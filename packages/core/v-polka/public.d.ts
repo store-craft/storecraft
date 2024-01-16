@@ -3,15 +3,15 @@ import type { Trouter } from './trouter/index';
 export type PartialURL = Partial<URL>;
 
 export type VPolkaRequest = Request & {
-    // path params
-    params?: Record<string, any>
-    // query search params
-    query?: URLSearchParams,
-    //current processed path
-    path?: string,
-    // a parsed url
-    parsedUrl?: PartialURL,
-    [k: string]: any
+  // path params
+  params?: Record<string, any>
+  // query search params
+  query?: URLSearchParams,
+  //current processed path
+  path?: string,
+  // a parsed url
+  parsedUrl?: PartialURL,
+  [k: string]: any
 }
 
 type ResponseBody = ReadableStream | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | string | undefined;
@@ -49,7 +49,7 @@ export interface IPolka extends Trouter<Middleware> {
 
   readonly handler: Middleware;
 
-  use(pattern: RegExp|string, ...handlers: (IPolka | Middleware)[]): this;
+  use(pattern: RegExp | string, ...handlers: (IPolka | Middleware)[]): this;
   use(...handlers: (IPolka | Middleware)[]): this;
 }
 
@@ -58,6 +58,5 @@ export type PolkaOptions {
   onError?: ErrorHandler;
   prefix?: string;
 }
-
 
 export * from './index.js';

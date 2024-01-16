@@ -13,10 +13,10 @@ import { Trouter } from './trouter/index.js';
  * @param {VPolkaResponse} res 
  */
 async function onError(err, req, res) {
-	let code = err?.code ?? err?.cause ?? 500;
-	code = res.status = code;
+  let code = err?.code ?? err?.cause ?? 500;
+  code = res.status = code;
   res.setStatus(code, STATUS_CODES[code.toString()])
-	res.sendJson(err.message);
+  res.sendJson(err.message);
 }
 
 /**
@@ -37,16 +37,16 @@ export class Polka extends Trouter {
    * 
    * @param {PolkaOptions} opts 
    */
-	constructor(opts={}) {
-		super();
+  constructor(opts = {}) {
+    super();
 
     this.opts = opts;
-		this.handler = this.handler.bind(this);
-		this.onError = opts.onError || onError; // catch-all handler
-		this.onNoMatch = opts.onNoMatch ||
+    this.handler = this.handler.bind(this);
+    this.onError = opts.onError || onError; // catch-all handler
+    this.onNoMatch = opts.onNoMatch ||
       this.onError.bind(null, { status: 404, message: 'Unavailable' });
-		this.attach = async (req, res) => await this.handler(req, res);
-	}
+    this.attach = async (req, res) => await this.handler(req, res);
+  }
 
   /**
    * @typedef {(RegExp | string | IPolka | Middleware)} Every
@@ -54,12 +54,12 @@ export class Polka extends Trouter {
    * @param  {...(IPolka | Middleware)} fns 
    * @returns 
    */
-	use(base, ...fns) {
+  use(base, ...fns) {
     const is_base_func = (typeof base === 'function' || base instanceof Polka);
     let funcs = is_base_func ? [base, ...fns] : fns
     base = is_base_func ? '/' : base
 
-    super.use( 
+    super.use(
       base,
       ...funcs.map(mount).map(
         fn => {
@@ -70,17 +70,17 @@ export class Polka extends Trouter {
             req.path = old_path // reset 
           }
         }
-      ) 
+      )
     );
-    
+
     return this;
-	}
+  }
 
   /**
    * @param {VPolkaRequest} req 
    * @param {VPolkaResponse} res 
    */
-	async handler(req, res) {
+  async handler(req, res) {
 
     req.parsedUrl = req?.parsedUrl ?? new URL(req.url, 'http://host');
     req.path = req.path ?? req.parsedUrl.pathname
@@ -97,18 +97,18 @@ export class Polka extends Trouter {
       }
     }
 
-    const arr=obj.handlers.concat(this.onNoMatch);
+    const arr = obj.handlers.concat(this.onNoMatch);
 
     try {
-      for(const m of arr) {
+      for (const m of arr) {
         console.log(`running path: ${req.path}`)
         await m(req, res)
         console.log(`res.finished: ${res.finished}`)
-        if(res.finished) { 
-          return res; 
+        if (res.finished) {
+          return res;
         }
 
-      } 
+      }
 
     } catch (e) {
       await this.onError(e, req, res);
@@ -116,7 +116,7 @@ export class Polka extends Trouter {
       // throw e
     }
 
-	}
- 
+  }
+
 }
 

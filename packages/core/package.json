@@ -1,0 +1,17 @@
+{
+  "name": "@storecraft/core",
+  "version": "1.0.0",
+  "description": "Core Package for storecraft",
+  "main": "index.js",
+  "type": "module",
+  "types": "./public.d.ts",
+  "scripts": {
+    "test": "uvu -c **/test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "uvu": "^0.5.6"
+  }
+}

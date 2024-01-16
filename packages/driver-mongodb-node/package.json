@@ -1,0 +1,21 @@
+{
+  "name": "@storecraft/driver-mongodb-node",
+  "version": "1.0.0",
+  "description": "driver for mongodb on nodejs platform",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "uvu": "^0.5.6"
+  }
+}

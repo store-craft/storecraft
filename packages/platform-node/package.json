@@ -1,0 +1,20 @@
+{
+  "name": "@storecraft/platform-node",
+  "version": "1.0.0",
+  "description": "requests adapter",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0"
+  }
+}

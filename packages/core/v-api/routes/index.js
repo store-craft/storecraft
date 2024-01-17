@@ -5,7 +5,7 @@ import { create as create_auth_route } from "./auth.js";
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../../public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
  */
 export const create_api = (app) => {
   const polka = new Polka();

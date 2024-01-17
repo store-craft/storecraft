@@ -1,0 +1,11 @@
+import { short_uuid } from '../utils/short-uuid.js'
+
+/**
+ * Create a UUID v4, stripped and with prefix
+ * @param {string} prefix 
+ * @returns 
+ */
+export const ID = (prefix='') => {
+  prefix = prefix ? (prefix + '_') : prefix;
+  return prefix + short_uuid();
+}

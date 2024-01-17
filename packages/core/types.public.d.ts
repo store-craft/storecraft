@@ -13,9 +13,12 @@
 //     status: number;
 // }
 
+import { App } from './types.public.js';
 import { Polka } from './v-polka/index.js'
 import type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
 export type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
+
+export type TypeOrCreator<T, A, B> = ((app: App<A, B>) => T) | T;
 
 export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext> {
     /**
@@ -51,4 +54,5 @@ declare namespace TicketingSystem {
 }
 
 export * from './index.js'
-export type * from './types.d.ts'
+export type * from './types.driver.js'
+export type * from './types.api.js'

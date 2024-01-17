@@ -3,18 +3,24 @@
 import http, { IncomingMessage, ServerResponse } from "node:http";
 import { App } from '@storecraft/core'
 import { NodeAdapter } from '@storecraft/platform-node'
+import { Driver } from '@storecraft/driver-mongodb-node'
 import { Polka } from "@storecraft/core/v-polka/index.js";
 
 const host = 'localhost';
 const port = 8000;
 
 
-let app = new App(new NodeAdapter())
+let app = new App(
+  new NodeAdapter(),
+  new Driver()
+)
+
+await app.init()
 
 // app.polka.use(
 //   (req, res, next) => {
 //     console.log('middle1')
-//     // next()
+//     // next() 
 //   } 
 // )  
  

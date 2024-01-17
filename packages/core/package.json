@@ -4,7 +4,7 @@
   "description": "Core Package for storecraft",
   "main": "index.js",
   "type": "module",
-  "types": "./public.d.ts",
+  "types": "./types.public.d.ts",
   "scripts": {
     "test": "uvu -c **/test"
   },

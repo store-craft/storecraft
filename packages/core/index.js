@@ -6,20 +6,46 @@ import { create_api } from './v-api/index.js'
  * @template PlatformNativeRequest
  * @template PlatformContext
  */
+
+/**
+ * @template PlatformNativeRequest
+ * @template PlatformContext
+ */
 export class App {
 
   /**
    * 
-   * @param {import('./public').PlatformAdapter<PlatformNativeRequest, PlatformContext>} platform platform
+   * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext>} PlatformAdapter
+   * @param {PlatformAdapter} platform platform
+   * @param {import('./types.public.js').db_driver} db_driver database driver
    */
-  constructor(platform) {
+  constructor(platform, db_driver) {
 
     // this._polka = new Polka();
     // this._polka = polka_api
+
     this._platform = platform;
+    this._db_driver = db_driver;
+
+    // this._polka = create_api(this);
+  }
+
+  async init() {
+    try{
+      await this.db.init(this)
+    } catch (e) {
+      console.error(e)
+    }
     this._polka = create_api(this);
   }
 
+  /**
+   * Get the Polka router
+   */
+  get db() {
+    return this._db_driver;
+  }
+  
   /**
    * Get the Polka router
    */
@@ -45,7 +71,7 @@ export class App {
   handler = async (req, context) => {
     const request = await this._platform.encode(req)
 
-    /** @type {import('./public').VPolkaResponse} */
+    /** @type {import('./types.public.js').VPolkaResponse} */
     const polka_response = {
       headers: new Headers(),
       finished: false,

@@ -2,9 +2,10 @@ import { Polka } from '../../v-polka/index.js'
 import * as phash from '../../utils/crypto-pbkdf2.js'
 import * as jwt from '../../utils/jwt.js'
 import { ID } from '../utils.js'
-import {z} from 'zod'
+import { z } from 'zod'
 import { json } from '../../v-middlewares/body-parse.js'
 import { zod_validate_body } from '../../v-middlewares/zod-validate.js'
+import { apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, apiAuthSignupTypeSchema } from './types.zod.api.js'
 
 /**
  * 
@@ -19,8 +20,12 @@ export const create = (app) => {
   // signup
   polka.post(
     '/signup',
+    json(),
+    zod_validate_body(apiAuthSignupTypeSchema),
     async (req, res) => {
-      const { email, password } = await req.json();
+
+      /** @type {z.infer<typeof apiAuthSignupTypeSchema>} */
+      const { email, password } = req.parsedBody;
   
       // Check if the user already exists
       const existingUser = await app.db.auth_users.getByEmail(email)
@@ -72,8 +77,12 @@ export const create = (app) => {
   // login
   polka.post(
     '/login',
+    json(),
+    zod_validate_body(apiAuthLoginTypeSchema),
     async (req, res) => {
-      const { email, password } = await req.json();
+
+      /** @type {z.infer<typeof apiAuthLoginTypeSchema>} */
+      const { email, password } = req.parsedBody;
 
       // Check if the user already exists
       const existingUser = await app.db.auth_users.getByEmail(email)
@@ -118,10 +127,10 @@ export const create = (app) => {
   polka.post(
     '/refresh',
     json(),
-    zod_validate_body(z.object({
-      refresh_token: z.string(),
-    })),
+    zod_validate_body(apiAuthRefreshTypeSchema),
     async (req, res) => {
+
+      /** @type {z.infer<typeof apiAuthRefreshTypeSchema>} */
       const { refresh_token } = req.parsedBody;
   
       if(!refresh_token)

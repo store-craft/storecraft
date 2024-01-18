@@ -19,7 +19,7 @@ const col = (d) => {
 const upsert = (driver) => {
   return async (data) => {
     console.log(data.id)
-    const filter = { id: data.id };
+    const filter = { _id: new ObjectId(data.id) };
     const replacement = { ...data };
     const options = { upsert: true };
 
@@ -37,7 +37,7 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id) => {
-    const filter = { id: id };
+    const filter = { _id: new ObjectId(id) };
 
     /** @type {import('@storecraft/core').AuthUserType} */
     const res = await col(driver).findOne(

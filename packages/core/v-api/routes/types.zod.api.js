@@ -5,10 +5,17 @@ const baseTypeSchema = z.object({
   createdAt: z.date().optional(),
   id: z.string().optional(),
 });
-export const authUserTypeSchema = baseTypeSchema.and(
+export const authBaseTypeSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(4).max(20),
+});
+export const apiAuthLoginTypeSchema = authBaseTypeSchema;
+export const apiAuthSignupTypeSchema = authBaseTypeSchema;
+export const apiAuthRefreshTypeSchema = z.object({
+  refresh_token: z.string(),
+});
+export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
   z.object({
-    email: z.string().optional(),
-    password: z.string().optional(),
     confirmed_mail: z.boolean().optional(),
   }),
 );

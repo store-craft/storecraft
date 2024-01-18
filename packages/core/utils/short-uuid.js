@@ -73,10 +73,11 @@ export const flickrBase58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRS
 export const cookieBase90 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+-./:<=>?@[]^_`{|}~";
 
 export const uuid = () => {
-  return crypto.randomUUID();
+  const u = crypto.randomUUID();
+  console.log(u.length)
+  return u;
 }
 
 export const short_uuid = () => {
   return convert(uuid().replace(/-/g, ''), HEX, flickrBase58)
 }
-

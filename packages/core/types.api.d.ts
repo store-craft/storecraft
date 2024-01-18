@@ -9,10 +9,33 @@ type BaseType = {
   id?: string;
 }
 
-export type AuthUserType = BaseType & {
-  email?: string;
-  password?: string; // hashed
-  confirmed_mail?: boolean
+// auth
+
+export type AuthBaseType = {
+  /**
+   * @format email
+   */
+  email: string;
+  /**
+   * @minLength 4
+   * @maxLength 20   
+   */
+  password: string;
+}
+
+export declare enum Role {
+  admin='admin',
+}
+
+export type ApiAuthLoginType = AuthBaseType;
+export type ApiAuthSignupType = AuthBaseType;
+export type ApiAuthRefreshType = {
+  refresh_token: string;
+}
+
+export type AuthUserType = BaseType & AuthBaseType & {
+  confirmed_mail: boolean
+  roles: Role[];
 }
 
 export type AddressType = BaseType & {

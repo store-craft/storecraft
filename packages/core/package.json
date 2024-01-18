@@ -6,12 +6,17 @@
   "type": "module",
   "types": "./types.public.d.ts",
   "scripts": {
-    "test": "uvu -c **/test"
+    "test": "uvu -c **/test",
+    "gen:zod": "npx ts-to-zod ./types.api.d.ts ./v-api/routes/types.zod.api.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "uvu": "^0.5.6"
+  },
+  "dependencies": {
+    "ts-to-zod": "^3.6.1",
+    "zod": "^3.22.4"
   }
 }

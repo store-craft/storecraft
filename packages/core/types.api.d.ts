@@ -48,11 +48,11 @@ export type CustomerType = BaseType & {
   /** email address */
   email: string;
   /** phone number */
-  phone_number: string;
+  phone_number?: string;
   /** address info */
-  address: AddressType;
+  address?: AddressType;
   /** list of tags , example ['likes_games', 'subscribed_false', ...] */
   tags: string[];
   /** simple search index */
-  search_index: string[];
+  search_index?: string[];
 }

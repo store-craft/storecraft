@@ -8,15 +8,36 @@ import { Trouter } from './trouter/index.js';
  * @typedef {import('./public.js').VPolkaRequest} VPolkaRequest 
  * @typedef {import('./public.js').VPolkaResponse} VPolkaResponse 
  * 
- * @param {import('./public.js').IError} err 
+ */
+
+const extract_code = e => {
+  const parsed = parseInt(e?.cause)
+  return isNaN(parsed) ? undefined : parsed
+}
+
+/**
+ * a robust error handler
+ * @param { Error | string | { message: any, code: number } } error
  * @param {VPolkaRequest} req 
  * @param {VPolkaResponse} res 
  */
-async function onError(err, req, res) {
-  let code = err?.code ?? err?.cause ?? 500;
-  code = res.status = code;
+export const onError = async (error, req, res) => {
+  let code = 500;
+  let message = 'error';
+
+  if(error instanceof Error) {
+    code = error?.cause?.code ?? extract_code(error) ?? code;
+    message = error?.message ?? message;
+  } else if(typeof error === 'string') {
+    message = error ?? message;
+  } else {
+    // assume { message: string, code: number }
+    code = error?.code ?? code;
+    message = error?.message ?? message;
+  }
+
   res.setStatus(code, STATUS_CODES[code.toString()])
-  res.sendJson(err.message);
+  res.sendJson({ error: message });
 }
 
 /**

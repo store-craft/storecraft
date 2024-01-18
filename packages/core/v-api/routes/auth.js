@@ -2,6 +2,9 @@ import { Polka } from '../../v-polka/index.js'
 import * as phash from '../../utils/crypto-pbkdf2.js'
 import * as jwt from '../../utils/jwt.js'
 import { ID } from '../utils.js'
+import {z} from 'zod'
+import { json } from '../../v-middlewares/body-parse.js'
+import { zod_validate_body } from '../../v-middlewares/zod-validate.js'
 
 /**
  * 
@@ -114,8 +117,12 @@ export const create = (app) => {
   // refresh
   polka.post(
     '/refresh',
+    json(),
+    zod_validate_body(z.object({
+      refresh_token: z.string(),
+    })),
     async (req, res) => {
-      const { refresh_token } = await req.json();
+      const { refresh_token } = req.parsedBody;
   
       if(!refresh_token)
         throw new Error('auth-error', { cause: 400 })
@@ -132,7 +139,7 @@ export const create = (app) => {
       if (!verified) {
         throw new Error('auth-error', { cause: 401 })
       }
-  
+   
       const access_token = await jwt.create(
         app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 
         { sub: claims.sub }, jwt.JWT_TIMES.HOUR

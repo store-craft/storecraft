@@ -11,6 +11,8 @@ export type VPolkaRequest = Request & {
   path?: string,
   // a parsed url
   parsedUrl?: PartialURL,
+  // Parsed body
+  parsedBody?: string | Blob | FormData | any;
   [k: string]: any
 }
 

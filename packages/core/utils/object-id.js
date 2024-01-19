@@ -13,10 +13,10 @@ let inc = ~~(Math.random() * 0xffffff);
 crypto.getRandomValues(MACHINE_ID);
 
 /**
- * Generate a compatible Mongo ObjectID.
+ * Generate a compatible Mongo ObjectID as 12 bytes array
  * @returns 
  */
-export const id = () => {
+export const id_as_array = () => {
   const time = ~~(Date.now() / 1000);
   const pid =
       (typeof process === 'undefined' || process.pid === 1
@@ -44,8 +44,16 @@ export const id = () => {
   // increment
   inc += 1;
 
+  return buffer;
+}
+
+/**
+ * Generate a compatible Mongo ObjectID as 24 HEX string
+ * @returns 
+ */
+export const id = () => {
   return Array.from(
-    buffer, 
+    id_as_array(), 
     i => i.toString(16).padStart(2, "0")
   ).join("");
 }

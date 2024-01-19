@@ -25,7 +25,13 @@ const connect = async (uri) => {
  */
 export class Driver {
 
-  constructor() {
+  /**
+   * 
+   * @param {string} db_name database name
+   * @param {string[]} admins_emails list of admin emails
+   */
+  constructor(db_name='main') {
+    this._name = db_name;
   }
 
   /**
@@ -35,8 +41,25 @@ export class Driver {
    */
   async init(app) {
     this._client = await connect(app.platform.env.MONGODB_URI);
+    this._admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(s => s.trim()) ?? [];
     this._db_auth_users = auth_users(this);
+
+    console.log(this.admins_emails)
     return this;
+  }
+
+  /**
+   * database name
+   */
+  get name () {
+    return this._name;
+  }
+
+  /**
+   * admins emails
+   */
+  get admins_emails () {
+    return this._admins_emails ?? [];
   }
 
   get client() {

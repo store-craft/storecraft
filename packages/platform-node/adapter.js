@@ -5,11 +5,7 @@ import { Readable } from 'node:stream'
  * 
  * @typedef {import('node:http').IncomingMessage} IncomingMessage
  * @typedef {import('node:http').ServerResponse} ServerResponse
- * @typedef {import("@storecraft/core").VPolkaResponse} VPolkaResponse
- * @typedef {import("@storecraft/core").VPolkaRequest} VPolkaRequest
  * @typedef {import("@storecraft/core").PlatformAdapter<IncomingMessage, ServerResponse>} RequestEncoderType
- * @typedef {Request} Request2
- * @typedef {Response} Response2
  */
 
 
@@ -34,12 +30,13 @@ export class NodeAdapter {
     /** @type {RequestInit} */
     const init = {
       method: from.method,
+      // @ts-ignore
       headers: from.headers,
       body: from.method==='HEAD' || from.method==='GET' ? undefined : Readable.toWeb(from),
       duplex: 'half'
     }
 
-    /** @type {VPolkaRequest} */
+    /** @type {Request} */
     const web_req = new Request(
       `https://host${from.url}`,
       init

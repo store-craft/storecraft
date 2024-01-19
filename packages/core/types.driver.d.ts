@@ -56,6 +56,14 @@ export interface db_driver {
   init: (app: App<any, any>) => Promise<this>;
 
   /**
+   * Database name
+   */
+  name: string;
+
+  /** admins emails */
+  admins_emails: string[]
+
+  /**
    * Get the underlying StoreCraft App
    */
   app: App<any, any> | undefined;

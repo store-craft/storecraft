@@ -9,6 +9,15 @@ export const authBaseTypeSchema = z.object({
   email: z.string().email(),
   password: z.string().min(4).max(20),
 });
+export const role2Schema = z.object({
+  admin: z.object({
+    type: z.literal("admin"),
+  }),
+  user: z.object({
+    type: z.literal("user"),
+  }),
+});
+export const roleSchema = z.union([z.literal("admin"), z.literal("user")]);
 export const apiAuthLoginTypeSchema = authBaseTypeSchema;
 export const apiAuthSignupTypeSchema = authBaseTypeSchema;
 export const apiAuthRefreshTypeSchema = z.object({
@@ -17,13 +26,24 @@ export const apiAuthRefreshTypeSchema = z.object({
 export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
   z.object({
     confirmed_mail: z.boolean().optional(),
+    roles: z.array(roleSchema).optional(),
+  }),
+);
+export const tagTypeSchema = baseTypeSchema.and(
+  z.object({
+    values: z.array(z.string()).optional(),
+    name: z.string().optional(),
+    desc: z.string().optional(),
   }),
 );
 export const addressTypeSchema = baseTypeSchema.and(
   z.object({
     firstname: z.string().optional(),
     lastname: z.string().optional(),
-    phone_number: z.string().optional(),
+    phone_number: z
+      .string()
+      .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
+      .optional(),
     company: z.string().optional(),
     street1: z.string().optional(),
     street2: z.string().optional(),
@@ -38,8 +58,11 @@ export const customerTypeSchema = baseTypeSchema.and(
   z.object({
     firstname: z.string(),
     lastname: z.string(),
-    email: z.string(),
-    phone_number: z.string().optional(),
+    email: z.string().email(),
+    phone_number: z
+      .string()
+      .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
+      .optional(),
     address: addressTypeSchema.optional(),
     tags: z.array(z.string()),
     search_index: z.array(z.string()).optional(),

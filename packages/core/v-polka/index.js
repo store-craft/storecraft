@@ -2,11 +2,9 @@ import { STATUS_CODES } from './codes.js';
 import { Trouter } from './trouter/index.js';
 
 /**
- * @typedef {import('./public.js').IPolka} IPolka
- * @typedef {import('./public.js').PolkaOptions} PolkaOptions
- * @typedef {import('./public.js').Middleware} Middleware
  * @typedef {import('./public.js').VPolkaRequest} VPolkaRequest 
  * @typedef {import('./public.js').VPolkaResponse} VPolkaResponse 
+ * @typedef {import('./public.js').IPolka} IPolka3
  * 
  */
 
@@ -41,22 +39,24 @@ export const onError = async (error, req, res) => {
 }
 
 /**
- * 
- * @param {Middleware | Polka} fn 
- * @returns {Middleware}
+ * @template {VPolkaRequest} Req
+ * @template {VPolkaResponse} Res
+ * @param {import('./public.js').Middleware<Req, Res>} fn 
+ * @returns {import('./public.js').Middleware<Req, Res>}
  */
 const mount = fn => fn instanceof Polka ? fn.attach : fn;
 
 /**
- * 
- * @extends {Trouter<Middleware>}
- * @implements {IPolka}
+ * @template {VPolkaRequest} Req
+ * @template {VPolkaResponse} Res
+ * @extends {Trouter<import('./public.js').Middleware<Req, Res>>}
+ * @implements {import('./public.js').IPolka<Req, Res>}
  */
 export class Polka extends Trouter {
 
   /**
    * 
-   * @param {PolkaOptions} opts 
+   * @param {import('./public.js').PolkaOptions<Req, Res>} opts 
    */
   constructor(opts = {}) {
     super();
@@ -70,9 +70,9 @@ export class Polka extends Trouter {
   }
 
   /**
-   * @typedef {(RegExp | string | IPolka | Middleware)} Every
+   * @typedef {(RegExp | string | Polka | import('./public.js').Middleware<Req, Res>)} Every
    * @param {Every} base 
-   * @param  {...(IPolka | Middleware)} fns 
+   * @param  {...(Polka | import('./public.js').Middleware<Req, Res>)} fns 
    * @returns 
    */
   use(base, ...fns) {
@@ -98,11 +98,10 @@ export class Polka extends Trouter {
   }
 
   /**
-   * @param {VPolkaRequest} req 
-   * @param {VPolkaResponse} res 
+   * @param {Req} req 
+   * @param {Res} res 
    */
   async handler(req, res) {
-
     req.parsedUrl = req?.parsedUrl ?? new URL(req.url, 'http://host');
     req.path = req.path ?? req.parsedUrl.pathname
     // const url = new URL(req.url, 'https://host')

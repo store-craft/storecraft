@@ -33,6 +33,10 @@ export interface VPolkaResponse {
   send: (body?: ResponseBody) => VPolkaResponse
   sendJson: (o: Object) => VPolkaResponse
   sendText: (o: string) => VPolkaResponse
+  sendBlob: (o: Blob) => VPolkaResponse
+  sendArrayBuffer: (o: ArrayBuffer) => VPolkaResponse
+  sendSearchParams: (o: URLSearchParams) => VPolkaResponse
+  sendFormData: (o: FormData) => VPolkaResponse
   setStatus: (code: number, text?: string) => VPolkaResponse
 }
 
@@ -43,20 +47,20 @@ export interface IError extends Error {
 }
 
 export type ErrorHandler = (err: string | IError, req: VPolkaRequest, res: VPolkaResponse) => Promise<void>;
-export type Middleware = (req: VPolkaRequest, res: VPolkaResponse) => Promise<VPolkaResponse | void>;
+export type Middleware<Req extends VPolkaRequest, Res extends VPolkaResponse> = (req: Req, res: Res) => Promise<Res | void>;
 
-export interface IPolka extends Trouter<Middleware> {
+export interface IPolka<Req extends VPolkaRequest, Res extends VPolkaResponse> extends Trouter<Middleware<Req, Res>> {
   readonly onError: ErrorHandler;
-  readonly onNoMatch: Middleware;
+  readonly onNoMatch: Middleware<Req, Res>;
 
-  readonly handler: Middleware;
+  readonly handler: Middleware<Req, Res>;
 
-  use(pattern: RegExp | string, ...handlers: (IPolka | Middleware)[]): this;
-  use(...handlers: (IPolka | Middleware)[]): this;
+  use(pattern: RegExp | string, ...handlers: (IPolka<Req, Res> | Middleware<Req, Res>)[]): this;
+  use(...handlers: (IPolka<Req, Res> | Middleware<Req, Res>)[]): this;
 }
 
-export type PolkaOptions {
-  onNoMatch?: Middleware;
+export type PolkaOptions<Req extends VPolkaRequest, Res extends VPolkaResponse> = {
+  onNoMatch?: Middleware<Req, Res>;
   onError?: ErrorHandler;
   prefix?: string;
 }

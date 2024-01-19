@@ -5,8 +5,8 @@ import { ZodSchema } from 'zod'
  */
 export const zod_validate_body = (zod_schema) => {
   /**
-   * @param {import("../types.public").VPolkaRequest} req
-   * @param {import("../types.public").VPolkaResponse} res
+   * @param {import("../types.public").ApiRequest} req
+   * @param {import("../types.public").ApiResponse} res
    */
   return async (req, res) => {
 

@@ -1,11 +1,6 @@
 import { STATUS_CODES } from './v-polka/codes.js';
-import { Polka } from './v-polka/index.js'
 import { create_api } from './v-api/index.js'
 
-/**
- * @template PlatformNativeRequest
- * @template PlatformContext
- */
 
 /**
  * @template PlatformNativeRequest
@@ -71,7 +66,7 @@ export class App {
   handler = async (req, context) => {
     const request = await this._platform.encode(req)
 
-    /** @type {import('./types.public.js').VPolkaResponse} */
+    /** @type {import('./types.public.js').ApiResponse} */
     const polka_response = {
       headers: new Headers(),
       finished: false,
@@ -92,6 +87,26 @@ export class App {
 
       sendText(o) {
         this.headers.set('Content-Type', 'text/plain')
+        return this.send(String(o))
+      },
+
+      sendBlob(o) {
+        this.headers.set('Content-Type', 'application/octet-stream')
+        return this.send(o)
+      },
+
+      sendArrayBuffer(o) {
+        this.headers.set('Content-Type', 'application/octet-stream')
+        return this.send(o)
+      },
+
+      sendSearchParams(o) {
+        this.headers.set('Content-Type', 'application/x-www-form-urlencoded')
+        return this.send(o)
+      },
+
+      sendFormData(o) {
+        this.headers.set('Content-Type', 'application/x-www-form-urlencoded')
         return this.send(o)
       },
 

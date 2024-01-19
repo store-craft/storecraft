@@ -23,9 +23,16 @@ export type AuthBaseType = {
   password: string;
 }
 
-export declare enum Role {
-  admin='admin',
+export type Role2 = {
+  admin: {
+    type: 'admin'
+  },
+  user: {
+    type: 'user'
+  },
 }
+
+export type Role = 'admin' | 'user'
 
 export type ApiAuthLoginType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
@@ -34,16 +41,32 @@ export type ApiAuthRefreshType = {
 }
 
 export type AuthUserType = BaseType & AuthBaseType & {
-  confirmed_mail: boolean
-  roles: Role[];
+  confirmed_mail?: boolean
+  roles?: Role[];
 }
+
+// tag type
+
+export type TagType = BaseType & {
+  /** list of values */
+  values?: string[];
+  /** the key */
+  name?: string;
+  /** rich description */
+  desc?: string;
+}
+
+//
 
 export type AddressType = BaseType & {
   /** first name of recipient */
   firstname?: string;
   /** last name of recipient */
   lastname?: string;
-  /** phone number */
+  /**
+   * The phone number
+   * @pattern ^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$
+   */  
   phone_number?: string;
   /** optional company name of recipient */
   company?: string;
@@ -68,9 +91,14 @@ export type CustomerType = BaseType & {
   firstname: string;
   /** lastname */
   lastname: string;
-  /** email address */
+  /**
+   * @format email
+   */
   email: string;
-  /** phone number */
+  /**
+   * The phone number
+   * @pattern ^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$
+   */  
   phone_number?: string;
   /** address info */
   address?: AddressType;

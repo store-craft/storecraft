@@ -5,7 +5,7 @@ import { ID } from '../utils.js'
 import { z } from 'zod'
 import { json } from '../../v-middlewares/body-parse.js'
 import { zod_validate_body } from '../../v-middlewares/zod-validate.js'
-import { apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, apiAuthSignupTypeSchema } from './types.zod.api.js'
+import { apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 
 /**
  * 
@@ -15,6 +15,7 @@ import { apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, apiAuthSignupTypeSche
  */
 export const create = (app) => {
 
+  /** @type {import('../../types.public.js').ApiPolka} */
   const polka = new Polka();
 
   // signup
@@ -23,7 +24,6 @@ export const create = (app) => {
     json(),
     zod_validate_body(apiAuthSignupTypeSchema),
     async (req, res) => {
-
       /** @type {z.infer<typeof apiAuthSignupTypeSchema>} */
       const { email, password } = req.parsedBody;
   
@@ -40,17 +40,24 @@ export const create = (app) => {
       );
   
       // Create a new user in the database
-      const id = ID('au')
+      const id = ID('au');
+      const roles = app.db.admins_emails.includes(email) ? ['admin'] : ['user']
+
       await app.db.auth_users.upsert(
         {
           id: id,
-          email, password: hashedPassword
+          email, password: hashedPassword,
+          confirmed_mail: false,
+          // @ts-ignore
+          roles
         }
       )
   
       /** @type {Partial<import("../../utils/jwt.js").JWTClaims>} */
       const claims = {
-        sub: id
+        sub: id, 
+        // @ts-ignore
+        roles
       }
   
       const access_token = await jwt.create(
@@ -99,7 +106,8 @@ export const create = (app) => {
   
       /** @type {Partial<import("../../utils/jwt.js").JWTClaims>} */
       const claims = {
-        sub: existingUser.id
+        sub: existingUser.id,
+        roles: existingUser.roles
       }
   
       const access_token = await jwt.create(
@@ -151,7 +159,10 @@ export const create = (app) => {
    
       const access_token = await jwt.create(
         app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 
-        { sub: claims.sub }, jwt.JWT_TIMES.HOUR
+        { 
+          // @ts-ignore
+          sub: claims.sub, roles: claims.roles 
+        }, jwt.JWT_TIMES.HOUR
       );
   
       res.sendJson(

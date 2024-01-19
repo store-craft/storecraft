@@ -6,10 +6,17 @@ import { ObjectId } from 'mongodb'
  */
 
 /**
+ * 
+ * @param {string} id 
+ * @returns 
+ */
+const to_objid = id => new ObjectId(id.split('_').at(-1))
+
+/**
  * @param {Driver} d 
  */
 const col = (d) => {
-  return d.client.db('main').collection('auth_users')
+  return d.client.db(d.name).collection('auth_users')
 }
 
 /**
@@ -19,7 +26,7 @@ const col = (d) => {
 const upsert = (driver) => {
   return async (data) => {
     console.log(data.id)
-    const filter = { _id: new ObjectId(data.id) };
+    const filter = { _id: to_objid(data.id) };
     const replacement = { ...data };
     const options = { upsert: true };
 
@@ -37,7 +44,7 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id) => {
-    const filter = { _id: new ObjectId(id) };
+    const filter = { _id: to_objid(id) };
 
     /** @type {import('@storecraft/core').AuthUserType} */
     const res = await col(driver).findOne(
@@ -71,7 +78,7 @@ const getByEmail = (driver) => {
  */
 const remove = (driver) => {
   return async (id) => {
-    const filter = { id: id };
+    const filter = { _id: to_objid(id) };
 
     /** @type {import('@storecraft/core').AuthUserType} */
     const res = await col(driver).findOneAndDelete(

@@ -1,4 +1,4 @@
-import { short_uuid } from '../utils/short-uuid.js'
+import { id } from '../utils/object-id.js';
 
 /**
  * Create a UUID v4, stripped and with prefix
@@ -7,5 +7,5 @@ import { short_uuid } from '../utils/short-uuid.js'
  */
 export const ID = (prefix='') => {
   prefix = prefix ? (prefix + '_') : prefix;
-  return prefix + short_uuid();
+  return prefix + id();
 }

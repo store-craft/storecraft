@@ -26,8 +26,10 @@ export const json = () => {
    * @param {VPolkaResponse} res
    */
   return async (req, res) => {
-    if(is_type(req, CONTENT_TYPE_JSON))
-      req.parsedBody = await req.json();
+    try {
+      if(is_type(req, CONTENT_TYPE_JSON))
+        req.parsedBody = await req.json();
+    } catch (e) {}
   }
 }
 

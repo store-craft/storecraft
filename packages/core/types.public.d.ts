@@ -1,9 +1,11 @@
+import { AuthUserType } from './types.api.js';
+import { JWTClaims } from './utils/jwt.js';
 import { Polka } from './v-polka/index.js'
 import type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
 export type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
 
 export type ApiRequest = VPolkaRequest & {
-  user?: string;
+  user?: JWTClaims & Partial<AuthUserType>;
 }
 
 export type ApiResponse = VPolkaResponse & {

@@ -1,6 +1,7 @@
 import { App } from '@storecraft/core';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import { auth_users } from './src/auth_users.js';
+import { impl as auth_users } from './src/auth_users.js';
+import { impl as tags } from './src/tags.js';
 
 /**
  * 
@@ -42,7 +43,9 @@ export class Driver {
   async init(app) {
     this._client = await connect(app.platform.env.MONGODB_URI);
     this._admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(s => s.trim()) ?? [];
-    this._db_auth_users = auth_users(this);
+
+    this.auth_users = auth_users(this);
+    this.tags = tags(this);
 
     console.log(this.admins_emails)
     return this;
@@ -66,7 +69,4 @@ export class Driver {
     return this._client;
   }
 
-  get auth_users() {
-    return this._db_auth_users
-  }
 }

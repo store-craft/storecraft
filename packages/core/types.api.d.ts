@@ -4,8 +4,8 @@
  * base type
  */
 type BaseType = {
-  updatedAt?: Date;
-  createdAt?: Date;
+  updated_at?: string;
+  created_at?: string;
   id?: string;
 }
 
@@ -32,7 +32,7 @@ export type Role2 = {
   },
 }
 
-export type Role = 'admin' | 'user'
+export type Role = 'admin' | 'user' | string;
 
 export type ApiAuthLoginType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
@@ -48,10 +48,10 @@ export type AuthUserType = BaseType & AuthBaseType & {
 // tag type
 
 export type TagType = BaseType & {
+  /** the key name */
+  handle: string;
   /** list of values */
-  values?: string[];
-  /** the key */
-  name?: string;
+  values: string[];
   /** rich description */
   desc?: string;
 }

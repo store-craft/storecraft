@@ -1,6 +1,7 @@
-import { AuthUserType, CustomerType } from "./types.api";
+import { AuthUserType, CustomerType, TagType } from "./types.api";
 import { App } from "./types.public";
 
+export type ID = string;
 export type Handle = string;
 
 /**
@@ -8,10 +9,16 @@ export type Handle = string;
  */
 export declare interface db_crud<T> {
   /**
-   * get a single item by handle
+   * get a single item by handle or id
    * @param handle 
    */
-  get: (handle?: Handle) => Promise<T>;
+  get: (id: ID) => Promise<T>;
+
+  /**
+   * get a single item by handle or id
+   * @param handle 
+   */
+  getByHandle: (handle: Handle) => Promise<T>;
 
   /**
    * set a single item by handle
@@ -23,7 +30,7 @@ export declare interface db_crud<T> {
    * Delete an item
    * @param handle 
    */
-  remove: (handle?: Handle) => Promise<void>
+  remove: (handle?: Handle | ID) => Promise<void>
 
   /**
    * TBD
@@ -41,6 +48,12 @@ export interface db_auth_users extends db_crud<AuthUserType> {
    * @param handle 
    */
   getByEmail: (email?: string) => Promise<AuthUserType>;
+}
+
+/**
+ * tags crud
+ */
+export interface db_tags extends db_crud<TagType> {
 }
 
 /**
@@ -70,7 +83,10 @@ export interface db_driver {
 
   /** CRUD authenticated users */
   auth_users: db_auth_users;
-  
+
+  /** CRUD authenticated users */
+  tags: db_tags;
+
   /** CRUD customers */
   customers: db_customers;
 }

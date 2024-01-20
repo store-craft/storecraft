@@ -31,8 +31,8 @@ export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
 );
 export const tagTypeSchema = baseTypeSchema.and(
   z.object({
-    values: z.array(z.string()).optional(),
-    name: z.string().optional(),
+    handle: z.string(),
+    values: z.array(z.string()),
     desc: z.string().optional(),
   }),
 );

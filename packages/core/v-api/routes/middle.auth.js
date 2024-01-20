@@ -1,11 +1,12 @@
-import { App } from "../..";
-import { verify } from "../../utils/jwt";
+import { App } from "../../index.js";
+import { verify } from "../../utils/jwt.js";
+import { assert } from "../utils.js";
 
 const Authorization = 'Authorization'
 const Bearer = 'Bearer'
-const auth_error = new Error(
-  'auth-error', { cause: 401 }
-);
+const auth_error = [
+  'auth/error', 401
+]
 
 /**
  * @typedef {import("../../types.public").ApiRequest} ApiRequest 
@@ -25,6 +26,8 @@ export const parse_auth_user = (app) => {
   return async (req, res) => {
     const a = req.headers.get(Authorization);
     const token = a?.split(Bearer)?.at(-1).trim();
+
+    // console.log(Object.fromEntries(req.headers.entries()))
 
     if(!token)
       return;
@@ -50,9 +53,10 @@ export const roles_guard = (roles=[]) => {
    * @param {ApiResponse} res 
    */
   return async (req, res) => {
-    if(!req.user) throw auth_error;
+    assert(req.user, ...auth_error);
+
     const user_has_required_role = roles.length==0 || roles.some(
-      r => (req?.user??[]).includes(r)
+      r => (req?.user?.roles ?? []).includes(r)
     );
 
     if(!user_has_required_role) throw auth_error;

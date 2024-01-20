@@ -1,9 +1,8 @@
 import { Polka } from '../../v-polka/index.js'
 import * as phash from '../../utils/crypto-pbkdf2.js'
 import * as jwt from '../../utils/jwt.js'
-import { ID } from '../utils.js'
+import { ID, apply_dates, assert } from '../utils.js'
 import { z } from 'zod'
-import { json } from '../../v-middlewares/body-parse.js'
 import { zod_validate_body } from '../../v-middlewares/zod-validate.js'
 import { apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 
@@ -21,7 +20,6 @@ export const create = (app) => {
   // signup
   polka.post(
     '/signup',
-    json(),
     zod_validate_body(apiAuthSignupTypeSchema),
     async (req, res) => {
       /** @type {z.infer<typeof apiAuthSignupTypeSchema>} */
@@ -30,9 +28,7 @@ export const create = (app) => {
       // Check if the user already exists
       const existingUser = await app.db.auth_users.getByEmail(email)
 
-      if (existingUser) {
-        throw new Error('auth-already-signed-up', { cause: 400 })
-      }
+      assert(!existingUser, 'auth/already-signed-up', 400)
   
       // Hash the password using pbkdf2
       const hashedPassword = await phash.hash(
@@ -44,13 +40,14 @@ export const create = (app) => {
       const roles = app.db.admins_emails.includes(email) ? ['admin'] : ['user']
 
       await app.db.auth_users.upsert(
-        {
-          id: id,
-          email, password: hashedPassword,
-          confirmed_mail: false,
-          // @ts-ignore
-          roles
-        }
+        apply_dates(
+          {
+            id: id,
+            email, password: hashedPassword,
+            confirmed_mail: false,
+            roles
+          }
+        )
       )
   
       /** @type {Partial<import("../../utils/jwt.js").JWTClaims>} */
@@ -84,7 +81,6 @@ export const create = (app) => {
   // login
   polka.post(
     '/login',
-    json(),
     zod_validate_body(apiAuthLoginTypeSchema),
     async (req, res) => {
 
@@ -94,16 +90,13 @@ export const create = (app) => {
       // Check if the user already exists
       const existingUser = await app.db.auth_users.getByEmail(email)
 
-      if (!existingUser) {
-        throw new Error('auth-error', { cause: 401 })
-      }
-  
+      assert(existingUser, 'auth/error', 401)
+
       // verify the password
       const verified = await phash.verify(existingUser.password, password);
       
-      if(!verified)
-        throw new Error('auth-error', { cause: 401 })
-  
+      assert(verified, 'auth/error', 401)
+
       /** @type {Partial<import("../../utils/jwt.js").JWTClaims>} */
       const claims = {
         sub: existingUser.id,
@@ -134,16 +127,14 @@ export const create = (app) => {
   // refresh
   polka.post(
     '/refresh',
-    json(),
     zod_validate_body(apiAuthRefreshTypeSchema),
     async (req, res) => {
 
       /** @type {z.infer<typeof apiAuthRefreshTypeSchema>} */
       const { refresh_token } = req.parsedBody;
   
-      if(!refresh_token)
-        throw new Error('auth-error', { cause: 400 })
-  
+      assert(refresh_token, 'auth/error', 400)
+
       // Check if the user already exists
       let { verified, claims } = await jwt.verify(
         app.platform.env.AUTH_SECRET_REFRESH_TOKEN, 
@@ -153,10 +144,8 @@ export const create = (app) => {
       // confirm it is indeed a refresh token
       verified = verified && claims?.aud==='/refresh';
   
-      if (!verified) {
-        throw new Error('auth-error', { cause: 401 })
-      }
-   
+      assert(verified, 'auth/error', 401)
+
       const access_token = await jwt.create(
         app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 
         { 

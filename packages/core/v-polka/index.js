@@ -65,7 +65,7 @@ export class Polka extends Trouter {
     this.handler = this.handler.bind(this);
     this.onError = opts.onError || onError; // catch-all handler
     this.onNoMatch = opts.onNoMatch ||
-      this.onError.bind(null, { status: 404, message: 'Unavailable' });
+    this.onError.bind(null, { status: 404, message: 'Unavailable' });
     this.attach = async (req, res) => await this.handler(req, res);
   }
 

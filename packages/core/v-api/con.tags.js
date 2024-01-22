@@ -1,23 +1,23 @@
-import { Polka } from '../../v-polka/index.js'
-import { ID, apply_dates, assert, to_handle } from '../utils.js'
+import { Polka } from '../v-polka/index.js'
+import { ID, apply_dates, assert, to_handle } from './utils.js'
 import { z } from 'zod'
-import { zod_validate_body } from '../../v-middlewares/zod-validate.js'
+import { zod_validate_body } from './middle.zod-validate.js'
 import { tagTypeSchema } from './types.autogen.zod.api.js'
 import { authorize } from './middle.auth.js'
 
 /**
- * @typedef {import('../../types.api.js').TagType} TagType
+ * @typedef {import('../types.api.js').TagType} TagType
  */
 
 /**
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
  */
 export const create = (app) => {
 
-  /** @type {import('../../types.public.js').ApiPolka} */
+  /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
   const middle_authorize_admin = authorize(app, ['admin'])

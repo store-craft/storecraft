@@ -1,20 +1,22 @@
-import { Polka } from '../../v-polka/index.js'
-import * as phash from '../../utils/crypto-pbkdf2.js'
-import * as jwt from '../../utils/jwt.js'
-import { ID, apply_dates, assert } from '../utils.js'
+import { Polka } from '../v-polka/index.js'
+import * as phash from '../utils/crypto-pbkdf2.js'
+import * as jwt from '../utils/jwt.js'
+import { ID, apply_dates, assert } from './utils.js'
 import { z } from 'zod'
-import { zod_validate_body } from '../../v-middlewares/zod-validate.js'
-import { apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
+import { zod_validate_body } from './middle.zod-validate.js'
+import { 
+  apiAuthLoginTypeSchema, apiAuthRefreshTypeSchema, 
+  apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 
 /**
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
  */
 export const create = (app) => {
 
-  /** @type {import('../../types.public.js').ApiPolka} */
+  /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
   // signup
@@ -50,7 +52,7 @@ export const create = (app) => {
         )
       )
   
-      /** @type {Partial<import("../../utils/jwt.js").JWTClaims>} */
+      /** @type {Partial<import("../utils/jwt.js").JWTClaims>} */
       const claims = {
         sub: id, 
         // @ts-ignore
@@ -97,7 +99,7 @@ export const create = (app) => {
       
       assert(verified, 'auth/error', 401)
 
-      /** @type {Partial<import("../../utils/jwt.js").JWTClaims>} */
+      /** @type {Partial<import("../utils/jwt.js").JWTClaims>} */
       const claims = {
         sub: existingUser.id,
         roles: existingUser.roles

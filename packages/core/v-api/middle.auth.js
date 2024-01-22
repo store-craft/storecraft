@@ -1,6 +1,6 @@
-import { App } from "../../index.js";
-import { verify } from "../../utils/jwt.js";
-import { assert } from "../utils.js";
+import { App } from "../index.js";
+import { verify } from "../utils/jwt.js";
+import { assert } from "./utils.js";
 
 const Authorization = 'Authorization'
 const Bearer = 'Bearer'
@@ -9,8 +9,8 @@ const auth_error = [
 ]
 
 /**
- * @typedef {import("../../types.public").ApiRequest} ApiRequest 
- * @typedef {import("../../types.public").ApiResponse} ApiResponse 
+ * @typedef {import("../types.public.js").ApiRequest} ApiRequest 
+ * @typedef {import("../types.public.js").ApiResponse} ApiResponse 
  */
 
 /**
@@ -44,7 +44,7 @@ export const parse_auth_user = (app) => {
 
 /**
  * 
- * @param {import("../..").Role[]} roles 
+ * @param {import("../types.public.js").Role[]} roles 
  */
 export const roles_guard = (roles=[]) => {
 
@@ -67,7 +67,7 @@ export const roles_guard = (roles=[]) => {
 /**
  * combine parse uath user with roles
  * @param {App} app 
- * @param {import("../..").Role[]} roles 
+ * @param {import("../types.public.js").Role[]} roles 
  */
 export const authorize = (app, roles=[]) => {
 

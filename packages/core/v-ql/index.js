@@ -195,7 +195,7 @@ function peg$parse(input, options) {
   var peg$c3 = "(";
   var peg$c4 = ")";
 
-  var peg$r0 = /^[%=:*>A-Za-z0-9[\]_]/;
+  var peg$r0 = /^[^" "()|&]/;
   var peg$r1 = /^[ ]/;
 
   var peg$e0 = peg$otherExpectation("expression");
@@ -209,7 +209,7 @@ function peg$parse(input, options) {
   var peg$e8 = peg$literalExpectation("(", false);
   var peg$e9 = peg$literalExpectation(")", false);
   var peg$e10 = peg$otherExpectation("variable");
-  var peg$e11 = peg$classExpectation(["%", "=", ":", "*", ">", ["A", "Z"], ["a", "z"], ["0", "9"], "[", "]", "_"], false, false);
+  var peg$e11 = peg$classExpectation(["\"", " ", "\"", "(", ")", "|", "&"], true, false);
   var peg$e12 = peg$otherExpectation("whitespace character(s)");
   var peg$e13 = peg$classExpectation([" "], false, false);
 
@@ -220,7 +220,7 @@ function peg$parse(input, options) {
   		if(typeof expression!=='string') expression.group=true;
         return expression; 
  	};
-  var peg$f4 = function(characters) { return characters.join(""); };
+  var peg$f4 = function(characters) { return text().trim(); };
   var peg$currPos = 0;
   var peg$savedPos = 0;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];

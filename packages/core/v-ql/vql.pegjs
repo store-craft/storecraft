@@ -54,7 +54,7 @@ term "term"
 
 //Our basic variables.
 variable "variable"
-  = whitespace characters:[%=\:\*\>A-Za-z0-9\[\]_]+ whitespace { return characters.join(""); }
+  = whitespace characters:[^" "\(\)\|\&]+ whitespace { return text().trim(); }
 
 //A collection of whitespace characters, which shouldn't matter to our expressions.
 whitespace "whitespace character(s)"

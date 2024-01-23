@@ -4,6 +4,8 @@ import { create as create_auth_route } from "./con.auth.js";
 import { create as create_tags_route } from "./con.tags.js";
 
 /**
+ * Create the entire virtual API
+ * TODO: maybe experiment with lazy loading ?
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext

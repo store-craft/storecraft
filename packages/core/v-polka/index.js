@@ -107,7 +107,7 @@ export class Polka extends Trouter {
     // const url = new URL(req.url, 'https://host')
     let obj = this.find(req.method, req.path);
 
-    req.searchParams = req.parsedUrl.searchParams;
+    req.query = req.parsedUrl.searchParams;
     req.params = obj.params;
 
     if (req.parsedUrl.pathname.length > 1 && req.parsedUrl.pathname.indexOf('%', 1) !== -1) {

@@ -86,6 +86,8 @@ export const create = (app) => {
   polka.get(
     '/',
     async (req, res) => {
+      console.log(req.query.toString())
+      console.log(req.query.get('a>'))
       // const handle_or_id = req?.params?.handle;
       // const is_id = Boolean(handle_or_id?.includes('_'))
       // let tag;

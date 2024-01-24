@@ -45,7 +45,6 @@ const parse_cursor = (cursor_str="") => {
             .map(
               s => {
                 const parts = s.split(':');
-                console.log(parts)
                 return [
                   parts[0].trim(),
                   parts.slice(1).join(':').trim()
@@ -71,7 +70,6 @@ export const parse_query = (s) => {
   // vql
   try {
     const vql = s.get(Q);
-    console.log(vql);
 
     if(vql) {
       q.q = parse(vql);

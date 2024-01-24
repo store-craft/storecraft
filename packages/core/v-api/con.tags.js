@@ -38,29 +38,39 @@ export const create = (app) => {
         [tag.handle, ...tag.values].every(
           h => to_handle(h)===h
         ),
-        'Handle is not valid', 400
+        'Handle or Values are invalid', 400
       );
 
       // Check if tag exists
-      const prev_tag = await app.db.tags.getByHandle(tag.handle);
       const save_mode = Boolean(tag.id)
+      const prev_tag = await app.db.tags.get(tag.id ?? tag.handle);
       const id = !save_mode ? ID('tag') : tag.id
 
-      assert(
-        !save_mode && prev_tag?.handle!==tag.handle, 
-        `Handle \`${tag.handle}\` already exists, choose another one !`, 400
-      );
+      if(save_mode) {
+        assert(
+          prev_tag, 
+          `Item with id \`${tag?.id}\` doesn't exist !`, 400);
+        assert(
+          prev_tag?.handle===tag.handle, 
+          `Item with id \`${prev_tag?.id}\` has a handle \`${prev_tag?.handle}!=${tag.handle}\` !`, 400
+        );
+      } else { // create mode
+        assert(
+          !prev_tag, 
+          `Handle \`${prev_tag?.handle}\` already exists!`, 400
+        );
+      }
 
-      await app.db.tags.upsert(
-        apply_dates({ ...tag, id })
-      )
-
-      res.sendJson(
-        {
-          id
+      const final = apply_dates(
+        { 
+          ...tag, id,
+          search: [tag.handle, ...(tag.values ?? [])]
         }
       );
-  
+
+      await app.db.tags.upsert(final);
+
+      res.sendJson(final);
     }
   )
 
@@ -70,9 +80,7 @@ export const create = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const tag = await app.db.tags.get(handle_or_id);
-
       assert(tag, 'not-found', 404);
-
       res.sendJson(tag);
     }
   );
@@ -93,9 +101,7 @@ export const create = (app) => {
     '/',
     async (req, res) => {
       let q = parse_query(req.query);
-
       const list = await app.db.tags.list(q);
-
       res.sendJson(list);
     }
   );

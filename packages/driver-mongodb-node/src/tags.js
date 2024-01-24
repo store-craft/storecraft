@@ -103,6 +103,14 @@ const remove = (driver) => {
  */
 const list = (driver) => {
   return async (query) => {
+    console.log(query)
+
+    const filter = { 
+    };
+
+    const res = await col(driver).find(
+      filter,
+    );
 
     return [
       { handle: 'a1'},

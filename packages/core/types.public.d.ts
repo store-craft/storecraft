@@ -41,3 +41,4 @@ export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext>
 export * from './index.js'
 export type * from './types.driver.js'
 export type * from './types.api.js'
+export type * from './types.api.query.js'

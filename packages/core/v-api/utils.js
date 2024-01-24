@@ -12,7 +12,7 @@ export const ID = (prefix='') => {
 
 /**
  * 
- * @param {any} c 
+ * @param {any | boolean} c 
  * @param {string} message 
  * @param {number} code 
  */

@@ -93,16 +93,15 @@ const remove = (driver) => {
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["remove"]}
+ * @returns {db_col["list"]}
  */
 const list = (driver) => {
-  return async (id) => {
-    const filter = { _id: to_objid(id) };
+  return async (query) => {
 
-    col(driver).find({},  {})
-    /** @type {import('@storecraft/core').TagType} */
-
-    return
+    return [
+      { handle: 'a1'},
+      { handle: 'a2'},
+    ]
   }
 }
 

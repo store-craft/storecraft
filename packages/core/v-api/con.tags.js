@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { zod_validate_body } from './middle.zod-validate.js'
 import { tagTypeSchema } from './types.autogen.zod.api.js'
 import { authorize } from './middle.auth.js'
+import { parse_query } from './func.query.js'
 
 /**
  * @typedef {import('../types.api.js').TagType} TagType
@@ -86,22 +87,11 @@ export const create = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      console.log(req.query.toString())
-      console.log(req.query.get('a>'))
-      // const handle_or_id = req?.params?.handle;
-      // const is_id = Boolean(handle_or_id?.includes('_'))
-      // let tag;
+      let q = parse_query(req.query);
 
-      // if(is_id) 
-      //   tag = await app.db.tags.get(handle_or_id);
-      // else
-      //   tag = await app.db.tags.getByHandle(to_handle(handle_or_id));
+      const list = await app.db.tags.list(q);
 
-      // assert(tag, 'not-found', 404);
-
-      res.sendJson({
-        hello: "hola"
-      });
+      res.sendJson(list);
     }
   );
 

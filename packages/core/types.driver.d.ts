@@ -1,5 +1,5 @@
 import { AuthUserType, CustomerType, TagType } from "./types.api";
-import { App } from "./types.public";
+import { App, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
 export type Handle = string;
@@ -12,13 +12,13 @@ export declare interface db_crud<T> {
    * get a single item by handle or id
    * @param handle 
    */
-  get: (id: ID) => Promise<T>;
+  get: (id: ID) => Promise<Partial<T>>;
 
   /**
    * get a single item by handle or id
    * @param handle 
    */
-  getByHandle: (handle: Handle) => Promise<T>;
+  getByHandle: (handle: Handle) => Promise<Partial<T>>;
 
   /**
    * set a single item by handle
@@ -36,7 +36,7 @@ export declare interface db_crud<T> {
    * TBD
    * @returns 
    */
-  list: () => Promise<T[]>
+  list: (query: ParsedApiQuery) => Promise<Partial<T>[]>
 }
 
 /**

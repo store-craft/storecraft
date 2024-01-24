@@ -80,9 +80,13 @@ export class App {
         return this;
       },
 
+      end() {
+        return this.send(undefined);
+      },
+
       sendJson(o) {
-        this.headers.set('Content-Type', 'application/json')
-        return this.send(JSON.stringify(o))
+        this.headers.set('Content-Type', 'application/json');
+        return this.send(o===undefined ? undefined : JSON.stringify(o))
       },
 
       sendText(o) {

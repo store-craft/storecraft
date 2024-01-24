@@ -4,15 +4,20 @@ import { App, ParsedApiQuery } from "./types.public";
 export type ID = string;
 export type Handle = string;
 
+type SearchTermsType = {
+  /** A bunch of search terms to be queried by VQL boolean language */
+  search?: string[];
+}
+
 /**
  * Basic collection or table
  */
 export declare interface db_crud<T> {
   /**
    * get a single item by handle or id
-   * @param handle 
+   * @param id_or_handle 
    */
-  get: (id: ID) => Promise<Partial<T>>;
+  get: (id_or_handle: ID | Handle) => Promise<Partial<T>>;
 
   /**
    * get a single item by handle or id
@@ -21,7 +26,7 @@ export declare interface db_crud<T> {
   getByHandle: (handle: Handle) => Promise<Partial<T>>;
 
   /**
-   * set a single item by handle
+   * Insert or Replace an item
    * @param handle 
    */
   upsert: (data?: T) => Promise<void>;
@@ -53,13 +58,13 @@ export interface db_auth_users extends db_crud<AuthUserType> {
 /**
  * tags crud
  */
-export interface db_tags extends db_crud<TagType> {
+export interface db_tags extends db_crud<TagType & SearchTermsType> {
 }
 
 /**
  * customers crud
  */
-export interface db_customers extends db_crud<CustomerType> {
+export interface db_customers extends db_crud<CustomerType & SearchTermsType> {
 }
 
 export interface db_driver {

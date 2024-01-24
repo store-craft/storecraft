@@ -69,17 +69,22 @@ export const create = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const is_id = Boolean(handle_or_id?.includes('_'))
-      let tag;
-
-      if(is_id) 
-        tag = await app.db.tags.get(handle_or_id);
-      else
-        tag = await app.db.tags.getByHandle(to_handle(handle_or_id));
+      const tag = await app.db.tags.get(handle_or_id);
 
       assert(tag, 'not-found', 404);
 
       res.sendJson(tag);
+    }
+  );
+
+  // delete tag
+  polka.delete(
+    '/:handle',
+    middle_authorize_admin,
+    async (req, res) => {
+      const handle_or_id = req?.params?.handle;
+      await app.db.tags.remove(handle_or_id);
+      res.end();
     }
   );
 
@@ -95,7 +100,5 @@ export const create = (app) => {
     }
   );
 
-
   return polka;
 }
-

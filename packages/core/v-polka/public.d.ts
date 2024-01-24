@@ -31,6 +31,7 @@ export interface VPolkaResponse {
    * @returns {Response}
    */
   send: (body?: ResponseBody) => VPolkaResponse
+  end: () => VPolkaResponse
   sendJson: (o: Object) => VPolkaResponse
   sendText: (o: string) => VPolkaResponse
   sendBlob: (o: Blob) => VPolkaResponse

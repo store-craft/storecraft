@@ -26,7 +26,6 @@ const col = (d) => {
  */
 const upsert = (driver) => {
   return async (data) => {
-    
     console.log(data.id)
     const filter = { _id: to_objid(data.id) };
     const replacement = { ...data };
@@ -45,8 +44,15 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id) => {
-    const filter = { _id: to_objid(id) };
+  return async (id_or_handle) => {
+    const is_id = Boolean(id_or_handle?.includes('_'))
+
+    // it is a handle
+    if(!is_id) {
+      return await getByHandle(driver)(id_or_handle);
+    }
+
+    const filter = { _id: to_objid(id_or_handle) };
 
     /** @type {import('@storecraft/core').TagType} */
     const res = await col(driver).findOne(
@@ -59,7 +65,7 @@ const get = (driver) => {
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["get"]}
+ * @returns {db_col["getByHandle"]}
  */
 const getByHandle = (driver) => {
   return async (handle) => {
@@ -119,4 +125,3 @@ export const impl = (driver) => {
     list: list(driver)
   }
 }
- 

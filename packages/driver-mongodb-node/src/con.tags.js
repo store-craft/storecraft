@@ -97,11 +97,10 @@ const remove = (driver) => {
  */
 const list = (driver) => {
   return async (query) => {
-    console.log('query')
-    console.log(query)
 
     const { filter, sort } = query_to_mongo(query);
 
+    console.log('query', query)
     console.log('filter', JSON.stringify(filter, null, 2))
     console.log('sort', sort)
 

@@ -124,7 +124,7 @@ export class App {
 
     await this._polka.handler(request, polka_response);
 
-    console.log('polka_response.body ', polka_response.body);
+    // console.log('polka_response.body ', polka_response.body);
 
     const response_web = new Response(
       polka_response.body, {

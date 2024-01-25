@@ -118,10 +118,10 @@ export const query_to_mongo = (q) => {
     c => c?.length
   );
   const sort_sign = q.order === 'asc' ? 1 : -1;
-  const sort = sort_cursor.reduce(
+  const sort = sort_cursor?.reduce(
     (p, c) => {p[c[0]]=sort_sign; return p;}, 
     {}
-  );
+  ) ?? { 'updated_at': sort_sign, _id: sort_sign };
 
   if(clauses?.length) {
     filter['$and'] = clauses;

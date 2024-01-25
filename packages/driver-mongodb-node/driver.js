@@ -1,7 +1,7 @@
 import { App } from '@storecraft/core';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import { impl as auth_users } from './src/auth_users.js';
-import { impl as tags } from './src/tags.js';
+import { impl as auth_users } from './src/con.auth_users.js';
+import { impl as tags } from './src/con.tags.js';
 
 /**
  * 

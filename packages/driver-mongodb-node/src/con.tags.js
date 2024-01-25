@@ -1,17 +1,11 @@
 import { Driver } from '../driver.js'
-import { ObjectId } from 'mongodb'
-import { delete_id, delete_keys } from './utils.js'
+import { delete_id, delete_keys, sanitize, to_objid } from './utils.funcs.js'
+import { query_to_mongo } from './utils.query.js'
 
 /**
  * @typedef {import('@storecraft/core').db_tags} db_col
  */
 
-/**
- * 
- * @param {string} id 
- * @returns 
- */
-const to_objid = id => new ObjectId(id.split('_').at(-1))
 
 /**
  * @param {Driver} d 
@@ -59,7 +53,7 @@ const get = (driver) => {
       filter
     );
 
-    return delete_id(res)
+    return sanitize(res)
   }
 }
 
@@ -76,7 +70,7 @@ const getByHandle = (driver) => {
       filter
     );
 
-    return delete_id(res)
+    return sanitize(res)
   }
 }
 
@@ -103,19 +97,22 @@ const remove = (driver) => {
  */
 const list = (driver) => {
   return async (query) => {
+    console.log('query')
     console.log(query)
 
-    const filter = { 
-    };
+    const { filter, sort } = query_to_mongo(query);
 
+    console.log('filter', JSON.stringify(filter, null, 2))
+    console.log('sort', sort)
+
+    /** @type {db_col["$type"][]} */
     const res = await col(driver).find(
-      filter,
-    );
+      filter,  {
+        sort, limit: query.limit
+      }
+    ).toArray();
 
-    return [
-      { handle: 'a1'},
-      { handle: 'a2'},
-    ]
+    return sanitize(res);
   }
 }
 

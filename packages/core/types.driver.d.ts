@@ -13,6 +13,8 @@ type SearchTermsType = {
  * Basic collection or table
  */
 export declare interface db_crud<T> {
+  $type?: T;
+
   /**
    * get a single item by handle or id
    * @param id_or_handle 

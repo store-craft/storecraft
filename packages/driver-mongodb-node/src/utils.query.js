@@ -1,3 +1,6 @@
+import { ObjectId } from "mongodb";
+import { to_objid } from "./utils.funcs.js";
+
 let a = { 
   $or: [
     { updated_at: { $gt: '2024-01-24T20:28:24.126Z'} },
@@ -28,8 +31,9 @@ const ID = 'id';
  * 
  * @param {import("@storecraft/core").Cursor[]} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
+ * @param {(x: [k: string, v: string]) => [k: string, v: string]} transformer Your chance to change key and value
  */
-export const query_cursor_to_mongo = (c, relation) => {
+export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
 
   let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
   let rel_key_2; // relation in last conjunction term in last disjunction
@@ -53,12 +57,14 @@ export const query_cursor_to_mongo = (c, relation) => {
     // each conjunction clause up until the last term (not inclusive)
     for (let jx = 0; jx < ix; jx++) {
       // the a_n=b_n
-      conjunctions.push({ [c[jx][0]] : c[jx][1] });
+      const r = transformer(c[jx]);
+      conjunctions.push({ [r[0]] : r[1] });
     }
 
     // Last conjunction term
     const relation_key = is_last_disjunction ? rel_key_2 : rel_key_1;
-    conjunctions.push({ [c[ix][0]] : { [relation_key]: c[ix][1] } });
+    const r = transformer(c[ix]);
+    conjunctions.push({ [r[0]] : { [relation_key]: r[1] } });
     // Add to disjunctions list
     disjunctions.push({ $and: conjunctions });
   }
@@ -74,16 +80,56 @@ export const query_cursor_to_mongo = (c, relation) => {
 }
 
 /**
+ * Let's transform ids into mongo ids
+ * @param {import("@storecraft/core").Cursor} c a cursor record
+ * @returns {[k: string, v: any]}
+ */
+const transform = c => {
+  if(c[0]!=='id') 
+    return c;
+  return [ '_id', to_objid(c[1]) ];
+}
+
+/**
  * Convert an API Query into mongo dialect, also sanitize.
  * @param {import("@storecraft/core").ParsedApiQuery} q 
  */
 export const query_to_mongo = (q) => {
   const filter = {};
-  const CON = []; // conjunctions
-  const sort = { _id: 1 };
+  const clauses = [];
 
+  // compute index clauses
   if(q.startAt) {
-   
+    clauses.push(query_cursor_to_mongo(q.startAt, '>=', transform));
+  } else if(q.startAfter) {
+    clauses.push(query_cursor_to_mongo(q.startAfter, '>', transform));
+  }
+
+  if(q.endAt) {
+    clauses.push(query_cursor_to_mongo(q.endAt, '<=', transform));
+  } else if(q.endBefore) {
+    clauses.push(query_cursor_to_mongo(q.endBefore, '<', transform));
+  }
+
+  // compute vql clauses
+
+  // compute sort fields and order
+  const sort_cursor = [q.startAt, q.startAfter, q.endAt, q.endBefore].find(
+    c => c?.length
+  );
+  const sort_sign = q.order === 'asc' ? 1 : -1;
+  const sort = sort_cursor.reduce(
+    (p, c) => {p[c[0]]=sort_sign; return p;}, 
+    {}
+  );
+
+  if(clauses?.length) {
+    filter['$and'] = clauses;
+  }
+
+  return {
+    filter,
+    sort
   }
 
 }

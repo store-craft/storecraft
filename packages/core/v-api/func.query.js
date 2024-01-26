@@ -9,7 +9,7 @@ import { assert } from "./utils.js";
 
 const ORDER = 'order';
 const LIMIT = 'limit';
-const Q = 'q';
+const VQL = 'vql';
 const START_AT = 'startAt';
 const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
@@ -69,10 +69,10 @@ export const parse_query = (s) => {
 
   // vql
   try {
-    const vql = s.get(Q);
+    const vql = s.get(VQL);
 
     if(vql) {
-      q.q = parse(vql);
+      q.vql = parse(vql);
     }
   } catch (e) {
     console.log(e);

@@ -11,7 +11,7 @@ export type ParsedApiQuery = {
    * boolean DSL for filtering the terms
    * (whatever-indexed tag:a -(tag:b | tag:c) handle:product*)
    */
-  q?: VQL.AST;
+  vql?: VQL.AST;
 
   /**
    * order of the query:

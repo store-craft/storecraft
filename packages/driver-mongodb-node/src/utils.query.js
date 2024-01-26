@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { to_objid } from "./utils.funcs.js";
 
 let a = { 
@@ -7,10 +6,6 @@ let a = {
     { $and : [ { updated_at: '2024-01-24T20:28:24.126Z' }, { id: { $gte : 'tag_65b172ebc4c9552fd46c1027'}}]}
   ], 
 }
-
-const UPDATED = 'updated_at';
-const CREATED = 'created_at';
-const ID = 'id';
 
 /**
  * Convert an API Query cursor into mongo dialect, also sanitize.
@@ -97,7 +92,7 @@ export const query_vql_node_to_mongo = node => {
       }
     case '!':
       return {
-        $not: conjunctions[0]
+        $nor: [ conjunctions[0] ]
       }
   
     default:
@@ -111,7 +106,7 @@ export const query_vql_node_to_mongo = node => {
  * @param {import("@storecraft/core/v-ql/types.js").VQL.Node} root 
  */
 export const query_vql_to_mongo = root => {
-  return query_vql_node_to_mongo(root);
+  return root ? query_vql_node_to_mongo(root) : undefined;
 }
 
 /**
@@ -148,7 +143,9 @@ export const query_to_mongo = (q) => {
     clauses.push(query_cursor_to_mongo(q.endBefore, asc ? '<' : '>', transform));
   }
 
-  // compute vql clauses ?
+  // compute VQL clauses 
+  const vql_clause = query_vql_to_mongo(q.vql)
+  vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order
   const sort_cursor = [q.startAt, q.startAfter, q.endAt, q.endBefore].find(

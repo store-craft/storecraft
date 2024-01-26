@@ -7,15 +7,6 @@ let a = {
     { $and : [ { updated_at: '2024-01-24T20:28:24.126Z' }, { id: { $gte : 'tag_65b172ebc4c9552fd46c1027'}}]}
   ], 
 }
-//
-// 1. (a1, a2) >  (b1, b2) IFF (a1 > b1) || (a1=b1 & a2>b2)
-// 2. (a1, a2) >= (b1, b2) IFF (a1 > b1) || (a1=b1 & a2>=b2)
-// 3. (a1, a2, a3) >  (b1, b2, b3) IFF (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
-// 4. (a1, a2, a3) >= (b1, b2, b3) IFF (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
-//
-// ABD
-// ABA
-//
 
 const UPDATED = 'updated_at';
 const CREATED = 'created_at';
@@ -97,18 +88,20 @@ const transform = c => {
 export const query_to_mongo = (q) => {
   const filter = {};
   const clauses = [];
+  const sort_sign = q.order === 'asc' ? 1 : -1;
+  const asc = sort_sign==1;
 
   // compute index clauses
   if(q.startAt) {
-    clauses.push(query_cursor_to_mongo(q.startAt, '>=', transform));
+    clauses.push(query_cursor_to_mongo(q.startAt, asc ? '>=' : '<=', transform));
   } else if(q.startAfter) {
-    clauses.push(query_cursor_to_mongo(q.startAfter, '>', transform));
+    clauses.push(query_cursor_to_mongo(q.startAfter, asc ? '>' : '<', transform));
   }
 
   if(q.endAt) {
-    clauses.push(query_cursor_to_mongo(q.endAt, '<=', transform));
+    clauses.push(query_cursor_to_mongo(q.endAt, asc ? '<=' : '>=', transform));
   } else if(q.endBefore) {
-    clauses.push(query_cursor_to_mongo(q.endBefore, '<', transform));
+    clauses.push(query_cursor_to_mongo(q.endBefore, asc ? '<' : '>', transform));
   }
 
   // compute vql clauses
@@ -117,7 +110,6 @@ export const query_to_mongo = (q) => {
   const sort_cursor = [q.startAt, q.startAfter, q.endAt, q.endBefore].find(
     c => c?.length
   );
-  const sort_sign = q.order === 'asc' ? 1 : -1;
   const sort = sort_cursor?.reduce(
     (p, c) => {p[c[0]]=sort_sign; return p;}, 
     {}

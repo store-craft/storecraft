@@ -72,7 +72,6 @@ export const query_vql_node_to_mongo = node => {
   if(node.op==='LEAF') {
     return {
       search: node.value
-      
     }
   }
 

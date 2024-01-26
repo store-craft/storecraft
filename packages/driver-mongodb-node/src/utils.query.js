@@ -71,6 +71,50 @@ export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
 }
 
 /**
+ * @param {import("@storecraft/core/v-ql/types.js").VQL.Node} node 
+ */
+export const query_vql_node_to_mongo = node => {
+  if(node.op==='LEAF') {
+    return {
+      search: node.value
+      
+    }
+  }
+
+  let conjunctions = [];
+  for(let arg of node?.args) {
+    conjunctions.push(query_vql_node_to_mongo(arg));
+  }
+
+  switch (node.op) {
+    case '&':
+      return {
+        $and: conjunctions
+      }
+    case '|':
+      return {
+        $or: conjunctions
+      }
+    case '!':
+      return {
+        $not: conjunctions[0]
+      }
+  
+    default:
+      throw new Error('VQL-to-mongo-failed')
+  }
+
+}
+
+/**
+ * 
+ * @param {import("@storecraft/core/v-ql/types.js").VQL.Node} root 
+ */
+export const query_vql_to_mongo = root => {
+  return query_vql_node_to_mongo(root);
+}
+
+/**
  * Let's transform ids into mongo ids
  * @param {import("@storecraft/core").Cursor} c a cursor record
  * @returns {[k: string, v: any]}
@@ -104,7 +148,7 @@ export const query_to_mongo = (q) => {
     clauses.push(query_cursor_to_mongo(q.endBefore, asc ? '<' : '>', transform));
   }
 
-  // compute vql clauses
+  // compute vql clauses ?
 
   // compute sort fields and order
   const sort_cursor = [q.startAt, q.startAfter, q.endAt, q.endBefore].find(

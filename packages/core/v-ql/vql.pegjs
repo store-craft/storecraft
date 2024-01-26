@@ -41,7 +41,7 @@ and_term "product term"
 
 // An potentially-inverted term, such as a literal or inverted subexpression.
 subexpression "subexpression"
-  = whitespace "-" term:term  whitespace { return {op:'!', args:term} }
+  = whitespace "-" term:term  whitespace { return {op:'!', args:[term]} }
   / term
 
 // A primary term, such as expression or inverted subexpression.
@@ -54,7 +54,7 @@ term "term"
 
 //Our basic variables.
 variable "variable"
-  = whitespace characters:[^" "\(\)\|\&]+ whitespace { return text().trim(); }
+  = whitespace characters:[^" "\(\)\|\&]+ whitespace { return { op:'LEAF', value: text().trim()}; }
 
 //A collection of whitespace characters, which shouldn't matter to our expressions.
 whitespace "whitespace character(s)"

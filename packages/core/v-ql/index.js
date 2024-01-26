@@ -215,12 +215,12 @@ function peg$parse(input, options) {
 
   var peg$f0 = function(left, right) { return con('|', left, right); };
   var peg$f1 = function(left, right) { return con('&', left, right); };
-  var peg$f2 = function(term) { return {op:'!', args:term} };
+  var peg$f2 = function(term) { return {op:'!', args:[term]} };
   var peg$f3 = function(expression) { 
   		if(typeof expression!=='string') expression.group=true;
         return expression; 
  	};
-  var peg$f4 = function(characters) { return text().trim(); };
+  var peg$f4 = function(characters) { return { op:'LEAF', value: text().trim()}; };
   var peg$currPos = 0;
   var peg$savedPos = 0;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];

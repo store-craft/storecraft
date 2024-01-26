@@ -4,23 +4,34 @@ import { parse } from '../index.js';
 
 test('parse 1', async () => {
   const truth = {
-        "op": "&",
-        "args": [
-          "name:tomer*",
+    op: '&',
+    args: [
+      {
+        op: 'LEAF',
+        value: 'name:tomer*'
+      },
+      {
+        op: '&',
+        args: [
           {
-            "op": "&",
-            "args": [
-              "tag:genre_a",
+            op: 'LEAF',
+            value: 'tag:genre_a'
+          },
+          {
+            op: '!',
+            args: [
               {
-                "op": "!",
-                "args": "tag:genre_b"
+                op: 'LEAF',
+                value: 'tag:genre_b'
               }
-            ],
-            "group": true
+            ]
           }
         ],
-        "group": true
-      };
+        group: true
+      }
+    ],
+    group: true
+  };
   
   
 

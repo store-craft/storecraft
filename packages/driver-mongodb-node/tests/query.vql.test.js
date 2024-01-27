@@ -44,9 +44,11 @@ test('VQL', async () => {
             "search": "tag:genre_a"
           },
           {
-            "$not": {
-              "search": "tag:genre_b"
-            }
+            "$nor": [
+              {
+                "search": "tag:genre_b"
+              }
+            ]
           }
         ]
       }

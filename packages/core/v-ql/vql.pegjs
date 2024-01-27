@@ -10,7 +10,7 @@
 {{
 function merge(op, l, r) {
   const not_groups = !(Boolean(l?.group) || Boolean(r?.group));
-  const similar_op = (l?.op ? l.op===op : true) && (r?.op ? r.op===op : true);
+  const similar_op = (l?.op!=='LEAF' ? l.op===op : true) && (r?.op!=='LEAF' ? r.op===op : true);
   if(!(not_groups && similar_op))
   	return [l, r];
   const new_args = [...l?.args??[l], ...r?.args??[r]];
@@ -54,7 +54,13 @@ term "term"
 
 //Our basic variables.
 variable "variable"
-  = whitespace characters:[^" "\(\)\|\&]+ whitespace { return { op:'LEAF', value: text().trim()}; }
+  = whitespace characters:("'"[^\']+"'" / '"'[^\"]+'"' / [^\"\' \(\)\|\&]+) whitespace { 
+  return { op:'LEAF', value: text().trim()}; 
+  }
+
+//variable "variable"
+//  = whitespace characters:[^\" \(\)\|\&]+ whitespace { return { op:'LEAF', value: text().trim()}; }
+
 
 //A collection of whitespace characters, which shouldn't matter to our expressions.
 whitespace "whitespace character(s)"

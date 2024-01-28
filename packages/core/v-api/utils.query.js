@@ -1,9 +1,9 @@
 import { parse } from "../v-ql/index.js";
-import { assert } from "./utils.js";
+import { assert } from "./utils.func.js";
 
 /**
- * @typedef {import("../types.api.query").ParsedApiQuery} ParsedApiQuery
- * @typedef {import("../types.api.query").Cursor<string>} Cursor
+ * @typedef {import("../types.api.query.js").ParsedApiQuery} ParsedApiQuery
+ * @typedef {import("../types.api.query.js").Cursor<string>} Cursor
  */
 
 
@@ -77,7 +77,7 @@ export const parse_query = (s) => {
   } catch (e) {
     console.log(e);
 
-    assert(false, 'VQL parsing failed: q', 401);
+    assert(false, 'VQL parsing failed', 401);
   }
 
   // parse cursors

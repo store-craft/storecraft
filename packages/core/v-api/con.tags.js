@@ -1,10 +1,10 @@
 import { Polka } from '../v-polka/index.js'
-import { ID, apply_dates, assert, to_handle } from './utils.js'
+import { ID, apply_dates, assert, to_handle } from './utils.func.js'
 import { z } from 'zod'
 import { zod_validate_body } from './middle.zod-validate.js'
 import { tagTypeSchema } from './types.autogen.zod.api.js'
 import { authorize } from './middle.auth.js'
-import { parse_query } from './func.query.js'
+import { parse_query } from './utils.query.js'
 
 /**
  * @typedef {import('../types.api.js').TagType} TagType

@@ -15,11 +15,6 @@ const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
 const END_BEFORE = 'endBefore';
 
-const UPDATED = 'updated';
-const CREATED = 'created';
-const ID = 'id';
-
-
 /**
  * (updated/created:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
  * 

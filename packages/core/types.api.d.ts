@@ -6,6 +6,16 @@ type BaseType = {
   updated_at?: string;
   created_at?: string;
   id?: string;
+  /** List of images urls */
+  media?: string[];
+  /** List of attributes */
+  attributes?: AttributeType[];
+  /** list of tags , example ['genere_action', 'rated_M', ...] */
+  tags?: string[];
+  /** Rich description */
+  desc?: string;
+  /** Is the entity active ? */
+  active?: boolean;
 }
 
 // auth
@@ -44,6 +54,14 @@ export type AuthUserType = BaseType & AuthBaseType & {
   roles?: Role[];
 }
 
+// attributes
+
+export type AttributeType = {
+  key: string;
+  value?: string;
+}
+
+
 // tag type
 
 export type TagType = BaseType & {
@@ -53,6 +71,19 @@ export type TagType = BaseType & {
   values: string[];
   /** rich description */
   desc?: string;
+}
+
+// collections
+
+export type CollectionType = BaseType & {
+  /** the key name */
+  handle: string;
+  /** title of collection */
+  title: string;
+  /** status */
+  active: boolean;
+  /** published json url */
+  _published?: string;
 }
 
 //

@@ -1,5 +1,5 @@
 import { Driver } from '../driver.js'
-import { delete_id, delete_keys, sanitize, to_objid } from './utils.funcs.js'
+import { sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 
 /**

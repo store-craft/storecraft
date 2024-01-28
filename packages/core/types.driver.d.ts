@@ -1,4 +1,4 @@
-import { AuthUserType, CustomerType, TagType } from "./types.api";
+import { AuthUserType, CollectionType, CustomerType, TagType } from "./types.api";
 import { App, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
@@ -64,6 +64,12 @@ export interface db_tags extends db_crud<TagType & SearchTermsType> {
 }
 
 /**
+ * tags crud
+ */
+export interface db_collections extends db_crud<CollectionType & SearchTermsType> {
+}
+
+/**
  * customers crud
  */
 export interface db_customers extends db_crud<CustomerType & SearchTermsType> {
@@ -93,6 +99,9 @@ export interface db_driver {
 
   /** CRUD authenticated users */
   tags: db_tags;
+
+  /** CRUD authenticated users */
+  collections: db_collections;
 
   /** CRUD customers */
   customers: db_customers;

@@ -46,16 +46,21 @@ subexpression "subexpression"
 
 // A primary term, such as expression or inverted subexpression.
 term "term"
-  = variable 
+  =  (var1 / variable)
   / whitespace "(" expression:expression ")" whitespace { 
-  		if(typeof expression!=='string') expression.group=true;
+  		expression.group=true;
         return expression; 
  	}
 
 //Our basic variables.
 variable "variable"
-  = whitespace characters:("'"[^\']+"'" / '"'[^\"]+'"' / [^\"\' \(\)\|\&]+) whitespace { 
+  =  whitespace characters:([^\"\' \(\)\|\&]+) whitespace  { 
   return { op:'LEAF', value: text().trim()}; 
+  }
+
+var1 "variable 1"
+  = whitespace characters:("'"[^\']+"'" / '"'[^\"]+'"') whitespace { 
+  return { op:'LEAF', value: text().trim().slice(1, -1)}; 
   }
 
 //variable "variable"

@@ -39,7 +39,7 @@ export const create = (app) => {
   
       // Create a new user in the database
       const id = ID('au');
-      const roles = app.db.admins_emails.includes(email) ? ['admin'] : ['user']
+      const roles = app.db.admins_emails.includes(email) ? ['admin'] : ['user'];
 
       await app.db.auth_users.upsert(
         apply_dates(
@@ -50,14 +50,14 @@ export const create = (app) => {
             roles
           }
         )
-      )
+      );
   
       /** @type {Partial<import("../utils/jwt.js").JWTClaims>} */
       const claims = {
         sub: id, 
         // @ts-ignore
         roles
-      }
+      };
   
       const access_token = await jwt.create(
         app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 

@@ -13,7 +13,7 @@ export const create_search_index = (data) => {
   s.push(...(data?.tags ?? []).map(t => `tag:${t}`));
   isDef(data.handle) && s.push(`handle:${data.handle}`);
   isDef(data.active) && s.push(`active:${Boolean(data.active)}`);
-  isDef(data.title) && s.push(...to_tokens(data.title));
+  isDef(data.title) && s.push(...to_tokens(data.title), data.title.toLowerCase().trim());
   isDef(data.desc) && s.push(...to_tokens(data.desc));
 
   return s;

@@ -16,13 +16,8 @@ export class App {
    */
   constructor(platform, db_driver) {
 
-    // this._polka = new Polka();
-    // this._polka = polka_api
-
     this._platform = platform;
     this._db_driver = db_driver;
-
-    // this._polka = create_api(this);
   }
 
   async init() {

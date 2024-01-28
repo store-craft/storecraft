@@ -26,6 +26,102 @@ export const apiAuthSignupTypeSchema = authBaseTypeSchema;
 export const apiAuthRefreshTypeSchema = z.object({
   refresh_token: z.string(),
 });
+export const variantOptionSelectionSchema = z.object({
+  option_id: z.string(),
+  value_id: z.string(),
+});
+export const textEntitySchema = z.object({
+  id: z.string(),
+  value: z.string(),
+});
+export const discountApplicationSchema = z.object({
+  id: z.number(),
+  name: z.union([z.literal("Automatic"), z.literal("Manual")]),
+  name2: z.union([z.literal("automatic"), z.literal("manual")]),
+});
+export const filterMetaSchema = z.object({
+  id: z.number(),
+  type: z.union([z.literal("product"), z.literal("order")]),
+  op: z.union([
+    z.literal("p-in-collections"),
+    z.literal("p-not-in-collections"),
+    z.literal("p-in-handles"),
+    z.literal("p-not-in-handles"),
+    z.literal("p-in-tags"),
+    z.literal("p-not-in-tags"),
+    z.literal("p-all"),
+    z.literal("p_in_price_range"),
+    z.literal("o-subtotal-in-range"),
+    z.literal("o-items-count-in-range"),
+    z.literal("o-date-in-range"),
+    z.literal("o_has_customer"),
+  ]),
+  name: z.string(),
+});
+export const discountMetaSchema = z.object({
+  id: z.number(),
+  type: z.union([
+    z.literal("regular"),
+    z.literal("bulk"),
+    z.literal("buy_x_get_y"),
+    z.literal("order"),
+    z.literal("bundle"),
+  ]),
+  name: z.string(),
+});
+export const regularDiscountExtraSchema = z.object({
+  fixed: z.number(),
+  percent: z.number(),
+});
+export const orderDiscountExtraSchema = z.object({
+  fixed: z.number(),
+  percent: z.number(),
+  free_shipping: z.boolean().optional(),
+});
+export const bulkDiscountExtraSchema = z.object({
+  fixed: z.number(),
+  percent: z.number(),
+  qty: z.number(),
+  recursive: z.boolean().optional(),
+});
+export const bundleDiscountExtraSchema = z.object({
+  fixed: z.number(),
+  percent: z.number(),
+  recursive: z.boolean().optional(),
+});
+export const addressTypeSchema = z.object({
+  firstname: z.string().optional(),
+  lastname: z.string().optional(),
+  phone_number: z
+    .string()
+    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
+    .optional(),
+  company: z.string().optional(),
+  street1: z.string().optional(),
+  street2: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  state: z.string().optional(),
+  zip_code: z.string().optional(),
+  postal_code: z.string().optional(),
+});
+export const postTypeSchema = z.object({
+  handle: z.string(),
+  title: z.string(),
+  text: z.string(),
+});
+export const notificationActionTypeSchema = z.union([
+  z.literal("route"),
+  z.literal("url"),
+]);
+export const notificationActionRouteParamsSchema = z.object({
+  collection: z.string(),
+  document: z.string(),
+});
+export const notificationActionUrlParamsSchema = z.object({
+  new_window: z.boolean(),
+  url: z.string(),
+});
 const baseTypeSchema = z.object({
   updated_at: z.string().optional(),
   created_at: z.string().optional(),
@@ -34,6 +130,7 @@ const baseTypeSchema = z.object({
   attributes: z.array(attributeTypeSchema).optional(),
   tags: z.array(z.string()).optional(),
   desc: z.string().optional(),
+  active: z.boolean().optional(),
 });
 export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
   z.object({
@@ -45,7 +142,6 @@ export const tagTypeSchema = baseTypeSchema.and(
   z.object({
     handle: z.string(),
     values: z.array(z.string()),
-    desc: z.string().optional(),
   }),
 );
 export const collectionTypeSchema = baseTypeSchema.and(
@@ -56,22 +152,42 @@ export const collectionTypeSchema = baseTypeSchema.and(
     _published: z.string().optional(),
   }),
 );
-export const addressTypeSchema = baseTypeSchema.and(
+export const variantOptionSchema = z.object({
+  name: z.string(),
+  id: z.string(),
+  values: z.array(textEntitySchema),
+});
+export const filterSchema = z.object({
+  meta: filterMetaSchema.optional(),
+  value: z
+    .union([
+      z.array(z.string()),
+      z.object({
+        from: z.number().optional(),
+        to: z.number(),
+      }),
+    ])
+    .optional(),
+});
+export const buyXGetYDiscountExtraSchema = z.object({
+  fixed: z.number(),
+  percent: z.number(),
+  qty_x: z.number(),
+  qty_y: z.number(),
+  filters_y: z.array(filterSchema),
+  recursive: z.boolean().optional(),
+});
+export const storefrontDataSchema = baseTypeSchema.and(
   z.object({
-    firstname: z.string().optional(),
-    lastname: z.string().optional(),
-    phone_number: z
-      .string()
-      .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
-      .optional(),
-    company: z.string().optional(),
-    street1: z.string().optional(),
-    street2: z.string().optional(),
-    city: z.string().optional(),
-    country: z.string().optional(),
-    state: z.string().optional(),
-    zip_code: z.string().optional(),
-    postal_code: z.string().optional(),
+    handle: z.string(),
+    title: z.string(),
+    video: z.string().optional(),
+    _published: z.string().optional(),
+    collections: z.array(z.string()).optional(),
+    products: z.array(z.string()).optional(),
+    shipping_methods: z.array(z.string()).optional(),
+    discounts: z.array(z.string()).optional(),
+    posts: z.array(z.string()).optional(),
   }),
 );
 export const customerTypeSchema = baseTypeSchema.and(
@@ -84,7 +200,86 @@ export const customerTypeSchema = baseTypeSchema.and(
       .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
       .optional(),
     address: addressTypeSchema.optional(),
-    tags: z.array(z.string()),
-    search_index: z.array(z.string()).optional(),
   }),
+);
+export const imageTypeSchema = baseTypeSchema.and(
+  z.object({
+    provider: z.string().optional(),
+    handle: z.string(),
+    name: z.string(),
+    url: z.string(),
+    ref: z.string(),
+    usage: z.array(z.string()),
+  }),
+);
+export const shippingMethodTypeSchema = baseTypeSchema.and(
+  z.object({
+    price: z.number().min(0),
+    name: z.string(),
+  }),
+);
+export const settingsTypeSchema = baseTypeSchema.and(z.object({}));
+export const notificationActionSchema = z.object({
+  name: z.string(),
+  type: notificationActionTypeSchema,
+  params: z.union([
+    notificationActionRouteParamsSchema,
+    notificationActionUrlParamsSchema,
+  ]),
+});
+export const discountDetailsSchema = z.object({
+  meta: discountMetaSchema.optional(),
+  extra: z.union([
+    regularDiscountExtraSchema,
+    orderDiscountExtraSchema,
+    bulkDiscountExtraSchema,
+    buyXGetYDiscountExtraSchema,
+    bundleDiscountExtraSchema,
+  ]),
+});
+export const notificationTypeSchema = baseTypeSchema.and(
+  z.object({
+    message: z.string(),
+    author: z.string().optional(),
+    actions: z.array(notificationActionSchema).optional(),
+  }),
+);
+export const discountInfoSchema = z.object({
+  details: discountDetailsSchema,
+  filters: z.array(filterSchema),
+});
+export const discountTypeSchema = baseTypeSchema.and(
+  z.object({
+    title: z.string(),
+    handle: z.string(),
+    priority: z.number(),
+    _published: z.string(),
+    info: discountInfoSchema,
+    application: discountApplicationSchema,
+  }),
+);
+export const variantCombinationSchema = z.lazy(() =>
+  z.object({
+    selection: z.array(variantOptionSelectionSchema),
+    product: productTypeSchema,
+  }),
+);
+export const productTypeSchema = z.lazy(() =>
+  baseTypeSchema.and(
+    z.object({
+      handle: z.string(),
+      title: z.string(),
+      active: z.boolean(),
+      collections: z.array(z.string()),
+      video: z.string().optional(),
+      price: z.number().min(0),
+      qty: z.number().min(0),
+      compare_at_price: z.number().min(0).optional(),
+      parent_handle: z.string().optional(),
+      variants_options: z.array(variantOptionSchema).optional(),
+      variants_products: z.record(variantCombinationSchema).optional(),
+      _variant_hint: z.array(variantOptionSelectionSchema).optional(),
+      discounts: z.record(discountTypeSchema).optional(),
+    }),
+  ),
 );

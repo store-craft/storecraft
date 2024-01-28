@@ -1,4 +1,8 @@
-import { AuthUserType, CollectionType, CustomerType, TagType } from "./types.api";
+import { 
+  AuthUserType, CollectionType, CustomerType, 
+  DiscountType, ImageType, NotificationType, 
+  PostType, ProductType, ShippingMethodType, 
+  StorefrontData, TagType } from "./types.api";
 import { App, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
@@ -25,7 +29,7 @@ export declare interface db_crud<T> {
    * get a single item by handle or id
    * @param handle 
    */
-  getByHandle: (handle: Handle) => Promise<Partial<T>>;
+  getByHandle?: (handle: Handle) => Promise<Partial<T>>;
 
   /**
    * Insert or Replace an item
@@ -75,6 +79,34 @@ export interface db_collections extends db_crud<CollectionType & SearchTermsType
 export interface db_customers extends db_crud<CustomerType & SearchTermsType> {
 }
 
+/** products crud */
+export interface db_products extends db_crud<ProductType & SearchTermsType> {
+}
+
+/** StorefrontData crud */
+export interface db_storefronts extends db_crud<StorefrontData & SearchTermsType> {
+}
+
+/** ImageType crud */
+export interface db_images extends db_crud<ImageType & SearchTermsType> {
+}
+
+/** PostType crud */
+export interface db_posts extends db_crud<PostType & SearchTermsType> {
+}
+
+/** ShippingMethodType crud */
+export interface db_shipping extends db_crud<ShippingMethodType & SearchTermsType> {
+}
+
+/** NotificationType crud */
+export interface db_notifications extends db_crud<NotificationType & SearchTermsType> {
+}
+
+/** DiscountType crud */
+export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
+}
+
 export interface db_driver {
   /**
    * Init to the database
@@ -94,15 +126,15 @@ export interface db_driver {
    */
   app: App<any, any> | undefined;
 
-  /** CRUD authenticated users */
   auth_users: db_auth_users;
-
-  /** CRUD authenticated users */
   tags: db_tags;
-
-  /** CRUD authenticated users */
   collections: db_collections;
-
-  /** CRUD customers */
   customers: db_customers;
+  products: db_products;
+  storefronts: db_storefronts;
+  images: db_images;
+  posts: db_posts;
+  shipping: db_shipping;
+  notifications: db_notifications;
+  discounts: db_discounts;
 }

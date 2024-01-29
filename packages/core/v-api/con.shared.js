@@ -1,4 +1,87 @@
-import { ID, assert } from "./utils.func.js";
+import { ID, apply_dates, assert } from './utils.func.js'
+import { assert_zod } from './middle.zod-validate.js'
+import { create_search_index } from './utils.index.js'
+import { ZodSchema } from 'zod'
+
+/**
+ * @typedef {import('../types.api.js').BaseType} ItemType
+ */
+
+/**
+ * @template {import('../types.api.js').BaseType} T
+ * @param {import("../types.public.js").App} app
+ * @param {import("../types.driver").db_crud} db
+ * @param {string} id_prefix
+ * @param {ZodSchema} schema
+ * @param {(final: T) => Promise<T>} hook hook into final state
+ */
+export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
+
+  /**
+   * @param {T} item
+   */
+  return async (item) => {
+    schema && assert_zod(schema, item);
+
+    // Check if exists
+    await assert_save_create_mode(item, db);
+    const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
+    // search index
+    let search = create_search_index(item);
+    // apply dates and index
+    const final = await hook(
+      apply_dates(
+        { 
+          ...item, id, search
+        }
+      )
+    );
+
+    await db.upsert(final);
+    return final;
+  }
+}
+
+/**
+ * @template {import('../types.api.js').BaseType} T
+ * @param {import("../types.public.js").App} app
+ * @param {import("../types.driver").db_crud<T>} db
+ */
+export const regular_get = (app, db) => /**
+  * 
+  * @param {string} handle_or_id 
+  */
+  async (handle_or_id) => {
+    const item = await db.get(handle_or_id);
+    return item;
+  };
+
+/**
+ * @template {import('../types.api.js').BaseType} T
+ * @param {import("../types.public.js").App} app
+ * @param {import("../types.driver").db_crud<T>} db
+ */
+export const regular_remove = (app, db) => 
+  /**
+   * 
+   * @param {string} id 
+   */
+  async (id) => {
+    return db.remove(id);
+  }
+
+/**
+ * @template {import('../types.api.js').BaseType} T
+ * @param {import("../types.public.js").App} app
+ * @param {import("../types.driver").db_crud<T>} db
+ */
+export const regular_list = (app, db) => 
+  /**
+   * @param {import('../types.api.query.js').ParsedApiQuery} q 
+   */
+  async (q) => {
+    return db.list(q);
+  }
 
 /**
  * @template {import("../types.api").BaseType} T

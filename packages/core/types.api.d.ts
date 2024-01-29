@@ -341,6 +341,8 @@ export type AddressType = {
 }
 
 export type CustomerType = BaseType & {
+  /** The auth id */
+  auth_id?: string;
   /** firstname */
   firstname: string;
   /** lastname */
@@ -391,7 +393,7 @@ export type ShippingMethodType = BaseType & {
 
 // posts
 
-export type PostType = {
+export type PostType = BaseType & {
   /** unique handle */
   handle: string;
   /** title of post */

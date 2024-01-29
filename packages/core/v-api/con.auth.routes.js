@@ -14,7 +14,7 @@ import {
  * @template PlatformContext
  * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
  */
-export const create = (app) => {
+export const create_routes = (app) => {
 
   /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();

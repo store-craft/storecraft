@@ -110,14 +110,14 @@ export const isEmpty = (str) => (!str?.trim().length)
  * @param {string} title 
  * @returns {string | undefined}
  */
-export const to_handle = (title) => {
+export const to_handle = (title, delimiter='-') => {
   if(typeof title !== 'string')
     return undefined
   let trimmed = title.trim()
   if(trimmed === "")
     return undefined
   
-  trimmed = trimmed.toLowerCase().match(/[\p{L}\d]+/gu).join('-')
+  trimmed = trimmed.toLowerCase().match(/[\p{L}\d]+/gu).join(delimiter)
   if(trimmed.length==0)
       return undefined
   

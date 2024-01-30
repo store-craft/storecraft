@@ -99,7 +99,7 @@ export const create_routes = (app) => {
       
       assert(verified, 'auth/error', 401)
 
-      /** @type {Partial<import("../utils/jwt.js").JWTClaims>} */
+      /** @type {Partial<import('./middle.auth.js').ApiRequest["user"]>} */
       const claims = {
         sub: existingUser.id,
         roles: existingUser.roles

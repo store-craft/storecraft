@@ -14,6 +14,8 @@ type BaseType = {
   desc?: string;
   /** Is the entity active ? */
   active?: boolean;
+  /** Search terms, usually computed by backend */
+  search?: string[];
 }
 
 // auth
@@ -164,10 +166,13 @@ export type DiscountType = BaseType & {
   title: string;
   /** discount code */
   handle: string;
-  /** the order in which to apply the discounts stack (priority) */
+  /** 
+   * the order in which to apply the discounts stack (priority) 
+   * @min 0
+   */
   priority: number;
   /** the collection handle that contains the applicable discount products */
-  _published: string;
+  _published?: string;
   /** details and filters of the discount */
   info: DiscountInfo;
   /** discount application (automatic and coupons) */
@@ -178,7 +183,10 @@ export type DiscountType = BaseType & {
 export type DiscountInfo = {
   /** discount details */
   details: DiscountDetails;
-  /** list of discount filters */
+  /** 
+   * list of discount filters 
+   * @minLength 1 You should Specify at least 1 Filter
+   */
   filters: Filter[]
 }
 
@@ -187,7 +195,7 @@ export type DiscountApplication = {
   /** 0 = Automatic, 1 = Manual */
   id: number;
   /** printable name */
-  name: 'Automatic' | 'Manual';
+  name: ('Automatic' | 'Manual');
   /** id name */  
   name2: ('automatic' | 'manual');
 }
@@ -195,9 +203,9 @@ export type DiscountApplication = {
 /** Discount filter scheme */
 export type Filter = {
   /** meta data related to identifying the filter */
-  meta?: FilterMeta;
+  meta: FilterMeta;
   /** the filter params */
-  value?: string[] | { from?: number, to:number};
+  value: string[] | { from?: number, to:number};
 }
 
 /** Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  */
@@ -215,7 +223,7 @@ export type FilterMeta = {
 /** The details of how to apply a discount. The type of discount and it's params */
 export type DiscountDetails = {
   /** metadata to identify the type of discount */
-  meta?: DiscountMeta;
+  meta: DiscountMeta;
   /** extra parameters of the specific discount type */
   extra: RegularDiscountExtra|OrderDiscountExtra|BulkDiscountExtra|BuyXGetYDiscountExtra|BundleDiscountExtra;
 }
@@ -225,7 +233,7 @@ export type DiscountMeta = {
   /** unique identifier of discount type (bulk, regular, order) */
   id: number;
   /** textual identifier */
-  type: 'regular' | 'bulk' | 'buy_x_get_y' | 'order' | 'bundle';
+  type: | 'regular' | 'bulk' | 'buy_x_get_y' | 'order' | 'bundle';
   /** printable name */
   name: string;
 }
@@ -288,7 +296,7 @@ export type BundleDiscountExtra = {
 
 // storefront
 
-export type StorefrontData = BaseType & {
+export type StorefrontType = BaseType & {
   /** readable handle */
   handle: string;
   /** readable title */
@@ -319,7 +327,7 @@ export type AddressType = {
   lastname?: string;
   /**
    * The phone number
-   * @pattern ^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$
+   * @pattern ^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$ Invalid phone number
    */  
   phone_number?: string;
   /** optional company name of recipient */
@@ -383,7 +391,7 @@ export type ImageType = BaseType & {
 export type ShippingMethodType = BaseType & {
   /**
    * shipping method price
-   * @minimum 0
+   * @minimum 0 Please set a price >= 0
    */
   price: number;
   /** name */
@@ -426,15 +434,15 @@ export type NotificationType = BaseType & {
 /** each notification may have an actionable item associated with it. For example, clicking an order notification will route to the order page at Shelf */
 export type NotificationAction = {
   /** Name of the action */
-  name: string;
+  name?: string;
   /** the type of action */
-  type: NotificationActionType;
+  type?: NotificationActionType;
   /** extra params for the actions type */
-  params: NotificationActionRouteParams | NotificationActionUrlParams;
+  params?: NotificationActionRouteParams | NotificationActionUrlParams | any;
 }
 
 /** 'route' means routing inside shelfm 'url' is linking to a url */
-export type NotificationActionType = 'route' | 'url';
+export type NotificationActionType = 'route' | 'url' | string;
 
 /** route inside shelf action params */
 export type NotificationActionRouteParams = {
@@ -450,4 +458,160 @@ export type NotificationActionUrlParams = {
   new_window: boolean;
   /** the url to open */
   url: string;
+}
+
+
+// order types
+
+export type OrderData = BaseType & {
+  /** status of checkout, fulfillment and payment */
+  status: OrderStatus; 
+  /** buyer info */
+  contact: OrderContact;
+  /** shipping address info */
+  address: AddressType;
+  /** line items is a list of the purchased products */
+  line_items: LineItem[];
+  /** notes for the order */
+  notes: string; 
+  /** shipping method info */
+  shipping_method: ShippingMethodType; 
+  /** a list of manual coupons */
+  coupons: DiscountType[]; 
+  /** pricing information */
+  pricing: PricingData;
+  /** in case the order went through validation  */
+  validation?: ValidationEntry[];
+  /** payment gateway info and status */
+  payment_gateway: OrderPaymentGatewayData; 
+}
+
+/** Order buyer info */
+export type OrderContact = {
+  firstname?: string;
+  lastname?: string;
+  phone_number?: string;
+  email?: string;
+  auth_id?: string;
+}
+
+/** status of checkout, fulfillment and payment */
+export type OrderStatus = {
+  checkout: CheckoutStatusOptions;
+  payment: PaymentStatusOptions;
+  fulfillment: FulfillStatusOptions;
+}
+
+/** Fulfillment options encapsulate the current state, see <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>  */
+export type FulfillStatusOptions = {
+  /** 0-draft, 1-processing, 2-shipped, 3-fulfilled, 4-cancelled */
+  id: number;
+  /** readable/printable name */
+  name: string;
+  /** unique name (like id) */
+  name2: 'draft' | 'processing' | 'shipped' | 'fulfilled' | 'cancelled';
+
+}
+
+
+/** Payment options encapsulate the current state, see <a href='#PaymentOptionsEnum'>#PaymentOptionsEnum</a>  */
+export type PaymentStatusOptions = {
+  /** 0-unpaid, 1-captured, 2-requires_auth, 3-requires_auth, 4-voided, 5-failed, 6-partially_paid, 7-refunded */
+  id: number;
+  /** readable/printable name */
+  name: string;
+  /** unique name (like id) */
+  name2: 'unpaid' | 'authorized' | 'captured' | 'requires_auth' | 'voided' | 'partially_paid' | 'refunded' | 'partially_refunded';
+
+}
+
+/** Checkout status encapsulate the current state, see <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>  */
+export type CheckoutStatusOptions = {
+  /** 0-created, 1-requires_action, 2-failed, 3-complete */
+  id: number;
+  /** readable/printable name */
+  name: string;
+  /** unique name (like id) */
+  name2: 'created' | 'requires_action' | 'failed' | 'complete';
+}
+
+
+/** Pricing object exaplins how the pricing of an order was calculated given a stack of automatic discounts, coupons, line items and shipping method */
+export type PricingData = {
+  /** explanation of how discounts stack and change pricing */
+  evo: EvoEntry[]; 
+  /** selected shipping method */
+  shipping_method: ShippingMethodType;
+  /** subtotal of items price before discounts */
+  subtotal_undiscounted: number; 
+  /** sum of all discounts at all stages */
+  subtotal_discount: number; 
+  /** subtotal_undiscounted - subtotal_discount */
+  subtotal: number; 
+  /** subtotal + shipping */
+  total: number; 
+  /** how many items were discounted */
+  total_quantity: number; 
+  /** authentication user id */
+  auth_id?: string; 
+  errors: DiscountError[];
+ 
+}
+
+
+/** A line item is a product, that appeared in an order */
+export type LineItem = {
+  /**  id or handle of product */
+  id: string;
+  /** it's known price */
+  price: number; 
+  /** integer quantity of how many such products were bought */
+  qty: number;
+  /** used by order to indicate it has reserved stock and it's amount */
+  stock_reserved: number; 
+  /** (optional) the product data */
+  data?: ProductType;
+}
+
+export type DiscountError = {
+  discount_code: string;
+  message: string;
+}
+
+/** Explain how a specific discount was used to discount line items */
+export type EvoEntry = {
+  discount: DiscountType;
+  /** the discount code */
+  discount_code: string;
+  /** the amount of money that was discounted by this discount */
+  total_discount: number;
+  /** how many items are left to discount */
+  quantity_undiscounted: number;
+  /** how many items were discounted now */
+  quantity_discounted: number;
+  /** running subtotal without shipping */
+  subtotal: number;
+  /** running total */
+  total: number;
+  /**  available line items after discount */
+  line_items: LineItem[];
+}
+/** checkouts or draft orders might be validated in automatic systems */
+export type ValidationEntry = {
+  id: string;
+  title: string;
+  message: 'out-of-stock' | 'not-enough-stock' | 'some-stock-is-on-hold';
+}
+
+/** How did the order interacted with a payment gateway ?  */
+export type OrderPaymentGatewayData = {
+  /** the payment gateway identifier */
+  gateway_id: string;
+  /** result of gateway at checkout creation */
+  on_checkout_create: any;
+  /** result of gateway at checkout completion */
+  on_checkout_complete: any; 
+  /** latest status of payment */
+  latest_status: any; 
+ 
 }

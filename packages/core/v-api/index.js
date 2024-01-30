@@ -4,6 +4,10 @@ import { create_routes as create_auth_route } from "./con.auth.routes.js";
 import { create_routes as create_tags_route } from "./con.tags.routes.js";
 import { create_routes as create_col_route } from "./con.collections.routes.js";
 import { create_routes as create_cus_route } from "./con.customers.routes.js";
+import { create_routes as create_images_route } from "./con.images.routes.js";
+import { create_routes as create_posts_route } from "./con.posts.routes.js";
+import { create_routes as create_storefronts_route } from "./con.storefronts.routes.js";
+import { create_routes as create_discounts_route } from "./con.discounts.routes.js";
 
 /**
  * Create the entire virtual API
@@ -18,8 +22,12 @@ export const create_api = (app) => {
   const polka = new Polka();
   const auth = create_auth_route(app);
   const tags = create_tags_route(app);
-  const coll = create_col_route(app);
-  const cus = create_cus_route(app);
+  const collections = create_col_route(app);
+  const customers = create_cus_route(app);
+  const images = create_images_route(app);
+  const posts = create_posts_route(app);
+  const storefronts = create_storefronts_route(app);
+  const discounts = create_discounts_route(app);
 
   polka.use(json());
 
@@ -35,12 +43,32 @@ export const create_api = (app) => {
 
   polka.use(
     '/api/collections',
-    coll
+    collections
   );
 
   polka.use(
     '/api/customers',
-    cus
+    customers
+  );
+
+  polka.use(
+    '/api/images',
+    images
+  );
+
+  polka.use(
+    '/api/posts',
+    posts
+  );
+
+  polka.use(
+    '/api/storefronts',
+    storefronts
+  );
+
+  polka.use(
+    '/api/discounts',
+    discounts
   );
 
   return polka;

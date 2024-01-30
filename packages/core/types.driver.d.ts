@@ -1,8 +1,9 @@
 import { 
   AuthUserType, CollectionType, CustomerType, 
   DiscountType, ImageType, NotificationType, 
+  OrderData, 
   PostType, ProductType, ShippingMethodType, 
-  StorefrontData, TagType } from "./types.api";
+  StorefrontType, TagType } from "./types.api";
 import { App, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
@@ -35,7 +36,7 @@ export declare interface db_crud<T> {
    * Insert or Replace an item
    * @param handle 
    */
-  upsert: (data?: T) => Promise<void>;
+  upsert: (data?: Partial<T> | Partial<T>[]) => Promise<void>;
 
   /**
    * Delete an item
@@ -84,7 +85,7 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
 }
 
 /** StorefrontData crud */
-export interface db_storefronts extends db_crud<StorefrontData & SearchTermsType> {
+export interface db_storefronts extends db_crud<StorefrontType & SearchTermsType> {
 }
 
 /** ImageType crud */
@@ -105,6 +106,10 @@ export interface db_notifications extends db_crud<NotificationType & SearchTerms
 
 /** DiscountType crud */
 export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
+}
+
+/** DiscountType crud */
+export interface db_orders extends db_crud<OrderData & SearchTermsType> {
 }
 
 export interface db_driver {
@@ -137,4 +142,5 @@ export interface db_driver {
   shipping: db_shipping;
   notifications: db_notifications;
   discounts: db_discounts;
+  orders: db_orders;
 }

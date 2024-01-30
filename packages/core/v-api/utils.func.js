@@ -100,10 +100,15 @@ export const to_tokens = (text) => {
 
   return tokens;
 }
-// /[\p{L}\d]+/gu
-export const union_array = (arrA=[], arrB=[]) => [...new Set([...arrA, ...arrB])];
 
-export const isEmpty = (str) => (!str?.trim().length)
+/**
+ * @param  {...any} args 
+ */
+export const union = (...args) => [
+  ...new Set(args.flat(Infinity))
+].filter(a => a!==undefined && a!==null);
+
+export const isEmpty = (str) => (!str?.trim().length);
 
 /**
  * URL friendly handle

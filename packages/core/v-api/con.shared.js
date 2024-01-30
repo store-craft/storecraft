@@ -8,6 +8,9 @@ import { ZodSchema } from 'zod'
  */
 
 /**
+ * This type of upsert might be uniform and re-occurring, so it is
+ * refactored. There is a hook to add more functionality.
+ * 
  * @template {import('../types.api.js').BaseType} T
  * @param {import("../types.public.js").App} app
  * @param {import("../types.driver").db_crud} db

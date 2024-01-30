@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 
 /** 
@@ -12,7 +13,8 @@ export const DiscountApplicationEnum = {
  * @enum {import('./types.api').FilterMeta} 
  */
 export const FilterMetaEnum = { 
-  p_in_collections: { 
+  p_in_collections: 
+  { 
     id: 0, type:'product', 
     op: 'p-in-collections', 
     name: 'Product In Collection'
@@ -100,3 +102,74 @@ export const DiscountMetaEnum = {
   },
 }
 
+/** 
+ * @enum {import('./types.api').CheckoutStatusOptions} 
+ */
+export const CheckoutStatusEnum = {
+  created: { 
+    id: 0, name2: 'created', name: 'Created'
+  },
+  requires_action: { 
+    id: 1, name2: 'requires_action', name: 'Requires Action'
+  },
+  failed: { 
+    id: 2, name2: 'failed', name: 'Failed'
+  },
+  complete: { 
+    id: 3, name2: 'complete', name: 'Complete'
+  },
+}
+
+/** 
+ * @enum {import('./types.api').FulfillStatusOptions} 
+ */
+export const FulfillOptionsEnum = {
+  draft: { 
+    id: 0, name2: 'draft', name: 'Draft'
+  },
+  processing: { 
+    id: 1, name2: 'processing' ,name: 'Processing (Stock Reserved)'
+  },
+  shipped: { 
+    id: 2, name2: 'shipped' ,name: 'Shipped'
+  },
+  fulfilled: { 
+    id: 3, name2: 'fulfilled', name: 'Fulfilled' 
+  },
+  cancelled: { 
+    id: 4, name2: 'cancelled', name: 'Cancelled (Stock returned)' 
+  }
+}
+
+/** 
+ * @enum {import('./types.api').PaymentStatusOptions} 
+ */
+export const PaymentOptionsEnum = {
+  unpaid: { 
+    id: 0, name: 'Unpaid', name2: 'unpaid'
+  },
+  authorized: { 
+    id: 1, name: 'Authorized', name2: 'authorized'
+  },
+  captured: { 
+    id: 2, name: 'Captured', name2: 'captured'
+  },
+  requires_auth: { 
+    id: 3, name: 'Requires Authentication', name2: 'requires_auth'
+  },
+  voided: { 
+    id: 4, name: 'Voided', name2: 'voided'
+  },
+  failed: { 
+    id: 5, name: 'Failed', name2: 'failed'
+  },
+  partially_paid: { 
+    id: 6, name: 'Partially paid', name2: 'partially_paid' 
+  },
+  refunded: { 
+    id: 7, name: 'Refunded', name2: 'refunded' 
+  },
+  partially_refunded: { 
+    id: 8, name: 'Partially Refunded', name2: 'partially_refunded' 
+  },
+}

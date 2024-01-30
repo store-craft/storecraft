@@ -1,17 +1,17 @@
 import { assert, to_handle } from './utils.func.js'
-import { tagTypeSchema } from './types.autogen.zod.api.js'
+import { postTypeSchema, tagTypeSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../types.api.js').PostType} ItemType
  */
 
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.tags;
+export const db = app => app.db.posts;
 
 /**
  * 
@@ -19,18 +19,17 @@ export const db = app => app.db.tags;
  * @param {ItemType} item
  */
 export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'tag', tagTypeSchema, 
+  app, db(app), 'post', postTypeSchema, 
   /**
    * @param {ItemType} final 
    */
   async (final) => {
     assert(
-      [final.handle, ...final.values].every(
+      [final.handle].every(
         h => to_handle(h)===h
       ),
       'Handle or Values are invalid', 400
     );
-    final.search?.push(...(final.values ?? []));
     return final;
   }
 )(item);

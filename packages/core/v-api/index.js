@@ -11,6 +11,7 @@ import { create_routes as create_discounts_route } from "./con.discounts.routes.
 import { create_routes as create_orders_route } from "./con.orders.routes.js";
 import { create_routes as create_notifications_route } from "./con.notifications.routes.js";
 import { create_routes as create_shipping_route } from "./con.shipping.routes.js";
+import { create_routes as create_products_route } from "./con.products.routes.js";
 
 /**
  * Create the entire virtual API
@@ -34,6 +35,7 @@ export const create_api = (app) => {
   const orders = create_orders_route(app);
   const notifications = create_notifications_route(app);
   const shipping = create_shipping_route(app);
+  const products = create_products_route(app);
 
   polka.use(json());
   polka.use('/api/auth', auth);
@@ -47,6 +49,7 @@ export const create_api = (app) => {
   polka.use('/api/orders', orders);
   polka.use('/api/notifications', notifications);
   polka.use('/api/shipping', shipping);
+  polka.use('/api/products', products);
 
   return polka;
 }

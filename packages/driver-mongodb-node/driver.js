@@ -1,6 +1,16 @@
 import { App } from '@storecraft/core';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { impl as auth_users } from './src/con.auth_users.js';
+import { impl as collections } from './src/con.collections.js';
+import { impl as customers } from './src/con.customers.js';
+import { impl as discounts } from './src/con.discounts.js';
+import { impl as images } from './src/con.images.js';
+import { impl as notifications } from './src/con.notifications.js';
+import { impl as orders } from './src/con.orders.js';
+import { impl as posts } from './src/con.posts.js';
+import { impl as products } from './src/con.products.js';
+import { impl as shipping } from './src/con.shipping.js';
+import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 
 /**
@@ -29,10 +39,10 @@ export class Driver {
   /**
    * 
    * @param {string} db_name database name
-   * @param {string[]} admins_emails list of admin emails
    */
   constructor(db_name='main') {
     this._name = db_name;
+    this._is_ready = false;
   }
 
   /**
@@ -42,20 +52,39 @@ export class Driver {
    */
   async init(app) {
     this._client = await connect(app.platform.env.MONGODB_URI);
-    this._admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(s => s.trim()) ?? [];
-
+    this._admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(
+      s => s.trim()) ?? [];
+    this._app = app;
     this.auth_users = auth_users(this);
+    this.collections = collections(this);
+    this.customers = customers(this);
+    this.discounts = discounts(this);
+    this.images = images(this);
+    this.notifications = notifications(this);
+    this.orders = orders(this);
+    this.posts = posts(this);
+    this.products = products(this);
+    this.storefronts = storefronts(this);
     this.tags = tags(this);
-
+    this.shipping = shipping(this);
+    this._is_ready = true;
     console.log(this.admins_emails)
     return this;
   }
 
+  get isReady() {
+    return this._is_ready;
+  }
+  
   /**
    * database name
    */
   get name () {
     return this._name;
+  }
+
+  get app() {
+    return this._app;
   }
 
   /**

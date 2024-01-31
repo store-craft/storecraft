@@ -57,10 +57,12 @@ export declare interface db_crud<T> {
   list: (query: ParsedApiQuery) => Promise<Partial<T>[]>
 }
 
+export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
+
 /**
  * auth users crud
  */
-export interface db_auth_users extends db_crud<AuthUserType> {
+export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
   /**
    * get by email
    * @param handle 
@@ -83,7 +85,7 @@ export interface db_collections extends db_crud<CollectionType & SearchTermsType
 /**
  * customers crud
  */
-export interface db_customers extends db_crud<CustomerType & SearchTermsType> {
+export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & SearchTermsType>> {
 }
 
 /** products crud */
@@ -103,11 +105,11 @@ export interface db_posts extends db_crud<PostType & SearchTermsType> {
 }
 
 /** ShippingMethodType crud */
-export interface db_shipping extends db_crud<ShippingMethodType & SearchTermsType> {
+export interface db_shipping extends OmitGetByHandle<db_crud<ShippingMethodType & SearchTermsType>> {
 }
 
 /** NotificationType crud */
-export interface db_notifications extends db_crud<NotificationType & SearchTermsType> {
+export interface db_notifications extends OmitGetByHandle<db_crud<NotificationType & SearchTermsType>> {
 }
 
 /** DiscountType crud */
@@ -115,7 +117,7 @@ export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
 }
 
 /** DiscountType crud */
-export interface db_orders extends db_crud<OrderData & SearchTermsType> {
+export interface db_orders extends OmitGetByHandle<db_crud<OrderData & SearchTermsType>> {
 }
 
 export interface db_driver {
@@ -123,6 +125,11 @@ export interface db_driver {
    * Init to the database
    */
   init: (app: App<any, any>) => Promise<this>;
+
+  /**
+   * Is the driver ready ?
+   */
+  isReady: boolean;
 
   /**
    * Database name
@@ -137,6 +144,7 @@ export interface db_driver {
    */
   app: App<any, any> | undefined;
 
+  // controllers
   auth_users: db_auth_users;
   tags: db_tags;
   collections: db_collections;

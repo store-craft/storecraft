@@ -1,19 +1,15 @@
 import { Driver } from '../driver.js'
-import { ObjectId } from 'mongodb'
+import { Collection } from 'mongodb'
+import { sanitize, to_objid } from './utils.funcs.js'
+import { get_regular, list_regular, upsert_regular } from './con.shared.js'
 
 /**
  * @typedef {import('@storecraft/core').db_auth_users} db_col
  */
 
 /**
- * 
- * @param {string} id 
- * @returns 
- */
-const to_objid = id => new ObjectId(id.split('_').at(-1))
-
-/**
  * @param {Driver} d 
+ * @returns {Collection<import('@storecraft/core').AuthUserType>}
  */
 const col = (d) => {
   return d.client.db(d.name).collection('auth_users')
@@ -21,39 +17,14 @@ const col = (d) => {
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["upsert"]}
  */
-const upsert = (driver) => {
-  return async (data) => {
-    console.log(data.id)
-    const filter = { _id: to_objid(data.id) };
-    const replacement = { ...data };
-    const options = { upsert: true };
-
-    const res = await col(driver).replaceOne(
-      filter, replacement, options
-    );
-
-    return;
-  }
-}
+const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
  * @returns {db_col["get"]}
  */
-const get = (driver) => {
-  return async (id) => {
-    const filter = { _id: to_objid(id) };
-
-    /** @type {import('@storecraft/core').AuthUserType} */
-    const res = await col(driver).findOne(
-      filter
-    );
-
-    return res
-  }
-}
+const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
@@ -68,7 +39,7 @@ const getByEmail = (driver) => {
       filter
     );
 
-    return res
+    return sanitize(res)
   }
 }
 
@@ -89,6 +60,11 @@ const remove = (driver) => {
   }
 }
 
+/**
+ * @param {Driver} driver 
+ */
+const list = (driver) => list_regular(driver, col(driver));
+
 
 /** 
  * @param {Driver} driver
@@ -100,6 +76,7 @@ export const impl = (driver) => {
     get: get(driver),
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),
-    remove: remove(driver)
+    remove: remove(driver),
+    list: list(driver)
   }
 }

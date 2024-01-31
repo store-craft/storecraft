@@ -32,7 +32,7 @@ export const addBulk = async (app, items) => {
     }
   );
 
-  await db(app).upsert(items);
+  await db(app).upsertBulk(items);
   return items;
 }
 

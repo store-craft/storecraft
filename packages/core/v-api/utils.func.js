@@ -1,7 +1,7 @@
 import { id } from '../utils/object-id.js';
 
 /**
- * Create a UUID v4, stripped and with prefix
+ * Create an ID with prefix
  * @param {string} prefix 
  * @returns 
  */
@@ -36,8 +36,8 @@ export const apply_dates = d => {
   return d;
 }
 
-export const select_fields = (...fields) => o => fields.reduce((p, c) =>  ({ ...p, [c] : o[c] }), {})
-export const filter_fields = (...fields) => items => items.map(item => select_fields(...fields)(item))
+export const select_fields = (...fields) => o => fields.reduce((p, c) =>  ({ ...p, [c] : o[c] }), {});
+export const filter_fields = (...fields) => items => items.map(item => select_fields(...fields)(item));
 
 
 export const select_unused_fields = o => Object.keys(o).reduce((p, c) =>  { 
@@ -47,8 +47,9 @@ export const select_unused_fields = o => Object.keys(o).reduce((p, c) =>  {
   else if(typeof o[c]!=='undefined')
     p[c]=o[c]      
   return p 
-}, {})
-export const filter_unused = items => items.map(item => select_unused_fields(item))
+}, {});
+
+export const filter_unused = items => items.map(item => select_unused_fields(item));
 
 /**
  * 
@@ -57,8 +58,8 @@ export const filter_unused = items => items.map(item => select_unused_fields(ite
  * @returns 
  */
 export const delete_keys = (...keys) => o => {
-  o = Array.isArray(o) ? o : [o]
-  o.forEach(it => keys.forEach(k => delete it[k] ))
+  o = Array.isArray(o) ? o : [o];
+  o.forEach(it => keys.forEach(k => delete it[k] ));
   return o
 }
 
@@ -80,7 +81,7 @@ export const STOP_WORDS = [
   'here','there','when','where','why','how','all','any','both','each','few',
   'more','most','other','some','such','no','nor','not','only','own','same',
   'so','than','too','very','s','t','can','will','just','don','should','now'
-]
+];
 
 /**
  * 

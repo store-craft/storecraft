@@ -1,6 +1,7 @@
+import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { sanitize, to_objid } from './utils.funcs.js'
-import { query_to_mongo } from './utils.query.js'
+import { getByHandle_regular, get_regular, list_regular, 
+  remove_regular, upsert_regular } from './con.shared.js'
 
 /**
  * @typedef {import('@storecraft/core').db_tags} db_col
@@ -9,6 +10,7 @@ import { query_to_mongo } from './utils.query.js'
 
 /**
  * @param {Driver} d 
+ * @returns {Collection<import('@storecraft/core').TagType>}
  */
 const col = (d) => {
   return d.client.db(d.name).collection('tags')
@@ -16,104 +18,28 @@ const col = (d) => {
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["upsert"]}
  */
-const upsert = (driver) => {
-  return async (data) => {
-    console.log(data.id)
-    const filter = { _id: to_objid(data.id) };
-    const replacement = { ...data };
-    const options = { upsert: true };
-
-    const res = await col(driver).replaceOne(
-      filter, replacement, options
-    );
-
-    return;
-  }
-}
+const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["get"]}
  */
-const get = (driver) => {
-  return async (id_or_handle) => {
-    const is_id = Boolean(id_or_handle?.includes('_'))
-
-    // it is a handle
-    if(!is_id) {
-      return await getByHandle(driver)(id_or_handle);
-    }
-
-    const filter = { _id: to_objid(id_or_handle) };
-
-    /** @type {import('@storecraft/core').TagType} */
-    const res = await col(driver).findOne(
-      filter
-    );
-
-    return sanitize(res)
-  }
-}
+const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["getByHandle"]}
  */
-const getByHandle = (driver) => {
-  return async (handle) => {
-    const filter = { handle: handle };
-
-    /** @type {import('@storecraft/core').TagType} */
-    const res = await col(driver).findOne(
-      filter
-    );
-
-    return sanitize(res)
-  }
-}
+const getByHandle = (driver) => getByHandle_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["remove"]}
  */
-const remove = (driver) => {
-  return async (id) => {
-    const filter = { _id: to_objid(id) };
-
-    /** @type {import('@storecraft/core').TagType} */
-    const res = await col(driver).findOneAndDelete(
-      filter
-    );
-
-    return
-  }
-}
+const remove = (driver) => remove_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["list"]}
  */
-const list = (driver) => {
-  return async (query) => {
-
-    const { filter, sort } = query_to_mongo(query);
-
-    console.log('query', query)
-    console.log('filter', JSON.stringify(filter, null, 2))
-    console.log('sort', sort)
-
-    /** @type {db_col["$type"][]} */
-    const res = await col(driver).find(
-      filter,  {
-        sort, limit: query.limit
-      }
-    ).toArray();
-
-    return sanitize(res);
-  }
-}
+const list = (driver) => list_regular(driver, col(driver));
 
 /** 
  * @param {Driver} driver

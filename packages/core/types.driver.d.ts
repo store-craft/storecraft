@@ -36,7 +36,13 @@ export declare interface db_crud<T> {
    * Insert or Replace an item
    * @param handle 
    */
-  upsert: (data?: Partial<T> | Partial<T>[]) => Promise<void>;
+  upsert: (data?: Partial<T>) => Promise<void>;
+
+  /**
+   * Insert or Replace an item
+   * @param handle 
+   */
+  upsertBulk?: (data?: Partial<T>[]) => Promise<void>;
 
   /**
    * Delete an item

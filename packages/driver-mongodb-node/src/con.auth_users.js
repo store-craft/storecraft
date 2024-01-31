@@ -12,7 +12,7 @@ import { get_regular, list_regular, upsert_regular } from './con.shared.js'
  * @returns {Collection<import('@storecraft/core').AuthUserType>}
  */
 const col = (d) => {
-  return d.client.db(d.name).collection('auth_users')
+  return d.collection('auth_users')
 }
 
 /**
@@ -68,11 +68,12 @@ const list = (driver) => list_regular(driver, col(driver));
 
 /** 
  * @param {Driver} driver
- * @return {db_col}
+ * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {
   driver
   return {
+    _col: col(driver),
     get: get(driver),
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),

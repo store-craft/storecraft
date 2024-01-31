@@ -36,17 +36,23 @@ test('VQL', async () => {
   const mongo = {
     "$and": [
       {
-        "search": "name:tomer"
+        "search": {
+          "$regex": "^name:tomer$"
+        }
       },
       {
         "$and": [
           {
-            "search": "tag:genre_a"
+            "search": {
+              "$regex": "^tag:genre_a$"
+            }
           },
           {
             "$nor": [
               {
-                "search": "tag:genre_b"
+                "search": {
+                  "$regex": "^tag:genre_b$"
+                }
               }
             ]
           }
@@ -57,7 +63,7 @@ test('VQL', async () => {
 
   const m1 = query_vql_to_mongo(vql_ast);
   
-  console.log(JSON.stringify(m1, null, 2))
+  // console.log(JSON.stringify(m1, null, 2))
 
   assert.equal(m1, mongo);
 });

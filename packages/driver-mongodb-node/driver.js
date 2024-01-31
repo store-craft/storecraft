@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 import { impl as auth_users } from './src/con.auth_users.js';
 import { impl as collections } from './src/con.collections.js';
 import { impl as customers } from './src/con.customers.js';
@@ -51,7 +51,7 @@ export class Driver {
    * @returns {Promise<this>}
    */
   async init(app) {
-    this._client = await connect(app.platform.env.MONGODB_URI);
+    this._mongo_client = await connect(app.platform.env.MONGODB_URI);
     this._admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(
       s => s.trim()) ?? [];
     this._app = app;
@@ -69,6 +69,8 @@ export class Driver {
     this.shipping = shipping(this);
     this._is_ready = true;
     console.log(this.admins_emails)
+
+
     return this;
   }
 
@@ -94,8 +96,17 @@ export class Driver {
     return this._admins_emails ?? [];
   }
 
-  get client() {
-    return this._client;
+  get mongo_client() {
+    return this._mongo_client;
+  }
+
+  /**
+   * @template {import('@storecraft/core').BaseType} T
+   * @param {string} name 
+   * @returns {Collection<T>}
+   */
+  collection(name) {
+    return this.mongo_client.db(this.name).collection(name);
   }
 
 }

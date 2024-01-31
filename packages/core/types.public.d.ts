@@ -13,21 +13,22 @@ export type ApiResponse = VPolkaResponse & {
 
 export type ApiPolka = Polka<ApiRequest, ApiResponse>;
 
-export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext> {
+export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext, H> {
     /**
-     * hello
+     * convert a platform native request into web api request.
      * @param from something
      * @returns 
      */
     encode: (from: PlatformNativeRequest)=> Promise<Request>;
 
     /**
-     * Handle the computed web response with context
+     * Handle the computed web response with context in case it is needed,
+     * In node.js for example, we have to stream it into the native server-response.
      * @param web_response 
      * @param context 
      * @returns 
      */
-    handleResponse: (web_response: Response, context: PlatformContext) => Promise<void>;
+    handleResponse: (web_response: Response, context: PlatformContext) => Promise<H>;
 
     /**
      * Get the environment variables of a platform

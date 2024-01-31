@@ -12,7 +12,7 @@ import { getByHandle_regular, get_regular, list_regular,
  * @returns {Collection<db_col["$type"]>}
  */
 const col = (d) => {
-  return d.client.db(d.name).collection('discounts')
+  return d.collection('discounts')
 }
 
 /**
@@ -42,11 +42,12 @@ const list = (driver) => list_regular(driver, col(driver));
 
 /** 
  * @param {Driver} driver
- * @return {db_col}
+ * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {
   driver
   return {
+    _col: col(driver),
     get: get(driver),
     getByHandle: getByHandle(driver),
     upsert: upsert(driver),

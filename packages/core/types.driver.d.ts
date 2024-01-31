@@ -124,7 +124,7 @@ export interface db_driver {
   /**
    * Init to the database
    */
-  init: (app: App<any, any>) => Promise<this>;
+  init: (app: App<any, any, any>) => Promise<this>;
 
   /**
    * Is the driver ready ?
@@ -142,7 +142,7 @@ export interface db_driver {
   /**
    * Get the underlying StoreCraft App
    */
-  app: App<any, any> | undefined;
+  app: App<any, any, any> | undefined;
 
   // controllers
   auth_users: db_auth_users;

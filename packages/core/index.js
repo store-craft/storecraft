@@ -3,14 +3,15 @@ import { create_api } from './v-api/index.js'
 
 
 /**
- * @template PlatformNativeRequest
- * @template PlatformContext
+ * @template {any} PlatformNativeRequest
+ * @template {any} PlatformContext
+ * @template {any} H
  */
 export class App {
 
   /**
    * 
-   * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext>} PlatformAdapter
+   * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} PlatformAdapter
    * @param {PlatformAdapter} platform platform
    * @param {import('./types.public.js').db_driver} db_driver database driver
    */
@@ -55,12 +56,12 @@ export class App {
   /**
    * Process a request with context in the native platform
    * 
-   * @param {PlatformNativeRequest} req 
+   * @param {PlatformNativeRequest} req
    * @param {PlatformContext} context 
    */
   handler = async (req, context) => {
     const request = await this._platform.encode(req)
-
+    
     /** @type {import('./types.public.js').ApiResponse} */
     const polka_response = {
       headers: new Headers(),
@@ -129,7 +130,7 @@ export class App {
       }
     )
 
-    await this._platform.handleResponse(response_web, context);
+    return await this._platform.handleResponse(response_web, context);
   }
 
 }

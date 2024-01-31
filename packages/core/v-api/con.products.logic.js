@@ -1,4 +1,4 @@
-import { assert, to_handle } from './utils.func.js'
+import { assert, to_handle, union } from './utils.func.js'
 import { collectionTypeSchema, productTypeSchema, tagTypeSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
@@ -30,6 +30,12 @@ export const upsert = (app, item) => regular_upsert(
       ),
       'Handle is invalid', 400
     );
+    final.search.push(
+      ...union(
+        final.collections?.map(c => `col:${c}`)
+      )
+    );
+    
     return final;
   }
 )(item);

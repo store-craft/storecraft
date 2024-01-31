@@ -10,7 +10,7 @@ import { Readable } from 'node:stream'
 
 
 /**
- * @typedef {import('@storecraft/core').PlatformAdapter<IncomingMessage, ServerResponse>} PlatformAdapter
+ * @typedef {import('@storecraft/core').PlatformAdapter<IncomingMessage, ServerResponse, ServerResponse>} PlatformAdapter
  * @implements {PlatformAdapter}
  */
 export class NodeAdapter {
@@ -54,8 +54,9 @@ export class NodeAdapter {
     const headers = Object.fromEntries(web_response?.headers?.entries() ?? []);
     context.writeHead(web_response.status, web_response.statusText, headers);
     if(web_response.body)
-      Readable.fromWeb(web_response.body).pipe(context)
-    else context.end()
+      Readable.fromWeb(web_response.body).pipe(context);
+    else context.end();
+    return context;
   } 
  
 } 

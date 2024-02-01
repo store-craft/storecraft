@@ -61,3 +61,23 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
  * @param {import('../types.api.query.js').ParsedApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} product handle or id
+ * @param {string} collection handle or id
+ */
+export const add_product_to_collection = (app, product, collection) => {
+  return db(app).add_product_to_collection(product, collection);
+}
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} product handle or id
+ * @param {string} collection handle or id
+ */
+export const remove_product_from_collection = (app, product, collection) => {
+  return db(app).remove_product_from_collection(product, collection);
+}

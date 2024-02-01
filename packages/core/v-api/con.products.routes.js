@@ -2,7 +2,7 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
 import { authorize_by_roles } from './middle.auth.js'
 import { parse_query } from './utils.query.js'
-import { get, list, remove, upsert } from './con.collections.logic.js'
+import { add_product_to_collection, get, list, remove, upsert } from './con.products.logic.js'
 
 /**
  * @typedef {import('../types.api.js').ProductType} ItemType
@@ -62,6 +62,27 @@ export const create_routes = (app) => {
       res.sendJson(items);
     }
   );
+
+  // add to collection
+  polka.post(
+    '/:product/collections/:collection',
+    async (req, res) => {
+      const { product, collection } = req?.params;
+      await add_product_to_collection(app, product, collection);
+      res.end();
+    }
+  );
+
+  // remove from
+  polka.delete(
+    '/:product/collections/:collection',
+    async (req, res) => {
+      const { product, collection } = req?.params;
+      await add_product_to_collection(app, product, collection);
+      res.end();
+    }
+  );
+  
 
   return polka;
 }

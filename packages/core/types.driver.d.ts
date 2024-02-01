@@ -90,6 +90,19 @@ export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & Sea
 
 /** products crud */
 export interface db_products extends db_crud<ProductType & SearchTermsType> {
+
+  /**
+   * Add product to collection
+   * @param product handle or id
+   * @param collection handle or id
+   */
+  add_product_to_collection: (product: string, collection: string) => Promise<void>;
+  /**
+   * remove product from collection
+   * @param product handle or id
+   * @param collection handle or id
+   */
+  remove_product_from_collection: (product: string, collection: string) => Promise<void>;
 }
 
 /** StorefrontData crud */

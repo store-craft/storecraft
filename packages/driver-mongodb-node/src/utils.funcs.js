@@ -54,3 +54,18 @@ export const sanitize = o => {
  * @returns 
  */
 export const to_objid = id => new ObjectId(id.split('_').at(-1))
+
+/**
+ * 
+ * @param {string} handle_or_id 
+ * @returns { {_id:ObjectId} | {handle: string}}
+ */
+export const handle_or_id = (handle_or_id) => {
+  let r = {};
+  try {
+    r._id = to_objid(handle_or_id);
+  } catch (e) {
+    r.handle = handle_or_id;
+  }
+  return r;
+}

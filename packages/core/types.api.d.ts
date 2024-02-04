@@ -16,6 +16,7 @@ type BaseType = {
   active?: boolean;
   /** Search terms, usually computed by backend */
   search?: string[];
+  [x: string] : any;
 }
 
 // auth
@@ -81,7 +82,7 @@ export type CollectionType = BaseType & {
   /** status */
   active: boolean;
   /** published json url */
-  _published?: string;
+  published?: string;
 }
 
 // products
@@ -125,8 +126,8 @@ export type ProductType = BaseType & {
   title: string;
   /** status */
   active: boolean;
-  /** handles of collection this product belongs to */
-  collections: string[];
+  /** collections, upon insert, should have at least id field */
+  collections?: Partial<CollectionType>[];
   /** video media url */
   video?: string;
   /** 
@@ -152,7 +153,7 @@ export type ProductType = BaseType & {
   /** mapping of product variants handles to product data and variants options selection */
   variants_products?: Record<string, VariantCombination>
   /** Internal usage, clarifies the variant projected options */
-  _variant_hint?: VariantOptionSelection[];
+  variant_hint?: VariantOptionSelection[];
   /** discounts we know were applied to this product */
   discounts?: Record<string, DiscountType>
 }
@@ -172,7 +173,7 @@ export type DiscountType = BaseType & {
    */
   priority: number;
   /** the collection handle that contains the applicable discount products */
-  _published?: string;
+  published?: string;
   /** details and filters of the discount */
   info: DiscountInfo;
   /** discount application (automatic and coupons) */
@@ -304,7 +305,7 @@ export type StorefrontType = BaseType & {
   /** video url */
   video?: string;
   /** exported storefront json */
-  _published?: string;
+  published?: string;
   /** Handles of collections part of the storefront */
   collections?: string[];
   /** Handles of products you want to promote as part of the storefront */

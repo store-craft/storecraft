@@ -25,6 +25,30 @@ export const upsert_regular = (driver, col) => {
 }
 
 /**
+ * 
+ * @param {import('@storecraft/core').ExpandQuery} expand 
+ */
+const gen_lookup = expand => {
+  // const r = await col.aggregate(
+  //   [
+  //     { $match : filter },
+  //     ...gen_lookup(options.expand)
+  //   ]
+  // ).toArray();
+
+  return (expand??[]).map(
+    e => {
+      return {
+        $lookup: { 
+          from: e, localField: `_${e}`, 
+          foreignField: '_id', as: e 
+        }
+      }
+    }
+  )
+}
+
+/**
  * @template {import('@storecraft/core').BaseType} T
  * @param {Driver} driver 
  * @param {Collection<T>} col 
@@ -32,14 +56,16 @@ export const upsert_regular = (driver, col) => {
  */
 export const get_regular = (driver, col) => {
   return async (id_or_handle, options) => {
-
     const filter = handle_or_id(id_or_handle);
+    /** @type {import('./utils.relations.js').WithRelations<T>} */
+    const res = await col.findOne(filter);
 
-    const res = await col.findOne(
-      filter
-    );
+    for(const e of (options?.expand ?? [])) {
+      // try to find embedded documents relations
+      res[e] = sanitize(Object.values(res._relations[e].entries));
+    }
 
-    return sanitize(res)
+    return sanitize(res);
   }
 }
 

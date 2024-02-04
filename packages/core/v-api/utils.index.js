@@ -1,7 +1,7 @@
 import { to_tokens } from './utils.func.js';
 
-export const isUnd = v => v===undefined || v===null;
 export const isDef = v => v!==undefined && v!==null;
+export const isUnd = v => !isDef(v);
 
 /**
  * Reasonable search index for terms for most types

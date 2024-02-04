@@ -89,11 +89,13 @@ export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & Sea
 /** products crud */
 export interface db_products extends db_crud<ProductType & SearchTermsType> {
   /**
-   * list all of the product related collections
+   * list all of the product related collections, returns eveything, this is not query based,
+   * we assume, there are a handful of collection per product
    * @param product handle or id
+   * @param options options like expand
    * @returns 
    */
-  list_product_collections: (product: string) => Promise<CollectionType[]>;
+  list_product_collections: (product: string) => Promise<Partial<CollectionType>[]>;
 
   /**
    * Add product to collection

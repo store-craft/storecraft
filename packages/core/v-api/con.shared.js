@@ -17,7 +17,7 @@ import { ZodSchema } from 'zod'
  * @param {import("../types.driver").db_crud} db
  * @param {string} id_prefix
  * @param {ZodSchema} schema
- * @param {(final: T) => Promise<T>} hook hook into final state
+ * @param {(final: T) => Promise<Partial<T>>} hook hook into final state
  */
 export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 

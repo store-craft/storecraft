@@ -1,8 +1,9 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
 import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+  remove_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
+import { create_hidden_relation } from './utils.relations.js'
 
 /**
  * @typedef {import('@storecraft/core').db_products} db_col
@@ -16,6 +17,8 @@ const col = (d) => {
   return d.collection('products')
 }
 
+
+
 /**
  * @param {Driver} driver 
  * @returns {db_col["upsert"]}
@@ -24,13 +27,16 @@ const upsert = (driver) => {
   return async (data) => {
     
     const filter = { _id: to_objid(data.id) };
-    const replacement = { ...data };
     const options = { upsert: true };
 
+    // for mongo hidden
+    const replacement = await create_hidden_relation(
+      driver, data, 'collections', 'collections', false);
+      
     const res = await driver.products._col.replaceOne(
       filter, replacement, options
     );
-
+    
     return;
   }
 }
@@ -62,7 +68,6 @@ const add_product_to_collections = (driver) => {
       handle_or_id(product),
       { $addToSet: { collections:{ $each: collections_handles } } }
     );
-
   }
 }
 
@@ -77,7 +82,6 @@ const remove_product_from_collections = (driver) => {
       handle_or_id(product),
       { $pullAll: { collections: collections_handles } }
     );
-
   }
 }
 
@@ -90,24 +94,20 @@ const remove_product_from_collections = (driver) => {
  */
 const list_product_collections = (driver) => {
   return async (product) => {
-    
-    const r = await driver.products._col.aggregate(
-      [
-        { $match : handle_or_id(product) },
-        { $lookup: { from: 'collections', localField: 'collections', foreignField: 'handle', as: 'collections_expanded' } } 
-      ]
-    ).toArray();
-
-    let arr = r?.[0]?.['collections_expanded'];
-    arr = sanitize(arr);
-    return arr;
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['collections']
+    };
+    // We have collections embedded in products, so let's use it
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item.collections);
   }
 }
 
 
 /** 
  * @param {Driver} driver
- * @return {db_col & { _col: ReturnType<col>}}
+ * @return {db_col & { _col: ReturnType<col> }}
  * */
 export const impl = (driver) => {
 
@@ -122,3 +122,4 @@ export const impl = (driver) => {
     list_product_collections: list_product_collections(driver),
   }
 }
+ 

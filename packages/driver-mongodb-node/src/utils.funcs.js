@@ -1,10 +1,7 @@
 import { ObjectId } from 'mongodb';
 
-/**
- * @template T
- * @param  {...string} keys 
- * @returns 
- */
+export const isDef = v => v!==undefined && v!==null;
+export const isUndef = v => !isDef(v);
 
 /**
  * 
@@ -25,6 +22,23 @@ export const delete_keys = (...keys) => {
 }
 
 /**
+ * Sanitize hidden properties in-place
+ * @template {object} T
+ * @param {T} o 
+ * @return {Partial<T>}
+ */
+export const sanitize_hidden = o => {
+  if(!isDef(o))
+    return o;
+
+  for (const k of Object.keys(o)) {
+    if(k.startsWith('_'))
+      delete o[k];
+  }
+  return o;
+}
+
+/**
  * @template T
  * @param {T} o 
  * @returns {T}
@@ -41,9 +55,9 @@ export const delete_id = o => {
  */
 export const sanitize = o => {
   if(Array.isArray(o)) {
-    o.forEach(it => delete_id(it))
+    o.forEach(it => sanitize_hidden(it))
   } else {
-    delete_id(o)
+    sanitize_hidden(o)
   }
   return o;
 }

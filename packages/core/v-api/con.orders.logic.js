@@ -62,8 +62,9 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
+ * @param {import('../types.driver.js').RegularGetOptions} [options]
  */
-export const get = (app, handle_or_id) => regular_get(app, db(app))(handle_or_id);
+export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
 /**
  * 

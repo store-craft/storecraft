@@ -1,8 +1,8 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
 import { authorize_by_roles } from './middle.auth.js'
-import { parse_query } from './utils.query.js'
-import { add_product_to_collection, get, list, remove, upsert } from './con.products.logic.js'
+import { parse_expend, parse_query } from './utils.query.js'
+import { add_product_to_collection, get, list, list_product_collections, remove, upsert } from './con.products.logic.js'
 
 /**
  * @typedef {import('../types.api.js').ProductType} ItemType
@@ -36,7 +36,11 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
+      /** @type {import('../types.driver.js').RegularGetOptions} */
+      const options = {
+        expend: parse_expend(req.query)
+      };
+      const item = await get(app, handle_or_id, options);
       assert(item, 'not-found', 404);
       res.sendJson(item);
     }
@@ -58,6 +62,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       let q = parse_query(req.query);
+      
       const items = await list(app, q);
       res.sendJson(items);
     }
@@ -83,6 +88,14 @@ export const create_routes = (app) => {
     }
   );
   
+  polka.get(
+    '/:product/collections',
+    async (req, res) => {
+      const { product } = req?.params;
+      const items = await list_product_collections(app, product);
+      res.sendJson(items);
+    }
+  );
 
   return polka;
 }

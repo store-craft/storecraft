@@ -5,6 +5,7 @@ import { ZodSchema } from 'zod'
 
 /**
  * @typedef {import('../types.api.js').BaseType} ItemType
+ * @typedef {import('../types.driver.js').RegularGetOptions} RegularGetOptions
  */
 
 /**
@@ -53,9 +54,10 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 export const regular_get = (app, db) => /**
   * 
   * @param {string} handle_or_id 
+  * @param {RegularGetOptions} [options] 
   */
-  async (handle_or_id) => {
-    const item = await db.get(handle_or_id);
+  async (handle_or_id, options) => {
+    const item = await db.get(handle_or_id, options);
     return item;
   };
 

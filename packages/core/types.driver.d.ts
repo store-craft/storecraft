@@ -4,7 +4,7 @@ import {
   OrderData, 
   PostType, ProductType, ShippingMethodType, 
   StorefrontType, TagType } from "./types.api";
-import { App, ParsedApiQuery } from "./types.public";
+import { App, ExpendQuery, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
 export type Handle = string;
@@ -12,6 +12,10 @@ export type Handle = string;
 type SearchTermsType = {
   /** A bunch of search terms to be queried by VQL boolean language */
   search?: string[];
+}
+
+export type RegularGetOptions = {
+  expend? : ExpendQuery;
 }
 
 /**
@@ -24,13 +28,7 @@ export declare interface db_crud<T> {
    * get a single item by handle or id
    * @param id_or_handle 
    */
-  get: (id_or_handle: ID | Handle) => Promise<Partial<T>>;
-
-  /**
-   * get a single item by handle or id
-   * @param handle 
-   */
-  getByHandle?: (handle: Handle) => Promise<Partial<T>>;
+  get: (id_or_handle: ID | Handle, options?: RegularGetOptions) => Promise<Partial<T>>;
 
   /**
    * Insert or Replace an item
@@ -90,19 +88,26 @@ export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & Sea
 
 /** products crud */
 export interface db_products extends db_crud<ProductType & SearchTermsType> {
+  /**
+   * list all of the product related collections
+   * @param product handle or id
+   * @returns 
+   */
+  list_product_collections: (product: string) => Promise<CollectionType[]>;
 
   /**
    * Add product to collection
    * @param product handle or id
-   * @param collection handle or id
+   * @param collections_handles list of handles
    */
-  add_product_to_collection: (product: string, collection: string) => Promise<void>;
+  add_product_to_collections?: (product: string, collections_handles: string[]) => Promise<void>;
+
   /**
    * remove product from collection
    * @param product handle or id
-   * @param collection handle or id
+   * @param collections_handles list of handles
    */
-  remove_product_from_collection: (product: string, collection: string) => Promise<void>;
+  remove_product_from_collections?: (product: string, collections_handles: string[]) => Promise<void>;
 }
 
 /** StorefrontData crud */

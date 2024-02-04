@@ -45,8 +45,9 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
+ * @param {import('../types.driver.js').RegularGetOptions} options
  */
-export const get = (app, handle_or_id) => regular_get(app, db(app))(handle_or_id);
+export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
 /**
  * 
@@ -69,7 +70,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
  * @param {string} collection handle or id
  */
 export const add_product_to_collection = (app, product, collection) => {
-  return db(app).add_product_to_collection(product, collection);
+  return db(app).add_product_to_collections(product, [collection]);
 }
 
 /**
@@ -79,5 +80,14 @@ export const add_product_to_collection = (app, product, collection) => {
  * @param {string} collection handle or id
  */
 export const remove_product_from_collection = (app, product, collection) => {
-  return db(app).remove_product_from_collection(product, collection);
+  return db(app).remove_product_from_collections(product, [collection]);
+}
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} product handle or id
+ */
+export const list_product_collections = (app, product) => {
+  return db(app).list_product_collections(product);
 }

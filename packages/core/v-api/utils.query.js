@@ -14,6 +14,7 @@ const START_AT = 'startAt';
 const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
 const END_BEFORE = 'endBefore';
+const EXPEND = 'expend';
 
 /**
  * (updated/created:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
@@ -49,6 +50,15 @@ const parse_cursor = (cursor_str="") => {
 }
 
 /**
+ * 
+ * @param {URLSearchParams} s 
+ * @return {import("../types.api.query.js").ExpendQuery | undefined}
+ */
+export const parse_expend = s => {
+  return s.get(EXPEND)?.split(',')?.map(s => s.trim()).filter(Boolean);
+}
+
+/**
  * Parse a query such as:
  * q="tag:a (tag:b)"&limit=10&startAt=(updated:2012,id:tomer)&order=asc
  * INTO a {ParsedApiQuery}
@@ -59,6 +69,7 @@ const parse_cursor = (cursor_str="") => {
 export const parse_query = (s) => {
   /** @type {ParsedApiQuery} */
   const q = {};
+  q.expend = parse_expend(s);
   q.order = s.get(ORDER)==='desc' ? 'desc' : 'asc';
   q.limit = Math.abs(parseInt(s.get(LIMIT))) || 10;
 

@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { sanitize, to_objid } from './utils.funcs.js'
+import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 
 /**
@@ -31,15 +31,9 @@ export const upsert_regular = (driver, col) => {
  * @returns {import('@storecraft/core').db_crud<T>["get"]}
  */
 export const get_regular = (driver, col) => {
-  return async (id_or_handle) => {
-    const is_id = Boolean(id_or_handle?.includes('_'))
+  return async (id_or_handle, options) => {
 
-    // it is a handle
-    if(!is_id) {
-      return await getByHandle_regular(driver, col)(id_or_handle);
-    }
-
-    const filter = { _id: to_objid(id_or_handle) };
+    const filter = handle_or_id(id_or_handle);
 
     const res = await col.findOne(
       filter
@@ -56,7 +50,7 @@ export const get_regular = (driver, col) => {
  * @returns {import('@storecraft/core').db_crud<T>["getByHandle"]}
  */
 export const getByHandle_regular = (driver, col) => {
-  return async (handle) => {
+  return async (handle, o) => {
     const filter = { handle: handle };
 
     const res = await col.findOne(

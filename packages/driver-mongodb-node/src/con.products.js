@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { getByHandle_regular, get_regular, list_regular, 
+import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 

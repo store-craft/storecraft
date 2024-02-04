@@ -43,23 +43,6 @@ export const get_regular = (driver, col) => {
   }
 }
 
-/**
- * @template {import('@storecraft/core').BaseType} T
- * @param {Driver} driver 
- * @param {Collection<T>} col 
- * @returns {import('@storecraft/core').db_crud<T>["getByHandle"]}
- */
-export const getByHandle_regular = (driver, col) => {
-  return async (handle, o) => {
-    const filter = { handle: handle };
-
-    const res = await col.findOne(
-      filter
-    );
-
-    return sanitize(res)
-  }
-}
 
 /**
  * @template {import('@storecraft/core').BaseType} T

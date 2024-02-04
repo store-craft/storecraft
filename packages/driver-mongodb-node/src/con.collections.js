@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { getByHandle_regular, get_regular, list_regular, 
+import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { to_objid } from './utils.funcs.js'
 
@@ -25,11 +25,6 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
  * @param {Driver} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
-
-/**
- * @param {Driver} driver 
- */
-const getByHandle = (driver) => getByHandle_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
@@ -76,7 +71,6 @@ export const impl = (driver) => {
   return {
     _col: col(driver),
     get: get(driver),
-    getByHandle: getByHandle(driver),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver)

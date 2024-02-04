@@ -55,12 +55,18 @@ Each collection has the following relation:
 ```
 
 `Product SAVE:`
-- update internal `_relations` relations with the collections you receive (we reload the collections and will also be using a transaction that will fail if the collections have changed)
+- for each related collection add the entry `_relations.collections.entries[col-id]`
+- for each related collection add the collection `id` to array `_relations.collections.ids`
 
 `Product DELETE:`
+- for each related collection remove the product `id` from array `_relations.products.ids`
 
 `Collection SAVE:`
 - update each related product `_relations.collections.entries[col-id] = c`
+
+`Collection DELETE:`
+- delete in each related product the entry `_relations.collections.entries[col-id]`
+- remove in each related product the `id` from array `_relations.collections.ids`
 
 
 ## collections

@@ -4,7 +4,7 @@ import {
   OrderData, 
   PostType, ProductType, ShippingMethodType, 
   StorefrontType, TagType } from "./types.api";
-import { App, ExpandQuery as ExpandQuery, ParsedApiQuery } from "./types.public";
+import { App, ExpandQuery, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
 export type Handle = string;

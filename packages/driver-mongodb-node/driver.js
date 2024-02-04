@@ -67,9 +67,10 @@ export class Driver {
     this.storefronts = storefronts(this);
     this.tags = tags(this);
     this.shipping = shipping(this);
+    
     this._is_ready = true;
-    console.log(this.admins_emails)
 
+    console.log(this.admins_emails)
 
     return this;
   }

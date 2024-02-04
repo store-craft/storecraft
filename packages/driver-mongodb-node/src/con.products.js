@@ -1,7 +1,6 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { get_regular, list_regular, 
-  remove_regular } from './con.shared.js'
+import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_hidden_relation } from './utils.relations.js'
 
@@ -17,8 +16,6 @@ const col = (d) => {
   return d.collection('products')
 }
 
-
-
 /**
  * @param {Driver} driver 
  * @returns {db_col["upsert"]}
@@ -29,7 +26,7 @@ const upsert = (driver) => {
     const filter = { _id: to_objid(data.id) };
     const options = { upsert: true };
 
-    // for mongo hidden
+    // update collections relation
     const replacement = await create_hidden_relation(
       driver, data, 'collections', 'collections', false);
       
@@ -48,9 +45,27 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
+ * @returns {db_col["remove"]}
  */
-const remove = (driver) => remove_regular(driver, col(driver));
+const remove = (driver) => {
+  return async (id) => {
+    const objid = to_objid(id);
+    const filter = { _id: objid };
 
+    // remove product relations from collections
+    await driver.collections._col.updateMany(
+      { '_relations.products.ids' : objid },
+      { $pull: { '_relations.products.ids': objid } },
+    );
+    // delete me
+    const res = await col(driver).findOneAndDelete(
+      filter
+    );
+
+    return
+  }
+
+}
 /**
  * @param {Driver} driver 
  */

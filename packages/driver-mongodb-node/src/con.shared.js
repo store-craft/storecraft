@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
+import { handle_or_id, isUndef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 
 /**
@@ -49,6 +49,37 @@ const gen_lookup = expand => {
 }
 
 /**
+ * Extract relations names from item
+ * @template {import('./utils.relations.js').WithRelations<{}>} T
+ * @param {T} item
+ */
+export const get_relations_names = item => {
+  return Object.keys(item?._relations ?? {});
+}
+
+/**
+ * Expand relations in-place
+ * @template {import('@storecraft/core').BaseType} T
+ * @param {T[]} items
+ * @param {import('@storecraft/core').ExpandQuery} [expand_query] 
+ */
+export const expand = (items, expand_query=undefined) => {
+  if(isUndef(expand_query))
+    return;
+
+  const all = expand_query.includes('*');
+  
+  for(const item of items) {
+    expand_query = all ? get_relations_names(item) : expand_query;
+
+    for(const e of (expand_query ?? [])) {
+      // try to find embedded documents relations
+      item[e] = sanitize(Object.values(item?._relations?.[e]?.entries ?? {}));
+    }
+  }
+}
+
+/**
  * @template {import('@storecraft/core').BaseType} T
  * @param {Driver} driver 
  * @param {Collection<T>} col 
@@ -59,12 +90,8 @@ export const get_regular = (driver, col) => {
     const filter = handle_or_id(id_or_handle);
     /** @type {import('./utils.relations.js').WithRelations<T>} */
     const res = await col.findOne(filter);
-
-    for(const e of (options?.expand ?? [])) {
-      // try to find embedded documents relations
-      res[e] = sanitize(Object.values(res._relations[e].entries));
-    }
-
+    // try to expand relations
+    expand([res], options?.expand);
     return sanitize(res);
   }
 }
@@ -80,7 +107,7 @@ export const remove_regular = (driver, col) => {
   return async (id) => {
     const filter = { _id: to_objid(id) };
 
-    const res = await col.findOneAndDelete(
+    const res = await col.findOneAndDelete( 
       filter
     );
 
@@ -102,15 +129,19 @@ export const list_regular = (driver, col) => {
     console.log('query', query)
     console.log('filter', JSON.stringify(filter, null, 2))
     console.log('sort', sort)
+    console.log('expand', query?.expand)
 
     /** @type {import('@storecraft/core').db_crud<T>["$type"][]} */
-    const res = await col.find(
+    const items = await col.find(
       filter,  {
         sort, limit: query.limit
       }
     ).toArray();
 
-    return sanitize(res);
+    // try expand relations, that were asked
+    expand(items, query?.expand);
+
+    return sanitize(items);
   }
 }
 

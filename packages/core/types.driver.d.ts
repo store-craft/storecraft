@@ -4,7 +4,7 @@ import {
   OrderData, 
   PostType, ProductType, ShippingMethodType, 
   StorefrontType, TagType } from "./types.api";
-import { App, ExpendQuery, ParsedApiQuery } from "./types.public";
+import { App, ExpandQuery as ExpandQuery, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
 export type Handle = string;
@@ -15,7 +15,7 @@ type SearchTermsType = {
 }
 
 export type RegularGetOptions = {
-  expend? : ExpendQuery;
+  expand? : ExpandQuery;
 }
 
 /**

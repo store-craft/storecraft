@@ -4,13 +4,13 @@ export type ApiQuerySortOrder = 'asc' | 'desc';
 export type Cursor<T=string> = [key: 'updated' | 'created' | 'id', value: T];
 
 /** Expend several relations */
-export type ExpendQuery = string[];
+export type ExpandQuery = string[];
 
 /**
  * Query url base type for most collections
  */
 export type ParsedApiQuery = {
-  expend?: ExpendQuery;
+  expand?: ExpandQuery;
   /**
    * boolean DSL for filtering the terms
    * (whatever-indexed tag:a -(tag:b | tag:c) handle:product*)

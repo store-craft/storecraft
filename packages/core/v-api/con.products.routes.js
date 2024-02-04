@@ -1,7 +1,7 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
 import { authorize_by_roles } from './middle.auth.js'
-import { parse_expend, parse_query } from './utils.query.js'
+import { parse_expand as parse_expand, parse_query } from './utils.query.js'
 import { add_product_to_collection, get, list, list_product_collections, remove, upsert } from './con.products.logic.js'
 
 /**
@@ -38,7 +38,7 @@ export const create_routes = (app) => {
       const handle_or_id = req?.params?.handle;
       /** @type {import('../types.driver.js').RegularGetOptions} */
       const options = {
-        expend: parse_expend(req.query)
+        expand: parse_expand(req.query)
       };
       const item = await get(app, handle_or_id, options);
       assert(item, 'not-found', 404);

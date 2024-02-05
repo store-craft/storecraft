@@ -93,23 +93,30 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
    * we assume, there are a handful of collection per product
    * @param product handle or id
    * @param options options like expand
-   * @returns 
    */
   list_product_collections: (product: string) => Promise<Partial<CollectionType>[]>;
 
   /**
+   * list all of the product related collections, returns eveything, this is not query based,
+   * we assume, there are a handful of collection per product
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_product_variants: (product: string) => Promise<Partial<ProductType>[]>;
+  
+  /**
    * Add product to collection
    * @param product handle or id
-   * @param collections_handles list of handles
+   * @param collection_handle_or_id collection handle or id
    */
-  add_product_to_collections?: (product: string, collections_handles: string[]) => Promise<void>;
+  add_product_to_collection?: (product: string, collection_handle_or_id: string) => Promise<void>;
 
   /**
    * remove product from collection
    * @param product handle or id
-   * @param collections_handles list of handles
+   * @param collection_handle_or_id collection handle or id
    */
-  remove_product_from_collections?: (product: string, collections_handles: string[]) => Promise<void>;
+  remove_product_from_collection?: (product: string, collection_handle_or_id: string) => Promise<void>;
 }
 
 /** StorefrontData crud */

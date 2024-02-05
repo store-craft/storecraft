@@ -2,7 +2,7 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
 import { authorize_by_roles } from './middle.auth.js'
 import { parse_expand as parse_expand, parse_query } from './utils.query.js'
-import { add_product_to_collection, get, list, list_product_collections, remove, upsert } from './con.products.logic.js'
+import { add_product_to_collection, get, list, list_product_collections, list_product_variants, remove, upsert } from './con.products.logic.js'
 
 /**
  * @typedef {import('../types.api.js').ProductType} ItemType
@@ -71,6 +71,7 @@ export const create_routes = (app) => {
   // add to collection
   polka.post(
     '/:product/collections/:collection',
+    middle_authorize_admin,
     async (req, res) => {
       const { product, collection } = req?.params;
       await add_product_to_collection(app, product, collection);
@@ -81,6 +82,7 @@ export const create_routes = (app) => {
   // remove from
   polka.delete(
     '/:product/collections/:collection',
+    middle_authorize_admin,
     async (req, res) => {
       const { product, collection } = req?.params;
       await add_product_to_collection(app, product, collection);
@@ -93,6 +95,16 @@ export const create_routes = (app) => {
     async (req, res) => {
       const { product } = req?.params;
       const items = await list_product_collections(app, product);
+      res.sendJson(items);
+    }
+  );
+
+  // get all variants of a product
+  polka.get(
+    '/:product/variants',
+    async (req, res) => {
+      const { product } = req?.params;
+      const items = await list_product_variants(app, product);
       res.sendJson(items);
     }
   );

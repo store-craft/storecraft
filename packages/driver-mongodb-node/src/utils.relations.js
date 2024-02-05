@@ -27,7 +27,7 @@ import { Driver } from '../driver.js';
  * @param {boolean} [ignore_entries=false] don't retrive documents
  * @returns {Promise<WithRelations<T>>}
  */
-export const create_hidden_relation = async (driver, data, fieldName, belongsToCollection, ignore_entries=false) => {
+export const create_explicit_relation = async (driver, data, fieldName, belongsToCollection, ignore_entries=false) => {
   const value = data?.[fieldName];
   if(isUndef(value))
     return data;

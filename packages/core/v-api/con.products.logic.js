@@ -71,7 +71,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
  * @param {string} collection handle or id
  */
 export const add_product_to_collection = (app, product, collection) => {
-  return db(app).add_product_to_collections(product, [collection]);
+  return db(app).add_product_to_collection(product, collection);
 }
 
 /**
@@ -81,7 +81,7 @@ export const add_product_to_collection = (app, product, collection) => {
  * @param {string} collection handle or id
  */
 export const remove_product_from_collection = (app, product, collection) => {
-  return db(app).remove_product_from_collections(product, [collection]);
+  return db(app).remove_product_from_collection(product, collection);
 }
 
 /**
@@ -91,4 +91,13 @@ export const remove_product_from_collection = (app, product, collection) => {
  */
 export const list_product_collections = (app, product) => {
   return db(app).list_product_collections(product);
+}
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} product handle or id
+ */
+export const list_product_variants = (app, product) => {
+  return db(app).list_product_variants(product);
 }

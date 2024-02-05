@@ -146,8 +146,12 @@ export type ProductType = BaseType & {
    */
   compare_at_price?: number;
 
+  /** product variants */
+  variants?: ProductType[]
   /** handle of parent product in case this product is a variant */
   parent_handle?: string;
+  /** id of parent product in case this product is a variant */
+  parent_id?: string;
   /** variants options info */
   variants_options?: VariantOption[];
   /** mapping of product variants handles to product data and variants options selection */

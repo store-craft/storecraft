@@ -32,7 +32,7 @@ const upsert = (driver) => {
     await driver.products._col.updateMany(
       { '_relations.collections.ids' : objid },
       { 
-        $set: { [`_relations.collections.entries.${objid.toString()}`]: '' },
+        $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
       },
     );
 
@@ -71,7 +71,7 @@ const remove = (driver) => {
       { 
         $pull: { 
           '_relations.collections.ids': objid,
-          'search': { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
+          search: { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
         },
         $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
       },

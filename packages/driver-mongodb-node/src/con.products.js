@@ -52,11 +52,6 @@ const remove = (driver) => {
     const objid = to_objid(id);
     const filter = { _id: objid };
 
-    // remove product relations from collections
-    await driver.collections._col.updateMany(
-      { '_relations.products.ids' : objid },
-      { $pull: { '_relations.products.ids': objid } },
-    );
     // delete me
     const res = await col(driver).findOneAndDelete(
       filter
@@ -66,39 +61,12 @@ const remove = (driver) => {
   }
 
 }
+
 /**
  * @param {Driver} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
-
-
-/**
- * @param {Driver} driver 
- * @returns {db_col["add_product_to_collections"]}
- */
-const add_product_to_collections = (driver) => {
-  return async (product, collections_handles=[]) => {
-
-    await driver.products._col.updateOne(
-      handle_or_id(product),
-      { $addToSet: { collections:{ $each: collections_handles } } }
-    );
-  }
-}
-
-/**
- * @param {Driver} driver 
- * @returns {db_col["remove_product_from_collections"]}
- */
-const remove_product_from_collections = (driver) => {
-  return async (product, collections_handles) => {
-
-    await driver.products._col.updateOne(
-      handle_or_id(product),
-      { $pullAll: { collections: collections_handles } }
-    );
-  }
-}
+ 
 
 /**
  * For now and because each product is related to very few
@@ -115,7 +83,7 @@ const list_product_collections = (driver) => {
     };
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item.collections);
+    return sanitize(item?.collections);
   }
 }
 
@@ -132,8 +100,8 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    add_product_to_collections: add_product_to_collections(driver),
-    remove_product_from_collections: remove_product_from_collections(driver),
+    // add_product_to_collections: add_product_to_collections(driver),
+    // remove_product_from_collections: remove_product_from_collections(driver),
     list_product_collections: list_product_collections(driver),
   }
 }

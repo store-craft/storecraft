@@ -2,7 +2,7 @@ import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
-import { to_objid } from './utils.funcs.js'
+import { handle_or_id, to_objid } from './utils.funcs.js'
 
 /**
  * @typedef {import('@storecraft/core').db_collections} db_col
@@ -18,8 +18,32 @@ const col = (d) => {
 
 /**
  * @param {Driver} driver 
+ * @returns {db_col["upsert"]}
  */
-const upsert = (driver) => upsert_regular(driver, col(driver));
+const upsert = (driver) => {
+  return async (data) => {
+    
+    const objid = to_objid(data.id)
+    const filter = { _id: objid };
+    const replacement = { ...data };
+    const options = { upsert: true };
+
+    // update collection document in products, that reference this collection
+    await driver.products._col.updateMany(
+      { '_relations.collections.ids' : objid },
+      { 
+        $set: { [`_relations.collections.entries.${objid.toString()}`]: '' },
+      },
+    );
+
+    const res = await col(driver).replaceOne(
+      filter, replacement, options
+    );
+
+    return;
+  }
+
+}
 
 /**
  * @param {Driver} driver 
@@ -32,28 +56,35 @@ const get = (driver) => get_regular(driver, col(driver));
  */
 const remove = (driver) => {
   return async (id) => {
-    const res = await col(driver).findOneAndDelete(
-      { _id: to_objid(id) }
-    );
 
-    // remove from products
+    const item = await get(driver)(id);
+    if(!item)
+      return;
+
+    const objid = to_objid(item.id);
+
+    // todo: transaction
+
+    // remove collection reference from products
     await driver.products._col.updateMany(
-      { collections: res.handle },
-      {
-        $pull: { collections: res.handle, search: `col:${res.handle}` },
-      }
+      { '_relations.collections.ids' : objid },
+      { 
+        $pull: { 
+          '_relations.collections.ids': objid,
+          'search': { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
+        },
+        $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
+      },
     );
 
-    // remove from storefronts
-    await driver.storefronts._col.updateMany(
-      { collections: res.handle },
-      {
-        $pull: { collections: res.handle },
-      }
+    // delete me
+    const res = await col(driver).findOneAndDelete(
+      { _id: objid }
     );
 
     return
   }
+
 }
 
 

@@ -49,7 +49,7 @@ export const create_hidden_relation = async (driver, data, fieldName, belongsToC
     relation.entries = {};
     entries.forEach(
       e => {
-        relation.entries[e.id] = e;
+        relation.entries[e._id.toString()] = e;
       }
     );
   }

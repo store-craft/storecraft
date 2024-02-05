@@ -46,27 +46,21 @@ Each product has the following relation:
     entries: Record<ID_STRING, CollectionType>
   }
 ```
-Each collection has the following relation:
-```js
-  _relations.products: {
-    // object ids of related products
-    ids: ObjectId[],
-  }
-```
 
 `Product SAVE:`
-- for each related collection add the entry `_relations.collections.entries[col-id]`
-- for each related collection add the collection `id` to array `_relations.collections.ids`
+- for each related collection add the entry `_relations.collections.entries[col-id]` in the product document.
+- for each related collection add the collection `ObjectId` to array `_relations.collections.ids` in the product document.
 
 `Product DELETE:`
-- for each related collection remove the product `id` from array `_relations.products.ids`
+- Nothing todo
 
 `Collection SAVE:`
-- update each related product `_relations.collections.entries[col-id] = c`
+- update each related product document with `_relations.collections.entries[col-id] = c`
 
 `Collection DELETE:`
 - delete in each related product the entry `_relations.collections.entries[col-id]`
 - remove in each related product the `id` from array `_relations.collections.ids`
+- remove in each related product the `[col:col-handle, col:col-id` from array `search` in the products documents.
 
 
 ## collections

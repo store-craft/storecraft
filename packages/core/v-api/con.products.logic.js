@@ -32,7 +32,8 @@ export const upsert = (app, item) => regular_upsert(
     );
     final.search.push(
       ...union(
-        final.collections?.map(c => `col:${c.handle}`)
+        final?.collections?.map(c => `col:${c?.handle}`),
+        final?.collections?.map(c => `col:${c?.id}`),
       )
     );
     

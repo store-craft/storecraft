@@ -212,8 +212,8 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    // add_product_to_collections: add_product_to_collections(driver),
-    // remove_product_from_collections: remove_product_from_collections(driver),
+    add_product_to_collection: add_product_to_collection(driver),
+    remove_product_from_collection: remove_product_from_collection(driver),
     list_product_collections: list_product_collections(driver),
     list_product_variants: list_product_variants(driver),
   }

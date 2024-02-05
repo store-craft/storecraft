@@ -1,8 +1,8 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
-import { handle_or_id, to_objid } from './utils.funcs.js'
+import { expand, get_regular, list_regular } from './con.shared.js'
+import { isDef, sanitize, to_objid } from './utils.funcs.js'
+import { query_to_mongo } from './utils.query.js'
 
 /**
  * @typedef {import('@storecraft/core').db_collections} db_col
@@ -93,6 +93,42 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {Driver} driver 
+ * @returns {db_col["list_products"]}
+ */
+const list_products = (driver) => {
+  return async (handle_or_id, query) => {
+
+    const { filter: filter_query, sort } = query_to_mongo(query);
+
+    console.log('query', query)
+    console.log('filter', JSON.stringify(filter_query, null, 2))
+    console.log('sort', sort)
+    console.log('expand', query?.expand)
+    
+    const filter = {
+      $and: [
+        { search: `col:${handle_or_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const items = await col(driver).find(
+      filter,  {
+        sort, limit: query.limit
+      }
+    ).toArray();
+
+    // try expand relations, that were asked
+    expand(items, query?.expand);
+
+    return sanitize(items);
+  }
+}
+
 /** 
  * @param {Driver} driver
  * @return {db_col & { _col: ReturnType<col>}}
@@ -104,6 +140,7 @@ export const impl = (driver) => {
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    list_products: list_products(driver) 
   }
 }

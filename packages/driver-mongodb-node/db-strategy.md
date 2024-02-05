@@ -92,6 +92,8 @@ to add variants like collections, i.e, explicitly.
 
 Notes:
 - Currently, I have no use for the `ids`, but it might change (because each sub variant has one parent).
+- Variants are always created by a product, that specify he has a parent. i.e, we rely on
+integrity, so use it with care.
 
 
 `Variant SAVE`:

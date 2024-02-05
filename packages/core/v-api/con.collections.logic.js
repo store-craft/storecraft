@@ -1,7 +1,6 @@
 import { assert, to_handle } from './utils.func.js'
-import { collectionTypeSchema, tagTypeSchema } from './types.autogen.zod.api.js'
-import { 
-  regular_get, regular_list, 
+import { collectionTypeSchema } from './types.autogen.zod.api.js'
+import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
@@ -34,6 +33,16 @@ export const upsert = (app, item) => regular_upsert(
   }
 )(item);
 
+
+/**
+ * given a collection handle and query, return products of that collection
+ * @param {import("../types.public.js").App} app
+ * @param {import('../types.driver.js').HandleOrId} handle_or_id 
+ * @param {import('../types.api.query.js').ParsedApiQuery} q 
+ */
+export const list_collection_products = async (app, handle_or_id, q) => {
+  return db(app).list_products(handle_or_id, q);
+}
 
 /**
  * 

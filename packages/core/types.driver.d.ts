@@ -8,6 +8,7 @@ import { App, ExpandQuery, ParsedApiQuery } from "./types.public";
 
 export type ID = string;
 export type Handle = string;
+export type HandleOrId = string;
 
 type SearchTermsType = {
   /** A bunch of search terms to be queried by VQL boolean language */
@@ -28,11 +29,10 @@ export declare interface db_crud<T> {
    * get a single item by handle or id
    * @param id_or_handle 
    */
-  get: (id_or_handle: ID | Handle, options?: RegularGetOptions) => Promise<Partial<T>>;
+  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<Partial<T>>;
 
   /**
    * Insert or Replace an item
-   * @param handle 
    */
   upsert: (data?: Partial<T>) => Promise<void>;
 
@@ -46,7 +46,7 @@ export declare interface db_crud<T> {
    * Delete an item
    * @param handle 
    */
-  remove: (handle?: Handle | ID) => Promise<void>
+  remove: (handle?: HandleOrId) => Promise<void>
 
   /**
    * TBD
@@ -75,9 +75,17 @@ export interface db_tags extends db_crud<TagType & SearchTermsType> {
 }
 
 /**
- * tags crud
+ * collections crud
  */
 export interface db_collections extends db_crud<CollectionType & SearchTermsType> {
+
+  /**
+   * 
+   * @param handle_or_id collection handle or id
+   * @param query query
+   */
+  list_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
+
 }
 
 /**
@@ -88,13 +96,14 @@ export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & Sea
 
 /** products crud */
 export interface db_products extends db_crud<ProductType & SearchTermsType> {
+  
   /**
    * list all of the product related collections, returns eveything, this is not query based,
    * we assume, there are a handful of collection per product
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_collections: (product: string) => Promise<Partial<CollectionType>[]>;
+  list_product_collections: (product: HandleOrId) => Promise<Partial<CollectionType>[]>;
 
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -102,21 +111,21 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: string) => Promise<Partial<ProductType>[]>;
+  list_product_variants: (product: HandleOrId) => Promise<Partial<ProductType>[]>;
   
   /**
    * Add product to collection
    * @param product handle or id
    * @param collection_handle_or_id collection handle or id
    */
-  add_product_to_collection?: (product: string, collection_handle_or_id: string) => Promise<void>;
+  add_product_to_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
 
   /**
    * remove product from collection
    * @param product handle or id
    * @param collection_handle_or_id collection handle or id
    */
-  remove_product_from_collection?: (product: string, collection_handle_or_id: string) => Promise<void>;
+  remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
 }
 
 /** StorefrontData crud */

@@ -1,1 +1,1 @@
-export * from './exports.js'
+export * from './public.js'

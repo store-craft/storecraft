@@ -3,6 +3,7 @@ import { Driver } from '../driver.js'
 import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
+import { DiscountApplicationEnum } from '@storecraft/core'
 
 /**
  * @typedef {import('@storecraft/core').db_products} db_col
@@ -26,8 +27,11 @@ const upsert = (driver) => {
     const objid = to_objid(data.id);
     const filter = { _id: objid };
     const options = { upsert: true };
-    const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
 
+    ////
+    // VARIANTS RELATION
+    ////
+    const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
     if(is_variant) {
       // update parent product
       await driver.products._col.updateOne(
@@ -41,11 +45,30 @@ const upsert = (driver) => {
       // in the future, support also explicit relation with `create_explicit_relation`
     }
 
-    // update collections relation
+    ////
+    // COLLECTIONS RELATION
+    ////
     const replacement = await create_explicit_relation(
       driver, data, 'collections', 'collections', false
     );
+
+    ////
+    // DISCOUNTS RELATION
+    ////
+    // get all automatic + active discounts
+    const discounts = await driver.discounts._col.find(
+      { 
+        'application.id': DiscountApplicationEnum.Auto.id,
+        active: true
+      }
+    ).toArray();
+    // now test locally
+    discounts.filter(d => test_product_with_discount(data, d))
     
+
+
+    
+    // SAVE ME
     const res = await driver.products._col.replaceOne(
       filter, replacement, options
     );
@@ -71,8 +94,10 @@ const remove = (driver) => {
     const item = await get(driver)(id);
     const objid = to_objid(item.id);
     
+    ////
+    // VARIANTS RELATION
+    ////
     const is_variant = item?.parent_handle && item?.parent_id && item?.variant_hint;
-
     if(is_variant) {
       // remove me from parent
       await driver.products._col.updateOne(

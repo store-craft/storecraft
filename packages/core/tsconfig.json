@@ -4,9 +4,11 @@
         "noEmit": true,
         "allowJs": true,
         "checkJs": true,
-        "target": "ESNext",
         "resolveJsonModule": true,
-        "moduleResolution": "node"
+        // "target": "",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true
     },
     "include": ["*", "**/*"]
 }

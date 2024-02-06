@@ -1,6 +1,6 @@
 import { Polka } from '../v-polka/index.js'
-import * as phash from '../utils/crypto-pbkdf2.js'
-import * as jwt from '../utils/jwt.js'
+import * as phash from '../v-utils/crypto-pbkdf2.js'
+import * as jwt from '../v-utils/jwt.js'
 import { ID, apply_dates, assert } from './utils.func.js'
 import { z } from 'zod'
 import { zod_validate_body } from './middle.zod-validate.js'
@@ -52,7 +52,7 @@ export const create_routes = (app) => {
         )
       );
   
-      /** @type {Partial<import("../utils/jwt.js").JWTClaims>} */
+      /** @type {Partial<import("../v-utils/jwt.js").JWTClaims>} */
       const claims = {
         sub: id, 
         // @ts-ignore

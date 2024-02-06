@@ -34,7 +34,7 @@ export declare interface db_crud<T> {
   /**
    * Insert or Replace an item
    */
-  upsert: (data?: Partial<T>) => Promise<void>;
+  upsert: (data?: T) => Promise<void>;
 
   /**
    * Insert or Replace an item

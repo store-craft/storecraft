@@ -5,6 +5,17 @@
   "main": "index.js",
   "type": "module",
   "types": "./types.public.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./types.public.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./v-api": {
+      "import": "./v-api/exports.js",
+      "types": "./v-api/types.public.d.ts"
+    }
+  },
   "scripts": {
     "test": "uvu -c",
     "gen:zod": "npx ts-to-zod ./types.api.d.ts ./v-api/types.autogen.zod.api.js",

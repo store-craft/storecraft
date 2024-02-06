@@ -210,7 +210,7 @@ export type Filter = {
   /** meta data related to identifying the filter */
   meta: FilterMeta;
   /** the filter params */
-  value: string[] | { from?: number, to:number};
+  value: string[] | { from?: number, to:number} | Pick<CollectionType, 'id' | 'handle'>[];
 }
 
 /** Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  */

@@ -1,4 +1,4 @@
-import { id } from '../utils/object-id.js';
+import { id } from '../v-utils/object-id.js';
 
 /**
  * Create an ID with prefix

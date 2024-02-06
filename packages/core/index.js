@@ -1,6 +1,6 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_api } from './v-api/index.js'
-
+export * from './types.api.enums.js'
 
 /**
  * @template {any} PlatformNativeRequest

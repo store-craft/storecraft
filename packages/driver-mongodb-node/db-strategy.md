@@ -1,4 +1,4 @@
-# Side Effects
+# MongoDB data modeling
 
 We embed some relation info in documents to model relations.
 ```js
@@ -112,8 +112,63 @@ integrity, so use it with care.
 
 `Product (parent) DELETE:`
 - delete all the children products
-- delete the parnt
+- delete the parent
 
+
+## products <-> discounts
+Again, a relation, that connects a collection with many entries (`products`) to one with
+much fewer (`discounts`). Therefore, we embed documents in.
+
+Each product has the following relation:
+```js
+  _relations.discounts: {
+    // object ids of related discounts
+    ids: ObjectId[],
+    // the variants documents
+    entries: Record<ID_STRING, DiscountType>
+  }
+```
+
+Notes:
+- like `variants`, relation connections are made implictly.
+- Everytime a discount is saved, it needs to form connection with eligible products.
+- Everytime a product is saved, it has to remove all of it's discounts and re-test itself.
+
+
+`Discount SAVE`:
+- Remove discount info from every related product:
+  - remove discount `ObjectId` from the product's `_relations.discounts.ids` array
+  - unset discount document from the product's `_relations.discounts.entries[discount-id]`
+  - remove [`discount:discount-handle`, `discount:discount-id`] from the product's `search`
+
+- query the eligible products of the discount:
+  - for each eligible product:
+    - add discount `ObjectId` into the product's `_relations.discounts.ids` array
+    - update discount document in the product's `_relations.discounts.entries[discount-id]=discount`
+    - add [`discount:discount-handle`, `discount:discount-id`] to the product's `search`
+
+`Discount DELETE`:
+- Remove discount info from every related product:
+  - remove discount `ObjectId` from the product's `_relations.discounts.ids` array
+  - unset discount document from the product's `_relations.discounts.entries[discount-id]`
+  - remove [`discount:discount-handle`, `discount:discount-id`] from the product's `search`
+- remove discount document
+
+
+`Product SAVE:`
+Product might have changed, therefore it needs to be re-tested for discounts, BUT,
+it is not OKAY to punish all products saves, usually, it is only required if 
+tags/collections/price changes
+- delete the product's self relations `_relations.discounts`
+- get all discounts of type product, which are active and for each:
+  - test eligibility for discount locally,
+    - If eligible:
+      - add discount `ObjectId` into the product's `_relations.discounts.ids` array
+      - update discount document in the product's `_relations.discounts.entries[discount-id]=discount`
+      - add [`discount:discount-handle`, `discount:discount-id`] into the product's `search`
+
+`Product DELETE:`
+- Do nothing
 
 ## images
 images are immutable, can only be created or deleted.

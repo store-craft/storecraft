@@ -6,7 +6,9 @@
     "checkJs": true,
     "target": "ESNext",
     "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true,
   },
   "include": ["*", "src/*"]
 }

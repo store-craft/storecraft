@@ -1,5 +1,5 @@
 import { AuthUserType } from './types.api.js';
-import { JWTClaims } from './utils/jwt.js';
+import { JWTClaims } from './v-utils/jwt.js';
 import { Polka } from './v-polka/index.js'
 import type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
 export type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
@@ -43,3 +43,4 @@ export * from './index.js'
 export type * from './types.driver.js'
 export type * from './types.api.js'
 export type * from './types.api.query.js'
+

@@ -170,6 +170,87 @@ tags/collections/price changes
 `Product DELETE:`
 - Do nothing
 
+
+## storefronts --> products, collections, discounts, shipping, posts
+We are going to create explicit connections, (the way `product` connects `collections`).
+
+Each product has the following relation:
+```js
+_relations: {
+  products: {
+    ids: ObjectId[],
+    entries: Record<ID_STRING, ProductType>
+  },
+  collections: {
+    ids: ObjectId[],
+    entries: Record<ID_STRING, CollectionType>
+  },
+  discounts: {
+    ids: ObjectId[],
+    entries: Record<ID_STRING, DiscountType>
+  },
+  shipping: {
+    ids: ObjectId[],
+    entries: Record<ID_STRING, ShippingMethodType>
+  },
+  posts: {
+    ids: ObjectId[],
+    entries: Record<ID_STRING, PostType>
+  },
+}
+```
+
+`Storefront SAVE:`
+- For Each product in `storefront.products`:
+  - Add `_relations.products.entries[product-id]=product`.
+  - Add `ObjectId` to `_relations.products.ids`.
+
+- For Each collection in `storefront.collections`:
+  - Add `_relations.collections.entries[collection-id]=collection`.
+  - Add `ObjectId` to `_relations.collections.ids`.
+
+- For Each discount in `storefront.discounts`:
+  - Add `_relations.discounts.entries[discount-id]=discount`.
+  - Add `ObjectId` to `_relations.discounts.ids`.
+
+- For Each shipping method in `storefront.shipping_methods`:
+  - Add `_relations.shipping_methods.entries[shipping_method-id]=shipping_method`.
+  - Add `ObjectId` to `_relations.shipping_methods.ids`.
+
+- For Each post in `storefront.posts`:
+  - Add `_relations.posts.entries[post-id]=post`.
+  - Add `ObjectId` to `_relations.posts.ids`.
+
+`Storefront DELETE:`
+- Nothing todo
+
+`product/collection/discount/shipping/post SAVE:`
+- update each related `storefront` document with `storefront._relations.products.entries[product-id] = product`
+- update each related `storefront` document with `storefront._relations.collections.entries[collection-id] = collection`
+- update each related `storefront` document with `storefront._relations.discounts.entries[discount-id] = discount`
+- update each related `storefront` document with `storefront._relations.shipping_methods.entries[shipping_method-id] = shipping_method`
+- update each related `storefront` document with `storefront._relations.posts.entries[post-id] = post`
+
+
+`product/collection/discount/shipping/post DELETE:`
+- on `product delete`:
+  - delete in each related `storefront` the entry `storefront._relations.products.entries[product-id]`
+  - remove in each related `storefront` the `ObjectId` from array `storefront._relations.products.ids`
+- on `collection delete`:
+  - delete in each related `storefront` the entry `storefront._relations.collections.entries[collection-id]`
+  - remove in each related `storefront` the `ObjectId` from array `storefront._relations.collections.ids`
+- on `discount delete`:
+  - delete in each related `storefront` the entry `storefront._relations.discounts.entries[discount-id]`
+  - remove in each related `storefront` the `ObjectId` from array `storefront._relations.discounts.ids`
+- on `shipping_method delete`:
+  - delete in each related `storefront` the entry `storefront._relations.shipping_methods.entries[shipping_method-id]`
+  - remove in each related `storefront` the `ObjectId` from array `storefront._relations.shipping_methods.ids`
+- on `post delete`:
+  - delete in each related `storefront` the entry `storefront._relations.posts.entries[post-id]`
+  - remove in each related `storefront` the `ObjectId` from array `storefront._relations.posts.ids`
+
+
+
 ## images
 images are immutable, can only be created or deleted.
 They are not normalized in places used.

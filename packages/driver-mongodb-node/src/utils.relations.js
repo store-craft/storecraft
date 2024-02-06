@@ -24,10 +24,12 @@ import { Driver } from '../driver.js';
  * @param {T} data data to create the connection from
  * @param {string} fieldName the field name, that represents a relation, a field with { id } property
  * @param {string} belongsToCollection which collection does the field relate to
- * @param {boolean} [ignore_entries=false] don't retrive documents
+ * @param {boolean} [reload=false] re-retrive documents ?
  * @returns {Promise<WithRelations<T>>}
  */
-export const create_explicit_relation = async (driver, data, fieldName, belongsToCollection, ignore_entries=false) => {
+export const create_explicit_relation = async (
+  driver, data, fieldName, belongsToCollection, reload=false) => {
+
   const value = data?.[fieldName];
   if(isUndef(value))
     return data;
@@ -41,18 +43,23 @@ export const create_explicit_relation = async (driver, data, fieldName, belongsT
   /** @type {Relation<T>} */
   const relation = data_with_rel._relations[belongsToCollection] = {};
   relation.ids = items.filter(i => isDef(i?.id)).map(c => to_objid(c.id));
+  relation.entries = {};
 
-  if(!ignore_entries) {
+  if(reload) {
     const entries = await driver.collection(belongsToCollection).find(
       { _id: { $in : relation.ids }}
     ).toArray();
-    relation.entries = {};
     entries.forEach(
       e => {
         relation.entries[e._id.toString()] = e;
       }
     );
+  } else {
+    relation.entries = Object.fromEntries(items.map(it => [it.id.split('_').at(-1), it]))
   }
+
+  // delete fieldname
+  delete data_with_rel[fieldName];
 
   return data_with_rel;
 }

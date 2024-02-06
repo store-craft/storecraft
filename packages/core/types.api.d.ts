@@ -311,15 +311,15 @@ export type StorefrontType = BaseType & {
   /** exported storefront json */
   published?: string;
   /** Handles of collections part of the storefront */
-  collections?: string[];
+  collections?: Partial<CollectionType>[];
   /** Handles of products you want to promote as part of the storefront */
-  products?: string[];
+  products?: Partial<ProductType>[];
   /** Handles of shipping methods part of the storefront */
-  shipping_methods?: string[];
+  shipping_methods?: Partial<ShippingMethodType>[];
   /** Handles of discounts to prmote part of the storefront */
-  discounts?: string[];
+  discounts?: Partial<DiscountType>[];
   /** Handles of posts to prmote part of the storefront */
-  posts?: string[];
+  posts?: Partial<PostType>[];
 }
 
 
@@ -618,5 +618,4 @@ export type OrderPaymentGatewayData = {
   on_checkout_complete: any; 
   /** latest status of payment */
   latest_status: any; 
- 
 }

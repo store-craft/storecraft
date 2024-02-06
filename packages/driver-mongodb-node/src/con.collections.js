@@ -25,9 +25,11 @@ const upsert = (driver) => {
     
     const objid = to_objid(data.id)
     const filter = { _id: objid };
-    const replacement = { ...data };
     const options = { upsert: true };
 
+    ////
+    // PRODUCT -> COLLECTION RELATION
+    ////
     // update collection document in products, that reference this collection
     await driver.products._col.updateMany(
       { '_relations.collections.ids' : objid },
@@ -36,8 +38,17 @@ const upsert = (driver) => {
       },
     );
 
+    ////
+    // STOREFRONTS -> COLLECTIONS RELATION
+    ////
+    await driver.storefronts._col.updateMany(
+      { '_relations.collections.ids' : objid },
+      { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
+    );
+
+    // SAVE ME
     const res = await col(driver).replaceOne(
-      filter, replacement, options
+      filter, data, options
     );
 
     return;
@@ -65,7 +76,9 @@ const remove = (driver) => {
 
     // todo: transaction
 
-    // remove collection reference from products
+    ////
+    // PRODUCTS --> COLLECTIONS RELATION
+    ////
     await driver.products._col.updateMany(
       { '_relations.collections.ids' : objid },
       { 
@@ -77,7 +90,18 @@ const remove = (driver) => {
       },
     );
 
-    // delete me
+    ////
+    // STOREFRONTS --> COLLECTIONS RELATION
+    ////
+    await driver.storefronts._col.updateMany(
+      { '_relations.collections.ids' : objid },
+      { 
+        $pull: { '_relations.collections.ids': objid, },
+        $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
+      },
+    );
+
+    // DELETE ME
     const res = await col(driver).findOneAndDelete(
       { _id: objid }
     );

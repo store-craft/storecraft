@@ -14,9 +14,7 @@ import { test_product_with_discount } from '@storecraft/core/v-api'
  * @param {Driver} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
-const col = (d) => {
-  return d.collection('products')
-}
+const col = (d) => d.collection('products');
 
 /**
  * @param {Driver} driver 
@@ -47,7 +45,7 @@ const upsert = (driver) => {
     }
 
     ////
-    // COLLECTIONS RELATION
+    // COLLECTIONS RELATION (explicit)
     ////
     const replacement = await create_explicit_relation(
       driver, data, 'collections', 'collections', false
@@ -80,6 +78,13 @@ const upsert = (driver) => {
       )
     );
 
+    ////
+    // STOREFRONTS -> PRODUCTS RELATION
+    ////
+    await driver.storefronts._col.updateMany(
+      { '_relations.products.ids' : objid },
+      { $set: { [`_relations.products.entries.${objid.toString()}`]: data } },
+    );
     
     // SAVE ME
     const res = await driver.products._col.replaceOne(
@@ -107,7 +112,7 @@ const remove = (driver) => {
     const objid = to_objid(item.id);
     
     ////
-    // VARIANTS RELATION
+    // PRODUCTS -> VARIANTS RELATION
     ////
     const is_variant = item?.parent_handle && item?.parent_id && item?.variant_hint;
     if(is_variant) {
@@ -129,7 +134,18 @@ const remove = (driver) => {
       }
     }
 
-    // delete me
+    ////
+    // STOREFRONTS --> PRODUCTS RELATION
+    ////
+    await driver.storefronts._col.updateMany(
+      { '_relations.products.ids' : objid },
+      { 
+        $pull: { '_relations.products.ids': objid, },
+        $unset: { [`_relations.products.entries.${objid.toString()}`]: '' },
+      },
+    );
+
+    // DELETE ME
     const res = await col(driver).findOneAndDelete(
       { _id: objid }
     );

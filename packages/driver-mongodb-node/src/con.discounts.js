@@ -12,9 +12,7 @@ import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
  * @param {Driver} d 
  * @returns {Collection<db_col["$type"]>}
  */
-const col = (d) => {
-  return d.collection('discounts')
-}
+const col = (d) => d.collection('discounts');
 
 /**
  * @param {Driver} driver 
@@ -28,10 +26,8 @@ const upsert = (driver) => {
     const options = { upsert: true };
 
     ////
-    // PRODUCT RELATION
+    // PRODUCT --> DISCOUNTS RELATION
     ////
-
-    // remove this discount reference from products
     await driver.products._col.updateMany(
       { '_relations.discounts.ids' : objid },
       { 
@@ -55,6 +51,14 @@ const upsert = (driver) => {
         },
       );
     }
+
+    ////
+    // STOREFRONTS -> DISCOUNTS RELATION
+    ////
+    await driver.storefronts._col.updateMany(
+      { '_relations.discounts.ids' : objid },
+      { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
+    );
 
 
     // SAVE ME
@@ -85,8 +89,6 @@ const remove = (driver) => {
     ////
     // PRODUCT RELATION
     ////
-
-    // remove this discount reference from products
     await driver.products._col.updateMany(
       { '_relations.discounts.ids' : objid },
       { 
@@ -98,10 +100,18 @@ const remove = (driver) => {
       },
     );
 
+    ////
+    // STOREFRONTS --> DISCOUNTS RELATION
+    ////
+    await driver.storefronts._col.updateMany(
+      { '_relations.discounts.ids' : objid },
+      { 
+        $pull: { '_relations.discounts.ids': objid, },
+        $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
+      },
+    );
 
-    ////
     // DELETE ME
-    ////
     const res = await col(driver).findOneAndDelete( 
       { _id: objid }
     );

@@ -1,8 +1,7 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
-import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
-import { to_objid } from './utils.funcs.js'
+import { get_regular, list_regular } from './con.shared.js'
+import { handle_or_id, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 
 /**
@@ -81,7 +80,7 @@ const get = (driver) => get_regular(driver, col(driver));
 const remove = (driver) => {
   return async (id) => {
     const objid = to_objid(id)
-    const item = await get(driver)(id);
+    const item = await col(driver).findOne(handle_or_id(id));
 
     ////
     // PRODUCT RELATION

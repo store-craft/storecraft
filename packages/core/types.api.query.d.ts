@@ -1,5 +1,5 @@
 // Query types
-import type { VQL } from './v-ql/types';
+import type { VQL } from './v-ql/types.js';
 export type ApiQuerySortOrder = 'asc' | 'desc';
 export type Cursor<T=string> = [key: 'updated' | 'created' | 'id', value: T];
 

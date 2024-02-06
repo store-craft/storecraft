@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
 import { expand, get_regular, list_regular } from './con.shared.js'
-import { isDef, sanitize, to_objid } from './utils.funcs.js'
+import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 
 /**
@@ -10,7 +10,7 @@ import { query_to_mongo } from './utils.query.js'
 
 /**
  * @param {Driver} d 
- * @returns {Collection<db_col["$type"]>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
 const col = (d) => {
   return d.collection('collections')
@@ -57,7 +57,7 @@ const get = (driver) => get_regular(driver, col(driver));
 const remove = (driver) => {
   return async (id) => {
 
-    const item = await get(driver)(id);
+    const item = await col(driver).findOne(handle_or_id(id));
     if(!item)
       return;
 

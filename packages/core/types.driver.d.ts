@@ -3,8 +3,8 @@ import {
   DiscountType, ImageType, NotificationType, 
   OrderData, 
   PostType, ProductType, ShippingMethodType, 
-  StorefrontType, TagType } from "./types.api";
-import { App, ExpandQuery, ParsedApiQuery } from "./types.public";
+  StorefrontType, TagType } from "./types.api.js";
+import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
 
 export type ID = string;
 export type Handle = string;

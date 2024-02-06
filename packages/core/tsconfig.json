@@ -5,7 +5,7 @@
         "allowJs": true,
         "checkJs": true,
         "resolveJsonModule": true,
-        // "target": "",
+        "target": "ESNext",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "esModuleInterop": true

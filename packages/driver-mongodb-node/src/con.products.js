@@ -4,6 +4,7 @@ import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
 import { DiscountApplicationEnum } from '@storecraft/core'
+import { test_product_with_discount } from '@storecraft/core/v-api'
 
 /**
  * @typedef {import('@storecraft/core').db_products} db_col
@@ -11,7 +12,7 @@ import { DiscountApplicationEnum } from '@storecraft/core'
 
 /**
  * @param {Driver} d 
- * @returns {Collection<Partial<db_col["$type"]>>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
 const col = (d) => {
   return d.collection('products')
@@ -63,9 +64,21 @@ const upsert = (driver) => {
       }
     ).toArray();
     // now test locally
-    discounts.filter(d => test_product_with_discount(data, d))
-    
-
+    const eligible_discounts = discounts.filter(
+      d => test_product_with_discount(data, d)
+    );
+    // now replace discounts relation
+    replacement._relations = replacement._relations ?? {};
+    replacement._relations.discounts = {
+      ids: eligible_discounts.map(d => d._id),
+      entries: Object.fromEntries(eligible_discounts.map(d => [d._id.toString(), d]))
+    }
+    replacement.search = replacement.search ?? [];
+    eligible_discounts.forEach(
+      d => replacement.search.push(
+        `discount:${d.handle}`, `discount:${d.id}`
+      )
+    );
 
     
     // SAVE ME
@@ -90,8 +103,7 @@ const remove = (driver) => {
   return async (id) => {
     // todo: transaction
 
-    /** @type {import('./utils.relations.js').WithRelations<import('@storecraft/core').ProductType>} */
-    const item = await get(driver)(id);
+    const item = await col(driver).findOne(handle_or_id(id));
     const objid = to_objid(item.id);
     
     ////
@@ -179,7 +191,10 @@ const add_product_to_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
 
     // 
-    const coll = await driver.collections.get(collection_handle_or_id);
+    const coll = await driver.collections._col.findOne(
+      handle_or_id(collection_handle_or_id)
+    );
+
     if(!coll)
       return;
 
@@ -206,7 +221,9 @@ const remove_product_from_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
 
     // 
-    const coll = await driver.collections.get(collection_handle_or_id);
+    const coll = await driver.collections._col.findOne(
+      handle_or_id(collection_handle_or_id)
+    );
     if(!coll)
       return;
 

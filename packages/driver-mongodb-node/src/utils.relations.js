@@ -11,7 +11,7 @@ import { Driver } from '../driver.js';
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @typedef {import('@storecraft/core').BaseType & T & { _relations? : Record<string, Relation<T>> }} WithRelations
+ * @typedef {T & { _relations? : Record<string, Relation<any>> }} WithRelations
  */
 
 /**

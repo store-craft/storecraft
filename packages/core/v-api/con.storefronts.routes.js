@@ -63,6 +63,52 @@ export const create_routes = (app) => {
     }
   );
 
+  // list
+  polka.get(
+    '/:handle/products',
+    async (req, res) => {
+      const { handle } = req.params;
+      const items = await app.db.storefronts.list_storefront_products(handle);
+      res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/:handle/collections',
+    async (req, res) => {
+      const { handle } = req.params;
+      const items = await app.db.storefronts.list_storefront_collections(handle);
+      res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/:handle/discounts',
+    async (req, res) => {
+      const { handle } = req.params;
+      const items = await app.db.storefronts.list_storefront_discounts(handle);
+      res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/:handle/shipping_methods',
+    async (req, res) => {
+      const { handle } = req.params;
+      const items = await app.db.storefronts.list_storefront_shipping_methods(handle);
+      res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/:handle/posts',
+    async (req, res) => {
+      const { handle } = req.params;
+      const items = await app.db.storefronts.list_storefront_posts(handle);
+      res.sendJson(items);
+    }
+  );
+
   return polka;
 }
 

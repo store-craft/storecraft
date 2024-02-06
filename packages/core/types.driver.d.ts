@@ -138,6 +138,42 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
 
 /** StorefrontData crud */
 export interface db_storefronts extends db_crud<StorefrontType & SearchTermsType> {
+  /**
+   * list all of the product related to storefront, returns eveything, this is not query based,
+   * we assume, there are a handful.
+   * @param handle_or_id handle or id
+   * @param options options like expand
+   */
+  list_storefront_products: (handle_or_id: HandleOrId) => Promise<Partial<ProductType>[]>;
+  /**
+   * list all of the collections related to storefront, returns eveything, this is not query based,
+   * we assume, there are a handful.
+   * @param handle_or_id handle or id
+   * @param options options like expand
+   */
+  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<Partial<CollectionType>[]>;
+  /**
+   * list all of the discounts related to storefront, returns eveything, this is not query based,
+   * we assume, there are a handful.
+   * @param handle_or_id handle or id
+   * @param options options like expand
+   */
+  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<Partial<DiscountType>[]>;
+  /**
+   * list all of the shipping methods related to storefront, returns eveything, this is not query based,
+   * we assume, there are a handful.
+   * @param handle_or_id handle or id
+   * @param options options like expand
+   */
+  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<Partial<ShippingMethodType>[]>;
+  /**
+   * list all of the posts related to storefront, returns eveything, this is not query based,
+   * we assume, there are a handful.
+   * @param handle_or_id handle or id
+   * @param options options like expand
+   */
+  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<Partial<PostType>[]>;
+
 }
 
 /** ImageType crud */

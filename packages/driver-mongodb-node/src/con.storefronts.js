@@ -1,8 +1,8 @@
 import { Collection } from 'mongodb'
 import { Driver } from '../driver.js'
 import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
-import { to_objid } from './utils.funcs.js'
+  remove_regular } from './con.shared.js'
+import { sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js';
 
 /**
@@ -69,17 +69,97 @@ const remove = (driver) => remove_regular(driver, col(driver));
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {Driver} driver 
+ * @returns {db_col["list_storefront_products"]}
+ */
+const list_storefront_products = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['products']
+    };
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item?.products);
+  }
+}
+
+/**
+ * @param {Driver} driver 
+ * @returns {db_col["list_storefront_collections"]}
+ */
+const list_storefront_collections = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['collections']
+    };
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item?.collections);
+  }
+}
+
+/**
+ * @param {Driver} driver 
+ * @returns {db_col["list_storefront_discounts"]}
+ */
+const list_storefront_discounts = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['discounts']
+    };
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item?.discounts);
+  }
+}
+
+/**
+ * @param {Driver} driver 
+ * @returns {db_col["list_storefront_shipping_methods"]}
+ */
+const list_storefront_shipping_methods = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['shipping_methods']
+    };
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item?.shipping_methods);
+  }
+}
+
+/**
+ * @param {Driver} driver 
+ * @returns {db_col["list_storefront_posts"]}
+ */
+const list_storefront_posts = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['posts']
+    };
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item?.posts);
+  }
+}
+
 /** 
  * @param {Driver} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {
-  driver
+
   return {
     _col: col(driver),
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    list_storefront_products: list_storefront_products(driver),
+    list_storefront_collections: list_storefront_collections(driver),
+    list_storefront_discounts: list_storefront_discounts(driver),
+    list_storefront_shipping_methods: list_storefront_shipping_methods(driver),
+    list_storefront_posts: list_storefront_posts(driver),
   }
 }

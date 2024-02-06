@@ -63,7 +63,7 @@ export const create_routes = (app) => {
   polka.get(
     '/:collection/products',
     async (req, res) => {
-      const { collection } = req?.params;
+      const { collection } = req.params;
       let q = parse_query(req.query);
       const items = await list_collection_products(app, collection, q);
       res.sendJson(items);

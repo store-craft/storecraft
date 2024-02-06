@@ -80,11 +80,11 @@ export interface db_tags extends db_crud<TagType & SearchTermsType> {
 export interface db_collections extends db_crud<CollectionType & SearchTermsType> {
 
   /**
-   * 
+   * List and query the product in a collection
    * @param handle_or_id collection handle or id
    * @param query query
    */
-  list_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
+  list_collection_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
 
 }
 
@@ -104,6 +104,14 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
    * @param options options like expand
    */
   list_product_collections: (product: HandleOrId) => Promise<Partial<CollectionType>[]>;
+
+  /**
+   * list all of the product related discounts, returns eveything, this is not query based,
+   * we assume, there are a handful of discounts per product
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_product_discounts: (product: HandleOrId) => Promise<Partial<DiscountType>[]>;
 
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -150,6 +158,13 @@ export interface db_notifications extends OmitGetByHandle<db_crud<NotificationTy
 
 /** DiscountType crud */
 export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
+
+  /**
+   * List and query the products in a discount
+   * @param handle_or_id discount handle or id
+   * @param query query
+   */
+  list_discount_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
 }
 
 /** DiscountType crud */

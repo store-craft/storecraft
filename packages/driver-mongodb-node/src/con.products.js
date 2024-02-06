@@ -201,6 +201,22 @@ const list_product_variants = (driver) => {
 
 /**
  * @param {Driver} driver 
+ * @returns {db_col["list_product_discounts"]}
+ */
+const list_product_discounts = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core').RegularGetOptions} */
+    const options = {
+      expand: ['discounts']
+    };
+    // We have collections embedded in products, so let's use it
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize(item?.discounts);
+  }
+}
+
+/**
+ * @param {Driver} driver 
  * @returns {db_col["add_product_to_collection"]}
  */
 const add_product_to_collection = (driver) => {
@@ -274,6 +290,7 @@ export const impl = (driver) => {
     remove_product_from_collection: remove_product_from_collection(driver),
     list_product_collections: list_product_collections(driver),
     list_product_variants: list_product_variants(driver),
+    list_product_discounts: list_product_discounts(driver),
   }
 }
  

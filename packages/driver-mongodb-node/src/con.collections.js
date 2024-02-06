@@ -12,9 +12,7 @@ import { query_to_mongo } from './utils.query.js'
  * @param {Driver} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
-const col = (d) => {
-  return d.collection('collections')
-}
+const col = (d) => d.collection('collections');
 
 /**
  * @param {Driver} driver 
@@ -119,9 +117,9 @@ const list = (driver) => list_regular(driver, col(driver));
 
 /**
  * @param {Driver} driver 
- * @returns {db_col["list_products"]}
+ * @returns {db_col["list_collection_products"]}
  */
-const list_products = (driver) => {
+const list_collection_products = (driver) => {
   return async (handle_or_id, query) => {
 
     const { filter: filter_query, sort } = query_to_mongo(query);
@@ -140,7 +138,7 @@ const list_products = (driver) => {
     // add the query filter
     isDef(filter_query) && filter.$and.push(filter_query);
 
-    const items = await col(driver).find(
+    const items = await driver.products._col.find(
       filter,  {
         sort, limit: query.limit
       }
@@ -165,6 +163,6 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    list_products: list_products(driver) 
+    list_collection_products: list_collection_products(driver) 
   }
 }

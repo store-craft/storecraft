@@ -101,3 +101,12 @@ export const list_product_collections = (app, product) => {
 export const list_product_variants = (app, product) => {
   return db(app).list_product_variants(product);
 }
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} product handle or id
+ */
+export const list_product_discounts = (app, product) => {
+  return db(app).list_product_discounts(product);
+}

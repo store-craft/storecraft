@@ -41,7 +41,7 @@ export const upsert = (app, item) => regular_upsert(
  * @param {import('../types.api.query.js').ParsedApiQuery} q 
  */
 export const list_collection_products = async (app, handle_or_id, q) => {
-  return db(app).list_products(handle_or_id, q);
+  return db(app).list_collection_products(handle_or_id, q);
 }
 
 /**

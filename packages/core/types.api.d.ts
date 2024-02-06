@@ -159,7 +159,7 @@ export type ProductType = BaseType & {
   /** Internal usage, clarifies the variant projected options */
   variant_hint?: VariantOptionSelection[];
   /** discounts we know were applied to this product */
-  discounts?: Record<string, DiscountType>
+  discounts?: Partial<DiscountType>[];
 }
 
 //

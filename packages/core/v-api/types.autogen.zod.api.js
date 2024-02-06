@@ -21,7 +21,7 @@ export const roleSchema = z.union([
   z.literal("user"),
   z.string(),
 ]);
-export const apiAuthLoginTypeSchema = authBaseTypeSchema;
+export const apiAuthSigninTypeSchema = authBaseTypeSchema;
 export const apiAuthSignupTypeSchema = authBaseTypeSchema;
 export const apiAuthRefreshTypeSchema = z.object({
   refresh_token: z.string(),
@@ -119,9 +119,11 @@ export const notificationActionUrlParamsSchema = z.object({
   url: z.string(),
 });
 export const orderContactSchema = z.object({
+  firstname: z.string().optional(),
+  lastname: z.string().optional(),
   phone_number: z.string().optional(),
   email: z.string().optional(),
-  auth_id: z.string(),
+  auth_id: z.string().optional(),
 });
 export const validationEntrySchema = z.object({
   id: z.string(),
@@ -177,17 +179,19 @@ export const discountErrorSchema = z.object({
   discount_code: z.string(),
   message: z.string(),
 });
-const baseTypeSchema = z.object({
-  updated_at: z.string().optional(),
-  created_at: z.string().optional(),
-  id: z.string().optional(),
-  media: z.array(z.string()).optional(),
-  attributes: z.array(attributeTypeSchema).optional(),
-  tags: z.array(z.string()).optional(),
-  desc: z.string().optional(),
-  active: z.boolean().optional(),
-  search: z.array(z.string()).optional(),
-});
+const baseTypeSchema = z.record(z.any()).and(
+  z.object({
+    updated_at: z.string().optional(),
+    created_at: z.string().optional(),
+    id: z.string().optional(),
+    media: z.array(z.string()).optional(),
+    attributes: z.array(attributeTypeSchema).optional(),
+    tags: z.array(z.string()).optional(),
+    desc: z.string().optional(),
+    active: z.boolean().optional(),
+    search: z.array(z.string()).optional(),
+  }),
+);
 export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
   z.object({
     confirmed_mail: z.boolean().optional(),
@@ -205,7 +209,7 @@ export const collectionTypeSchema = baseTypeSchema.and(
     handle: z.string(),
     title: z.string(),
     active: z.boolean(),
-    _published: z.string().optional(),
+    published: z.string().optional(),
   }),
 );
 export const variantOptionSchema = z.object({
@@ -221,6 +225,12 @@ export const filterSchema = z.object({
       from: z.number().optional(),
       to: z.number(),
     }),
+    z.array(
+      z.object({
+        id: z.string().optional(),
+        handle: z.string().optional(),
+      }),
+    ),
   ]),
 });
 export const buyXGetYDiscountExtraSchema = z.object({
@@ -231,17 +241,17 @@ export const buyXGetYDiscountExtraSchema = z.object({
   filters_y: z.array(filterSchema),
   recursive: z.boolean().optional(),
 });
-export const storefrontTypeSchema = baseTypeSchema.and(
+export const shippingMethodTypeSchema = baseTypeSchema.and(
+  z.object({
+    price: z.number().min(0, "Please set a price >= 0"),
+    name: z.string(),
+  }),
+);
+export const postTypeSchema = baseTypeSchema.and(
   z.object({
     handle: z.string(),
     title: z.string(),
-    video: z.string().optional(),
-    _published: z.string().optional(),
-    collections: z.array(z.string()).optional(),
-    products: z.array(z.string()).optional(),
-    shipping_methods: z.array(z.string()).optional(),
-    discounts: z.array(z.string()).optional(),
-    posts: z.array(z.string()).optional(),
+    text: z.string(),
   }),
 );
 export const customerTypeSchema = baseTypeSchema.and(
@@ -265,19 +275,6 @@ export const imageTypeSchema = baseTypeSchema.and(
     url: z.string(),
     ref: z.string(),
     usage: z.array(z.string()),
-  }),
-);
-export const shippingMethodTypeSchema = baseTypeSchema.and(
-  z.object({
-    price: z.number().min(0, "Please set a price >= 0"),
-    name: z.string(),
-  }),
-);
-export const postTypeSchema = baseTypeSchema.and(
-  z.object({
-    handle: z.string(),
-    title: z.string(),
-    text: z.string(),
   }),
 );
 export const settingsTypeSchema = baseTypeSchema.and(z.object({}));
@@ -323,7 +320,7 @@ export const discountTypeSchema = baseTypeSchema.and(
     title: z.string(),
     handle: z.string(),
     priority: z.number(),
-    _published: z.string().optional(),
+    published: z.string().optional(),
     info: discountInfoSchema,
     application: discountApplicationSchema,
   }),
@@ -340,16 +337,33 @@ export const productTypeSchema = z.lazy(() =>
       handle: z.string(),
       title: z.string(),
       active: z.boolean(),
-      collections: z.array(z.string()),
+      collections: z.array(collectionTypeSchema.partial()).optional(),
       video: z.string().optional(),
       price: z.number().min(0),
       qty: z.number().min(0),
       compare_at_price: z.number().min(0).optional(),
+      variants: z.array(productTypeSchema).optional(),
       parent_handle: z.string().optional(),
+      parent_id: z.string().optional(),
       variants_options: z.array(variantOptionSchema).optional(),
       variants_products: z.record(variantCombinationSchema).optional(),
-      _variant_hint: z.array(variantOptionSelectionSchema).optional(),
-      discounts: z.record(discountTypeSchema).optional(),
+      variant_hint: z.array(variantOptionSelectionSchema).optional(),
+      discounts: z.array(discountTypeSchema.partial()).optional(),
+    }),
+  ),
+);
+export const storefrontTypeSchema = z.lazy(() =>
+  baseTypeSchema.and(
+    z.object({
+      handle: z.string(),
+      title: z.string(),
+      video: z.string().optional(),
+      published: z.string().optional(),
+      collections: z.array(collectionTypeSchema.partial()).optional(),
+      products: z.array(productTypeSchema.partial()).optional(),
+      shipping_methods: z.array(shippingMethodTypeSchema.partial()).optional(),
+      discounts: z.array(discountTypeSchema.partial()).optional(),
+      posts: z.array(postTypeSchema.partial()).optional(),
     }),
   ),
 );

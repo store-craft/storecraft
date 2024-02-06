@@ -44,7 +44,7 @@ export type Role2 = {
 
 export type Role = 'admin' | 'user' | string;
 
-export type ApiAuthLoginType = AuthBaseType;
+export type ApiAuthSigninType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
 export type ApiAuthRefreshType = {
   refresh_token: string;
@@ -210,7 +210,7 @@ export type Filter = {
   /** meta data related to identifying the filter */
   meta: FilterMeta;
   /** the filter params */
-  value: string[] | { from?: number, to:number} | Pick<CollectionType, 'id' | 'handle'>[];
+  value: string[] | { from?: number, to:number} | { id?: string, handle?: string }[];
 }
 
 /** Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  */

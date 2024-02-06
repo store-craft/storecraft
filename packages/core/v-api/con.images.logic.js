@@ -1,10 +1,9 @@
-import { ID, apply_dates, assert, to_handle, to_tokens, union } from './utils.func.js'
+import { ID, apply_dates, to_handle, to_tokens, union } from './utils.func.js'
 import { imageTypeSchema } from './types.autogen.zod.api.js'
 import { 
   assert_save_create_mode,
-  regular_get, regular_list, 
-  regular_remove } from './con.shared.js'
-import { create_search_index, isDef } from './utils.index.js';
+  regular_get, regular_list } from './con.shared.js'
+import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
 /**
@@ -33,9 +32,7 @@ export const upsert = async (app, item) => {
   let search = create_search_index(item);
   // apply dates and index
   const final = apply_dates(
-    {
-      ...item, id, search
-    }
+    { ...item, id, search }
   );
 
   await db(app).upsert(final);

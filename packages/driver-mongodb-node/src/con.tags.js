@@ -12,9 +12,7 @@ import { get_regular, list_regular,
  * @param {Driver} d 
  * @returns {Collection<import('@storecraft/core').TagType>}
  */
-const col = (d) => {
-  return d.collection('tags')
-}
+const col = (d) => d.collection('tags');
 
 /**
  * @param {Driver} driver 

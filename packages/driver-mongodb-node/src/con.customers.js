@@ -12,9 +12,7 @@ import { to_objid } from './utils.funcs.js'
  * @param {Driver} d 
  * @returns {Collection<db_col["$type"]>}
  */
-const col = (d) => {
-  return d.collection('customers')
-}
+const col = (d) => d.collection('customers');
 
 /**
  * @param {Driver} driver 

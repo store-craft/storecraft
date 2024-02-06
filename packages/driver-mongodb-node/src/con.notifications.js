@@ -11,9 +11,7 @@ import { get_regular, list_regular,
  * @param {Driver} d 
  * @returns {Collection<db_col["$type"]>}
  */
-const col = (d) => {
-  return d.collection('notifications')
-}
+const col = (d) => d.collection('notifications');
 
 /**
  * @param {Driver} driver 

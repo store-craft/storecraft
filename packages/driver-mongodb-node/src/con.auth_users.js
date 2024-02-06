@@ -11,9 +11,7 @@ import { get_regular, list_regular, upsert_regular } from './con.shared.js'
  * @param {Driver} d 
  * @returns {Collection<import('@storecraft/core').AuthUserType>}
  */
-const col = (d) => {
-  return d.collection('auth_users')
-}
+const col = (d) => d.collection('auth_users');
 
 /**
  * @param {Driver} driver 

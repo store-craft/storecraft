@@ -37,15 +37,15 @@ we don't expand as above and return everything but use a different pathway. We h
 to achieve this, either by the built in search terms array.
 
 
-## products <-> collections
+## products --> collections
 Each product has the following relation:
 ```js
-  _relations.collections: {
-    // object ids of related collections
-    ids: ObjectId[],
-    // the collections documents
-    entries: Record<ID_STRING, CollectionType>
-  }
+product._relations.collections: {
+  // object ids of related collections
+  ids: ObjectId[],
+  // the collections documents
+  entries: Record<ID_STRING, CollectionType>
+}
 ```
 
 How connections intentions from product to collections are formed ?
@@ -68,15 +68,15 @@ We use these as user intention to form a connection in the database. super conve
 - remove in each related product the `[col:col-handle, col:col-id` from array `search` in the products documents.
 
 
-## products <-> products variants
+## products --> products variants
 Each product has the following relation:
 ```js
-  _relations.variants: {
-    // object ids of related collections
-    ids: ObjectId[],
-    // the variants documents
-    entries: Record<ID_STRING, ProductType>
-  }
+product._relations.variants: {
+  // object ids of related collections
+  ids: ObjectId[],
+  // the variants documents
+  entries: Record<ID_STRING, ProductType>
+}
 ```
 
 Variant is any product, that has 
@@ -115,18 +115,18 @@ integrity, so use it with care.
 - delete the parent
 
 
-## products <-> discounts
+## products --> discounts
 Again, a relation, that connects a collection with many entries (`products`) to one with
 much fewer (`discounts`). Therefore, we embed documents in.
 
 Each product has the following relation:
 ```js
-  _relations.discounts: {
-    // object ids of related discounts
-    ids: ObjectId[],
-    // the variants documents
-    entries: Record<ID_STRING, DiscountType>
-  }
+product._relations.discounts: {
+  // object ids of related discounts
+  ids: ObjectId[],
+  // the variants documents
+  entries: Record<ID_STRING, DiscountType>
+}
 ```
 
 Notes:
@@ -176,7 +176,7 @@ We are going to create explicit connections, (the way `product` connects `collec
 
 Each product has the following relation:
 ```js
-_relations: {
+storefront._relations: {
   products: {
     ids: ObjectId[],
     entries: Record<ID_STRING, ProductType>
@@ -252,17 +252,20 @@ _relations: {
 
 
 ## images
-images are immutable, can only be created or deleted.
-They are not normalized in places used.
+images are immutable, can only be created or deleted. They are not normalized in places used.
 
-everything->images
+**products/collections/discounts/posts/shipping/storefronts**.{media} --> `image.url`
 
-1. delete image
-  1. try to supply as best as possible
+`image DELETE`
+- for each `products/collections/discounts/posts/shipping/storefronts`, that has image url
+in it's `media` array, simply remove it.
 
 
-## customers
-customer->auth_user
+## customers --> auth_user
+they are related through `customer.auth_id` field
 
-1. on delete
-  1. delete the auth user
+`customer DELETE:`
+- delete the auth user references by `customer.auth_id`
+
+`auth_user DELETE:`
+- do nothing

@@ -30,19 +30,16 @@ const get = (driver) => get_regular(driver, col(driver));
  */
 const remove = (driver) => {
   return async (id) => {
-    const filter = { _id: to_objid(id) };
 
     const res = await col(driver).findOneAndDelete(
-      filter
+      { _id: to_objid(id) }
     );
 
     // delete the auth user
     if(res?.auth_id) {
-      await col(driver).findOneAndDelete(
-        {
-          _id: to_objid(res.auth_id)
-        }
-      )
+      await driver.auth_users._col.findOneAndDelete(
+        { _id: to_objid(res.auth_id) }
+      );
     }
 
     return

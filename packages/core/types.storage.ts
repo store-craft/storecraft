@@ -17,10 +17,10 @@ export declare interface storage_driver {
   init: (app: App<any, any, any>) => Promise<this>;
 
   put: (key: string, blob: Blob) => Promise<string>; 
-  putWithRedirect?: (key: string) => Promise<StorageRedirect>; 
+  putWithRedirect?: (key: string) => Promise<StorageRedirect | undefined>; 
 
   get: (key: string) => Promise<Blob>;
-  getWithRedirect?: (key: string) => Promise<StorageRedirect>;
+  getWithRedirect?: (key: string) => Promise<StorageRedirect | undefined>;
 
   remove: (key: string) => Promise<void>;
   list?: () => Promise<any>;

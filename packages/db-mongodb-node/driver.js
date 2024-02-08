@@ -34,7 +34,7 @@ const connect = async (uri) => {
  * @typedef {import('@storecraft/core').db_driver} db_driver
  * @implements {db_driver}
  */
-export class Driver {
+export class Database {
 
   /** @type {string} */ #_name;
   /** @type {boolean} */ #_is_ready;

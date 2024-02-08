@@ -4,6 +4,7 @@
   "description": "local node storage adapter",
   "type": "module",
   "main": "index.js",
+  "types": "./types.public.d.ts",
   "scripts": {
     "test": "uvu -c"
   },

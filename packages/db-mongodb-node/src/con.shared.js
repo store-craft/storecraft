@@ -1,11 +1,11 @@
 import { Collection } from 'mongodb'
-import { Driver } from '../driver.js'
+import { Database } from '../driver.js'
 import { handle_or_id, isUndef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["upsert"]}
  */
@@ -82,7 +82,7 @@ export const expand = (items, expand_query=undefined) => {
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["get"]}
  */
@@ -100,7 +100,7 @@ export const get_regular = (driver, col) => {
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["remove"]}
  */
@@ -118,7 +118,7 @@ export const remove_regular = (driver, col) => {
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["list"]}
  */

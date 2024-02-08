@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
-import { Driver } from '../driver.js';
+import { Database } from '../driver.js';
 
 /**
  * @template {import('@storecraft/core').BaseType} T
@@ -20,7 +20,7 @@ import { Driver } from '../driver.js';
  * for example, each product specifies collections it belongs to.
  * Basically creates an ids array and embedded documents for fast retrival.
  * @template {import('@storecraft/core').BaseType} T
- * @param {Driver} driver our driver
+ * @param {Database} driver our driver
  * @param {T} data data to create the connection from
  * @param {string} fieldName the field name, that represents a relation, a field with { id } property
  * @param {string} belongsToCollection which collection does the field relate to

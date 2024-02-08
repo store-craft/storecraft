@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Driver } from '../driver.js'
+import { Database } from '../driver.js'
 import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
@@ -11,13 +11,13 @@ import { test_product_with_discount } from '@storecraft/core/v-api'
  */
 
 /**
- * @param {Driver} d 
+ * @param {Database} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
 const col = (d) => d.collection('products');
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -96,12 +96,12 @@ const upsert = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -156,7 +156,7 @@ const remove = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
@@ -165,7 +165,7 @@ const list = (driver) => list_regular(driver, col(driver));
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["list_product_collections"]}
  */
 const list_product_collections = (driver) => {
@@ -184,7 +184,7 @@ const list_product_collections = (driver) => {
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["list_product_collections"]}
  */
 const list_product_variants = (driver) => {
@@ -200,7 +200,7 @@ const list_product_variants = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["list_product_discounts"]}
  */
 const list_product_discounts = (driver) => {
@@ -216,7 +216,7 @@ const list_product_discounts = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["add_product_to_collection"]}
  */
 const add_product_to_collection = (driver) => {
@@ -246,7 +246,7 @@ const add_product_to_collection = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["remove_product_from_collection"]}
  */
 const remove_product_from_collection = (driver) => {
@@ -275,7 +275,7 @@ const remove_product_from_collection = (driver) => {
 }
 
 /** 
- * @param {Driver} driver
+ * @param {Database} driver
  * @return {db_col & { _col: ReturnType<col> }}
  */
 export const impl = (driver) => {

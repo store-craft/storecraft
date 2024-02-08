@@ -9,32 +9,45 @@ export * from './types.api.enums.js'
  */
 export class App {
 
+  /** 
+   * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} Platform
+   * @type {Platform} 
+   */
+  #_platform;
+  /** @type {import('./types.driver.js').db_driver} */
+  #_db_driver;
+  /** @type {import('./types.storage.js').storage_driver} */
+  #_storage;
+
   /**
    * 
-   * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} PlatformAdapter
-   * @param {PlatformAdapter} platform platform
-   * @param {import('./types.public.js').db_driver} db_driver database driver
+   * @param {Platform} platform 
+   * @param {import('./types.driver.js').db_driver} db_driver 
+   * @param {import('./types.storage.js').storage_driver} storage 
    */
-  constructor(platform, db_driver) {
+  constructor(platform, db_driver, storage) {
 
-    this._platform = platform;
-    this._db_driver = db_driver;
+    this.#_platform = platform;
+    this.#_db_driver = db_driver;
+    this.#_storage = storage;
   }
 
   async init() {
     try{
       await this.db.init(this)
+      await this.storage.init(this)
     } catch (e) {
       console.error(e)
     }
     this._polka = create_api(this);
+    return this;
   }
 
   /**
    * Get the Polka router
    */
   get db() {
-    return this._db_driver;
+    return this.#_db_driver;
   }
   
   /**
@@ -48,7 +61,14 @@ export class App {
    * Get the native platform object
    */
   get platform() {
-    return this._platform
+    return this.#_platform
+  }
+
+  /**
+   * Get the native storage object
+   */
+  get storage() {
+    return this.#_storage
   }
 
   hello = () => {}
@@ -60,7 +80,7 @@ export class App {
    * @param {PlatformContext} context 
    */
   handler = async (req, context) => {
-    const request = await this._platform.encode(req)
+    const request = await this.#_platform.encode(req)
     
     /** @type {import('./types.public.js').ApiResponse} */
     const polka_response = {
@@ -130,7 +150,7 @@ export class App {
       }
     )
 
-    return await this._platform.handleResponse(response_web, context);
+    return await this.#_platform.handleResponse(response_web, context);
   }
 
 }

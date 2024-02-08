@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Driver } from '../driver.js'
+import { Database } from '../driver.js'
 import { expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
@@ -10,13 +10,13 @@ import { query_to_mongo } from './utils.query.js'
  */
 
 /**
- * @param {Driver} d 
+ * @param {Database} d 
  * @returns {Collection<db_col["$type"]>}
  */
 const col = (d) => d.collection('discounts');
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -73,13 +73,13 @@ const upsert = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -123,12 +123,12 @@ const remove = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["list_discount_products"]}
  */
 const list_discount_products = (driver) => {
@@ -164,7 +164,7 @@ const list_discount_products = (driver) => {
 }
 
 /** 
- * @param {Driver} driver
+ * @param {Database} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

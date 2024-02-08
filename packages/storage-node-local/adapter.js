@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { readFile, writeFile, mkdir, open, unlink } from 'node:fs/promises';
+import { readFile, mkdir, open, unlink } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
 import * as path from 'node:path';
 import { App } from '@storecraft/core'
@@ -45,6 +45,9 @@ export class Storage {
     return;
   }
 
+  /**
+   * Base path folder to local storage
+   */
   get path() {
     return this.#path;
   }
@@ -72,6 +75,10 @@ export class Storage {
     return key;
   }
 
+  /**
+   * 
+   * @param {string} key 
+   */
   async putWithRedirect(key) {
     return undefined;
   }
@@ -98,6 +105,10 @@ export class Storage {
     return blob;
   }
 
+  /**
+   * 
+   * @param {string} key 
+   */
   async getWithRedirect(key) {
     return undefined;
   }

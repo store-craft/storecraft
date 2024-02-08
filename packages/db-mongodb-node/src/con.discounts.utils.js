@@ -1,5 +1,5 @@
 import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from "@storecraft/core";
-import { Driver } from "../driver.js";
+import { Database } from "../driver.js";
 
 /** @param {import("@storecraft/core").DiscountType} d */
 const is_order_discount = d => {

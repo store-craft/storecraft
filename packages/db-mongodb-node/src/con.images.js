@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Driver } from '../driver.js'
+import { Database } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
@@ -9,23 +9,23 @@ import { handle_or_id, to_objid } from './utils.funcs.js';
  */
 
 /**
- * @param {Driver} d @returns {Collection<db_col["$type"]>}
+ * @param {Database} d @returns {Collection<db_col["$type"]>}
  */
 const col = (d) =>  d.collection('images');
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -60,12 +60,12 @@ const remove = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 /** 
- * @param {Driver} driver
+ * @param {Database} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

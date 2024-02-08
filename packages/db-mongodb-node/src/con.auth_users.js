@@ -1,4 +1,4 @@
-import { Driver } from '../driver.js'
+import { Database } from '../driver.js'
 import { Collection } from 'mongodb'
 import { sanitize, to_objid } from './utils.funcs.js'
 import { get_regular, list_regular, upsert_regular } from './con.shared.js'
@@ -8,24 +8,24 @@ import { get_regular, list_regular, upsert_regular } from './con.shared.js'
  */
 
 /**
- * @param {Driver} d 
+ * @param {Database} d 
  * @returns {Collection<import('@storecraft/core').AuthUserType>}
  */
 const col = (d) => d.collection('auth_users');
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["get"]}
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
@@ -42,7 +42,7 @@ const getByEmail = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -59,13 +59,13 @@ const remove = (driver) => {
 }
 
 /**
- * @param {Driver} driver 
+ * @param {Database} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 
 /** 
- * @param {Driver} driver
+ * @param {Database} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

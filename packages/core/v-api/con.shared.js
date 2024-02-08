@@ -14,7 +14,7 @@ import { ZodSchema } from 'zod'
  * 
  * @template {import('../types.api.js').BaseType} T
  * @param {import("../types.public.js").App} app
- * @param {import("../types.driver").db_crud} db
+ * @param {import("../types.driver.js").db_crud} db
  * @param {string} id_prefix
  * @param {ZodSchema} schema
  * @param {(final: T) => Promise<Partial<T>>} hook hook into final state
@@ -49,7 +49,7 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 /**
  * @template {import('../types.api.js').BaseType} T
  * @param {import("../types.public.js").App} app
- * @param {import("../types.driver").db_crud<T>} db
+ * @param {import("../types.driver.js").db_crud<T>} db
  */
 export const regular_get = (app, db) => /**
   * 
@@ -64,7 +64,7 @@ export const regular_get = (app, db) => /**
 /**
  * @template {import('../types.api.js').BaseType} T
  * @param {import("../types.public.js").App} app
- * @param {import("../types.driver").db_crud<T>} db
+ * @param {import("../types.driver.js").db_crud<T>} db
  */
 export const regular_remove = (app, db) => 
   /**
@@ -78,7 +78,7 @@ export const regular_remove = (app, db) =>
 /**
  * @template {import('../types.api.js').BaseType} T
  * @param {import("../types.public.js").App} app
- * @param {import("../types.driver").db_crud<T>} db
+ * @param {import("../types.driver.js").db_crud<T>} db
  */
 export const regular_list = (app, db) => 
   /**
@@ -89,9 +89,9 @@ export const regular_list = (app, db) =>
   }
 
 /**
- * @template {import("../types.api").BaseType} T
- * @param {import("../types.api").BaseType} item 
- * @param {import("../types.driver").db_crud<T>} db 
+ * @template {import("../types.api.js").BaseType} T
+ * @param {import("../types.api.js").BaseType} item 
+ * @param {import("../types.driver.js").db_crud<T>} db 
  */
 export const assert_save_create_mode = async (item, db) => {
   // Check if tag exists

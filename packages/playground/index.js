@@ -1,7 +1,7 @@
 import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodeAdapter } from '@storecraft/platform-node'
-import { Driver } from '@storecraft/driver-mongodb-node'
+import { Driver } from '@storecraft/db-mongodb-node'
 
 const host = 'localhost';
 const port = 8000;

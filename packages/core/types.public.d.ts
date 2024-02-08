@@ -43,4 +43,5 @@ export * from './index.js'
 export type * from './types.driver.js'
 export type * from './types.api.js'
 export type * from './types.api.query.js'
+export type * from './types.storage.js'
 

@@ -36,13 +36,19 @@ const connect = async (uri) => {
  */
 export class Driver {
 
+  /** @type {string} */ #_name;
+  /** @type {boolean} */ #_is_ready;
+  /** @type {App<any, any, any>} */ #_app;
+  /** @type {MongoClient} */ #_mongo_client;
+  /** @type {string[]} */ #_admins_emails;
+
   /**
    * 
    * @param {string} db_name database name
    */
   constructor(db_name='main') {
-    this._name = db_name;
-    this._is_ready = false;
+    this.#_name = db_name;
+    this.#_is_ready = false;
   }
 
   /**
@@ -51,10 +57,10 @@ export class Driver {
    * @returns {Promise<this>}
    */
   async init(app) {
-    this._mongo_client = await connect(app.platform.env.MONGODB_URI);
-    this._admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(
+    this.#_mongo_client = await connect(app.platform.env.MONGODB_URI);
+    this.#_admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(
       s => s.trim()) ?? [];
-    this._app = app;
+    this.#_app = app;
     this.auth_users = auth_users(this);
     this.collections = collections(this);
     this.customers = customers(this);
@@ -68,7 +74,7 @@ export class Driver {
     this.tags = tags(this);
     this.shipping = shipping(this);
     
-    this._is_ready = true;
+    this.#_is_ready = true;
 
     console.log(this.admins_emails)
 
@@ -76,29 +82,29 @@ export class Driver {
   }
 
   get isReady() {
-    return this._is_ready;
+    return this.#_is_ready;
   }
   
   /**
    * database name
    */
   get name () {
-    return this._name;
+    return this.#_name;
   }
 
   get app() {
-    return this._app;
+    return this.#_app;
   }
 
   /**
    * admins emails
    */
   get admins_emails () {
-    return this._admins_emails ?? [];
+    return this.#_admins_emails ?? [];
   }
 
   get mongo_client() {
-    return this._mongo_client;
+    return this.#_mongo_client;
   }
 
   /**

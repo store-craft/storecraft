@@ -31,7 +31,7 @@ test('blob put/get/delete', async () => {
   data.forEach(
     async d => {
       // write
-      await storage.put(d.key, d.blob);
+      await storage.putBlob(d.key, d.blob);
       // read
       const blob_read = await storage.get(d.key);
       // compare

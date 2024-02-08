@@ -4,9 +4,33 @@ import { fileURLToPath } from "node:url";
 import * as path from 'node:path';
 import { App } from '@storecraft/core'
 import { Blob } from 'node:buffer';
+import { createReadStream } from 'node:fs';
+import { Readable } from 'node:stream';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const types = {
+  'png': 'image/png',
+  'gif': 'image/gif',
+  'jpeg': 'image/jpeg',
+  'jpg': 'image/jpeg',
+  'tiff': 'image/tiff',
+  'webp': 'image/webp',
+  'txt': 'text/plain',
+  'json': 'application/json',
+}
+
+/**
+ * 
+ * @param {string} name 
+ */
+const infer_content_type = (name) => {
+  const idx = name.lastIndexOf('.');
+  if(!idx) return 'application/octet-stream';
+  const type = types[name.substring(idx + 1).trim()]
+  return type ?? 'application/octet-stream';
+}
 
 /**
  * 
@@ -57,11 +81,11 @@ export class Storage {
    * @param {string} key 
    * @param {Blob} blob 
    */
-  async put(key, blob) {
+  async putBlob(key, blob) {
 
-    // const r = Readable.fromWeb(blob.stream());
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w')
+
     try {
       for await (const buf of blob.stream()) {
         await file_handle.write(buf);
@@ -96,14 +120,35 @@ export class Storage {
    */
   async get(key) {
 
-
     const buffer = await readFile(
       this.to_file_path(key),
     );
 
-    const blob = new Blob([buffer]);
+    const blob = new Blob(
+      [buffer], 
+      { type: infer_content_type(key) }
+    );
 
     return blob;
+  }
+
+  /**
+   * 
+   * @param {string} key 
+   */
+  async getStream(key) {
+
+    return Readable.toWeb(createReadStream(this.to_file_path(key)))
+    // const buffer = await readFile(
+    //   this.to_file_path(key),
+    // );
+
+    // const blob = new Blob(
+    //   [buffer], 
+    //   { type: infer_content_type(key) }
+    // );
+
+    // return blob;
   }
 
   /**

@@ -100,6 +100,10 @@ export class App {
         return this.send(undefined);
       },
 
+      sendReadableStream(o) {
+        return this.send(o);
+      },
+
       sendJson(o) {
         this.headers.set('Content-Type', 'application/json');
         return this.send(o===undefined ? undefined : JSON.stringify(o))

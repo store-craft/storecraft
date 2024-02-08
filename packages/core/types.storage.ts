@@ -16,7 +16,9 @@ export declare interface storage_driver {
    */
   init: (app: App<any, any, any>) => Promise<this>;
 
-  put: (key: string, blob: Blob) => Promise<string>; 
+  putBlob: (key: string, blob: Blob) => Promise<string>; 
+  putReadableStream: (key: string, stream: ReadableStream) => Promise<string>; 
+  putArraybuffer: (key: string, buffer: ArrayBuffer) => Promise<string>; 
   putWithRedirect?: (key: string) => Promise<StorageRedirect | undefined>; 
 
   get: (key: string) => Promise<Blob>;

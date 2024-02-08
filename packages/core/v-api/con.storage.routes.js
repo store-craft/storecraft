@@ -22,33 +22,47 @@ export const create_routes = (app) => {
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
 
   // upload file, todo
-  polka.post(
-    '/',
-    middle_authorize_admin,
+  polka.put(
+    '/*',
+    // middle_authorize_admin,
     async (req, res) => {
-      // const final = await upsert(app, req.parsedBody);
-      // res.sendJson(final);
-    }
-  )
+      const file_key = req?.params?.['*'];
+      if(!file_key) {
+        // list them
+        res.setStatus(401).end();
+        return;
+      }
 
+      console.log('req?.params ', req?.params)
+
+      // suppose, we don't support streaming
+      const blob = await req.blob();
+      await app.storage.putBlob(file_key, blob);
+      res.sendBlob(blob);    
+    }
+  );
+ 
   // get file
   polka.get(
-    // '/:file_key[.]*',
     '/*',
     async (req, res) => {
       const file_key = req?.params?.['*'];
-      if(file_key===undefined) {
+      if(!file_key) {
         // list them
         return await app.storage.list();
       }
 
       console.log('req?.params ', req?.params)
 
-      const blob = await app.storage.get(file_key);
-      console.log(blob.size)
-      res.sendBlob(blob);
+      // const blob = await app.storage.get(file_key);
+      // res.sendBlob(blob);
+
+      const s = await app.storage.getStream(file_key);
+      res.sendReadableStream(s);
+
     }
   );
+
 
   // delete file
   polka.delete(

@@ -1,5 +1,7 @@
 import 'dotenv/config'
 import { Readable } from 'node:stream'
+import  {ReadableWebToNodeStream} from 'readable-web-to-node-stream';
+import { finished } from 'stream/promises'
 
 /**
  * 
@@ -32,8 +34,8 @@ export class Platform {
       method: from.method,
       // @ts-ignore
       headers: from.headers,
+      duplex: 'half',
       body: from.method==='HEAD' || from.method==='GET' ? undefined : Readable.toWeb(from),
-      duplex: 'half'
     }
 
     /** @type {Request} */
@@ -51,11 +53,32 @@ export class Platform {
    * @param {ServerResponse} context 
    */
   async handleResponse(web_response, context) {
-    const headers = Object.fromEntries(web_response?.headers?.entries() ?? []);
-    context.writeHead(web_response.status, web_response.statusText, headers);
-    if(web_response.body)
-      Readable.fromWeb(web_response.body).pipe(context);
-    else context.end();
+    const headers = Object.fromEntries(
+      web_response?.headers?.entries() ?? []
+    );
+    context.writeHead(
+      web_response.status, web_response.statusText, headers
+    );
+
+    if(web_response.body) {
+      // this is buggy and not finishing, stalls infinitely
+      // await finished(Readable.fromWeb(web_response.body).pipe(context))
+
+      // I found this to be better
+      const reader = web_response.body.getReader();
+      const read_more = async () => {
+        const { done, value } = await reader.read();
+        if (!done) {
+          context.write(value);
+          await read_more();
+        }
+      }
+
+      await read_more(); 
+    } 
+
+    context.end();
+    
     return context;
   } 
  

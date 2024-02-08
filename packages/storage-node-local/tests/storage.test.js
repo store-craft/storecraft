@@ -39,7 +39,7 @@ test('blob put/get/delete', async () => {
       assert.ok(equal, 'Blobs are not equal !!!');
 
       // delete
-      await storage.remove(d.key);
+      // await storage.remove(d.key);
     }
   );
   

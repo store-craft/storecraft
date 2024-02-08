@@ -21,44 +21,51 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
 
-  // save tag
+  // upload file, todo
   polka.post(
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await upsert(app, req.parsedBody);
-      res.sendJson(final);
+      // const final = await upsert(app, req.parsedBody);
+      // res.sendJson(final);
     }
   )
 
-  // get item
+  // get file
   polka.get(
-    '/:handle',
+    // '/:file_key[.]*',
+    '/*',
     async (req, res) => {
-      const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
-      assert(item, 'not-found', 404);
-      res.sendJson(item);
+      const file_key = req?.params?.['*'];
+      if(file_key===undefined) {
+        // list them
+        return await app.storage.list();
+      }
+
+      console.log('req?.params ', req?.params)
+
+      const blob = await app.storage.get(file_key);
+      console.log(blob.size)
+      res.sendBlob(blob);
     }
   );
 
-  // delete item
+  // delete file
   polka.delete(
     '/:file_key',
     middle_authorize_admin,
     async (req, res) => {
       const { file_key } = req?.params;
-      await remove(app, handle_or_id);
+      await app.storage.remove(file_key);
       res.end();
     }
   );
 
-  // list
+  // list files, todo
   polka.get(
     '/',
     async (req, res) => {
-      let q = parse_query(req.query);
-      const items = await list(app, q);
+      const items = app.storage.list();
       res.sendJson(items);
     }
   );

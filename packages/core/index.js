@@ -106,20 +106,22 @@ export class App {
       },
 
       sendText(o) {
-        this.headers.set('Content-Type', 'text/plain')
+        this.headers.set('Content-Type', 'text/plain');
         return this.send(String(o))
       },
 
       sendBlob(o) {
-        this.headers.set('Content-Type', 'application/octet-stream')
+        !o.type && this.headers.set('Content-Type', 'application/octet-stream');
+        
         return this.send(o)
+        // return this.send(new Blob(['tomer', 'tomer2', 'tomer', 'tomer2', 'tomer', 'tomer2'], {type:'application/tomer'}))
       },
 
       sendArrayBuffer(o) {
         this.headers.set('Content-Type', 'application/octet-stream')
         return this.send(o)
       },
-
+ 
       sendSearchParams(o) {
         this.headers.set('Content-Type', 'application/x-www-form-urlencoded')
         return this.send(o)

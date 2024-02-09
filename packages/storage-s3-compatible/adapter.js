@@ -1,14 +1,6 @@
 import 'dotenv/config'
-import { readFile, mkdir, open, unlink } from 'node:fs/promises';
-import { fileURLToPath } from "node:url";
-import * as path from 'node:path';
 import { App } from '@storecraft/core'
-import { Blob } from 'node:buffer';
-import { createReadStream } from 'node:fs';
-import { Readable } from 'node:stream';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { AwsClient } from './aws4fetch.js';
 
 const types = {
   'png': 'image/png',
@@ -42,6 +34,9 @@ const key_to_encoded = key => {
   return encoded_key;
 }
 
+/**
+ * @typedef {import('./types.public.js').Options} Options
+ */
 
 /**
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
@@ -49,46 +44,35 @@ const key_to_encoded = key => {
  */
 export class Storage {
   
-  /** @type {import('node:fs').PathLike} */ #path;
+  /** @type {AwsClient} */ #_client;
+  /** @type {Options} */ #_options;
 
   /**
    * 
-   * @param {import('node:fs').PathLike} path 
    */
-  constructor(path) {
-    this.#path = path;
+  #compute_endpoint() {
+    
   }
+
 
   /**
    * 
-   * @param {App<any, any>} app 
-   * @returns {Promise<this>}
+   * @param {Options} options 
    */
-  async init(app) {
-    await mkdir(this.#path, { recursive: true });
-    return this;
+  constructor(options) {
+    this.#_options = options;
+    this.#_client = new AwsClient({
+      accessKeyId: options.accessKeyId, secretAccessKey: options.secretAccessKey, 
+      region: options.region, service: 's3'
+    });
+
+    this.#bab()
+
   }
 
-  /**
-   * Base path folder to local storage
-   */
-  get path() {
-    return this.#path;
-  }
-
-  /**
-   * @param {string} key
-   */
-  to_file_path(key) {
-    return path.join(String(this.#path), key_to_encoded(key)); 
-  }
-
-  /**
-   * @param {string} key 
-   */
-  getContentType(key) {
-    return infer_content_type(key);
-  }
+  get client() { return this.#_client; }
+  get options() { return this.#_options; }
+  async init(app) { return this; }
 
   // puts
 

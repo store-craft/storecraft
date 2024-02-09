@@ -1,0 +1,22 @@
+{
+  "name": "@storecraft/storage-s3-compatible",
+  "version": "1.0.0",
+  "description": "s3 storage compatible",
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "test": "uvu -c"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "uvu": "^0.5.6"
+  }
+}

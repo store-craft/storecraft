@@ -51,33 +51,35 @@ export class Platform {
    * @param {ServerResponse} context 
    */
   async handleResponse(web_response, context) {
-    const headers = Object.fromEntries(
-      web_response?.headers?.entries() ?? []
-    );
-    context.writeHead(
-      web_response.status, web_response.statusText, headers
-    );
+    try {
+      const headers = Object.fromEntries(
+        web_response?.headers?.entries() ?? []
+      );
+      context.writeHead(
+        web_response.status, web_response.statusText, headers
+      );
 
-    if(web_response.body) {
-      // this is buggy and not finishing, stalls infinitely
-      // await finished(Readable.fromWeb(web_response.body).pipe(context))
+      if(web_response.body) {
+        // this is buggy and not finishing, stalls infinitely
+        // await finished(Readable.fromWeb(web_response.body).pipe(context))
 
-      // I found this to be better
-      const reader = web_response.body.getReader();
-      const read_more = async () => {
-        const { done, value } = await reader.read();
-        if (!done) {
-          context.write(value);
-          await read_more();
+        // I found this to be better
+        const reader = web_response.body.getReader();
+        const read_more = async () => {
+          const { done, value } = await reader.read();
+          if (!done) {
+            context.write(value);
+            await read_more();
+          }
         }
-      }
 
-      await read_more(); 
-    } 
-
-    context.end();
-    
-    return context;
-  } 
- 
+        await read_more(); 
+      } 
+    } catch (e) {
+      console.log(e);
+    } finally {
+      context.end();
+      return context;
+    }
+  }  
 } 

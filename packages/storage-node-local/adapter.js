@@ -222,12 +222,20 @@ export class Storage {
    * @param {string} key 
    */
   async getStream(key) {
-    return {
-      value: Readable.toWeb(createReadStream(this.to_file_path(key))),
-      metadata: {
-        contentType: infer_content_type(key)
-      }
-    };
+    try { 
+      const s = createReadStream(this.to_file_path(key));
+      return {
+        value: Readable.toWeb(s), 
+        metadata: {
+          contentType: infer_content_type(key)
+        }
+      };
+  
+    } catch(e) {
+      
+    }
+
+    return undefined;
   }
 
   /**

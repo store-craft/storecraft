@@ -55,8 +55,12 @@ export const create_routes = (app) => {
       console.log('req?.params ', req?.params)
 
       const s = await app.storage.getStream(file_key);
-      res.sendReadableStream(s.value);
-      s?.metadata?.contentType && res.headers.set('Content-Type', s?.metadata?.contentType);
+      if(s) {
+        res.sendReadableStream(s.value);
+        s?.metadata?.contentType && res.headers.set('Content-Type', s?.metadata?.contentType);
+      } else {
+        res.end(); 
+      }
     }
   );
 

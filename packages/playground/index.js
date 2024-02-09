@@ -1,6 +1,7 @@
 import http from "node:http";
 import { join } from "node:path";
 import { homedir } from "node:os";
+
 import { App } from '@storecraft/core'
 import { Platform } from '@storecraft/platform-node'
 import { Database } from '@storecraft/db-mongodb-node'
@@ -19,4 +20,4 @@ const server = http.createServer(app.handler).listen(
   () => {
     console.log(`Server is running on http://localhost:8000`);
   }
-);
+); 

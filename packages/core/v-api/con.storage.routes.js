@@ -33,12 +33,12 @@ export const create_routes = (app) => {
         return;
       }
 
-      console.log('req?.params ', req?.params)
+      console.log('req?.params ', req?.params);
 
-      // suppose, we don't support streaming
-      const blob = await req.blob();
-      await app.storage.putBlob(file_key, blob);
-      res.sendBlob(blob);    
+      // stream
+      await app.storage.putStream(file_key, req.body);
+
+      res.end();    
     }
   );
  
@@ -54,35 +54,26 @@ export const create_routes = (app) => {
 
       console.log('req?.params ', req?.params)
 
-      // const blob = await app.storage.get(file_key);
-      // res.sendBlob(blob);
-
       const s = await app.storage.getStream(file_key);
-      res.sendReadableStream(s);
-
+      res.sendReadableStream(s.value);
+      s?.metadata?.contentType && res.headers.set('Content-Type', s?.metadata?.contentType);
     }
   );
 
 
   // delete file
   polka.delete(
-    '/:file_key',
+    '/*',
     middle_authorize_admin,
     async (req, res) => {
-      const { file_key } = req?.params;
-      await app.storage.remove(file_key);
+      const file_key = req?.params?.['*'];
+      if(file_key) {
+        await app.storage.remove(file_key);
+      }
       res.end();
     }
   );
 
-  // list files, todo
-  polka.get(
-    '/',
-    async (req, res) => {
-      const items = app.storage.list();
-      res.sendJson(items);
-    }
-  );
 
   return polka;
 }

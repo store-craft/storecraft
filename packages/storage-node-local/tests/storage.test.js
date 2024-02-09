@@ -33,7 +33,7 @@ test('blob put/get/delete', async () => {
       // write
       await storage.putBlob(d.key, d.blob);
       // read
-      const blob_read = await storage.get(d.key);
+      const { value: blob_read } = await storage.getBlob(d.key);
       // compare
       const equal = await areBlobsEqual(blob_read, d.blob);
       assert.ok(equal, 'Blobs are not equal !!!');

@@ -42,16 +42,24 @@ const key_to_encoded = key => {
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
  * @implements {storage}
  */
-export class Storage {
+export class BaseS3Storage {
   
   /** @type {AwsClient} */ #_client;
   /** @type {Options} */ #_options;
+  /** @type {string} */ #_url;
 
   /**
    * 
+   * @param {Options} options 
    */
-  #compute_endpoint() {
-    
+  #compute_url(options) {
+    const url = new URL(options.endpoint);
+    if(options.forcePathStyle) {
+      url.pathname = options.bucket;
+    } else {
+      url.host = `${options.bucket}.${url.host}`;
+    }
+    return url.toString();
   }
 
 
@@ -63,13 +71,13 @@ export class Storage {
     this.#_options = options;
     this.#_client = new AwsClient({
       accessKeyId: options.accessKeyId, secretAccessKey: options.secretAccessKey, 
-      region: options.region, service: 's3'
+      region: options.region ?? 'auto', service: 's3'
     });
 
-    this.#bab()
-
+    this.#_url = this.#compute_url(options);
   }
 
+  get url() { return this.#_url; }
   get client() { return this.#_client; }
   get options() { return this.#_options; }
   async init(app) { return this; }
@@ -82,6 +90,7 @@ export class Storage {
    * @param {Blob} blob 
    */
   async putBlob(key, blob) {
+    /*
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w');
 
@@ -100,7 +109,7 @@ export class Storage {
     finally {
       await file_handle.close()
     }
-
+*/
     // return await this.putStream(key, blob.stream());
   }
 
@@ -110,6 +119,7 @@ export class Storage {
    * @param {ArrayBuffer} buffer 
    */
   async putArraybuffer(key, buffer) {
+    /*
     const arr = new Uint8Array(buffer);
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w');
@@ -120,6 +130,7 @@ export class Storage {
     } finally {
       await file_handle.close();
     }
+    */
   }  
 
   /**
@@ -128,6 +139,7 @@ export class Storage {
    * @param {ReadableStream} stream 
    */
   async putStream(key, stream) {
+    /*
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w')
 
@@ -149,7 +161,7 @@ export class Storage {
     } finally {
       await file_handle.close();
     }
-    
+    */
     return;
   }  
 
@@ -163,17 +175,25 @@ export class Storage {
 
   // gets
 
+  /** @param {string} key  */
+  get_file_url(key) {
+    return `${this.#_url}/${key}`;
+  }
+
+  /** @param {string} key  */
+  #get_request(key) {
+    return this.client.fetch(this.get_file_url(key));
+  }
+
   /**
    * 
    * @param {string} key 
    */
   async getArraybuffer(key) {
-
-    const buffer = await readFile(
-      this.to_file_path(key),
-    );
+    const r = await this.#get_request(key);
+    const b = await r.arrayBuffer();
     return {
-      value: buffer,
+      value: b, 
       metadata: {
         contentType: infer_content_type(key)
       }
@@ -185,16 +205,10 @@ export class Storage {
    * @param {string} key 
    */
   async getBlob(key) {
-
-    const buffer = await this.getArraybuffer(key);
-
-    const blob = new Blob(
-      [buffer.value], 
-      { type: infer_content_type(key) }
-    );
-
+    const r = await this.#get_request(key);
+    const b = await r.blob();
     return {
-      value: blob,
+      value: b, 
       metadata: {
         contentType: infer_content_type(key)
       }
@@ -204,19 +218,22 @@ export class Storage {
   /**
    * 
    * @param {string} key 
+   * @param {Response} key 
    */
   async getStream(key) {
+
     try { 
-      const s = createReadStream(this.to_file_path(key));
+      const s = (await this.#get_request(key)).body
       return {
-        value: Readable.toWeb(s), 
+        value: s, 
         metadata: {
           contentType: infer_content_type(key)
         }
       };
   
     } catch(e) {
-      
+      console.log(e);
+      return undefined;
     }
 
     return undefined;
@@ -237,8 +254,27 @@ export class Storage {
    * @param {string} key 
    */
   async remove(key) {
-    await unlink(this.to_file_path(key));
+    // await unlink(this.to_file_path(key));
     return;
   }
+}
+
+export class R2 extends BaseS3Storage {
+
+  /**
+   * 
+   * @param {string} bucket 
+   * @param {string} account_id 
+   * @param {string} access_key_id 
+   * @param {string} secret_access_key 
+   */
+  constructor(bucket, account_id, access_key_id, secret_access_key) {
+    super({
+      endpoint: `https://${account_id}.r2.cloudflarestorage.com`,
+      accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
+      bucket, forcePathStyle: true, region: 'auto'
+    })
+  }
+
 }
 

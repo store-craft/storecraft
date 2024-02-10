@@ -53,7 +53,7 @@ export class Database {
 
   /**
    * 
-   * @param {App<any, any>} app 
+   * @param {App<any, any, any>} app 
    * @returns {Promise<this>}
    */
   async init(app) {

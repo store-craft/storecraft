@@ -87,30 +87,25 @@ export class BaseS3Storage {
   /**
    * 
    * @param {string} key 
+   * @param {BodyInit} body 
+   */
+  async #put_internal(key, body) {
+    await this.client.fetch(
+      this.get_file_url(key),
+      {
+        method: 'PUT',
+        body
+      }
+    );
+  }
+
+  /**
+   * 
+   * @param {string} key 
    * @param {Blob} blob 
    */
   async putBlob(key, blob) {
-    /*
-    const f = this.to_file_path(key);
-    const file_handle = await open(f, 'w');
-
-    try {
-      for await (const buf of blob.stream()) {
-        try {
-          await file_handle.write(buf);
-        } catch(e) {
-          console.log(e);
-          throw e;
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-    finally {
-      await file_handle.close()
-    }
-*/
-    // return await this.putStream(key, blob.stream());
+    await this.#put_internal(key, blob);
   }
 
   /**
@@ -119,18 +114,7 @@ export class BaseS3Storage {
    * @param {ArrayBuffer} buffer 
    */
   async putArraybuffer(key, buffer) {
-    /*
-    const arr = new Uint8Array(buffer);
-    const f = this.to_file_path(key);
-    const file_handle = await open(f, 'w');
-    try{
-      await file_handle.write(arr);
-    } catch (e) {
-
-    } finally {
-      await file_handle.close();
-    }
-    */
+    await this.#put_internal(key, buffer);
   }  
 
   /**
@@ -139,31 +123,8 @@ export class BaseS3Storage {
    * @param {ReadableStream} stream 
    */
   async putStream(key, stream) {
-    /*
-    const f = this.to_file_path(key);
-    const file_handle = await open(f, 'w')
-
-    // I found this to be better than async iterators in node.js
-    const reader = stream.getReader();
-    const read_more = async () => {
-      const { done, value } = await reader.read();
-      console.log(done)
-      if (!done) {
-        await file_handle.write(value);
-        await read_more();
-      }
-    }
-
-    try {
-      await read_more(); 
-    } catch(e) {
-      console.log('putStream error ', e);
-    } finally {
-      await file_handle.close();
-    }
-    */
-    return;
-  }  
+    await this.#put_internal(key, stream);
+  }
 
   /**
    * 
@@ -222,21 +183,13 @@ export class BaseS3Storage {
    */
   async getStream(key) {
 
-    try { 
-      const s = (await this.#get_request(key)).body
-      return {
-        value: s, 
-        metadata: {
-          contentType: infer_content_type(key)
-        }
-      };
-  
-    } catch(e) {
-      console.log(e);
-      return undefined;
-    }
-
-    return undefined;
+    const s = (await this.#get_request(key)).body
+    return {
+      value: s, 
+      metadata: {
+        contentType: infer_content_type(key)
+      }
+    };
   }
 
   /**
@@ -244,6 +197,7 @@ export class BaseS3Storage {
    * @param {string} key 
    */
   async getRedirect(key) {
+
     return undefined;
   }
 
@@ -254,8 +208,12 @@ export class BaseS3Storage {
    * @param {string} key 
    */
   async remove(key) {
-    // await unlink(this.to_file_path(key));
-    return;
+    await this.client.fetch(
+      this.get_file_url(key),
+      {
+        method: 'DELETE'
+      }
+    );
   }
 }
 

@@ -173,7 +173,7 @@ export class Storage {
    * 
    * @param {string} key 
    */
-  async putRedirect(key) {
+  async putSigned(key) {
     return undefined;
   }
 
@@ -242,7 +242,7 @@ export class Storage {
    * 
    * @param {string} key 
    */
-  async getRedirect(key) {
+  async getSigned(key) {
     return undefined;
   }
 

@@ -1,7 +1,7 @@
 {
   "name": "@storecraft/storage-s3-compatible",
   "version": "1.0.0",
-  "description": "s3 storage compatible",
+  "description": "s3 storage compatible for runtimes with fetch",
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
@@ -12,8 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@storecraft/core": "^1.0.0",
-    "dotenv": "^16.3.1"
+    "@storecraft/core": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

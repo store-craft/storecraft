@@ -1,8 +1,7 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
 import { authorize_by_roles } from './middle.auth.js'
-import { parse_query } from './utils.query.js'
-import { get, list, remove, upsert } from './con.tags.logic.js'
+import { does_prefer_signed } from './con.storage.logic.js';
 
 /**
  * @typedef {import('../types.api.js').TagType} ItemType
@@ -28,17 +27,19 @@ export const create_routes = (app) => {
     async (req, res) => {
       const file_key = req?.params?.['*'];
       if(!file_key) {
-        // list them
         res.setStatus(401).end();
         return;
       }
 
-      console.log('req?.params ', req?.params);
+      // console.log('req?.params ', req?.params);
 
-      // stream
-      await app.storage.putStream(file_key, req.body);
-
-      res.end();    
+      if(does_prefer_signed(req?.query) && app.storage.putSigned) {
+        const r = await app.storage.putSigned(file_key)
+        res.sendJson(r);
+      } else {
+        await app.storage.putStream(file_key, req.body);
+        res.end();
+      }
     }
   );
  
@@ -52,14 +53,18 @@ export const create_routes = (app) => {
         return await app.storage.list();
       }
 
-      console.log('req?.params ', req?.params)
-
-      const s = await app.storage.getStream(file_key);
-      if(s) {
-        res.sendReadableStream(s.value);
-        s?.metadata?.contentType && res.headers.set('Content-Type', s?.metadata?.contentType);
+      // try to see if redirect is supported
+      if(does_prefer_signed(req?.query) && app.storage.getSigned) {
+        const r = await app.storage.getSigned(file_key)
+        res.sendJson(r);
       } else {
-        res.end(); 
+        const s = await app.storage.getStream(file_key);
+        if(s) {
+          res.sendReadableStream(s.value);
+          s?.metadata?.contentType && res.headers.set('Content-Type', s?.metadata?.contentType);
+        } else {
+          res.end(); 
+        }
       }
     }
   );

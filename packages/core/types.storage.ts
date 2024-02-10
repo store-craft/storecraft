@@ -1,7 +1,7 @@
 import { App } from "./index.js";
 
-export type StorageRedirect = {
-  method: 'POST' | 'GET' | 'PUT',
+export type StorageSignedOperation = {
+  method: string,
   url: string,
   headers?: Record<string, string>
 }
@@ -30,12 +30,12 @@ export declare interface storage_driver {
   putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<void>; 
   putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<void>; 
   putStream: (key: string, stream: ReadableStream, meta?: MetaData) => Promise<void>; 
-  putRedirect?: (key: string) => Promise<StorageRedirect | undefined>; 
+  putSigned?: (key: string) => Promise<StorageSignedOperation | undefined>; 
 
   getBlob: (key: string) => Promise<Get<Blob>>;
   getArraybuffer: (key: string) => Promise<Get<ArrayBuffer>>;
   getStream: (key: string) => Promise<Get<ReadableStream>>;
-  getRedirect?: (key: string) => Promise<StorageRedirect | undefined>;
+  getSigned?: (key: string) => Promise<StorageSignedOperation>;
 
   remove: (key: string) => Promise<void>;
   list?: () => Promise<any>;

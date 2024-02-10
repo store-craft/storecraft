@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { App } from '@storecraft/core'
 import { AwsClient } from './aws4fetch.js';
 
@@ -24,25 +23,17 @@ const infer_content_type = (name) => {
   return type ?? 'application/octet-stream';
 }
 
-/**
- * 
- * @param {string} key 
- */
-const key_to_encoded = key => {
-  const url = new URL(key, 'file://host/');
-  const encoded_key = encodeURIComponent(url.pathname.substring(1));
-  return encoded_key;
-}
 
 /**
  * @typedef {import('./types.public.js').Options} Options
  */
 
 /**
+ * The base S3 compatible class
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
  * @implements {storage}
  */
-export class BaseS3Storage {
+export class S3CompatibleStorage {
   
   /** @type {AwsClient} */ #_client;
   /** @type {Options} */ #_options;
@@ -129,9 +120,24 @@ export class BaseS3Storage {
   /**
    * 
    * @param {string} key 
+   * @returns {ReturnType<import('../core/types.storage.js').storage_driver["putSigned"]>}
    */
-  async putRedirect(key) {
-    return undefined;
+  async putSigned(key) {
+    const url = new URL(this.get_file_url(key));
+    const signed = await this.client.sign(
+      new Request(url, {
+        method: "PUT",
+      }), 
+      {
+        aws: { signQuery: true },
+      }
+    );
+
+    return {
+      url: signed.url,
+      method: signed.method,
+      headers: Object.fromEntries(signed.headers.entries())
+    }
   }
 
   // gets
@@ -195,10 +201,25 @@ export class BaseS3Storage {
   /**
    * 
    * @param {string} key 
+   * @returns {ReturnType<import('../core/types.storage.js').storage_driver["getSigned"]>}
    */
-  async getRedirect(key) {
+  async getSigned(key) {
+    const url = new URL(this.get_file_url(key));
+    // url.searchParams.set("X-Amz-Expires", "3600");
+    const signed = await this.client.sign(
+      new Request(url, {
+        method: "GET",
+      }), 
+      {
+        aws: { signQuery: true },
+      }
+    );
 
-    return undefined;
+    return {
+      url: signed.url,
+      method: signed.method,
+      headers: Object.fromEntries(signed.headers.entries())
+    }
   }
 
   // remove
@@ -209,15 +230,15 @@ export class BaseS3Storage {
    */
   async remove(key) {
     await this.client.fetch(
-      this.get_file_url(key),
-      {
-        method: 'DELETE'
-      }
+      this.get_file_url(key), { method: 'DELETE' }
     );
   }
 }
 
-export class R2 extends BaseS3Storage {
+/**
+ * Cloudflare R2
+ */
+export class R2 extends S3CompatibleStorage {
 
   /**
    * 
@@ -231,6 +252,51 @@ export class R2 extends BaseS3Storage {
       endpoint: `https://${account_id}.r2.cloudflarestorage.com`,
       accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
       bucket, forcePathStyle: true, region: 'auto'
+    })
+  }
+
+}
+
+/**
+ * Amazon S3
+ */
+export class S3 extends S3CompatibleStorage {
+
+  /**
+   * 
+   * @param {string} bucket 
+   * @param {string} region 
+   * @param {string} access_key_id 
+   * @param {string} secret_access_key 
+   * @param {boolean} forcePathStyle 
+   */
+  constructor(bucket, region, access_key_id, secret_access_key, forcePathStyle=false) {
+    super({
+      endpoint: `https://s3${region ? ('.'+region) : ''}.amazonaws.com`,
+      accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
+      bucket, forcePathStyle, region
+    })
+  }
+
+}
+
+/**
+ * Digital Ocean spaces
+ */
+export class DigitalOceanSpaces extends S3CompatibleStorage {
+
+  /**
+   * 
+   * @param {string} bucket 
+   * @param {string} region 'nyc3' for example
+   * @param {string} access_key_id 
+   * @param {string} secret_access_key 
+   */
+  constructor(bucket, region, access_key_id, secret_access_key) {
+    super({
+      endpoint: `https://${region}.digitaloceanspaces.com`,
+      accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
+      bucket, forcePathStyle: false, region: 'auto'
     })
   }
 

@@ -376,18 +376,14 @@ export type CustomerType = BaseType & {
 // image
 
 export type ImageType = BaseType & {
-  /** storage provider */
-  provider?: string;
   /** unique handle */
   handle: string;
   /** name */
   name: string;
   /** it's published public url */
   url: string;
-  /** it's api resource location */
-  ref: string;
   /** List of assets using this image */
-  usage: string[];
+  usage?: string[];
 }
 
 // shipping

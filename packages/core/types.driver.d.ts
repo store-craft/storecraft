@@ -1,5 +1,5 @@
 import { 
-  AuthUserType, CollectionType, CustomerType, 
+  AuthUserType, BaseType, CollectionType, CustomerType, 
   DiscountType, ImageType, NotificationType, 
   OrderData, 
   PostType, ProductType, ShippingMethodType, 
@@ -178,6 +178,11 @@ export interface db_storefronts extends db_crud<StorefrontType & SearchTermsType
 
 /** ImageType crud */
 export interface db_images extends db_crud<ImageType & SearchTermsType> {
+  /**
+   * report the media images
+   * @param data a document that has `media`
+   */
+  report_document_media: (data: BaseType) => Promise<void>;
 }
 
 /** PostType crud */

@@ -1,7 +1,6 @@
 import { ID, apply_dates, to_handle, to_tokens, union } from './utils.func.js'
 import { imageTypeSchema } from './types.autogen.zod.api.js'
-import { 
-  assert_save_create_mode,
+import { assert_save_create_mode,
   regular_get, regular_list } from './con.shared.js'
 import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
@@ -53,56 +52,16 @@ export const get = (app, handle_or_id, options) => regular_get(app, db(app))(han
  * @param {string} id
  */
 export const remove = async (app, id) => {
-  // TODO: AFTER STORAGE
-  const [exists, _, data] = await this.get(id)
-    if(!exists)
-      return;
+  // remove from storage
+  const img = await get(app, id);
+  if(!img) return;
 
-    // 1. look at ref
-    // - if this is missing, do nothing
-    // - if this is gs://, use google storage for delete
-    // - if this is s3, locate the correct setting and delete it
-    // 2. remove url from usages
-    // 3. remove image from database - this.db.col(NAME).remove(id)
-    const { url, ref, usage } = data
+  // remove from storage if it belongs
+  if(img.url.startsWith('storage://'))
+    await app.storage.remove(img.url.substring('storage://'.length));
 
-    if(ref) {
-      try {
-        // First, delete from object storage
-        await this.context.storage.deleteByRef(ref)
-      } catch(e) {
-        console.log(e)
-      }
-    }
-
-    if(usage) {
-      // second remove usages
-        usage.forEach(
-          async u => {
-            const parts = u.split('/')
-            const doc = parts.pop()
-            const col = parts.join('/')
-            const urls = []
-            if(url) urls.push(url)
-            if(ref) urls.push(ref)
-            if(urls.length==0)
-            return;
-
-            try {
-              await this.db.doc(col, doc).update(
-                {
-                  media: arrayRemove(...urls)
-                }
-              )
-            } catch(e) {
-              console.log(e)
-            }
-          }
-        )
-    }
-
-    // Lastly, remove the image document
-    await this.db.col(NAME).remove(id)
+  // db remove image side-effect
+  await app.db.images.remove(img.id);
 }
 
 /**
@@ -116,55 +75,20 @@ export const list = (app, q) => regular_list(app, db(app))(q);
  * url to name
  * @param {string} url 
  */
-export const url2Name = url => 
+export const image_url_to_name = url => 
   decodeURIComponent(String(url)).split('/').pop().split('?')[0];
 
 /**
  * url to handle
  * @param {string} url 
  */
-export const url2Handle = url => to_handle(url2Name(url));
+export const image_url_to_handle = url => to_handle(image_url_to_name(url));
 
 /**
  * report media usages
  * @param {import("../types.public.js").App} app
- * @param {string} collection reporting collection
- * @param {string} id reporting id
  * @param {import('../types.api.js').BaseType} data data being reported
  */
-export const reportSearchAndUsageFromRegularDoc = async (app, collection, id, data) => {
-  data?.media?.forEach(
-    async (m) => {
-      // we do not await, we are willing to fail
-      try {
-        const name = url2Name(m);
-        const handle = to_handle(url2Name(m));
-        let img = await get(app, handle)
-        img = img ?? {
-          handle: handle,
-          id: ID('img'),
-          name: name,
-          url: m,
-          ref: undefined,
-          search: [],
-          usage: []
-        }
-        img.search = union(
-          img.search, id,
-          data['title'], to_tokens(data['title'])
-        );
-
-        img.usage = union(
-          img.usage, 
-          `${collection}/${id}`
-        )
-
-        apply_dates(img);
-        
-        await db(app).upsert(img);
-      } catch (e) {
-        console.log(e)
-      }
-    }
-  )
+export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
+  await db(app).report_document_media(data)
 }

@@ -3,6 +3,7 @@ import { Database } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
+import { to_handle, image_url_to_name, image_url_to_handle, union, to_tokens, apply_dates } from '@storecraft/core/v-api';
 
 /**
  * @typedef {import('@storecraft/core').db_images} db_col
@@ -60,6 +61,53 @@ const remove = (driver) => {
 }
 
 /**
+ * report media usages
+ * @param {Database} driver 
+ * @returns {db_col["report_document_media"]}
+ */
+export const report_document_media = (driver) => {
+  return async (data) => {
+    if(!(data?.media?.length))
+      return;
+
+    const add_to_search_index = union(
+      data['title'], to_tokens(data['title'])
+    );
+
+    const dates = apply_dates({});
+    
+    /** 
+     * @param {string} url 
+     * @returns {import('mongodb').AnyBulkWriteOperation<import('@storecraft/core').ImageType>}
+     */
+    const url_to_update = url => {
+      return {
+        updateOne: {
+          filter: { handle: image_url_to_handle(url) },
+          update: { 
+            $addToSet : { search: { $each: add_to_search_index} },
+            $set: { 
+              name: image_url_to_name(url),
+              url: url,
+              updated_at: dates.updated_at
+            },
+            $setOnInsert: { created_at: dates.created_at }
+          },
+          upsert: true
+        }
+      }
+    }
+
+    const ops = data.media.map(url_to_update);
+
+    await driver.images._col.bulkWrite(
+      ops
+    );
+
+  }
+}
+
+/**
  * @param {Database} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
@@ -69,12 +117,13 @@ const list = (driver) => list_regular(driver, col(driver));
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {
-  driver
+
   return {
     _col: col(driver),
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    report_document_media: report_document_media(driver)
   }
 }

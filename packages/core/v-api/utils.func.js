@@ -26,8 +26,9 @@ export const assert = (c, message, code=400) => {
 }
 
 /**
- * @template {import('../types.api.js').BaseType} T
+ * @template T
  * @param {T} d 
+ * @returns {T & { created_at: string, updated_at: string}} d 
  */
 export const apply_dates = d => {
   const now_iso = new Date().toISOString();

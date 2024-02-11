@@ -256,10 +256,21 @@ images are immutable, can only be created or deleted. They are not normalized in
 
 **products/collections/discounts/posts/shipping/storefronts**.{media} --> `image.url`
 
+Some collections have `media[]` array, and we use it to keep track of used images in
+the system, it is a soft feature. no hard relations on them.
+
 `image DELETE`
+- remove from storage if it's there
 - for each `products/collections/discounts/posts/shipping/storefronts`, that has image url
 in it's `media` array, simply remove it.
 
+`products/collections/discounts/posts/shipping/storefronts GET`:
+- fetch storage settings
+- for each media url entry, if it has `storage://`, rewrite it for CDN setting
+
+`products/collections/discounts/posts/shipping/storefronts SAVE`:
+- for each media url entry:
+  - upsert `image` record with the url
 
 ## customers --> auth_user
 they are related through `customer.auth_id` field

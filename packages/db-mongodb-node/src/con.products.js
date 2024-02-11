@@ -5,6 +5,7 @@ import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
 import { DiscountApplicationEnum } from '@storecraft/core'
 import { test_product_with_discount } from '@storecraft/core/v-api'
+import { report_document_media } from './con.images.js'
 
 /**
  * @typedef {import('@storecraft/core').db_products} db_col
@@ -85,6 +86,11 @@ const upsert = (driver) => {
       { '_relations.products.ids' : objid },
       { $set: { [`_relations.products.entries.${objid.toString()}`]: data } },
     );
+    
+    ////
+    // REPORT IMAGES USAGE
+    ////
+    await report_document_media(driver)(data);
     
     // SAVE ME
     const res = await driver.products._col.replaceOne(

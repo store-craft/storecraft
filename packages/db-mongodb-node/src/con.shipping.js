@@ -3,6 +3,7 @@ import { Database } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
+import { report_document_media } from './con.images.js';
 
 /**
  * @typedef {import('@storecraft/core').db_shipping} db_col
@@ -33,11 +34,16 @@ const upsert = (driver) => {
       { $set: { [`_relations.shipping_methods.entries.${objid.toString()}`]: data } },
     );
 
+    ////
+    // REPORT IMAGES USAGE
+    ////
+    await report_document_media(driver)(data);
 
     // SAVE ME
     const res = await col(driver).replaceOne(
       filter, replacement, options
     );
+
 
     return;
   }

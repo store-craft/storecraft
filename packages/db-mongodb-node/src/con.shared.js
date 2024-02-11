@@ -2,6 +2,7 @@ import { Collection } from 'mongodb'
 import { Database } from '../driver.js'
 import { handle_or_id, isUndef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
+import { report_document_media } from './con.images.js'
 
 /**
  * @template {import('@storecraft/core').BaseType} T
@@ -19,6 +20,11 @@ export const upsert_regular = (driver, col) => {
     const res = await col.replaceOne(
       filter, replacement, options
     );
+
+    ////
+    // REPORT IMAGES USAGE
+    ////
+    await report_document_media(driver)(data);
 
     return;
   }

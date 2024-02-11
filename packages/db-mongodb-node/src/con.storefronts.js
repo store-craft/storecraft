@@ -4,6 +4,7 @@ import { get_regular, list_regular,
   remove_regular } from './con.shared.js'
 import { sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js';
+import { report_document_media } from './con.images.js';
 
 /**
  * @typedef {import('@storecraft/core').db_storefronts} db_col
@@ -43,6 +44,11 @@ const upsert = (driver) => {
     await create_explicit_relation(
       driver, replacement, 'posts', 'posts', false
     );
+
+    ////
+    // REPORT IMAGES USAGE
+    ////
+    await report_document_media(driver)(data);
     
     // SAVE ME
     const res = await col(driver).replaceOne(

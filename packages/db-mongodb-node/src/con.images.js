@@ -1,9 +1,10 @@
 import { Collection } from 'mongodb'
 import { Database } from '../driver.js'
 import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
-import { handle_or_id, to_objid } from './utils.funcs.js';
-import { to_handle, image_url_to_name, image_url_to_handle, union, to_tokens, apply_dates } from '@storecraft/core/v-api';
+  upsert_regular } from './con.shared.js'
+import { handle_or_id } from './utils.funcs.js';
+import { image_url_to_name, image_url_to_handle, 
+  union, to_tokens, apply_dates } from '@storecraft/core/v-api';
 
 /**
  * @typedef {import('@storecraft/core').db_images} db_col

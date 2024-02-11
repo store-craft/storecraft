@@ -3,6 +3,7 @@ import { Database } from '../driver.js'
 import { expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
+import { report_document_media } from './con.images.js'
 
 /**
  * @typedef {import('@storecraft/core').db_collections} db_col
@@ -43,6 +44,11 @@ const upsert = (driver) => {
       { '_relations.collections.ids' : objid },
       { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
     );
+
+    ////
+    // REPORT IMAGES USAGE
+    ////
+    await report_document_media(driver)(data);
 
     // SAVE ME
     const res = await col(driver).replaceOne(

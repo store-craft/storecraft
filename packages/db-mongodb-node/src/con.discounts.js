@@ -4,6 +4,7 @@ import { expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
+import { report_document_media } from './con.images.js'
 
 /**
  * @typedef {import('@storecraft/core').db_discounts} db_col
@@ -61,6 +62,10 @@ const upsert = (driver) => {
       { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
     );
 
+    ////
+    // REPORT IMAGES USAGE
+    ////
+    await report_document_media(driver)(data);
 
     // SAVE ME
 

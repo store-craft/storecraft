@@ -81,13 +81,15 @@ export class S3CompatibleStorage {
    * @param {BodyInit} body 
    */
   async #put_internal(key, body) {
-    await this.client.fetch(
+    const r = await this.client.fetch(
       this.get_file_url(key),
       {
         method: 'PUT',
         body
       }
     );
+
+    return r.ok;
   }
 
   /**
@@ -96,7 +98,7 @@ export class S3CompatibleStorage {
    * @param {Blob} blob 
    */
   async putBlob(key, blob) {
-    await this.#put_internal(key, blob);
+    return this.#put_internal(key, blob);
   }
 
   /**
@@ -105,7 +107,7 @@ export class S3CompatibleStorage {
    * @param {ArrayBuffer} buffer 
    */
   async putArraybuffer(key, buffer) {
-    await this.#put_internal(key, buffer);
+    return this.#put_internal(key, buffer);
   }  
 
   /**
@@ -114,7 +116,7 @@ export class S3CompatibleStorage {
    * @param {ReadableStream} stream 
    */
   async putStream(key, stream) {
-    await this.#put_internal(key, stream);
+    return this.#put_internal(key, stream);
   }
 
   /**

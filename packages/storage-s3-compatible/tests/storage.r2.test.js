@@ -1,11 +1,10 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { GoogleStorage } from '../adapter.js'
+import { R2 } from '../adapter.js'
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os'
 import * as path from 'node:path';
-import service_key from './service-key.json' assert { type: 'json' };
 
 const areBlobsEqual = async (blob1, blob2) => {
   return !Buffer.from(await blob1.arrayBuffer()).compare(
@@ -13,9 +12,9 @@ const areBlobsEqual = async (blob1, blob2) => {
   );
 };
 
-const storage = new GoogleStorage(
-  process.env.GS_BUCKET, process.env.GS_CLIENT_EMAIL, 
-  process.env.GS_PRIVATE_KEY, process.env.GS_PRIVATE_KEY_ID
+const storage = new R2(
+  process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, 
+  process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY
   );
 
 test.before(async () => await storage.init())
@@ -76,8 +75,6 @@ test('blob put (presign)', async () => {
           body: d.blob
         }
       );
-
-      console.log(url)
 
       assert.ok(r.ok, 'upload failed')
     }

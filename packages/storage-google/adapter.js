@@ -41,12 +41,15 @@ export class GoogleStorage {
   /**
    * 
    * @param {string} bucket 
-   * @param {import('./types.public.js').ServiceFile} service_file 
+   * @param {string} client_email 
+   * @param {string} private_key 
+   * @param {string} private_key_id 
    */
-  constructor(bucket, service_file) {
+  constructor(bucket, client_email, private_key, private_key_id) {
     this.#_bucket = bucket;
-    this.#_service_file = service_file;
-
+    this.#_service_file = {
+      client_email, private_key, private_key_id
+    };
   }
 
   get bucket() { return this.#_bucket; }
@@ -79,7 +82,8 @@ export class GoogleStorage {
         headers: {
           Authorization: auth,
           'Content-Type': 'image/png'
-        }
+        },
+        duplex: 'half'
       }
     );
 
@@ -122,6 +126,7 @@ export class GoogleStorage {
   async putSigned(key) {
     const ct = infer_content_type(key);
     const sf = this.service_file;
+
     const url_signed = await presign({
       pem_private_key: sf.private_key,
       client_id_email: sf.client_email,

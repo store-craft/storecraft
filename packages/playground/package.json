@@ -14,7 +14,8 @@
     "@storecraft/platform-node": "^1.0.0",
     "@storecraft/db-mongodb-node": "^1.0.0",
     "@storecraft/storage-node-local": "^1.0.0",
-    "@storecraft/storage-s3-compatible": "^1.0.0"
+    "@storecraft/storage-s3-compatible": "^1.0.0",
+    "@storecraft/storage-google": "^1.0.0"
   },
   "keywords": [],
   "author": "",

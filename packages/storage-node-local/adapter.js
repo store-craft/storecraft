@@ -100,7 +100,7 @@ export class Storage {
   async putBlob(key, blob) {
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w');
-
+    let ok = true;
     try {
       for await (const buf of blob.stream()) {
         try {
@@ -111,13 +111,14 @@ export class Storage {
         }
       }
     } catch (e) {
+      ok=false;
       console.log(e);
     }
     finally {
       await file_handle.close()
     }
 
-    // return await this.putStream(key, blob.stream());
+    return ok;
   }
 
   /**
@@ -129,13 +130,15 @@ export class Storage {
     const arr = new Uint8Array(buffer);
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w');
+    let ok = true;
     try{
       await file_handle.write(arr);
     } catch (e) {
-
+      ok = false;
     } finally {
       await file_handle.close();
     }
+    return ok;
   }  
 
   /**
@@ -146,6 +149,7 @@ export class Storage {
   async putStream(key, stream) {
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w')
+    let ok = true;
 
     // I found this to be better than async iterators in node.js
     const reader = stream.getReader();
@@ -161,21 +165,14 @@ export class Storage {
     try {
       await read_more(); 
     } catch(e) {
+      ok=false;
       console.log('putStream error ', e);
     } finally {
       await file_handle.close();
     }
     
-    return;
+    return ok;
   }  
-
-  /**
-   * 
-   * @param {string} key 
-   */
-  async putSigned(key) {
-    return undefined;
-  }
 
   // gets
 
@@ -235,14 +232,6 @@ export class Storage {
       
     }
 
-    return undefined;
-  }
-
-  /**
-   * 
-   * @param {string} key 
-   */
-  async getSigned(key) {
     return undefined;
   }
 

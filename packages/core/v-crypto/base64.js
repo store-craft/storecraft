@@ -31,8 +31,7 @@ const _fromCC = String.fromCharCode.bind(String);
 const _U8Afrom = typeof Uint8Array.from === 'function'
     ? Uint8Array.from.bind(Uint8Array)
     : (it) => new Uint8Array(Array.prototype.slice.call(it, 0));
-const _mkUriSafe = (src) => src
-    .replace(/=/g, '').replace(/[+\/]/g, (m0) => m0 == '+' ? '-' : '_');
+const _mkUriSafe = (src) => src.replace(/=/g, '').replace(/[+\/]/g, (m0) => m0 == '+' ? '-' : '_');
 const _tidyB64 = (s) => s.replace(/[^A-Za-z0-9\+\/]/g, '');
 /**
  * polyfill version of `btoa`
@@ -197,6 +196,7 @@ const _toUint8Array = _hasBuffer
  * @returns {Uint8Array}
  */
 const toUint8Array = (a) => _toUint8Array(_unURI(a));
+const toUint8Array_regular = (a) => _toUint8Array(a);
 //
 const _decode = _hasBuffer
     ? (a) => Buffer.from(a, 'base64').toString('utf8')
@@ -293,6 +293,7 @@ export { decode };
 export { isValid };
 export { fromUint8Array };
 export { toUint8Array };
+export { toUint8Array_regular };
 export { extendString };
 export { extendUint8Array };
 export { extendBuiltins };

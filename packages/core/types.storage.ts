@@ -27,9 +27,9 @@ export declare interface storage_driver {
    */
   init: (app: App<any, any, any>) => Promise<this>;
 
-  putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<void>; 
-  putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<void>; 
-  putStream: (key: string, stream: ReadableStream, meta?: MetaData) => Promise<void>; 
+  putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<boolean>; 
+  putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<boolean>; 
+  putStream: (key: string, stream: ReadableStream, meta?: MetaData) => Promise<boolean>; 
   putSigned?: (key: string) => Promise<StorageSignedOperation | undefined>; 
 
   getBlob: (key: string) => Promise<Get<Blob>>;

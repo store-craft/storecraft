@@ -1,5 +1,5 @@
-import * as phash from '../v-utils/crypto-pbkdf2.js'
-import * as jwt from '../v-utils/jwt.js'
+import * as phash from '../v-crypto/crypto-pbkdf2.js'
+import * as jwt from '../v-crypto/jwt.js'
 import { ID, apply_dates, assert } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { 
@@ -45,7 +45,7 @@ export const signup = async (app, body) => {
     )
   );
 
-  /** @type {Partial<import("../v-utils/jwt.js").JWTClaims>} */
+  /** @type {Partial<import("../v-crypto/jwt.js").JWTClaims>} */
   const claims = {
     sub: id, 
     // @ts-ignore

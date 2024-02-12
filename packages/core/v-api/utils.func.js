@@ -1,4 +1,4 @@
-import { id } from '../v-utils/object-id.js';
+import { id } from '../v-crypto/object-id.js';
 
 /**
  * Create an ID with prefix

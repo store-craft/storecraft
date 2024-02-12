@@ -1,5 +1,5 @@
-// import {encode as bEnc, decode as bDec} from "https://deno.land/std/encoding/base64url.ts";
-import { encodeURL, decode , btoa, fromUint8Array as bEnc, toUint8Array as bDec } from './base64.js'
+import { fromUint8Array as bEnc, toUint8Array as bDec, 
+  toUint8Array, encode, fromUint8Array } from './base64.js'
 
 /**
  * @typedef {Object} JWTClaims
@@ -69,15 +69,20 @@ const fill_claims = (claims, expireIn=JWT_TIMES.HOUR) => {
 /**
  * @typedef {Object} JWTOptions
  * @prop {string} [alg='HS256'] the algorithm
+ */
+
+/**
  * 
+ * Create a JWT with symmetric HMAC secret
  * @param {string} key 
  * @param {Partial<JWTClaims>} claims 
  * @param {number} expiresIn in seconds
  * @param {string} alg 
+ * @param {Record<string, string>} extra_headers 
  * @returns {Promise<{ token: string, claims: Partial<JWTClaims>}>}
  */
-export const create = async (key, claims, expiresIn=JWT_TIMES.HOUR, alg='HS256') => {
-  const header = JSON.stringify({ alg, typ:"JWT"});
+export const create = async (key, claims, expiresIn=JWT_TIMES.HOUR, alg='HS256', extra_headers={}) => {
+  const header = JSON.stringify({ alg, typ:"JWT", ...extra_headers});
   const payload_header = bEnc(tEnc(header), true);
   const payload_claims = bEnc(tEnc(JSON.stringify(fill_claims(claims, expiresIn))), true);
   const payload = `${payload_header}.${payload_claims}`;
@@ -101,6 +106,73 @@ export const create = async (key, claims, expiresIn=JWT_TIMES.HOUR, alg='HS256')
 
 /**
  * 
+ * @param {string} pem 
+ * @param {any} algorithm 
+ */
+export const import_pem_pkcs8 = (pem, algorithm) => {
+  const pemHeader = '-----BEGIN PRIVATE KEY-----';
+  const pemFooter = '-----END PRIVATE KEY-----';
+
+  pem = pem.replace(/\n/g, '');
+
+  if (!pem.startsWith(pemHeader) || !pem.endsWith(pemFooter)) {
+      throw new Error('Invalid service account private key')
+  }
+
+  pem = pem.substring(pemHeader.length, pem.length - pemFooter.length);
+  const buffer = toUint8Array(pem);
+
+  return crypto.subtle.importKey('pkcs8', buffer, algorithm, false, ['sign'])
+}
+
+/**
+ * 
+ * Create a JWT with asymmetric PEM private key PKCS #8 with RSA-256 hash 
+ * @param {string} pem_private_key  
+ * @param {Partial<JWTClaims>} claims 
+ * @param {number} expiresIn in seconds
+ * @param {Record<string, string>} extra_headers 
+ * @returns {Promise<{ token: string, claims: Partial<JWTClaims>}>}
+ */
+export const create_with_pem = async (pem_private_key, claims, expiresIn=JWT_TIMES.HOUR, extra_headers={}) => {
+  const algorithm = {
+    name: 'RSASSA-PKCS1-v1_5',
+    hash: { name: 'SHA-256' },
+  }
+
+  const privateKey = await import_pem_pkcs8(pem_private_key, algorithm);
+  
+  const header = encode(
+    JSON.stringify({
+      alg: 'RS256',
+      typ: 'JWT',
+      ...extra_headers,
+    }), true
+  )
+  const iat = Math.floor(Date.now() / 1000);
+  const exp = iat + expiresIn;
+  
+  claims = { exp, iat, ...claims };
+  const payload = encode(
+    JSON.stringify(claims), true
+  );
+
+  const textEncoder = new TextEncoder()
+  const inputArrayBuffer = textEncoder.encode(`${header}.${payload}`)
+
+  const outputArrayBuffer = await crypto.subtle.sign(
+    algorithm,
+    privateKey,
+    inputArrayBuffer
+  );
+
+  const signature = fromUint8Array(new Uint8Array(outputArrayBuffer), true);
+  const token = `${header}.${payload}.${signature}`;
+  return { token, claims }
+}
+
+/**
+ * 
  * @param {string} jwt 
  * @returns {Partial<JWTClaims>}
  */
@@ -113,6 +185,7 @@ export const extractJWTClaims = (jwt) => {
 }
 
 /**
+ * Verify with Symetric HMAC secret
  * @typedef {object} JWTVerifyResult
  * @prop {boolean} verified
  * @prop {Partial<JWTClaims> | undefined} [claims]
@@ -123,25 +196,25 @@ export const extractJWTClaims = (jwt) => {
  * @returns {Promise<JWTVerifyResult>}
  */
 export const verify = async (key, jwt, verifyExpiration=true)=>{
-    const jwtParts = jwt.split('.');
+  const jwtParts = jwt.split('.');
 
-    if(jwtParts.length!==3) 
-      return { verified: false };
+  if(jwtParts.length!==3) 
+    return { verified: false };
 
-    const data = tEnc(jwtParts[0] + '.' + jwtParts[1]);
+  const data = tEnc(jwtParts[0] + '.' + jwtParts[1]);
 
-    let verified = await crypto.subtle.verify(
-      {name:"HMAC"}, await genKey(key), bDec(jwtParts[2]), data
-    )
+  let verified = await crypto.subtle.verify(
+    {name:"HMAC"}, await genKey(key), bDec(jwtParts[2]), data
+  )
 
-    let claims = verified ? extractJWTClaims(jwt) : undefined
+  let claims = verified ? extractJWTClaims(jwt) : undefined
 
-    if(verifyExpiration && claims) {
-      verified = verified && claims?.exp && (claims?.exp > now_seconds())
-    }
+  if(verifyExpiration && claims) {
+    verified = verified && claims?.exp && (claims?.exp > now_seconds())
+  }
 
-    return {
-      verified,
-      claims
-    }
+  return {
+    verified,
+    claims
+  }
 };

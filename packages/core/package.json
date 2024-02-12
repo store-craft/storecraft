@@ -18,6 +18,10 @@
     "./v-storage": {
       "import": "./v-storage/public.js",
       "types": "./v-storage/types.public.d.ts"
+    },
+    "./v-crypto": {
+      "import": "./v-crypto/public.js",
+      "types": "./v-crypto/types.public.d.ts"
     }
   },
   "scripts": {

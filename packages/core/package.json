@@ -22,6 +22,10 @@
     "./v-crypto": {
       "import": "./v-crypto/public.js",
       "types": "./v-crypto/types.public.d.ts"
+    },
+    "./v-ql": {
+      "import": "./v-ql/index.js",
+      "types": "./v-ql/types.d.ts"
     }
   },
   "scripts": {

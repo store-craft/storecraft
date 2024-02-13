@@ -1,7 +1,10 @@
 // Query types
 import type { VQL } from './v-ql/types.js';
 export type ApiQuerySortOrder = 'asc' | 'desc';
-export type Cursor<T=string> = [key: 'updated' | 'created' | 'id', value: T];
+export type Tuple<T extends string> = [key: string, value: T];
+export type Cursor = Tuple<string>[];
+export type SortCursor = string[];
+export type SortOrder = 'asc' | 'desc';
 
 /** Expend several relations */
 export type ExpandQuery = string[];
@@ -18,12 +21,10 @@ export type ParsedApiQuery = {
   vql?: VQL.AST;
 
   /**
-   * order of the query:
-   * 1. If startAt/endAt=(updated:2012..), it will order by `updated_at`
-   * 2. if startAt===undefined, it will sort by `updated_at`
-   * 3. If startAt/endAt=(created:2012..), it will order by `created_at`
+   * 
    */
-  order?: ApiQuerySortOrder;
+  sortBy?: SortCursor;
+  order?: SortOrder;
 
   /**
    * limit of items returned
@@ -35,14 +36,14 @@ export type ParsedApiQuery = {
    * (updated:2012-09,id:aokaoskox)
    * (created:2012-09,id:aokaoskox)
    */
-  startAt?: Cursor[];
-  startAfter?: Cursor[];
+  startAt?: Cursor;
+  startAfter?: Cursor;
 
   /**
    * (updated:2012-09)
    * (updated:2012-09,id:aokaoskox)
    * (created:2012-09,id:aokaoskox)
    */
-  endAt?: Cursor[];
-  endBefore?: Cursor[];
+  endAt?: Cursor;
+  endBefore?: Cursor;
 }

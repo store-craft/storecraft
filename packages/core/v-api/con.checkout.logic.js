@@ -127,7 +127,7 @@ export const complete_checkout =
   order.payment_gateway.on_checkout_complete = complete;
   await upsert(app, order);
 
-  return order
+  return order;
 }
 
 

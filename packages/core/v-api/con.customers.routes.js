@@ -1,6 +1,6 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
-import { parse_auth_user, roles_guard } from './middle.auth.js'
+import { parse_auth_user, roles_guard } from './con.auth.middle.js'
 import { parse_query } from './utils.query.js'
 import { get, list, remove, upsert } from './con.customers.logic.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'

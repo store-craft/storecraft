@@ -89,7 +89,7 @@ export const signin = async (app, body) => {
   
   assert(verified, 'auth/error', 401)
 
-  /** @type {Partial<import('./middle.auth.js').ApiRequest["user"]>} */
+  /** @type {Partial<import('./con.auth.middle.js').ApiRequest["user"]>} */
   const claims = {
     sub: existingUser.id,
     roles: existingUser.roles

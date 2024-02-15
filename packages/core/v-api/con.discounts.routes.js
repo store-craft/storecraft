@@ -1,6 +1,6 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
-import { authorize_by_roles } from './middle.auth.js'
+import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from './utils.query.js'
 import { get, list, list_discounts_products, remove, upsert } from './con.discounts.logic.js'
 

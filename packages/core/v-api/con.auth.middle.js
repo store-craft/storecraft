@@ -36,7 +36,6 @@ export const parse_auth_user = (app) => {
 
     if(jwt.verified)
      req.user = jwt.claims;
-
   }
 }
 

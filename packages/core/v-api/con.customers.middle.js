@@ -1,10 +1,10 @@
 import { assert } from './utils.func.js'
-import { auth_error, has_role } from './middle.auth.js'
+import { auth_error, has_role } from './con.auth.middle.js'
 import { isDef } from './utils.index.js'
 
 /**
- * @param {import('./middle.auth.js').ApiRequest} req 
- * @param {import('./middle.auth.js').ApiResponse} res 
+ * @param {import('./con.auth.middle.js').ApiRequest} req 
+ * @param {import('./con.auth.middle.js').ApiResponse} res 
  */
 export const owner_or_admin_guard = async (req, res) => {
   assert(req.user, ...auth_error);

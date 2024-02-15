@@ -1,6 +1,6 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
-import { authorize_by_roles } from './middle.auth.js'
+import { authorize_by_roles } from './con.auth.middle.js'
 import { does_prefer_signed } from './con.storage.logic.js';
 
 /**

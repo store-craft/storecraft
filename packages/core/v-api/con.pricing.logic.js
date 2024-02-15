@@ -17,7 +17,8 @@
  * 
  */
 
-import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from '../types.api.enums.js'
+import { DiscountApplicationEnum, DiscountMetaEnum, 
+  FilterMetaEnum } from '../types.api.enums.js';
 
 /**
  * 
@@ -197,7 +198,7 @@ const assert = (condition, message) => {
  * @returns {number}
  */
 export const lineitems_to_quantity = (line_items) => {
-  return line_items.reduce((p, c) => p + c.qty, 0)
+  return line_items.reduce((p, c) => p + c.qty, 0);
 }
 
 
@@ -223,7 +224,7 @@ export const calculate_line_items_discount_with_regular_discount =
         discount?.info?.filters, li.data
         )
     }
-  )
+  );
 
   // perform discount and compute new generation of line items
   const line_items_next = line_items.filter(
@@ -234,26 +235,26 @@ export const calculate_line_items_discount_with_regular_discount =
   /**@type {RegularDiscountExtra} */
   const discount_extra = discount_details?.extra
 
-  const $percent = clamp(discount_extra?.percent, 0, 100) ?? 0
-  const $fixed = discount_extra?.fixed ?? 0
+  const $percent = clamp(discount_extra?.percent, 0, 100) ?? 0;
+  const $fixed = discount_extra?.fixed ?? 0;
 
   const report = line_items.filter(
     (li, ix) => pass_mask[ix]
   ).reduce(
     (p, c, ix) => {
 
-      const qty = c.qty
-      const price = c?.data?.price ?? c.price
+      const qty = c.qty;
+      const price = c?.data?.price ?? c.price;
       const curr = apply_discount(
         c.qty, price, $percent, $fixed
-      )
+      );
       
-      p.total_discount += curr
-      p.quantity_discounted += qty
+      p.total_discount += curr;
+      p.quantity_discounted += qty;
 
-      return p
-    }
-    , {
+      return p;
+    }, 
+    {
       total_discount: 0,
       quantity_discounted : 0,
       quantity_undiscounted: lineitems_to_quantity(line_items_next)
@@ -773,11 +774,13 @@ export const calculate_pricing =
           ctx.evo.at(-1).line_items, discount, ctx
         )
   
+        // update global context
         ctx.subtotal_discount += total_discount
         ctx.subtotal -= total_discount
         ctx.total -= total_discount
         ctx.quantity_discounted = ctx.quantity_discounted + (rest?.quantity_discounted ?? 0)
 
+        // push the iteration result for future review
         ctx.evo.push({
           ...rest,
           discount,

@@ -28,8 +28,16 @@ export declare interface db_crud<T> {
   /**
    * get a single item by handle or id
    * @param id_or_handle 
+   * @param options 
    */
   get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<Partial<T>>;
+  /**
+   * get bulk of items, ordered, if something is missing, `undefined`
+   * should be instead
+   * @param ids array of ids
+   * @param options 
+   */
+  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<(Partial<T> | undefined)[]>;
 
   /**
    * Insert or Replace an item

@@ -103,6 +103,34 @@ export const get_regular = (driver, col) => {
   }
 }
 
+/**
+ * get bulk of items, ordered, if something is missing, `undefined`
+ * should be instead
+ * @template {import('@storecraft/core').BaseType} T
+ * @param {Database} driver 
+ * @param {Collection<T>} col 
+ * @returns {import('@storecraft/core').db_crud<T>["getBulk"]}
+ */
+export const get_bulk = (driver, col) => {
+  return async (ids, options) => {
+    const objids = ids.map(to_objid);
+
+    /** @type {import('./utils.relations.js').WithRelations<T>[]} */
+    const res = await col.find(
+      { _id: { $in: objids } }
+    ).toArray();
+
+    // try to expand relations
+    expand(res, options?.expand);
+    const sanitized = sanitize(res);
+    // now let's order them
+    return ids.map(
+      id => sanitized.find(s => s.id===id)
+    );
+    
+  }
+}
+
 
 /**
  * @template {import('@storecraft/core').BaseType} T

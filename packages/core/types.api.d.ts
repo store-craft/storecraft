@@ -487,13 +487,17 @@ export type OrderData = BaseType & {
   payment_gateway: OrderPaymentGatewayData; 
 }
 
+export type CheckoutData = {
+
+}
+
 /** Order buyer info */
 export type OrderContact = {
   firstname?: string;
   lastname?: string;
   phone_number?: string;
   email?: string;
-  auth_id?: string;
+  customer_id?: string;
 }
 
 /** status of checkout, fulfillment and payment */
@@ -551,10 +555,12 @@ export type PricingData = {
   subtotal: number; 
   /** subtotal + shipping */
   total: number; 
+  /** how many items are eligible */
+  quantity_total: number; 
   /** how many items were discounted */
-  total_quantity: number; 
+  quantity_discounted: number;
   /** authentication user id */
-  auth_id?: string; 
+  uid?: string; 
   errors: DiscountError[];
  
 }
@@ -581,27 +587,27 @@ export type DiscountError = {
 
 /** Explain how a specific discount was used to discount line items */
 export type EvoEntry = {
-  discount: DiscountType;
+  discount?: DiscountType;
   /** the discount code */
-  discount_code: string;
+  discount_code?: string;
   /** the amount of money that was discounted by this discount */
-  total_discount: number;
+  total_discount?: number;
   /** how many items are left to discount */
-  quantity_undiscounted: number;
+  quantity_undiscounted?: number;
   /** how many items were discounted now */
-  quantity_discounted: number;
+  quantity_discounted?: number;
   /** running subtotal without shipping */
-  subtotal: number;
+  subtotal?: number;
   /** running total */
-  total: number;
+  total?: number;
   /**  available line items after discount */
-  line_items: LineItem[];
+  line_items?: LineItem[];
 }
 /** checkouts or draft orders might be validated in automatic systems */
 export type ValidationEntry = {
   id: string;
-  title: string;
-  message: 'out-of-stock' | 'not-enough-stock' | 'some-stock-is-on-hold';
+  title?: string;
+  message?: 'out-of-stock' | 'not-enough-stock' | 'some-stock-is-on-hold';
 }
 
 /** How did the order interacted with a payment gateway ?  */

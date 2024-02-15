@@ -118,6 +118,9 @@ export const CheckoutStatusEnum = {
   complete: { 
     id: 3, name2: 'complete', name: 'Complete'
   },
+  unknown: { 
+    id: 4, name2: 'unknown', name: 'Unknown'
+  },
 }
 
 /** 

@@ -85,10 +85,11 @@ export const parse_sort_order = (s='desc') => {
  * 
  * INTO a {`ParsedApiQuery`}
  * 
- * @param {URLSearchParams} s 
+ * @param {URLSearchParams | string} s 
  * @returns {ParsedApiQuery | undefined}
  */
 export const parse_query = (s) => {
+  s = s instanceof URLSearchParams ? s : new URLSearchParams(s)
   /** @type {ParsedApiQuery} */
   const q = {};
 

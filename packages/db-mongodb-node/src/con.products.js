@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { Database } from '../driver.js'
-import { get_regular, list_regular } from './con.shared.js'
+import { get_bulk, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
 import { DiscountApplicationEnum } from '@storecraft/core'
@@ -289,6 +289,7 @@ export const impl = (driver) => {
   return {
     _col: col(driver),
     get: get(driver),
+    getBulk: get_bulk(driver, col(driver)),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),

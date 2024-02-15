@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { Database } from '../driver.js'
-import { expand, get_regular, list_regular } from './con.shared.js'
+import { expand, get_bulk, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
@@ -177,6 +177,7 @@ export const impl = (driver) => {
   return {
     _col: col(driver),
     get: get(driver),
+    getBulk: get_bulk(driver, col(driver)),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),

@@ -1,4 +1,4 @@
-import type { Trouter } from './trouter/index';
+import type { Trouter } from './trouter/index.js';
 
 export type PartialURL = Partial<URL>;
 

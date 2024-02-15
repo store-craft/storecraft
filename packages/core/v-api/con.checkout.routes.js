@@ -14,8 +14,6 @@ export const create_routes = (app) => {
   /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
-
   // create checkout
   polka.post(
     '/create',

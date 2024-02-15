@@ -1,5 +1,6 @@
 import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from "@storecraft/core";
 import { Database } from "../driver.js";
+import { to_objid } from "./utils.funcs.js";
 
 /** @param {import("@storecraft/core").DiscountType} d */
 const is_order_discount = d => {
@@ -59,12 +60,12 @@ export const discount_to_mongo_conjunctions = d => {
       case FilterMetaEnum.p_in_collections.op:
         // PROBLEM: we only have ids, but use handles in the filters
         conjunctions.push(
-          { '_relations.collection.ids': { $in: filter.value } }
+          { '_relations.collections.ids': { $in: filter.value?.map(c => to_objid(c.id)) } }
         );
         break;
       case FilterMetaEnum.p_not_in_collections.op:
         conjunctions.push(
-          { '_relations.collection.ids': { $nin: filter.value } }
+          { '_relations.collections.ids': { $nin: filter.value?.map(c => to_objid(c.id)) } }
         );
         break;
       case FilterMetaEnum.p_in_price_range.op:

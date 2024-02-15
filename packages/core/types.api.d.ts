@@ -220,7 +220,9 @@ export type FilterMeta = {
   /** product or order filter */
   type: 'product' | 'order';
   /**  operation name id */
-  op: 'p-in-collections' | 'p-not-in-collections' | 'p-in-handles' | 'p-not-in-handles' | 'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p_in_price_range' | 'o-subtotal-in-range' | 'o-items-count-in-range' | 'o-date-in-range' | 'o_has_customer';
+  op: 'p-in-collections' | 'p-not-in-collections' | 'p-in-handles' | 'p-not-in-handles' | 
+  'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p_in_price_range' | 'o-subtotal-in-range' | 
+  'o-items-count-in-range' | 'o-date-in-range' | 'o_has_customer';
   /** printable name */
   name: string;
 }
@@ -571,11 +573,11 @@ export type LineItem = {
   /**  id or handle of product */
   id: string;
   /** it's known price */
-  price: number; 
+  price?: number; 
   /** integer quantity of how many such products were bought */
   qty: number;
   /** used by order to indicate it has reserved stock and it's amount */
-  stock_reserved: number; 
+  stock_reserved?: number; 
   /** (optional) the product data */
   data?: ProductType;
 }

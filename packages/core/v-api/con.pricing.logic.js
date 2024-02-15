@@ -25,7 +25,7 @@ import { DiscountApplicationEnum, DiscountMetaEnum,
  * @param {ProductType} product 
  * @param {Filter} filter 
  */
-const test_product_filter_against_product = 
+export const test_product_filter_against_product = 
   (filter, product) => {
 
   try {
@@ -39,11 +39,11 @@ const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_collections.op:
         return product.collections?.some(
-          c => filter.value.includes(c)
+          c => filter.value.map(v => v.id).includes(c.id)
         ) ?? false
       case FilterMetaEnum.p_not_in_collections.op:
         return product.collections?.every(
-            c => !filter.value.includes(c)
+            c => !filter.value.map(v => v.id).includes(c.id)
           ) ?? true
 
       case FilterMetaEnum.p_in_handles.op:
@@ -73,7 +73,7 @@ const test_product_filter_against_product =
  * @param {ProductType} product 
  * @param {Filter[]} filters 
  */
-const test_product_filters_against_product = 
+export const test_product_filters_against_product = 
   (filters=[], product) => {
 
   filters = filters?.filter(
@@ -93,7 +93,7 @@ const test_product_filters_against_product =
  * @param {PricingData} context 
  */
 const test_order_filter = 
-  (filter, { uid, total, subtotal, total_quantity }) => {
+  (filter, { uid, total, subtotal, quantity_total }) => {
 
   try {
     switch (filter.meta.op) {
@@ -107,7 +107,7 @@ const test_order_filter =
         )
 
       case FilterMetaEnum.o_items_count_in_range.op:
-        return total_quantity>=filter.value.from
+        return quantity_total>=filter.value.from
 
       case FilterMetaEnum.o_subtotal_in_range.op:
         return subtotal>=filter.value.from
@@ -692,11 +692,11 @@ export const calculate_line_items_for_discount =
  * @param {DiscountType[]} auto_discounts disabled discounted will be filtered out
  * @param {DiscountType[]} coupons disabled coupons will be filtered out
  * @param {ShippingMethodType} shipping_method 
- * @param {string} uid 
+ * @param {string} [uid] 
  * @returns {PricingData}
  */
 export const calculate_pricing = 
-  (line_items, auto_discounts=[], coupons=[], shipping_method, uid) => {
+  (line_items, auto_discounts=[], coupons=[], shipping_method, uid=undefined) => {
 
   auto_discounts = auto_discounts.filter(
     d => d.enabled && d.application.id==DiscountApplicationEnum.Auto.id
@@ -784,7 +784,7 @@ export const calculate_pricing =
         ctx.evo.push({
           ...rest,
           discount,
-          discount_code: discount.code,
+          discount_code: discount.handle,
           total_discount,
           subtotal: ctx.subtotal,
           total: ctx.total,
@@ -794,7 +794,7 @@ export const calculate_pricing =
       } catch (e) {
         console.log(e)
         ctx.errors.push({
-          discount_code: discount.code,
+          discount_code: discount.handle,
           message: e?.message ?? e
         })
       } finally {

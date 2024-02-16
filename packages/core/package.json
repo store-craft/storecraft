@@ -26,7 +26,12 @@
     "./v-ql": {
       "import": "./v-ql/index.js",
       "types": "./v-ql/types.d.ts"
+    },
+    "./v-payments": {
+      "import": "./v-payments/index.js",
+      "types": "./v-payments/types.public.d.ts"
     }
+
   },
   "scripts": {
     "test": "uvu -c",

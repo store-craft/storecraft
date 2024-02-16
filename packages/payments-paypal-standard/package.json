@@ -1,0 +1,21 @@
+{
+  "name": "@storecraft/payments-paypal-standard",
+  "version": "1.0.0",
+  "description": "paypal standard support",
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "test": "uvu -c"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@storecraft/core": "^1.0.0",
+    "@types/node": "^20.11.0",
+    "uvu": "^0.5.6"
+  }
+}

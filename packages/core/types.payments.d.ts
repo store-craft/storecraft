@@ -20,10 +20,12 @@ export type PaymentGatewayStatus = {
   status: string;
 }
 
+export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfillment">>;
+
 /**
  * Basic collection or table
  */
-export declare interface payment_gateway<Config, CreateResult> {
+export declare interface payment_gateway<Config, CreateResult extends any> {
 
   get config(): Config;
   /**
@@ -39,7 +41,7 @@ export declare interface payment_gateway<Config, CreateResult> {
    * @param create_result the result of checkout creation, use it to know the gateays order id etc..
    * @returns 
    */
-  onCheckoutComplete: (create_result: CreateResult) => Promise<OrderData["status"]["payment"]>;
+  onCheckoutComplete: (create_result: CreateResult) => Promise<OnCheckoutCompleteResult>;
 
   /**
    * Query for the status of created payment, receive back a status object with

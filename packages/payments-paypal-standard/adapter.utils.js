@@ -57,10 +57,10 @@ export const getAccessToken = async (config) => {
    * @param {string} path relative path, i.e `v2/checkout/orders/..`
    * @param {RequestInit} init 
    */
-  export const with_auth = async (config, path, init={}) => {
+  export const fetch_with_auth = async (config, path, init={}) => {
     const { access_token, endpoint } = await getAccessToken(config);
     
-    const response = await fetch(
+    return fetch(
       `${endpoint}/${path}`, {
         ...init,
         headers: {
@@ -69,9 +69,4 @@ export const getAccessToken = async (config) => {
         },
       }
     );
-  
-    if (!response.ok)
-      throw new Error(await response.text());
-  
-    return response.json();
   }

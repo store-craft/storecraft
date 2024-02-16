@@ -1,3 +1,4 @@
+import { PaymentOptionsEnum } from "./types.api.enums.js";
 
 /** Base properties */
 type BaseType = {

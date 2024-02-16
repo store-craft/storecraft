@@ -1,7 +1,9 @@
-import { getAccessToken, with_auth } from './adapter.utils.js';
+import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core';
+import { fetch_with_auth } from './adapter.utils.js';
 
 /**
- * @typedef {string} CreateResult
+ * @typedef {import('./types.private.js').paypal_order} CreateResult
+ * @typedef {import('@storecraft/core').CheckoutStatusOptions} CheckoutStatusOptions
  * @typedef {import('@storecraft/core').OrderData} OrderData
  * @typedef {import('./types.public.js').Config} Config
  * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
@@ -22,6 +24,7 @@ export class PaypalStandard {
   get config() { return this.#_config; }
 
   /**
+   * TODO: the user prefers to capture intent instead
    * @param {OrderData} order 
    */
   async onCheckoutCreate(order) {
@@ -42,23 +45,57 @@ export class PaypalStandard {
       ],
     }
 
-    const response = await with_auth(
-      this.config, 'v2/checkout/orders',
-      {
-        method: 'post',
-        body: JSON.stringify(body),
+    const response = await fetch_with_auth(
+      this.config, 'v2/checkout/orders', {
+        method: 'post', body: JSON.stringify(body),
       }
     );
 
-    return response.json();
+    /** @type {CreateResult} */
+    const json = await response.json();
+    return json;
   }
 
   /**
    * 
    * @param {CreateResult} create_result 
+   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>} create_result 
    */
   async onCheckoutComplete(create_result) {
-    return null;
+
+    const response = await fetch_with_auth(
+      this.config, 
+      `v2/checkout/orders/${create_result.id}/authorize`, 
+      { method: 'post' }
+    );
+
+    if(!response.ok) {
+      const errorMessage = await response.text()
+      throw new Error(errorMessage)
+    }
+    
+    /** @type {import('./types.private.js').paypal_order_authorize_response} */
+    const payload = await response.json();
+    
+    switch(payload.status) {
+      case 'COMPLETED':
+        return {
+          // @ts-ignore
+          payment: PaymentOptionsEnum.authorized,
+          // @ts-ignore
+          checkout: CheckoutStatusEnum.complete
+        }
+      case 'PAYER_ACTION_REQUIRED':
+        return {
+          // @ts-ignore
+          checkout: CheckoutStatusEnum.requires_action
+        }
+      default:
+        return {
+          // @ts-ignore
+          checkout: CheckoutStatusEnum.failed
+        }
+    }
   }
 
   /**

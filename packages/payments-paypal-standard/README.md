@@ -1,10 +1,32 @@
-# Storecraft Google Cloud Storage
+# Paypal Standard payment gateway for **StoreCraft**
 
-Support for an `GCP` **Storage**
+[paypal standard](https://developer.paypal.com/docs/checkout/standard/) integration
 
-Features:
-- Supports streaming `Get` / `Put` / `Delete`
-- Supports `presigned` `Get` / `Put` requests to offload to client
+## Features
+- Create checkouts with `AUTHORIZE` or `CAPTURE` intents
+- `capture`, `void`, `refund` actions
+- Get a readable and explainable `status`
+- Supports both `prod` and `test` endpoints
+
+## Howto
+
+```js
+const config = {
+  env: 'prod',
+  client_id: '<get-from-your-paypal-dashboard>',
+  secret: '<get-from-your-paypal-dashboard>',
+  currency_code: 'USD',
+  intent_on_checkout: 'AUTHORIZE'
+}
+
+new PaypalStandard(config);
+```
+
 
 ## todo:
-- add tests
+- Add tests
+- Think about adding more dynamic config 
+
+```txt
+Author: Tomer Shalev (tomer.shalev@gmail.com)
+```

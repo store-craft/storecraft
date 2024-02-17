@@ -13,6 +13,11 @@ export const endpoints = {
  */
 export const get_endpoint = (config) => endpoints[config.env==='test' ? 'test': 'prod'];
 
+/** @param {Response} response */
+export const throw_bad_response = async (response) => {
+  if(!response.ok) throw new Error(await response.text());
+}
+
 /**
  * get access token if it has expired
  * 
@@ -40,33 +45,32 @@ export const getAccessToken = async (config) => {
     }
   );
 
-  if(!response.ok)
-    throw new Error(await response.text())
+  throw_bad_response(response);
 
   const jsonData = await response.json()
   // current_auth.latest_auth_response = jsonData
   return {
     endpoint,
-    access_token: jsonData.access_token;
+    access_token: jsonData.access_token
   }
 }
 
-  /**
-   * make a request, taking into account auth and endpoints for test and prod
-   * @param {Config} config 
-   * @param {string} path relative path, i.e `v2/checkout/orders/..`
-   * @param {RequestInit} init 
-   */
-  export const fetch_with_auth = async (config, path, init={}) => {
-    const { access_token, endpoint } = await getAccessToken(config);
-    
-    return fetch(
-      `${endpoint}/${path}`, {
-        ...init,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-  }
+/**
+ * make a request, taking into account auth and endpoints for test and prod
+ * @param {Config} config 
+ * @param {string} path relative path, i.e `v2/checkout/orders/..`
+ * @param {RequestInit} init 
+ */
+export const fetch_with_auth = async (config, path, init={}) => {
+  const { access_token, endpoint } = await getAccessToken(config);
+  
+  return fetch(
+    `${endpoint}/${path}`, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  );
+}

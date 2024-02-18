@@ -4,9 +4,11 @@ import { assert } from "./utils.func.js";
 
 const Authorization = 'Authorization'
 const Bearer = 'Bearer'
-export const auth_error = [
-  'auth/error', 401
-];
+
+/** @param {any} o */
+export const assert_generic_auth = (o) => {
+  assert(o, 'auth/error', 401);
+}
 
 /**
  * @typedef {import("../types.public.js").ApiRequest} ApiRequest 
@@ -44,7 +46,7 @@ export const parse_auth_user = (app) => {
  * @param {import("../types.public.js").Role[]} roles 
  * @param {ApiRequest["user"]} user 
  */
-export const has_role = (roles, user) => {
+export const has_role = (roles=[], user) => {
   return roles.length==0 || roles.some(
     r => (user.roles ?? []).includes(r)
   );
@@ -68,10 +70,10 @@ export const roles_guard = (roles=[]) => {
    * @param {ApiResponse} res 
    */
   return async (req, res) => {
-    assert(req.user, ...auth_error);
+    assert_generic_auth(req.user);
 
     const user_has_required_role = has_role(roles, req.user);
-    if(!user_has_required_role) assert(false, ...auth_error);
+    if(!user_has_required_role) assert_generic_auth(false);
   }  
 }
 

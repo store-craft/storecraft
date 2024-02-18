@@ -216,8 +216,15 @@ export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
   list_discount_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
 }
 
-/** DiscountType crud */
+/** OrderData crud */
 export interface db_orders extends OmitGetByHandle<db_crud<OrderData & SearchTermsType>> {
+
+  /**
+   * 
+   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
+   * @param query query object
+   */
+  list_customer_orders: (customer_id: ID, query: ParsedApiQuery) => Promise<Partial<OrderData>[]>;
 }
 
 export interface db_driver {

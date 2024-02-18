@@ -5,7 +5,7 @@ import type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
 export type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
 
 export type ApiRequest = VPolkaRequest & {
-  user?: Partial<JWTClaims> & Partial<AuthUserType>;
+  user?: Partial<JWTClaims> & Pick<AuthUserType, 'roles'>;
 }
 
 export type ApiResponse = VPolkaResponse & {

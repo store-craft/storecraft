@@ -1,8 +1,8 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
-import { authorize_by_roles, is_admin, parse_auth_user } from './con.auth.middle.js'
+import { assert_generic_auth, authorize_admin, authorize_by_roles, is_admin, parse_auth_user } from './con.auth.middle.js'
 import { parse_query } from './utils.query.js'
-import { get, list, remove, upsert } from './con.orders.logic.js'
+import { get, list, list_customer_orders, remove, upsert } from './con.orders.logic.js'
 
 /**
  * @typedef {import('../types.api.js').OrderData} ItemType
@@ -19,9 +19,9 @@ export const create_routes = (app) => {
   /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
+  const middle_authorize_admin = authorize_admin(app);
 
-  // save tag
+  // save order
   polka.post(
     '/',
     middle_authorize_admin,
@@ -31,7 +31,9 @@ export const create_routes = (app) => {
     }
   )
 
-  // get item, this is public because ids are cryptographic
+  // 
+  // get order is public because ids are cryptographic:
+  // - but, if you are not admin, payment gateway is partially hidden
   polka.get(
     '/:id',
     parse_auth_user(app),
@@ -58,13 +60,26 @@ export const create_routes = (app) => {
     }
   );
 
-  // list,
-  // todo: allow admin or user
+  // list:
+  // - admin can see all orders from all customers
+  // - customer can see only his own orders
+  // - anonymous can see nothing
   polka.get(
     '/',
+    parse_auth_user(app),
     async (req, res) => {
       let q = parse_query(req.query);
-      const items = await list(app, q);
+      // auth id postfix === customer id postfix
+      let items = [];
+      if(is_admin(req.user)) {
+        items = await list(app, q);
+      } else if(req.user) {
+        // authenticated user, but not admin
+        const customer_id = req.user.sub?.replace('au', 'cus');
+        items = await list_customer_orders(app, customer_id, q);
+      } else {
+        assert_generic_auth(false);
+      }
       res.sendJson(items);
     }
   );

@@ -22,7 +22,7 @@ const create_search_index = (data) => {
     data?.id,
     data?.contact?.firstname?.toLowerCase(),
     data?.contact?.lastname?.toLowerCase(),
-    data?.contact?.customer_id && `customer_id:${data?.contact?.customer_id}`,
+    data?.contact?.customer_id && `customer:${data?.contact?.customer_id}`,
     data?.contact?.customer_id,
     data?.contact?.email,
     data?.pricing?.total && Math.floor(data.pricing?.total),
@@ -79,3 +79,13 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
  * @param {import('../types.api.query.js').ParsedApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
+
+/**
+ * given a discount handle and query, return products of that discount
+ * @param {import("../types.public.js").App} app
+ * @param {import('../types.database.js').ID} customer_id 
+ * @param {import('../types.api.query.js').ParsedApiQuery} q 
+ */
+export const list_customer_orders = async (app, customer_id, q) => {
+  return db(app).list_customer_orders(customer_id, q);
+}

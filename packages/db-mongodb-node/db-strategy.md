@@ -275,6 +275,8 @@ in it's `media` array, simply remove it.
 ## customers --> auth_user
 they are related through `customer.auth_id` field
 
+* `au_{id} == cus_{id}`, the postfix is the same
+
 `customer DELETE:`
 - delete the auth user references by `customer.auth_id`
 

@@ -40,7 +40,7 @@ export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext,
 }
 
 export * from './index.js'
-export type * from './types.driver.d.ts'
+export type * from './types.database.js'
 export type * from './types.api.d.ts'
 export type * from './types.api.query.d.ts'
 export type * from './types.storage.d.ts'

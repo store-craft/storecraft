@@ -37,7 +37,7 @@ export const upsert = (app, item) => regular_upsert(
 /**
  * given a collection handle and query, return products of that collection
  * @param {import("../types.public.js").App} app
- * @param {import('../types.driver.js').HandleOrId} handle_or_id 
+ * @param {import('../types.database.js').HandleOrId} handle_or_id 
  * @param {import('../types.api.query.js').ParsedApiQuery} q 
  */
 export const list_collection_products = async (app, handle_or_id, q) => {
@@ -48,7 +48,7 @@ export const list_collection_products = async (app, handle_or_id, q) => {
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.driver.js').RegularGetOptions} [options]
+ * @param {import('../types.database.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 

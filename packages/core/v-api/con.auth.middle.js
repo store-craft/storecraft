@@ -52,6 +52,14 @@ export const has_role = (roles, user) => {
 
 /**
  * 
+ * @param {ApiRequest["user"]} user 
+ */
+export const is_admin = (user) => {
+  return has_role(['admin'], user);
+}
+
+/**
+ * 
  * @param {import("../types.public.js").Role[]} roles 
  */
 export const roles_guard = (roles=[]) => {
@@ -69,7 +77,7 @@ export const roles_guard = (roles=[]) => {
 
 
 /**
- * combine parse uath user with roles
+ * combine parse auth user with roles
  * @param {App} app 
  * @param {import("../types.public.js").Role[]} roles 
  */

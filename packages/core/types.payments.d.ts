@@ -1,6 +1,18 @@
 import type { OrderData } from "./types.api.d.ts";
 
 /**
+ * Payment gateway description, logos and urls
+ */
+export type PaymentGatewayInfo = {
+  /** description of the gateway */
+  description?: string;
+  /** logo url (or even data-url) of the gateway */
+  logo_url?: string;
+  /** url of the gateway website */
+  url?: string;
+}
+
+/**
  * Upon status query, the gateway return a list of possible actions,
  * such as `void`, `capture`, `refund` etc...
  */
@@ -47,8 +59,11 @@ export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfil
  * in this case, you can implement a webhook for this and return `OnCheckoutCompleteResult`.
  * 
  */
-export declare interface payment_gateway<Config, CreateResult extends any> {
+export declare interface payment_gateway<Config extends any, CreateResult extends any> {
+  /** info of the payment gateway */
+  get info(): PaymentGatewayInfo;
 
+  /** config of the gateway */
   get config(): Config;
 
   /**

@@ -1,4 +1,5 @@
 import { PaymentOptionsEnum } from "./types.api.enums.js";
+import { PaymentGatewayStatus } from "./types.payments.js";
 
 /** Base properties */
 type BaseType = {
@@ -616,11 +617,9 @@ export type ValidationEntry = {
 /** How did the order interacted with a payment gateway ?  */
 export type OrderPaymentGatewayData = {
   /** the payment gateway identifier */
-  gateway_id: string;
+  gateway_handle: string;
   /** result of gateway at checkout creation */
-  on_checkout_create: any;
-  /** result of gateway at checkout completion */
-  on_checkout_complete: any; 
-  /** latest status of payment */
-  latest_status: any; 
+  on_checkout_create?: any;
+  /** latest status of payment for caching */
+  latest_status?: PaymentGatewayStatus; 
 }

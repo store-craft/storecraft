@@ -10,6 +10,7 @@ import { parse_query } from "./utils.query.js"
 /**
  * @typedef {import("../types.api.js").OrderData} OrderData
  * @typedef {import("../types.api.js").DiscountType} DiscountType
+ * @typedef {import("../types.payments.js").payment_gateway} payment_gateway
  */
 
 /**
@@ -50,27 +51,31 @@ export const eval_pricing =
  * Create a checkout, which is a draft order
  * @param {App} app 
  * @param {OrderData} order
+ * @param {string} gateway_handle chosen payment gateway
  * @returns {Promise<OrderData>}
  */
 export const create_checkout = 
-  async (app, order) => {
+  async (app, order, gateway_handle) => {
 
   // fetch correct data from backend. we dont trust client
   order = await validate_checkout(
     app, order
-  )
+  );
 
   // eval pricing with discounts
   order = await eval_pricing(
     app, order
-  )
+  );
 
   /**@type {OrderData} */
   order = {
     ...order,
     status : {
+      // @ts-ignore
       fulfillment: FulfillOptionsEnum.draft,
+      // @ts-ignore
       payment: PaymentOptionsEnum.unpaid,
+      // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
   }
@@ -81,19 +86,19 @@ export const create_checkout =
     return order;
   }
 
-  // payment gateway config, maybe cache it for 1 hour
-  const gateway_id = order.payment_gateway.gateway_id
-  /**@type {admin.firestore.DocumentSnapshot<PaymentGatewayData>} */
-  const pg_config = await db.collection('payment_gateways').doc(gateway_id).get()
+  const gateway = app.gateway(gateway_handle);
 
-  const payment_gateway_handler = await import(
-    `../../gateways/${gateway_id}/index.js`
-  )
-  const { onCheckoutCreate } = payment_gateway_handler
+  assert(gateway, `gateway ${gateway_handle} not found`, 400);
 
-  order.payment_gateway.on_checkout_create = await onCheckoutCreate(
-    order, pg_config.data()
-  )
+  const { onCheckoutCreate } = gateway;
+
+  // save the creation payload
+  order.payment_gateway = {
+    on_checkout_create: await onCheckoutCreate(order),
+    gateway_handle
+  };
+
+  // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
   await upsert(app, order);
@@ -103,7 +108,7 @@ export const create_checkout =
 
 
 /**
- * Complete a checkout
+ * Complete a checkout sync
  * @param {App} app 
  * @param {string} checkoutId 
  * @param {object} client_payload 
@@ -113,18 +118,21 @@ export const complete_checkout =
   
   const order = await get(app, checkoutId);
 
-  assert(order, 'checkout-not-found')
+  assert(order, 'checkout-not-found', 400);
 
-  const gateway_id = order.payment_gateway.gateway_id
-  const pg_config = await db.collection('payment_gateways').doc(gateway_id).get()
-  const gateway_handler = await import(`../../gateways/${gateway_id}/index.js`)
-  const onCheckoutComplete = gateway_handler.onCheckoutComplete
-  const complete = await onCheckoutComplete(
-    order, pg_config.data(), 
-    client_payload
-  )
+  const gateway = app.gateway(order?.payment_gateway?.gateway_handle);
 
-  order.payment_gateway.on_checkout_complete = complete;
+  assert(gateway, `gateway not found`, 400);
+
+  const { onCheckoutComplete } = gateway;
+
+  const status = await onCheckoutComplete(order.payment_gateway?.on_checkout_create);
+
+  order.status = {
+    ...order.status,
+    ...status
+  }
+  
   await upsert(app, order);
 
   return order;

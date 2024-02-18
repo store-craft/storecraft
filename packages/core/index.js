@@ -10,26 +10,30 @@ export * from './types.api.enums.js'
 export class App {
 
   /** 
+   * @typedef {import('./types.storage.js').storage_driver} storage_driver
+   * @typedef {import('./types.database.js').db_driver} db_driver
+   * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
    * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} Platform
    * @type {Platform} 
    */
   #_platform;
-  /** @type {import('./types.driver.js').db_driver} */
-  #_db_driver;
-  /** @type {import('./types.storage.js').storage_driver} */
-  #_storage;
+  /** @type {db_driver} */ #_db_driver;
+  /** @type {storage_driver} */ #_storage;
+  /** @type {Record<string, payment_gateway>} */ #_payment_gateways;
 
   /**
    * 
    * @param {Platform} platform 
-   * @param {import('./types.driver.js').db_driver} db_driver 
-   * @param {import('./types.storage.js').storage_driver} storage 
+   * @param {db_driver} db_driver 
+   * @param {storage_driver} [storage] 
+   * @param {Record<string, payment_gateway>} [payment_gateways] 
    */
-  constructor(platform, db_driver, storage) {
+  constructor(platform, db_driver, storage, payment_gateways) {
 
     this.#_platform = platform;
     this.#_db_driver = db_driver;
     this.#_storage = storage;
+    this.#_payment_gateways = payment_gateways;
   }
 
   async init() {
@@ -43,35 +47,23 @@ export class App {
     return this;
   }
 
+  /** Get the Polka router */
+  get polka() { return this._polka; }
+  /** Get the Polka router */
+  get db() { return this.#_db_driver; }
+  /** Get the native platform object */
+  get platform() { return this.#_platform; }
+  /** Get the native storage object */
+  get storage() { return this.#_storage; }
+  /** Get the payment gateways */
+  get gateways() { return this.#_payment_gateways; }
   /**
-   * Get the Polka router
+   * Get a payment gateway by handle
+   * @param {string} handle 
    */
-  get db() {
-    return this.#_db_driver;
+  gateway = (handle) => {
+    return this.gateways?.[handle];
   }
-  
-  /**
-   * Get the Polka router
-   */
-  get polka() {
-    return this._polka
-  }
-
-  /**
-   * Get the native platform object
-   */
-  get platform() {
-    return this.#_platform
-  }
-
-  /**
-   * Get the native storage object
-   */
-  get storage() {
-    return this.#_storage
-  }
-
-  hello = () => {}
 
   /**
    * Process a request with context in the native platform

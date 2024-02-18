@@ -24,6 +24,13 @@ export class PaypalStandard {
     this.#_config = config;
   }
 
+  get info() {
+    return {
+      description: 'Paypal standard payments',
+      url: 'https://developer.paypal.com/docs/checkout/standard/',
+      logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
+    }
+  }
   get config() { return this.#_config; }
   get actions() {
     return [

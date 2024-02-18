@@ -1,6 +1,6 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from './utils.func.js'
-import { authorize_by_roles } from './con.auth.middle.js'
+import { authorize_by_roles, is_admin, parse_auth_user } from './con.auth.middle.js'
 import { parse_query } from './utils.query.js'
 import { get, list, remove, upsert } from './con.orders.logic.js'
 
@@ -31,13 +31,18 @@ export const create_routes = (app) => {
     }
   )
 
-  // get item
+  // get item, this is public because ids are cryptographic
   polka.get(
-    '/:handle',
+    '/:id',
+    parse_auth_user(app),
     async (req, res) => {
-      const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
+      const id = req?.params?.id;
+      const item = await get(app, id);
       assert(item, 'not-found', 404);
+      if(!is_admin(req.user)) {
+        // non admins won't see gateway
+        delete item?.payment_gateway?.on_checkout_create;
+      }
       res.sendJson(item);
     }
   );
@@ -53,7 +58,8 @@ export const create_routes = (app) => {
     }
   );
 
-  // list
+  // list,
+  // todo: allow admin or user
   polka.get(
     '/',
     async (req, res) => {

@@ -51,7 +51,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.driver.js').RegularGetOptions} [options]
+ * @param {import('../types.database.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
@@ -72,7 +72,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
 /**
  * given a discount handle and query, return products of that discount
  * @param {import("../types.public.js").App} app
- * @param {import('../types.driver.js').HandleOrId} handle_or_id 
+ * @param {import('../types.database.js').HandleOrId} handle_or_id 
  * @param {import('../types.api.query.js').ParsedApiQuery} q 
  */
 export const list_discounts_products = async (app, handle_or_id, q) => {

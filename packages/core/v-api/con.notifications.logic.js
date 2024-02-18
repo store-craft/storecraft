@@ -40,7 +40,7 @@ export const addBulk = async (app, items) => {
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.driver.js').RegularGetOptions} [options]
+ * @param {import('../types.database.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 

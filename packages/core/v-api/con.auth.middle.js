@@ -92,3 +92,11 @@ export const authorize_by_roles = (app, roles=[]) => {
     await roles_guard(roles)(req, res);
   }    
 }
+
+/**
+ * authorize admin only
+ * @param {App} app 
+ */
+export const authorize_admin = (app) => {
+  return authorize_by_roles(app, ['admin']);
+}

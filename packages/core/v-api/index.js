@@ -13,6 +13,8 @@ import { create_routes as create_notifications_route } from "./con.notifications
 import { create_routes as create_shipping_route } from "./con.shipping.routes.js";
 import { create_routes as create_products_route } from "./con.products.routes.js";
 import { create_routes as create_storage_route } from "./con.storage.routes.js";
+import { create_routes as create_checkout_route } from "./con.checkout.routes.js";
+import { create_routes as create_payment_gateways_route } from "./con.payment-gateways.routes.js";
 
 /**
  * Create the entire virtual API
@@ -38,6 +40,8 @@ export const create_api = (app) => {
   const shipping = create_shipping_route(app);
   const products = create_products_route(app);
   const storage = create_storage_route(app);
+  const checkout = create_checkout_route(app);
+  const gateways = create_payment_gateways_route(app);
 
   polka.use(json());
   polka.use('/api/auth', auth);
@@ -53,6 +57,8 @@ export const create_api = (app) => {
   polka.use('/api/shipping', shipping);
   polka.use('/api/products', products);
   polka.use('/api/storage', storage);
+  polka.use('/api/checkout', checkout);
+  polka.use('/api/gateways', gateways);
 
   return polka;
 }

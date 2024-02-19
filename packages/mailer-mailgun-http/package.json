@@ -1,0 +1,22 @@
+{
+  "name": "@storecraft/mailer-mailgun-http",
+  "version": "1.0.0",
+  "description": "mailgun email support for any js runtime over http",
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "test": "uvu -c"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "uvu": "^0.5.6",
+    "dotenv": "^16.3.1"
+  }
+}

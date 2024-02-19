@@ -1,12 +1,11 @@
-import { base64 } from '@storecraft/core/v-crypto'
 
 /**
  * 
  * @param {import("../core/types.mailer.js").MailObject["attachments"][0]["content"]} c 
  */
-export const convert_to_base64 = async (c) => {
+export const convert_attachment_to_blob = async c => {
   if(c instanceof ArrayBuffer)
-    return base64.fromUint8Array(new Uint8Array(c));
+    return new Blob([new Uint8Array(c)]);
   else if(c instanceof ReadableStream) {
     const reader = c.getReader();
     const buffer = []
@@ -18,12 +17,12 @@ export const convert_to_base64 = async (c) => {
       // `done`  - `true` if the stream has already given you all its data.
       // `value` - Some data. Always `undefined` when `done` is `true`.
       if (done) {
-        return base64.fromUint8Array(new Uint8Array(buffer));
+        return new Blob([new Uint8Array(buffer)]);
       }
       buffer.push(value);
     }
   }
-  else return base64.toBase64(c.toString());
+  else return new Blob([c.toString()]);  
 }
 
 /**

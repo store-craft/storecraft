@@ -7,7 +7,7 @@ import { base64, jwt } from '@storecraft/core/v-crypto';
  * @returns 
  */
 export async function getJWTFromServiceAccount(sf, aud=undefined) {
-  /** @type {Partial<import('@storecraft/core/v-crypto/jwt.js').JWTClaims> & Record<string, string>} */
+  /** @type {Partial<import('@storecraft/core/v-crypto').jwt.JWTClaims> & Record<string, string>} */
   const claims = {
     scope: [
       // 'https://www.googleapis.com/auth/cloud-platform',

@@ -25,7 +25,7 @@ export declare interface storage_driver {
   /**
    * Init the storage
    */
-  init: (app: App<any, any, any>) => Promise<this>;
+  init: (app: App<any, any, any>) => Promise<storage_driver>;
 
   putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<boolean>; 
   putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<boolean>; 

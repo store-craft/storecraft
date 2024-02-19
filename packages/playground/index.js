@@ -15,7 +15,7 @@ let app = new App(
   new MongoDB(),
   // new Storage(join(homedir(), 'tomer'))
   // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
-  new GoogleStorage(process.env.GS_BUCKET, process.env.GS_CLIENT_EMAIL, process.env.GS_PRIVATE_KEY, process.env.GS_PRIVATE_KEY_ID )
+  new GoogleStorage()
 );
 
 await app.init();

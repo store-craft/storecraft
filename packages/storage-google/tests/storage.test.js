@@ -10,12 +10,12 @@ const areBlobsEqual = async (blob1, blob2) => {
   );
 };
 
-const storage = new GoogleStorage(
-  process.env.GS_BUCKET, process.env.GS_CLIENT_EMAIL, 
-  process.env.GS_PRIVATE_KEY, process.env.GS_PRIVATE_KEY_ID
-  );
+const storage = new GoogleStorage({
+  bucket: process.env.GS_BUCKET, client_email: process.env.GS_CLIENT_EMAIL, 
+  private_key: process.env.GS_PRIVATE_KEY, private_key_id: process.env.GS_PRIVATE_KEY_ID
+});
 
-test.before(async () => { await storage.init() });
+test.before(async () => { await storage.init(undefined) });
 
 test('blob put/get/delete', async () => {
   const data = [

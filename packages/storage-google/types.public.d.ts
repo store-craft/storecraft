@@ -13,3 +13,14 @@ export type ServiceFile = {
   client_x509_cert_url?: string;
   universe_domain?: string;
 }
+
+export type Config = {
+  /** bucket name */
+  bucket: string;
+  /** client email from the service file */
+  client_email: string;
+  /** private key */
+  private_key: string;
+  /** private key id */
+  private_key_id: string;
+}

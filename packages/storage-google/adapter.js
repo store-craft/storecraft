@@ -25,35 +25,43 @@ const infer_content_type = (name) => {
 
 /**
  * @typedef {import('./types.public.js').ServiceFile} ServiceFile
+ * @typedef {import('./types.public.js').Config} Config
  */
 
 /**
- * The base S3 compatible class
+ * Google Storage
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
  * @implements {storage}
  */
 export class GoogleStorage {
   
-  /** @type {string} */ #_bucket;
-  /** @type {ServiceFile} */ #_service_file;
+  /** @type {Config} */ #_config;
 
   /**
-   * 
-   * @param {string} bucket 
-   * @param {string} client_email 
-   * @param {string} private_key 
-   * @param {string} private_key_id 
+   * @param {Config} [config]
    */
-  constructor(bucket, client_email, private_key, private_key_id) {
-    this.#_bucket = bucket;
-    this.#_service_file = {
-      client_email, private_key, private_key_id
-    };
+  constructor(config) {
+    this.#_config = config;
   }
 
-  get bucket() { return this.#_bucket; }
-  get service_file() { return this.#_service_file; }
-  async init(app) { return this; }
+  get bucket() { return this.config.bucket; }
+  get config() { return this.#_config; }
+
+  /**
+   * @type {storage["init"]}
+   */
+  async init(app) {
+    if(!app)
+      return this;
+
+    this.#_config = this.#_config ?? {
+      bucket: app.platform.env.GS_BUCKET,
+      client_email: app.platform.env.GS_CLIENT_EMAIL,
+      private_key: app.platform.env.GS_PRIVATE_KEY,
+      private_key_id: app.platform.env.GS_PRIVATE_KEY_ID,
+    }
+    return this; 
+  }
 
   // puts
 
@@ -71,7 +79,7 @@ export class GoogleStorage {
    * @param {BodyInit} body 
    */
   async #put_internal(key, body) {
-    const auth = 'Bearer ' + await getJWTFromServiceAccount(this.service_file);
+    const auth = 'Bearer ' + await getJWTFromServiceAccount(this.config);
 
     const r = await fetch(
       this.put_file_url(key),
@@ -124,7 +132,7 @@ export class GoogleStorage {
    */
   async putSigned(key) {
     const ct = infer_content_type(key);
-    const sf = this.service_file;
+    const sf = this.config;
 
     const url_signed = await presign({
       pem_private_key: sf.private_key,
@@ -156,7 +164,7 @@ export class GoogleStorage {
 
   /** @param {string} key  */
   async #get_request(key) {
-    const auth = 'Bearer ' + await getJWTFromServiceAccount(this.service_file);
+    const auth = 'Bearer ' + await getJWTFromServiceAccount(this.config);
     return fetch(
       this.get_file_url(key) + '?alt=media',
       {
@@ -221,7 +229,7 @@ export class GoogleStorage {
    * @param {string} key 
    */
   async getSigned(key) {
-    const sf = this.service_file;
+    const sf = this.config;
     const url_signed = await presign({
       pem_private_key: sf.private_key,
       client_id_email: sf.client_email,
@@ -243,7 +251,7 @@ export class GoogleStorage {
    * @param {string} key 
    */
   async remove(key) {
-    const Authorization = 'Bearer ' + await getJWTFromServiceAccount(this.service_file);
+    const Authorization = 'Bearer ' + await getJWTFromServiceAccount(this.config);
     const r = await fetch(
       this.get_file_url(key), 
       { 

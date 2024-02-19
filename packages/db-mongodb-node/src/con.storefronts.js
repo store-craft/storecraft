@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Database } from '../driver.js'
+import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular } from './con.shared.js'
 import { sanitize, to_objid } from './utils.funcs.js'
@@ -11,13 +11,13 @@ import { report_document_media } from './con.images.js';
  */
 
 /**
- * @param {Database} d 
+ * @param {MongoDB} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
 const col = (d) => d.collection('storefronts');
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @return {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -61,22 +61,22 @@ const upsert = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const remove = (driver) => remove_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_storefront_products"]}
  */
 const list_storefront_products = (driver) => {
@@ -91,7 +91,7 @@ const list_storefront_products = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_storefront_collections"]}
  */
 const list_storefront_collections = (driver) => {
@@ -106,7 +106,7 @@ const list_storefront_collections = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_storefront_discounts"]}
  */
 const list_storefront_discounts = (driver) => {
@@ -121,7 +121,7 @@ const list_storefront_discounts = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_storefront_shipping_methods"]}
  */
 const list_storefront_shipping_methods = (driver) => {
@@ -136,7 +136,7 @@ const list_storefront_shipping_methods = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_storefront_posts"]}
  */
 const list_storefront_posts = (driver) => {
@@ -151,7 +151,7 @@ const list_storefront_posts = (driver) => {
 }
 
 /** 
- * @param {Database} driver
+ * @param {MongoDB} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

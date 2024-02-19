@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Database } from '../driver.js'
+import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { query_to_mongo } from './utils.query.js';
@@ -10,34 +10,34 @@ import { isDef, sanitize } from './utils.funcs.js';
  */
 
 /**
- * @param {Database} d 
+ * @param {MongoDB} d 
  * @returns {Collection<db_col["$type"]>}
  */
 const col = (d) => d.collection('orders');
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const remove = (driver) => remove_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
@@ -70,7 +70,7 @@ const list_customer_orders = (driver) => {
 }
 
 /** 
- * @param {Database} driver
+ * @param {MongoDB} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

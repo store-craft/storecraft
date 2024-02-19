@@ -1,12 +1,12 @@
 import { Collection } from 'mongodb'
-import { Database } from '../driver.js'
+import { MongoDB } from '../driver.js'
 import { handle_or_id, isUndef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["upsert"]}
  */
@@ -88,7 +88,7 @@ export const expand = (items, expand_query=undefined) => {
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["get"]}
  */
@@ -107,7 +107,7 @@ export const get_regular = (driver, col) => {
  * get bulk of items, ordered, if something is missing, `undefined`
  * should be instead
  * @template {import('@storecraft/core').BaseType} T
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["getBulk"]}
  */
@@ -134,7 +134,7 @@ export const get_bulk = (driver, col) => {
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["remove"]}
  */
@@ -152,7 +152,7 @@ export const remove_regular = (driver, col) => {
 
 /**
  * @template {import('@storecraft/core').BaseType} T
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @param {Collection<T>} col 
  * @returns {import('@storecraft/core').db_crud<T>["list"]}
  */

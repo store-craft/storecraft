@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Database } from '../driver.js'
+import { MongoDB } from '../driver.js'
 import { expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
@@ -10,13 +10,13 @@ import { report_document_media } from './con.images.js'
  */
 
 /**
- * @param {Database} d 
+ * @param {MongoDB} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
 const col = (d) => d.collection('collections');
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -61,12 +61,12 @@ const upsert = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -117,12 +117,12 @@ const remove = (driver) => {
 
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_collection_products"]}
  */
 const list_collection_products = (driver) => {
@@ -158,7 +158,7 @@ const list_collection_products = (driver) => {
 }
 
 /** 
- * @param {Database} driver
+ * @param {MongoDB} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Database } from '../driver.js'
+import { MongoDB } from '../driver.js'
 import { get_bulk, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
@@ -12,13 +12,13 @@ import { report_document_media } from './con.images.js'
  */
 
 /**
- * @param {Database} d 
+ * @param {MongoDB} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
  */
 const col = (d) => d.collection('products');
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -102,12 +102,12 @@ const upsert = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -162,7 +162,7 @@ const remove = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
@@ -171,7 +171,7 @@ const list = (driver) => list_regular(driver, col(driver));
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_product_collections"]}
  */
 const list_product_collections = (driver) => {
@@ -190,7 +190,7 @@ const list_product_collections = (driver) => {
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_product_collections"]}
  */
 const list_product_variants = (driver) => {
@@ -206,7 +206,7 @@ const list_product_variants = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["list_product_discounts"]}
  */
 const list_product_discounts = (driver) => {
@@ -222,7 +222,7 @@ const list_product_discounts = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["add_product_to_collection"]}
  */
 const add_product_to_collection = (driver) => {
@@ -252,7 +252,7 @@ const add_product_to_collection = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["remove_product_from_collection"]}
  */
 const remove_product_from_collection = (driver) => {
@@ -281,7 +281,7 @@ const remove_product_from_collection = (driver) => {
 }
 
 /** 
- * @param {Database} driver
+ * @param {MongoDB} driver
  * @return {db_col & { _col: ReturnType<col> }}
  */
 export const impl = (driver) => {

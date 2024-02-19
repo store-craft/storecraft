@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { Database } from '../driver.js'
+import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { handle_or_id } from './utils.funcs.js';
@@ -11,23 +11,23 @@ import { image_url_to_name, image_url_to_handle,
  */
 
 /**
- * @param {Database} d @returns {Collection<db_col["$type"]>}
+ * @param {MongoDB} d @returns {Collection<db_col["$type"]>}
  */
 const col = (d) =>  d.collection('images');
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -63,7 +63,7 @@ const remove = (driver) => {
 
 /**
  * report media usages
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  * @returns {db_col["report_document_media"]}
  */
 export const report_document_media = (driver) => {
@@ -109,12 +109,12 @@ export const report_document_media = (driver) => {
 }
 
 /**
- * @param {Database} driver 
+ * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
 
 /** 
- * @param {Database} driver
+ * @param {MongoDB} driver
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

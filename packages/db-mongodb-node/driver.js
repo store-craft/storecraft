@@ -14,19 +14,23 @@ import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 
 /**
+ * @typedef {import('./types.public.js').Config} Config
+ */
+
+/**
  * 
  * @param {string} uri 
+ * @param {import('mongodb').MongoClientOptions} [options] 
  */
-const connect = async (uri) => {
-  const client = new MongoClient(uri, {
+const connect = async (uri, options) => {
+  options = options ?? {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
       deprecationErrors: true,
     }
-  });
-  
-  // Connect the client to the server	(optional starting in v4.7)
+  }
+  const client = new MongoClient(uri, options);
   return client.connect();
 }
 
@@ -34,21 +38,24 @@ const connect = async (uri) => {
  * @typedef {import('@storecraft/core').db_driver} db_driver
  * @implements {db_driver}
  */
-export class Database {
+export class MongoDB {
 
-  /** @type {string} */ #_name;
   /** @type {boolean} */ #_is_ready;
   /** @type {App<any, any, any>} */ #_app;
   /** @type {MongoClient} */ #_mongo_client;
   /** @type {string[]} */ #_admins_emails;
+  /** @type {Config} */ #_config;
 
   /**
    * 
-   * @param {string} db_name database name
+   * @param {Config} [config] config, if undefined, 
+   * env variables will be used for uri upon init later
    */
-  constructor(db_name='main') {
-    this.#_name = db_name;
+  // constructor(db_name='main') {
+  constructor(config) {
+    // this.#_name = db_name;
     this.#_is_ready = false;
+    this.#_config = config;
   }
 
   /**
@@ -57,7 +64,16 @@ export class Database {
    * @returns {Promise<this>}
    */
   async init(app) {
-    this.#_mongo_client = await connect(app.platform.env.MONGODB_URI);
+    if(this.isReady)
+      return this;
+    this.#_config = this.#_config ?? {
+      url: app.platform.env.MONGODB_URI,
+      db_name: 'main'
+    }
+    this.#_mongo_client = await connect(
+      this.config.url,
+      this.config.options
+    );
     this.#_admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(
       s => s.trim()) ?? [];
     this.#_app = app;
@@ -74,27 +90,23 @@ export class Database {
     this.tags = tags(this);
     this.shipping = shipping(this);
     
-    this.#_is_ready = true;
+    this.#_is_ready = true; 
 
     console.log(this.admins_emails)
 
     return this;
   }
 
-  get isReady() {
-    return this.#_is_ready;
-  }
+  get isReady() { return this.#_is_ready; }
   
   /**
    * database name
    */
   get name () {
-    return this.#_name;
+    return this.config.db_name ?? 'main';
   }
 
-  get app() {
-    return this.#_app;
-  }
+  get app() { return this.#_app; }
 
   /**
    * admins emails
@@ -106,6 +118,8 @@ export class Database {
   get mongo_client() {
     return this.#_mongo_client;
   }
+
+  get config() { return this.#_config; }
 
   /**
    * @template {import('@storecraft/core').BaseType} T

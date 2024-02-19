@@ -1,14 +1,14 @@
-# SendGrid mailer over http
-[sendgrid.com](https://docs.sendgrid.com/api-reference/mail-send/mail-send) client, that can work on eveywhere with `javascript`. We only rely on `fetch api`.
+# Resend mailer over http
+[Resend.com](https://resend.com/docs/api-reference/emails/send-email) client, that can work on eveywhere with `javascript`. We only rely on `fetch api`
 
 ## Howto
 
 ```js
-import { MailerSmtpNode } from '@storecraft/mailer-sendgrid-http';
+import { MailerResend } from '@storecraft/mailer-resend-http';
 
-const mailer = new MailerSendGrid(
+const mailer = new MailerResend(
   {
-      apikey: process.env.SEND_GRID_SECRET
+      apikey: process.env.RESEND_API_KEY
   }
 );
 

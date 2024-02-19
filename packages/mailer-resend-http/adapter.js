@@ -1,13 +1,13 @@
-import { convert_to_base64 } from "./adapter.utils.js";
+import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js";
 
 /**
  * @typedef {import("./types.public.js").Config} Config
  * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 
- * mailer with sendgrid http api
+ * mailer with Resend rest api
  */
-export class MailerSendGrid {
+export class MailerResend {
   
   /** @type {Config} */ #_config;
 
@@ -27,47 +27,32 @@ export class MailerSendGrid {
    */
   async email(o) {
 
-    /** @type {import("./types.private.js").SendgridV3_sendmail} */
+    /** @type {import("./types.private.js").Resend_sendmail} */
     const body = {
-      content: [
-          { 
-            type: 'text/html', value: o.html 
-          }, 
-          { 
-            type: 'text/plain', value: o.text 
-          }
-        ].filter(c => Boolean(c.value)),
-      from: { email: o.from.address, name: o.from.name ?? ''},
+      from: address_to_friendly_name(o.from),
+      to: o.to.map(t => t.address),
       subject: o.subject,
+      html: o.html,
+      text: o.text,
       attachments: await Promise.all(
         o.attachments?.map(
+          /**
+           * @returns {Promise<import("./types.private.js").Resend_sendmail_attachment>}
+           */
           async a => (
             {
-              content_id: a.content_id,
-              disposition: a.disposition,
               filename: a.filename,
-              type: a.content_type,
               content: await convert_to_base64(a.content)
             }
           )
         ) ?? []
       ),
-      personalizations: o.to.map(
-        t => (
-          {
-            to: {
-              email: t.address,
-              name: t.name ?? ''
-            }
-          }
-        )
-      )
     }
 
     let r;
     try {
       r = await fetch(
-        'https://api.sendgrid.com/v3/mail/send',
+        'https://api.resend.com/emails',
         {
           body: JSON.stringify(body),
           headers: {

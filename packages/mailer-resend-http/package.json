@@ -1,7 +1,7 @@
 {
-  "name": "@storecraft/mailer-sendgrid-http",
+  "name": "@storecraft/mailer-resend-http",
   "version": "1.0.0",
-  "description": "send-grid email support for any js runtime over http",
+  "description": "Resend email support for any js runtime over http",
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",

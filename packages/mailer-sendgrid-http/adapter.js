@@ -39,8 +39,8 @@ export class MailerSendGrid {
         ].filter(c => Boolean(c.value)),
       from: { email: o.from.address, name: o.from.name ?? ''},
       subject: o.subject,
-      attachments: await Promise.all(
-        o.attachments?.map(
+      attachments: o.attachments && await Promise.all(
+        o.attachments.map(
           async a => (
             {
               content_id: a.content_id,
@@ -50,7 +50,7 @@ export class MailerSendGrid {
               content: await convert_to_base64(a.content)
             }
           )
-        ) ?? []
+        )
       ),
       personalizations: o.to.map(
         t => (

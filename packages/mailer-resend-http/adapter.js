@@ -34,8 +34,8 @@ export class MailerResend {
       subject: o.subject,
       html: o.html,
       text: o.text,
-      attachments: await Promise.all(
-        o.attachments?.map(
+      attachments: o.attachments && await Promise.all(
+        o.attachments.map(
           /**
            * @returns {Promise<import("./types.private.js").Resend_sendmail_attachment>}
            */
@@ -45,7 +45,7 @@ export class MailerResend {
               content: await convert_to_base64(a.content)
             }
           )
-        ) ?? []
+        )
       ),
     }
 

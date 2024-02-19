@@ -1,14 +1,14 @@
-# SendGrid mailer over http
-[sendgrid.com](https://docs.sendgrid.com/api-reference/mail-send/mail-send) client, that can work on eveywhere with `javascript`. We only rely on `fetch api`.
+# `mailchimp` mailer over http
+[mailchimp.com](https://mailchimp.com/developer/transactional/api/messages/send-new-message/) client, that can work on eveywhere with `javascript`. We only rely on `fetch api`.
 
 ## Howto
 
 ```js
-import { MailerSendGrid } from '@storecraft/mailer-sendgrid-http';
+import { MailerMailChimp } from '@storecraft/mailer-mailchimp-http';
 
-const mailer = new MailerSendGrid(
+const mailer = new MailerMailChimp(
   {
-      apikey: process.env.SEND_GRID_SECRET
+      apikey: process.env.MAILCHIMP_API_KEY
   }
 );
 

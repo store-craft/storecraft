@@ -1,6 +1,6 @@
 export * from './index.js';
 
-export type Options = {
+export type Config = {
   endpoint: string;
   bucket: string;
   accessKeyId: string;

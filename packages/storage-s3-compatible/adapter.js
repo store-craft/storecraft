@@ -25,7 +25,7 @@ const infer_content_type = (name) => {
 
 
 /**
- * @typedef {import('./types.public.js').Options} Options
+ * @typedef {import('./types.public.js').Config} Config
  */
 
 /**
@@ -36,12 +36,12 @@ const infer_content_type = (name) => {
 export class S3CompatibleStorage {
   
   /** @type {AwsClient} */ #_client;
-  /** @type {Options} */ #_options;
+  /** @type {Config} */ #_config;
   /** @type {string} */ #_url;
 
   /**
    * 
-   * @param {Options} options 
+   * @param {Config} options 
    */
   #compute_url(options) {
     const url = new URL(options.endpoint);
@@ -56,21 +56,21 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @param {Options} options 
+   * @param {Config} config 
    */
-  constructor(options) {
-    this.#_options = options;
+  constructor(config) {
+    this.#_config = config;
     this.#_client = new AwsClient({
-      accessKeyId: options.accessKeyId, secretAccessKey: options.secretAccessKey, 
-      region: options.region ?? 'auto', service: 's3'
+      accessKeyId: config.accessKeyId, secretAccessKey: config.secretAccessKey, 
+      region: config.region ?? 'auto', service: 's3'
     });
 
-    this.#_url = this.#compute_url(options);
+    this.#_url = this.#compute_url(config);
   }
 
   get url() { return this.#_url; }
   get client() { return this.#_client; }
-  get options() { return this.#_options; }
+  get config() { return this.#_config; }
   async init(app) { return this; }
 
   // puts

@@ -1,7 +1,7 @@
 {
-  "name": "@storecraft/payments-paypal-standard",
+  "name": "@storecraft/mailer-smtp-node",
   "version": "1.0.0",
-  "description": "paypal standard support",
+  "description": "SMTP mail support with node.js",
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
@@ -12,9 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "nodemailer": "^6.9.9"
   },
   "devDependencies": {
     "@storecraft/core": "^1.0.0",
+    "@types/nodemailer": "^6.4.14",
     "@types/node": "^20.11.0",
     "uvu": "^0.5.6",
     "dotenv": "^16.3.1"

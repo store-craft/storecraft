@@ -3,9 +3,6 @@ import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { GoogleStorage } from '../adapter.js'
 import { readFile } from 'node:fs/promises';
-import { homedir } from 'node:os'
-import * as path from 'node:path';
-import service_key from './service-key.json' assert { type: 'json' };
 
 const areBlobsEqual = async (blob1, blob2) => {
   return !Buffer.from(await blob1.arrayBuffer()).compare(
@@ -18,7 +15,7 @@ const storage = new GoogleStorage(
   process.env.GS_PRIVATE_KEY, process.env.GS_PRIVATE_KEY_ID
   );
 
-test.before(async () => await storage.init())
+test.before(async () => { await storage.init() });
 
 test('blob put/get/delete', async () => {
   const data = [

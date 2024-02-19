@@ -30,6 +30,10 @@
     "./v-payments": {
       "import": "./v-payments/index.js",
       "types": "./v-payments/types.public.d.ts"
+    },
+    "./v-mailer": {
+      "import": "./v-mailer/index.js",
+      "types": "./v-mailer/types.public.d.ts"
     }
 
   },

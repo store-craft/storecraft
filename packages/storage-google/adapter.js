@@ -1,5 +1,4 @@
-import { App } from '@storecraft/core'
-import { getJWTFromServiceAccount, presign } from './utils.js';
+import { getJWTFromServiceAccount, presign } from './adapter.utils.js';
 
 const types = {
   'png': 'image/png',

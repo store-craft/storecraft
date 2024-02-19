@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { readFile, mkdir, open, unlink } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
 import * as path from 'node:path';

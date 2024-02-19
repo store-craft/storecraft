@@ -7,7 +7,7 @@ import { base64, jwt } from '@storecraft/core/v-crypto';
  * @returns 
  */
 export async function getJWTFromServiceAccount(sf, aud=undefined) {
-  /** @type {import('../core/v-crypto/jwt.js').JWTClaims} */
+  /** @type {Partial<import('@storecraft/core/v-crypto/jwt.js').JWTClaims> & Record<string, string>} */
   const claims = {
     scope: [
       // 'https://www.googleapis.com/auth/cloud-platform',
@@ -74,7 +74,7 @@ export const presign = async ({pem_private_key, client_id_email, gcs_api_endpoin
   const signature_b64 = base64.fromUint8Array(new Uint8Array(signature_buffer));
   const qp = {
     'GoogleAccessId': client_id_email,
-    'Expires': expiration,
+    'Expires': expiration.toString(),
     'Signature': signature_b64
   };
   const qp_string = new URLSearchParams(qp).toString();

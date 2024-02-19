@@ -7,7 +7,7 @@
 ## Howto
 
 ```js
-import { MailerSmtpNode } from '../index.js';
+import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
 
 const mailer = new MailerSmtpNode(
   {
@@ -21,15 +21,13 @@ const mailer = new MailerSmtpNode(
   }
 );
 
-let { success, native_response } = await mailer.email(
-  {
-    from: `shelf 👻" <${process.env.FROM_EMAIL}>`, // sender address
-    to: [process.env.TO_EMAIL], // list of receivers
-    subject: 'nodemailer test', // Subject line
-    text: 'nodemailer test text', // plain text body
-    html: '<p>nodemailer test html</p>', // html body
-  }
-);
+let { success, native_response } = await mailer.email({
+  from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, // sender address
+  to: [ { address: process.env.TO_EMAIL } ], // list of receivers
+  subject: 'subject test', // Subject line
+  text: 'plain text test', // plain text body
+  html: '<p>html test</p>', // html body
+});
 
 ```
 

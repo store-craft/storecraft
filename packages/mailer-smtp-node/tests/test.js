@@ -18,8 +18,8 @@ const mailer = new MailerSmtpNode(
 test('send email', async () => {
   
   let { success, native_response } = await mailer.email({
-    from: `shelf 👻" <${process.env.FROM_EMAIL}>`, // sender address
-    to: [process.env.TO_EMAIL], // list of receivers
+    from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, // sender address
+    to: [ { address: process.env.TO_EMAIL } ], // list of receivers
     subject: 'nodemailer test', // Subject line
     text: 'nodemailer test text', // plain text body
     html: '<p>nodemailer test html</p>', // html body

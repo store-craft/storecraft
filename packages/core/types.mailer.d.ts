@@ -1,11 +1,21 @@
 export type Attachment = {
-  filename: string,
-  content: string | ArrayBuffer | ReadableStream
+  filename?: string,
+  content: string | ArrayBuffer | ReadableStream,
+  content_type?: string,
+  content_id?: string,
+  disposition?: 'attachment' | 'inline' | undefined
+}
+
+export type MailAddress = {
+  /** name of addressee */
+  name?: string;
+  /** the email address */
+  address: string;
 }
 
 export type MailObject = {
-  from: string, 
-  to: string[], 
+  from: MailAddress, 
+  to: MailAddress[], 
   subject: string, 
   html: string, 
   text: string,

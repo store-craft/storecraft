@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer"
 import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import { attachment_convert } from "./adapter.utils.js";
 
 /**
  * @typedef {nodemailer.Transporter<SMTPTransport.SentMessageInfo>} NodemailerClient
@@ -37,11 +38,29 @@ export class MailerSmtpNode {
     try {
       r = await this.client.sendMail(
         {
-          from: o.from,
-          to: o.to,
+          from: { address: o.from.address, name: o.from.name ?? ''},
+          to: o.to.map(
+            t => (
+              {
+                address: t.address, 
+                name: t.name ?? ''
+              }
+            )
+          ),
           subject: o.subject,
           text: o.text,
-          html: o.html
+          html: o.html, 
+          attachments: o.attachments?.map(
+            a => (
+              {
+                cid: a.content_id, 
+                contentDisposition: a.disposition, 
+                filename: a.filename,
+                contentType: a.content_type, 
+                content: attachment_convert(a.content)
+              }
+            )
+          )
         }
       );
     } catch(e) {

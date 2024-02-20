@@ -43,7 +43,6 @@ export class MongoDB {
   /** @type {boolean} */ #_is_ready;
   /** @type {App<any, any, any>} */ #_app;
   /** @type {MongoClient} */ #_mongo_client;
-  /** @type {string[]} */ #_admins_emails;
   /** @type {Config} */ #_config;
 
   /**
@@ -53,7 +52,6 @@ export class MongoDB {
    */
   // constructor(db_name='main') {
   constructor(config) {
-    // this.#_name = db_name;
     this.#_is_ready = false;
     this.#_config = config;
   }
@@ -66,16 +64,18 @@ export class MongoDB {
   async init(app) {
     if(this.isReady)
       return this;
-    this.#_config = this.#_config ?? {
-      url: app.platform.env.MONGODB_URI,
-      db_name: 'main'
+    const c = this.#_config;
+    this.#_config = {
+      ...c, 
+      url: c?.url ?? app.platform.env.MONGODB_URL,
+      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
     }
+
     this.#_mongo_client = await connect(
       this.config.url,
       this.config.options
     );
-    this.#_admins_emails = app.platform.env.DB_ADMINS_EMAILS?.split(',').map(
-      s => s.trim()) ?? [];
+
     this.#_app = app;
     this.auth_users = auth_users(this);
     this.collections = collections(this);
@@ -92,8 +92,6 @@ export class MongoDB {
     
     this.#_is_ready = true; 
 
-    console.log(this.admins_emails)
-
     return this;
   }
 
@@ -107,13 +105,6 @@ export class MongoDB {
   }
 
   get app() { return this.#_app; }
-
-  /**
-   * admins emails
-   */
-  get admins_emails () {
-    return this.#_admins_emails ?? [];
-  }
 
   get mongo_client() {
     return this.#_mongo_client;

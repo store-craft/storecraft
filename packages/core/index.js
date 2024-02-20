@@ -2,6 +2,11 @@ import { STATUS_CODES } from './v-polka/codes.js';
 import { create_api } from './v-api/index.js'
 export * from './types.api.enums.js'
 
+const parse_int = (s, def) => {
+  const parsed = parseInt(s); // can be NaN
+  return parsed ? parsed : def;
+}
+
 /**
  * @template {any} PlatformNativeRequest
  * @template {any} PlatformContext
@@ -10,6 +15,7 @@ export * from './types.api.enums.js'
 export class App {
 
   /** 
+   * @typedef {import('./types.public.js').Config} Config
    * @typedef {import('./types.storage.js').storage_driver} storage_driver
    * @typedef {import('./types.database.js').db_driver} db_driver
    * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
@@ -20,6 +26,7 @@ export class App {
   /** @type {db_driver} */ #_db_driver;
   /** @type {storage_driver} */ #_storage;
   /** @type {Record<string, payment_gateway>} */ #_payment_gateways;
+  /** @type {Config} */ #_config;
 
   /**
    * 
@@ -27,17 +34,45 @@ export class App {
    * @param {db_driver} db_driver 
    * @param {storage_driver} [storage] 
    * @param {Record<string, payment_gateway>} [payment_gateways] 
+   * @param {Config} [config] 
    */
-  constructor(platform, db_driver, storage, payment_gateways) {
+  constructor(platform, db_driver, storage, payment_gateways, config) {
 
     this.#_platform = platform;
     this.#_db_driver = db_driver;
     this.#_storage = storage;
     this.#_payment_gateways = payment_gateways;
+    this.#_config = config;
+  }
+
+  /**
+   * After init, we inspect for missing config values and try to 
+   * find them in platform environment.
+   */
+  #settle_config_after_init() {
+    const c = this.#_config;
+    const env = this.platform.env;
+    this.#_config = {
+      ...c,
+      auth_secret_access_token: c?.auth_secret_access_token ?? 
+                  env.SC_AUTH_SECRET_ACCESS_TOKEN,
+      auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
+                  env.SC_AUTH_SECRET_REFRESH_TOKEN,
+      auth_password_hash_rounds: c?.auth_password_hash_rounds ?? 
+                parse_int(env.SC_AUTH_PASS_HASH_ROUNDS, 1000),
+      admins_emails: c?.admins_emails ?? 
+              env.SC_ADMINS_EMAILS?.split(',').map(
+                s => s.trim()).filter(Boolean) ?? []
+    }
+
+    console.log('store-craft config', this.#_config);
   }
 
   async init() {
     try{
+      // first let's settle config
+      this.#settle_config_after_init();
+
       await this.db.init(this)
       await this.storage.init(this)
     } catch (e) {
@@ -57,6 +92,8 @@ export class App {
   get storage() { return this.#_storage; }
   /** Get the payment gateways */
   get gateways() { return this.#_payment_gateways; }
+  get config() { return this.#_config; }
+
   /**
    * Get a payment gateway by handle
    * @param {string} handle 

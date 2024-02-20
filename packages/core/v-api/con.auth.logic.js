@@ -8,7 +8,6 @@ import {
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 
-
 /**
  * 
  * @param {App} app 
@@ -27,12 +26,12 @@ export const signup = async (app, body) => {
 
   // Hash the password using pbkdf2
   const hashedPassword = await phash.hash(
-    password, parseInt(app.platform.env.AUTH_PBKDF2_ITERATIONS) ?? 1000
+    password, app.config.auth_password_hash_rounds
   );
 
   // Create a new user in the database
   const id = ID('au');
-  const roles = app.db.admins_emails.includes(email) ? ['admin'] : ['user'];
+  const roles = app.config.admins_emails.includes(email) ? ['admin'] : ['user'];
 
   await app.db.auth_users.upsert(
     apply_dates(
@@ -53,12 +52,12 @@ export const signup = async (app, body) => {
   };
 
   const access_token = await jwt.create(
-    app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 
+    app.config.auth_secret_access_token,
     claims, jwt.JWT_TIMES.HOUR
   );
 
   const refresh_token = await jwt.create(
-    app.platform.env.AUTH_SECRET_REFRESH_TOKEN, 
+    app.config.auth_secret_refresh_token, 
     {...claims, aud: '/refresh'}, jwt.JWT_TIMES.DAY * 7
   );
 
@@ -96,12 +95,12 @@ export const signin = async (app, body) => {
   }
 
   const access_token = await jwt.create(
-    app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 
+    app.config.auth_secret_access_token, 
     claims, jwt.JWT_TIMES.HOUR
   );
 
   const refresh_token = await jwt.create(
-    app.platform.env.AUTH_SECRET_REFRESH_TOKEN, 
+    app.config.auth_secret_refresh_token, 
     {...claims, aud: '/refresh'}, jwt.JWT_TIMES.DAY * 7
   );
 
@@ -126,7 +125,7 @@ export const refresh = async (app, body) => {
 
   // Check if the user already exists
   let { verified, claims } = await jwt.verify(
-    app.platform.env.AUTH_SECRET_REFRESH_TOKEN, 
+    app.config.auth_secret_refresh_token, 
     refresh_token, true
   );
 
@@ -136,7 +135,7 @@ export const refresh = async (app, body) => {
   assert(verified, 'auth/error', 401)
 
   const access_token = await jwt.create(
-    app.platform.env.AUTH_SECRET_ACCESS_TOKEN, 
+    app.config.auth_secret_access_token, 
     { 
       // @ts-ignore
       sub: claims.sub, roles: claims.roles 

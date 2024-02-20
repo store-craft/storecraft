@@ -13,7 +13,7 @@ import { Readable } from 'node:stream'
  * @typedef {import('@storecraft/core').PlatformAdapter<IncomingMessage, ServerResponse, ServerResponse>} PlatformAdapter
  * @implements {PlatformAdapter}
  */
-export class Platform {
+export class NodePlatform {
 
   constructor() {
   }

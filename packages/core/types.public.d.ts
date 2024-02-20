@@ -39,6 +39,24 @@ export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext,
     $context?: PlatformContext;
 }
 
+/**
+ * Basic config for storecraft
+ */
+export type Config = {
+  /** Seed admin emails, if absent will be infered at init by 
+   * `platform.env.SC_ADMIN_EMAILS` environment as CSV of emails */
+  admins_emails?: string[];
+  /** password hash rounds, if absent will be infered at init by 
+   * `platform.env.SC_AUTH_PASS_HASH_ROUNDS` environment  */
+  auth_password_hash_rounds?: number;
+  /** access token signing secret, if absent will be infered at init by 
+   * `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  */
+  auth_secret_access_token: string;
+  /** refresh token signing secret, if absent will be infered at init by 
+   * `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment  */
+  auth_secret_refresh_token: string;
+}
+
 export * from './index.js'
 export type * from './types.database.js'
 export type * from './types.api.d.ts'

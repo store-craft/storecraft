@@ -46,7 +46,7 @@ const key_to_encoded = key => {
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
  * @implements {storage}
  */
-export class Storage {
+export class NodeLocalStorage {
   
   /** @type {import('node:fs').PathLike} */ #path;
 

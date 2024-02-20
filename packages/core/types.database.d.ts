@@ -243,9 +243,6 @@ export interface db_driver {
    */
   name: string;
 
-  /** admins emails */
-  admins_emails: string[]
-
   /**
    * Get the underlying StoreCraft App
    */

@@ -49,8 +49,16 @@ const mount = fn => fn instanceof Polka ? fn.attach : fn;
 /**
  * @template {VPolkaRequest} Req
  * @template {VPolkaResponse} Res
+ * @typedef {import('./public.js').IPolka<Req, Res>} IPolka
+ * 
+ */
+
+/**
+ * 
+ * @template {VPolkaRequest} Req
+ * @template {VPolkaResponse} Res
  * @extends {Trouter<import('./public.js').Middleware<Req, Res>>}
- * @implements {import('./public.js').IPolka<Req, Res>}
+ * @implements {IPolka<Req, Res>}
  */
 export class Polka extends Trouter {
 
@@ -70,7 +78,7 @@ export class Polka extends Trouter {
   }
 
   /**
-   * @typedef {(RegExp | string | Polka | import('./public.js').Middleware<Req, Res>)} Every
+   * @typedef {(RegExp | string | IPolka<Req, Res> | import('./public.js').Middleware<Req, Res>)} Every
    * @param {Every} base 
    * @param  {...(Polka | import('./public.js').Middleware<Req, Res>)} fns 
    * @returns 
@@ -79,14 +87,16 @@ export class Polka extends Trouter {
     const is_base_func = (typeof base === 'function' || base instanceof Polka);
     let funcs = is_base_func ? [base, ...fns] : fns
     base = is_base_func ? '/' : base
+    /** @type {string | RegExp} */
+    let pattern = is_base_func ? '/' : base
 
     super.use(
-      base,
+      pattern,
       ...funcs.map(mount).map(
         fn => {
           return async (req, res) => {
             const old_path = req.path + ''
-            req.path = req.path.replace(base, '') || '/'
+            req.path = req.path.replace(pattern, '') || '/'
             await fn(req, res);
             req.path = old_path // reset 
           }

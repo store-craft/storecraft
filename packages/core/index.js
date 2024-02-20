@@ -1,7 +1,16 @@
 import { STATUS_CODES } from './v-polka/codes.js';
-import { create_api } from './v-api/index.js'
+// import { create_api } from './v-api/index.js'
+import { create_rest_api } from './v-rest/index.js';
 export * from './types.api.enums.js'
 
+/** 
+ * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.storage.js').storage_driver} storage_driver
+ * @typedef {import('./types.database.js').db_driver} db_driver
+ * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
+ */
+
+/** @param {string} s @param {number} def */
 const parse_int = (s, def) => {
   const parsed = parseInt(s); // can be NaN
   return parsed ? parsed : def;
@@ -15,10 +24,6 @@ const parse_int = (s, def) => {
 export class App {
 
   /** 
-   * @typedef {import('./types.public.js').Config} Config
-   * @typedef {import('./types.storage.js').storage_driver} storage_driver
-   * @typedef {import('./types.database.js').db_driver} db_driver
-   * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
    * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} Platform
    * @type {Platform} 
    */
@@ -27,6 +32,7 @@ export class App {
   /** @type {storage_driver} */ #_storage;
   /** @type {Record<string, payment_gateway>} */ #_payment_gateways;
   /** @type {Config} */ #_config;
+  /** @type {ReturnType<create_rest_api>} */ #_rest_controller;
 
   /**
    * 
@@ -78,12 +84,13 @@ export class App {
     } catch (e) {
       console.error(e)
     }
-    this._polka = create_api(this);
+    // this._polka = create_api(this);
+    this.#_rest_controller = create_rest_api(this);
     return this;
   }
 
-  /** Get the Polka router */
-  get polka() { return this._polka; }
+  /** Get the REST API controller */
+  get rest_api() { return this.#_rest_controller; }
   /** Get the Polka router */
   get db() { return this.#_db_driver; }
   /** Get the native platform object */
@@ -145,9 +152,7 @@ export class App {
 
       sendBlob(o) {
         !o.type && this.headers.set('Content-Type', 'application/octet-stream');
-        
         return this.send(o)
-        // return this.send(new Blob(['tomer', 'tomer2', 'tomer', 'tomer2', 'tomer', 'tomer2'], {type:'application/tomer'}))
       },
 
       sendArrayBuffer(o) {
@@ -173,7 +178,10 @@ export class App {
 
     }
 
-    await this._polka.handler(request, polka_response);
+    console.log(request.url)
+
+    await this.rest_api.handler(request, polka_response);
+    // await this._polka.handler(request, polka_response);
 
     // console.log('polka_response.body ', polka_response.body);
 

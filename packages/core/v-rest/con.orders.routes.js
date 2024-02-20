@@ -1,8 +1,9 @@
 import { Polka } from '../v-polka/index.js'
-import { assert } from './utils.func.js'
-import { assert_generic_auth, authorize_admin, authorize_by_roles, is_admin, parse_auth_user } from './con.auth.middle.js'
-import { parse_query } from './utils.query.js'
-import { get, list, list_customer_orders, remove, upsert } from './con.orders.logic.js'
+import { assert } from '../v-api/utils.func.js'
+import { assert_generic_auth, authorize_admin, 
+  authorize_by_roles, is_admin, parse_auth_user } from './con.auth.middle.js'
+import { parse_query } from '../v-api/utils.query.js'
+import { get, list, list_customer_orders, remove, upsert } from '../v-api/con.orders.logic.js'
 
 /**
  * @typedef {import('../types.api.js').OrderData} ItemType

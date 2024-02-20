@@ -1,6 +1,6 @@
 import { App } from "../index.js";
 import { verify } from "../v-crypto/jwt.js";
-import { assert } from "./utils.func.js";
+import { assert } from "../v-api/utils.func.js";
 
 const Authorization = 'Authorization'
 const Bearer = 'Bearer'

@@ -1,5 +1,5 @@
 import { Polka } from '../v-polka/index.js'
-import { refresh, signin, signup } from './con.auth.logic.js'
+import { refresh, signin, signup } from '../v-api/con.auth.logic.js'
 
 /**
  * 

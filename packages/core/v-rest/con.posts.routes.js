@@ -1,8 +1,12 @@
 import { Polka } from '../v-polka/index.js'
-import { assert } from './utils.func.js'
+import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { parse_query } from './utils.query.js'
-import { get, list, list_collection_products, remove, upsert } from './con.collections.logic.js'
+import { parse_query } from '../v-api/utils.query.js'
+import { get, list, remove, upsert } from '../v-api/con.posts.logic.js'
+
+/**
+ * @typedef {import('../types.api.js').TagType} ItemType
+ */
 
 /**
  * 
@@ -55,17 +59,6 @@ export const create_routes = (app) => {
     async (req, res) => {
       let q = parse_query(req.query);
       const items = await list(app, q);
-      res.sendJson(items);
-    }
-  );
-
-  // list a specific collection's products
-  polka.get(
-    '/:collection/products',
-    async (req, res) => {
-      const { collection } = req.params;
-      let q = parse_query(req.query);
-      const items = await list_collection_products(app, collection, q);
       res.sendJson(items);
     }
   );

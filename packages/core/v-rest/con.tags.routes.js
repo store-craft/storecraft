@@ -1,8 +1,8 @@
 import { Polka } from '../v-polka/index.js'
-import { assert } from './utils.func.js'
+import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { parse_query } from './utils.query.js'
-import { get, list, remove, upsert } from './con.posts.logic.js'
+import { parse_query } from '../v-api/utils.query.js'
+import { get, list, remove, upsert } from '../v-api/con.tags.logic.js'
 
 /**
  * @typedef {import('../types.api.js').TagType} ItemType

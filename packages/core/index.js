@@ -201,7 +201,7 @@ export class App {
 
     return this.#_platform.handleResponse(
       response_web, context
-      );
+    );
   }
 
 }

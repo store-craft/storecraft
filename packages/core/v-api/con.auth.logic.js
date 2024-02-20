@@ -2,9 +2,7 @@ import * as phash from '../v-crypto/crypto-pbkdf2.js'
 import * as jwt from '../v-crypto/jwt.js'
 import { ID, apply_dates, assert } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
-import { 
-  apiAuthRefreshTypeSchema, 
-  apiAuthSigninTypeSchema, 
+import { apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema, 
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 
@@ -88,7 +86,7 @@ export const signin = async (app, body) => {
   
   assert(verified, 'auth/error', 401)
 
-  /** @type {Partial<import('./con.auth.middle.js').ApiRequest["user"]>} */
+  /** @type {Partial<import('../types.public.js').ApiRequest["user"]>} */
   const claims = {
     sub: existingUser.id,
     roles: existingUser.roles

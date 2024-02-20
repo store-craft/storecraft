@@ -1,7 +1,7 @@
 import { Polka } from '../v-polka/index.js'
-import { assert } from './utils.func.js'
+import { assert } from '../v-api/utils.func.js'
 import { authorize_admin } from './con.auth.middle.js'
-import { get } from './con.orders.logic.js'
+import { get } from '../v-api/con.orders.logic.js'
 
 /** @param {any} o */
 const is_function = o => {

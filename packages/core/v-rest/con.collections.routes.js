@@ -1,12 +1,8 @@
 import { Polka } from '../v-polka/index.js'
-import { assert } from './utils.func.js'
+import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { parse_query } from './utils.query.js'
-import { get, list, remove, upsert } from './con.storefronts.logic.js'
-
-/**
- * @typedef {import('../types.api.js').TagType} ItemType
- */
+import { parse_query } from '../v-api/utils.query.js'
+import { get, list, list_collection_products, remove, upsert } from '../v-api/con.collections.logic.js'
 
 /**
  * 
@@ -63,48 +59,13 @@ export const create_routes = (app) => {
     }
   );
 
-  // list
+  // list a specific collection's products
   polka.get(
-    '/:handle/products',
+    '/:collection/products',
     async (req, res) => {
-      const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_products(handle);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:handle/collections',
-    async (req, res) => {
-      const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_collections(handle);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:handle/discounts',
-    async (req, res) => {
-      const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_discounts(handle);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:handle/shipping_methods',
-    async (req, res) => {
-      const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_shipping_methods(handle);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:handle/posts',
-    async (req, res) => {
-      const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_posts(handle);
+      const { collection } = req.params;
+      let q = parse_query(req.query);
+      const items = await list_collection_products(app, collection, q);
       res.sendJson(items);
     }
   );

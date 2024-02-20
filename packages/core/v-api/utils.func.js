@@ -26,7 +26,7 @@ export const assert = (c, message, code=400) => {
 }
 
 /**
- * @template T
+ * @template {any} T
  * @param {T} d 
  * @returns {T & { created_at: string, updated_at: string}} d 
  */

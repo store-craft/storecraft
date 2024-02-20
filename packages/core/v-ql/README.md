@@ -3,33 +3,50 @@
 
 The following expression
 ```js
-(name:tomer* -(tag:genre_a -tag:genre_b))
+(name:tomer* | -(tag:genre_a -tag:genre_b) | "very long with weird chars | ")
 ```
 
 Will parse into **AST**
 ```js
+
 {
-  op: '&',
+  op: '|',
   args: [
-    'name:tomer*',
+    {
+      op: 'LEAF',
+      value: 'name:tomer*'
+    },
     {
       op: '!',
-      args: {
-        op: '&',
-        args: [
-          'tag:genre_a',
-          {
-            op: '!',
-            args: 'tag:genre_b'
-          }
-        ],
-        group: true
-      }
+      args: [
+        {
+          op: '&',
+          args: [
+            {
+              op: 'LEAF',
+              value: 'tag:genre_a'
+            },
+            {
+              op: '!',
+              args: [
+                {
+                  op: 'LEAF',
+                  value: 'tag:genre_b'
+                }
+              ]
+            }
+          ],
+          group: true
+        }
+      ]
+    },
+    {
+      op: 'LEAF',
+      value: 'very long with weird chars | '
     }
   ],
   group: true
 }
-3
 
 ```
 
@@ -41,3 +58,6 @@ import { parse } from './index.js';
 
 const AST = parse('(name:tomer* -(tag:genre_a -tag:genre_b))')
 ```
+
+### playground
+copy `vql.pegjs` into the online [https://peggyjs.org/online.html](https://peggyjs.org/online.html)

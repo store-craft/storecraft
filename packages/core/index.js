@@ -102,7 +102,9 @@ export class App {
   get storage() { return this.#_storage; }
   /** Get the payment gateways */
   get gateways() { return this.#_payment_gateways; }
+  /** Mailer driver */
   get mailer() { return this.#_mailer; }
+  /** Config */
   get config() { return this.#_config; }
 
   /**
@@ -197,7 +199,9 @@ export class App {
       }
     )
 
-    return await this.#_platform.handleResponse(response_web, context);
+    return this.#_platform.handleResponse(
+      response_web, context
+      );
   }
 
 }

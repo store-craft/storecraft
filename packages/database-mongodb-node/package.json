@@ -1,5 +1,5 @@
 {
-  "name": "@storecraft/db-mongodb-node",
+  "name": "@storecraft/database-mongodb-node",
   "version": "1.0.0",
   "description": "driver for mongodb on nodejs platform",
   "type": "module",

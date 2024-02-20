@@ -1,5 +1,4 @@
 import { STATUS_CODES } from './v-polka/codes.js';
-// import { create_api } from './v-api/index.js'
 import { create_rest_api } from './v-rest/index.js';
 export * from './types.api.enums.js'
 
@@ -8,6 +7,7 @@ export * from './types.api.enums.js'
  * @typedef {import('./types.storage.js').storage_driver} storage_driver
  * @typedef {import('./types.database.js').db_driver} db_driver
  * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
+ * @typedef {import('./types.mailer.js').mailer} mailer
  */
 
 /** @param {string} s @param {number} def */
@@ -31,23 +31,26 @@ export class App {
   /** @type {db_driver} */ #_db_driver;
   /** @type {storage_driver} */ #_storage;
   /** @type {Record<string, payment_gateway>} */ #_payment_gateways;
+  /** @type {mailer} */ #_mailer;
   /** @type {Config} */ #_config;
   /** @type {ReturnType<create_rest_api>} */ #_rest_controller;
 
   /**
    * 
-   * @param {Platform} platform 
-   * @param {db_driver} db_driver 
-   * @param {storage_driver} [storage] 
-   * @param {Record<string, payment_gateway>} [payment_gateways] 
-   * @param {Config} [config] 
+   * @param {Platform} platform platform
+   * @param {db_driver} db_driver datatbase
+   * @param {storage_driver} [storage] storage
+   * @param {Record<string, payment_gateway>} [payment_gateways] payment gateways
+   * @param {mailer} [mailer] mailer 
+   * @param {Config} [config] config
    */
-  constructor(platform, db_driver, storage, payment_gateways, config) {
+  constructor(platform, db_driver, storage, payment_gateways, mailer, config) {
 
     this.#_platform = platform;
     this.#_db_driver = db_driver;
     this.#_storage = storage;
     this.#_payment_gateways = payment_gateways;
+    this.#_mailer = mailer;
     this.#_config = config;
   }
 
@@ -99,6 +102,7 @@ export class App {
   get storage() { return this.#_storage; }
   /** Get the payment gateways */
   get gateways() { return this.#_payment_gateways; }
+  get mailer() { return this.#_mailer; }
   get config() { return this.#_config; }
 
   /**
@@ -166,7 +170,7 @@ export class App {
       },
 
       sendFormData(o) {
-        this.headers.set('Content-Type', 'application/x-www-form-urlencoded')
+        this.headers.set('Content-Type', 'multipart/form-data')
         return this.send(o)
       },
 

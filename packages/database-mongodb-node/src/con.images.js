@@ -3,8 +3,7 @@ import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { handle_or_id } from './utils.funcs.js';
-import { image_url_to_name, image_url_to_handle, 
-  union, to_tokens, apply_dates } from '@storecraft/core/v-api';
+import { images, func } from '@storecraft/core/v-api';
 
 /**
  * @typedef {import('@storecraft/core').db_images} db_col
@@ -71,11 +70,11 @@ export const report_document_media = (driver) => {
     if(!(data?.media?.length))
       return;
 
-    const add_to_search_index = union(
-      data['title'], to_tokens(data['title'])
+    const add_to_search_index = func.union(
+      data['title'], func.to_tokens(data['title'])
     );
 
-    const dates = apply_dates({});
+    const dates = func.apply_dates({});
     
     /** 
      * @param {string} url 
@@ -84,11 +83,11 @@ export const report_document_media = (driver) => {
     const url_to_update = url => {
       return {
         updateOne: {
-          filter: { handle: image_url_to_handle(url) },
+          filter: { handle: images.image_url_to_handle(url) },
           update: { 
             $addToSet : { search: { $each: add_to_search_index} },
             $set: { 
-              name: image_url_to_name(url),
+              name: images.image_url_to_name(url),
               url: url,
               updated_at: dates.updated_at
             },

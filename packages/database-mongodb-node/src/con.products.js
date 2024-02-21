@@ -4,7 +4,7 @@ import { get_bulk, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
 import { DiscountApplicationEnum } from '@storecraft/core'
-import { test_product_filters_against_product } from '@storecraft/core/v-api'
+import { pricing } from '@storecraft/core/v-api'
 import { report_document_media } from './con.images.js'
 
 /**
@@ -64,7 +64,7 @@ const upsert = (driver) => {
     ).toArray();
     // now test locally
     const eligible_discounts = discounts.filter(
-      d => test_product_filters_against_product(d.info.filters, data)
+      d => pricing.test_product_filters_against_product(d.info.filters, data)
     );
     // now replace discounts relation
     replacement._relations = replacement._relations ?? {};

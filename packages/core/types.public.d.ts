@@ -57,10 +57,10 @@ export type Config = {
   auth_secret_refresh_token: string;
 }
 
-export type { App } from './index.js'
+export { App } from './index.js'
 export type * from './types.database.d.ts'
 export type * from './types.api.d.ts'
 export type * from './types.api.query.d.ts'
 export type * from './types.storage.d.ts'
 export type * from './types.payments.d.ts'
-
+export * from './types.api.enums.js'

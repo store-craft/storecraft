@@ -1,11 +1,20 @@
-import { PaymentOptionsEnum } from "./types.api.enums.js";
-import { PaymentGatewayStatus } from "./types.payments.js";
+export type timestamps = {
+  created_at?: string;
+  updated_at?: string;
+}
+
+export type searchable = {
+  /** Search terms, usually computed by backend */
+  search?: string[];
+}
+
+export type idable = {
+  /** ID */
+  id?: string;
+}
 
 /** Base properties */
-type BaseType = {
-  updated_at?: string;
-  created_at?: string;
-  id?: string;
+export interface BaseType extends idable {
   /** List of images urls */
   media?: string[];
   /** List of attributes */
@@ -13,13 +22,11 @@ type BaseType = {
   /** list of tags , example ['genere_action', 'rated_M', ...] */
   tags?: string[];
   /** Rich description */
-  desc?: string;
+  description?: string;
   /** Is the entity active ? */
   active?: boolean;
-  /** Search terms, usually computed by backend */
-  search?: string[];
-  [x: string] : any;
 }
+
 
 // auth
 
@@ -35,17 +42,8 @@ export type AuthBaseType = {
   password: string;
 }
 
-export type Role2 = {
-  admin: {
-    type: 'admin'
-  },
-  user: {
-    type: 'user'
-  },
-}
 
 export type Role = 'admin' | 'user' | string;
-
 export type ApiAuthSigninType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
 export type ApiAuthRefreshType = {
@@ -65,18 +63,21 @@ export type AttributeType = {
 }
 
 
+
 // tag type
 
-export type TagType = BaseType & {
+export interface TagType extends idable, timestamps {
   /** the key name */
   handle: string;
   /** list of values */
   values: string[];
 }
 
+export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
+
 // collections
 
-export type CollectionType = BaseType & {
+export interface CollectionType extends BaseType {
   /** the key name */
   handle: string;
   /** title of collection */
@@ -121,7 +122,7 @@ export type VariantOptionSelection = {
   value_id: string;
 }
 
-export type ProductType = BaseType & {
+export interface ProductType extends BaseType {
   /** the key name */
   handle: string;
   /** title of collection */
@@ -168,7 +169,7 @@ export type ProductType = BaseType & {
 
 // discounts
 
-export type DiscountType = BaseType & {
+export interface DiscountType extends BaseType {
   /** title */
   title: string;
   /** discount code */
@@ -305,7 +306,7 @@ export type BundleDiscountExtra = {
 
 // storefront
 
-export type StorefrontType = BaseType & {
+export interface StorefrontType extends BaseType {
   /** readable handle */
   handle: string;
   /** readable title */
@@ -357,7 +358,7 @@ export type AddressType = {
   postal_code?: string;  
 }
 
-export type CustomerType = BaseType & {
+export interface CustomerType extends BaseType {
   /** The auth id */
   auth_id?: string;
   /** firstname */
@@ -379,7 +380,7 @@ export type CustomerType = BaseType & {
 
 // image
 
-export type ImageType = BaseType & {
+export interface ImageType extends BaseType {
   /** unique handle */
   handle: string;
   /** name */
@@ -393,7 +394,7 @@ export type ImageType = BaseType & {
 // shipping
 
 
-export type ShippingMethodType = BaseType & {
+export interface ShippingMethodType extends BaseType {
   /**
    * shipping method price
    * @minimum 0 Please set a price >= 0
@@ -406,7 +407,7 @@ export type ShippingMethodType = BaseType & {
 
 // posts
 
-export type PostType = BaseType & {
+export interface PostType extends BaseType {
   /** unique handle */
   handle: string;
   /** title of post */
@@ -420,14 +421,14 @@ export type PostType = BaseType & {
 
 
 
-export type SettingsType = BaseType & {
+export interface SettingsType extends BaseType {
 
 }
 
 
 // notifications
 
-export type NotificationType = BaseType & {
+export interface NotificationType extends BaseType {
   /** message of notification, can be markdown, markup or plain text */
   message: string;
   /** author of the notification */
@@ -468,7 +469,7 @@ export type NotificationActionUrlParams = {
 
 // order types
 
-export type OrderData = BaseType & {
+export interface OrderData extends BaseType {
   /** status of checkout, fulfillment and payment */
   status: OrderStatus; 
   /** buyer info */
@@ -489,10 +490,6 @@ export type OrderData = BaseType & {
   validation?: ValidationEntry[];
   /** payment gateway info and status */
   payment_gateway: OrderPaymentGatewayData; 
-}
-
-export type CheckoutData = {
-
 }
 
 /** Order buyer info */
@@ -621,5 +618,5 @@ export type OrderPaymentGatewayData = {
   /** result of gateway at checkout creation */
   on_checkout_create?: any;
   /** latest status of payment for caching */
-  latest_status?: PaymentGatewayStatus; 
+  latest_status?: any; 
 }

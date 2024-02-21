@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
-import {  } from '@storecraft/core/v-api'
+import { auth } from '@storecraft/core/v-api'
 import { NodePlatform } from '@storecraft/platform-node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'

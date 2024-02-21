@@ -6,6 +6,25 @@ import { apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema,
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 
+
+/**
+ * 
+ * @param {App} app 
+ * @param {string} id
+ */  
+export const removeById = async (app, id) => {
+  return app.db.auth_users.remove(id);
+}
+
+/**
+ * 
+ * @param {App} app 
+ * @param {string} email
+ */  
+export const removeByEmail = async (app, email) => {
+  return app.db.auth_users.removeByEmail(email);
+}
+
 /**
  * 
  * @param {App} app 

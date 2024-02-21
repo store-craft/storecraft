@@ -3,7 +3,7 @@ import { create_rest_api } from './v-rest/index.js';
 export * from './types.api.enums.js'
 
 /** 
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {Partial<import('./types.public.js').Config>} Config
  * @typedef {import('./types.storage.js').storage_driver} storage_driver
  * @typedef {import('./types.database.js').db_driver} db_driver
  * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
@@ -34,6 +34,7 @@ export class App {
   /** @type {mailer} */ #_mailer;
   /** @type {Config} */ #_config;
   /** @type {ReturnType<create_rest_api>} */ #_rest_controller;
+  /** @type {boolean} */ #_is_ready;
 
   /**
    * 
@@ -52,6 +53,7 @@ export class App {
     this.#_payment_gateways = payment_gateways;
     this.#_mailer = mailer;
     this.#_config = config;
+    this.#_is_ready = false;
   }
 
   /**
@@ -83,12 +85,13 @@ export class App {
       this.#settle_config_after_init();
 
       await this.db.init(this)
-      await this.storage.init(this)
+      this.storage && await this.storage.init(this)
     } catch (e) {
       console.error(e)
     }
     // this._polka = create_api(this);
     this.#_rest_controller = create_rest_api(this);
+    this.#_is_ready = true;
     return this;
   }
 
@@ -106,6 +109,7 @@ export class App {
   get mailer() { return this.#_mailer; }
   /** Config */
   get config() { return this.#_config; }
+  get ready() { return this.#_is_ready; }
 
   /**
    * Get a payment gateway by handle

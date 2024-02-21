@@ -47,11 +47,24 @@ const getByEmail = (driver) => {
  */
 const remove = (driver) => {
   return async (id) => {
-    const filter = { _id: to_objid(id) };
-
     /** @type {import('@storecraft/core').AuthUserType} */
     const res = await col(driver).findOneAndDelete(
-      filter
+      { _id: to_objid(id) }
+    );
+
+    return
+  }
+}
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["removeByEmail"]}
+ */
+const removeByEmail = (driver) => {
+  return async (email) => {
+    /** @type {import('@storecraft/core').AuthUserType} */
+    const res = await col(driver).findOneAndDelete(
+      { email }
     );
 
     return
@@ -76,6 +89,7 @@ export const impl = (driver) => {
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
+    removeByEmail: removeByEmail(driver),
     list: list(driver)
   }
 }

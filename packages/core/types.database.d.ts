@@ -3,7 +3,8 @@ import {
   DiscountType, ImageType, NotificationType, 
   OrderData, 
   PostType, ProductType, ShippingMethodType, 
-  StorefrontType, TagType } from "./types.api.js";
+  StorefrontType, TagType, 
+  searchable} from "./types.api.js";
 import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
 
 export type ID = string;
@@ -19,48 +20,54 @@ export type RegularGetOptions = {
   expand? : ExpandQuery;
 }
 
+export type Aug = {
+  search?: string[],
+  created_at: string;
+  updated_at: string;
+}
+
 /**
  * Basic collection or table
  */
-export declare interface db_crud<T> {
-  $type?: T;
+export declare interface db_crud<U, G=any> {
+  $type?: U;
 
   /**
    * get a single item by handle or id
    * @param id_or_handle 
    * @param options 
    */
-  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<Partial<T>>;
+  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<Partial<U>>;
   /**
    * get bulk of items, ordered, if something is missing, `undefined`
    * should be instead
    * @param ids array of ids
    * @param options 
    */
-  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<(Partial<T> | undefined)[]>;
+  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<(Partial<U> | undefined)[]>;
 
   /**
    * Insert or Replace an item
    */
-  upsert: (data?: T) => Promise<void>;
+  upsert: (data: U & searchable) => Promise<void>;
 
   /**
    * Insert or Replace an item
    * @param handle 
    */
-  upsertBulk?: (data?: Partial<T>[]) => Promise<void>;
+  upsertBulk?: (data: Partial<U & searchable>[]) => Promise<void>;
 
   /**
    * Delete an item
    * @param handle 
    */
-  remove: (handle?: HandleOrId) => Promise<void>
+  remove: (handle: HandleOrId) => Promise<void>
 
   /**
    * TBD
    * @returns 
    */
-  list: (query: ParsedApiQuery) => Promise<Partial<T>[]>
+  list: (query: ParsedApiQuery) => Promise<Partial<U>[]>
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -71,9 +78,15 @@ export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
 export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
   /**
    * get by email
-   * @param handle 
+   * @param email 
    */
   getByEmail: (email?: string) => Promise<AuthUserType>;
+  /**
+   * remove by email
+   * @param email 
+   */
+  removeByEmail: (email?: string) => Promise<void>;
+
 }
 
 /**

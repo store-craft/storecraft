@@ -14,7 +14,7 @@ import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 
 /**
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {Partial<import('./types.public.js').Config>} Config
  */
 
 /**
@@ -48,9 +48,8 @@ export class MongoDB {
   /**
    * 
    * @param {Config} [config] config, if undefined, 
-   * env variables will be used for uri upon init later
+   * env variables `MONGODB_URL` will be used for uri upon init later
    */
-  // constructor(db_name='main') {
   constructor(config) {
     this.#_is_ready = false;
     this.#_config = config;

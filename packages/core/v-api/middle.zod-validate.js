@@ -1,4 +1,5 @@
 import { ZodSchema } from 'zod'
+import { StorecraftError } from './utils.func.js';
 
 /**
  * @param {ZodSchema} zod_schema
@@ -10,7 +11,7 @@ export const assert_zod = (zod_schema, item) => {
   if(!result.success) {
     /** @type {import("zod").SafeParseError<any>} */
     const casted = result;
-    throw { message: casted.error?.issues, code: 400 };
+    throw new StorecraftError(casted.error?.issues, 400);
   };
 }
 

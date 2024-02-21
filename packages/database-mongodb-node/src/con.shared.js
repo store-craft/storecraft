@@ -140,10 +140,8 @@ export const get_bulk = (driver, col) => {
  */
 export const remove_regular = (driver, col) => {
   return async (id) => {
-    const filter = { _id: to_objid(id) };
-
     const res = await col.findOneAndDelete( 
-      filter
+      { _id: to_objid(id) }
     );
 
     return

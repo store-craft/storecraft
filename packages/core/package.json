@@ -35,7 +35,6 @@
       "import": "./v-mailer/index.js",
       "types": "./v-mailer/types.public.d.ts"
     }
-
   },
   "scripts": {
     "test": "uvu -c",
@@ -43,7 +42,7 @@
     "gen:vql": "node ./v-ql/compile.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "ts-to-zod": "^3.6.1",

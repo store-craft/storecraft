@@ -9,7 +9,7 @@
     "test": "uvu -c"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "nodemailer": "^6.9.9"

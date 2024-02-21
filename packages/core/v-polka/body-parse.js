@@ -5,8 +5,8 @@ const CONTENT_TYPE_OCTET_STREAM = 'application/octet-stream';
 const CONTENT_TYPE_FORM_URL_ENCODED = 'application/x-www-form-urlencoded';
 
 /**
- * @typedef {import("./public").VPolkaRequest} VPolkaRequest
- * @typedef {import("./public").VPolkaResponse} VPolkaResponse
+ * @typedef {import("./public.d.ts").VPolkaRequest} VPolkaRequest
+ * @typedef {import("./public.d.ts").VPolkaResponse} VPolkaResponse
  */
 
 /**

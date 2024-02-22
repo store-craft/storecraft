@@ -66,7 +66,7 @@ const remove = (driver) => {
  * @returns {db_col["report_document_media"]}
  */
 export const report_document_media = (driver) => {
-  return async (data) => {
+  return async (data, session) => {
     if(!(data?.media?.length))
       return;
 
@@ -101,7 +101,7 @@ export const report_document_media = (driver) => {
     const ops = data.media.map(url_to_update);
 
     await driver.images._col.bulkWrite(
-      ops
+      ops, { session }
     );
 
   }

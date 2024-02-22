@@ -10,25 +10,27 @@ const app = await create_app();
 const items_upsert = [
   {
     active: true,
-    handle: 'col-1',
+    handle: 'col-crud-1',
     title: 'col 1',
     tags: ['tag-1_a', 'tag-1_b']
   },
   {
     active: true,
-    handle: 'col-2',
+    handle: 'col-crud-2',
     title: 'col 2',
     tags: ['tag-1_a', 'tag-1_b']
   },
   {
     active: true,
-    handle: 'col-3',
+    handle: 'col-crud-3',
     title: 'col 3',
     tags: ['tag-1_a', 'tag-1_b']
   },
 ]
 
 test.before(async () => { assert.ok(app.ready) });
+test.after(async () => { await app.db.disconnect() });
+
 const ops = collections;
 
 test('create', async () => {

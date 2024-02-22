@@ -86,10 +86,10 @@ export const remove_product_from_collection = (app, product, collection) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} product handle or id
+ * @param {string} handle_or_id handle or id
  */
-export const list_product_collections = (app, product) => {
-  return db(app).list_product_collections(product);
+export const list_product_collections = (app, handle_or_id) => {
+  return db(app).list_product_collections(handle_or_id);
 }
 
 /**

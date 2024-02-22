@@ -94,6 +94,11 @@ export class MongoDB {
     return this;
   }
 
+  async disconnect() {
+    await this.mongo_client.close(true);
+    return true;
+  }
+
   get isReady() { return this.#_is_ready; }
   
   /**

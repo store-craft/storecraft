@@ -1,5 +1,5 @@
-import { auth } from '@storecraft/core/v-api';
 import 'dotenv/config';
+import { auth } from '@storecraft/core/v-api';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { admin_email, admin_password, create_app } from './utils.js';
@@ -8,6 +8,7 @@ import { admin_email, admin_password, create_app } from './utils.js';
 const app = await create_app();
 
 test.before(async () => { assert.ok(app.ready) });
+test.after(async () => { await app.db.disconnect() });
 
 test('remove and signup admin', async () => {
   await auth.removeByEmail(app, admin_email);

@@ -2,7 +2,7 @@ import { notifications } from '@storecraft/core/v-api';
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { assert_async_throws, assert_partial, create_app } from './utils.js';
+import { create_app } from './utils.js';
 
 const app = await create_app();
 
@@ -24,6 +24,7 @@ const items_upsert = [
 ]
 
 test.before(async () => { assert.ok(app.ready) });
+test.after(async () => { await app.db.disconnect() });
 const ops = notifications;
 
 test('add', async () => {

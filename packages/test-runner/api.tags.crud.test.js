@@ -23,6 +23,7 @@ const items_upsert = [
 ]
 
 test.before(async () => { assert.ok(app.ready) });
+test.after(async () => { await app.db.disconnect() });
 const ops = tags;
 
 test('create', async () => {

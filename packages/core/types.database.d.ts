@@ -62,13 +62,13 @@ export declare interface db_crud<U extends idable, G=U> {
   /**
    * Insert or Replace an item
    */
-  upsert: (data: U & searchable & idable_concrete) => Promise<void>;
+  upsert: (data: U & searchable & idable_concrete) => Promise<boolean>;
 
   /**
    * Insert or Replace an item
    * @param handle 
    */
-  upsertBulk?: (data: (U & searchable & idable_concrete)[]) => Promise<void>;
+  upsertBulk?: (data: (U & searchable & idable_concrete)[]) => Promise<boolean>;
 
   /**
    * Delete an item
@@ -259,6 +259,8 @@ export interface db_driver {
    * Init to the database
    */
   init: (app: App<any, any, any>) => Promise<this>;
+  /** Disconnect the database if possible */
+  disconnect: () => Promise<boolean>;
 
   /**
    * Is the driver ready ?

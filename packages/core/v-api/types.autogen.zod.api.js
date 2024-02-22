@@ -193,7 +193,6 @@ export const discountErrorSchema = z.object({
   message: z.string(),
 });
 export const baseTypeSchema = idableSchema.extend({
-  id: z.string().optional(),
   media: z.array(z.string()).optional(),
   attributes: z.array(attributeTypeSchema).optional(),
   tags: z.array(z.string()).optional(),
@@ -206,11 +205,18 @@ export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
     roles: z.array(roleSchema).optional(),
   }),
 );
-export const collectionTypeSchema = baseTypeSchema.extend({
-  handle: z.string(),
-  title: z.string(),
-  active: z.boolean(),
-  published: z.string().optional(),
+export const collectionTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    handle: z.string(),
+    title: z.string(),
+    active: z.boolean(),
+    published: z.string().optional(),
+  });
+export const collectionTypeUpsertSchema = collectionTypeSchema.omit({
+  created_at: true,
+  updated_at: true,
+  published: true,
 });
 export const variantOptionSchema = z.object({
   name: z.string(),
@@ -219,19 +225,21 @@ export const variantOptionSchema = z.object({
 });
 export const filterSchema = z.object({
   meta: filterMetaSchema,
-  value: z.union([
-    z.array(z.string()),
-    z.object({
-      from: z.number().optional(),
-      to: z.number(),
-    }),
-    z.array(
+  value: z
+    .union([
+      z.array(z.string()),
       z.object({
-        id: z.string().optional(),
-        handle: z.string().optional(),
+        from: z.number().optional(),
+        to: z.number(),
       }),
-    ),
-  ]),
+      z.array(
+        z.object({
+          id: z.string().optional(),
+          handle: z.string().optional(),
+        }),
+      ),
+    ])
+    .optional(),
 });
 export const buyXGetYDiscountExtraSchema = z.object({
   fixed: z.number(),
@@ -241,31 +249,56 @@ export const buyXGetYDiscountExtraSchema = z.object({
   filters_y: z.array(filterSchema),
   recursive: z.boolean().optional(),
 });
-export const shippingMethodTypeSchema = baseTypeSchema.extend({
-  price: z.number().min(0, "Please set a price >= 0"),
-  name: z.string(),
+export const shippingMethodTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    price: z.number().min(0, "Please set a price >= 0"),
+    name: z.string(),
+    handle: z.string(),
+  });
+export const postTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    handle: z.string(),
+    title: z.string(),
+    text: z.string(),
+  });
+export const customerTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    auth_id: z.string().optional(),
+    firstname: z.string(),
+    lastname: z.string(),
+    email: z.string().email(),
+    phone_number: z
+      .string()
+      .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
+      .optional(),
+    address: addressTypeSchema.optional(),
+  });
+export const customerTypeUpsertSchema = customerTypeSchema.omit({
+  updated_at: true,
+  created_at: true,
 });
-export const postTypeSchema = baseTypeSchema.extend({
-  handle: z.string(),
-  title: z.string(),
-  text: z.string(),
+export const imageTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    handle: z.string(),
+    name: z.string(),
+    url: z.string(),
+    usage: z.array(z.string()).optional(),
+  });
+export const imageTypeUpsertSchema = imageTypeSchema.omit({
+  updated_at: true,
+  created_at: true,
 });
-export const customerTypeSchema = baseTypeSchema.extend({
-  auth_id: z.string().optional(),
-  firstname: z.string(),
-  lastname: z.string(),
-  email: z.string().email(),
-  phone_number: z
-    .string()
-    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
-    .optional(),
-  address: addressTypeSchema.optional(),
+export const shippingMethodTypeUpsertSchema = shippingMethodTypeSchema.omit({
+  created_at: true,
+  updated_at: true,
 });
-export const imageTypeSchema = baseTypeSchema.extend({
-  handle: z.string(),
-  name: z.string(),
-  url: z.string(),
-  usage: z.array(z.string()).optional(),
+export const postTypeUpsertSchema = postTypeSchema.omit({
+  updated_at: true,
+  created_at: true,
 });
 export const settingsTypeSchema = baseTypeSchema;
 export const notificationActionSchema = z.object({
@@ -294,107 +327,145 @@ export const discountDetailsSchema = z.object({
     bundleDiscountExtraSchema,
   ]),
 });
-export const notificationTypeSchema = baseTypeSchema.extend({
+const baseNotificationTypeSchema = z.object({
   message: z.string(),
   author: z.string().optional(),
   actions: z.array(notificationActionSchema).optional(),
+  search: z.array(z.string()).optional(),
+  id: z.string().optional(),
+});
+export const notificationTypeSchema = baseNotificationTypeSchema.extend(
+  timestampsSchema.shape,
+);
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema.extend({
+  id: z.string(),
 });
 export const discountInfoSchema = z.object({
   details: discountDetailsSchema,
   filters: z.array(filterSchema).min(1, "You should Specify at least 1 Filter"),
 });
-export const discountTypeSchema = baseTypeSchema.extend({
-  title: z.string(),
-  handle: z.string(),
-  priority: z.number(),
-  published: z.string().optional(),
-  info: discountInfoSchema,
-  application: discountApplicationSchema,
+export const discountTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    active: z.boolean(),
+    title: z.string(),
+    handle: z.string(),
+    priority: z.number(),
+    published: z.string().optional(),
+    info: discountInfoSchema,
+    application: discountApplicationSchema,
+  });
+export const discountTypeUpsertSchema = discountTypeSchema.omit({
+  created_at: true,
+  updated_at: true,
 });
-export const variantCombinationSchema = z.lazy(() =>
-  z.object({
-    selection: z.array(variantOptionSelectionSchema),
-    product: productTypeSchema,
-  }),
-);
-export const productTypeSchema = z.lazy(() =>
-  baseTypeSchema.extend({
+export const baseProductTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
     handle: z.string(),
     title: z.string(),
     active: z.boolean(),
-    collections: z.array(collectionTypeSchema.partial()).optional(),
     video: z.string().optional(),
     price: z.number().min(0),
     qty: z.number().min(0),
     compare_at_price: z.number().min(0).optional(),
-    variants: z.array(productTypeSchema).optional(),
-    parent_handle: z.string().optional(),
-    parent_id: z.string().optional(),
-    variants_options: z.array(variantOptionSchema).optional(),
-    variants_products: z.record(variantCombinationSchema).optional(),
-    variant_hint: z.array(variantOptionSelectionSchema).optional(),
+    collections: z.array(collectionTypeSchema).optional(),
     discounts: z.array(discountTypeSchema.partial()).optional(),
-  }),
-);
-export const storefrontTypeSchema = z.lazy(() =>
-  baseTypeSchema.extend({
+  });
+export const variantTypeUpsertSchema = baseProductTypeSchema
+  .omit({
+    collections: true,
+    created_at: true,
+    updated_at: true,
+    published: true,
+    discounts: true,
+  })
+  .and(
+    z.object({
+      collections: z.array(collectionTypeSchema.pick({ id: true })).optional(),
+    }),
+  );
+export const productTypeUpsertSchema = baseProductTypeSchema
+  .omit({
+    collections: true,
+    created_at: true,
+    updated_at: true,
+    published: true,
+    discounts: true,
+  })
+  .and(
+    z.object({
+      collections: z.array(collectionTypeSchema.pick({ id: true })).optional(),
+    }),
+  );
+export const variantTypeSchema = baseProductTypeSchema.extend({
+  parent_handle: z.string().optional(),
+  parent_id: z.string().optional(),
+  variant_hint: z.array(variantOptionSelectionSchema).optional(),
+});
+export const productTypeSchema = baseProductTypeSchema.extend({
+  variants: z.array(variantTypeSchema).optional(),
+  variants_options: z.array(variantOptionSchema).optional(),
+});
+export const storefrontTypeSchema = baseTypeSchema
+  .extend(timestampsSchema.shape)
+  .extend({
     handle: z.string(),
     title: z.string(),
     video: z.string().optional(),
     published: z.string().optional(),
-    collections: z.array(collectionTypeSchema.partial()).optional(),
-    products: z.array(productTypeSchema.partial()).optional(),
-    shipping_methods: z.array(shippingMethodTypeSchema.partial()).optional(),
-    discounts: z.array(discountTypeSchema.partial()).optional(),
-    posts: z.array(postTypeSchema.partial()).optional(),
-  }),
-);
-export const orderDataSchema = z.lazy(() =>
-  baseTypeSchema.extend({
-    status: orderStatusSchema,
-    contact: orderContactSchema,
-    address: addressTypeSchema,
-    line_items: z.array(lineItemSchema),
-    notes: z.string(),
-    shipping_method: shippingMethodTypeSchema,
-    coupons: z.array(discountTypeSchema),
-    pricing: pricingDataSchema,
-    validation: z.array(validationEntrySchema).optional(),
-    payment_gateway: orderPaymentGatewayDataSchema,
-  }),
-);
-export const lineItemSchema = z.lazy(() =>
-  z.object({
-    id: z.string(),
-    price: z.number().optional(),
-    qty: z.number(),
-    stock_reserved: z.number().optional(),
-    data: productTypeSchema.optional(),
-  }),
-);
-export const pricingDataSchema = z.lazy(() =>
-  z.object({
-    evo: z.array(evoEntrySchema),
-    shipping_method: shippingMethodTypeSchema,
-    subtotal_undiscounted: z.number(),
-    subtotal_discount: z.number(),
-    subtotal: z.number(),
-    total: z.number(),
-    quantity_total: z.number(),
-    quantity_discounted: z.number(),
-    uid: z.string().optional(),
-    errors: z.array(discountErrorSchema),
-  }),
-);
-export const evoEntrySchema = z.lazy(() =>
-  z.object({
-    discount: discountTypeSchema.optional(),
-    discount_code: z.string().optional(),
-    total_discount: z.number().optional(),
-    quantity_undiscounted: z.number().optional(),
-    quantity_discounted: z.number().optional(),
-    subtotal: z.number().optional(),
-    total: z.number().optional(),
-    line_items: z.array(lineItemSchema).optional(),
-  }),
-);
+    collections: z.array(collectionTypeSchema).optional(),
+    products: z.array(productTypeSchema).optional(),
+    shipping_methods: z.array(shippingMethodTypeSchema).optional(),
+    discounts: z.array(discountTypeSchema).optional(),
+    posts: z.array(postTypeSchema).optional(),
+  });
+export const storefrontTypeUpsertSchema = storefrontTypeSchema.omit({
+  created_at: true,
+  updated_at: true,
+});
+export const lineItemSchema = z.object({
+  id: z.string(),
+  price: z.number().optional(),
+  qty: z.number(),
+  stock_reserved: z.number().optional(),
+  data: productTypeSchema.optional(),
+});
+export const evoEntrySchema = z.object({
+  discount: discountTypeSchema.optional(),
+  discount_code: z.string().optional(),
+  total_discount: z.number().optional(),
+  quantity_undiscounted: z.number().optional(),
+  quantity_discounted: z.number().optional(),
+  subtotal: z.number().optional(),
+  total: z.number().optional(),
+  line_items: z.array(lineItemSchema).optional(),
+});
+export const variantCombinationSchema = z.object({
+  selection: z.array(variantOptionSelectionSchema),
+  product: productTypeSchema,
+});
+export const pricingDataSchema = z.object({
+  evo: z.array(evoEntrySchema),
+  shipping_method: shippingMethodTypeSchema,
+  subtotal_undiscounted: z.number(),
+  subtotal_discount: z.number(),
+  subtotal: z.number(),
+  total: z.number(),
+  quantity_total: z.number(),
+  quantity_discounted: z.number(),
+  uid: z.string().optional(),
+  errors: z.array(discountErrorSchema),
+});
+export const orderDataSchema = baseTypeSchema.extend({
+  status: orderStatusSchema,
+  contact: orderContactSchema,
+  address: addressTypeSchema,
+  line_items: z.array(lineItemSchema),
+  notes: z.string(),
+  shipping_method: shippingMethodTypeSchema,
+  coupons: z.array(discountTypeSchema),
+  pricing: pricingDataSchema,
+  validation: z.array(validationEntrySchema).optional(),
+  payment_gateway: orderPaymentGatewayDataSchema,
+});

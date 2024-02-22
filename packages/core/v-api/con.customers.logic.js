@@ -1,12 +1,14 @@
-import { assert, to_handle } from './utils.func.js'
+import { ID, apply_dates, assert, to_handle } from './utils.func.js'
 import { customerTypeSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
-import { isDef } from './utils.index.js';
+import { create_search_index, isDef } from './utils.index.js';
+import { assert_zod } from './middle.zod-validate.js';
 
 /**
  * @typedef {import('../types.api.js').CustomerType} ItemType
+ * @typedef {import('../types.api.js').CustomerTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -17,32 +19,53 @@ export const db = app => app.db.customers;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
-export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'cus', customerTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
-  async (final) => {
-    // add to index
-    isDef(final.auth_id) && final.search.push(`auth_id:${final.auth_id}`);
-    isDef(final.firstname) && final.search.push(`${final.firstname}`);
-    isDef(final.lastname) && final.search.push(`${final.lastname}`);
-    isDef(final.email) && final.search.push(`${final.email}`);
-    isDef(final.phone_number) && final.search.push(to_handle(final.phone_number, ''));
-    return final;
-  }
-)(item);
+export const upsert = async (app, item) => {
+  assert_zod(customerTypeSchema, item);
 
+  // Check if exists
+  const item_get = await db(app).getByEmail(item.email);
+  if(item_get) {
+    assert(item_get.id===item.id, `ids incompatible`, 401);
+  }
+  const id = !Boolean(item.id) ? ID('cus') : item.id;
+  // search index
+  let search = create_search_index({ ...item, id });
+  isDef(item.auth_id) && search.push(`auth_id:${item.auth_id}`);
+  isDef(item.firstname) && search.push(`${item.firstname}`);
+  isDef(item.lastname) && search.push(`${item.lastname}`);
+  isDef(item.email) && search.push(`${item.email}`);
+  isDef(item.phone_number) && search.push(to_handle(item.phone_number, ''));
+  
+  // apply dates and index
+  const final = apply_dates(
+    { 
+      ...item, id, search
+    }
+  );
+
+  await db(app).upsert(final);
+  return id;
+}
 
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
+ * @param {string} id
  * @param {import('../types.database.js').RegularGetOptions} [options]
  */
-export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
+export const get = (app, id, options) => regular_get(app, db(app))(id, options);
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} email
+ * @param {import('../types.database.js').RegularGetOptions} [options]
+ */
+export const getByEmail = async (app, email, options) => {
+  return db(app).getByEmail(email);
+};
 
 /**
  * 

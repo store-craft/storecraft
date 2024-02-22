@@ -14,8 +14,9 @@ import { ZodSchema } from 'zod'
  * refactored. There is a hook to add more functionality.
  * 
  * @template {import('../types.api.js').idable} T
+ * @template {import('../types.api.js').idable} G
  * @param {import("../types.public.js").App} app app instance
- * @param {import("../types.database.js").db_crud<T>} db db instance
+ * @param {import("../types.database.js").db_crud<T, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
  * @param {<H extends T & searchable>(final: H) => Promise<H>} hook hook into final state
@@ -48,9 +49,9 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 }
 
 /**
- * @template {any} T
+ * @template {any} T, G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T>} db
+ * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_get = (app, db) => /**
   * 
@@ -63,9 +64,9 @@ export const regular_get = (app, db) => /**
   };
 
 /**
- * @template {import('../types.api.js').BaseType} T
+ * @template {import('../types.api.js').BaseType} T, G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T>} db
+ * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_remove = (app, db) => 
   /**
@@ -77,9 +78,9 @@ export const regular_remove = (app, db) =>
   }
 
 /**
- * @template {import('../types.api.js').BaseType} T
+ * @template {import('../types.api.js').BaseType} T, G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T>} db
+ * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_list = (app, db) => 
   /**
@@ -91,8 +92,9 @@ export const regular_list = (app, db) =>
 
 /**
  * @template {import("../types.api.js").BaseType} T
+ * @template {import("../types.api.js").BaseType} G
  * @param {import("../types.api.js").BaseType} item 
- * @param {import("../types.database.js").db_crud<T>} db 
+ * @param {import("../types.database.js").db_crud<T, G>} db 
  */
 export const assert_save_create_mode = async (item, db) => {
   // Check if tag exists

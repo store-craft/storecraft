@@ -6,6 +6,7 @@ import {
 
 /**
  * @typedef {import('../types.api.js').StorefrontType} ItemType
+ * @typedef {import('../types.api.js').StorefrontTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -16,13 +17,10 @@ export const db = app => app.db.storefronts;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'sf', storefrontTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
     assert(
       [final.handle].every(

@@ -3,7 +3,7 @@ import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { query_to_mongo } from './utils.query.js';
-import { isDef, sanitize } from './utils.funcs.js';
+import { isDef, sanitize_array } from './utils.funcs.js';
 
 /**
  * @typedef {import('@storecraft/core').db_orders} db_col
@@ -11,7 +11,7 @@ import { isDef, sanitize } from './utils.funcs.js';
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<db_col["$type"]>}
+ * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('orders');
 
@@ -65,7 +65,7 @@ const list_customer_orders = (driver) => {
       }
     ).toArray();
 
-    return sanitize(items);
+    return sanitize_array(items);
   }
 }
 

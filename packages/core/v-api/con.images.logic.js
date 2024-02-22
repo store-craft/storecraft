@@ -7,6 +7,7 @@ import { assert_zod } from './middle.zod-validate.js';
 
 /**
  * @typedef {import('../types.api.js').ImageType} ItemType
+ * @typedef {import('../types.api.js').ImageTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -17,7 +18,7 @@ export const db = app => app.db.images;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = async (app, item) => {
   assert_zod(imageTypeSchema, item);
@@ -35,7 +36,7 @@ export const upsert = async (app, item) => {
   );
 
   await db(app).upsert(final);
-  return final;
+  return final.id;
 }
 
 /**

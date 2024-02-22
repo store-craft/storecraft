@@ -2,6 +2,7 @@ import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
+import { to_objid } from './utils.funcs.js';
 
 /**
  * @typedef {import('@storecraft/core').db_notifications} db_col
@@ -9,7 +10,7 @@ import { get_regular, list_regular,
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<db_col["$type"]>}
+ * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('notifications');
 
@@ -17,6 +18,26 @@ const col = (d) => d.collection('notifications');
  * @param {MongoDB} driver 
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["upsertBulk"]}
+ */
+const upsertBulk = (driver) => {
+  return async (data) => {
+    data.forEach(
+      d => {
+        d._id = to_objid(d.id);
+      }
+    );
+
+    const res = await col(driver).insertMany(
+      data
+    );
+
+    return;
+  }
+}
 
 /**
  * @param {MongoDB} driver 
@@ -43,6 +64,7 @@ export const impl = (driver) => {
     _col: col(driver),
     get: get(driver),
     upsert: upsert(driver),
+    upsertBulk: upsertBulk(driver),
     remove: remove(driver),
     list: list(driver)
   }

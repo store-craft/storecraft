@@ -1,9 +1,13 @@
 import { 
   AuthUserType, BaseType, CollectionType, CustomerType, 
-  DiscountType, ImageType, NotificationType, 
+  CustomerTypeUpsert, 
+  DiscountType, DiscountTypeUpsert, ImageType, ImageTypeUpsert, NotificationType, 
+  NotificationTypeUpsert, 
   OrderData, 
-  PostType, ProductType, ShippingMethodType, 
-  StorefrontType, TagType, 
+  PostType, PostTypeUpsert, ProductType, ProductTypeUpsert, ShippingMethodType, 
+  ShippingMethodTypeUpsert, 
+  StorefrontType, StorefrontTypeUpsert, TagType, 
+  idable, 
   searchable} from "./types.api.js";
 import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
 
@@ -20,6 +24,10 @@ export type RegularGetOptions = {
   expand? : ExpandQuery;
 }
 
+export type idable_concrete = {
+  id: string;
+}
+
 export type Aug = {
   search?: string[],
   created_at: string;
@@ -29,33 +37,36 @@ export type Aug = {
 /**
  * Basic collection or table
  */
-export declare interface db_crud<U, G=any> {
-  $type?: U;
+export declare interface db_crud<U extends idable, G=U> {
+  /** upsert type */
+  $type_upsert?: U;
+  /** get type */
+  $type_get?: G;
 
   /**
    * get a single item by handle or id
    * @param id_or_handle 
    * @param options 
    */
-  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<Partial<U>>;
+  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<G>;
   /**
    * get bulk of items, ordered, if something is missing, `undefined`
    * should be instead
    * @param ids array of ids
    * @param options 
    */
-  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<(Partial<U> | undefined)[]>;
+  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<G[]>;
 
   /**
    * Insert or Replace an item
    */
-  upsert: (data: U & searchable) => Promise<void>;
+  upsert: (data: U & searchable & idable_concrete) => Promise<void>;
 
   /**
    * Insert or Replace an item
    * @param handle 
    */
-  upsertBulk?: (data: Partial<U & searchable>[]) => Promise<void>;
+  upsertBulk?: (data: (U & searchable & idable_concrete)[]) => Promise<void>;
 
   /**
    * Delete an item
@@ -67,7 +78,7 @@ export declare interface db_crud<U, G=any> {
    * TBD
    * @returns 
    */
-  list: (query: ParsedApiQuery) => Promise<Partial<U>[]>
+  list: (query: ParsedApiQuery) => Promise<G[]>
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -92,13 +103,13 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
 /**
  * tags crud
  */
-export interface db_tags extends db_crud<TagType & SearchTermsType> {
+export interface db_tags extends db_crud<TagType> {
 }
 
 /**
  * collections crud
  */
-export interface db_collections extends db_crud<CollectionType & SearchTermsType> {
+export interface db_collections extends db_crud<CollectionType> {
 
   /**
    * List and query the product in a collection
@@ -109,14 +120,8 @@ export interface db_collections extends db_crud<CollectionType & SearchTermsType
 
 }
 
-/**
- * customers crud
- */
-export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & SearchTermsType>> {
-}
-
 /** products crud */
-export interface db_products extends db_crud<ProductType & SearchTermsType> {
+export interface db_products extends db_crud<ProductTypeUpsert, ProductType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -157,48 +162,55 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
   remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
 }
 
+/**
+ * customers crud
+ */
+export interface db_customers extends OmitGetByHandle<db_crud<CustomerTypeUpsert, CustomerType>> {
+  getByEmail: (email: string) => Promise<CustomerType>;
+}
+
 /** StorefrontData crud */
-export interface db_storefronts extends db_crud<StorefrontType & SearchTermsType> {
+export interface db_storefronts extends db_crud<StorefrontTypeUpsert, StorefrontType> {
   /**
    * list all of the product related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_products: (handle_or_id: HandleOrId) => Promise<Partial<ProductType>[]>;
+  list_storefront_products: (handle_or_id: HandleOrId) => Promise<ProductType[]>;
   /**
    * list all of the collections related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<Partial<CollectionType>[]>;
+  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<CollectionType[]>;
   /**
    * list all of the discounts related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<Partial<DiscountType>[]>;
+  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<DiscountType[]>;
   /**
    * list all of the shipping methods related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<Partial<ShippingMethodType>[]>;
+  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<ShippingMethodType[]>;
   /**
    * list all of the posts related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<Partial<PostType>[]>;
+  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
 
 }
 
 /** ImageType crud */
-export interface db_images extends db_crud<ImageType & SearchTermsType> {
+export interface db_images extends db_crud<ImageTypeUpsert, ImageType> {
   /**
    * report the media images
    * @param data a document that has `media`
@@ -207,19 +219,19 @@ export interface db_images extends db_crud<ImageType & SearchTermsType> {
 }
 
 /** PostType crud */
-export interface db_posts extends db_crud<PostType & SearchTermsType> {
+export interface db_posts extends db_crud<PostTypeUpsert, PostType> {
 }
 
 /** ShippingMethodType crud */
-export interface db_shipping extends OmitGetByHandle<db_crud<ShippingMethodType & SearchTermsType>> {
+export interface db_shipping extends db_crud<ShippingMethodTypeUpsert, ShippingMethodType> {
 }
 
 /** NotificationType crud */
-export interface db_notifications extends OmitGetByHandle<db_crud<NotificationType & SearchTermsType>> {
+export interface db_notifications extends OmitGetByHandle<db_crud<NotificationTypeUpsert, NotificationType>> {
 }
 
 /** DiscountType crud */
-export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
+export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> {
 
   /**
    * List and query the products in a discount

@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_bulk, get_regular, list_regular } from './con.shared.js'
-import { handle_or_id, sanitize, to_objid } from './utils.funcs.js'
+import { handle_or_id, sanitize_array, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
 import { DiscountApplicationEnum } from '@storecraft/core'
 import { pricing } from '@storecraft/core/v-api'
@@ -13,7 +13,7 @@ import { report_document_media } from './con.images.js'
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('products');
 
@@ -23,7 +23,7 @@ const col = (d) => d.collection('products');
  */
 const upsert = (driver) => {
   return async (data) => {
-    
+
     const objid = to_objid(data.id);
     const filter = { _id: objid };
     const options = { upsert: true };
@@ -182,7 +182,7 @@ const list_product_collections = (driver) => {
     };
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.collections);
+    return sanitize_array(item?.collections);
   }
 }
 
@@ -191,7 +191,7 @@ const list_product_collections = (driver) => {
  * collections, I will not expose the query api, and use aggregate
  * instead.
  * @param {MongoDB} driver 
- * @returns {db_col["list_product_collections"]}
+ * @returns {db_col["list_product_variants"]}
  */
 const list_product_variants = (driver) => {
   return async (product) => {
@@ -201,7 +201,7 @@ const list_product_variants = (driver) => {
     };
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.variants);
+    return sanitize_array(item?.variants);
   }
 }
 
@@ -217,7 +217,7 @@ const list_product_discounts = (driver) => {
     };
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.discounts);
+    return sanitize_array(item?.discounts);
   }
 }
 

@@ -10,7 +10,7 @@ import { to_objid } from './utils.funcs.js'
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<db_col["$type"]>}
+ * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('customers');
 
@@ -23,6 +23,18 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
  * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["getByEmail"]}
+ */
+const getByEmail = (driver) => {
+  return async (email) => {
+    return col(driver).findOne(
+      { email }
+    );
+  }
+}
 
 /**
  * @param {MongoDB} driver 
@@ -59,6 +71,7 @@ export const impl = (driver) => {
   return {
     _col: col(driver),
     get: get(driver),
+    getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver)

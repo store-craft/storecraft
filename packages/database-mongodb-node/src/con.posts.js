@@ -11,7 +11,7 @@ import { report_document_media } from './con.images.js';
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('posts');
 

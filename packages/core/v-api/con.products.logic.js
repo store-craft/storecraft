@@ -6,6 +6,7 @@ import {
 
 /**
  * @typedef {import('../types.api.js').ProductType} ItemType
+ * @typedef {import('../types.api.js').ProductTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -16,14 +17,12 @@ export const db = app => app.db.products;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'pr', productTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
+    
     assert(
       [final.handle].every(
         h => to_handle(h)===h
@@ -32,7 +31,7 @@ export const upsert = (app, item) => regular_upsert(
     );
     final.search.push(
       ...union(
-        final?.collections?.map(c => `col:${c?.handle}`),
+        final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
         final?.collections?.map(c => `col:${c?.id}`),
       )
     );
@@ -46,7 +45,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.database.js').RegularGetOptions} options
+ * @param {import('../types.database.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 

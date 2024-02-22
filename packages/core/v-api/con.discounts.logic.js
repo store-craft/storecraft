@@ -7,6 +7,7 @@ import { isDef } from './utils.index.js';
 
 /**
  * @typedef {import('../types.api.js').DiscountType} ItemType
+ * @typedef {import('../types.api.js').DiscountTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -17,13 +18,10 @@ export const db = app => app.db.discounts;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'dis', discountTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
     assert(
       [final.handle].every(

@@ -6,6 +6,7 @@ import {
 
 /**
  * @typedef {import('../types.api.js').ShippingMethodType} ItemType
+ * @typedef {import('../types.api.js').ShippingMethodTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -16,13 +17,10 @@ export const db = app => app.db.shipping;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'ship', shippingMethodTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
     
     return final;

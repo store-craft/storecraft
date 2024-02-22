@@ -1,6 +1,7 @@
 
 /**
  * @typedef {import('../types.api.js').ProductType} ProductType
+ * @typedef {import('../types.api.js').ProductTypeUpsert} ProductTypeUpsert
  * @typedef {import('../types.api.js').ShippingMethodType} ShippingMethodType
  * @typedef {import('../types.api.js').FilterMeta} FilterMeta
  * @typedef {import('../types.api.js').Filter} Filter
@@ -22,7 +23,7 @@ import { DiscountApplicationEnum, DiscountMetaEnum,
 
 /**
  * 
- * @param {ProductType} product 
+ * @param {ProductType | ProductTypeUpsert} product 
  * @param {Filter} filter 
  */
 export const test_product_filter_against_product = 
@@ -70,7 +71,7 @@ export const test_product_filter_against_product =
 
 /**
  * 
- * @param {ProductType} product 
+ * @param {ProductType | ProductTypeUpsert} product 
  * @param {Filter[]} filters 
  */
 export const test_product_filters_against_product = 

@@ -77,7 +77,7 @@ export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
 
 // collections
 
-export interface CollectionType extends BaseType {
+export interface CollectionType extends BaseType, timestamps {
   /** the key name */
   handle: string;
   /** title of collection */
@@ -87,6 +87,9 @@ export interface CollectionType extends BaseType {
   /** published json url */
   published?: string;
 }
+
+export type CollectionTypeUpsert = Omit<CollectionType, 'created_at' | 'updated_at' | 'published'>;
+
 
 // products
 
@@ -122,15 +125,22 @@ export type VariantOptionSelection = {
   value_id: string;
 }
 
-export interface ProductType extends BaseType {
+export interface VariantType extends BaseProductType {
+  /** handle of parent product in case this product is a variant */
+  parent_handle?: string;
+  /** id of parent product in case this product is a variant */
+  parent_id?: string;
+  /** Internal usage, clarifies the variant projected options */
+  variant_hint?: VariantOptionSelection[];
+}
+
+export interface BaseProductType extends BaseType, timestamps {
   /** the key name */
   handle: string;
   /** title of collection */
   title: string;
   /** status */
   active: boolean;
-  /** collections, upon insert, should have at least id field */
-  collections?: Partial<CollectionType>[];
   /** video media url */
   video?: string;
   /** 
@@ -149,27 +159,35 @@ export interface ProductType extends BaseType {
    */
   compare_at_price?: number;
 
-  /** product variants */
-  variants?: ProductType[]
-  /** handle of parent product in case this product is a variant */
-  parent_handle?: string;
-  /** id of parent product in case this product is a variant */
-  parent_id?: string;
+  /** collections, upon insert, should have at least id field, expanded */
+  collections?: CollectionType[];
+  /** discounts we know were applied to this product, expanded type */
+  discounts?: Partial<DiscountType>[];
+}
+
+export type VariantTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+  /** list of collections to add the product into, this is an explicit connection, to form a better UX experience */
+  collections?: Pick<CollectionType, 'id'>[];
+}
+
+export interface ProductType extends BaseProductType {
+  /** product variants, expanded type */
+  variants?: VariantType[]
   /** variants options info */
   variants_options?: VariantOption[];
-  /** mapping of product variants handles to product data and variants options selection */
-  variants_products?: Record<string, VariantCombination>
-  /** Internal usage, clarifies the variant projected options */
-  variant_hint?: VariantOptionSelection[];
-  /** discounts we know were applied to this product */
-  discounts?: Partial<DiscountType>[];
+}
+
+export type ProductTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+  /** list of collections to add the product into, this is an explicit connection, to form a better UX experience */
+  collections?: Pick<CollectionType, 'id'>[];
 }
 
 //
 
 // discounts
 
-export interface DiscountType extends BaseType {
+export interface DiscountType extends BaseType, timestamps {
+  active: boolean;
   /** title */
   title: string;
   /** discount code */
@@ -186,6 +204,8 @@ export interface DiscountType extends BaseType {
   /** discount application (automatic and coupons) */
   application: DiscountApplication;
 }
+
+export type DiscountTypeUpsert = Omit<DiscountType, 'created_at' | 'updated_at'>;
 
 /** details and filters of the discount */
 export type DiscountInfo = {
@@ -213,7 +233,7 @@ export type Filter = {
   /** meta data related to identifying the filter */
   meta: FilterMeta;
   /** the filter params */
-  value: string[] | { from?: number, to:number} | { id?: string, handle?: string }[];
+  value?: string[] | { from?: number, to:number} | { id?: string, handle?: string }[];
 }
 
 /** Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  */
@@ -306,7 +326,7 @@ export type BundleDiscountExtra = {
 
 // storefront
 
-export interface StorefrontType extends BaseType {
+export interface StorefrontType extends BaseType, timestamps {
   /** readable handle */
   handle: string;
   /** readable title */
@@ -316,17 +336,18 @@ export interface StorefrontType extends BaseType {
   /** exported storefront json */
   published?: string;
   /** Handles of collections part of the storefront */
-  collections?: Partial<CollectionType>[];
+  collections?: CollectionType[];
   /** Handles of products you want to promote as part of the storefront */
-  products?: Partial<ProductType>[];
+  products?: ProductType[];
   /** Handles of shipping methods part of the storefront */
-  shipping_methods?: Partial<ShippingMethodType>[];
+  shipping_methods?: ShippingMethodType[];
   /** Handles of discounts to prmote part of the storefront */
-  discounts?: Partial<DiscountType>[];
+  discounts?: DiscountType[];
   /** Handles of posts to prmote part of the storefront */
-  posts?: Partial<PostType>[];
+  posts?: PostType[];
 }
 
+export type StorefrontTypeUpsert = Omit<StorefrontType, 'created_at' | 'updated_at'>;
 
 //
 
@@ -358,7 +379,7 @@ export type AddressType = {
   postal_code?: string;  
 }
 
-export interface CustomerType extends BaseType {
+export interface CustomerType extends BaseType, timestamps {
   /** The auth id */
   auth_id?: string;
   /** firstname */
@@ -378,9 +399,11 @@ export interface CustomerType extends BaseType {
   address?: AddressType;
 }
 
+export type CustomerTypeUpsert = Omit<CustomerType, 'updated_at' | 'created_at'>
+
 // image
 
-export interface ImageType extends BaseType {
+export interface ImageType extends BaseType, timestamps {
   /** unique handle */
   handle: string;
   /** name */
@@ -391,10 +414,12 @@ export interface ImageType extends BaseType {
   usage?: string[];
 }
 
+export type ImageTypeUpsert = Omit<ImageType, 'updated_at' | 'created_at'>
+
 // shipping
 
 
-export interface ShippingMethodType extends BaseType {
+export interface ShippingMethodType extends BaseType, timestamps {
   /**
    * shipping method price
    * @minimum 0 Please set a price >= 0
@@ -402,12 +427,14 @@ export interface ShippingMethodType extends BaseType {
   price: number;
   /** name */
   name: string;
+  handle: string;
 }
 
+export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'created_at' | 'updated_at'>;
 
 // posts
 
-export interface PostType extends BaseType {
+export interface PostType extends BaseType, timestamps {
   /** unique handle */
   handle: string;
   /** title of post */
@@ -416,6 +443,7 @@ export interface PostType extends BaseType {
   text: string;
 }
 
+export type PostTypeUpsert = Omit<PostType, 'updated_at' | 'created_at'>;
 
 // settings
 
@@ -428,13 +456,21 @@ export interface SettingsType extends BaseType {
 
 // notifications
 
-export interface NotificationType extends BaseType {
+interface BaseNotificationType {
   /** message of notification, can be markdown, markup or plain text */
   message: string;
   /** author of the notification */
   author?: string;
   /** list of actions */
   actions?: NotificationAction[];
+  search?: string[];
+  id?: string;
+}
+
+export interface NotificationType extends BaseNotificationType, timestamps {
+}
+
+export interface NotificationTypeUpsert extends BaseNotificationType {
 }
 
 /** each notification may have an actionable item associated with it. For example, clicking an order notification will route to the order page at Shelf */
@@ -444,11 +480,11 @@ export type NotificationAction = {
   /** the type of action */
   type?: NotificationActionType;
   /** extra params for the actions type */
-  params?: NotificationActionRouteParams | NotificationActionUrlParams | any;
+  params?: NotificationActionRouteParams | NotificationActionUrlParams;
 }
 
 /** 'route' means routing inside shelfm 'url' is linking to a url */
-export type NotificationActionType = 'route' | 'url' | string;
+export type NotificationActionType = 'route' | 'url';
 
 /** route inside shelf action params */
 export type NotificationActionRouteParams = {
@@ -461,7 +497,7 @@ export type NotificationActionRouteParams = {
 /** Action params for actions of type 'url' */
 export type NotificationActionUrlParams = {
   /** open the url in new window */
-  new_window: boolean;
+  new_window?: boolean;
   /** the url to open */
   url: string;
 }

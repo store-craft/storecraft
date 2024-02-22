@@ -5,6 +5,7 @@ import { regular_get, regular_list,
 
 /**
  * @typedef {import('../types.api.js').CollectionType} ItemType
+ * @typedef {import('../types.api.js').CollectionTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -15,13 +16,10 @@ export const db = app => app.db.collections;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'col', collectionTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
     assert(
       [final.handle].every(

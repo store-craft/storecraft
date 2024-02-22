@@ -10,7 +10,7 @@ import { images, func } from '@storecraft/core/v-api';
  */
 
 /**
- * @param {MongoDB} d @returns {Collection<db_col["$type"]>}
+ * @param {MongoDB} d @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) =>  d.collection('images');
 

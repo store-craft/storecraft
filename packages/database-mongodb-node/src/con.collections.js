@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { expand, get_regular, list_regular } from './con.shared.js'
-import { handle_or_id, isDef, sanitize, to_objid } from './utils.funcs.js'
+import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
@@ -11,7 +11,7 @@ import { report_document_media } from './con.images.js'
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('collections');
 
@@ -153,7 +153,7 @@ const list_collection_products = (driver) => {
     // try expand relations, that were asked
     expand(items, query?.expand);
 
-    return sanitize(items);
+    return sanitize_array(items);
   }
 }
 

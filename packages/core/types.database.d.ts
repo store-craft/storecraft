@@ -1,12 +1,14 @@
 import { 
-  AuthUserType, BaseType, CollectionType, CustomerType, 
+  AuthUserType, BaseType, CollectionType, CollectionTypeUpsert, CustomerType, 
   CustomerTypeUpsert, 
   DiscountType, DiscountTypeUpsert, ImageType, ImageTypeUpsert, NotificationType, 
   NotificationTypeUpsert, 
   OrderData, 
+  OrderDataUpsert, 
   PostType, PostTypeUpsert, ProductType, ProductTypeUpsert, ShippingMethodType, 
   ShippingMethodTypeUpsert, 
   StorefrontType, StorefrontTypeUpsert, TagType, 
+  TagTypeUpsert, 
   idable, 
   searchable} from "./types.api.js";
 import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
@@ -103,13 +105,13 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
 /**
  * tags crud
  */
-export interface db_tags extends db_crud<TagType> {
+export interface db_tags extends db_crud<TagTypeUpsert, TagType> {
 }
 
 /**
  * collections crud
  */
-export interface db_collections extends db_crud<CollectionType> {
+export interface db_collections extends db_crud<CollectionTypeUpsert, CollectionType> {
 
   /**
    * List and query the product in a collection
@@ -129,7 +131,7 @@ export interface db_products extends db_crud<ProductTypeUpsert, ProductType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_collections: (product: HandleOrId) => Promise<Partial<CollectionType>[]>;
+  list_product_collections: (product: HandleOrId) => Promise<CollectionType[]>;
 
   /**
    * list all of the product related discounts, returns eveything, this is not query based,
@@ -137,7 +139,7 @@ export interface db_products extends db_crud<ProductTypeUpsert, ProductType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_discounts: (product: HandleOrId) => Promise<Partial<DiscountType>[]>;
+  list_product_discounts: (product: HandleOrId) => Promise<DiscountType[]>;
 
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -145,7 +147,7 @@ export interface db_products extends db_crud<ProductTypeUpsert, ProductType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: HandleOrId) => Promise<Partial<ProductType>[]>;
+  list_product_variants: (product: HandleOrId) => Promise<ProductType[]>;
   
   /**
    * Add product to collection
@@ -238,18 +240,18 @@ export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> 
    * @param handle_or_id discount handle or id
    * @param query query
    */
-  list_discount_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
+  list_discount_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<ProductType[]>
 }
 
 /** OrderData crud */
-export interface db_orders extends OmitGetByHandle<db_crud<OrderData & SearchTermsType>> {
+export interface db_orders extends OmitGetByHandle<db_crud<OrderDataUpsert, OrderData>> {
 
   /**
    * 
    * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
    * @param query query object
    */
-  list_customer_orders: (customer_id: ID, query: ParsedApiQuery) => Promise<Partial<OrderData>[]>;
+  list_customer_orders: (customer_id: ID, query: ParsedApiQuery) => Promise<OrderData[]>;
 }
 
 export interface db_driver {

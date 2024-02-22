@@ -120,14 +120,13 @@ export const addressTypeSchema = z.object({
 export const notificationActionTypeSchema = z.union([
   z.literal("route"),
   z.literal("url"),
-  z.string(),
 ]);
 export const notificationActionRouteParamsSchema = z.object({
   collection: z.string(),
   document: z.string(),
 });
 export const notificationActionUrlParamsSchema = z.object({
-  new_window: z.boolean(),
+  new_window: z.boolean().optional(),
   url: z.string(),
 });
 export const orderContactSchema = z.object({
@@ -308,7 +307,6 @@ export const notificationActionSchema = z.object({
     .union([
       notificationActionRouteParamsSchema,
       notificationActionUrlParamsSchema,
-      z.any(),
     ])
     .optional(),
 });
@@ -337,9 +335,7 @@ const baseNotificationTypeSchema = z.object({
 export const notificationTypeSchema = baseNotificationTypeSchema.extend(
   timestampsSchema.shape,
 );
-export const notificationTypeUpsertSchema = baseNotificationTypeSchema.extend({
-  id: z.string(),
-});
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
 export const discountInfoSchema = z.object({
   details: discountDetailsSchema,
   filters: z.array(filterSchema).min(1, "You should Specify at least 1 Filter"),
@@ -445,9 +441,19 @@ export const variantCombinationSchema = z.object({
   selection: z.array(variantOptionSelectionSchema),
   product: productTypeSchema,
 });
-export const pricingDataSchema = z.object({
-  evo: z.array(evoEntrySchema),
+export const baseCheckoutCreateTypeSchema = z.object({
+  contact: orderContactSchema.optional(),
+  address: addressTypeSchema.optional(),
+  line_items: z.array(lineItemSchema),
+  notes: z.string().optional(),
   shipping_method: shippingMethodTypeSchema,
+});
+export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
+  coupons: z.array(discountTypeSchema.shape.handle).optional(),
+});
+export const pricingDataSchema = z.object({
+  evo: z.array(evoEntrySchema).optional(),
+  shipping_method: shippingMethodTypeSchema.optional(),
   subtotal_undiscounted: z.number(),
   subtotal_discount: z.number(),
   subtotal: z.number(),
@@ -455,17 +461,19 @@ export const pricingDataSchema = z.object({
   quantity_total: z.number(),
   quantity_discounted: z.number(),
   uid: z.string().optional(),
-  errors: z.array(discountErrorSchema),
+  errors: z.array(discountErrorSchema).optional(),
 });
-export const orderDataSchema = baseTypeSchema.extend({
-  status: orderStatusSchema,
-  contact: orderContactSchema,
-  address: addressTypeSchema,
-  line_items: z.array(lineItemSchema),
-  notes: z.string(),
-  shipping_method: shippingMethodTypeSchema,
-  coupons: z.array(discountTypeSchema),
-  pricing: pricingDataSchema,
-  validation: z.array(validationEntrySchema).optional(),
-  payment_gateway: orderPaymentGatewayDataSchema,
+export const orderDataSchema = baseCheckoutCreateTypeSchema
+  .extend(baseTypeSchema.shape)
+  .extend(timestampsSchema.shape)
+  .extend({
+    status: orderStatusSchema,
+    pricing: pricingDataSchema,
+    validation: z.array(validationEntrySchema).optional(),
+    payment_gateway: orderPaymentGatewayDataSchema.optional(),
+    coupons: z.array(discountTypeSchema).optional(),
+  });
+export const orderDataUpsertSchema = orderDataSchema.omit({
+  updated_at: true,
+  created_at: true,
 });

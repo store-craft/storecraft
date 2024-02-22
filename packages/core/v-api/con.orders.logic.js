@@ -3,9 +3,11 @@ import {
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 import { union } from './utils.func.js';
+import { isDef } from './utils.index.js';
 
 /**
  * @typedef {import('../types.api.js').OrderData} ItemType
+ * @typedef {import('../types.api.js').OrderDataUpsert} ItemTypeUpsert
  */
 
 /**
@@ -27,11 +29,11 @@ const create_search_index = (data) => {
     data?.contact?.email,
     data?.pricing?.total && Math.floor(data.pricing?.total),
     data?.status?.payment?.name2 && `payment:${data.status.payment.name2}`,
-    data?.status?.payment?.id && `payment:${data.status.payment.id}`,
+    isDef(data?.status?.payment?.id) && `payment:${data.status.payment.id}`,
     data?.status?.fulfillment?.name2 && `fulfill:${data.status.fulfillment.name2}`,
-    data?.status?.fulfillment?.id && `fulfill:${data.status.fulfillment.id}`,
+    isDef(data?.status?.fulfillment?.id) && `fulfill:${data.status.fulfillment.id}`,
     data?.status?.checkout?.name2 && `checkout:${data.status.checkout.name2}`,
-    data?.status?.checkout?.id && `checkout:${data.status.checkout.id}`,
+    isDef(data?.status?.checkout?.id) && `checkout:${data.status.checkout.id}`,
     data?.pricing?.evo?.slice(1)?.filter(
       e => e.total_discount>0
       ).map(e => `discount:${e.discount_code}`),
@@ -44,13 +46,10 @@ const create_search_index = (data) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'order', orderDataSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
     final?.search?.push(...create_search_index(final));
     return final;

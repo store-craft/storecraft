@@ -504,29 +504,40 @@ export type NotificationActionUrlParams = {
 
 
 // order types
-
-export interface OrderData extends BaseType {
-  /** status of checkout, fulfillment and payment */
-  status: OrderStatus; 
+export interface BaseCheckoutCreateType {
   /** buyer info */
-  contact: OrderContact;
+  contact?: OrderContact;
   /** shipping address info */
-  address: AddressType;
+  address?: AddressType;
   /** line items is a list of the purchased products */
   line_items: LineItem[];
   /** notes for the order */
-  notes: string; 
+  notes?: string; 
   /** shipping method info */
   shipping_method: ShippingMethodType; 
-  /** a list of manual coupons */
-  coupons: DiscountType[]; 
+}
+
+export interface CheckoutCreateType extends BaseCheckoutCreateType {
+  /** a list of manual coupons handles */
+  coupons?: DiscountType["handle"][]; 
+}
+
+export interface OrderData extends BaseCheckoutCreateType, BaseType, timestamps {
+  /** status of checkout, fulfillment and payment */
+  status: OrderStatus; 
   /** pricing information */
   pricing: PricingData;
   /** in case the order went through validation  */
   validation?: ValidationEntry[];
   /** payment gateway info and status */
-  payment_gateway: OrderPaymentGatewayData; 
+  payment_gateway?: OrderPaymentGatewayData; 
+  /** a list of manual coupons snapshots that were used */
+  coupons?: DiscountType[]; 
 }
+
+export type OrderDataUpsert = Omit<OrderData, 'updated_at' | 'created_at'>;
+
+
 
 /** Order buyer info */
 export type OrderContact = {
@@ -581,9 +592,9 @@ export type CheckoutStatusOptions = {
 /** Pricing object exaplins how the pricing of an order was calculated given a stack of automatic discounts, coupons, line items and shipping method */
 export type PricingData = {
   /** explanation of how discounts stack and change pricing */
-  evo: EvoEntry[]; 
+  evo?: EvoEntry[]; 
   /** selected shipping method */
-  shipping_method: ShippingMethodType;
+  shipping_method?: ShippingMethodType;
   /** subtotal of items price before discounts */
   subtotal_undiscounted: number; 
   /** sum of all discounts at all stages */
@@ -598,7 +609,7 @@ export type PricingData = {
   quantity_discounted: number;
   /** authentication user id */
   uid?: string; 
-  errors: DiscountError[];
+  errors?: DiscountError[];
  
 }
 

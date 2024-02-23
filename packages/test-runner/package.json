@@ -1,7 +1,7 @@
 {
   "name": "@storecraft/test-runner",
   "version": "1.0.0",
-  "description": "test runner for storecraft api",
+  "description": "Official test runner for storecraft api",
   "main": "index.js",
   "type": "module",
   "scripts": {

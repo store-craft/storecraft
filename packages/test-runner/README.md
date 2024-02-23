@@ -16,14 +16,15 @@ Todo:
 - list and query tests for controllers
 - test relations:
   - DONE: product -> collections
-  - product -> discounts
+  - DONE: product -> discounts
   - product -> products variants
+  - DONE: collection -> products
+  - DONE: discounts -> products
   - storefronts -> shippping
   - storefronts -> posts
   - storefronts -> collections
   - storefronts -> products
 - test side effects:
-  - discounts applications on discount save and product save
   - image usage reporting
 
 

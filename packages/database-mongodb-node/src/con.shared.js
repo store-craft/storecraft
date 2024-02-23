@@ -1,6 +1,7 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { handle_or_id, isUndef, sanitize_array, sanitize_one, to_objid } from './utils.funcs.js'
+import { handle_or_id, isUndef, sanitize_array, 
+  sanitize_one, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
@@ -12,21 +13,31 @@ import { report_document_media } from './con.images.js'
  */
 export const upsert_regular = (driver, col) => {
   return async (data) => {
-    
-    const filter = { _id: to_objid(data.id) };
-    const replacement = { ...data };
-    const options = { upsert: true };
 
-    const res = await col.replaceOne(
-      filter, replacement, options
-    );
+    const session = driver.mongo_client.startSession();
 
-    ////
-    // REPORT IMAGES USAGE
-    ////
-    await report_document_media(driver)(data);
+    try {
+      await session.withTransaction(
+        async () => {
+          const res = await col.replaceOne(
+            { _id: to_objid(data.id) }, 
+            replacement,
+            { session, upsert: true }
+          );
+      
+          ////
+          // REPORT IMAGES USAGE
+          ////
+          await report_document_media(driver)(data, session);
+        }
+      );
+    } catch(e) {
+      return false;
+    } finally {
+      await session.endSession();
+    }
 
-    return;
+    return true;
   }
 }
 
@@ -116,18 +127,16 @@ export const get_bulk = (driver, col) => {
  * @returns {import('@storecraft/core').db_crud<T, G>["remove"]}
  */
 export const remove_regular = (driver, col) => {
-  return async (id) => {
+  return async (id_or_handle) => {
     const res = await col.findOneAndDelete( 
-      { _id: to_objid(id) }
+      handle_or_id(id_or_handle)
     );
-
-    return
   }
 }
 
 /**
- * @template {import('@storecraft/core').BaseType} T
- * @template {import('@storecraft/core').BaseType} G
+ * @template {any} T
+ * @template {any} G
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * @returns {import('@storecraft/core').db_crud<T, G>["list"]}

@@ -3,7 +3,8 @@ import { discounts, products } from '@storecraft/core/v-api';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';
-import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
+import { DiscountApplicationEnum, 
+  DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
 
 const app = await create_app();
 

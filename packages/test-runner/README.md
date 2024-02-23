@@ -26,8 +26,10 @@ Todo:
   - image usage reporting
 
 ## checkout
+- todo
 
 ## storage integration
+storage is tested in it's own package, but integration test should be made available here
 
 ## v-rest controller
 In the future, I will combine rest controller testing with `v-api`

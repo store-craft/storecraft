@@ -5,6 +5,7 @@ import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
+import { DiscountApplicationEnum } from '@storecraft/core'
 
 /**
  * @typedef {import('@storecraft/core').db_discounts} db_col
@@ -31,6 +32,8 @@ const upsert = (driver) => {
           ////
           // PRODUCT --> DISCOUNTS RELATION
           ////
+
+          // first remove discount from anywhere
           await driver.products._col.updateMany(
             { '_relations.discounts.ids' : objid },
             { 
@@ -44,20 +47,22 @@ const upsert = (driver) => {
           );
 
           // now filter and update for products
-          const conjunctions = discount_to_mongo_conjunctions(data);
-          if(conjunctions.length) {
-            await driver.products._col.updateMany(
-              { $and: conjunctions },
-              { 
-                $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
-                $addToSet: { 
-                  '_relations.discounts.ids': objid,
-                  search: { $each : [`discount:${data.handle}`, `discount:${data.id}`]} 
+          if(data.active && data.application.id===DiscountApplicationEnum.Auto.id) {
+            const conjunctions = discount_to_mongo_conjunctions(data);
+            if(conjunctions.length) {
+              await driver.products._col.updateMany(
+                { $and: conjunctions },
+                { 
+                  $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
+                  $addToSet: { 
+                    '_relations.discounts.ids': objid,
+                    search: { $each : [`discount:${data.handle}`, `discount:${data.id}`]} 
+                  },
+                  
                 },
-                
-              },
-              { session }
-            );
+                { session }
+              );
+            }
           }
 
           ////
@@ -72,7 +77,7 @@ const upsert = (driver) => {
           ////
           // REPORT IMAGES USAGE
           ////
-          await report_document_media(driver)(data);
+          await report_document_media(driver)(data, session);
 
           // SAVE ME
 

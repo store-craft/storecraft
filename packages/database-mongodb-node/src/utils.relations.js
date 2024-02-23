@@ -60,6 +60,5 @@ export const create_explicit_relation = async (
 
   // delete fieldname
   delete data_with_rel[fieldName];
-
   return data_with_rel;
 }

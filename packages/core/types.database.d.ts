@@ -212,7 +212,7 @@ export interface db_images extends db_crud<ImageTypeUpsert, ImageType> {
    * report the media images
    * @param data a document that has `media`
    */
-  report_document_media: (data: BaseType) => Promise<void>;
+  report_document_media: (data: BaseType, extra: any) => Promise<void>;
 }
 
 /** PostType crud */

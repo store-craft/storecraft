@@ -20,10 +20,7 @@ Todo:
   - product -> products variants
   - DONE: collection -> products
   - DONE: discounts -> products
-  - storefronts -> shippping
-  - storefronts -> posts
-  - storefronts -> collections
-  - storefronts -> products
+  - DONE: storefronts -> shippping/posts/products/collections/discounts
 - test side effects:
   - image usage reporting
 

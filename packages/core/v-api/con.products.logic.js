@@ -1,7 +1,6 @@
 import { assert, to_handle, union } from './utils.func.js'
 import { productTypeSchema } from './types.autogen.zod.api.js'
-import { 
-  regular_get, regular_list, 
+import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**

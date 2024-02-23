@@ -29,33 +29,33 @@ const upsert = (driver) => {
     ////
     // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
     ////
-    const replacement = await create_explicit_relation(
+    let replacement = await create_explicit_relation(
       driver, data, 'products', 'products', false
     );
-    await create_explicit_relation(
+    replacement = await create_explicit_relation(
       driver, replacement, 'collections', 'collections', false
     );
-    await create_explicit_relation(
+    replacement = await create_explicit_relation(
       driver, replacement, 'discounts', 'discounts', false
     );
-    await create_explicit_relation(
+    replacement = await create_explicit_relation(
       driver, replacement, 'shipping_methods', 'shipping_methods', false
     );
-    await create_explicit_relation(
+    replacement = await create_explicit_relation(
       driver, replacement, 'posts', 'posts', false
     );
 
     ////
     // REPORT IMAGES USAGE
     ////
-    await report_document_media(driver)(data);
+    await report_document_media(driver)(replacement);
     
     // SAVE ME
     const res = await col(driver).replaceOne(
       filter, replacement, options
     );
 
-    return;
+    return true;
   }
 
 }

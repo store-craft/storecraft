@@ -25,8 +25,6 @@ const upsert = (driver) => {
   return async (data) => {
 
     const objid = to_objid(data.id);
-    const filter = { _id: objid };
-    const options = { upsert: true };
 
     ////
     // VARIANTS RELATION
@@ -91,10 +89,10 @@ const upsert = (driver) => {
     // REPORT IMAGES USAGE
     ////
     await report_document_media(driver)(data);
-    
+
     // SAVE ME
     const res = await driver.products._col.replaceOne(
-      filter, replacement, options
+      { _id: objid }, replacement, { upsert: true }
     );
     
     return;

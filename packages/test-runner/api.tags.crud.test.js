@@ -1,5 +1,5 @@
-import { tags } from '@storecraft/core/v-api';
 import 'dotenv/config';
+import { tags } from '@storecraft/core/v-api';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { assert_async_throws, assert_partial, create_app } from './utils.js';

@@ -50,7 +50,7 @@ export const FilterMetaEnum = {
   },    
   p_in_price_range: {
     id: 7, type:'product', 
-    op: 'p_in_price_range', 
+    op: 'p-in-price-range', 
     name: 'Product in Price range'
   },    
   o_subtotal_in_range: {

@@ -228,12 +228,30 @@ export type DiscountApplication = {
   name2: ('automatic' | 'manual');
 }
 
+export type FilterValue_p_in_collections = { id?: string, handle?: string }[];
+export type FilterValue_p_not_in_collections = { id?: string, handle?: string }[];
+export type FilterValue_p_in_handles = string[];
+export type FilterValue_p_not_in_handles = string[];
+export type FilterValue_p_in_tags = string[];
+export type FilterValue_p_not_in_tags = string[];
+export type FilterValue_p_all = undefined;
+export type FilterValue_p_in_price_range = { from?: number, to: number };
+export type FilterValue_o_subtotal_in_range = { from?: number, to: number };
+export type FilterValue_o_items_count_in_range = { from?: number, to: number };
+export type FilterValue_o_date_in_range = { from?: number, to: number };
+export type FilterValue_o_has_customers = string[];
+
 /** Discount filter scheme */
 export type Filter = {
   /** meta data related to identifying the filter */
   meta: FilterMeta;
   /** the filter params */
-  value?: string[] | { from?: number, to:number} | { id?: string, handle?: string }[];
+  value?: FilterValue_p_in_collections | FilterValue_p_not_in_collections | 
+          FilterValue_p_in_handles | FilterValue_p_not_in_handles | 
+          FilterValue_p_in_tags | FilterValue_p_not_in_tags | 
+          FilterValue_p_all | FilterValue_p_in_price_range | 
+          FilterValue_o_subtotal_in_range | FilterValue_o_items_count_in_range |
+          FilterValue_o_date_in_range | FilterValue_o_has_customers;
 }
 
 /** Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  */
@@ -244,7 +262,7 @@ export type FilterMeta = {
   type: 'product' | 'order';
   /**  operation name id */
   op: 'p-in-collections' | 'p-not-in-collections' | 'p-in-handles' | 'p-not-in-handles' | 
-  'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p_in_price_range' | 'o-subtotal-in-range' | 
+  'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p-in-price-range' | 'o-subtotal-in-range' | 
   'o-items-count-in-range' | 'o-date-in-range' | 'o_has_customer';
   /** printable name */
   name: string;

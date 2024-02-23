@@ -32,28 +32,40 @@ const get = (driver) => get_regular(driver, col(driver));
 const remove = (driver) => {
   return async (id) => {
     const image = await col(driver).findOne(handle_or_id(id));
+    if(!image) return;
 
-    ////
-    // EVERYTHING --> IMAGES URL
-    ////
-    const filter = { media : image.url };
-    const update = { $pull: { media: image.url } };
+    const session = driver.mongo_client.startSession();
+    try {
+      await session.withTransaction(
+        async () => {
+          ////
+          // EVERYTHING --> IMAGES URL
+          ////
+          const filter = { media : image.url };
+          const update = { $pull: { media: image.url } };
+          const options = { session };
 
-    await Promise.all(
-      [
-        driver.collections._col.updateMany(filter, update),
-        driver.discounts._col.updateMany(filter, update),
-        driver.posts._col.updateMany(filter, update),
-        driver.products._col.updateMany(filter, update),
-        driver.shipping._col.updateMany(filter, update),
-        driver.storefronts._col.updateMany(filter, update),
-      ]
-    );
+          await Promise.all(
+            [
+              driver.collections._col.updateMany(filter, update, options),
+              driver.discounts._col.updateMany(filter, update, options),
+              driver.posts._col.updateMany(filter, update, options),
+              driver.products._col.updateMany(filter, update, options),
+              driver.shipping._col.updateMany(filter, update, options),
+              driver.storefronts._col.updateMany(filter, update, options),
+            ]
+          );
 
-    // DELETE ME
-    const res = await col(driver).findOneAndDelete( 
-      { _id: image._id }
-    );
+          // DELETE ME
+          const res = await col(driver).findOneAndDelete( 
+            { _id: image._id },
+            options
+          );
+        }
+      );
+    } finally {
+      await session.endSession();
+    }
 
     return
   }

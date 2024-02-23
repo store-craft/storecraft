@@ -35,7 +35,7 @@ const upsertBulk = (driver) => {
       data
     );
 
-    return;
+    return true;
   }
 }
 

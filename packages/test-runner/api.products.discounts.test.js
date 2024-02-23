@@ -1,5 +1,5 @@
-import { discounts, products } from '@storecraft/core/v-api';
 import 'dotenv/config';
+import { discounts, products } from '@storecraft/core/v-api';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';

@@ -129,8 +129,7 @@ const remove = (driver) => {
     // todo: transaction
 
     const item = await col(driver).findOne(handle_or_id(id));
-    if(!item)
-      return;
+    if(!item) return;
     const objid = to_objid(item.id);
     const session = driver.mongo_client.startSession();
 

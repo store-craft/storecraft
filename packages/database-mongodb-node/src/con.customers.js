@@ -43,15 +43,26 @@ const getByEmail = (driver) => {
 const remove = (driver) => {
   return async (id) => {
 
-    const res = await col(driver).findOneAndDelete(
-      { _id: to_objid(id) }
-    );
-
-    // delete the auth user
-    if(res?.auth_id) {
-      await driver.auth_users._col.findOneAndDelete(
-        { _id: to_objid(res.auth_id) }
+    const session = driver.mongo_client.startSession();
+    try {
+      await session.withTransaction(
+        async () => {
+          const res = await col(driver).findOneAndDelete(
+            { _id: to_objid(id) },
+            { session }
+          );
+      
+          // delete the auth user
+          if(res?.auth_id) {
+            await driver.auth_users._col.findOneAndDelete(
+              { _id: to_objid(res.auth_id) },
+              { session }
+            );
+          }
+        }
       );
+    } finally {
+      await session.endSession();
     }
 
     return

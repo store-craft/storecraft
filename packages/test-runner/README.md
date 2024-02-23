@@ -27,6 +27,9 @@ Todo:
 - test side effects:
   - image usage reporting
 
+## checkout
+
+## storage integration
 
 ## v-rest controller
 In the future, I will combine rest controller testing with `v-api`

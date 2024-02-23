@@ -1,15 +1,10 @@
 import { 
   AuthUserType, BaseType, CollectionType, CollectionTypeUpsert, CustomerType, 
-  CustomerTypeUpsert, 
-  DiscountType, DiscountTypeUpsert, ImageType, ImageTypeUpsert, NotificationType, 
-  NotificationTypeUpsert, 
-  OrderData, 
-  OrderDataUpsert, 
-  PostType, PostTypeUpsert, ProductType, ProductTypeUpsert, ShippingMethodType, 
-  ShippingMethodTypeUpsert, 
-  StorefrontType, StorefrontTypeUpsert, TagType, 
-  TagTypeUpsert, 
-  idable, 
+  CustomerTypeUpsert, DiscountType, DiscountTypeUpsert, ImageType, 
+  ImageTypeUpsert, NotificationType, NotificationTypeUpsert, OrderData, 
+  OrderDataUpsert, PostType, PostTypeUpsert, ProductType, ProductTypeUpsert, 
+  ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
+  StorefrontTypeUpsert, TagType, TagTypeUpsert, idable, 
   searchable} from "./types.api.js";
 import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
 

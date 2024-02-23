@@ -162,7 +162,7 @@ export interface BaseProductType extends BaseType, timestamps {
   /** collections, upon insert, should have at least id field, expanded */
   collections?: CollectionType[];
   /** discounts we know were applied to this product, expanded type */
-  discounts?: Partial<DiscountType>[];
+  discounts?: DiscountType[];
 }
 
 export type VariantTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {

@@ -3,14 +3,14 @@ import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../driver.js';
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template {any} T
  * @typedef {Object} Relation
  * @property {ObjectId[]} [ids]
  * @property {Record<import('@storecraft/core').ID, T>} [entries]
  */
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template {any} T
  * @typedef {T & { _relations? : Record<string, Relation<any>> }} WithRelations
  */
 

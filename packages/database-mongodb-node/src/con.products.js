@@ -25,77 +25,92 @@ const upsert = (driver) => {
   return async (data) => {
 
     const objid = to_objid(data.id);
+    const session = driver.mongo_client.startSession();
 
-    ////
-    // VARIANTS RELATION
-    ////
-    const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
-    if(is_variant) {
-      // update parent product
-      await driver.products._col.updateOne(
-        { _id : to_objid(data.parent_id) },
-        { 
-          $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
-          $addToSet: { '_relations.variants.ids': objid }
-        },
+    try {
+      await session.withTransaction(
+        async () => {
+          ////
+          // VARIANTS RELATION
+          ////
+          const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
+          if(is_variant) {
+            // update parent product
+            await driver.products._col.updateOne(
+              { _id : to_objid(data.parent_id) },
+              { 
+                $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
+                $addToSet: { '_relations.variants.ids': objid }
+              },
+              { session }
+            );
+          } else {
+            // in the future, support also explicit relation with `create_explicit_relation`
+          }
+
+          ////
+          // COLLECTIONS RELATION (explicit)
+          ////
+          const replacement = await create_explicit_relation(
+            driver, data, 'collections', 'collections', false
+          );
+
+          ////
+          // DISCOUNTS RELATION
+          ////
+          // get all automatic + active discounts
+          const discounts = await driver.discounts._col.find(
+            { 
+              'application.id': DiscountApplicationEnum.Auto.id,
+              active: true
+            }
+          ).toArray();
+          // now test locally
+          const eligible_discounts = discounts.filter(
+            d => pricing.test_product_filters_against_product(d.info.filters, data)
+          );
+          // now replace discounts relation
+          replacement._relations = replacement._relations ?? {};
+          replacement._relations.discounts = {
+            ids: eligible_discounts.map(d => d._id),
+            entries: Object.fromEntries(eligible_discounts.map(d => [d._id.toString(), d]))
+          }
+          replacement.search = replacement.search ?? [];
+          eligible_discounts.forEach(
+            d => replacement.search.push(
+              `discount:${d.handle}`, `discount:${d.id}`
+            )
+          );
+
+          ////
+          // STOREFRONTS -> PRODUCTS RELATION
+          ////
+          await driver.storefronts._col.updateMany(
+            { '_relations.products.ids' : objid },
+            { $set: { [`_relations.products.entries.${objid.toString()}`]: data } },
+            { session }
+          );
+          
+          ////
+          // REPORT IMAGES USAGE
+          ////
+          await report_document_media(driver)(data);
+
+          // SAVE ME
+          const res = await driver.products._col.replaceOne(
+            { _id: objid }, replacement, { session, upsert: true }
+          );
+
+        }
       );
-    } else {
-      // in the future, support also explicit relation with `create_explicit_relation`
+    } catch (e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
     }
 
-    ////
-    // COLLECTIONS RELATION (explicit)
-    ////
-    const replacement = await create_explicit_relation(
-      driver, data, 'collections', 'collections', false
-    );
-
-    ////
-    // DISCOUNTS RELATION
-    ////
-    // get all automatic + active discounts
-    const discounts = await driver.discounts._col.find(
-      { 
-        'application.id': DiscountApplicationEnum.Auto.id,
-        active: true
-      }
-    ).toArray();
-    // now test locally
-    const eligible_discounts = discounts.filter(
-      d => pricing.test_product_filters_against_product(d.info.filters, data)
-    );
-    // now replace discounts relation
-    replacement._relations = replacement._relations ?? {};
-    replacement._relations.discounts = {
-      ids: eligible_discounts.map(d => d._id),
-      entries: Object.fromEntries(eligible_discounts.map(d => [d._id.toString(), d]))
-    }
-    replacement.search = replacement.search ?? [];
-    eligible_discounts.forEach(
-      d => replacement.search.push(
-        `discount:${d.handle}`, `discount:${d.id}`
-      )
-    );
-
-    ////
-    // STOREFRONTS -> PRODUCTS RELATION
-    ////
-    await driver.storefronts._col.updateMany(
-      { '_relations.products.ids' : objid },
-      { $set: { [`_relations.products.entries.${objid.toString()}`]: data } },
-    );
-    
-    ////
-    // REPORT IMAGES USAGE
-    ////
-    await report_document_media(driver)(data);
-
-    // SAVE ME
-    const res = await driver.products._col.replaceOne(
-      { _id: objid }, replacement, { upsert: true }
-    );
-    
-    return;
+    return true;
   }
 }
 
@@ -114,45 +129,61 @@ const remove = (driver) => {
 
     const item = await col(driver).findOne(handle_or_id(id));
     const objid = to_objid(item.id);
-    
-    ////
-    // PRODUCTS -> VARIANTS RELATION
-    ////
-    const is_variant = item?.parent_handle && item?.parent_id && item?.variant_hint;
-    if(is_variant) {
-      // remove me from parent
-      await driver.products._col.updateOne(
-        { _id : to_objid(item.parent_id) },
-        { 
-          $pull: { '_relations.variants.ids': objid },
-          $unset: { [`_relations.variants.entries.${objid.toString()}`]: '' },
-        },
+    const session = driver.mongo_client.startSession();
+
+    try {
+      await session.withTransaction(
+        async () => {
+
+          ////
+          // PRODUCTS -> VARIANTS RELATION
+          ////
+          const is_variant = item?.parent_handle && item?.parent_id && item?.variant_hint;
+          if(is_variant) {
+            // remove me from parent
+            await driver.products._col.updateOne(
+              { _id : to_objid(item.parent_id) },
+              { 
+                $pull: { '_relations.variants.ids': objid },
+                $unset: { [`_relations.variants.entries.${objid.toString()}`]: '' },
+              },
+              { session }
+            );
+          } else {
+            // I am a parent, let's delete all of the children variants
+            const ids = item?._relations?.variants?.ids;
+            if(ids) {
+              await driver.products._col.deleteMany(
+                { _id: { $in: ids } },
+                { session }
+              );
+            }
+          }
+
+          ////
+          // STOREFRONTS --> PRODUCTS RELATION
+          ////
+          await driver.storefronts._col.updateMany(
+            { '_relations.products.ids' : objid },
+            { 
+              $pull: { '_relations.products.ids': objid, },
+              $unset: { [`_relations.products.entries.${objid.toString()}`]: '' },
+            },
+            { session }
+          );
+
+          // DELETE ME
+          const res = await col(driver).findOneAndDelete(
+            { _id: objid },
+            { session }
+          );
+
+        }
       );
-    } else {
-      // I am a parent, let's delete all of the children variants
-      const ids = item?._relations?.variants?.ids;
-      if(ids) {
-        await driver.products._col.deleteMany(
-          { _id: { $in: ids } }
-        );
-      }
-    }
-
-    ////
-    // STOREFRONTS --> PRODUCTS RELATION
-    ////
-    await driver.storefronts._col.updateMany(
-      { '_relations.products.ids' : objid },
-      { 
-        $pull: { '_relations.products.ids': objid, },
-        $unset: { [`_relations.products.entries.${objid.toString()}`]: '' },
-      },
-    );
-
-    // DELETE ME
-    const res = await col(driver).findOneAndDelete(
-      { _id: objid }
-    );
+      
+    } finally {
+      await session.endSession();
+    }    
 
     return
   }

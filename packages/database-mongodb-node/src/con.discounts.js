@@ -111,9 +111,10 @@ const get = (driver) => get_regular(driver, col(driver));
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
-  return async (id) => {
-    const objid = to_objid(id)
-    const item = await col(driver).findOne(handle_or_id(id));
+  return async (id_or_handle) => {
+    const item = await col(driver).findOne(handle_or_id(id_or_handle));
+    if(!item) return;
+    const objid = to_objid(item.id)
     const session = driver.mongo_client.startSession();
 
     try {

@@ -23,9 +23,6 @@ const col = (d) => d.collection('storefronts');
 const upsert = (driver) => {
   return async (data) => {
     
-    const filter = { _id: to_objid(data.id) };
-    const options = { upsert: true };
-
     ////
     // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
     ////
@@ -52,7 +49,9 @@ const upsert = (driver) => {
     
     // SAVE ME
     const res = await col(driver).replaceOne(
-      filter, replacement, options
+      { _id: to_objid(data.id) }, 
+      replacement, 
+      { upsert: true }
     );
 
     return true;

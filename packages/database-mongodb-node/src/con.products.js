@@ -69,6 +69,7 @@ const upsert = (driver) => {
           const eligible_discounts = discounts.filter(
             d => pricing.test_product_filters_against_product(d.info.filters, data)
           );
+          // console.log('eligible_discounts', eligible_discounts)
           // now replace discounts relation
           replacement._relations = replacement._relations ?? {};
           replacement._relations.discounts = {
@@ -128,6 +129,8 @@ const remove = (driver) => {
     // todo: transaction
 
     const item = await col(driver).findOne(handle_or_id(id));
+    if(!item)
+      return;
     const objid = to_objid(item.id);
     const session = driver.mongo_client.startSession();
 

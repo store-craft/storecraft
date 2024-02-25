@@ -22,30 +22,43 @@ const col = (d) => d.collection('posts');
 const upsert = (driver) => {
   return async (data) => {
     const objid = to_objid(data.id);
-    const filter = { _id: objid };
-    const replacement = { ...data };
-    const options = { upsert: true };
+    const session = driver.mongo_client.startSession();
 
-    ////
-    // STOREFRONTS --> POSTS RELATION
-    ////
-    await driver.storefronts._col.updateMany(
-      { '_relations.posts.ids' : objid },
-      { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
-    );
+    try {
+      await session.withTransaction(
+        async () => {
 
-    ////
-    // REPORT IMAGES USAGE
-    ////
-    await report_document_media(driver)(data);
+          ////
+          // STOREFRONTS --> POSTS RELATION
+          ////
+          await driver.storefronts._col.updateMany(
+            { '_relations.posts.ids' : objid },
+            { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
+            { session }
+          );
 
-    // SAVE ME
+          ////
+          // REPORT IMAGES USAGE
+          ////
+          await report_document_media(driver)(data, session);
 
-    const res = await col(driver).replaceOne(
-      filter, replacement, options
-    );
+          // SAVE ME
 
-    return;
+          const res = await col(driver).replaceOne(
+            { _id: objid }, 
+            data, 
+            { session, upsert: true }
+          );
+        }
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
+    }
+
+    return true;
   }
 
 }
@@ -88,11 +101,14 @@ const remove = (driver) => {
 
         }
       );
+    } catch(e) {
+      console.log(e);
+      return false;
     } finally {
       await session.endSession();
     }
 
-    return
+    return true;
   }
 
 }

@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+  upsert_regular } from './con.shared.js'
 import { to_objid } from './utils.funcs.js'
 
 /**
@@ -62,6 +62,7 @@ const remove = (driver) => {
         }
       );
     } catch(e) {
+      console.log(e);
       return false;
     } finally {
       await session.endSession();

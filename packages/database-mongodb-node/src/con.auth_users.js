@@ -47,12 +47,11 @@ const getByEmail = (driver) => {
  */
 const remove = (driver) => {
   return async (id) => {
-    /** @type {import('@storecraft/core').AuthUserType} */
-    const res = await col(driver).findOneAndDelete(
+    const res = await col(driver).deleteOne(
       { _id: to_objid(id) }
     );
 
-    return
+    return Boolean(res.deletedCount)
   }
 }
 

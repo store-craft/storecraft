@@ -37,6 +37,6 @@ export declare interface storage_driver {
   getStream: (key: string) => Promise<Get<ReadableStream>>;
   getSigned?: (key: string) => Promise<StorageSignedOperation>;
 
-  remove: (key: string) => Promise<void>;
+  remove: (key: string) => Promise<boolean>;
   list?: () => Promise<any>;
 }

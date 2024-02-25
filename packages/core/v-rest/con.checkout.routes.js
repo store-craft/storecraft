@@ -1,7 +1,8 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { parse_auth_user, is_admin } from './con.auth.middle.js'
-import { complete_checkout, create_checkout, eval_pricing } from '../v-api/con.checkout.logic.js'
+import { complete_checkout, create_checkout, 
+  eval_pricing } from '../v-api/con.checkout.logic.js'
 
 /**
  * 

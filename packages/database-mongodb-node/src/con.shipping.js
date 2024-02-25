@@ -52,6 +52,7 @@ const upsert = (driver) => {
         }
       );
     } catch(e) {
+      console.log(e);
       return false;
     } finally {
       await session.endSession();
@@ -100,11 +101,14 @@ const remove = (driver) => {
           );
         }
       );
+    } catch(e) {
+      console.log(e);
+      return false;
     } finally {
       await session.endSession();
     }
 
-    return
+    return true;
   }
 
 }

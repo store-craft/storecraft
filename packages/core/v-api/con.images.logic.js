@@ -62,7 +62,7 @@ export const remove = async (app, id) => {
     await app.storage.remove(img.url.substring('storage://'.length));
 
   // db remove image side-effect
-  await app.db.images.remove(img.id);
+  return app.db.images.remove(img.id);
 }
 
 /**

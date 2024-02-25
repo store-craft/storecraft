@@ -55,7 +55,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const removed = handle_or_id && await remove(app, handle_or_id);
-      res.setStatus(removed ? 200 : 400).end();
+      res.setStatus(removed ? 200 : 404).end();
     }
   );
 

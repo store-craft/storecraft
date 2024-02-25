@@ -43,7 +43,8 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
       )
     );
 
-    await db.upsert(final);
+    const success = await db.upsert(final);
+    assert(success, 'upsert-failed', 400);
     return final.id;
   }
 }

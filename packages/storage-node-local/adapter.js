@@ -61,7 +61,6 @@ export class NodeLocalStorage {
   /**
    * 
    * @param {App<any, any>} app 
-   * @returns {Promise<this>}
    */
   async init(app) {
     await mkdir(this.#path, { recursive: true });
@@ -241,8 +240,13 @@ export class NodeLocalStorage {
    * @param {string} key 
    */
   async remove(key) {
-    await unlink(this.to_file_path(key));
-    return;
+    try {
+      await unlink(this.to_file_path(key));
+    } catch(e) {
+      console.log(e);
+      return false;
+    }
+    return true;
   }
 }
 

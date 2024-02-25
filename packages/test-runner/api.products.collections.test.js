@@ -1,10 +1,14 @@
 import 'dotenv/config';
 import { products, collections } from '@storecraft/core/v-api';
-import { test } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';
+import { file_name } from './api.utils.crud.js';
 
 const app = await create_app();
+const s = suite(
+  file_name(import.meta.url), 
+);
 
 /** @type {import('@storecraft/core').CollectionTypeUpsert[]} */
 const col_upsert = [
@@ -40,15 +44,25 @@ const pr_upsert = [
   },
 ]
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
+s.before(
+  async () => { 
+    assert.ok(app.ready);
 
-test('create', async () => {
+    for(const p of pr_upsert)
+      await products.remove(app, p.handle);
+    for(const p of col_upsert)
+      await collections.remove(app, p.handle);
+  }
+);
+
+s.after(async () => { await app.db.disconnect() });
+
+s('test products->collections', async () => {
   // upsert collections
   const cols = await Promise.all(
     col_upsert.map(
       async c => {
-        try { await collections.upsert(app, c); } catch (e) {};
+        await collections.upsert(app, c);
         return collections.get(app, c.handle);
       }
     )
@@ -58,7 +72,7 @@ test('create', async () => {
   const prs = await Promise.all(
     pr_upsert.map(
       async c => {
-        try { await products.upsert(app, c); } catch (e) {};
+        await products.upsert(app, c);
         return products.get(app, c.handle);
       }
     )
@@ -96,4 +110,4 @@ test('create', async () => {
 
 });
 
-test.run();
+s.run();

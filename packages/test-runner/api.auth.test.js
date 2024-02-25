@@ -1,16 +1,20 @@
 import 'dotenv/config';
 import { auth } from '@storecraft/core/v-api';
-import { test } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { admin_email, admin_password, create_app } from './utils.js';
+import { file_name } from './api.utils.crud.js';
 
 
 const app = await create_app();
+const s = suite(
+  file_name(import.meta.url), 
+);
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
+s.before(async () => { assert.ok(app.ready) });
+s.after(async () => { await app.db.disconnect() });
 
-test('remove and signup admin', async () => {
+s('remove and signup admin', async () => {
   await auth.removeByEmail(app, admin_email);
   const r = await auth.signup(app, {
     email: admin_email,
@@ -23,7 +27,7 @@ test('remove and signup admin', async () => {
 });
 
 
-test('signin admin', async () => {
+s('signin admin', async () => {
   const r = await auth.signin(app, {
     email: admin_email,
     password: admin_password
@@ -34,7 +38,7 @@ test('signin admin', async () => {
   assert.ok(ok, 'nope');
 });
 
-test('refresh admin', async () => {
+s('refresh admin', async () => {
 
   const u = await auth.signin(app, {
     email: admin_email,
@@ -50,4 +54,4 @@ test('refresh admin', async () => {
 });
 
 
-test.run();
+s.run();

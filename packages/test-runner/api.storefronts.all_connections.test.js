@@ -1,13 +1,17 @@
 import 'dotenv/config';
 import { storefronts, products, collections, 
   discounts, posts, shipping } from '@storecraft/core/v-api';
-import { test } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';
 import { DiscountApplicationEnum, DiscountMetaEnum, 
   FilterMetaEnum } from '@storecraft/core';
+import { file_name } from './api.utils.crud.js';
 
 const app = await create_app();
+const s = suite(
+  file_name(import.meta.url)
+);
 
 /**
  * @typedef {import('@storecraft/core').StorefrontTypeUpsert} StorefrontTypeUpsert
@@ -109,15 +113,32 @@ const posts_upsert = [
   { handle: 'post-2', title: 'post 2', text: 'blah blah 2' },
 ]
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
+s.before(
+  async () => { 
+    assert.ok(app.ready) ;
 
-test('create', async () => {
+    for(const p of posts_upsert)
+      await posts.remove(app, p.handle);
+    for(const p of discounts_upsert)
+      await discounts.remove(app, p.handle);
+    for(const p of shipping_upsert)
+      await shipping.remove(app, p.handle);
+    for(const p of collections_upsert)
+      await collections.remove(app, p.handle);
+    for(const p of products_upsert)
+      await products.remove(app, p.handle);
+    await storefronts.remove(app, storefront_upsert.handle);
+  }
+);
+
+s.after(async () => { await app.db.disconnect() });
+
+s('create', async () => {
   // upsert products
   const collections_get = await Promise.all(
     collections_upsert.map(
       async c => {
-        try { await collections.upsert(app, c); } catch (e) {};
+        await collections.upsert(app, c);
         return collections.get(app, c.handle);
       }
     )
@@ -126,7 +147,7 @@ test('create', async () => {
   const products_get = await Promise.all(
     products_upsert.map(
       async c => {
-        try { await products.upsert(app, c); } catch (e) {};
+        await products.upsert(app, c);
         return products.get(app, c.handle);
       }
     )
@@ -135,7 +156,7 @@ test('create', async () => {
   const shipping_get = await Promise.all(
     shipping_upsert.map(
       async c => {
-        try { await shipping.upsert(app, c); } catch (e) {};
+        await shipping.upsert(app, c);
         return shipping.get(app, c.handle);
       }
     )
@@ -144,7 +165,7 @@ test('create', async () => {
   const posts_get = await Promise.all(
     posts_upsert.map(
       async c => {
-        try { await posts.upsert(app, c); } catch (e) {};
+        await posts.upsert(app, c);
         return posts.get(app, c.handle);
       }
     )
@@ -153,7 +174,7 @@ test('create', async () => {
   const discounts_get = await Promise.all(
     discounts_upsert.map(
       async c => {
-        try { await discounts.upsert(app, c); } catch (e) {};
+        await discounts.upsert(app, c);
         return discounts.get(app, c.handle);
       }
     )
@@ -162,7 +183,7 @@ test('create', async () => {
 
   // now connect them to storefront
   // upsert products with collections relation
-  try { await storefronts.upsert(app, storefront_upsert); } catch (e) {};
+  await storefronts.upsert(app, storefront_upsert);
   const storefront_get = await storefronts.get(app, storefront_upsert.handle);
   // now, connect
   await storefronts.upsert(
@@ -251,45 +272,55 @@ test('create', async () => {
     await shipping.remove(app, shipping_id_to_remove);
     await posts.remove(app, post_id_to_remove);
 
-    let queried = await storefronts.list_storefront_collections(
-      app, storefront_upsert.handle
-    );
-    assert.not(
-      queried.find(q => q.id===collection_id_to_remove), 
-      'list collections does not include original collections !'
-    );
+    {
+      let queried = await storefronts.list_storefront_collections(
+        app, storefront_upsert.handle
+      );
+      assert.not(
+        queried.find(q => q.id===collection_id_to_remove), 
+        'list collections does not include original collections !'
+      );
+    }
     //
-    queried = await storefronts.list_storefront_discounts(
-      app, storefront_upsert.handle
-    );
-    assert.not(
-      queried.find(q => q.id===discount_id_to_remove), 
-      'list discounts does not include original collections !'
-    );
+    {
+      let queried = await storefronts.list_storefront_discounts(
+        app, storefront_upsert.handle
+      );
+      assert.not(
+        queried.find(q => q.id===discount_id_to_remove), 
+        'list discounts does not include original collections !'
+      );
+    }
     //
-    queried = await storefronts.list_storefront_posts(
-      app, storefront_upsert.handle
-    );
-    assert.not(
-      queried.find(q => q.id===post_id_to_remove), 
-      'list posts does not include original collections !'
-    );
+    {
+      let queried = await storefronts.list_storefront_posts(
+        app, storefront_upsert.handle
+      );
+      assert.not(
+        queried.find(q => q.id===post_id_to_remove), 
+        'list posts does not include original collections !'
+      );
+    }
     //
-    queried = await storefronts.list_storefront_products(
-      app, storefront_upsert.handle
-    );
-    assert.not(
-      queried.find(q => q.id===product_id_to_remove), 
-      'list products does not include original collections !'
-    );
+    {
+      let queried = await storefronts.list_storefront_products(
+        app, storefront_upsert.handle
+      );
+      assert.not(
+        queried.find(q => q.id===product_id_to_remove), 
+        'list products does not include original collections !'
+      );
+    }
     //
-    queried = await storefronts.list_storefront_shipping_methods(
-      app, storefront_upsert.handle
-    );
-    assert.not(
-      queried.find(q => q.id===shipping_id_to_remove), 
-      'list shipping does not include original collections !'
-    );
+    {
+      let queried = await storefronts.list_storefront_shipping_methods(
+        app, storefront_upsert.handle
+      );
+      assert.not(
+        queried.find(q => q.id===shipping_id_to_remove), 
+        'list shipping does not include original collections !'
+      );
+    }
 
   }
 
@@ -297,4 +328,4 @@ test('create', async () => {
 });
 
 
-test.run();
+s.run();

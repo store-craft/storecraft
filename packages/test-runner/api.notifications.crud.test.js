@@ -1,10 +1,14 @@
 import { notifications } from '@storecraft/core/v-api';
 import 'dotenv/config';
-import { test } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';
+import { file_name } from './api.utils.crud.js';
 
 const app = await create_app();
+const s = suite(
+  file_name(import.meta.url), 
+);
 
 /** @type {import('@storecraft/core').NotificationTypeUpsert[]} */
 const items_upsert = [
@@ -23,11 +27,11 @@ const items_upsert = [
   },
 ]
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
+s.before(async () => { assert.ok(app.ready) });
+s.after(async () => { await app.db.disconnect() });
 const ops = notifications;
 
-test('add', async () => {
+s('add', async () => {
   const one = items_upsert[0];
   const ids = await ops.addBulk(
     app, Array.from({ length: 10 }).map((_, ix) => ({...one, message: `message ${ix}`}))
@@ -37,4 +41,4 @@ test('add', async () => {
 });
 
 
-test.run();
+s.run();

@@ -1,11 +1,15 @@
-import { discounts, products } from '@storecraft/core/v-api';
 import 'dotenv/config';
-import { test } from 'uvu';
+import { discounts, products } from '@storecraft/core/v-api';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';
 import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
+import { file_name } from './api.utils.crud.js';
 
 const app = await create_app();
+const s = suite(
+  file_name(import.meta.url), 
+);
 
 /**
  * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
@@ -48,15 +52,24 @@ const discounts_upsert = [
   },
 ]
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
+s.before(
+  async () => { 
+    assert.ok(app.ready);
 
-test('create', async () => {
+    for(const p of pr_upsert)
+      await products.remove(app, p.handle);
+    for(const p of discounts_upsert)
+      await discounts.remove(app, p.handle);
+  }
+);
+s.after(async () => { await app.db.disconnect() });
+
+s('test discounts->products', async () => {
   // upsert product
   const prs = await Promise.all(
     pr_upsert.map(
       async c => {
-        try { await products.upsert(app, c); } catch (e) {};
+        await products.upsert(app, c);
         return products.get(app, c.handle);
       }
     )
@@ -66,7 +79,7 @@ test('create', async () => {
   const dis = await Promise.all(
     discounts_upsert.map(
       async c => {
-        try { await discounts.upsert(app, c); } catch (e) { console.log(e)};
+        await discounts.upsert(app, c);
         return discounts.get(app, c.handle);
       }
     )
@@ -90,4 +103,4 @@ test('create', async () => {
 
 });
 
-test.run();
+s.run();

@@ -1,12 +1,16 @@
 import 'dotenv/config';
 import { discounts, products } from '@storecraft/core/v-api';
-import { test } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_app } from './utils.js';
 import { DiscountApplicationEnum, 
   DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
+import { file_name } from './api.utils.crud.js';
 
 const app = await create_app();
+const s = suite(
+  file_name(import.meta.url), 
+);
 
 /**
  * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
@@ -56,7 +60,7 @@ const discounts_upsert = [
   },
 ]
 
-test.before(
+s.before(
   async () => { 
     assert.ok(app.ready);
     try {
@@ -74,9 +78,9 @@ test.before(
   }
 );
 
-test.after(async () => { await app.db.disconnect(); });
+s.after(async () => { await app.db.disconnect(); });
 
-test('upsert 1st product -> upsert Discount -> test discount was applied', async () => {
+s('upsert 1st product -> upsert Discount -> test discount was applied', async () => {
   // upsert 1st product
   await products.upsert(app, pr_upsert[0]);
 
@@ -95,7 +99,7 @@ test('upsert 1st product -> upsert Discount -> test discount was applied', async
   assert.ok(find_discount, 'discount was not applied')
 });
 
-test('upsert 2nd product -> test discount was applied too', async () => {
+s('upsert 2nd product -> test discount was applied too', async () => {
 
   // now test upsert 2nd product AFTER discount was created, to test
   // the side-effect, the product should be linked to the discount
@@ -117,7 +121,7 @@ test('upsert 2nd product -> test discount was applied too', async () => {
   
 });
 
-test('remove Discount -> test discount was removed from products too', async () => {
+s('remove Discount -> test discount was removed from products too', async () => {
   const discount = discounts_upsert[0];
   // remove the discount and then test it does not show in product's discounts
   await discounts.remove(app, discount.handle); 
@@ -134,4 +138,4 @@ test('remove Discount -> test discount was removed from products too', async () 
   
 });
 
-test.run();
+s.run();

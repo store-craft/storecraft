@@ -1,5 +1,4 @@
 import { Polka } from '../v-polka/index.js'
-import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { does_prefer_signed } from '../v-api/con.storage.logic.js';
 
@@ -20,7 +19,7 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
 
-  // upload file, todo
+  // upload file
   polka.put(
     '/*',
     // middle_authorize_admin,
@@ -61,14 +60,15 @@ export const create_routes = (app) => {
         const s = await app.storage.getStream(file_key);
         if(s) {
           res.sendReadableStream(s.value);
-          s?.metadata?.contentType && res.headers.set('Content-Type', s?.metadata?.contentType);
+          s?.metadata?.contentType && res.headers.set(
+            'Content-Type', s?.metadata?.contentType
+          );
         } else {
           res.end(); 
         }
       }
     }
   );
-
 
   // delete file
   polka.delete(

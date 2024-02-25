@@ -2,7 +2,7 @@ import { discounts, products } from '@storecraft/core/v-api';
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { assert_async_throws, assert_partial, create_app } from './utils.js';
+import { create_app } from './utils.js';
 import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
 
 const app = await create_app();
@@ -78,7 +78,9 @@ test('create', async () => {
   const products_queried = await discounts.list_discounts_products(
     app, discounts_upsert[0].handle,
     {
-      startAt: [['id', prs[0].id]]
+      startAt: [['id', prs[0].id]],
+      sortBy: ['id'],
+      limit: 1
     }
   );
 

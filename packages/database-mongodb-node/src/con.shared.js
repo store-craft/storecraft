@@ -21,7 +21,7 @@ export const upsert_regular = (driver, col) => {
         async () => {
           const res = await col.replaceOne(
             { _id: to_objid(data.id) }, 
-            replacement,
+            data,
             { session, upsert: true }
           );
       
@@ -32,6 +32,7 @@ export const upsert_regular = (driver, col) => {
         }
       );
     } catch(e) {
+      // console.log(e);
       return false;
     } finally {
       await session.endSession();

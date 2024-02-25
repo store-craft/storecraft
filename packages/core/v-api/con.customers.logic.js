@@ -45,7 +45,8 @@ export const upsert = async (app, item) => {
     }
   );
 
-  await db(app).upsert(final);
+  const succeed = await db(app).upsert(final);
+  assert(succeed, 'failed', 401);
   return id;
 }
 

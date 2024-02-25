@@ -69,7 +69,7 @@ export declare interface db_crud<U extends idable, G=U> {
    * Delete an item
    * @param id_or_handle 
    */
-  remove: (id_or_handle: HandleOrId) => Promise<void>
+  remove: (id_or_handle: HandleOrId) => Promise<boolean>
 
   /**
    * TBD

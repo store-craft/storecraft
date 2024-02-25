@@ -61,11 +61,13 @@ const remove = (driver) => {
           }
         }
       );
+    } catch(e) {
+      return false;
     } finally {
       await session.endSession();
     }
 
-    return
+    return true;
   }
 }
 /**

@@ -1,9 +1,10 @@
-import { discounts } from '@storecraft/core/v-api';
 import 'dotenv/config';
-import { test } from 'uvu';
+import { discounts } from '@storecraft/core/v-api';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { assert_async_throws, assert_partial, create_app } from './utils.js';
+import { create_app } from './utils.js';
 import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
+import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 
 const app = await create_app();
 
@@ -26,68 +27,47 @@ const items_upsert = [
       ]
     }
   },
+  {
+    active: false, application: DiscountApplicationEnum.Auto, 
+    handle: '2-for-60', priority: 0, title: 'Buy 2 for 60',
+    info: {
+      details: {
+        meta: DiscountMetaEnum.bulk,
+        extra: {
+          qty: 3, fixed: 100, percent: 100
+        }
+      },
+      filters: [
+        {
+          meta: FilterMetaEnum.p_all,
+        }
+      ]
+    }
+  },  
 ]
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
-const ops = discounts;
+const s = suite(
+  file_name(import.meta.url), 
+  { items: items_upsert, app, ops: discounts }
+);
 
-test('create', async () => {
-  const one = items_upsert[0];
-  const item = await ops.get(app, one.handle);
+s.before(
+  async () => { 
+    assert.ok(app.ready) 
+    try {
+      for(const p of items_upsert) {
+        const get = await discounts.remove(app, p.handle);
+      }
+    } catch(e) {
+      console.log(e)
+      throw e;
+    }
 
-  if(item) {
-    // console.log(tag)
-    await ops.remove(app, item.id);
-    const should_be_undefined = await ops.get(app, item.handle);
-    assert.not(should_be_undefined, 'should be undefined')
+    console.log('before DONE')
   }
+);
+s.after(async () => { await app.db.disconnect() });
 
-  const id = await ops.upsert(app, one);
-  const item_get = await ops.get(app, id);
+add_sanity_crud_to_test_suite(s);
 
-  assert_partial(item_get, {...one, id});
-});
-
-test('update', async () => {
-  const one = items_upsert[0]
-  let item = await ops.get(app, one.handle);
-  if(!item) {
-    await ops.upsert(app, one);
-  }
-  item = await ops.get(app, one.handle);
-
-  // now, le's update
-  const id = await ops.upsert(app, item);
-  const item_get = await ops.get(app, id);
-
-  assert_partial(item_get, {...one, id});
-});
-
-test('missing fields should throw', async () => {
-  await assert_async_throws(
-    async () => await ops.upsert(app, {})
-  );
-})
-
-test('insert new with existing handle should throw', async () => {
-  const one = items_upsert[0];
-  let item = await ops.get(app, one.handle);
-  if(!item) {
-    await ops.upsert(app, one);
-  }
-  // without id and same handle should throw
-  await assert_async_throws(
-    async () => await ops.upsert(app, one)
-  );
-
-})
-
-test('update with non existing id should throw', async () => {
-  const one = { ...items_upsert[0], id: 'lihcwihiwe9ewh' };
-  await assert_async_throws(
-    async () => await ops.upsert(app, one)
-  );
-})
-
-test.run();
+s.run();

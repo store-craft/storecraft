@@ -58,7 +58,7 @@ export const remove = async (app, id) => {
   if(!img) return;
 
   // remove from storage if it belongs
-  if(img.url.startsWith('storage://'))
+  if(app.storage && img.url.startsWith('storage://'))
     await app.storage.remove(img.url.substring('storage://'.length));
 
   // db remove image side-effect

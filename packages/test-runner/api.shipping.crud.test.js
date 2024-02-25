@@ -1,8 +1,9 @@
-import { shipping } from '@storecraft/core/v-api';
 import 'dotenv/config';
-import { test } from 'uvu';
+import { shipping } from '@storecraft/core/v-api';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { assert_async_throws, assert_partial, create_app } from './utils.js';
+import { create_app } from './utils.js';
+import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 
 const app = await create_app();
 
@@ -19,66 +20,25 @@ const items_upsert = [
   },
 ]
 
-test.before(async () => { assert.ok(app.ready) });
-test.after(async () => { await app.db.disconnect() });
-const ops = shipping;
+const s = suite(
+  file_name(import.meta.url), 
+  { items: items_upsert, app, ops: shipping }
+);
 
-test('create', async () => {
-  const one = items_upsert[0];
-  const item = await ops.get(app, one.handle);
+s.before(
+  async () => { 
+    assert.ok(app.ready) 
+    try {
+      for(const p of items_upsert)
+        await shipping.remove(app, p.handle);
+    } catch(e) {
+      console.log(e)
+      throw e;
+    }
 
-  if(item) {
-    // console.log(tag)
-    await ops.remove(app, item.id);
-    const should_be_undefined = await ops.get(app, item.handle);
-    assert.not(should_be_undefined, 'should be undefined')
+    console.log('before DONE')
   }
+);
 
-  const id = await ops.upsert(app, one);
-  const item_get = await ops.get(app, id);
-
-  assert_partial(item_get, {...one, id});
-});
-
-test('update', async () => {
-  const one = items_upsert[1];
-  let item = await ops.get(app, one.handle);
-  if(!item) {
-    await ops.upsert(app, one);
-  }
-  item = await ops.get(app, one.handle);
-
-  // now, le's update
-  const id = await ops.upsert(app, item);
-  const item_get = await ops.get(app, id);
-
-  assert_partial(item_get, {...one, id});
-});
-
-test('missing fields should throw', async () => {
-  await assert_async_throws(
-    async () => await ops.upsert(app, {})
-  );
-})
-
-test('insert new with existing email should throw', async () => {
-  const one = items_upsert[2];
-  let item = await ops.get(app, one.handle);
-  if(!item) {
-    await ops.upsert(app, one);
-  }
-  // without id and same handle should throw
-  await assert_async_throws(
-    async () => await ops.upsert(app, one)
-  );
-
-})
-
-test('update with non existing id should throw', async () => {
-  const one = { ...items_upsert[2], id: 'lihcwihiwe9ewh' };
-  await assert_async_throws(
-    async () => await ops.upsert(app, one)
-  );
-})
-
-test.run();
+s.after(async () => { await app.db.disconnect() });
+add_sanity_crud_to_test_suite(s).run();

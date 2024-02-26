@@ -1,11 +1,9 @@
 import { 
-  AuthUserType, BaseType, CollectionType, CollectionTypeUpsert, CustomerType, 
-  CustomerTypeUpsert, DiscountType, DiscountTypeUpsert, ImageType, 
-  ImageTypeUpsert, NotificationType, NotificationTypeUpsert, OrderData, 
-  OrderDataUpsert, PostType, PostTypeUpsert, ProductType, ProductTypeUpsert, 
-  ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
-  StorefrontTypeUpsert, TagType, TagTypeUpsert, idable, 
-  searchable} from "./v-api/types.api.js";
+  AuthUserType, BaseType, CollectionType, 
+  CustomerType, DiscountType, ImageType, 
+  NotificationType, OrderData, PostType, 
+  ProductType, ShippingMethodType, StorefrontType, 
+  TagType, searchable} from "./v-api/types.api.js";
 import { App, ExpandQuery, ApiQuery } from "./types.public.js";
 
 export type ID = string;
@@ -34,7 +32,7 @@ export type Aug = {
 /**
  * Basic collection or table
  */
-export declare interface db_crud<U extends idable, G=U> {
+export declare interface db_crud<U extends idable_concrete, G=U> {
   /** upsert type */
   $type_upsert?: U;
   /** get type */
@@ -83,7 +81,7 @@ export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
 /**
  * auth users crud
  */
-export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
+export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & idable_concrete>> {
   /**
    * get by email
    * @param email 
@@ -100,13 +98,13 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
 /**
  * tags crud
  */
-export interface db_tags extends db_crud<TagTypeUpsert, TagType> {
+export interface db_tags extends db_crud<TagType & idable_concrete, TagType> {
 }
 
 /**
  * collections crud
  */
-export interface db_collections extends db_crud<CollectionTypeUpsert, CollectionType> {
+export interface db_collections extends db_crud<CollectionType & idable_concrete, CollectionType> {
 
   /**
    * List and query the product in a collection
@@ -118,7 +116,7 @@ export interface db_collections extends db_crud<CollectionTypeUpsert, Collection
 }
 
 /** products crud */
-export interface db_products extends db_crud<ProductTypeUpsert, ProductType> {
+export interface db_products extends db_crud<ProductType & idable_concrete, ProductType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -162,12 +160,12 @@ export interface db_products extends db_crud<ProductTypeUpsert, ProductType> {
 /**
  * customers crud
  */
-export interface db_customers extends OmitGetByHandle<db_crud<CustomerTypeUpsert, CustomerType>> {
+export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & idable_concrete, CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
 }
 
 /** StorefrontData crud */
-export interface db_storefronts extends db_crud<StorefrontTypeUpsert, StorefrontType> {
+export interface db_storefronts extends db_crud<StorefrontType & idable_concrete, StorefrontType> {
   /**
    * list all of the product related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
@@ -207,7 +205,7 @@ export interface db_storefronts extends db_crud<StorefrontTypeUpsert, Storefront
 }
 
 /** ImageType crud */
-export interface db_images extends db_crud<ImageTypeUpsert, ImageType> {
+export interface db_images extends db_crud<ImageType & idable_concrete, ImageType> {
   /**
    * report the media images
    * @param data a document that has `media`
@@ -216,19 +214,19 @@ export interface db_images extends db_crud<ImageTypeUpsert, ImageType> {
 }
 
 /** PostType crud */
-export interface db_posts extends db_crud<PostTypeUpsert, PostType> {
+export interface db_posts extends db_crud<PostType & idable_concrete, PostType> {
 }
 
 /** ShippingMethodType crud */
-export interface db_shipping extends db_crud<ShippingMethodTypeUpsert, ShippingMethodType> {
+export interface db_shipping extends db_crud<ShippingMethodType & idable_concrete, ShippingMethodType> {
 }
 
 /** NotificationType crud */
-export interface db_notifications extends OmitGetByHandle<db_crud<NotificationTypeUpsert, NotificationType>> {
+export interface db_notifications extends OmitGetByHandle<db_crud<NotificationType & idable_concrete, NotificationType>> {
 }
 
 /** DiscountType crud */
-export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> {
+export interface db_discounts extends db_crud<DiscountType & idable_concrete, DiscountType> {
 
   /**
    * List and query the products in a discount
@@ -239,7 +237,7 @@ export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> 
 }
 
 /** OrderData crud */
-export interface db_orders extends OmitGetByHandle<db_crud<OrderDataUpsert, OrderData>> {
+export interface db_orders extends OmitGetByHandle<db_crud<OrderData & idable_concrete, OrderData>> {
 
   /**
    * 

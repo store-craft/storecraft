@@ -147,10 +147,10 @@ export const list_regular = (driver, col) => {
 
     const { filter, sort } = query_to_mongo(query);
 
-    console.log('query', query)
-    console.log('filter', JSON.stringify(filter, null, 2))
-    console.log('sort', sort)
-    console.log('expand', query?.expand)
+    // console.log('query', query)
+    // console.log('filter', JSON.stringify(filter, null, 2))
+    // console.log('sort', sort)
+    // console.log('expand', query?.expand)
 
     /** @type {import('mongodb').WithId<G>[]} */
     const items = await col.find(

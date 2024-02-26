@@ -5,6 +5,10 @@ import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
 
+export const iso = number => {
+  return new Date(number).toISOString();
+}
+
 export const file_name = (meta_url) => {
   return basename(fileURLToPath(meta_url));
 }

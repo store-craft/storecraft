@@ -74,7 +74,7 @@ export interface TagType extends idable, timestamps {
 }
 
 export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
-
+  
 // collections
 
 export interface CollectionType extends BaseType, timestamps {

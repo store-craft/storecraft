@@ -17,12 +17,7 @@ Currently, I accomplished:
 Todo:
 - list and query tests for controllers
 - test relations:
-  - DONE: product -> collections
-  - DONE: product -> discounts
   - product -> products variants
-  - DONE: collection -> products
-  - DONE: discounts -> products
-  - DONE: storefronts -> shippping/posts/products/collections/discounts
 - test side effects:
   - image usage reporting
 

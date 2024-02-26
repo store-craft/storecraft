@@ -2,12 +2,12 @@ import 'dotenv/config';
 import { orders } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { create_app } from './utils.js';
-import { CheckoutStatusEnum, FulfillOptionsEnum, 
+import { App, CheckoutStatusEnum, FulfillOptionsEnum, 
   PaymentOptionsEnum } from '@storecraft/core';
 import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import esMain from './utils.esmain.js';
 
-const app = await create_app();
+// const app = await create_app();
 
 /** @type {import('@storecraft/core').OrderDataUpsert[]} */
 const items_upsert = [
@@ -51,19 +51,38 @@ const items_upsert = [
   },  
 ]
 
+/**
+ * 
+ * @param {App} app 
+ */
+export const create = app => {
 
-const s = suite(
-  file_name(import.meta.url), 
-  { items: items_upsert, app, ops: orders }
-);
+  const s = suite(
+    file_name(import.meta.url), 
+    { items: items_upsert, app, ops: orders }
+  );
 
-s.before(
-  async () => { 
-    assert.ok(app.ready) 
-    console.log('before DONE')
+  s.before(
+    async () => { 
+      assert.ok(app.ready) 
+      console.log('before DONE')
+    }
+  );
+
+  s.after(async () => { await app.db.disconnect() });
+
+  add_sanity_crud_to_test_suite(s);
+  return s;
+}
+
+
+(async function inner_test() {
+  // helpful for direct inner tests
+  if(!esMain(import.meta)) return;
+  try {
+    const { create_app } = await import('./play.js');
+    const app = await create_app();
+    create(app).run();
+  } catch (e) {
   }
-);
-
-s.after(async () => { await app.db.disconnect() });
-
-add_sanity_crud_to_test_suite(s).run();
+})();

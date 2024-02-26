@@ -1,21 +1,11 @@
 {
   "name": "@storecraft/test-runner",
   "version": "1.0.0",
-  "description": "Official test runner for storecraft api",
+  "description": "Official integration test runner for storecraft api",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "start" : "node --watch index.js",
-    "server" : "node --watch index.js",
-    "test": "uvu -c"
-  },
-  "dependencies": {
+  "devdependencies": {
     "@storecraft/core": "^1.0.0",
-    "@storecraft/platform-node": "^1.0.0",
-    "@storecraft/database-mongodb-node": "^1.0.0",
-    "@storecraft/storage-node-local": "^1.0.0",
-    "@storecraft/storage-s3-compatible": "^1.0.0",
-    "@storecraft/storage-google": "^1.0.0",
     "@types/node": "^20.11.0",
     "uvu": "^0.5.6",
     "dotenv": "^16.3.1"

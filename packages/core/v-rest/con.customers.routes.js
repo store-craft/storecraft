@@ -6,7 +6,7 @@ import { get, list, remove, upsert } from '../v-api/con.customers.logic.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').TagType} ItemType
  */
 
 /**

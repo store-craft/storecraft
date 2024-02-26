@@ -5,8 +5,8 @@ import {
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('../types.api.js').ShippingMethodType} ItemType
- * @typedef {import('../types.api.js').ShippingMethodTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.js').ShippingMethodType} ItemType
+ * @typedef {import('./types.api.js').ShippingMethodTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -46,6 +46,6 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);

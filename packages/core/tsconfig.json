@@ -10,5 +10,6 @@
         "moduleResolution": "NodeNext",
         "esModuleInterop": true
     },
-    "include": ["*", "**/*"]
+    "include": ["*", "**/*"],
+    "exclude": ["*.json"]
 }

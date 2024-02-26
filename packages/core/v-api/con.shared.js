@@ -4,8 +4,8 @@ import { create_search_index } from './utils.index.js'
 import { ZodSchema } from 'zod'
 
 /**
- * @typedef {import('../types.api.js').searchable} searchable
- * @typedef {import('../types.api.js').BaseType} ItemType
+ * @typedef {import('./types.api.js').searchable} searchable
+ * @typedef {import('./types.api.js').BaseType} ItemType
  * @typedef {import('../types.database.js').RegularGetOptions} RegularGetOptions
  */
 
@@ -13,8 +13,8 @@ import { ZodSchema } from 'zod'
  * This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {import('../types.api.js').idable} T
- * @template {import('../types.api.js').idable} G
+ * @template {import('./types.api.js').idable} T
+ * @template {import('./types.api.js').idable} G
  * @param {import("../types.public.js").App} app app instance
  * @param {import("../types.database.js").db_crud<T, G>} db db instance
  * @param {string} id_prefix
@@ -65,7 +65,7 @@ export const regular_get = (app, db) => /**
   };
 
 /**
- * @template {import('../types.api.js').BaseType} T, G
+ * @template {import('./types.api.js').BaseType} T, G
  * @param {import("../types.public.js").App} app
  * @param {import("../types.database.js").db_crud<T, G>} db
  */
@@ -79,22 +79,22 @@ export const regular_remove = (app, db) =>
   }
 
 /**
- * @template {import('../types.api.js').BaseType} T, G
+ * @template {import('./types.api.js').BaseType} T, G
  * @param {import("../types.public.js").App} app
  * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_list = (app, db) => 
   /**
-   * @param {import('../types.api.query.js').ParsedApiQuery} q 
+   * @param {import('./types.api.query.js').ApiQuery} q 
    */
   async (q) => {
     return db.list(q);
   }
 
 /**
- * @template {import("../types.api.js").BaseType} T
- * @template {import("../types.api.js").BaseType} G
- * @param {import("../types.api.js").BaseType} item 
+ * @template {import("./types.api.js").BaseType} T
+ * @template {import("./types.api.js").BaseType} G
+ * @param {import("./types.api.js").BaseType} item 
  * @param {import("../types.database.js").db_crud<T, G>} db 
  */
 export const assert_save_create_mode = async (item, db) => {

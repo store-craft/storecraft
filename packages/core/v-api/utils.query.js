@@ -2,9 +2,9 @@ import { parse } from "../v-ql/index.js";
 import { assert } from "./utils.func.js";
 
 /**
- * @typedef {import("../types.api.query.js").ParsedApiQuery} ParsedApiQuery
- * @typedef {import("../types.api.query.js").Cursor} Cursor
- * @typedef {import("../types.api.query.js").SortCursor} SortCursor
+ * @typedef {import("./types.api.query.js").ApiQuery} ParsedApiQuery
+ * @typedef {import("./types.api.query.js").Cursor} Cursor
+ * @typedef {import("./types.api.query.js").SortCursor} SortCursor
  */
 
 
@@ -22,7 +22,7 @@ const EXPAND = 'expand';
  * parswe string tuples of the form (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
  * @template {string} T
  * @param {string} str 
- * @returns {import("../types.api.query.js").Tuple<T>[] | undefined}
+ * @returns {import("./types.api.query.js").Tuple<T>[] | undefined}
  */
 export const parse_tuples = (str="") => {
   if(!str) return undefined;
@@ -53,7 +53,7 @@ export const parse_tuples = (str="") => {
 /**
  * 
  * @param {URLSearchParams} s 
- * @return {import("../types.api.query.js").ExpandQuery | undefined}
+ * @return {import("./types.api.query.js").ExpandQuery | undefined}
  */
 export const parse_expand = s => {
   return s.get(EXPAND)?.split(',')?.map(s => s.trim()).filter(Boolean);
@@ -62,7 +62,7 @@ export const parse_expand = s => {
 /**
  * 
  * @param {string} s 
- * @returns {import("../types.api.query.js").SortCursor}
+ * @returns {import("./types.api.query.js").SortCursor}
  */
 export const parse_sortby = (s) => {
   return (s ?? '(updated_at, id)').replace(/[()]/g, '').split(',').map(
@@ -72,7 +72,7 @@ export const parse_sortby = (s) => {
 /**
  * 
  * @param {string} s 
- * @returns {import("../types.api.query.js").SortOrder}
+ * @returns {import("./types.api.query.js").SortOrder}
  */
 export const parse_sort_order = (s='desc') => {
   return (s==='asc') ? 'asc' : 'desc';

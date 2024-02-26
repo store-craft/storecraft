@@ -51,6 +51,40 @@ export const discountApplicationSchema = z.object({
   name: z.union([z.literal("Automatic"), z.literal("Manual")]),
   name2: z.union([z.literal("automatic"), z.literal("manual")]),
 });
+export const filterValuePInCollectionsSchema = z.array(
+  z.object({
+    id: z.string().optional(),
+    handle: z.string().optional(),
+  }),
+);
+export const filterValuePNotInCollectionsSchema = z.array(
+  z.object({
+    id: z.string().optional(),
+    handle: z.string().optional(),
+  }),
+);
+export const filterValuePInHandlesSchema = z.array(z.string());
+export const filterValuePNotInHandlesSchema = z.array(z.string());
+export const filterValuePInTagsSchema = z.array(z.string());
+export const filterValuePNotInTagsSchema = z.array(z.string());
+export const filterValuePAllSchema = z.any();
+export const filterValuePInPriceRangeSchema = z.object({
+  from: z.number().optional(),
+  to: z.number(),
+});
+export const filterValueOSubtotalInRangeSchema = z.object({
+  from: z.number().optional(),
+  to: z.number(),
+});
+export const filterValueOItemsCountInRangeSchema = z.object({
+  from: z.number().optional(),
+  to: z.number(),
+});
+export const filterValueODateInRangeSchema = z.object({
+  from: z.number().optional(),
+  to: z.number(),
+});
+export const filterValueOHasCustomersSchema = z.array(z.string());
 export const filterMetaSchema = z.object({
   id: z.number(),
   type: z.union([z.literal("product"), z.literal("order")]),
@@ -62,7 +96,7 @@ export const filterMetaSchema = z.object({
     z.literal("p-in-tags"),
     z.literal("p-not-in-tags"),
     z.literal("p-all"),
-    z.literal("p_in_price_range"),
+    z.literal("p-in-price-range"),
     z.literal("o-subtotal-in-range"),
     z.literal("o-items-count-in-range"),
     z.literal("o-date-in-range"),
@@ -226,17 +260,18 @@ export const filterSchema = z.object({
   meta: filterMetaSchema,
   value: z
     .union([
-      z.array(z.string()),
-      z.object({
-        from: z.number().optional(),
-        to: z.number(),
-      }),
-      z.array(
-        z.object({
-          id: z.string().optional(),
-          handle: z.string().optional(),
-        }),
-      ),
+      filterValuePInCollectionsSchema,
+      filterValuePNotInCollectionsSchema,
+      filterValuePInHandlesSchema,
+      filterValuePNotInHandlesSchema,
+      filterValuePInTagsSchema,
+      filterValuePNotInTagsSchema,
+      filterValuePAllSchema,
+      filterValuePInPriceRangeSchema,
+      filterValueOSubtotalInRangeSchema,
+      filterValueOItemsCountInRangeSchema,
+      filterValueODateInRangeSchema,
+      filterValueOHasCustomersSchema,
     ])
     .optional(),
 });
@@ -366,7 +401,7 @@ export const baseProductTypeSchema = baseTypeSchema
     qty: z.number().min(0),
     compare_at_price: z.number().min(0).optional(),
     collections: z.array(collectionTypeSchema).optional(),
-    discounts: z.array(discountTypeSchema.partial()).optional(),
+    discounts: z.array(discountTypeSchema).optional(),
   });
 export const variantTypeUpsertSchema = baseProductTypeSchema
   .omit({

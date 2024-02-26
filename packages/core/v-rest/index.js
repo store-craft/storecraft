@@ -52,7 +52,7 @@ export const create_rest_api = (app) => {
       this.#factory['/api/products'] = create_products_route;
       this.#factory['/api/storage'] = create_storage_route;
       this.#factory['/api/checkout'] = create_checkout_route;
-      this.#factory['/api/gateways'] = create_payment_gateways_route;
+      this.#factory['/api/payments'] = create_payment_gateways_route;
     }
 
     /** @param {string} path */

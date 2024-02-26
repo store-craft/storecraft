@@ -28,7 +28,7 @@ export const removeByEmail = async (app, email) => {
 /**
  * 
  * @param {App} app 
- * @param {import('../types.api.js').ApiAuthSignupType} body 
+ * @param {import('./types.api.js').ApiAuthSignupType} body 
  */  
 export const signup = async (app, body) => {
 
@@ -88,7 +88,7 @@ export const signup = async (app, body) => {
 /**
  * 
  * @param {App} app 
- * @param {import('../types.api.js').ApiAuthSigninType} body 
+ * @param {import('./types.api.js').ApiAuthSigninType} body 
  */  
 export const signin = async (app, body) => {
   assert_zod(apiAuthSigninTypeSchema, body);
@@ -131,7 +131,7 @@ export const signin = async (app, body) => {
 /**
  * 
  * @param {App} app 
- * @param {import('../types.api.js').ApiAuthRefreshType} body 
+ * @param {import('./types.api.js').ApiAuthRefreshType} body 
  */  
 export const refresh = async (app, body) => {
   assert_zod(apiAuthRefreshTypeSchema, body);

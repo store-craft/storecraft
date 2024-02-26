@@ -8,9 +8,9 @@ import { parse_query } from "./utils.query.js"
 
 
 /**
- * @typedef {import("../types.api.js").OrderData} OrderData
- * @typedef {import("../types.api.js").DiscountType} DiscountType
- * @typedef {import("../types.payments.js").payment_gateway} payment_gateway
+ * @typedef {import("./types.api.js").OrderData} OrderData
+ * @typedef {import("./types.api.js").DiscountType} DiscountType
+ * @typedef {import("../v-payments/types.payments.js").payment_gateway} payment_gateway
  */
 
 /**
@@ -159,7 +159,7 @@ export const validate_checkout =
     checkout.line_items.map(li => li.id)
   );
 
-  /**@type {import("../types.api.js").ValidationEntry[]} */
+  /**@type {import("./types.api.js").ValidationEntry[]} */
   const errors = []
 
   const errorWith = (id, message) => {

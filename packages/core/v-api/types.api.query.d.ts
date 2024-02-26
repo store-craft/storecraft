@@ -1,5 +1,5 @@
 // Query types
-import type { VQL } from './v-ql/types.js';
+import type { VQL } from '../v-ql/types.js';
 export type ApiQuerySortOrder = 'asc' | 'desc';
 export type Tuple<T extends string> = [key: string, value: T];
 export type Cursor = Tuple<string>[];
@@ -12,7 +12,7 @@ export type ExpandQuery = string[];
 /**
  * Query url base type for most collections
  */
-export type ParsedApiQuery = {
+export type ApiQuery = {
   expand?: ExpandQuery;
   /**
    * boolean DSL for filtering the terms

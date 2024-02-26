@@ -1,4 +1,4 @@
-import { AuthUserType } from './types.api.js';
+import { AuthUserType } from './v-api/types.api.js';
 import { JWTClaims } from './v-crypto/jwt.ts';
 import { Polka } from './v-polka/index.js'
 import type { VPolkaRequest, VPolkaResponse } from './v-polka/public.js'
@@ -59,8 +59,9 @@ export type Config = {
 
 export { App } from './index.js'
 export type * from './types.database.d.ts'
-export type * from './types.api.d.ts'
-export type * from './types.api.query.d.ts'
-export type * from './types.storage.d.ts'
-export type * from './types.payments.d.ts'
-export * from './types.api.enums.js'
+export type * from './v-api/types.api.js'
+export type * from './v-api/types.api.query.js'
+export * from './v-api/types.api.enums.js'
+export type * from './v-storage/types.storage.js'
+export type * from './v-payments/types.payments.d.ts'
+export type * from './v-mailer/types.mailer.d.ts'

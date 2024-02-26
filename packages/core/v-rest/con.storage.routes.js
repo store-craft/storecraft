@@ -3,7 +3,7 @@ import { authorize_by_roles } from './con.auth.middle.js'
 import { does_prefer_signed } from '../v-api/con.storage.logic.js';
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').TagType} ItemType
  */
 
 /**

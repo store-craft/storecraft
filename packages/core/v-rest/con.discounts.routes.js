@@ -5,7 +5,7 @@ import { parse_query } from '../v-api/utils.query.js'
 import { get, list, list_discounts_products, remove, upsert } from '../v-api/con.discounts.logic.js'
 
 /**
- * @typedef {import('../types.api.js').DiscountType} ItemType
+ * @typedef {import('../v-api/types.api.js').DiscountType} ItemType
  */
 
 /**

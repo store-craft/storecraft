@@ -6,8 +6,8 @@ import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
 /**
- * @typedef {import('../types.api.js').ImageType} ItemType
- * @typedef {import('../types.api.js').ImageTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.js').ImageType} ItemType
+ * @typedef {import('./types.api.js').ImageTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -68,7 +68,7 @@ export const remove = async (app, id) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
 
@@ -88,7 +88,7 @@ export const image_url_to_handle = url => to_handle(image_url_to_name(url));
 /**
  * report media usages
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.js').BaseType} data data being reported
+ * @param {import('./types.api.js').BaseType} data data being reported
  */
 export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
   await db(app).report_document_media(data)

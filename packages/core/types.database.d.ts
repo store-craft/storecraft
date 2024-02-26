@@ -5,8 +5,8 @@ import {
   OrderDataUpsert, PostType, PostTypeUpsert, ProductType, ProductTypeUpsert, 
   ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
   StorefrontTypeUpsert, TagType, TagTypeUpsert, idable, 
-  searchable} from "./types.api.js";
-import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
+  searchable} from "./v-api/types.api.js";
+import { App, ExpandQuery, ApiQuery } from "./types.public.js";
 
 export type ID = string;
 export type Handle = string;
@@ -75,7 +75,7 @@ export declare interface db_crud<U extends idable, G=U> {
    * TBD
    * @returns 
    */
-  list: (query: ParsedApiQuery) => Promise<G[]>
+  list: (query: ApiQuery) => Promise<G[]>
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -113,7 +113,7 @@ export interface db_collections extends db_crud<CollectionTypeUpsert, Collection
    * @param handle_or_id collection handle or id
    * @param query query
    */
-  list_collection_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
+  list_collection_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<Partial<ProductType>[]>
 
 }
 
@@ -235,7 +235,7 @@ export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> 
    * @param handle_or_id discount handle or id
    * @param query query
    */
-  list_discount_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<ProductType[]>
+  list_discount_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<ProductType[]>
 }
 
 /** OrderData crud */
@@ -246,7 +246,7 @@ export interface db_orders extends OmitGetByHandle<db_crud<OrderDataUpsert, Orde
    * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
    * @param query query object
    */
-  list_customer_orders: (customer_id: ID, query: ParsedApiQuery) => Promise<OrderData[]>;
+  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
 export interface db_driver {

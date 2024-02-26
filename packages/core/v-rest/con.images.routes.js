@@ -5,7 +5,7 @@ import { parse_query } from '../v-api/utils.query.js'
 import { get, list, remove, upsert } from '../v-api/con.images.logic.js'
 
 /**
- * @typedef {import('../types.api.js').ImageType} ItemType
+ * @typedef {import('../v-api/types.api.js').ImageType} ItemType
  */
 
 /**

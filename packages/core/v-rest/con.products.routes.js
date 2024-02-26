@@ -7,7 +7,7 @@ import { add_product_to_collection, get, list,
   remove, remove_product_from_collection, upsert } from '../v-api/con.products.logic.js'
 
 /**
- * @typedef {import('../types.api.js').ProductType} ItemType
+ * @typedef {import('../v-api/types.api.js').ProductType} ItemType
  */
 
 /**

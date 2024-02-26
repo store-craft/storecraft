@@ -7,8 +7,8 @@ import { assert_zod } from './middle.zod-validate.js';
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('../types.api.js').NotificationType} ItemType
- * @typedef {import('../types.api.js').NotificationTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.js').NotificationType} ItemType
+ * @typedef {import('./types.api.js').NotificationTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -58,6 +58,6 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);

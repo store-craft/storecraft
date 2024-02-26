@@ -1,13 +1,13 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
-export * from './types.api.enums.js'
+export * from './v-api/types.api.enums.js'
 
 /** 
  * @typedef {Partial<import('./types.public.js').Config>} Config
- * @typedef {import('./types.storage.js').storage_driver} storage_driver
+ * @typedef {import('./v-storage/types.storage.js').storage_driver} storage_driver
  * @typedef {import('./types.database.js').db_driver} db_driver
- * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
- * @typedef {import('./types.mailer.js').mailer} mailer
+ * @typedef {import('./v-payments/types.payments.js').payment_gateway} payment_gateway
+ * @typedef {import('./v-mailer/types.mailer.js').mailer} mailer
  */
 
 /** @param {string} s @param {number} def */

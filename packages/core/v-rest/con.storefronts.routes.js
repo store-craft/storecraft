@@ -8,7 +8,7 @@ import { get, list, list_storefront_collections,
   remove, upsert } from '../v-api/con.storefronts.logic.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').TagType} ItemType
  */
 
 /**

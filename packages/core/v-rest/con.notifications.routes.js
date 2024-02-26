@@ -5,7 +5,7 @@ import { parse_query } from '../v-api/utils.query.js'
 import { get, list, remove, addBulk } from '../v-api/con.notifications.logic.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').TagType} ItemType
  */
 
 /**

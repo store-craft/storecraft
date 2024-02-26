@@ -6,8 +6,8 @@ import { union } from './utils.func.js';
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('../types.api.js').OrderData} ItemType
- * @typedef {import('../types.api.js').OrderDataUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.js').OrderData} ItemType
+ * @typedef {import('./types.api.js').OrderDataUpsert} ItemTypeUpsert
  */
 
 /**
@@ -75,7 +75,7 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
 
@@ -83,7 +83,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
  * given a discount handle and query, return products of that discount
  * @param {import("../types.public.js").App} app
  * @param {import('../types.database.js').ID} customer_id 
- * @param {import('../types.api.query.js').ParsedApiQuery} q 
+ * @param {import('./types.api.query.js').ApiQuery} q 
  */
 export const list_customer_orders = async (app, customer_id, q) => {
   return db(app).list_customer_orders(customer_id, q);

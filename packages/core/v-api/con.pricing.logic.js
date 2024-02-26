@@ -1,25 +1,25 @@
 
 /**
- * @typedef {import('../types.api.js').ProductType} ProductType
- * @typedef {import('../types.api.js').ProductTypeUpsert} ProductTypeUpsert
- * @typedef {import('../types.api.js').ShippingMethodType} ShippingMethodType
- * @typedef {import('../types.api.js').FilterMeta} FilterMeta
- * @typedef {import('../types.api.js').Filter} Filter
- * @typedef {import('../types.api.js').DiscountType} DiscountType
- * @typedef {import('../types.api.js').DiscountDetails} DiscountDetails
- * @typedef {import('../types.api.js').DiscountMeta} DiscountMeta
- * @typedef {import('../types.api.js').BulkDiscountExtra} BulkDiscountExtra
- * @typedef {import('../types.api.js').OrderDiscountExtra} OrderDiscountExtra
- * @typedef {import('../types.api.js').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('../types.api.js').BuyXGetYDiscountExtra} BuyXGetYDiscountExtra
- * @typedef {import('../types.api.js').BundleDiscountExtra} BundleDiscountExtra
- * @typedef {import('../types.api.js').LineItem} LineItem
- * @typedef {import('../types.api.js').PricingData} PricingData
+ * @typedef {import('./types.api.js').ProductType} ProductType
+ * @typedef {import('./types.api.js').ProductTypeUpsert} ProductTypeUpsert
+ * @typedef {import('./types.api.js').ShippingMethodType} ShippingMethodType
+ * @typedef {import('./types.api.js').FilterMeta} FilterMeta
+ * @typedef {import('./types.api.js').Filter} Filter
+ * @typedef {import('./types.api.js').DiscountType} DiscountType
+ * @typedef {import('./types.api.js').DiscountDetails} DiscountDetails
+ * @typedef {import('./types.api.js').DiscountMeta} DiscountMeta
+ * @typedef {import('./types.api.js').BulkDiscountExtra} BulkDiscountExtra
+ * @typedef {import('./types.api.js').OrderDiscountExtra} OrderDiscountExtra
+ * @typedef {import('./types.api.js').RegularDiscountExtra} RegularDiscountExtra
+ * @typedef {import('./types.api.js').BuyXGetYDiscountExtra} BuyXGetYDiscountExtra
+ * @typedef {import('./types.api.js').BundleDiscountExtra} BundleDiscountExtra
+ * @typedef {import('./types.api.js').LineItem} LineItem
+ * @typedef {import('./types.api.js').PricingData} PricingData
  * 
  */
 
 import { DiscountApplicationEnum, DiscountMetaEnum, 
-  FilterMetaEnum } from '../types.api.enums.js';
+  FilterMetaEnum } from './types.api.enums.js';
 
 /**
  * 

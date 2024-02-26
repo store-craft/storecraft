@@ -1,4 +1,4 @@
-import { App } from "./index.js";
+import { App } from "../index.js";
 
 export type StorageSignedOperation = {
   method: string,

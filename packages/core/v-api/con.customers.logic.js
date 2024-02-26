@@ -7,8 +7,8 @@ import { create_search_index, isDef } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
 /**
- * @typedef {import('../types.api.js').CustomerType} ItemType
- * @typedef {import('../types.api.js').CustomerTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.js').CustomerType} ItemType
+ * @typedef {import('./types.api.js').CustomerTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -78,6 +78,6 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);

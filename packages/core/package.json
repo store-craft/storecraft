@@ -41,7 +41,7 @@
   },
   "scripts": {
     "test": "uvu -c",
-    "gen:zod": "npx ts-to-zod ./types.api.d.ts ./v-api/types.autogen.zod.api.js",
+    "gen:zod": "npx ts-to-zod ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js",
     "gen:vql": "node ./v-ql/compile.js"
   },
   "keywords": [],

@@ -2,11 +2,10 @@ import 'dotenv/config';
 import { customers } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name, add_sanity_crud_to_test_suite } from './api.utils.crud.js';
+import { file_name, add_sanity_crud_to_test_suite, 
+  create_handle } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-
-// const app = await create_app();
 
 /** @type {import('@storecraft/core').CustomerTypeUpsert[]} */
 const items_upsert = [

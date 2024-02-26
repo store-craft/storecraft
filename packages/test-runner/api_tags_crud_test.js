@@ -3,24 +3,24 @@ import { tags } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { assert_async_throws } from './utils.js';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { add_sanity_crud_to_test_suite, create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
+const handle_tag = create_handle('tag', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core').TagTypeUpsert[]} */
 const items_upsert = [
   {
-    handle: 'col-1',
+    handle: handle_tag(),
     values: ['a', 'b'],
   },
   {
-    handle: 'col-2',
+    handle: handle_tag(),
     values: ['a', 'b'],
   },
   {
-    handle: 'col-3',
+    handle: handle_tag(),
     values: ['a', 'b'],
   },
 ]

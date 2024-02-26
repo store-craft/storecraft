@@ -2,22 +2,23 @@ import 'dotenv/config';
 import { posts } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { add_sanity_crud_to_test_suite, create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
 // const app = await create_app();
+const handle = create_handle('post', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core').PostTypeUpsert[]} */
 const items_upsert = [
   {
-    handle: 'post-1', title: 'post 1', text: 'blah blah 1'
+    handle: handle(), title: 'post 1', text: 'blah blah 1'
   },
   {
-    handle: 'post-2', title: 'post 2', text: 'blah blah 2'
+    handle: handle(), title: 'post 2', text: 'blah blah 2'
   },
   {
-    handle: 'post-3', title: 'post 3', text: 'blah blah 3'
+    handle: handle(), title: 'post 3', text: 'blah blah 3'
   },
 ]
 

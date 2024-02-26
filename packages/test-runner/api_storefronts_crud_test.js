@@ -2,22 +2,22 @@ import 'dotenv/config';
 import { storefronts } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { add_sanity_crud_to_test_suite, create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
+const handle_sf = create_handle('sf', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core').StorefrontTypeUpsert[]} */
 const items_upsert = [
   {
-    handle: 'sf-1', title: 'sf 1'
+    handle: handle_sf(), title: 'sf 1'
   },
   {
-    handle: 'sf-2', title: 'sf 2'
+    handle: handle_sf(), title: 'sf 2'
   },
   {
-    handle: 'sf-3', title: 'sf 3'
+    handle: handle_sf(), title: 'sf 3'
   },
 ]
 

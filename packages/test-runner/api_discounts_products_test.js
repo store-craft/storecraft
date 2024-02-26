@@ -4,10 +4,11 @@ import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App, DiscountApplicationEnum, 
   DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
-import { file_name } from './api.utils.crud.js';
+import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 
 // const app = await create_app();
+const handle = create_handle('pr', file_name(import.meta.url));
 
 /**
  * 
@@ -28,7 +29,7 @@ export const create = app => {
   /** @type {import('@storecraft/core').ProductTypeUpsert[]} */
   const pr_upsert = [
     {
-      handle: 'pr-1',
+      handle: handle(),
       active: true,
       price: 50,
       qty: 1,

@@ -3,9 +3,17 @@ import { basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
+import { to_handle } from '@storecraft/core/v-api/utils.func.js';
 
 export const file_name = (meta_url) => {
   return basename(fileURLToPath(meta_url));
+}
+
+export const create_handle = (...prefixs) => {
+  let index = 0;
+  return () => {
+    return to_handle([...prefixs, index+=1].join('-'));
+  }
 }
 
 /**

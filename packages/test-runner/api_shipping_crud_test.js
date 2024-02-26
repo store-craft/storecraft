@@ -2,22 +2,22 @@ import 'dotenv/config';
 import { shipping } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { add_sanity_crud_to_test_suite, create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
+const handle = create_handle('ship', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core').ShippingMethodTypeUpsert[]} */
 const items_upsert = [
   {
-    handle: 'ship-1', name: 'ship 1', price: 50
+    handle: handle(), name: 'ship 1', price: 50
   },
   {
-    handle: 'ship-2', name: 'ship 2', price: 50
+    handle: handle(), name: 'ship 2', price: 50
   },
   {
-    handle: 'ship-3', name: 'ship 3', price: 50
+    handle: handle(), name: 'ship 3', price: 50
   },
 ]
 

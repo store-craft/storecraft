@@ -2,23 +2,24 @@ import 'dotenv/config';
 import { products, collections } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
+const handle_col = create_handle('col', file_name(import.meta.url));
+const handle_pr = create_handle('pr', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core').CollectionTypeUpsert[]} */
 const col_upsert = [
   {
     active: true,
-    handle: 'col-1',
+    handle: handle_col(),
     title: 'col 1',
     tags: ['tag-1_a', 'tag-1_b']
   },
   {
     active: true,
-    handle: 'col-2',
+    handle: handle_col(),
     title: 'col 2',
     tags: ['tag-1_a', 'tag-1_b']
   },
@@ -27,14 +28,14 @@ const col_upsert = [
 /** @type {import('@storecraft/core').ProductTypeUpsert[]} */
 const pr_upsert = [
   {
-    handle: 'pr-1',
+    handle: handle_pr(),
     active: true,
     price: 50,
     qty: 1,
     title: 'product 1',
   },
   {
-    handle: 'pr-2',
+    handle: handle_pr(),
     active: true,
     price: 150,
     qty: 2,

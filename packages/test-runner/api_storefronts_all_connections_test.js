@@ -5,7 +5,7 @@ import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App, DiscountApplicationEnum, DiscountMetaEnum, 
   FilterMetaEnum } from '@storecraft/core';
-import { file_name } from './api.utils.crud.js';
+import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 
 // const app = await create_app();
@@ -18,23 +18,29 @@ import esMain from './utils.esmain.js';
  * @typedef {import('@storecraft/core').ShippingMethodTypeUpsert} ShippingMethodTypeUpsert
  * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
  */
+const handle_sf = create_handle('sf', file_name(import.meta.url));
+const handle_pr = create_handle('pr', file_name(import.meta.url));
+const handle_col = create_handle('col', file_name(import.meta.url));
+const handle_post = create_handle('post', file_name(import.meta.url));
+const handle_ship = create_handle('ship', file_name(import.meta.url));
+const handle_dis = create_handle('dis', file_name(import.meta.url));
 
 /** @type {StorefrontTypeUpsert} */
 const storefront_upsert = {
-    handle: 'sf-1', title: 'sf 1'
+    handle: handle_sf(), title: 'sf 1'
 }
 
 /** @type {ProductTypeUpsert[]} */
 const products_upsert = [
   {
-    handle: 'pr-1',
+    handle: handle_pr(),
     active: true,
     price: 50,
     qty: 1,
     title: 'product 1'
   },
   {
-    handle: 'pr-2',
+    handle: handle_pr(),
     active: true,
     price: 150,
     qty: 2,
@@ -46,13 +52,13 @@ const products_upsert = [
 const collections_upsert = [
   {
     active: true,
-    handle: 'col-crud-1',
+    handle: handle_col(),
     title: 'col 1',
     tags: ['tag-1_a', 'tag-1_b']
   },
   {
     active: true,
-    handle: 'col-crud-2',
+    handle: handle_col(),
     title: 'col 2',
     tags: ['tag-1_a', 'tag-1_b']
   },
@@ -60,15 +66,15 @@ const collections_upsert = [
 
 /** @type {ShippingMethodTypeUpsert[]} */
 const shipping_upsert = [
-  { handle: 'ship-1', name: 'ship 1', price: 50 },
-  { handle: 'ship-2', name: 'ship 2', price: 50 },
+  { handle: handle_ship(), name: 'ship 1', price: 50 },
+  { handle: handle_ship(), name: 'ship 2', price: 50 },
 ]
 
 /** @type {DiscountTypeUpsert[]} */
 const discounts_upsert = [
   {
     active: false, application: DiscountApplicationEnum.Auto, 
-    handle: 'fake-discount-1', priority: 0, title: 'Fake Discount 1',
+    handle: handle_dis(), priority: 0, title: 'Fake Discount 1',
     info: {
       details: {
         meta: DiscountMetaEnum.bulk,
@@ -86,7 +92,7 @@ const discounts_upsert = [
   },
   {
     active: false, application: DiscountApplicationEnum.Auto, 
-    handle: 'fake-discount-2', priority: 0, title: 'Fake Discount 2',
+    handle: handle_dis(), priority: 0, title: 'Fake Discount 2',
     info: {
       details: {
         meta: DiscountMetaEnum.bulk,
@@ -106,8 +112,8 @@ const discounts_upsert = [
 
 /** @type {PostTypeUpsert[]} */
 const posts_upsert = [
-  { handle: 'post-1', title: 'post 1', text: 'blah blah 1' },
-  { handle: 'post-2', title: 'post 2', text: 'blah blah 2' },
+  { handle: handle_post(), title: 'post 1', text: 'blah blah 1' },
+  { handle: handle_post(), title: 'post 2', text: 'blah blah 2' },
 ]
 
 /**

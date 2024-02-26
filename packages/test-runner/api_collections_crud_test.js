@@ -3,11 +3,12 @@ import { collections } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { add_sanity_crud_to_test_suite, 
+  create_handle, 
   file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
+const handle = create_handle('col', file_name(import.meta.url));
 
 /**
  * 
@@ -19,19 +20,19 @@ export const create = app => {
   const items_upsert = [
     {
       active: true,
-      handle: 'col-crud-1',
+      handle: handle(),
       title: 'col 1',
       tags: ['tag-1_a', 'tag-1_b']
     },
     {
       active: true,
-      handle: 'col-crud-2',
+      handle: handle(),
       title: 'col 2',
       tags: ['tag-1_a', 'tag-1_b']
     },
     {
       active: true,
-      handle: 'col-crud-3',
+      handle: handle(),
       title: 'col 3',
       tags: ['tag-1_a', 'tag-1_b']
     },

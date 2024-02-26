@@ -2,30 +2,30 @@ import 'dotenv/config';
 import { products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { add_sanity_crud_to_test_suite, create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
+const handle = create_handle('pr', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core').ProductTypeUpsert[]} */
 const items_upsert = [
   {
-    handle: 'pr-1',
+    handle: handle(),
     active: true,
     price: 50,
     qty: 1,
     title: 'product 1'
   },
   {
-    handle: 'pr-2',
+    handle: handle(),
     active: true,
     price: 150,
     qty: 2,
     title: 'product 2',
   },
   {
-    handle: 'pr-3',
+    handle: handle(),
     active: true,
     price: 250,
     qty: 3,

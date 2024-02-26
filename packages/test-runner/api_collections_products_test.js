@@ -68,7 +68,6 @@ export const create = app => {
         await collections.remove(app, p.handle);
     }
   );
-  s.after(async () => { await app.db.disconnect() });
 
   s('create', async () => {
     // upsert collections
@@ -125,7 +124,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

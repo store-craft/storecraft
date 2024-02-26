@@ -48,7 +48,6 @@ export const create = app => {
       console.log('before DONE')
     }
   );
-  s.after(async () => { await app.db.disconnect() });
 
   add_sanity_crud_to_test_suite(s);
 
@@ -61,7 +60,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

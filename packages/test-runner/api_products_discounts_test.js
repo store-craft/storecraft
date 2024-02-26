@@ -85,8 +85,6 @@ export const create = app => {
     }
   );
 
-  s.after(async () => { await app.db.disconnect(); });
-
   s('upsert 1st product -> upsert Discount -> test discount was applied', async () => {
     // upsert 1st product
     await products.upsert(app, pr_upsert[0]);
@@ -155,7 +153,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

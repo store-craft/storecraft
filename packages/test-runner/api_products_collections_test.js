@@ -64,8 +64,6 @@ export const create = app => {
     }
   );
 
-  s.after(async () => { await app.db.disconnect() });
-
   s('test products->collections', async () => {
     // upsert collections
     const cols = await Promise.all(
@@ -129,7 +127,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

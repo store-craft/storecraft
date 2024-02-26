@@ -61,6 +61,8 @@ export class App {
    * find them in platform environment.
    */
   #settle_config_after_init() {
+    if(!this.platform)
+      return;
     const c = this.#_config;
     const env = this.platform.env;
     this.#_config = {
@@ -84,7 +86,7 @@ export class App {
       // first let's settle config
       this.#settle_config_after_init();
 
-      await this.db.init(this)
+      await this.db.init(this);
       this.storage && await this.storage.init(this)
     } catch (e) {
       console.error(e)

@@ -3,7 +3,6 @@ A work in progress package to test:
 - api and databases integrations
 - rest api
 - and more
-- make it a library
 
 
 ## v-api controller test

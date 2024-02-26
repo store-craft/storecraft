@@ -35,7 +35,6 @@ export const create = app => {
   );
   
   s.before(async () => { assert.ok(app.ready) });
-  s.after(async () => { await app.db.disconnect() });
   const ops = notifications;
 
   s('add', async () => {
@@ -57,7 +56,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

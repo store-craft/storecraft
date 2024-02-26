@@ -21,7 +21,6 @@ export const create = app => {
   );
   
   s.before(async () => { assert.ok(app.ready) });
-  s.after(async () => { await app.db.disconnect() });
   
   s('remove and signup admin', async () => {
     await auth.removeByEmail(app, admin_email);
@@ -72,7 +71,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

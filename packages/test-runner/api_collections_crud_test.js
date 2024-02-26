@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { collections } from '@storecraft/core/v-api';
-import { suite } from 'uvu';
+import { suite, exec } from 'uvu';
 import * as assert from 'uvu/assert';
 import { add_sanity_crud_to_test_suite, 
   create_handle, 
@@ -58,8 +58,6 @@ export const create = app => {
     }
   );
 
-  s.after(async () => { await app.db.disconnect() });
-
   add_sanity_crud_to_test_suite(s);
   return s;
 }
@@ -71,7 +69,9 @@ export const create = app => {
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
-    create(app).run();
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
   } catch (e) {
   }
 })();

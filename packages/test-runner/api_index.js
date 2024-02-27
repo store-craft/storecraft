@@ -15,4 +15,5 @@ export * as api_shipping_crud_test from './api_shipping_crud_test.js'
 export * as api_storefronts_all_connections_test from './api_storefronts_all_connections_test.js'
 export * as api_storefronts_crud_test from './api_storefronts_crud_test.js'
 export * as api_tags_crud_test from './api_tags_crud_test.js'
+export * as api_tags_list_test from './api_tags_list_test.js'
 

@@ -147,7 +147,7 @@ export const query_to_mongo = (q) => {
   vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order
-  const sort = q.sortBy.reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});
+  const sort = (q.sortBy ?? []).reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});
 
   if(clauses?.length) {
     filter['$and'] = clauses;

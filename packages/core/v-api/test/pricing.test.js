@@ -19,7 +19,7 @@ const shipping = {
 
 /**
  * 
- * @param {import('../../types.api.js').LineItem[]} line_items 
+ * @param {import('../types.api.js').LineItem[]} line_items 
  */
 const print_line_items = (line_items) => {
   log(`\n\nLine Items (${lineitems_to_quantity(line_items)})`)

@@ -7,7 +7,7 @@ import { add_product_to_collection, get, list,
   remove, remove_product_from_collection, upsert } from '../v-api/con.products.logic.js'
 
 /**
- * @typedef {import('../types.api.js').ProductType} ItemType
+ * @typedef {import('../v-api/types.api.js').ProductType} ItemType
  */
 
 /**
@@ -54,8 +54,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      await remove(app, handle_or_id);
-      res.end();
+      const removed = handle_or_id && await remove(app, handle_or_id);
+      res.setStatus(removed ? 200 : 404).end();
     }
   );
 

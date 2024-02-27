@@ -50,7 +50,7 @@ export const FilterMetaEnum = {
   },    
   p_in_price_range: {
     id: 7, type:'product', 
-    op: 'p_in_price_range', 
+    op: 'p-in-price-range', 
     name: 'Product in Price range'
   },    
   o_subtotal_in_range: {
@@ -103,7 +103,7 @@ export const DiscountMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').CheckoutStatusOptions} 
+ * @enum {import('./types.api.js').CheckoutStatusOptions} 
  */
 export const CheckoutStatusEnum = {
   created: { 
@@ -124,7 +124,7 @@ export const CheckoutStatusEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').FulfillStatusOptions} 
+ * @enum {import('./types.api.js').FulfillStatusOptions} 
  */
 export const FulfillOptionsEnum = {
   draft: { 
@@ -145,7 +145,7 @@ export const FulfillOptionsEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').PaymentStatusOptions} 
+ * @enum {import('./types.api.js').PaymentStatusOptions} 
  */
 export const PaymentOptionsEnum = {
   unpaid: { 

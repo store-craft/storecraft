@@ -11,7 +11,7 @@ import { report_document_media } from './con.images.js';
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('posts');
 
@@ -22,30 +22,43 @@ const col = (d) => d.collection('posts');
 const upsert = (driver) => {
   return async (data) => {
     const objid = to_objid(data.id);
-    const filter = { _id: objid };
-    const replacement = { ...data };
-    const options = { upsert: true };
+    const session = driver.mongo_client.startSession();
 
-    ////
-    // STOREFRONTS --> POSTS RELATION
-    ////
-    await driver.storefronts._col.updateMany(
-      { '_relations.posts.ids' : objid },
-      { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
-    );
+    try {
+      await session.withTransaction(
+        async () => {
 
-    ////
-    // REPORT IMAGES USAGE
-    ////
-    await report_document_media(driver)(data);
+          ////
+          // STOREFRONTS --> POSTS RELATION
+          ////
+          await driver.storefronts._col.updateMany(
+            { '_relations.posts.ids' : objid },
+            { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
+            { session }
+          );
 
-    // SAVE ME
+          ////
+          // REPORT IMAGES USAGE
+          ////
+          await report_document_media(driver)(data, session);
 
-    const res = await col(driver).replaceOne(
-      filter, replacement, options
-    );
+          // SAVE ME
 
-    return;
+          const res = await col(driver).replaceOne(
+            { _id: objid }, 
+            data, 
+            { session, upsert: true }
+          );
+        }
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
+    }
+
+    return true;
   }
 
 }
@@ -59,27 +72,43 @@ const get = (driver) => get_regular(driver, col(driver));
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
-  return async (id) => {
-    const objid = to_objid(id)
-    // const item = await col(driver).findOne(handle_or_id(id));
+  return async (id_or_handle) => {
+    const item = await col(driver).findOne(handle_or_id(id_or_handle));
+    if(!item) return;
+    const objid = to_objid(item.id)
+    const session = driver.mongo_client.startSession();
 
-    ////
-    // STOREFRONTS --> POSTS RELATION
-    ////
-    await driver.storefronts._col.updateMany(
-      { '_relations.posts.ids' : objid },
-      { 
-        $pull: { '_relations.posts.ids': objid, },
-        $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
-      },
-    );
+    try {
+      await session.withTransaction(
+        async () => {
+          ////
+          // STOREFRONTS --> POSTS RELATION
+          ////
+          await driver.storefronts._col.updateMany(
+            { '_relations.posts.ids' : objid },
+            { 
+              $pull: { '_relations.posts.ids': objid, },
+              $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
+            },
+            { session }
+          );
 
-    // DELETE ME
-    const res = await col(driver).findOneAndDelete( 
-      { _id: objid }
-    );
+          // DELETE ME
+          const res = await col(driver).findOneAndDelete( 
+            { _id: objid },
+            { session }
+          );
 
-    return
+        }
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
+    }
+
+    return true;
   }
 
 }

@@ -6,7 +6,7 @@ import { parse_query } from '../v-api/utils.query.js'
 import { get, list, list_customer_orders, remove, upsert } from '../v-api/con.orders.logic.js'
 
 /**
- * @typedef {import('../types.api.js').OrderData} ItemType
+ * @typedef {import('../v-api/types.api.js').OrderData} ItemType
  */
 
 /**
@@ -56,8 +56,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      await remove(app, handle_or_id);
-      res.end();
+      const removed = handle_or_id && await remove(app, handle_or_id);
+      res.setStatus(removed ? 200 : 404).end();
     }
   );
 

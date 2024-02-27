@@ -10,7 +10,7 @@ import { get_regular, list_regular,
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('@storecraft/core').TagType>}
+ * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('tags');
 

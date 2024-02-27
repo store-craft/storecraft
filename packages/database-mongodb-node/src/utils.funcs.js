@@ -25,7 +25,7 @@ export const delete_keys = (...keys) => {
  * Sanitize hidden properties in-place
  * @template {object} T
  * @param {T} o 
- * @return {Partial<T>}
+ * @return {Omit<T, '_id' | '_relations'>}
  */
 export const sanitize_hidden = o => {
   if(!isDef(o))
@@ -51,15 +51,18 @@ export const delete_id = o => {
  * Sanitize the mongo document before sending to client
  * @template T
  * @param {T} o 
- * @returns {T}
  */
-export const sanitize = o => {
-  if(Array.isArray(o)) {
-    o.forEach(it => sanitize_hidden(it))
-  } else {
-    sanitize_hidden(o)
-  }
-  return o;
+export const sanitize_one = o => {
+  return sanitize_hidden(o)
+}
+
+/**
+ * Sanitize the mongo document before sending to client
+ * @template T
+ * @param {T[]} o 
+ */
+export const sanitize_array = o => {
+  return o.map(it => sanitize_hidden(it));
 }
 
 /**

@@ -3,14 +3,14 @@ import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../driver.js';
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template {any} T
  * @typedef {Object} Relation
  * @property {ObjectId[]} [ids]
  * @property {Record<import('@storecraft/core').ID, T>} [entries]
  */
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template {any} T
  * @typedef {T & { _relations? : Record<string, Relation<any>> }} WithRelations
  */
 
@@ -37,10 +37,10 @@ export const create_explicit_relation = async (
   /** @type {import('@storecraft/core').BaseType[]} */
   const items = Array.isArray(value) ? value : [value];
 
-  /** @type {WithRelations<T>} */
+  /** @type {WithRelations<any>} */
   let data_with_rel = { ...data }
   data_with_rel._relations = data_with_rel._relations ?? {};
-  /** @type {Relation<T>} */
+  /** @type {Relation<any>} */
   const relation = data_with_rel._relations[belongsToCollection] = {};
   relation.ids = items.filter(i => isDef(i?.id)).map(c => to_objid(c.id));
   relation.entries = {};
@@ -60,6 +60,5 @@ export const create_explicit_relation = async (
 
   // delete fieldname
   delete data_with_rel[fieldName];
-
   return data_with_rel;
 }

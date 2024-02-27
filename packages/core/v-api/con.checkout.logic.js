@@ -8,9 +8,9 @@ import { parse_query } from "./utils.query.js"
 
 
 /**
- * @typedef {import("../types.api.js").OrderData} OrderData
- * @typedef {import("../types.api.js").DiscountType} DiscountType
- * @typedef {import("../types.payments.js").payment_gateway} payment_gateway
+ * @typedef {import("./types.api.js").OrderData} OrderData
+ * @typedef {import("./types.api.js").DiscountType} DiscountType
+ * @typedef {import("../v-payments/types.payments.js").payment_gateway} payment_gateway
  */
 
 /**
@@ -36,7 +36,7 @@ export const eval_pricing =
     order.line_items, 
     auto_discounts, 
     manual_discounts, 
-    order.delivery, 
+    order.shipping_method, 
     order?.contact?.customer_id
   )
 
@@ -120,13 +120,17 @@ export const complete_checkout =
 
   assert(order, 'checkout-not-found', 400);
 
-  const gateway = app.gateway(order?.payment_gateway?.gateway_handle);
+  const gateway = app.gateway(
+    order?.payment_gateway?.gateway_handle
+  );
 
   assert(gateway, `gateway not found`, 400);
 
   const { onCheckoutComplete } = gateway;
 
-  const status = await onCheckoutComplete(order.payment_gateway?.on_checkout_create);
+  const status = await onCheckoutComplete(
+    order.payment_gateway?.on_checkout_create
+  );
 
   order.status = {
     ...order.status,
@@ -148,12 +152,14 @@ export const complete_checkout =
 export const validate_checkout = 
   async (app, checkout) => {
 
-  const snap_shipping = await app.db.shipping.get(checkout.shipping_method.id);
+  const snap_shipping = await app.db.shipping.get(
+    checkout.shipping_method.id
+    );
   const snaps_products = await app.db.products.getBulk(
     checkout.line_items.map(li => li.id)
   );
 
-  /**@type {import("../types.api.js").ValidationEntry[]} */
+  /**@type {import("./types.api.js").ValidationEntry[]} */
   const errors = []
 
   const errorWith = (id, message) => {

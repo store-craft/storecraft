@@ -6,7 +6,7 @@ import { get, list, remove, upsert } from '../v-api/con.customers.logic.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').TagType} ItemType
  */
 
 /**
@@ -52,8 +52,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      await remove(app, handle_or_id);
-      res.end();
+      const removed = handle_or_id && await remove(app, handle_or_id);
+      res.setStatus(removed ? 200 : 404).end();
     }
   );
 

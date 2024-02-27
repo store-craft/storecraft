@@ -20,7 +20,6 @@ let app = new App(
 
 await app.init();
  
-/** @type {import('@storecraft/core').payment_gateway} */
 const server = http.createServer(app.handler).listen(
   8000,
   () => {

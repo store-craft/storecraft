@@ -15,6 +15,9 @@
       "import": "./v-api/public.js",
       "types": "./v-api/types.public.d.ts"
     },
+    "./v-api/*": {
+      "import": "./v-api/*"
+    },
     "./v-storage": {
       "import": "./v-storage/public.js",
       "types": "./v-storage/types.public.d.ts"
@@ -35,15 +38,14 @@
       "import": "./v-mailer/index.js",
       "types": "./v-mailer/types.public.d.ts"
     }
-
   },
   "scripts": {
     "test": "uvu -c",
-    "gen:zod": "npx ts-to-zod ./types.api.d.ts ./v-api/types.autogen.zod.api.js",
+    "gen:zod": "npx ts-to-zod ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js",
     "gen:vql": "node ./v-ql/compile.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "ts-to-zod": "^3.6.1",

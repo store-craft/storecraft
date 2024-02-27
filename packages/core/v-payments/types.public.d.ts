@@ -1,2 +1,2 @@
-export type * from '../types.payments.d.ts';
+export type * from './types.payments.js';
 export * from './public.js';

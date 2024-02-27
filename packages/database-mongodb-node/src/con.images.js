@@ -3,15 +3,14 @@ import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { handle_or_id } from './utils.funcs.js';
-import { image_url_to_name, image_url_to_handle, 
-  union, to_tokens, apply_dates } from '@storecraft/core/v-api';
+import { images, func } from '@storecraft/core/v-api';
 
 /**
  * @typedef {import('@storecraft/core').db_images} db_col
  */
 
 /**
- * @param {MongoDB} d @returns {Collection<db_col["$type"]>}
+ * @param {MongoDB} d @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) =>  d.collection('images');
 
@@ -33,30 +32,45 @@ const get = (driver) => get_regular(driver, col(driver));
 const remove = (driver) => {
   return async (id) => {
     const image = await col(driver).findOne(handle_or_id(id));
+    if(!image) return;
 
-    ////
-    // EVERYTHING --> IMAGES URL
-    ////
-    const filter = { media : image.url };
-    const update = { $pull: { media: image.url } };
+    const session = driver.mongo_client.startSession();
+    try {
+      await session.withTransaction(
+        async () => {
+          ////
+          // EVERYTHING --> IMAGES URL
+          ////
+          const filter = { media : image.url };
+          const update = { $pull: { media: image.url } };
+          const options = { session };
 
-    await Promise.all(
-      [
-        driver.collections._col.updateMany(filter, update),
-        driver.discounts._col.updateMany(filter, update),
-        driver.posts._col.updateMany(filter, update),
-        driver.products._col.updateMany(filter, update),
-        driver.shipping._col.updateMany(filter, update),
-        driver.storefronts._col.updateMany(filter, update),
-      ]
-    );
+          await Promise.all(
+            [
+              driver.collections._col.updateMany(filter, update, options),
+              driver.discounts._col.updateMany(filter, update, options),
+              driver.posts._col.updateMany(filter, update, options),
+              driver.products._col.updateMany(filter, update, options),
+              driver.shipping._col.updateMany(filter, update, options),
+              driver.storefronts._col.updateMany(filter, update, options),
+            ]
+          );
 
-    // DELETE ME
-    const res = await col(driver).findOneAndDelete( 
-      { _id: image._id }
-    );
+          // DELETE ME
+          const res = await col(driver).findOneAndDelete( 
+            { _id: image._id },
+            options
+          );
+        }
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
+    }
 
-    return
+    return true;
   }
 
 }
@@ -67,15 +81,15 @@ const remove = (driver) => {
  * @returns {db_col["report_document_media"]}
  */
 export const report_document_media = (driver) => {
-  return async (data) => {
+  return async (data, session) => {
     if(!(data?.media?.length))
       return;
 
-    const add_to_search_index = union(
-      data['title'], to_tokens(data['title'])
+    const add_to_search_index = func.union(
+      data['title'], func.to_tokens(data['title'])
     );
 
-    const dates = apply_dates({});
+    const dates = func.apply_dates({});
     
     /** 
      * @param {string} url 
@@ -84,11 +98,11 @@ export const report_document_media = (driver) => {
     const url_to_update = url => {
       return {
         updateOne: {
-          filter: { handle: image_url_to_handle(url) },
+          filter: { handle: images.image_url_to_handle(url) },
           update: { 
             $addToSet : { search: { $each: add_to_search_index} },
             $set: { 
-              name: image_url_to_name(url),
+              name: images.image_url_to_name(url),
               url: url,
               updated_at: dates.updated_at
             },
@@ -102,7 +116,7 @@ export const report_document_media = (driver) => {
     const ops = data.media.map(url_to_update);
 
     await driver.images._col.bulkWrite(
-      ops
+      ops, { session }
     );
 
   }

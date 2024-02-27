@@ -1,4 +1,4 @@
-import type { OrderData } from "./types.api.d.ts";
+import type { OrderData } from "../v-api/types.api.js";
 
 /**
  * Payment gateway description, logos and urls

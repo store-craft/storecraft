@@ -1,6 +1,6 @@
 import { MongoDB } from '../driver.js'
 import { Collection } from 'mongodb'
-import { sanitize, to_objid } from './utils.funcs.js'
+import { sanitize_one, to_objid } from './utils.funcs.js'
 import { get_regular, list_regular, upsert_regular } from './con.shared.js'
 
 /**
@@ -37,7 +37,7 @@ const getByEmail = (driver) => {
       filter
     );
 
-    return sanitize(res)
+    return sanitize_one(res)
   }
 }
 
@@ -47,11 +47,23 @@ const getByEmail = (driver) => {
  */
 const remove = (driver) => {
   return async (id) => {
-    const filter = { _id: to_objid(id) };
+    const res = await col(driver).deleteOne(
+      { _id: to_objid(id) }
+    );
 
+    return Boolean(res.deletedCount)
+  }
+}
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["removeByEmail"]}
+ */
+const removeByEmail = (driver) => {
+  return async (email) => {
     /** @type {import('@storecraft/core').AuthUserType} */
     const res = await col(driver).findOneAndDelete(
-      filter
+      { email }
     );
 
     return
@@ -76,6 +88,7 @@ export const impl = (driver) => {
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
+    removeByEmail: removeByEmail(driver),
     list: list(driver)
   }
 }

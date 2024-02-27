@@ -1,13 +1,13 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
-export * from './types.api.enums.js'
+export * from './v-api/types.api.enums.js'
 
 /** 
- * @typedef {import('./types.public.js').Config} Config
- * @typedef {import('./types.storage.js').storage_driver} storage_driver
+ * @typedef {Partial<import('./types.public.js').Config>} Config
+ * @typedef {import('./v-storage/types.storage.js').storage_driver} storage_driver
  * @typedef {import('./types.database.js').db_driver} db_driver
- * @typedef {import('./types.payments.js').payment_gateway} payment_gateway
- * @typedef {import('./types.mailer.js').mailer} mailer
+ * @typedef {import('./v-payments/types.payments.js').payment_gateway} payment_gateway
+ * @typedef {import('./v-mailer/types.mailer.js').mailer} mailer
  */
 
 /** @param {string} s @param {number} def */
@@ -34,6 +34,7 @@ export class App {
   /** @type {mailer} */ #_mailer;
   /** @type {Config} */ #_config;
   /** @type {ReturnType<create_rest_api>} */ #_rest_controller;
+  /** @type {boolean} */ #_is_ready;
 
   /**
    * 
@@ -52,6 +53,7 @@ export class App {
     this.#_payment_gateways = payment_gateways;
     this.#_mailer = mailer;
     this.#_config = config;
+    this.#_is_ready = false;
   }
 
   /**
@@ -59,6 +61,8 @@ export class App {
    * find them in platform environment.
    */
   #settle_config_after_init() {
+    if(!this.platform)
+      return;
     const c = this.#_config;
     const env = this.platform.env;
     this.#_config = {
@@ -82,13 +86,14 @@ export class App {
       // first let's settle config
       this.#settle_config_after_init();
 
-      await this.db.init(this)
-      await this.storage.init(this)
+      await this.db.init(this);
+      this.storage && await this.storage.init(this)
     } catch (e) {
       console.error(e)
     }
     // this._polka = create_api(this);
     this.#_rest_controller = create_rest_api(this);
+    this.#_is_ready = true;
     return this;
   }
 
@@ -106,6 +111,7 @@ export class App {
   get mailer() { return this.#_mailer; }
   /** Config */
   get config() { return this.#_config; }
+  get ready() { return this.#_is_ready; }
 
   /**
    * Get a payment gateway by handle

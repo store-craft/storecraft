@@ -2,10 +2,13 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
-import { get, list, remove, upsert } from '../v-api/con.storefronts.logic.js'
+import { get, list, list_storefront_collections, 
+  list_storefront_discounts, list_storefront_posts, 
+  list_storefront_products, list_storefront_shipping_methods, 
+  remove, upsert } from '../v-api/con.storefronts.logic.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').TagType} ItemType
  */
 
 /**
@@ -48,8 +51,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      await remove(app, handle_or_id);
-      res.end();
+      const removed = handle_or_id && await remove(app, handle_or_id);
+      res.setStatus(removed ? 200 : 404).end();
     }
   );
 
@@ -68,7 +71,7 @@ export const create_routes = (app) => {
     '/:handle/products',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_products(handle);
+      const items = await list_storefront_products(app, handle);
       res.sendJson(items);
     }
   );
@@ -77,7 +80,7 @@ export const create_routes = (app) => {
     '/:handle/collections',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_collections(handle);
+      const items = await list_storefront_collections(app, handle);
       res.sendJson(items);
     }
   );
@@ -86,7 +89,7 @@ export const create_routes = (app) => {
     '/:handle/discounts',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_discounts(handle);
+      const items = await list_storefront_discounts(app, handle);
       res.sendJson(items);
     }
   );
@@ -95,7 +98,7 @@ export const create_routes = (app) => {
     '/:handle/shipping_methods',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_shipping_methods(handle);
+      const items = await list_storefront_shipping_methods(app, handle);
       res.sendJson(items);
     }
   );
@@ -104,7 +107,7 @@ export const create_routes = (app) => {
     '/:handle/posts',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await app.db.storefronts.list_storefront_posts(handle);
+      const items = await list_storefront_posts(app, handle);
       res.sendJson(items);
     }
   );

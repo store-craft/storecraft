@@ -1,5 +1,18 @@
 import { id } from '../v-crypto/object-id.js';
 
+export class StorecraftError extends Error {
+  /**
+   * 
+   * @param {any} message 
+   * @param {number} code 
+   */
+  constructor(message, code=400) {
+    super(String(message));
+    this.code = code;
+    this.message = message;
+  }
+}
+
 /**
  * Create an ID with prefix
  * @param {string} prefix 
@@ -18,10 +31,9 @@ export const ID = (prefix='') => {
  */
 export const assert = (c, message, code=400) => {
   if(!Boolean(c)) {
-    throw {
-      message,
-      code
-    };
+    throw new StorecraftError(
+      message, code
+    );
   };
 }
 

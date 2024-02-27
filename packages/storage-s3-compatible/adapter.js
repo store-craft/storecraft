@@ -231,9 +231,10 @@ export class S3CompatibleStorage {
    * @param {string} key 
    */
   async remove(key) {
-    await this.client.fetch(
+    const r = await this.client.fetch(
       this.get_file_url(key), { method: 'DELETE' }
     );
+    return r.ok;
   }
 }
 

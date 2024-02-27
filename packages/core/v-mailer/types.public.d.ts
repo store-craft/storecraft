@@ -1,2 +1,2 @@
-export type * from '../types.mailer.d.ts';
+export type * from './types.mailer.js';
 export * from './public.js';

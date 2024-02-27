@@ -1,4 +1,4 @@
-import { ID } from './utils.func.js'
+import { ID, apply_dates } from './utils.func.js'
 import { notificationTypeSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
@@ -7,7 +7,8 @@ import { assert_zod } from './middle.zod-validate.js';
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('../types.api.js').NotificationType} ItemType
+ * @typedef {import('./types.api.js').NotificationType} ItemType
+ * @typedef {import('./types.api.js').NotificationTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -18,31 +19,34 @@ export const db = app => app.db.notifications;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType[] | ItemType} items
+ * @param {ItemTypeUpsert[]} items
+ * @return {Promise<import('../types.database.js').ID[]>}
  */
 export const addBulk = async (app, items) => {
+  
   items = Array.isArray(items) ? items : [items] ;
   // validate and assign ids
   items.forEach(
     item => { 
       assert_zod(notificationTypeSchema, item);
-      item.id=ID('not');
+      item.id = ID('not');
       item.search = item.search ?? [];
+      apply_dates(item);
       isDef(item.author) && item.search.push(`author:${item.author}`)
     }
   );
 
   await db(app).upsertBulk(items);
-  return items;
+  return items.map(it => it.id);
 }
 
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
+ * @param {string} id
  * @param {import('../types.database.js').RegularGetOptions} [options]
  */
-export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
+export const get = (app, id, options) => regular_get(app, db(app))(id, options);
 
 /**
  * 
@@ -54,6 +58,6 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);

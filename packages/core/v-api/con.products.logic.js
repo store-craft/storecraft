@@ -1,11 +1,11 @@
 import { assert, to_handle, union } from './utils.func.js'
-import { collectionTypeSchema, productTypeSchema, tagTypeSchema } from './types.autogen.zod.api.js'
-import { 
-  regular_get, regular_list, 
+import { productTypeSchema } from './types.autogen.zod.api.js'
+import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('../types.api.js').ProductType} ItemType
+ * @typedef {import('./types.api.js').ProductType} ItemType
+ * @typedef {import('./types.api.js').ProductTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -16,14 +16,12 @@ export const db = app => app.db.products;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'pr', productTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
+    
     assert(
       [final.handle].every(
         h => to_handle(h)===h
@@ -32,7 +30,7 @@ export const upsert = (app, item) => regular_upsert(
     );
     final.search.push(
       ...union(
-        final?.collections?.map(c => `col:${c?.handle}`),
+        final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
         final?.collections?.map(c => `col:${c?.id}`),
       )
     );
@@ -46,7 +44,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.database.js').RegularGetOptions} options
+ * @param {import('../types.database.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
@@ -60,7 +58,7 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
 
@@ -87,10 +85,10 @@ export const remove_product_from_collection = (app, product, collection) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} product handle or id
+ * @param {string} handle_or_id handle or id
  */
-export const list_product_collections = (app, product) => {
-  return db(app).list_product_collections(product);
+export const list_product_collections = (app, handle_or_id) => {
+  return db(app).list_product_collections(handle_or_id);
 }
 
 /**

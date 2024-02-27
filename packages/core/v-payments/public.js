@@ -1,1 +1,0 @@
-export const tomer = 1;

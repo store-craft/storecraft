@@ -18,6 +18,6 @@
     "@storecraft/storage-google": "^1.0.0"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
   "license": "ISC"
 }

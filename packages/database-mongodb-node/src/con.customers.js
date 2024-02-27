@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+  upsert_regular } from './con.shared.js'
 import { to_objid } from './utils.funcs.js'
 
 /**
@@ -10,7 +10,7 @@ import { to_objid } from './utils.funcs.js'
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<db_col["$type"]>}
+ * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('customers');
 
@@ -26,23 +26,49 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * @returns {db_col["getByEmail"]}
+ */
+const getByEmail = (driver) => {
+  return async (email) => {
+    return col(driver).findOne(
+      { email }
+    );
+  }
+}
+
+/**
+ * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
   return async (id) => {
 
-    const res = await col(driver).findOneAndDelete(
-      { _id: to_objid(id) }
-    );
-
-    // delete the auth user
-    if(res?.auth_id) {
-      await driver.auth_users._col.findOneAndDelete(
-        { _id: to_objid(res.auth_id) }
+    const session = driver.mongo_client.startSession();
+    try {
+      await session.withTransaction(
+        async () => {
+          const res = await col(driver).findOneAndDelete(
+            { _id: to_objid(id) },
+            { session }
+          );
+      
+          // delete the auth user
+          if(res?.auth_id) {
+            await driver.auth_users._col.findOneAndDelete(
+              { _id: to_objid(res.auth_id) },
+              { session }
+            );
+          }
+        }
       );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
     }
 
-    return
+    return true;
   }
 }
 /**
@@ -59,6 +85,7 @@ export const impl = (driver) => {
   return {
     _col: col(driver),
     get: get(driver),
+    getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver)

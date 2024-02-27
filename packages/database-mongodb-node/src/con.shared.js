@@ -1,57 +1,45 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { handle_or_id, isUndef, sanitize, to_objid } from './utils.funcs.js'
+import { handle_or_id, isUndef, sanitize_array, 
+  sanitize_one, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template T, G
  * @param {MongoDB} driver 
- * @param {Collection<T>} col 
- * @returns {import('@storecraft/core').db_crud<T>["upsert"]}
+ * @param {Collection<G>} col 
+ * @returns {import('@storecraft/core').db_crud<T, G>["upsert"]}
  */
 export const upsert_regular = (driver, col) => {
   return async (data) => {
-    
-    const filter = { _id: to_objid(data.id) };
-    const replacement = { ...data };
-    const options = { upsert: true };
 
-    const res = await col.replaceOne(
-      filter, replacement, options
-    );
+    const session = driver.mongo_client.startSession();
 
-    ////
-    // REPORT IMAGES USAGE
-    ////
-    await report_document_media(driver)(data);
-
-    return;
-  }
-}
-
-/**
- * 
- * @param {import('@storecraft/core').ExpandQuery} expand 
- */
-const gen_lookup = expand => {
-  // const r = await col.aggregate(
-  //   [
-  //     { $match : filter },
-  //     ...gen_lookup(options.expand)
-  //   ]
-  // ).toArray();
-
-  return (expand??[]).map(
-    e => {
-      return {
-        $lookup: { 
-          from: e, localField: `_${e}`, 
-          foreignField: '_id', as: e 
+    try {
+      await session.withTransaction(
+        async () => {
+          const res = await col.replaceOne(
+            { _id: to_objid(data.id) }, 
+            data,
+            { session, upsert: true }
+          );
+      
+          ////
+          // REPORT IMAGES USAGE
+          ////
+          await report_document_media(driver)(data, session);
         }
-      }
+      );
+    } catch(e) {
+      // console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
     }
-  )
+
+    return true;
+  }
 }
 
 /**
@@ -65,7 +53,7 @@ export const get_relations_names = item => {
 
 /**
  * Expand relations in-place
- * @template {import('@storecraft/core').BaseType} T
+ * @template {any} T
  * @param {T[]} items
  * @param {import('@storecraft/core').ExpandQuery} [expand_query] 
  */
@@ -80,49 +68,50 @@ export const expand = (items, expand_query=undefined) => {
 
     for(const e of (expand_query ?? [])) {
       // try to find embedded documents relations
-      item[e] = sanitize(Object.values(item?._relations?.[e]?.entries ?? {}));
+      item[e] = sanitize_array(Object.values(item?._relations?.[e]?.entries ?? {}));
     }
   }
 }
 
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template T, G
  * @param {MongoDB} driver 
- * @param {Collection<T>} col 
- * @returns {import('@storecraft/core').db_crud<T>["get"]}
+ * @param {Collection<G>} col 
+ * @returns {import('@storecraft/core').db_crud<T, G>["get"]}
  */
 export const get_regular = (driver, col) => {
   return async (id_or_handle, options) => {
     const filter = handle_or_id(id_or_handle);
-    /** @type {import('./utils.relations.js').WithRelations<T>} */
+    /** @type {import('./utils.relations.js').WithRelations<G>} */
     const res = await col.findOne(filter);
     // try to expand relations
     expand([res], options?.expand);
-    return sanitize(res);
+    return sanitize_one(res);
   }
 }
 
 /**
  * get bulk of items, ordered, if something is missing, `undefined`
  * should be instead
- * @template {import('@storecraft/core').BaseType} T
+ * @template {import('@storecraft/core').idable} T
+ * @template {import('@storecraft/core').idable} G
  * @param {MongoDB} driver 
- * @param {Collection<T>} col 
- * @returns {import('@storecraft/core').db_crud<T>["getBulk"]}
+ * @param {Collection<G>} col 
+ * @returns {import('@storecraft/core').db_crud<T, G>["getBulk"]}
  */
 export const get_bulk = (driver, col) => {
   return async (ids, options) => {
     const objids = ids.map(to_objid);
 
-    /** @type {import('./utils.relations.js').WithRelations<T>[]} */
     const res = await col.find(
       { _id: { $in: objids } }
     ).toArray();
 
     // try to expand relations
     expand(res, options?.expand);
-    const sanitized = sanitize(res);
+    const sanitized = sanitize_array(res);
+
     // now let's order them
     return ids.map(
       id => sanitized.find(s => s.id===id)
@@ -133,40 +122,37 @@ export const get_bulk = (driver, col) => {
 
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template T, G
  * @param {MongoDB} driver 
- * @param {Collection<T>} col 
- * @returns {import('@storecraft/core').db_crud<T>["remove"]}
+ * @param {Collection<G>} col 
+ * @returns {import('@storecraft/core').db_crud<T, G>["remove"]}
  */
 export const remove_regular = (driver, col) => {
-  return async (id) => {
-    const filter = { _id: to_objid(id) };
-
+  return async (id_or_handle) => {
     const res = await col.findOneAndDelete( 
-      filter
+      handle_or_id(id_or_handle)
     );
-
-    return
   }
 }
 
 /**
- * @template {import('@storecraft/core').BaseType} T
+ * @template {any} T
+ * @template {any} G
  * @param {MongoDB} driver 
- * @param {Collection<T>} col 
- * @returns {import('@storecraft/core').db_crud<T>["list"]}
+ * @param {Collection<G>} col 
+ * @returns {import('@storecraft/core').db_crud<T, G>["list"]}
  */
 export const list_regular = (driver, col) => {
   return async (query) => {
 
     const { filter, sort } = query_to_mongo(query);
 
-    console.log('query', query)
-    console.log('filter', JSON.stringify(filter, null, 2))
-    console.log('sort', sort)
-    console.log('expand', query?.expand)
+    // console.log('query', query)
+    // console.log('filter', JSON.stringify(filter, null, 2))
+    // console.log('sort', sort)
+    // console.log('expand', query?.expand)
 
-    /** @type {import('@storecraft/core').db_crud<T>["$type"][]} */
+    /** @type {import('mongodb').WithId<G>[]} */
     const items = await col.find(
       filter,  {
         sort, limit: query.limit
@@ -176,7 +162,7 @@ export const list_regular = (driver, col) => {
     // try expand relations, that were asked
     expand(items, query?.expand);
 
-    return sanitize(items);
+    return sanitize_array(items);
   }
 }
 

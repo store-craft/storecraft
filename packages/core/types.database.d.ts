@@ -1,10 +1,10 @@
 import { 
-  AuthUserType, BaseType, CollectionType, CustomerType, 
-  DiscountType, ImageType, NotificationType, 
-  OrderData, 
-  PostType, ProductType, ShippingMethodType, 
-  StorefrontType, TagType } from "./types.api.js";
-import { App, ExpandQuery, ParsedApiQuery } from "./types.public.js";
+  AuthUserType, BaseType, CollectionType, 
+  CustomerType, DiscountType, ImageType, 
+  NotificationType, OrderData, PostType, 
+  ProductType, ShippingMethodType, StorefrontType, 
+  TagType, searchable} from "./v-api/types.api.js";
+import { App, ExpandQuery, ApiQuery } from "./types.public.js";
 
 export type ID = string;
 export type Handle = string;
@@ -19,48 +19,61 @@ export type RegularGetOptions = {
   expand? : ExpandQuery;
 }
 
+export type idable_concrete = {
+  id: string;
+}
+
+export type Aug = {
+  search?: string[],
+  created_at: string;
+  updated_at: string;
+}
+
 /**
  * Basic collection or table
  */
-export declare interface db_crud<T> {
-  $type?: T;
+export declare interface db_crud<U extends idable_concrete, G=U> {
+  /** upsert type */
+  $type_upsert?: U;
+  /** get type */
+  $type_get?: G;
 
   /**
    * get a single item by handle or id
    * @param id_or_handle 
    * @param options 
    */
-  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<Partial<T>>;
+  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<G>;
   /**
    * get bulk of items, ordered, if something is missing, `undefined`
    * should be instead
    * @param ids array of ids
    * @param options 
    */
-  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<(Partial<T> | undefined)[]>;
+  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<G[]>;
 
   /**
    * Insert or Replace an item
    */
-  upsert: (data?: T) => Promise<void>;
+  upsert: (data: U & searchable & idable_concrete) => Promise<boolean>;
 
   /**
    * Insert or Replace an item
    * @param handle 
    */
-  upsertBulk?: (data?: Partial<T>[]) => Promise<void>;
+  upsertBulk?: (data: (U & searchable & idable_concrete)[]) => Promise<boolean>;
 
   /**
    * Delete an item
-   * @param handle 
+   * @param id_or_handle 
    */
-  remove: (handle?: HandleOrId) => Promise<void>
+  remove: (id_or_handle: HandleOrId) => Promise<boolean>
 
   /**
    * TBD
    * @returns 
    */
-  list: (query: ParsedApiQuery) => Promise<Partial<T>[]>
+  list: (query: ApiQuery) => Promise<G[]>
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -68,42 +81,42 @@ export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
 /**
  * auth users crud
  */
-export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
+export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & idable_concrete>> {
   /**
    * get by email
-   * @param handle 
+   * @param email 
    */
   getByEmail: (email?: string) => Promise<AuthUserType>;
+  /**
+   * remove by email
+   * @param email 
+   */
+  removeByEmail: (email?: string) => Promise<void>;
+
 }
 
 /**
  * tags crud
  */
-export interface db_tags extends db_crud<TagType & SearchTermsType> {
+export interface db_tags extends db_crud<TagType & idable_concrete, TagType> {
 }
 
 /**
  * collections crud
  */
-export interface db_collections extends db_crud<CollectionType & SearchTermsType> {
+export interface db_collections extends db_crud<CollectionType & idable_concrete, CollectionType> {
 
   /**
    * List and query the product in a collection
    * @param handle_or_id collection handle or id
    * @param query query
    */
-  list_collection_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
+  list_collection_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<Partial<ProductType>[]>
 
-}
-
-/**
- * customers crud
- */
-export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & SearchTermsType>> {
 }
 
 /** products crud */
-export interface db_products extends db_crud<ProductType & SearchTermsType> {
+export interface db_products extends db_crud<ProductType & idable_concrete, ProductType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -111,7 +124,7 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_collections: (product: HandleOrId) => Promise<Partial<CollectionType>[]>;
+  list_product_collections: (product: HandleOrId) => Promise<CollectionType[]>;
 
   /**
    * list all of the product related discounts, returns eveything, this is not query based,
@@ -119,7 +132,7 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_discounts: (product: HandleOrId) => Promise<Partial<DiscountType>[]>;
+  list_product_discounts: (product: HandleOrId) => Promise<DiscountType[]>;
 
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -127,7 +140,7 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: HandleOrId) => Promise<Partial<ProductType>[]>;
+  list_product_variants: (product: HandleOrId) => Promise<ProductType[]>;
   
   /**
    * Add product to collection
@@ -144,87 +157,94 @@ export interface db_products extends db_crud<ProductType & SearchTermsType> {
   remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
 }
 
+/**
+ * customers crud
+ */
+export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & idable_concrete, CustomerType>> {
+  getByEmail: (email: string) => Promise<CustomerType>;
+}
+
 /** StorefrontData crud */
-export interface db_storefronts extends db_crud<StorefrontType & SearchTermsType> {
+export interface db_storefronts extends db_crud<StorefrontType & idable_concrete, StorefrontType> {
   /**
    * list all of the product related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_products: (handle_or_id: HandleOrId) => Promise<Partial<ProductType>[]>;
+  list_storefront_products: (handle_or_id: HandleOrId) => Promise<ProductType[]>;
   /**
    * list all of the collections related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<Partial<CollectionType>[]>;
+  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<CollectionType[]>;
   /**
    * list all of the discounts related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<Partial<DiscountType>[]>;
+  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<DiscountType[]>;
   /**
    * list all of the shipping methods related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<Partial<ShippingMethodType>[]>;
+  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<ShippingMethodType[]>;
   /**
    * list all of the posts related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<Partial<PostType>[]>;
+  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
 
 }
 
 /** ImageType crud */
-export interface db_images extends db_crud<ImageType & SearchTermsType> {
+export interface db_images extends db_crud<ImageType & idable_concrete, ImageType> {
   /**
    * report the media images
    * @param data a document that has `media`
    */
-  report_document_media: (data: BaseType) => Promise<void>;
+  report_document_media: (data: BaseType, extra: any) => Promise<void>;
 }
 
 /** PostType crud */
-export interface db_posts extends db_crud<PostType & SearchTermsType> {
+export interface db_posts extends db_crud<PostType & idable_concrete, PostType> {
 }
 
 /** ShippingMethodType crud */
-export interface db_shipping extends OmitGetByHandle<db_crud<ShippingMethodType & SearchTermsType>> {
+export interface db_shipping extends db_crud<ShippingMethodType & idable_concrete, ShippingMethodType> {
 }
 
 /** NotificationType crud */
-export interface db_notifications extends OmitGetByHandle<db_crud<NotificationType & SearchTermsType>> {
+export interface db_notifications extends OmitGetByHandle<db_crud<NotificationType & idable_concrete, NotificationType>> {
 }
 
 /** DiscountType crud */
-export interface db_discounts extends db_crud<DiscountType & SearchTermsType> {
+export interface db_discounts extends db_crud<DiscountType & idable_concrete, DiscountType> {
 
   /**
    * List and query the products in a discount
    * @param handle_or_id discount handle or id
    * @param query query
    */
-  list_discount_products: (handle_or_id: HandleOrId, query: ParsedApiQuery) => Promise<Partial<ProductType>[]>
+  list_discount_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<ProductType[]>
 }
 
 /** OrderData crud */
-export interface db_orders extends OmitGetByHandle<db_crud<OrderData & SearchTermsType>> {
+export interface db_orders extends OmitGetByHandle<db_crud<OrderData & idable_concrete, OrderData>> {
 
   /**
    * 
    * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
    * @param query query object
    */
-  list_customer_orders: (customer_id: ID, query: ParsedApiQuery) => Promise<Partial<OrderData>[]>;
+  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
 export interface db_driver {
@@ -232,6 +252,8 @@ export interface db_driver {
    * Init to the database
    */
   init: (app: App<any, any, any>) => Promise<this>;
+  /** Disconnect the database if possible */
+  disconnect: () => Promise<boolean>;
 
   /**
    * Is the driver ready ?

@@ -1,0 +1,16 @@
+{
+  "name": "@storecraft/test-runner",
+  "version": "1.0.0",
+  "description": "Official integration test runner for storecraft api",
+  "main": "index.js",
+  "type": "module",
+  "devdependencies": {
+    "@storecraft/core": "^1.0.0",
+    "@types/node": "^20.11.0",
+    "uvu": "^0.5.6",
+    "dotenv": "^16.3.1"
+  },
+  "keywords": [],
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
+  "license": "ISC"
+}

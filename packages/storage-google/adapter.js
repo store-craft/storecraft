@@ -262,6 +262,7 @@ export class GoogleStorage {
       }
     );
 
+    return r.ok;
     // console.log(r)
   }
 }

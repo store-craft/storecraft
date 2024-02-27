@@ -4,7 +4,7 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URL;
 
 console.log('uri ', uri);
 

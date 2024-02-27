@@ -6,7 +6,8 @@ import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
 /**
- * @typedef {import('../types.api.js').ImageType} ItemType
+ * @typedef {import('./types.api.js').ImageType} ItemType
+ * @typedef {import('./types.api.js').ImageTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -17,7 +18,7 @@ export const db = app => app.db.images;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = async (app, item) => {
   assert_zod(imageTypeSchema, item);
@@ -35,7 +36,7 @@ export const upsert = async (app, item) => {
   );
 
   await db(app).upsert(final);
-  return final;
+  return final.id;
 }
 
 /**
@@ -57,17 +58,17 @@ export const remove = async (app, id) => {
   if(!img) return;
 
   // remove from storage if it belongs
-  if(img.url.startsWith('storage://'))
+  if(app.storage && img.url.startsWith('storage://'))
     await app.storage.remove(img.url.substring('storage://'.length));
 
   // db remove image side-effect
-  await app.db.images.remove(img.id);
+  return app.db.images.remove(img.id);
 }
 
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
 
@@ -87,7 +88,7 @@ export const image_url_to_handle = url => to_handle(image_url_to_name(url));
 /**
  * report media usages
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.js').BaseType} data data being reported
+ * @param {import('./types.api.js').BaseType} data data being reported
  */
 export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
   await db(app).report_document_media(data)

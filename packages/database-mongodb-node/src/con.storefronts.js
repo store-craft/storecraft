@@ -2,7 +2,7 @@ import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular } from './con.shared.js'
-import { sanitize, to_objid } from './utils.funcs.js'
+import { sanitize_array, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js';
 import { report_document_media } from './con.images.js';
 
@@ -12,7 +12,7 @@ import { report_document_media } from './con.images.js';
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type"]>>}
+ * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('storefronts');
 
@@ -22,40 +22,50 @@ const col = (d) => d.collection('storefronts');
  */
 const upsert = (driver) => {
   return async (data) => {
-    
-    const filter = { _id: to_objid(data.id) };
-    const options = { upsert: true };
+    const session = driver.mongo_client.startSession();
+    try {
+      await session.withTransaction(
+        async () => {
+          ////
+          // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
+          ////
+          let replacement = await create_explicit_relation(
+            driver, data, 'products', 'products', false
+          );
+          replacement = await create_explicit_relation(
+            driver, replacement, 'collections', 'collections', false
+          );
+          replacement = await create_explicit_relation(
+            driver, replacement, 'discounts', 'discounts', false
+          );
+          replacement = await create_explicit_relation(
+            driver, replacement, 'shipping_methods', 'shipping_methods', false
+          );
+          replacement = await create_explicit_relation(
+            driver, replacement, 'posts', 'posts', false
+          );
 
-    ////
-    // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
-    ////
-    const replacement = await create_explicit_relation(
-      driver, data, 'products', 'products', false
-    );
-    await create_explicit_relation(
-      driver, replacement, 'collections', 'collections', false
-    );
-    await create_explicit_relation(
-      driver, replacement, 'discounts', 'discounts', false
-    );
-    await create_explicit_relation(
-      driver, replacement, 'shipping_methods', 'shipping_methods', false
-    );
-    await create_explicit_relation(
-      driver, replacement, 'posts', 'posts', false
-    );
+          ////
+          // REPORT IMAGES USAGE
+          ////
+          await report_document_media(driver)(replacement, session);
+          
+          // SAVE ME
+          const res = await col(driver).replaceOne(
+            { _id: to_objid(data.id) }, 
+            replacement, 
+            { session, upsert: true }
+          );
+        }
+      );
+    } catch (e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
+    }
 
-    ////
-    // REPORT IMAGES USAGE
-    ////
-    await report_document_media(driver)(data);
-    
-    // SAVE ME
-    const res = await col(driver).replaceOne(
-      filter, replacement, options
-    );
-
-    return;
+    return true;
   }
 
 }
@@ -86,7 +96,7 @@ const list_storefront_products = (driver) => {
       expand: ['products']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.products);
+    return sanitize_array(item?.products);
   }
 }
 
@@ -101,7 +111,7 @@ const list_storefront_collections = (driver) => {
       expand: ['collections']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.collections);
+    return sanitize_array(item?.collections);
   }
 }
 
@@ -116,7 +126,7 @@ const list_storefront_discounts = (driver) => {
       expand: ['discounts']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.discounts);
+    return sanitize_array(item?.discounts);
   }
 }
 
@@ -131,7 +141,7 @@ const list_storefront_shipping_methods = (driver) => {
       expand: ['shipping_methods']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.shipping_methods);
+    return sanitize_array(item?.shipping_methods);
   }
 }
 
@@ -146,7 +156,7 @@ const list_storefront_posts = (driver) => {
       expand: ['posts']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize(item?.posts);
+    return sanitize_array(item?.posts);
   }
 }
 

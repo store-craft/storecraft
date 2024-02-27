@@ -1,11 +1,20 @@
-import { PaymentOptionsEnum } from "./types.api.enums.js";
-import { PaymentGatewayStatus } from "./types.payments.js";
+export type timestamps = {
+  created_at?: string;
+  updated_at?: string;
+}
+
+export type searchable = {
+  /** Search terms, usually computed by backend */
+  search?: string[];
+}
+
+export type idable = {
+  /** ID */
+  id?: string;
+}
 
 /** Base properties */
-type BaseType = {
-  updated_at?: string;
-  created_at?: string;
-  id?: string;
+export interface BaseType extends idable {
   /** List of images urls */
   media?: string[];
   /** List of attributes */
@@ -13,13 +22,11 @@ type BaseType = {
   /** list of tags , example ['genere_action', 'rated_M', ...] */
   tags?: string[];
   /** Rich description */
-  desc?: string;
+  description?: string;
   /** Is the entity active ? */
   active?: boolean;
-  /** Search terms, usually computed by backend */
-  search?: string[];
-  [x: string] : any;
 }
+
 
 // auth
 
@@ -35,17 +42,8 @@ export type AuthBaseType = {
   password: string;
 }
 
-export type Role2 = {
-  admin: {
-    type: 'admin'
-  },
-  user: {
-    type: 'user'
-  },
-}
 
 export type Role = 'admin' | 'user' | string;
-
 export type ApiAuthSigninType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
 export type ApiAuthRefreshType = {
@@ -65,18 +63,21 @@ export type AttributeType = {
 }
 
 
+
 // tag type
 
-export type TagType = BaseType & {
+export interface TagType extends idable, timestamps {
   /** the key name */
   handle: string;
   /** list of values */
   values: string[];
 }
 
+export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
+  
 // collections
 
-export type CollectionType = BaseType & {
+export interface CollectionType extends BaseType, timestamps {
   /** the key name */
   handle: string;
   /** title of collection */
@@ -86,6 +87,9 @@ export type CollectionType = BaseType & {
   /** published json url */
   published?: string;
 }
+
+export type CollectionTypeUpsert = Omit<CollectionType, 'created_at' | 'updated_at' | 'published'>;
+
 
 // products
 
@@ -121,15 +125,22 @@ export type VariantOptionSelection = {
   value_id: string;
 }
 
-export type ProductType = BaseType & {
+export interface VariantType extends BaseProductType {
+  /** handle of parent product in case this product is a variant */
+  parent_handle?: string;
+  /** id of parent product in case this product is a variant */
+  parent_id?: string;
+  /** Internal usage, clarifies the variant projected options */
+  variant_hint?: VariantOptionSelection[];
+}
+
+export interface BaseProductType extends BaseType, timestamps {
   /** the key name */
   handle: string;
   /** title of collection */
   title: string;
   /** status */
   active: boolean;
-  /** collections, upon insert, should have at least id field */
-  collections?: Partial<CollectionType>[];
   /** video media url */
   video?: string;
   /** 
@@ -148,27 +159,35 @@ export type ProductType = BaseType & {
    */
   compare_at_price?: number;
 
-  /** product variants */
-  variants?: ProductType[]
-  /** handle of parent product in case this product is a variant */
-  parent_handle?: string;
-  /** id of parent product in case this product is a variant */
-  parent_id?: string;
+  /** collections, upon insert, should have at least id field, expanded */
+  collections?: CollectionType[];
+  /** discounts we know were applied to this product, expanded type */
+  discounts?: DiscountType[];
+}
+
+export type VariantTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+  /** list of collections to add the product into, this is an explicit connection, to form a better UX experience */
+  collections?: Pick<CollectionType, 'id'>[];
+}
+
+export interface ProductType extends BaseProductType {
+  /** product variants, expanded type */
+  variants?: VariantType[]
   /** variants options info */
   variants_options?: VariantOption[];
-  /** mapping of product variants handles to product data and variants options selection */
-  variants_products?: Record<string, VariantCombination>
-  /** Internal usage, clarifies the variant projected options */
-  variant_hint?: VariantOptionSelection[];
-  /** discounts we know were applied to this product */
-  discounts?: Partial<DiscountType>[];
+}
+
+export type ProductTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+  /** list of collections to add the product into, this is an explicit connection, to form a better UX experience */
+  collections?: Pick<CollectionType, 'id'>[];
 }
 
 //
 
 // discounts
 
-export type DiscountType = BaseType & {
+export interface DiscountType extends BaseType, timestamps {
+  active: boolean;
   /** title */
   title: string;
   /** discount code */
@@ -185,6 +204,8 @@ export type DiscountType = BaseType & {
   /** discount application (automatic and coupons) */
   application: DiscountApplication;
 }
+
+export type DiscountTypeUpsert = Omit<DiscountType, 'created_at' | 'updated_at'>;
 
 /** details and filters of the discount */
 export type DiscountInfo = {
@@ -207,12 +228,30 @@ export type DiscountApplication = {
   name2: ('automatic' | 'manual');
 }
 
+export type FilterValue_p_in_collections = { id?: string, handle?: string }[];
+export type FilterValue_p_not_in_collections = { id?: string, handle?: string }[];
+export type FilterValue_p_in_handles = string[];
+export type FilterValue_p_not_in_handles = string[];
+export type FilterValue_p_in_tags = string[];
+export type FilterValue_p_not_in_tags = string[];
+export type FilterValue_p_all = any;
+export type FilterValue_p_in_price_range = { from?: number, to: number };
+export type FilterValue_o_subtotal_in_range = { from?: number, to: number };
+export type FilterValue_o_items_count_in_range = { from?: number, to: number };
+export type FilterValue_o_date_in_range = { from?: number, to: number };
+export type FilterValue_o_has_customers = string[];
+
 /** Discount filter scheme */
 export type Filter = {
   /** meta data related to identifying the filter */
   meta: FilterMeta;
   /** the filter params */
-  value: string[] | { from?: number, to:number} | { id?: string, handle?: string }[];
+  value?: FilterValue_p_in_collections | FilterValue_p_not_in_collections | 
+          FilterValue_p_in_handles | FilterValue_p_not_in_handles | 
+          FilterValue_p_in_tags | FilterValue_p_not_in_tags | 
+          FilterValue_p_all | FilterValue_p_in_price_range | 
+          FilterValue_o_subtotal_in_range | FilterValue_o_items_count_in_range |
+          FilterValue_o_date_in_range | FilterValue_o_has_customers;
 }
 
 /** Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  */
@@ -223,7 +262,7 @@ export type FilterMeta = {
   type: 'product' | 'order';
   /**  operation name id */
   op: 'p-in-collections' | 'p-not-in-collections' | 'p-in-handles' | 'p-not-in-handles' | 
-  'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p_in_price_range' | 'o-subtotal-in-range' | 
+  'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p-in-price-range' | 'o-subtotal-in-range' | 
   'o-items-count-in-range' | 'o-date-in-range' | 'o_has_customer';
   /** printable name */
   name: string;
@@ -305,7 +344,7 @@ export type BundleDiscountExtra = {
 
 // storefront
 
-export type StorefrontType = BaseType & {
+export interface StorefrontType extends BaseType, timestamps {
   /** readable handle */
   handle: string;
   /** readable title */
@@ -315,17 +354,18 @@ export type StorefrontType = BaseType & {
   /** exported storefront json */
   published?: string;
   /** Handles of collections part of the storefront */
-  collections?: Partial<CollectionType>[];
+  collections?: CollectionType[];
   /** Handles of products you want to promote as part of the storefront */
-  products?: Partial<ProductType>[];
+  products?: ProductType[];
   /** Handles of shipping methods part of the storefront */
-  shipping_methods?: Partial<ShippingMethodType>[];
+  shipping_methods?: ShippingMethodType[];
   /** Handles of discounts to prmote part of the storefront */
-  discounts?: Partial<DiscountType>[];
+  discounts?: DiscountType[];
   /** Handles of posts to prmote part of the storefront */
-  posts?: Partial<PostType>[];
+  posts?: PostType[];
 }
 
+export type StorefrontTypeUpsert = Omit<StorefrontType, 'created_at' | 'updated_at'>;
 
 //
 
@@ -357,7 +397,7 @@ export type AddressType = {
   postal_code?: string;  
 }
 
-export type CustomerType = BaseType & {
+export interface CustomerType extends BaseType, timestamps {
   /** The auth id */
   auth_id?: string;
   /** firstname */
@@ -377,9 +417,11 @@ export type CustomerType = BaseType & {
   address?: AddressType;
 }
 
+export type CustomerTypeUpsert = Omit<CustomerType, 'updated_at' | 'created_at'>
+
 // image
 
-export type ImageType = BaseType & {
+export interface ImageType extends BaseType, timestamps {
   /** unique handle */
   handle: string;
   /** name */
@@ -390,10 +432,12 @@ export type ImageType = BaseType & {
   usage?: string[];
 }
 
+export type ImageTypeUpsert = Omit<ImageType, 'updated_at' | 'created_at'>
+
 // shipping
 
 
-export type ShippingMethodType = BaseType & {
+export interface ShippingMethodType extends BaseType, timestamps {
   /**
    * shipping method price
    * @minimum 0 Please set a price >= 0
@@ -401,12 +445,14 @@ export type ShippingMethodType = BaseType & {
   price: number;
   /** name */
   name: string;
+  handle: string;
 }
 
+export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'created_at' | 'updated_at'>;
 
 // posts
 
-export type PostType = BaseType & {
+export interface PostType extends BaseType, timestamps {
   /** unique handle */
   handle: string;
   /** title of post */
@@ -415,25 +461,34 @@ export type PostType = BaseType & {
   text: string;
 }
 
+export type PostTypeUpsert = Omit<PostType, 'updated_at' | 'created_at'>;
 
 // settings
 
 
 
-export type SettingsType = BaseType & {
+export interface SettingsType extends BaseType {
 
 }
 
 
 // notifications
 
-export type NotificationType = BaseType & {
+interface BaseNotificationType {
   /** message of notification, can be markdown, markup or plain text */
   message: string;
   /** author of the notification */
   author?: string;
   /** list of actions */
   actions?: NotificationAction[];
+  search?: string[];
+  id?: string;
+}
+
+export interface NotificationType extends BaseNotificationType, timestamps {
+}
+
+export interface NotificationTypeUpsert extends BaseNotificationType {
 }
 
 /** each notification may have an actionable item associated with it. For example, clicking an order notification will route to the order page at Shelf */
@@ -443,11 +498,11 @@ export type NotificationAction = {
   /** the type of action */
   type?: NotificationActionType;
   /** extra params for the actions type */
-  params?: NotificationActionRouteParams | NotificationActionUrlParams | any;
+  params?: NotificationActionRouteParams | NotificationActionUrlParams;
 }
 
 /** 'route' means routing inside shelfm 'url' is linking to a url */
-export type NotificationActionType = 'route' | 'url' | string;
+export type NotificationActionType = 'route' | 'url';
 
 /** route inside shelf action params */
 export type NotificationActionRouteParams = {
@@ -460,40 +515,47 @@ export type NotificationActionRouteParams = {
 /** Action params for actions of type 'url' */
 export type NotificationActionUrlParams = {
   /** open the url in new window */
-  new_window: boolean;
+  new_window?: boolean;
   /** the url to open */
   url: string;
 }
 
 
 // order types
-
-export type OrderData = BaseType & {
-  /** status of checkout, fulfillment and payment */
-  status: OrderStatus; 
+export interface BaseCheckoutCreateType {
   /** buyer info */
-  contact: OrderContact;
+  contact?: OrderContact;
   /** shipping address info */
-  address: AddressType;
+  address?: AddressType;
   /** line items is a list of the purchased products */
   line_items: LineItem[];
   /** notes for the order */
-  notes: string; 
+  notes?: string; 
   /** shipping method info */
   shipping_method: ShippingMethodType; 
-  /** a list of manual coupons */
-  coupons: DiscountType[]; 
+}
+
+export interface CheckoutCreateType extends BaseCheckoutCreateType {
+  /** a list of manual coupons handles */
+  coupons?: DiscountType["handle"][]; 
+}
+
+export interface OrderData extends BaseCheckoutCreateType, BaseType, timestamps {
+  /** status of checkout, fulfillment and payment */
+  status: OrderStatus; 
   /** pricing information */
   pricing: PricingData;
   /** in case the order went through validation  */
   validation?: ValidationEntry[];
   /** payment gateway info and status */
-  payment_gateway: OrderPaymentGatewayData; 
+  payment_gateway?: OrderPaymentGatewayData; 
+  /** a list of manual coupons snapshots that were used */
+  coupons?: DiscountType[]; 
 }
 
-export type CheckoutData = {
+export type OrderDataUpsert = Omit<OrderData, 'updated_at' | 'created_at'>;
 
-}
+
 
 /** Order buyer info */
 export type OrderContact = {
@@ -548,9 +610,9 @@ export type CheckoutStatusOptions = {
 /** Pricing object exaplins how the pricing of an order was calculated given a stack of automatic discounts, coupons, line items and shipping method */
 export type PricingData = {
   /** explanation of how discounts stack and change pricing */
-  evo: EvoEntry[]; 
+  evo?: EvoEntry[]; 
   /** selected shipping method */
-  shipping_method: ShippingMethodType;
+  shipping_method?: ShippingMethodType;
   /** subtotal of items price before discounts */
   subtotal_undiscounted: number; 
   /** sum of all discounts at all stages */
@@ -565,7 +627,7 @@ export type PricingData = {
   quantity_discounted: number;
   /** authentication user id */
   uid?: string; 
-  errors: DiscountError[];
+  errors?: DiscountError[];
  
 }
 
@@ -621,5 +683,5 @@ export type OrderPaymentGatewayData = {
   /** result of gateway at checkout creation */
   on_checkout_create?: any;
   /** latest status of payment for caching */
-  latest_status?: PaymentGatewayStatus; 
+  latest_status?: any; 
 }

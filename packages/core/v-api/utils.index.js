@@ -5,7 +5,7 @@ export const isUnd = v => !isDef(v);
 
 /**
  * Reasonable search index for terms for most types
- * @param {import('../types.api.js').BaseType} data 
+ * @param {import('./types.api.js').BaseType} data 
  * @returns {string[]}
  */
 export const create_search_index = (data) => {

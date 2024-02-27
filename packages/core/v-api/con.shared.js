@@ -4,7 +4,8 @@ import { create_search_index } from './utils.index.js'
 import { ZodSchema } from 'zod'
 
 /**
- * @typedef {import('../types.api.js').BaseType} ItemType
+ * @typedef {import('./types.api.js').searchable} searchable
+ * @typedef {import('./types.api.js').BaseType} ItemType
  * @typedef {import('../types.database.js').RegularGetOptions} RegularGetOptions
  */
 
@@ -12,12 +13,13 @@ import { ZodSchema } from 'zod'
  * This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {import('../types.api.js').BaseType} T
- * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud} db
+ * @template {import('./types.api.js').idable} T
+ * @template {import('./types.api.js').idable} G
+ * @param {import("../types.public.js").App} app app instance
+ * @param {import("../types.database.js").db_crud<T, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
- * @param {(final: T) => Promise<Partial<T>>} hook hook into final state
+ * @param {<H extends T & searchable>(final: H) => Promise<H>} hook hook into final state
  */
 export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 
@@ -31,7 +33,7 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
     await assert_save_create_mode(item, db);
     const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
     // search index
-    let search = create_search_index(item);
+    let search = create_search_index({ ...item, id });
     // apply dates and index
     const final = await hook(
       apply_dates(
@@ -41,15 +43,16 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
       )
     );
 
-    await db.upsert(final);
-    return final;
+    const success = await db.upsert(final);
+    assert(success, 'upsert-failed', 400);
+    return final.id;
   }
 }
 
 /**
- * @template {import('../types.api.js').BaseType} T
+ * @template {any} T, G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T>} db
+ * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_get = (app, db) => /**
   * 
@@ -62,9 +65,9 @@ export const regular_get = (app, db) => /**
   };
 
 /**
- * @template {import('../types.api.js').BaseType} T
+ * @template {import('./types.api.js').BaseType} T, G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T>} db
+ * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_remove = (app, db) => 
   /**
@@ -76,22 +79,23 @@ export const regular_remove = (app, db) =>
   }
 
 /**
- * @template {import('../types.api.js').BaseType} T
+ * @template {import('./types.api.js').BaseType} T, G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T>} db
+ * @param {import("../types.database.js").db_crud<T, G>} db
  */
 export const regular_list = (app, db) => 
   /**
-   * @param {import('../types.api.query.js').ParsedApiQuery} q 
+   * @param {import('./types.api.query.js').ApiQuery} q 
    */
   async (q) => {
     return db.list(q);
   }
 
 /**
- * @template {import("../types.api.js").BaseType} T
- * @param {import("../types.api.js").BaseType} item 
- * @param {import("../types.database.js").db_crud<T>} db 
+ * @template {import("./types.api.js").BaseType} T
+ * @template {import("./types.api.js").BaseType} G
+ * @param {import("./types.api.js").BaseType} item 
+ * @param {import("../types.database.js").db_crud<T, G>} db 
  */
 export const assert_save_create_mode = async (item, db) => {
   // Check if tag exists

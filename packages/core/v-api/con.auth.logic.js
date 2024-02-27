@@ -6,10 +6,29 @@ import { apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema,
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 
+
 /**
  * 
  * @param {App} app 
- * @param {import('../types.api.js').ApiAuthSignupType} body 
+ * @param {string} id
+ */  
+export const removeById = async (app, id) => {
+  return app.db.auth_users.remove(id);
+}
+
+/**
+ * 
+ * @param {App} app 
+ * @param {string} email
+ */  
+export const removeByEmail = async (app, email) => {
+  return app.db.auth_users.removeByEmail(email);
+}
+
+/**
+ * 
+ * @param {App} app 
+ * @param {import('./types.api.js').ApiAuthSignupType} body 
  */  
 export const signup = async (app, body) => {
 
@@ -69,7 +88,7 @@ export const signup = async (app, body) => {
 /**
  * 
  * @param {App} app 
- * @param {import('../types.api.js').ApiAuthSigninType} body 
+ * @param {import('./types.api.js').ApiAuthSigninType} body 
  */  
 export const signin = async (app, body) => {
   assert_zod(apiAuthSigninTypeSchema, body);
@@ -112,7 +131,7 @@ export const signin = async (app, body) => {
 /**
  * 
  * @param {App} app 
- * @param {import('../types.api.js').ApiAuthRefreshType} body 
+ * @param {import('./types.api.js').ApiAuthRefreshType} body 
  */  
 export const refresh = async (app, body) => {
   assert_zod(apiAuthRefreshTypeSchema, body);

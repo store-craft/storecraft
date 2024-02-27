@@ -1,10 +1,11 @@
 import { assert, to_handle } from './utils.func.js'
-import { tagTypeSchema } from './types.autogen.zod.api.js'
+import { tagTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('../types.api.js').TagType} ItemType
+ * @typedef {import('./types.api.js').TagType} ItemType
+ * @typedef {import('./types.api.js').TagTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -15,21 +16,19 @@ export const db = app => app.db.tags;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'tag', tagTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
+  app, db(app), 'tag', tagTypeUpsertSchema, 
   async (final) => {
+    
     assert(
       [final.handle, ...final.values].every(
         h => to_handle(h)===h
       ),
       'Handle or Values are invalid', 400
     );
-    final.search?.push(...(final.values ?? []));
+    final.search.push(...(final.values ?? []));
     return final;
   }
 )(item);
@@ -53,6 +52,6 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);

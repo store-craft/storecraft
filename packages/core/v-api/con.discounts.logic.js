@@ -6,7 +6,8 @@ import {
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('../types.api.js').DiscountType} ItemType
+ * @typedef {import('./types.api.js').DiscountType} ItemType
+ * @typedef {import('./types.api.js').DiscountTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -17,13 +18,10 @@ export const db = app => app.db.discounts;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemType} item
+ * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'dis', discountTypeSchema, 
-  /**
-   * @param {ItemType} final 
-   */
   async (final) => {
     assert(
       [final.handle].every(
@@ -65,7 +63,7 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {import('../types.api.query.js').ParsedApiQuery} q
+ * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
 
@@ -73,7 +71,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
  * given a discount handle and query, return products of that discount
  * @param {import("../types.public.js").App} app
  * @param {import('../types.database.js').HandleOrId} handle_or_id 
- * @param {import('../types.api.query.js').ParsedApiQuery} q 
+ * @param {import('./types.api.query.js').ApiQuery} [q] 
  */
 export const list_discounts_products = async (app, handle_or_id, q) => {
   return db(app).list_discount_products(handle_or_id, q);

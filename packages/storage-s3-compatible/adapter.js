@@ -122,7 +122,7 @@ export class S3CompatibleStorage {
   /**
    * 
    * @param {string} key 
-   * @returns {ReturnType<import('../core/types.storage.js').storage_driver["putSigned"]>}
+   * @returns {ReturnType<import('@storecraft/core/v-storage').storage_driver["putSigned"]>}
    */
   async putSigned(key) {
     const url = new URL(this.get_file_url(key));
@@ -203,7 +203,7 @@ export class S3CompatibleStorage {
   /**
    * 
    * @param {string} key 
-   * @returns {ReturnType<import('../core/types.storage.js').storage_driver["getSigned"]>}
+   * @returns {ReturnType<import('@storecraft/core/v-storage').storage_driver["getSigned"]>}
    */
   async getSigned(key) {
     const url = new URL(this.get_file_url(key));

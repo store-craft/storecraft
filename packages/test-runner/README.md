@@ -28,3 +28,7 @@ storage is tested in it's own package, but integration test should be made avail
 
 ## v-rest controller
 In the future, I will combine rest controller testing with `v-api`
+
+```text
+Author: Tomer Shalev (tomer.shalev@gmail.com)
+```

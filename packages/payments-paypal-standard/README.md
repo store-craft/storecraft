@@ -27,6 +27,6 @@ new PaypalStandard(config);
 - Add tests
 - Think about adding more dynamic config 
 
-```txt
+```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

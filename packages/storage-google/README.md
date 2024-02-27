@@ -1,16 +1,17 @@
 # Storecraft Google Cloud Storage
 
-Support for an `GCP` **Storage**
+`fetch` ready support for an `GCP` **Storage**
 
 Features:
+- Works in any `js` runtime and platform that supports `fetch`
 - Supports streaming `Get` / `Put` / `Delete`
 - Supports `presigned` `Get` / `Put` requests to offload to client
 
-## Howto
+## How-to
 1. Create a bucket at `GCP console` or even at `firebase`
-2. Download the `service key json file`
+2. Download the `service json file`
 
-Use the values in the service key.
+Use the values of the service file.
 
 Note:
 - You can use an empty constructor and upon `StoreCraft` init, the platform
@@ -37,4 +38,9 @@ const { value } = await storage.getBlob('folder1/tomer.txt');
 const url = await storage.getSigned('folder1/tomer.txt');
 console.log('presign GET url ', url);
 
+```
+
+
+```text
+Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

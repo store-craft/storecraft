@@ -22,6 +22,6 @@ let { success, native_response } = await mailer.email({
 
 ```
 
-```txt
+```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'

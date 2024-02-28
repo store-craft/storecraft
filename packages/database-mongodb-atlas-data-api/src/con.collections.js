@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
 import { expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
@@ -29,50 +29,40 @@ const col = (d) => d.collection('collections');
 const upsert = (driver) => {
   return async (data) => {
     const objid = to_objid(data.id)
-    const session = driver.mongo_client.startSession();
-
     try {
-      await session.withTransaction(
-        async () => {
-
-          ////
-          // PRODUCT -> COLLECTION RELATION
-          ////
-          // update collection document in products, that reference this collection
-          await driver.products._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { 
-              $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
-            },
-            { session }
-          );
-
-          ////
-          // STOREFRONTS -> COLLECTIONS RELATION
-          ////
-          await driver.storefronts._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
-            { session }
-          );
-
-          ////
-          // REPORT IMAGES USAGE
-          ////
-          await report_document_media(driver)(data, session);
-
-          // SAVE ME
-          const res = await col(driver).replaceOne(
-            { _id: objid }, data, { upsert: true, session }
-          );
-
-        }, transactionOptions
+      ////
+      // PRODUCT -> COLLECTION RELATION
+      ////
+      // update collection document in products, that reference this collection
+      await driver.products._col.updateMany(
+        { '_relations.collections.ids' : objid },
+        { 
+          $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
+        }, false
       );
-    
+
+      ////
+      // STOREFRONTS -> COLLECTIONS RELATION
+      ////
+      await driver.storefronts._col.updateMany(
+        { '_relations.collections.ids' : objid },
+        { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
+        false
+      );
+
+      ////
+      // REPORT IMAGES USAGE
+      ////
+      await report_document_media(driver)(data);
+
+      // SAVE ME
+      const res = await col(driver).updateOne(
+        { _id: objid }, data, true
+      );
+      
     } catch(e) {
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;
@@ -94,55 +84,46 @@ const remove = (driver) => {
     const item = await col(driver).findOne(handle_or_id(id_or_handle));
     if(!item) return;
     const objid = to_objid(item.id);
-    const session = driver.mongo_client.startSession();
-
     try {
-      await session.withTransaction(
-        async () => {
-
-          ////
-          // PRODUCTS --> COLLECTIONS RELATION
-          ////
-          const rr = await driver.products._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { 
-              $pull: { 
-                '_relations.collections.ids': objid,
-                search: { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
-              },
-              $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
-            },
-            { upsert: false, session }
-          );
-
-          // console.log(objid)
-          // console.log(rr)
-
-          ////
-          // STOREFRONTS --> COLLECTIONS RELATION
-          ////
-          await driver.storefronts._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { 
-              $pull: { '_relations.collections.ids': objid, },
-              $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
-            },
-            { session }
-          );
-
-          // DELETE ME
-          const res = await col(driver).findOneAndDelete(
-            { _id: objid },
-            { session }
-          );
-
-        }, transactionOptions
+      ////
+      // PRODUCTS --> COLLECTIONS RELATION
+      ////
+      const rr = await driver.products._col.updateMany(
+        { '_relations.collections.ids' : objid },
+        { 
+          $pull: { 
+            '_relations.collections.ids': objid,
+            search: { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
+          },
+          $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
+        },
+        false
       );
+
+      // console.log(objid)
+      // console.log(rr)
+
+      ////
+      // STOREFRONTS --> COLLECTIONS RELATION
+      ////
+      await driver.storefronts._col.updateMany(
+        { '_relations.collections.ids' : objid },
+        { 
+          $pull: { '_relations.collections.ids': objid, },
+          $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
+        },
+        false
+      );
+
+      // DELETE ME
+      const res = await col(driver).deleteOne(
+        { _id: objid },
+      );
+
     } catch(e) {
       console.log(e);
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;

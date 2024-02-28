@@ -131,7 +131,7 @@ const remove = (driver) => {
           );
 
           // DELETE ME
-          const res = await col(driver).findOneAndDelete(
+          const res = await col(driver).deleteOne(
             { _id: objid },
             { session }
           );

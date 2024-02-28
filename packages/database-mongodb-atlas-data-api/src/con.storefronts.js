@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular } from './con.shared.js'
@@ -22,47 +22,41 @@ const col = (d) => d.collection('storefronts');
  */
 const upsert = (driver) => {
   return async (data) => {
-    const session = driver.mongo_client.startSession();
     try {
-      await session.withTransaction(
-        async () => {
-          ////
-          // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
-          ////
-          let replacement = await create_explicit_relation(
-            driver, data, 'products', 'products', false
-          );
-          replacement = await create_explicit_relation(
-            driver, replacement, 'collections', 'collections', false
-          );
-          replacement = await create_explicit_relation(
-            driver, replacement, 'discounts', 'discounts', false
-          );
-          replacement = await create_explicit_relation(
-            driver, replacement, 'shipping_methods', 'shipping_methods', false
-          );
-          replacement = await create_explicit_relation(
-            driver, replacement, 'posts', 'posts', false
-          );
+      ////
+      // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
+      ////
+      let replacement = await create_explicit_relation(
+        driver, data, 'products', 'products', false
+      );
+      replacement = await create_explicit_relation(
+        driver, replacement, 'collections', 'collections', false
+      );
+      replacement = await create_explicit_relation(
+        driver, replacement, 'discounts', 'discounts', false
+      );
+      replacement = await create_explicit_relation(
+        driver, replacement, 'shipping_methods', 'shipping_methods', false
+      );
+      replacement = await create_explicit_relation(
+        driver, replacement, 'posts', 'posts', false
+      );
 
-          ////
-          // REPORT IMAGES USAGE
-          ////
-          await report_document_media(driver)(replacement, session);
-          
-          // SAVE ME
-          const res = await col(driver).replaceOne(
-            { _id: to_objid(data.id) }, 
-            replacement, 
-            { session, upsert: true }
-          );
-        }
+      ////
+      // REPORT IMAGES USAGE
+      ////
+      await report_document_media(driver)(replacement);
+      
+      // SAVE ME
+      const res = await col(driver).updateOne(
+        { _id: to_objid(data.id) }, 
+        replacement, 
+        true
       );
     } catch (e) {
       console.log(e);
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;

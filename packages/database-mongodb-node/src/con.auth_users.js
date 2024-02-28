@@ -9,7 +9,7 @@ import { get_regular, list_regular, upsert_regular } from './con.shared.js'
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('@storecraft/core').AuthUserType>}
+ * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('auth_users');
 
@@ -62,7 +62,7 @@ const remove = (driver) => {
 const removeByEmail = (driver) => {
   return async (email) => {
     /** @type {import('@storecraft/core').AuthUserType} */
-    const res = await col(driver).findOneAndDelete(
+    await col(driver).deleteOne(
       { email }
     );
 

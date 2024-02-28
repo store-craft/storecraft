@@ -1,7 +1,6 @@
-import { Collection } from 'mongodb'
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
 import { report_document_media } from './con.images.js';
 
@@ -22,40 +21,33 @@ const col = (d) => d.collection('posts');
 const upsert = (driver) => {
   return async (data) => {
     const objid = to_objid(data.id);
-    const session = driver.mongo_client.startSession();
 
     try {
-      await session.withTransaction(
-        async () => {
+      ////
+      // STOREFRONTS --> POSTS RELATION
+      ////
+      await driver.storefronts._col.updateMany(
+        { '_relations.posts.ids' : objid },
+        { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
+        false
+      );
 
-          ////
-          // STOREFRONTS --> POSTS RELATION
-          ////
-          await driver.storefronts._col.updateMany(
-            { '_relations.posts.ids' : objid },
-            { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
-            { session }
-          );
+      ////
+      // REPORT IMAGES USAGE
+      ////
+      await report_document_media(driver)(data);
 
-          ////
-          // REPORT IMAGES USAGE
-          ////
-          await report_document_media(driver)(data, session);
+      // SAVE ME
 
-          // SAVE ME
-
-          const res = await col(driver).replaceOne(
-            { _id: objid }, 
-            data, 
-            { session, upsert: true }
-          );
-        }
+      const res = await col(driver).updateOne(
+        { _id: objid }, 
+        data, 
+        true
       );
     } catch(e) {
       console.log(e);
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;
@@ -76,36 +68,28 @@ const remove = (driver) => {
     const item = await col(driver).findOne(handle_or_id(id_or_handle));
     if(!item) return;
     const objid = to_objid(item.id)
-    const session = driver.mongo_client.startSession();
 
     try {
-      await session.withTransaction(
-        async () => {
-          ////
-          // STOREFRONTS --> POSTS RELATION
-          ////
-          await driver.storefronts._col.updateMany(
-            { '_relations.posts.ids' : objid },
-            { 
-              $pull: { '_relations.posts.ids': objid, },
-              $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
-            },
-            { session }
-          );
+      ////
+      // STOREFRONTS --> POSTS RELATION
+      ////
+      await driver.storefronts._col.updateMany(
+        { '_relations.posts.ids' : objid },
+        { 
+          $pull: { '_relations.posts.ids': objid, },
+          $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
+        },
+        false
+      );
 
-          // DELETE ME
-          const res = await col(driver).findOneAndDelete( 
-            { _id: objid },
-            { session }
-          );
-
-        }
+      // DELETE ME
+      const res = await col(driver).deleteOne( 
+        { _id: objid },
       );
     } catch(e) {
       console.log(e);
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;

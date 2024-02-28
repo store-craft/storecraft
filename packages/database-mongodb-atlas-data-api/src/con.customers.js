@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
@@ -43,29 +43,19 @@ const getByEmail = (driver) => {
 const remove = (driver) => {
   return async (id) => {
 
-    const session = driver.mongo_client.startSession();
     try {
-      await session.withTransaction(
-        async () => {
-          const res = await col(driver).findOneAndDelete(
-            { _id: to_objid(id) },
-            { session }
-          );
-      
-          // delete the auth user
-          if(res?.auth_id) {
-            await driver.auth_users._col.findOneAndDelete(
-              { _id: to_objid(res.auth_id) },
-              { session }
-            );
-          }
-        }
+      await col(driver).deleteOne(
+        { _id: to_objid(id) },
+      );
+  
+      // delete the auth user
+      await driver.auth_users._col.deleteOne(
+        { _id: to_objid(id) },
       );
     } catch(e) {
       console.log(e);
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;

@@ -95,7 +95,7 @@ const upsert = (driver) => {
           ////
           // REPORT IMAGES USAGE
           ////
-          await report_document_media(driver)(data);
+          await report_document_media(driver)(data, session);
 
           // SAVE ME
           const res = await driver.products._col.replaceOne(

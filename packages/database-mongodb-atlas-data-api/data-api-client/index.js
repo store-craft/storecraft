@@ -6,10 +6,6 @@ export class MongoDBDataAPIClient {
    * @param {import("./types.js").Config} config 
    */
   constructor(config) {
-    if (!config.apiKey) {
-      throw new Error('Invalid API key!')
-    }
-
     this.#config = config;
     this.#config.dataSource = this.#config.dataSource ?? 'mongodb-atlas';
   }
@@ -32,7 +28,9 @@ export class MongoDBDataAPIClient {
     return {
       /**
        * get a collection handler
+       * @template T
        * @param {string} collection_name collection name
+       * @returns {Collection<T>}
        */
       collection: (collection_name) => {
         return new Collection(
@@ -96,8 +94,9 @@ export class Collection {
         body: JSON.stringify(body),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Access-Control-Request-Headers': '*',
-          'api-key': this.config.apiKey
+          'apiKey': this.config.apiKey
         },
       }
     );
@@ -110,14 +109,16 @@ export class Collection {
    * @link https://www.mongodb.com/docs/atlas/api/data-api-resources/#find-a-single-document
    * @param {import("mongodb").Filter<TSchema>} filter
    * @param {import("mongodb").FindOptions['projection']} [projection] 
-   * @returns {Promise<{ document: TSchema | null }>}
+   * @returns {Promise<TSchema | null>}
    */
-  findOne(filter, projection) {
-    return this.#action(
+  async findOne(filter, projection) {
+    /** @type {{ document: TSchema | null }} */
+    const r = await this.#action(
       'findOne', {
         filter, projection
       }
     );
+    return r.document;
   }
 
   /**
@@ -128,14 +129,20 @@ export class Collection {
    * @param {import("mongodb").Sort} [sort] 
    * @param {number} [limit=0] 
    * @param {number} [skip=0] 
-   * @returns {Promise<{ documents: Array<TSchema> }>}
+   * @returns {{ toArray: () => Promise<TSchema[]> }}
    */
   find(filter, projection, sort, limit=0, skip=0) {
-    return this.#action(
-      'find', {
-        filter, projection, sort, limit, skip
+    return {
+      toArray: async () => {
+        /** @type {{ documents: Array<TSchema> }} */
+        const r = await this.#action(
+          'find', {
+            filter, projection, sort, limit, skip
+          }
+        );
+        return r.documents;
       }
-    );
+    }
   }
 
   /**

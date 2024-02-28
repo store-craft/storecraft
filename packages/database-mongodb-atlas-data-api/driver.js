@@ -1,4 +1,5 @@
 import { App } from '@storecraft/core';
+import { Collection, MongoDBDataAPIClient as MongoClient } from './data-api-client/index.js'
 import { impl as auth_users } from './src/con.auth_users.js';
 import { impl as collections } from './src/con.collections.js';
 import { impl as customers } from './src/con.customers.js';
@@ -11,7 +12,6 @@ import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
-import { Collection, MongoDBDataAPIClient as MongoClient } from './data-api-client/index.js'
 
 /**
  * @typedef {import('./types.public.js').Config} Config
@@ -27,11 +27,11 @@ export class MongoDB {
   /** @type {boolean} */ #_is_ready;
   /** @type {App<any, any, any>} */ #_app;
   /** @type {MongoClient} */ #_mongo_client;
-  /** @type {Config} */ #_config;
+  /** @type {Partial<Config>} */ #_config;
 
   /**
    * 
-   * @param {Config} [config] config, if undefined, 
+   * @param {Partial<Config>} [config] config, if undefined, 
    * env variables, taht will be infered upon init are
    * - `MONGODB_DATA_API_KEY`
    * - `MONGODB_DATA_API_DATA_SOURCE`
@@ -51,16 +51,15 @@ export class MongoDB {
   async init(app) {
     if(this.isReady)
       return this;
-    const c = this.#_config;
     this.#_config = {
-      ...c, 
-      apiKey: c?.apiKey ?? app.platform.env.MONGODB_DATA_API_KEY,
-      dataSource: c?.dataSource ?? app.platform.env.MONGODB_DATA_API_DATA_SOURCE,
-      endpoint: c?.endpoint ?? app.platform.env.MONGODB_DATA_API_ENDPOINT,
-      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main',
+      ...this.#_config, 
+      apiKey: this.#_config?.apiKey ?? app.platform.env.MONGODB_DATA_API_KEY,
+      dataSource: this.#_config?.dataSource ?? app.platform.env.MONGODB_DATA_API_DATA_SOURCE,
+      endpoint: this.#_config?.endpoint ?? app.platform.env.MONGODB_DATA_API_ENDPOINT,
+      db_name: this.#_config?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main',
     }
 
-    this.#_mongo_client = new MongoClient(this.config);
+    this.#_mongo_client = new MongoClient(this.#_config);
 
     this.#_app = app;
     this.auth_users = auth_users(this);

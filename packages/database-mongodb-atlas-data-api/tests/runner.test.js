@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
+import { MongoDB } from '@storecraft/database-mongodb-atlas-data-api';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 export const admin_email = 'admin@sc.com';
@@ -28,8 +28,15 @@ async function test() {
     }
   );
   const last_test = Object.values(api_index).at(-1).create(app);
-  last_test.after(async ()=>app.db.disconnect());
+  last_test.after(async ()=>{await app.db.disconnect()});
   last_test.run();
 }
 
-test();
+// test();
+
+async function test2() {
+  const app = await create_app();
+  api_index.api_collections_crud_test.create(app).run();
+}
+
+test2()

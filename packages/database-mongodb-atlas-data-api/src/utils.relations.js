@@ -1,10 +1,11 @@
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../driver.js';
+import { ObjectId } from 'bson';
 
 /**
  * @template {any} T
  * @typedef {Object} Relation
- * @property {string[]} [ids]
+ * @property {ObjectId[]} [ids]
  * @property {Record<import('@storecraft/core').ID, T>} [entries]
  */
 
@@ -54,7 +55,9 @@ export const create_explicit_relation = async (
       }
     );
   } else {
-    relation.entries = Object.fromEntries(items.map(it => [it.id.split('_').at(-1), it]))
+    relation.entries = Object.fromEntries(
+      items.map(it => [it.id.split('_').at(-1), it])
+    );
   }
 
   // delete fieldname

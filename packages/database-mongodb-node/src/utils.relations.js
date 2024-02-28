@@ -55,7 +55,9 @@ export const create_explicit_relation = async (
       }
     );
   } else {
-    relation.entries = Object.fromEntries(items.map(it => [it.id.split('_').at(-1), it]))
+    relation.entries = Object.fromEntries(
+      items.map(it => [it.id.split('_').at(-1), it])
+    );
   }
 
   // delete fieldname

@@ -129,9 +129,10 @@ export const get_bulk = (driver, col) => {
  */
 export const remove_regular = (driver, col) => {
   return async (id_or_handle) => {
-    const res = await col.findOneAndDelete( 
+    const res = await col.deleteOne( 
       handle_or_id(id_or_handle)
     );
+    return res.acknowledged && res.deletedCount>0;
   }
 }
 

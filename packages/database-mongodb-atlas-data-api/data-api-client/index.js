@@ -1,3 +1,5 @@
+import { EJSON } from 'bson';
+
 export class MongoDBDataAPIClient {
   /** @type {import("./types.js").Config} */ #config
 
@@ -83,7 +85,7 @@ export class Collection {
     body = {
       ...body,
       database: this.database_name,
-      collection: this.database_name,
+      collection: this.collection_name,
       dataSource: this.data_source
     }
 
@@ -91,17 +93,18 @@ export class Collection {
       `${this.endpoint}/action/${action}`,
       {
         method: 'post',
-        body: JSON.stringify(body),
+        body: EJSON.stringify(body, { relaxed: false }),
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Content-Type': 'application/ejson',
+          'Accept': 'application/ejson',
           'Access-Control-Request-Headers': '*',
           'apiKey': this.config.apiKey
         },
       }
     );
 
-    return r.json();
+    const txt = await r.text();
+    return EJSON.parse(txt, { relaxed: true });
   }
 
   /**
@@ -125,13 +128,13 @@ export class Collection {
    * Find Multiple Documents.
    * @link https://www.mongodb.com/docs/atlas/api/data-api-resources/#find-multiple-documents
    * @param {import("mongodb").Filter<TSchema>} filter
-   * @param {import("mongodb").FindOptions<TSchema>['projection']} [projection] 
    * @param {import("mongodb").Sort} [sort] 
    * @param {number} [limit=0] 
    * @param {number} [skip=0] 
+   * @param {import("mongodb").FindOptions<TSchema>['projection']} [projection] 
    * @returns {{ toArray: () => Promise<TSchema[]> }}
    */
-  find(filter, projection, sort, limit=0, skip=0) {
+  find(filter, sort, limit=0, skip=0, projection) {
     return {
       toArray: async () => {
         /** @type {{ documents: Array<TSchema> }} */
@@ -140,7 +143,9 @@ export class Collection {
             filter, projection, sort, limit, skip
           }
         );
-        return r.documents;
+        // console.log('find ', r);
+
+        return r.documents ?? [];
       }
     }
   }

@@ -1,3 +1,5 @@
+import { ObjectId } from "bson";
+
 export const isDef = v => v!==undefined && v!==null;
 export const isUndef = v => !isDef(v);
 
@@ -68,12 +70,12 @@ export const sanitize_array = o => {
  * @param {string} id 
  * @returns 
  */
-export const to_objid = id => id.split('_').at(-1);
+export const to_objid = id => new ObjectId(id.split('_').at(-1))
 
 /**
  * 
  * @param {string} handle_or_id 
- * @returns { {_id: string} | {handle: string}}
+ * @returns { {_id:ObjectId} | {handle: string}}
  */
 export const handle_or_id = (handle_or_id) => {
   let r = {};

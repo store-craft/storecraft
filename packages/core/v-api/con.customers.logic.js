@@ -1,5 +1,5 @@
 import { ID, apply_dates, assert, to_handle } from './utils.func.js'
-import { customerTypeSchema } from './types.autogen.zod.api.js'
+import { customerTypeSchema, customerTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -22,7 +22,7 @@ export const db = app => app.db.customers;
  * @param {ItemTypeUpsert} item
  */
 export const upsert = async (app, item) => {
-  assert_zod(customerTypeSchema, item);
+  assert_zod(customerTypeUpsertSchema, item);
 
   // Check if exists
   const item_get = await db(app).getByEmail(item.email);

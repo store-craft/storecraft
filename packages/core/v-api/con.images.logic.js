@@ -1,5 +1,5 @@
 import { ID, apply_dates, to_handle, to_tokens, union } from './utils.func.js'
-import { imageTypeSchema } from './types.autogen.zod.api.js'
+import { imageTypeSchema, imageTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { assert_save_create_mode,
   regular_get, regular_list } from './con.shared.js'
 import { create_search_index } from './utils.index.js';
@@ -21,7 +21,7 @@ export const db = app => app.db.images;
  * @param {ItemTypeUpsert} item
  */
 export const upsert = async (app, item) => {
-  assert_zod(imageTypeSchema, item);
+  assert_zod(imageTypeUpsertSchema, item);
 
   item.handle = to_handle(decodeURIComponent(item.name));
 

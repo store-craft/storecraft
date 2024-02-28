@@ -181,9 +181,7 @@ const list_discount_products = (driver) => {
     isDef(filter_query) && filter.$and.push(filter_query);
 
     const items = await driver.products._col.find(
-      filter,  {
-        sort, limit: query.limit
-      }
+      filter, sort, query.limit
     ).toArray();
 
     // try expand relations, that were asked

@@ -36,7 +36,7 @@ const upsert = (driver) => {
         await driver.products._col.updateOne(
           { _id : to_objid(data.parent_id) },
           { 
-            $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
+            $set: { [`_relations.variants.entries.${objid.$oid}`]: data },
             $addToSet: { '_relations.variants.ids': objid }
           },
           false
@@ -60,7 +60,7 @@ const upsert = (driver) => {
         { 
           'application.id': DiscountApplicationEnum.Auto.id,
           active: true
-        }
+        }, null, 10000
       ).toArray();
       // now test locally
       const eligible_discounts = discounts.filter(
@@ -71,7 +71,9 @@ const upsert = (driver) => {
       replacement._relations = replacement._relations ?? {};
       replacement._relations.discounts = {
         ids: eligible_discounts.map(d => d._id),
-        entries: Object.fromEntries(eligible_discounts.map(d => [d._id.toString(), d]))
+        entries: Object.fromEntries(
+          eligible_discounts.map(d => [d._id.toString(), d])
+          )
       }
       replacement.search = replacement.search ?? [];
       eligible_discounts.forEach(
@@ -125,7 +127,7 @@ const remove = (driver) => {
     if(!item) return;
     const objid = to_objid(item.id);
 
-try {
+    try {
       ////
       // PRODUCTS -> VARIANTS RELATION
       ////

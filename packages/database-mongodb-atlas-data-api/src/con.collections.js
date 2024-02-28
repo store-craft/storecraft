@@ -9,13 +9,6 @@ import { report_document_media } from './con.images.js'
  * @typedef {import('@storecraft/core').db_collections} db_col
  */
 
-
-const transactionOptions = {
-  readPreference: 'primary',
-  readConcern: { level: 'local' },
-  writeConcern: { w: 'majority' }
-};
-
 /**
  * @param {MongoDB} d 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
@@ -161,9 +154,7 @@ const list_collection_products = (driver) => {
     isDef(filter_query) && filter.$and.push(filter_query);
 
     const items = await driver.products._col.find(
-      filter,  {
-        sort, limit: query.limit
-      }
+      filter, sort, query.limit
     ).toArray();
 
     // try expand relations, that were asked

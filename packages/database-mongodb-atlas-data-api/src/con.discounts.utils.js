@@ -1,5 +1,5 @@
-import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from "@storecraft/core";
-import { MongoDB } from "../driver.js";
+import { DiscountApplicationEnum, 
+  DiscountMetaEnum, FilterMetaEnum } from "@storecraft/core";
 import { to_objid } from "./utils.funcs.js";
 
 /** @param {import("@storecraft/core").DiscountType} d */

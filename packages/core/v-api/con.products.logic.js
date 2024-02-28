@@ -1,5 +1,5 @@
 import { assert, to_handle, union } from './utils.func.js'
-import { productTypeSchema } from './types.autogen.zod.api.js'
+import { productTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
@@ -19,7 +19,7 @@ export const db = app => app.db.products;
  * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'pr', productTypeSchema, 
+  app, db(app), 'pr', productTypeUpsertSchema, 
   async (final) => {
     
     assert(

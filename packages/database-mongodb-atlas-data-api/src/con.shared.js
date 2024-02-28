@@ -98,7 +98,7 @@ export const get_bulk = (driver, col) => {
     const objids = ids.map(to_objid);
 
     const res = await col.find(
-      { _id: { $in: objids } }
+      { _id: { $in: objids } }, null, 10000
     ).toArray();
 
     // try to expand relations
@@ -122,9 +122,10 @@ export const get_bulk = (driver, col) => {
  */
 export const remove_regular = (driver, col) => {
   return async (id_or_handle) => {
-    const res = await col.findOneAndDelete( 
+    const res = await col.deleteOne( 
       handle_or_id(id_or_handle)
     );
+    return res && res.deletedCount>0;
   }
 }
 
@@ -145,11 +146,8 @@ export const list_regular = (driver, col) => {
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
 
-    /** @type {import('mongodb').WithId<G>[]} */
     const items = await col.find(
-      filter,  {
-        sort, limit: query.limit
-      }
+      filter, sort, query.limit
     ).toArray();
 
     // try expand relations, that were asked

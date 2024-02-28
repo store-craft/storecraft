@@ -7,9 +7,10 @@ export class StorecraftError extends Error {
    * @param {number} code 
    */
   constructor(message, code=400) {
-    super(String(message));
+    super(JSON.stringify(message, null, 2));
     this.code = code;
     this.message = message;
+    console.log(JSON.stringify(message, null, 2));
   }
 }
 

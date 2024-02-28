@@ -60,9 +60,7 @@ const list_customer_orders = (driver) => {
     isDef(filter_query) && filter.$and.push(filter_query);
 
     const items = await driver.orders._col.find(
-      filter,  {
-        sort, limit: query.limit
-      }
+      filter, sort, query.limit
     ).toArray();
 
     return sanitize_array(items);

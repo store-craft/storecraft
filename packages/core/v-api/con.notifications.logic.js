@@ -1,5 +1,5 @@
 import { ID, apply_dates } from './utils.func.js'
-import { notificationTypeSchema } from './types.autogen.zod.api.js'
+import { notificationTypeSchema, notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove } from './con.shared.js'
@@ -28,7 +28,7 @@ export const addBulk = async (app, items) => {
   // validate and assign ids
   items.forEach(
     item => { 
-      assert_zod(notificationTypeSchema, item);
+      assert_zod(notificationTypeUpsertSchema, item);
       item.id = ID('not');
       item.search = item.search ?? [];
       apply_dates(item);

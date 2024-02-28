@@ -121,7 +121,7 @@ const transform = c => {
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
- * @param {import("@storecraft/core").ParsedApiQuery} q 
+ * @param {import("@storecraft/core").ApiQuery} q 
  */
 export const query_to_mongo = (q) => {
   const filter = {};

@@ -165,10 +165,10 @@ const list_collection_products = (driver) => {
 
     const { filter: filter_query, sort } = query_to_mongo(query);
 
-    console.log('query', query)
-    console.log('filter', JSON.stringify(filter_query, null, 2))
-    console.log('sort', sort)
-    console.log('expand', query?.expand)
+    // console.log('query', query)
+    // console.log('filter', JSON.stringify(filter_query, null, 2))
+    // console.log('sort', sort)
+    // console.log('expand', query?.expand)
     
     const filter = {
       $and: [

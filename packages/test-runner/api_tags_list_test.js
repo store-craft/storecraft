@@ -60,7 +60,7 @@ export const create = app => {
     }
   );
 
-  s.skip('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
+  s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
     async () => {
       /** @type {import('@storecraft/core').ApiQuery} */
       const q_asc = {

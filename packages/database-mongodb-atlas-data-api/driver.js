@@ -1,5 +1,4 @@
 import { App } from '@storecraft/core';
-import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 import { impl as auth_users } from './src/con.auth_users.js';
 import { impl as collections } from './src/con.collections.js';
 import { impl as customers } from './src/con.customers.js';
@@ -12,27 +11,12 @@ import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
+import { Collection, MongoDBDataAPIClient as MongoClient } from './data-api-client/index.js'
 
 /**
- * @typedef {Partial<import('./types.public.js').Config>} Config
+ * @typedef {import('./types.public.js').Config} Config
  */
 
-/**
- * 
- * @param {string} uri 
- * @param {import('mongodb').MongoClientOptions} [options] 
- */
-const connect = async (uri, options) => {
-  options = options ?? {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  }
-  const client = new MongoClient(uri, options);
-  return client.connect();
-}
 
 /**
  * @typedef {import('@storecraft/core').db_driver} db_driver
@@ -48,7 +32,11 @@ export class MongoDB {
   /**
    * 
    * @param {Config} [config] config, if undefined, 
-   * env variables `MONGODB_URL` will be used for uri upon init later
+   * env variables, taht will be infered upon init are
+   * - `MONGODB_DATA_API_KEY`
+   * - `MONGODB_DATA_API_DATA_SOURCE`
+   * - `MONGODB_DATA_API_ENDPOINT`
+   * - `MONGODB_NAME`
    */
   constructor(config) {
     this.#_is_ready = false;
@@ -66,14 +54,13 @@ export class MongoDB {
     const c = this.#_config;
     this.#_config = {
       ...c, 
-      url: c?.url ?? app.platform.env.MONGODB_URL,
-      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
+      apiKey: c?.apiKey ?? app.platform.env.MONGODB_DATA_API_KEY,
+      dataSource: c?.dataSource ?? app.platform.env.MONGODB_DATA_API_DATA_SOURCE,
+      endpoint: c?.endpoint ?? app.platform.env.MONGODB_DATA_API_ENDPOINT,
+      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main',
     }
 
-    this.#_mongo_client = await connect(
-      this.config.url,
-      this.config.options
-    );
+    this.#_mongo_client = new MongoClient(this.config);
 
     this.#_app = app;
     this.auth_users = auth_users(this);
@@ -95,7 +82,6 @@ export class MongoDB {
   }
 
   async disconnect() {
-    await this.mongo_client.close(true);
     return true;
   }
 

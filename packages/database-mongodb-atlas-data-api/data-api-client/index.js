@@ -1,9 +1,9 @@
 export class MongoDBDataAPIClient {
-  /** @type {Config} */ #config
+  /** @type {import("./types.js").Config} */ #config
 
   /**
    * 
-   * @param {Config} config 
+   * @param {import("./types.js").Config} config 
    */
   constructor(config) {
     if (!config.apiKey) {
@@ -15,6 +15,14 @@ export class MongoDBDataAPIClient {
   }
 
   get config() { return this.#config; }
+
+  /**
+   * get a database by name
+   * @param {string} database_name database name
+   */
+  db(database_name) {
+    return this.database(database_name);
+  }
 
   /**
    * get a database by name
@@ -54,7 +62,6 @@ export class Collection {
     this.#client = client;
     this.#database_name = database_name;
     this.#collection_name = collection_name;
-    this.#endpoint = this.#url_endpoint();
   }
 
   get data_source() { return this.#client.config.dataSource; }
@@ -62,14 +69,7 @@ export class Collection {
   get collection_name() { return this.#collection_name; }
   get client() { return this.#client; }
   get config() { return this.#client.config; }
-  get endpoint() { return this.#endpoint; }
-
-  #url_endpoint() {
-    const c = this.config;
-    return c.region && c.cloud
-        ? `https://${c.region}.${c.cloud}.data.mongodb-api.com/app/${c.appId}/endpoint/data/v1`
-        : `https://data.mongodb-api.com/app/${c.appId}/endpoint/data/v1`
-  }
+  get endpoint() { return this.config.endpoint; }
 
   /**
    * Execute a API action.
@@ -80,7 +80,7 @@ export class Collection {
    * @param {T} body 
    * @returns {Promise<R>}
    */
-  async action(action, body) {
+  async #action(action, body) {
 
     body = {
       ...body,
@@ -113,7 +113,7 @@ export class Collection {
    * @returns {Promise<{ document: TSchema | null }>}
    */
   findOne(filter, projection) {
-    return this.action(
+    return this.#action(
       'findOne', {
         filter, projection
       }
@@ -131,7 +131,7 @@ export class Collection {
    * @returns {Promise<{ documents: Array<TSchema> }>}
    */
   find(filter, projection, sort, limit=0, skip=0) {
-    return this.action(
+    return this.#action(
       'find', {
         filter, projection, sort, limit, skip
       }
@@ -146,7 +146,7 @@ export class Collection {
    * @returns {Promise<{ insertedId: string }>}
    */
   insertOne(document) {
-    return this.action(
+    return this.#action(
       'insertOne', {
         document
       }
@@ -160,7 +160,7 @@ export class Collection {
    * @returns {Promise<{ insertedIds: Array<string> }>}
    */
   insertMany(documents) {
-    return this.action(
+    return this.#action(
       'insertMany', {
         documents
       }
@@ -180,7 +180,7 @@ export class Collection {
    * }>}
    */
   updateOne(filter, update, upsert=false) {
-    return this.action(
+    return this.#action(
       'updateOne', {
         filter, update, upsert
       }
@@ -200,7 +200,7 @@ export class Collection {
    * }>}
    */
   updateMany(filter, update, upsert=false) {
-    return this.action(
+    return this.#action(
       'updateMany', {
         filter, update, upsert
       }
@@ -214,7 +214,7 @@ export class Collection {
    * @returns {Promise<{ deletedCount: number }>}
    */
   deleteOne(filter) {
-    return this.action(
+    return this.#action(
       'deleteOne', {
         filter
       }
@@ -228,7 +228,7 @@ export class Collection {
    * @returns {Promise<{ deletedCount: number }>}
    */
   deleteMany(filter) {
-    return this.action(
+    return this.#action(
       'deleteMany', {
         filter
       }
@@ -242,7 +242,7 @@ export class Collection {
    * @returns {Promise<{ documents: Document[] }>}
    */
   aggregate(pipeline) {
-    return this.action(
+    return this.#action(
       'aggregate', {
         pipeline
       }

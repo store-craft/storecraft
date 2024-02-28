@@ -8,7 +8,10 @@ export const admin_password = 'password';
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
-    new MongoDB({ db_name: 'test-data-api'}),
+    new MongoDB({ 
+      db_name: 'test-data-api', apiKey: '<API-KEY>', 
+      dataSource: '<DATA-SOURCE>', endpoint: '<ENDPOINT>'}
+    ),
     null, null, null, {
       admins_emails: [admin_email],
       auth_password_hash_rounds: 100,
@@ -32,22 +35,11 @@ async function test() {
   last_test.run();
 }
 
-// test();
+test();
 
 async function test2() {
   const app = await create_app();
   api_index.api_collections_products_test.create(app).run();
 }
 
-test2()
-
-// import  { EJSON, ObjectId } from 'bson';
-
-// const a = {
-//   _id: new ObjectId(3232)
-// }
-
-// const b = EJSON.parse('{ "_id": { "$oid": 10 } }', {relaxed:true})
-// const c = EJSON.stringify(b, {relaxed:true})
-// console.log(b)
-// console.log(c)
+// test()

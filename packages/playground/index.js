@@ -12,7 +12,7 @@ import { GoogleStorage } from '@storecraft/storage-google'
 
 let app = new App(
   new NodePlatform(),
-  new MongoDB(),
+  new MongoDB({db_name: 'test'}),
   // new NodeLocalStorage(join(homedir(), 'tomer'))
   // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
   new GoogleStorage()

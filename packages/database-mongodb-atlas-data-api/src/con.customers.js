@@ -1,17 +1,18 @@
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
-import { Collection } from 'mongodb'
-import { sanitize_one, to_objid } from './utils.funcs.js'
-import { get_regular, list_regular, upsert_regular } from './con.shared.js'
+import { get_regular, list_regular, 
+  upsert_regular } from './con.shared.js'
+import { to_objid } from './utils.funcs.js'
 
 /**
- * @typedef {import('@storecraft/core').db_auth_users} db_col
+ * @typedef {import('@storecraft/core').db_customers} db_col
  */
 
 /**
  * @param {MongoDB} d 
  * @returns {Collection<db_col["$type_get"]>}
  */
-const col = (d) => d.collection('auth_users');
+const col = (d) => d.collection('customers');
 
 /**
  * @param {MongoDB} driver 
@@ -20,7 +21,6 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * @returns {db_col["get"]}
  */
 const get = (driver) => get_regular(driver, col(driver));
 
@@ -30,14 +30,9 @@ const get = (driver) => get_regular(driver, col(driver));
  */
 const getByEmail = (driver) => {
   return async (email) => {
-    const filter = { email: email };
-
-    /** @type {import('@storecraft/core').AuthUserType} */
-    const res = await col(driver).findOne(
-      filter
+    return col(driver).findOne(
+      { email }
     );
-
-    return sanitize_one(res)
   }
 }
 
@@ -47,34 +42,29 @@ const getByEmail = (driver) => {
  */
 const remove = (driver) => {
   return async (id) => {
-    const res = await col(driver).deleteOne(
-      { _id: to_objid(id) }
-    );
 
-    return Boolean(res.deletedCount)
+    try {
+      await col(driver).deleteOne(
+        { _id: to_objid(id) },
+      );
+  
+      // delete the auth user
+      await driver.auth_users._col.deleteOne(
+        { _id: to_objid(id) },
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+    }
+
+    return true;
   }
 }
-
-/**
- * @param {MongoDB} driver 
- * @returns {db_col["removeByEmail"]}
- */
-const removeByEmail = (driver) => {
-  return async (email) => {
-    /** @type {import('@storecraft/core').AuthUserType} */
-    await col(driver).deleteOne(
-      { email }
-    );
-
-    return
-  }
-}
-
 /**
  * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
-
 
 /** 
  * @param {MongoDB} driver
@@ -88,7 +78,6 @@ export const impl = (driver) => {
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    removeByEmail: removeByEmail(driver),
     list: list(driver)
   }
 }

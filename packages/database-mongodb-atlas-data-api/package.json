@@ -1,0 +1,25 @@
+{
+  "name": "@storecraft/database-mongodb-atlas-data-api",
+  "version": "1.0.0",
+  "description": "driver for mongodb on js platforms with web api fetch",
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "test": "uvu -c"
+  },
+  "keywords": [],
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "bson": "^6.3.0"
+  },
+  "devDependencies": {
+    "@storecraft/test-runner": "^1.0.0",
+    "@types/node": "^20.11.0",
+    "dotenv": "^16.3.1",
+    "mongodb": "^6.3.0",
+    "uvu": "^0.5.6"
+  }
+}

@@ -1,4 +1,4 @@
-import { orderDataSchema } from './types.autogen.zod.api.js'
+import { orderDataSchema, orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -49,7 +49,7 @@ const create_search_index = (data) => {
  * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'order', orderDataSchema, 
+  app, db(app), 'order', orderDataUpsertSchema, 
   async (final) => {
     final?.search?.push(...create_search_index(final));
     return final;

@@ -1,7 +1,7 @@
 import { MongoDB } from '../driver.js'
-import { Collection } from 'mongodb'
 import { sanitize_one, to_objid } from './utils.funcs.js'
 import { get_regular, list_regular, upsert_regular } from './con.shared.js'
+import { Collection } from '../data-api-client/index.js';
 
 /**
  * @typedef {import('@storecraft/core').db_auth_users} db_col

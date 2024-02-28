@@ -16,7 +16,7 @@ import { ZodSchema } from 'zod'
  * @template {import('./types.api.js').idable} T
  * @template {import('./types.api.js').idable} G
  * @param {import("../types.public.js").App} app app instance
- * @param {import("../types.database.js").db_crud<T, G>} db db instance
+ * @param {import("../types.database.js").db_crud<T & {id:string}, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
  * @param {<H extends T & searchable>(final: H) => Promise<H>} hook hook into final state
@@ -27,6 +27,7 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
    * @param {T} item
    */
   return async (item) => {
+    // console.log('item ', item)
     schema && assert_zod(schema, item);
 
     // Check if exists

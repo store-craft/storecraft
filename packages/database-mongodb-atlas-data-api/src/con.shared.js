@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
 import { handle_or_id, isUndef, sanitize_array, 
   sanitize_one, to_objid } from './utils.funcs.js'
@@ -14,28 +14,21 @@ import { report_document_media } from './con.images.js'
 export const upsert_regular = (driver, col) => {
   return async (data) => {
 
-    const session = driver.mongo_client.startSession();
-
     try {
-      await session.withTransaction(
-        async () => {
-          const res = await col.replaceOne(
-            { _id: to_objid(data.id) }, 
-            data,
-            { session, upsert: true }
-          );
-      
-          ////
-          // REPORT IMAGES USAGE
-          ////
-          await report_document_media(driver)(data, session);
-        }
+      const res = await col.updateOne(
+        { _id: to_objid(data.id) }, 
+        data,
+        true
       );
+  
+      ////
+      // REPORT IMAGES USAGE
+      ////
+      await report_document_media(driver)(data);
     } catch(e) {
-      // console.log(e);
+      console.log(e);
       return false;
     } finally {
-      await session.endSession();
     }
 
     return true;
@@ -105,7 +98,7 @@ export const get_bulk = (driver, col) => {
     const objids = ids.map(to_objid);
 
     const res = await col.find(
-      { _id: { $in: objids } }
+      { _id: { $in: objids } }, null, 10000
     ).toArray();
 
     // try to expand relations
@@ -132,7 +125,7 @@ export const remove_regular = (driver, col) => {
     const res = await col.deleteOne( 
       handle_or_id(id_or_handle)
     );
-    return res.acknowledged && res.deletedCount>0;
+    return res && res.deletedCount>0;
   }
 }
 
@@ -153,11 +146,8 @@ export const list_regular = (driver, col) => {
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
 
-    /** @type {import('mongodb').WithId<G>[]} */
     const items = await col.find(
-      filter,  {
-        sort, limit: query.limit
-      }
+      filter, sort, query.limit
     ).toArray();
 
     // try expand relations, that were asked

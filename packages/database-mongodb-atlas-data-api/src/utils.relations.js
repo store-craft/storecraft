@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../driver.js';
+import { ObjectId } from 'bson';
 
 /**
  * @template {any} T

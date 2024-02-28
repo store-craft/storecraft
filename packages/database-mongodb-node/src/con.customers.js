@@ -54,7 +54,7 @@ const remove = (driver) => {
       
           // delete the auth user
           if(res?.auth_id) {
-            await driver.auth_users._col.findOneAndDelete(
+            await driver.auth_users._col.deleteOne(
               { _id: to_objid(res.auth_id) },
               { session }
             );

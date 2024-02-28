@@ -1,5 +1,5 @@
 import { assert, to_handle } from './utils.func.js'
-import { postTypeSchema } from './types.autogen.zod.api.js'
+import { postTypeSchema, postTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -20,7 +20,7 @@ export const db = app => app.db.posts;
  * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'post', postTypeSchema, 
+  app, db(app), 'post', postTypeUpsertSchema, 
   async (final) => {
     assert(
       [final.handle].every(

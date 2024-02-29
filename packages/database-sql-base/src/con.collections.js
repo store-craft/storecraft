@@ -9,7 +9,6 @@ import { report_document_media } from './con.images.js'
  * @typedef {import('@storecraft/core').db_collections} db_col
  */
 
-
 const transactionOptions = {
   readPreference: 'primary',
   readConcern: { level: 'local' },

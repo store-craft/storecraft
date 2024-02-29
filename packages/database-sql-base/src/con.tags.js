@@ -1,5 +1,4 @@
 import { SQL } from '../driver.js'
-import { sanitize_one } from './utils.funcs.js'
 import { expand } from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -37,6 +36,7 @@ const upsert = (driver) => {
     return true;
   }
 }
+
 
 /**
  * @param {SQL} driver 
@@ -80,6 +80,7 @@ const remove = (driver) => {
   }
 }
 
+
 /**
  * @param {SQL} driver 
  * @returns {db_col["list"]}
@@ -97,7 +98,7 @@ const list = (driver) => {
               .limit(query.limit ?? 10)
               .execute();
 
-
+    // console.log(items)
     // try expand relations, that were asked
     expand(items, query?.expand);
 

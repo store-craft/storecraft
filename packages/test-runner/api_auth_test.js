@@ -34,7 +34,6 @@ export const create = app => {
     assert.ok(ok, 'nope');
   });
   
-  
   s('signin admin', async () => {
     const r = await auth.signin(app, {
       email: admin_email,

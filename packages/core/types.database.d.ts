@@ -91,7 +91,7 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & id
    * remove by email
    * @param email 
    */
-  removeByEmail: (email?: string) => Promise<void>;
+  removeByEmail: (email?: string) => Promise<boolean>;
 
 }
 

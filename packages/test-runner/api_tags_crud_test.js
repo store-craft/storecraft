@@ -43,7 +43,7 @@ export const create = app => {
         for(const p of items_upsert)
           await tags.remove(app, p.handle);
       } catch(e) {
-        console.log(e)
+        // console.log(e)
         throw e;
       }
 

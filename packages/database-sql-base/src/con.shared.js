@@ -1,8 +1,6 @@
 import { Collection } from 'mongodb'
-import { MongoDB } from '../driver.js'
 import { handle_or_id, isUndef, sanitize_array, 
   sanitize_one, to_objid } from './utils.funcs.js'
-import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
 /**
@@ -13,6 +11,8 @@ import { report_document_media } from './con.images.js'
  */
 export const upsert_regular = (driver, col) => {
   return async (data) => {
+
+    
 
     const session = driver.mongo_client.startSession();
 

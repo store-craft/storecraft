@@ -15,26 +15,29 @@ let a = {
  * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
+ * @template D
+ * @param {import("kysely").ExpressionBuilder<D>} eb 
  * @param {import("@storecraft/core").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
  */
-export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
+export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
   let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
   let rel_key_2; // relation in last conjunction term in last disjunction
 
   if (relation==='>' || relation==='>=') {
-    rel_key_1 = rel_key_2 = '$gt';
+    rel_key_1 = rel_key_2 = '>';
     if(relation==='>=')
-      rel_key_2='$gte';
+      rel_key_2='>=';
   }
   else if (relation==='<' || relation==='<=') {
-    rel_key_1 = rel_key_2 = '$lt';
+    rel_key_1 = rel_key_2 = '<';
     if(relation==='<=')
-      rel_key_2='$lte';
+      rel_key_2='<=';
   } else return undefined;
 
+  
   const disjunctions = [];
   // each disjunction clause
   for (let ix = 0; ix < c.length; ix++) {
@@ -44,31 +47,39 @@ export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
     for (let jx = 0; jx < ix; jx++) {
       // the a_n=b_n
       const r = transformer(c[jx]);
-      conjunctions.push({ [r[0]] : r[1] });
+      
+      // conjunctions.push({ [r[0]] : r[1] });
+      conjunctions.push(eb(r[0], '=', r[1]));
     }
 
     // Last conjunction term
     const relation_key = is_last_disjunction ? rel_key_2 : rel_key_1;
     const r = transformer(c[ix]);
-    conjunctions.push({ [r[0]] : { [relation_key]: r[1] } });
+    // conjunctions.push({ [r[0]] : { [relation_key]: r[1] } });
+    conjunctions.push(eb(r[0], relation_key, r[1]));
     // Add to disjunctions list
-    disjunctions.push({ $and: conjunctions });
+    // disjunctions.push({ $and: conjunctions });
+    disjunctions.push(eb.and(conjunctions));
   }
 
   if(disjunctions.length==0)
     return undefined;
 
-  const result = {
-    $or: disjunctions
-  };
+  // const result = {
+  //   $or: disjunctions
+  // };
 
-  return result;
+  return eb.or(disjunctions);
+
+  // return result;
 }
 
 /**
+ * @template D
+ * @param {import("kysely").ExpressionBuilder<D>} eb 
  * @param {import("@storecraft/core/v-ql").VQL.Node} node 
  */
-export const query_vql_node_to_mongo = node => {
+export const query_vql_node_to_eb = (eb, node) => {
   if(node.op==='LEAF') {
     return {
       search: { $regex: `^${node.value}$` }
@@ -77,23 +88,16 @@ export const query_vql_node_to_mongo = node => {
 
   let conjunctions = [];
   for(let arg of node?.args) {
-    conjunctions.push(query_vql_node_to_mongo(arg));
+    conjunctions.push(query_vql_node_to_eb(eb, arg));
   }
 
   switch (node.op) {
     case '&':
-      return {
-        $and: conjunctions
-      }
+      return eb.and(conjunctions)
     case '|':
-      return {
-        $or: conjunctions
-      }
+      return eb.or(conjunctions)
     case '!':
-      return {
-        $nor: [ conjunctions[0] ]
-      }
-  
+      return eb.not(conjunctions[0])
     default:
       throw new Error('VQL-to-mongo-failed')
   }
@@ -101,11 +105,12 @@ export const query_vql_node_to_mongo = node => {
 }
 
 /**
- * 
+ * @template D
+ * @param {import("kysely").ExpressionBuilder<D>} eb 
  * @param {import("@storecraft/core/v-ql").VQL.Node} root 
  */
-export const query_vql_to_mongo = root => {
-  return root ? query_vql_node_to_mongo(root) : undefined;
+export const query_vql_to_eb = (eb, root) => {
+  return root ? query_vql_node_to_eb(root) : undefined;
 }
 
 /**
@@ -121,9 +126,11 @@ const transform = c => {
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
+ * @template D
+ * @param {import("kysely").ExpressionBuilder<D>} eb 
  * @param {import("@storecraft/core").ApiQuery} q 
  */
-export const query_to_mongo = (q) => {
+export const query_to_eb = (eb, q) => {
   const filter = {};
   const clauses = [];
   const sort_sign = q.order === 'asc' ? 1 : -1;
@@ -131,31 +138,44 @@ export const query_to_mongo = (q) => {
 
   // compute index clauses
   if(q.startAt) {
-    clauses.push(query_cursor_to_mongo(q.startAt, asc ? '>=' : '<=', transform));
+    clauses.push(query_cursor_to_eb(eb, q.startAt, asc ? '>=' : '<='));
   } else if(q.startAfter) {
-    clauses.push(query_cursor_to_mongo(q.startAfter, asc ? '>' : '<', transform));
+    clauses.push(query_cursor_to_eb(eb, q.startAfter, asc ? '>' : '<'));
   }
 
   if(q.endAt) {
-    clauses.push(query_cursor_to_mongo(q.endAt, asc ? '<=' : '>=', transform));
+    clauses.push(query_cursor_to_eb(eb, q.endAt, asc ? '<=' : '>='));
   } else if(q.endBefore) {
-    clauses.push(query_cursor_to_mongo(q.endBefore, asc ? '<' : '>', transform));
+    clauses.push(query_cursor_to_eb(eb, q.endBefore, asc ? '<' : '>'));
   }
 
   // compute VQL clauses 
-  const vql_clause = query_vql_to_mongo(q.vql)
-  vql_clause && clauses.push(vql_clause);
+  // const vql_clause = query_vql_to_eb(q.vql)
+  // vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order
-  const sort = (q.sortBy ?? []).reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});
+  // const sort = (q.sortBy ?? []).reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});
 
   if(clauses?.length) {
-    filter['$and'] = clauses;
+    // filter['$and'] = clauses;
+    filter.eb = eb.and(clauses);
   }
 
-  return {
-    filter,
-    sort
-  }
+  return filter;
+}
 
+/**
+ * Convert an API Query into mongo dialect, also sanitize.
+ * @template D
+ * @param {import("@storecraft/core").ApiQuery} q 
+ */
+export const query_to_sort = (q) => {
+  const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
+
+  // compute sort fields and order
+  const sort = (q.sortBy ?? []).map(
+    s => `${s} ${sort_sign}`
+  )
+  
+  return sort;
 }

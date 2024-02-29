@@ -1,21 +1,25 @@
 import { App } from '@storecraft/core';
-import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 import { impl as auth_users } from './src/con.auth_users.js';
-import { impl as collections } from './src/con.collections.js';
-import { impl as customers } from './src/con.customers.js';
-import { impl as discounts } from './src/con.discounts.js';
-import { impl as images } from './src/con.images.js';
-import { impl as notifications } from './src/con.notifications.js';
-import { impl as orders } from './src/con.orders.js';
-import { impl as posts } from './src/con.posts.js';
-import { impl as products } from './src/con.products.js';
-import { impl as shipping } from './src/con.shipping.js';
-import { impl as storefronts } from './src/con.storefronts.js';
+// import { impl as collections } from './src/con.collections.js';
+// import { impl as customers } from './src/con.customers.js';
+// import { impl as discounts } from './src/con.discounts.js';
+// import { impl as images } from './src/con.images.js';
+// import { impl as notifications } from './src/con.notifications.js';
+// import { impl as orders } from './src/con.orders.js';
+// import { impl as posts } from './src/con.posts.js';
+// import { impl as products } from './src/con.products.js';
+// import { impl as shipping } from './src/con.shipping.js';
+// import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
+import { Kysely, ParseJSONResultsPlugin } from 'kysely'
+import { def_dialect } from './tests/dialect.js';
 
 /**
  * @typedef {Partial<import('./types.public.js').Config>} Config
- */
+ * @typedef {import('./types.sql.tables.js').Database} Database
+ * @typedef {import('kysely').Dialect} Dialect
+ * @typedef {import('@storecraft/core').db_driver} db_driver
+*/
 
 /**
  * 
@@ -23,36 +27,42 @@ import { impl as tags } from './src/con.tags.js';
  * @param {import('mongodb').MongoClientOptions} [options] 
  */
 const connect = async (uri, options) => {
-  options = options ?? {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  }
-  const client = new MongoClient(uri, options);
-  return client.connect();
+  
 }
 
 /**
- * @typedef {import('@storecraft/core').db_driver} db_driver
+ * @template {Dialect} D
  * @implements {db_driver}
  */
-export class MongoDB {
+export class SQL {
 
   /** @type {boolean} */ #_is_ready;
   /** @type {App<any, any, any>} */ #_app;
-  /** @type {MongoClient} */ #_mongo_client;
   /** @type {Config} */ #_config;
+  /** @type {D} */ #_dialect;
+  /** @type {Kysely<Database>} */ #_client;
 
   /**
    * 
    * @param {Config} [config] config, if undefined, 
+   * @param {D} [dialect] config, if undefined, 
    * env variables `MONGODB_URL` will be used for uri upon init later
    */
-  constructor(config) {
+  constructor(config, dialect) {
     this.#_is_ready = false;
     this.#_config = config;
+
+    if(!dialect) {
+      dialect = def_dialect;
+    }
+
+    this.#_dialect = dialect;
+    this.#_client = new Kysely({
+      dialect, 
+      plugins: [
+        new ParseJSONResultsPlugin()
+      ]
+    });
   }
 
   /**
@@ -70,24 +80,19 @@ export class MongoDB {
       db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
     }
 
-    this.#_mongo_client = await connect(
-      this.config.url,
-      this.config.options
-    );
-
     this.#_app = app;
     this.auth_users = auth_users(this);
-    this.collections = collections(this);
-    this.customers = customers(this);
-    this.discounts = discounts(this);
-    this.images = images(this);
-    this.notifications = notifications(this);
-    this.orders = orders(this);
-    this.posts = posts(this);
-    this.products = products(this);
-    this.storefronts = storefronts(this);
     this.tags = tags(this);
-    this.shipping = shipping(this);
+    // this.collections = collections(this);
+    // this.customers = customers(this);
+    // this.discounts = discounts(this);
+    // this.images = images(this);
+    // this.notifications = notifications(this);
+    // this.orders = orders(this);
+    // this.posts = posts(this);
+    // this.products = products(this);
+    // this.storefronts = storefronts(this);
+    // this.shipping = shipping(this);
     
     this.#_is_ready = true; 
 
@@ -95,34 +100,21 @@ export class MongoDB {
   }
 
   async disconnect() {
-    await this.mongo_client.close(true);
+    await this.client.destroy();
     return true;
   }
 
-  get isReady() { return this.#_is_ready; }
-  
-  /**
-   * database name
-   */
-  get name () {
-    return this.config.db_name ?? 'main';
-  }
-
+  get name () { return this.config.db_name ?? 'main'; }
   get app() { return this.#_app; }
-
-  get mongo_client() {
-    return this.#_mongo_client;
-  }
-
+  get client() { return this.#_client; }
   get config() { return this.#_config; }
+  get isReady() { return this.#_is_ready; }
 
   /**
    * @template {import('@storecraft/core').BaseType} T
    * @param {string} name 
-   * @returns {Collection<T>}
    */
   collection(name) {
-    return this.mongo_client.db(this.name).collection(name);
   }
 
 }

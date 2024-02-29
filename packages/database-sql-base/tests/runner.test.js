@@ -1,14 +1,15 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
+import { SQL } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
+
 export const admin_email = 'admin@sc.com';
 export const admin_password = 'password';
 
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
-    new MongoDB({ db_name: 'test'}),
+    new SQL(),
     null, null, null, {
       admins_emails: [admin_email],
       auth_password_hash_rounds: 100,
@@ -28,8 +29,17 @@ async function test() {
     }
   );
   const last_test = Object.values(api_index).at(-1).create(app);
-  last_test.after(async ()=>app.db.disconnect());
+  last_test.after(async () => { await app.db.disconnect() });
   last_test.run();
 }
 
-test();
+// test();
+
+async function test2() {
+  const app = await create_app();
+  // api_index.api_auth_test.create(app).run();
+  // api_index.api_tags_crud_test.create(app).run();
+  api_index.api_tags_list_test.create(app).run();
+}
+
+test2();

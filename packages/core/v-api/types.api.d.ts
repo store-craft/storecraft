@@ -50,7 +50,7 @@ export type ApiAuthRefreshType = {
   refresh_token: string;
 }
 
-export type AuthUserType = BaseType & AuthBaseType & {
+export type AuthUserType = BaseType & AuthBaseType & timestamps & {
   confirmed_mail?: boolean
   roles?: Role[];
 }

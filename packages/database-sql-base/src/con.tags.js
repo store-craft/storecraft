@@ -1,10 +1,12 @@
 import { SQL } from '../driver.js'
-import { expand } from './con.shared.js'
+import { delete_me, delete_search_of, expand, insert_search_of, 
+  upsert_me, where_id_or_handle_table } from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
  * @typedef {import('@storecraft/core').db_tags} db_col
  */
+export const table_name = 'tags'
 
 /**
  * @param {SQL} driver 
@@ -16,17 +18,25 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          trx.deleteFrom('tags').where(
-            'id', '=', item.id).execute();
-          trx.insertInto('tags').values(
-            {
-              created_at: item.created_at,
-              updated_at: item.updated_at,
-              id: item.id,
-              handle: item.handle,
-              values: JSON.stringify(item.values)
-            }
-          ).execute()
+          await insert_search_of(trx, item.search, item.id, item.handle);
+          await upsert_me(trx, table_name, item.id, {
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            id: item.id,
+            handle: item.handle,
+            values: JSON.stringify(item.values)
+          });
+          // await trx.deleteFrom(table_name).where(
+          //   'id', '=', item.id).execute();
+          // await trx.insertInto(table_name).values(
+          //   {
+          //     created_at: item.created_at,
+          //     updated_at: item.updated_at,
+          //     id: item.id,
+          //     handle: item.handle,
+          //     values: JSON.stringify(item.values)
+          //   }
+          // ).execute()
         }
       );
     } catch(e) {
@@ -44,13 +54,10 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id_or_handle, options) => {
-    const r = await driver.client.selectFrom('tags')
+    const r = await driver.client.selectFrom(table_name)
                  .selectAll()
-                 .where((eb) => eb.or(
-                  [
-                    eb('id', '=', id_or_handle),
-                    eb('handle', '=', id_or_handle),
-                  ])).executeTakeFirst();
+                 .where(where_id_or_handle_table(id_or_handle))
+                 .executeTakeFirst();
 
     // r?.values && (r.values=JSON.parse(r.values));
     // try to expand relations
@@ -66,17 +73,24 @@ const get = (driver) => {
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
-    const r = await driver.client.deleteFrom('tags')
-            .where(
-              (eb) => eb.or(
-                [
-                  eb('id', '=', id_or_handle),
-                  eb('handle', '=', id_or_handle),
-                ]
-              )
-            ).executeTakeFirst();
-    
-    return r.numDeletedRows>0;
+    try {
+      const t = await driver.client.transaction().execute(
+        async (trx) => {
+            
+          // entities
+          await delete_search_of(trx, id_or_handle);
+          // delete me
+          const d2 = await delete_me(trx, table_name, id_or_handle);
+          return d2.numDeletedRows>0;
+        }
+      );
+
+      return t;
+    } catch(e) {
+      console.log(e);
+      return false;
+    }
+    return true;
   }
 }
 
@@ -88,7 +102,7 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client.selectFrom('tags')
+    const items = await driver.client.selectFrom(table_name)
               .selectAll()
               .where(
                 (eb) => {

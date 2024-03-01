@@ -54,6 +54,7 @@ export const add_sanity_crud_to_test_suite = s => {
     assert_partial(item_get, {...one, id});
   });
   
+  return s;
   s('update', async (ctx) => {
     const one = ctx.items[1];
     const id = await ctx.ops.upsert(ctx.app, one);

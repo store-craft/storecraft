@@ -15,7 +15,6 @@ export const admin_password = 'password';
  * @param {App} app 
  */
 export const create = app => {
-  // const app = await create_app();
   const s = suite(
     file_name(import.meta.url), 
   );
@@ -71,6 +70,7 @@ export const create = app => {
     const { create_app } = await import('./play.js');
     const app = await create_app();
     const s = create(app);
+    console.log('operating local')
     s.after(async () => { await app.db.disconnect() });
     s.run();
   } catch (e) {

@@ -8,9 +8,14 @@ const folder = join(homedir(), 'tomer');
 try { mkdirSync(folder) } catch(e) {}
 export const def_dialect = new SqliteDialect(
   {
-    database: new SQLite(
-      join(folder, 'db.sqlite')
-      )
+    onCreateConnection: async conn => {
+      // console.log('onCreateConnection');
+    },
+    database: async () => {
+      console.log('database init');
+      return new SQLite(join(folder, 'db.sqlite'));
+    }
+    
     // database: new SQLite(':memory:')
   }
 )

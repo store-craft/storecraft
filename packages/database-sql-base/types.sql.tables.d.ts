@@ -1,4 +1,4 @@
-import { AttributeType, AuthUserType, Role, TagType } from '@storecraft/core'
+import { AttributeType, AuthUserType, Role, TagType, CollectionType } from '@storecraft/core'
 import {
   ColumnType,
   Generated,
@@ -11,19 +11,24 @@ import {
 export interface Database {
   auth_users: AuthUserTypeTable,
   tags: TagsTable
+  collections: CollectionsTable,
+  entity_to_media: entity_to_media,
+  entity_to_tags_projections: entity_to_tags_projections,
+  entity_to_search_terms: entity_to_search_terms,
 }
 
-
-export interface junction_entity_2_media {
+export interface entity_to_value {
   id: Generated<number>,
   entity_id: string,
-  url: string
+  entity_handle: string,
+  value: string
 }
 
-export interface junction_entity_2_tag_projection {
-  id: Generated<number>,
-  entity_id: string,
-  tag: string
+export interface entity_to_media extends entity_to_value {
+}
+export interface entity_to_tags_projections extends entity_to_value {
+}
+export interface entity_to_search_terms extends entity_to_value {
 }
 
 export interface Base {
@@ -51,6 +56,11 @@ export interface TagsTable extends Base {
   values: JSONColumnType<string[]>;
 }
 
+export interface CollectionsTable extends Base {
+  handle: string;
+  title: string;
+  published: string | undefined;
+}
 
 // export interface PetTable {
 //   id: Generated<number>

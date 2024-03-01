@@ -1,6 +1,6 @@
 import { App } from '@storecraft/core';
 import { impl as auth_users } from './src/con.auth_users.js';
-// import { impl as collections } from './src/con.collections.js';
+import { impl as collections } from './src/con.collections.js';
 // import { impl as customers } from './src/con.customers.js';
 // import { impl as discounts } from './src/con.discounts.js';
 // import { impl as images } from './src/con.images.js';
@@ -83,7 +83,7 @@ export class SQL {
     this.#_app = app;
     this.auth_users = auth_users(this);
     this.tags = tags(this);
-    // this.collections = collections(this);
+    this.collections = collections(this);
     // this.customers = customers(this);
     // this.discounts = discounts(this);
     // this.images = images(this);

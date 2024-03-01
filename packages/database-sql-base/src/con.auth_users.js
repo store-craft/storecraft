@@ -1,10 +1,12 @@
 import { SQL } from '../driver.js'
-import { handle_or_id, isID, sanitize_one, to_objid } from './utils.funcs.js'
-import { expand } from './con.shared.js'
+import { sanitize_one } from './utils.funcs.js'
+import { delete_me, expand, upsert_me, where_id_or_handle_table } from './con.shared.js'
 
 /**
  * @typedef {import('@storecraft/core').db_auth_users} db_col
  */
+
+export const table_name = 'auth_users';
 
 /**
  * @param {SQL} driver 
@@ -16,21 +18,18 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          trx.deleteFrom('auth_users').where(
-            'id', '=', item.id).execute();
-          trx.insertInto('auth_users').values(
-            {
-              confirmed_mail: item.confirmed_mail ? 1 : 0,
-              email: item.email,
-              password: item.password,
-              created_at: item.created_at,
-              updated_at: item.updated_at,
-              id: item.id,
-              roles: JSON.stringify(item.roles),
-            }
-          ).execute()
+          return await upsert_me(trx, table_name, item.id, {
+            confirmed_mail: item.confirmed_mail ? 1 : 0,
+            email: item.email,
+            password: item.password,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            id: item.id,
+            roles: JSON.stringify(item.roles),
+          });
         }
       );
+      return t.numInsertedOrUpdatedRows>0;
     } catch(e) {
       console.log(e);
       return false;
@@ -45,12 +44,10 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id_or_handle, options) => {
-    const r = await driver.client.selectFrom('auth_users')
-                 .selectAll()
-                 .where((eb) => eb.or(
-                  [
-                    eb('id', '=', id_or_handle),
-                  ])).executeTakeFirst();
+    const r = await driver.client.selectFrom(table_name)
+            .selectAll()
+            .where(where_id_or_handle_table(id_or_handle))
+            .executeTakeFirst();
 
     // try to expand relations
     expand([r], options?.expand);
@@ -66,14 +63,8 @@ const get = (driver) => {
 const getByEmail = (driver) => {
   return async (email) => {
     const r = await driver.client.selectFrom('auth_users')
-            .selectAll().where(
-              (eb) => eb.or(
-                [
-                  eb('email', '=', email),
-                ]
-              )
-            ).executeTakeFirst();
-
+            .selectAll().where('email', '=', email)
+            .executeTakeFirst();
     return sanitize_one(r);
   }
 }
@@ -83,20 +74,25 @@ const getByEmail = (driver) => {
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
-  return async (id) => {
-    const r = await driver.client.deleteFrom('auth_users')
-            .where(
-              (eb) => eb.or(
-                [
-                  eb('id', '=', id),
-                ]
-              )
-            ).executeTakeFirst();
-    
-    return r.numDeletedRows>0;
+  return async (id_or_handle) => {
+    try {
+      const t = await driver.client.transaction().execute(
+        async (trx) => {
+            
+          // entities
+          // delete me
+          const d2 = await delete_me(trx, table_name, id_or_handle);
+          return d2.numDeletedRows>0;
+        }
+      );
+      return t;
+    } catch(e) {
+      console.log(e);
+      return false;
+    }
+    return true;
   }
 }
-
 /**
  * @param {SQL} driver 
  * @returns {db_col["removeByEmail"]}
@@ -104,14 +100,8 @@ const remove = (driver) => {
 const removeByEmail = (driver) => {
   return async (email) => {
     const r = await driver.client.deleteFrom('auth_users')
-            .where(
-              (eb) => eb.or(
-                [
-                  eb('email', '=', email),
-                ]
-              )
-            ).executeTakeFirst();
-    
+            .where('email', '=', email)
+            .executeTakeFirst();
     return r.numDeletedRows>0;
   }
 }

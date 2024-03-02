@@ -1,8 +1,11 @@
 import { SQL } from '../driver.js'
+import { stringArrayFrom } from './con.helpers.json.sqlite.js'
 import { delete_me, delete_media_of, delete_search_of, delete_tags_of, expand, 
   insert_media_of, insert_search_of, insert_tags_of, 
   upsert_me, where_id_or_handle_table } from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/sqlite'
+
 
 /**
  * @typedef {import('@storecraft/core').db_collections} db_col
@@ -24,9 +27,6 @@ const upsert = (driver) => {
           const tt1 = await insert_tags_of(trx, item.tags, item.id, item.handle);
           const tt2 = await insert_search_of(trx, item.search, item.id, item.handle);
           const tt3 = await insert_media_of(trx, item.media, item.id, item.handle);
-          console.log('tt1', tt1)
-          console.log('tt2', tt2)
-          console.log('tt3', tt3)
           // main
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,
@@ -49,6 +49,19 @@ const upsert = (driver) => {
   }
 }
 
+/**
+ * 
+ * @param {import('kysely').ExpressionBuilder<import('../index.js').Database>} eb 
+ * @param {keyof import('../index.js').Database} table 
+ */
+export const with_tags = (eb, table) => {
+  return stringArrayFrom(
+    eb.selectFrom('entity_to_tags_projections')
+      .select('entity_to_tags_projections.value')
+      .whereRef('entity_to_tags_projections.entity_id', '=', `${table}.id`)
+      .orderBy('entity_to_tags_projections.id')
+    ).as('tags');
+}
 
 /**
  * @param {SQL} driver 
@@ -56,14 +69,20 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id_or_handle, options) => {
+
     const r = await driver.client
                  .selectFrom(table_name)
-                 .selectAll()
+                 .selectAll('collections')
+                 .select(eb => [
+                    with_tags(eb, 'collections')
+                  ])
                  .where(where_id_or_handle_table(id_or_handle))
+                //  .compile()
                  .executeTakeFirst();
+    
+    if(r?.active) r.active = Boolean(r.active);
 
-    if(r)
-      r.active = Boolean(r.active)
+    // console.log(r);
     // r?.values && (r.values=JSON.parse(r.values));
     // try to expand relations
     expand([r], options?.expand);

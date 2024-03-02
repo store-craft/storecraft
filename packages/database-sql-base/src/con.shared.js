@@ -261,8 +261,11 @@ export const insert_entity_values_of = (entity_table_name) => {
    * @param {boolean} [delete_previous=true] whom the tags belong to
    */
   return async (trx, values, item_id, item_handle, delete_previous=true) => {
-    delete_previous && await delete_tags_of(trx, item_id ?? item_handle);
+    if(delete_previous)
+      await delete_entity_values_of(entity_table_name)(trx, item_id ?? item_handle);
+
     if(!values?.length) return Promise.resolve();
+
     return await trx.insertInto(entity_table_name).values(
       values.map(t => ({
           entity_handle: item_handle,

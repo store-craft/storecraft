@@ -1,9 +1,10 @@
 import { Collection } from 'mongodb'
-import { handle_or_id, isUndef, sanitize_array, 
+import { handle_or_id, isUndef, 
   sanitize_one, to_objid } from './utils.funcs.js'
 import { report_document_media } from './con.images.js'
 import { SQL } from '../index.js'
 import { InsertQueryBuilder, Transaction } from 'kysely'
+import { stringArrayFrom } from './con.helpers.json.sqlite.js'
 
 /**
  * @template T, G
@@ -312,3 +313,16 @@ export const delete_me = async (trx, table_name, id_or_handle) => {
   ).executeTakeFirst();
 }
 
+/**
+ * 
+ * @param {import('kysely').ExpressionBuilder<import('../index.js').Database>} eb 
+ * @param {keyof import('../index.js').Database} table 
+ */
+export const with_tags = (eb, table) => {
+  return stringArrayFrom(
+    eb.selectFrom('entity_to_tags_projections')
+      .select('entity_to_tags_projections.value')
+      .whereRef('entity_to_tags_projections.entity_id', '=', `${table}.id`)
+      .orderBy('entity_to_tags_projections.id')
+    ).as('tags');
+}

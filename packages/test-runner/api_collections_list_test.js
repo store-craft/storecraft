@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { tags } from '@storecraft/core/v-api';
+import { collections } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
@@ -8,24 +8,26 @@ import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
 
-const handle_tag = create_handle('tag', file_name(import.meta.url));
+const handle = create_handle('col', file_name(import.meta.url));
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').TagType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core').CollectionType & import('../core/types.database.js').idable_concrete)[]} */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
-    ix = Math.min(ix, arr.length - 3);
+    let jx = Math.min(ix, arr.length - 3);
     return {
-      handle: handle_tag(),
-      values: ['a'],
-      id: ID('tag'),
-      created_at: iso(ix + 1),
-      updated_at: iso(ix + 1)
+      handle: handle(),
+      id: ID('col'),
+      title: `collection ${ix}`,
+      active: true,
+      tags: [`a_${ix}`, `b_${ix}`],
+      created_at: iso(jx + 1),
+      updated_at: iso(jx + 1)
     }
   }
 );
@@ -39,7 +41,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: tags }
+    { items: items, app, ops: collections }
   );
 
   s.before(
@@ -47,10 +49,10 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await tags.remove(app, p.handle);
+          await collections.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.tags.upsert(p);
+          await app.db.collections.upsert(p);
         }
       } catch(e) {
         console.log(e)

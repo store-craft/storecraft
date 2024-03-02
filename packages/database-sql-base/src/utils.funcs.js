@@ -39,6 +39,21 @@ export const sanitize_hidden = o => {
 }
 
 /**
+ * Sanitize hidden properties in-place
+ * @template {object} T
+ * @param {T} o 
+ */
+export const sanitize_null = o => {
+  for (const key in o) {
+    if(!isDef(o[key]) && o.hasOwnProperty(key)) {
+      delete o[key];
+    }
+  }
+  return o;
+}
+
+
+/**
  * @template T
  * @param {T} o 
  * @returns {T}
@@ -53,16 +68,19 @@ export const delete_id = o => {
  * @param {T} o 
  */
 export const sanitize_one = o => {
-  return sanitize_hidden(o)
+  return sanitize_null(o)
 }
 
 /**
  * Sanitize the mongo document before sending to client
  * @template T
- * @param {T[]} o 
+ * @param {T[]} arr 
  */
-export const sanitize_array = o => {
-  return o.map(it => sanitize_hidden(it));
+export const sanitize_array_null = arr => {
+  for(const p of arr) {
+    sanitize_null(p);
+  }
+  return arr;
 }
 
 /**

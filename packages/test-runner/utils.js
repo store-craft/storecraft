@@ -16,6 +16,8 @@ const filter_actual_keys_by_expected = (actual, expected) => {
  * @param {Object} expected 
  */
 export const assert_partial = (actual, expected) => {
+  console.log('actual ', actual)
+  console.log('expected ', expected)
   assert.equal(filter_actual_keys_by_expected(actual, expected), expected);
 }
 

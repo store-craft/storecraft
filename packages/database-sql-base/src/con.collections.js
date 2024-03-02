@@ -1,10 +1,10 @@
 import { SQL } from '../driver.js'
-import { stringArrayFrom } from './con.helpers.json.sqlite.js'
 import { delete_me, delete_media_of, delete_search_of, delete_tags_of, expand, 
   insert_media_of, insert_search_of, insert_tags_of, 
-  upsert_me, where_id_or_handle_table } from './con.shared.js'
+  upsert_me, where_id_or_handle_table, 
+  with_tags} from './con.shared.js'
+import { sanitize_array_null, sanitize_null } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
-import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/sqlite'
 
 
 /**
@@ -49,19 +49,6 @@ const upsert = (driver) => {
   }
 }
 
-/**
- * 
- * @param {import('kysely').ExpressionBuilder<import('../index.js').Database>} eb 
- * @param {keyof import('../index.js').Database} table 
- */
-export const with_tags = (eb, table) => {
-  return stringArrayFrom(
-    eb.selectFrom('entity_to_tags_projections')
-      .select('entity_to_tags_projections.value')
-      .whereRef('entity_to_tags_projections.entity_id', '=', `${table}.id`)
-      .orderBy('entity_to_tags_projections.id')
-    ).as('tags');
-}
 
 /**
  * @param {SQL} driver 
@@ -81,11 +68,12 @@ const get = (driver) => {
                  .executeTakeFirst();
     
     if(r?.active) r.active = Boolean(r.active);
+    sanitize_null(r);
 
     // console.log(r);
     // r?.values && (r.values=JSON.parse(r.values));
     // try to expand relations
-    expand([r], options?.expand);
+    // expand([r], options?.expand);
     return r;
   }
 }
@@ -120,7 +108,6 @@ const remove = (driver) => {
   }
 }
 
-
 /**
  * @param {SQL} driver 
  * @returns {db_col["list"]}
@@ -130,6 +117,9 @@ const list = (driver) => {
 
     const items = await driver.client.selectFrom(table_name)
               .selectAll()
+              .select(eb => [
+                with_tags(eb, 'collections')
+              ])
               .where(
                 (eb) => {
                   return query_to_eb(eb, query).eb;
@@ -137,10 +127,15 @@ const list = (driver) => {
               ).orderBy(query_to_sort(query))
               .limit(query.limit ?? 10)
               .execute();
+    
+    for(const item of items) {
+      item.active = Boolean(item.active);
+    }
 
+    sanitize_array_null(items);
     // console.log(items)
     // try expand relations, that were asked
-    expand(items, query?.expand);
+    // expand(items, query?.expand);
 
     return items;
   }

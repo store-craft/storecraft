@@ -54,7 +54,7 @@ export const add_sanity_crud_to_test_suite = s => {
     assert_partial(item_get, {...one, id});
   });
   
-  return s;
+  // return s;
   s('update', async (ctx) => {
     const one = ctx.items[1];
     const id = await ctx.ops.upsert(ctx.app, one);
@@ -117,7 +117,7 @@ const compare_tuples = (vec1, vec2) => {
  * @param {T[]} list the result of the query
  * @param {import('@storecraft/core').ApiQuery} q the query used
  */
-export const assert_query_list = (list, q) => {
+export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
 
   // assert limit
@@ -168,4 +168,94 @@ export const assert_query_list = (list, q) => {
       }
     }
   }
+}
+
+
+/**
+ * A simple CRUD sanity
+ * @template {import('@storecraft/core').BaseType & import('@storecraft/core').timestamps} T
+ * @template {{
+ *  items: T[],
+ *  ops: {
+ *    upsert: (app: App, item: T) => Promise<string>,
+ *    get: (app: App, id: string) => Promise<T>,
+ *    list: (app: App, q: import('@storecraft/core').ApiQuery) => Promise<T[]>,
+ *  }
+ *  app: App
+ * }} C
+ * @param {import('uvu').uvu.Test<C>} s 
+ */
+export const add_list_integrity_tests = s => {
+
+  s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
+    async (ctx) => {
+      /** @type {import('@storecraft/core').ApiQuery} */
+      const q_asc = {
+        startAt: [['updated_at', iso(5)]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 3
+      }
+      /** @type {import('@storecraft/core').ApiQuery} */
+      const q_desc = {
+        ...q_asc, order: 'desc'
+      }
+
+      const list_asc = await ctx.ops.list(ctx.app, q_asc);
+      const list_desc = await ctx.ops.list(ctx.app, q_desc);
+
+      assert_query_list_integrity(list_asc, q_asc);
+      assert_query_list_integrity(list_desc, q_desc);
+
+      { 
+        // for each list item find it's original seed item and make sure
+        // all of it's properties are getting back
+        for(const p of list_asc) {
+          const original_item = ctx.items.find(it => it.id===p.id);
+          // console.log('original ', original_item)
+          assert.ok(original_item, 'Did not find original item of inserted item !!');
+          assert_partial(p, original_item);
+        }
+      }
+      
+    }
+  );
+
+  s('refined query', 
+    async (ctx) => {
+      // last 3 items have the same timestamps, so we refine by ID
+      // let's pick one before the last
+      const item = ctx.items.at(-2);
+      /** @type {import('@storecraft/core').ApiQuery} */
+      const q = {
+        startAt: [['updated_at', item.updated_at], ['id', item.id]],
+        sortBy: ['updated_at', 'id'],
+        order: 'asc',
+        limit: 2
+      }
+
+      const list = await ctx.ops.list(
+        ctx.app, q
+      );
+
+      // console.log(list)
+      // console.log(items)
+
+      assert_query_list_integrity(list, q);
+      assert.equal(list[0].id, item.id, 'should have had the same id');
+
+      { 
+        // for each list item find it's original seed item and make sure
+        // all of it's properties are getting back
+        for(const p of list) {
+          const original_item = ctx.items.find(it => it.id===p.id);
+          assert.ok(original_item, 'Did not find original item of inserted item !!');
+          assert_partial(p, original_item);
+        }
+      }
+
+    }
+  );
+
+  return s;
 }

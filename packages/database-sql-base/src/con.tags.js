@@ -1,6 +1,7 @@
 import { SQL } from '../driver.js'
 import { delete_me, delete_search_of, expand, insert_search_of, 
   upsert_me, where_id_or_handle_table } from './con.shared.js'
+import { sanitize_array_null, sanitize_null } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -61,6 +62,7 @@ const get = (driver) => {
 
     // r?.values && (r.values=JSON.parse(r.values));
     // try to expand relations
+    sanitize_null(r);
     expand([r], options?.expand);
     return r;
   }
@@ -111,6 +113,8 @@ const list = (driver) => {
               ).orderBy(query_to_sort(query))
               .limit(query.limit ?? 10)
               .execute();
+
+    sanitize_array_null(items);
 
     // console.log(items)
     // try expand relations, that were asked

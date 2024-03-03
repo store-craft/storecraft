@@ -1,5 +1,5 @@
 import { SQL } from '../driver.js'
-import { sanitize_one } from './utils.funcs.js'
+import { sanitize } from './utils.funcs.js'
 import { delete_me, expand, upsert_me, where_id_or_handle_table } from './con.shared.js'
 
 /**
@@ -51,7 +51,7 @@ const get = (driver) => {
 
     // try to expand relations
     expand([r], options?.expand);
-    return sanitize_one(r);
+    return sanitize(r);
   }
 }
 
@@ -65,7 +65,7 @@ const getByEmail = (driver) => {
     const r = await driver.client.selectFrom('auth_users')
             .selectAll().where('email', '=', email)
             .executeTakeFirst();
-    return sanitize_one(r);
+    return sanitize(r);
   }
 }
 

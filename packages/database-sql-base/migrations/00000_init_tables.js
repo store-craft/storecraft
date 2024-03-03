@@ -1,5 +1,4 @@
 import { CreateTableBuilder, Kysely } from 'kysely'
-import { tables } from '../utils.tables.names.js'
 
 /**
  * @typedef {import('../types.sql.tables.js').Database} Database
@@ -84,6 +83,22 @@ export async function up(db) {
     await tb.execute();
   }
 
+  { // products
+    let tb = create_safe_table(db, 'products');
+    tb = add_base_columns(tb);
+    tb = tb.addColumn('handle', 'text', (col) => col.unique())
+      .addColumn('title', 'text')
+      .addColumn('video', 'text')
+      .addColumn('price', 'numeric')
+      .addColumn('qty', 'integer')
+      .addColumn('compare_at_price', 'integer')
+      .addColumn('variants_options', 'json')
+      .addColumn('parent_handle', 'text')
+      .addColumn('parent_id', 'text')
+      .addColumn('variant_hint', 'json')
+    await tb.execute();
+  }
+
   { // entity_to_tags_projections
     let tb = create_entity_to_value_table(db, 'entity_to_tags_projections')
     await tb.execute();
@@ -96,6 +111,16 @@ export async function up(db) {
 
   { // entity_to_media
     let tb = create_entity_to_value_table(db, 'entity_to_media')
+    await tb.execute();
+  }
+
+  { // products_to_collections
+    let tb = create_entity_to_value_table(db, 'products_to_collections')
+    await tb.execute();
+  }
+
+  { // products_to_discounts
+    let tb = create_entity_to_value_table(db, 'products_to_discounts')
     await tb.execute();
   }
 

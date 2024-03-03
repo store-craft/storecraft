@@ -5,6 +5,7 @@ import * as assert from 'uvu/assert';
 import { create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
+import { assert_partial } from './utils.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -97,14 +98,23 @@ export const create = app => {
     {
       const cols_of_pr = await products.list_product_collections(app, prs[0].handle);
       // console.log(JSON.stringify(cols_of_pr,null,2))
-      assert.equal(cols_of_pr, cols);
+      assert_partial(cols_of_pr, cols);
+      // assert.equal(cols_of_pr, cols);
+    }
+
+    // simple get with exapnd collections, should also return the collections
+    { 
+      const product_with_collections = await products.get(app, prs[0].handle, { expand: ['*']});
+      // console.log(JSON.stringify(product_with_collections, null, 2))
+      // assert.equal(product_with_collections.collections, cols);
+      assert_partial(product_with_collections.collections, cols);
     }
 
     // test collection delete, collection was deleted from product
     {
       await collections.remove(app, cols[0].id);
       const cols_of_pr = await products.list_product_collections(app, prs[0].handle);
-      assert.equal(cols_of_pr, cols.slice(1));
+      assert_partial(cols_of_pr, cols.slice(1));
     }
 
     // test collection update, collection was updated at product

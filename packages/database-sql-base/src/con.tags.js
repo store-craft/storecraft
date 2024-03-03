@@ -1,7 +1,7 @@
 import { SQL } from '../driver.js'
 import { delete_me, delete_search_of, expand, insert_search_of, 
   upsert_me, where_id_or_handle_table } from './con.shared.js'
-import { sanitize_array_null, sanitize_null } from './utils.funcs.js'
+import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -27,17 +27,6 @@ const upsert = (driver) => {
             handle: item.handle,
             values: JSON.stringify(item.values)
           });
-          // await trx.deleteFrom(table_name).where(
-          //   'id', '=', item.id).execute();
-          // await trx.insertInto(table_name).values(
-          //   {
-          //     created_at: item.created_at,
-          //     updated_at: item.updated_at,
-          //     id: item.id,
-          //     handle: item.handle,
-          //     values: JSON.stringify(item.values)
-          //   }
-          // ).execute()
         }
       );
     } catch(e) {
@@ -62,7 +51,7 @@ const get = (driver) => {
 
     // r?.values && (r.values=JSON.parse(r.values));
     // try to expand relations
-    sanitize_null(r);
+    sanitize(r);
     expand([r], options?.expand);
     return r;
   }
@@ -114,7 +103,7 @@ const list = (driver) => {
               .limit(query.limit ?? 10)
               .execute();
 
-    sanitize_array_null(items);
+    sanitize_array(items);
 
     // console.log(items)
     // try expand relations, that were asked

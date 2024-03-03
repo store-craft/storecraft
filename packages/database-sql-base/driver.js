@@ -7,7 +7,7 @@ import { impl as collections } from './src/con.collections.js';
 // import { impl as notifications } from './src/con.notifications.js';
 // import { impl as orders } from './src/con.orders.js';
 // import { impl as posts } from './src/con.posts.js';
-// import { impl as products } from './src/con.products.js';
+import { impl as products } from './src/con.products.js';
 // import { impl as shipping } from './src/con.shipping.js';
 // import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
@@ -90,7 +90,7 @@ export class SQL {
     // this.notifications = notifications(this);
     // this.orders = orders(this);
     // this.posts = posts(this);
-    // this.products = products(this);
+    this.products = products(this);
     // this.storefronts = storefronts(this);
     // this.shipping = shipping(this);
     

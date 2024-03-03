@@ -1,14 +1,14 @@
 import { Collection } from 'mongodb'
 import { handle_or_id, isUndef, 
-  sanitize_one, to_objid } from './utils.funcs.js'
+  to_objid } from './utils.funcs.js'
 import { report_document_media } from './con.images.js'
 import { SQL } from '../index.js'
-import { InsertQueryBuilder, Transaction } from 'kysely'
-import { stringArrayFrom } from './con.helpers.json.sqlite.js'
+import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
+import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.sqlite.js'
 
 /**
  * @template T, G
- * @param {MongoDB} driver 
+ * @param {SQL} driver 
  * @param {Collection<G>} col 
  * @returns {import('@storecraft/core').db_crud<T, G>["upsert"]}
  */
@@ -46,52 +46,12 @@ export const upsert_regular = (driver, col) => {
 }
 
 /**
- * Extract relations names from item
- * @template {import('./utils.relations.js').WithRelations<{}>} T
- * @param {T} item
+ * @template T
+ * @param {T[]} items 
+ * @param {import('@storecraft/core').ExpandQuery} expand 
  */
-export const get_relations_names = item => {
-  return Object.keys(item?._relations ?? {});
-}
-
-/**
- * Expand relations in-place
- * @template {any} T
- * @param {T[]} items
- * @param {import('@storecraft/core').ExpandQuery} [expand_query] 
- */
-export const expand = (items, expand_query=undefined) => {
-  if(isUndef(expand_query))
-    return;
-
-  const all = expand_query.includes('*');
-  
-  for(const item of items) {
-    expand_query = all ? get_relations_names(item) : expand_query;
-
-    for(const e of (expand_query ?? [])) {
-      // try to find embedded documents relations
-      item[e] = sanitize_array(Object.values(item?._relations?.[e]?.entries ?? {}));
-    }
-  }
-}
-
-
-/**
- * @template T, G
- * @param {MongoDB} driver 
- * @param {Collection<G>} col 
- * @returns {import('@storecraft/core').db_crud<T, G>["get"]}
- */
-export const get_regular33 = (driver, col) => {
-  return async (id_or_handle, options) => {
-    const filter = handle_or_id(id_or_handle);
-    /** @type {import('./utils.relations.js').WithRelations<G>} */
-    const res = await col.findOne(filter);
-    // try to expand relations
-    expand([res], options?.expand);
-    return sanitize_one(res);
-  }
+export const expand = (items, expand) => {
+  return items;
 }
 
 /**
@@ -122,7 +82,7 @@ export const get_regular = (driver, table_name) => {
  * should be instead
  * @template {import('@storecraft/core').idable} T
  * @template {import('@storecraft/core').idable} G
- * @param {MongoDB} driver 
+ * @param {SQL} driver 
  * @param {Collection<G>} col 
  * @returns {import('@storecraft/core').db_crud<T, G>["getBulk"]}
  */
@@ -289,11 +249,14 @@ export const insert_media_of = insert_entity_values_of('entity_to_media');
 
 /**
  * @typedef {import('../index.js').Database} Database
- * 
+ */
+
+/**
+ * @template {keyof Database} T
  * @param {Transaction<Database>} trx 
- * @param {keyof Database} table_name 
+ * @param {T} table_name 
  * @param {string} item_id 
- * @param {Parameters<InsertQueryBuilder<Database>["values"]>[0]} item values of the entity
+ * @param {Parameters<InsertQueryBuilder<Database, T>["values"]>[0]} item values of the entity
  */
 export const upsert_me = async (trx, table_name, item_id, item) => {
   await trx.deleteFrom(table_name).where('id', '=', item_id).execute();
@@ -315,14 +278,75 @@ export const delete_me = async (trx, table_name, id_or_handle) => {
 
 /**
  * 
- * @param {import('kysely').ExpressionBuilder<import('../index.js').Database>} eb 
- * @param {keyof import('../index.js').Database} table 
+ * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {string | ExpressionWrapper<Database>} id_or_handle 
  */
-export const with_tags = (eb, table) => {
+export const with_tags = (eb, id_or_handle) => {
   return stringArrayFrom(
-    eb.selectFrom('entity_to_tags_projections')
-      .select('entity_to_tags_projections.value')
-      .whereRef('entity_to_tags_projections.entity_id', '=', `${table}.id`)
-      .orderBy('entity_to_tags_projections.id')
+    values_of_entity_table(eb, 'entity_to_tags_projections', id_or_handle)
     ).as('tags');
+}
+
+/**
+ * 
+ * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {string | ExpressionWrapper<Database>} id_or_handle 
+ */
+export const with_media = (eb, id_or_handle) => {
+  return stringArrayFrom(
+    values_of_entity_table(eb, 'entity_to_media', id_or_handle)
+    ).as('media');
+}
+
+/**
+ * select as json array collections of a product
+ * @param {import('kysely').ExpressionBuilder<import('../index.js').Database, 'products'>} eb 
+ * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ */
+export const products_with_collections = (eb, product_id_or_handle) => {
+  return jsonArrayFrom(
+    eb.selectFrom('collections')
+      .select('collections.active')
+      .select('collections.attributes')
+      .select('collections.created_at')
+      .select('collections.updated_at')
+      .select('collections.description')
+      .select('collections.title')
+      .select('collections.handle')
+      .select('collections.id')
+      .select(eb => [
+        with_tags(eb, eb.ref('collections.id')),
+        with_media(eb, eb.ref('collections.id')),
+      ])
+      .where('collections.id', 'in', 
+        eb => values_of_entity_table(
+          eb, 'products_to_collections', product_id_or_handle
+        )
+      )
+    ).as('collections');
+}
+
+/**
+ * @typedef {keyof Pick<Database, 'entity_to_media' | 'entity_to_search_terms' | 'entity_to_tags_projections' | 'products_to_collections' | 'products_to_discounts'>} entity_junction_table_key 
+ */
+
+/**
+ * Use this to extract an entity values by it's id or handle. We assume not many
+ * entities values of course.
+ * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {entity_junction_table_key} entity_junction_table 
+ * @param {string | ExpressionWrapper<Database>} entity_id_or_handle 
+ */
+export const values_of_entity_table = (eb, entity_junction_table, entity_id_or_handle) => {
+  return eb
+    .selectFrom(entity_junction_table)
+    .select(`${entity_junction_table}.value`)
+    .where(eb2 => eb2.or(
+      [
+        eb2(`${entity_junction_table}.entity_id`, '=', entity_id_or_handle),
+        eb2(`${entity_junction_table}.entity_handle`, '=', entity_id_or_handle),
+      ]
+      )
+    )
+    .orderBy(`${entity_junction_table}.id`);
 }

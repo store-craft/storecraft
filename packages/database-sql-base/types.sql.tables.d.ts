@@ -1,4 +1,7 @@
-import { AttributeType, AuthUserType, Role, TagType, CollectionType } from '@storecraft/core'
+import { AttributeType, AuthUserType, Role, TagType, 
+  CollectionType, ProductType, 
+  VariantOption,
+  VariantOptionSelection} from '@storecraft/core'
 import {
   ColumnType,
   Generated,
@@ -12,6 +15,9 @@ export interface Database {
   auth_users: AuthUserTypeTable,
   tags: TagsTable
   collections: CollectionsTable,
+  products: ProductsTable,
+  products_to_collections: products_to_collections;
+  products_to_discounts: products_to_discounts;
   entity_to_media: entity_to_media,
   entity_to_tags_projections: entity_to_tags_projections,
   entity_to_search_terms: entity_to_search_terms,
@@ -24,12 +30,11 @@ export interface entity_to_value {
   value: string
 }
 
-export interface entity_to_media extends entity_to_value {
-}
-export interface entity_to_tags_projections extends entity_to_value {
-}
-export interface entity_to_search_terms extends entity_to_value {
-}
+export interface entity_to_media extends entity_to_value {}
+export interface entity_to_tags_projections extends entity_to_value {}
+export interface entity_to_search_terms extends entity_to_value {}
+export interface products_to_collections extends entity_to_value {}
+export interface products_to_discounts extends entity_to_value {}
 
 export interface Base {
   attributes: JSONColumnType<AttributeType[] | undefined>;
@@ -62,13 +67,17 @@ export interface CollectionsTable extends Base {
   published: string | undefined;
 }
 
-// export interface PetTable {
-//   id: Generated<number>
-//   name: string
-//   owner_id: number
-//   species: 'dog' | 'cat'
-// }
+export interface ProductsTable extends Base {
+  handle: string;
+  title: string;
+  video: string;
+  price: number;
+  qty: number;
+  compare_at_price: number;
+  variants_options: JSONColumnType<VariantOption[]>;
+  //for variant children
+  parent_handle: string;
+  parent_id: string;
+  variant_hint: JSONColumnType<VariantOptionSelection[]>;
+}
 
-// export type Pet = Selectable<PetTable>
-// export type NewPet = Insertable<PetTable>
-// export type PetUpdate = Updateable<PetTable>

@@ -43,7 +43,7 @@ export const create = app => {
     file_name(import.meta.url), 
     { items: items_upsert, app, ops: products }
   );
-
+  
   s.before(
     async () => { 
       assert.ok(app.ready) 

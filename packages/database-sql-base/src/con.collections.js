@@ -3,7 +3,7 @@ import { delete_me, delete_media_of, delete_search_of, delete_tags_of, expand,
   insert_media_of, insert_search_of, insert_tags_of, 
   upsert_me, where_id_or_handle_table, 
   with_tags} from './con.shared.js'
-import { sanitize_array_null, sanitize_null } from './utils.funcs.js'
+import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 
@@ -29,6 +29,7 @@ const upsert = (driver) => {
           const tt3 = await insert_media_of(trx, item.media, item.id, item.handle);
           // main
           await upsert_me(trx, table_name, item.id, {
+            
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
@@ -61,14 +62,13 @@ const get = (driver) => {
                  .selectFrom(table_name)
                  .selectAll('collections')
                  .select(eb => [
-                    with_tags(eb, 'collections')
+                    with_tags(eb, eb.ref('collections.id'))
                   ])
                  .where(where_id_or_handle_table(id_or_handle))
                 //  .compile()
                  .executeTakeFirst();
     
-    if(r?.active) r.active = Boolean(r.active);
-    sanitize_null(r);
+    sanitize(r);
 
     // console.log(r);
     // r?.values && (r.values=JSON.parse(r.values));
@@ -118,7 +118,7 @@ const list = (driver) => {
     const items = await driver.client.selectFrom(table_name)
               .selectAll()
               .select(eb => [
-                with_tags(eb, 'collections')
+                with_tags(eb, eb.ref('collections.id'))
               ])
               .where(
                 (eb) => {
@@ -128,11 +128,7 @@ const list = (driver) => {
               .limit(query.limit ?? 10)
               .execute();
     
-    for(const item of items) {
-      item.active = Boolean(item.active);
-    }
-
-    sanitize_array_null(items);
+    sanitize_array(items);
     // console.log(items)
     // try expand relations, that were asked
     // expand(items, query?.expand);

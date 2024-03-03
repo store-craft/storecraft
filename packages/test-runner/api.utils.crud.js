@@ -194,7 +194,8 @@ export const add_list_integrity_tests = s => {
         startAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
         order: 'asc',
-        limit: 3
+        limit: 3,
+        expand: ['*']
       }
       /** @type {import('@storecraft/core').ApiQuery} */
       const q_desc = {
@@ -214,6 +215,7 @@ export const add_list_integrity_tests = s => {
           const original_item = ctx.items.find(it => it.id===p.id);
           // console.log('original ', original_item)
           assert.ok(original_item, 'Did not find original item of inserted item !!');
+          // assert_partial(p, original_item);
           assert_partial(p, original_item);
         }
       }
@@ -231,7 +233,8 @@ export const add_list_integrity_tests = s => {
         startAt: [['updated_at', item.updated_at], ['id', item.id]],
         sortBy: ['updated_at', 'id'],
         order: 'asc',
-        limit: 2
+        limit: 2,
+        expand: ['*']
       }
 
       const list = await ctx.ops.list(

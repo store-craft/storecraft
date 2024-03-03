@@ -17,6 +17,7 @@ export * as api_orders_crud_test from './api_orders_crud_test.js'
 
 export * as api_posts_crud_test from './api_posts_crud_test.js'
 
+export * as api_products_list_test from './api_products_list_test.js'
 export * as api_products_collections_test from './api_products_collections_test.js'
 export * as api_products_crud_test from './api_products_crud_test.js'
 export * as api_products_discounts_test from './api_products_discounts_test.js'

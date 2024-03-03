@@ -39,46 +39,37 @@ export const sanitize_hidden = o => {
 }
 
 /**
- * Sanitize hidden properties in-place
+ * Sanitize null/undefined valued keys
  * @template {object} T
  * @param {T} o 
  */
-export const sanitize_null = o => {
+export const sanitize = o => {
   for (const key in o) {
     if(!isDef(o[key]) && o.hasOwnProperty(key)) {
       delete o[key];
+      continue;
     }
+    if(key==='active') {
+      o[key] = Boolean(o[key]);
+    }
+
+    if(Array.isArray(o[key])) {
+      sanitize_array(o[key]);
+    }
+
   }
   return o;
 }
 
 
 /**
- * @template T
- * @param {T} o 
- * @returns {T}
- */
-export const delete_id = o => {
-  return delete_keys('_id')(o)
-}
-
-/**
- * Sanitize the mongo document before sending to client
- * @template T
- * @param {T} o 
- */
-export const sanitize_one = o => {
-  return sanitize_null(o)
-}
-
-/**
  * Sanitize the mongo document before sending to client
  * @template T
  * @param {T[]} arr 
  */
-export const sanitize_array_null = arr => {
+export const sanitize_array = arr => {
   for(const p of arr) {
-    sanitize_null(p);
+    sanitize(p);
   }
   return arr;
 }

@@ -98,16 +98,22 @@ export const create = app => {
     {
       const cols_of_pr = await products.list_product_collections(app, prs[0].handle);
       // console.log(JSON.stringify(cols_of_pr,null,2))
-      assert_partial(cols_of_pr, cols);
-      // assert.equal(cols_of_pr, cols);
+      for (const expected of cols) {
+        const actual = cols_of_pr.find(c => c.handle===expected.handle);
+        assert_partial(actual, expected);
+      }
     }
 
     // simple get with exapnd collections, should also return the collections
     { 
       const product_with_collections = await products.get(app, prs[0].handle, { expand: ['*']});
       // console.log(JSON.stringify(product_with_collections, null, 2))
-      // assert.equal(product_with_collections.collections, cols);
-      assert_partial(product_with_collections.collections, cols);
+      for (const expected of cols) {
+        const actual = product_with_collections.collections.find(
+          c => c.handle===expected.handle
+          );
+        assert_partial(actual, expected);
+      }
     }
 
     // test collection delete, collection was deleted from product

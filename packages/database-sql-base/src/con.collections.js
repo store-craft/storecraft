@@ -59,22 +59,16 @@ const get = (driver) => {
   return async (id_or_handle, options) => {
 
     const r = await driver.client
-                 .selectFrom(table_name)
-                 .selectAll('collections')
-                 .select(eb => [
-                    with_tags(eb, eb.ref('collections.id'))
-                  ])
-                 .where(where_id_or_handle_table(id_or_handle))
-                //  .compile()
-                 .executeTakeFirst();
+      .selectFrom(table_name)
+      .selectAll('collections')
+      .select(eb => [
+        with_tags(eb, eb.ref('collections.id'))
+      ])
+      .where(where_id_or_handle_table(id_or_handle))
+    //  .compile()
+      .executeTakeFirst();
     
-    sanitize(r);
-
-    // console.log(r);
-    // r?.values && (r.values=JSON.parse(r.values));
-    // try to expand relations
-    // expand([r], options?.expand);
-    return r;
+    return sanitize(r);
   }
 }
 
@@ -116,24 +110,19 @@ const list = (driver) => {
   return async (query) => {
 
     const items = await driver.client.selectFrom(table_name)
-              .selectAll()
-              .select(eb => [
-                with_tags(eb, eb.ref('collections.id'))
-              ])
-              .where(
-                (eb) => {
-                  return query_to_eb(eb, query).eb;
-                }
-              ).orderBy(query_to_sort(query))
-              .limit(query.limit ?? 10)
-              .execute();
+      .selectAll()
+      .select(eb => [
+        with_tags(eb, eb.ref('collections.id'))
+      ])
+      .where(
+        (eb) => {
+          return query_to_eb(eb, query).eb;
+        }
+      ).orderBy(query_to_sort(query))
+      .limit(query.limit ?? 10)
+      .execute();
     
-    sanitize_array(items);
-    // console.log(items)
-    // try expand relations, that were asked
-    // expand(items, query?.expand);
-
-    return items;
+    return sanitize_array(items);
   }
 }
 

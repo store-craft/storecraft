@@ -1,6 +1,7 @@
 import { SQL } from '../driver.js'
 import { sanitize } from './utils.funcs.js'
-import { delete_me, expand, upsert_me, where_id_or_handle_table } from './con.shared.js'
+import { delete_me, upsert_me, 
+  where_id_or_handle_table } from './con.shared.js'
 
 /**
  * @typedef {import('@storecraft/core').db_auth_users} db_col
@@ -44,13 +45,12 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id_or_handle, options) => {
-    const r = await driver.client.selectFrom(table_name)
-            .selectAll()
-            .where(where_id_or_handle_table(id_or_handle))
-            .executeTakeFirst();
+    const r = await driver.client
+      .selectFrom(table_name)
+      .selectAll()
+      .where(where_id_or_handle_table(id_or_handle))
+      .executeTakeFirst();
 
-    // try to expand relations
-    expand([r], options?.expand);
     return sanitize(r);
   }
 }
@@ -62,9 +62,10 @@ const get = (driver) => {
  */
 const getByEmail = (driver) => {
   return async (email) => {
-    const r = await driver.client.selectFrom('auth_users')
-            .selectAll().where('email', '=', email)
-            .executeTakeFirst();
+    const r = await driver.client
+      .selectFrom('auth_users')
+      .selectAll().where('email', '=', email)
+      .executeTakeFirst();
     return sanitize(r);
   }
 }

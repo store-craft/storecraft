@@ -73,26 +73,26 @@ const upsert = (driver) => {
 const get = (driver) => {
   return async (id_or_handle, options) => {
 
+    const expand = options?.expand ?? ['*'];
+    const expand_tags = expand.includes('*') || expand.includes('tags');
+    const expand_collections = expand.includes('*') || expand.includes('collections');
+
     const r = await driver.client
       .selectFrom(table_name)
       .selectAll('products')
       .select(eb => [
-        with_tags(eb, id_or_handle),
+        expand_tags && with_tags(eb, id_or_handle),
         with_media(eb, id_or_handle),
-        products_with_collections(eb, id_or_handle)
-      ])
+        expand_collections && products_with_collections(eb, id_or_handle)
+      ].filter(Boolean)
+      )
       .where(where_id_or_handle_table(id_or_handle))
     //  .compile()
       .executeTakeFirst();
     
-    if(r?.active) r.active = Boolean(r.active);
     sanitize(r);
 
-    // console.log(r);
-    // r?.values && (r.values=JSON.parse(r.values));
-    // try to expand relations
-    // expand([r], options?.expand);
-    return r;
+    return sanitize(r);
   }
 }
 
@@ -138,14 +138,18 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
+    const expand = query.expand ?? ['*'];
+    const expand_tags = expand.includes('*') || expand.includes('tags');
+    const expand_collections = expand.includes('*') || expand.includes('collections');
+
     const items = await driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_tags(eb, eb.ref('products.id')),
+        expand_tags && with_tags(eb, eb.ref('products.id')),
         with_media(eb, eb.ref('products.id')),
-        products_with_collections(eb, eb.ref('products.id'))
-      ])
+        expand_collections && products_with_collections(eb, eb.ref('products.id'))
+      ].filter(Boolean))
       .where(
         (eb) => {
           return query_to_eb(eb, query).eb;
@@ -156,19 +160,7 @@ const list = (driver) => {
       // .compile();
         // console.log(items)
 
-    // for(const item of items) {
-    //   item.active = Boolean(item.active);
-    //   for(const col of item.collections)
-    //     col.active = Boolean(col.active);
-    //   sanitize_array(item.collections);
-    // }
-
-    sanitize_array(items);
-    // console.log(items)
-    // try expand relations, that were asked
-    // expand(items, query?.expand);
-
-    return items;
+    return sanitize_array(items);
   }
 }
 

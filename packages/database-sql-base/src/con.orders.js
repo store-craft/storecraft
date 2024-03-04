@@ -1,7 +1,9 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_search_of, insert_media_of, insert_search_of, 
+import { delete_me, delete_media_of, delete_search_of, delete_tags_of, insert_media_of, insert_search_of, 
+  insert_tags_of, 
   upsert_me, where_id_or_handle_table, 
-  with_media} from './con.shared.js'
+  with_media,
+  with_tags} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -22,6 +24,7 @@ const upsert = (driver) => {
         async (trx) => {
           await insert_search_of(trx, item.search, item.id, item.id);
           await insert_media_of(trx, item.media, item.id, item.id);
+          await insert_tags_of(trx, item.tags, item.id, item.id);
           await upsert_me(trx, table_name, item.id, {
             active: item.active ? 1: 0,
             attributes: JSON.stringify(item.attributes),
@@ -63,6 +66,7 @@ const get = (driver) => {
       .selectAll()
       .select(eb => [
         with_media(eb, id_or_handle),
+        with_tags(eb, id_or_handle),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -84,6 +88,8 @@ const remove = (driver) => {
             
           // entities
           await delete_search_of(trx, id_or_handle);
+          await delete_media_of(trx, id_or_handle);
+          await delete_tags_of(trx, id_or_handle);
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           return d2.numDeletedRows>0;
@@ -112,6 +118,7 @@ const list = (driver) => {
       .selectAll()
       .select(eb => [
         with_media(eb, eb.ref('orders.id')),
+        with_tags(eb, eb.ref('orders.id')),
       ].filter(Boolean))
       .where(
         (eb) => {

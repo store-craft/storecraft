@@ -100,9 +100,10 @@ const remove = (driver) => {
  */
 const removeByEmail = (driver) => {
   return async (email) => {
-    const r = await driver.client.deleteFrom('auth_users')
-            .where('email', '=', email)
-            .executeTakeFirst();
+    const r = await driver.client
+      .deleteFrom('auth_users')
+      .where('email', '=', email)
+      .executeTakeFirst();
     return r.numDeletedRows>0;
   }
 }

@@ -2,6 +2,7 @@ import { SQL } from '../driver.js'
 import { delete_me, delete_media_of, delete_search_of, delete_tags_of, expand, 
   insert_media_of, insert_search_of, insert_tags_of, 
   upsert_me, where_id_or_handle_table, 
+  with_media, 
   with_tags} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -62,7 +63,8 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll('collections')
       .select(eb => [
-        with_tags(eb, eb.ref('collections.id'))
+        with_tags(eb, eb.ref('collections.id')),
+        with_media(eb, eb.ref('collections.id'))
       ])
       .where(where_id_or_handle_table(id_or_handle))
     //  .compile()
@@ -112,7 +114,8 @@ const list = (driver) => {
     const items = await driver.client.selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_tags(eb, eb.ref('collections.id'))
+        with_tags(eb, eb.ref('collections.id')),
+        with_media(eb, eb.ref('collections.id')),
       ])
       .where(
         (eb) => {

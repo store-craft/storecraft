@@ -36,7 +36,7 @@ const upsert = (driver) => {
         await driver.products._col.updateOne(
           { _id : to_objid(data.parent_id) },
           { 
-            $set: { [`_relations.variants.entries.${objid.$oid}`]: data },
+            $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
             $addToSet: { '_relations.variants.ids': objid }
           },
           false

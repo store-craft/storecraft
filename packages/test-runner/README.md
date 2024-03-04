@@ -17,7 +17,6 @@ Todo:
 - list and query tests:
   - discounts
   - images
-  - notifications
 - orders of customer list
 - products:
   - product -> products variants

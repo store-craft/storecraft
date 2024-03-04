@@ -2,7 +2,7 @@ import { AttributeType, AuthUserType, Role, TagType,
   CollectionType, ProductType, ShippingMethodType,
   VariantOption, PostType, CustomerType,
   VariantOptionSelection, OrderData, StorefrontType,
-  AddressType,
+  AddressType, ImageType,
   OrderContact,
   LineItem,
   OrderStatus,
@@ -30,6 +30,7 @@ export interface Database {
   orders: OrdersTable;
   storefronts: StorefrontType;
   notifications: NotificationsTable;
+  images: ImagesTable;
 
   products: ProductsTable,
   products_to_collections: products_to_collections;
@@ -75,18 +76,15 @@ export type AuthUserTypeInsert = Insertable<AuthUserTypeTable>
 export type AuthUserTypeUpdate = Updateable<AuthUserTypeTable>
 
 export interface TagsTable extends Base {
-  handle: string;
   values: JSONColumnType<string[]>;
 }
 
 export interface CollectionsTable extends Base {
-  handle: string;
   title: string;
   published: string | undefined;
 }
 
 export interface ProductsTable extends Base {
-  handle: string;
   title: string;
   video: string;
   price: number;
@@ -100,13 +98,11 @@ export interface ProductsTable extends Base {
 }
 
 export interface ShippingMethodsTable extends Base {
-  handle: string;
   title: string;
   price: number;
 }
 
 export interface PostsTable extends Base {
-  handle: string;
   title: string;
   text: string;
 }
@@ -121,8 +117,6 @@ export interface CustomersTable extends Base {
 }
 
 export interface OrdersTable extends Base {
-  // just the ID
-  handle: string;
   /** buyer info */
   contact: JSONColumnType<OrderContact>;
   /** shipping address info */
@@ -146,8 +140,6 @@ export interface OrdersTable extends Base {
 }
 
 export interface StorefrontsTable extends Base {
-  /** readable handle */
-  handle: string;
   /** readable title */
   title: string;
   /** video url */
@@ -165,4 +157,9 @@ export interface NotificationsTable extends Base {
   actions: JSONColumnType<NotificationAction[]>;
   // for local usage as well
   search: JSONColumnType<string[]>; 
+}
+
+export interface ImagesTable extends Base {
+  name: string;
+  url: string;
 }

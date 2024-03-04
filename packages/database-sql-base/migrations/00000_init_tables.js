@@ -27,13 +27,14 @@ const add_base_columns = tb => {
  * @param {keyof Database} table_name
  */
 const create_entity_to_value_table = (db, table_name) => {
-  return db.schema.createTable(table_name)
-                  .addColumn('id', 'integer', 
-                      (col) => col.autoIncrement().primaryKey()
-                  )
-                  .addColumn('entity_id', 'text', col => col.notNull())
-                  .addColumn('entity_handle', 'text')
-                  .addColumn('value', 'text')
+  return db.schema
+    .createTable(table_name)
+    .addColumn('id', 'integer', 
+        (col) => col.autoIncrement().primaryKey()
+    )
+    .addColumn('entity_id', 'text', col => col.notNull())
+    .addColumn('entity_handle', 'text')
+    .addColumn('value', 'text')
 }
 
 /**
@@ -172,6 +173,15 @@ export async function up(db) {
       .addColumn('author', 'text')
       .addColumn('actions', 'json')
       // .addColumn('search', 'json')
+    await tb.execute();
+  } 
+
+  { // images
+    let tb = create_safe_table(db, 'images');
+    tb = add_base_columns(tb);
+    tb = tb
+      .addColumn('name', 'text')
+      .addColumn('url', 'text')
     await tb.execute();
   } 
 

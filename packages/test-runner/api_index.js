@@ -13,6 +13,7 @@ export * as api_discounts_products_test from './api_discounts_products_test.js'
 export * as api_images_crud_test from './api_images_crud_test.js'
 
 export * as api_notifications_crud_test from './api_notifications_crud_test.js'
+export * as api_notifications_list_test from './api_notifications_list_test.js'
 
 export * as api_orders_crud_test from './api_orders_crud_test.js'
 export * as api_orders_list_test from './api_orders_list_test.js'

@@ -1,5 +1,5 @@
 import { ID, apply_dates } from './utils.func.js'
-import { notificationTypeSchema, notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove } from './con.shared.js'

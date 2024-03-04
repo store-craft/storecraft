@@ -293,6 +293,17 @@ export const with_tags = (eb, id_or_handle) => {
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
  */
+export const with_search = (eb, id_or_handle) => {
+  return stringArrayFrom(
+    values_of_entity_table(eb, 'entity_to_search_terms', id_or_handle)
+    ).as('search');
+}
+
+/**
+ * 
+ * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {string | ExpressionWrapper<Database>} id_or_handle 
+ */
 export const with_media = (eb, id_or_handle) => {
   return stringArrayFrom(
     values_of_entity_table(eb, 'entity_to_media', id_or_handle)

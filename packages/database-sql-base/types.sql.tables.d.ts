@@ -8,8 +8,9 @@ import { AttributeType, AuthUserType, Role, TagType,
   OrderStatus,
   PricingData,
   ValidationEntry,
-  OrderPaymentGatewayData,
-  DiscountType} from '@storecraft/core'
+  OrderPaymentGatewayData, NotificationType,
+  DiscountType,
+  NotificationAction} from '@storecraft/core'
 import {
   ColumnType,
   Generated,
@@ -28,6 +29,7 @@ export interface Database {
   customers: CustomersTable;
   orders: OrdersTable;
   storefronts: StorefrontType;
+  notifications: NotificationsTable;
 
   products: ProductsTable,
   products_to_collections: products_to_collections;
@@ -58,6 +60,7 @@ export interface Base {
   created_at: ColumnType<string>;
   updated_at: ColumnType<string>;
   id: string;
+  handle: string;
 }
 
 export interface AuthUserTypeTable extends Base {
@@ -151,4 +154,15 @@ export interface StorefrontsTable extends Base {
   video: string;
   /** exported storefront json */
   published: string;
+}
+
+export interface NotificationsTable extends Base {
+  /** message of notification, can be markdown, markup or plain text */
+  message: string;
+  /** author of the notification */
+  author: string;
+  /** list of actions */
+  actions: JSONColumnType<NotificationAction[]>;
+  // for local usage as well
+  search: JSONColumnType<string[]>; 
 }

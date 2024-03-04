@@ -2,28 +2,30 @@ import { notifications } from '@storecraft/core/v-api';
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name, get_static_ids } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
 // const app = await create_app();
 
 /** @type {import('@storecraft/core').NotificationTypeUpsert[]} */
-const items_upsert = [
-  {
-    message: 'message 1', search: ['checkout', 'backend'],
-    author: 'backend-bot', 
-    actions: [
-      {
-        type: 'url',
-        name: 'name',
-        params: {
-          url: 'https://storecraft.com'
+const items_upsert = get_static_ids('not').map(
+  (id, ix, arr) => (
+    {
+      message: `message ${ix}`, search: ['checkout', 'backend'],
+      author: 'backend-bot', 
+      actions: [
+        {
+          type: 'url',
+          name: 'name',
+          params: {
+            url: 'https://storecraft.com'
+          }
         }
-      }
-    ]
-  },
-]
+      ]
+    }
+  )
+);
 
 /**
  * 
@@ -40,7 +42,7 @@ export const create = app => {
   s('add', async () => {
     const one = items_upsert[0];
     const ids = await ops.addBulk(
-      app, Array.from({ length: 10 }).map((_, ix) => ({...one, message: `message ${ix}`}))
+      app, items_upsert
     );
 
     assert.ok(ids?.length)

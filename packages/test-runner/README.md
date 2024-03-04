@@ -18,7 +18,6 @@ Todo:
   - discounts
   - images
   - notifications
-  - storefronts
 - orders of customer list
 - products:
   - product -> products variants

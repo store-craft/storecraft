@@ -232,12 +232,15 @@ export const baseTypeSchema = idableSchema.extend({
   description: z.string().optional(),
   active: z.boolean().optional(),
 });
-export const authUserTypeSchema = baseTypeSchema.and(authBaseTypeSchema).and(
-  z.object({
-    confirmed_mail: z.boolean().optional(),
-    roles: z.array(roleSchema).optional(),
-  }),
-);
+export const authUserTypeSchema = baseTypeSchema
+  .and(authBaseTypeSchema)
+  .and(timestampsSchema)
+  .and(
+    z.object({
+      confirmed_mail: z.boolean().optional(),
+      roles: z.array(roleSchema).optional(),
+    }),
+  );
 export const collectionTypeSchema = baseTypeSchema
   .extend(timestampsSchema.shape)
   .extend({
@@ -287,7 +290,7 @@ export const shippingMethodTypeSchema = baseTypeSchema
   .extend(timestampsSchema.shape)
   .extend({
     price: z.number().min(0, "Please set a price >= 0"),
-    name: z.string(),
+    title: z.string(),
     handle: z.string(),
   });
 export const postTypeSchema = baseTypeSchema

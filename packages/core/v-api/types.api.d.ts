@@ -444,7 +444,7 @@ export interface ShippingMethodType extends BaseType, timestamps {
    */
   price: number;
   /** name */
-  name: string;
+  title: string;
   handle: string;
 }
 

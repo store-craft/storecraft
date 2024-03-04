@@ -27,7 +27,7 @@ const items_upsert = [
       { id: 'pr-2-id', qty: 2 },
     ],
     shipping_method: {
-      handle: 'ship-a', name: 'ship a', price: 30
+      handle: 'ship-a', title: 'ship a', price: 30
     }
   },
   {
@@ -46,7 +46,7 @@ const items_upsert = [
       { id: 'pr-22-id', qty: 2 },
     ],
     shipping_method: {
-      handle: 'ship-b', name: 'ship b', price: 60
+      handle: 'ship-b', title: 'ship b', price: 60
     }
   },  
 ]

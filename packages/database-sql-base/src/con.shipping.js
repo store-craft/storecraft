@@ -1,131 +1,131 @@
-import { Collection } from 'mongodb'
-import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
-import { handle_or_id, to_objid } from './utils.funcs.js';
-import { report_document_media } from './con.images.js';
+import { SQL } from '../driver.js'
+import { delete_me, delete_search_of, insert_media_of, insert_search_of, 
+  upsert_me, where_id_or_handle_table, 
+  with_media} from './con.shared.js'
+import { sanitize_array, sanitize } from './utils.funcs.js'
+import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
  * @typedef {import('@storecraft/core').db_shipping} db_col
  */
+export const table_name = 'shipping_methods'
 
 /**
- * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
- */
-const col = (d) => d.collection('shipping_methods');
-
-/**
- * @param {MongoDB} driver 
+ * @param {SQL} driver 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (data) => {
-    const objid = to_objid(data.id);
-    const replacement = { ...data };
-    const session = driver.mongo_client.startSession();
-
+  return async (item) => {
+    const c = driver.client;
     try {
-      await session.withTransaction(
-        async () => {
-          ////
-          // STOREFRONTS --> SHIPPING RELATION
-          ////
-          await driver.storefronts._col.updateMany(
-            { '_relations.shipping_methods.ids' : objid },
-            { $set: { [`_relations.shipping_methods.entries.${objid.toString()}`]: data } },
-            { session }
-          );
-
-          ////
-          // REPORT IMAGES USAGE
-          ////
-          await report_document_media(driver)(data, session);
-
-          // SAVE ME
-          const res = await col(driver).replaceOne(
-            { _id: objid }, 
-            replacement, 
-            { session, upsert: true }
-          );
-
+      const t = await c.transaction().execute(
+        async (trx) => {
+          await insert_search_of(trx, item.search, item.id, item.handle);
+          await insert_media_of(trx, item.media, item.id, item.handle);
+          await upsert_me(trx, table_name, item.id, {
+            active: item.active ? 1: 0,
+            attributes: JSON.stringify(item.attributes),
+            description: item.description,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            id: item.id,
+            handle: item.handle,
+            title: item.title, 
+            price: item.price
+          });
         }
       );
     } catch(e) {
       console.log(e);
       return false;
-    } finally {
-      await session.endSession();
     }
-
     return true;
   }
-
 }
 
-/**
- * @param {MongoDB} driver 
- */
-const get = (driver) => get_regular(driver, col(driver));
 
 /**
- * @param {MongoDB} driver 
+ * @param {SQL} driver 
+ * @returns {db_col["get"]}
+ */
+const get = (driver) => {
+  return async (id_or_handle, options) => {
+    const r = await driver.client
+      .selectFrom(table_name)
+      .selectAll()
+      .select(eb => [
+        with_media(eb, id_or_handle),
+      ].filter(Boolean))
+      .where(where_id_or_handle_table(id_or_handle))
+      .executeTakeFirst();
+
+    return sanitize(r);
+  }
+}
+
+
+/**
+ * @param {SQL} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
-    const item = await col(driver).findOne(handle_or_id(id_or_handle));
-    if(!item) return;
-    const objid = to_objid(item.id);
-    const session = driver.mongo_client.startSession();
-
     try {
-      await session.withTransaction(
-        async () => {
-          ////
-          // STOREFRONTS --> SHIPPING RELATION
-          ////
-          await driver.storefronts._col.updateMany(
-            { '_relations.shipping_methods.ids' : objid },
-            { 
-              $pull: { '_relations.shipping_methods.ids': objid },
-              $unset: { [`_relations.shipping_methods.entries.${objid.toString()}`]: '' },
-            },
-            { session }
-          );
-
-          // DELETE ME
-          const res = await col(driver).deleteOne( 
-            { _id: objid }, 
-            { session }
-          );
+      const t = await driver.client.transaction().execute(
+        async (trx) => {
+            
+          // entities
+          await delete_search_of(trx, id_or_handle);
+          // delete me
+          const d2 = await delete_me(trx, table_name, id_or_handle);
+          return d2.numDeletedRows>0;
         }
       );
+
+      return t;
     } catch(e) {
       console.log(e);
       return false;
-    } finally {
-      await session.endSession();
     }
-
     return true;
   }
-
 }
 
 
 /**
- * @param {MongoDB} driver 
+ * @param {SQL} driver 
+ * @returns {db_col["list"]}
  */
-const list = (driver) => list_regular(driver, col(driver));
+const list = (driver) => {
+  return async (query) => {
+
+    const items = await driver.client
+      .selectFrom(table_name)
+      .selectAll()
+      .select(eb => [
+        with_media(eb, eb.ref('shipping_methods.id')),
+      ].filter(Boolean))
+      .where(
+        (eb) => {
+          return query_to_eb(eb, query).eb;
+        }
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query.limit ?? 10)
+      .execute();
+
+    return sanitize_array(items);
+  }
+}
+
 
 /** 
- * @param {MongoDB} driver
- * @return {db_col & { _col: ReturnType<col>}}
+ * @param {SQL} driver
+ * @return {db_col}}
  * */
 export const impl = (driver) => {
+
   return {
-    _col: col(driver),
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),

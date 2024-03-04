@@ -1,7 +1,8 @@
 import { AttributeType, AuthUserType, Role, TagType, 
-  CollectionType, ProductType, 
-  VariantOption,
-  VariantOptionSelection} from '@storecraft/core'
+  CollectionType, ProductType, ShippingMethodType,
+  VariantOption, PostType, CustomerType,
+  VariantOptionSelection,
+  AddressType} from '@storecraft/core'
 import {
   ColumnType,
   Generated,
@@ -15,9 +16,14 @@ export interface Database {
   auth_users: AuthUserTypeTable,
   tags: TagsTable
   collections: CollectionsTable,
+  shipping_methods: ShippingMethodsTable;
+  posts: PostsTable;
+  customers: CustomersTable;
+
   products: ProductsTable,
   products_to_collections: products_to_collections;
   products_to_discounts: products_to_discounts;
+
   entity_to_media: entity_to_media,
   entity_to_tags_projections: entity_to_tags_projections,
   entity_to_search_terms: entity_to_search_terms,
@@ -81,3 +87,23 @@ export interface ProductsTable extends Base {
   variant_hint: JSONColumnType<VariantOptionSelection[]>;
 }
 
+export interface ShippingMethodsTable extends Base {
+  handle: string;
+  title: string;
+  price: number;
+}
+
+export interface PostsTable extends Base {
+  handle: string;
+  title: string;
+  text: string;
+}
+
+export interface CustomersTable extends Base {
+  auth_id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone_number: string;
+  address: JSONColumnType<AddressType>;
+}

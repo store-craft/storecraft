@@ -90,8 +90,6 @@ const get = (driver) => {
     //  .compile()
       .executeTakeFirst();
     
-    sanitize(r);
-
     return sanitize(r);
   }
 }

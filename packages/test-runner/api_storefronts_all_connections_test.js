@@ -66,8 +66,8 @@ const collections_upsert = [
 
 /** @type {ShippingMethodTypeUpsert[]} */
 const shipping_upsert = [
-  { handle: handle_ship(), name: 'ship 1', price: 50 },
-  { handle: handle_ship(), name: 'ship 2', price: 50 },
+  { handle: handle_ship(), title: 'ship 1', price: 50 },
+  { handle: handle_ship(), title: 'ship 2', price: 50 },
 ]
 
 /** @type {DiscountTypeUpsert[]} */

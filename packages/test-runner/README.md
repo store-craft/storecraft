@@ -20,8 +20,7 @@ Todo:
 - orders of customer list
 - products:
   - product -> products variants
-- test side effects:
-  - image usage reporting
+- image usage testing
 
 ## checkout
 - todo

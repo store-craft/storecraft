@@ -198,11 +198,19 @@ export const delete_entity_values_of = (entity_table_name) => {
   /**
    * 
    * @param {Transaction<import('../index.js').Database>} trx 
-   * @param {string} id_or_handle whom the tags belong to
+   * @param {string} id_or_handle delete by id/handle
+   * @param {string} reporter delete by reporter, takes precedence over id/handle
    */
-  return async (trx, id_or_handle) => {
-    return await trx.deleteFrom(entity_table_name).where(
-      where_id_or_handle_entity(id_or_handle)
+  return (trx, id_or_handle, reporter) => {
+
+    return trx.deleteFrom(entity_table_name).where(
+      eb => eb.or(
+        [
+          !reporter && eb('id', '=', id_or_handle),
+          !reporter && eb('handle', '=', id_or_handle),
+          reporter && eb('reporter', '=', reporter)
+        ].filter(Boolean)
+      )
     ).executeTakeFirst();
   }
 }
@@ -220,10 +228,11 @@ export const insert_entity_values_of = (entity_table_name) => {
    * @param {string} item_id whom the tags belong to
    * @param {string} [item_handle] whom the tags belong to
    * @param {boolean} [delete_previous=true] whom the tags belong to
+   * @param {string} [reporter=undefined] the reporter of the value (another segment technique)
    */
-  return async (trx, values, item_id, item_handle, delete_previous=true) => {
+  return async (trx, values, item_id, item_handle, delete_previous=true, reporter=undefined) => {
     if(delete_previous)
-      await delete_entity_values_of(entity_table_name)(trx, item_id ?? item_handle);
+      await delete_entity_values_of(entity_table_name)(trx, item_id ?? item_handle, reporter);
 
     if(!values?.length) return Promise.resolve();
 
@@ -231,7 +240,8 @@ export const insert_entity_values_of = (entity_table_name) => {
       values.map(t => ({
           entity_handle: item_handle,
           entity_id: item_id,
-          value: t
+          value: t,
+          reporter
         })
       )
     ).executeTakeFirst();

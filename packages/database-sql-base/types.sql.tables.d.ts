@@ -46,6 +46,9 @@ export interface entity_to_value {
   entity_id: string,
   entity_handle: string,
   value: string
+  /** reporter is a segmentation technique, it adds another dimension.
+   *  If reporter is `null`, then it means the `entity_id` was the reporter */
+  reporter: string | undefined;
 }
 
 export interface entity_to_media extends entity_to_value {}

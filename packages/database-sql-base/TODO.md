@@ -1,2 +1,3 @@
 - orders -> customer
 - seacrh terms
+- add report usage to every media type

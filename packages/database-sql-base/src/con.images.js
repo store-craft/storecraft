@@ -1,10 +1,12 @@
-import { func } from '@storecraft/core/v-api'
+import { func, images } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { delete_me, delete_search_of, 
   insert_search_of, upsert_me, where_id_or_handle_table 
 } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
+import { ID } from '@storecraft/core/v-api/utils.func.js'
+import { Transaction } from 'kysely'
 
 /**
  * @typedef {import('@storecraft/core').db_images} db_col
@@ -99,44 +101,61 @@ const remove = (driver) => {
  * @returns {db_col["report_document_media"]}
  */
 export const report_document_media = (driver) => {
-  return async (data, session) => {
-    if(!(data?.media?.length))
+  /**
+   * @param {Transaction<import('../index.js').Database>} [transaction]
+   */
+  return async (item, transaction) => {
+    if(!(item?.media?.length))
       return;
-
-    const add_to_search_index = func.union(
-      data['title'], func.to_tokens(data['title'])
-    );
-
-    const dates = func.apply_dates({});
-    
-    /** 
-     * @param {string} url 
-     * @returns {import('mongodb').AnyBulkWriteOperation<import('@storecraft/core').ImageType>}
+  
+    /**
+     * 
+   * @param {Transaction<import('../index.js').Database>} trx
      */
-    const url_to_update = url => {
-      return {
-        updateOne: {
-          filter: { handle: images.image_url_to_handle(url) },
-          update: { 
-            $addToSet : { search: { $each: add_to_search_index} },
-            $set: { 
-              name: images.image_url_to_name(url),
-              url: url,
-              updated_at: dates.updated_at
-            },
-            $setOnInsert: { created_at: dates.created_at }
-          },
-          upsert: true
+    const doit = async (trx) => {
+      const dates = func.apply_dates({});
+
+      for (const m of item.media) {
+        const handle = images.image_url_to_handle(m);
+        const prev = await trx
+          .selectFrom(table_name)
+          .selectAll()
+          .where('handle', '=', handle)
+          .executeTakeFirst();
+        const id = prev?.id ?? ID('img');
+        if(!prev) {
+          await trx
+            .insertInto(table_name)
+            .values({
+              handle: handle,
+              url: m,
+              name: images.image_url_to_name(m),
+              id: id,
+              created_at: dates.created_at,
+              updated_at: dates.updated_at,
+            })
+            .execute();
         }
+
+        const search = func.union(
+          item['title'], func.to_tokens(item['title'])
+        );
+
+        await insert_search_of(trx, search, id, handle, true, item.id);
       }
     }
 
-    const ops = data.media.map(url_to_update);
-
-    await driver.images._col.bulkWrite(
-      ops, { session }
-    );
-
+    if(transaction) {
+      await doit(transaction);
+    } else {
+      try {
+        const t = await driver.client
+          .transaction()
+          .execute(doit);
+      } catch(e) {
+        console.log(e);
+      }
+    }
   }
 }
 
@@ -175,6 +194,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    report_document_media: report_document_media(driver)
 
   }
 }

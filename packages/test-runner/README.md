@@ -14,8 +14,13 @@ Currently, I accomplished:
 - sanity tests for CRUD operations on all controllers
 
 Todo:
-- list and query tests for controllers
-- test relations:
+- list and query tests:
+  - discounts
+  - images
+  - notifications
+  - storefronts
+- orders of customer list
+- products:
   - product -> products variants
 - test side effects:
   - image usage reporting

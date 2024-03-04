@@ -271,6 +271,7 @@ export const upsert_me = async (trx, table_name, item_id, item) => {
  * @param {string} id_or_handle 
  */
 export const delete_me = async (trx, table_name, id_or_handle) => {
+  // console.log('delete ', id_or_handle)
   return await trx.deleteFrom(table_name).where(
     where_id_or_handle_table(id_or_handle)
   ).executeTakeFirst();

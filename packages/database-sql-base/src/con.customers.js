@@ -94,13 +94,16 @@ const remove = (driver) => {
           await delete_search_of(trx, id);
           await delete_media_of(trx, id);
           await delete_tags_of(trx, id);
-          
+
           // delete related auth user
           await trx.deleteFrom('auth_users')
              .where('auth_users.id', '=', valid_auth_id)
              .executeTakeFirst();
+             
           // delete me
           const d2 = await delete_me(trx, table_name, id);
+
+          
           return d2.numDeletedRows>0;
         }
       );

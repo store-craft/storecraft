@@ -71,9 +71,9 @@ export const getByEmail = async (app, email, options) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} id
+ * @param {string} id_or_email
  */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
+export const remove = (app, id_or_email) => regular_remove(app, db(app))(id_or_email);
 
 /**
  * 

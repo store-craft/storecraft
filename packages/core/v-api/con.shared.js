@@ -93,7 +93,7 @@ export const regular_list = (app, db) =>
   }
 
 /**
- * @template {import("./types.api.js").BaseType} T
+ * @template {import('../types.database.js').idable_concrete} T
  * @template {import("./types.api.js").BaseType} G
  * @param {import("./types.api.js").BaseType} item 
  * @param {import("../types.database.js").db_crud<T, G>} db 
@@ -107,7 +107,7 @@ export const assert_save_create_mode = async (item, db) => {
     assert(
       prev_item, 
       `Item with id \`${item?.id}\` doesn't exist !`, 400);
-    assert(
+    item.handle && assert(
       prev_item?.handle===item.handle, 
       `Item with id \`${prev_item?.id}\` has a handle \`${prev_item?.handle}!=${item.handle}\` !`, 400
     );

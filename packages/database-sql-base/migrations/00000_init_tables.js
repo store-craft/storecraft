@@ -140,6 +140,24 @@ export async function up(db) {
     await tb.execute();
   }
 
+  { // orders
+    let tb = create_safe_table(db, 'orders');
+    tb = add_base_columns(tb);
+    tb = tb
+      .addColumn('handle', 'text', (col) => col.unique())
+      .addColumn('contact', 'json')
+      .addColumn('address', 'json')
+      .addColumn('line_items', 'json')
+      .addColumn('notes', 'text')
+      .addColumn('shipping_method', 'json')
+      .addColumn('status', 'json')
+      .addColumn('pricing', 'json')
+      .addColumn('validation', 'json')
+      .addColumn('payment_gateway', 'json')
+      .addColumn('coupons', 'json')
+    await tb.execute();
+  }
+
   { // entity_to_tags_projections
     let tb = create_entity_to_value_table(db, 'entity_to_tags_projections')
     await tb.execute();

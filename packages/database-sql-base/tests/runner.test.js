@@ -51,10 +51,16 @@ async function test2() {
   // api_index.api_products_list_test.create(app).run();
 
   // api_index.api_shipping_crud_test.create(app).run();
+  // api_index.api_shipping_list_test.create(app).run();
 
   // api_index.api_posts_crud_test.create(app).run();
+  // api_index.api_posts_list_test.create(app).run();
 
-  api_index.api_customers_crud_test.create(app).run();
+  // api_index.api_customers_crud_test.create(app).run();
+  // api_index.api_customers_list_test.create(app).run();  
+
+  api_index.api_orders_crud_test.create(app).run();
+  api_index.api_orders_list_test.create(app).run();
   
 }
 

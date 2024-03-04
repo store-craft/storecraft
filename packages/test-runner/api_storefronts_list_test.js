@@ -1,45 +1,33 @@
 import 'dotenv/config';
-import { orders } from '@storecraft/core/v-api';
+import { storefronts } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
   iso, add_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
-import { App, CheckoutStatusEnum, FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core';
+import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
+
+const handle = create_handle('ship', file_name(import.meta.url));
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').OrderData & import('../core/types.database.js').idable_concrete)[]} */
-const items = get_static_ids('order').map(
+/** @type {(import('@storecraft/core').StorefrontType & import('../core/types.database.js').idable_concrete)[]} */
+const items = get_static_ids('sf').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
-      id: id,
+      title: `sf ${ix}`,
+      handle: handle(),
+      id,
       created_at: iso(jx + 1),
       updated_at: iso(jx + 1),
-      status: {
-        checkout: CheckoutStatusEnum.created,
-        payment: PaymentOptionsEnum.authorized,
-        fulfillment: FulfillOptionsEnum.draft
-      },
-      pricing: {
-        quantity_discounted: 3, quantity_total: 5, subtotal: 100, 
-        subtotal_discount: 30, subtotal_undiscounted: 70,
-        total: 120
-      },
-      line_items: [
-        { id: 'pr-1-id', qty: 3 },
-        { id: 'pr-2-id', qty: 2 },
-      ],
-      shipping_method: {
-        handle: 'ship-a', title: 'ship a', price: 30
-      }
+      active: true,
+      tags: [`tag-sf_${ix}`]
     }
   }
 );
@@ -53,7 +41,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: orders }
+    { items: items, app, ops: storefronts }
   );
 
   s.before(
@@ -61,10 +49,10 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await orders.remove(app, p.id);
+          await storefronts.remove(app, p.id);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-            await app.db.orders.upsert(p);
+            await app.db.storefronts.upsert(p);
         }
       } catch(e) {
         console.log(e)
@@ -92,3 +80,4 @@ export const create = app => {
   } catch (e) {
   }
 })();
+

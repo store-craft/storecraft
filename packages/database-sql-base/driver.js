@@ -9,7 +9,7 @@ import { impl as orders } from './src/con.orders.js';
 import { impl as posts } from './src/con.posts.js';
 import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
-// import { impl as storefronts } from './src/con.storefronts.js';
+import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { def_dialect } from './tests/dialect.js';
@@ -91,7 +91,7 @@ export class SQL {
     this.orders = orders(this);
     this.posts = posts(this);
     this.products = products(this);
-    // this.storefronts = storefronts(this);
+    this.storefronts = storefronts(this);
     this.shipping = shipping(this);
     
     this.#_is_ready = true; 

@@ -158,6 +158,17 @@ export async function up(db) {
     await tb.execute();
   }
 
+  { // storefronts
+    let tb = create_safe_table(db, 'storefronts');
+    tb = add_base_columns(tb);
+    tb = tb
+      .addColumn('handle', 'text', (col) => col.unique())
+      .addColumn('title', 'text')
+      .addColumn('video', 'text')
+      .addColumn('published', 'text')
+    await tb.execute();
+  }    
+
   { // entity_to_tags_projections
     let tb = create_entity_to_value_table(db, 'entity_to_tags_projections')
     await tb.execute();

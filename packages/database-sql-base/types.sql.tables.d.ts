@@ -1,7 +1,7 @@
 import { AttributeType, AuthUserType, Role, TagType, 
   CollectionType, ProductType, ShippingMethodType,
   VariantOption, PostType, CustomerType,
-  VariantOptionSelection, OrderData,
+  VariantOptionSelection, OrderData, StorefrontType,
   AddressType,
   OrderContact,
   LineItem,
@@ -27,6 +27,7 @@ export interface Database {
   posts: PostsTable;
   customers: CustomersTable;
   orders: OrdersTable;
+  storefronts: StorefrontType;
 
   products: ProductsTable,
   products_to_collections: products_to_collections;
@@ -140,4 +141,14 @@ export interface OrdersTable extends Base {
   /** a list of manual coupons snapshots that were used */
   coupons: JSONColumnType<DiscountType[]>; 
 }
-  
+
+export interface StorefrontsTable extends Base {
+  /** readable handle */
+  handle: string;
+  /** readable title */
+  title: string;
+  /** video url */
+  video: string;
+  /** exported storefront json */
+  published: string;
+}

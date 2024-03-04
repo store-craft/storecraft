@@ -22,6 +22,25 @@ export const create_handle = (...prefixs) => {
 }
 
 /**
+ * a list of 10 static ids, this is helpful for testing
+ * @param {string} prefix 
+ */
+export const get_static_ids = (prefix) => {
+  return [
+    '65e5ca42c43e2c41ae5216a9',
+    '65e5ca42c43e2c41ae5216aa',
+    '65e5ca42c43e2c41ae5216ab',
+    '65e5ca42c43e2c41ae5216ac',
+    '65e5ca42c43e2c41ae5216ad',
+    '65e5ca42c43e2c41ae5216ae',
+    '65e5ca42c43e2c41ae5216af',
+    '65e5ca42c43e2c41ae5216b0',
+    '65e5ca42c43e2c41ae5216b1',
+    '65e5ca42c43e2c41ae5216b2'
+  ].map(id => `${prefix}_${id}`);
+}
+
+/**
  * @template T
  * @param {T[]} items 
  */
@@ -213,7 +232,7 @@ export const add_list_integrity_tests = s => {
         // all of it's properties are getting back
         for(const p of list_asc) {
           const original_item = ctx.items.find(it => it.id===p.id);
-          // console.log('original ', original_item)
+          // console.log(p)
           assert.ok(original_item, 'Did not find original item of inserted item !!');
           // assert_partial(p, original_item);
           assert_partial(p, original_item);

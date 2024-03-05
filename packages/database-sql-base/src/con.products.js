@@ -1,5 +1,5 @@
 import { SQL } from '../driver.js'
-import { delete_entity_values_of, delete_me, delete_media_of, 
+import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, expand, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
   insert_tags_of, upsert_me, values_of_entity_table, 
@@ -112,7 +112,7 @@ const remove = (driver) => {
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           // Explicit PRODUCTS => COLLECTIONS
-          await delete_entity_values_of('products_to_collections')(
+          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
             trx, id_or_handle
           );
 

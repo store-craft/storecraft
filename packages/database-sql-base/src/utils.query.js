@@ -15,8 +15,7 @@ let a = {
  * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
- * @template D
- * @param {import("kysely").ExpressionBuilder<D>} eb 
+ * @param {import("kysely").ExpressionBuilder<import("../index.js").Database>} eb 
  * @param {import("@storecraft/core").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
@@ -126,8 +125,7 @@ const transform = c => {
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
- * @template D
- * @param {import("kysely").ExpressionBuilder<D>} eb 
+ * @param {import("kysely").ExpressionBuilder<import("../index.js").Database>} eb 
  * @param {import("@storecraft/core").ApiQuery} q 
  */
 export const query_to_eb = (eb, q) => {

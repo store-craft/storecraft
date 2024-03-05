@@ -163,7 +163,7 @@ export const list_regular = (driver, col) => {
  */
 export const where_id_or_handle_entity = (id_or_handle) => {
   /**
-   * @param {import('kysely').ExpressionBuilder<import('../index.js').Database>} eb 
+   * @param {import('kysely').ExpressionBuilder<Database>} eb 
    */
   return (eb) => eb.or(
     [
@@ -179,7 +179,7 @@ export const where_id_or_handle_entity = (id_or_handle) => {
  */
 export const where_id_or_handle_table = (id_or_handle) => {
   /**
-   * @param {import('kysely').ExpressionBuilder<import('../index.js').Database>} eb 
+   * @param {import('kysely').ExpressionBuilder<Database>} eb 
    */
   return (eb) => eb.or(
     [
@@ -189,27 +189,55 @@ export const where_id_or_handle_table = (id_or_handle) => {
   );
 }
 
-
+/**
+ * @typedef { keyof Pick<Database, 
+ * 'entity_to_media' | 'entity_to_search_terms' 
+ * | 'entity_to_tags_projections' | 'products_to_collections' 
+ * | 'products_to_discounts'>
+ * } EntityTableKeys
+ */
 /**
  * helper to generate entity values delete
- * @param {keyof import('../index.js').Database} entity_table_name 
+ * @param {EntityTableKeys} entity_table_name 
  */
-export const delete_entity_values_of = (entity_table_name) => {
+export const delete_entity_values_by_value_or_reporter = (entity_table_name) => {
   /**
    * 
-   * @param {Transaction<import('../index.js').Database>} trx 
-   * @param {string} id_or_handle delete by id/handle
-   * @param {string} [reporter] delete by reporter, takes precedence over id/handle
+   * @param {Transaction<Database>} trx 
+   * @param {string} value delete by entity value
+   * @param {string} [reporter] delete by reporter
    */
-  return (trx, id_or_handle, reporter=undefined) => {
+  return (trx, value, reporter=undefined) => {
 
     return trx.deleteFrom(entity_table_name).where(
       eb => eb.or(
         [
-          !reporter && eb('entity_id', '=', id_or_handle),
-          !reporter && eb('entity_handle', '=', id_or_handle),
-          reporter && eb('reporter', '=', reporter)
+          value && eb('value', '=', value),
+          reporter && eb('reporter', '=', reporter),
         ].filter(Boolean)
+      )
+    ).executeTakeFirst();
+  }
+}
+
+/**
+ * helper to generate entity values delete
+ * @param {EntityTableKeys} entity_table_name 
+ */
+export const delete_entity_values_of_by_entity_id_or_handle = (entity_table_name) => {
+  /**
+   * 
+   * @param {Transaction<import('../index.js').Database>} trx 
+   * @param {string} entity_id delete by id
+   * @param {string} [entity_handle=entity_id] delete by handle
+   */
+  return (trx, entity_id, entity_handle=undefined) => {
+    return trx.deleteFrom(entity_table_name).where(
+      eb => eb.or(
+        [
+          eb('entity_id', '=', entity_id),
+          eb('entity_handle', '=', entity_handle ?? entity_id),
+        ]
       )
     ).executeTakeFirst();
   }
@@ -218,12 +246,12 @@ export const delete_entity_values_of = (entity_table_name) => {
 /**
  * TODO: ADD PREFIX FOR HANDLES BECAUSE THEY CAN BE NON-UNIQUE CROSS TABLES
  * helper to generate entity values delete
- * @param {keyof import('../index.js').Database} entity_table_name 
+ * @param {EntityTableKeys} entity_table_name 
  */
 export const insert_entity_values_of = (entity_table_name) => {
   /**
    * 
-   * @param {Transaction<import('../index.js').Database>} trx 
+   * @param {Transaction<Database>} trx 
    * @param {string[]} values values of the entity
    * @param {string} item_id whom the tags belong to
    * @param {string} [item_handle] whom the tags belong to
@@ -231,8 +259,13 @@ export const insert_entity_values_of = (entity_table_name) => {
    * @param {string} [reporter=undefined] the reporter of the value (another segment technique)
    */
   return async (trx, values, item_id, item_handle, delete_previous=true, reporter=undefined) => {
-    if(delete_previous)
-      await delete_entity_values_of(entity_table_name)(trx, item_id ?? item_handle, reporter);
+    if(delete_previous) {
+      if(reporter) {
+        await delete_entity_values_by_value_or_reporter(entity_table_name)(trx, undefined, reporter);
+      } else {
+        await delete_entity_values_of_by_entity_id_or_handle(entity_table_name)(trx, item_id, item_handle);
+      }
+    }
 
     if(!values?.length) return Promise.resolve();
 
@@ -248,13 +281,13 @@ export const insert_entity_values_of = (entity_table_name) => {
   }
 }
 
-export const delete_tags_of = delete_entity_values_of('entity_to_tags_projections');
+export const delete_tags_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_tags_projections');
 export const insert_tags_of = insert_entity_values_of('entity_to_tags_projections');
 
-export const delete_search_of = delete_entity_values_of('entity_to_search_terms');
+export const delete_search_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_search_terms');
 export const insert_search_of = insert_entity_values_of('entity_to_search_terms');
 
-export const delete_media_of = delete_entity_values_of('entity_to_media');
+export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_media');
 export const insert_media_of = insert_entity_values_of('entity_to_media');
 
 /**

@@ -73,7 +73,8 @@ async function test2() {
   // api_index.api_images_list_test.create(app).run();
 
   // api_index.api_discounts_crud_test.create(app).run();
-  api_index.api_discounts_list_test.create(app).run();
+  // api_index.api_discounts_list_test.create(app).run();
+  api_index.api_discounts_products_test.create(app).run();
 
 }
 

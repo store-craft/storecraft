@@ -141,6 +141,7 @@ export const report_document_media = (driver) => {
           item['title'], func.to_tokens(item['title'])
         );
 
+        // delete and insert only search terms originated from this item (reporter)
         await insert_search_of(trx, search, id, handle, true, item.id);
       }
     }

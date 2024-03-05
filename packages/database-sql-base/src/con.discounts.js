@@ -1,5 +1,6 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_media_of, delete_search_of, 
+import { discount_to_conjunctions } from './con.discounts.utils.js'
+import { delete_entity_values_by_value_or_reporter, delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, upsert_me, where_id_or_handle_table, 
   with_media, with_tags} from './con.shared.js'
@@ -21,9 +22,37 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
+          /// ENTITIES
           await insert_search_of(trx, item.search, item.id, item.handle);
           await insert_media_of(trx, item.media, item.id, item.handle);
           await insert_tags_of(trx, item.tags, item.id, item.handle);
+          //
+          // PRODUCTS => DISCOUNTS
+          //
+          // delete old connections of discount
+          await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+            trx, item.id, item.handle);
+          // INSERT INTO SELECT FROM
+          await trx
+            .insertInto('products_to_discounts')
+            .columns(['entity_handle', 'entity_id', 'value', 'reporter'])
+            .expression(eb => 
+              eb.selectFrom('products')
+                .select(eb => [
+                  'handle as entity_handle',
+                  'id as entity_id',
+                  eb.val(item.id).as('value'),
+                  eb.val(item.handle).as('reporter')
+                  ]
+                )
+                .where(
+                  eb => eb.and(discount_to_conjunctions(eb, item))
+                )
+            ).execute();
+
+          ///
+          /// SAVE ME
+          ///
           await upsert_me(trx, table_name, item.id, {
             active: item.active ? 1: 0,
             attributes: JSON.stringify(item.attributes),
@@ -84,6 +113,10 @@ const remove = (driver) => {
           await delete_search_of(trx, id_or_handle);
           await delete_media_of(trx, id_or_handle);
           await delete_tags_of(trx, id_or_handle);
+          // delete products -> discounts
+          await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+            trx, id_or_handle, id_or_handle);
+
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           return d2.numDeletedRows>0;

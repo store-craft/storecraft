@@ -7,7 +7,6 @@ import { App, DiscountApplicationEnum,
 import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
 const handle = create_handle('pr', file_name(import.meta.url));
 
 /**
@@ -35,13 +34,23 @@ export const create = app => {
       qty: 1,
       title: 'product 1',
     },
+    {
+      handle: handle(),
+      active: true,
+      price: 50,
+      qty: 1,
+      title: 'product 2',
+      tags: ['red', 'green']
+    },
   ]
 
   /** @type {DiscountTypeUpsert[]} */
   const discounts_upsert = [
-    {
-      active: true, application: DiscountApplicationEnum.Auto, 
-      handle: '10-off', priority: 0, title: '10% OFF',
+    { // this should give discount for product 1 because of matching handles
+      active: true, 
+      handle: '10-off-for-specific', priority: 0, 
+      title: '10% OFF for specific product',
+      application: DiscountApplicationEnum.Auto, 
       info: {
         details: {
           meta: DiscountMetaEnum.regular,
@@ -59,6 +68,28 @@ export const create = app => {
         ]
       }
     },
+    { // this should give discount for product 2 because of matching tags
+      active: true, 
+      handle: '10-off-for-some-tags', priority: 0, 
+      title: '10% OFF for green and red tags',
+      application: DiscountApplicationEnum.Auto, 
+      info: {
+        details: {
+          meta: DiscountMetaEnum.regular,
+          /** @type {RegularDiscountExtra} */
+          extra: {
+            fixed: 0, percent: 10
+          }
+        },
+        filters: [
+          { // discount for a specific product handle
+            meta: FilterMetaEnum.p_in_tags,
+            /** @type {FilterValue_p_in_handles} */
+            value: ['red', 'black']
+          }
+        ]
+      }
+    },    
   ]
 
   s.before(
@@ -108,7 +139,6 @@ export const create = app => {
     // console.log(products_queried)
     // the first returned product should be the product
     assert.ok(products_queried[0].handle===pr_upsert[0].handle);
-
   });
 
   return s;

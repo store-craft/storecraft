@@ -36,6 +36,7 @@ const create_entity_to_value_table = (db, table_name) => {
     .addColumn('entity_handle', 'text')
     .addColumn('value', 'text')
     .addColumn('reporter', 'text')
+    .addColumn('context', 'text')
 }
 
 /**

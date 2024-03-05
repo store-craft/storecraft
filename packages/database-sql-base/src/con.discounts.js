@@ -1,3 +1,4 @@
+import { DiscountApplicationEnum } from '@storecraft/core'
 import { SQL } from '../driver.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { delete_entity_values_by_value_or_reporter, delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, delete_search_of, 
@@ -23,17 +24,35 @@ const upsert = (driver) => {
       const t = await c.transaction().execute(
         async (trx) => {
           /// ENTITIES
-          await insert_search_of(trx, item.search, item.id, item.handle);
-          await insert_media_of(trx, item.media, item.id, item.handle);
-          await insert_tags_of(trx, item.tags, item.id, item.handle);
+          await insert_search_of(trx, item.search, item.id, item.handle, true, undefined, table_name);
+          await insert_media_of(trx, item.media, item.id, item.handle, true, undefined, table_name);
+          await insert_tags_of(trx, item.tags, item.id, item.handle, true, undefined, table_name);
           //
           // PRODUCTS => DISCOUNTS
           //
-          // delete old connections of discount
+          // remove all products relation to this discount
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
             trx, item.id, item.handle);
+          // remove discount search terms from related products search terms
+          // await trx
+          //   .deleteFrom('entity_to_search_terms')
+          //   .where(eb => eb.and(
+          //     [
+          //       eb.or(
+          //         [
+          //           eb('value', '=', `dis:${item.id}`),
+          //           eb('value', '=', `dis:${item.handle}`)
+          //         ]
+          //       ),
+          //       eb('context', '=', 'products') // makes sure it is only products records
+          //     ])
+          //   )
+          //   .execute();
+          // insert new relations
           // INSERT INTO SELECT FROM
-          await trx
+          if(item.active && item.application.id===DiscountApplicationEnum.Auto.id) {
+            // make connections
+            await trx
             .insertInto('products_to_discounts')
             .columns(['entity_handle', 'entity_id', 'value', 'reporter'])
             .expression(eb => 
@@ -49,6 +68,10 @@ const upsert = (driver) => {
                   eb => eb.and(discount_to_conjunctions(eb, item))
                 )
             ).execute();
+
+            // now add search terms for eligible products
+
+          }
 
           ///
           /// SAVE ME
@@ -114,8 +137,9 @@ const remove = (driver) => {
           await delete_media_of(trx, id_or_handle);
           await delete_tags_of(trx, id_or_handle);
           // delete products -> discounts
+          // delete by the original reporting discount
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
-            trx, id_or_handle, id_or_handle);
+            trx, undefined, id_or_handle);
 
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
@@ -149,7 +173,7 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query).eb;
+          return query_to_eb(eb, query, table_name).eb;
         }
       )
       .orderBy(query_to_sort(query))

@@ -257,8 +257,9 @@ export const insert_entity_values_of = (entity_table_name) => {
    * @param {string} [item_handle] whom the tags belong to
    * @param {boolean} [delete_previous=true] whom the tags belong to
    * @param {string} [reporter=undefined] the reporter of the value (another segment technique)
+   * @param {string} [context=undefined] the context (another segment technique)
    */
-  return async (trx, values, item_id, item_handle, delete_previous=true, reporter=undefined) => {
+  return async (trx, values, item_id, item_handle, delete_previous=true, reporter=undefined, context=undefined) => {
     if(delete_previous) {
       if(reporter) {
         await delete_entity_values_by_value_or_reporter(entity_table_name)(trx, undefined, reporter);
@@ -274,7 +275,8 @@ export const insert_entity_values_of = (entity_table_name) => {
           entity_handle: item_handle,
           entity_id: item_id,
           value: t,
-          reporter
+          reporter,
+          context
         })
       )
     ).executeTakeFirst();

@@ -45,12 +45,17 @@ export interface Database {
 
 export interface entity_to_value {
   id: Generated<number>,
+  /** The entity ID */
   entity_id: string,
-  entity_handle: string,
+  /** The entity handle */
+  entity_handle: string | undefined,
+  /** The value reported */
   value: string
   /** reporter is a segmentation technique, it adds another dimension.
    *  If reporter is `null`, then it means the `entity_id` was the reporter */
   reporter: string | undefined;
+  /** The context of the values */
+  context: string | undefined;
 }
 
 export interface entity_to_media extends entity_to_value {}

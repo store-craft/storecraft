@@ -17,6 +17,8 @@ Todo:
 - orders of customer list
 - products:
   - product -> products variants
+- discounts
+  - better discount -> products with collection and tags
 - image usage testing
 
 ## checkout

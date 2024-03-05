@@ -1,11 +1,6 @@
-import { to_objid } from "./utils.funcs.js";
-
-let a = { 
-  $or: [
-    { updated_at: { $gt: '2024-01-24T20:28:24.126Z'} },
-    { $and : [ { updated_at: '2024-01-24T20:28:24.126Z' }, { id: { $gte : 'tag_65b172ebc4c9552fd46c1027'}}]}
-  ], 
-}
+/**
+ * @typedef {import("../index.js").Database} Database
+ */
 
 /**
  * Convert an API Query cursor into mongo dialect, also sanitize.
@@ -15,7 +10,7 @@ let a = {
  * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
- * @param {import("kysely").ExpressionBuilder<import("../index.js").Database>} eb 
+ * @param {import("kysely").ExpressionBuilder<Database>} eb 
  * @param {import("@storecraft/core").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
@@ -73,21 +68,52 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
   // return result;
 }
 
+// eb.exists(
+//   eb => eb
+//     .selectFrom(table)
+//     .select('id')
+//     .where(
+//       eb => eb.and([
+//         eb.or([
+//           eb(`${table}.entity_id`, '=', eb.ref('products.id')),
+//           eb(`${table}.entity_handle`, '=', eb.ref('products.handle')),
+//         ]),
+//         eb(`${table}.value`, op, value)
+//       ])
+//     )
+// )
+
 /**
- * @template D
- * @param {import("kysely").ExpressionBuilder<D>} eb 
+ * @param {import("kysely").ExpressionBuilder<Database>} eb 
  * @param {import("@storecraft/core/v-ql").VQL.Node} node 
+ * @param {keyof Database} table_name 
  */
-export const query_vql_node_to_eb = (eb, node) => {
+export const query_vql_node_to_eb = (eb, node, table_name) => {
   if(node.op==='LEAF') {
-    return {
-      search: { $regex: `^${node.value}$` }
-    }
+    return eb
+      .exists(
+        eb => eb
+          .selectFrom('entity_to_search_terms')
+          .select('id')
+          .where(
+            eb => eb.and([
+              eb.or([
+                eb(`entity_to_search_terms.entity_id`, '=', eb.ref(`${table_name}.id`)),
+                eb(`entity_to_search_terms.entity_handle`, '=', eb.ref(`${table_name}.handle`)),
+              ]),
+              eb(`entity_to_search_terms.value`, 'ilike', node.value)
+            ])
+          )
+      )
+
+    // return {
+    //   search: { $regex: `^${node.value}$` }
+    // }
   }
 
   let conjunctions = [];
   for(let arg of node?.args) {
-    conjunctions.push(query_vql_node_to_eb(eb, arg));
+    conjunctions.push(query_vql_node_to_eb(eb, arg, table_name));
   }
 
   switch (node.op) {
@@ -104,31 +130,22 @@ export const query_vql_node_to_eb = (eb, node) => {
 }
 
 /**
- * @template D
- * @param {import("kysely").ExpressionBuilder<D>} eb 
+ * @param {import("kysely").ExpressionBuilder<Database>} eb 
  * @param {import("@storecraft/core/v-ql").VQL.Node} root 
+ * @param {keyof Database} table_name 
  */
-export const query_vql_to_eb = (eb, root) => {
-  return root ? query_vql_node_to_eb(root) : undefined;
+export const query_vql_to_eb = (eb, root, table_name) => {
+  return root ? query_vql_node_to_eb(eb, root, table_name) : undefined;
 }
 
-/**
- * Let's transform ids into mongo ids
- * @param {import("@storecraft/core").Tuple<string>} c a cursor record
- * @returns {[k: string, v: any]}
- */
-const transform = c => {
-  if(c[0]!=='id') 
-    return c;
-  return [ '_id', to_objid(c[1]) ];
-}
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
- * @param {import("kysely").ExpressionBuilder<import("../index.js").Database>} eb 
+ * @param {import("kysely").ExpressionBuilder<Database>} eb 
  * @param {import("@storecraft/core").ApiQuery} q 
+ * @param {keyof Database} table_name 
  */
-export const query_to_eb = (eb, q) => {
+export const query_to_eb = (eb, q, table_name) => {
   const filter = {};
   const clauses = [];
   const sort_sign = q.order === 'asc' ? 1 : -1;
@@ -148,8 +165,8 @@ export const query_to_eb = (eb, q) => {
   }
 
   // compute VQL clauses 
-  // const vql_clause = query_vql_to_eb(q.vql)
-  // vql_clause && clauses.push(vql_clause);
+  const vql_clause = query_vql_to_eb(eb, q.vql, table_name)
+  vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order
   // const sort = (q.sortBy ?? []).reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});

@@ -12,8 +12,9 @@ import esMain from './utils.esmain.js';
 /** @type {import('@storecraft/core').DiscountTypeUpsert[]} */
 const items_upsert = [
   {
-    active: true, application: DiscountApplicationEnum.Auto, 
+    active: true, 
     handle: '3-for-100', priority: 0, title: 'Buy 3 for 100',
+    application: DiscountApplicationEnum.Auto, 
     info: {
       details: {
         meta: DiscountMetaEnum.bulk,
@@ -29,8 +30,9 @@ const items_upsert = [
     }
   },
   {
-    active: false, application: DiscountApplicationEnum.Auto, 
+    active: false, 
     handle: '2-for-60', priority: 0, title: 'Buy 2 for 60',
+    application: DiscountApplicationEnum.Auto, 
     info: {
       details: {
         meta: DiscountMetaEnum.bulk,

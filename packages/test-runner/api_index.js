@@ -8,6 +8,7 @@ export * as api_customers_crud_test from './api_customers_crud_test.js'
 export * as api_customers_list_test from './api_customers_list_test.js'
 
 export * as api_discounts_crud_test from './api_discounts_crud_test.js'
+export * as api_discounts_list_test from './api_discounts_list_test.js'
 export * as api_discounts_products_test from './api_discounts_products_test.js'
 
 export * as api_images_crud_test from './api_images_crud_test.js'

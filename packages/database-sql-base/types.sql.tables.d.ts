@@ -5,12 +5,13 @@ import { AttributeType, AuthUserType, Role, TagType,
   AddressType, ImageType,
   OrderContact,
   LineItem,
-  OrderStatus,
+  OrderStatus, DiscountType,
   PricingData,
   ValidationEntry,
   OrderPaymentGatewayData, NotificationType,
-  DiscountType,
-  NotificationAction} from '@storecraft/core'
+  NotificationAction,
+  DiscountInfo,
+  DiscountApplication} from '@storecraft/core'
 import {
   ColumnType,
   Generated,
@@ -31,6 +32,7 @@ export interface Database {
   storefronts: StorefrontType;
   notifications: NotificationsTable;
   images: ImagesTable;
+  discounts: DiscountsTable;
 
   products: ProductsTable,
   products_to_collections: products_to_collections;
@@ -166,3 +168,18 @@ export interface ImagesTable extends Base {
   name: string;
   url: string;
 }
+
+export interface DiscountsTable extends Base {
+  /** title */
+  title: string;
+  /** discount code */
+  handle: string;
+  priority: number;
+  /** the collection handle that contains the applicable discount products */
+  published?: string;
+  /** details and filters of the discount */
+  info: JSONColumnType<DiscountInfo>;
+  /** discount application (automatic and coupons) */
+  application: JSONColumnType<DiscountApplication>;
+}
+

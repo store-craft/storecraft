@@ -186,6 +186,18 @@ export async function up(db) {
     await tb.execute();
   } 
 
+  { // discounts
+    let tb = create_safe_table(db, 'discounts');
+    tb = add_base_columns(tb);
+    tb = tb
+      .addColumn('title', 'text')
+      .addColumn('published', 'text')
+      .addColumn('priority', 'integer')
+      .addColumn('info', 'json')
+      .addColumn('application', 'json')
+    await tb.execute();
+  } 
+
   { // entity_to_tags_projections
     let tb = create_entity_to_value_table(db, 'entity_to_tags_projections')
     await tb.execute();
@@ -201,7 +213,6 @@ export async function up(db) {
     await tb.execute();
   }
 
-
 }
 
 /**
@@ -213,6 +224,16 @@ export async function down(db) {
     drop_safe_table(db, 'auth_users'),
     drop_safe_table(db, 'tags'),
     drop_safe_table(db, 'collections'),
+    drop_safe_table(db, 'customers'),
+    drop_safe_table(db, 'discounts'),
+    drop_safe_table(db, 'images'),
+    drop_safe_table(db, 'notifications'),
+    drop_safe_table(db, 'orders'),
+    drop_safe_table(db, 'posts'),
+    drop_safe_table(db, 'products'),
+    drop_safe_table(db, 'products_to_collections'),
+    drop_safe_table(db, 'products_to_discounts'),
+    drop_safe_table(db, 'storefronts'),
     drop_safe_table(db, 'entity_to_media'),
     drop_safe_table(db, 'entity_to_search_terms'),
     drop_safe_table(db, 'entity_to_tags_projections'),

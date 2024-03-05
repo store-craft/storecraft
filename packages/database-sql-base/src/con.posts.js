@@ -110,6 +110,7 @@ const list = (driver) => {
       .selectAll()
       .select(eb => [
         with_media(eb, eb.ref('posts.id')),
+        with_tags(eb, eb.ref('posts.id')),
       ].filter(Boolean))
       .where(
         (eb) => {

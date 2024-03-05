@@ -199,15 +199,15 @@ export const delete_entity_values_of = (entity_table_name) => {
    * 
    * @param {Transaction<import('../index.js').Database>} trx 
    * @param {string} id_or_handle delete by id/handle
-   * @param {string} reporter delete by reporter, takes precedence over id/handle
+   * @param {string} [reporter] delete by reporter, takes precedence over id/handle
    */
-  return (trx, id_or_handle, reporter) => {
+  return (trx, id_or_handle, reporter=undefined) => {
 
     return trx.deleteFrom(entity_table_name).where(
       eb => eb.or(
         [
-          !reporter && eb('id', '=', id_or_handle),
-          !reporter && eb('handle', '=', id_or_handle),
+          !reporter && eb('entity_id', '=', id_or_handle),
+          !reporter && eb('entity_handle', '=', id_or_handle),
           reporter && eb('reporter', '=', reporter)
         ].filter(Boolean)
       )

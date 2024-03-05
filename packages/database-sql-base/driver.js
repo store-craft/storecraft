@@ -3,7 +3,7 @@ import { impl as auth_users } from './src/con.auth_users.js';
 import { impl as collections } from './src/con.collections.js';
 import { impl as customers } from './src/con.customers.js';
 // import { impl as discounts } from './src/con.discounts.js';
-// import { impl as images } from './src/con.images.js';
+import { impl as images } from './src/con.images.js';
 import { impl as notifications } from './src/con.notifications.js';
 import { impl as orders } from './src/con.orders.js';
 import { impl as posts } from './src/con.posts.js';
@@ -86,7 +86,7 @@ export class SQL {
     this.collections = collections(this);
     this.customers = customers(this);
     // this.discounts = discounts(this);
-    // this.images = images(this);
+    this.images = images(this);
     this.notifications = notifications(this);
     this.orders = orders(this);
     this.posts = posts(this);

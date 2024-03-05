@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
+import { image_url_to_handle, image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
 
 /** timestamp to iso */
 export const iso = number => {
@@ -14,10 +15,29 @@ export const file_name = (meta_url) => {
   return basename(fileURLToPath(meta_url));
 }
 
+/**
+ * @param  {...string} prefixs 
+ */
 export const create_handle = (...prefixs) => {
   let index = 0;
   return () => {
     return to_handle([...prefixs, index+=1].join('-'));
+  }
+}
+
+/**
+ * @param  {...string} prefixs 
+ */
+export const image_mock_url_handle_name = (...prefixs) => {
+  let index = 0;
+  
+  return () => {
+    const url = [...prefixs, index+=1].join('-') + '.png';
+    return {
+      url: url,
+      name: image_url_to_name(url),
+      handle: image_url_to_handle(url)
+    }
   }
 }
 

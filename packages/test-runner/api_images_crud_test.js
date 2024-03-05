@@ -6,8 +6,6 @@ import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-// const app = await create_app();
-
 /** @type {import('@storecraft/core').ImageTypeUpsert[]} */
 const items_upsert = [
   {

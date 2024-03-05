@@ -18,7 +18,7 @@ const extract_abs_number = v => {
 /**
  * @typedef {import("../index.js").Database} Database
  * @param {import("kysely").ExpressionBuilder<Database, 'products'>} eb 
- * @param {keyof Pick<Database,'entity_to_tags_projections' | 'products_to_collections'>} table 
+ * @param {keyof Pick<Database, 'entity_to_tags_projections' | 'products_to_collections'>} table 
  * @param {import("kysely").BinaryOperator} op 
  * @param {string[]} value 
  */

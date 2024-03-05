@@ -184,6 +184,46 @@ const list = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_discount_products"]}
+ */
+const list_discount_products = (driver) => {
+  return async (handle_or_id, query={}) => {
+    const items = await driver.client
+      .selectFrom('products')
+      .selectAll()
+      .select(eb => [
+        with_media(eb, eb.ref('products.id')),
+        with_tags(eb, eb.ref('products.id')),
+      ])
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, 'products')?.eb,
+            eb('products.id', 'in', 
+              eb => eb // select product ids of a discount, this sub-query will be computed once at SQL
+                .selectFrom('products_to_discounts')
+                .select('products_to_discounts.entity_id')
+                .where( 
+                  eb => eb.or(
+                    [
+                      eb('products_to_discounts.value', '=', handle_or_id),
+                      eb('products_to_discounts.reporter', '=', handle_or_id),
+                    ]
+                  )
+                )
+              )
+          ].filter(Boolean)
+        )
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query?.limit ?? 10)
+      .execute();
+
+    return sanitize_array(items);
+  }
+}
 
 /** 
  * @param {SQL} driver
@@ -195,7 +235,8 @@ export const impl = (driver) => {
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    list_discount_products: list_discount_products(driver)
   }
 }
 

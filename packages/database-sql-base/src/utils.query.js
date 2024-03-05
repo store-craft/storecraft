@@ -146,6 +146,7 @@ export const query_vql_to_eb = (eb, root, table_name) => {
  * @param {keyof Database} table_name 
  */
 export const query_to_eb = (eb, q, table_name) => {
+  if(!q) return undefined;
   const filter = {};
   const clauses = [];
   const sort_sign = q.order === 'asc' ? 1 : -1;
@@ -184,7 +185,7 @@ export const query_to_eb = (eb, q, table_name) => {
  * @template D
  * @param {import("@storecraft/core").ApiQuery} q 
  */
-export const query_to_sort = (q) => {
+export const query_to_sort = (q={}) => {
   const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
 
   // compute sort fields and order

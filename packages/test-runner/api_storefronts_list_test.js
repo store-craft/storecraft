@@ -8,7 +8,7 @@ import { create_handle, file_name,
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-const handle = create_handle('ship', file_name(import.meta.url));
+const handle = create_handle('sf', file_name(import.meta.url));
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,

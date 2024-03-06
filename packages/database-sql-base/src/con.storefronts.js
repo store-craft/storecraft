@@ -1,8 +1,12 @@
 import { SQL } from '../driver.js'
-import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, delete_search_of, 
-  delete_tags_of, insert_entity_values_of, insert_media_of, insert_search_of, 
-  insert_tags_of, storefront_with_collections, storefront_with_discounts, storefront_with_posts, storefront_with_products, storefront_with_shipping, upsert_me, where_id_or_handle_table, 
-  with_media, with_tags} from './con.shared.js'
+import { delete_entity_values_of_by_entity_id_or_handle, 
+  delete_me, delete_media_of, delete_search_of, 
+  delete_tags_of, insert_entity_values_of, insert_media_of, 
+  insert_search_of, insert_tags_of, storefront_with_collections, 
+  storefront_with_discounts, storefront_with_posts, 
+  storefront_with_products, storefront_with_shipping, 
+  upsert_me, where_id_or_handle_table, 
+  with_media, with_tags } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -192,6 +196,85 @@ const list = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_storefront_products"]}
+ */
+const list_storefront_products = (driver) => {
+  return async (product_id_or_handle) => {
+    // because we load everything (we don't expect storefronts to
+    // promote so many products), therefore we use the simple `get`
+    // method instead of a query
+    const item = await get(driver)(
+      product_id_or_handle, { expand: ['products'] }
+    );
+    return item.products ?? []
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_storefront_collections"]}
+ */
+const list_storefront_collections = (driver) => {
+  return async (product_id_or_handle) => {
+    // because we load everything (we don't expect storefronts to
+    // promote so many products), therefore we use the simple `get`
+    // method instead of a query
+    const item = await get(driver)(
+      product_id_or_handle, { expand: ['collections'] }
+    );
+    return item.collections ?? []
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_storefront_discounts"]}
+ */
+const list_storefront_discounts = (driver) => {
+  return async (product_id_or_handle) => {
+    // because we load everything (we don't expect storefronts to
+    // promote so many products), therefore we use the simple `get`
+    // method instead of a query
+    const item = await get(driver)(
+      product_id_or_handle, { expand: ['discounts'] }
+    );
+    return item.discounts ?? []
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_storefront_posts"]}
+ */
+const list_storefront_posts = (driver) => {
+  return async (product_id_or_handle) => {
+    // because we load everything (we don't expect storefronts to
+    // promote so many products), therefore we use the simple `get`
+    // method instead of a query
+    const item = await get(driver)(
+      product_id_or_handle, { expand: ['posts'] }
+    );
+    return item.posts ?? []
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_storefront_shipping_methods"]}
+ */
+const list_storefront_shipping_methods = (driver) => {
+  return async (product_id_or_handle) => {
+    // because we load everything (we don't expect storefronts to
+    // promote so many products), therefore we use the simple `get`
+    // method instead of a query
+    const item = await get(driver)(
+      product_id_or_handle, { expand: ['shipping_methods'] }
+    );
+    return item.shipping_methods ?? []
+  }
+}
 
 /** 
  * @param {SQL} driver
@@ -204,6 +287,11 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    list_storefront_products: list_storefront_products(driver),
+    list_storefront_collections: list_storefront_collections(driver),
+    list_storefront_discounts: list_storefront_discounts(driver),
+    list_storefront_posts: list_storefront_posts(driver),
+    list_storefront_shipping_methods: list_storefront_shipping_methods(driver)
   }
 }
 

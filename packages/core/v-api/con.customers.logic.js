@@ -81,3 +81,13 @@ export const remove = (app, id_or_email) => regular_remove(app, db(app))(id_or_e
  * @param {import('./types.api.query.js').ApiQuery} q
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
+
+/**
+ * given a discount handle and query, return products of that discount
+ * @param {import("../types.public.js").App} app
+ * @param {import('../types.database.js').ID} customer_id 
+ * @param {import('./types.api.query.js').ApiQuery} q 
+ */
+export const list_customer_orders = async (app, customer_id, q) => {
+  return db(app).list_customer_orders(customer_id, q);
+}

@@ -1,9 +1,8 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_media_of, delete_search_of, delete_tags_of, insert_media_of, insert_search_of, 
-  insert_tags_of, 
-  upsert_me, where_id_or_handle_table, 
-  with_media,
-  with_tags} from './con.shared.js'
+import { delete_me, delete_media_of, delete_search_of, 
+  delete_tags_of, insert_media_of, insert_search_of, 
+  insert_tags_of, upsert_me, where_id_or_handle_table, 
+  with_media, with_tags} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -43,6 +42,10 @@ const upsert = (driver) => {
             shipping_method: JSON.stringify(item.shipping_method),
             status: JSON.stringify(item.status),
             validation: JSON.stringify(item.validation),
+            _customer_id: item?.contact?.customer_id,
+            _status_checkout_id: item?.status?.checkout?.id,
+            _status_payment_id: item?.status?.payment?.id,
+            _status_fulfillment_id: item?.status?.fulfillment?.id,
           });
         }
       );

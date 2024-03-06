@@ -162,6 +162,12 @@ export interface db_products extends db_crud<ProductType & idable_concrete, Prod
  */
 export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & idable_concrete, CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
+  /**
+   * 
+   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
+   * @param query query object
+   */
+  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
 /** StorefrontData crud */
@@ -239,12 +245,6 @@ export interface db_discounts extends db_crud<DiscountType & idable_concrete, Di
 /** OrderData crud */
 export interface db_orders extends OmitGetByHandle<db_crud<OrderData & idable_concrete, OrderData>> {
 
-  /**
-   * 
-   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
-   * @param query query object
-   */
-  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
 export interface db_driver {

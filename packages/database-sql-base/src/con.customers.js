@@ -63,7 +63,7 @@ const get = (driver) => {
       .select(eb => [
         with_media(eb, id),
         with_tags(eb, id),
-      ].filter(Boolean))
+      ])
       .where(where_id_or_handle_table(id))
       .executeTakeFirst();
 
@@ -98,9 +98,10 @@ const remove = (driver) => {
           await delete_tags_of(trx, id);
 
           // delete related auth user
-          await trx.deleteFrom('auth_users')
-             .where('auth_users.id', '=', valid_auth_id)
-             .executeTakeFirst();
+          await trx
+          .deleteFrom('auth_users')
+          .where('auth_users.id', '=', valid_auth_id)
+          .executeTakeFirst();
              
           // delete me
           const d2 = await delete_me(trx, table_name, id);
@@ -147,6 +148,35 @@ const list = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_customer_orders"]}
+ */
+const list_customer_orders = (driver) => {
+  return async (id, query) => {
+
+    const items = await driver.client
+      .selectFrom('orders')
+      .selectAll()
+      .select(eb => [
+        with_media(eb, eb.ref('orders.id')),
+        with_tags(eb, eb.ref('orders.id')),
+      ])
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, table_name)?.eb,
+            eb('_customer_id', '=', id)
+          ].filter(Boolean)
+        )
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query.limit ?? 10)
+      .execute();
+
+    return sanitize_array(items);
+  }
+}
 
 /** 
  * @param {SQL} driver
@@ -159,102 +189,7 @@ export const impl = (driver) => {
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    list_customer_orders: list_customer_orders(driver)
   }
 }
-
-
-
-// import { Collection } from 'mongodb'
-// import { MongoDB } from '../driver.js'
-// import { get_regular, list_regular, 
-//   upsert_regular } from './con.shared.js'
-// import { to_objid } from './utils.funcs.js'
-
-// /**
-//  * @typedef {import('@storecraft/core').db_customers} db_col
-//  */
-
-// /**
-//  * @param {MongoDB} d 
-//  * @returns {Collection<db_col["$type_get"]>}
-//  */
-// const col = (d) => d.collection('customers');
-
-// /**
-//  * @param {MongoDB} driver 
-//  */
-// const upsert = (driver) => upsert_regular(driver, col(driver));
-
-// /**
-//  * @param {MongoDB} driver 
-//  */
-// const get = (driver) => get_regular(driver, col(driver));
-
-// /**
-//  * @param {MongoDB} driver 
-//  * @returns {db_col["getByEmail"]}
-//  */
-// const getByEmail = (driver) => {
-//   return async (email) => {
-//     return col(driver).findOne(
-//       { email }
-//     );
-//   }
-// }
-
-// /**
-//  * @param {MongoDB} driver 
-//  * @returns {db_col["remove"]}
-//  */
-// const remove = (driver) => {
-//   return async (id) => {
-
-//     const session = driver.mongo_client.startSession();
-//     try {
-//       await session.withTransaction(
-//         async () => {
-//           const res = await col(driver).findOneAndDelete(
-//             { _id: to_objid(id) },
-//             { session }
-//           );
-      
-//           // delete the auth user
-//           if(res?.auth_id) {
-//             await driver.auth_users._col.deleteOne(
-//               { _id: to_objid(res.auth_id) },
-//               { session }
-//             );
-//           }
-//         }
-//       );
-//     } catch(e) {
-//       console.log(e);
-//       return false;
-//     } finally {
-//       await session.endSession();
-//     }
-
-//     return true;
-//   }
-// }
-// /**
-//  * @param {MongoDB} driver 
-//  */
-// const list = (driver) => list_regular(driver, col(driver));
-
-// /** 
-//  * @param {MongoDB} driver
-//  * @return {db_col & { _col: ReturnType<col>}}
-//  * */
-// export const impl = (driver) => {
-//   driver
-//   return {
-//     _col: col(driver),
-//     get: get(driver),
-//     getByEmail: getByEmail(driver),
-//     upsert: upsert(driver),
-//     remove: remove(driver),
-//     list: list(driver)
-//   }
-// }

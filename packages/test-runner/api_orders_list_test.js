@@ -2,8 +2,7 @@ import 'dotenv/config';
 import { orders } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { create_handle, file_name, 
-  iso, add_list_integrity_tests,
+import { file_name, iso, add_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
 import { App, CheckoutStatusEnum, FulfillOptionsEnum, 
   PaymentOptionsEnum } from '@storecraft/core';
@@ -78,7 +77,6 @@ export const create = app => {
 
   return s;
 }
-
 
 (async function inner_test() {
   // helpful for direct inner tests

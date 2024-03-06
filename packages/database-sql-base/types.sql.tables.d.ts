@@ -173,6 +173,11 @@ export interface OrdersTable extends Base {
   payment_gateway: JSONColumnType<OrderPaymentGatewayData>; 
   /** a list of manual coupons snapshots that were used */
   coupons: JSONColumnType<DiscountType[]>; 
+  /** Internal for querying */
+  _customer_id: string;
+  _status_payment_id: number;
+  _status_checkout_id: number;
+  _status_fulfillment_id: number;
 }
 
 export interface StorefrontsTable extends Base {

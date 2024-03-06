@@ -29,10 +29,12 @@ export interface Database {
   posts: PostsTable;
   customers: CustomersTable;
   orders: OrdersTable;
-  storefronts: StorefrontType;
   notifications: NotificationsTable;
   images: ImagesTable;
   discounts: DiscountsTable;
+
+  storefronts: StorefrontType;
+  storefronts_to_other: storefronts_to_other;
 
   products: ProductsTable,
   products_to_collections: products_to_collections;
@@ -73,6 +75,20 @@ export interface products_to_collections extends entity_to_value {}
  * - value, reporter = discount id,  discount handle
  */
 export interface products_to_discounts extends entity_to_value {}
+/**
+ * storefronts to products/collections/posts/discounts/shipping
+ * here:
+ * - entity_id, entity_handle = storefront id, storefront handle
+ * - value, reporter = other entity id,  other entity handle, i.e(product_id, product_handle)
+ * - context = `products` / `collections` / `posts` / `discounts` / `shipping`
+ * 
+ * This will probably be a small table hence everything is recorded in the same table.
+ * Usually, a user will have:
+ * - small number of storefronts
+ * - small number of attached products/collections/posts/discounts/shipping per storefront
+ */
+export interface storefronts_to_other extends entity_to_value {}
+
 
 export interface Base {
   attributes: JSONColumnType<AttributeType[] | undefined>;
@@ -196,5 +212,9 @@ export interface DiscountsTable extends Base {
   info: JSONColumnType<DiscountInfo>;
   /** discount application (automatic and coupons) */
   application: JSONColumnType<DiscountApplication>;
+  /** internal usage, the application type id */
+  _application_id: number;
+  /** internal usage, the discount type id */
+  _discount_type_id: number;
 }
 

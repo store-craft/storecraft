@@ -167,6 +167,11 @@ export async function up(db) {
     await tb.execute();
   }
 
+  { // storefronts_to_other
+    let tb = create_entity_to_value_table(db, 'storefronts_to_other')
+    await tb.execute();
+  }
+
   { // notifications
     let tb = create_safe_table(db, 'notifications');
     tb = add_base_columns(tb);
@@ -196,6 +201,8 @@ export async function up(db) {
       .addColumn('priority', 'integer')
       .addColumn('info', 'json')
       .addColumn('application', 'json')
+      .addColumn('_application_id', 'integer')
+      .addColumn('_discount_type_id', 'integer')
     await tb.execute();
   } 
 
@@ -235,6 +242,7 @@ export async function down(db) {
     drop_safe_table(db, 'products_to_collections'),
     drop_safe_table(db, 'products_to_discounts'),
     drop_safe_table(db, 'storefronts'),
+    drop_safe_table(db, 'storefronts_to_other'),
     drop_safe_table(db, 'entity_to_media'),
     drop_safe_table(db, 'entity_to_search_terms'),
     drop_safe_table(db, 'entity_to_tags_projections'),

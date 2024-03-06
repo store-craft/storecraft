@@ -45,7 +45,7 @@ export const sanitize_hidden = o => {
  */
 export const sanitize = o => {
   for (const key in o) {
-    if(!isDef(o[key]) && o.hasOwnProperty(key)) {
+    if(key.startsWith('_') || (!isDef(o[key]) && o.hasOwnProperty(key))) {
       delete o[key];
       continue;
     }

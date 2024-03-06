@@ -1,13 +1,14 @@
+import { DiscountApplicationEnum } from '@storecraft/core'
 import { SQL } from '../driver.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
-  delete_search_of, delete_tags_of, expand, 
+  delete_search_of, delete_tags_of, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
   insert_tags_of, upsert_me, select_values_of_entity_by_entity_id_or_handle, 
   where_id_or_handle_table, products_with_collections, 
-  with_tags,
-  with_media} from './con.shared.js'
+  with_tags, with_media } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
+import { pricing } from '@storecraft/core/v-api'
 
 
 /**
@@ -50,15 +51,43 @@ const upsert = (driver) => {
 
           // Explicit PRODUCTS => COLLECTIONS
           if(item.collections) {
+            // remove this product's old collections connections
             await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
               trx, item.id, item.handle
             );
+            // add this product's new collections connections
             await insert_entity_values_of('products_to_collections')(
               trx, item.collections.map(c => ({ value: c.id, reporter: c.handle})), 
               item.id, item.handle, 
             );
           }
 
+          // PRODUCTS => DISCOUNTS
+          // The product has changed, it's discounts eligibility may have changed.
+          // get all automatic + active discounts
+          const discounts = await trx
+          .selectFrom('discounts')
+          .selectAll()
+          .where(
+            eb => eb.and([
+              eb('active', '=', 1),
+              eb('_application_id', '=', DiscountApplicationEnum.Auto.id),
+            ])
+          ).execute();
+          const eligible_discounts = discounts.filter(
+            d => pricing.test_product_filters_against_product(d.info.filters, item)
+          );
+          // remove this product's older connections to discounts
+          await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
+            trx, item.id, item.handle, 
+          );
+          if(eligible_discounts) {
+            // insert new connections to discounts
+            await insert_entity_values_of('products_to_discounts')(
+              trx, eligible_discounts.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 
+            );
+          }
         }
       );
     } catch(e) {
@@ -203,6 +232,39 @@ const list_product_collections = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_product_discounts"]}
+ */
+const list_product_discounts = (driver) => {
+  return async (product_id_or_handle) => {
+
+    const items = await driver.client
+      .selectFrom('discounts')
+      .selectAll('discounts')
+      .select(eb => [
+        with_tags(eb, eb.ref('discounts.id')),
+        with_media(eb, eb.ref('discounts.id'))
+      ])
+      .where('discounts.id', 'in',
+        eb => select_values_of_entity_by_entity_id_or_handle( 
+          // the values of `products_to_collections` are collection ids
+          eb, 'products_to_discounts', product_id_or_handle
+        )
+      )
+      .orderBy('discounts.updated_at desc')
+      // .limit()
+      .execute();
+    
+    sanitize_array(items);
+    // console.log(items)
+    // try expand relations, that were asked
+    // expand(items, query?.expand);
+
+    return items;
+  }
+}
+
 
 /** 
  * @param {SQL} driver
@@ -216,7 +278,8 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    list_product_collections: list_product_collections(driver)
+    list_product_collections: list_product_collections(driver),
+    list_product_discounts: list_product_discounts(driver)
   }
 }
 

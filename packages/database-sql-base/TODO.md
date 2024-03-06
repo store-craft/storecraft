@@ -2,15 +2,7 @@
   - TODO: test it
 
 - products connections
-  - DONE: collections
-  - discounts
   - variants
-
-- discount connections
-  - DONE: products
-
-- collections connections
-  - products
 
 - storefronts connections
   - products

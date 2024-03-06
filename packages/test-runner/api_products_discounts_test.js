@@ -6,8 +6,10 @@ import { App, DiscountApplicationEnum,
   DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
 import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
+import { assert_partial } from './utils.js';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
+const handle_discount = create_handle('10-off', file_name(import.meta.url));
 
 /**
  * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
@@ -34,28 +36,30 @@ const pr_upsert = [
 ]
 
 /** @type {DiscountTypeUpsert[]} */
-const discounts_upsert = [
-  {
-    active: true, application: DiscountApplicationEnum.Auto, 
-    handle: '10-off', priority: 0, title: '10% OFF',
-    info: {
-      details: {
-        meta: DiscountMetaEnum.regular,
-        /** @type {RegularDiscountExtra} */
-        extra: {
-          fixed: 0, percent: 10
-        }
-      },
-      filters: [
-        { // discount for a specific product handle
-          meta: FilterMetaEnum.p_in_handles,
-          /** @type {FilterValue_p_in_handles} */
-          value: [ pr_upsert[0].handle, pr_upsert[1].handle ]
-        }
-      ]
+const discounts_upsert = Array.from({length: 10}).map(
+  (_, ix, arr) => (
+    {
+      active: true, application: DiscountApplicationEnum.Auto, 
+      handle: handle_discount(), priority: 0, title: `10% OFF (${ix+1})`,
+      info: {
+        details: {
+          meta: DiscountMetaEnum.regular,
+          /** @type {RegularDiscountExtra} */
+          extra: {
+            fixed: 0, percent: 10
+          }
+        },
+        filters: [
+          { // discount for a specific product handle
+            meta: FilterMetaEnum.p_in_handles,
+            /** @type {FilterValue_p_in_handles} */
+            value: [ pr_upsert[0].handle, pr_upsert[1].handle ]
+          }
+        ]
+      }
     }
-  },
-]
+  )
+)
 
 /**
  * 
@@ -89,19 +93,19 @@ export const create = app => {
     // upsert 1st product
     await products.upsert(app, pr_upsert[0]);
 
-    // upsert discount
-    await discounts.upsert(app, discounts_upsert[0]);
+    // upsert all discount
+    const ids = await Promise.all(
+      discounts_upsert.map(d => discounts.upsert(app, d))
+    )
 
     // now query the product's discounts to see if discount was applied to 1st product
     const product_discounts = await products.list_product_discounts(
       app, pr_upsert[0].handle
     );
-    // console.log(product_discounts)
 
-    const find_discount = product_discounts.find(
-      d => d.handle===discounts_upsert[0].handle
-    )
-    assert.ok(find_discount, 'discount was not applied')
+    console.log(product_discounts.length)
+
+    assert.ok(product_discounts.length>=discounts_upsert.length, 'got less')
   });
 
   s('upsert 2nd product -> test discount was applied too', async () => {
@@ -117,13 +121,7 @@ export const create = app => {
     const product_discounts = await products.list_product_discounts(
       app, pr_2.handle
     );
-    // console.log(product_discounts)
-
-    const find_discount = product_discounts.find(
-      d => d.handle===discounts_upsert[0].handle
-    )
-    assert.ok(find_discount, 'discount was not applied')
-    
+    assert.ok(product_discounts.length>=discounts_upsert.length, 'got less')
   });
 
   s('remove Discount -> test discount was removed from products too', async () => {

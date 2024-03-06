@@ -59,13 +59,13 @@ async function test2() {
   // api_index.api_posts_list_test.create(app).run();
 
   // api_index.api_customers_crud_test.create(app).run();
-  // api_index.api_customers_list_test.create(app).run();  
+  // api_index.api_customers_list_test.create(app).run();
 
   // api_index.api_orders_crud_test.create(app).run();
   // api_index.api_orders_list_test.create(app).run();
 
-  // api_index.api_storefronts_crud_test.create(app).run();
-  // api_index.api_storefronts_list_test.create(app).run();
+  api_index.api_storefronts_crud_test.create(app).run();
+  api_index.api_storefronts_list_test.create(app).run();
   api_index.api_storefronts_all_connections_test.create(app).run();
 
   // api_index.api_notifications_crud_test.create(app).run();

@@ -90,10 +90,15 @@ const remove = (driver) => {
           await delete_tags_of(trx, id_or_handle);
           await delete_search_of(trx, id_or_handle);
           await delete_media_of(trx, id_or_handle);
-          // products -> collections
+          // PRODUCTS -> COLLECTIONS
           await delete_entity_values_by_value_or_reporter('products_to_collections')(
             trx, id_or_handle, id_or_handle
           );
+          // STOREFRONT => COLLECTIONS
+          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle
+          );
+
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           return d2.numDeletedRows>0;

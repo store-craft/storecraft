@@ -141,9 +141,13 @@ const remove = (driver) => {
           await delete_media_of(trx, id_or_handle);
           await delete_tags_of(trx, id_or_handle);
           // delete products -> discounts
-          // delete by the original reporting discount
+          // PRODUCTS => DISCOUNTS
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
             trx, id_or_handle, id_or_handle);
+          // STOREFRONT => DISCOUNTS
+          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle
+          );
 
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);

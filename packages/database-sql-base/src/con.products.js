@@ -5,7 +5,8 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
   insert_entity_values_of, insert_media_of, insert_search_of, 
   insert_tags_of, upsert_me, select_values_of_entity_by_entity_id_or_handle, 
   where_id_or_handle_table, products_with_collections, 
-  with_tags, with_media } from './con.shared.js'
+  with_tags, with_media, 
+  delete_entity_values_by_value_or_reporter} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { pricing } from '@storecraft/core/v-api'
@@ -50,11 +51,11 @@ const upsert = (driver) => {
           });
 
           // Explicit PRODUCTS => COLLECTIONS
+          // remove this product's old collections connections
+          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
+            trx, item.id, item.handle
+          );
           if(item.collections) {
-            // remove this product's old collections connections
-            await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-              trx, item.id, item.handle
-            );
             // add this product's new collections connections
             await insert_entity_values_of('products_to_collections')(
               trx, item.collections.map(c => ({ value: c.id, reporter: c.handle})), 
@@ -150,6 +151,11 @@ const remove = (driver) => {
           await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
             trx, id_or_handle, id_or_handle
           );
+          // STOREFRONT => PRODUCT
+          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle
+          );
+
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
 

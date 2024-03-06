@@ -1,7 +1,7 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_media_of, delete_search_of, 
-  delete_tags_of, insert_media_of, insert_search_of, 
-  insert_tags_of, upsert_me, where_id_or_handle_table, 
+import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, delete_search_of, 
+  delete_tags_of, insert_entity_values_of, insert_media_of, insert_search_of, 
+  insert_tags_of, storefront_with_collections, storefront_with_discounts, storefront_with_posts, storefront_with_products, storefront_with_shipping, upsert_me, where_id_or_handle_table, 
   with_media, with_tags} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -21,9 +21,47 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
+          // regular entities
           await insert_search_of(trx, item.search, item.id, item.handle, table_name);
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
+          // Explicit STOREFRONTS => PRODUCTS / COLLECTIONS / DISCOUNTS / SHIPPING / POSTS
+          // remove all the past connections of this storefront at once
+          await delete_entity_values_of_by_entity_id_or_handle('storefronts_to_other')(
+            trx, item.id, item.handle
+          );
+          if(item.collections) { // add this storefront's new collections connections
+            await insert_entity_values_of('storefronts_to_other')(
+              trx, item.collections.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 'collections'
+            );
+          }
+          if(item.products) { // add this storefront's new products connections
+            await insert_entity_values_of('storefronts_to_other')(
+              trx, item.products.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 'products'
+            );
+          }
+          if(item.discounts) { // add this storefront's new discounts connections
+            await insert_entity_values_of('storefronts_to_other')(
+              trx, item.discounts.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 'discounts'
+            );
+          }
+          if(item.posts) { // add this storefront's new posts connections
+            await insert_entity_values_of('storefronts_to_other')(
+              trx, item.posts.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 'posts'
+            );
+          }
+          if(item.shipping_methods) { // add this storefront's new shipping_methods connections
+            await insert_entity_values_of('storefronts_to_other')(
+              trx, item.shipping_methods.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 'shipping_methods'
+            );
+          }
+
+          // upsert me
           await upsert_me(trx, table_name, item.id, {
             active: item.active ? 1: 0,
             attributes: JSON.stringify(item.attributes),
@@ -53,12 +91,25 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return async (id_or_handle, options) => {
+    const expand = options?.expand ?? ['*'];
+    const expand_all = expand.includes('*');
+    const expand_collections = expand_all || expand.includes('collections');
+    const expand_products = expand_all || expand.includes('products');
+    const expand_discounts = expand_all || expand.includes('discounts');
+    const expand_shipping = expand_all || expand.includes('shipping_methods');
+    const expand_posts = expand_all || expand.includes('posts');
+
     const r = await driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
         with_media(eb, id_or_handle),
         with_tags(eb, id_or_handle),
+        expand_collections && storefront_with_collections(eb, id_or_handle),
+        expand_products && storefront_with_products(eb, id_or_handle),
+        expand_discounts && storefront_with_discounts(eb, id_or_handle),
+        expand_shipping && storefront_with_shipping(eb, id_or_handle),
+        expand_posts && storefront_with_posts(eb, id_or_handle),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -82,6 +133,10 @@ const remove = (driver) => {
           await delete_search_of(trx, id_or_handle);
           await delete_tags_of(trx, id_or_handle);
           await delete_media_of(trx, id_or_handle);
+          // delete storefront => other
+          await delete_entity_values_of_by_entity_id_or_handle('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle
+          );
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           return d2.numDeletedRows>0;
@@ -104,6 +159,13 @@ const remove = (driver) => {
  */
 const list = (driver) => {
   return async (query) => {
+    const expand = query?.expand ?? ['*'];
+    const expand_all = expand.includes('*');
+    const expand_collections = expand_all || expand.includes('collections');
+    const expand_products = expand_all || expand.includes('products');
+    const expand_discounts = expand_all || expand.includes('discounts');
+    const expand_shipping = expand_all || expand.includes('shipping_methods');
+    const expand_posts = expand_all || expand.includes('posts');
 
     const items = await driver.client
       .selectFrom(table_name)
@@ -111,6 +173,11 @@ const list = (driver) => {
       .select(eb => [
         with_media(eb, eb.ref('storefronts.id')),
         with_tags(eb, eb.ref('storefronts.id')),
+        expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id')),
+        expand_products && storefront_with_products(eb, eb.ref('storefronts.id')),
+        expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id')),
+        expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id')),
+        expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id')),
       ].filter(Boolean))
       .where(
         (eb) => {

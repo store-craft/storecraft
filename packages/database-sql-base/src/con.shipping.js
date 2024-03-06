@@ -1,5 +1,5 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_media_of, delete_search_of, delete_tags_of, insert_media_of, insert_search_of, 
+import { delete_entity_values_by_value_or_reporter, delete_me, delete_media_of, delete_search_of, delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, 
   upsert_me, where_id_or_handle_table, 
   with_media,
@@ -82,6 +82,10 @@ const remove = (driver) => {
           await delete_search_of(trx, id_or_handle);
           await delete_media_of(trx, id_or_handle);
           await delete_tags_of(trx, id_or_handle);
+          // STOREFRONT => SHIPPING
+          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle
+          );
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           return d2.numDeletedRows>0;

@@ -154,6 +154,11 @@ export async function up(db) {
       .addColumn('validation', 'json')
       .addColumn('payment_gateway', 'json')
       .addColumn('coupons', 'json')
+      .addColumn('_customer_id', 'text')
+      .addColumn('_status_payment_id', 'integer')
+      .addColumn('_status_checkout_id', 'integer')
+      .addColumn('_status_fulfillment_id', 'integer')
+    
     await tb.execute();
   }
 

@@ -45,11 +45,12 @@ export const create = app => {
   ]
 
   /** @type {DiscountTypeUpsert[]} */
-  const discounts_upsert = [
+  const discounts_upsert = [ // Each discounts_upsert[ix] => applies to pr_upsert[ix] sequence wise
     { // this should give discount for product 1 because of matching handles
       active: true, 
-      handle: '10-off-for-specific', priority: 0, 
-      title: '10% OFF for specific product',
+      handle: '10-off-for-product-1', 
+      title: '10% OFF for product 1',
+      priority: 0, 
       application: DiscountApplicationEnum.Auto, 
       info: {
         details: {
@@ -70,8 +71,9 @@ export const create = app => {
     },
     { // this should give discount for product 2 because of matching tags
       active: true, 
-      handle: '10-off-for-some-tags', priority: 0, 
-      title: '10% OFF for green and red tags',
+      handle: '10-off-for-product-2', 
+      title: '10% OFF for product 2',
+      priority: 0, 
       application: DiscountApplicationEnum.Auto, 
       info: {
         details: {
@@ -126,19 +128,20 @@ export const create = app => {
 
     // console.log(dis)
 
-    // now query list of products of discount
-    const products_queried = await discounts.list_discounts_products(
-      app, discounts_upsert[0].handle,
-      {
-        startAt: [['id', prs[0].id]],
-        sortBy: ['id'],
-        limit: 1
-      }
-    );
+    // now assert, each product and discount applied
+    for(let ix = 0; ix < discounts_upsert.length; ix++) {
+      const products_queried = await discounts.list_discounts_products(
+        app, discounts_upsert[ix].handle,
+        {
+          startAt: [['id', prs[ix].id]],
+          sortBy: ['id'],
+          limit: 1
+        }
+      );
 
-    // console.log(products_queried)
-    // the first returned product should be the product
-    assert.ok(products_queried[0].handle===pr_upsert[0].handle);
+      assert.ok(products_queried[0].handle===prs[ix].handle);
+    }
+
   });
 
   return s;

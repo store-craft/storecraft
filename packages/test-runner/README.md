@@ -18,7 +18,12 @@ Todo:
 - products:
   - product -> products variants
 - discounts
-  - better discount -> products with collection and tags
+  - better discount -> products with filters:
+    - in collections
+    - not-in tags
+    - not-in handles
+    - all
+    - price range
 - image usage testing
 
 ## checkout

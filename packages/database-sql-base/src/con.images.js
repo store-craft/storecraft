@@ -172,7 +172,7 @@ const list = (driver) => {
       .selectAll()
       .where(
         (eb) => {
-          return query_to_eb(eb, query).eb;
+          return query_to_eb(eb, query, table_name).eb;
         }
       )
       .orderBy(query_to_sort(query))

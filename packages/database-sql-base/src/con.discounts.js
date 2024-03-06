@@ -5,7 +5,7 @@ import { delete_entity_values_by_value_or_reporter,
   delete_entity_values_of_by_entity_id_or_handle, 
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
-  insert_tags_of, upsert_me, where_id_or_handle_table, 
+  insert_tags_of, select_entity_ids_by_value_or_reporter, upsert_me, where_id_or_handle_table, 
   with_media, with_tags} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -205,18 +205,10 @@ const list_discount_products = (driver) => {
           [
             query_to_eb(eb, query, 'products')?.eb,
             eb('products.id', 'in', 
-              eb => eb // select product ids of a discount, this sub-query will be computed once at SQL
-                .selectFrom('products_to_discounts')
-                .select('products_to_discounts.entity_id')
-                .where( 
-                  eb => eb.or(
-                    [
-                      eb('products_to_discounts.value', '=', handle_or_id),
-                      eb('products_to_discounts.reporter', '=', handle_or_id),
-                    ]
-                  )
-                )
+              eb => select_entity_ids_by_value_or_reporter( // select all the product ids by discount id
+                eb, 'products_to_discounts', handle_or_id
               )
+            )
           ].filter(Boolean)
         )
       )

@@ -329,7 +329,7 @@ export const delete_me = async (trx, table_name, id_or_handle) => {
  */
 export const with_tags = (eb, id_or_handle) => {
   return stringArrayFrom(
-    values_of_entity_table(eb, 'entity_to_tags_projections', id_or_handle)
+    select_values_of_entity_by_entity_id_or_handle(eb, 'entity_to_tags_projections', id_or_handle)
     ).as('tags');
 }
 
@@ -340,7 +340,7 @@ export const with_tags = (eb, id_or_handle) => {
  */
 export const with_search = (eb, id_or_handle) => {
   return stringArrayFrom(
-    values_of_entity_table(eb, 'entity_to_search_terms', id_or_handle)
+    select_values_of_entity_by_entity_id_or_handle(eb, 'entity_to_search_terms', id_or_handle)
     ).as('search');
 }
 
@@ -351,7 +351,7 @@ export const with_search = (eb, id_or_handle) => {
  */
 export const with_media = (eb, id_or_handle) => {
   return stringArrayFrom(
-    values_of_entity_table(eb, 'entity_to_media', id_or_handle)
+    select_values_of_entity_by_entity_id_or_handle(eb, 'entity_to_media', id_or_handle)
     ).as('media');
 }
 
@@ -376,7 +376,7 @@ export const products_with_collections = (eb, product_id_or_handle) => {
         with_media(eb, eb.ref('collections.id')),
       ])
       .where('collections.id', 'in', 
-        eb => values_of_entity_table(
+        eb => select_values_of_entity_by_entity_id_or_handle(
           eb, 'products_to_collections', product_id_or_handle
         )
       )
@@ -388,13 +388,12 @@ export const products_with_collections = (eb, product_id_or_handle) => {
  */
 
 /**
- * Use this to extract an entity values by it's id or handle. We assume not many
- * entities values of course.
+ * select all the entity values by entity id or handle
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {entity_junction_table_key} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} entity_id_or_handle 
  */
-export const values_of_entity_table = (eb, entity_junction_table, entity_id_or_handle) => {
+export const select_values_of_entity_by_entity_id_or_handle = (eb, entity_junction_table, entity_id_or_handle) => {
   return eb
     .selectFrom(entity_junction_table)
     .select(`${entity_junction_table}.value`)
@@ -406,4 +405,25 @@ export const values_of_entity_table = (eb, entity_junction_table, entity_id_or_h
       )
     )
     .orderBy(`${entity_junction_table}.id`);
+}
+
+/**
+ * select the entity ids which are constrained by value or reporter
+ * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {entity_junction_table_key} entity_junction_table 
+ * @param {string | ExpressionWrapper<Database>} value 
+ * @param {string | ExpressionWrapper<Database>} [reporter] 
+ */
+export const select_entity_ids_by_value_or_reporter = (eb, entity_junction_table, value, reporter=undefined) => {
+  return eb
+    .selectFrom(entity_junction_table)
+    .select(`${entity_junction_table}.entity_id`)
+    .where(eb2 => eb2.or(
+      [
+        eb2(`${entity_junction_table}.value`, '=', value ?? reporter),
+        eb2(`${entity_junction_table}.reporter`, '=', reporter ?? value),
+      ]
+      )
+    )
+    .orderBy(`${entity_junction_table}.entity_id`);
 }

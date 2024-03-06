@@ -119,9 +119,10 @@ const list = (driver) => {
       ])
       .where(
         (eb) => {
-          return query_to_eb(eb, query).eb;
+          return query_to_eb(eb, query, table_name).eb;
         }
-      ).orderBy(query_to_sort(query))
+      )
+      .orderBy(query_to_sort(query))
       .limit(query.limit ?? 10)
       .execute();
     

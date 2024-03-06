@@ -2,7 +2,7 @@ import { SQL } from '../driver.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, expand, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
-  insert_tags_of, upsert_me, values_of_entity_table, 
+  insert_tags_of, upsert_me, select_values_of_entity_by_entity_id_or_handle, 
   where_id_or_handle_table, products_with_collections, 
   with_tags,
   with_media} from './con.shared.js'
@@ -150,7 +150,7 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query).eb;
+          return query_to_eb(eb, query, table_name).eb;
         }
       ).orderBy(query_to_sort(query))
       .limit(query.limit ?? 10)
@@ -177,7 +177,10 @@ const list_product_collections = (driver) => {
         with_media(eb, eb.ref('collections.id'))
       ])
       .where('collections.id', 'in',
-        eb => values_of_entity_table(eb, 'products_to_collections', product_id_or_handle)
+        eb => select_values_of_entity_by_entity_id_or_handle( 
+          // the values of `products_to_collections` are collection ids
+          eb, 'products_to_collections', product_id_or_handle
+        )
       )
       .orderBy('collections.updated_at desc')
       // .limit()

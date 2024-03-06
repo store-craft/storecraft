@@ -6,7 +6,7 @@
   - variants
 
 - discount connections
-  - products
+  - DONE: products
 
 - collections connections
   - products

@@ -108,7 +108,7 @@ export const create = app => {
       }
     );
 
-    // console.log(products_queried)
+    console.log(products_queried)
     // the first returned product should be the product
     assert.ok(products_queried[0].handle===prs[0].handle);
 

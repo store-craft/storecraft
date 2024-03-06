@@ -1,6 +1,7 @@
 import { func, images } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { delete_me, delete_search_of, 
+  insert_entity_array_values_of, 
   insert_search_of, upsert_me, where_id_or_handle_table 
 } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
@@ -23,7 +24,7 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          await insert_search_of(trx, item.search, item.id, item.handle);
+          await insert_search_of(trx, item.search, item.id, item.handle, table_name);
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,
             updated_at: item.updated_at,
@@ -142,7 +143,11 @@ export const report_document_media = (driver) => {
         );
 
         // delete and insert only search terms originated from this item (reporter)
-        await insert_search_of(trx, search, id, handle, true, item.id);
+        // this is why we don't use the standard `insert_search_of` method, because
+        // we delete by `reporter`
+        await insert_entity_array_values_of('entity_to_search_terms')(
+          trx, search, id, handle, true, item.id, table_name
+        );
       }
     }
 

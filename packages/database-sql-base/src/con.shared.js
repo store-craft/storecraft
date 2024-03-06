@@ -244,19 +244,18 @@ export const delete_entity_values_of_by_entity_id_or_handle = (entity_table_name
 }
 
 /**
- * TODO: ADD PREFIX FOR HANDLES BECAUSE THEY CAN BE NON-UNIQUE CROSS TABLES
- * helper to generate entity values delete
+ * helper to generate entity values for simple tables
  * @param {EntityTableKeys} entity_table_name 
  */
-export const insert_entity_values_of = (entity_table_name) => {
+export const insert_entity_array_values_of = (entity_table_name) => {
   /**
    * 
    * @param {Transaction<Database>} trx 
    * @param {string[]} values values of the entity
    * @param {string} item_id whom the tags belong to
    * @param {string} [item_handle] whom the tags belong to
-   * @param {boolean} [delete_previous=true] whom the tags belong to
-   * @param {string} [reporter=undefined] the reporter of the value (another segment technique)
+   * @param {boolean} [delete_previous=true] if true and `reporter`, then will delete by reporter, otherwise by `item_id/item_handle`
+   * @param {string} [reporter=undefined] the reporter of the batch values (another segment technique)
    * @param {string} [context=undefined] the context (another segment technique)
    */
   return async (trx, values, item_id, item_handle, delete_previous=true, reporter=undefined, context=undefined) => {
@@ -283,14 +282,63 @@ export const insert_entity_values_of = (entity_table_name) => {
   }
 }
 
+/**
+ * helper to generate entity values delete
+ * @param {EntityTableKeys} entity_table_name 
+ */
+export const insert_entity_values_of = (entity_table_name) => {
+  /**
+   * 
+   * @param {Transaction<Database>} trx 
+   * @param {{value: string, reporter: string}[]} values values of the entity
+   * @param {string} item_id whom the tags belong to
+   * @param {string} [item_handle] whom the tags belong to
+   * @param {string} [context=undefined] the context (another segment technique)
+   */
+  return async (trx, values, item_id, item_handle, context=undefined) => {
+
+    if(!values?.length) return Promise.resolve();
+
+    return await trx.insertInto(entity_table_name).values(
+      values.map(t => ({
+          entity_handle: item_handle,
+          entity_id: item_id,
+          value: t.value,
+          reporter: t.reporter,
+          context
+        })
+      )
+    ).executeTakeFirst();
+  }
+}
+
+
+/**
+ * Delete previous entities by `id/handle` and insert new ones
+ * @param {EntityTableKeys} entity_table 
+ */
+export const insert_entity_array_values_with_delete_of = (entity_table) => {
+/**
+ * @param {Transaction<Database>} trx 
+ * @param {string[]} values values of the entity
+ * @param {string} item_id entity id
+ * @param {string} [item_handle] entity handle
+ * @param {string} [context] context
+ */
+return (trx, values, item_id, item_handle, context) => {
+    return insert_entity_array_values_of(entity_table)(
+      trx, values, item_id, item_handle, true, undefined, context
+    )
+  };
+}
+
+export const insert_tags_of = insert_entity_array_values_with_delete_of('entity_to_tags_projections');
+export const insert_search_of = insert_entity_array_values_with_delete_of('entity_to_search_terms');
+export const insert_media_of = insert_entity_array_values_with_delete_of('entity_to_media');
+
 export const delete_tags_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_tags_projections');
-export const insert_tags_of = insert_entity_values_of('entity_to_tags_projections');
-
 export const delete_search_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_search_terms');
-export const insert_search_of = insert_entity_values_of('entity_to_search_terms');
-
 export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_media');
-export const insert_media_of = insert_entity_values_of('entity_to_media');
 
 /**
  * @typedef {import('../index.js').Database} Database
@@ -384,13 +432,9 @@ export const products_with_collections = (eb, product_id_or_handle) => {
 }
 
 /**
- * @typedef {keyof Pick<Database, 'entity_to_media' | 'entity_to_search_terms' | 'entity_to_tags_projections' | 'products_to_collections' | 'products_to_discounts'>} entity_junction_table_key 
- */
-
-/**
  * select all the entity values by entity id or handle
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
- * @param {entity_junction_table_key} entity_junction_table 
+ * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} entity_id_or_handle 
  */
 export const select_values_of_entity_by_entity_id_or_handle = (eb, entity_junction_table, entity_id_or_handle) => {
@@ -410,7 +454,7 @@ export const select_values_of_entity_by_entity_id_or_handle = (eb, entity_juncti
 /**
  * select the entity ids which are constrained by value or reporter
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
- * @param {entity_junction_table_key} entity_junction_table 
+ * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} value 
  * @param {string | ExpressionWrapper<Database>} [reporter] 
  */

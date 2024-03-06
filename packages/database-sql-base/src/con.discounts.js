@@ -26,9 +26,9 @@ const upsert = (driver) => {
       const t = await c.transaction().execute(
         async (trx) => {
           /// ENTITIES
-          await insert_search_of(trx, item.search, item.id, item.handle, true, undefined, table_name);
-          await insert_media_of(trx, item.media, item.id, item.handle, true, undefined, table_name);
-          await insert_tags_of(trx, item.tags, item.id, item.handle, true, undefined, table_name);
+          await insert_search_of(trx, item.search, item.id, item.handle, table_name);
+          await insert_media_of(trx, item.media, item.id, item.handle, table_name);
+          await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
           //
           // PRODUCTS => DISCOUNTS
           //
@@ -141,7 +141,7 @@ const remove = (driver) => {
           // delete products -> discounts
           // delete by the original reporting discount
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
-            trx, undefined, id_or_handle);
+            trx, id_or_handle, id_or_handle);
 
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);

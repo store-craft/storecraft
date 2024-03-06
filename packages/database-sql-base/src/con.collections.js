@@ -1,6 +1,7 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_media_of, delete_search_of, delete_tags_of, expand, 
+import { delete_entity_values_by_value_or_reporter, delete_me, delete_media_of, delete_search_of, delete_tags_of, expand, 
   insert_media_of, insert_search_of, insert_tags_of, 
+  select_entity_ids_by_value_or_reporter, 
   upsert_me, where_id_or_handle_table, 
   with_media, 
   with_tags} from './con.shared.js'
@@ -25,9 +26,9 @@ const upsert = (driver) => {
         async (trx) => {
 
           // entities
-          const tt1 = await insert_tags_of(trx, item.tags, item.id, item.handle);
-          const tt2 = await insert_search_of(trx, item.search, item.id, item.handle);
-          const tt3 = await insert_media_of(trx, item.media, item.id, item.handle);
+          const tt1 = await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
+          const tt2 = await insert_search_of(trx, item.search, item.id, item.handle, table_name);
+          const tt3 = await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           // main
           await upsert_me(trx, table_name, item.id, {
             
@@ -89,6 +90,10 @@ const remove = (driver) => {
           await delete_tags_of(trx, id_or_handle);
           await delete_search_of(trx, id_or_handle);
           await delete_media_of(trx, id_or_handle);
+          // products -> collections
+          await delete_entity_values_by_value_or_reporter('products_to_collections')(
+            trx, id_or_handle, id_or_handle
+          );
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
           return d2.numDeletedRows>0;
@@ -130,6 +135,39 @@ const list = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_collection_products"]}
+ */
+const list_collection_products = (driver) => {
+  return async (handle_or_id, query={}) => {
+
+    const items = await driver.client
+      .selectFrom('products')
+      .selectAll()
+      .select(eb => [
+        with_media(eb, eb.ref('products.id')),
+        with_tags(eb, eb.ref('products.id')),
+      ])
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, 'products')?.eb,
+            eb('products.id', 'in', 
+              eb => select_entity_ids_by_value_or_reporter( // select all the product ids by collection id
+                eb, 'products_to_collections', handle_or_id
+              )
+            )
+          ].filter(Boolean)
+        )
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query?.limit ?? 10)
+      .execute();
+
+    return sanitize_array(items);
+  }
+}
 
 /** 
  * @param {SQL} driver
@@ -142,6 +180,7 @@ export const impl = (driver) => {
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    list_collection_products: list_collection_products(driver)
   }
 }

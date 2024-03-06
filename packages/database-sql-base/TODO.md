@@ -1,7 +1,8 @@
 - seacrh terms (vql)
+  - TODO: test it
 
 - products connections
-  - collections
+  - DONE: collections
   - discounts
   - variants
 

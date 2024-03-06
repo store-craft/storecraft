@@ -21,9 +21,9 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          await insert_search_of(trx, item.search, item.id, item.handle);
-          await insert_media_of(trx, item.media, item.id, item.handle);
-          await insert_tags_of(trx, item.tags, item.id, item.handle);
+          await insert_search_of(trx, item.search, item.id, item.handle, table_name);
+          await insert_media_of(trx, item.media, item.id, item.handle, table_name);
+          await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
           await upsert_me(trx, table_name, item.id, {
             active: item.active ? 1: 0,
             attributes: JSON.stringify(item.attributes),

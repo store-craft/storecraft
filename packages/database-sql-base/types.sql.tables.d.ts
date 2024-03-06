@@ -61,6 +61,11 @@ export interface entity_to_value {
 export interface entity_to_media extends entity_to_value {}
 export interface entity_to_tags_projections extends entity_to_value {}
 export interface entity_to_search_terms extends entity_to_value {}
+/**
+ * here:
+ * - entity_id, entity_handle = product id, product handle
+ * - value, reporter = collection id,  collection handle
+ */
 export interface products_to_collections extends entity_to_value {}
 /**
  * here:

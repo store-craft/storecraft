@@ -20,7 +20,7 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          await insert_search_of(trx, item.search, item.id, item.id);
+          await insert_search_of(trx, item.search, item.id, item.id, table_name);
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,
             updated_at: item.updated_at,

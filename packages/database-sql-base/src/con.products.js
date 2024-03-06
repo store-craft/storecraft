@@ -27,9 +27,9 @@ const upsert = (driver) => {
         async (trx) => {
 
           // entities
-          const tt1 = await insert_tags_of(trx, item.tags, item.id, item.handle);
-          const tt2 = await insert_search_of(trx, item.search, item.id, item.handle);
-          const tt3 = await insert_media_of(trx, item.media, item.id, item.handle);
+          const tt1 = await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
+          const tt2 = await insert_search_of(trx, item.search, item.id, item.handle, table_name);
+          const tt3 = await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           // main
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,
@@ -50,8 +50,12 @@ const upsert = (driver) => {
 
           // Explicit PRODUCTS => COLLECTIONS
           if(item.collections) {
+            await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
+              trx, item.id, item.handle
+            );
             await insert_entity_values_of('products_to_collections')(
-              trx, item.collections.map(c => c.id), item.id, item.handle, true
+              trx, item.collections.map(c => ({ value: c.id, reporter: c.handle})), 
+              item.id, item.handle, 
             );
           }
 
@@ -109,12 +113,16 @@ const remove = (driver) => {
           await delete_tags_of(trx, id_or_handle);
           await delete_search_of(trx, id_or_handle);
           await delete_media_of(trx, id_or_handle);
+          // PRODUCTS => COLLECTIONS
+          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
+            trx, id_or_handle, id_or_handle
+          );
+          // PRODUCTS => DISCOUNTS
+          await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
+            trx, id_or_handle, id_or_handle
+          );
           // delete me
           const d2 = await delete_me(trx, table_name, id_or_handle);
-          // Explicit PRODUCTS => COLLECTIONS
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-            trx, id_or_handle
-          );
 
           return d2.numDeletedRows>0;
         }

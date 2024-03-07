@@ -3,7 +3,7 @@ import {
   CustomerType, DiscountType, ImageType, 
   NotificationType, OrderData, PostType, 
   ProductType, ShippingMethodType, StorefrontType, 
-  TagType, searchable} from "./v-api/types.api.js";
+  TagType, VariantType, searchable} from "./v-api/types.api.js";
 import { App, ExpandQuery, ApiQuery } from "./types.public.js";
 
 export type ID = string;
@@ -116,7 +116,7 @@ export interface db_collections extends db_crud<CollectionType & idable_concrete
 }
 
 /** products crud */
-export interface db_products extends db_crud<ProductType & idable_concrete, ProductType> {
+export interface db_products extends db_crud<(ProductType & VariantType) & idable_concrete, ProductType & VariantType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -140,7 +140,7 @@ export interface db_products extends db_crud<ProductType & idable_concrete, Prod
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: HandleOrId) => Promise<ProductType[]>;
+  list_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
   
   /**
    * Add product to collection

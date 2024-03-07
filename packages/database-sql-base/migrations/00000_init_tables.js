@@ -111,6 +111,11 @@ export async function up(db) {
     let tb = create_entity_to_value_table(db, 'products_to_discounts')
     await tb.execute();
   }
+  
+  { // products_to_variants
+    let tb = create_entity_to_value_table(db, 'products_to_variants')
+    await tb.execute();
+  }
 
   { // shipping_methods
     let tb = create_safe_table(db, 'shipping_methods');

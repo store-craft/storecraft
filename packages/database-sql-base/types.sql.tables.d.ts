@@ -39,7 +39,8 @@ export interface Database {
   products: ProductsTable,
   products_to_collections: products_to_collections;
   products_to_discounts: products_to_discounts;
-
+  products_to_variants: products_to_variants;
+  
   entity_to_media: entity_to_media,
   entity_to_tags_projections: entity_to_tags_projections,
   entity_to_search_terms: entity_to_search_terms,
@@ -76,6 +77,12 @@ export interface products_to_collections extends entity_to_value {}
  */
 export interface products_to_discounts extends entity_to_value {}
 /**
+ * here:
+ * - (entity_id, entity_handle) = (parent product id, parent product handle)
+ * - (value, reporter) = (variant product id,  variant product handle)
+ */
+export interface products_to_variants extends entity_to_value {}
+/**
  * storefronts to products/collections/posts/discounts/shipping
  * here:
  * - entity_id, entity_handle = storefront id, storefront handle
@@ -106,10 +113,6 @@ export interface AuthUserTypeTable extends Base {
   confirmed_mail: boolean
   roles: JSONColumnType<Role[]>;
 }
-
-export type AuthUserTypeSelect = Selectable<AuthUserTypeTable>
-export type AuthUserTypeInsert = Insertable<AuthUserTypeTable>
-export type AuthUserTypeUpdate = Updateable<AuthUserTypeTable>
 
 export interface TagsTable extends Base {
   values: JSONColumnType<string[]>;

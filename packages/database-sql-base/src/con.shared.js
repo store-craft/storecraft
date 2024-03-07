@@ -193,9 +193,11 @@ export const where_id_or_handle_table = (id_or_handle) => {
  * @typedef { keyof Pick<Database, 
  * 'entity_to_media' | 'entity_to_search_terms' 
  * | 'entity_to_tags_projections' | 'products_to_collections' 
- * | 'products_to_discounts' | 'storefronts_to_other'>
+ * | 'products_to_discounts' | 'products_to_variants' 
+ * | 'storefronts_to_other'>
  * } EntityTableKeys
  */
+
 /**
  * helper to generate entity values delete
  * @param {EntityTableKeys} entity_table_name 
@@ -301,8 +303,8 @@ export const insert_entity_values_of = (entity_table_name) => {
 
     return await trx.insertInto(entity_table_name).values(
       values.map(t => ({
-          entity_handle: item_handle,
           entity_id: item_id,
+          entity_handle: item_handle,
           value: t.value,
           reporter: t.reporter,
           context
@@ -438,6 +440,61 @@ export const products_with_collections = (eb, product_id_or_handle) => {
         )
       )
     ).as('collections');
+}
+
+/**
+ * select as json array collections of a product
+ * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ */
+export const products_with_discounts = (eb, product_id_or_handle) => {
+  return jsonArrayFrom(
+    select_base_from(eb, 'discounts')
+      .select('discounts.title')
+      .select('discounts.published')
+      .select('discounts.application')
+      .select('discounts.info')
+      .select('discounts.priority')
+      .select(eb => [
+        with_tags(eb, eb.ref('discounts.id')),
+        with_media(eb, eb.ref('discounts.id')),
+      ])
+      .where('discounts.id', 'in', 
+        eb => select_values_of_entity_by_entity_id_or_handle(
+          eb, 'products_to_discounts', product_id_or_handle
+        )
+      )
+    ).as('discounts');
+}
+
+/**
+ * select as json array collections of a product
+ * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ */
+export const products_with_variants = (eb, product_id_or_handle) => {
+  return jsonArrayFrom(
+    select_base_from(eb, 'products')
+      .select('products.title')
+      .select('products.compare_at_price')
+      .select('products.parent_handle')
+      .select('products.parent_id')
+      .select('products.price')
+      .select('products.qty')
+      .select('products.title')
+      .select('products.variant_hint')
+      .select('products.variants_options')
+      .select('products.video')
+      .select(eb => [
+        with_tags(eb, eb.ref('products.id')),
+        with_media(eb, eb.ref('products.id')),
+      ])
+      .where('products.id', 'in', 
+        eb => select_values_of_entity_by_entity_id_or_handle(
+          eb, 'products_to_variants', product_id_or_handle
+        )
+      )
+    ).as('variants');
 }
 
 /**

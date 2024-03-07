@@ -58,8 +58,11 @@ export const get_relations_names = item => {
  * @param {import('@storecraft/core').ExpandQuery} [expand_query] 
  */
 export const expand = (items, expand_query=undefined) => {
-  if(isUndef(expand_query))
+  
+  if(isUndef(expand_query) || !Array.isArray(items))
     return;
+
+  items = items.filter(Boolean)
 
   const all = expand_query.includes('*');
   

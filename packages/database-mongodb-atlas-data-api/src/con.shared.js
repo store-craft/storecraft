@@ -79,7 +79,7 @@ export const get_regular = (driver, col) => {
     /** @type {import('./utils.relations.js').WithRelations<G>} */
     const res = await col.findOne(filter);
     // try to expand relations
-    expand([res], options?.expand);
+    res && expand([res], options?.expand);
     return sanitize_one(res);
   }
 }

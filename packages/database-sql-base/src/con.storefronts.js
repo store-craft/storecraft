@@ -208,7 +208,7 @@ const list_storefront_products = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['products'] }
     );
-    return item.products ?? []
+    return item?.products ?? []
   }
 }
 
@@ -224,7 +224,7 @@ const list_storefront_collections = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['collections'] }
     );
-    return item.collections ?? []
+    return item?.collections ?? []
   }
 }
 
@@ -240,7 +240,7 @@ const list_storefront_discounts = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['discounts'] }
     );
-    return item.discounts ?? []
+    return item?.discounts ?? []
   }
 }
 
@@ -256,7 +256,7 @@ const list_storefront_posts = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['posts'] }
     );
-    return item.posts ?? []
+    return item?.posts ?? []
   }
 }
 
@@ -272,7 +272,7 @@ const list_storefront_shipping_methods = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['shipping_methods'] }
     );
-    return item.shipping_methods ?? []
+    return item?.shipping_methods ?? []
   }
 }
 

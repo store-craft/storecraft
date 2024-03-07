@@ -62,7 +62,7 @@ export const sanitize_one = o => {
  * @param {T[]} o 
  */
 export const sanitize_array = o => {
-  return o.map(it => sanitize_hidden(it));
+  return o?.map(it => sanitize_hidden(it));
 }
 
 /**

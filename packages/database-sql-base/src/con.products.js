@@ -12,6 +12,7 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { pricing } from '@storecraft/core/v-api'
+import { Transaction } from 'kysely'
 
 
 /**
@@ -162,6 +163,58 @@ const get = (driver) => {
 
 /**
  * @param {SQL} driver 
+ */
+const remove_internal = (driver) => {
+  /**
+   * @param {import('@storecraft/core').ProductType & import('@storecraft/core').VariantType} product
+   * @param {Transaction<import('../index.js').Database>} trx
+   */
+  return async (product, trx) => {
+    // entities
+    await delete_tags_of(trx, product.id);
+    await delete_search_of(trx, product.id);
+    await delete_media_of(trx, product.id);
+    // PRODUCTS => COLLECTIONS
+    await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
+      trx, product.id, product.handle
+    );
+    // PRODUCTS => DISCOUNTS
+    await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
+      trx, product.id, product.handle
+    );
+    // STOREFRONT => PRODUCT
+    await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
+      trx, product.id, product.handle
+    );
+    // PRODUCT => VARIANTS
+    // delete all of it's variants
+    {
+      if(is_variant(product)) {
+        // delete my reported connections
+        await delete_entity_values_by_value_or_reporter('products_to_variants')(
+          trx, product.id, product.handle
+        );
+      } else { // parent
+        await Promise.all(
+          (product.variants ?? []).map(v => remove_internal(driver)(v, trx))
+        );
+        // if I am a parent product, delete my relations to all previous variants
+        await delete_entity_values_of_by_entity_id_or_handle('products_to_variants')(
+          trx, product.id, product.handle
+        );
+      }
+    }
+
+    // delete me
+    const d2 = await delete_me(trx, table_name, product.id);
+
+    return d2.numDeletedRows>0;
+  }
+}
+
+
+/**
+ * @param {SQL} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -172,46 +225,7 @@ const remove = (driver) => {
         return true;
       const t = await driver.client.transaction().execute(
         async (trx) => {
-            
-          // entities
-          await delete_tags_of(trx, id_or_handle);
-          await delete_search_of(trx, id_or_handle);
-          await delete_media_of(trx, id_or_handle);
-          // PRODUCTS => COLLECTIONS
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-            trx, id_or_handle, id_or_handle
-          );
-          // PRODUCTS => DISCOUNTS
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
-            trx, id_or_handle, id_or_handle
-          );
-          // STOREFRONT => PRODUCT
-          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
-            trx, id_or_handle, id_or_handle
-          );
-          // PRODUCT => VARIANTS
-          // delete all of it's variants
-          {
-            if(is_variant(product)) {
-              // delete my reported connections
-              await delete_entity_values_by_value_or_reporter('products_to_variants')(
-                trx, product.id, product.handle
-              );
-            } else { // parent
-              await Promise.all(
-                (product.variants ?? []).map(v => remove(driver)(v.id))
-              );
-              // if I am a parent product, delete my relations to all previous variants
-              await delete_entity_values_of_by_entity_id_or_handle('products_to_variants')(
-                trx, id_or_handle, id_or_handle
-              );
-            }
-          }
-
-          // delete me
-          const d2 = await delete_me(trx, table_name, id_or_handle);
-
-          return d2.numDeletedRows>0;
+          return await remove_internal(driver)(product, trx);
         }
       );
 
@@ -271,31 +285,7 @@ const list_product_collections = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['collections'] }
     );
-    return item.collections ?? []
-
-    // const items = await driver.client
-    //   .selectFrom('collections')
-    //   .selectAll('collections')
-    //   .select(eb => [
-    //     with_tags(eb, eb.ref('collections.id')),
-    //     with_media(eb, eb.ref('collections.id'))
-    //   ])
-    //   .where('collections.id', 'in',
-    //     eb => select_values_of_entity_by_entity_id_or_handle( 
-    //       // the values of `products_to_collections` are collection ids
-    //       eb, 'products_to_collections', product_id_or_handle
-    //     )
-    //   )
-    //   .orderBy('collections.updated_at desc')
-    //   // .limit()
-    //   .execute();
-    
-    // sanitize_array(items);
-    // // console.log(items)
-    // // try expand relations, that were asked
-    // // expand(items, query?.expand);
-
-    // return items;
+    return item?.collections ?? []
   }
 }
 
@@ -310,7 +300,7 @@ const list_product_discounts = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['discounts'] }
     );
-    return item.discounts ?? []
+    return item?.discounts ?? []
   }
 }
 
@@ -325,7 +315,7 @@ const list_product_variants = (driver) => {
     const item = await get(driver)(
       product_id_or_handle, { expand: ['variants'] }
     );
-    return item.variants ?? []
+    return item?.variants ?? []
   }
 }
 

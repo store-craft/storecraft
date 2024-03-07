@@ -10,8 +10,6 @@ Everything prefixed with `api.` tests files within `v-api` folder
 of `StoreCraft`. This is just testing the controller and the database.
 
 Todo:
-- products:
-  - product -> products variants
 - discounts
   - better discount -> products with filters:
     - in collections

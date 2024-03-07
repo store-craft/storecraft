@@ -38,45 +38,46 @@ async function test() {
 async function test2() {
   const app = await create_app();
 
-  // api_index.api_auth_test.create(app).run();
+  api_index.api_auth_test.create(app).run();
 
-  // api_index.api_tags_crud_test.create(app).run();
-  // api_index.api_tags_list_test.create(app).run();
+  api_index.api_tags_crud_test.create(app).run();
+  api_index.api_tags_list_test.create(app).run();
 
-  // api_index.api_collections_crud_test.create(app).run();
-  // api_index.api_collections_list_test.create(app).run();
-  // api_index.api_collections_products_test.create(app).run();
+  api_index.api_collections_crud_test.create(app).run();
+  api_index.api_collections_list_test.create(app).run();
+  api_index.api_collections_products_test.create(app).run();
 
   api_index.api_products_crud_test.create(app).run();
   api_index.api_products_collections_test.create(app).run();
   api_index.api_products_list_test.create(app).run();
   api_index.api_products_discounts_test.create(app).run();
+  api_index.api_products_variants_test.create(app).run();
 
-  // api_index.api_shipping_crud_test.create(app).run();
-  // api_index.api_shipping_list_test.create(app).run();
+  api_index.api_shipping_crud_test.create(app).run();
+  api_index.api_shipping_list_test.create(app).run();
 
-  // api_index.api_posts_crud_test.create(app).run();
-  // api_index.api_posts_list_test.create(app).run();
+  api_index.api_posts_crud_test.create(app).run();
+  api_index.api_posts_list_test.create(app).run();
 
-  // api_index.api_customers_crud_test.create(app).run();
-  // api_index.api_customers_list_test.create(app).run();
+  api_index.api_customers_crud_test.create(app).run();
+  api_index.api_customers_list_test.create(app).run();
 
-  // api_index.api_orders_crud_test.create(app).run();
-  // api_index.api_orders_list_test.create(app).run();
+  api_index.api_orders_crud_test.create(app).run();
+  api_index.api_orders_list_test.create(app).run();
 
-  // api_index.api_storefronts_crud_test.create(app).run();
-  // api_index.api_storefronts_list_test.create(app).run();
-  // api_index.api_storefronts_all_connections_test.create(app).run();
+  api_index.api_storefronts_crud_test.create(app).run();
+  api_index.api_storefronts_list_test.create(app).run();
+  api_index.api_storefronts_all_connections_test.create(app).run();
 
-  // api_index.api_notifications_crud_test.create(app).run();
-  // api_index.api_notifications_list_test.create(app).run();
+  api_index.api_notifications_crud_test.create(app).run();
+  api_index.api_notifications_list_test.create(app).run();
 
-  // api_index.api_images_crud_test.create(app).run();
-  // api_index.api_images_list_test.create(app).run();
+  api_index.api_images_crud_test.create(app).run();
+  api_index.api_images_list_test.create(app).run();
 
-  // api_index.api_discounts_crud_test.create(app).run();
-  // api_index.api_discounts_list_test.create(app).run();
-  // api_index.api_discounts_products_test.create(app).run();
+  api_index.api_discounts_crud_test.create(app).run();
+  api_index.api_discounts_list_test.create(app).run();
+  api_index.api_discounts_products_test.create(app).run();
 
 
 }

@@ -90,7 +90,7 @@ const list_storefront_products = (driver) => {
       expand: ['products']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.products);
+    return sanitize_array(item?.products ?? []);
   }
 }
 
@@ -105,7 +105,7 @@ const list_storefront_collections = (driver) => {
       expand: ['collections']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.collections);
+    return sanitize_array(item?.collections ?? []);
   }
 }
 
@@ -120,7 +120,7 @@ const list_storefront_discounts = (driver) => {
       expand: ['discounts']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.discounts);
+    return sanitize_array(item?.discounts ?? []);
   }
 }
 
@@ -135,7 +135,7 @@ const list_storefront_shipping_methods = (driver) => {
       expand: ['shipping_methods']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.shipping_methods);
+    return sanitize_array(item?.shipping_methods ?? []);
   }
 }
 
@@ -150,7 +150,7 @@ const list_storefront_posts = (driver) => {
       expand: ['posts']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.posts);
+    return sanitize_array(item?.posts ?? []);
   }
 }
 

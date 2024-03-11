@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
@@ -38,6 +38,21 @@ const getByEmail = (driver) => {
 }
 
 /**
+ * 
+ * @param {string} email_or_id 
+ * @returns { {_id:ObjectId} | {email: string}}
+ */
+export const email_or_id = (email_or_id) => {
+  let r = {};
+  try {
+    r._id = to_objid(email_or_id);
+  } catch (e) {
+    r.email = email_or_id;
+  }
+  return r;
+}
+
+/**
  * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
@@ -49,7 +64,7 @@ const remove = (driver) => {
       await session.withTransaction(
         async () => {
           const res = await col(driver).findOneAndDelete(
-            { _id: to_objid(id) },
+            email_or_id(id),
             { session }
           );
       
@@ -72,6 +87,8 @@ const remove = (driver) => {
     return true;
   }
 }
+
+
 /**
  * @param {MongoDB} driver 
  */

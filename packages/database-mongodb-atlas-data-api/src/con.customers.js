@@ -1,8 +1,9 @@
+import { ObjectId } from 'bson';
 import { Collection } from '../data-api-client/index.js'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
-import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
+import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**
@@ -38,15 +39,29 @@ const getByEmail = (driver) => {
 }
 
 /**
+ * 
+ * @param {string} email_or_id 
+ * @returns { {_id:ObjectId} | {email: string}}
+ */
+export const email_or_id = (email_or_id) => {
+  let r = {};
+  try {
+    r._id = to_objid(email_or_id);
+  } catch (e) {
+    r.email = email_or_id;
+  }
+  return r;
+}
+
+/**
  * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
   return async (id) => {
-
     try {
       await col(driver).deleteOne(
-        { _id: to_objid(id) },
+        email_or_id(id),
       );
   
       // delete the auth user

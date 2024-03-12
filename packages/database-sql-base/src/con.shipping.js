@@ -1,14 +1,14 @@
 import { SQL } from '../driver.js'
-import { delete_entity_values_by_value_or_reporter, delete_me, delete_media_of, delete_search_of, delete_tags_of, insert_media_of, insert_search_of, 
-  insert_tags_of, 
-  upsert_me, where_id_or_handle_table, 
-  with_media,
-  with_tags} from './con.shared.js'
+import { delete_entity_values_by_value_or_reporter, 
+  delete_me, delete_media_of, delete_search_of, 
+  delete_tags_of, insert_media_of, insert_search_of, 
+  insert_tags_of, upsert_me, where_id_or_handle_table, 
+  with_media, with_tags } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
- * @typedef {import('@storecraft/core').db_shipping} db_col
+ * @typedef {import('@storecraft/core/v-database').db_shipping} db_col
  */
 export const table_name = 'shipping_methods'
 

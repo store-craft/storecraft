@@ -11,14 +11,11 @@ import { AttributeType, AuthUserType, Role, TagType,
   OrderPaymentGatewayData, NotificationType,
   NotificationAction,
   DiscountInfo,
-  DiscountApplication} from '@storecraft/core'
+  DiscountApplication} from '@storecraft/core/v-api'
 import {
   ColumnType,
   Generated,
-  Insertable,
   JSONColumnType,
-  Selectable,
-  Updateable
 } from 'kysely'
 
 export interface Database {

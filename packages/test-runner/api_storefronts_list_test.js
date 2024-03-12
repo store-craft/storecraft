@@ -15,7 +15,7 @@ const handle = create_handle('sf', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').StorefrontType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').StorefrontType & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = get_static_ids('sf').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps

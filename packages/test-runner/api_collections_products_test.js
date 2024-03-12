@@ -20,11 +20,11 @@ export const create = app => {
   );
 
   /**
-   * @typedef {import('@storecraft/core').CollectionTypeUpsert} CollectionTypeUpsert
-   * @typedef {import('@storecraft/core').ProductTypeUpsert} ProductTypeUpsert
+   * @typedef {import('@storecraft/core/v-api').CollectionTypeUpsert} CollectionTypeUpsert
+   * @typedef {import('@storecraft/core/v-api').ProductTypeUpsert} ProductTypeUpsert
    */
 
-  /** @type {import('@storecraft/core').CollectionTypeUpsert[]} */
+  /** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
   const col_upsert = [
     {
       active: true,
@@ -40,7 +40,7 @@ export const create = app => {
     },
   ]
 
-  /** @type {import('@storecraft/core').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
   const pr_upsert = [
     {
       handle: handle_pr(),

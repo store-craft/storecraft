@@ -15,7 +15,7 @@ const handle_tag = create_handle('tag', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').TagType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').TagType & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps

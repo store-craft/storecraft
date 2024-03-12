@@ -7,7 +7,7 @@ import { images, func } from '@storecraft/core/v-api';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
 
 /**
- * @typedef {import('@storecraft/core').db_images} db_col
+ * @typedef {import('@storecraft/core/v-database').db_images} db_col
  */
 
 /**

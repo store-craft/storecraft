@@ -16,7 +16,8 @@
       "types": "./v-api/types.public.d.ts"
     },
     "./v-api/*": {
-      "import": "./v-api/*"
+      "import": "./v-api/*",
+      "types": "./v-api/types.public.d.ts"
     },
     "./v-storage": {
       "import": "./v-storage/public.js",
@@ -31,12 +32,16 @@
       "types": "./v-ql/types.d.ts"
     },
     "./v-payments": {
-      "import": "./v-payments/index.js",
+      "import": "./v-payments/public.js",
       "types": "./v-payments/types.public.d.ts"
     },
     "./v-mailer": {
-      "import": "./v-mailer/index.js",
+      "import": "./v-mailer/public.js",
       "types": "./v-mailer/types.public.d.ts"
+    },
+    "./v-database": {
+      "import": "./v-database/public.js",
+      "types": "./v-database/types.public.d.ts"
     }
   },
   "scripts": {

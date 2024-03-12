@@ -13,7 +13,7 @@ import esMain from './utils.esmain.js';
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').NotificationType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').NotificationType & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = get_static_ids('not').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps

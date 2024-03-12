@@ -6,7 +6,7 @@ import { MongoDB } from '../driver.js';
  * @template {any} T
  * @typedef {Object} Relation
  * @property {ObjectId[]} [ids]
- * @property {Record<import('@storecraft/core').ID, T>} [entries]
+ * @property {Record<import('@storecraft/core/v-database').ID, T>} [entries]
  */
 
 /**
@@ -19,7 +19,7 @@ import { MongoDB } from '../driver.js';
  * On upsert Create a relation on a given field that represents a relation.
  * for example, each product specifies collections it belongs to.
  * Basically creates an ids array and embedded documents for fast retrival.
- * @template {import('@storecraft/core').BaseType} T
+ * @template {import('@storecraft/core/v-api').BaseType} T
  * @param {MongoDB} driver our driver
  * @param {T} data data to create the connection from
  * @param {string} fieldName the field name, that represents a relation, a field with { id } property
@@ -34,7 +34,7 @@ export const create_explicit_relation = async (
   if(isUndef(value))
     return data;
    
-  /** @type {import('@storecraft/core').BaseType[]} */
+  /** @type {import('@storecraft/core/v-api').BaseType[]} */
   const items = Array.isArray(value) ? value : [value];
 
   /** @type {WithRelations<any>} */

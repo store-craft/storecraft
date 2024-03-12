@@ -3,12 +3,12 @@ import { MongoDB } from '../driver.js'
 import { get_bulk, get_regular, list_regular } from './con.shared.js'
 import { delete_keys, handle_or_id, sanitize_array, to_objid } from './utils.funcs.js'
 import { create_explicit_relation } from './utils.relations.js'
-import { DiscountApplicationEnum } from '@storecraft/core'
+import { DiscountApplicationEnum } from '@storecraft/core/v-api'
 import { pricing } from '@storecraft/core/v-api'
 import { report_document_media } from './con.images.js'
 
 /**
- * @typedef {import('@storecraft/core').db_products} db_col
+ * @typedef {import('@storecraft/core/v-database').db_products} db_col
  */
 
 /**
@@ -195,7 +195,7 @@ const list = (driver) => list_regular(driver, col(driver));
  */
 const list_product_collections = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['collections']
     };
@@ -214,7 +214,7 @@ const list_product_collections = (driver) => {
  */
 const list_product_variants = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['variants']
     };
@@ -230,7 +230,7 @@ const list_product_variants = (driver) => {
  */
 const list_product_discounts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['discounts']
     };

@@ -7,7 +7,7 @@ import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**
- * @typedef {import('@storecraft/core').db_customers} db_col
+ * @typedef {import('@storecraft/core/v-database').db_customers} db_col
  */
 
 /**

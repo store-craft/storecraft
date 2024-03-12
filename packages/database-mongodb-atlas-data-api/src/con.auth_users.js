@@ -4,7 +4,7 @@ import { get_regular, list_regular, upsert_regular } from './con.shared.js'
 import { Collection } from '../data-api-client/index.js';
 
 /**
- * @typedef {import('@storecraft/core').db_auth_users} db_col
+ * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
  */
 
 /**
@@ -32,7 +32,7 @@ const getByEmail = (driver) => {
   return async (email) => {
     const filter = { email: email };
 
-    /** @type {import('@storecraft/core').AuthUserType} */
+    /** @type {import('@storecraft/core/v-api').AuthUserType} */
     const res = await col(driver).findOne(
       filter
     );
@@ -61,12 +61,12 @@ const remove = (driver) => {
  */
 const removeByEmail = (driver) => {
   return async (email) => {
-    /** @type {import('@storecraft/core').AuthUserType} */
+    /** @type {import('@storecraft/core/v-api').AuthUserType} */
     await col(driver).deleteOne(
       { email }
     );
 
-    return
+    return true;
   }
 }
 

@@ -10,7 +10,7 @@ import esMain from './utils.esmain.js';
 
 const handle_tag = create_handle('tag', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core').TagTypeUpsert[]} */
+/** @type {import('@storecraft/core/v-api').TagTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle_tag(),
@@ -57,7 +57,7 @@ export const create = app => {
 
 
   s('upsert tag with bad handle', async () => {
-    /** @type {import('@storecraft/core').TagTypeUpsert} */
+    /** @type {import('@storecraft/core/v-api').TagTypeUpsert} */
     const tag_insert = {
       handle: 'tag 2', values:['a', 'b']
     }

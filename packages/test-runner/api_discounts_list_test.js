@@ -7,10 +7,10 @@ import { file_name,
   get_static_ids,
   image_mock_url_handle_name,
   create_handle} from './api.utils.crud.js';
-import { App, DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
+import { DiscountApplicationEnum, DiscountMetaEnum, 
+  FilterMetaEnum } from '@storecraft/core/v-api';
 import esMain from './utils.esmain.js';
-import { image_url_to_handle, 
-  image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
+import { App } from '@storecraft/core';
 
 const url_handle_name = image_mock_url_handle_name(
   'img', file_name(import.meta.url)
@@ -23,7 +23,7 @@ const handle_gen = create_handle('dis', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').DiscountType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').DiscountType & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = get_static_ids('dis').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps

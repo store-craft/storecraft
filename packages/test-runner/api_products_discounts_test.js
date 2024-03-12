@@ -2,22 +2,22 @@ import 'dotenv/config';
 import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { App, DiscountApplicationEnum, 
-  DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core';
+import { DiscountApplicationEnum, 
+  DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core/v-api';
 import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
-import { assert_partial } from './utils.js';
+import { App } from '@storecraft/core';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 const handle_discount = create_handle('10-off', file_name(import.meta.url));
 
 /**
- * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
- * @typedef {import('@storecraft/core').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('@storecraft/core').FilterValue_p_in_handles} FilterValue_p_in_handles
+ * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').RegularDiscountExtra} RegularDiscountExtra
+ * @typedef {import('@storecraft/core/v-api').FilterValue_p_in_handles} FilterValue_p_in_handles
  */
 
-/** @type {import('@storecraft/core').ProductTypeUpsert[]} */
+/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
 const pr_upsert = [
   {
     handle: handle_pr(),

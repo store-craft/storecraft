@@ -2,23 +2,35 @@ import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
+import SQLite from 'better-sqlite3'
+import { SqliteDialect } from "kysely";
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 
-export const admin_email = 'admin@sc.com';
-export const admin_password = 'password';
+export const sqlite_dialect = new SqliteDialect({
+  database: async () => new SQLite(join(homedir(), 'db.sqlite')),
+});
 
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
-    new SQL(),
+    new SQL({
+      dialect: sqlite_dialect, 
+      dialect_type: 'SQLITE'
+    }),
     null, null, null, {
-      admins_emails: [admin_email],
+      admins_emails: ['admin@sc.com'],
       auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
   );
   
-  return app.init();
+  await app.init();
+
+  
+
+  return app;
 }
 
 async function test() {

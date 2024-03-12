@@ -58,10 +58,10 @@ export type Config = {
 }
 
 export { App } from './index.js'
-export type * from './types.database.d.ts'
-export type * from './v-api/types.api.js'
-export type * from './v-api/types.api.query.js'
-export * from './v-api/types.api.enums.js'
-export type * from './v-storage/types.storage.js'
-export type * from './v-payments/types.payments.d.ts'
-export type * from './v-mailer/types.mailer.d.ts'
+// export type * from './v-database/types.database.js'
+// export type * from './v-api/types.api.js'
+// export type * from './v-api/types.api.query.js'
+// export * from './v-api/types.api.enums.js'
+// export type * from './v-storage/types.storage.js'
+// export type * from './v-payments/types.payments.d.ts'
+// export type * from './v-mailer/types.mailer.d.ts'

@@ -1,22 +1,22 @@
 import 'dotenv/config';
-import { discounts, products } from '@storecraft/core/v-api';
+import { products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App } from '@storecraft/core';
-import { create_handle, file_name, get_static_ids } from './api.utils.crud.js';
+import { create_handle, file_name, 
+  get_static_ids } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
-import { assert_partial } from './utils.js';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 const handle_var = create_handle('var', file_name(import.meta.url));
 
 /**
- * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
- * @typedef {import('@storecraft/core').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('@storecraft/core').FilterValue_p_in_handles} FilterValue_p_in_handles
+ * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').RegularDiscountExtra} RegularDiscountExtra
+ * @typedef {import('@storecraft/core/v-api').FilterValue_p_in_handles} FilterValue_p_in_handles
  */
 
-/** @type {import('@storecraft/core').ProductType} */
+/** @type {import('@storecraft/core/v-api').ProductType} */
 const pr_upsert = {
   id: get_static_ids('pr').at(0),
   handle: handle_pr(),
@@ -36,7 +36,7 @@ const pr_upsert = {
   ],
 }
 
-/** @type {import('@storecraft/core').VariantTypeUpsert[]} */
+/** @type {import('@storecraft/core/v-api').VariantTypeUpsert[]} */
 const var_upsert = [
   {
     handle: handle_var(),
@@ -118,7 +118,8 @@ export const create = app => {
 
   s('remove 2nd variant -> test only one variant for product', async () => {
     await products.remove(app, var_upsert[0].handle);
-    // now query the product's discounts to see if discount was applied to 1st product
+    // now query the product's discounts to see if 
+    // discount was applied to 1st product
     const product_variants = await products.list_product_variants(
       app, pr_upsert.handle
     );
@@ -127,21 +128,27 @@ export const create = app => {
     const first_variant_is_gone = product_variants.every(
       p => p.handle!==var_upsert[0].handle
     )
-    assert.ok(first_variant_is_gone, 'First variant was removed,  but still apears in product variants')
+    assert.ok(first_variant_is_gone, 
+      'First variant was removed,  but still apears in product variants')
   });
 
   s('remove product -> confirm all the variants are gone', async () => {
     await products.remove(app, pr_upsert.handle);
-    // now query the product's discounts to see if discount was applied to 1st product
+    // now query the product's discounts to see if 
+    // discount was applied to 1st product
     const product_variants = await products.list_product_variants(
       app, pr_upsert.handle
     );
-    assert.ok(product_variants.length==0, 'product removed, but it\'s variants are in place');
+    assert.ok(product_variants.length==0, 
+      'product removed, but it\'s variants are in place');
 
     const variants_explicit = await Promise.all(
       var_upsert.map(v => products.get(app, v.handle))
     )
-    assert.ok(variants_explicit.filter(Boolean).length==0, 'product removed, but it\'s variants are in place');
+    assert.ok(
+      variants_explicit.filter(Boolean).length==0, 
+      'product removed, but it\'s variants are in place'
+      );
   });
 
   return s;

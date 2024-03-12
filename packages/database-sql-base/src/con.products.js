@@ -1,9 +1,9 @@
-import { DiscountApplicationEnum } from '@storecraft/core'
+import { DiscountApplicationEnum } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
-  insert_tags_of, upsert_me, select_values_of_entity_by_entity_id_or_handle, 
+  insert_tags_of, upsert_me, 
   where_id_or_handle_table, products_with_collections, 
   with_tags, with_media, 
   delete_entity_values_by_value_or_reporter,
@@ -16,7 +16,7 @@ import { Transaction } from 'kysely'
 
 
 /**
- * @typedef {import('@storecraft/core').db_products} db_col
+ * @typedef {import('@storecraft/core/v-database').db_products} db_col
  */
 export const table_name = 'products'
 
@@ -166,7 +166,7 @@ const get = (driver) => {
  */
 const remove_internal = (driver) => {
   /**
-   * @param {import('@storecraft/core').ProductType & import('@storecraft/core').VariantType} product
+   * @param {import('@storecraft/core/v-api').ProductType & import('@storecraft/core/v-api').VariantType} product
    * @param {Transaction<import('../index.js').Database>} trx
    */
   return async (product, trx) => {

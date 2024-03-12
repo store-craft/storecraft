@@ -11,7 +11,7 @@
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core").Cursor} c 
+ * @param {import("@storecraft/core/v-api").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
  */
@@ -68,20 +68,6 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
   // return result;
 }
 
-// eb.exists(
-//   eb => eb
-//     .selectFrom(table)
-//     .select('id')
-//     .where(
-//       eb => eb.and([
-//         eb.or([
-//           eb(`${table}.entity_id`, '=', eb.ref('products.id')),
-//           eb(`${table}.entity_handle`, '=', eb.ref('products.handle')),
-//         ]),
-//         eb(`${table}.value`, op, value)
-//       ])
-//     )
-// )
 
 /**
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
@@ -124,7 +110,7 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
     case '!':
       return eb.not(conjunctions[0])
     default:
-      throw new Error('VQL-to-mongo-failed')
+      throw new Error('VQL-failed')
   }
 
 }
@@ -142,7 +128,7 @@ export const query_vql_to_eb = (eb, root, table_name) => {
 /**
  * Convert an API Query into mongo dialect, also sanitize.
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core").ApiQuery} q 
+ * @param {import("@storecraft/core/v-api").ApiQuery} q 
  * @param {keyof Database} table_name 
  */
 export const query_to_eb = (eb, q, table_name) => {
@@ -183,7 +169,7 @@ export const query_to_eb = (eb, q, table_name) => {
 /**
  * Convert an API Query into mongo dialect, also sanitize.
  * @template D
- * @param {import("@storecraft/core").ApiQuery} q 
+ * @param {import("@storecraft/core/v-api").ApiQuery} q 
  */
 export const query_to_sort = (q={}) => {
   const sort_sign = q.order === 'asc' ? 'asc' : 'desc';

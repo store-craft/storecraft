@@ -3,8 +3,9 @@ import {
   CustomerType, DiscountType, ImageType, 
   NotificationType, OrderData, PostType, 
   ProductType, ShippingMethodType, StorefrontType, 
-  TagType, VariantType, searchable} from "./v-api/types.api.js";
-import { App, ExpandQuery, ApiQuery } from "./types.public.js";
+  TagType, VariantType, searchable} from "../v-api/types.api.js";
+import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.js";
+import type { App } from '../types.public.js'
 
 export type ID = string;
 export type Handle = string;

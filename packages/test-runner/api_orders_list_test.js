@@ -4,16 +4,17 @@ import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, iso, add_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
-import { App, CheckoutStatusEnum, FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core';
+import { CheckoutStatusEnum, FulfillOptionsEnum, 
+  PaymentOptionsEnum } from '@storecraft/core/v-api';
 import esMain from './utils.esmain.js';
+import { App } from '@storecraft/core';
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').OrderData & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').OrderData & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = get_static_ids('order').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps

@@ -1,12 +1,11 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
 import { report_document_media } from './con.images.js';
 
 /**
- * @typedef {import('@storecraft/core').db_posts} db_col
+ * @typedef {import('@storecraft/core/v-database').db_posts} db_col
  */
 
 /**

@@ -1,8 +1,7 @@
 import { base64 } from '@storecraft/core/v-crypto'
 
 /**
- * 
- * @param {import("../core/types.mailer.js").MailObject["attachments"][0]["content"]} c 
+ * @param {import('@storecraft/core/v-mailer').MailObject["attachments"][0]["content"]} c 
  */
 export const convert_to_base64 = async (c) => {
   if(c instanceof ArrayBuffer)

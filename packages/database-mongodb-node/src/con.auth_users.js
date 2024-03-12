@@ -4,7 +4,7 @@ import { sanitize_one, to_objid } from './utils.funcs.js'
 import { get_regular, list_regular, upsert_regular } from './con.shared.js'
 
 /**
- * @typedef {import('@storecraft/core').db_auth_users} db_col
+ * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
  */
 
 /**

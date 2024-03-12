@@ -1,11 +1,11 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_search_of, expand, insert_search_of, 
+import { delete_me, delete_search_of, insert_search_of, 
   upsert_me, where_id_or_handle_table } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
- * @typedef {import('@storecraft/core').db_tags} db_col
+ * @typedef {import('@storecraft/core/v-database').db_tags} db_col
  */
 export const table_name = 'tags'
 

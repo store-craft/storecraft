@@ -11,7 +11,7 @@ import { def_dialect } from './tests/dialect.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function migrateToLatest() {
+export async function migrateToLatest() {
   /** @type {Kysely<import('./types.sql.tables.js').Database>} */
   const db = new Kysely({
     dialect: def_dialect

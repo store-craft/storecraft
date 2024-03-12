@@ -4,7 +4,8 @@ import { fileURLToPath } from "node:url";
 import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
-import { image_url_to_handle, image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
+import { image_url_to_handle, 
+  image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
 
 /** timestamp to iso */
 export const iso = number => {
@@ -71,11 +72,12 @@ export const pick_random = items => {
 
 /**
  * A simple CRUD sanity
+ * @template G
  * @template {{
- *  items: T[],
+ *  items: G[],
  *  ops: {
- *    upsert: (app: App, item: T) => Promise<string>,
- *    get: (app: App, id: string) => Promise<T>,
+ *    upsert?: (app: App, item: G) => Promise<string>,
+ *    get?: (app: App, id: string) => Promise<G>,
  *  }
  *  app: App
  * }} T
@@ -154,7 +156,7 @@ const compare_tuples = (vec1, vec2) => {
  * Basic testing to see if a query result is satisfied
  * @template T
  * @param {T[]} list the result of the query
- * @param {import('@storecraft/core').ApiQuery} q the query used
+ * @param {import('@storecraft/core/v-api').ApiQuery} q the query used
  */
 export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
@@ -212,13 +214,13 @@ export const assert_query_list_integrity = (list, q) => {
 
 /**
  * A simple CRUD sanity
- * @template {import('@storecraft/core').BaseType & import('@storecraft/core').timestamps} T
+ * @template {import('@storecraft/core/v-api').BaseType & import('@storecraft/core/v-api').timestamps} T
  * @template {{
  *  items: T[],
  *  ops: {
  *    upsert: (app: App, item: T) => Promise<string>,
  *    get: (app: App, id: string) => Promise<T>,
- *    list: (app: App, q: import('@storecraft/core').ApiQuery) => Promise<T[]>,
+ *    list: (app: App, q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
  *  }
  *  app: App
  * }} C
@@ -228,7 +230,7 @@ export const add_list_integrity_tests = s => {
 
   s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
     async (ctx) => {
-      /** @type {import('@storecraft/core').ApiQuery} */
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q_asc = {
         startAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
@@ -236,7 +238,7 @@ export const add_list_integrity_tests = s => {
         limit: 3,
         expand: ['*']
       }
-      /** @type {import('@storecraft/core').ApiQuery} */
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -267,7 +269,7 @@ export const add_list_integrity_tests = s => {
       // last 3 items have the same timestamps, so we refine by ID
       // let's pick one before the last
       const item = ctx.items.at(-2);
-      /** @type {import('@storecraft/core').ApiQuery} */
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q = {
         startAt: [['updated_at', item.updated_at], ['id', item.id]],
         sortBy: ['updated_at', 'id'],

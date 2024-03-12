@@ -3,20 +3,21 @@ import { storefronts, products, collections,
   discounts, posts, shipping } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { App, DiscountApplicationEnum, DiscountMetaEnum, 
-  FilterMetaEnum } from '@storecraft/core';
+import { DiscountApplicationEnum, DiscountMetaEnum, 
+  FilterMetaEnum } from '@storecraft/core/v-api';
 import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
+import { App } from '@storecraft/core';
 
 // const app = await create_app();
 
 /**
- * @typedef {import('@storecraft/core').StorefrontTypeUpsert} StorefrontTypeUpsert
- * @typedef {import('@storecraft/core').ProductTypeUpsert} ProductTypeUpsert
- * @typedef {import('@storecraft/core').CollectionTypeUpsert} CollectionTypeUpsert
- * @typedef {import('@storecraft/core').PostTypeUpsert} PostTypeUpsert
- * @typedef {import('@storecraft/core').ShippingMethodTypeUpsert} ShippingMethodTypeUpsert
- * @typedef {import('@storecraft/core').DiscountTypeUpsert} DiscountTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').StorefrontTypeUpsert} StorefrontTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').ProductTypeUpsert} ProductTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').CollectionTypeUpsert} CollectionTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').PostTypeUpsert} PostTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').ShippingMethodTypeUpsert} ShippingMethodTypeUpsert
+ * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
  */
 const handle_sf = create_handle('sf', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -195,7 +196,9 @@ export const create = app => {
     // now connect them to storefront
     // upsert products with collections relation
     await storefronts.upsert(app, storefront_upsert);
-    const storefront_get = await storefronts.get(app, storefront_upsert.handle);
+    const storefront_get = await storefronts.get(
+      app, storefront_upsert.handle
+      );
     // now, connect
     await storefronts.upsert(
       app,
@@ -218,7 +221,8 @@ export const create = app => {
       const verified = collections_upsert.every(
         c => queried.some(q => q.handle===c.handle)
       )
-      assert.ok(verified, 'list collections does not include original collections !')
+      assert.ok(verified, 
+        'list collections does not include original collections !')
     }
 
     { // verify products
@@ -229,7 +233,8 @@ export const create = app => {
       const verified = products_upsert.every(
         c => queried.some(q => q.handle===c.handle)
       )
-      assert.ok(verified, 'list products does not include original items !')
+      assert.ok(verified, 
+        'list products does not include original items !')
     }
 
     { // verify discounts
@@ -240,7 +245,8 @@ export const create = app => {
       const verified = discounts_upsert.every(
         c => queried.some(q => q.handle===c.handle)
       )
-      assert.ok(verified, 'list discounts does not include original items !')
+      assert.ok(verified, 
+        'list discounts does not include original items !')
     }
 
     { // verify shipping
@@ -251,7 +257,8 @@ export const create = app => {
       const verified = shipping_upsert.every(
         c => queried.some(q => q.handle===c.handle)
       )
-      assert.ok(verified, 'list shipping does not include original items !')
+      assert.ok(verified, 
+        'list shipping does not include original items !')
     }
 
     { // verify posts
@@ -262,7 +269,8 @@ export const create = app => {
       const verified = posts_upsert.every(
         c => queried.some(q => q.handle===c.handle)
       )
-      assert.ok(verified, 'list posts does not include original items !')
+      assert.ok(verified, 
+        'list posts does not include original items !')
     }
 
     // AFTER DELETE OF CONNECTIONS

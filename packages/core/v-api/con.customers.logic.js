@@ -54,7 +54,7 @@ export const upsert = async (app, item) => {
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} id
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const get = (app, id, options) => regular_get(app, db(app))(id, options);
 
@@ -62,7 +62,7 @@ export const get = (app, id, options) => regular_get(app, db(app))(id, options);
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} email
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const getByEmail = async (app, email, options) => {
   return db(app).getByEmail(email);
@@ -85,7 +85,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
 /**
  * given a discount handle and query, return products of that discount
  * @param {import("../types.public.js").App} app
- * @param {import('../types.database.js').ID} customer_id 
+ * @param {import('../v-database/types.public.js').ID} customer_id 
  * @param {import('./types.api.query.js').ApiQuery} q 
  */
 export const list_customer_orders = async (app, customer_id, q) => {

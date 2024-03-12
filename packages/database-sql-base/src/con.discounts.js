@@ -1,4 +1,4 @@
-import { DiscountApplicationEnum } from '@storecraft/core'
+import { DiscountApplicationEnum } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { delete_entity_values_by_value_or_reporter, 
@@ -11,7 +11,7 @@ import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
- * @typedef {import('@storecraft/core').db_discounts} db_col
+ * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
  */
 export const table_name = 'discounts'
 

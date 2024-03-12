@@ -6,7 +6,7 @@ import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
 /**
- * @typedef {import('@storecraft/core').db_collections} db_col
+ * @typedef {import('@storecraft/core/v-database').db_collections} db_col
  */
 
 /**

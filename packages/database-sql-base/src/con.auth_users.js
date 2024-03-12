@@ -4,7 +4,7 @@ import { delete_me, upsert_me,
   where_id_or_handle_table } from './con.shared.js'
 
 /**
- * @typedef {import('@storecraft/core').db_auth_users} db_col
+ * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
  */
 
 export const table_name = 'auth_users';

@@ -8,8 +8,6 @@ import { file_name,
   image_mock_url_handle_name} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { image_url_to_handle, 
-  image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
 
 const url_handle_name = image_mock_url_handle_name(
   'img', file_name(import.meta.url)
@@ -20,7 +18,7 @@ const url_handle_name = image_mock_url_handle_name(
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').ImageType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').ImageType & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = get_static_ids('img').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps

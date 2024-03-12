@@ -7,7 +7,7 @@ import { create_explicit_relation } from './utils.relations.js';
 import { report_document_media } from './con.images.js';
 
 /**
- * @typedef {import('@storecraft/core').db_storefronts} db_col
+ * @typedef {import('@storecraft/core/v-database').db_storefronts} db_col
  */
 
 /**
@@ -85,7 +85,7 @@ const list = (driver) => list_regular(driver, col(driver));
  */
 const list_storefront_products = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['products']
     };
@@ -100,7 +100,7 @@ const list_storefront_products = (driver) => {
  */
 const list_storefront_collections = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['collections']
     };
@@ -115,7 +115,7 @@ const list_storefront_collections = (driver) => {
  */
 const list_storefront_discounts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['discounts']
     };
@@ -130,7 +130,7 @@ const list_storefront_discounts = (driver) => {
  */
 const list_storefront_shipping_methods = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['shipping_methods']
     };
@@ -145,7 +145,7 @@ const list_storefront_shipping_methods = (driver) => {
  */
 const list_storefront_posts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['posts']
     };

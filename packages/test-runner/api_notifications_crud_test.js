@@ -8,7 +8,7 @@ import esMain from './utils.esmain.js';
 
 // const app = await create_app();
 
-/** @type {import('@storecraft/core').NotificationTypeUpsert[]} */
+/** @type {import('@storecraft/core/v-api').NotificationTypeUpsert[]} */
 const items_upsert = get_static_ids('not').map(
   (id, ix, arr) => (
     {

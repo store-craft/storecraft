@@ -1,13 +1,14 @@
-import { DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum } from "@storecraft/core";
+import { DiscountApplicationEnum, DiscountMetaEnum, 
+  FilterMetaEnum } from "@storecraft/core/v-api";
 import { MongoDB } from "../driver.js";
 import { to_objid } from "./utils.funcs.js";
 
-/** @param {import("@storecraft/core").DiscountType} d */
+/** @param {import("@storecraft/core/v-api").DiscountType} d */
 const is_order_discount = d => {
   return (d.info.details.meta.id===DiscountMetaEnum.order.id);
 }
 
-/** @param {import("@storecraft/core").DiscountType} d */
+/** @param {import("@storecraft/core/v-api").DiscountType} d */
 const is_automatic_discount = d => {
   return (d.application.id===DiscountApplicationEnum.Auto.id);
 }
@@ -19,7 +20,7 @@ const extract_abs_number = v => {
 /**
  * create a mongodb conjunctions clauses from discount, intended
  * for filtering.
- * @param {import("@storecraft/core").DiscountType} d 
+ * @param {import("@storecraft/core/v-api").DiscountType} d 
  */
 export const discount_to_mongo_conjunctions = d => {
   // discount has to be product discount + automatic + active + has filters

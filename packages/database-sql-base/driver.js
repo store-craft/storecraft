@@ -12,26 +12,23 @@ import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
-import { def_dialect } from './tests/dialect.js';
 
 /**
- * @typedef {Partial<import('./types.public.js').Config>} Config
- * @typedef {import('./types.sql.tables.js').Database} Database
- * @typedef {import('kysely').Dialect} Dialect
- * @typedef {import('@storecraft/core').db_driver} db_driver
-*/
-
-/**
- * 
- * @param {string} uri 
- * @param {import('mongodb').MongoClientOptions} [options] 
+ * @param {any} b 
+ * @param {string} msg 
  */
-const connect = async (uri, options) => {
-  
+const assert = (b, msg) => {
+  if(!Boolean(b)) throw new Error(msg);
 }
 
 /**
- * @template {Dialect} D
+ * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.sql.tables.js').Database} Database
+ * @typedef {import('kysely').Dialect} Dialect
+ * @typedef {import('@storecraft/core/v-database').db_driver} db_driver
+*/
+
+/**
  * @implements {db_driver}
  */
 export class SQL {
@@ -39,26 +36,21 @@ export class SQL {
   /** @type {boolean} */ #_is_ready;
   /** @type {App<any, any, any>} */ #_app;
   /** @type {Config} */ #_config;
-  /** @type {D} */ #_dialect;
   /** @type {Kysely<Database>} */ #_client;
 
   /**
    * 
    * @param {Config} [config] config, if undefined, 
-   * @param {D} [dialect] config, if undefined, 
-   * env variables `MONGODB_URL` will be used for uri upon init later
    */
-  constructor(config, dialect) {
+  constructor(config) {
     this.#_is_ready = false;
     this.#_config = config;
 
-    if(!dialect) {
-      dialect = def_dialect;
-    }
+    assert(this.#_config.dialect, 'No Dialect found !')
+    assert(this.#_config.dialect_type, 'No Dialect Type specified !')
 
-    this.#_dialect = dialect;
     this.#_client = new Kysely({
-      dialect, 
+      dialect: this.#_config.dialect, 
       plugins: [
         new ParseJSONResultsPlugin()
       ]
@@ -73,12 +65,6 @@ export class SQL {
   async init(app) {
     if(this.isReady)
       return this;
-    const c = this.#_config;
-    this.#_config = {
-      ...c, 
-      url: c?.url ?? app.platform.env.MONGODB_URL,
-      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
-    }
 
     this.#_app = app;
     this.auth_users = auth_users(this);
@@ -104,17 +90,10 @@ export class SQL {
     return true;
   }
 
-  get name () { return this.config.db_name ?? 'main'; }
+  get name () { return 'main'; }
   get app() { return this.#_app; }
   get client() { return this.#_client; }
   get config() { return this.#_config; }
   get isReady() { return this.#_is_ready; }
-
-  /**
-   * @template {import('@storecraft/core').BaseType} T
-   * @param {string} name 
-   */
-  collection(name) {
-  }
 
 }

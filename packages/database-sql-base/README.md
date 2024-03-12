@@ -1,6 +1,6 @@
-# Storecraft MongoDB driver for Node.js
+# Storecraft `SQL` driver
 
-Official `mongodb` driver for `StoreCraft` on **Node.js** platforms.
+Official `SQL` driver for `StoreCraft` with the dialects abstracted with `Kysely`
 
 ## usage
 

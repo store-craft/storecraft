@@ -5,7 +5,7 @@ export * from './v-api/types.api.enums.js'
 /** 
  * @typedef {Partial<import('./types.public.js').Config>} Config
  * @typedef {import('./v-storage/types.storage.js').storage_driver} storage_driver
- * @typedef {import('./types.database.js').db_driver} db_driver
+ * @typedef {import('./v-database/types.public.js').db_driver} db_driver
  * @typedef {import('./v-payments/types.payments.js').payment_gateway} payment_gateway
  * @typedef {import('./v-mailer/types.mailer.js').mailer} mailer
  */

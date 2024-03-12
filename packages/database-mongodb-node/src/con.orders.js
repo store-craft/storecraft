@@ -2,11 +2,9 @@ import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
-import { query_to_mongo } from './utils.query.js';
-import { isDef, sanitize_array } from './utils.funcs.js';
 
 /**
- * @typedef {import('@storecraft/core').db_orders} db_col
+ * @typedef {import('@storecraft/core/v-database').db_orders} db_col
  */
 
 /**

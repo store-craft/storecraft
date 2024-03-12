@@ -61,7 +61,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} id
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const get = (app, id, options) => regular_get(app, db(app))(id, options);
 

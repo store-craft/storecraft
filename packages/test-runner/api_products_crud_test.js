@@ -8,7 +8,7 @@ import esMain from './utils.esmain.js';
 
 const handle = create_handle('pr', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core').ProductTypeUpsert[]} */
+/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle(),

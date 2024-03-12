@@ -17,9 +17,9 @@ const handle_pr = create_handle('pr', file_name(import.meta.url));
 // virtual api of storecraft for insertion
 
 /**
- * @typedef {import('../core/types.database.js').idable_concrete} idable_concrete
+ * @typedef {import('@storecraft/core/v-database').idable_concrete} idable_concrete
  */
-/** @type {(import('@storecraft/core').ProductType & idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').ProductType & idable_concrete)[]} */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -38,7 +38,7 @@ const items = Array.from({length: 10}).map(
   }
 );
 
-/** @type {(import('@storecraft/core').CollectionType & idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').CollectionType & idable_concrete)[]} */
 const collections_upsert = [
   {
     active: true,

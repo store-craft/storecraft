@@ -91,6 +91,7 @@ const remove = (driver) => {
     try {
       const t = await driver.client.transaction().execute(
         async (trx) => {
+
           const valid_auth_id = `au_${id.split('_').at(-1)}`
           // entities
           await delete_search_of(trx, id);

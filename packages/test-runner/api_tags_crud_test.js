@@ -52,6 +52,7 @@ export const create = app => {
     }
   );
 
+  // return s;
   add_sanity_crud_to_test_suite(s);
 
 

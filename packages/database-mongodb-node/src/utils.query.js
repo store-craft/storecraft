@@ -15,7 +15,7 @@ let a = {
  * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
- * @param {import("@storecraft/core").Cursor} c 
+ * @param {import("@storecraft/core/v-api").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
  */
@@ -110,7 +110,7 @@ export const query_vql_to_mongo = root => {
 
 /**
  * Let's transform ids into mongo ids
- * @param {import("@storecraft/core").Tuple<string>} c a cursor record
+ * @param {import("@storecraft/core/v-api").Tuple<string>} c a cursor record
  * @returns {[k: string, v: any]}
  */
 const transform = c => {
@@ -121,7 +121,7 @@ const transform = c => {
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
- * @param {import("@storecraft/core").ApiQuery} q 
+ * @param {import("@storecraft/core/v-api").ApiQuery} q 
  */
 export const query_to_mongo = (q) => {
   const filter = {};

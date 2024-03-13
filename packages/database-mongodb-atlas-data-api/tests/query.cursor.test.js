@@ -167,7 +167,7 @@ test('(a1, a2, a3)', async () => {
     ]
   };
 
-  /** @type {import('@storecraft/core').Cursor[]} */
+  /** @type {import('@storecraft/core/v-api').Cursor[]} */
   const cursor = [
     ['a1', 'b1'],
     ['a2', 'b2'],
@@ -292,7 +292,7 @@ test('(a1, a2)', async () => {
     ]
   };
 
-  /** @type {import('@storecraft/core').Cursor[]} */
+  /** @type {import('@storecraft/core/v-api').Cursor[]} */
   const cursor = [
     ['a1', 'b1'],
     ['a2', 'b2'],
@@ -368,7 +368,7 @@ test('(a1)', async () => {
     ]
   };
 
-  /** @type {import('@storecraft/core').Cursor[]} */
+  /** @type {import('@storecraft/core/v-api').Cursor[]} */
   const cursor = [
     ['a1', 'b1'],
   ];

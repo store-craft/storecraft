@@ -1,4 +1,4 @@
-import { orderDataSchema, orderDataUpsertSchema } from './types.autogen.zod.api.js'
+import { orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -61,7 +61,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} id
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const get = (app, id, options) => regular_get(app, db(app))(id, options);
 
@@ -79,12 +79,3 @@ export const remove = (app, id) => regular_remove(app, db(app))(id);
  */
 export const list = (app, q) => regular_list(app, db(app))(q);
 
-/**
- * given a discount handle and query, return products of that discount
- * @param {import("../types.public.js").App} app
- * @param {import('../types.database.js').ID} customer_id 
- * @param {import('./types.api.query.js').ApiQuery} q 
- */
-export const list_customer_orders = async (app, customer_id, q) => {
-  return db(app).list_customer_orders(customer_id, q);
-}

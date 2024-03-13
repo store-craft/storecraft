@@ -1,0 +1,1 @@
+# Storecraft database types and logic

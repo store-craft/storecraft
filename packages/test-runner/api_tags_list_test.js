@@ -3,7 +3,7 @@ import { tags } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, assert_query_list} from './api.utils.crud.js';
+  iso, add_list_integrity_tests} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
@@ -15,7 +15,7 @@ const handle_tag = create_handle('tag', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core').TagType & import('../core/types.database.js').idable_concrete)[]} */
+/** @type {(import('@storecraft/core/v-api').TagType & import('@storecraft/core/v-database').idable_concrete)[]} */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -43,7 +43,7 @@ export const create = app => {
   );
 
   s.before(
-    async () => { 
+    async (a) => { 
       assert.ok(app.ready) 
       try {
         for(const p of items) {
@@ -60,52 +60,7 @@ export const create = app => {
     }
   );
 
-  s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
-    async () => {
-      /** @type {import('@storecraft/core').ApiQuery} */
-      const q_asc = {
-        startAt: [['updated_at', iso(5)]],
-        sortBy: ['updated_at'],
-        order: 'asc',
-        limit: 3
-      }
-      /** @type {import('@storecraft/core').ApiQuery} */
-      const q_desc = {
-        ...q_asc, order: 'desc'
-      }
-
-      const list_asc = await tags.list(app, q_asc);
-      const list_desc = await tags.list(app, q_desc);
-
-      assert_query_list(list_asc, q_asc);
-      assert_query_list(list_desc, q_desc);
-    }
-  );
-
-  s('refined query', 
-    async () => {
-      // last 3 items have the same timestamps, so we refine by ID
-      // let's pick one before the last
-      const item = items.at(-2);
-      /** @type {import('@storecraft/core').ApiQuery} */
-      const q = {
-        startAt: [['updated_at', item.updated_at], ['id', item.id]],
-        sortBy: ['updated_at', 'id'],
-        order: 'asc',
-        limit: 2
-      }
-
-      const list = await tags.list(
-        app, q
-      );
-
-      // console.log(list)
-      // console.log(items)
-
-      assert_query_list(list, q);
-      assert.equal(list[0].id, item.id, 'should have had the same id')
-    }
-  );
+  add_list_integrity_tests(s);
 
   return s;
 }

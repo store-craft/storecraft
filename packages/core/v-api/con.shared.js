@@ -6,7 +6,7 @@ import { ZodSchema } from 'zod'
 /**
  * @typedef {import('./types.api.js').searchable} searchable
  * @typedef {import('./types.api.js').BaseType} ItemType
- * @typedef {import('../types.database.js').RegularGetOptions} RegularGetOptions
+ * @typedef {import('../v-database/types.public.js').RegularGetOptions} RegularGetOptions
  */
 
 /**
@@ -16,7 +16,7 @@ import { ZodSchema } from 'zod'
  * @template {import('./types.api.js').idable} T
  * @template {import('./types.api.js').idable} G
  * @param {import("../types.public.js").App} app app instance
- * @param {import("../types.database.js").db_crud<T & {id:string}, G>} db db instance
+ * @param {import("../v-database/types.public.js").db_crud<T & {id:string}, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
  * @param {<H extends T & searchable>(final: H) => Promise<H>} hook hook into final state
@@ -51,10 +51,11 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 }
 
 /**
- * @template {any} T, G
+  * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T, G>} db
- */
+ * @param {import("../v-database/types.public.js").db_crud<T, G>} db
+*/
 export const regular_get = (app, db) => /**
   * 
   * @param {string} handle_or_id 
@@ -66,9 +67,10 @@ export const regular_get = (app, db) => /**
   };
 
 /**
- * @template {import('./types.api.js').BaseType} T, G
+ * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<T, G>} db
  */
 export const regular_remove = (app, db) => 
   /**
@@ -80,9 +82,10 @@ export const regular_remove = (app, db) =>
   }
 
 /**
- * @template {import('./types.api.js').BaseType} T, G
+ * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template G
  * @param {import("../types.public.js").App} app
- * @param {import("../types.database.js").db_crud<T, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<T, G>} db
  */
 export const regular_list = (app, db) => 
   /**
@@ -93,10 +96,10 @@ export const regular_list = (app, db) =>
   }
 
 /**
- * @template {import("./types.api.js").BaseType} T
+ * @template {import('../v-database/types.public.js').idable_concrete} T
  * @template {import("./types.api.js").BaseType} G
  * @param {import("./types.api.js").BaseType} item 
- * @param {import("../types.database.js").db_crud<T, G>} db 
+ * @param {import("../v-database/types.public.js").db_crud<T, G>} db 
  */
 export const assert_save_create_mode = async (item, db) => {
   // Check if tag exists
@@ -107,7 +110,7 @@ export const assert_save_create_mode = async (item, db) => {
     assert(
       prev_item, 
       `Item with id \`${item?.id}\` doesn't exist !`, 400);
-    assert(
+    item.handle && assert(
       prev_item?.handle===item.handle, 
       `Item with id \`${prev_item?.id}\` has a handle \`${prev_item?.handle}!=${item.handle}\` !`, 400
     );

@@ -31,12 +31,20 @@
       "types": "./v-ql/types.d.ts"
     },
     "./v-payments": {
-      "import": "./v-payments/index.js",
+      "import": "./v-payments/public.js",
       "types": "./v-payments/types.public.d.ts"
     },
     "./v-mailer": {
-      "import": "./v-mailer/index.js",
+      "import": "./v-mailer/public.js",
       "types": "./v-mailer/types.public.d.ts"
+    },
+    "./v-database": {
+      "import": "./v-database/public.js",
+      "types": "./v-database/types.public.d.ts"
+    },
+    "./v-platform": {
+      "import": "./v-platform/public.js",
+      "types": "./v-platform/types.public.d.ts"
     }
   },
   "scripts": {

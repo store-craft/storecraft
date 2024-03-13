@@ -110,7 +110,7 @@ export const query_vql_to_mongo = root => {
 
 /**
  * Let's transform ids into mongo ids
- * @param {import("@storecraft/core").Tuple<string>} c a cursor record
+ * @param {import("@storecraft/core/v-api").Tuple<string>} c a cursor record
  * @returns {[k: string, v: any]}
  */
 const transform = c => {
@@ -121,7 +121,7 @@ const transform = c => {
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
- * @param {import("@storecraft/core").ApiQuery} q 
+ * @param {import("@storecraft/core/v-api").ApiQuery} q 
  */
 export const query_to_mongo = (q) => {
   const filter = {};

@@ -1,5 +1,5 @@
 import { assert, to_handle } from './utils.func.js'
-import { postTypeSchema, postTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { postTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -37,7 +37,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 

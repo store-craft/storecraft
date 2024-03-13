@@ -50,7 +50,7 @@ export type ApiAuthRefreshType = {
   refresh_token: string;
 }
 
-export type AuthUserType = BaseType & AuthBaseType & {
+export type AuthUserType = BaseType & AuthBaseType & timestamps & {
   confirmed_mail?: boolean
   roles?: Role[];
 }
@@ -127,11 +127,11 @@ export type VariantOptionSelection = {
 
 export interface VariantType extends BaseProductType {
   /** handle of parent product in case this product is a variant */
-  parent_handle?: string;
+  parent_handle: string;
   /** id of parent product in case this product is a variant */
-  parent_id?: string;
+  parent_id: string;
   /** Internal usage, clarifies the variant projected options */
-  variant_hint?: VariantOptionSelection[];
+  variant_hint: VariantOptionSelection[];
 }
 
 export interface BaseProductType extends BaseType, timestamps {
@@ -159,15 +159,15 @@ export interface BaseProductType extends BaseType, timestamps {
    */
   compare_at_price?: number;
 
-  /** collections, upon insert, should have at least id field, expanded */
+  /** collections, upon insert, should have at least {`id`, `handle`} fields, expanded */
   collections?: CollectionType[];
   /** discounts we know were applied to this product, expanded type */
   discounts?: DiscountType[];
 }
 
-export type VariantTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+export type VariantTypeUpsert = Omit<VariantType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
   /** list of collections to add the product into, this is an explicit connection, to form a better UX experience */
-  collections?: Pick<CollectionType, 'id'>[];
+  collections?: Pick<CollectionType, 'id' | 'handle'>[];
 }
 
 export interface ProductType extends BaseProductType {
@@ -179,7 +179,7 @@ export interface ProductType extends BaseProductType {
 
 export type ProductTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
   /** list of collections to add the product into, this is an explicit connection, to form a better UX experience */
-  collections?: Pick<CollectionType, 'id'>[];
+  collections?: Pick<CollectionType, 'id' | 'handle'>[];
 }
 
 //
@@ -444,7 +444,7 @@ export interface ShippingMethodType extends BaseType, timestamps {
    */
   price: number;
   /** name */
-  name: string;
+  title: string;
   handle: string;
 }
 

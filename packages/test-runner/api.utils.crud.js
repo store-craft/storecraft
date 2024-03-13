@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
+import { image_url_to_handle, 
+  image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
 
 /** timestamp to iso */
 export const iso = number => {
@@ -14,11 +16,49 @@ export const file_name = (meta_url) => {
   return basename(fileURLToPath(meta_url));
 }
 
+/**
+ * @param  {...string} prefixs 
+ */
 export const create_handle = (...prefixs) => {
   let index = 0;
   return () => {
     return to_handle([...prefixs, index+=1].join('-'));
   }
+}
+
+/**
+ * @param  {...string} prefixs 
+ */
+export const image_mock_url_handle_name = (...prefixs) => {
+  let index = 0;
+  
+  return () => {
+    const url = [...prefixs, index+=1].join('-') + '.png';
+    return {
+      url: url,
+      name: image_url_to_name(url),
+      handle: image_url_to_handle(url)
+    }
+  }
+}
+
+/**
+ * a list of 10 static ids, this is helpful for testing
+ * @param {string} prefix 
+ */
+export const get_static_ids = (prefix) => {
+  return [
+    '65e5ca42c43e2c41ae5216a9',
+    '65e5ca42c43e2c41ae5216aa',
+    '65e5ca42c43e2c41ae5216ab',
+    '65e5ca42c43e2c41ae5216ac',
+    '65e5ca42c43e2c41ae5216ad',
+    '65e5ca42c43e2c41ae5216ae',
+    '65e5ca42c43e2c41ae5216af',
+    '65e5ca42c43e2c41ae5216b0',
+    '65e5ca42c43e2c41ae5216b1',
+    '65e5ca42c43e2c41ae5216b2'
+  ].map(id => `${prefix}_${id}`);
 }
 
 /**
@@ -32,11 +72,12 @@ export const pick_random = items => {
 
 /**
  * A simple CRUD sanity
+ * @template G
  * @template {{
- *  items: T[],
+ *  items: G[],
  *  ops: {
- *    upsert: (app: App, item: T) => Promise<string>,
- *    get: (app: App, id: string) => Promise<T>,
+ *    upsert?: (app: App, item: G) => Promise<string>,
+ *    get?: (app: App, id: string) => Promise<G>,
  *  }
  *  app: App
  * }} T
@@ -54,6 +95,7 @@ export const add_sanity_crud_to_test_suite = s => {
     assert_partial(item_get, {...one, id});
   });
   
+  // return s;
   s('update', async (ctx) => {
     const one = ctx.items[1];
     const id = await ctx.ops.upsert(ctx.app, one);
@@ -114,9 +156,9 @@ const compare_tuples = (vec1, vec2) => {
  * Basic testing to see if a query result is satisfied
  * @template T
  * @param {T[]} list the result of the query
- * @param {import('@storecraft/core').ApiQuery} q the query used
+ * @param {import('@storecraft/core/v-api').ApiQuery} q the query used
  */
-export const assert_query_list = (list, q) => {
+export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
 
   // assert limit
@@ -167,4 +209,97 @@ export const assert_query_list = (list, q) => {
       }
     }
   }
+}
+
+
+/**
+ * A simple CRUD sanity
+ * @template {import('@storecraft/core/v-api').BaseType & import('@storecraft/core/v-api').timestamps} T
+ * @template {{
+ *  items: T[],
+ *  ops: {
+ *    upsert: (app: App, item: T) => Promise<string>,
+ *    get: (app: App, id: string) => Promise<T>,
+ *    list: (app: App, q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
+ *  }
+ *  app: App
+ * }} C
+ * @param {import('uvu').uvu.Test<C>} s 
+ */
+export const add_list_integrity_tests = s => {
+
+  s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
+    async (ctx) => {
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q_asc = {
+        startAt: [['updated_at', iso(5)]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 3,
+        expand: ['*']
+      }
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q_desc = {
+        ...q_asc, order: 'desc'
+      }
+
+      const list_asc = await ctx.ops.list(ctx.app, q_asc);
+      const list_desc = await ctx.ops.list(ctx.app, q_desc);
+
+      assert_query_list_integrity(list_asc, q_asc);
+      assert_query_list_integrity(list_desc, q_desc);
+
+      { 
+        // for each list item find it's original seed item and make sure
+        // all of it's properties are getting back
+        for(const p of list_asc) {
+          const original_item = ctx.items.find(it => it.id===p.id);
+          // console.log(p)
+          assert.ok(original_item, 'Did not find original item of inserted item !!');
+          // assert_partial(p, original_item);
+          assert_partial(p, original_item);
+        }
+      }
+      
+    }
+  );
+
+  s('refined query', 
+    async (ctx) => {
+      // last 3 items have the same timestamps, so we refine by ID
+      // let's pick one before the last
+      const item = ctx.items.at(-2);
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q = {
+        startAt: [['updated_at', item.updated_at], ['id', item.id]],
+        sortBy: ['updated_at', 'id'],
+        order: 'asc',
+        limit: 2,
+        expand: ['*']
+      }
+
+      const list = await ctx.ops.list(
+        ctx.app, q
+      );
+
+      // console.log(list)
+      // console.log(items)
+
+      assert_query_list_integrity(list, q);
+      assert.equal(list[0].id, item.id, 'should have had the same id');
+
+      { 
+        // for each list item find it's original seed item and make sure
+        // all of it's properties are getting back
+        for(const p of list) {
+          const original_item = ctx.items.find(it => it.id===p.id);
+          assert.ok(original_item, 'Did not find original item of inserted item !!');
+          assert_partial(p, original_item);
+        }
+      }
+
+    }
+  );
+
+  return s;
 }

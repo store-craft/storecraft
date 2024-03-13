@@ -19,7 +19,7 @@ import { impl as tags } from './src/con.tags.js';
 
 
 /**
- * @typedef {import('@storecraft/core').db_driver} db_driver
+ * @typedef {import('@storecraft/core/v-database').db_driver} db_driver
  * @implements {db_driver}
  */
 export class MongoDB {
@@ -102,7 +102,7 @@ export class MongoDB {
   get config() { return this.#_config; }
 
   /**
-   * @template {import('@storecraft/core').BaseType} T
+   * @template {import('@storecraft/core/v-api').BaseType} T
    * @param {string} name 
    * @returns {Collection<T>}
    */

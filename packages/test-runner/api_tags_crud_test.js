@@ -3,13 +3,14 @@ import { tags } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { assert_async_throws } from './utils.js';
-import { add_sanity_crud_to_test_suite, create_handle, file_name } from './api.utils.crud.js';
+import { add_sanity_crud_to_test_suite, 
+  create_handle, file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
 const handle_tag = create_handle('tag', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core').TagTypeUpsert[]} */
+/** @type {import('@storecraft/core/v-api').TagTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle_tag(),
@@ -43,7 +44,7 @@ export const create = app => {
         for(const p of items_upsert)
           await tags.remove(app, p.handle);
       } catch(e) {
-        console.log(e)
+        // console.log(e)
         throw e;
       }
 
@@ -51,11 +52,12 @@ export const create = app => {
     }
   );
 
+  // return s;
   add_sanity_crud_to_test_suite(s);
 
 
   s('upsert tag with bad handle', async () => {
-    /** @type {import('@storecraft/core').TagTypeUpsert} */
+    /** @type {import('@storecraft/core/v-api').TagTypeUpsert} */
     const tag_insert = {
       handle: 'tag 2', values:['a', 'b']
     }

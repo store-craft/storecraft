@@ -1,7 +1,7 @@
 
 /**
  * 
- * @param {import("../core/types.mailer.js").MailObject["attachments"][0]["content"]} c 
+ * @param {import('@storecraft/core/v-mailer').MailObject["attachments"][0]["content"]} c 
  */
 export const convert_attachment_to_blob = async c => {
   if(c instanceof ArrayBuffer)

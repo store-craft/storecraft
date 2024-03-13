@@ -700,17 +700,17 @@ export const calculate_pricing =
   (line_items, auto_discounts=[], coupons=[], shipping_method, uid=undefined) => {
 
   auto_discounts = auto_discounts.filter(
-    d => d.enabled && d.application.id==DiscountApplicationEnum.Auto.id
+    d => d.active && d.application.id==DiscountApplicationEnum.Auto.id
   )
   auto_discounts.sort(
-    (a, b) => a.order-b.order
+    (a, b) => a.priority-b.priority
   )
 
   coupons = coupons.filter(
-    d => d.enabled && d.application.id==DiscountApplicationEnum.Manual.id
+    d => d.active && d.application.id==DiscountApplicationEnum.Manual.id
   )
   coupons.sort(
-    (a, b) => a.order-b.order
+    (a, b) => a.priority-b.priority
   )
 
   const discounts = [

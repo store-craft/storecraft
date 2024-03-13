@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { collections } from '@storecraft/core/v-api';
-import { suite, exec } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { add_sanity_crud_to_test_suite, 
   create_handle, 
@@ -16,7 +16,7 @@ const handle = create_handle('col', file_name(import.meta.url));
  */
 export const create = app => {
 
-  /** @type {import('@storecraft/core').CollectionTypeUpsert[]} */
+  /** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
   const items_upsert = [
     {
       active: true,

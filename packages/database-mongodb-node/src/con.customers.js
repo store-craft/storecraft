@@ -1,11 +1,12 @@
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
-import { to_objid } from './utils.funcs.js'
+import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
+import { query_to_mongo } from './utils.query.js';
 
 /**
- * @typedef {import('@storecraft/core').db_customers} db_col
+ * @typedef {import('@storecraft/core/v-database').db_customers} db_col
  */
 
 /**
@@ -37,6 +38,21 @@ const getByEmail = (driver) => {
 }
 
 /**
+ * 
+ * @param {string} email_or_id 
+ * @returns { {_id:ObjectId} | {email: string}}
+ */
+export const email_or_id = (email_or_id) => {
+  let r = {};
+  try {
+    r._id = to_objid(email_or_id);
+  } catch (e) {
+    r.email = email_or_id;
+  }
+  return r;
+}
+
+/**
  * @param {MongoDB} driver 
  * @returns {db_col["remove"]}
  */
@@ -48,7 +64,7 @@ const remove = (driver) => {
       await session.withTransaction(
         async () => {
           const res = await col(driver).findOneAndDelete(
-            { _id: to_objid(id) },
+            email_or_id(id),
             { session }
           );
       
@@ -71,10 +87,46 @@ const remove = (driver) => {
     return true;
   }
 }
+
+
 /**
  * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
+
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_customer_orders"]}
+ */
+const list_customer_orders = (driver) => {
+  return async (customer_id, query) => {
+
+    const { filter: filter_query, sort } = query_to_mongo(query);
+
+    console.log('query', query)
+    console.log('filter', JSON.stringify(filter_query, null, 2))
+    console.log('sort', sort)
+    console.log('expand', query?.expand)
+    
+    const filter = {
+      $and: [
+        { search: `customer:${customer_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const items = await driver.orders._col.find(
+      filter,  {
+        sort, limit: query.limit
+      }
+    ).toArray();
+
+    return sanitize_array(items);
+  }
+}
 
 /** 
  * @param {MongoDB} driver
@@ -88,6 +140,7 @@ export const impl = (driver) => {
     getByEmail: getByEmail(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    list_customer_orders: list_customer_orders(driver) 
   }
 }

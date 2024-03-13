@@ -5,7 +5,7 @@ import { handle_or_id, to_objid } from './utils.funcs.js';
 import { report_document_media } from './con.images.js';
 
 /**
- * @typedef {import('@storecraft/core').db_shipping} db_col
+ * @typedef {import('@storecraft/core/v-database').db_shipping} db_col
  */
 
 /**

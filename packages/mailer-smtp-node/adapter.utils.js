@@ -4,7 +4,7 @@ import { Readable } from 'node:stream'
  * convert:
  * - arraybuffer -> Buffer
  * - readablestream -> readable
- * @param {import("../core/types.mailer.js").MailObject["attachments"][0]["content"]} c 
+ * @param {import('@storecraft/core/v-mailer').MailObject["attachments"][0]["content"]} c 
  */
 export const attachment_convert = c => {
   if(c instanceof ArrayBuffer)

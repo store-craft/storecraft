@@ -1,0 +1,27 @@
+{
+  "name": "@storecraft/database-sql-base",
+  "version": "1.0.0",
+  "description": "driver for sql",
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "test": "uvu -c",
+    "migrate": "node ./migrate.js"
+  },
+  "keywords": [],
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "kysely": "^0.27.2"
+  },
+  "devDependencies": {
+    "@storecraft/test-runner": "^1.0.0",
+    "@types/node": "^20.11.0",
+    "@types/better-sqlite3": "^7.6.9",
+    "better-sqlite3": "^9.4.3",
+    "dotenv": "^16.3.1",
+    "uvu": "^0.5.6"
+  }
+}

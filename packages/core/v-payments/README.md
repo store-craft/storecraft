@@ -1,0 +1,1 @@
+# Storecraft payments types and logic

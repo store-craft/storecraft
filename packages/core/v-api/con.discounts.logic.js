@@ -1,5 +1,5 @@
 import { assert, to_handle } from './utils.func.js'
-import { discountTypeSchema, discountTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { discountTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -49,7 +49,7 @@ export const upsert = (app, item) => regular_upsert(
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
@@ -70,7 +70,7 @@ export const list = (app, q) => regular_list(app, db(app))(q);
 /**
  * given a discount handle and query, return products of that discount
  * @param {import("../types.public.js").App} app
- * @param {import('../types.database.js').HandleOrId} handle_or_id 
+ * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
  * @param {import('./types.api.query.js').ApiQuery} [q] 
  */
 export const list_discounts_products = async (app, handle_or_id, q) => {

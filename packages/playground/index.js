@@ -3,12 +3,12 @@ import http from "node:http";
 import { join } from "node:path";
 import { homedir } from "node:os";
 
-import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platform-node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
+import { App } from '@storecraft/core';
 
 let app = new App(
   new NodePlatform(),

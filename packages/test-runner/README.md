@@ -9,16 +9,15 @@ A work in progress package to test:
 Everything prefixed with `api.` tests files within `v-api` folder
 of `StoreCraft`. This is just testing the controller and the database.
 
-
-Currently, I accomplished:
-- sanity tests for CRUD operations on all controllers
-
 Todo:
-- list and query tests for controllers
-- test relations:
-  - product -> products variants
-- test side effects:
-  - image usage reporting
+- discounts
+  - better discount -> products with filters:
+    - in collections
+    - not-in tags
+    - not-in handles
+    - all
+    - price range
+- image usage testing
 
 ## checkout
 - todo

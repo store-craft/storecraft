@@ -1,5 +1,5 @@
 import { ID, apply_dates } from './utils.func.js'
-import { notificationTypeSchema, notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove } from './con.shared.js'
@@ -20,7 +20,7 @@ export const db = app => app.db.notifications;
  * 
  * @param {import("../types.public.js").App} app
  * @param {ItemTypeUpsert[]} items
- * @return {Promise<import('../types.database.js').ID[]>}
+ * @return {Promise<import('../v-database/types.public.js').ID[]>}
  */
 export const addBulk = async (app, items) => {
   
@@ -44,7 +44,7 @@ export const addBulk = async (app, items) => {
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} id
- * @param {import('../types.database.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
 export const get = (app, id, options) => regular_get(app, db(app))(id, options);
 

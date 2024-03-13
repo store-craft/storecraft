@@ -5,7 +5,7 @@ import { get_regular, list_regular,
 import { to_objid } from './utils.funcs.js';
 
 /**
- * @typedef {import('@storecraft/core').db_notifications} db_col
+ * @typedef {import('@storecraft/core/v-database').db_notifications} db_col
  */
 
 /**

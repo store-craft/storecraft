@@ -3,8 +3,9 @@ import {
   CustomerType, DiscountType, ImageType, 
   NotificationType, OrderData, PostType, 
   ProductType, ShippingMethodType, StorefrontType, 
-  TagType, searchable} from "./v-api/types.api.js";
-import { App, ExpandQuery, ApiQuery } from "./types.public.js";
+  TagType, VariantType, searchable} from "../v-api/types.api.js";
+import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.js";
+import type { App } from '../types.public.js'
 
 export type ID = string;
 export type Handle = string;
@@ -91,7 +92,7 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & id
    * remove by email
    * @param email 
    */
-  removeByEmail: (email?: string) => Promise<void>;
+  removeByEmail: (email?: string) => Promise<boolean>;
 
 }
 
@@ -116,7 +117,7 @@ export interface db_collections extends db_crud<CollectionType & idable_concrete
 }
 
 /** products crud */
-export interface db_products extends db_crud<ProductType & idable_concrete, ProductType> {
+export interface db_products extends db_crud<(ProductType & VariantType) & idable_concrete, ProductType & VariantType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -140,7 +141,7 @@ export interface db_products extends db_crud<ProductType & idable_concrete, Prod
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: HandleOrId) => Promise<ProductType[]>;
+  list_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
   
   /**
    * Add product to collection
@@ -162,6 +163,12 @@ export interface db_products extends db_crud<ProductType & idable_concrete, Prod
  */
 export interface db_customers extends OmitGetByHandle<db_crud<CustomerType & idable_concrete, CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
+  /**
+   * 
+   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
+   * @param query query object
+   */
+  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
 /** StorefrontData crud */
@@ -239,12 +246,6 @@ export interface db_discounts extends db_crud<DiscountType & idable_concrete, Di
 /** OrderData crud */
 export interface db_orders extends OmitGetByHandle<db_crud<OrderData & idable_concrete, OrderData>> {
 
-  /**
-   * 
-   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
-   * @param query query object
-   */
-  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
 export interface db_driver {

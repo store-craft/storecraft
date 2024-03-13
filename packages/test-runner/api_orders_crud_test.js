@@ -2,14 +2,15 @@ import 'dotenv/config';
 import { orders } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { App, CheckoutStatusEnum, FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core';
+import { CheckoutStatusEnum, FulfillOptionsEnum, 
+  PaymentOptionsEnum } from '@storecraft/core/v-api';
 import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
+import { App } from '@storecraft/core';
 
 // const app = await create_app();
 
-/** @type {import('@storecraft/core').OrderDataUpsert[]} */
+/** @type {import('@storecraft/core/v-api').OrderDataUpsert[]} */
 const items_upsert = [
   {
     status: {
@@ -27,7 +28,7 @@ const items_upsert = [
       { id: 'pr-2-id', qty: 2 },
     ],
     shipping_method: {
-      handle: 'ship-a', name: 'ship a', price: 30
+      handle: 'ship-a', title: 'ship a', price: 30
     }
   },
   {
@@ -46,7 +47,7 @@ const items_upsert = [
       { id: 'pr-22-id', qty: 2 },
     ],
     shipping_method: {
-      handle: 'ship-b', name: 'ship b', price: 60
+      handle: 'ship-b', title: 'ship b', price: 60
     }
   },  
 ]

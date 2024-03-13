@@ -5,12 +5,12 @@ import { Readable } from 'node:stream'
  * 
  * @typedef {import('node:http').IncomingMessage} IncomingMessage
  * @typedef {import('node:http').ServerResponse} ServerResponse
- * @typedef {import("@storecraft/core").PlatformAdapter<IncomingMessage, ServerResponse>} RequestEncoderType
+ * @typedef {import("@storecraft/core/v-platform").PlatformAdapter<IncomingMessage, ServerResponse>} RequestEncoderType
  */
 
 
 /**
- * @typedef {import('@storecraft/core').PlatformAdapter<IncomingMessage, ServerResponse, ServerResponse>} PlatformAdapter
+ * @typedef {import('@storecraft/core/v-platform').PlatformAdapter<IncomingMessage, ServerResponse, ServerResponse>} PlatformAdapter
  * @implements {PlatformAdapter}
  */
 export class NodePlatform {

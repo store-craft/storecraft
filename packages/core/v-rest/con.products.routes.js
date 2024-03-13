@@ -38,7 +38,7 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      /** @type {import('../types.database.js').RegularGetOptions} */
+      /** @type {import('../v-database/types.public.js').RegularGetOptions} */
       const options = {
         expand: parse_expand(req.query)
       };

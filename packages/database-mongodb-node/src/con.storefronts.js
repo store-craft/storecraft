@@ -7,7 +7,7 @@ import { create_explicit_relation } from './utils.relations.js';
 import { report_document_media } from './con.images.js';
 
 /**
- * @typedef {import('@storecraft/core').db_storefronts} db_col
+ * @typedef {import('@storecraft/core/v-database').db_storefronts} db_col
  */
 
 /**
@@ -91,12 +91,12 @@ const list = (driver) => list_regular(driver, col(driver));
  */
 const list_storefront_products = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['products']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.products);
+    return sanitize_array(item?.products ?? []);
   }
 }
 
@@ -106,12 +106,12 @@ const list_storefront_products = (driver) => {
  */
 const list_storefront_collections = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['collections']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.collections);
+    return sanitize_array(item?.collections ?? []);
   }
 }
 
@@ -121,12 +121,12 @@ const list_storefront_collections = (driver) => {
  */
 const list_storefront_discounts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['discounts']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.discounts);
+    return sanitize_array(item?.discounts ?? []);
   }
 }
 
@@ -136,12 +136,12 @@ const list_storefront_discounts = (driver) => {
  */
 const list_storefront_shipping_methods = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['shipping_methods']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.shipping_methods);
+    return sanitize_array(item?.shipping_methods ?? []);
   }
 }
 
@@ -151,12 +151,12 @@ const list_storefront_shipping_methods = (driver) => {
  */
 const list_storefront_posts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core').RegularGetOptions} */
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
     const options = {
       expand: ['posts']
     };
     const item = await get_regular(driver, col(driver))(product, options);
-    return sanitize_array(item?.posts);
+    return sanitize_array(item?.posts ?? []);
   }
 }
 

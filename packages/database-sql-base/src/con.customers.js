@@ -61,8 +61,8 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, id),
-        with_tags(eb, id),
+        with_media(eb, id, driver.dialectType),
+        with_tags(eb, id, driver.dialectType),
       ])
       .where(where_id_or_handle_table(id))
       .executeTakeFirst();
@@ -133,8 +133,8 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('customers.id')),
-        with_tags(eb, eb.ref('customers.id')),
+        with_media(eb, eb.ref('customers.id'), driver.dialectType),
+        with_tags(eb, eb.ref('customers.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {
@@ -160,8 +160,8 @@ const list_customer_orders = (driver) => {
       .selectFrom('orders')
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('orders.id')),
-        with_tags(eb, eb.ref('orders.id')),
+        with_media(eb, eb.ref('orders.id'), driver.dialectType),
+        with_tags(eb, eb.ref('orders.id'), driver.dialectType),
       ])
       .where(
         (eb) => eb.and(

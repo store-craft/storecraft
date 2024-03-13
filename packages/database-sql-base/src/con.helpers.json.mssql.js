@@ -56,7 +56,7 @@ import { sql } from "kysely"
  * @param {import("kysely").Expression<O>} expr 
  * @returns {import("kysely").RawBuilder<import("kysely").Simplify<O>[]>}
  */
-export function jsonArrayFrom(expr) {
+export function mssql_jsonArrayFrom(expr) {
   return sql`coalesce((select * from ${expr} as agg for json path, include_null_values), '[]')`
 }
 
@@ -116,7 +116,7 @@ export function jsonArrayFrom(expr) {
  * @param {import("kysely").Expression<O>} expr 
  * @returns {import("kysely").RawBuilder<import("kysely").Simplify<O>[]>}
  */
-export function stringArrayFrom(expr) {
+export function mssql_stringArrayFrom(expr) {
   return sql`coalesce((select * from ${expr} as agg for json path, include_null_values), '[]')`
 }
 
@@ -177,7 +177,7 @@ export function stringArrayFrom(expr) {
  * @param {import("kysely").Expression<O>} expr 
  * @returns {import("kysely").RawBuilder<import("kysely").Simplify<O> | null>}
  */
-export function jsonObjectFrom(expr) {
+export function mssql_jsonObjectFrom(expr) {
   return sql`(select * from ${expr} as agg for json path, include_null_values, without_array_wrapper)`
 }
 
@@ -225,7 +225,7 @@ export function jsonObjectFrom(expr) {
  * @param {O} obj 
  * @returns {import("kysely").RawBuilder<import("kysely").Simplify<{[K in keyof O]: O[K] extends Expression<infer V> ? V : never}>>}
  */
-export function jsonBuildObject(obj) {
+export function mssql_jsonBuildObject(obj) {
   return sql`json_query('{${sql.join(
     Object.keys(obj).map((k) => sql`"${sql.raw(k)}":"'+${obj[k]}+'"`),
     sql`,`,

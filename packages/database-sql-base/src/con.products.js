@@ -140,16 +140,16 @@ const get = (driver) => {
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
     const expand_variants = expand.includes('*') || expand.includes('variants');
-
+    const dtype = driver.config.dialect_type;
     const r = await driver.client
     .selectFrom(table_name)
     .selectAll('products')
     .select(eb => [
-      with_tags(eb, id_or_handle),
-      with_media(eb, id_or_handle),
-      expand_collections && products_with_collections(eb, id_or_handle),
-      expand_discounts && products_with_discounts(eb, id_or_handle),
-      expand_variants && products_with_variants(eb, id_or_handle)
+      with_tags(eb, id_or_handle, dtype),
+      with_media(eb, id_or_handle, dtype),
+      expand_collections && products_with_collections(eb, id_or_handle, dtype),
+      expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
+      expand_variants && products_with_variants(eb, id_or_handle, dtype)
     ].filter(Boolean)
     )
     .where(where_id_or_handle_table(id_or_handle))
@@ -249,16 +249,15 @@ const list = (driver) => {
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
     const expand_variants = expand.includes('*') || expand.includes('variants');
-
     const items = await driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_tags(eb, eb.ref('products.id')),
-        with_media(eb, eb.ref('products.id')),
-        expand_collections && products_with_collections(eb, eb.ref('products.id')),
-        expand_discounts && products_with_discounts(eb, eb.ref('products.id')),
-        expand_variants && products_with_variants(eb, eb.ref('products.id'))
+        with_tags(eb, eb.ref('products.id'), driver.dialectType),
+        with_media(eb, eb.ref('products.id'), driver.dialectType),
+        expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
+        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
+        expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType)
       ].filter(Boolean))
       .where(
         (eb) => {

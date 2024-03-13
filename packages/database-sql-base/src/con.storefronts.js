@@ -107,13 +107,13 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, id_or_handle),
-        with_tags(eb, id_or_handle),
-        expand_collections && storefront_with_collections(eb, id_or_handle),
-        expand_products && storefront_with_products(eb, id_or_handle),
-        expand_discounts && storefront_with_discounts(eb, id_or_handle),
-        expand_shipping && storefront_with_shipping(eb, id_or_handle),
-        expand_posts && storefront_with_posts(eb, id_or_handle),
+        with_media(eb, id_or_handle, driver.dialectType),
+        with_tags(eb, id_or_handle, driver.dialectType),
+        expand_collections && storefront_with_collections(eb, id_or_handle, driver.dialectType),
+        expand_products && storefront_with_products(eb, id_or_handle, driver.dialectType),
+        expand_discounts && storefront_with_discounts(eb, id_or_handle, driver.dialectType),
+        expand_shipping && storefront_with_shipping(eb, id_or_handle, driver.dialectType),
+        expand_posts && storefront_with_posts(eb, id_or_handle, driver.dialectType),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -175,13 +175,13 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('storefronts.id')),
-        with_tags(eb, eb.ref('storefronts.id')),
-        expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id')),
-        expand_products && storefront_with_products(eb, eb.ref('storefronts.id')),
-        expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id')),
-        expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id')),
-        expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id')),
+        with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
+        with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
+        expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
+        expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
+        expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
+        expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id'), driver.dialectType),
+        expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {

@@ -64,8 +64,8 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll('collections')
       .select(eb => [
-        with_tags(eb, eb.ref('collections.id')),
-        with_media(eb, eb.ref('collections.id'))
+        with_tags(eb, eb.ref('collections.id'), driver.dialectType),
+        with_media(eb, eb.ref('collections.id'), driver.dialectType)
       ])
       .where(where_id_or_handle_table(id_or_handle))
     //  .compile()
@@ -124,8 +124,8 @@ const list = (driver) => {
     const items = await driver.client.selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_tags(eb, eb.ref('collections.id')),
-        with_media(eb, eb.ref('collections.id')),
+        with_tags(eb, eb.ref('collections.id'), driver.dialectType),
+        with_media(eb, eb.ref('collections.id'), driver.dialectType),
       ])
       .where(
         (eb) => {
@@ -151,8 +151,8 @@ const list_collection_products = (driver) => {
       .selectFrom('products')
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('products.id')),
-        with_tags(eb, eb.ref('products.id')),
+        with_media(eb, eb.ref('products.id'), driver.dialectType),
+        with_tags(eb, eb.ref('products.id'), driver.dialectType),
       ])
       .where(
         (eb) => eb.and(

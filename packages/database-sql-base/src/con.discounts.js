@@ -2,7 +2,6 @@ import { DiscountApplicationEnum } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { delete_entity_values_by_value_or_reporter, 
-  delete_entity_values_of_by_entity_id_or_handle, 
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, select_entity_ids_by_value_or_reporter, upsert_me, where_id_or_handle_table, 
@@ -115,8 +114,8 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, id_or_handle),
-        with_tags(eb, id_or_handle),
+        with_media(eb, id_or_handle, driver.dialectType),
+        with_tags(eb, id_or_handle, driver.dialectType),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -176,8 +175,8 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('discounts.id')),
-        with_tags(eb, eb.ref('discounts.id')),
+        with_media(eb, eb.ref('discounts.id'), driver.dialectType),
+        with_tags(eb, eb.ref('discounts.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {
@@ -203,8 +202,8 @@ const list_discount_products = (driver) => {
       .selectFrom('products')
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('products.id')),
-        with_tags(eb, eb.ref('products.id')),
+        with_media(eb, eb.ref('products.id'), driver.dialectType),
+        with_tags(eb, eb.ref('products.id'), driver.dialectType),
       ])
       .where(
         (eb) => eb.and(

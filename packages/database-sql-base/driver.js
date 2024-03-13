@@ -95,5 +95,6 @@ export class SQL {
   get client() { return this.#_client; }
   get config() { return this.#_config; }
   get isReady() { return this.#_is_ready; }
+  get dialectType() { return this.#_config.dialect_type; }
 
 }

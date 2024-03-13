@@ -57,8 +57,8 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, id_or_handle),
-        with_tags(eb, id_or_handle),
+        with_media(eb, id_or_handle, driver.dialectType),
+        with_tags(eb, id_or_handle, driver.dialectType),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -113,8 +113,8 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('shipping_methods.id')),
-        with_tags(eb, eb.ref('shipping_methods.id')),
+        with_media(eb, eb.ref('shipping_methods.id'), driver.dialectType),
+        with_tags(eb, eb.ref('shipping_methods.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {

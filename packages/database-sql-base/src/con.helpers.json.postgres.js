@@ -53,7 +53,7 @@ import { extract_first_selection } from './con.helpers.json.js';
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
-export function stringArrayFrom(expr) {
+export function pg_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');
   return sql`(select coalesce(json_agg(${sql.join([arg])}), '[]') from ${expr} as agg)`
 }
@@ -110,7 +110,7 @@ export function stringArrayFrom(expr) {
  * @param {import('kysely').Expression<O>} expr 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
-export function jsonArrayFrom(expr) {
+export function pg_jsonArrayFrom(expr) {
   return sql`(select coalesce(json_agg(agg), '[]') from ${expr} as agg)`
 }
 
@@ -168,7 +168,7 @@ export function jsonArrayFrom(expr) {
  * @param {import('kysely').Expression<O>} expr 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O> | null>}
  */
-export function jsonObjectFrom(expr) {
+export function pg_jsonObjectFrom(expr) {
   return sql`(select to_json(obj) from ${expr} as obj)`
 }
 
@@ -216,7 +216,7 @@ export function jsonObjectFrom(expr) {
  * @returns { import('kysely').RawBuilder<import('kysely').Simplify<{[K in keyof O]: O[K] extends Expression<infer V> ? V : never}>>}
 >}
  */
-export function jsonBuildObject(obj) {
+export function pg_jsonBuildObject(obj) {
   return sql`json_build_object(${sql.join(
     Object.keys(obj).flatMap((k) => [sql.lit(k), obj[k]]),
   )})`

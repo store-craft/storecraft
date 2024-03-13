@@ -64,7 +64,7 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_search(eb, eb.ref('notifications.id')),
+        with_search(eb, eb.ref('notifications.id'), driver.dialectType),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -111,7 +111,7 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_search(eb, eb.ref('notifications.id')),
+        with_search(eb, eb.ref('notifications.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {

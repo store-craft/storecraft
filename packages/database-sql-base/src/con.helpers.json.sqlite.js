@@ -57,7 +57,7 @@ import { extract_first_selection, getJsonObjectArgs } from './con.helpers.json.j
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
-export function jsonArrayFrom(expr) {
+export function sqlite_jsonArrayFrom(expr) {
 
   return sql`(select coalesce(json_group_array(json_object(${sql.join(
     getSqliteJsonObjectArgs(expr.toOperationNode(), 'agg')
@@ -116,7 +116,7 @@ export function jsonArrayFrom(expr) {
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
-export function stringArrayFrom(expr) {
+export function sqlite_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');
   return sql`(select coalesce(json_group_array(${sql.join([arg])}), '[]') from ${expr} as agg)`
 }
@@ -180,7 +180,7 @@ export function stringArrayFrom(expr) {
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O> | null>}
  */
-export function jsonObjectFrom(expr) {
+export function sqlite_jsonObjectFrom(expr) {
   return sql`(select json_object(${sql.join(
     getSqliteJsonObjectArgs(expr.toOperationNode(), 'obj'),
   )}) from ${expr} as obj)`

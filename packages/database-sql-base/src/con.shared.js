@@ -1,5 +1,5 @@
 import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
-import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.sqlite.js'
+import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 
 /**
  * 
@@ -70,7 +70,8 @@ export const delete_entity_values_by_value_or_reporter = (entity_table_name) => 
  * helper to generate entity values delete
  * @param {EntityTableKeys} entity_table_name 
  */
-export const delete_entity_values_of_by_entity_id_or_handle = (entity_table_name) => {
+export const delete_entity_values_of_by_entity_id_or_handle = 
+(entity_table_name) => {
   /**
    * 
    * @param {Transaction<import('../index.js').Database>} trx 
@@ -104,12 +105,18 @@ export const insert_entity_array_values_of = (entity_table_name) => {
    * @param {string} [reporter=undefined] the reporter of the batch values (another segment technique)
    * @param {string} [context=undefined] the context (another segment technique)
    */
-  return async (trx, values, item_id, item_handle, delete_previous=true, reporter=undefined, context=undefined) => {
+  return async (trx, values, item_id, item_handle, delete_previous=true, 
+    reporter=undefined, context=undefined) => {
+
     if(delete_previous) {
       if(reporter) {
-        await delete_entity_values_by_value_or_reporter(entity_table_name)(trx, undefined, reporter);
+        await delete_entity_values_by_value_or_reporter(entity_table_name)(
+          trx, undefined, reporter
+          );
       } else {
-        await delete_entity_values_of_by_entity_id_or_handle(entity_table_name)(trx, item_id, item_handle);
+        await delete_entity_values_of_by_entity_id_or_handle(entity_table_name)(
+          trx, item_id, item_handle
+          );
       }
     }
 
@@ -220,33 +227,42 @@ export const delete_me = async (trx, table_name, id_or_handle) => {
  * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const with_tags = (eb, id_or_handle) => {
+export const with_tags = (eb, id_or_handle, sql_type) => {
   return stringArrayFrom(
-    select_values_of_entity_by_entity_id_or_handle(eb, 'entity_to_tags_projections', id_or_handle)
-    ).as('tags');
+    select_values_of_entity_by_entity_id_or_handle(
+      eb, 'entity_to_tags_projections', id_or_handle
+    ), sql_type
+  ).as('tags');
 }
 
 /**
  * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const with_search = (eb, id_or_handle) => {
+export const with_search = (eb, id_or_handle, sql_type) => {
   return stringArrayFrom(
-    select_values_of_entity_by_entity_id_or_handle(eb, 'entity_to_search_terms', id_or_handle)
-    ).as('search');
+    select_values_of_entity_by_entity_id_or_handle(
+      eb, 'entity_to_search_terms', id_or_handle
+    ), sql_type
+  ).as('search');
 }
 
 /**
  * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const with_media = (eb, id_or_handle) => {
+export const with_media = (eb, id_or_handle, sql_type) => {
   return stringArrayFrom(
-    select_values_of_entity_by_entity_id_or_handle(eb, 'entity_to_media', id_or_handle)
-    ).as('media');
+    select_values_of_entity_by_entity_id_or_handle(
+      eb, 'entity_to_media', id_or_handle
+    ), sql_type
+  ).as('media');
 }
 
 /**
@@ -268,21 +284,22 @@ const select_base_from = (eb, table) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const products_with_collections = (eb, product_id_or_handle) => {
+export const products_with_collections = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'collections')
       .select('collections.title')
       .select('collections.published')
       .select(eb => [
-        with_tags(eb, eb.ref('collections.id')),
-        with_media(eb, eb.ref('collections.id')),
+        with_tags(eb, eb.ref('collections.id'), sql_type),
+        with_media(eb, eb.ref('collections.id'), sql_type),
       ])
       .where('collections.id', 'in', 
         eb => select_values_of_entity_by_entity_id_or_handle(
           eb, 'products_to_collections', product_id_or_handle
         )
-      )
+      ), sql_type
     ).as('collections');
 }
 
@@ -290,8 +307,9 @@ export const products_with_collections = (eb, product_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const products_with_discounts = (eb, product_id_or_handle) => {
+export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'discounts')
       .select('discounts.title')
@@ -300,14 +318,14 @@ export const products_with_discounts = (eb, product_id_or_handle) => {
       .select('discounts.info')
       .select('discounts.priority')
       .select(eb => [
-        with_tags(eb, eb.ref('discounts.id')),
-        with_media(eb, eb.ref('discounts.id')),
+        with_tags(eb, eb.ref('discounts.id'), sql_type),
+        with_media(eb, eb.ref('discounts.id'), sql_type),
       ])
       .where('discounts.id', 'in', 
         eb => select_values_of_entity_by_entity_id_or_handle(
           eb, 'products_to_discounts', product_id_or_handle
         )
-      )
+      ), sql_type
     ).as('discounts');
 }
 
@@ -315,8 +333,9 @@ export const products_with_discounts = (eb, product_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const products_with_variants = (eb, product_id_or_handle) => {
+export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'products')
       .select('products.title')
@@ -330,14 +349,14 @@ export const products_with_variants = (eb, product_id_or_handle) => {
       .select('products.variants_options')
       .select('products.video')
       .select(eb => [
-        with_tags(eb, eb.ref('products.id')),
-        with_media(eb, eb.ref('products.id')),
+        with_tags(eb, eb.ref('products.id'), sql_type),
+        with_media(eb, eb.ref('products.id'), sql_type),
       ])
       .where('products.id', 'in', 
         eb => select_values_of_entity_by_entity_id_or_handle(
           eb, 'products_to_variants', product_id_or_handle
         )
-      )
+      ), sql_type
     ).as('variants');
 }
 
@@ -345,21 +364,22 @@ export const products_with_variants = (eb, product_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database, 'storefronts'>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const storefront_with_collections = (eb, sf_id_or_handle) => {
+export const storefront_with_collections = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'collections')
     .select('collections.title')
     .select('collections.published')
     .select(eb => [
-      with_tags(eb, eb.ref('collections.id')),
-      with_media(eb, eb.ref('collections.id')),
+      with_tags(eb, eb.ref('collections.id'), sql_type),
+      with_media(eb, eb.ref('collections.id'), sql_type),
     ])
     .where('collections.id', 'in', 
       eb => select_values_of_entity_by_entity_id_or_handle(
         eb, 'storefronts_to_other', sf_id_or_handle
       )
-    )
+    ), sql_type
   ).as('collections');
 }
 
@@ -367,8 +387,9 @@ export const storefront_with_collections = (eb, sf_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const storefront_with_products = (eb, sf_id_or_handle) => {
+export const storefront_with_products = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'products')
     .select('products.title')
@@ -381,14 +402,14 @@ export const storefront_with_products = (eb, sf_id_or_handle) => {
     .select('products.variants_options')
     .select('products.video')
     .select(eb => [
-      with_tags(eb, eb.ref('products.id')),
-      with_media(eb, eb.ref('products.id')),
+      with_tags(eb, eb.ref('products.id'), sql_type),
+      with_media(eb, eb.ref('products.id'), sql_type),
     ])
     .where('products.id', 'in', 
       eb => select_values_of_entity_by_entity_id_or_handle(
         eb, 'storefronts_to_other', sf_id_or_handle
       )
-    )
+    ), sql_type
   ).as('products');
 }
 
@@ -396,8 +417,9 @@ export const storefront_with_products = (eb, sf_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const storefront_with_discounts = (eb, sf_id_or_handle) => {
+export const storefront_with_discounts = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'discounts')
     .select('discounts.application')
@@ -406,14 +428,14 @@ export const storefront_with_discounts = (eb, sf_id_or_handle) => {
     .select('discounts.published')
     .select('discounts.title')
     .select(eb => [
-      with_tags(eb, eb.ref('discounts.id')),
-      with_media(eb, eb.ref('discounts.id')),
+      with_tags(eb, eb.ref('discounts.id'), sql_type),
+      with_media(eb, eb.ref('discounts.id'), sql_type),
     ])
     .where('discounts.id', 'in', 
       eb => select_values_of_entity_by_entity_id_or_handle(
         eb, 'storefronts_to_other', sf_id_or_handle
       )
-    )
+    ), sql_type
   ).as('discounts');
 }
 
@@ -421,21 +443,22 @@ export const storefront_with_discounts = (eb, sf_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const storefront_with_posts = (eb, sf_id_or_handle) => {
+export const storefront_with_posts = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'posts')
     .select('posts.text')
     .select('posts.title')
     .select(eb => [
-      with_tags(eb, eb.ref('posts.id')),
-      with_media(eb, eb.ref('posts.id')),
+      with_tags(eb, eb.ref('posts.id'), sql_type),
+      with_media(eb, eb.ref('posts.id'), sql_type),
     ])
     .where('posts.id', 'in', 
       eb => select_values_of_entity_by_entity_id_or_handle(
         eb, 'storefronts_to_other', sf_id_or_handle
       )
-    )
+    ), sql_type
   ).as('posts');
 }
 
@@ -443,21 +466,22 @@ export const storefront_with_posts = (eb, sf_id_or_handle) => {
  * select as json array collections of a product
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
  */
-export const storefront_with_shipping = (eb, sf_id_or_handle) => {
+export const storefront_with_shipping = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'shipping_methods')
     .select('shipping_methods.price')
     .select('shipping_methods.title')
     .select(eb => [
-      with_tags(eb, eb.ref('shipping_methods.id')),
-      with_media(eb, eb.ref('shipping_methods.id')),
+      with_tags(eb, eb.ref('shipping_methods.id'), sql_type),
+      with_media(eb, eb.ref('shipping_methods.id'), sql_type),
     ])
     .where('shipping_methods.id', 'in', 
       eb => select_values_of_entity_by_entity_id_or_handle(
         eb, 'storefronts_to_other', sf_id_or_handle
       )
-    )
+    ), sql_type
   ).as('shipping_methods');
 }
 
@@ -467,7 +491,8 @@ export const storefront_with_shipping = (eb, sf_id_or_handle) => {
  * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} entity_id_or_handle 
  */
-export const select_values_of_entity_by_entity_id_or_handle = (eb, entity_junction_table, entity_id_or_handle) => {
+export const select_values_of_entity_by_entity_id_or_handle = 
+(eb, entity_junction_table, entity_id_or_handle) => {
   return eb
   .selectFrom(entity_junction_table)
   .select(`${entity_junction_table}.value`)
@@ -488,7 +513,8 @@ export const select_values_of_entity_by_entity_id_or_handle = (eb, entity_juncti
  * @param {string | ExpressionWrapper<Database>} value 
  * @param {string | ExpressionWrapper<Database>} [reporter] 
  */
-export const select_entity_ids_by_value_or_reporter = (eb, entity_junction_table, value, reporter=undefined) => {
+export const select_entity_ids_by_value_or_reporter = 
+(eb, entity_junction_table, value, reporter=undefined) => {
   return eb
     .selectFrom(entity_junction_table)
     .select(`${entity_junction_table}.entity_id`)

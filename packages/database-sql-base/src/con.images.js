@@ -68,14 +68,16 @@ const get = (driver) => {
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
+    const img = await driver.client
+    .selectFrom(table_name)
+    .selectAll()
+    .where(where_id_or_handle_table(id_or_handle))
+    .executeTakeFirst();
+
     try {
       await driver.client.transaction().execute(
         async (trx) => {
-          const img = await trx
-            .selectFrom(table_name)
-            .selectAll()
-            .where(where_id_or_handle_table(id_or_handle))
-            .executeTakeFirst();
+          // remove images -> media
           await trx
             .deleteFrom('entity_to_media')
             .where('value', '=', img.url)

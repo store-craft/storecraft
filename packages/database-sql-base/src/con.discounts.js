@@ -8,6 +8,7 @@ import { delete_entity_values_by_value_or_reporter,
   with_media, with_tags} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
+import { report_document_media } from './con.images.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
@@ -28,6 +29,7 @@ const upsert = (driver) => {
           await insert_search_of(trx, item.search, item.id, item.handle, table_name);
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
+          await report_document_media(driver)(item, trx);
           //
           // PRODUCTS => DISCOUNTS
           //

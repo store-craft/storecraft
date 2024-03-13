@@ -1,4 +1,5 @@
 import { SQL } from '../driver.js'
+import { report_document_media } from './con.images.js'
 import { delete_entity_values_by_value_or_reporter, 
   delete_me, delete_media_of, delete_search_of, delete_tags_of, 
   insert_media_of, insert_search_of, insert_tags_of, 
@@ -25,6 +26,7 @@ const upsert = (driver) => {
           await insert_search_of(trx, item.search, item.id, item.handle, table_name);
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
+          await report_document_media(driver)(item, trx);
           await upsert_me(trx, table_name, item.id, {
             active: item.active ? 1: 0,
             attributes: JSON.stringify(item.attributes),

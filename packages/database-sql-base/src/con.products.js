@@ -13,6 +13,7 @@ import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { pricing } from '@storecraft/core/v-api'
 import { Transaction } from 'kysely'
+import { report_document_media } from './con.images.js'
 
 
 /**
@@ -60,6 +61,7 @@ const upsert = (driver) => {
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
           await insert_search_of(trx, item.search, item.id, item.handle, table_name);
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
+          await report_document_media(driver)(item, trx);
           // main
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,

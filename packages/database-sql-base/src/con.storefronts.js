@@ -1,4 +1,5 @@
 import { SQL } from '../driver.js'
+import { report_document_media } from './con.images.js'
 import { delete_entity_values_of_by_entity_id_or_handle, 
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_entity_values_of, insert_media_of, 
@@ -29,6 +30,7 @@ const upsert = (driver) => {
           await insert_search_of(trx, item.search, item.id, item.handle, table_name);
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
+          await report_document_media(driver)(item, trx);
           // Explicit STOREFRONTS => PRODUCTS / COLLECTIONS / DISCOUNTS / SHIPPING / POSTS
           // remove all the past connections of this storefront at once
           await delete_entity_values_of_by_entity_id_or_handle('storefronts_to_other')(

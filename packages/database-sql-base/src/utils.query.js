@@ -91,10 +91,6 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
             ])
           )
       )
-
-    // return {
-    //   search: { $regex: `^${node.value}$` }
-    // }
   }
 
   let conjunctions = [];

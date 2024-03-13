@@ -130,7 +130,7 @@ const get = (driver) => {
 const remove = (driver) => {
   return async (id_or_handle) => {
     try {
-      const t = await driver.client.transaction().execute(
+      await driver.client.transaction().execute(
         async (trx) => {
             
           // entities
@@ -142,12 +142,10 @@ const remove = (driver) => {
             trx, id_or_handle, id_or_handle
           );
           // delete me
-          const d2 = await delete_me(trx, table_name, id_or_handle);
-          return d2.numDeletedRows>0;
+          await delete_me(trx, table_name, id_or_handle);
         }
       );
 
-      return t;
     } catch(e) {
       console.log(e);
       return false;

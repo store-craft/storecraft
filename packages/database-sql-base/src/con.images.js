@@ -69,7 +69,7 @@ const get = (driver) => {
 const remove = (driver) => {
   return async (id_or_handle) => {
     try {
-      const t = await driver.client.transaction().execute(
+      await driver.client.transaction().execute(
         async (trx) => {
           const img = await trx
             .selectFrom(table_name)
@@ -83,12 +83,10 @@ const remove = (driver) => {
           // entities
           await delete_search_of(trx, id_or_handle);
           // delete me
-          const d2 = await delete_me(trx, table_name, id_or_handle);
-          return d2.numDeletedRows>0;
+          await delete_me(trx, table_name, id_or_handle);
         }
       );
 
-      return t;
     } catch(e) {
       console.log(e);
       return false;
@@ -117,39 +115,55 @@ export const report_document_media = (driver) => {
     const doit = async (trx) => {
       const dates = func.apply_dates({});
 
-      for (const m of item.media) {
-        const handle = images.image_url_to_handle(m);
-        const prev = await trx
-          .selectFrom(table_name)
-          .selectAll()
-          .where('handle', '=', handle)
-          .executeTakeFirst();
-        const id = prev?.id ?? ID('img');
-        if(!prev) {
-          await trx
-            .insertInto(table_name)
-            .values({
-              handle: handle,
-              url: m,
-              name: images.image_url_to_name(m),
-              id: id,
-              created_at: dates.created_at,
-              updated_at: dates.updated_at,
-            })
-            .execute();
-        }
+      const ms = item.media.map(
+        m => (
+          {
+            handle: images.image_url_to_handle(m),
+            url: m,
+            name: images.image_url_to_name(m),
+            id: ID('img'),
+            created_at: dates.created_at,
+            updated_at: dates.updated_at,
+          }
+        )
+      );
+      const handles = ms.map(m => m.handle);
 
-        const search = func.union(
-          item['title'], func.to_tokens(item['title'])
+      await trx.deleteFrom(table_name).where(
+        'handle', 'in', handles
+      ).execute();
+      await trx.insertInto(table_name).values(
+        ms
+      ).execute();
+      // search stuff
+      // remove by reporter
+      await trx.deleteFrom('entity_to_search_terms').where(
+        'reporter', '=', item.id
+      ).execute();
+      const search = func.union(
+        item['title'], func.to_tokens(item['title'])
+      );
+      if(search.length) {
+        const A = ms.map(m => ({
+            entity_id: m.id,
+            entity_handle: m.handle,
+            context: table_name,
+            reporter: item.id
+          })
         );
 
-        // delete and insert only search terms originated from this item (reporter)
-        // this is why we don't use the standard `insert_search_of` method, because
-        // we delete by `reporter`
-        await insert_entity_array_values_of('entity_to_search_terms')(
-          trx, search, id, handle, true, item.id, table_name
+        const B = search.reduce(
+          (p, c) => {
+            p.push(...A.map(a => ({...a, value: c})));
+            return p;
+          }, []
         );
+      
+        await trx.insertInto('entity_to_search_terms').values(
+          B
+        ).execute();
       }
+      
     }
 
     if(transaction) {

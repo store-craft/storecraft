@@ -21,7 +21,7 @@ export const delete_keys = (...keys) => {
 
 /**
  * Sanitize null/undefined valued keys
- * @template {object} T
+ * @template {Record<string, any>} T
  * @param {T} o 
  */
 export const sanitize = o => {

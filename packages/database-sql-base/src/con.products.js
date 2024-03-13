@@ -38,6 +38,21 @@ const upsert = (driver) => {
   return async (item) => {
     const c = driver.client;
     try {
+      // The product has changed, it's discounts eligibility may have changed.
+      // get all automatic + active discounts
+      const discounts = await driver.client
+      .selectFrom('discounts')
+      .selectAll()
+      .where(
+        eb => eb.and([
+          eb('active', '=', 1),
+          eb('_application_id', '=', DiscountApplicationEnum.Auto.id),
+        ])
+      ).execute();
+      const eligible_discounts = discounts.filter(
+        d => pricing.test_product_filters_against_product(d.info.filters, item)
+      );      
+
       const t = await driver.client.transaction().execute(
         async (trx) => {
 
@@ -93,20 +108,6 @@ const upsert = (driver) => {
           }
 
           // PRODUCTS => DISCOUNTS
-          // The product has changed, it's discounts eligibility may have changed.
-          // get all automatic + active discounts
-          const discounts = await trx
-          .selectFrom('discounts')
-          .selectAll()
-          .where(
-            eb => eb.and([
-              eb('active', '=', 1),
-              eb('_application_id', '=', DiscountApplicationEnum.Auto.id),
-            ])
-          ).execute();
-          const eligible_discounts = discounts.filter(
-            d => pricing.test_product_filters_against_product(d.info.filters, item)
-          );
           // remove this product's older connections to discounts
           await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
             trx, item.id, item.handle, 
@@ -206,9 +207,7 @@ const remove_internal = (driver) => {
     }
 
     // delete me
-    const d2 = await delete_me(trx, table_name, product.id);
-
-    return d2.numDeletedRows>0;
+    await delete_me(trx, table_name, product.id);
   }
 }
 
@@ -223,13 +222,12 @@ const remove = (driver) => {
       const product = await get(driver)(id_or_handle, { expand: ['variants'] });
       if(!product)
         return true;
-      const t = await driver.client.transaction().execute(
+      await driver.client.transaction().execute(
         async (trx) => {
-          return await remove_internal(driver)(product, trx);
+          await remove_internal(driver)(product, trx);
         }
       );
 
-      return t;
     } catch(e) {
       console.log(e);
       return false;

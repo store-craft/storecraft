@@ -89,7 +89,7 @@ const getByEmail = (driver) => {
 const remove = (driver) => {
   return async (id) => {
     try {
-      const t = await driver.client.transaction().execute(
+      await driver.client.transaction().execute(
         async (trx) => {
 
           const valid_auth_id = `au_${id.split('_').at(-1)}`
@@ -105,14 +105,9 @@ const remove = (driver) => {
           .executeTakeFirst();
              
           // delete me
-          const d2 = await delete_me(trx, table_name, id);
-
-          
-          return d2.numDeletedRows>0;
+          await delete_me(trx, table_name, id);
         }
       );
-
-      return t;
     } catch(e) {
       console.log(e);
       return false;

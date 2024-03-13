@@ -16,8 +16,7 @@
       "types": "./v-api/types.public.d.ts"
     },
     "./v-api/*": {
-      "import": "./v-api/*",
-      "types": "./v-api/types.public.d.ts"
+      "import": "./v-api/*"
     },
     "./v-storage": {
       "import": "./v-storage/public.js",

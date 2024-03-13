@@ -55,14 +55,19 @@ export declare interface db_crud<U extends idable_concrete, G=U> {
 
   /**
    * Insert or Replace an item
+   * @param data 
+   * @param [search_terms] array of search terms realte to the item
    */
-  upsert: (data: U & searchable & idable_concrete) => Promise<boolean>;
+  upsert: (data: U & idable_concrete, search_terms?: string[]) => Promise<boolean>;
 
   /**
-   * Insert or Replace an item
-   * @param handle 
+   * TODO: remove and put only in notifications
+   * bulk upsert 
+   * @param data 
+   * @param search_terms 
+   * @returns 
    */
-  upsertBulk?: (data: (U & searchable & idable_concrete)[]) => Promise<boolean>;
+  upsertBulk?: (data: (U & idable_concrete)[], search_terms: string[][]) => Promise<boolean>;
 
   /**
    * Delete an item

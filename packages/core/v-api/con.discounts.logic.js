@@ -1,4 +1,4 @@
-import { assert, to_handle } from './utils.func.js'
+import { assert, to_handle, union } from './utils.func.js'
 import { discountTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
@@ -22,7 +22,7 @@ export const db = app => app.db.discounts;
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'dis', discountTypeUpsertSchema, 
-  async (final) => {
+  (final) => {
     assert(
       [final.handle].every(
         h => to_handle(h)===h
@@ -30,17 +30,12 @@ export const upsert = (app, item) => regular_upsert(
       'Handle or Values are invalid', 400
     );
 
-    isDef(final.application) && final.search.push(
-      `app:${final.application.id}`, 
-      `app:${final.application.name.toLowerCase()}`, 
-      );
-
-    isDef(final.info?.details?.meta) && final.search.push(
-      `type:${final.info?.details?.meta?.id}`, 
-      `type:${final.info?.details?.meta?.type}`, 
-      );
-
-    return final;
+    return union(
+      isDef(final.application) && `app:${final.application.id}`,
+      isDef(final.application) && `app:${final.application.name.toLowerCase()}`,
+      isDef(final.info?.details?.meta) && `type:${final.info.details.meta.id}`,
+      isDef(final.info?.details?.meta) && `type:${final.info.details.meta.type}`,
+    );
   }
 )(item);
 

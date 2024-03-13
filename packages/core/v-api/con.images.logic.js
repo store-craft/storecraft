@@ -32,10 +32,10 @@ export const upsert = async (app, item) => {
   let search = create_search_index(item);
   // apply dates and index
   const final = apply_dates(
-    { ...item, id, search }
+    { ...item, id }
   );
 
-  await db(app).upsert(final);
+  await db(app).upsert(final, search);
   return final.id;
 }
 

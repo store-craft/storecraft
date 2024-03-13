@@ -20,7 +20,7 @@ export const db = app => app.db.products;
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'pr', productTypeUpsertSchema, 
-  async (final) => {
+  (final) => {
     
     assert(
       [final.handle].every(
@@ -28,14 +28,10 @@ export const upsert = (app, item) => regular_upsert(
       ),
       'Handle is invalid', 400
     );
-    final.search.push(
-      ...union(
-        final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
-        final?.collections?.map(c => `col:${c?.id}`),
-      )
+    return union(
+      final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
+      final?.collections?.map(c => `col:${c?.id}`),
     );
-    
-    return final;
   }
 )(item);
 

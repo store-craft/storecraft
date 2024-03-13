@@ -1,5 +1,5 @@
 import { assert, to_handle } from './utils.func.js'
-import { collectionTypeSchema, collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
@@ -20,14 +20,14 @@ export const db = app => app.db.collections;
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'col', collectionTypeUpsertSchema, 
-  async (final) => {
+  (final) => {
     assert(
       [final.handle].every(
         h => to_handle(h)===h
       ),
       'Handle is invalid', 400
     );
-    return final;
+    return [];
   }
 )(item);
 

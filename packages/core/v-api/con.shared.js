@@ -19,9 +19,9 @@ import { ZodSchema } from 'zod'
  * @param {import("../v-database/types.public.js").db_crud<T & {id:string}, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
- * @param {<H extends T & searchable>(final: H) => Promise<H>} hook hook into final state
+ * @param {<H extends T>(final: H) => string[]} hook hook into final state, returns extra search terms
  */
-export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
+export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
 
   /**
    * @param {T} item
@@ -33,18 +33,13 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
     // Check if exists
     await assert_save_create_mode(item, db);
     const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
-    // search index
-    let search = create_search_index({ ...item, id });
-    // apply dates and index
-    const final = await hook(
-      apply_dates(
-        { 
-          ...item, id, search
-        }
-      )
-    );
+    const final = apply_dates({ ...item, id})
+    const search = [
+      ...create_search_index({ ...item, id }), 
+      ...hook(final)
+    ];
 
-    const success = await db.upsert(final);
+    const success = await db.upsert(final, search);
     assert(success, 'upsert-failed', 400);
     return final.id;
   }

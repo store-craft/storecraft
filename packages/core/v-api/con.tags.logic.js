@@ -20,7 +20,7 @@ export const db = app => app.db.tags;
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'tag', tagTypeUpsertSchema, 
-  async (final) => {
+  (final) => {
     
     assert(
       [final.handle, ...final.values].every(
@@ -28,8 +28,7 @@ export const upsert = (app, item) => regular_upsert(
       ),
       'Handle or Values are invalid', 400
     );
-    final.search.push(...(final.values ?? []));
-    return final;
+    return final.values ?? [];
   }
 )(item);
 

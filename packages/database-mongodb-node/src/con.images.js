@@ -94,7 +94,7 @@ export const report_document_media = (driver) => {
     
     /** 
      * @param {string} url 
-     * @returns {import('mongodb').AnyBulkWriteOperation<import('@storecraft/core').ImageType>}
+     * @returns {import('mongodb').AnyBulkWriteOperation<import('@storecraft/core/v-api').ImageType>}
      */
     const url_to_update = url => {
       const id_on_insert = ID('img');
@@ -102,7 +102,7 @@ export const report_document_media = (driver) => {
         updateOne: {
           filter: { handle: images.image_url_to_handle(url) },
           update: { 
-            $addToSet : { search: { $each: add_to_search_index} },
+            $addToSet : { '_relations.search': { $each: add_to_search_index} },
             $set: { 
               name: images.image_url_to_name(url),
               url: url,

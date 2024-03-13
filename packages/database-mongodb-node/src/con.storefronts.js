@@ -3,7 +3,7 @@ import { MongoDB } from '../driver.js'
 import { get_regular, list_regular, 
   remove_regular } from './con.shared.js'
 import { sanitize_array, to_objid } from './utils.funcs.js'
-import { create_explicit_relation } from './utils.relations.js';
+import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js';
 import { report_document_media } from './con.images.js';
 
 /**
@@ -21,7 +21,8 @@ const col = (d) => d.collection('storefronts');
  * @return {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (data) => {
+  return async (data, search_terms=[]) => {
+    data = {...data};
     const session = driver.mongo_client.startSession();
     try {
       await session.withTransaction(
@@ -44,6 +45,9 @@ const upsert = (driver) => {
           replacement = await create_explicit_relation(
             driver, replacement, 'posts', 'posts', false
           );
+
+          // SEARCH
+          add_search_terms_relation_on(data, search_terms);
 
           ////
           // REPORT IMAGES USAGE

@@ -257,6 +257,7 @@ export const add_list_integrity_tests = s => {
           // console.log(p)
           assert.ok(original_item, 'Did not find original item of inserted item !!');
           // assert_partial(p, original_item);
+          // console.log(original_item)
           assert_partial(p, original_item);
         }
       }

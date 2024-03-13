@@ -64,3 +64,18 @@ export const create_explicit_relation = async (
   delete data_with_rel[fieldName];
   return data_with_rel;
 }
+
+/**
+ * @template {Object.<string, any>} T
+ * @param {T} data 
+ * @param {string[]} terms 
+ */
+export const add_search_terms_relation_on = (data, terms=[]) => {
+  if(!data)
+    return;
+  if(!Array.isArray(terms))
+    throw new Error('terms is not an array !');
+  
+  data._relations = data._relations ?? {};
+  data._relations.search = terms;
+}

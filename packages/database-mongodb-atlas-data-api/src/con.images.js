@@ -93,7 +93,7 @@ export const report_document_media = (driver) => {
       return {
         filter: { handle: images.image_url_to_handle(url) },
         update: { 
-          $addToSet : { search: { $each: add_to_search_index} },
+          $addToSet : { '_relations.search': { $each: add_to_search_index} },
           $set: { 
             name: images.image_url_to_name(url),
             url: url,

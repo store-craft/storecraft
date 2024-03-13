@@ -4,6 +4,7 @@ import { expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
+import { add_search_terms_relation_on } from './utils.relations.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_collections} db_col
@@ -27,7 +28,8 @@ const col = (d) => d.collection('collections');
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (data) => {
+  return async (data, search_terms=[]) => {
+    data = {...data};
     const objid = to_objid(data.id)
     const session = driver.mongo_client.startSession();
 
@@ -60,6 +62,9 @@ const upsert = (driver) => {
           // REPORT IMAGES USAGE
           ////
           await report_document_media(driver)(data, session);
+
+          // SEARCH
+          add_search_terms_relation_on(data, search_terms);
 
           // SAVE ME
           const res = await col(driver).replaceOne(
@@ -108,7 +113,7 @@ const remove = (driver) => {
             { 
               $pull: { 
                 '_relations.collections.ids': objid,
-                search: { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
+                '_relations.search': { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
               },
               $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
             },
@@ -172,7 +177,7 @@ const list_collection_products = (driver) => {
     
     const filter = {
       $and: [
-        { search: `col:${handle_or_id}` },
+        { '_relations.search': `col:${handle_or_id}` },
       ]
     };
 

@@ -8,10 +8,7 @@ export const admin_password = 'password';
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
-    new MongoDB({ 
-      db_name: 'test-data-api', apiKey: '<API-KEY>', 
-      dataSource: '<DATA-SOURCE>', endpoint: '<ENDPOINT>'}
-    ),
+    new MongoDB(),
     null, null, null, {
       admins_emails: [admin_email],
       auth_password_hash_rounds: 100,

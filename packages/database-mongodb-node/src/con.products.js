@@ -2,10 +2,11 @@ import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { get_bulk, get_regular, list_regular } from './con.shared.js'
 import { delete_keys, handle_or_id, sanitize_array, to_objid } from './utils.funcs.js'
-import { create_explicit_relation } from './utils.relations.js'
+import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js'
 import { DiscountApplicationEnum } from '@storecraft/core/v-api'
 import { pricing } from '@storecraft/core/v-api'
 import { report_document_media } from './con.images.js'
+import { union } from '@storecraft/core/v-api/utils.func.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_products} db_col
@@ -22,8 +23,9 @@ const col = (d) => d.collection('products');
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (data) => {
-
+  return async (data, search_terms=[]) => {
+    // console.log('search_terms', search_terms)
+    data = {...data};
     const objid = to_objid(data.id);
     const session = driver.mongo_client.startSession();
 
@@ -76,11 +78,14 @@ const upsert = (driver) => {
             ids: eligible_discounts.map(d => d._id),
             entries: Object.fromEntries(eligible_discounts.map(d => [d._id.toString(), d]))
           }
-          replacement.search = replacement.search ?? [];
-          eligible_discounts.forEach(
-            d => replacement.search.push(
-              `discount:${d.handle}`, `discount:${d.id}`
-            )
+
+          // SEARCH
+          add_search_terms_relation_on(
+            replacement, union([
+              search_terms, 
+              eligible_discounts.map(d => `discount:${d.handle}`),
+              eligible_discounts.map(d => `discount:${d.id}`),
+            ])
           );
 
           ////
@@ -277,7 +282,7 @@ const add_product_to_collection = (driver) => {
         $set: { [`_relations.collections.entries.${objid.toString()}`]: coll },
         $addToSet: { 
           '_relations.collections.ids': objid, 
-          search: { $each : [`col:${coll.handle}`, `col:${coll.id}`]} 
+          '_relations.search': { $each : [`col:${coll.handle}`, `col:${coll.id}`]} 
         }
       },
     );
@@ -306,7 +311,7 @@ const remove_product_from_collection = (driver) => {
         $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
         $pull: { 
           '_relations.collections.ids': objid, 
-          search: { $in : [`col:${coll.handle}`, `col:${coll.id}`]} 
+          '_relations.search': { $in : [`col:${coll.handle}`, `col:${coll.id}`]} 
         }
       },
     );

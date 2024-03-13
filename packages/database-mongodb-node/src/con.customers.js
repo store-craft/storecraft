@@ -111,7 +111,7 @@ const list_customer_orders = (driver) => {
     
     const filter = {
       $and: [
-        { search: `customer:${customer_id}` },
+        {'_relations.search': `customer:${customer_id}` },
       ]
     };
 

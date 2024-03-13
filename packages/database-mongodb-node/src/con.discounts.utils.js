@@ -1,6 +1,5 @@
 import { DiscountApplicationEnum, DiscountMetaEnum, 
   FilterMetaEnum } from "@storecraft/core/v-api";
-import { MongoDB } from "../driver.js";
 import { to_objid } from "./utils.funcs.js";
 
 /** @param {import("@storecraft/core/v-api").DiscountType} d */

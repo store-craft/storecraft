@@ -32,7 +32,7 @@ const getByEmail = (driver) => {
   return async (email) => {
     const filter = { email: email };
 
-    /** @type {import('@storecraft/core').AuthUserType} */
+    /** @type {import('@storecraft/core/v-api').AuthUserType} */
     const res = await col(driver).findOne(
       filter
     );
@@ -61,7 +61,7 @@ const remove = (driver) => {
  */
 const removeByEmail = (driver) => {
   return async (email) => {
-    /** @type {import('@storecraft/core').AuthUserType} */
+    /** @type {import('@storecraft/core/v-api').AuthUserType} */
     await col(driver).deleteOne(
       { email }
     );

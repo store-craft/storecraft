@@ -3,6 +3,7 @@ import { MongoDB } from '../driver.js'
 import { get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
 import { report_document_media } from './con.images.js';
+import { add_search_terms_relation_on } from './utils.relations.js';
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_posts} db_col
@@ -19,7 +20,8 @@ const col = (d) => d.collection('posts');
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (data) => {
+  return async (data, search_terms=[]) => {
+    data = {...data};
     const objid = to_objid(data.id);
 
     try {
@@ -31,6 +33,9 @@ const upsert = (driver) => {
         { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
         false
       );
+
+      // SEARCH
+      add_search_terms_relation_on(data, search_terms);
 
       ////
       // REPORT IMAGES USAGE

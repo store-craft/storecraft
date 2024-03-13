@@ -67,7 +67,7 @@ export declare interface db_crud<U extends idable_concrete, G=U> {
    * @param search_terms 
    * @returns 
    */
-  upsertBulk?: (data: (U & idable_concrete)[], search_terms: string[][]) => Promise<boolean>;
+  upsertBulk?: (data: (U & idable_concrete)[], search_terms?: string[][]) => Promise<boolean>;
 
   /**
    * Delete an item

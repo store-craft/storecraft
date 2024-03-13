@@ -6,6 +6,7 @@ import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 import { DiscountApplicationEnum } from '@storecraft/core/v-api'
+import { add_search_terms_relation_on } from './utils.relations.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
@@ -22,7 +23,8 @@ const col = (d) => d.collection('discounts');
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (data) => {
+  return async (data, search_terms=[]) => {
+    data = {...data};
     const objid = to_objid(data.id);
 
     try {
@@ -36,7 +38,7 @@ const upsert = (driver) => {
         { 
           $pull: { 
             '_relations.discounts.ids': objid,
-            search: { $in : [ `discount:${data.handle}`, `discount:${data.id}` ] }
+            '_relations.search': { $in : [ `discount:${data.handle}`, `discount:${data.id}` ] }
           },
           $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
         },
@@ -53,7 +55,7 @@ const upsert = (driver) => {
               $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
               $addToSet: { 
                 '_relations.discounts.ids': objid,
-                search: { $each : [`discount:${data.handle}`, `discount:${data.id}`]} 
+                '_relations.search': { $each : [`discount:${data.handle}`, `discount:${data.id}`]} 
               },
               
             },
@@ -70,6 +72,9 @@ const upsert = (driver) => {
         { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
         false
       );
+
+      // SEARCH
+      add_search_terms_relation_on(data, search_terms);
 
       ////
       // REPORT IMAGES USAGE
@@ -117,7 +122,7 @@ const remove = (driver) => {
         { 
           $pull: { 
             '_relations.discounts.ids': objid,
-            search: { $in : [ `discount:${item.handle}`, `discount:${item.id}` ] }
+            '_relations.search': { $in : [ `discount:${item.handle}`, `discount:${item.id}` ] }
           },
           $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
         },
@@ -173,7 +178,7 @@ const list_discount_products = (driver) => {
     
     const filter = {
       $and: [
-        { search: `discount:${handle_or_id}` },
+        { '_relations.search': `discount:${handle_or_id}` },
       ]
     };
 

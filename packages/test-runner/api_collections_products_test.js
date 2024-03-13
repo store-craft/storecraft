@@ -109,7 +109,10 @@ export const create = app => {
 
     // console.log(products_queried)
     // the first returned product should be the product
-    assert.ok(products_queried[0].handle===prs[0].handle);
+    assert.ok(
+      products_queried?.[0]?.handle===prs[0].handle,
+      `failed list_collection_products for collection handle ${col_upsert[0].handle}`
+    );
 
   });
 
@@ -120,6 +123,7 @@ export const create = app => {
 (async function inner_test() {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
+
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
@@ -127,5 +131,7 @@ export const create = app => {
     s.after(async () => { await app.db.disconnect() });
     s.run();
   } catch (e) {
+    console.log(e)
+
   }
 })();

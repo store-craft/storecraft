@@ -15,7 +15,7 @@ let a = {
  * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
- * @param {import("@storecraft/core").Cursor} c 
+ * @param {import("@storecraft/core/v-api").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
  */
@@ -71,7 +71,7 @@ export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
 export const query_vql_node_to_mongo = node => {
   if(node.op==='LEAF') {
     return {
-      search: { $regex: `^${node.value}$` }
+      '_relations.search': { $regex: `^${node.value}$` }
     }
   }
 

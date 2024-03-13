@@ -1,0 +1,1 @@
+# Storecraft main API, types and logic

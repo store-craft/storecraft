@@ -20,12 +20,12 @@ export const table_name = 'images'
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (item) => {
+  return async (item, search_terms) => {
     const c = driver.client;
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          await insert_search_of(trx, item.search, item.id, item.handle, table_name);
+          await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,
             updated_at: item.updated_at,

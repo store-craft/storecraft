@@ -23,7 +23,7 @@ export const assert_partial = (actual, expected, prefix='', _original=undefined)
   if(Array.isArray(actual) && Array.isArray(expected)) {
     assert.ok(
       actual.length==expected.length, 
-      'assert_partial:: actual is not same shape as expected !!!'
+      `assert_partial:: actual ${prefix} is not same shape as expected !!!`
     );
     for(let ix=0; ix < expected.length; ix++) {
       assert_partial(actual?.[ix], expected[ix], `${prefix}[${ix}]`, _original);

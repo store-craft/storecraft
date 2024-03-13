@@ -22,7 +22,8 @@ const items = get_static_ids('not').map(
       id,
       created_at: iso(jx + 1),
       updated_at: iso(jx + 1),
-      message: `message ${ix}`, search: ['checkout', 'backend'],
+      message: `message ${ix}`, 
+      search: ['checkout', 'backend'],
       author: 'backend-bot', 
       actions: [
         {

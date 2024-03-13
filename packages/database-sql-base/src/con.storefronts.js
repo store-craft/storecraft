@@ -21,13 +21,13 @@ export const table_name = 'storefronts'
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
-  return async (item) => {
+  return async (item, search_terms) => {
     const c = driver.client;
     try {
       const t = await c.transaction().execute(
         async (trx) => {
           // regular entities
-          await insert_search_of(trx, item.search, item.id, item.handle, table_name);
+          await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
           await report_document_media(driver)(item, trx);

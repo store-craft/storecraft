@@ -406,19 +406,6 @@ export const baseProductTypeSchema = baseTypeSchema
     collections: z.array(collectionTypeSchema).optional(),
     discounts: z.array(discountTypeSchema).optional(),
   });
-export const variantTypeUpsertSchema = baseProductTypeSchema
-  .omit({
-    collections: true,
-    created_at: true,
-    updated_at: true,
-    published: true,
-    discounts: true,
-  })
-  .and(
-    z.object({
-      collections: z.array(collectionTypeSchema.pick({ id: true })).optional(),
-    }),
-  );
 export const productTypeUpsertSchema = baseProductTypeSchema
   .omit({
     collections: true,
@@ -429,14 +416,31 @@ export const productTypeUpsertSchema = baseProductTypeSchema
   })
   .and(
     z.object({
-      collections: z.array(collectionTypeSchema.pick({ id: true })).optional(),
+      collections: z
+        .array(collectionTypeSchema.pick({ id: true, handle: true }))
+        .optional(),
     }),
   );
 export const variantTypeSchema = baseProductTypeSchema.extend({
-  parent_handle: z.string().optional(),
-  parent_id: z.string().optional(),
-  variant_hint: z.array(variantOptionSelectionSchema).optional(),
+  parent_handle: z.string(),
+  parent_id: z.string(),
+  variant_hint: z.array(variantOptionSelectionSchema),
 });
+export const variantTypeUpsertSchema = variantTypeSchema
+  .omit({
+    collections: true,
+    created_at: true,
+    updated_at: true,
+    published: true,
+    discounts: true,
+  })
+  .and(
+    z.object({
+      collections: z
+        .array(collectionTypeSchema.pick({ id: true, handle: true }))
+        .optional(),
+    }),
+  );
 export const productTypeSchema = baseProductTypeSchema.extend({
   variants: z.array(variantTypeSchema).optional(),
   variants_options: z.array(variantOptionSchema).optional(),

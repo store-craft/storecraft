@@ -24,7 +24,7 @@ const parse_int = (s, def) => {
 export class App {
 
   /** 
-   * @typedef {import('./types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} Platform
+   * @typedef {import('./v-platform/types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} Platform
    * @type {Platform} 
    */
   #_platform;

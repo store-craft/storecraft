@@ -39,4 +39,4 @@ async function test2() {
   api_index.api_collections_products_test.create(app).run();
 }
 
-// test()
+// test2()

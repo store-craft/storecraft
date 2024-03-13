@@ -60,14 +60,19 @@ export const email_or_id = (email_or_id) => {
 const remove = (driver) => {
   return async (id) => {
     try {
+      const res = await col(driver).findOne(
+        email_or_id(id),
+      );
       await col(driver).deleteOne(
         email_or_id(id),
       );
   
       // delete the auth user
-      await driver.auth_users._col.deleteOne(
-        { _id: to_objid(id) },
-      );
+      if(res?.auth_id) {
+        await driver.auth_users._col.deleteOne(
+          { _id: to_objid(res.auth_id) },
+        );
+      }
     } catch(e) {
       console.log(e);
       return false;

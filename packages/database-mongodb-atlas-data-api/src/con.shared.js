@@ -68,7 +68,13 @@ export const expand = (items, expand_query=undefined) => {
 
     for(const e of (expand_query ?? [])) {
       // try to find embedded documents relations
-      item[e] = sanitize_array(Object.values(item?._relations?.[e]?.entries ?? {}));
+      const rel = item?._relations?.[e];
+      item[e] = [];
+      if(Array.isArray(rel)) {
+        item[e] = rel;
+      } else if(rel?.entries) {
+        item[e] = sanitize_array(Object.values(rel.entries));
+      }
     }
   }
 }

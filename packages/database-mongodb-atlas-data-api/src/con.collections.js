@@ -162,6 +162,7 @@ const list_collection_products = (driver) => {
       filter, sort, query.limit
     ).toArray();
 
+    // console.log('items', items)
     // try expand relations, that were asked
     expand(items, query?.expand);
 

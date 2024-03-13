@@ -129,12 +129,12 @@ export class Collection {
    * @link https://www.mongodb.com/docs/atlas/api/data-api-resources/#find-multiple-documents
    * @param {import("mongodb").Filter<TSchema>} filter
    * @param {import("mongodb").Sort} [sort] 
-   * @param {number} [limit=0] 
+   * @param {number} [limit=10] 
    * @param {number} [skip=0] 
    * @param {import("mongodb").FindOptions<TSchema>['projection']} [projection] 
    * @returns {{ toArray: () => Promise<TSchema[]> }}
    */
-  find(filter, sort, limit=0, skip=0, projection) {
+  find(filter, sort, limit=10, skip=0, projection) {
     return {
       toArray: async () => {
         /** @type {{ documents: Array<TSchema> }} */

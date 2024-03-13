@@ -69,6 +69,8 @@ export const create = app => {
     }
   );
 
+  // return s;
+
   s('create', async () => {
     // upsert collections
     const cols = await Promise.all(
@@ -98,7 +100,8 @@ export const create = app => {
       });
     }
 
-    // now query list of products of discount
+    console.log('prs', prs)
+    // now query list of products of collection
     const products_queried = await collections.list_collection_products(
       app, col_upsert[0].handle,
       {
@@ -107,7 +110,7 @@ export const create = app => {
       }
     );
 
-    // console.log(products_queried)
+    // console.log('products_queried', products_queried)
     // the first returned product should be the product
     assert.ok(
       products_queried?.[0]?.handle===prs[0].handle,

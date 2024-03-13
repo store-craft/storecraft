@@ -248,22 +248,22 @@ const list = (driver) => {
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const items = await driver.client
-      .selectFrom(table_name)
-      .selectAll()
-      .select(eb => [
-        with_tags(eb, eb.ref('products.id'), driver.dialectType),
-        with_media(eb, eb.ref('products.id'), driver.dialectType),
-        expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
-        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
-        expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType)
-      ].filter(Boolean))
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
-        }
-      ).orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
-      .execute();
+    .selectFrom(table_name)
+    .selectAll()
+    .select(eb => [
+      with_tags(eb, eb.ref('products.id'), driver.dialectType),
+      with_media(eb, eb.ref('products.id'), driver.dialectType),
+      expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
+      expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
+      expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType)
+    ].filter(Boolean))
+    .where(
+      (eb) => {
+        return query_to_eb(eb, query, table_name).eb;
+      }
+    ).orderBy(query_to_sort(query))
+    .limit(query.limit ?? 10)
+    .execute();
       // .compile();
         // console.log(items)
 

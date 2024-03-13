@@ -138,7 +138,11 @@ export const report_document_media = (driver) => {
       // search stuff
       // remove by reporter
       await trx.deleteFrom('entity_to_search_terms').where(
-        'reporter', '=', item.id
+        eb => eb.and([
+            eb('reporter', '=', item.id),
+            eb('context', '=', table_name),
+          ]
+        )
       ).execute();
       const search = func.union(
         item['title'], func.to_tokens(item['title'])

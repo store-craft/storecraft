@@ -1,4 +1,4 @@
-import { orderDataSchema, orderDataUpsertSchema } from './types.autogen.zod.api.js'
+import { orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'

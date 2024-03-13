@@ -1,5 +1,5 @@
 import { assert, to_handle } from './utils.func.js'
-import { discountTypeSchema, discountTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { discountTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'

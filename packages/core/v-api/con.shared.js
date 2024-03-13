@@ -51,10 +51,11 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
 }
 
 /**
- * @template {any} T, G
+  * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template G
  * @param {import("../types.public.js").App} app
  * @param {import("../v-database/types.public.js").db_crud<T, G>} db
- */
+*/
 export const regular_get = (app, db) => /**
   * 
   * @param {string} handle_or_id 
@@ -66,7 +67,8 @@ export const regular_get = (app, db) => /**
   };
 
 /**
- * @template {import('./types.api.js').BaseType} T, G
+ * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template G
  * @param {import("../types.public.js").App} app
  * @param {import("../v-database/types.public.js").db_crud<T, G>} db
  */
@@ -80,7 +82,8 @@ export const regular_remove = (app, db) =>
   }
 
 /**
- * @template {import('./types.api.js').BaseType} T, G
+ * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template G
  * @param {import("../types.public.js").App} app
  * @param {import("../v-database/types.public.js").db_crud<T, G>} db
  */

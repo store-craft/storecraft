@@ -13,32 +13,6 @@ export type ApiResponse = VPolkaResponse & {
 
 export type ApiPolka = Polka<ApiRequest, ApiResponse>;
 
-export declare interface PlatformAdapter<PlatformNativeRequest, PlatformContext, H> {
-    /**
-     * convert a platform native request into web api request.
-     * @param from something
-     * @returns 
-     */
-    encode: (from: PlatformNativeRequest)=> Promise<Request>;
-
-    /**
-     * Handle the computed web response with context in case it is needed,
-     * In node.js for example, we have to stream it into the native server-response.
-     * @param web_response 
-     * @param context 
-     * @returns 
-     */
-    handleResponse: (web_response: Response, context: PlatformContext) => Promise<H>;
-
-    /**
-     * Get the environment variables of a platform
-     */
-    get env(): Record<string, string>;
-
-    $from?: PlatformNativeRequest;
-    $context?: PlatformContext;
-}
-
 /**
  * Basic config for storecraft
  */
@@ -58,10 +32,3 @@ export type Config = {
 }
 
 export { App } from './index.js'
-// export type * from './v-database/types.database.js'
-// export type * from './v-api/types.api.js'
-// export type * from './v-api/types.api.query.js'
-// export * from './v-api/types.api.enums.js'
-// export type * from './v-storage/types.storage.js'
-// export type * from './v-payments/types.payments.d.ts'
-// export type * from './v-mailer/types.mailer.d.ts'

@@ -105,7 +105,7 @@ export const signin = async (app, body) => {
   
   assert(verified, 'auth/error', 401)
 
-  /** @type {Partial<import('../types.public.js').ApiRequest["user"]>} */
+  /** @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & Pick<import('./types.api.js').AuthUserType, 'roles'>>} */
   const claims = {
     sub: existingUser.id,
     roles: existingUser.roles

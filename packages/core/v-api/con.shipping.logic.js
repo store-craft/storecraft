@@ -1,5 +1,4 @@
-import { assert, to_handle } from './utils.func.js'
-import { shippingMethodTypeSchema, shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'

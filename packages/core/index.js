@@ -17,35 +17,72 @@ const parse_int = (s, def) => {
 }
 
 /**
- * @template {any} PlatformNativeRequest
- * @template {any} PlatformContext
- * @template {any} H
- * @template {import('./v-database/types.public.js').db_driver} D
- * @template {storage_driver} S
+ * @template {any} [PlatformNativeRequest=any]
+ * @template {any} [PlatformContext=any]
+ * @template {any} [H=any]
+ * @template {db_driver} [D=db_driver]
+ * @template {storage_driver} [S=storage_driver]
  */
 export class App {
 
   /** 
-   * @typedef {import('./v-platform/types.public.js').PlatformAdapter<PlatformNativeRequest, PlatformContext, H>} Platform
+   * @typedef {import('./v-platform/types.public.js').PlatformAdapter<
+   * PlatformNativeRequest, PlatformContext, H>
+   * } Platform
    * @type {Platform} 
    */
   #_platform;
-  /** @type {D} */ #_db_driver;
-  /** @type {S} */ #_storage;
-  /** @type {Record<string, payment_gateway>} */ #_payment_gateways;
-  /** @type {mailer} */ #_mailer;
-  /** @type {Config} */ #_config;
-  /** @type {ReturnType<create_rest_api>} */ #_rest_controller;
-  /** @type {boolean} */ #_is_ready;
+  /** 
+   * The private database driver
+   * @type {D} 
+   **/ 
+  #_db_driver;
+
+  /** 
+   * The private storage driver
+   * @type {S} 
+   **/ 
+  #_storage;
+
+  /** 
+   * The payment gateways
+   * 
+   * @type {Record<string, payment_gateway>} 
+   **/ 
+  #_payment_gateways;
+
+  /** 
+   * The mailer driver
+   * @type {mailer} 
+   **/ 
+  #_mailer;
+
+  /** 
+   * The Storecraft App Config
+   * @type {Config} 
+   **/ 
+  #_config;
+
+  /** 
+   * The REST API controller
+   * @type {ReturnType<create_rest_api>} 
+   **/ 
+  #_rest_controller;
+
+  /** 
+   * Flag for app is ready 
+   * @type {boolean} 
+   **/ 
+  #_is_ready;
 
   /**
    * 
-   * @param {Platform} platform platform
-   * @param {D} db_driver datatbase
-   * @param {S} [storage] storage
-   * @param {Record<string, payment_gateway>} [payment_gateways] payment gateways
-   * @param {mailer} [mailer] mailer 
-   * @param {Config} [config] config
+   * @param {Platform} platform platform The Platform driver
+   * @param {D} db_driver datatbase The Database driver
+   * @param {S} [storage] storage The storage driver
+   * @param {Record<string, payment_gateway>} [payment_gateways] The Payment Gateways
+   * @param {mailer} [mailer] mailer The Email driver
+   * @param {Config} [config] config The Storecraft Application config
    */
   constructor(platform, db_driver, storage, payment_gateways, mailer, config) {
 
@@ -83,6 +120,10 @@ export class App {
     console.log('store-craft config', this.#_config);
   }
 
+  /**
+   * 
+   * Initialize the Application
+   */
   async init() {
     try{
       // first let's settle config
@@ -99,24 +140,71 @@ export class App {
     return this;
   }
 
-  /** Get the REST API controller */
-  get rest_api() { return this.#_rest_controller; }
-  /** Get the Database driver */
-  get db() { return this.#_db_driver; }
-  /** Get the native platform object */
-  get platform() { return this.#_platform; }
-  /** Get the native storage object */
-  get storage() { return this.#_storage; }
-  /** Get the payment gateways */
-  get gateways() { return this.#_payment_gateways; }
-  /** Mailer driver */
-  get mailer() { return this.#_mailer; }
-  /** Config */
-  get config() { return this.#_config; }
-  get ready() { return this.#_is_ready; }
+  /** 
+   * 
+   * Get the REST API controller 
+   **/
+  get rest_api() { 
+    return this.#_rest_controller; 
+  }
+
+  /** 
+   * 
+   * Get the Database driver 
+   **/
+  get db() { 
+    return this.#_db_driver; 
+  }
+
+  /** 
+   * 
+   * Get the native platform object 
+   **/
+  get platform() { 
+    return this.#_platform; 
+  }
+
+  /** 
+   * 
+   * Get the native storage object 
+   **/
+  get storage() { 
+    return this.#_storage; 
+  }
+
+  /** 
+   * 
+   * Get the payment gateways 
+   **/
+  get gateways() { 
+    return this.#_payment_gateways; 
+  }
+
+  /** 
+   * 
+   * Mailer driver 
+   **/
+  get mailer() { 
+    return this.#_mailer; 
+  }
+
+  /** 
+   * Config 
+   **/
+  get config() { 
+    return this.#_config; 
+  }
+
+  /**
+   * Is the app ready ?
+   */
+  get ready() { 
+    return this.#_is_ready; 
+  }
 
   /**
    * Get a payment gateway by handle
+   * 
    * @param {string} handle 
    */
   gateway = (handle) => {

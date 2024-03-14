@@ -9,7 +9,8 @@
     "test": "uvu -c",
     "migrate": "node ./migrate.js",
     "test:sqlite": "node ./tests/runner.sqlite-local.test.js",
-    "test:postgres": "node ./tests/runner.postgres-local.test.js"
+    "test:postgres": "node ./tests/runner.postgres-local.test.js",
+    "test:mysql": "node ./tests/runner.mysql-local.test.js"
   },
   "keywords": [],
   "author": "Tomer Shalev <tomer.shalev@gmail.com>",
@@ -25,9 +26,11 @@
     "@types/node": "^20.11.0",
     "@types/pg": "^8.11.2",
     "better-sqlite3": "^9.4.3",
+    "dotenv": "^16.3.1",
     "mysql2": "^3.9.2",
     "pg": "^8.11.3",
-    "dotenv": "^16.3.1",
+    "tarn": "^3.0.2",
+    "tedious": "^18.1.0",
     "uvu": "^0.5.6"
   }
 }

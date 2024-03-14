@@ -2,6 +2,7 @@ import { assert, to_handle, union } from './utils.func.js'
 import { productTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.js').ProductType} ItemType
@@ -9,19 +10,20 @@ import { regular_get, regular_list,
  */
 
 /**
- * @param {import("../types.public.js").App<>} app
+ * @param {App} app
  */
 export const db = app => app.db.products;
 
+
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {App} app
  * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'pr', productTypeUpsertSchema, 
   (final) => {
-    
+
     assert(
       [final.handle].every(
         h => to_handle(h)===h

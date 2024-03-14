@@ -2,7 +2,7 @@ import { App } from '@storecraft/core';
 import { SQL, migrate } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
-import { PostgresDialect } from "kysely";
+import { PostgresDialect } from 'kysely';
 import pg from 'pg'
 
 const pg_dialect = new PostgresDialect({
@@ -10,7 +10,7 @@ const pg_dialect = new PostgresDialect({
     host: process.env.POSTGRES_HOST,
     port: parseInt(process.env.POSTGRES_PORT),
     user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD
+    password: process.env.POSTGRES_PASSWORD,
   })
 });
 

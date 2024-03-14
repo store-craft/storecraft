@@ -10,5 +10,5 @@
     "module": "NodeNext",
     "composite": true,
   },
-  "include": ["*", "src/*", "migrations/*", "tests/dialect.js"]
+  "include": ["*", "src/*", "migrations/*", "tests/*.js"]
 }

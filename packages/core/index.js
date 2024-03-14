@@ -20,6 +20,8 @@ const parse_int = (s, def) => {
  * @template {any} PlatformNativeRequest
  * @template {any} PlatformContext
  * @template {any} H
+ * @template {db_driver} D
+ * @template {storage_driver} S
  */
 export class App {
 
@@ -28,8 +30,8 @@ export class App {
    * @type {Platform} 
    */
   #_platform;
-  /** @type {db_driver} */ #_db_driver;
-  /** @type {storage_driver} */ #_storage;
+  /** @type {D} */ #_db_driver;
+  /** @type {S} */ #_storage;
   /** @type {Record<string, payment_gateway>} */ #_payment_gateways;
   /** @type {mailer} */ #_mailer;
   /** @type {Config} */ #_config;
@@ -39,8 +41,8 @@ export class App {
   /**
    * 
    * @param {Platform} platform platform
-   * @param {db_driver} db_driver datatbase
-   * @param {storage_driver} [storage] storage
+   * @param {D} db_driver datatbase
+   * @param {S} [storage] storage
    * @param {Record<string, payment_gateway>} [payment_gateways] payment gateways
    * @param {mailer} [mailer] mailer 
    * @param {Config} [config] config
@@ -99,7 +101,7 @@ export class App {
 
   /** Get the REST API controller */
   get rest_api() { return this.#_rest_controller; }
-  /** Get the Polka router */
+  /** Get the Database driver */
   get db() { return this.#_db_driver; }
   /** Get the native platform object */
   get platform() { return this.#_platform; }

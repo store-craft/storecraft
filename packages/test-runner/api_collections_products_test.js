@@ -100,7 +100,7 @@ export const create = app => {
       });
     }
 
-    console.log('prs', prs)
+    // console.log('prs', prs)
     // now query list of products of collection
     const products_queried = await collections.list_collection_products(
       app, col_upsert[0].handle,

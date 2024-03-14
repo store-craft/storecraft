@@ -7,15 +7,24 @@ import {
   FileMigrationProvider,
 } from 'kysely'
 import { def_dialect } from './tests/dialect.js'
+import { SQL } from "./index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function migrateToLatest() {
-  /** @type {Kysely<import('./types.sql.tables.js').Database>} */
-  const db = new Kysely({
-    dialect: def_dialect
-  })
+/**
+ * 
+ * @param {SQL} db_driver 
+ */
+export async function migrateToLatest(db_driver) {
+  if(!db_driver?.client)
+    throw new Error('No Kysely client found !!!');
+  // /** @type {Kysely<import('./types.sql.tables.js').Database>} */
+  // const db = new Kysely({
+  //   dialect: def_dialect
+  // })
+
+  const db = db_driver.client;
 
   const migrator = new Migrator({
     db,

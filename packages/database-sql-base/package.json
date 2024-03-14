@@ -7,7 +7,10 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "test": "uvu -c",
-    "migrate": "node ./migrate.js"
+    "migrate": "node ./migrate.js",
+    "test:sqlite": "node ./tests/runner.sqlite-local.test.js",
+    "test:postgres": "node ./tests/runner.postgres-local.test.js",
+    "test:mysql": "node ./tests/runner.mysql-local.test.js"
   },
   "keywords": [],
   "author": "Tomer Shalev <tomer.shalev@gmail.com>",
@@ -17,11 +20,17 @@
     "kysely": "^0.27.2"
   },
   "devDependencies": {
+    "@storecraft/platform-node": "^1.0.0",
     "@storecraft/test-runner": "^1.0.0",
-    "@types/node": "^20.11.0",
     "@types/better-sqlite3": "^7.6.9",
+    "@types/node": "^20.11.0",
+    "@types/pg": "^8.11.2",
     "better-sqlite3": "^9.4.3",
     "dotenv": "^16.3.1",
+    "mysql2": "^3.9.2",
+    "pg": "^8.11.3",
+    "tarn": "^3.0.2",
+    "tedious": "^18.1.0",
     "uvu": "^0.5.6"
   }
 }

@@ -13,50 +13,45 @@ import { ZodSchema } from 'zod'
  * This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {import('./types.api.js').idable} T
- * @template {import('./types.api.js').idable} G
+ * @template {import('./types.api.js').BaseType} T
+ * @template {import('./types.api.js').BaseType} G
  * @param {import("../types.public.js").App} app app instance
  * @param {import("../v-database/types.public.js").db_crud<T & {id:string}, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
- * @param {<H extends T & searchable>(final: H) => Promise<H>} hook hook into final state
+ * @param {<H extends T>(final: H) => string[]} hook hook into final state, returns extra search terms
  */
-export const regular_upsert = (app, db, id_prefix, schema, hook=async x=>x) => {
+export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
 
   /**
    * @param {T} item
    */
   return async (item) => {
-    // console.log('item ', item)
     schema && assert_zod(schema, item);
 
     // Check if exists
     await assert_save_create_mode(item, db);
     const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
-    // search index
-    let search = create_search_index({ ...item, id });
-    // apply dates and index
-    const final = await hook(
-      apply_dates(
-        { 
-          ...item, id, search
-        }
-      )
-    );
+    const final = apply_dates({ ...item, id })
+    const search = [
+      ...create_search_index(final), 
+      ...hook(final)
+    ];
 
-    const success = await db.upsert(final);
+    const success = await db.upsert(final, search);
     assert(success, 'upsert-failed', 400);
     return final.id;
   }
 }
 
 /**
-  * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template {import('../v-database/types.public.js').idable_concrete} T 
  * @template G
  * @param {import("../types.public.js").App} app
  * @param {import("../v-database/types.public.js").db_crud<T, G>} db
 */
-export const regular_get = (app, db) => /**
+export const regular_get = (app, db) => 
+/**
   * 
   * @param {string} handle_or_id 
   * @param {RegularGetOptions} [options] 
@@ -66,6 +61,7 @@ export const regular_get = (app, db) => /**
     return item;
   };
 
+  
 /**
  * @template {import('../v-database/types.public.js').idable_concrete} T 
  * @template G

@@ -1,6 +1,5 @@
 import { shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
-import { 
-  regular_get, regular_list, 
+import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
@@ -20,9 +19,8 @@ export const db = app => app.db.shipping;
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'ship', shippingMethodTypeUpsertSchema, 
-  async (final) => {
-    
-    return final;
+  (final) => {
+    return [];
   }
 )(item);
 

@@ -1,22 +1,26 @@
 import { App } from '@storecraft/core';
-import { SQL } from '@storecraft/database-sql-base';
+import { SQL, migrate } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
-import SQLite from 'better-sqlite3'
-import { SqliteDialect } from "kysely";
-import { homedir } from 'node:os';
-import { join } from 'node:path';
+import { MysqlDialect } from 'kysely';
+import { createPool } from 'mysql2'
 
-export const sqlite_dialect = new SqliteDialect({
-  database: async () => new SQLite(join(homedir(), 'db.sqlite')),
+export const dialect = new MysqlDialect({
+  pool: createPool({
+    database: process.env.MYSQL_DB_NAME,
+    host: process.env.MYSQL_HOST,
+    port: parseInt(process.env.MYSQL_PORT),
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+  })
 });
 
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
     new SQL({
-      dialect: sqlite_dialect, 
-      dialect_type: 'SQLITE'
+      dialect: dialect, 
+      dialect_type: 'MYSQL'
     }),
     null, null, null, {
       admins_emails: ['admin@sc.com'],
@@ -25,12 +29,9 @@ export const create_app = async () => {
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
   );
-  
-  await app.init();
 
-  
-
-  return app;
+  await migrate.migrateToLatest(app.db, false);
+  return app.init();
 }
 
 async function test() {
@@ -84,8 +85,8 @@ async function test2() {
   // api_index.api_notifications_crud_test.create(app).run();
   // api_index.api_notifications_list_test.create(app).run();
 
-  api_index.api_images_crud_test.create(app).run();
-  api_index.api_images_list_test.create(app).run();
+  // api_index.api_images_crud_test.create(app).run();
+  // api_index.api_images_list_test.create(app).run();
 
   // api_index.api_discounts_crud_test.create(app).run();
   // api_index.api_discounts_list_test.create(app).run();

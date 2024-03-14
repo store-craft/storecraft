@@ -41,11 +41,11 @@ export const upsert = async (app, item) => {
   // apply dates and index
   const final = apply_dates(
     { 
-      ...item, id, search
+      ...item, id
     }
   );
 
-  const succeed = await db(app).upsert(final);
+  const succeed = await db(app).upsert(final, search);
   assert(succeed, 'failed', 401);
   return id;
 }

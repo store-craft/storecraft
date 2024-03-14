@@ -1,7 +1,6 @@
 import { assert, to_handle } from './utils.func.js'
 import { postTypeUpsertSchema } from './types.autogen.zod.api.js'
-import { 
-  regular_get, regular_list, 
+import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
@@ -21,14 +20,14 @@ export const db = app => app.db.posts;
  */
 export const upsert = (app, item) => regular_upsert(
   app, db(app), 'post', postTypeUpsertSchema, 
-  async (final) => {
+  (final) => {
     assert(
       [final.handle].every(
         h => to_handle(h)===h
       ),
       'Handle or Values are invalid', 400
     );
-    return final;
+    return [];
   }
 )(item);
 

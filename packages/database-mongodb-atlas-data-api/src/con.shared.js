@@ -4,6 +4,7 @@ import { handle_or_id, isUndef, sanitize_array,
   sanitize_one, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
+import { add_search_terms_relation_on } from './utils.relations.js'
 
 /**
  * @template T, G
@@ -12,9 +13,15 @@ import { report_document_media } from './con.images.js'
  * @returns {import('@storecraft/core/v-database').db_crud<T, G>["upsert"]}
  */
 export const upsert_regular = (driver, col) => {
-  return async (data) => {
-
+  return async (data, search_terms=[]) => {
+    data = {...data};
     try {
+      // SEARCH
+      add_search_terms_relation_on(
+        data, 
+        [...(data?.search ?? []), ...search_terms]
+      );
+
       const res = await col.updateOne(
         { _id: to_objid(data.id) }, 
         data,
@@ -61,7 +68,13 @@ export const expand = (items, expand_query=undefined) => {
 
     for(const e of (expand_query ?? [])) {
       // try to find embedded documents relations
-      item[e] = sanitize_array(Object.values(item?._relations?.[e]?.entries ?? {}));
+      const rel = item?._relations?.[e];
+      item[e] = [];
+      if(Array.isArray(rel)) {
+        item[e] = rel;
+      } else if(rel?.entries) {
+        item[e] = sanitize_array(Object.values(rel.entries));
+      }
     }
   }
 }

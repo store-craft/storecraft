@@ -218,9 +218,9 @@ export const assert_query_list_integrity = (list, q) => {
  * @template {{
  *  items: T[],
  *  ops: {
- *    upsert: (app: App, item: T) => Promise<string>,
- *    get: (app: App, id: string) => Promise<T>,
- *    list: (app: App, q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
+ *    upsert?: (app: App, item: T) => Promise<string>,
+ *    get?: (app: App, id: string) => Promise<T>,
+ *    list?: (app: App, q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
  *  }
  *  app: App
  * }} C
@@ -257,6 +257,7 @@ export const add_list_integrity_tests = s => {
           // console.log(p)
           assert.ok(original_item, 'Did not find original item of inserted item !!');
           // assert_partial(p, original_item);
+          // console.log(original_item)
           assert_partial(p, original_item);
         }
       }

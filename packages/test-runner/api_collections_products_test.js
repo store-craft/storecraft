@@ -64,10 +64,12 @@ export const create = app => {
 
       for(const p of pr_upsert)
         await products.remove(app, p.handle);
-      for(const p of col_upsert)
-        await collections.remove(app, p.handle);
+      // for(const p of col_upsert)
+      //   await collections.remove(app, p.handle);
     }
   );
+
+  // return s;
 
   s('create', async () => {
     // upsert collections
@@ -90,6 +92,7 @@ export const create = app => {
       )
     );
 
+    // console.log(prs)
     // upsert products with collections relation
     for (const pr of prs) {
       await products.upsert(app, {
@@ -98,7 +101,8 @@ export const create = app => {
       });
     }
 
-    // now query list of products of discount
+    // console.log('prs', prs)
+    // now query list of products of collection
     const products_queried = await collections.list_collection_products(
       app, col_upsert[0].handle,
       {
@@ -107,9 +111,12 @@ export const create = app => {
       }
     );
 
-    // console.log(products_queried)
+    // console.log('products_queried', products_queried)
     // the first returned product should be the product
-    assert.ok(products_queried[0].handle===prs[0].handle);
+    assert.ok(
+      products_queried?.[0]?.handle===prs[0].handle,
+      `failed list_collection_products for collection handle ${col_upsert[0].handle}`
+    );
 
   });
 
@@ -120,6 +127,7 @@ export const create = app => {
 (async function inner_test() {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
+
   try {
     const { create_app } = await import('./play.js');
     const app = await create_app();
@@ -127,5 +135,7 @@ export const create = app => {
     s.after(async () => { await app.db.disconnect() });
     s.run();
   } catch (e) {
+    console.log(e)
+
   }
 })();

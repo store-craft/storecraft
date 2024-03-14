@@ -338,7 +338,6 @@ export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
 export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
     select_base_from(eb, 'products')
-      .select('products.title')
       .select('products.compare_at_price')
       .select('products.parent_handle')
       .select('products.parent_id')

@@ -96,5 +96,9 @@ export class SQL {
   get config() { return this.#_config; }
   get isReady() { return this.#_is_ready; }
   get dialectType() { return this.#_config.dialect_type; }
+  get isSqlite() { return this.dialectType==='SQLITE'; }
+  get isPostgres() { return this.dialectType==='POSTGRES'; }
+  get isMysql() { return this.dialectType==='MYSQL'; }
+  get isMssql() { return this.dialectType==='MSSQL'; }
 
 }

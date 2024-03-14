@@ -71,7 +71,7 @@ export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
 export const query_vql_node_to_mongo = node => {
   if(node.op==='LEAF') {
     return {
-      search: { $regex: `^${node.value}$` }
+      '_relations.search': { $regex: `^${node.value}$` }
     }
   }
 

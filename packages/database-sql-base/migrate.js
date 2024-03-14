@@ -2,31 +2,42 @@ import { fileURLToPath } from "node:url";
 import * as path from 'path'
 import { promises as fs } from 'fs'
 import {
-  Kysely,
   Migrator,
   FileMigrationProvider,
 } from 'kysely'
-import { def_dialect } from './tests/dialect.js'
+import { SQL } from "./index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function migrateToLatest() {
-  /** @type {Kysely<import('./types.sql.tables.js').Database>} */
-  const db = new Kysely({
-    dialect: def_dialect
-  })
+/**
+ * 
+ * @param {SQL} db_driver 
+ * @param {boolean} [destroy_db_upon_completion=true] 
+ */
+export async function migrateToLatest(db_driver, destroy_db_upon_completion=true) {
+  if(!db_driver?.client)
+    throw new Error('No Kysely client found !!!');
+  // /** @type {Kysely<import('./types.sql.tables.js').Database>} */
+  // const db = new Kysely({
+  //   dialect: def_dialect
+  // })
+
+  console.log('Resolving migrations')
+
+  const db = db_driver.client;
 
   const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: path.join(__dirname, 'migrations'),
+      migrationFolder: path.join(__dirname, `migrations.${db_driver.dialectType.toLowerCase()}`),
     }),
   })
 
-  const { error, results } = await migrator.migrateToLatest()
+  await migrator.migrateDown()
+  const { error, results } = await migrator.migrateToLatest();
 
   results?.forEach((it) => {
     if (it.status === 'Success') {
@@ -42,7 +53,8 @@ export async function migrateToLatest() {
     process.exit(1)
   }
 
-  await db.destroy()
+  if(destroy_db_upon_completion)
+    await db.destroy()
 }
 
-migrateToLatest()
+// migrateToLatest()

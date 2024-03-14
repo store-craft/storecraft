@@ -20,7 +20,7 @@ const parse_int = (s, def) => {
  * @template {any} PlatformNativeRequest
  * @template {any} PlatformContext
  * @template {any} H
- * @template {db_driver} D
+ * @template {import('./v-database/types.public.js').db_driver} D
  * @template {storage_driver} S
  */
 export class App {

@@ -2,11 +2,9 @@ import { fileURLToPath } from "node:url";
 import * as path from 'path'
 import { promises as fs } from 'fs'
 import {
-  Kysely,
   Migrator,
   FileMigrationProvider,
 } from 'kysely'
-import { def_dialect } from './tests/dialect.js'
 import { SQL } from "./index.js";
 
 const __filename = fileURLToPath(import.meta.url);

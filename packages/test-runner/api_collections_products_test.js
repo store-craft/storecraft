@@ -64,8 +64,8 @@ export const create = app => {
 
       for(const p of pr_upsert)
         await products.remove(app, p.handle);
-      for(const p of col_upsert)
-        await collections.remove(app, p.handle);
+      // for(const p of col_upsert)
+      //   await collections.remove(app, p.handle);
     }
   );
 

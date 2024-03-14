@@ -9,7 +9,7 @@ import { regular_get, regular_list,
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.js").App<>} app
  */
 export const db = app => app.db.products;
 

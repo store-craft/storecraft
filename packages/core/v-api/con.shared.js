@@ -45,12 +45,13 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
 }
 
 /**
-  * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template {import('../v-database/types.public.js').idable_concrete} T 
  * @template G
  * @param {import("../types.public.js").App} app
  * @param {import("../v-database/types.public.js").db_crud<T, G>} db
 */
-export const regular_get = (app, db) => /**
+export const regular_get = (app, db) => 
+/**
   * 
   * @param {string} handle_or_id 
   * @param {RegularGetOptions} [options] 
@@ -60,6 +61,7 @@ export const regular_get = (app, db) => /**
     return item;
   };
 
+  
 /**
  * @template {import('../v-database/types.public.js').idable_concrete} T 
  * @template G

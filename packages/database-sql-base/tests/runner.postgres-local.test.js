@@ -7,12 +7,12 @@ import pg from 'pg'
 
 const pg_dialect = new PostgresDialect({
   pool: new pg.Pool({
-    host: 'localhost',
-    port: 6432,
-    user: 'postgres',
-    password: 'postgres'
+    host: process.env.POSTGRES_HOST,
+    port: parseInt(process.env.POSTGRES_PORT),
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD
   })
-})
+});
 
 export const create_app = async () => {
   let app = new App(

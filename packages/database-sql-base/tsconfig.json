@@ -10,5 +10,5 @@
     "module": "NodeNext",
     "composite": true,
   },
-  "include": ["*", "src/*", "migrations/*", "tests/*.js"]
+  "include": ["*", "src/*", "migrations.sqlite/*", "tests/*.js"]
 }

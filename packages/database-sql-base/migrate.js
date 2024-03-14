@@ -15,14 +15,17 @@ const __dirname = path.dirname(__filename);
 /**
  * 
  * @param {SQL} db_driver 
+ * @param {boolean} [destroy_db_upon_completion=true] 
  */
-export async function migrateToLatest(db_driver) {
+export async function migrateToLatest(db_driver, destroy_db_upon_completion=true) {
   if(!db_driver?.client)
     throw new Error('No Kysely client found !!!');
   // /** @type {Kysely<import('./types.sql.tables.js').Database>} */
   // const db = new Kysely({
   //   dialect: def_dialect
   // })
+
+  console.log('Resolving migrations')
 
   const db = db_driver.client;
 
@@ -31,11 +34,12 @@ export async function migrateToLatest(db_driver) {
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: path.join(__dirname, 'migrations'),
+      migrationFolder: path.join(__dirname, `migrations.${db_driver.dialectType.toLowerCase()}`),
     }),
   })
 
-  const { error, results } = await migrator.migrateToLatest()
+  await migrator.migrateDown()
+  const { error, results } = await migrator.migrateToLatest();
 
   results?.forEach((it) => {
     if (it.status === 'Success') {
@@ -51,7 +55,8 @@ export async function migrateToLatest(db_driver) {
     process.exit(1)
   }
 
-  await db.destroy()
+  if(destroy_db_upon_completion)
+    await db.destroy()
 }
 
-migrateToLatest()
+// migrateToLatest()

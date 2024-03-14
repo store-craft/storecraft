@@ -33,6 +33,12 @@ export const sanitize = o => {
     if(key==='active') {
       o[key] = Boolean(o[key]);
     }
+    else if(key==='price') {
+      o[key] = parseFloat(o[key]);
+    }
+    else if(key==='compare_at_price') {
+      o[key] = parseFloat(o[key]);
+    }
 
     if(Array.isArray(o[key])) {
       sanitize_array(o[key]);

@@ -92,6 +92,7 @@ export const create = app => {
       )
     );
 
+    // console.log(prs)
     // upsert products with collections relation
     for (const pr of prs) {
       await products.upsert(app, {

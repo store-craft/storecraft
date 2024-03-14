@@ -3,7 +3,7 @@ import { SQL, migrate } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 import SQLite from 'better-sqlite3'
-import { SqliteDialect } from "kysely";
+import { SqliteDialect } from 'kysely';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
@@ -25,11 +25,9 @@ export const create_app = async () => {
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
   );
-  
-  await migrate.migrateToLatest(app.db);
-  await app.init();
 
-  return app;
+  await migrate.migrateToLatest(app.db, false);
+  return app.init();
 }
 
 async function test() {

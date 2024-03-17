@@ -36,7 +36,7 @@ const server = http.createServer(app.handler).listen(
 - `@storecraft/platform-cloudflare-workers` - soon
 
 **Databases**
-- `@storecraft/database-sql-base` - Base support for `SQLite` / `MySQL` / `Postgres` dialects with `Kysely`
+- `@storecraft/database-sql-base` - Universal pure javascript support for `SQLite` / `MySQL` / `Postgres` dialects with `Kysely`
 - `@storecraft/database-mongodb-node` - Mongodb support on node
 - `@storecraft/database-mongodb-atlas-data-api` - Mongodb support for fetch (without transactions) (http)
 - `@storecraft/database-firestore` - (maybe soon) Google firestore support (http)

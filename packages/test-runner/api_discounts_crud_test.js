@@ -73,7 +73,6 @@ export const create = app => {
         throw e;
       }
 
-      console.log('before DONE')
     }
   );
 

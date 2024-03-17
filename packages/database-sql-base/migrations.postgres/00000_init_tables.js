@@ -196,7 +196,6 @@ export async function up(db) {
       .addColumn('message', 'text')
       .addColumn('author', 'text')
       .addColumn('actions', 'json')
-      // .addColumn('search', 'json')
     await tb.execute();
   } 
 

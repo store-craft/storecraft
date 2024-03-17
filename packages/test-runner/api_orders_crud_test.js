@@ -66,7 +66,6 @@ export const create = app => {
   s.before(
     async () => { 
       assert.ok(app.ready) 
-      console.log('before DONE')
     }
   );
 

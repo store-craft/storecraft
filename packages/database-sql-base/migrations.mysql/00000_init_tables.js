@@ -15,11 +15,12 @@ const add_base_columns = tb => {
       col.primaryKey()
     )
     .addColumn('handle', 'varchar(255)', (col) => col.unique())
-    .addColumn('created_at', 'text')
-    .addColumn('updated_at', 'text')
+    .addColumn('created_at', 'varchar(32)')
+    .addColumn('updated_at', 'varchar(32)')
     .addColumn('attributes', 'json')
     .addColumn('description', 'text')
     .addColumn('active', 'integer')
+    
 }
 
 /**
@@ -33,11 +34,11 @@ const create_entity_to_value_table = (db, table_name) => {
     .addColumn('id', 'integer', 
         (col) => col.autoIncrement().primaryKey()
     )
-    .addColumn('entity_id', 'text', col => col.notNull())
-    .addColumn('entity_handle', 'text')
+    .addColumn('entity_id', 'varchar(100)', col => col.notNull())
+    .addColumn('entity_handle', 'varchar(255)')
     .addColumn('value', 'text')
-    .addColumn('reporter', 'text')
-    .addColumn('context', 'text')
+    .addColumn('reporter', 'varchar(100)')
+    .addColumn('context', 'varchar(100)')
 }
 
 /**
@@ -100,8 +101,8 @@ export async function up(db) {
       .addColumn('compare_at_price', 'numeric')
       .addColumn('qty', 'integer')
       .addColumn('variants_options', 'json')
-      .addColumn('parent_handle', 'text')
-      .addColumn('parent_id', 'text')
+      .addColumn('parent_handle', 'varchar(255)')
+      .addColumn('parent_id', 'varchar(100)')
       .addColumn('variant_hint', 'json')
     await tb.execute();
   }
@@ -144,9 +145,9 @@ export async function up(db) {
     tb = tb
       .addColumn('email', 'varchar(255)', (col) => col.unique())
       .addColumn('auth_id', 'varchar(255)', (col) => col.unique())
-      .addColumn('firstname', 'text')
-      .addColumn('lastname', 'text')
-      .addColumn('phone_number', 'text')
+      .addColumn('firstname', 'varchar(255)')
+      .addColumn('lastname', 'varchar(255)')
+      .addColumn('phone_number', 'varchar(255)')
       .addColumn('address', 'json')
     await tb.execute();
   }
@@ -165,7 +166,7 @@ export async function up(db) {
       .addColumn('validation', 'json')
       .addColumn('payment_gateway', 'json')
       .addColumn('coupons', 'json')
-      .addColumn('_customer_id', 'text')
+      .addColumn('_customer_id', 'varchar(255)')
       .addColumn('_status_payment_id', 'integer')
       .addColumn('_status_checkout_id', 'integer')
       .addColumn('_status_fulfillment_id', 'integer')
@@ -195,7 +196,6 @@ export async function up(db) {
       .addColumn('message', 'text')
       .addColumn('author', 'text')
       .addColumn('actions', 'json')
-      // .addColumn('search', 'json')
     await tb.execute();
   } 
 

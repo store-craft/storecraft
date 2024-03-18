@@ -1,5 +1,11 @@
 export type timestamps = {
+  /**
+   * @description ISO string creation time
+   */
   created_at?: string;
+  /**
+   * @description ISO string update time
+   */
   updated_at?: string;
 }
 
@@ -9,7 +15,7 @@ export type searchable = {
 }
 
 export type idable = {
-  /** ID */
+  /** @description ID */
   id?: string;
 }
 
@@ -67,9 +73,11 @@ export type AttributeType = {
 // tag type
 
 export interface TagType extends idable, timestamps {
-  /** the key name */
+  /** 
+   * @description the key name 
+   */
   handle: string;
-  /** list of values */
+  /** @description list of values */
   values: string[];
 }
 
@@ -273,7 +281,9 @@ export type DiscountDetails = {
   /** metadata to identify the type of discount */
   meta: DiscountMeta;
   /** extra parameters of the specific discount type */
-  extra: RegularDiscountExtra|OrderDiscountExtra|BulkDiscountExtra|BuyXGetYDiscountExtra|BundleDiscountExtra;
+  extra: RegularDiscountExtra | OrderDiscountExtra 
+  | BulkDiscountExtra | BuyXGetYDiscountExtra 
+  | BundleDiscountExtra;
 }
 
 /** Discount meta data, see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>  */

@@ -247,6 +247,11 @@ export class App {
         return this.send(o===undefined ? undefined : JSON.stringify(o))
       },
 
+      sendHtml(o) {
+        this.headers.set('Content-Type', 'text/html');
+        return this.send(String(o));
+      },
+
       sendText(o) {
         this.headers.set('Content-Type', 'text/plain');
         return this.send(String(o))

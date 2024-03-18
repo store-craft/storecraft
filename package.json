@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Store Craft Mono Repo",
   "main": "index.js",
-  "workspaces": ["./packages/*"],
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

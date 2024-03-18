@@ -33,6 +33,7 @@ export interface VPolkaResponse {
   send: (body?: ResponseBody) => VPolkaResponse
   end: () => VPolkaResponse
   sendJson: (o: Object) => VPolkaResponse
+  sendHtml: (o: Object) => VPolkaResponse
   sendText: (o: string) => VPolkaResponse
   sendBlob: (o: Blob) => VPolkaResponse
   sendReadableStream: (o: ReadableStream) => VPolkaResponse

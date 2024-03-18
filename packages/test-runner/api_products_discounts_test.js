@@ -85,7 +85,6 @@ export const create = app => {
         throw e;
       }
 
-      console.log('before DONE')
     }
   );
 
@@ -103,7 +102,7 @@ export const create = app => {
       app, pr_upsert[0].handle
     );
 
-    console.log(product_discounts.length)
+    // console.log(product_discounts.length)
 
     assert.ok(product_discounts.length>=discounts_upsert.length, 'got less')
   });

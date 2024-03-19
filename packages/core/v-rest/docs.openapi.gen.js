@@ -36,9 +36,11 @@ import {
   variantTypeUpsertSchema
 } from '../v-api/types.autogen.zod.api.js'
 import * as path from 'node:path';
-import { readFile, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
-
+//
+// This file creates an OpenAPI file
+//
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 extendZodWithOpenApi(z);

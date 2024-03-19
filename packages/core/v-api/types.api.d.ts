@@ -472,7 +472,7 @@ export interface DiscountType extends BaseType, timestamps {
   info: DiscountInfo;
 
   /** 
-   * @description Discount application (`automatic` and `coupons`) 
+   * @description Discount application (`automatic` and `manual`) 
    */
   application: DiscountApplicationEnum['Auto'] | DiscountApplicationEnum['Manual'];
 }
@@ -497,31 +497,6 @@ export type DiscountInfo = {
    */
   filters: Filter[]
 }
-
-// /**
-//  * @description Automatic discount application type
-//  */
-// export type DiscountApplicationAuto = {
-//   id: 0,
-//   name: 'Automatic',
-//   name2: 'automatic'
-// }
-
-// /**
-//  * @description Manual (coupons) discount application type
-//  */
-// export type DiscountApplicationManual = {
-//   id: 1,
-//   name: 'Manual',
-//   name2: 'manual'
-// }
-
-// /** 
-//  * @description Discounts can be manual(coupon) or automatic types, 
-//  * see <a href='#DiscountApplicationEnum'>#DiscountApplicationEnum</a>  
-//  */
-// export type DiscountApplication = DiscountApplicationAuto | 
-//   DiscountApplicationManual;
 
 /** 
  * @description Discounts can be manual(coupon) or automatic types, 
@@ -777,7 +752,9 @@ export type DiscountDetails = {
   /** 
    * @description metadata to identify the type of discount 
    */
-  meta: DiscountMeta;
+  meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
+  DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
+  DiscountMetaEnum['order'];
 
   /** 
    * @description Extra parameters of the specific discount type 
@@ -790,22 +767,30 @@ export type DiscountDetails = {
 /** 
  * @description Discount meta data, see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>  
  */
-export type DiscountMeta = {
-  /** 
-   * @description Unique identifier of discount type 
-   * (`bulk`, `regular`, `buy_x_get_y`, `bundle`, `order`) */
-  id: number;
-
-  /** 
-   * @description Textual identifier 
-   */
-  type: | 'regular' | 'bulk' | 'buy_x_get_y' | 'order' | 'bundle';
-
-  /** 
-   * @description Printable name 
-   */
-  name: string;
+export type DiscountMetaEnum = {
+  regular: { 
+    id: 0, 
+    type: 'regular',          
+    name : 'Regular Discount', 
+  },
+  bulk: { 
+    id: 1, type: 'bulk',          
+    name : 'Bulk Discount', 
+  },
+  buy_x_get_y: { 
+    id: 2, type: 'buy_x_get_y' ,  
+    name : 'Buy X Get Y',
+  },
+  order: { 
+    id: 3, type: 'order', 
+    name : 'Order Discount',
+  },
+  bundle: { 
+    id: 4, type: 'bundle', 
+    name : 'Bundle Discount',
+  },
 }
+
 
 /** 
  *  @description Parameters of a regular discount 
@@ -1400,39 +1385,47 @@ export type OrderStatus = {
   /**
    * @description `checkout` status
    */
-  checkout: CheckoutStatusOptions;
+  checkout: CheckoutStatusEnum['complete'] | CheckoutStatusEnum['created'] | 
+            CheckoutStatusEnum['failed'] | CheckoutStatusEnum['requires_action'] |
+            CheckoutStatusEnum['unknown'];
 
   /**
    * @description `payment` status
    */
-  payment: PaymentStatusOptions;
+  payment: PaymentOptionsEnum['authorized'] | PaymentOptionsEnum['captured'] |
+           PaymentOptionsEnum['failed'] | PaymentOptionsEnum['partially_paid'] | 
+           PaymentOptionsEnum['partially_refunded'] | PaymentOptionsEnum['refunded'] |
+           PaymentOptionsEnum['requires_auth'] | PaymentOptionsEnum['unpaid'] | 
+           PaymentOptionsEnum['voided'];
 
   /**
    * @description `fulfillment` status
    */
-  fulfillment: FulfillStatusOptions;
+  fulfillment: FulfillOptionsEnum['cancelled'] | FulfillOptionsEnum['draft'] |
+               FulfillOptionsEnum['fulfilled'] | FulfillOptionsEnum['processing'] | 
+               FulfillOptionsEnum['shipped'];
 }
 
 /** 
  * @description Fulfillment options encapsulate the current state, 
  * see <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>  
  */
-export type FulfillStatusOptions = {
-  /** 
-   * @description `id` of fulfill option: `0-draft, 1-processing, 2-shipped, 3-fulfilled, 4-cancelled`
-   */
-  id: number;
-
-  /** 
-   * @description Readable/printable name 
-   */
-  name: string;
-
-  /** 
-   * @description Unique name (like id) 
-   */
-  name2: 'draft' | 'processing' | 'shipped' | 'fulfilled' | 'cancelled';
-
+export type FulfillOptionsEnum = {
+  draft: { 
+    id: 0, name2: 'draft', name: 'Draft'
+  },
+  processing: { 
+    id: 1, name2: 'processing' ,name: 'Processing (Stock Reserved)'
+  },
+  shipped: { 
+    id: 2, name2: 'shipped' ,name: 'Shipped'
+  },
+  fulfilled: { 
+    id: 3, name2: 'fulfilled', name: 'Fulfilled' 
+  },
+  cancelled: { 
+    id: 4, name2: 'cancelled', name: 'Cancelled (Stock returned)' 
+  }
 }
 
 
@@ -1440,45 +1433,58 @@ export type FulfillStatusOptions = {
  * @description Payment options encapsulate the current state, 
  * see <a href='#PaymentOptionsEnum'>#PaymentOptionsEnum</a>  
  */
-export type PaymentStatusOptions = {
-  /** 
-   * @description `id` of payment option: `0-unpaid, 1-captured, 2-requires_auth, 3-requires_auth, 4-voided, 5-failed, 6-partially_paid, 7-refunded` 
-   */
-  id: number;
-
-  /** 
-   * @description Readable/printable name 
-   */
-  name: string;
-
-  /** 
-   * @description Unique name (like id) 
-   */
-  name2: 'unpaid' | 'authorized' | 'captured' | 'requires_auth' | 'voided' | 'partially_paid' | 'refunded' | 'partially_refunded';
-
+export type PaymentOptionsEnum = {
+  unpaid: { 
+    id: 0, name: 'Unpaid', name2: 'unpaid'
+  },
+  authorized: { 
+    id: 1, name: 'Authorized', name2: 'authorized'
+  },
+  captured: { 
+    id: 2, name: 'Captured', name2: 'captured'
+  },
+  requires_auth: { 
+    id: 3, name: 'Requires Authentication', name2: 'requires_auth'
+  },
+  voided: { 
+    id: 4, name: 'Voided', name2: 'voided'
+  },
+  failed: { 
+    id: 5, name: 'Failed', name2: 'failed'
+  },
+  partially_paid: { 
+    id: 6, name: 'Partially paid', name2: 'partially_paid' 
+  },
+  refunded: { 
+    id: 7, name: 'Refunded', name2: 'refunded' 
+  },
+  partially_refunded: { 
+    id: 8, name: 'Partially Refunded', name2: 'partially_refunded' 
+  },
 }
+
 
 /** 
  * @description Checkout status encapsulate the current state, 
  * see <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>  
  */
-export type CheckoutStatusOptions = {
-  /** 
-   * @description `id` of checkout option: `0-created, 1-requires_action, 2-failed, 3-complete` 
-   */
-  id: number;
-
-  /** 
-   * @description Readable/printable name 
-   */
-  name: string;
-  
-  /** 
-   * @description Unique name (like id) 
-   */
-  name2: 'created' | 'requires_action' | 'failed' | 'complete';
+export type CheckoutStatusEnum = {
+  created: { 
+    id: 0, name2: 'created', name: 'Created'
+  },
+  requires_action: { 
+    id: 1, name2: 'requires_action', name: 'Requires Action'
+  },
+  failed: { 
+    id: 2, name2: 'failed', name: 'Failed'
+  },
+  complete: { 
+    id: 3, name2: 'complete', name: 'Complete'
+  },
+  unknown: { 
+    id: 4, name2: 'unknown', name: 'Unknown'
+  },
 }
-
 
 /** 
  * @description Pricing object exaplins how the pricing of an order 

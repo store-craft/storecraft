@@ -391,40 +391,97 @@ components:
                         type: object
                         properties:
                           meta:
-                            type: object
-                            properties:
-                              id:
-                                type: number
-                                description: >-
-                                  Unique identifier of discount type
-
-                                  (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                                  `order`)
-                              type:
-                                anyOf:
-                                  - type: string
+                            anyOf:
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 0
+                                  type:
+                                    type: string
                                     enum:
                                       - regular
-                                  - type: string
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Regular Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 1
+                                  type:
+                                    type: string
                                     enum:
                                       - bulk
-                                  - type: string
+                                  name:
+                                    type: string
                                     enum:
-                                      - buy_x_get_y
-                                  - type: string
+                                      - Bulk Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
                                     enum:
-                                      - order
-                                  - type: string
+                                      - 4
+                                  type:
+                                    type: string
                                     enum:
                                       - bundle
-                                description: Textual identifier
-                              name:
-                                type: string
-                                description: Printable name
-                            required:
-                              - id
-                              - type
-                              - name
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Bundle Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 2
+                                  type:
+                                    type: string
+                                    enum:
+                                      - buy_x_get_y
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Buy X Get Y
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 3
+                                  type:
+                                    type: string
+                                    enum:
+                                      - order
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Order Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
                             description: metadata to identify the type of discount
                           extra:
                             anyOf:
@@ -1276,7 +1333,7 @@ components:
                           - id
                           - name
                           - name2
-                    description: Discount application (`automatic` and `coupons`)
+                    description: Discount application (`automatic` and `manual`)
                 required:
                   - active
                   - title
@@ -1485,40 +1542,97 @@ components:
                               type: object
                               properties:
                                 meta:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: number
-                                      description: >-
-                                        Unique identifier of discount type
-
-                                        (`bulk`, `regular`, `buy_x_get_y`,
-                                        `bundle`, `order`)
-                                    type:
-                                      anyOf:
-                                        - type: string
+                                  anyOf:
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 0
+                                        type:
+                                          type: string
                                           enum:
                                             - regular
-                                        - type: string
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Regular Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 1
+                                        type:
+                                          type: string
                                           enum:
                                             - bulk
-                                        - type: string
+                                        name:
+                                          type: string
                                           enum:
-                                            - buy_x_get_y
-                                        - type: string
+                                            - Bulk Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
                                           enum:
-                                            - order
-                                        - type: string
+                                            - 4
+                                        type:
+                                          type: string
                                           enum:
                                             - bundle
-                                      description: Textual identifier
-                                    name:
-                                      type: string
-                                      description: Printable name
-                                  required:
-                                    - id
-                                    - type
-                                    - name
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Bundle Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 2
+                                        type:
+                                          type: string
+                                          enum:
+                                            - buy_x_get_y
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Buy X Get Y
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 3
+                                        type:
+                                          type: string
+                                          enum:
+                                            - order
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Order Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
                                   description: metadata to identify the type of discount
                                 extra:
                                   anyOf:
@@ -2373,7 +2487,7 @@ components:
                                 - id
                                 - name
                                 - name2
-                          description: Discount application (`automatic` and `coupons`)
+                          description: Discount application (`automatic` and `manual`)
                       required:
                         - active
                         - title
@@ -2647,40 +2761,97 @@ components:
                         type: object
                         properties:
                           meta:
-                            type: object
-                            properties:
-                              id:
-                                type: number
-                                description: >-
-                                  Unique identifier of discount type
-
-                                  (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                                  `order`)
-                              type:
-                                anyOf:
-                                  - type: string
+                            anyOf:
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 0
+                                  type:
+                                    type: string
                                     enum:
                                       - regular
-                                  - type: string
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Regular Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 1
+                                  type:
+                                    type: string
                                     enum:
                                       - bulk
-                                  - type: string
+                                  name:
+                                    type: string
                                     enum:
-                                      - buy_x_get_y
-                                  - type: string
+                                      - Bulk Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
                                     enum:
-                                      - order
-                                  - type: string
+                                      - 4
+                                  type:
+                                    type: string
                                     enum:
                                       - bundle
-                                description: Textual identifier
-                              name:
-                                type: string
-                                description: Printable name
-                            required:
-                              - id
-                              - type
-                              - name
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Bundle Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 2
+                                  type:
+                                    type: string
+                                    enum:
+                                      - buy_x_get_y
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Buy X Get Y
+                                required:
+                                  - id
+                                  - type
+                                  - name
+                              - type: object
+                                properties:
+                                  id:
+                                    type: number
+                                    enum:
+                                      - 3
+                                  type:
+                                    type: string
+                                    enum:
+                                      - order
+                                  name:
+                                    type: string
+                                    enum:
+                                      - Order Discount
+                                required:
+                                  - id
+                                  - type
+                                  - name
                             description: metadata to identify the type of discount
                           extra:
                             anyOf:
@@ -3532,7 +3703,7 @@ components:
                           - id
                           - name
                           - name2
-                    description: Discount application (`automatic` and `coupons`)
+                    description: Discount application (`automatic` and `manual`)
                 required:
                   - active
                   - title
@@ -4237,38 +4408,97 @@ components:
               type: object
               properties:
                 meta:
-                  type: object
-                  properties:
-                    id:
-                      type: number
-                      description: |-
-                        Unique identifier of discount type
-                        (`bulk`, `regular`, `buy_x_get_y`, `bundle`, `order`)
-                    type:
-                      anyOf:
-                        - type: string
+                  anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 0
+                        type:
+                          type: string
                           enum:
                             - regular
-                        - type: string
+                        name:
+                          type: string
+                          enum:
+                            - Regular Discount
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 1
+                        type:
+                          type: string
                           enum:
                             - bulk
-                        - type: string
+                        name:
+                          type: string
                           enum:
-                            - buy_x_get_y
-                        - type: string
+                            - Bulk Discount
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
                           enum:
-                            - order
-                        - type: string
+                            - 4
+                        type:
+                          type: string
                           enum:
                             - bundle
-                      description: Textual identifier
-                    name:
-                      type: string
-                      description: Printable name
-                  required:
-                    - id
-                    - type
-                    - name
+                        name:
+                          type: string
+                          enum:
+                            - Bundle Discount
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 2
+                        type:
+                          type: string
+                          enum:
+                            - buy_x_get_y
+                        name:
+                          type: string
+                          enum:
+                            - Buy X Get Y
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 3
+                        type:
+                          type: string
+                          enum:
+                            - order
+                        name:
+                          type: string
+                          enum:
+                            - Order Discount
+                      required:
+                        - id
+                        - type
+                        - name
                   description: metadata to identify the type of discount
                 extra:
                   anyOf:
@@ -5120,7 +5350,7 @@ components:
                 - id
                 - name
                 - name2
-          description: Discount application (`automatic` and `coupons`)
+          description: Discount application (`automatic` and `manual`)
       required:
         - active
         - title
@@ -5187,38 +5417,97 @@ components:
               type: object
               properties:
                 meta:
-                  type: object
-                  properties:
-                    id:
-                      type: number
-                      description: |-
-                        Unique identifier of discount type
-                        (`bulk`, `regular`, `buy_x_get_y`, `bundle`, `order`)
-                    type:
-                      anyOf:
-                        - type: string
+                  anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 0
+                        type:
+                          type: string
                           enum:
                             - regular
-                        - type: string
+                        name:
+                          type: string
+                          enum:
+                            - Regular Discount
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 1
+                        type:
+                          type: string
                           enum:
                             - bulk
-                        - type: string
+                        name:
+                          type: string
                           enum:
-                            - buy_x_get_y
-                        - type: string
+                            - Bulk Discount
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
                           enum:
-                            - order
-                        - type: string
+                            - 4
+                        type:
+                          type: string
                           enum:
                             - bundle
-                      description: Textual identifier
-                    name:
-                      type: string
-                      description: Printable name
-                  required:
-                    - id
-                    - type
-                    - name
+                        name:
+                          type: string
+                          enum:
+                            - Bundle Discount
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 2
+                        type:
+                          type: string
+                          enum:
+                            - buy_x_get_y
+                        name:
+                          type: string
+                          enum:
+                            - Buy X Get Y
+                      required:
+                        - id
+                        - type
+                        - name
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                          enum:
+                            - 3
+                        type:
+                          type: string
+                          enum:
+                            - order
+                        name:
+                          type: string
+                          enum:
+                            - Order Discount
+                      required:
+                        - id
+                        - type
+                        - name
                   description: metadata to identify the type of discount
                 extra:
                   anyOf:
@@ -6070,7 +6359,7 @@ components:
                 - id
                 - name
                 - name2
-          description: Discount application (`automatic` and `coupons`)
+          description: Discount application (`automatic` and `manual`)
       required:
         - active
         - title
@@ -6613,40 +6902,97 @@ components:
                               type: object
                               properties:
                                 meta:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: number
-                                      description: >-
-                                        Unique identifier of discount type
-
-                                        (`bulk`, `regular`, `buy_x_get_y`,
-                                        `bundle`, `order`)
-                                    type:
-                                      anyOf:
-                                        - type: string
+                                  anyOf:
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 0
+                                        type:
+                                          type: string
                                           enum:
                                             - regular
-                                        - type: string
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Regular Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 1
+                                        type:
+                                          type: string
                                           enum:
                                             - bulk
-                                        - type: string
+                                        name:
+                                          type: string
                                           enum:
-                                            - buy_x_get_y
-                                        - type: string
+                                            - Bulk Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
                                           enum:
-                                            - order
-                                        - type: string
+                                            - 4
+                                        type:
+                                          type: string
                                           enum:
                                             - bundle
-                                      description: Textual identifier
-                                    name:
-                                      type: string
-                                      description: Printable name
-                                  required:
-                                    - id
-                                    - type
-                                    - name
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Bundle Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 2
+                                        type:
+                                          type: string
+                                          enum:
+                                            - buy_x_get_y
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Buy X Get Y
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 3
+                                        type:
+                                          type: string
+                                          enum:
+                                            - order
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Order Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
                                   description: metadata to identify the type of discount
                                 extra:
                                   anyOf:
@@ -7501,7 +7847,7 @@ components:
                                 - id
                                 - name
                                 - name2
-                          description: Discount application (`automatic` and `coupons`)
+                          description: Discount application (`automatic` and `manual`)
                       required:
                         - active
                         - title
@@ -7710,40 +8056,97 @@ components:
                                     type: object
                                     properties:
                                       meta:
-                                        type: object
-                                        properties:
-                                          id:
-                                            type: number
-                                            description: >-
-                                              Unique identifier of discount type
-
-                                              (`bulk`, `regular`, `buy_x_get_y`,
-                                              `bundle`, `order`)
-                                          type:
-                                            anyOf:
-                                              - type: string
+                                        anyOf:
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 0
+                                              type:
+                                                type: string
                                                 enum:
                                                   - regular
-                                              - type: string
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Regular Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 1
+                                              type:
+                                                type: string
                                                 enum:
                                                   - bulk
-                                              - type: string
+                                              name:
+                                                type: string
                                                 enum:
-                                                  - buy_x_get_y
-                                              - type: string
+                                                  - Bulk Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
                                                 enum:
-                                                  - order
-                                              - type: string
+                                                  - 4
+                                              type:
+                                                type: string
                                                 enum:
                                                   - bundle
-                                            description: Textual identifier
-                                          name:
-                                            type: string
-                                            description: Printable name
-                                        required:
-                                          - id
-                                          - type
-                                          - name
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Bundle Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 2
+                                              type:
+                                                type: string
+                                                enum:
+                                                  - buy_x_get_y
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Buy X Get Y
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 3
+                                              type:
+                                                type: string
+                                                enum:
+                                                  - order
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Order Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
                                         description: metadata to identify the type of discount
                                       extra:
                                         anyOf:
@@ -8598,7 +9001,7 @@ components:
                                       - id
                                       - name
                                       - name2
-                                description: Discount application (`automatic` and `coupons`)
+                                description: Discount application (`automatic` and `manual`)
                             required:
                               - active
                               - title
@@ -8791,110 +9194,355 @@ components:
           type: object
           properties:
             checkout:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: "`id` of checkout option: `0-created, 1-requires_action, 2-failed,
-                    3-complete`"
-                name:
-                  type: string
-                  description: Readable/printable name
-                name2:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - created
-                    - type: string
-                      enum:
-                        - requires_action
-                    - type: string
-                      enum:
-                        - failed
-                    - type: string
+                        - 3
+                    name2:
+                      type: string
                       enum:
                         - complete
-                  description: Unique name (like id)
-              required:
-                - id
-                - name
-                - name2
+                    name:
+                      type: string
+                      enum:
+                        - Complete
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 0
+                    name2:
+                      type: string
+                      enum:
+                        - created
+                    name:
+                      type: string
+                      enum:
+                        - Created
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 2
+                    name2:
+                      type: string
+                      enum:
+                        - failed
+                    name:
+                      type: string
+                      enum:
+                        - Failed
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 1
+                    name2:
+                      type: string
+                      enum:
+                        - requires_action
+                    name:
+                      type: string
+                      enum:
+                        - Requires Action
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 4
+                    name2:
+                      type: string
+                      enum:
+                        - unknown
+                    name:
+                      type: string
+                      enum:
+                        - Unknown
+                  required:
+                    - id
+                    - name2
+                    - name
               description: "`checkout` status"
             payment:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: "`id` of payment option: `0-unpaid, 1-captured, 2-requires_auth,
-                    3-requires_auth, 4-voided, 5-failed, 6-partially_paid,
-                    7-refunded`"
-                name:
-                  type: string
-                  description: Readable/printable name
-                name2:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - unpaid
-                    - type: string
+                        - 1
+                    name:
+                      type: string
+                      enum:
+                        - Authorized
+                    name2:
+                      type: string
                       enum:
                         - authorized
-                    - type: string
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 2
+                    name:
+                      type: string
+                      enum:
+                        - Captured
+                    name2:
+                      type: string
                       enum:
                         - captured
-                    - type: string
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - requires_auth
-                    - type: string
+                        - 5
+                    name:
+                      type: string
                       enum:
-                        - voided
-                    - type: string
+                        - Failed
+                    name2:
+                      type: string
+                      enum:
+                        - failed
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 6
+                    name:
+                      type: string
+                      enum:
+                        - Partially paid
+                    name2:
+                      type: string
                       enum:
                         - partially_paid
-                    - type: string
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - refunded
-                    - type: string
+                        - 8
+                    name:
+                      type: string
+                      enum:
+                        - Partially Refunded
+                    name2:
+                      type: string
                       enum:
                         - partially_refunded
-                  description: Unique name (like id)
-              required:
-                - id
-                - name
-                - name2
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 7
+                    name:
+                      type: string
+                      enum:
+                        - Refunded
+                    name2:
+                      type: string
+                      enum:
+                        - refunded
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 3
+                    name:
+                      type: string
+                      enum:
+                        - Requires Authentication
+                    name2:
+                      type: string
+                      enum:
+                        - requires_auth
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 0
+                    name:
+                      type: string
+                      enum:
+                        - Unpaid
+                    name2:
+                      type: string
+                      enum:
+                        - unpaid
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 4
+                    name:
+                      type: string
+                      enum:
+                        - Voided
+                    name2:
+                      type: string
+                      enum:
+                        - voided
+                  required:
+                    - id
+                    - name
+                    - name2
               description: "`payment` status"
             fulfillment:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: "`id` of fulfill option: `0-draft, 1-processing, 2-shipped,
-                    3-fulfilled, 4-cancelled`"
-                name:
-                  type: string
-                  description: Readable/printable name
-                name2:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - draft
-                    - type: string
-                      enum:
-                        - processing
-                    - type: string
-                      enum:
-                        - shipped
-                    - type: string
-                      enum:
-                        - fulfilled
-                    - type: string
+                        - 4
+                    name2:
+                      type: string
                       enum:
                         - cancelled
-                  description: Unique name (like id)
-              required:
-                - id
-                - name
-                - name2
+                    name:
+                      type: string
+                      enum:
+                        - Cancelled (Stock returned)
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 0
+                    name2:
+                      type: string
+                      enum:
+                        - draft
+                    name:
+                      type: string
+                      enum:
+                        - Draft
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 3
+                    name2:
+                      type: string
+                      enum:
+                        - fulfilled
+                    name:
+                      type: string
+                      enum:
+                        - Fulfilled
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 1
+                    name2:
+                      type: string
+                      enum:
+                        - processing
+                    name:
+                      type: string
+                      enum:
+                        - Processing (Stock Reserved)
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 2
+                    name2:
+                      type: string
+                      enum:
+                        - shipped
+                    name:
+                      type: string
+                      enum:
+                        - Shipped
+                  required:
+                    - id
+                    - name2
+                    - name
               description: "`fulfillment` status"
           required:
             - checkout
@@ -8975,40 +9623,97 @@ components:
                             type: object
                             properties:
                               meta:
-                                type: object
-                                properties:
-                                  id:
-                                    type: number
-                                    description: >-
-                                      Unique identifier of discount type
-
-                                      (`bulk`, `regular`, `buy_x_get_y`,
-                                      `bundle`, `order`)
-                                  type:
-                                    anyOf:
-                                      - type: string
+                                anyOf:
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 0
+                                      type:
+                                        type: string
                                         enum:
                                           - regular
-                                      - type: string
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Regular Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 1
+                                      type:
+                                        type: string
                                         enum:
                                           - bulk
-                                      - type: string
+                                      name:
+                                        type: string
                                         enum:
-                                          - buy_x_get_y
-                                      - type: string
+                                          - Bulk Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
                                         enum:
-                                          - order
-                                      - type: string
+                                          - 4
+                                      type:
+                                        type: string
                                         enum:
                                           - bundle
-                                    description: Textual identifier
-                                  name:
-                                    type: string
-                                    description: Printable name
-                                required:
-                                  - id
-                                  - type
-                                  - name
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Bundle Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 2
+                                      type:
+                                        type: string
+                                        enum:
+                                          - buy_x_get_y
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Buy X Get Y
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 3
+                                      type:
+                                        type: string
+                                        enum:
+                                          - order
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Order Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
                                 description: metadata to identify the type of discount
                               extra:
                                 anyOf:
@@ -9862,7 +10567,7 @@ components:
                               - id
                               - name
                               - name2
-                        description: Discount application (`automatic` and `coupons`)
+                        description: Discount application (`automatic` and `manual`)
                     required:
                       - active
                       - title
@@ -10103,42 +10808,97 @@ components:
                                         type: object
                                         properties:
                                           meta:
-                                            type: object
-                                            properties:
-                                              id:
-                                                type: number
-                                                description: >-
-                                                  Unique identifier of discount
-                                                  type
-
-                                                  (`bulk`, `regular`,
-                                                  `buy_x_get_y`, `bundle`,
-                                                  `order`)
-                                              type:
-                                                anyOf:
-                                                  - type: string
+                                            anyOf:
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 0
+                                                  type:
+                                                    type: string
                                                     enum:
                                                       - regular
-                                                  - type: string
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Regular Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 1
+                                                  type:
+                                                    type: string
                                                     enum:
                                                       - bulk
-                                                  - type: string
+                                                  name:
+                                                    type: string
                                                     enum:
-                                                      - buy_x_get_y
-                                                  - type: string
+                                                      - Bulk Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
                                                     enum:
-                                                      - order
-                                                  - type: string
+                                                      - 4
+                                                  type:
+                                                    type: string
                                                     enum:
                                                       - bundle
-                                                description: Textual identifier
-                                              name:
-                                                type: string
-                                                description: Printable name
-                                            required:
-                                              - id
-                                              - type
-                                              - name
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Bundle Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 2
+                                                  type:
+                                                    type: string
+                                                    enum:
+                                                      - buy_x_get_y
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Buy X Get Y
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 3
+                                                  type:
+                                                    type: string
+                                                    enum:
+                                                      - order
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Order Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
                                             description: metadata to identify the type of discount
                                           extra:
                                             anyOf:
@@ -10995,7 +11755,7 @@ components:
                                           - id
                                           - name
                                           - name2
-                                    description: Discount application (`automatic` and `coupons`)
+                                    description: Discount application (`automatic` and `manual`)
                                 required:
                                   - active
                                   - title
@@ -11204,42 +11964,97 @@ components:
                                               type: object
                                               properties:
                                                 meta:
-                                                  type: object
-                                                  properties:
-                                                    id:
-                                                      type: number
-                                                      description: >-
-                                                        Unique identifier of
-                                                        discount type
-
-                                                        (`bulk`, `regular`,
-                                                        `buy_x_get_y`, `bundle`,
-                                                        `order`)
-                                                    type:
-                                                      anyOf:
-                                                        - type: string
+                                                  anyOf:
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 0
+                                                        type:
+                                                          type: string
                                                           enum:
                                                             - regular
-                                                        - type: string
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Regular Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 1
+                                                        type:
+                                                          type: string
                                                           enum:
                                                             - bulk
-                                                        - type: string
+                                                        name:
+                                                          type: string
                                                           enum:
-                                                            - buy_x_get_y
-                                                        - type: string
+                                                            - Bulk Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
                                                           enum:
-                                                            - order
-                                                        - type: string
+                                                            - 4
+                                                        type:
+                                                          type: string
                                                           enum:
                                                             - bundle
-                                                      description: Textual identifier
-                                                    name:
-                                                      type: string
-                                                      description: Printable name
-                                                  required:
-                                                    - id
-                                                    - type
-                                                    - name
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Bundle Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 2
+                                                        type:
+                                                          type: string
+                                                          enum:
+                                                            - buy_x_get_y
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Buy X Get Y
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 3
+                                                        type:
+                                                          type: string
+                                                          enum:
+                                                            - order
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Order Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
                                                   description: metadata to identify the type of discount
                                                 extra:
                                                   anyOf:
@@ -12097,7 +12912,7 @@ components:
                                                 - id
                                                 - name
                                                 - name2
-                                          description: Discount application (`automatic` and `coupons`)
+                                          description: Discount application (`automatic` and `manual`)
                                       required:
                                         - active
                                         - title
@@ -12398,40 +13213,97 @@ components:
                     type: object
                     properties:
                       meta:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                            description: >-
-                              Unique identifier of discount type
-
-                              (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                              `order`)
-                          type:
-                            anyOf:
-                              - type: string
+                        anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 0
+                              type:
+                                type: string
                                 enum:
                                   - regular
-                              - type: string
+                              name:
+                                type: string
+                                enum:
+                                  - Regular Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 1
+                              type:
+                                type: string
                                 enum:
                                   - bulk
-                              - type: string
+                              name:
+                                type: string
                                 enum:
-                                  - buy_x_get_y
-                              - type: string
+                                  - Bulk Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
                                 enum:
-                                  - order
-                              - type: string
+                                  - 4
+                              type:
+                                type: string
                                 enum:
                                   - bundle
-                            description: Textual identifier
-                          name:
-                            type: string
-                            description: Printable name
-                        required:
-                          - id
-                          - type
-                          - name
+                              name:
+                                type: string
+                                enum:
+                                  - Bundle Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 2
+                              type:
+                                type: string
+                                enum:
+                                  - buy_x_get_y
+                              name:
+                                type: string
+                                enum:
+                                  - Buy X Get Y
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 3
+                              type:
+                                type: string
+                                enum:
+                                  - order
+                              name:
+                                type: string
+                                enum:
+                                  - Order Discount
+                            required:
+                              - id
+                              - type
+                              - name
                         description: metadata to identify the type of discount
                       extra:
                         anyOf:
@@ -13283,7 +14155,7 @@ components:
                       - id
                       - name
                       - name2
-                description: Discount application (`automatic` and `coupons`)
+                description: Discount application (`automatic` and `manual`)
             required:
               - active
               - title
@@ -13572,40 +14444,97 @@ components:
                               type: object
                               properties:
                                 meta:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: number
-                                      description: >-
-                                        Unique identifier of discount type
-
-                                        (`bulk`, `regular`, `buy_x_get_y`,
-                                        `bundle`, `order`)
-                                    type:
-                                      anyOf:
-                                        - type: string
+                                  anyOf:
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 0
+                                        type:
+                                          type: string
                                           enum:
                                             - regular
-                                        - type: string
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Regular Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 1
+                                        type:
+                                          type: string
                                           enum:
                                             - bulk
-                                        - type: string
+                                        name:
+                                          type: string
                                           enum:
-                                            - buy_x_get_y
-                                        - type: string
+                                            - Bulk Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
                                           enum:
-                                            - order
-                                        - type: string
+                                            - 4
+                                        type:
+                                          type: string
                                           enum:
                                             - bundle
-                                      description: Textual identifier
-                                    name:
-                                      type: string
-                                      description: Printable name
-                                  required:
-                                    - id
-                                    - type
-                                    - name
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Bundle Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 2
+                                        type:
+                                          type: string
+                                          enum:
+                                            - buy_x_get_y
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Buy X Get Y
+                                      required:
+                                        - id
+                                        - type
+                                        - name
+                                    - type: object
+                                      properties:
+                                        id:
+                                          type: number
+                                          enum:
+                                            - 3
+                                        type:
+                                          type: string
+                                          enum:
+                                            - order
+                                        name:
+                                          type: string
+                                          enum:
+                                            - Order Discount
+                                      required:
+                                        - id
+                                        - type
+                                        - name
                                   description: metadata to identify the type of discount
                                 extra:
                                   anyOf:
@@ -14460,7 +15389,7 @@ components:
                                 - id
                                 - name
                                 - name2
-                          description: Discount application (`automatic` and `coupons`)
+                          description: Discount application (`automatic` and `manual`)
                       required:
                         - active
                         - title
@@ -14669,40 +15598,97 @@ components:
                                     type: object
                                     properties:
                                       meta:
-                                        type: object
-                                        properties:
-                                          id:
-                                            type: number
-                                            description: >-
-                                              Unique identifier of discount type
-
-                                              (`bulk`, `regular`, `buy_x_get_y`,
-                                              `bundle`, `order`)
-                                          type:
-                                            anyOf:
-                                              - type: string
+                                        anyOf:
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 0
+                                              type:
+                                                type: string
                                                 enum:
                                                   - regular
-                                              - type: string
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Regular Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 1
+                                              type:
+                                                type: string
                                                 enum:
                                                   - bulk
-                                              - type: string
+                                              name:
+                                                type: string
                                                 enum:
-                                                  - buy_x_get_y
-                                              - type: string
+                                                  - Bulk Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
                                                 enum:
-                                                  - order
-                                              - type: string
+                                                  - 4
+                                              type:
+                                                type: string
                                                 enum:
                                                   - bundle
-                                            description: Textual identifier
-                                          name:
-                                            type: string
-                                            description: Printable name
-                                        required:
-                                          - id
-                                          - type
-                                          - name
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Bundle Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 2
+                                              type:
+                                                type: string
+                                                enum:
+                                                  - buy_x_get_y
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Buy X Get Y
+                                            required:
+                                              - id
+                                              - type
+                                              - name
+                                          - type: object
+                                            properties:
+                                              id:
+                                                type: number
+                                                enum:
+                                                  - 3
+                                              type:
+                                                type: string
+                                                enum:
+                                                  - order
+                                              name:
+                                                type: string
+                                                enum:
+                                                  - Order Discount
+                                            required:
+                                              - id
+                                              - type
+                                              - name
                                         description: metadata to identify the type of discount
                                       extra:
                                         anyOf:
@@ -15557,7 +16543,7 @@ components:
                                       - id
                                       - name
                                       - name2
-                                description: Discount application (`automatic` and `coupons`)
+                                description: Discount application (`automatic` and `manual`)
                             required:
                               - active
                               - title
@@ -15744,110 +16730,355 @@ components:
           type: object
           properties:
             checkout:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: "`id` of checkout option: `0-created, 1-requires_action, 2-failed,
-                    3-complete`"
-                name:
-                  type: string
-                  description: Readable/printable name
-                name2:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - created
-                    - type: string
-                      enum:
-                        - requires_action
-                    - type: string
-                      enum:
-                        - failed
-                    - type: string
+                        - 3
+                    name2:
+                      type: string
                       enum:
                         - complete
-                  description: Unique name (like id)
-              required:
-                - id
-                - name
-                - name2
+                    name:
+                      type: string
+                      enum:
+                        - Complete
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 0
+                    name2:
+                      type: string
+                      enum:
+                        - created
+                    name:
+                      type: string
+                      enum:
+                        - Created
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 2
+                    name2:
+                      type: string
+                      enum:
+                        - failed
+                    name:
+                      type: string
+                      enum:
+                        - Failed
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 1
+                    name2:
+                      type: string
+                      enum:
+                        - requires_action
+                    name:
+                      type: string
+                      enum:
+                        - Requires Action
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 4
+                    name2:
+                      type: string
+                      enum:
+                        - unknown
+                    name:
+                      type: string
+                      enum:
+                        - Unknown
+                  required:
+                    - id
+                    - name2
+                    - name
               description: "`checkout` status"
             payment:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: "`id` of payment option: `0-unpaid, 1-captured, 2-requires_auth,
-                    3-requires_auth, 4-voided, 5-failed, 6-partially_paid,
-                    7-refunded`"
-                name:
-                  type: string
-                  description: Readable/printable name
-                name2:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - unpaid
-                    - type: string
+                        - 1
+                    name:
+                      type: string
+                      enum:
+                        - Authorized
+                    name2:
+                      type: string
                       enum:
                         - authorized
-                    - type: string
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 2
+                    name:
+                      type: string
+                      enum:
+                        - Captured
+                    name2:
+                      type: string
                       enum:
                         - captured
-                    - type: string
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - requires_auth
-                    - type: string
+                        - 5
+                    name:
+                      type: string
                       enum:
-                        - voided
-                    - type: string
+                        - Failed
+                    name2:
+                      type: string
+                      enum:
+                        - failed
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 6
+                    name:
+                      type: string
+                      enum:
+                        - Partially paid
+                    name2:
+                      type: string
                       enum:
                         - partially_paid
-                    - type: string
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - refunded
-                    - type: string
+                        - 8
+                    name:
+                      type: string
+                      enum:
+                        - Partially Refunded
+                    name2:
+                      type: string
                       enum:
                         - partially_refunded
-                  description: Unique name (like id)
-              required:
-                - id
-                - name
-                - name2
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 7
+                    name:
+                      type: string
+                      enum:
+                        - Refunded
+                    name2:
+                      type: string
+                      enum:
+                        - refunded
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 3
+                    name:
+                      type: string
+                      enum:
+                        - Requires Authentication
+                    name2:
+                      type: string
+                      enum:
+                        - requires_auth
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 0
+                    name:
+                      type: string
+                      enum:
+                        - Unpaid
+                    name2:
+                      type: string
+                      enum:
+                        - unpaid
+                  required:
+                    - id
+                    - name
+                    - name2
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 4
+                    name:
+                      type: string
+                      enum:
+                        - Voided
+                    name2:
+                      type: string
+                      enum:
+                        - voided
+                  required:
+                    - id
+                    - name
+                    - name2
               description: "`payment` status"
             fulfillment:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: "`id` of fulfill option: `0-draft, 1-processing, 2-shipped,
-                    3-fulfilled, 4-cancelled`"
-                name:
-                  type: string
-                  description: Readable/printable name
-                name2:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    id:
+                      type: number
                       enum:
-                        - draft
-                    - type: string
-                      enum:
-                        - processing
-                    - type: string
-                      enum:
-                        - shipped
-                    - type: string
-                      enum:
-                        - fulfilled
-                    - type: string
+                        - 4
+                    name2:
+                      type: string
                       enum:
                         - cancelled
-                  description: Unique name (like id)
-              required:
-                - id
-                - name
-                - name2
+                    name:
+                      type: string
+                      enum:
+                        - Cancelled (Stock returned)
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 0
+                    name2:
+                      type: string
+                      enum:
+                        - draft
+                    name:
+                      type: string
+                      enum:
+                        - Draft
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 3
+                    name2:
+                      type: string
+                      enum:
+                        - fulfilled
+                    name:
+                      type: string
+                      enum:
+                        - Fulfilled
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 1
+                    name2:
+                      type: string
+                      enum:
+                        - processing
+                    name:
+                      type: string
+                      enum:
+                        - Processing (Stock Reserved)
+                  required:
+                    - id
+                    - name2
+                    - name
+                - type: object
+                  properties:
+                    id:
+                      type: number
+                      enum:
+                        - 2
+                    name2:
+                      type: string
+                      enum:
+                        - shipped
+                    name:
+                      type: string
+                      enum:
+                        - Shipped
+                  required:
+                    - id
+                    - name2
+                    - name
               description: "`fulfillment` status"
           required:
             - checkout
@@ -15928,40 +17159,97 @@ components:
                             type: object
                             properties:
                               meta:
-                                type: object
-                                properties:
-                                  id:
-                                    type: number
-                                    description: >-
-                                      Unique identifier of discount type
-
-                                      (`bulk`, `regular`, `buy_x_get_y`,
-                                      `bundle`, `order`)
-                                  type:
-                                    anyOf:
-                                      - type: string
+                                anyOf:
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 0
+                                      type:
+                                        type: string
                                         enum:
                                           - regular
-                                      - type: string
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Regular Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 1
+                                      type:
+                                        type: string
                                         enum:
                                           - bulk
-                                      - type: string
+                                      name:
+                                        type: string
                                         enum:
-                                          - buy_x_get_y
-                                      - type: string
+                                          - Bulk Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
                                         enum:
-                                          - order
-                                      - type: string
+                                          - 4
+                                      type:
+                                        type: string
                                         enum:
                                           - bundle
-                                    description: Textual identifier
-                                  name:
-                                    type: string
-                                    description: Printable name
-                                required:
-                                  - id
-                                  - type
-                                  - name
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Bundle Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 2
+                                      type:
+                                        type: string
+                                        enum:
+                                          - buy_x_get_y
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Buy X Get Y
+                                    required:
+                                      - id
+                                      - type
+                                      - name
+                                  - type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                        enum:
+                                          - 3
+                                      type:
+                                        type: string
+                                        enum:
+                                          - order
+                                      name:
+                                        type: string
+                                        enum:
+                                          - Order Discount
+                                    required:
+                                      - id
+                                      - type
+                                      - name
                                 description: metadata to identify the type of discount
                               extra:
                                 anyOf:
@@ -16815,7 +18103,7 @@ components:
                               - id
                               - name
                               - name2
-                        description: Discount application (`automatic` and `coupons`)
+                        description: Discount application (`automatic` and `manual`)
                     required:
                       - active
                       - title
@@ -17056,42 +18344,97 @@ components:
                                         type: object
                                         properties:
                                           meta:
-                                            type: object
-                                            properties:
-                                              id:
-                                                type: number
-                                                description: >-
-                                                  Unique identifier of discount
-                                                  type
-
-                                                  (`bulk`, `regular`,
-                                                  `buy_x_get_y`, `bundle`,
-                                                  `order`)
-                                              type:
-                                                anyOf:
-                                                  - type: string
+                                            anyOf:
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 0
+                                                  type:
+                                                    type: string
                                                     enum:
                                                       - regular
-                                                  - type: string
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Regular Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 1
+                                                  type:
+                                                    type: string
                                                     enum:
                                                       - bulk
-                                                  - type: string
+                                                  name:
+                                                    type: string
                                                     enum:
-                                                      - buy_x_get_y
-                                                  - type: string
+                                                      - Bulk Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
                                                     enum:
-                                                      - order
-                                                  - type: string
+                                                      - 4
+                                                  type:
+                                                    type: string
                                                     enum:
                                                       - bundle
-                                                description: Textual identifier
-                                              name:
-                                                type: string
-                                                description: Printable name
-                                            required:
-                                              - id
-                                              - type
-                                              - name
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Bundle Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 2
+                                                  type:
+                                                    type: string
+                                                    enum:
+                                                      - buy_x_get_y
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Buy X Get Y
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
+                                              - type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                    enum:
+                                                      - 3
+                                                  type:
+                                                    type: string
+                                                    enum:
+                                                      - order
+                                                  name:
+                                                    type: string
+                                                    enum:
+                                                      - Order Discount
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - name
                                             description: metadata to identify the type of discount
                                           extra:
                                             anyOf:
@@ -17948,7 +19291,7 @@ components:
                                           - id
                                           - name
                                           - name2
-                                    description: Discount application (`automatic` and `coupons`)
+                                    description: Discount application (`automatic` and `manual`)
                                 required:
                                   - active
                                   - title
@@ -18157,42 +19500,97 @@ components:
                                               type: object
                                               properties:
                                                 meta:
-                                                  type: object
-                                                  properties:
-                                                    id:
-                                                      type: number
-                                                      description: >-
-                                                        Unique identifier of
-                                                        discount type
-
-                                                        (`bulk`, `regular`,
-                                                        `buy_x_get_y`, `bundle`,
-                                                        `order`)
-                                                    type:
-                                                      anyOf:
-                                                        - type: string
+                                                  anyOf:
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 0
+                                                        type:
+                                                          type: string
                                                           enum:
                                                             - regular
-                                                        - type: string
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Regular Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 1
+                                                        type:
+                                                          type: string
                                                           enum:
                                                             - bulk
-                                                        - type: string
+                                                        name:
+                                                          type: string
                                                           enum:
-                                                            - buy_x_get_y
-                                                        - type: string
+                                                            - Bulk Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
                                                           enum:
-                                                            - order
-                                                        - type: string
+                                                            - 4
+                                                        type:
+                                                          type: string
                                                           enum:
                                                             - bundle
-                                                      description: Textual identifier
-                                                    name:
-                                                      type: string
-                                                      description: Printable name
-                                                  required:
-                                                    - id
-                                                    - type
-                                                    - name
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Bundle Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 2
+                                                        type:
+                                                          type: string
+                                                          enum:
+                                                            - buy_x_get_y
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Buy X Get Y
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
+                                                    - type: object
+                                                      properties:
+                                                        id:
+                                                          type: number
+                                                          enum:
+                                                            - 3
+                                                        type:
+                                                          type: string
+                                                          enum:
+                                                            - order
+                                                        name:
+                                                          type: string
+                                                          enum:
+                                                            - Order Discount
+                                                      required:
+                                                        - id
+                                                        - type
+                                                        - name
                                                   description: metadata to identify the type of discount
                                                 extra:
                                                   anyOf:
@@ -19050,7 +20448,7 @@ components:
                                                 - id
                                                 - name
                                                 - name2
-                                          description: Discount application (`automatic` and `coupons`)
+                                          description: Discount application (`automatic` and `manual`)
                                       required:
                                         - active
                                         - title
@@ -19351,40 +20749,97 @@ components:
                     type: object
                     properties:
                       meta:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                            description: >-
-                              Unique identifier of discount type
-
-                              (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                              `order`)
-                          type:
-                            anyOf:
-                              - type: string
+                        anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 0
+                              type:
+                                type: string
                                 enum:
                                   - regular
-                              - type: string
+                              name:
+                                type: string
+                                enum:
+                                  - Regular Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 1
+                              type:
+                                type: string
                                 enum:
                                   - bulk
-                              - type: string
+                              name:
+                                type: string
                                 enum:
-                                  - buy_x_get_y
-                              - type: string
+                                  - Bulk Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
                                 enum:
-                                  - order
-                              - type: string
+                                  - 4
+                              type:
+                                type: string
                                 enum:
                                   - bundle
-                            description: Textual identifier
-                          name:
-                            type: string
-                            description: Printable name
-                        required:
-                          - id
-                          - type
-                          - name
+                              name:
+                                type: string
+                                enum:
+                                  - Bundle Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 2
+                              type:
+                                type: string
+                                enum:
+                                  - buy_x_get_y
+                              name:
+                                type: string
+                                enum:
+                                  - Buy X Get Y
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 3
+                              type:
+                                type: string
+                                enum:
+                                  - order
+                              name:
+                                type: string
+                                enum:
+                                  - Order Discount
+                            required:
+                              - id
+                              - type
+                              - name
                         description: metadata to identify the type of discount
                       extra:
                         anyOf:
@@ -20236,7 +21691,7 @@ components:
                       - id
                       - name
                       - name2
-                description: Discount application (`automatic` and `coupons`)
+                description: Discount application (`automatic` and `manual`)
             required:
               - active
               - title
@@ -20674,40 +22129,97 @@ components:
                           type: object
                           properties:
                             meta:
-                              type: object
-                              properties:
-                                id:
-                                  type: number
-                                  description: >-
-                                    Unique identifier of discount type
-
-                                    (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                                    `order`)
-                                type:
-                                  anyOf:
-                                    - type: string
+                              anyOf:
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 0
+                                    type:
+                                      type: string
                                       enum:
                                         - regular
-                                    - type: string
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Regular Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 1
+                                    type:
+                                      type: string
                                       enum:
                                         - bulk
-                                    - type: string
+                                    name:
+                                      type: string
                                       enum:
-                                        - buy_x_get_y
-                                    - type: string
+                                        - Bulk Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
                                       enum:
-                                        - order
-                                    - type: string
+                                        - 4
+                                    type:
+                                      type: string
                                       enum:
                                         - bundle
-                                  description: Textual identifier
-                                name:
-                                  type: string
-                                  description: Printable name
-                              required:
-                                - id
-                                - type
-                                - name
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Bundle Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 2
+                                    type:
+                                      type: string
+                                      enum:
+                                        - buy_x_get_y
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Buy X Get Y
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 3
+                                    type:
+                                      type: string
+                                      enum:
+                                        - order
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Order Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
                               description: metadata to identify the type of discount
                             extra:
                               anyOf:
@@ -21560,7 +23072,7 @@ components:
                             - id
                             - name
                             - name2
-                      description: Discount application (`automatic` and `coupons`)
+                      description: Discount application (`automatic` and `manual`)
                   required:
                     - active
                     - title
@@ -21769,40 +23281,97 @@ components:
                                 type: object
                                 properties:
                                   meta:
-                                    type: object
-                                    properties:
-                                      id:
-                                        type: number
-                                        description: >-
-                                          Unique identifier of discount type
-
-                                          (`bulk`, `regular`, `buy_x_get_y`,
-                                          `bundle`, `order`)
-                                      type:
-                                        anyOf:
-                                          - type: string
+                                    anyOf:
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 0
+                                          type:
+                                            type: string
                                             enum:
                                               - regular
-                                          - type: string
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Regular Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 1
+                                          type:
+                                            type: string
                                             enum:
                                               - bulk
-                                          - type: string
+                                          name:
+                                            type: string
                                             enum:
-                                              - buy_x_get_y
-                                          - type: string
+                                              - Bulk Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
                                             enum:
-                                              - order
-                                          - type: string
+                                              - 4
+                                          type:
+                                            type: string
                                             enum:
                                               - bundle
-                                        description: Textual identifier
-                                      name:
-                                        type: string
-                                        description: Printable name
-                                    required:
-                                      - id
-                                      - type
-                                      - name
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Bundle Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 2
+                                          type:
+                                            type: string
+                                            enum:
+                                              - buy_x_get_y
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Buy X Get Y
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 3
+                                          type:
+                                            type: string
+                                            enum:
+                                              - order
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Order Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
                                     description: metadata to identify the type of discount
                                   extra:
                                     anyOf:
@@ -22657,7 +24226,7 @@ components:
                                   - id
                                   - name
                                   - name2
-                            description: Discount application (`automatic` and `coupons`)
+                            description: Discount application (`automatic` and `manual`)
                         required:
                           - active
                           - title
@@ -22868,40 +24437,97 @@ components:
                     type: object
                     properties:
                       meta:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                            description: >-
-                              Unique identifier of discount type
-
-                              (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                              `order`)
-                          type:
-                            anyOf:
-                              - type: string
+                        anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 0
+                              type:
+                                type: string
                                 enum:
                                   - regular
-                              - type: string
+                              name:
+                                type: string
+                                enum:
+                                  - Regular Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 1
+                              type:
+                                type: string
                                 enum:
                                   - bulk
-                              - type: string
+                              name:
+                                type: string
                                 enum:
-                                  - buy_x_get_y
-                              - type: string
+                                  - Bulk Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
                                 enum:
-                                  - order
-                              - type: string
+                                  - 4
+                              type:
+                                type: string
                                 enum:
                                   - bundle
-                            description: Textual identifier
-                          name:
-                            type: string
-                            description: Printable name
-                        required:
-                          - id
-                          - type
-                          - name
+                              name:
+                                type: string
+                                enum:
+                                  - Bundle Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 2
+                              type:
+                                type: string
+                                enum:
+                                  - buy_x_get_y
+                              name:
+                                type: string
+                                enum:
+                                  - Buy X Get Y
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 3
+                              type:
+                                type: string
+                                enum:
+                                  - order
+                              name:
+                                type: string
+                                enum:
+                                  - Order Discount
+                            required:
+                              - id
+                              - type
+                              - name
                         description: metadata to identify the type of discount
                       extra:
                         anyOf:
@@ -23753,7 +25379,7 @@ components:
                       - id
                       - name
                       - name2
-                description: Discount application (`automatic` and `coupons`)
+                description: Discount application (`automatic` and `manual`)
             required:
               - active
               - title
@@ -24136,40 +25762,97 @@ components:
                           type: object
                           properties:
                             meta:
-                              type: object
-                              properties:
-                                id:
-                                  type: number
-                                  description: >-
-                                    Unique identifier of discount type
-
-                                    (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                                    `order`)
-                                type:
-                                  anyOf:
-                                    - type: string
+                              anyOf:
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 0
+                                    type:
+                                      type: string
                                       enum:
                                         - regular
-                                    - type: string
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Regular Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 1
+                                    type:
+                                      type: string
                                       enum:
                                         - bulk
-                                    - type: string
+                                    name:
+                                      type: string
                                       enum:
-                                        - buy_x_get_y
-                                    - type: string
+                                        - Bulk Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
                                       enum:
-                                        - order
-                                    - type: string
+                                        - 4
+                                    type:
+                                      type: string
                                       enum:
                                         - bundle
-                                  description: Textual identifier
-                                name:
-                                  type: string
-                                  description: Printable name
-                              required:
-                                - id
-                                - type
-                                - name
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Bundle Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 2
+                                    type:
+                                      type: string
+                                      enum:
+                                        - buy_x_get_y
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Buy X Get Y
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                      enum:
+                                        - 3
+                                    type:
+                                      type: string
+                                      enum:
+                                        - order
+                                    name:
+                                      type: string
+                                      enum:
+                                        - Order Discount
+                                  required:
+                                    - id
+                                    - type
+                                    - name
                               description: metadata to identify the type of discount
                             extra:
                               anyOf:
@@ -25022,7 +26705,7 @@ components:
                             - id
                             - name
                             - name2
-                      description: Discount application (`automatic` and `coupons`)
+                      description: Discount application (`automatic` and `manual`)
                   required:
                     - active
                     - title
@@ -25231,40 +26914,97 @@ components:
                                 type: object
                                 properties:
                                   meta:
-                                    type: object
-                                    properties:
-                                      id:
-                                        type: number
-                                        description: >-
-                                          Unique identifier of discount type
-
-                                          (`bulk`, `regular`, `buy_x_get_y`,
-                                          `bundle`, `order`)
-                                      type:
-                                        anyOf:
-                                          - type: string
+                                    anyOf:
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 0
+                                          type:
+                                            type: string
                                             enum:
                                               - regular
-                                          - type: string
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Regular Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 1
+                                          type:
+                                            type: string
                                             enum:
                                               - bulk
-                                          - type: string
+                                          name:
+                                            type: string
                                             enum:
-                                              - buy_x_get_y
-                                          - type: string
+                                              - Bulk Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
                                             enum:
-                                              - order
-                                          - type: string
+                                              - 4
+                                          type:
+                                            type: string
                                             enum:
                                               - bundle
-                                        description: Textual identifier
-                                      name:
-                                        type: string
-                                        description: Printable name
-                                    required:
-                                      - id
-                                      - type
-                                      - name
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Bundle Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 2
+                                          type:
+                                            type: string
+                                            enum:
+                                              - buy_x_get_y
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Buy X Get Y
+                                        required:
+                                          - id
+                                          - type
+                                          - name
+                                      - type: object
+                                        properties:
+                                          id:
+                                            type: number
+                                            enum:
+                                              - 3
+                                          type:
+                                            type: string
+                                            enum:
+                                              - order
+                                          name:
+                                            type: string
+                                            enum:
+                                              - Order Discount
+                                        required:
+                                          - id
+                                          - type
+                                          - name
                                     description: metadata to identify the type of discount
                                   extra:
                                     anyOf:
@@ -26119,7 +27859,7 @@ components:
                                   - id
                                   - name
                                   - name2
-                            description: Discount application (`automatic` and `coupons`)
+                            description: Discount application (`automatic` and `manual`)
                         required:
                           - active
                           - title
@@ -26330,40 +28070,97 @@ components:
                     type: object
                     properties:
                       meta:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                            description: >-
-                              Unique identifier of discount type
-
-                              (`bulk`, `regular`, `buy_x_get_y`, `bundle`,
-                              `order`)
-                          type:
-                            anyOf:
-                              - type: string
+                        anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 0
+                              type:
+                                type: string
                                 enum:
                                   - regular
-                              - type: string
+                              name:
+                                type: string
+                                enum:
+                                  - Regular Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 1
+                              type:
+                                type: string
                                 enum:
                                   - bulk
-                              - type: string
+                              name:
+                                type: string
                                 enum:
-                                  - buy_x_get_y
-                              - type: string
+                                  - Bulk Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
                                 enum:
-                                  - order
-                              - type: string
+                                  - 4
+                              type:
+                                type: string
                                 enum:
                                   - bundle
-                            description: Textual identifier
-                          name:
-                            type: string
-                            description: Printable name
-                        required:
-                          - id
-                          - type
-                          - name
+                              name:
+                                type: string
+                                enum:
+                                  - Bundle Discount
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 2
+                              type:
+                                type: string
+                                enum:
+                                  - buy_x_get_y
+                              name:
+                                type: string
+                                enum:
+                                  - Buy X Get Y
+                            required:
+                              - id
+                              - type
+                              - name
+                          - type: object
+                            properties:
+                              id:
+                                type: number
+                                enum:
+                                  - 3
+                              type:
+                                type: string
+                                enum:
+                                  - order
+                              name:
+                                type: string
+                                enum:
+                                  - Order Discount
+                            required:
+                              - id
+                              - type
+                              - name
                         description: metadata to identify the type of discount
                       extra:
                         anyOf:
@@ -27215,7 +29012,7 @@ components:
                       - id
                       - name
                       - name2
-                description: Discount application (`automatic` and `coupons`)
+                description: Discount application (`automatic` and `manual`)
             required:
               - active
               - title

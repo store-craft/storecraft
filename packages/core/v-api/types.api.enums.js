@@ -1,4 +1,4 @@
-// @ts-nocheck2
+// @ts-nocheck
 
 
 /** 
@@ -76,7 +76,7 @@ export const FilterMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').DiscountMeta} 
+ * @enum {import('./types.api.d.ts').DiscountMetaEnum} 
  */
 export const DiscountMetaEnum = {
   regular: { 
@@ -103,7 +103,7 @@ export const DiscountMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api.js').CheckoutStatusOptions} 
+ * @enum {import('./types.api.js').CheckoutStatusEnum} 
  */
 export const CheckoutStatusEnum = {
   created: { 
@@ -124,7 +124,7 @@ export const CheckoutStatusEnum = {
 }
 
 /** 
- * @enum {import('./types.api.js').FulfillStatusOptions} 
+ * @enum {import('./types.api.js').FulfillOptionsEnum} 
  */
 export const FulfillOptionsEnum = {
   draft: { 
@@ -145,7 +145,7 @@ export const FulfillOptionsEnum = {
 }
 
 /** 
- * @enum {import('./types.api.js').PaymentStatusOptions} 
+ * @enum {import('./types.api.js').PaymentOptionsEnum} 
  */
 export const PaymentOptionsEnum = {
   unpaid: { 

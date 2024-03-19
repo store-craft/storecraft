@@ -283,27 +283,6 @@ export const filterMetaSchema = z
   .describe(
     "Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>",
   );
-export const discountMetaSchema = z
-  .object({
-    id: z
-      .number()
-      .describe(
-        "Unique identifier of discount type\n(`bulk`, `regular`, `buy_x_get_y`, `bundle`, `order`)",
-      ),
-    type: z
-      .union([
-        z.literal("regular"),
-        z.literal("bulk"),
-        z.literal("buy_x_get_y"),
-        z.literal("order"),
-        z.literal("bundle"),
-      ])
-      .describe("Textual identifier"),
-    name: z.string().describe("Printable name"),
-  })
-  .describe(
-    "Discount meta data, see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
-  );
 export const regularDiscountExtraSchema = z
   .object({
     fixed: z
@@ -357,6 +336,37 @@ export const bundleDiscountExtraSchema = z
       ),
   })
   .describe("Parameters of bulk discount");
+export const discountMetaEnumSchema = z
+  .object({
+    regular: z.object({
+      id: z.literal(0),
+      type: z.literal("regular"),
+      name: z.literal("Regular Discount"),
+    }),
+    bulk: z.object({
+      id: z.literal(1),
+      type: z.literal("bulk"),
+      name: z.literal("Bulk Discount"),
+    }),
+    buy_x_get_y: z.object({
+      id: z.literal(2),
+      type: z.literal("buy_x_get_y"),
+      name: z.literal("Buy X Get Y"),
+    }),
+    order: z.object({
+      id: z.literal(3),
+      type: z.literal("order"),
+      name: z.literal("Order Discount"),
+    }),
+    bundle: z.object({
+      id: z.literal(4),
+      type: z.literal("bundle"),
+      name: z.literal("Bundle Discount"),
+    }),
+  })
+  .describe(
+    "Discount meta data, see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
+  );
 export const addressTypeSchema = z
   .object({
     firstname: z.string().optional().describe("First name of recipient"),
@@ -434,70 +444,118 @@ export const orderPaymentGatewayDataSchema = z
       .describe("Latest status of payment for caching"),
   })
   .describe("How did the order interacted with a payment gateway ?");
-export const checkoutStatusOptionsSchema = z
+export const fulfillOptionsEnumSchema = z
   .object({
-    id: z
-      .number()
-      .describe(
-        "`id` of checkout option: `0-created, 1-requires_action, 2-failed, 3-complete`",
-      ),
-    name: z.string().describe("Readable/printable name"),
-    name2: z
-      .union([
-        z.literal("created"),
-        z.literal("requires_action"),
-        z.literal("failed"),
-        z.literal("complete"),
-      ])
-      .describe("Unique name (like id)"),
+    draft: z.object({
+      id: z.literal(0),
+      name2: z.literal("draft"),
+      name: z.literal("Draft"),
+    }),
+    processing: z.object({
+      id: z.literal(1),
+      name2: z.literal("processing"),
+      name: z.literal("Processing (Stock Reserved)"),
+    }),
+    shipped: z.object({
+      id: z.literal(2),
+      name2: z.literal("shipped"),
+      name: z.literal("Shipped"),
+    }),
+    fulfilled: z.object({
+      id: z.literal(3),
+      name2: z.literal("fulfilled"),
+      name: z.literal("Fulfilled"),
+    }),
+    cancelled: z.object({
+      id: z.literal(4),
+      name2: z.literal("cancelled"),
+      name: z.literal("Cancelled (Stock returned)"),
+    }),
   })
   .describe(
-    "Checkout status encapsulate the current state,\nsee <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>",
+    "Fulfillment options encapsulate the current state,\nsee <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>",
   );
-export const paymentStatusOptionsSchema = z
+export const paymentOptionsEnumSchema = z
   .object({
-    id: z
-      .number()
-      .describe(
-        "`id` of payment option: `0-unpaid, 1-captured, 2-requires_auth, 3-requires_auth, 4-voided, 5-failed, 6-partially_paid, 7-refunded`",
-      ),
-    name: z.string().describe("Readable/printable name"),
-    name2: z
-      .union([
-        z.literal("unpaid"),
-        z.literal("authorized"),
-        z.literal("captured"),
-        z.literal("requires_auth"),
-        z.literal("voided"),
-        z.literal("partially_paid"),
-        z.literal("refunded"),
-        z.literal("partially_refunded"),
-      ])
-      .describe("Unique name (like id)"),
+    unpaid: z.object({
+      id: z.literal(0),
+      name: z.literal("Unpaid"),
+      name2: z.literal("unpaid"),
+    }),
+    authorized: z.object({
+      id: z.literal(1),
+      name: z.literal("Authorized"),
+      name2: z.literal("authorized"),
+    }),
+    captured: z.object({
+      id: z.literal(2),
+      name: z.literal("Captured"),
+      name2: z.literal("captured"),
+    }),
+    requires_auth: z.object({
+      id: z.literal(3),
+      name: z.literal("Requires Authentication"),
+      name2: z.literal("requires_auth"),
+    }),
+    voided: z.object({
+      id: z.literal(4),
+      name: z.literal("Voided"),
+      name2: z.literal("voided"),
+    }),
+    failed: z.object({
+      id: z.literal(5),
+      name: z.literal("Failed"),
+      name2: z.literal("failed"),
+    }),
+    partially_paid: z.object({
+      id: z.literal(6),
+      name: z.literal("Partially paid"),
+      name2: z.literal("partially_paid"),
+    }),
+    refunded: z.object({
+      id: z.literal(7),
+      name: z.literal("Refunded"),
+      name2: z.literal("refunded"),
+    }),
+    partially_refunded: z.object({
+      id: z.literal(8),
+      name: z.literal("Partially Refunded"),
+      name2: z.literal("partially_refunded"),
+    }),
   })
   .describe(
     "Payment options encapsulate the current state,\nsee <a href='#PaymentOptionsEnum'>#PaymentOptionsEnum</a>",
   );
-export const fulfillStatusOptionsSchema = z
+export const checkoutStatusEnumSchema = z
   .object({
-    id: z
-      .number()
-      .describe(
-        "`id` of fulfill option: `0-draft, 1-processing, 2-shipped, 3-fulfilled, 4-cancelled`",
-      ),
-    name: z.string().describe("Readable/printable name"),
-    name2: z
-      .union([
-        z.literal("draft"),
-        z.literal("processing"),
-        z.literal("shipped"),
-        z.literal("fulfilled"),
-        z.literal("cancelled"),
-      ])
-      .describe("Unique name (like id)"),
+    created: z.object({
+      id: z.literal(0),
+      name2: z.literal("created"),
+      name: z.literal("Created"),
+    }),
+    requires_action: z.object({
+      id: z.literal(1),
+      name2: z.literal("requires_action"),
+      name: z.literal("Requires Action"),
+    }),
+    failed: z.object({
+      id: z.literal(2),
+      name2: z.literal("failed"),
+      name: z.literal("Failed"),
+    }),
+    complete: z.object({
+      id: z.literal(3),
+      name2: z.literal("complete"),
+      name: z.literal("Complete"),
+    }),
+    unknown: z.object({
+      id: z.literal(4),
+      name2: z.literal("unknown"),
+      name: z.literal("Unknown"),
+    }),
   })
   .describe(
-    "Fulfillment options encapsulate the current state,\nsee <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>",
+    "Checkout status encapsulate the current state,\nsee <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>",
   );
 export const discountErrorSchema = z
   .object({
@@ -713,16 +771,50 @@ export const notificationActionSchema = z
   );
 export const orderStatusSchema = z
   .object({
-    checkout: checkoutStatusOptionsSchema.describe("`checkout` status"),
-    payment: paymentStatusOptionsSchema.describe("`payment` status"),
-    fulfillment: fulfillStatusOptionsSchema.describe("`fulfillment` status"),
+    checkout: z
+      .union([
+        checkoutStatusEnumSchema.shape.complete,
+        checkoutStatusEnumSchema.shape.created,
+        checkoutStatusEnumSchema.shape.failed,
+        checkoutStatusEnumSchema.shape.requires_action,
+        checkoutStatusEnumSchema.shape.unknown,
+      ])
+      .describe("`checkout` status"),
+    payment: z
+      .union([
+        paymentOptionsEnumSchema.shape.authorized,
+        paymentOptionsEnumSchema.shape.captured,
+        paymentOptionsEnumSchema.shape.failed,
+        paymentOptionsEnumSchema.shape.partially_paid,
+        paymentOptionsEnumSchema.shape.partially_refunded,
+        paymentOptionsEnumSchema.shape.refunded,
+        paymentOptionsEnumSchema.shape.requires_auth,
+        paymentOptionsEnumSchema.shape.unpaid,
+        paymentOptionsEnumSchema.shape.voided,
+      ])
+      .describe("`payment` status"),
+    fulfillment: z
+      .union([
+        fulfillOptionsEnumSchema.shape.cancelled,
+        fulfillOptionsEnumSchema.shape.draft,
+        fulfillOptionsEnumSchema.shape.fulfilled,
+        fulfillOptionsEnumSchema.shape.processing,
+        fulfillOptionsEnumSchema.shape.shipped,
+      ])
+      .describe("`fulfillment` status"),
   })
   .describe("Status of `checkout`, `fulfillment` and `payment`");
 export const discountDetailsSchema = z
   .object({
-    meta: discountMetaSchema.describe(
-      "metadata to identify the type of discount",
-    ),
+    meta: z
+      .union([
+        discountMetaEnumSchema.shape.regular,
+        discountMetaEnumSchema.shape.bulk,
+        discountMetaEnumSchema.shape.bundle,
+        discountMetaEnumSchema.shape.buy_x_get_y,
+        discountMetaEnumSchema.shape.order,
+      ])
+      .describe("metadata to identify the type of discount"),
     extra: z
       .union([
         regularDiscountExtraSchema,
@@ -784,7 +876,7 @@ export const discountTypeSchema = baseTypeSchema
         discountApplicationEnumSchema.shape.Auto,
         discountApplicationEnumSchema.shape.Manual,
       ])
-      .describe("Discount application (`automatic` and `coupons`)"),
+      .describe("Discount application (`automatic` and `manual`)"),
   });
 export const discountTypeUpsertSchema = discountTypeSchema.omit({
   created_at: true,

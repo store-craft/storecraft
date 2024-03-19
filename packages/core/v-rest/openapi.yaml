@@ -8,6 +8,39 @@ servers:
 security: []
 components:
   schemas:
+    AuthSignup:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 4
+          maxLength: 20
+      required:
+        - email
+        - password
+    AuthSignin:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 4
+          maxLength: 20
+      required:
+        - email
+        - password
+    AuthRefresh:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+      required:
+        - refresh_token
     tag:
       type: object
       properties:
@@ -131,1153 +164,7 @@ components:
         - handle
         - title
     product:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        media:
-          type: array
-          items:
-            type: string
-        attributes:
-          type: array
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-              value:
-                type: string
-            required:
-              - key
-        tags:
-          type: array
-          items:
-            type: string
-        description:
-          type: string
-        active:
-          type: boolean
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
-        handle:
-          type: string
-        title:
-          type: string
-        video:
-          type: string
-        price:
-          type: number
-          minimum: 0
-        qty:
-          type: number
-          minimum: 0
-        compare_at_price:
-          type: number
-          minimum: 0
-        collections:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID
-              media:
-                type: array
-                items:
-                  type: string
-              attributes:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  required:
-                    - key
-              tags:
-                type: array
-                items:
-                  type: string
-              description:
-                type: string
-              active:
-                type: boolean
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
-              handle:
-                type: string
-              title:
-                type: string
-              published:
-                type: string
-            required:
-              - active
-              - handle
-              - title
-        discounts:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID
-              media:
-                type: array
-                items:
-                  type: string
-              attributes:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  required:
-                    - key
-              tags:
-                type: array
-                items:
-                  type: string
-              description:
-                type: string
-              active:
-                type: boolean
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
-              title:
-                type: string
-              handle:
-                type: string
-              priority:
-                type: number
-              published:
-                type: string
-              info:
-                type: object
-                properties:
-                  details:
-                    type: object
-                    properties:
-                      meta:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                          type:
-                            anyOf:
-                              - type: string
-                                enum:
-                                  - regular
-                              - type: string
-                                enum:
-                                  - bulk
-                              - type: string
-                                enum:
-                                  - buy_x_get_y
-                              - type: string
-                                enum:
-                                  - order
-                              - type: string
-                                enum:
-                                  - bundle
-                          name:
-                            type: string
-                        required:
-                          - id
-                          - type
-                          - name
-                      extra:
-                        anyOf:
-                          - type: object
-                            properties:
-                              fixed:
-                                type: number
-                              percent:
-                                type: number
-                            required:
-                              - fixed
-                              - percent
-                          - type: object
-                            properties:
-                              fixed:
-                                type: number
-                              percent:
-                                type: number
-                              free_shipping:
-                                type: boolean
-                            required:
-                              - fixed
-                              - percent
-                          - type: object
-                            properties:
-                              fixed:
-                                type: number
-                              percent:
-                                type: number
-                              qty:
-                                type: number
-                              recursive:
-                                type: boolean
-                            required:
-                              - fixed
-                              - percent
-                              - qty
-                          - type: object
-                            properties:
-                              fixed:
-                                type: number
-                              percent:
-                                type: number
-                              qty_x:
-                                type: number
-                              qty_y:
-                                type: number
-                              filters_y:
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    meta:
-                                      type: object
-                                      properties:
-                                        id:
-                                          type: number
-                                        type:
-                                          anyOf:
-                                            - type: string
-                                              enum:
-                                                - product
-                                            - type: string
-                                              enum:
-                                                - order
-                                        op:
-                                          anyOf:
-                                            - type: string
-                                              enum:
-                                                - p-in-collections
-                                            - type: string
-                                              enum:
-                                                - p-not-in-collections
-                                            - type: string
-                                              enum:
-                                                - p-in-handles
-                                            - type: string
-                                              enum:
-                                                - p-not-in-handles
-                                            - type: string
-                                              enum:
-                                                - p-in-tags
-                                            - type: string
-                                              enum:
-                                                - p-not-in-tags
-                                            - type: string
-                                              enum:
-                                                - p-all
-                                            - type: string
-                                              enum:
-                                                - p-in-price-range
-                                            - type: string
-                                              enum:
-                                                - o-subtotal-in-range
-                                            - type: string
-                                              enum:
-                                                - o-items-count-in-range
-                                            - type: string
-                                              enum:
-                                                - o-date-in-range
-                                            - type: string
-                                              enum:
-                                                - o_has_customer
-                                        name:
-                                          type: string
-                                      required:
-                                        - id
-                                        - type
-                                        - op
-                                        - name
-                                    value:
-                                      anyOf:
-                                        - type: array
-                                          items:
-                                            type: object
-                                            properties:
-                                              id:
-                                                type: string
-                                              handle:
-                                                type: string
-                                        - type: array
-                                          items:
-                                            type: object
-                                            properties:
-                                              id:
-                                                type: string
-                                              handle:
-                                                type: string
-                                        - type: array
-                                          items:
-                                            type: string
-                                        - type: array
-                                          items:
-                                            type: string
-                                        - type: array
-                                          items:
-                                            type: string
-                                        - type: array
-                                          items:
-                                            type: string
-                                        - nullable: true
-                                        - type: object
-                                          properties:
-                                            from:
-                                              type: number
-                                            to:
-                                              type: number
-                                          required:
-                                            - to
-                                        - type: object
-                                          properties:
-                                            from:
-                                              type: number
-                                            to:
-                                              type: number
-                                          required:
-                                            - to
-                                        - type: object
-                                          properties:
-                                            from:
-                                              type: number
-                                            to:
-                                              type: number
-                                          required:
-                                            - to
-                                        - type: object
-                                          properties:
-                                            from:
-                                              type: number
-                                            to:
-                                              type: number
-                                          required:
-                                            - to
-                                        - type: array
-                                          items:
-                                            type: string
-                                        - nullable: true
-                                  required:
-                                    - meta
-                              recursive:
-                                type: boolean
-                            required:
-                              - fixed
-                              - percent
-                              - qty_x
-                              - qty_y
-                              - filters_y
-                          - type: object
-                            properties:
-                              fixed:
-                                type: number
-                              percent:
-                                type: number
-                              recursive:
-                                type: boolean
-                            required:
-                              - fixed
-                              - percent
-                    required:
-                      - meta
-                      - extra
-                  filters:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        meta:
-                          type: object
-                          properties:
-                            id:
-                              type: number
-                            type:
-                              anyOf:
-                                - type: string
-                                  enum:
-                                    - product
-                                - type: string
-                                  enum:
-                                    - order
-                            op:
-                              anyOf:
-                                - type: string
-                                  enum:
-                                    - p-in-collections
-                                - type: string
-                                  enum:
-                                    - p-not-in-collections
-                                - type: string
-                                  enum:
-                                    - p-in-handles
-                                - type: string
-                                  enum:
-                                    - p-not-in-handles
-                                - type: string
-                                  enum:
-                                    - p-in-tags
-                                - type: string
-                                  enum:
-                                    - p-not-in-tags
-                                - type: string
-                                  enum:
-                                    - p-all
-                                - type: string
-                                  enum:
-                                    - p-in-price-range
-                                - type: string
-                                  enum:
-                                    - o-subtotal-in-range
-                                - type: string
-                                  enum:
-                                    - o-items-count-in-range
-                                - type: string
-                                  enum:
-                                    - o-date-in-range
-                                - type: string
-                                  enum:
-                                    - o_has_customer
-                            name:
-                              type: string
-                          required:
-                            - id
-                            - type
-                            - op
-                            - name
-                        value:
-                          anyOf:
-                            - type: array
-                              items:
-                                type: object
-                                properties:
-                                  id:
-                                    type: string
-                                  handle:
-                                    type: string
-                            - type: array
-                              items:
-                                type: object
-                                properties:
-                                  id:
-                                    type: string
-                                  handle:
-                                    type: string
-                            - type: array
-                              items:
-                                type: string
-                            - type: array
-                              items:
-                                type: string
-                            - type: array
-                              items:
-                                type: string
-                            - type: array
-                              items:
-                                type: string
-                            - nullable: true
-                            - type: object
-                              properties:
-                                from:
-                                  type: number
-                                to:
-                                  type: number
-                              required:
-                                - to
-                            - type: object
-                              properties:
-                                from:
-                                  type: number
-                                to:
-                                  type: number
-                              required:
-                                - to
-                            - type: object
-                              properties:
-                                from:
-                                  type: number
-                                to:
-                                  type: number
-                              required:
-                                - to
-                            - type: object
-                              properties:
-                                from:
-                                  type: number
-                                to:
-                                  type: number
-                              required:
-                                - to
-                            - type: array
-                              items:
-                                type: string
-                            - nullable: true
-                      required:
-                        - meta
-                    minItems: 1
-                required:
-                  - details
-                  - filters
-              application:
-                type: object
-                properties:
-                  id:
-                    type: number
-                  name:
-                    anyOf:
-                      - type: string
-                        enum:
-                          - Automatic
-                      - type: string
-                        enum:
-                          - Manual
-                  name2:
-                    anyOf:
-                      - type: string
-                        enum:
-                          - automatic
-                      - type: string
-                        enum:
-                          - manual
-                required:
-                  - id
-                  - name
-                  - name2
-            required:
-              - active
-              - title
-              - handle
-              - priority
-              - info
-              - application
-        variants:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID
-              media:
-                type: array
-                items:
-                  type: string
-              attributes:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  required:
-                    - key
-              tags:
-                type: array
-                items:
-                  type: string
-              description:
-                type: string
-              active:
-                type: boolean
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
-              handle:
-                type: string
-              title:
-                type: string
-              video:
-                type: string
-              price:
-                type: number
-                minimum: 0
-              qty:
-                type: number
-                minimum: 0
-              compare_at_price:
-                type: number
-                minimum: 0
-              collections:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: ID
-                    media:
-                      type: array
-                      items:
-                        type: string
-                    attributes:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          key:
-                            type: string
-                          value:
-                            type: string
-                        required:
-                          - key
-                    tags:
-                      type: array
-                      items:
-                        type: string
-                    description:
-                      type: string
-                    active:
-                      type: boolean
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
-                    handle:
-                      type: string
-                    title:
-                      type: string
-                    published:
-                      type: string
-                  required:
-                    - active
-                    - handle
-                    - title
-              discounts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: ID
-                    media:
-                      type: array
-                      items:
-                        type: string
-                    attributes:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          key:
-                            type: string
-                          value:
-                            type: string
-                        required:
-                          - key
-                    tags:
-                      type: array
-                      items:
-                        type: string
-                    description:
-                      type: string
-                    active:
-                      type: boolean
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
-                    title:
-                      type: string
-                    handle:
-                      type: string
-                    priority:
-                      type: number
-                    published:
-                      type: string
-                    info:
-                      type: object
-                      properties:
-                        details:
-                          type: object
-                          properties:
-                            meta:
-                              type: object
-                              properties:
-                                id:
-                                  type: number
-                                type:
-                                  anyOf:
-                                    - type: string
-                                      enum:
-                                        - regular
-                                    - type: string
-                                      enum:
-                                        - bulk
-                                    - type: string
-                                      enum:
-                                        - buy_x_get_y
-                                    - type: string
-                                      enum:
-                                        - order
-                                    - type: string
-                                      enum:
-                                        - bundle
-                                name:
-                                  type: string
-                              required:
-                                - id
-                                - type
-                                - name
-                            extra:
-                              anyOf:
-                                - type: object
-                                  properties:
-                                    fixed:
-                                      type: number
-                                    percent:
-                                      type: number
-                                  required:
-                                    - fixed
-                                    - percent
-                                - type: object
-                                  properties:
-                                    fixed:
-                                      type: number
-                                    percent:
-                                      type: number
-                                    free_shipping:
-                                      type: boolean
-                                  required:
-                                    - fixed
-                                    - percent
-                                - type: object
-                                  properties:
-                                    fixed:
-                                      type: number
-                                    percent:
-                                      type: number
-                                    qty:
-                                      type: number
-                                    recursive:
-                                      type: boolean
-                                  required:
-                                    - fixed
-                                    - percent
-                                    - qty
-                                - type: object
-                                  properties:
-                                    fixed:
-                                      type: number
-                                    percent:
-                                      type: number
-                                    qty_x:
-                                      type: number
-                                    qty_y:
-                                      type: number
-                                    filters_y:
-                                      type: array
-                                      items:
-                                        type: object
-                                        properties:
-                                          meta:
-                                            type: object
-                                            properties:
-                                              id:
-                                                type: number
-                                              type:
-                                                anyOf:
-                                                  - type: string
-                                                    enum:
-                                                      - product
-                                                  - type: string
-                                                    enum:
-                                                      - order
-                                              op:
-                                                anyOf:
-                                                  - type: string
-                                                    enum:
-                                                      - p-in-collections
-                                                  - type: string
-                                                    enum:
-                                                      - p-not-in-collections
-                                                  - type: string
-                                                    enum:
-                                                      - p-in-handles
-                                                  - type: string
-                                                    enum:
-                                                      - p-not-in-handles
-                                                  - type: string
-                                                    enum:
-                                                      - p-in-tags
-                                                  - type: string
-                                                    enum:
-                                                      - p-not-in-tags
-                                                  - type: string
-                                                    enum:
-                                                      - p-all
-                                                  - type: string
-                                                    enum:
-                                                      - p-in-price-range
-                                                  - type: string
-                                                    enum:
-                                                      - o-subtotal-in-range
-                                                  - type: string
-                                                    enum:
-                                                      - o-items-count-in-range
-                                                  - type: string
-                                                    enum:
-                                                      - o-date-in-range
-                                                  - type: string
-                                                    enum:
-                                                      - o_has_customer
-                                              name:
-                                                type: string
-                                            required:
-                                              - id
-                                              - type
-                                              - op
-                                              - name
-                                          value:
-                                            anyOf:
-                                              - type: array
-                                                items:
-                                                  type: object
-                                                  properties:
-                                                    id:
-                                                      type: string
-                                                    handle:
-                                                      type: string
-                                              - type: array
-                                                items:
-                                                  type: object
-                                                  properties:
-                                                    id:
-                                                      type: string
-                                                    handle:
-                                                      type: string
-                                              - type: array
-                                                items:
-                                                  type: string
-                                              - type: array
-                                                items:
-                                                  type: string
-                                              - type: array
-                                                items:
-                                                  type: string
-                                              - type: array
-                                                items:
-                                                  type: string
-                                              - nullable: true
-                                              - type: object
-                                                properties:
-                                                  from:
-                                                    type: number
-                                                  to:
-                                                    type: number
-                                                required:
-                                                  - to
-                                              - type: object
-                                                properties:
-                                                  from:
-                                                    type: number
-                                                  to:
-                                                    type: number
-                                                required:
-                                                  - to
-                                              - type: object
-                                                properties:
-                                                  from:
-                                                    type: number
-                                                  to:
-                                                    type: number
-                                                required:
-                                                  - to
-                                              - type: object
-                                                properties:
-                                                  from:
-                                                    type: number
-                                                  to:
-                                                    type: number
-                                                required:
-                                                  - to
-                                              - type: array
-                                                items:
-                                                  type: string
-                                              - nullable: true
-                                        required:
-                                          - meta
-                                    recursive:
-                                      type: boolean
-                                  required:
-                                    - fixed
-                                    - percent
-                                    - qty_x
-                                    - qty_y
-                                    - filters_y
-                                - type: object
-                                  properties:
-                                    fixed:
-                                      type: number
-                                    percent:
-                                      type: number
-                                    recursive:
-                                      type: boolean
-                                  required:
-                                    - fixed
-                                    - percent
-                          required:
-                            - meta
-                            - extra
-                        filters:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              meta:
-                                type: object
-                                properties:
-                                  id:
-                                    type: number
-                                  type:
-                                    anyOf:
-                                      - type: string
-                                        enum:
-                                          - product
-                                      - type: string
-                                        enum:
-                                          - order
-                                  op:
-                                    anyOf:
-                                      - type: string
-                                        enum:
-                                          - p-in-collections
-                                      - type: string
-                                        enum:
-                                          - p-not-in-collections
-                                      - type: string
-                                        enum:
-                                          - p-in-handles
-                                      - type: string
-                                        enum:
-                                          - p-not-in-handles
-                                      - type: string
-                                        enum:
-                                          - p-in-tags
-                                      - type: string
-                                        enum:
-                                          - p-not-in-tags
-                                      - type: string
-                                        enum:
-                                          - p-all
-                                      - type: string
-                                        enum:
-                                          - p-in-price-range
-                                      - type: string
-                                        enum:
-                                          - o-subtotal-in-range
-                                      - type: string
-                                        enum:
-                                          - o-items-count-in-range
-                                      - type: string
-                                        enum:
-                                          - o-date-in-range
-                                      - type: string
-                                        enum:
-                                          - o_has_customer
-                                  name:
-                                    type: string
-                                required:
-                                  - id
-                                  - type
-                                  - op
-                                  - name
-                              value:
-                                anyOf:
-                                  - type: array
-                                    items:
-                                      type: object
-                                      properties:
-                                        id:
-                                          type: string
-                                        handle:
-                                          type: string
-                                  - type: array
-                                    items:
-                                      type: object
-                                      properties:
-                                        id:
-                                          type: string
-                                        handle:
-                                          type: string
-                                  - type: array
-                                    items:
-                                      type: string
-                                  - type: array
-                                    items:
-                                      type: string
-                                  - type: array
-                                    items:
-                                      type: string
-                                  - type: array
-                                    items:
-                                      type: string
-                                  - nullable: true
-                                  - type: object
-                                    properties:
-                                      from:
-                                        type: number
-                                      to:
-                                        type: number
-                                    required:
-                                      - to
-                                  - type: object
-                                    properties:
-                                      from:
-                                        type: number
-                                      to:
-                                        type: number
-                                    required:
-                                      - to
-                                  - type: object
-                                    properties:
-                                      from:
-                                        type: number
-                                      to:
-                                        type: number
-                                    required:
-                                      - to
-                                  - type: object
-                                    properties:
-                                      from:
-                                        type: number
-                                      to:
-                                        type: number
-                                    required:
-                                      - to
-                                  - type: array
-                                    items:
-                                      type: string
-                                  - nullable: true
-                            required:
-                              - meta
-                          minItems: 1
-                      required:
-                        - details
-                        - filters
-                    application:
-                      type: object
-                      properties:
-                        id:
-                          type: number
-                        name:
-                          anyOf:
-                            - type: string
-                              enum:
-                                - Automatic
-                            - type: string
-                              enum:
-                                - Manual
-                        name2:
-                          anyOf:
-                            - type: string
-                              enum:
-                                - automatic
-                            - type: string
-                              enum:
-                                - manual
-                      required:
-                        - id
-                        - name
-                        - name2
-                  required:
-                    - active
-                    - title
-                    - handle
-                    - priority
-                    - info
-                    - application
-              parent_handle:
-                type: string
-              parent_id:
-                type: string
-              variant_hint:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    option_id:
-                      type: string
-                    value_id:
-                      type: string
-                  required:
-                    - option_id
-                    - value_id
-            required:
-              - active
-              - handle
-              - title
-              - price
-              - qty
-              - parent_handle
-              - parent_id
-              - variant_hint
-        variants_options:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              id:
-                type: string
-              values:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    value:
-                      type: string
-                  required:
-                    - id
-                    - value
-            required:
-              - name
-              - id
-              - values
-      required:
-        - active
-        - handle
-        - title
-        - price
-        - qty
-    productUpsert:
-      allOf:
+      anyOf:
         - type: object
           properties:
             id:
@@ -1306,6 +193,12 @@ components:
               type: string
             active:
               type: boolean
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
             handle:
               type: string
             title:
@@ -1321,14 +214,6 @@ components:
             compare_at_price:
               type: number
               minimum: 0
-          required:
-            - active
-            - handle
-            - title
-            - price
-            - qty
-        - type: object
-          properties:
             collections:
               type: array
               items:
@@ -1337,10 +222,1811 @@ components:
                   id:
                     type: string
                     description: ID
+                  media:
+                    type: array
+                    items:
+                      type: string
+                  attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - key
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  description:
+                    type: string
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   handle:
                     type: string
+                  title:
+                    type: string
+                  published:
+                    type: string
                 required:
+                  - active
                   - handle
+                  - title
+            discounts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID
+                  media:
+                    type: array
+                    items:
+                      type: string
+                  attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - key
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  description:
+                    type: string
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
+                  title:
+                    type: string
+                  handle:
+                    type: string
+                  priority:
+                    type: number
+                  published:
+                    type: string
+                  info:
+                    type: object
+                    properties:
+                      details:
+                        type: object
+                        properties:
+                          meta:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                              type:
+                                anyOf:
+                                  - type: string
+                                    enum:
+                                      - regular
+                                  - type: string
+                                    enum:
+                                      - bulk
+                                  - type: string
+                                    enum:
+                                      - buy_x_get_y
+                                  - type: string
+                                    enum:
+                                      - order
+                                  - type: string
+                                    enum:
+                                      - bundle
+                              name:
+                                type: string
+                            required:
+                              - id
+                              - type
+                              - name
+                          extra:
+                            anyOf:
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                required:
+                                  - fixed
+                                  - percent
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  free_shipping:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  qty:
+                                    type: number
+                                  recursive:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                                  - qty
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  qty_x:
+                                    type: number
+                                  qty_y:
+                                    type: number
+                                  filters_y:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        meta:
+                                          type: object
+                                          properties:
+                                            id:
+                                              type: number
+                                            type:
+                                              anyOf:
+                                                - type: string
+                                                  enum:
+                                                    - product
+                                                - type: string
+                                                  enum:
+                                                    - order
+                                            op:
+                                              anyOf:
+                                                - type: string
+                                                  enum:
+                                                    - p-in-collections
+                                                - type: string
+                                                  enum:
+                                                    - p-not-in-collections
+                                                - type: string
+                                                  enum:
+                                                    - p-in-handles
+                                                - type: string
+                                                  enum:
+                                                    - p-not-in-handles
+                                                - type: string
+                                                  enum:
+                                                    - p-in-tags
+                                                - type: string
+                                                  enum:
+                                                    - p-not-in-tags
+                                                - type: string
+                                                  enum:
+                                                    - p-all
+                                                - type: string
+                                                  enum:
+                                                    - p-in-price-range
+                                                - type: string
+                                                  enum:
+                                                    - o-subtotal-in-range
+                                                - type: string
+                                                  enum:
+                                                    - o-items-count-in-range
+                                                - type: string
+                                                  enum:
+                                                    - o-date-in-range
+                                                - type: string
+                                                  enum:
+                                                    - o_has_customer
+                                            name:
+                                              type: string
+                                          required:
+                                            - id
+                                            - type
+                                            - op
+                                            - name
+                                        value:
+                                          anyOf:
+                                            - type: array
+                                              items:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                  handle:
+                                                    type: string
+                                            - type: array
+                                              items:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                  handle:
+                                                    type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - nullable: true
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - nullable: true
+                                      required:
+                                        - meta
+                                  recursive:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                                  - qty_x
+                                  - qty_y
+                                  - filters_y
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  recursive:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                        required:
+                          - meta
+                          - extra
+                      filters:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            meta:
+                              type: object
+                              properties:
+                                id:
+                                  type: number
+                                type:
+                                  anyOf:
+                                    - type: string
+                                      enum:
+                                        - product
+                                    - type: string
+                                      enum:
+                                        - order
+                                op:
+                                  anyOf:
+                                    - type: string
+                                      enum:
+                                        - p-in-collections
+                                    - type: string
+                                      enum:
+                                        - p-not-in-collections
+                                    - type: string
+                                      enum:
+                                        - p-in-handles
+                                    - type: string
+                                      enum:
+                                        - p-not-in-handles
+                                    - type: string
+                                      enum:
+                                        - p-in-tags
+                                    - type: string
+                                      enum:
+                                        - p-not-in-tags
+                                    - type: string
+                                      enum:
+                                        - p-all
+                                    - type: string
+                                      enum:
+                                        - p-in-price-range
+                                    - type: string
+                                      enum:
+                                        - o-subtotal-in-range
+                                    - type: string
+                                      enum:
+                                        - o-items-count-in-range
+                                    - type: string
+                                      enum:
+                                        - o-date-in-range
+                                    - type: string
+                                      enum:
+                                        - o_has_customer
+                                name:
+                                  type: string
+                              required:
+                                - id
+                                - type
+                                - op
+                                - name
+                            value:
+                              anyOf:
+                                - type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      handle:
+                                        type: string
+                                - type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      handle:
+                                        type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - nullable: true
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: array
+                                  items:
+                                    type: string
+                                - nullable: true
+                          required:
+                            - meta
+                        minItems: 1
+                    required:
+                      - details
+                      - filters
+                  application:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        anyOf:
+                          - type: string
+                            enum:
+                              - Automatic
+                          - type: string
+                            enum:
+                              - Manual
+                      name2:
+                        anyOf:
+                          - type: string
+                            enum:
+                              - automatic
+                          - type: string
+                            enum:
+                              - manual
+                    required:
+                      - id
+                      - name
+                      - name2
+                required:
+                  - active
+                  - title
+                  - handle
+                  - priority
+                  - info
+                  - application
+            variants:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID
+                  media:
+                    type: array
+                    items:
+                      type: string
+                  attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - key
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  description:
+                    type: string
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
+                  handle:
+                    type: string
+                  title:
+                    type: string
+                  video:
+                    type: string
+                  price:
+                    type: number
+                    minimum: 0
+                  qty:
+                    type: number
+                    minimum: 0
+                  compare_at_price:
+                    type: number
+                    minimum: 0
+                  collections:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: ID
+                        media:
+                          type: array
+                          items:
+                            type: string
+                        attributes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                              value:
+                                type: string
+                            required:
+                              - key
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                        description:
+                          type: string
+                        active:
+                          type: boolean
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
+                        handle:
+                          type: string
+                        title:
+                          type: string
+                        published:
+                          type: string
+                      required:
+                        - active
+                        - handle
+                        - title
+                  discounts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: ID
+                        media:
+                          type: array
+                          items:
+                            type: string
+                        attributes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                              value:
+                                type: string
+                            required:
+                              - key
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                        description:
+                          type: string
+                        active:
+                          type: boolean
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
+                        title:
+                          type: string
+                        handle:
+                          type: string
+                        priority:
+                          type: number
+                        published:
+                          type: string
+                        info:
+                          type: object
+                          properties:
+                            details:
+                              type: object
+                              properties:
+                                meta:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                    type:
+                                      anyOf:
+                                        - type: string
+                                          enum:
+                                            - regular
+                                        - type: string
+                                          enum:
+                                            - bulk
+                                        - type: string
+                                          enum:
+                                            - buy_x_get_y
+                                        - type: string
+                                          enum:
+                                            - order
+                                        - type: string
+                                          enum:
+                                            - bundle
+                                    name:
+                                      type: string
+                                  required:
+                                    - id
+                                    - type
+                                    - name
+                                extra:
+                                  anyOf:
+                                    - type: object
+                                      properties:
+                                        fixed:
+                                          type: number
+                                        percent:
+                                          type: number
+                                      required:
+                                        - fixed
+                                        - percent
+                                    - type: object
+                                      properties:
+                                        fixed:
+                                          type: number
+                                        percent:
+                                          type: number
+                                        free_shipping:
+                                          type: boolean
+                                      required:
+                                        - fixed
+                                        - percent
+                                    - type: object
+                                      properties:
+                                        fixed:
+                                          type: number
+                                        percent:
+                                          type: number
+                                        qty:
+                                          type: number
+                                        recursive:
+                                          type: boolean
+                                      required:
+                                        - fixed
+                                        - percent
+                                        - qty
+                                    - type: object
+                                      properties:
+                                        fixed:
+                                          type: number
+                                        percent:
+                                          type: number
+                                        qty_x:
+                                          type: number
+                                        qty_y:
+                                          type: number
+                                        filters_y:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              meta:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: number
+                                                  type:
+                                                    anyOf:
+                                                      - type: string
+                                                        enum:
+                                                          - product
+                                                      - type: string
+                                                        enum:
+                                                          - order
+                                                  op:
+                                                    anyOf:
+                                                      - type: string
+                                                        enum:
+                                                          - p-in-collections
+                                                      - type: string
+                                                        enum:
+                                                          - p-not-in-collections
+                                                      - type: string
+                                                        enum:
+                                                          - p-in-handles
+                                                      - type: string
+                                                        enum:
+                                                          - p-not-in-handles
+                                                      - type: string
+                                                        enum:
+                                                          - p-in-tags
+                                                      - type: string
+                                                        enum:
+                                                          - p-not-in-tags
+                                                      - type: string
+                                                        enum:
+                                                          - p-all
+                                                      - type: string
+                                                        enum:
+                                                          - p-in-price-range
+                                                      - type: string
+                                                        enum:
+                                                          - o-subtotal-in-range
+                                                      - type: string
+                                                        enum:
+                                                          - o-items-count-in-range
+                                                      - type: string
+                                                        enum:
+                                                          - o-date-in-range
+                                                      - type: string
+                                                        enum:
+                                                          - o_has_customer
+                                                  name:
+                                                    type: string
+                                                required:
+                                                  - id
+                                                  - type
+                                                  - op
+                                                  - name
+                                              value:
+                                                anyOf:
+                                                  - type: array
+                                                    items:
+                                                      type: object
+                                                      properties:
+                                                        id:
+                                                          type: string
+                                                        handle:
+                                                          type: string
+                                                  - type: array
+                                                    items:
+                                                      type: object
+                                                      properties:
+                                                        id:
+                                                          type: string
+                                                        handle:
+                                                          type: string
+                                                  - type: array
+                                                    items:
+                                                      type: string
+                                                  - type: array
+                                                    items:
+                                                      type: string
+                                                  - type: array
+                                                    items:
+                                                      type: string
+                                                  - type: array
+                                                    items:
+                                                      type: string
+                                                  - nullable: true
+                                                  - type: object
+                                                    properties:
+                                                      from:
+                                                        type: number
+                                                      to:
+                                                        type: number
+                                                    required:
+                                                      - to
+                                                  - type: object
+                                                    properties:
+                                                      from:
+                                                        type: number
+                                                      to:
+                                                        type: number
+                                                    required:
+                                                      - to
+                                                  - type: object
+                                                    properties:
+                                                      from:
+                                                        type: number
+                                                      to:
+                                                        type: number
+                                                    required:
+                                                      - to
+                                                  - type: object
+                                                    properties:
+                                                      from:
+                                                        type: number
+                                                      to:
+                                                        type: number
+                                                    required:
+                                                      - to
+                                                  - type: array
+                                                    items:
+                                                      type: string
+                                                  - nullable: true
+                                            required:
+                                              - meta
+                                        recursive:
+                                          type: boolean
+                                      required:
+                                        - fixed
+                                        - percent
+                                        - qty_x
+                                        - qty_y
+                                        - filters_y
+                                    - type: object
+                                      properties:
+                                        fixed:
+                                          type: number
+                                        percent:
+                                          type: number
+                                        recursive:
+                                          type: boolean
+                                      required:
+                                        - fixed
+                                        - percent
+                              required:
+                                - meta
+                                - extra
+                            filters:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  meta:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: number
+                                      type:
+                                        anyOf:
+                                          - type: string
+                                            enum:
+                                              - product
+                                          - type: string
+                                            enum:
+                                              - order
+                                      op:
+                                        anyOf:
+                                          - type: string
+                                            enum:
+                                              - p-in-collections
+                                          - type: string
+                                            enum:
+                                              - p-not-in-collections
+                                          - type: string
+                                            enum:
+                                              - p-in-handles
+                                          - type: string
+                                            enum:
+                                              - p-not-in-handles
+                                          - type: string
+                                            enum:
+                                              - p-in-tags
+                                          - type: string
+                                            enum:
+                                              - p-not-in-tags
+                                          - type: string
+                                            enum:
+                                              - p-all
+                                          - type: string
+                                            enum:
+                                              - p-in-price-range
+                                          - type: string
+                                            enum:
+                                              - o-subtotal-in-range
+                                          - type: string
+                                            enum:
+                                              - o-items-count-in-range
+                                          - type: string
+                                            enum:
+                                              - o-date-in-range
+                                          - type: string
+                                            enum:
+                                              - o_has_customer
+                                      name:
+                                        type: string
+                                    required:
+                                      - id
+                                      - type
+                                      - op
+                                      - name
+                                  value:
+                                    anyOf:
+                                      - type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            id:
+                                              type: string
+                                            handle:
+                                              type: string
+                                      - type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            id:
+                                              type: string
+                                            handle:
+                                              type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                      - nullable: true
+                                      - type: object
+                                        properties:
+                                          from:
+                                            type: number
+                                          to:
+                                            type: number
+                                        required:
+                                          - to
+                                      - type: object
+                                        properties:
+                                          from:
+                                            type: number
+                                          to:
+                                            type: number
+                                        required:
+                                          - to
+                                      - type: object
+                                        properties:
+                                          from:
+                                            type: number
+                                          to:
+                                            type: number
+                                        required:
+                                          - to
+                                      - type: object
+                                        properties:
+                                          from:
+                                            type: number
+                                          to:
+                                            type: number
+                                        required:
+                                          - to
+                                      - type: array
+                                        items:
+                                          type: string
+                                      - nullable: true
+                                required:
+                                  - meta
+                              minItems: 1
+                          required:
+                            - details
+                            - filters
+                        application:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              anyOf:
+                                - type: string
+                                  enum:
+                                    - Automatic
+                                - type: string
+                                  enum:
+                                    - Manual
+                            name2:
+                              anyOf:
+                                - type: string
+                                  enum:
+                                    - automatic
+                                - type: string
+                                  enum:
+                                    - manual
+                          required:
+                            - id
+                            - name
+                            - name2
+                      required:
+                        - active
+                        - title
+                        - handle
+                        - priority
+                        - info
+                        - application
+                  parent_handle:
+                    type: string
+                  parent_id:
+                    type: string
+                  variant_hint:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        option_id:
+                          type: string
+                        value_id:
+                          type: string
+                      required:
+                        - option_id
+                        - value_id
+                required:
+                  - active
+                  - handle
+                  - title
+                  - price
+                  - qty
+                  - parent_handle
+                  - parent_id
+                  - variant_hint
+            variants_options:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: string
+                  values:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - id
+                        - value
+                required:
+                  - name
+                  - id
+                  - values
+          required:
+            - active
+            - handle
+            - title
+            - price
+            - qty
+        - type: object
+          properties:
+            id:
+              type: string
+              description: ID
+            media:
+              type: array
+              items:
+                type: string
+            attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+                required:
+                  - key
+            tags:
+              type: array
+              items:
+                type: string
+            description:
+              type: string
+            active:
+              type: boolean
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
+            handle:
+              type: string
+            title:
+              type: string
+            video:
+              type: string
+            price:
+              type: number
+              minimum: 0
+            qty:
+              type: number
+              minimum: 0
+            compare_at_price:
+              type: number
+              minimum: 0
+            collections:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID
+                  media:
+                    type: array
+                    items:
+                      type: string
+                  attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - key
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  description:
+                    type: string
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
+                  handle:
+                    type: string
+                  title:
+                    type: string
+                  published:
+                    type: string
+                required:
+                  - active
+                  - handle
+                  - title
+            discounts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID
+                  media:
+                    type: array
+                    items:
+                      type: string
+                  attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - key
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  description:
+                    type: string
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
+                  title:
+                    type: string
+                  handle:
+                    type: string
+                  priority:
+                    type: number
+                  published:
+                    type: string
+                  info:
+                    type: object
+                    properties:
+                      details:
+                        type: object
+                        properties:
+                          meta:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                              type:
+                                anyOf:
+                                  - type: string
+                                    enum:
+                                      - regular
+                                  - type: string
+                                    enum:
+                                      - bulk
+                                  - type: string
+                                    enum:
+                                      - buy_x_get_y
+                                  - type: string
+                                    enum:
+                                      - order
+                                  - type: string
+                                    enum:
+                                      - bundle
+                              name:
+                                type: string
+                            required:
+                              - id
+                              - type
+                              - name
+                          extra:
+                            anyOf:
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                required:
+                                  - fixed
+                                  - percent
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  free_shipping:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  qty:
+                                    type: number
+                                  recursive:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                                  - qty
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  qty_x:
+                                    type: number
+                                  qty_y:
+                                    type: number
+                                  filters_y:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        meta:
+                                          type: object
+                                          properties:
+                                            id:
+                                              type: number
+                                            type:
+                                              anyOf:
+                                                - type: string
+                                                  enum:
+                                                    - product
+                                                - type: string
+                                                  enum:
+                                                    - order
+                                            op:
+                                              anyOf:
+                                                - type: string
+                                                  enum:
+                                                    - p-in-collections
+                                                - type: string
+                                                  enum:
+                                                    - p-not-in-collections
+                                                - type: string
+                                                  enum:
+                                                    - p-in-handles
+                                                - type: string
+                                                  enum:
+                                                    - p-not-in-handles
+                                                - type: string
+                                                  enum:
+                                                    - p-in-tags
+                                                - type: string
+                                                  enum:
+                                                    - p-not-in-tags
+                                                - type: string
+                                                  enum:
+                                                    - p-all
+                                                - type: string
+                                                  enum:
+                                                    - p-in-price-range
+                                                - type: string
+                                                  enum:
+                                                    - o-subtotal-in-range
+                                                - type: string
+                                                  enum:
+                                                    - o-items-count-in-range
+                                                - type: string
+                                                  enum:
+                                                    - o-date-in-range
+                                                - type: string
+                                                  enum:
+                                                    - o_has_customer
+                                            name:
+                                              type: string
+                                          required:
+                                            - id
+                                            - type
+                                            - op
+                                            - name
+                                        value:
+                                          anyOf:
+                                            - type: array
+                                              items:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                  handle:
+                                                    type: string
+                                            - type: array
+                                              items:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                  handle:
+                                                    type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - nullable: true
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: object
+                                              properties:
+                                                from:
+                                                  type: number
+                                                to:
+                                                  type: number
+                                              required:
+                                                - to
+                                            - type: array
+                                              items:
+                                                type: string
+                                            - nullable: true
+                                      required:
+                                        - meta
+                                  recursive:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                                  - qty_x
+                                  - qty_y
+                                  - filters_y
+                              - type: object
+                                properties:
+                                  fixed:
+                                    type: number
+                                  percent:
+                                    type: number
+                                  recursive:
+                                    type: boolean
+                                required:
+                                  - fixed
+                                  - percent
+                        required:
+                          - meta
+                          - extra
+                      filters:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            meta:
+                              type: object
+                              properties:
+                                id:
+                                  type: number
+                                type:
+                                  anyOf:
+                                    - type: string
+                                      enum:
+                                        - product
+                                    - type: string
+                                      enum:
+                                        - order
+                                op:
+                                  anyOf:
+                                    - type: string
+                                      enum:
+                                        - p-in-collections
+                                    - type: string
+                                      enum:
+                                        - p-not-in-collections
+                                    - type: string
+                                      enum:
+                                        - p-in-handles
+                                    - type: string
+                                      enum:
+                                        - p-not-in-handles
+                                    - type: string
+                                      enum:
+                                        - p-in-tags
+                                    - type: string
+                                      enum:
+                                        - p-not-in-tags
+                                    - type: string
+                                      enum:
+                                        - p-all
+                                    - type: string
+                                      enum:
+                                        - p-in-price-range
+                                    - type: string
+                                      enum:
+                                        - o-subtotal-in-range
+                                    - type: string
+                                      enum:
+                                        - o-items-count-in-range
+                                    - type: string
+                                      enum:
+                                        - o-date-in-range
+                                    - type: string
+                                      enum:
+                                        - o_has_customer
+                                name:
+                                  type: string
+                              required:
+                                - id
+                                - type
+                                - op
+                                - name
+                            value:
+                              anyOf:
+                                - type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      handle:
+                                        type: string
+                                - type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      handle:
+                                        type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - type: array
+                                  items:
+                                    type: string
+                                - nullable: true
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: object
+                                  properties:
+                                    from:
+                                      type: number
+                                    to:
+                                      type: number
+                                  required:
+                                    - to
+                                - type: array
+                                  items:
+                                    type: string
+                                - nullable: true
+                          required:
+                            - meta
+                        minItems: 1
+                    required:
+                      - details
+                      - filters
+                  application:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        anyOf:
+                          - type: string
+                            enum:
+                              - Automatic
+                          - type: string
+                            enum:
+                              - Manual
+                      name2:
+                        anyOf:
+                          - type: string
+                            enum:
+                              - automatic
+                          - type: string
+                            enum:
+                              - manual
+                    required:
+                      - id
+                      - name
+                      - name2
+                required:
+                  - active
+                  - title
+                  - handle
+                  - priority
+                  - info
+                  - application
+            parent_handle:
+              type: string
+            parent_id:
+              type: string
+            variant_hint:
+              type: array
+              items:
+                type: object
+                properties:
+                  option_id:
+                    type: string
+                  value_id:
+                    type: string
+                required:
+                  - option_id
+                  - value_id
+          required:
+            - active
+            - handle
+            - title
+            - price
+            - qty
+            - parent_handle
+            - parent_id
+            - variant_hint
+    productUpsert:
+      anyOf:
+        - allOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                  description: ID
+                media:
+                  type: array
+                  items:
+                    type: string
+                attributes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                      - key
+                tags:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+                active:
+                  type: boolean
+                handle:
+                  type: string
+                title:
+                  type: string
+                video:
+                  type: string
+                price:
+                  type: number
+                  minimum: 0
+                qty:
+                  type: number
+                  minimum: 0
+                compare_at_price:
+                  type: number
+                  minimum: 0
+              required:
+                - active
+                - handle
+                - title
+                - price
+                - qty
+            - type: object
+              properties:
+                collections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID
+                      handle:
+                        type: string
+                    required:
+                      - handle
+        - allOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                  description: ID
+                media:
+                  type: array
+                  items:
+                    type: string
+                attributes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                      - key
+                tags:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+                active:
+                  type: boolean
+                handle:
+                  type: string
+                title:
+                  type: string
+                video:
+                  type: string
+                price:
+                  type: number
+                  minimum: 0
+                qty:
+                  type: number
+                  minimum: 0
+                compare_at_price:
+                  type: number
+                  minimum: 0
+                parent_handle:
+                  type: string
+                parent_id:
+                  type: string
+                variant_hint:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      option_id:
+                        type: string
+                      value_id:
+                        type: string
+                    required:
+                      - option_id
+                      - value_id
+              required:
+                - active
+                - handle
+                - title
+                - price
+                - qty
+                - parent_handle
+                - parent_id
+                - variant_hint
+            - type: object
+              properties:
+                collections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID
+                      handle:
+                        type: string
+                    required:
+                      - handle
     shipping:
       type: object
       properties:
@@ -13504,11 +14190,289 @@ components:
         - title
   parameters: {}
 paths:
+  /auth/signup:
+    post:
+      description: Signup a user
+      summary: Signup a user
+      tags: &a1
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthSignup"
+      responses:
+        "200":
+          description: auth info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                  user_id:
+                    type: string
+                  access_token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      claims:
+                        type: object
+                        properties:
+                          iss:
+                            type: string
+                          sub:
+                            type: string
+                          aud:
+                            type: string
+                          exp:
+                            type: number
+                          nbf:
+                            type: number
+                          iat:
+                            type: number
+                          jti:
+                            type: string
+                          roles:
+                            type: array
+                            items:
+                              type: string
+                    required:
+                      - token
+                      - claims
+                  refresh_token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      claims:
+                        type: object
+                        properties:
+                          iss:
+                            type: string
+                          sub:
+                            type: string
+                          aud:
+                            type: string
+                          exp:
+                            type: number
+                          nbf:
+                            type: number
+                          iat:
+                            type: number
+                          jti:
+                            type: string
+                          roles:
+                            type: array
+                            items:
+                              type: string
+                    required:
+                      - token
+                      - claims
+                required:
+                  - token_type
+                  - user_id
+                  - access_token
+                  - refresh_token
+              example: &a2
+                token_type: Bearer
+                user_id: au_65f98390d6a34550cdc651a1
+                access_token:
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NWY5ODM5MGQ2YTM0NTUwY2RjNjUxYTEiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTA4NTEwMDksImV4cCI6MTcxMDg1NDYwOX0.8Rlo_P_LivCwn_S-JK68ltQCbXPbUK3nXJKrhRYs7R8
+                  claims:
+                    sub: au_65f98390d6a34550cdc651a1
+                    roles:
+                      - admin
+                    iat: 1710851009
+                    exp: 1710854609
+                refresh_token:
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NWY5ODM5MGQ2YTM0NTUwY2RjNjUxYTEiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTA4NTEwMDksImV4cCI6MTcxMTQ1NTgwOSwiYXVkIjoiL3JlZnJlc2gifQ.WEwJtnEpfcQ6IHouQEnVeG5haWJTCw8hRmxqLMxHKM8
+                  claims:
+                    sub: au_65f98390d6a34550cdc651a1
+                    roles:
+                      - admin
+                    iat: 1710851009
+                    exp: 1711455809
+                    aud: /refresh
+  /auth/signin:
+    post:
+      description: Signin a user
+      summary: Signin a user
+      tags: *a1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthSignin"
+      responses:
+        "200":
+          description: auth info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                  user_id:
+                    type: string
+                  access_token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      claims:
+                        type: object
+                        properties:
+                          iss:
+                            type: string
+                          sub:
+                            type: string
+                          aud:
+                            type: string
+                          exp:
+                            type: number
+                          nbf:
+                            type: number
+                          iat:
+                            type: number
+                          jti:
+                            type: string
+                          roles:
+                            type: array
+                            items:
+                              type: string
+                    required:
+                      - token
+                      - claims
+                  refresh_token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      claims:
+                        type: object
+                        properties:
+                          iss:
+                            type: string
+                          sub:
+                            type: string
+                          aud:
+                            type: string
+                          exp:
+                            type: number
+                          nbf:
+                            type: number
+                          iat:
+                            type: number
+                          jti:
+                            type: string
+                          roles:
+                            type: array
+                            items:
+                              type: string
+                    required:
+                      - token
+                      - claims
+                required:
+                  - token_type
+                  - user_id
+                  - access_token
+                  - refresh_token
+              example: *a2
+  /auth/refresh:
+    post:
+      description: Refresh a token
+      summary: Refresh a token
+      tags: *a1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRefresh"
+      responses:
+        "200":
+          description: auth info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                  user_id:
+                    type: string
+                  access_token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      claims:
+                        type: object
+                        properties:
+                          iss:
+                            type: string
+                          sub:
+                            type: string
+                          aud:
+                            type: string
+                          exp:
+                            type: number
+                          nbf:
+                            type: number
+                          iat:
+                            type: number
+                          jti:
+                            type: string
+                          roles:
+                            type: array
+                            items:
+                              type: string
+                    required:
+                      - token
+                      - claims
+                  refresh_token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      claims:
+                        type: object
+                        properties:
+                          iss:
+                            type: string
+                          sub:
+                            type: string
+                          aud:
+                            type: string
+                          exp:
+                            type: number
+                          nbf:
+                            type: number
+                          iat:
+                            type: number
+                          jti:
+                            type: string
+                          roles:
+                            type: array
+                            items:
+                              type: string
+                    required:
+                      - token
+                      - claims
+                required:
+                  - token_type
+                  - user_id
+                  - access_token
+                  - refresh_token
+              example: *a2
   /tags/{id_or_handle}:
     get:
       description: Get tag data by its `id` or `handle`
       summary: Get a single tag
-      tags: &a1
+      tags: &a3
         - tags
       parameters:
         - schema:
@@ -13524,7 +14488,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/tag"
-              example: &a3
+              example: &a5
                 handle: color
                 values:
                   - white
@@ -13536,7 +14500,7 @@ paths:
     delete:
       description: Delete a `tag`
       summary: Delete a single item
-      tags: *a1
+      tags: *a3
       responses:
         "200":
           description: Item was deleted
@@ -13544,7 +14508,7 @@ paths:
     post:
       description: Upsert a `tag`
       summary: Upsert a single tag
-      tags: *a1
+      tags: *a3
       requestBody:
         content:
           application/json:
@@ -13562,7 +14526,7 @@ paths:
     get:
       summary: List and filter tag items
       description: List and filter items
-      tags: *a1
+      tags: *a3
       parameters:
         - schema:
             type: number
@@ -13577,7 +14541,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a2
+            examples: &a4
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -13587,7 +14551,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a2
+            examples: *a4
           required: true
           name: startAfter
           in: query
@@ -13596,7 +14560,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a2
+            examples: *a4
           required: true
           name: endAt
           in: query
@@ -13605,7 +14569,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a2
+            examples: *a4
           required: true
           name: endBefore
           in: query
@@ -13660,12 +14624,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/tagUpsert"
               example:
-                - *a3
+                - *a5
   /collections/{id_or_handle}:
     get:
       description: Get collection data by its `id` or `handle`
       summary: Get a single collection
-      tags: &a4
+      tags: &a6
         - collections
       parameters:
         - schema:
@@ -13681,7 +14645,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/collection"
-              example: &a6
+              example: &a8
                 active: true
                 handle: t-shirts-men
                 title: T Shirts for men
@@ -13705,7 +14669,7 @@ paths:
     delete:
       description: Delete a `collection`
       summary: Delete a single item
-      tags: *a4
+      tags: *a6
       responses:
         "200":
           description: Item was deleted
@@ -13713,7 +14677,7 @@ paths:
     post:
       description: Upsert a `collection`
       summary: Upsert a single collection
-      tags: *a4
+      tags: *a6
       requestBody:
         content:
           application/json:
@@ -13731,7 +14695,7 @@ paths:
     get:
       summary: List and filter collection items
       description: List and filter items
-      tags: *a4
+      tags: *a6
       parameters:
         - schema:
             type: number
@@ -13746,7 +14710,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a5
+            examples: &a7
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -13756,7 +14720,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a5
+            examples: *a7
           required: true
           name: startAfter
           in: query
@@ -13765,7 +14729,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a5
+            examples: *a7
           required: true
           name: endAt
           in: query
@@ -13774,7 +14738,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a5
+            examples: *a7
           required: true
           name: endBefore
           in: query
@@ -13829,12 +14793,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/collectionUpsert"
               example:
-                - *a6
+                - *a8
   /products/{id_or_handle}:
     get:
       description: Get product data by its `id` or `handle`
       summary: Get a single product
-      tags: &a7
+      tags: &a9
         - products
       parameters:
         - schema:
@@ -13850,7 +14814,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/product"
-              example: &a9
+              example: &a11
                 handle: pr-api-discounts-products-test-js-1
                 active: true
                 price: 50
@@ -13930,22 +14894,21 @@ paths:
                     id: dis_65f2ae768bf30e6cd0ca95fc
                     created_at: 2024-03-14T07:59:50.908Z
                     updated_at: 2024-03-14T07:59:50.908Z
-                    _relations:
-                      search:
-                        - handle:3-for-100
-                        - 3-for-100
-                        - id:dis_65f2ae768bf30e6cd0ca95fc
-                        - dis_65f2ae768bf30e6cd0ca95fc
-                        - 65f2ae768bf30e6cd0ca95fc
-                        - active:true
-                        - buy
-                        - "3"
-                        - "100"
-                        - buy 3 for 100
-                        - app:0
-                        - app:automatic
-                        - type:1
-                        - type:bulk
+                    search:
+                      - handle:3-for-100
+                      - 3-for-100
+                      - id:dis_65f2ae768bf30e6cd0ca95fc
+                      - dis_65f2ae768bf30e6cd0ca95fc
+                      - 65f2ae768bf30e6cd0ca95fc
+                      - active:true
+                      - buy
+                      - "3"
+                      - "100"
+                      - buy 3 for 100
+                      - app:0
+                      - app:automatic
+                      - type:1
+                      - type:bulk
                 search:
                   - handle:pr-api-discounts-products-test-js-1
                   - pr-api-discounts-products-test-js-1
@@ -13963,7 +14926,7 @@ paths:
     delete:
       description: Delete a `product`
       summary: Delete a single item
-      tags: *a7
+      tags: *a9
       responses:
         "200":
           description: Item was deleted
@@ -13971,7 +14934,7 @@ paths:
     post:
       description: Upsert a `product`
       summary: Upsert a single product
-      tags: *a7
+      tags: *a9
       requestBody:
         content:
           application/json:
@@ -13989,7 +14952,7 @@ paths:
     get:
       summary: List and filter product items
       description: List and filter items
-      tags: *a7
+      tags: *a9
       parameters:
         - schema:
             type: number
@@ -14004,7 +14967,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a8
+            examples: &a10
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -14014,7 +14977,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a8
+            examples: *a10
           required: true
           name: startAfter
           in: query
@@ -14023,7 +14986,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a8
+            examples: *a10
           required: true
           name: endAt
           in: query
@@ -14032,7 +14995,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a8
+            examples: *a10
           required: true
           name: endBefore
           in: query
@@ -14087,12 +15050,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/productUpsert"
               example:
-                - *a9
+                - *a11
   /shipping/{id_or_handle}:
     get:
       description: Get shipping data by its `id` or `handle`
       summary: Get a single shipping
-      tags: &a10
+      tags: &a12
         - shipping
       parameters:
         - schema:
@@ -14108,7 +15071,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shipping"
-              example: &a12
+              example: &a14
                 handle: shipping-express
                 name: Express Shipping 2-3 days
                 price: 50
@@ -14126,7 +15089,7 @@ paths:
     delete:
       description: Delete a `shipping`
       summary: Delete a single item
-      tags: *a10
+      tags: *a12
       responses:
         "200":
           description: Item was deleted
@@ -14134,7 +15097,7 @@ paths:
     post:
       description: Upsert a `shipping`
       summary: Upsert a single shipping
-      tags: *a10
+      tags: *a12
       requestBody:
         content:
           application/json:
@@ -14152,7 +15115,7 @@ paths:
     get:
       summary: List and filter shipping items
       description: List and filter items
-      tags: *a10
+      tags: *a12
       parameters:
         - schema:
             type: number
@@ -14167,7 +15130,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a11
+            examples: &a13
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -14177,7 +15140,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a11
+            examples: *a13
           required: true
           name: startAfter
           in: query
@@ -14186,7 +15149,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a11
+            examples: *a13
           required: true
           name: endAt
           in: query
@@ -14195,7 +15158,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a11
+            examples: *a13
           required: true
           name: endBefore
           in: query
@@ -14250,12 +15213,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/shippingUpsert"
               example:
-                - *a12
+                - *a14
   /customers/{id_or_handle}:
     get:
       description: Get customer data by its `id` or `handle`
       summary: Get a single customer
-      tags: &a13
+      tags: &a15
         - customers
       parameters:
         - schema:
@@ -14271,7 +15234,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/customer"
-              example: &a15
+              example: &a17
                 email: a1@a.com
                 firstname: name 1
                 lastname: last 1
@@ -14288,7 +15251,7 @@ paths:
     delete:
       description: Delete a `customer`
       summary: Delete a single item
-      tags: *a13
+      tags: *a15
       responses:
         "200":
           description: Item was deleted
@@ -14296,7 +15259,7 @@ paths:
     post:
       description: Upsert a `customer`
       summary: Upsert a single customer
-      tags: *a13
+      tags: *a15
       requestBody:
         content:
           application/json:
@@ -14314,7 +15277,7 @@ paths:
     get:
       summary: List and filter customer items
       description: List and filter items
-      tags: *a13
+      tags: *a15
       parameters:
         - schema:
             type: number
@@ -14329,7 +15292,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a14
+            examples: &a16
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -14339,7 +15302,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a14
+            examples: *a16
           required: true
           name: startAfter
           in: query
@@ -14348,7 +15311,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a14
+            examples: *a16
           required: true
           name: endAt
           in: query
@@ -14357,7 +15320,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a14
+            examples: *a16
           required: true
           name: endBefore
           in: query
@@ -14412,12 +15375,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/customerUpsert"
               example:
-                - *a15
+                - *a17
   /auth_users/{id_or_handle}:
     get:
       description: Get auth_user data by its `id` or `handle`
       summary: Get a single auth_user
-      tags: &a16
+      tags: &a18
         - auth_users
       parameters:
         - schema:
@@ -14433,7 +15396,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/auth_user"
-              example: &a18
+              example: &a20
                 id: au_65f2ae588bf30e6cd0ca95f3
                 email: admin@sc.com
                 password: djAxaUodw7NHExEjHkRLJ3RdwoTDigAAZMKXwrYkw7pCw6XClcOXBlU_wrXDh8KXw7PDuMKAWMOww5pIGsOsworDrUhlwoFbwrrCvsKw
@@ -14445,7 +15408,7 @@ paths:
     delete:
       description: Delete a `auth_user`
       summary: Delete a single item
-      tags: *a16
+      tags: *a18
       responses:
         "200":
           description: Item was deleted
@@ -14453,7 +15416,7 @@ paths:
     post:
       description: Upsert a `auth_user`
       summary: Upsert a single auth_user
-      tags: *a16
+      tags: *a18
       requestBody:
         content:
           application/json:
@@ -14471,7 +15434,7 @@ paths:
     get:
       summary: List and filter auth_user items
       description: List and filter items
-      tags: *a16
+      tags: *a18
       parameters:
         - schema:
             type: number
@@ -14486,7 +15449,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a17
+            examples: &a19
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -14496,7 +15459,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a17
+            examples: *a19
           required: true
           name: startAfter
           in: query
@@ -14505,7 +15468,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a17
+            examples: *a19
           required: true
           name: endAt
           in: query
@@ -14514,7 +15477,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a17
+            examples: *a19
           required: true
           name: endBefore
           in: query
@@ -14569,12 +15532,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/auth_user"
               example:
-                - *a18
+                - *a20
   /discounts/{id_or_handle}:
     get:
       description: Get discount data by its `id` or `handle`
       summary: Get a single discount
-      tags: &a19
+      tags: &a21
         - discounts
       parameters:
         - schema:
@@ -14590,7 +15553,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/discount"
-              example: &a21
+              example: &a23
                 active: true
                 handle: 10-off-for-product-1
                 title: 10% OFF for product 1
@@ -14637,7 +15600,7 @@ paths:
     delete:
       description: Delete a `discount`
       summary: Delete a single item
-      tags: *a19
+      tags: *a21
       responses:
         "200":
           description: Item was deleted
@@ -14645,7 +15608,7 @@ paths:
     post:
       description: Upsert a `discount`
       summary: Upsert a single discount
-      tags: *a19
+      tags: *a21
       requestBody:
         content:
           application/json:
@@ -14663,7 +15626,7 @@ paths:
     get:
       summary: List and filter discount items
       description: List and filter items
-      tags: *a19
+      tags: *a21
       parameters:
         - schema:
             type: number
@@ -14678,7 +15641,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a20
+            examples: &a22
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -14688,7 +15651,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a20
+            examples: *a22
           required: true
           name: startAfter
           in: query
@@ -14697,7 +15660,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a20
+            examples: *a22
           required: true
           name: endAt
           in: query
@@ -14706,7 +15669,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a20
+            examples: *a22
           required: true
           name: endBefore
           in: query
@@ -14761,12 +15724,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/discountUpsert"
               example:
-                - *a21
+                - *a23
   /images/{id_or_handle}:
     get:
       description: Get image data by its `id` or `handle`
       summary: Get a single image
-      tags: &a22
+      tags: &a24
         - images
       parameters:
         - schema:
@@ -14782,7 +15745,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/image"
-              example: &a24
+              example: &a26
                 handle: a2-png
                 name: a2.png
                 url: https://host.com/folder/a2.png
@@ -14801,7 +15764,7 @@ paths:
     delete:
       description: Delete a `image`
       summary: Delete a single item
-      tags: *a22
+      tags: *a24
       responses:
         "200":
           description: Item was deleted
@@ -14809,7 +15772,7 @@ paths:
     post:
       description: Upsert a `image`
       summary: Upsert a single image
-      tags: *a22
+      tags: *a24
       requestBody:
         content:
           application/json:
@@ -14827,7 +15790,7 @@ paths:
     get:
       summary: List and filter image items
       description: List and filter items
-      tags: *a22
+      tags: *a24
       parameters:
         - schema:
             type: number
@@ -14842,7 +15805,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a23
+            examples: &a25
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -14852,7 +15815,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a23
+            examples: *a25
           required: true
           name: startAfter
           in: query
@@ -14861,7 +15824,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a23
+            examples: *a25
           required: true
           name: endAt
           in: query
@@ -14870,7 +15833,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a23
+            examples: *a25
           required: true
           name: endBefore
           in: query
@@ -14925,12 +15888,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/imageUpsert"
               example:
-                - *a24
+                - *a26
   /notifications/{id_or_handle}:
     get:
       description: Get notification data by its `id` or `handle`
       summary: Get a single notification
-      tags: &a25
+      tags: &a27
         - notifications
       parameters:
         - schema:
@@ -14946,7 +15909,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/notification"
-              example: &a27
+              example: &a29
                 message: message 1
                 search:
                   - checkout
@@ -14964,7 +15927,7 @@ paths:
     delete:
       description: Delete a `notification`
       summary: Delete a single item
-      tags: *a25
+      tags: *a27
       responses:
         "200":
           description: Item was deleted
@@ -14972,7 +15935,7 @@ paths:
     post:
       description: Upsert a `notification`
       summary: Upsert a single notification
-      tags: *a25
+      tags: *a27
       requestBody:
         content:
           application/json:
@@ -14990,7 +15953,7 @@ paths:
     get:
       summary: List and filter notification items
       description: List and filter items
-      tags: *a25
+      tags: *a27
       parameters:
         - schema:
             type: number
@@ -15005,7 +15968,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a26
+            examples: &a28
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -15015,7 +15978,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a26
+            examples: *a28
           required: true
           name: startAfter
           in: query
@@ -15024,7 +15987,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a26
+            examples: *a28
           required: true
           name: endAt
           in: query
@@ -15033,7 +15996,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a26
+            examples: *a28
           required: true
           name: endBefore
           in: query
@@ -15088,12 +16051,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/notificationUpsert"
               example:
-                - *a27
+                - *a29
   /orders/{id_or_handle}:
     get:
       description: Get order data by its `id` or `handle`
       summary: Get a single order
-      tags: &a28
+      tags: &a30
         - orders
       parameters:
         - schema:
@@ -15109,7 +16072,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/order"
-              example: &a30
+              example: &a32
                 status:
                   checkout:
                     id: 0
@@ -15159,7 +16122,7 @@ paths:
     delete:
       description: Delete a `order`
       summary: Delete a single item
-      tags: *a28
+      tags: *a30
       responses:
         "200":
           description: Item was deleted
@@ -15167,7 +16130,7 @@ paths:
     post:
       description: Upsert a `order`
       summary: Upsert a single order
-      tags: *a28
+      tags: *a30
       requestBody:
         content:
           application/json:
@@ -15185,7 +16148,7 @@ paths:
     get:
       summary: List and filter order items
       description: List and filter items
-      tags: *a28
+      tags: *a30
       parameters:
         - schema:
             type: number
@@ -15200,7 +16163,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a29
+            examples: &a31
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -15210,7 +16173,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a29
+            examples: *a31
           required: true
           name: startAfter
           in: query
@@ -15219,7 +16182,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a29
+            examples: *a31
           required: true
           name: endAt
           in: query
@@ -15228,7 +16191,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a29
+            examples: *a31
           required: true
           name: endBefore
           in: query
@@ -15283,12 +16246,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/orderUpsert"
               example:
-                - *a30
+                - *a32
   /posts/{id_or_handle}:
     get:
       description: Get post data by its `id` or `handle`
       summary: Get a single post
-      tags: &a31
+      tags: &a33
         - posts
       parameters:
         - schema:
@@ -15304,7 +16267,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/post"
-              example: &a33
+              example: &a35
                 handle: post-1
                 title: post 1
                 text: text of post 1
@@ -15323,7 +16286,7 @@ paths:
     delete:
       description: Delete a `post`
       summary: Delete a single item
-      tags: *a31
+      tags: *a33
       responses:
         "200":
           description: Item was deleted
@@ -15331,7 +16294,7 @@ paths:
     post:
       description: Upsert a `post`
       summary: Upsert a single post
-      tags: *a31
+      tags: *a33
       requestBody:
         content:
           application/json:
@@ -15349,7 +16312,7 @@ paths:
     get:
       summary: List and filter post items
       description: List and filter items
-      tags: *a31
+      tags: *a33
       parameters:
         - schema:
             type: number
@@ -15364,7 +16327,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a32
+            examples: &a34
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -15374,7 +16337,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a32
+            examples: *a34
           required: true
           name: startAfter
           in: query
@@ -15383,7 +16346,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a32
+            examples: *a34
           required: true
           name: endAt
           in: query
@@ -15392,7 +16355,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a32
+            examples: *a34
           required: true
           name: endBefore
           in: query
@@ -15447,12 +16410,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/postUpsert"
               example:
-                - *a33
+                - *a35
   /storefronts/{id_or_handle}:
     get:
       description: Get storefront data by its `id` or `handle`
       summary: Get a single storefront
-      tags: &a34
+      tags: &a36
         - storefronts
       parameters:
         - schema:
@@ -15468,7 +16431,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/storefront"
-              example: &a36
+              example: &a38
                 handle: sf-1
                 title: sf 1
                 id: sf_65dc619ac40344c9a1dd6755
@@ -15585,7 +16548,7 @@ paths:
     delete:
       description: Delete a `storefront`
       summary: Delete a single item
-      tags: *a34
+      tags: *a36
       responses:
         "200":
           description: Item was deleted
@@ -15593,7 +16556,7 @@ paths:
     post:
       description: Upsert a `storefront`
       summary: Upsert a single storefront
-      tags: *a34
+      tags: *a36
       requestBody:
         content:
           application/json:
@@ -15611,7 +16574,7 @@ paths:
     get:
       summary: List and filter storefront items
       description: List and filter items
-      tags: *a34
+      tags: *a36
       parameters:
         - schema:
             type: number
@@ -15626,7 +16589,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: &a35
+            examples: &a37
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
           required: true
           name: startAt
@@ -15636,7 +16599,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a35
+            examples: *a37
           required: true
           name: startAfter
           in: query
@@ -15645,7 +16608,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a35
+            examples: *a37
           required: true
           name: endAt
           in: query
@@ -15654,7 +16617,7 @@ paths:
             description: "A cursor in CSV format of key and values,
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
-            examples: *a35
+            examples: *a37
           required: true
           name: endBefore
           in: query
@@ -15709,4 +16672,4 @@ paths:
                 items:
                   $ref: "#/components/schemas/storefrontUpsert"
               example:
-                - *a36
+                - *a38

@@ -6,6 +6,10 @@ import {
 } from '@asteasolutions/zod-to-openapi';
 import { stringify as YAMLStringify } from 'yaml'
 import {
+  apiAuthRefreshTypeSchema,
+  apiAuthResultSchema,
+  apiAuthSigninTypeSchema,
+  apiAuthSignupTypeSchema,
   authUserTypeSchema,
   collectionTypeSchema,
   collectionTypeUpsertSchema,
@@ -27,7 +31,9 @@ import {
   shippingMethodTypeUpsertSchema,
   storefrontTypeSchema,
   storefrontTypeUpsertSchema,
-  tagTypeSchema, tagTypeUpsertSchema
+  tagTypeSchema, tagTypeUpsertSchema,
+  variantTypeSchema,
+  variantTypeUpsertSchema
 } from '../v-api/types.autogen.zod.api.js'
 import * as path from 'node:path';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -95,6 +101,7 @@ const create_query = () => {
 const create_all = () => {
   const registry = new OpenAPIRegistry();
 
+  register_auth(registry);
   register_tags(registry);
   register_collections(registry);
   register_products(registry);
@@ -268,6 +275,81 @@ const register_base_list = (registry, slug_base, name, tags, zod_schema, example
     },
   });
 
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_auth = registry => {
+  const tags = ['auth'];
+  const _signupTypeSchema = registry.register('AuthSignup', apiAuthSignupTypeSchema);
+  const _signinTypeSchema = registry.register('AuthSignin', apiAuthSigninTypeSchema);
+  const _refreshTypeSchema = registry.register(`AuthRefresh`, apiAuthRefreshTypeSchema);
+  const example = {
+    "token_type": "Bearer",
+    "user_id": "au_65f98390d6a34550cdc651a1",
+    "access_token": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NWY5ODM5MGQ2YTM0NTUwY2RjNjUxYTEiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTA4NTEwMDksImV4cCI6MTcxMDg1NDYwOX0.8Rlo_P_LivCwn_S-JK68ltQCbXPbUK3nXJKrhRYs7R8",
+        "claims": {
+            "sub": "au_65f98390d6a34550cdc651a1",
+            "roles": [
+                "admin"
+            ],
+            "iat": 1710851009,
+            "exp": 1710854609
+        }
+    },
+    "refresh_token": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NWY5ODM5MGQ2YTM0NTUwY2RjNjUxYTEiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTA4NTEwMDksImV4cCI6MTcxMTQ1NTgwOSwiYXVkIjoiL3JlZnJlc2gifQ.WEwJtnEpfcQ6IHouQEnVeG5haWJTCw8hRmxqLMxHKM8",
+        "claims": {
+            "sub": "au_65f98390d6a34550cdc651a1",
+            "roles": [
+                "admin"
+            ],
+            "iat": 1710851009,
+            "exp": 1711455809,
+            "aud": "/refresh"
+        }
+    }
+  };
+
+  [
+    { slug: '/auth/signup', schema: _signupTypeSchema, desc: 'Signup a user' },
+    { slug: '/auth/signin', schema: _signinTypeSchema, desc: 'Signin a user' },
+    { slug: '/auth/refresh', schema: _refreshTypeSchema, desc: 'Refresh a token' }
+  ].forEach(
+    it => {
+      registry.registerPath({
+        method: 'post',
+        path: it.slug,
+        description: it.desc,
+        summary: it.desc,
+        tags,
+        request: {
+          body: {
+            content: {
+              "application/json": {
+                schema: it.schema,
+              },
+            },
+          }
+        },
+        responses: {
+          200: {
+            description: 'auth info',
+            content: {
+              "application/json": {
+                schema: apiAuthResultSchema,
+                example
+              },
+            },
+          },
+        },
+      });
+    }
+  )
+
+  
 }
 
 
@@ -856,8 +938,8 @@ const register_products = registry => {
   const slug_base = 'products'
   const tags = [slug_base];
   const example_id = 'pr_65f2ae998bf30e6cd0ca9605';
-  const _typeSchema = registry.register(name, productTypeSchema);
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, productTypeUpsertSchema);
+  const _typeSchema = registry.register(name, productTypeSchema.or(variantTypeSchema));
+  const _typeUpsertSchema = registry.register(`${name}Upsert`, productTypeUpsertSchema.or(variantTypeUpsertSchema));
   const example = {
     "handle": "pr-api-discounts-products-test-js-1",
     "active": true,
@@ -1001,6 +1083,8 @@ const register_products = registry => {
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
+
+
 
 //
 

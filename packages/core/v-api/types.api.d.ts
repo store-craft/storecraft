@@ -1,3 +1,4 @@
+
 export type timestamps = {
   /**
    * @description ISO string creation time
@@ -35,6 +36,16 @@ export interface BaseType extends idable {
 
 
 // auth
+interface JWTClaims {
+  iss: string;
+  sub: string;
+  aud: string;
+  exp: number;
+  nbf: number;
+  iat: number;
+  jti: string;
+  roles: string[]
+}
 
 export type AuthBaseType = {
   /**
@@ -54,6 +65,18 @@ export type ApiAuthSigninType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
 export type ApiAuthRefreshType = {
   refresh_token: string;
+}
+
+export type ApiTokenWithClaims = {
+  token: string;
+  claims: Partial<JWTClaims>;
+}
+
+export type ApiAuthResult = {
+  token_type: string;
+  user_id: string;
+  access_token: ApiTokenWithClaims;
+  refresh_token: ApiTokenWithClaims;
 }
 
 export type AuthUserType = BaseType & AuthBaseType & timestamps & {

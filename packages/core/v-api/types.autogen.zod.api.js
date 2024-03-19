@@ -14,6 +14,16 @@ export const attributeTypeSchema = z.object({
   key: z.string(),
   value: z.string().optional(),
 });
+const jWTClaimsSchema = z.object({
+  iss: z.string(),
+  sub: z.string(),
+  aud: z.string(),
+  exp: z.number(),
+  nbf: z.number(),
+  iat: z.number(),
+  jti: z.string(),
+  roles: z.array(z.string()),
+});
 export const authBaseTypeSchema = z.object({
   email: z.string().email(),
   password: z.string().min(4).max(20),
@@ -27,6 +37,16 @@ export const apiAuthSigninTypeSchema = authBaseTypeSchema;
 export const apiAuthSignupTypeSchema = authBaseTypeSchema;
 export const apiAuthRefreshTypeSchema = z.object({
   refresh_token: z.string(),
+});
+export const apiTokenWithClaimsSchema = z.object({
+  token: z.string(),
+  claims: jWTClaimsSchema.partial(),
+});
+export const apiAuthResultSchema = z.object({
+  token_type: z.string(),
+  user_id: z.string(),
+  access_token: apiTokenWithClaimsSchema,
+  refresh_token: apiTokenWithClaimsSchema,
 });
 export const tagTypeSchema = idableSchema
   .extend(timestampsSchema.shape)

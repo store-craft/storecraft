@@ -385,6 +385,14 @@ const register_storage = registry => {
     }
   )
 
+  const PresignedUrl = registry.register('PresignedUrl', zod_presigned).openapi(
+    {
+      description: '`presigned` urls endpoints generate a description of `http` request \
+      that a client can assemble and use it\'s own resources and network to execute to perform\
+      image download or upload. This is highly recommended'
+    }
+  );
+
   // download (no presigned url)
   registry.registerPath({
     method: 'get',
@@ -440,7 +448,7 @@ const register_storage = registry => {
         description: 'A `http` request instruction, that you should execute',
         content: {
           "application/json": {
-            schema: zod_presigned,
+            schema: PresignedUrl,
             example: {
               "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710878150&Signature=XQttB9RJbIQalNoHENZenlq9LEIVf3jKU4zdJJEXLO1cdnjZ8CqRUgM4exbh5nclakrGA7waNwfHpaaAAs5nUnUPhoDBYv7y8wcDMK%2BJL9%2F4uNSSAX4TutudLZ1EMQ4CoGTfPCPXnoTPcGjOm2L5TPB6PeTeWgq%2BUiPZ%2FoMrDDHe8Xjy0WCuAJQo6LPWQtdcnRsLedJB77K8NYxjWzxqNgrhft08d3YjugFDAvDcCz7hOgA8mXBAinKH6JvBQhjRgQaUCCIQr0qJPyroX7rfgxBKCFs0jJjdtVlwDCm535BOENWCI5bgcxSy4yUu9b%2BI59v%2B8Zg74ANAFGIQq0zXdA%3D%3D",
               "method": "GET"
@@ -504,7 +512,7 @@ const register_storage = registry => {
         description: 'A `http` request instruction, that you should execute',
         content: {
           "application/json": {
-            schema: zod_presigned,
+            schema: PresignedUrl,
             example: {
               "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710879955&Signature=Wi5Di1f55k%2FWt9yULSHmyZpYpgBW3VTw9ZqlityFrI%2BgKehA%2FEptAHb%2FoWEWblv5Pd9RDGhFl9PoNaV6j%2B8dl4qdJkTJNWufXhYRmTirxsuXZlPYV25lMPPZ6HBaurg1Cjgd0V87FASsXTshnpC514MUH%2BioDCxksdybTEu%2BRSG27KqlGfY1CXEheBUncSmY6%2BURVhZhhRGLc2f7sfTlVpwq5d4HHSk%2FkLHflUPMUQioEYOD6EwKd8FBLdciA%2FQjDK3AcpmRrQslR5f524V8AfFdWRsRMqE%2BBFcYR4FimHkjuQPo4HedfQ5uSwnWi4g9TugWpIwVVNgfbQoN9wJOzQ%3D%3D",
               "method": "PUT",
@@ -1120,6 +1128,303 @@ const register_storefronts = registry => {
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+
+  // list linked products
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products`,
+    description: 'Each `storefront` has linked products, you can list these `products`',
+    summary: 'List storefront products',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of products`,
+        content: {
+          'application/json': {
+            schema: productTypeSchema.or(variantTypeSchema),
+            example: [
+              {
+                "handle": "pr-api-discounts-products-test-js-1",
+                "active": true,
+                "price": 50,
+                "qty": 1,
+                "title": "product 1",
+                "id": "pr_65f2ae878bf30e6cd0ca95ff",
+                "created_at": "2024-03-14T08:00:07.297Z",
+                "updated_at": "2024-03-14T08:00:07.297Z",
+                "search": [
+                  "handle:pr-api-discounts-products-test-js-1",
+                  "pr-api-discounts-products-test-js-1",
+                  "id:pr_65f2ae878bf30e6cd0ca95ff",
+                  "pr_65f2ae878bf30e6cd0ca95ff",
+                  "65f2ae878bf30e6cd0ca95ff",
+                  "active:true",
+                  "product",
+                  "1",
+                  "product 1",
+                  "discount:10-off-for-specific",
+                  "discount:3-for-100",
+                  "discount:dis_65e75bbb3e40cc70cb17d131",
+                  "discount:dis_65f2ae768bf30e6cd0ca95fc",
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+
+  // list linked discounts
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/discounts`,
+    description: 'Each `storefront` has linked discounts, you can list these `discounts`',
+    summary: 'List storefront discounts',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of discounts`,
+        content: {
+          'application/json': {
+            schema: discountTypeSchema,
+            example: [
+              {
+                "active": true,
+                "handle": "10-off-for-product-1",
+                "title": "10% OFF for product 1",
+                "priority": 0,
+                "application": {
+                  "id": 0,
+                  "name": "Automatic",
+                  "name2": "automatic"
+                },
+                "info": {
+                  "details": {
+                    "meta": {
+                      "id": 0,
+                      "type": "regular",
+                      "name": "Regular Discount"
+                    },
+                    "extra": {
+                      "fixed": 0,
+                      "percent": 10
+                    }
+                  },
+                  "filters": [
+                    {
+                      "meta": {
+                        "id": 2,
+                        "type": "product",
+                        "op": "p-in-handles",
+                        "name": "Product has ID"
+                      },
+                      "value": [
+                        "pr-api-discounts-products-test-js-1"
+                      ]
+                    }
+                  ]
+                },
+                "id": "dis_65f2ae888bf30e6cd0ca9600",
+                "created_at": "2024-03-14T08:00:08.138Z",
+                "updated_at": "2024-03-14T08:00:08.138Z",
+                "search": [
+                  "handle:10-off-for-product-1",
+                  "10-off-for-product-1",
+                  "id:dis_65f2ae888bf30e6cd0ca9600",
+                  "dis_65f2ae888bf30e6cd0ca9600",
+                  "65f2ae888bf30e6cd0ca9600",
+                  "active:true",
+                  "10",
+                  "product",
+                  "1",
+                  "10% off for product 1",
+                  "app:0",
+                  "app:automatic",
+                  "type:0",
+                  "type:regular"
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+
+  // list linked shipping methods
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/shipping`,
+    description: 'Each `storefront` has linked shipping methods, you can list these `shipping methods`',
+    summary: 'List storefront shipping methods',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of shipping methods`,
+        content: {
+          'application/json': {
+            schema: shippingMethodTypeSchema,
+            example: [
+              {
+                "handle": "shipping-express",
+                "name": "Express Shipping 2-3 days",
+                "price": 50,
+                "id": "ship_65dc6198c40344c9a1dd674f",
+                "search": [
+                  "handle:shipping-express",
+                  "shipping-express",
+                  "id:ship_65dc6198c40344c9a1dd674f",
+                  "ship_65dc6198c40344c9a1dd674f",
+                  "65dc6198c40344c9a1dd674f",
+                  "Express",
+                  "Shipping",
+                ],
+                "created_at": "2024-02-26T10:02:00.139Z",
+                "updated_at": "2024-02-26T10:02:00.139Z"
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+  
+  // list linked collections
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/collections`,
+    description: 'Each `storefront` has linked collections, you can list these `collections`',
+    summary: 'List storefront collections',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of collections`,
+        content: {
+          'application/json': {
+            schema: collectionTypeSchema,
+            example: [
+              {
+                "active": true,
+                "handle": "t-shirts-men",
+                "title": "T Shirts for men",
+                "tags": [
+                  "tag-summer",
+                  "tag-hello"
+                ],
+                "id": "col_65f2ae5a8bf30e6cd0ca95f4",
+                "created_at": "2024-03-14T07:59:22.013Z",
+                "updated_at": "2024-03-14T07:59:22.013Z",
+                "search": [
+                  "tag:tag-summer",
+                  "tag:tag-hello",
+                  "handle:t-shirts-men",
+                  "t-shirts-men",
+                  "id:col_65f2ae5a8bf30e6cd0ca95f4",
+                  "col_65f2ae5a8bf30e6cd0ca95f4",
+                  "65f2ae5a8bf30e6cd0ca95f4",
+                  "active:true",
+                  "summer",
+                  "hello",
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+
+  // list linked posts
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/posts`,
+    description: 'Each `storefront` has linked posts, you can list these `posts`',
+    summary: 'List storefront posts',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of posts`,
+        content: {
+          'application/json': {
+            schema: postTypeSchema,
+            example: [
+              {
+                "handle": "post-1",
+                "title": "post 1",
+                "text": "text of post 1",
+                "id": "post_65f2aea48bf30e6cd0ca9610",
+                "created_at": "2024-03-14T08:00:36.999Z",
+                "updated_at": "2024-03-14T08:00:36.999Z",
+                "search": [
+                  "handle:post-1",
+                  "post-1",
+                  "id:post_65f2aea48bf30e6cd0ca9610",
+                  "post_65f2aea48bf30e6cd0ca9610",
+                  "65f2aea48bf30e6cd0ca9610",
+                  "post",
+                  "1",
+                  "post 1"
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+  
+
 }
 
 /**

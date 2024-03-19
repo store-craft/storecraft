@@ -11,18 +11,24 @@ import {
   apiAuthSigninTypeSchema,
   apiAuthSignupTypeSchema,
   authUserTypeSchema,
+  checkoutStatusEnumSchema,
   collectionTypeSchema,
   collectionTypeUpsertSchema,
   customerTypeSchema,
   customerTypeUpsertSchema,
+  discountApplicationEnumSchema,
+  discountMetaEnumSchema,
   discountTypeSchema,
   discountTypeUpsertSchema,
+  filterMetaEnumSchema,
+  fulfillOptionsEnumSchema,
   imageTypeSchema,
   imageTypeUpsertSchema,
   notificationTypeSchema,
   notificationTypeUpsertSchema,
   orderDataSchema,
   orderDataUpsertSchema,
+  paymentOptionsEnumSchema,
   postTypeSchema,
   postTypeUpsertSchema,
   productTypeSchema,
@@ -103,7 +109,9 @@ const create_query = () => {
 const create_all = () => {
   const registry = new OpenAPIRegistry();
 
+  // register routes
   register_auth(registry);
+  register_storage(registry);
   register_tags(registry);
   register_collections(registry);
   register_products(registry);
@@ -117,6 +125,15 @@ const create_all = () => {
   register_posts(registry);
   register_storefronts(registry);
 
+  // register some utility types
+  registry.register('CheckoutStatusEnum', checkoutStatusEnumSchema);
+  registry.register('PaymentOptionsEnum', paymentOptionsEnumSchema);
+  registry.register('FulfillOptionsEnum', fulfillOptionsEnumSchema);
+  registry.register('FilterMetaEnum', filterMetaEnumSchema);
+  registry.register('DiscountMetaEnum', discountMetaEnumSchema);
+  registry.register('DiscountApplication', discountApplicationEnumSchema);
+
+  // generate
   const generator = new OpenApiGeneratorV3(registry.definitions);
   const out = generator.generateDocument({
     openapi: '3.0.0',
@@ -353,8 +370,178 @@ const register_auth = registry => {
       });
     }
   )
+}
 
-  
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_storage = registry => {
+  const tags = ['storage'];
+  const zod_presigned = z.object(
+    {
+      url: z.string().openapi({ description: 'The request url to follow' }),
+      method: z.enum(['GET', 'POST']).openapi({ description: 'The request method' }),
+      headers: z.record(z.string()).optional().openapi({ description: 'Additional request headers'}),
+    }
+  )
+
+  // download (no presigned url)
+  registry.registerPath({
+    method: 'get',
+    path: '/storage/{file_key}?signed=false',
+    description: 'Download a file directly from the backend, this is discouraged if you are using \
+    a storage provider, that supports `presigned` urls creation, which you can delegate to \
+    the client and use it\'s resources and network for download',
+    summary: 'Download file (directly)',
+    tags,
+    request: {
+      params: z.object({
+        file_key: z.string().openapi(
+          { 
+            example: `images/test.png`
+          }
+        ),
+      }),
+
+    },
+    responses: {
+      200: {
+        description: 'image bytearray',
+        content: {
+          "image/*": {
+            schema: z.any(),
+          },
+        },
+      },
+    },
+  });
+
+  // download (presigned url)
+  registry.registerPath({
+    method: 'get',
+    path: '/storage/{file_key}?signed=true',
+    description: 'Cloud storage providers allow the creation of Presigned links, \
+    so frontend can download directly, this is recommended. The response returned is a \
+    request description, that you should create. i.e, `url`, `method`, `headers`',
+    summary: 'Download file (presigned url)',
+    tags,
+    request: {
+      params: z.object({
+        file_key: z.string().openapi(
+          { 
+            example: `images/test.png`
+          }
+        ),
+      }),
+
+    },
+    responses: {
+      200: {
+        description: 'A `http` request instruction, that you should execute',
+        content: {
+          "application/json": {
+            schema: zod_presigned,
+            example: {
+              "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710878150&Signature=XQttB9RJbIQalNoHENZenlq9LEIVf3jKU4zdJJEXLO1cdnjZ8CqRUgM4exbh5nclakrGA7waNwfHpaaAAs5nUnUPhoDBYv7y8wcDMK%2BJL9%2F4uNSSAX4TutudLZ1EMQ4CoGTfPCPXnoTPcGjOm2L5TPB6PeTeWgq%2BUiPZ%2FoMrDDHe8Xjy0WCuAJQo6LPWQtdcnRsLedJB77K8NYxjWzxqNgrhft08d3YjugFDAvDcCz7hOgA8mXBAinKH6JvBQhjRgQaUCCIQr0qJPyroX7rfgxBKCFs0jJjdtVlwDCm535BOENWCI5bgcxSy4yUu9b%2BI59v%2B8Zg74ANAFGIQq0zXdA%3D%3D",
+              "method": "GET"
+            }
+          },
+        },
+      },
+    },
+  });  
+
+  // upload (no presigned url)
+  registry.registerPath({
+    method: 'put',
+    path: '/storage/{file_key}?signed=false',
+    description: 'Upload a file directly into the backend, this is discouraged, we do encourage to use `presigned` url variant',
+    summary: 'Upload a file (directly)',
+    tags,
+    request: {
+      params: z.object({
+        file_key: z.string().openapi(
+          { 
+            example: `images/test.png`,
+            description: 'The file key'
+          }
+        ),
+      }),
+      body: {
+        content: {
+          '*/*': { schema: z.any().openapi({ description: 'Body is any `blob` / `bytearray` stream' }) },
+          
+        },
+      }
+
+    },
+    responses: {
+      200: {
+        description: 'success'
+      },
+    },
+  });
+
+  // upload (presigned url)
+  registry.registerPath({
+    method: 'put',
+    path: '/storage/{file_key}?signed=true',
+    description: 'Upload a file indirectly into the backend, most cloud storages allow this feature',
+    summary: 'Upload a file (presigned url)',
+    tags,
+    request: {
+      params: z.object({
+        file_key: z.string().openapi(
+          { 
+            example: `images/test.png`,
+            description: 'The file key'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: 'A `http` request instruction, that you should execute',
+        content: {
+          "application/json": {
+            schema: zod_presigned,
+            example: {
+              "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710879955&Signature=Wi5Di1f55k%2FWt9yULSHmyZpYpgBW3VTw9ZqlityFrI%2BgKehA%2FEptAHb%2FoWEWblv5Pd9RDGhFl9PoNaV6j%2B8dl4qdJkTJNWufXhYRmTirxsuXZlPYV25lMPPZ6HBaurg1Cjgd0V87FASsXTshnpC514MUH%2BioDCxksdybTEu%2BRSG27KqlGfY1CXEheBUncSmY6%2BURVhZhhRGLc2f7sfTlVpwq5d4HHSk%2FkLHflUPMUQioEYOD6EwKd8FBLdciA%2FQjDK3AcpmRrQslR5f524V8AfFdWRsRMqE%2BBFcYR4FimHkjuQPo4HedfQ5uSwnWi4g9TugWpIwVVNgfbQoN9wJOzQ%3D%3D",
+              "method": "PUT",
+              "headers": {
+                  "Content-Type": "image/png"
+              }
+            }
+
+          },
+        },
+      },
+    },
+  });
+
+  // delete
+  registry.registerPath({
+    method: 'delete',
+    path: '/storage/{file_key}',
+    description: 'Delete a file',
+    summary: 'Delete a file',
+    tags,
+    request: {
+      params: z.object({
+        file_key: z.string().openapi(
+          { 
+            example: `images/test.png`,
+            description: 'The file key'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: 'success',
+      },
+    },
+  });  
 }
 
 
@@ -1088,8 +1275,6 @@ const register_products = registry => {
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
-
-
 
 //
 

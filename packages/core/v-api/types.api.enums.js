@@ -1,8 +1,8 @@
-// @ts-nocheck
+// @ts-nocheck2
 
 
 /** 
- * @enum {import('./types.api').DiscountApplication} 
+ * @enum {import('./types.api.d.ts').DiscountApplicationEnum} 
  */
 export const DiscountApplicationEnum = {
   Auto:   { id: 0, name: 'Automatic', name2: 'automatic'},
@@ -10,7 +10,7 @@ export const DiscountApplicationEnum = {
 }
 
 /**
- * @enum {import('./types.api').FilterMeta} 
+ * @enum {import('./types.api.d.ts').FilterMetaEnum} 
  */
 export const FilterMetaEnum = { 
   p_in_collections: 
@@ -76,7 +76,7 @@ export const FilterMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api').DiscountMeta} 
+ * @enum {import('./types.api.d.ts').DiscountMeta} 
  */
 export const DiscountMetaEnum = {
   regular: { 

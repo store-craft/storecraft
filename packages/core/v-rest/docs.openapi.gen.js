@@ -191,6 +191,8 @@ const register_base_get = (registry, slug_base, name, tags, example_id, zod_sche
  * @param {z.infer<typeof zod_schema>} example 
  */
 const register_base_upsert = (registry, slug_base, name, tags, example_id, zod_schema, example) => {
+  example = {...example};
+  delete example['search'];
   
   registry.registerPath({
     method: 'post',
@@ -203,6 +205,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id, zod_s
         content: {
           "application/json": {
             schema: zod_schema,
+            example
           },
         },
       }

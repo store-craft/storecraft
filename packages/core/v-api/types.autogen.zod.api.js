@@ -35,7 +35,7 @@ const jWTClaimsSchema = z.object({
 export const authBaseTypeSchema = z
   .object({
     email: z.string().email().describe("Email of user"),
-    password: z.string().min(4).max(20).describe("Hashed password"),
+    password: z.string().min(4).max(20).describe("password"),
   })
   .describe("Auth base type");
 export const roleSchema = z
@@ -142,7 +142,7 @@ export const filterValuePNotInTagsSchema = z
   .describe("Filter for product discount, NOT has tags");
 export const filterValuePAllSchema = z
   .any()
-  .describe("Filter for product discount, that chooses all products");
+  .describe("Filter for product discount,\nthat chooses all products");
 export const filterValuePInPriceRangeSchema = z
   .object({
     from: z
@@ -256,33 +256,6 @@ export const filterMetaEnumSchema = z.object({
     name: z.literal("Order has Customers"),
   }),
 });
-export const filterMetaSchema = z
-  .object({
-    id: z.number().describe("Unique identifier for filter type"),
-    type: z
-      .union([z.literal("product"), z.literal("order")])
-      .describe("`product` or `order` filter"),
-    op: z
-      .union([
-        z.literal("p-in-collections"),
-        z.literal("p-not-in-collections"),
-        z.literal("p-in-handles"),
-        z.literal("p-not-in-handles"),
-        z.literal("p-in-tags"),
-        z.literal("p-not-in-tags"),
-        z.literal("p-all"),
-        z.literal("p-in-price-range"),
-        z.literal("o-subtotal-in-range"),
-        z.literal("o-items-count-in-range"),
-        z.literal("o-date-in-range"),
-        z.literal("o_has_customer"),
-      ])
-      .describe("operation name `id` is a unique readable id"),
-    name: z.string().describe("Printable name"),
-  })
-  .describe(
-    "Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>",
-  );
 export const regularDiscountExtraSchema = z
   .object({
     fixed: z
@@ -312,13 +285,13 @@ export const bulkDiscountExtraSchema = z
     qty: z
       .number()
       .describe(
-        "`BulkDiscountExtra` params, The integer quantity for which the discount is given",
+        "`BulkDiscountExtra` params, The integer quantity\nfor which the discount is given",
       ),
     recursive: z
       .boolean()
       .optional()
       .describe(
-        "`BulkDiscountExtra` params, Apply the discount as many times as possible",
+        "`BulkDiscountExtra` params, Apply the discount as\nmany times as possible",
       ),
   })
   .describe("Parameters of bulk discount");
@@ -332,7 +305,7 @@ export const bundleDiscountExtraSchema = z
       .boolean()
       .optional()
       .describe(
-        "`BundleDiscountExtra` params, Apply the discount as many times as possible",
+        "`BundleDiscountExtra` params, Apply the discount\nas many times as possible",
       ),
   })
   .describe("Parameters of bulk discount");
@@ -365,7 +338,7 @@ export const discountMetaEnumSchema = z
     }),
   })
   .describe(
-    "Discount meta data, see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
+    "Discount meta data,\nsee <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
   );
 export const addressTypeSchema = z
   .object({
@@ -429,7 +402,7 @@ export const validationEntrySchema = z
       .describe("message"),
   })
   .describe(
-    "Checkouts or draft orders might be validated in automatic systems",
+    "Checkouts or draft orders might be validated\nin automatic systems",
   );
 export const orderPaymentGatewayDataSchema = z
   .object({
@@ -602,7 +575,7 @@ export const collectionTypeSchema = baseTypeSchema
       .string()
       .optional()
       .describe(
-        "Collections can be exported into json with products, this\nis the url",
+        "Collections can be exported into\njson with products, this is the url",
       ),
   });
 export const collectionTypeUpsertSchema = collectionTypeSchema.omit({
@@ -617,7 +590,7 @@ export const variantOptionSchema = z
     values: z
       .array(textEntitySchema)
       .describe(
-        "Variant option values (for example `Small` / `Medium` / `Large` ..)",
+        "Variant option values\n(for example `Small` / `Medium` / `Large` ..)",
       ),
   })
   .describe("The data of a variant option");
@@ -668,23 +641,23 @@ export const buyXGetYDiscountExtraSchema = z
     qty_x: z
       .number()
       .describe(
-        "`BuyXGetYDiscountExtra` params, The integer quantity of BUY X",
+        "`BuyXGetYDiscountExtra` params, The integer\nquantity of BUY X",
       ),
     qty_y: z
       .number()
       .describe(
-        "`BuyXGetYDiscountExtra` params, The integer quantity of BUY Y",
+        "`BuyXGetYDiscountExtra` params, The integer quantity\nof BUY Y",
       ),
     filters_y: z
       .array(filterSchema)
       .describe(
-        "`BuyXGetYDiscountExtra` params, The filters for what a customer gets (Y)",
+        "`BuyXGetYDiscountExtra` params, The filters for what\na customer gets (Y)",
       ),
     recursive: z
       .boolean()
       .optional()
       .describe(
-        "`BuyXGetYDiscountExtra` params, Apply the discount as many times as possible",
+        "`BuyXGetYDiscountExtra` params, Apply the discount\nas many times as possible",
       ),
   })
   .describe("Parameters of bulk discount");
@@ -767,7 +740,7 @@ export const notificationActionSchema = z
       .describe("Extra params for the actions type"),
   })
   .describe(
-    "Each notification may have an actionable item associated with it.\nFor example, clicking an order notification will route to the order page",
+    "Each notification may have an actionable item\nassociated with it. For example, clicking an order notification\nwill route to the order page",
   );
 export const orderStatusSchema = z
   .object({
@@ -831,7 +804,9 @@ export const discountDetailsSchema = z
 const baseNotificationTypeSchema = z.object({
   message: z
     .string()
-    .describe("Message of notification, can be markdown, markup or plain text"),
+    .describe(
+      "Message of notification, can be markdown,\nmarkup or plain text",
+    ),
   author: z.string().optional().describe("Author of the notification"),
   actions: z
     .array(notificationActionSchema)
@@ -863,12 +838,12 @@ export const discountTypeSchema = baseTypeSchema
     handle: z.string().describe("Discount `code` / `handle`"),
     priority: z
       .number()
-      .describe("The order in which to apply the discounts stack (priority)"),
+      .describe("The order in which to apply the discounts\nstack (priority)"),
     published: z
       .string()
       .optional()
       .describe(
-        "Discounts may generate collections, this is the collection\nhandle that contains the applicable discount products",
+        "Discounts may generate collections, this\nis the collection handle that contains the applicable\ndiscount products",
       ),
     info: discountInfoSchema.describe("Details and filters of the discount"),
     application: z
@@ -904,7 +879,7 @@ export const baseProductTypeSchema = baseTypeSchema
       .array(discountTypeSchema)
       .optional()
       .describe(
-        "Discounts we know were applied to this product, expanded type",
+        "Discounts we know were applied to this product,\nexpanded type",
       ),
   });
 export const productTypeUpsertSchema = baseProductTypeSchema
@@ -921,7 +896,7 @@ export const productTypeUpsertSchema = baseProductTypeSchema
         .array(collectionTypeSchema.pick({ id: true, handle: true }))
         .optional()
         .describe(
-          "List of collections to add the product into, this is an explicit connection,\nto form a better UX experience",
+          "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
         ),
     }),
   )
@@ -929,13 +904,13 @@ export const productTypeUpsertSchema = baseProductTypeSchema
 export const variantTypeSchema = baseProductTypeSchema.extend({
   parent_handle: z
     .string()
-    .describe("Handle of parent product in case this product is a variant"),
+    .describe("Handle of parent product in case this\nproduct is a variant"),
   parent_id: z
     .string()
-    .describe("`id` of parent product in case this product is a variant"),
+    .describe("`id` of parent product in case this\nproduct is a variant"),
   variant_hint: z
     .array(variantOptionSelectionSchema)
-    .describe("Internal usage, clarifies the variant projected options"),
+    .describe("Internal usage, clarifies the variant\nprojected options"),
 });
 export const variantTypeUpsertSchema = variantTypeSchema
   .omit({
@@ -951,7 +926,7 @@ export const variantTypeUpsertSchema = variantTypeSchema
         .array(collectionTypeSchema.pick({ id: true, handle: true }))
         .optional()
         .describe(
-          "List of collections to add the product into, this is an explicit connection,\nto form a better UX experience",
+          "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
         ),
     }),
   )
@@ -976,7 +951,7 @@ export const storefrontTypeSchema = baseTypeSchema
       .string()
       .optional()
       .describe(
-        "Storefronts may be exported to `json` for CDN, this is the `url`",
+        "Storefronts may be exported to `json` for CDN,\nthis is the `url`",
       ),
     collections: z
       .array(collectionTypeSchema)
@@ -1009,16 +984,16 @@ export const lineItemSchema = z
     price: z.number().optional().describe("Product price snapshot"),
     qty: z
       .number()
-      .describe("Integer quantity of how many such products were bought"),
+      .describe("Integer quantity of how many such products\nwere bought"),
     stock_reserved: z
       .number()
       .optional()
       .describe(
-        "Used by order to indicate it has reserved stock and it's amount",
+        "Used by order to indicate it has reserved stock\nand it's amount",
       ),
     data: productTypeSchema
       .optional()
-      .describe("(optional) the product data snapshot for future integrity"),
+      .describe("(optional) the product data snapshot for\nfuture integrity"),
   })
   .describe("A line item is a product, that appeared in an order");
 export const evoEntrySchema = z
@@ -1028,7 +1003,7 @@ export const evoEntrySchema = z
     total_discount: z
       .number()
       .optional()
-      .describe("The amount of money that was discounted by this discount"),
+      .describe("The amount of money that was discounted\nby this discount"),
     quantity_undiscounted: z
       .number()
       .optional()
@@ -1047,7 +1022,9 @@ export const evoEntrySchema = z
       .optional()
       .describe("Available line items after discount"),
   })
-  .describe("Explains how a specific discount was used to discount line items");
+  .describe(
+    "Explains how a specific discount was used\nto discount line items",
+  );
 export const variantCombinationSchema = z
   .object({
     selection: z

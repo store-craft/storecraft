@@ -93,7 +93,7 @@ export type AuthBaseType = {
   email: string;
 
   /**
-   * @description Hashed password
+   * @description password
    * @minLength 4
    * @maxLength 20   
    */
@@ -242,8 +242,8 @@ export interface CollectionType extends BaseType, timestamps {
   active: boolean;
 
   /** 
-   * @description Collections can be exported into json with products, this
-   * is the url
+   * @description Collections can be exported into 
+   * json with products, this is the url
    */
   published?: string;
 }
@@ -286,7 +286,8 @@ export type VariantOption = {
   id: string;
 
   /** 
-   * @description Variant option values (for example `Small` / `Medium` / `Large` ..) 
+   * @description Variant option values 
+   * (for example `Small` / `Medium` / `Large` ..) 
    */
   values: TextEntity[];
 }
@@ -326,17 +327,20 @@ export type VariantOptionSelection = {
  */
 export interface VariantType extends BaseProductType {
   /** 
-   * @description Handle of parent product in case this product is a variant 
+   * @description Handle of parent product in case this 
+   * product is a variant 
    */
   parent_handle: string;
 
   /** 
-   * @description `id` of parent product in case this product is a variant 
+   * @description `id` of parent product in case this 
+   * product is a variant 
    */
   parent_id: string;
 
   /** 
-   * @description Internal usage, clarifies the variant projected options 
+   * @description Internal usage, clarifies the variant 
+   * projected options 
    */
   variant_hint: VariantOptionSelection[];
 }
@@ -389,7 +393,8 @@ export interface BaseProductType extends BaseType, timestamps {
   collections?: CollectionType[];
 
   /** 
-   * @description Discounts we know were applied to this product, expanded type 
+   * @description Discounts we know were applied to this product, 
+   * expanded type 
    */
   discounts?: DiscountType[];
 }
@@ -397,10 +402,11 @@ export interface BaseProductType extends BaseType, timestamps {
 /**
  * @description Variant upsert type
  */
-export type VariantTypeUpsert = Omit<VariantType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+export type VariantTypeUpsert = Omit<VariantType, 
+'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
   /** 
-   * @description List of collections to add the product into, this is an explicit connection, 
-   * to form a better UX experience 
+   * @description List of collections to add the product into, 
+   * this is an explicit connection, to form a better UX experience 
    */
   collections?: Pick<CollectionType, 'id' | 'handle'>[];
 }
@@ -423,10 +429,11 @@ export interface ProductType extends BaseProductType {
 /**
  * @description Product upsert type
  */
-export type ProductTypeUpsert = Omit<BaseProductType, 'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+export type ProductTypeUpsert = Omit<BaseProductType, 
+  'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
   /** 
-   * @description List of collections to add the product into, this is an explicit connection, 
-   * to form a better UX experience 
+   * @description List of collections to add the product into, 
+   * this is an explicit connection, to form a better UX experience 
    */
   collections?: Pick<CollectionType, 'id' | 'handle'>[];
 }
@@ -455,14 +462,16 @@ export interface DiscountType extends BaseType, timestamps {
   handle: string;
 
   /** 
-   * @description The order in which to apply the discounts stack (priority) 
+   * @description The order in which to apply the discounts 
+   * stack (priority) 
    * @min 0
    */
   priority: number;
 
   /** 
-   * @description Discounts may generate collections, this is the collection 
-   * handle that contains the applicable discount products 
+   * @description Discounts may generate collections, this 
+   * is the collection handle that contains the applicable 
+   * discount products 
    */
   published?: string;
 
@@ -558,7 +567,8 @@ export type FilterValue_p_in_tags = string[];
 export type FilterValue_p_not_in_tags = string[];
 
 /**
- * @description Filter for product discount, that chooses all products
+ * @description Filter for product discount, 
+ * that chooses all products
  */
 export type FilterValue_p_all = any;
 
@@ -635,11 +645,12 @@ export type Filter = {
    * @description Meta data related to identifying the filter 
    */
   meta: FilterMetaEnum['p_all'] | FilterMetaEnum['p_in_collections'] |
-  FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
-  FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_handles'] |
-  FilterMetaEnum['p_not_in_handles'] | FilterMetaEnum['o_date_in_range'] |
-  FilterMetaEnum['o_has_customer'] | FilterMetaEnum['o_items_count_in_range'] |
-  FilterMetaEnum['o_subtotal_in_range'];
+        FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
+        FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_handles'] |
+        FilterMetaEnum['p_not_in_handles'] | FilterMetaEnum['o_date_in_range'] |
+        FilterMetaEnum['o_has_customer'] | FilterMetaEnum['o_items_count_in_range'] |
+        FilterMetaEnum['o_subtotal_in_range'];
+
   /** 
    * @description The filter params 
    */
@@ -717,32 +728,6 @@ export interface FilterMetaEnum {
   },    
 }
 
-/** 
- * @description Filter meta data, see <a href='#FilterMetaEnum'>#FilterMetaEnum</a>  
- */
-export type FilterMeta = {
-  /** 
-   * @description Unique identifier for filter type 
-   */
-  id: number;
-
-  /** 
-   * @description `product` or `order` filter 
-   */
-  type: 'product' | 'order';
-
-  /**  
-   * @description operation name `id` is a unique readable id
-   */
-  op: 'p-in-collections' | 'p-not-in-collections' | 'p-in-handles' | 'p-not-in-handles' | 
-  'p-in-tags' | 'p-not-in-tags' | 'p-all' | 'p-in-price-range' | 'o-subtotal-in-range' | 
-  'o-items-count-in-range' | 'o-date-in-range' | 'o_has_customer';
-
-  /** 
-   * @description Printable name 
-   */
-  name: string;
-}
 
 /** 
  * @description The details of how to apply a discount. 
@@ -753,8 +738,8 @@ export type DiscountDetails = {
    * @description metadata to identify the type of discount 
    */
   meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
-  DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
-  DiscountMetaEnum['order'];
+        DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
+        DiscountMetaEnum['order'];
 
   /** 
    * @description Extra parameters of the specific discount type 
@@ -765,7 +750,8 @@ export type DiscountDetails = {
 }
 
 /** 
- * @description Discount meta data, see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>  
+ * @description Discount meta data, 
+ * see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>  
  */
 export type DiscountMetaEnum = {
   regular: { 
@@ -842,12 +828,14 @@ export type BulkDiscountExtra = {
   percent: number;
 
   /** 
-   * @description `BulkDiscountExtra` params, The integer quantity for which the discount is given 
+   * @description `BulkDiscountExtra` params, The integer quantity 
+   * for which the discount is given 
    */
   qty: number
 
   /** 
-   * @description `BulkDiscountExtra` params, Apply the discount as many times as possible 
+   * @description `BulkDiscountExtra` params, Apply the discount as 
+   * many times as possible 
    */
   recursive?: boolean
 }
@@ -867,22 +855,26 @@ export type BuyXGetYDiscountExtra = {
   percent: number;
 
   /** 
-   * @description `BuyXGetYDiscountExtra` params, The integer quantity of BUY X 
+   * @description `BuyXGetYDiscountExtra` params, The integer 
+   * quantity of BUY X 
    */
   qty_x: number
 
   /** 
-   * @description `BuyXGetYDiscountExtra` params, The integer quantity of BUY Y 
+   * @description `BuyXGetYDiscountExtra` params, The integer quantity 
+   * of BUY Y 
    */
   qty_y: number
 
   /** 
-   * @description `BuyXGetYDiscountExtra` params, The filters for what a customer gets (Y) 
+   * @description `BuyXGetYDiscountExtra` params, The filters for what 
+   * a customer gets (Y) 
    */
   filters_y: Filter[];
 
   /** 
-   * @description `BuyXGetYDiscountExtra` params, Apply the discount as many times as possible 
+   * @description `BuyXGetYDiscountExtra` params, Apply the discount 
+   * as many times as possible 
    */
   recursive?: boolean
 }
@@ -902,7 +894,8 @@ export type BundleDiscountExtra = {
   percent: number
   
   /** 
-   * @description `BundleDiscountExtra` params, Apply the discount as many times as possible 
+   * @description `BundleDiscountExtra` params, Apply the discount 
+   * as many times as possible 
    */
   recursive?: boolean
 }
@@ -929,7 +922,8 @@ export interface StorefrontType extends BaseType, timestamps {
   video?: string;
 
   /** 
-   * @description Storefronts may be exported to `json` for CDN, this is the `url`
+   * @description Storefronts may be exported to `json` for CDN, 
+   * this is the `url`
    */
   published?: string;
 
@@ -1176,7 +1170,8 @@ export interface SettingsType extends BaseType {
  */
 interface BaseNotificationType {
   /** 
-   * @description Message of notification, can be markdown, markup or plain text 
+   * @description Message of notification, can be markdown, 
+   * markup or plain text 
    */
   message: string;
 
@@ -1214,8 +1209,9 @@ export interface NotificationTypeUpsert extends BaseNotificationType {
 }
 
 /** 
- * @description Each notification may have an actionable item associated with it. 
- * For example, clicking an order notification will route to the order page */
+ * @description Each notification may have an actionable item 
+ * associated with it. For example, clicking an order notification 
+ * will route to the order page */
 export type NotificationAction = {
   /** 
    * @description Name of the action 
@@ -1558,17 +1554,20 @@ export type LineItem = {
   price?: number; 
 
   /** 
-   * @description Integer quantity of how many such products were bought 
+   * @description Integer quantity of how many such products 
+   * were bought 
    */
   qty: number;
 
   /** 
-   * @description Used by order to indicate it has reserved stock and it's amount 
+   * @description Used by order to indicate it has reserved stock 
+   * and it's amount 
    */
   stock_reserved?: number; 
 
   /** 
-   * @description (optional) the product data snapshot for future integrity
+   * @description (optional) the product data snapshot for 
+   * future integrity
    */
   data?: ProductType;
 }
@@ -1589,7 +1588,8 @@ export type DiscountError = {
 }
 
 /** 
- * @description Explains how a specific discount was used to discount line items 
+ * @description Explains how a specific discount was used 
+ * to discount line items 
  */
 export type EvoEntry = {
   /**
@@ -1603,7 +1603,8 @@ export type EvoEntry = {
   discount_code?: string;
 
   /** 
-   * @description The amount of money that was discounted by this discount 
+   * @description The amount of money that was discounted 
+   * by this discount 
    */
   total_discount?: number;
 
@@ -1635,7 +1636,8 @@ export type EvoEntry = {
 
 
 /** 
- * @description Checkouts or draft orders might be validated in automatic systems 
+ * @description Checkouts or draft orders might be validated 
+ * in automatic systems 
  */
 export type ValidationEntry = {
   /**

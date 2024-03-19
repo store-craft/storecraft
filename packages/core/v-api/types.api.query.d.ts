@@ -15,15 +15,19 @@ export type ExpandQuery = string[];
 export type ApiQuery = {
   expand?: ExpandQuery;
   /**
-   * boolean DSL for filtering the terms
-   * (whatever-indexed tag:a -(tag:b | tag:c) handle:product*)
+   * boolean `DSL` for filtering the terms
+   * `(whatever-indexed tag:a -(tag:b | tag:c) handle:product*)`
    */
   vql?: VQL.AST;
 
   /**
-   * 
+   * `(updated_at)`
+   * `(updated_at, id)`
    */
   sortBy?: SortCursor;
+  /**
+   * `asc` / `desc`
+   */
   order?: SortOrder;
 
   /**
@@ -32,17 +36,17 @@ export type ApiQuery = {
   limit?: number;
 
   /**
-   * (updated:2012-09)
-   * (updated:2012-09,id:aokaoskox)
-   * (created:2012-09,id:aokaoskox)
+   * `(updated_at:2012-09)`
+   * `(updated_at:2012-09,id:aokaoskox)`
+   * `(updated_at:2012-09,id:aokaoskox)`
    */
   startAt?: Cursor;
   startAfter?: Cursor;
 
   /**
-   * (updated:2012-09)
-   * (updated:2012-09,id:aokaoskox)
-   * (created:2012-09,id:aokaoskox)
+   * `(updated_at:2012-09)`
+   * `(updated_at:2012-09,id:aokaoskox)`
+   * `(created:2012-09,id:aokaoskox)`
    */
   endAt?: Cursor;
   endBefore?: Cursor;

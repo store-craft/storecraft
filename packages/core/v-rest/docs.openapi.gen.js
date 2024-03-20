@@ -109,6 +109,15 @@ const create_query = () => {
 
 const create_all = () => {
   const registry = new OpenAPIRegistry();
+  const bearerAuth = registry.registerComponent(
+    'securitySchemes',
+    'bearerAuth',
+    {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    }
+  );
 
   // register routes
   register_auth(registry);
@@ -133,7 +142,6 @@ const create_all = () => {
   registry.register('FilterMetaEnum', filterMetaEnumSchema);
   registry.register('DiscountMetaEnum', discountMetaEnumSchema);
   registry.register('DiscountApplication', discountApplicationEnumSchema);
-
   // generate
   const generator = new OpenApiGeneratorV3(registry.definitions);
   const out = generator.generateDocument({
@@ -141,10 +149,9 @@ const create_all = () => {
     info: {
       version: '1.0.0',
       title: 'StoreCraft API',
-      description: 'This is the API',
+      description: 'Welcome to the `StoreCraft` **API**',
     },
     servers: [{ url: 'v1' }],
-    security: []
   });
   
   writeFile(
@@ -169,9 +176,11 @@ const create_all = () => {
  * @param {ZodSchema} zod_schema 
  * @param {z.infer<typeof zod_schema>} example 
  * @param {string} [aug_description] 
+ * @param {any} [extra] 
  */
 const register_base_get = (
-  registry, slug_base, name, tags, example_id, zod_schema, example, aug_description=''
+  registry, slug_base, name, tags, example_id, zod_schema, 
+  example, aug_description='', extra={}
   ) => {
 
   registry.registerPath({
@@ -211,6 +220,7 @@ const register_base_get = (
         },
       },
     },
+    ...extra
   });
 }
 
@@ -257,6 +267,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
         },
       },
     },
+    security: [{ bearerAuth: [] }]
   });
 }
 
@@ -282,6 +293,7 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
         description: 'Item was deleted',
       }
     },
+    security: [{ bearerAuth: [] }]
   });
 }
 
@@ -292,8 +304,11 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
  * @param {string[]} tags 
  * @param {ZodSchema} zod_schema 
  * @param {z.infer<typeof zod_schema>} example 
+ * @param {any} [extra] 
+ * @param {string} [aug_description] 
  */
-const register_base_list = (registry, slug_base, name, tags, zod_schema, example) => {
+const register_base_list = (
+  registry, slug_base, name, tags, zod_schema, example, extra={}, aug_description='') => {
   
   registry.registerPath({
     method: 'get',
@@ -301,7 +316,7 @@ const register_base_list = (registry, slug_base, name, tags, zod_schema, example
       &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
       &order={order}&vql={vql}&expand={expand}`,
     summary: `List and filter ${name} items`,
-    description: 'List and filter items',
+    description: `List and filter items \n ${aug_description}`,
     tags,
     request: {
       query: create_query()
@@ -317,6 +332,7 @@ const register_base_list = (registry, slug_base, name, tags, zod_schema, example
         },
       },
     },
+    ...extra
   });
 
 }
@@ -399,6 +415,7 @@ const register_auth = registry => {
  */
 const register_storage = registry => {
   const tags = ['storage'];
+  const security = [ { bearerAuth: [] } ];
   const zod_presigned = z.object(
     {
       url: z.string().openapi({ description: 'The request url to follow' }),
@@ -417,11 +434,14 @@ const register_storage = registry => {
 
   // download (no presigned url)
   registry.registerPath({
+    security,
     method: 'get',
     path: '/storage/{file_key}?signed=false',
-    description: 'Download a file directly from the backend, this is discouraged if you are using \
-    a storage provider, that supports `presigned` urls creation, which you can delegate to \
-    the client and use it\'s resources and network for download',
+    description: 'Download a file directly from the backend, \
+    this is discouraged if you are using \
+    a storage provider, that supports `presigned` urls creation, \
+    which you can delegate to the client and use it\'s resources \
+    and network for download',
     summary: 'Download file (directly)',
     tags,
     request: {
@@ -448,6 +468,7 @@ const register_storage = registry => {
 
   // download (presigned url)
   registry.registerPath({
+    security,
     method: 'get',
     path: '/storage/{file_key}?signed=true',
     description: 'Cloud storage providers allow the creation of Presigned links, \
@@ -483,6 +504,7 @@ const register_storage = registry => {
 
   // upload (no presigned url)
   registry.registerPath({
+    security,
     method: 'put',
     path: '/storage/{file_key}?signed=false',
     description: 'Upload a file directly into the backend, this is discouraged, we do encourage to use `presigned` url variant',
@@ -514,6 +536,7 @@ const register_storage = registry => {
 
   // upload (presigned url)
   registry.registerPath({
+    security,
     method: 'put',
     path: '/storage/{file_key}?signed=true',
     description: 'Upload a file indirectly into the backend, most cloud storages allow this feature',
@@ -551,6 +574,7 @@ const register_storage = registry => {
 
   // delete
   registry.registerPath({
+    security,
     method: 'delete',
     path: '/storage/{file_key}',
     description: 'Delete a file',
@@ -610,11 +634,20 @@ const register_collections = registry => {
       "hello",
     ]
   }
-  
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+
+  register_base_get(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example
+    );
+  register_base_upsert(
+    registry, slug_base, name, tags, example_id, 
+    _typeUpsertSchema, example
+    );
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_list(
+    registry, slug_base, name, tags, _typeUpsertSchema, 
+    example
+    );
 
   // list and filter collection products
   registry.registerPath({
@@ -773,10 +806,11 @@ const register_customers = registry => {
       "a1@a.com"
     ]
   }
-  
+  const security = [ { bearerAuth: [] } ];
+
   register_base_get(
     registry, slug_base, name, tags, example_id,
-    _typeSchema, example
+    _typeSchema, example, '', { security }
     );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
@@ -791,7 +825,7 @@ const register_customers = registry => {
   register_base_delete(registry, slug_base, name, tags, desc_delete);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example
+    _typeUpsertSchema, example, { security }
     );
 }
 
@@ -815,11 +849,18 @@ const register_auth_users = registry => {
     "created_at": "2024-03-14T07:59:20.031Z",
     "updated_at": "2024-03-14T07:59:20.031Z",
   }
-  
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeSchema, example);
+  const security = [ { bearerAuth: [] } ];
+
+  register_base_get(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example, '', { security } );
+  register_base_upsert(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example
+    );
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeSchema, example);
+  register_base_list(
+    registry, slug_base, name, tags, _typeSchema, example, { security });
 }
 
 /**
@@ -908,72 +949,72 @@ const register_discounts = registry => {
   register_base_list(registry, slug_base, name, tags, 
     _typeUpsertSchema, example);
 
-    // list and filter discount's products
-    registry.registerPath({
-      method: 'get',
-      path: `/${slug_base}/{id_or_handle}/products`,
-      description: 'Each `discount` has eligible `products`, \
-        you can query and filter these `products` by discount',
-      summary: 'List and filter discount\'s eligible products',
-      tags,
-      request: {
-        params: z.object({
-          id_or_handle: z.string().openapi(
-            { 
-              example: `\`${example_id}\` or a \`handle\``,
-              description: '`id` or `handle`'
-            }
-          ),
-        }),
-        query: create_query()
-      },
-      responses: {
-        200: {
-          description: `Filtered product\'s of a discount`,
-          content: {
-            'application/json': {
-              schema: z.array(variantTypeSchema),
-              example: [
-                {
-                  "handle": "tshirt-red-color",
-                  "active": true,
-                  "price": 50,
-                  "qty": 1,
-                  "title": "tshirt variant 1 - red color",
-                  "parent_handle": "pr-api-products-variants-test-js-1",
-                  "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
-                  "variant_hint": [
-                    {
-                      "option_id": "id-option-1",
-                      "value_id": "id-val-1"
-                    }
-                  ],
-                  "id": "pr_65fab4471d764999c957cb05",
-                  "created_at": "2024-03-20T10:02:47.411Z",
-                  "updated_at": "2024-03-20T10:02:47.411Z",
-                  "search": [
-                    "handle:tshirt-red-color",
-                    "tshirt-red-color",
-                    "id:pr_65fab4471d764999c957cb05",
-                    "pr_65fab4471d764999c957cb05",
-                    "65fab4471d764999c957cb05",
-                    "active:true",
-                    "tshirt",
-                    "variant",
-                    "1",
-                    "red",
-                    "color",
-                    "tshirt variant 1 - red color",
-                    "discount:3-for-100",
-                  ]
-                }
-              ]
-            },
+  // list and filter discount's products
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products`,
+    description: 'Each `discount` has eligible `products`, \
+      you can query and filter these `products` by discount',
+    summary: 'List and filter discount\'s eligible products',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `Filtered product\'s of a discount`,
+        content: {
+          'application/json': {
+            schema: z.array(variantTypeSchema),
+            example: [
+              {
+                "handle": "tshirt-red-color",
+                "active": true,
+                "price": 50,
+                "qty": 1,
+                "title": "tshirt variant 1 - red color",
+                "parent_handle": "pr-api-products-variants-test-js-1",
+                "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
+                "variant_hint": [
+                  {
+                    "option_id": "id-option-1",
+                    "value_id": "id-val-1"
+                  }
+                ],
+                "id": "pr_65fab4471d764999c957cb05",
+                "created_at": "2024-03-20T10:02:47.411Z",
+                "updated_at": "2024-03-20T10:02:47.411Z",
+                "search": [
+                  "handle:tshirt-red-color",
+                  "tshirt-red-color",
+                  "id:pr_65fab4471d764999c957cb05",
+                  "pr_65fab4471d764999c957cb05",
+                  "65fab4471d764999c957cb05",
+                  "active:true",
+                  "tshirt",
+                  "variant",
+                  "1",
+                  "red",
+                  "color",
+                  "tshirt variant 1 - red color",
+                  "discount:3-for-100",
+                ]
+              }
+            ]
           },
         },
       },
-    });
-  
+    },
+  });
+
 }
 
 /**
@@ -1042,11 +1083,20 @@ const register_notifications = registry => {
     "created_at": "2024-03-14T08:00:25.859Z",
     "updated_at": "2024-03-14T08:00:25.859Z"
   }
-  
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+  const security = [ { bearerAuth: [] } ];
+
+  register_base_get(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example, '', { security }
+  );
+  register_base_upsert(
+    registry, slug_base, name, tags, example_id, 
+    _typeUpsertSchema, example);
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_list(
+    registry, slug_base, name, tags, 
+    _typeUpsertSchema, example, { security }
+    );
 }
 
 /**
@@ -1058,7 +1108,9 @@ const register_orders = registry => {
   const tags = [slug_base];
   const example_id = 'order_65f2ae998bf30e6cd0ca9605';
   const _typeSchema = registry.register(name, orderDataSchema);
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, orderDataUpsertSchema);
+  const _typeUpsertSchema = registry.register(
+    `${name}Upsert`, orderDataUpsertSchema
+    );
   const example = {
     "status": {
       "checkout": {
@@ -1119,10 +1171,23 @@ const register_orders = registry => {
     "created_at": "2024-02-22T16:22:30.095Z",
     "updated_at": "2024-02-22T16:22:30.095Z"
   }
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+  const security = [ { bearerAuth: [] } ];
+
+  register_base_get(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example);
+  register_base_upsert(
+    registry, slug_base, name, tags, example_id, 
+    _typeUpsertSchema, example
+    );
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_list(
+    registry, slug_base, name, tags, 
+    _typeUpsertSchema, example, { security },
+    'List operates differently in the following cases: \n \
+    - If user is `admin`, orders of all customers will be returned \n \
+    - If user is not `admin`, then only his own orders will be returned '
+    );
 }
 
 /**
@@ -1324,7 +1389,8 @@ const register_storefronts = registry => {
     products, discounts, posts, shipping, search')\``
     );
 
-  const desc_upsert = 'When upserting a `storefront`, the following side effects will happen:\n \
+  const desc_upsert = 'When upserting a `storefront`, the \
+  following side effects will happen:\n \
   - `collections` field will be used to form connections with `collections` \n \
   - `products` field will be used to form connections with `products` \n \
   - `discounts` field will be used to form connections with `discounts` \n \
@@ -1332,8 +1398,9 @@ const register_storefronts = registry => {
   - `posts` field will be used to form connections with `posts` \n \
   '
 
-  register_base_upsert(registry, slug_base, name, tags, example_id, 
-    _typeUpsertSchema, example, desc_upsert);
+  register_base_upsert(registry, slug_base, name, tags, 
+    example_id, _typeUpsertSchema, example, desc_upsert
+    );
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, example
@@ -1633,7 +1700,6 @@ const register_storefronts = registry => {
       },
     },
   });
-  
 
 }
 

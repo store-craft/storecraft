@@ -98,8 +98,9 @@ const create_query = () => {
     ),
     expand: z.string().openapi(
       {
-        examples: [],
-        description: 'A CSV of keys of connections to expand, example `(search, discounts, collections, *)`',
+        examples: ['*', 'search', 'search, collections'],
+        description: 'A **CSV** of keys of connections to expand, example \
+        `(search, discounts, collections, *)`',
         default: '*'
       }
     )
@@ -167,19 +168,34 @@ const create_all = () => {
  * @param {string} example_id 
  * @param {ZodSchema} zod_schema 
  * @param {z.infer<typeof zod_schema>} example 
+ * @param {string} [aug_description] 
  */
-const register_base_get = (registry, slug_base, name, tags, example_id, zod_schema, example) => {
+const register_base_get = (
+  registry, slug_base, name, tags, example_id, zod_schema, example, aug_description=''
+  ) => {
+
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}/{id_or_handle}`,
-    description: `Get ${name} data by its \`id\` or \`handle\``,
+    path: `/${slug_base}/{id_or_handle}?expand={expand}`,
+    description: `Get ${name} data by its \`id\` or \`handle\` \n${aug_description}`,
     summary: `Get a single ${name}`,
     tags,
     request: {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``
+            example: `\`${example_id}\` or a \`handle\``,
+            description: `The \`id\` or \`handle\` of ${name}`
+          }
+        ),
+      }),
+      query: z.object({
+        expand: z.string().openapi(
+          { 
+            examples: [`(collections, search)`, `*`],
+            description: `Expand connections of item, 
+            a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
+            default: '`*`'
           }
         ),
       }),
@@ -206,15 +222,18 @@ const register_base_get = (registry, slug_base, name, tags, example_id, zod_sche
  * @param {string} example_id 
  * @param {ZodSchema} zod_schema 
  * @param {z.infer<typeof zod_schema>} example 
+ * @param {string} [description] 
  */
-const register_base_upsert = (registry, slug_base, name, tags, example_id, zod_schema, example) => {
+const register_base_upsert = (registry, slug_base, name, tags, example_id, 
+  zod_schema, example, description) => {
   example = {...example};
+
   delete example['search'];
   
   registry.registerPath({
     method: 'post',
     path: `/${slug_base}`,
-    description: `Upsert a \`${name}\``,
+    description: description ?? `Upsert a \`${name}\``,
     summary: `Upsert a single ${name}`,
     tags,
     request: {
@@ -246,14 +265,15 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id, zod_s
  * @param {string} slug_base 
  * @param {string} name 
  * @param {string[]} tags 
+ * @param {string} [description] 
  */
-const register_base_delete = (registry, slug_base, name, tags) => {
+const register_base_delete = (registry, slug_base, name, tags, description) => {
   
   registry.registerPath({
     method: 'delete',
     path: `/${slug_base}/{id_or_handle}`,
-    description: `Delete a \`${name}\``,
-    summary: 'Delete a single item',
+    description: description ?? `Delete a \`${name}\``,
+    summary: `Delete a single ${name}`,
     tags,
     request: {
     },
@@ -277,7 +297,9 @@ const register_base_list = (registry, slug_base, name, tags, zod_schema, example
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}?limit={limit}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
+    path: `/${slug_base}?limit={limit}&startAt={startAt}&endAt={endAt}
+      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
+      &order={order}&vql={vql}&expand={expand}`,
     summary: `List and filter ${name} items`,
     description: 'List and filter items',
     tags,
@@ -552,7 +574,6 @@ const register_storage = registry => {
   });  
 }
 
-
 /**
  * @param {OpenAPIRegistry} registry 
  */
@@ -562,7 +583,9 @@ const register_collections = registry => {
   const tags = [`${name}s`];
   const example_id = 'col_65f2ae568bf30e6cd0ca95ea';
   const _typeSchema = registry.register(name, collectionTypeSchema);
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, collectionTypeUpsertSchema);
+  const _typeUpsertSchema = registry.register(
+    `${name}Upsert`, collectionTypeUpsertSchema
+    );
   const example = {
     "active": true,
     "handle": "t-shirts-men",
@@ -592,6 +615,72 @@ const register_collections = registry => {
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+
+  // list and filter collection products
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products`,
+    description: 'Each `collection` is linked to `products`, you can query and filter these `products` by collection',
+    summary: 'List and filter collection\'s products',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `Filtered product\'s of a collection`,
+        content: {
+          'application/json': {
+            schema: z.array(variantTypeSchema),
+            example: [
+              {
+                "handle": "tshirt-red-color",
+                "active": true,
+                "price": 50,
+                "qty": 1,
+                "title": "tshirt variant 1 - red color",
+                "parent_handle": "pr-api-products-variants-test-js-1",
+                "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
+                "variant_hint": [
+                  {
+                    "option_id": "id-option-1",
+                    "value_id": "id-val-1"
+                  }
+                ],
+                "id": "pr_65fab4471d764999c957cb05",
+                "created_at": "2024-03-20T10:02:47.411Z",
+                "updated_at": "2024-03-20T10:02:47.411Z",
+                "search": [
+                  "handle:tshirt-red-color",
+                  "tshirt-red-color",
+                  "id:pr_65fab4471d764999c957cb05",
+                  "pr_65fab4471d764999c957cb05",
+                  "65fab4471d764999c957cb05",
+                  "active:true",
+                  "tshirt",
+                  "variant",
+                  "1",
+                  "red",
+                  "color",
+                  "tshirt variant 1 - red color",
+                  "discount:3-for-100",
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+
 }
 
 /**
@@ -662,8 +751,12 @@ const register_customers = registry => {
   const slug_base = 'customers'
   const tags = [slug_base];
   const example_id = 'cus_65f2ae6e8bf30e6cd0ca95fa';
-  const _typeSchema = registry.register(name, customerTypeSchema);
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, customerTypeUpsertSchema);
+  const _typeSchema = registry.register(
+    name, customerTypeSchema
+    );
+  const _typeUpsertSchema = registry.register(
+    `${name}Upsert`, customerTypeUpsertSchema
+    );
   const example = {
     "email": "a1@a.com",
     "firstname": "name 1",
@@ -681,10 +774,25 @@ const register_customers = registry => {
     ]
   }
   
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_get(
+    registry, slug_base, name, tags, example_id,
+    _typeSchema, example
+    );
+  register_base_upsert(
+    registry, slug_base, name, tags, example_id, 
+    _typeUpsertSchema, example
+    );
+
+  const desc_delete = `When removing a \`customer\`, the 
+  following side effects will happen:\n 
+  - Referenced \`auth_user\` will be removed as well \n 
+  `
+
+  register_base_delete(registry, slug_base, name, tags, desc_delete);
+  register_base_list(
+    registry, slug_base, name, tags, 
+    _typeUpsertSchema, example
+    );
 }
 
 /**
@@ -723,7 +831,9 @@ const register_discounts = registry => {
   const tags = [slug_base];
   const example_id = 'dis_65f2ae888bf30e6cd0ca9600';
   const _typeSchema = registry.register(name, discountTypeSchema);
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, discountTypeUpsertSchema);
+  const _typeUpsertSchema = registry.register(
+    `${name}Upsert`, discountTypeUpsertSchema
+    );
   const example = {
     "active": true,
     "handle": "10-off-for-product-1",
@@ -781,10 +891,89 @@ const register_discounts = registry => {
     ]
   }
   
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+  register_base_get(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example
+    );
+
+  const desc_upsert = `When upserting a \`discount\`, 
+  the following side effects will happen:\n 
+  - \`Products\` will be inspected and updated with eligibility 
+  to the \`discount\` if they meet criterions \n
+  `
+
+  register_base_upsert(registry, slug_base, name, tags, 
+    example_id, _typeUpsertSchema, example, desc_upsert);
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_list(registry, slug_base, name, tags, 
+    _typeUpsertSchema, example);
+
+    // list and filter discount's products
+    registry.registerPath({
+      method: 'get',
+      path: `/${slug_base}/{id_or_handle}/products`,
+      description: 'Each `discount` has eligible `products`, \
+        you can query and filter these `products` by discount',
+      summary: 'List and filter discount\'s eligible products',
+      tags,
+      request: {
+        params: z.object({
+          id_or_handle: z.string().openapi(
+            { 
+              example: `\`${example_id}\` or a \`handle\``,
+              description: '`id` or `handle`'
+            }
+          ),
+        }),
+        query: create_query()
+      },
+      responses: {
+        200: {
+          description: `Filtered product\'s of a discount`,
+          content: {
+            'application/json': {
+              schema: z.array(variantTypeSchema),
+              example: [
+                {
+                  "handle": "tshirt-red-color",
+                  "active": true,
+                  "price": 50,
+                  "qty": 1,
+                  "title": "tshirt variant 1 - red color",
+                  "parent_handle": "pr-api-products-variants-test-js-1",
+                  "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
+                  "variant_hint": [
+                    {
+                      "option_id": "id-option-1",
+                      "value_id": "id-val-1"
+                    }
+                  ],
+                  "id": "pr_65fab4471d764999c957cb05",
+                  "created_at": "2024-03-20T10:02:47.411Z",
+                  "updated_at": "2024-03-20T10:02:47.411Z",
+                  "search": [
+                    "handle:tshirt-red-color",
+                    "tshirt-red-color",
+                    "id:pr_65fab4471d764999c957cb05",
+                    "pr_65fab4471d764999c957cb05",
+                    "65fab4471d764999c957cb05",
+                    "active:true",
+                    "tshirt",
+                    "variant",
+                    "1",
+                    "red",
+                    "color",
+                    "tshirt variant 1 - red color",
+                    "discount:3-for-100",
+                  ]
+                }
+              ]
+            },
+          },
+        },
+      },
+    });
+  
 }
 
 /**
@@ -979,8 +1168,12 @@ const register_storefronts = registry => {
   const slug_base = 'storefronts'
   const tags = [slug_base];
   const example_id = 'sf_65dc619ac40344c9a1dd6755';
-  const _typeSchema = registry.register(name, storefrontTypeSchema);
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, storefrontTypeUpsertSchema);
+  const _typeSchema = registry.register(
+    name, storefrontTypeSchema
+    );
+  const _typeUpsertSchema = registry.register(
+    `${name}Upsert`, storefrontTypeUpsertSchema
+    );
   const example = {
     "handle": "sf-1",
     "title": "sf 1",
@@ -1124,10 +1317,27 @@ const register_storefronts = registry => {
     ]
   }
 
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+  register_base_get(
+    registry, slug_base, name, tags, example_id, 
+    _typeSchema, example,
+    `- Eligible  expand connection are \`('collections, 
+    products, discounts, posts, shipping, search')\``
+    );
+
+  const desc_upsert = 'When upserting a `storefront`, the following side effects will happen:\n \
+  - `collections` field will be used to form connections with `collections` \n \
+  - `products` field will be used to form connections with `products` \n \
+  - `discounts` field will be used to form connections with `discounts` \n \
+  - `shipping_methods` field will be used to form connections with `shipping` \n \
+  - `posts` field will be used to form connections with `posts` \n \
+  '
+
+  register_base_upsert(registry, slug_base, name, tags, example_id, 
+    _typeUpsertSchema, example, desc_upsert);
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_list(
+    registry, slug_base, name, tags, _typeUpsertSchema, example
+    );
 
   // list linked products
   registry.registerPath({
@@ -1435,8 +1645,12 @@ const register_products = registry => {
   const slug_base = 'products'
   const tags = [slug_base];
   const example_id = 'pr_65f2ae998bf30e6cd0ca9605';
-  const _typeSchema = registry.register(name, productTypeSchema.or(variantTypeSchema));
-  const _typeUpsertSchema = registry.register(`${name}Upsert`, productTypeUpsertSchema.or(variantTypeUpsertSchema));
+  const _typeSchema = registry.register(
+    name, productTypeSchema.or(variantTypeSchema)
+    );
+  const _typeUpsertSchema = registry.register(
+    `${name}Upsert`, productTypeUpsertSchema.or(variantTypeUpsertSchema)
+    );
   const example = {
     "handle": "pr-api-discounts-products-test-js-1",
     "active": true,
@@ -1575,10 +1789,92 @@ const register_products = registry => {
     ]
   }
 
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+  const desc_upsert = `When upserting a \`product\`, 
+  the following side effects will happen:\n 
+  - \`collections\` field will be used to form connections with \`collections\` \n 
+  - It will form connections with eligible product \`discounts\` \n 
+  - If it is a \`variant\`, it will be connected to it\'s parent \n  
+  `
+  register_base_get(
+    registry, slug_base, name, tags, example_id,
+    _typeSchema, example, 
+    `- Eligible  expand connection are \`('collections, 
+    search, variants, discounts')\``
+    );
+  register_base_upsert(
+    registry, slug_base, name, tags, example_id, 
+    _typeUpsertSchema, example, desc_upsert
+    );
+
+  // upsert a variant
+
+  registry.registerPath({
+    method: 'post',
+    path: `/${slug_base}/`,
+    summary: `Upsert a single variant`,
+    description: 'Upsert a `variant`, a `variant` is a regular \
+    product with the following fields set `parent_id`, `parent_handle`, `variant_hint`',
+    tags,
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: variantTypeUpsertSchema,
+            example: {
+              "handle": "tshirt-red-color",
+              "active": true,
+              "price": 50,
+              "qty": 1,
+              "title": "tshirt variant 1 - red color",
+              "parent_handle": "tshirt",
+              "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
+              "variant_hint": [
+                {
+                  "option_id": "id-option-1",
+                  "value_id": "id-val-1"
+                }
+              ],
+              "id": "pr_65fab4471d764999c957cb05",
+              "created_at": "2024-03-20T10:02:47.411Z",
+              "updated_at": "2024-03-20T10:02:47.411Z",
+              "search": [
+                "handle:tshirt-red-color",
+                "tshirt-red-color",
+                "id:pr_65fab4471d764999c957cb05",
+                "pr_65fab4471d764999c957cb05",
+                "65fab4471d764999c957cb05",
+                "active:true",
+                "tshirt",
+                "variant",
+                "1",
+                "red",
+                "color",
+                "tshirt variant 1 - red color",
+                "discount:3-for-100",
+              ]
+            }
+          },
+        },
+      }
+    },
+    responses: {
+      200: {
+        description: 'ID of upserted data',
+        content: {
+          "application/json": {
+            schema: z.string(),
+            example: example_id
+          },
+        },
+      },
+    },
+  });
+
   register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_list(
+    registry, slug_base, name, tags, 
+    _typeUpsertSchema, example
+    );
 
   // list collections
   registry.registerPath({
@@ -1690,6 +1986,93 @@ const register_products = registry => {
                   "color",
                   "tshirt variant 1 - red color",
                   "discount:3-for-100",
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+
+  // list discounts
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/discounts`,
+    description: 'Each `products` may have linked `discounts`, you can list all these `discounts`',
+    summary: 'List all product\'s discounts',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List all product\'s discounts`,
+        content: {
+          'application/json': {
+            schema: z.array(discountTypeSchema),
+            example: [
+              {
+                "active": true,
+                "handle": "10-off-for-product-1",
+                "title": "10% OFF for product 1",
+                "priority": 0,
+                "application": {
+                  "id": 0,
+                  "name": "Automatic",
+                  "name2": "automatic"
+                },
+                "info": {
+                  "details": {
+                    "meta": {
+                      "id": 0,
+                      "type": "regular",
+                      "name": "Regular Discount"
+                    },
+                    "extra": {
+                      "fixed": 0,
+                      "percent": 10
+                    }
+                  },
+                  "filters": [
+                    {
+                      "meta": {
+                        "id": 2,
+                        "type": "product",
+                        "op": "p-in-handles",
+                        "name": "Product has ID"
+                      },
+                      "value": [
+                        "pr-api-discounts-products-test-js-1"
+                      ]
+                    }
+                  ]
+                },
+                "id": "dis_65f2ae888bf30e6cd0ca9600",
+                "created_at": "2024-03-14T08:00:08.138Z",
+                "updated_at": "2024-03-14T08:00:08.138Z",
+                "search": [
+                  "handle:10-off-for-product-1",
+                  "10-off-for-product-1",
+                  "id:dis_65f2ae888bf30e6cd0ca9600",
+                  "dis_65f2ae888bf30e6cd0ca9600",
+                  "65f2ae888bf30e6cd0ca9600",
+                  "active:true",
+                  "10",
+                  "product",
+                  "1",
+                  "10% off for product 1",
+                  "app:0",
+                  "app:automatic",
+                  "type:0",
+                  "type:regular"
                 ]
               }
             ]

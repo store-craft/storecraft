@@ -1579,6 +1579,61 @@ const register_products = registry => {
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+
+  // list collections
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/collections`,
+    description: 'Each `products` has linked collections, you can list all these `collections`',
+    summary: 'List all product\'s collections',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List all product\'s collections`,
+        content: {
+          'application/json': {
+            schema: productTypeSchema.or(variantTypeSchema),
+            example: [
+              {
+                "active": true,
+                "handle": "t-shirts-men",
+                "title": "T Shirts for men",
+                "tags": [
+                  "tag-summer",
+                  "tag-hello"
+                ],
+                "id": "col_65f2ae5a8bf30e6cd0ca95f4",
+                "created_at": "2024-03-14T07:59:22.013Z",
+                "updated_at": "2024-03-14T07:59:22.013Z",
+                "search": [
+                  "tag:tag-summer",
+                  "tag:tag-hello",
+                  "handle:t-shirts-men",
+                  "t-shirts-men",
+                  "id:col_65f2ae5a8bf30e6cd0ca95f4",
+                  "col_65f2ae5a8bf30e6cd0ca95f4",
+                  "65f2ae5a8bf30e6cd0ca95f4",
+                  "active:true",
+                  "summer",
+                  "hello",
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
 }
 
 //

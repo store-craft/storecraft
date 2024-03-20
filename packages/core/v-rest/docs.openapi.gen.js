@@ -1151,7 +1151,7 @@ const register_storefronts = registry => {
         description: `List of products`,
         content: {
           'application/json': {
-            schema: productTypeSchema.or(variantTypeSchema),
+            schema: z.array(productTypeSchema.or(variantTypeSchema)),
             example: [
               {
                 "handle": "pr-api-discounts-products-test-js-1",
@@ -1207,7 +1207,7 @@ const register_storefronts = registry => {
         description: `List of discounts`,
         content: {
           'application/json': {
-            schema: discountTypeSchema,
+            schema: z.array(discountTypeSchema),
             example: [
               {
                 "active": true,
@@ -1294,7 +1294,7 @@ const register_storefronts = registry => {
         description: `List of shipping methods`,
         content: {
           'application/json': {
-            schema: shippingMethodTypeSchema,
+            schema: z.array(shippingMethodTypeSchema),
             example: [
               {
                 "handle": "shipping-express",
@@ -1342,7 +1342,7 @@ const register_storefronts = registry => {
         description: `List of collections`,
         content: {
           'application/json': {
-            schema: collectionTypeSchema,
+            schema: z.array(collectionTypeSchema),
             example: [
               {
                 "active": true,
@@ -1397,7 +1397,7 @@ const register_storefronts = registry => {
         description: `List of posts`,
         content: {
           'application/json': {
-            schema: postTypeSchema,
+            schema: z.array(postTypeSchema),
             example: [
               {
                 "handle": "post-1",
@@ -1592,7 +1592,7 @@ const register_products = registry => {
         id_or_handle: z.string().openapi(
           { 
             example: `\`${example_id}\` or a \`handle\``,
-            description: '`id` or `handle` of the storefront'
+            description: '`id` or `handle`'
           }
         ),
       }),
@@ -1602,7 +1602,7 @@ const register_products = registry => {
         description: `List all product\'s collections`,
         content: {
           'application/json': {
-            schema: productTypeSchema.or(variantTypeSchema),
+            schema: z.array(collectionTypeSchema),
             example: [
               {
                 "active": true,
@@ -1634,6 +1634,71 @@ const register_products = registry => {
       },
     },
   });
+
+  // list variants
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/variants`,
+    description: 'Each `products` may have linked product variants, you can list all these `variants`',
+    summary: 'List all product\'s variants',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List all product\'s variants`,
+        content: {
+          'application/json': {
+            schema: z.array(variantTypeSchema),
+            example: [
+              {
+                "handle": "tshirt-red-color",
+                "active": true,
+                "price": 50,
+                "qty": 1,
+                "title": "tshirt variant 1 - red color",
+                "parent_handle": "pr-api-products-variants-test-js-1",
+                "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
+                "variant_hint": [
+                  {
+                    "option_id": "id-option-1",
+                    "value_id": "id-val-1"
+                  }
+                ],
+                "id": "pr_65fab4471d764999c957cb05",
+                "created_at": "2024-03-20T10:02:47.411Z",
+                "updated_at": "2024-03-20T10:02:47.411Z",
+                "search": [
+                  "handle:tshirt-red-color",
+                  "tshirt-red-color",
+                  "id:pr_65fab4471d764999c957cb05",
+                  "pr_65fab4471d764999c957cb05",
+                  "65fab4471d764999c957cb05",
+                  "active:true",
+                  "tshirt",
+                  "variant",
+                  "1",
+                  "red",
+                  "color",
+                  "tshirt variant 1 - red color",
+                  "discount:3-for-100",
+                ]
+              }
+            ]
+          },
+        },
+      },
+    },
+  });
+
 }
 
 //

@@ -114,6 +114,7 @@ export const create = app => {
 
     assert.ok(product_variants.length>=product_variants.length, 'got less')
   });
+  // return s;
 
   s('remove 2nd variant -> test only one variant for product', async () => {
     await products.remove(app, var_upsert[0].handle);

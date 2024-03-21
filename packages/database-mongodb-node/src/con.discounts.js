@@ -47,7 +47,7 @@ const upsert = (driver) => {
             },
             { session }
           );
-
+          
           // now filter and update for products
           if(data.active && data.application.id===DiscountApplicationEnum.Auto.id) {
             const conjunctions = discount_to_mongo_conjunctions(data);

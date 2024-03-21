@@ -15,6 +15,7 @@ import { create_routes as create_products_route } from "./con.products.routes.js
 import { create_routes as create_storage_route } from "./con.storage.routes.js";
 import { create_routes as create_checkout_route } from "./con.checkout.routes.js";
 import { create_routes as create_payment_gateways_route } from "./con.payment-gateways.routes.js";
+import { create_routes as create_others_route } from "./con.others.routes.js";
 
 /**
  * @typedef {import("../types.public.js").ApiRequest} ApiRequest
@@ -53,11 +54,15 @@ export const create_rest_api = (app) => {
       this.#factory['/api/storage'] = create_storage_route;
       this.#factory['/api/checkout'] = create_checkout_route;
       this.#factory['/api/payments'] = create_payment_gateways_route;
+      this.#factory['/api/info'] = create_others_route;
     }
 
     /** @param {string} path */
     load_route_lazily(path) {
       const key = path?.split('/').slice(0, 3).join('/');
+      console.log(
+        path.split('/').slice(0,3)
+      )
       const con = this.#controllers[key];
       if(!con) {
         const f = this.#factory[key];

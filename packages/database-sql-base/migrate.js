@@ -18,10 +18,6 @@ const __dirname = path.dirname(__filename);
 export async function migrateToLatest(db_driver, destroy_db_upon_completion=true) {
   if(!db_driver?.client)
     throw new Error('No Kysely client found !!!');
-  // /** @type {Kysely<import('./types.sql.tables.js').Database>} */
-  // const db = new Kysely({
-  //   dialect: def_dialect
-  // })
 
   console.log('Resolving migrations')
 
@@ -32,18 +28,24 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: path.join(__dirname, `migrations.${db_driver.dialectType.toLowerCase()}`),
+      migrationFolder: path.join(
+        __dirname, `migrations.${db_driver.dialectType.toLowerCase()}`
+        ),
     }),
   })
 
-  await migrator.migrateDown()
+  // await migrator.migrateDown()
   const { error, results } = await migrator.migrateToLatest();
 
   results?.forEach((it) => {
     if (it.status === 'Success') {
-      console.log(`migration "${it.migrationName}" was executed successfully`)
+      console.log(
+        `migration "${it.migrationName}" was executed successfully`
+        );
     } else if (it.status === 'Error') {
-      console.error(`failed to execute migration "${it.migrationName}"`)
+      console.error(
+        `failed to execute migration "${it.migrationName}"`
+        );
     }
   })
 
@@ -56,5 +58,3 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
   if(destroy_db_upon_completion)
     await db.destroy()
 }
-
-// migrateToLatest()

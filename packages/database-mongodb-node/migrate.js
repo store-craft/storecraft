@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename);
 /**
  * 
  * @param {MongoDB} driver 
- * @returns 
  */
 export async function migrateToLatest(driver) {
   console.log('Starting Migrations');

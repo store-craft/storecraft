@@ -22,6 +22,9 @@ export const create_app = async () => {
 
 async function test() {
   const app = await create_app();
+
+  await app.db.migrateToLatest();
+
   Object.entries(api_index).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();

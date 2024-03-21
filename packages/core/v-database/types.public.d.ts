@@ -258,8 +258,17 @@ export interface db_driver {
    * Init to the database
    */
   init: (app: App<any, any, any, db_driver, any>) => Promise<this>;
-  /** Disconnect the database if possible */
+
+  /** 
+   * Disconnect the database if possible 
+   */
   disconnect: () => Promise<boolean>;
+
+  /**
+   * 
+   * Migrate database to latest state
+   */
+  migrateToLatest: () => Promise<void>
 
   /**
    * Is the driver ready ?

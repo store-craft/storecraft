@@ -13,6 +13,7 @@ import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 
+
 /**
  * @typedef {Partial<import('./types.public.js').Config>} Config
  */
@@ -94,12 +95,23 @@ export class MongoDB {
     return this;
   }
 
+  async migrateToLatest() {
+    this.throwIfNotReady();
+    const { migrateToLatest } = await import('./migrate.js');
+    await migrateToLatest(this);
+  }
+
   async disconnect() {
     await this.mongo_client.close(true);
     return true;
   }
 
   get isReady() { return this.#_is_ready; }
+
+  throwIfNotReady() {
+    if(!this.isReady)
+      throw new Error('Database not ready !!! you need to `.init()` it')
+  }
   
   /**
    * database name
@@ -108,13 +120,26 @@ export class MongoDB {
     return this.config.db_name ?? 'main';
   }
 
-  get app() { return this.#_app; }
+  /**
+   * Get the `storecraft` app
+   */
+  get app() { 
+    return this.#_app; 
+  }
 
+  /**
+   * Get the native `mongodb` client
+   */
   get mongo_client() {
     return this.#_mongo_client;
   }
 
-  get config() { return this.#_config; }
+  /**
+   * Get the config object
+   */
+  get config() { 
+    return this.#_config; 
+  }
 
   /**
    * 

@@ -30,7 +30,7 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
     schema && assert_zod(schema, item);
 
     // Check if exists
-    await assert_save_create_mode(item, db);
+    // await assert_save_create_mode(item, db);
     const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
     const final = apply_dates({ ...item, id })
     const search = [

@@ -108,7 +108,6 @@ export const add_sanity_crud_to_test_suite = s => {
     assert_partial(item_get, {...one, id});
   });
   
-  // return s;
   s('update', async (ctx) => {
     const one = ctx.items[1];
     const id = await ctx.ops.upsert(ctx.app, one);
@@ -123,12 +122,15 @@ export const add_sanity_crud_to_test_suite = s => {
     assert_partial(item_get, {...one, id});
   });
   
+
   s('missing fields should throw', async (ctx) => {
     await assert_async_throws(
       async () => await ctx.ops.upsert(ctx.app, {})
     );
   })
   
+  return s;
+
   s('insert new with existing handle should throw', async (ctx) => {
     const one = ctx.items[0];
     if(!one.handle)

@@ -6,7 +6,7 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   insert_search_of, insert_tags_of, storefront_with_collections, 
   storefront_with_discounts, storefront_with_posts, 
   storefront_with_products, storefront_with_shipping, 
-  upsert_me, where_id_or_handle_table, 
+  regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -68,7 +68,7 @@ const upsert = (driver) => {
           }
 
           // upsert me
-          await upsert_me(trx, table_name, item.id, {
+          await regular_upsert_me(trx, table_name, {
             active: item.active ? 1: 0,
             attributes: JSON.stringify(item.attributes),
             description: item.description,

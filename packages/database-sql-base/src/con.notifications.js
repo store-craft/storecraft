@@ -1,6 +1,6 @@
 import { SQL } from '../driver.js'
 import { delete_me, delete_search_of, 
-  insert_search_of, upsert_me, where_id_or_handle_table, 
+  insert_search_of, regular_upsert_me, where_id_or_handle_table, 
   with_search } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -24,7 +24,7 @@ const upsert = (driver) => {
             trx, [...item.search, ...search_terms], 
             item.id, item.id, table_name
             );
-          await upsert_me(trx, table_name, item.id, {
+          await regular_upsert_me(trx, table_name, {
             created_at: item.created_at,
             updated_at: item.updated_at,
             message: item.message,

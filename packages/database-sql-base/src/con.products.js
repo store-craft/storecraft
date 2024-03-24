@@ -3,7 +3,7 @@ import { SQL } from '../driver.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
-  insert_tags_of, upsert_me, 
+  insert_tags_of, regular_upsert_me, 
   where_id_or_handle_table, products_with_collections, 
   with_tags, with_media, 
   delete_entity_values_by_value_or_reporter,
@@ -63,7 +63,7 @@ const upsert = (driver) => {
           await insert_media_of(trx, item.media, item.id, item.handle, table_name);
           await report_document_media(driver)(item, trx);
           // main
-          await upsert_me(trx, table_name, item.id, {
+          await regular_upsert_me(trx, table_name, {
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,

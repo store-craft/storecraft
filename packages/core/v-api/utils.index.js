@@ -1,6 +1,17 @@
 import { to_tokens } from './utils.func.js';
 
-export const isDef = v => v!==undefined && v!==null;
+/**
+ * Is the value **NOT** (`undefined` **OR** `null`) ?
+ * @param {any} v 
+ * @returns {boolean}
+ */
+export const isDef = v => !(v===undefined || v===null);
+
+/**
+ * Is the value (`undefined` **OR** `null`) ?
+ * @param {any} v 
+ * @returns {boolean}
+ */
 export const isUnd = v => !isDef(v);
 
 /**

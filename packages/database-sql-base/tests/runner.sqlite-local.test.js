@@ -54,7 +54,7 @@ async function test2() {
   // api_index.api_tags_crud_test.create(app).run();
   // api_index.api_tags_list_test.create(app).run();
 
-  // api_index.api_collections_crud_test.create(app).run();
+  api_index.api_collections_crud_test.create(app).run();
   // api_index.api_collections_list_test.create(app).run();
   // api_index.api_collections_products_test.create(app).run();
 
@@ -83,8 +83,8 @@ async function test2() {
   // api_index.api_notifications_crud_test.create(app).run();
   // api_index.api_notifications_list_test.create(app).run();
 
-  api_index.api_images_crud_test.create(app).run();
-  api_index.api_images_list_test.create(app).run();
+  // api_index.api_images_crud_test.create(app).run();
+  // api_index.api_images_list_test.create(app).run();
 
   // api_index.api_discounts_crud_test.create(app).run();
   // api_index.api_discounts_list_test.create(app).run();

@@ -1,6 +1,6 @@
 import { SQL } from '../driver.js'
 import { sanitize } from './utils.funcs.js'
-import { delete_me, upsert_me, 
+import { delete_me, regular_upsert_me, 
   where_id_or_handle_table } from './con.shared.js'
 
 /**
@@ -19,9 +19,10 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          return await upsert_me(trx, table_name, item.id, {
+          return await regular_upsert_me(trx, table_name, {
             confirmed_mail: item.confirmed_mail ? 1 : 0,
             email: item.email,
+            handle: item.email,
             password: item.password,
             created_at: item.created_at,
             updated_at: item.updated_at,

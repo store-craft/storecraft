@@ -201,11 +201,19 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  * @template {keyof Database} T
  * @param {Transaction<Database>} trx 
  * @param {T} table_name 
- * @param {string} item_id 
+ * @param {string} item_id
  * @param {Parameters<InsertQueryBuilder<Database, T>["values"]>[0]} item values of the entity
  */
-export const upsert_me = async (trx, table_name, item_id, item) => {
-  await trx.deleteFrom(table_name).where('id', '=', item_id).execute();
+export const regular_upsert_me = async (trx, table_name, item) => {
+// export const regular_upsert_me = async (trx, table_name, item_id, item) => {
+  await trx.deleteFrom(table_name).where(
+    eb => eb.or(
+      [
+        item.id && eb('id', '=', item.id),
+        item.handle && eb('handle', '=', item.handle),
+      ].filter(Boolean)
+    )
+  ).execute();
   return await trx.insertInto(table_name).values(item).executeTakeFirst()
 }
 

@@ -24,20 +24,23 @@ export const db = app => app.db.notifications;
  */
 export const addBulk = async (app, items) => {
   
-  items = Array.isArray(items) ? items : [items] ;
+  /** @type {(ItemTypeUpsert & import('../v-database/types.public.js').idable_concrete)[]} */
+  const items_with_id = Array.isArray(items) ? items : [items] ;
   // validate and assign ids
-  items.forEach(
+  const search_terms = [];
+  items_with_id.forEach(
     item => { 
       assert_zod(notificationTypeUpsertSchema, item);
       item.id = ID('not');
       item.search = item.search ?? [];
       apply_dates(item);
       isDef(item.author) && item.search.push(`author:${item.author}`)
+      search_terms.push(item.search)
     }
   );
 
-  await db(app).upsertBulk(items);
-  return items.map(it => it.id);
+  await db(app).upsertBulk(items_with_id, search_terms);
+  return items_with_id.map(it => it.id);
 }
 
 /**

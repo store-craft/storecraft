@@ -50,31 +50,44 @@ export const apply_dates = d => {
   return d;
 }
 
-export const select_fields = (...fields) => o => fields.reduce((p, c) =>  ({ ...p, [c] : o[c] }), {});
-export const filter_fields = (...fields) => items => items.map(item => select_fields(...fields)(item));
 
+/**
+ * Select specific fields from an object
+ * @param  {...any} fields 
+ */
+export const select_fields = (...fields) => {
+  /**
+   * @param {Record<string, any>} o
+   */
+  return o => fields.reduce((p, c) =>  ({ ...p, [c] : o[c] }), {});
+}
 
-export const select_unused_fields = o => Object.keys(o).reduce((p, c) =>  { 
-  if(Array.isArray(o[c])) {
-    if(o[c].length) p[c]=o[c]
-  }
-  else if(typeof o[c]!=='undefined')
-    p[c]=o[c]      
-  return p 
-}, {});
+/**
+ * 
+ * @param  {...any} fields 
+ * @returns 
+ */
+export const filter_fields = (...fields) => {
+  /**
+   * @param {any[]} items
+   */
+  return items => items.map(item => select_fields(...fields)(item));
+}
 
-export const filter_unused = items => items.map(item => select_unused_fields(item));
 
 /**
  * 
  * @param  {...string} keys 
- * @param  {object} o 
- * @returns 
  */
-export const delete_keys = (...keys) => o => {
-  o = Array.isArray(o) ? o : [o];
-  o.forEach(it => keys.forEach(k => delete it[k] ));
-  return o
+export const delete_keys = (...keys) => {
+  /**
+   * @param  {object} o 
+   */
+  return o => {
+    o = Array.isArray(o) ? o : [o];
+    o.forEach(it => keys.forEach(k => delete it[k] ));
+    return o
+  }
 }
 
 export const text2tokens_unsafe = (text) => {

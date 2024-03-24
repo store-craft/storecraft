@@ -19,7 +19,7 @@ const END_BEFORE = 'endBefore';
 const EXPAND = 'expand';
 
 /**
- * parswe string tuples of the form (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
+ * Parse string tuples of the form (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
  * @template {string} T
  * @param {string} str 
  * @returns {import("./types.api.query.js").Tuple<T>[] | undefined}

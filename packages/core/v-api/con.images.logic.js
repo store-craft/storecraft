@@ -1,7 +1,6 @@
 import { ID, apply_dates, to_handle } from './utils.func.js'
 import { imageTypeUpsertSchema } from './types.autogen.zod.api.js'
-import { assert_save_create_mode,
-  regular_get, regular_list } from './con.shared.js'
+import { regular_get, regular_list } from './con.shared.js'
 import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
@@ -26,7 +25,6 @@ export const upsert = async (app, item) => {
   item.handle = to_handle(decodeURIComponent(item.name));
 
   // Check if exists
-  await assert_save_create_mode(item, db(app));
   const id = !Boolean(item.id) ? ID('img') : item.id;
   // search index
   let search = create_search_index(item);

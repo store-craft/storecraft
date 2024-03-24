@@ -60,6 +60,66 @@ const drop_safe_table = (db, table_name) => {
 }
 
 /**
+ * @param {Kysely<Database>} db 
+ * @param {keyof Database} table_name 
+ * @param {boolean} [include_id=true] 
+ * @param {boolean} [include_handle=true] 
+ */
+const create_base_indexes = async (db, table_name, include_id=true, include_handle=true) => {
+  if(include_id) {
+    await db.schema.createIndex(`index_${table_name}_id_updated_at_asc`)
+            .on(table_name)
+            .columns(['id', 'updated_at asc'])
+            .execute();
+    await db.schema.createIndex(`index_${table_name}_id_updated_at_desc`)
+            .on(table_name)
+            .columns(['id', 'updated_at desc'])
+            .execute();
+  }
+
+  if(include_handle) {
+    await db.schema.createIndex(`index_${table_name}_handle_updated_at_asc`)
+            .on(table_name)
+            .columns(['handle', 'updated_at asc'])
+            .execute();
+    await db.schema.createIndex(`index_${table_name}_handle_updated_at_desc`)
+            .on(table_name)
+            .columns(['handle', 'updated_at desc'])
+            .execute();
+  }
+}
+
+/**
+ * @param {Kysely<Database>} db 
+ * @param {keyof Pick<Database, 'entity_to_media' | 
+ * 'entity_to_search_terms' | 'entity_to_tags_projections' | 
+ * 'products_to_collections' | 'products_to_discounts' | 
+ * 'products_to_variants' | 'storefronts_to_other'>} table_name 
+ */
+const create_entity_table_indexes = async (db, table_name) => {
+  await db.schema.createIndex(`index_${table_name}_entity_id`)
+           .on(table_name)
+           .column('entity_id')
+           .execute();
+  await db.schema.createIndex(`index_${table_name}_entity_handle`)
+           .on(table_name)
+           .column('entity_handle')
+           .execute();
+  await db.schema.createIndex(`index_${table_name}_value`)
+           .on(table_name)
+           .column('value')
+           .execute();
+  await db.schema.createIndex(`index_${table_name}_reporter`)
+           .on(table_name)
+           .column('reporter')
+           .execute();
+  await db.schema.createIndex(`index_${table_name}_context`)
+           .on(table_name)
+           .column('context')
+           .execute();
+}
+
+/**
  * 
  * @param {Kysely<Database>} db 
  */
@@ -73,6 +133,7 @@ export async function up(db) {
       .addColumn('roles', 'json')
       .addColumn('confirmed_mail', 'integer');
     await tb.execute();
+    await create_base_indexes(db, 'auth_users');
   }
 
   { // tags
@@ -80,6 +141,7 @@ export async function up(db) {
     tb = add_base_columns(tb);
     tb = tb.addColumn('values', 'json');
     await tb.execute();
+    await create_base_indexes(db, 'tags');
   }
 
   { // collections
@@ -89,6 +151,7 @@ export async function up(db) {
       .addColumn('title', 'text')
       .addColumn('published', 'text')
     await tb.execute();
+    await create_base_indexes(db, 'collections');
   }
 
   { // products
@@ -105,21 +168,22 @@ export async function up(db) {
       .addColumn('parent_id', 'varchar(100)')
       .addColumn('variant_hint', 'json')
     await tb.execute();
+    await create_base_indexes(db, 'products');
   }
 
   { // products_to_collections
-    let tb = create_entity_to_value_table(db, 'products_to_collections')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'products_to_collections').execute();
+    await create_entity_table_indexes(db, 'products_to_collections');
   }
 
   { // products_to_discounts
-    let tb = create_entity_to_value_table(db, 'products_to_discounts')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'products_to_discounts').execute();
+    await create_entity_table_indexes(db, 'products_to_discounts');
   }
   
   { // products_to_variants
-    let tb = create_entity_to_value_table(db, 'products_to_variants')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'products_to_variants').execute();
+    await create_entity_table_indexes(db, 'products_to_variants');
   }
 
   { // shipping_methods
@@ -128,6 +192,7 @@ export async function up(db) {
     tb = tb.addColumn('title', 'text')
       .addColumn('price', 'numeric')
     await tb.execute();
+    await create_base_indexes(db, 'shipping_methods');
   }
 
   { // posts
@@ -137,6 +202,7 @@ export async function up(db) {
       .addColumn('title', 'text')
       .addColumn('text', 'text')
     await tb.execute();
+    await create_base_indexes(db, 'posts');
   }
 
   { // customers
@@ -150,6 +216,7 @@ export async function up(db) {
       .addColumn('phone_number', 'varchar(255)')
       .addColumn('address', 'json')
     await tb.execute();
+    await create_base_indexes(db, 'customers');
   }
 
   { // orders
@@ -172,6 +239,7 @@ export async function up(db) {
       .addColumn('_status_fulfillment_id', 'integer')
     
     await tb.execute();
+    await create_base_indexes(db, 'orders');
   }
 
   { // storefronts
@@ -182,11 +250,12 @@ export async function up(db) {
       .addColumn('video', 'text')
       .addColumn('published', 'text')
     await tb.execute();
+    await create_base_indexes(db, 'storefronts');
   }
 
   { // storefronts_to_other
-    let tb = create_entity_to_value_table(db, 'storefronts_to_other')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'storefronts_to_other').execute();
+    await create_entity_table_indexes(db, 'storefronts_to_other');
   }
 
   { // notifications
@@ -197,6 +266,7 @@ export async function up(db) {
       .addColumn('author', 'text')
       .addColumn('actions', 'json')
     await tb.execute();
+    await create_base_indexes(db, 'notifications', true, false);
   } 
 
   { // images
@@ -206,6 +276,7 @@ export async function up(db) {
       .addColumn('name', 'text')
       .addColumn('url', 'text')
     await tb.execute();
+    await create_base_indexes(db, 'images');
   } 
 
   { // discounts
@@ -220,21 +291,22 @@ export async function up(db) {
       .addColumn('_application_id', 'integer')
       .addColumn('_discount_type_id', 'integer')
     await tb.execute();
+    await create_base_indexes(db, 'discounts');
   } 
 
   { // entity_to_tags_projections
-    let tb = create_entity_to_value_table(db, 'entity_to_tags_projections')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'entity_to_tags_projections').execute();
+    await create_entity_table_indexes(db, 'entity_to_tags_projections');
   }
 
   { // entity_to_search_terms
-    let tb = create_entity_to_value_table(db, 'entity_to_search_terms')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'entity_to_search_terms').execute();
+    await create_entity_table_indexes(db, 'entity_to_search_terms');
   }
 
   { // entity_to_media
-    let tb = create_entity_to_value_table(db, 'entity_to_media')
-    await tb.execute();
+    let tb = create_entity_to_value_table(db, 'entity_to_media').execute();
+    await create_entity_table_indexes(db, 'entity_to_media');
   }
 
 }

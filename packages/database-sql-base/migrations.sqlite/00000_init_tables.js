@@ -59,25 +59,33 @@ const drop_safe_table = (db, table_name) => {
 /**
  * @param {Kysely<Database>} db 
  * @param {keyof Database} table_name 
+ * @param {boolean} [include_id=true] 
+ * @param {boolean} [include_handle=true] 
  */
-const create_base_indexes = async (db, table_name) => {
-  await db.schema.createIndex(`index_${table_name}_id_updated_at_asc`)
-           .on(table_name)
-           .columns(['id', 'updated_at asc'])
-           .execute();
-  await db.schema.createIndex(`index_${table_name}_id_updated_at_desc`)
-           .on(table_name)
-           .columns(['id', 'updated_at desc'])
-           .execute();
-  await db.schema.createIndex(`index_${table_name}_handle_updated_at_asc`)
-           .on(table_name)
-           .columns(['handle', 'updated_at asc'])
-           .execute();
-  await db.schema.createIndex(`index_${table_name}_handle_updated_at_desc`)
-           .on(table_name)
-           .columns(['handle', 'updated_at desc'])
-           .execute();
+const create_base_indexes = async (db, table_name, include_id=true, include_handle=true) => {
+  if(include_id) {
+    await db.schema.createIndex(`index_${table_name}_id_updated_at_asc`)
+            .on(table_name)
+            .columns(['id', 'updated_at asc'])
+            .execute();
+    await db.schema.createIndex(`index_${table_name}_id_updated_at_desc`)
+            .on(table_name)
+            .columns(['id', 'updated_at desc'])
+            .execute();
+  }
+
+  if(include_handle) {
+    await db.schema.createIndex(`index_${table_name}_handle_updated_at_asc`)
+            .on(table_name)
+            .columns(['handle', 'updated_at asc'])
+            .execute();
+    await db.schema.createIndex(`index_${table_name}_handle_updated_at_desc`)
+            .on(table_name)
+            .columns(['handle', 'updated_at desc'])
+            .execute();
+  }
 }
+
 
 /**
  * @param {Kysely<Database>} db 
@@ -257,6 +265,7 @@ export async function up(db) {
       .addColumn('actions', 'json')
       // .addColumn('search', 'json')
     await tb.execute();
+    await create_base_indexes(db, 'notifications', true, false);
   } 
 
   { // images

@@ -3,7 +3,7 @@ import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
-import { create_handle, file_name } from './api.utils.crud.js';
+import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -92,8 +92,8 @@ export const create = app => {
     await products.upsert(app, pr_upsert[0]);
 
     // upsert all discount
-    const ids = await Promise.all(
-      discounts_upsert.map(d => discounts.upsert(app, d))
+    const ids = await promises_sequence(
+      discounts_upsert.map(d => () => discounts.upsert(app, d))
     )
 
     // now query the product's discounts to see if discount was applied to 1st product

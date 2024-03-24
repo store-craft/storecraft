@@ -17,6 +17,19 @@ export const file_name = (meta_url) => {
 }
 
 /**
+ * Execute a bunch of functions, that create promises sequentially.
+ * All tests promises run in serial to avoid transactions locks.
+ * @template T
+ * @param {(() => Promise<T>)[]} items 
+ */
+export const promises_sequence = async (items) => {
+  const results = [];
+  for(const it of items)
+    results.push(await it())
+  return results;
+}
+
+/**
  * @param  {...string} prefixs 
  */
 export const create_handle = (...prefixs) => {

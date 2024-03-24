@@ -20,7 +20,10 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
-          await insert_search_of(trx, [...item.search, ...search_terms], item.id, item.id, table_name);
+          await insert_search_of(
+            trx, [...item.search, ...search_terms], 
+            item.id, item.id, table_name
+            );
           await upsert_me(trx, table_name, item.id, {
             created_at: item.created_at,
             updated_at: item.updated_at,
@@ -44,11 +47,10 @@ const upsert = (driver) => {
  * @returns {db_col["upsertBulk"]}
  */
 const upsertBulk = (driver) => {
-  return async (data) => {
-
-    const results = await Promise.all(
-      data.map(item => upsert(driver)(item))
-    )
+  return async (items) => {
+    const results = [];
+    for (const it of items)
+      results.push(await upsert(driver)(it));
 
     return results.every(b => b);
   }

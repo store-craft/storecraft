@@ -3,7 +3,7 @@ import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
-import { create_handle, file_name } from './api.utils.crud.js';
+import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -107,9 +107,9 @@ export const create = app => {
 
   s('test discounts->products', async () => {
     // upsert product
-    const prs = await Promise.all(
+    const prs = await promises_sequence(
       pr_upsert.map(
-        async c => {
+        c => async () => {
           await products.upsert(app, c);
           return products.get(app, c.handle);
         }
@@ -117,9 +117,9 @@ export const create = app => {
     );
 
     // upsert discount
-    const dis = await Promise.all(
+    const dis = await promises_sequence(
       discounts_upsert.map(
-        async c => {
+        c => async () => {
           await discounts.upsert(app, c);
           return discounts.get(app, c.handle);
         }

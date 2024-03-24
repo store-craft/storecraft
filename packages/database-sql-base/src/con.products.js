@@ -1,4 +1,4 @@
-import { DiscountApplicationEnum } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
@@ -47,7 +47,7 @@ const upsert = (driver) => {
       .where(
         eb => eb.and([
           eb('active', '=', 1),
-          eb('_application_id', '=', DiscountApplicationEnum.Auto.id),
+          eb('_application_id', '=', enums.DiscountApplicationEnum.Auto.id),
         ])
       ).execute();
       const eligible_discounts = discounts.filter(

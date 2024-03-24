@@ -68,7 +68,9 @@ npm run test:postgres
 1. First setup a `mysql` server
 ```zsh
 docker pull mysql
-docker run --name some-mysql -v $(pwd):/etc/mysql/conf.d \
+docker run --name mysql \
+           -v $(pwd):/etc/mysql/conf.d \
+           -v /my/own/datadir:/var/lib/mysql \
            -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_ROOT_HOST=localhost \
            -e MYSQL_DATABASE=main -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin \
            -p 8080:3306 -d mysql
@@ -88,7 +90,7 @@ MYSQL_HOST='localhost'
 npm run test:mysql
 ```
 
-### **MSSQL** (Currently NOT SUPPORTED)
+### **MSSQL** (Currently NOT SUPPORTED, waiting for votes on that one)
 Work in progress, i will probably not continue with this.
 
 1. First setup a `mysql` server

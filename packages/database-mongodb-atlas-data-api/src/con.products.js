@@ -3,7 +3,7 @@ import { MongoDB } from '../driver.js'
 import { get_bulk, get_regular, list_regular } from './con.shared.js'
 import { delete_keys, handle_or_id, sanitize_array, to_objid } from './utils.funcs.js'
 import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js'
-import { DiscountApplicationEnum } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/v-api'
 import { pricing } from '@storecraft/core/v-api'
 import { report_document_media } from './con.images.js'
 import { union } from '@storecraft/core/v-api/utils.func.js'
@@ -59,7 +59,7 @@ const upsert = (driver) => {
       // get all automatic + active discounts
       const discounts = await driver.discounts._col.find(
         { 
-          'application.id': DiscountApplicationEnum.Auto.id,
+          'application.id': enums.DiscountApplicationEnum.Auto.id,
           active: true
         }, null, 10000
       ).toArray();

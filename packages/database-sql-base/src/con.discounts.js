@@ -1,4 +1,4 @@
-import { DiscountApplicationEnum } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { delete_entity_values_by_value_or_reporter, 
@@ -53,7 +53,7 @@ const upsert = (driver) => {
           //   .execute();
           // insert new relations
           // INSERT INTO SELECT FROM
-          if(item.active && item.application.id===DiscountApplicationEnum.Auto.id) {
+          if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
             // make connections
             await trx
             .insertInto('products_to_discounts')

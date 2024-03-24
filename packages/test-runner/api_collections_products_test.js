@@ -9,6 +9,18 @@ import esMain from './utils.esmain.js';
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 
+
+/**
+ * @template T
+ * @param {Promise<T>[]} items 
+ */
+const promises_sequence = async (items) => {
+  const results = [];
+  for(const it of items)
+    results.push(await it)
+  return results;
+}
+
 /**
  * 
  * @param {App} app 
@@ -73,25 +85,44 @@ export const create = app => {
 
   s('create', async () => {
     // upsert collections
-    const cols = await Promise.all(
-      col_upsert.map(
+    // const cols = await Promise.all(
+    //   col_upsert.map(
+    //     async c => {
+    //       await collections.upsert(app, c);
+    //       return collections.get(app, c.handle);
+    //     }
+    //   )
+    // );
+
+    // const cols = await promises_sequence(
+    //   col_upsert.map(
+    //     async c => {
+    //       await collections.upsert(app, c);
+    //       return collections.get(app, c.handle);
+    //     }
+    //   )
+    // );
+
+    const prs = await promises_sequence(
+      pr_upsert.map(
         async c => {
-          await collections.upsert(app, c);
-          return collections.get(app, c.handle);
+          await products.upsert(app, c);
+          // return products.get(app, c.handle);
         }
       )
     );
 
     // upsert products
-    const prs = await Promise.all(
-      pr_upsert.map(
-        async c => {
-          await products.upsert(app, c);
-          return products.get(app, c.handle);
-        }
-      )
-    );
+    // const prs = await Promise.all(
+    //   pr_upsert.map(
+    //     async c => {
+    //       await products.upsert(app, c);
+    //       return products.get(app, c.handle);
+    //     }
+    //   )
+    // );
 
+return;
     // console.log(prs)
     // upsert products with collections relation
     for (const pr of prs) {

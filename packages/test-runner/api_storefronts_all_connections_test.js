@@ -3,8 +3,7 @@ import { storefronts, products, collections,
   discounts, posts, shipping } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { DiscountApplicationEnum, DiscountMetaEnum, 
-  FilterMetaEnum } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/v-api';
 import { create_handle, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
@@ -74,36 +73,38 @@ const shipping_upsert = [
 /** @type {DiscountTypeUpsert[]} */
 const discounts_upsert = [
   {
-    active: false, application: DiscountApplicationEnum.Auto, 
+    active: false, 
+    application: enums.DiscountApplicationEnum.Auto, 
     handle: handle_dis(), priority: 0, title: 'Fake Discount 1',
     info: {
       details: {
-        meta: DiscountMetaEnum.bulk,
+        meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
-          meta: FilterMetaEnum.p_in_handles,
+          meta: enums.FilterMetaEnum.p_in_handles,
           value: ['pr-non-existing-handle']
         }
       ]
     }
   },
   {
-    active: false, application: DiscountApplicationEnum.Auto, 
+    active: false, 
+    application: enums.DiscountApplicationEnum.Auto, 
     handle: handle_dis(), priority: 0, title: 'Fake Discount 2',
     info: {
       details: {
-        meta: DiscountMetaEnum.bulk,
+        meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
-          meta: FilterMetaEnum.p_in_handles,
+          meta: enums.FilterMetaEnum.p_in_handles,
           value: ['pr-non-existing-handle']
         }
       ]

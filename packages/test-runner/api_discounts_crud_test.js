@@ -2,8 +2,7 @@ import 'dotenv/config';
 import { discounts } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { DiscountApplicationEnum, 
-  DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/v-api';
 import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
@@ -15,17 +14,17 @@ const items_upsert = [
   {
     active: true, 
     handle: '3-for-100', priority: 0, title: 'Buy 3 for 100',
-    application: DiscountApplicationEnum.Auto, 
+    application: enums.DiscountApplicationEnum.Auto, 
     info: {
       details: {
-        meta: DiscountMetaEnum.bulk,
+        meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
-          meta: FilterMetaEnum.p_all,
+          meta: enums.FilterMetaEnum.p_all,
         }
       ]
     }
@@ -33,17 +32,17 @@ const items_upsert = [
   {
     active: false, 
     handle: '2-for-60', priority: 0, title: 'Buy 2 for 60',
-    application: DiscountApplicationEnum.Auto, 
+    application: enums.DiscountApplicationEnum.Auto, 
     info: {
       details: {
-        meta: DiscountMetaEnum.bulk,
+        meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
-          meta: FilterMetaEnum.p_all,
+          meta: enums.FilterMetaEnum.p_all,
         }
       ]
     }

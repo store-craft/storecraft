@@ -3,11 +3,11 @@
  * @typedef {import('./types.api.js').ProductType} ProductType
  * @typedef {import('./types.api.js').ProductTypeUpsert} ProductTypeUpsert
  * @typedef {import('./types.api.js').ShippingMethodType} ShippingMethodType
- * @typedef {import('./types.api.js').FilterMeta} FilterMeta
+ * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
  * @typedef {import('./types.api.js').Filter} Filter
  * @typedef {import('./types.api.js').DiscountType} DiscountType
  * @typedef {import('./types.api.js').DiscountDetails} DiscountDetails
- * @typedef {import('./types.api.js').DiscountMeta} DiscountMeta
+ * @typedef {import('./types.api.js').DiscountMetaEnum} DiscountMeta
  * @typedef {import('./types.api.js').BulkDiscountExtra} BulkDiscountExtra
  * @typedef {import('./types.api.js').OrderDiscountExtra} OrderDiscountExtra
  * @typedef {import('./types.api.js').RegularDiscountExtra} RegularDiscountExtra

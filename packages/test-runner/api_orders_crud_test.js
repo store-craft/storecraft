@@ -2,8 +2,7 @@ import 'dotenv/config';
 import { orders } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { CheckoutStatusEnum, FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/v-api';
 import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
@@ -14,9 +13,9 @@ import { App } from '@storecraft/core';
 const items_upsert = [
   {
     status: {
-      checkout: CheckoutStatusEnum.created,
-      payment: PaymentOptionsEnum.authorized,
-      fulfillment: FulfillOptionsEnum.draft
+      checkout: enums.CheckoutStatusEnum.created,
+      payment: enums.PaymentOptionsEnum.authorized,
+      fulfillment: enums.FulfillOptionsEnum.draft
     },
     pricing: {
       quantity_discounted: 3, quantity_total: 5, subtotal: 100, 
@@ -33,9 +32,9 @@ const items_upsert = [
   },
   {
     status: {
-      checkout: CheckoutStatusEnum.created,
-      payment: PaymentOptionsEnum.captured,
-      fulfillment: FulfillOptionsEnum.draft
+      checkout: enums.CheckoutStatusEnum.created,
+      payment: enums.PaymentOptionsEnum.captured,
+      fulfillment: enums.FulfillOptionsEnum.draft
     },
     pricing: {
       quantity_discounted: 3, quantity_total: 5, subtotal: 100, 

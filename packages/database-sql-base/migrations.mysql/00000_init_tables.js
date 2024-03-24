@@ -36,7 +36,7 @@ const create_entity_to_value_table = (db, table_name) => {
     )
     .addColumn('entity_id', 'varchar(100)', col => col.notNull())
     .addColumn('entity_handle', 'varchar(255)')
-    .addColumn('value', 'text')
+    .addColumn('value', 'varchar(500)')
     .addColumn('reporter', 'varchar(100)')
     .addColumn('context', 'varchar(100)')
 }
@@ -124,6 +124,8 @@ const create_entity_table_indexes = async (db, table_name) => {
  * @param {Kysely<Database>} db 
  */
 export async function up(db) {
+  // await drop_tables(db);
+
   { // auth_users
     let tb = create_safe_table(db, 'auth_users');
     tb = add_base_columns(tb);
@@ -316,25 +318,38 @@ export async function up(db) {
  * @param {Kysely<Database>} db 
  */
 export async function down(db) {
-  await Promise.all([
-    drop_safe_table(db, 'auth_users'),
-    drop_safe_table(db, 'tags'),
-    drop_safe_table(db, 'collections'),
-    drop_safe_table(db, 'customers'),
-    drop_safe_table(db, 'discounts'),
-    drop_safe_table(db, 'images'),
-    drop_safe_table(db, 'notifications'),
-    drop_safe_table(db, 'orders'),
-    drop_safe_table(db, 'posts'),
-    drop_safe_table(db, 'shipping_methods'),
-    drop_safe_table(db, 'products'),
-    drop_safe_table(db, 'products_to_collections'),
-    drop_safe_table(db, 'products_to_discounts'),
-    drop_safe_table(db, 'products_to_variants'),
-    drop_safe_table(db, 'storefronts'),
-    drop_safe_table(db, 'storefronts_to_other'),
-    drop_safe_table(db, 'entity_to_media'),
-    drop_safe_table(db, 'entity_to_search_terms'),
-    drop_safe_table(db, 'entity_to_tags_projections'),
-  ]);
+  await drop_tables(db);
+}
+
+/**
+ * 
+ * @param {Kysely<Database>} db 
+ */
+const drop_tables = async (db) => {
+  try {
+    await Promise.all([
+      drop_safe_table(db, 'auth_users'),
+      drop_safe_table(db, 'tags'),
+      drop_safe_table(db, 'collections'),
+      drop_safe_table(db, 'customers'),
+      drop_safe_table(db, 'discounts'),
+      drop_safe_table(db, 'images'),
+      drop_safe_table(db, 'notifications'),
+      drop_safe_table(db, 'orders'),
+      drop_safe_table(db, 'posts'),
+      drop_safe_table(db, 'shipping_methods'),
+      drop_safe_table(db, 'products'),
+      drop_safe_table(db, 'products_to_collections'),
+      drop_safe_table(db, 'products_to_discounts'),
+      drop_safe_table(db, 'products_to_variants'),
+      drop_safe_table(db, 'storefronts'),
+      drop_safe_table(db, 'storefronts_to_other'),
+      drop_safe_table(db, 'entity_to_media'),
+      drop_safe_table(db, 'entity_to_search_terms'),
+      drop_safe_table(db, 'entity_to_tags_projections'),
+    ]);
+  } catch (e) {
+    console.log(e)
+  }
+
 }

@@ -57,6 +57,19 @@ export class SQL {
     });
   }
 
+  throwIfNotReady() {
+    assert(
+      this.isReady,
+      'Database not ready !!! you need to `.init()` it'
+      );
+  }
+
+  async migrateToLatest() {
+    this.throwIfNotReady();
+    const { migrateToLatest } = await import('./migrate.js');
+    await migrateToLatest(this, false);
+  };
+
   /**
    * 
    * @param {App<any, any, any>} app 
@@ -90,15 +103,44 @@ export class SQL {
     return true;
   }
 
-  get name () { return 'main'; }
-  get app() { return this.#_app; }
-  get client() { return this.#_client; }
-  get config() { return this.#_config; }
-  get isReady() { return this.#_is_ready; }
-  get dialectType() { return this.#_config.dialect_type; }
-  get isSqlite() { return this.dialectType==='SQLITE'; }
-  get isPostgres() { return this.dialectType==='POSTGRES'; }
-  get isMysql() { return this.dialectType==='MYSQL'; }
-  get isMssql() { return this.dialectType==='MSSQL'; }
+  get name () { 
+    return 'main'; 
+  }
+
+  get app() { 
+    return this.#_app; 
+  }
+
+  get client() { 
+    return this.#_client; 
+  }
+
+  get config() { 
+    return this.#_config; 
+  }
+
+  get isReady() { 
+    return this.#_is_ready; 
+  }
+
+  get dialectType() { 
+    return this.#_config.dialect_type; 
+  }
+
+  get isSqlite() { 
+    return this.dialectType==='SQLITE'; 
+  }
+
+  get isPostgres() { 
+    return this.dialectType==='POSTGRES'; 
+  }
+
+  get isMysql() { 
+    return this.dialectType==='MYSQL'; 
+  }
+
+  get isMssql() { 
+    return this.dialectType==='MSSQL'; 
+  }
 
 }

@@ -2,9 +2,8 @@ import 'dotenv/config';
 import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { DiscountApplicationEnum, 
-  DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core/v-api';
-import { create_handle, file_name } from './api.utils.crud.js';
+import { enums } from '@storecraft/core/v-api';
+import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -39,11 +38,11 @@ const pr_upsert = [
 const discounts_upsert = Array.from({length: 10}).map(
   (_, ix, arr) => (
     {
-      active: true, application: DiscountApplicationEnum.Auto, 
+      active: true, application: enums.DiscountApplicationEnum.Auto, 
       handle: handle_discount(), priority: 0, title: `10% OFF (${ix+1})`,
       info: {
         details: {
-          meta: DiscountMetaEnum.regular,
+          meta: enums.DiscountMetaEnum.regular,
           /** @type {RegularDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
@@ -51,7 +50,7 @@ const discounts_upsert = Array.from({length: 10}).map(
         },
         filters: [
           { // discount for a specific product handle
-            meta: FilterMetaEnum.p_in_handles,
+            meta: enums.FilterMetaEnum.p_in_handles,
             /** @type {FilterValue_p_in_handles} */
             value: [ pr_upsert[0].handle, pr_upsert[1].handle ]
           }
@@ -93,8 +92,8 @@ export const create = app => {
     await products.upsert(app, pr_upsert[0]);
 
     // upsert all discount
-    const ids = await Promise.all(
-      discounts_upsert.map(d => discounts.upsert(app, d))
+    const ids = await promises_sequence(
+      discounts_upsert.map(d => () => discounts.upsert(app, d))
     )
 
     // now query the product's discounts to see if discount was applied to 1st product

@@ -4,7 +4,8 @@ import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App } from '@storecraft/core';
 import { create_handle, file_name, 
-  get_static_ids } from './api.utils.crud.js';
+  get_static_ids, 
+  promises_sequence} from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -101,8 +102,8 @@ export const create = app => {
     // upsert 1st product straight to the db because we have ID
     await app.db.products.upsert(pr_upsert);
     // upsert all variants
-    const ids = await Promise.all(
-      var_upsert.map(v => products.upsert(app, v))
+    const ids = await promises_sequence(
+      var_upsert.map(v => () => products.upsert(app, v))
     )
 
     // now query the product's discounts to see if discount was applied to 1st product

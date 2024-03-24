@@ -11,7 +11,7 @@ import { AttributeType, AuthUserType, Role, TagType,
   OrderPaymentGatewayData, NotificationType,
   NotificationAction,
   DiscountInfo,
-  DiscountApplication} from '@storecraft/core/v-api'
+  DiscountApplicationEnum} from '@storecraft/core/v-api'
 import {
   ColumnType,
   Generated,
@@ -216,7 +216,7 @@ export interface DiscountsTable extends Base {
   /** details and filters of the discount */
   info: JSONColumnType<DiscountInfo>;
   /** discount application (automatic and coupons) */
-  application: JSONColumnType<DiscountApplication>;
+  application: JSONColumnType<DiscountApplicationEnum>;
   /** internal usage, the application type id */
   _application_id: number;
   /** internal usage, the discount type id */

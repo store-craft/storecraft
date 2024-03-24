@@ -3,9 +3,8 @@ import { storefronts, products, collections,
   discounts, posts, shipping } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { DiscountApplicationEnum, DiscountMetaEnum, 
-  FilterMetaEnum } from '@storecraft/core/v-api';
-import { create_handle, file_name } from './api.utils.crud.js';
+import { enums } from '@storecraft/core/v-api';
+import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -74,36 +73,38 @@ const shipping_upsert = [
 /** @type {DiscountTypeUpsert[]} */
 const discounts_upsert = [
   {
-    active: false, application: DiscountApplicationEnum.Auto, 
+    active: false, 
+    application: enums.DiscountApplicationEnum.Auto, 
     handle: handle_dis(), priority: 0, title: 'Fake Discount 1',
     info: {
       details: {
-        meta: DiscountMetaEnum.bulk,
+        meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
-          meta: FilterMetaEnum.p_in_handles,
+          meta: enums.FilterMetaEnum.p_in_handles,
           value: ['pr-non-existing-handle']
         }
       ]
     }
   },
   {
-    active: false, application: DiscountApplicationEnum.Auto, 
+    active: false, 
+    application: enums.DiscountApplicationEnum.Auto, 
     handle: handle_dis(), priority: 0, title: 'Fake Discount 2',
     info: {
       details: {
-        meta: DiscountMetaEnum.bulk,
+        meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
-          meta: FilterMetaEnum.p_in_handles,
+          meta: enums.FilterMetaEnum.p_in_handles,
           value: ['pr-non-existing-handle']
         }
       ]
@@ -147,45 +148,45 @@ export const create = app => {
 
   s('create', async () => {
     // upsert products
-    const collections_get = await Promise.all(
+    const collections_get = await promises_sequence(
       collections_upsert.map(
-        async c => {
+        c => async () => {
           await collections.upsert(app, c);
           return collections.get(app, c.handle);
         }
       )
     );
 
-    const products_get = await Promise.all(
+    const products_get = await promises_sequence(
       products_upsert.map(
-        async c => {
+        c => async () => {
           await products.upsert(app, c);
           return products.get(app, c.handle);
         }
       )
     );
 
-    const shipping_get = await Promise.all(
+    const shipping_get = await promises_sequence(
       shipping_upsert.map(
-        async c => {
+        c => async () => {
           await shipping.upsert(app, c);
           return shipping.get(app, c.handle);
         }
       )
     );
 
-    const posts_get = await Promise.all(
+    const posts_get = await promises_sequence(
       posts_upsert.map(
-        async c => {
+        c => async () => {
           await posts.upsert(app, c);
           return posts.get(app, c.handle);
         }
       )
     );
 
-    const discounts_get = await Promise.all(
+    const discounts_get = await promises_sequence(
       discounts_upsert.map(
-        async c => {
+        c => async () => {
           await discounts.upsert(app, c);
           return discounts.get(app, c.handle);
         }

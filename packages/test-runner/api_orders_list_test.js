@@ -4,8 +4,7 @@ import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, iso, add_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
-import { CheckoutStatusEnum, FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/v-api';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -24,9 +23,9 @@ const items = get_static_ids('order').map(
       created_at: iso(jx + 1),
       updated_at: iso(jx + 1),
       status: {
-        checkout: CheckoutStatusEnum.created,
-        payment: PaymentOptionsEnum.authorized,
-        fulfillment: FulfillOptionsEnum.draft
+        checkout: enums.CheckoutStatusEnum.created,
+        payment: enums.PaymentOptionsEnum.authorized,
+        fulfillment: enums.FulfillOptionsEnum.draft
       },
       pricing: {
         quantity_discounted: 3, quantity_total: 5, subtotal: 100, 

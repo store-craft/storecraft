@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { SQL, migrate } from '@storecraft/database-sql-base';
+import { SQL } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 import { MysqlDialect } from 'kysely';
@@ -30,12 +30,14 @@ export const create_app = async () => {
     }
   );
 
-  await migrate.migrateToLatest(app.db, false);
-  return app.init();
+  await app.init();
+  await app.db.migrateToLatest();
+  return app;
 }
 
 async function test() {
   const app = await create_app();
+
   Object.entries(api_index).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();
@@ -75,22 +77,22 @@ async function test2() {
   // api_index.api_customers_crud_test.create(app).run();
   // api_index.api_customers_list_test.create(app).run();
 
-  // api_index.api_orders_crud_test.create(app).run();
-  // api_index.api_orders_list_test.create(app).run();
+  api_index.api_orders_crud_test.create(app).run();
+  api_index.api_orders_list_test.create(app).run();
 
-  // api_index.api_storefronts_crud_test.create(app).run();
-  // api_index.api_storefronts_list_test.create(app).run();
-  // api_index.api_storefronts_all_connections_test.create(app).run();
+  api_index.api_storefronts_crud_test.create(app).run();
+  api_index.api_storefronts_list_test.create(app).run();
+  api_index.api_storefronts_all_connections_test.create(app).run();
 
-  // api_index.api_notifications_crud_test.create(app).run();
-  // api_index.api_notifications_list_test.create(app).run();
+  api_index.api_notifications_crud_test.create(app).run();
+  api_index.api_notifications_list_test.create(app).run();
 
-  // api_index.api_images_crud_test.create(app).run();
-  // api_index.api_images_list_test.create(app).run();
+  api_index.api_images_crud_test.create(app).run();
+  api_index.api_images_list_test.create(app).run();
 
-  // api_index.api_discounts_crud_test.create(app).run();
-  // api_index.api_discounts_list_test.create(app).run();
-  // api_index.api_discounts_products_test.create(app).run();
+  api_index.api_discounts_crud_test.create(app).run();
+  api_index.api_discounts_list_test.create(app).run();
+  api_index.api_discounts_products_test.create(app).run();
 
 
 }

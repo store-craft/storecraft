@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { SQL, migrate } from '@storecraft/database-sql-base';
+import { SQL } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 import { PostgresDialect } from 'kysely';
@@ -29,9 +29,8 @@ export const create_app = async () => {
     }
   );
   
-  await migrate.migrateToLatest(app.db, false);
   await app.init();
-
+  await app.db.migrateToLatest();
   return app;
 }
 

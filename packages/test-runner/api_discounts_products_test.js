@@ -2,9 +2,8 @@ import 'dotenv/config';
 import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { DiscountApplicationEnum, 
-  DiscountMetaEnum, FilterMetaEnum } from '@storecraft/core/v-api';
-import { create_handle, file_name } from './api.utils.crud.js';
+import { enums } from '@storecraft/core/v-api';
+import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -52,10 +51,10 @@ export const create = app => {
       handle: '10-off-for-product-1', 
       title: '10% OFF for product 1',
       priority: 0, 
-      application: DiscountApplicationEnum.Auto, 
+      application: enums.DiscountApplicationEnum.Auto, 
       info: {
         details: {
-          meta: DiscountMetaEnum.regular,
+          meta: enums.DiscountMetaEnum.regular,
           /** @type {RegularDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
@@ -63,7 +62,7 @@ export const create = app => {
         },
         filters: [
           { // discount for a specific product handle
-            meta: FilterMetaEnum.p_in_handles,
+            meta: enums.FilterMetaEnum.p_in_handles,
             /** @type {FilterValue_p_in_handles} */
             value: [ pr_upsert[0].handle ]
           }
@@ -75,10 +74,10 @@ export const create = app => {
       handle: '10-off-for-product-2', 
       title: '10% OFF for product 2',
       priority: 0, 
-      application: DiscountApplicationEnum.Auto, 
+      application: enums.DiscountApplicationEnum.Auto, 
       info: {
         details: {
-          meta: DiscountMetaEnum.regular,
+          meta: enums.DiscountMetaEnum.regular,
           /** @type {RegularDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
@@ -86,7 +85,7 @@ export const create = app => {
         },
         filters: [
           { // discount for a specific product handle
-            meta: FilterMetaEnum.p_in_tags,
+            meta: enums.FilterMetaEnum.p_in_tags,
             /** @type {FilterValue_p_in_handles} */
             value: ['red', 'black']
           }
@@ -108,9 +107,9 @@ export const create = app => {
 
   s('test discounts->products', async () => {
     // upsert product
-    const prs = await Promise.all(
+    const prs = await promises_sequence(
       pr_upsert.map(
-        async c => {
+        c => async () => {
           await products.upsert(app, c);
           return products.get(app, c.handle);
         }
@@ -118,9 +117,9 @@ export const create = app => {
     );
 
     // upsert discount
-    const dis = await Promise.all(
+    const dis = await promises_sequence(
       discounts_upsert.map(
-        async c => {
+        c => async () => {
           await discounts.upsert(app, c);
           return discounts.get(app, c.handle);
         }

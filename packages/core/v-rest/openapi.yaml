@@ -4,7 +4,7 @@ info:
   title: StoreCraft API
   description: Welcome to the `StoreCraft` **API**
 servers:
-  - url: v1
+  - url: api
 components:
   securitySchemes:
     bearerAuth:

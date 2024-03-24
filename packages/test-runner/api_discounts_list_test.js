@@ -7,8 +7,7 @@ import { file_name,
   get_static_ids,
   image_mock_url_handle_name,
   create_handle} from './api.utils.crud.js';
-import { DiscountApplicationEnum, DiscountMetaEnum, 
-  FilterMetaEnum } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/v-api';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -36,17 +35,17 @@ const items = get_static_ids('dis').map(
       title: `discount ${ix}`,
       active: true,
       priority: 0,
-      application: DiscountApplicationEnum.Auto, 
+      application: enums.DiscountApplicationEnum.Auto, 
       info: {
         details: {
-          meta: DiscountMetaEnum.bulk,
+          meta: enums.DiscountMetaEnum.bulk,
           extra: {
             qty: 3, fixed: 100, percent: 100
           }
         },
         filters: [
           {
-            meta: FilterMetaEnum.p_all,
+            meta: enums.FilterMetaEnum.p_all,
           }
         ]
       }

@@ -5,7 +5,7 @@ import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
-import { DiscountApplicationEnum } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/v-api'
 import { add_search_terms_relation_on } from './utils.relations.js'
 
 /**
@@ -49,7 +49,7 @@ const upsert = (driver) => {
           );
           
           // now filter and update for products
-          if(data.active && data.application.id===DiscountApplicationEnum.Auto.id) {
+          if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
             const conjunctions = discount_to_mongo_conjunctions(data);
             if(conjunctions.length) {
               await driver.products._col.updateMany(

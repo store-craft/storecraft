@@ -51,16 +51,16 @@ export class MongoDB {
   async init(app) {
     if(this.isReady)
       return this;
-    this.#_config = {
+    const c = {
       ...this.#_config, 
       apiKey: this.#_config?.apiKey ?? app.platform.env.MONGODB_DATA_API_KEY,
       dataSource: this.#_config?.dataSource ?? app.platform.env.MONGODB_DATA_API_DATA_SOURCE,
       endpoint: this.#_config?.endpoint ?? app.platform.env.MONGODB_DATA_API_ENDPOINT,
       db_name: this.#_config?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main',
-    }
+    };
 
-    this.#_mongo_client = new MongoClient(this.#_config);
-
+    this.#_config = c;
+    this.#_mongo_client = new MongoClient(c);
     this.#_app = app;
     this.auth_users = auth_users(this);
     this.collections = collections(this);
@@ -78,6 +78,10 @@ export class MongoDB {
     this.#_is_ready = true; 
 
     return this;
+  }
+
+  async migrateToLatest() {
+
   }
 
   async disconnect() {

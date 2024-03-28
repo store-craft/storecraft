@@ -28,6 +28,15 @@ export const removeByEmail = async (app, email) => {
 /**
  * 
  * @param {App} app 
+ * @param {string} email 
+ */  
+const isAdminEmail = (app, email) => {
+  return app.config.admins_emails.includes(email);
+}
+
+/**
+ * 
+ * @param {App} app 
  * @param {import('./types.api.js').ApiAuthSignupType} body 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
  */  
@@ -49,7 +58,7 @@ export const signup = async (app, body) => {
 
   // Create a new user in the database
   const id = ID('au');
-  const roles = app.config.admins_emails.includes(email) ? ['admin'] : ['user'];
+  const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
 
   await app.db.auth_users.upsert(
     apply_dates(
@@ -90,24 +99,37 @@ export const signup = async (app, body) => {
  * 
  * @param {App} app 
  * @param {import('./types.api.js').ApiAuthSigninType} body 
+ * @param {boolean} [fail_if_not_admin=false] 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
  */  
-export const signin = async (app, body) => {
+export const signin = async (app, body, fail_if_not_admin=false) => {
   assert_zod(apiAuthSigninTypeSchema, body);
 
   const { email, password } = body;
 
   // Check if the user already exists
-  const existingUser = await app.db.auth_users.getByEmail(email)
+  let existingUser = await app.db.auth_users.getByEmail(email);
+  const isAdmin = isAdminEmail(app, email);
+  // An admin first login will register the default `admin` password
+  if(!existingUser && isAdmin) {
+    await signup(app, { ...body, password: 'admin' });
+    existingUser = await app.db.auth_users.getByEmail(email);
+  }
 
+  assert(isAdmin || !fail_if_not_admin, 'auth/error', 401)
   assert(existingUser, 'auth/error', 401)
 
   // verify the password
-  const verified = await phash.verify(existingUser.password, password);
+  const verified = await phash.verify(
+    existingUser.password, password
+    );
   
   assert(verified, 'auth/error', 401)
 
-  /** @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & Pick<import('./types.api.js').AuthUserType, 'roles'>>} */
+  /** 
+   * @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & 
+   * Pick<import('./types.api.js').AuthUserType, 'roles'>> } 
+   */
   const claims = {
     sub: existingUser.id,
     roles: existingUser.roles

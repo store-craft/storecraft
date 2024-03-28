@@ -24,6 +24,7 @@ import { impl as tags } from './src/con.tags.js';
  * @param {import('mongodb').MongoClientOptions} [options] 
  */
 const connect = async (uri, options) => {
+
   options = options ?? {
     serverApi: {
       version: ServerApiVersion.v1,

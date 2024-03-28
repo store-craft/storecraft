@@ -10,8 +10,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/migrate-mongo": "^10.0.4"
-  }
+  "license": "ISC"
 }

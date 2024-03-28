@@ -16,6 +16,7 @@ import { create_routes as create_storage_route } from "./con.storage.routes.js";
 import { create_routes as create_checkout_route } from "./con.checkout.routes.js";
 import { create_routes as create_payment_gateways_route } from "./con.payment-gateways.routes.js";
 import { create_routes as create_others_route } from "./con.others.routes.js";
+import { cors } from "../v-polka/cors.js";
 
 /**
  * @typedef {import("../types.public.js").ApiRequest} ApiRequest
@@ -32,6 +33,7 @@ import { create_routes as create_others_route } from "./con.others.routes.js";
 export const create_rest_api = (app) => {
   const polka = new Polka();
 
+  polka.use(cors());
   polka.use(json());
 
   const lazy_creator = new class {

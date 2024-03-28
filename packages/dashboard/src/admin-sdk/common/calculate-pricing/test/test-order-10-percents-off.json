@@ -1,0 +1,52 @@
+{
+    "code": "test-order-10-percents-off",
+    "title": "test-order-10-percents-off",
+    "info": {
+        "filters": [
+            {
+                "meta": {
+                    "id": 100,
+                    "type": "order",
+                    "op": "o-subtotal-in-range"
+                },
+                "value": {
+                    "from": 200,
+                    "to": null
+                }
+            }
+        ],
+        "details": {
+            "meta": {
+                "id": 3,
+                "type": "order",
+                "name": "Order Discount"
+            },
+            "extra": {
+                "percent": 10,
+                "fixed": 0,
+                "free_shipping": false
+            }
+        }
+    },
+    "media": [],
+    "enabled": true,
+    "application": {
+        "id": 0,
+        "name": "Automatic"
+    },
+    "order": 20,
+    "createdAt": 1679413674344,
+    "updatedAt": 1679413674908,
+    "search": [
+        "test-order-10-percents-off",
+        "test-order-10-percents-off",
+        "automatic",
+        "app:automatic",
+        "app:0",
+        "order",
+        "3",
+        "type:3",
+        "type:order",
+        "enabled:true"
+    ]
+}

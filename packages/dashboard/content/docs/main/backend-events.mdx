@@ -1,0 +1,27 @@
+# Events
+
+As the `shelf-backend` is built with Google Firebase functions, we can
+use event handlers for **Firestore** events:
+- `onDocumentCreated` event - Event handler which triggers when a document is created in Firestore
+- `onDocumentWritten` event - Event handler which triggers when a document is created, updated, or deleted in Firestore
+- `onDocumentUpdated` event - Event handler which triggers when a document is updated in Firestore
+- `onDocumentDeleted` event - Event handler which triggers when a document is deleted in Firestore
+
+We use these events to generate and send emails to users when
+
+#### `Order` checkout transitions into `complete` status
+Send SMTP Email about order creation.
+Please consult the [shelf-backend]() repository at github
+
+#### `Order` fulfillment transitions into `shipped` status
+Send SMTP Email about order shipping update.
+Please consult the [shelf-backend]() repository at github
+
+#### `Order` fulfillment transitions into `cancelled` status
+Send SMTP Email about order cancellation.
+Please consult the [shelf-backend]() repository at github
+
+#### `User` is created
+Send SMTP Email welcoming the `user`
+Please consult the [shelf-backend]() repository at github
+

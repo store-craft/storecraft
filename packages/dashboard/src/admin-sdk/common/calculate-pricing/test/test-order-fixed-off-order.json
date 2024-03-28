@@ -1,0 +1,56 @@
+{
+    "title": "order above 299 discounted",
+    "createdAt": 1680457002571,
+    "order": 100,
+    "desc": "הנחה של 25 שקל על כל הזמנה מעל 299 ש\"ח",
+    "application": {
+        "name": "Automatic",
+        "id": 0
+    },
+    "info": {
+        "filters": [
+            {
+                "meta": {
+                    "op": "o-subtotal-in-range",
+                    "id": 100,
+                    "type": "order"
+                },
+                "value": {
+                    "from": 299,
+                    "to": null
+                }
+            }
+        ],
+        "details": {
+            "meta": {
+                "name": "Order Discount",
+                "id": 3,
+                "type": "order"
+            },
+            "extra": {
+                "free_shipping": false,
+                "percent": 0,
+                "fixed": -25
+            }
+        }
+    },
+    "enabled": true,
+    "updatedAt": 1681064080925,
+    "search": [
+        "order-above-299",
+        "order",
+        "above",
+        "299",
+        "discounted",
+        "automatic",
+        "app:automatic",
+        "app:0",
+        "order",
+        "3",
+        "type:3",
+        "type:order",
+        "enabled:true"
+    ],
+    "code": "order-above-299",
+    "media": []
+}

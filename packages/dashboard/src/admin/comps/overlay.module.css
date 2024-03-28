@@ -1,0 +1,15 @@
+.enter {
+  opacity: 0;
+}
+.enterActive {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.exit {
+  opacity: 1;
+  display: none;
+}
+.exitActive {
+  opacity: 0;
+  transition: opacity 300ms;
+}

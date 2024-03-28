@@ -1,0 +1,49 @@
+# Notifications
+
+`shelf` reserves a special **Firestore** collection named <Lime c='notifications' />.
+
+This collection holds notification documents, you can write them at automation and
+event times to create notifications at the `shelf-admin`.
+
+Each [#NotificationData](schema/definitions#NotificationData) is a simple object
+
+```js
+
+/** @type {OrderData} */
+const order = {}
+
+const noti = {
+  search: ['checkout', 'orders'],
+  author: 'shelf-backend-bot 🤖',
+  updatedAt: Date.now(),
+  actions: [
+    {
+      name: '',
+      type: 'route',
+      params: {
+        collection: 'orders',
+        document: order.id,
+      }
+    }
+  ],
+  message: `
+💰 **Checkout update**\n 
+* \`${order.address.firstname ?? ''}\` has completed checkout. 
+* 💳 Order total is \`${order.pricing.total ?? '-'}\`.
+* 📧 Email was sent to ${order.contact.email ?? 'no-email'}
+`
+}    
+
+
+
+// save the notification
+await db.collection('notifications').add(
+  noti
+);
+
+```
+
+This above code should by synced in `shelf-admin` like this
+
+<Image src='/docs/main/backend-1.webp' className='w-full sm:w-1/2 mx-auto mt-5' />
+

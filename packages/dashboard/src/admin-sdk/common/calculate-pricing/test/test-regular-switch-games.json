@@ -1,0 +1,53 @@
+{
+    "createdAt": 1679413371702,
+    "updatedAt": 1679413371736,
+    "order": 10,
+    "title": "Test Regular Switch Games",
+    "media": [],
+    "enabled": true,
+    "info": {
+        "filters": [
+            {
+                "value": [
+                    "nintendo-switch-games"
+                ],
+                "meta": {
+                    "op": "p-in-collections",
+                    "id": 0,
+                    "type": "product"
+                }
+            }
+        ],
+        "details": {
+            "meta": {
+                "id": 0,
+                "type": "regular",
+                "name": "Regular Discount"
+            },
+            "extra": {
+                "percent": 5,
+                "fixed": 0
+            }
+        }
+    },
+    "code": "test-regular-switch-games",
+    "search": [
+        "test-regular-switch-games",
+        "test",
+        "regular",
+        "switch",
+        "games",
+        "automatic",
+        "app:automatic",
+        "app:0",
+        "regular",
+        "0",
+        "type:0",
+        "type:regular",
+        "enabled:true"
+    ],
+    "application": {
+        "name": "Automatic",
+        "id": 0
+    }
+}

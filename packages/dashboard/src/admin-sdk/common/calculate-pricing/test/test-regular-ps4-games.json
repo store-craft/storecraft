@@ -1,0 +1,53 @@
+{
+    "title": "test regular ps4 games",
+    "code": "test-regular-ps4-games",
+    "info": {
+        "filters": [
+            {
+                "meta": {
+                    "type": "product",
+                    "id": 0,
+                    "op": "p-in-collections"
+                },
+                "value": [
+                    "ps4-games"
+                ]
+            }
+        ],
+        "details": {
+            "meta": {
+                "type": "regular",
+                "name": "Regular Discount",
+                "id": 0
+            },
+            "extra": {
+                "percent": 7,
+                "fixed": 0
+            }
+        }
+    },
+    "updatedAt": 1679413440840,
+    "createdAt": 1679413440811,
+    "media": [],
+    "enabled": true,
+    "application": {
+        "id": 0,
+        "name": "Automatic"
+    },
+    "search": [
+        "test-regular-ps4-games",
+        "test",
+        "regular",
+        "ps4",
+        "games",
+        "automatic",
+        "app:automatic",
+        "app:0",
+        "regular",
+        "0",
+        "type:0",
+        "type:regular",
+        "enabled:true"
+    ],
+    "order": 10
+}

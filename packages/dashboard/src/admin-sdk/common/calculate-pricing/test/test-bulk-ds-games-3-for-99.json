@@ -1,0 +1,52 @@
+{
+    "updatedAt": 1679477419118,
+    "enabled": true,
+    "media": [],
+    "code": "test-bulk-ds-games-3-for-99",
+    "title": "test-bulk-ds-games-3-for-99",
+    "search": [
+        "test-bulk-ds-games-3-for-99",
+        "test-bulk-ds-games-3-for-99",
+        "automatic",
+        "app:automatic",
+        "app:0",
+        "bulk",
+        "1",
+        "type:1",
+        "type:bulk",
+        "enabled:true"
+    ],
+    "order": 9,
+    "application": {
+        "name": "Automatic",
+        "id": 0
+    },
+    "createdAt": 1679413598698,
+    "info": {
+        "filters": [
+            {
+                "meta": {
+                    "type": "product",
+                    "id": 0,
+                    "op": "p-in-collections"
+                },
+                "value": [
+                    "nintendo-ds-games"
+                ]
+            }
+        ],
+        "details": {
+            "meta": {
+                "id": 1,
+                "type": "bulk",
+                "name": "Bulk Discount"
+            },
+            "extra": {
+                "percent": 100,
+                "fixed": 100,
+                "recursive": true,
+                "qty": 3
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+# Security
+
+`shelf` sends **http** requests with two security measures always.
+You can choose which one to respond to
+
+### apiKey
+`apiKey` security is easy to get started with, but it fragile.
+Support it with caution.
+
+Each <Purple c='payment' /> is sent with `apiKey` query param.
+You generate `apiKey` at `shelf-admin > settings`
+
+<Image src='/docs/main/backend-sec-1.webp' className='w-full sm:w-1/2 mx-auto mt-5' />
+
+Don't forget to hit the <Purple c='save'/> button afterwards.
+
+When a request is made to the backend, we put `apiKey` at the query parameters
+of the request.
+
+> This is a fragile security practice. Keys might be sniffed by a middle proxy.
+
+When your backend recieves the request it can compare the `apiKey` to validate
+the request.
+
+### JWT (JSON Web Token)
+Each request is augmented with <Lime c='Header' />
+
+```js
+{
+  Authorization: BEARER <JWT>
+}
+```
+
+The JWT is signed with a secret (generated at `shelf-admin > settings`) with
+
+#### Header
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+#### payload
+
+```json
+{
+  "sub": "shelf-admin",
+  "iat": 1516239022
+}
+```
+
+#### signature
+```json
+HMACSHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload), 
+  <your-256-bit-secret>
+) 
+```
+
+You will verify the signature of the payload and decide if to accept the request
+based on time window for example (requests that are no more than 30 seconds old).
+
+This security model is better than `apiKey` model.
+
+> `shelf-backend` demo automatically loads the keys from database

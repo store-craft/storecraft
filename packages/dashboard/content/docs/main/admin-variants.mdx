@@ -1,0 +1,106 @@
+# Product Variants
+
+Product variants is a staple feature every merchant should know about and use.
+But, what are they exactly ?
+
+So, let's suppose you are selling a branded shirt 👕 and let's suppose that the shirt
+- has many sizes `small` / `medium` / `large`
+- and the shirt has two colors `red` / `white`
+
+You may start to feel, that products are usually manufactured with different flavours
+in order to appeal to a wider consumer markets and rightfully so.
+
+<table className='border mx-auto mt-5'>
+  <tbody className='border'>
+    <tr className='border'>
+      <td children='' className='border'/>
+      <td children=' small ' className='border px-3'/>
+      <td children=' medium ' className='border px-3'/>
+      <td children=' large ' className='border px-3'/>
+    </tr>
+    <tr className='border' className='border'>
+      <td children=' red ' className='border px-3'/>
+      <td children='✅' className='border text-center'/>
+      <td children='✅' className='border text-center'/>
+      <td children='✅' className='border text-center'/>
+    </tr>
+    <tr className='border' className='border'>
+      <td children=' white ' className='border px-3'/>
+      <td children='✅' className='border text-center'/>
+      <td children='✅' className='border text-center'/>
+      <td children='✅' className='border text-center'/>
+    </tr>
+  </tbody>
+</table>
+
+Let's iterate all the possible **6** <Purple c='variants'/>:
+- a `small`, `red` shirt 
+- a `small`, `white` shirt 
+- a `medium`, `red` shirt 
+- a `medium`, `white` shirt 
+- a `large`, `red` shirt 
+- a `large`, `white` shirt 
+
+> Yep, Each **variant** is a **combination**
+
+`shelf` supports product variants.
+With `shelf`, we have a main product and each variant is a child product with it's own handle
+and specific data such as images, description, stock and pricing.
+
+Let's see an example and a developer guide
+
+## Example
+First, let's edit or create a new product
+
+<div className='flex flex-row flex-wrap --bg-red-400 gap-5 mt-10'>
+  {
+    [
+      { url: 'admin-variants-0.webp', label: 'Scroll to the Product Variants card' },
+      { url: 'admin-variants-1.webp', label: 'Hit the + button and add product Options with values' },
+      { url: 'admin-variants-2.webp', label: 'Below them, variants will show' },
+    ].map(
+      (it, ix) => (
+        <Image key={ix} 
+               src={`/docs/main/${it.url}`} className='w-full sm:w-[500px]' 
+               label={`${++ix}. ${it.label}`}/>
+      )
+    )
+  }
+</div>
+
+Let's create one of the variants. 
+- Click on the `create` button next to **Large** / **White** variant.
+- A new product page will show with somw filled data (based on the parent product)
+- Fill up it's pricing, description and stock
+- click `create`
+- go back to the main product
+
+Now, you will see the green check mark next to it
+<Image src={`/docs/main/admin-variants-3.webp`} className='w-full sm:w-[500px]' 
+        label={`green check mark`}/>
+
+> Don't forget to **save**        
+
+## Developer guide
+First of all, each `variant` in the database is a product on it's own right.
+This helps with unified `checkout` and `search` functions.
+
+> 💡 Reminder, each **variant** is a child product of the main product
+
+Every variant product is **ALSO** embedded in the parent product through the
+`variants_products` property found in [ProductData](schema/definitions#ProductData),
+this helps when loading the parent product, then all of it's children products are just there.
+
+Each option with it's **id** and values (and **ids**) are recorded in the parent product's
+`product_options` field.
+
+Each handle in [variants_products](schema/definitions#ProductData) maps into 
+[VariantCombination](schema/definitions#VariantCombination) which tells exactly
+the option ids and selection ids that trigger this variant product  .
+
+Here is a sample `json` that explains these relations
+
+<Image src={`/docs/main/admin-variants-4.webp`} className='w-full sm:w-[500px]' 
+        label={`green check mark`}/>
+
+> 💡 If a product has a `parent_handle` property, then it is a **variant** of the **parent** product, you can also watch the `_product_hint` property, which tells which options seclections it triggers

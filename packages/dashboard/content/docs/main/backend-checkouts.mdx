@@ -1,0 +1,90 @@
+# Checkouts
+
+`Checkouts` are basucally `draft` orders initiated from the client side.
+
+They have two phases:
+
+## Checkout creation
+1. User at your store fills a cart.
+2. He navigates to checkout page
+3. Customer selects shipping method
+3. Customer optionally specifies `coupons`
+4. A checkout is created at backend:
+  * `draft` order is created
+  * `Validation` of order against available stock
+  * `Pricing` is calculated with discounts, coupons and shipping
+  * `Payment Gateway` creates a payment **intent**
+  * All of this is recorded in [#OrderData](schema/defintions#OrderData) object
+5. A checkout object (`OrderData`) is returned to the client
+6. The result is displayed to the user, such as discounts and total pricing
+
+## Checkout completion
+7. customer sees the payment form. 
+8. Fills his payment method and `CONFIRMS` payment. 
+
+Payment can initiate two behaviours
+
+#### synchronously (at your backend)
+
+Where you try to confirm the `authorization` / `capture` with possibly some payload
+from the frontend. This is eager mode. It has pros and cons.
+
+#### asynchronously (at the payment processor servers)
+
+In this mode, payments are confirmed at `PayPal` or `Stripe` servers, they also
+usually handle **3DS** security automatically at frontend.
+
+Afterwards, you are notified via `webhooks` about the status of the payment.
+Then you need to confirm the webhook is valid and was sent from a trusted source.
+If this is the case, you can proceed to change the checkout and payment status of
+[#OrderData](schema/defintions#OrderData).
+
+> Our backend, currently emphesizes **synchronous** payments, but you can modify this easily
+
+
+# Rest API
+Your `shelf` client communicates **checkout** with your backend via restful **API**.
+
+## <Purple c='Checkout' /> create
+
+<Purple c='POST'/> request for <Lime c='/checkouts/create'/>
+```
+<BACKEND-HOST>/checkouts/create
+```
+
+### <Purple c='Request BODY' className='text-xl mt-5' />
+A **JSON** body of partial [#OrderData](schema/defintions#OrderData), that
+contains 
+- Optional `order` id
+- `line_items`
+- `delivery`, which is [#ShippingData](schema/defintions#ShippingData)
+- `payment_gateway` : `{ gateway_id: 'paypal-standard-payments' }`
+
+### <Purple c='Return' className='text-xl mt-5' />
+A **JSON** body of complete [#OrderData](schema/defintions#OrderData), that
+contains 
+- `order` id
+- correct [line_items](schema/defintions#LineItem)
+- `pricing`,  a complete [#PricingData](schema/defintions#PricingData)
+- `payment_gateway` : `{ on_checkout_create: object }` - The result of `onCheckoutCreate` hook
+- `validations`, which is a list [#ValidationEntry](schema/defintions#ValidationEntry)
+- or general `{ error }` object
+
+
+## <Purple c='Checkout' /> complete
+
+<Purple c='POST'/> request for <Lime c='/checkouts/{order-id}/complete'/>
+```
+<BACKEND-HOST>/checkouts/{ORDER-ID}/complete
+```
+
+### <Purple c='Request BODY' className='text-xl mt-5' />
+Any object, that will get passed to your gateway `onCheckoutComplete` hook.
+Usually, for passing information about `payment method` in **synchronous** confirmation.
+
+
+### <Purple c='Return' className='text-xl mt-5' />
+A JSON body of complete [#OrderData](schema/defintions#OrderData), that
+also contains 
+- `payment_gateway` : `{ on_checkout_complete: object }` - The result of `onCheckoutComplete` hook
+

@@ -1,0 +1,47 @@
+{
+    "enabled": true,
+    "code": "test-regular-all-games",
+    "media": [],
+    "application": {
+        "name": "Automatic",
+        "id": 0
+    },
+    "title": "test-regular-all-games",
+    "order": 10,
+    "createdAt": 1679413475474,
+    "updatedAt": 1679413475736,
+    "info": {
+        "filters": [
+            {
+                "meta": {
+                    "id": 6,
+                    "type": "product",
+                    "op": "p-all"
+                }
+            }
+        ],
+        "details": {
+            "meta": {
+                "name": "Regular Discount",
+                "type": "regular",
+                "id": 0
+            },
+            "extra": {
+                "fixed": 0,
+                "percent": 5
+            }
+        }
+    },
+    "search": [
+        "test-regular-all-games",
+        "test-regular-all-games",
+        "automatic",
+        "app:automatic",
+        "app:0",
+        "regular",
+        "0",
+        "type:0",
+        "type:regular",
+        "enabled:true"
+    ]
+}

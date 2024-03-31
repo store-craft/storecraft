@@ -47,10 +47,13 @@ const upsert = (driver) => {
  * @returns {db_col["upsertBulk"]}
  */
 const upsertBulk = (driver) => {
-  return async (items) => {
+  return async (items, search_terms) => {
     const results = [];
-    for (const it of items)
-      results.push(await upsert(driver)(it));
+    // for (const it of items)
+    for(let ix = 0; ix < items.length; ix++)
+      results.push(await upsert(driver)(
+        items[ix], search_terms?.[ix])
+        );
 
     return results.every(b => b);
   }

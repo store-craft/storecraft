@@ -58,32 +58,47 @@ export default class Auth {
         this.#_update_and_notify_subscribers(this.currentUser, false);
       } else {
         // let's try to authenticate
-        fetch(
-          url(this.context.config, '/api/auth/refresh'),
-          {
-            method: 'post',
-            body: JSON.stringify(
-              {
-                refresh_token: this.currentUser.refresh_token.token
-              }
-            ),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        )
-        .then(res => res.json())
-        .then(payload => {
-          console.log('payload', payload)
-          this.#_update_and_notify_subscribers(payload, false);
-        })
-        .catch(e => {
-          console.log('e', e)
-          this.#_update_and_notify_subscribers(undefined, false);
-        })
+        this.reAuthenticate();
       }
     }
+  }
 
+  /**
+   * Get a working access-token
+   */
+  async working_access_token() {
+    if(!this.isAuthenticated)
+      await this.reAuthenticate();
+    return this.currentUser.access_token.token;
+  }
+
+  /**
+   * Perform re-authentication
+   */
+  async reAuthenticate() {
+    const auth_res = await fetch(
+      url(this.context.config, '/api/auth/refresh'),
+      {
+        method: 'post',
+        body: JSON.stringify(
+          {
+            refresh_token: this.currentUser.refresh_token.token
+          }
+        ),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    /** @type {ApiAuthResult | undefined} */
+    let payload = undefined;
+    if(auth_res.ok) {
+      payload = await auth_res.json();
+    }
+
+    this.#_update_and_notify_subscribers(payload, false);
+    return payload;
   }
 
   notify_subscribers = () => {

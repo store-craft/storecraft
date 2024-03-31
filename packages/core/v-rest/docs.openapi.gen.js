@@ -233,9 +233,10 @@ const register_base_get = (
  * @param {ZodSchema} zod_schema 
  * @param {z.infer<typeof zod_schema>} example 
  * @param {string} [description] 
+ * @param {string} [summary] 
  */
 const register_base_upsert = (registry, slug_base, name, tags, example_id, 
-  zod_schema, example, description) => {
+  zod_schema, example, description, summary) => {
   example = {...example};
 
   delete example['search'];
@@ -244,7 +245,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
     method: 'post',
     path: `/${slug_base}`,
     description: description ?? `Upsert a \`${name}\``,
-    summary: `Upsert a single ${name}`,
+    summary: summary ?? `Upsert a single ${name}`,
     tags,
     request: {
       body: {
@@ -1062,27 +1063,29 @@ const register_notifications = registry => {
   const example_id = 'not_65f2ae998bf30e6cd0ca9605';
   const _typeSchema = registry.register(name, notificationTypeSchema);
   const _typeUpsertSchema = registry.register(`${name}Upsert`, notificationTypeUpsertSchema);
-  const example = {
-    "message": "message 1",
-    "search": [
-      "checkout",
-      "backend",
-      "author:backend-bot"
-    ],
-    "author": "backend-bot",
-    "actions": [
-      {
-        "type": "url",
-        "name": "name",
-        "params": {
-          "url": "https://storecraft.com"
+  const example = [
+    {
+      "message": "message 1",
+      "search": [
+        "checkout",
+        "backend",
+        "author:backend-bot"
+      ],
+      "author": "backend-bot",
+      "actions": [
+        {
+          "type": "url",
+          "name": "name",
+          "params": {
+            "url": "https://storecraft.com"
+          }
         }
-      }
-    ],
-    "id": "not_65f2ae998bf30e6cd0ca9605",
-    "created_at": "2024-03-14T08:00:25.859Z",
-    "updated_at": "2024-03-14T08:00:25.859Z"
-  }
+      ],
+      "id": "not_65f2ae998bf30e6cd0ca9605",
+      "created_at": "2024-03-14T08:00:25.859Z",
+      "updated_at": "2024-03-14T08:00:25.859Z"
+    }
+  ];
   const security = [ { bearerAuth: [] } ];
 
   register_base_get(
@@ -1091,7 +1094,8 @@ const register_notifications = registry => {
   );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
-    _typeUpsertSchema, example);
+    z.array(_typeUpsertSchema), example, 
+    'Upsert Bulk `notifications`', 'Upsert Bulk notifications');
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(
     registry, slug_base, name, tags, 

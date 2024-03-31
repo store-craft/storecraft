@@ -1,7 +1,7 @@
 import { useCallback, useEffect, 
          useRef, useState } from 'react'
-import useTrigger from './common/useTrigger'
-import { getShelf } from '../admin-sdk'
+import useTrigger from './common/useTrigger.js'
+import { getSDK } from '@/admin-sdk/index.js'
 
 const q = {
   orderBy: [['firstname', 'asc']],
@@ -11,33 +11,39 @@ const q = {
 /**
  * 
  * @param {string} what id
- * @param {any[][]} list list of lists
- * @returns {any[][]}
  */
-const delete_from_collection = what => list => {
-  let wx = -1
-  let ix = -1
-  let br = false
-  for (wx=0; wx < list.length; wx++) {
-    for (ix = 0; ix < list[wx].length; ix++) {
-      const id = list[wx][ix][0]
-      if(id===what) {
-        br=true; break
-      }
-    }
-    if(br) break
-  }
+const delete_from_collection = what => {
 
-  if(!br)
+  /**
+   * 
+   * @param {any[][]} list 
+   */
+  return (list) => {
+    let wx = -1
+    let ix = -1
+    let br = false
+    for (wx=0; wx < list.length; wx++) {
+      for (ix = 0; ix < list[wx].length; ix++) {
+        const id = list[wx][ix][0]
+        if(id===what) {
+          br=true; break
+        }
+      }
+      if(br) break
+    }
+  
+    if(!br)
+      return list
+      
+    // console.log('list1 ', list);
+    list = [...list]    
+    list[wx] = [...list[wx]]
+    list[wx].splice(ix, 1)
+    // console.log('wx ', wx, 'ix ', ix);
+    // console.log('list ', list);
     return list
-    
-  // console.log('list1 ', list);
-  list = [...list]    
-  list[wx] = [...list[wx]]
-  list[wx].splice(ix, 1)
-  // console.log('wx ', wx, 'ix ', ix);
-  // console.log('list ', list);
-  return list
+  }
+  
 }
 
 
@@ -57,7 +63,8 @@ export const useCollection =
   // const _next = useRef(getShelf().db.col(colId).paginate2(q))
   const _next = useRef()
   const [error, setError] = useState(undefined)
-  /**@type {[[string, T][][]]} */
+  // /**@type {[[string, T][][], ]} */
+  /**@type {[[string, T][][], import('react').Dispatch<import('react').SetStateAction<[string, T][][]>>]} */
   const [pages, setPages] = useState([])
   const [index, setIndex] = useState(-1)
   const [loading, setIsLoading] = useState(autoLoad)
@@ -67,7 +74,7 @@ export const useCollection =
   // console.log('windows ',  windows);
 
   useEffect(
-    () => getShelf().auth.add_sub(trigger)
+    () => getSDK().auth.add_sub(trigger)
     , [trigger]
   )
 
@@ -118,17 +125,18 @@ export const useCollection =
   const next = useCallback(
     () => paginate(true)
     , [paginate]
-  )
+  );
+
   const prev = useCallback(
     () => paginate(false)
     , [paginate]
-  )
+  );
 
   const deleteDocument = useCallback(
     /**@param {string} docId */
     async (docId) => {
       try {
-        await getShelf()[colId].delete(docId)
+        await getSDK()[colId].delete(docId)
         setPages(delete_from_collection(docId))
         return docId
       } catch (err) {
@@ -147,7 +155,7 @@ export const useCollection =
     async (q={}, from_cache=false) => {
       let result = undefined
       _q.current = q
-      _next.current = await getShelf().db.col(colId).paginate2(
+      _next.current = await getSDK().db.col(colId).paginate2(
         q, from_cache
         ) 
       result = await _internal_fetch_next(true)  
@@ -158,10 +166,10 @@ export const useCollection =
         startAfterId, startAtId, endAtId, endBeforeId, 
         ...q_minus_limit
       } = q
-      const count = await getShelf().db.col(colId).count(q_minus_limit)
+      const count = await getSDK().db?.col(colId).count(q_minus_limit)
       setQueryCount(count)
       return result
-    }, [colId, _internal_fetch_next, getShelf()]
+    }, [colId, _internal_fetch_next, getSDK()]
   )
 
   useEffect(
@@ -246,37 +254,37 @@ const q_initial = {
   }
 }
 
-/**
- * Modified collection for users
- * @param {*} limit 
- * @param {*} autoLoad 
- * @returns 
- */
-export const useUsers = (limit=10, autoLoad=true) => {
-  const q_initial = useRef({
-    orderBy: [['updatedAt', 'asc']],
-    limit
-  })
+// /**
+//  * Modified collection for users
+//  * @param {*} limit 
+//  * @param {*} autoLoad 
+//  * @returns 
+//  */
+// export const useUsers = (limit=10, autoLoad=true) => {
+//   const q_initial = useRef({
+//     orderBy: [['updatedAt', 'asc']],
+//     limit
+//   })
 
-  const [windows, window, loading, error, 
-          { prev, next, setQuery : setQueryParent, deleteDocument, reload, colId }] = 
-          useCollection('users', q_initial.current, autoLoad)
+//   const [windows, window, loading, error, 
+//           { prev, next, setQuery : setQueryParent, deleteDocument, reload, colId }] = 
+//           useCollection('users', q_initial.current, autoLoad)
 
-  const [query, setQuery] = useState( { limit, search: undefined } )
+//   const [query, setQuery] = useState( { limit, search: undefined } )
 
-  useEffect(() => {
-    const tokens = text2tokens(query.search)
-    const where = tokens?.length ? [['search', 'array-contains-any', tokens]] : undefined
-    setQueryParent({
-      ...q_initial.current, 
-      where,
-      limit : query.limit
-    })
-  }, [query])
+//   useEffect(() => {
+//     const tokens = text2tokens(query.search)
+//     const where = tokens?.length ? [['search', 'array-contains-any', tokens]] : undefined
+//     setQueryParent({
+//       ...q_initial.current, 
+//       where,
+//       limit : query.limit
+//     })
+//   }, [query])
 
-  return [windows, window, loading, error, 
-          { prev, next, 
-            setQuery, 
-            deleteDocument, 
-            reload, colId }]
-}
+//   return [windows, window, loading, error, 
+//           { prev, next, 
+//             setQuery, 
+//             deleteDocument, 
+//             reload, colId }]
+// }

@@ -1,114 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import useTrigger from "./common/useTrigger"
-import { getShelf } from '../admin-sdk'
-
-export function useDatabaseDocument(colId=undefined, docId=undefined, autoLoad=true) {
-  const [location, setLocation] = useState([colId, docId])
-  const [loading, setLoading] = useState((colId && docId && autoLoad) ? true : false)
-  const [data, setData] = useState({})
-  const [hasLoaded, setHasLoaded] = useState(false)
-  const [error, setError] = useState(undefined)
-  const [op, setOp] = useState(undefined)
-  const trigger = useTrigger()
-
-  useEffect(() => {
-    return getShelf().auth.add_sub(trigger)
-  }, [trigger])
-
-  const reload = useCallback(() => {
-    if(!(location[0] && location[1]))
-      return
-
-    setLoading(true)
-    setError(undefined)
-    setOp('load')
-
-    getShelf().db.doc(location[0], location[1]).get()
-      .then(([exists, id, data]) => data)
-      .then(res => { setData(res); setHasLoaded(true); setLoading(false) })
-      .catch(err => { setError(err); setLoading(false) })
-
-  },[location])
-
-  const update = useCallback(new_data => {
-    setLoading(true)
-    setError(undefined)
-    setOp('update')
-
-    getShelf().db.doc(location[0], location[1]).update(new_data)
-      .then(() => {
-        const prev_data = data || {}
-        new_data = {...prev_data, ...new_data}
-        setData(new_data)
-        setHasLoaded(true)
-        setLoading(false)
-      })
-      .catch(err => { setError(err); setLoading(false) })
-  }, [location])
-
-  const create = useCallback((new_data) => {
-    setLoading(true)
-    setError(undefined)
-    setOp('create')
-
-    const collId = location[0]
-    getShelf().db.col(collId).add(new_data)
-      .then(id => {
-        setLocation([collId, id])
-        setData({...new_data})
-        setHasLoaded(true)
-        setLoading(false)
-      })
-      .catch(err => { setError(err); setLoading(false) })
-  }, [location])
-
-  const createWithId = useCallback((id, new_data) => {
-    setLoading(true)
-    setError(undefined)
-    setOp('create')
-
-    const collId = location[0]
-    getShelf().db.doc(collId, id).set(new_data)
-      .then(() => {
-        setLocation([collId, id])
-        setData({...new_data})
-        setHasLoaded(true)
-        setLoading(false)
-      })
-      .catch(err => { setError(err); setLoading(false) })
-  }, [location])
-
-  const deleteDocument = useCallback(() => {
-    setLoading(true)
-    setError(undefined)
-    setOp('delete')
-
-    getShelf().db.col(location[0]).remove(location[1])
-      .then(() => {
-        setData({})
-        setHasLoaded(true)
-        setLoading(false)
-      })
-      .catch(err => { setError(err); setLoading(false) })
-  }, [location])
-
-  useEffect(() => {
-    if(colId==undefined)
-      throw new Error('useDocument: no Collection Id')
-
-    setLocation([colId, docId])
-    setData({})
-  }, [colId, docId])
-
-  useEffect(() => {
-    if (autoLoad) 
-      reload()
-  }, [autoLoad, reload])
-
-  return [data, loading, hasLoaded, error, op, 
-          { reload, update, create, createWithId, deleteDocument, 
-            colId : location[0], docId : location[1] }]
-}
+import useTrigger from "./common/useTrigger.js"
+import { getSDK } from '@/admin-sdk/index.js'
 
  
 /**
@@ -132,7 +24,7 @@ export function useCommonApiDocument(
   const trigger = useTrigger()
 
   useEffect(
-    () => getShelf().auth.add_sub(trigger)
+    () => getSDK().auth.add_sub(trigger)
     ,[trigger]
   )
 
@@ -146,7 +38,7 @@ export function useCommonApiDocument(
       setOp('load')
 
       try {
-        const [exists, id, data] = await getShelf()[colId].get(
+        const [exists, id, data] = await getSDK()[colId].get(
           location[1], try_cache
           )
         setData(data)
@@ -170,7 +62,7 @@ export function useCommonApiDocument(
       setOp('update')
 
       try {
-        const [id, saved_data] = await getShelf()[colId].set(
+        const [id, saved_data] = await getSDK()[colId].set(
           location[1], new_data, ...extra
           )
         setData(saved_data)  
@@ -193,7 +85,7 @@ export function useCommonApiDocument(
       const collId = location[0]
       
       try {
-        const [id, saved_data] = await getShelf()[colId].create(new_data)
+        const [id, saved_data] = await getSDK()[colId].create(new_data)
         setLocation([collId, id])
         setData(saved_data)
         setHasLoaded(true)
@@ -215,7 +107,7 @@ export function useCommonApiDocument(
       setOp('delete')
 
       try {
-        await getShelf()[colId].delete(location[1]);
+        await getSDK()[colId].delete(location[1]);
         setData({})
         setHasLoaded(true)
         return location[1]
@@ -253,3 +145,113 @@ export function useCommonApiDocument(
     }
   }
 }
+
+
+
+// export function useDatabaseDocument(colId=undefined, docId=undefined, autoLoad=true) {
+//   const [location, setLocation] = useState([colId, docId])
+//   const [loading, setLoading] = useState((colId && docId && autoLoad) ? true : false)
+//   const [data, setData] = useState({})
+//   const [hasLoaded, setHasLoaded] = useState(false)
+//   const [error, setError] = useState(undefined)
+//   const [op, setOp] = useState(undefined)
+//   const trigger = useTrigger()
+
+//   useEffect(() => {
+//     return getSDK().auth.add_sub(trigger)
+//   }, [trigger])
+
+//   const reload = useCallback(() => {
+//     if(!(location[0] && location[1]))
+//       return
+
+//     setLoading(true)
+//     setError(undefined)
+//     setOp('load')
+
+//     getSDK().db.doc(location[0], location[1]).get()
+//       .then(([exists, id, data]) => data)
+//       .then(res => { setData(res); setHasLoaded(true); setLoading(false) })
+//       .catch(err => { setError(err); setLoading(false) })
+
+//   },[location])
+
+//   const update = useCallback(new_data => {
+//     setLoading(true)
+//     setError(undefined)
+//     setOp('update')
+
+//     getSDK().db.doc(location[0], location[1]).update(new_data)
+//       .then(() => {
+//         const prev_data = data || {}
+//         new_data = {...prev_data, ...new_data}
+//         setData(new_data)
+//         setHasLoaded(true)
+//         setLoading(false)
+//       })
+//       .catch(err => { setError(err); setLoading(false) })
+//   }, [location])
+
+//   const create = useCallback((new_data) => {
+//     setLoading(true)
+//     setError(undefined)
+//     setOp('create')
+
+//     const collId = location[0]
+//     getSDK().db.col(collId).add(new_data)
+//       .then(id => {
+//         setLocation([collId, id])
+//         setData({...new_data})
+//         setHasLoaded(true)
+//         setLoading(false)
+//       })
+//       .catch(err => { setError(err); setLoading(false) })
+//   }, [location])
+
+//   const createWithId = useCallback((id, new_data) => {
+//     setLoading(true)
+//     setError(undefined)
+//     setOp('create')
+
+//     const collId = location[0]
+//     getSDK().db.doc(collId, id).set(new_data)
+//       .then(() => {
+//         setLocation([collId, id])
+//         setData({...new_data})
+//         setHasLoaded(true)
+//         setLoading(false)
+//       })
+//       .catch(err => { setError(err); setLoading(false) })
+//   }, [location])
+
+//   const deleteDocument = useCallback(() => {
+//     setLoading(true)
+//     setError(undefined)
+//     setOp('delete')
+
+//     getSDK().db.col(location[0]).remove(location[1])
+//       .then(() => {
+//         setData({})
+//         setHasLoaded(true)
+//         setLoading(false)
+//       })
+//       .catch(err => { setError(err); setLoading(false) })
+//   }, [location])
+
+//   useEffect(() => {
+//     if(colId==undefined)
+//       throw new Error('useDocument: no Collection Id')
+
+//     setLocation([colId, docId])
+//     setData({})
+//   }, [colId, docId])
+
+//   useEffect(() => {
+//     if (autoLoad) 
+//       reload()
+//   }, [autoLoad, reload])
+
+//   return [data, loading, hasLoaded, error, op, 
+//           { reload, update, create, createWithId, deleteDocument, 
+//             colId : location[0], docId : location[1] }]
+// }

@@ -37,9 +37,12 @@ export class StorecraftAdminSDK {
   }
 
   /**
-   * @param {StorecraftConfig} config 
+   * @param {StorecraftConfig} [config] 
    */  
-  init(config) { 
+  async init(config) { 
+    if(this.#_has_inited)
+      return this;
+
     this.#_config = config
     // this.firebase = materializeConfig(config)
     // this.db = new FirebaseDB(this)
@@ -47,15 +50,16 @@ export class StorecraftAdminSDK {
     // this.storage = new Storage(this)
     // this.users = new Users(this)
     // this.tags = new Tags(this)
-    // this.products = new Products(this)
+    this.products = new Products(this)
+
     // this.orders = new Orders(this)
     // this.collections = new Collections(this)
     // this.discounts = new Discounts(this)
-    // this.shipping_methods = new ShippingMethods(this)
+    this.shipping = new ShippingMethods(this)
     // this.storefronts = new StoreFronts(this)
     // this.stats = new Stats(this)
     // this.images = new Images(this)
-    // this.posts = new Posts(this)
+    this.posts = new Posts(this)
     // this.payment_gateways = new PaymentGateways(this)
     // this.settings = new Settings(this)
     // this.notifications = new Notifications(this)

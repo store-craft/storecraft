@@ -1,32 +1,20 @@
-import { StorecraftAdminSDK } from '.'
-import { assert, text2tokens, 
-         to_handle } from './common/utils/functional'
-import { NotificationData, PostData } from './js-docs-types'
-
+import { StorecraftAdminSDK } from './index.js'
+import { collection_base } from './api.fetch.js';
 
 /**
- * @typedef {NotificationData} Data
+ * Base `products` **CRUD**
+ * 
+ * @extends {collection_base<import('@storecraft/core/v-api').NotificationTypeUpsert ,import('@storecraft/core/v-api').NotificationType>}
  */
-
-const NAME = 'notifications'
-
-export default class Notifications {
+export default class Notifications extends collection_base {
 
   /**
-   * @param {StorecraftAdminSDK} context 
+   * 
+   * @param {StorecraftAdminSDK} sdk 
    */
-  constructor(context) {
-    this.context = context
-    this.db = context.db
+  constructor(sdk) {
+    super(sdk, 'notifications');
   }
-
-  /**
-   * @param {string} id 
-   * @param {boolean} try_cache 
-   * @returns {Promise<[boolean, string, Data]>}
-   */
-  get = (id, try_cache=true) => this.db.doc(NAME, id).get(try_cache)
-
 
   /**
    * add notification

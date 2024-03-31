@@ -5,6 +5,7 @@
   "type": "module",
   "types": "",
   "scripts": {
+    "start": "next dev",
     "dashboard:dev": "next dev",
     "dashboard:build": "next build",
     "dashboard:start": "next start",

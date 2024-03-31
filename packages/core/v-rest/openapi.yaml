@@ -38370,24 +38370,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/notification"
               example: &a43
-                message: message 1
-                search:
-                  - checkout
-                  - backend
-                  - author:backend-bot
-                author: backend-bot
-                actions: &a40
-                  - type: url
-                    name: name
-                    params:
-                      url: https://storecraft.com
-                id: not_65f2ae998bf30e6cd0ca9605
-                created_at: 2024-03-14T08:00:25.859Z
-                updated_at: 2024-03-14T08:00:25.859Z
+                - &a40
+                  message: message 1
+                  search:
+                    - checkout
+                    - backend
+                    - author:backend-bot
+                  author: backend-bot
+                  actions:
+                    - type: url
+                      name: name
+                      params:
+                        url: https://storecraft.com
+                  id: not_65f2ae998bf30e6cd0ca9605
+                  created_at: 2024-03-14T08:00:25.859Z
+                  updated_at: 2024-03-14T08:00:25.859Z
   /notifications:
     post:
-      description: Upsert a `notification`
-      summary: Upsert a single notification
+      description: Upsert Bulk `notifications`
+      summary: Upsert Bulk notifications
       tags: *a39
       security:
         - bearerAuth: []
@@ -38395,14 +38396,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/notificationUpsert"
+              type: array
+              items:
+                $ref: "#/components/schemas/notificationUpsert"
             example:
-              message: message 1
-              author: backend-bot
-              actions: *a40
-              id: not_65f2ae998bf30e6cd0ca9605
-              created_at: 2024-03-14T08:00:25.859Z
-              updated_at: 2024-03-14T08:00:25.859Z
+              "0": *a40
       responses:
         "200":
           description: ID of upserted data

@@ -4,7 +4,8 @@ import { collection_base } from './api.fetch.js';
 /**
  * Base `shipping` **CRUD**
  * 
- * @extends {collection_base<import('@storecraft/core/v-api').ShippingMethodTypeUpsert ,import('@storecraft/core/v-api').ShippingMethodType>}
+ * @extends {collection_base<import('@storecraft/core/v-api').ShippingMethodTypeUpsert, 
+ * import('@storecraft/core/v-api').ShippingMethodType>}
  */
 export default class Shipping extends collection_base {
 
@@ -15,6 +16,5 @@ export default class Shipping extends collection_base {
   constructor(sdk) {
     super(sdk, 'shipping');
   }
-
 
 }

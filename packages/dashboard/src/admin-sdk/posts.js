@@ -4,7 +4,8 @@ import { collection_base } from './api.fetch.js';
 /**
  * Base `posts` **CRUD**
  * 
- * @extends {collection_base<import('@storecraft/core/v-api').PostTypeUpsert ,import('@storecraft/core/v-api').PostType>}
+ * @extends {collection_base<import('@storecraft/core/v-api').PostTypeUpsert, 
+ * import('@storecraft/core/v-api').PostType>}
  */
 export default class Posts extends collection_base {
 
@@ -14,16 +15,6 @@ export default class Posts extends collection_base {
    */
   constructor(sdk) {
     super(sdk, 'posts');
-  }
-
-  /**
-   * 
-   * @param {string} id 
-   * @param {number} howmuch 
-   * @returns 
-   */
-  changeStockOf = (id, howmuch) => {
-    // return this.db.doc(NAME, id).incrementField('qty', howmuch, 0)
   }
 
 }

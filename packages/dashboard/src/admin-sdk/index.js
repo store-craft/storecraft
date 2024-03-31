@@ -1,7 +1,7 @@
 import Auth from './auth.js'
 // import Storage from './storage'
 // import FirebaseDB from './db_driver'
-import Users from './users.js'
+import Customers from './users.js'
 import Tags from './tags.js'
 import Products from './products.js'
 import Orders from './orders.js'
@@ -44,26 +44,24 @@ export class StorecraftAdminSDK {
       return this;
 
     this.#_config = config
-    // this.firebase = materializeConfig(config)
-    // this.db = new FirebaseDB(this)
     this.auth = new Auth(this)
     // this.storage = new Storage(this)
-    // this.users = new Users(this)
-    // this.tags = new Tags(this)
+    this.customers = new Customers(this)
+    this.tags = new Tags(this)
     this.products = new Products(this)
 
-    // this.orders = new Orders(this)
-    // this.collections = new Collections(this)
-    // this.discounts = new Discounts(this)
+    this.orders = new Orders(this)
+    this.collections = new Collections(this)
+    this.discounts = new Discounts(this)
     this.shipping = new ShippingMethods(this)
-    // this.storefronts = new StoreFronts(this)
+    this.storefronts = new StoreFronts(this)
     // this.stats = new Stats(this)
-    // this.images = new Images(this)
+    this.images = new Images(this)
     this.posts = new Posts(this)
     // this.payment_gateways = new PaymentGateways(this)
-    // this.settings = new Settings(this)
-    // this.notifications = new Notifications(this)
-    // this.bots = new Bots(this)
+    this.settings = new Settings(this)
+    this.notifications = new Notifications(this)
+    this.bots = new Bots(this)
     this.perfs = new Perfs(this)
 
     this.auth.init()

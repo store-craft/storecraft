@@ -7,6 +7,7 @@ import { url } from './utils.js';
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
  * - Throws a `json` representation of the `error`, if the request is `bad`
+ * 
  * @template {any} R
  * @param { string } path relative path in api
  * @param {RequestInit} [init] request `init` type

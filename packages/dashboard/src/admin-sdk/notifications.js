@@ -1,10 +1,12 @@
 import { StorecraftAdminSDK } from './index.js'
-import { collection_base } from './api.fetch.js';
+import { collection_base, fetchApiWithAuth } from './api.fetch.js';
 
 /**
- * Base `products` **CRUD**
+ * Base `notifications` **CRUD**
  * 
- * @extends {collection_base<import('@storecraft/core/v-api').NotificationTypeUpsert ,import('@storecraft/core/v-api').NotificationType>}
+ * @extends { collection_base<import('@storecraft/core/v-api').NotificationTypeUpsert, 
+ * import('@storecraft/core/v-api').NotificationType>
+ * }
  */
 export default class Notifications extends collection_base {
 
@@ -17,111 +19,25 @@ export default class Notifications extends collection_base {
   }
 
   /**
-   * add notification
-   * @param {Data} data 
+   * 
+   * @param {import('@storecraft/core/v-api').NotificationTypeUpsert[]} items 
    */
-  add = (data) => {
-    data = {
-      ...data,
-      updatedAt: Date.now()
-    }
-    return this.db.col(NAME).add(data)
-  }
-
-  /**
-   * add notification
-   * @param {Data[]} data 
-   */
-  addBulk = (data) => {
-    return this.db.col(NAME).addBulk(data)
+  upsertBulk = items => {
+    return fetchApiWithAuth(
+      `${this.base_name}`,
+      {
+        method: 'post',
+        body: JSON.stringify(items),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
   }
 
   meta = () => {
     return this.get('_meta')
   }
-
-  /**
-   * @param {string} id 
-   * @param {Data} data 
-   * @returns id
-   */
-  update = (id, data) => {
-    data = { ...data, updatedAt: Date.now() }
-    assert(
-      id===data.handle,
-      'id cannot be changed !'
-    )
-
-    return this.db.doc(NAME, id).update(data)
-  }
-
-  /**
-   * @param {string} id 
-   * @param {NotificationData} data
-   * @returns {Promise<[id: string, data: NotificationData]>}
-   */
-  set = async (id, data) => {
-    assert(
-      id===data.handle,
-      'id cannot be changed !'
-    )
-
-    try {
-      const report = await validate(data)
-
-      // console.log('report ', report);
-      if(report.hasErrors)
-        throw [...report.errors, ...report.warnings]
-
-      data = { 
-        ...data, 
-        search: create_search_index(data),
-        updatedAt: Date.now() 
-      }     
-
-      // media usage report
-      this.context.images
-          .reportSearchAndUsageFromRegularDoc(NAME, id, data)
-
-    } catch (e) {
-      throw Array.isArray(e) ? e : [e]
-    }
-    
-    await this.db.doc(NAME, id).set(data)
-    return [id, data]
-  }
-
-  /**
-   * @param {Data} data 
-   * @returns {Promise<[id: string, data: NotificationData]>}
-   */
-  create = async (data) => { 
-    data = { 
-      ...data, 
-      createdAt: Date.now(),
-      handle: to_handle(data.title) 
-    }
-    
-    assert(
-      data.handle,
-      'Please choose a valid Title'
-    )
-
-    const [exists, _, __] = await this.get(data.handle)
-
-    assert(
-      !exists,
-      `handle ${data.handle} already exists !!`
-    )
- 
-    return this.set(data.handle, data)
-  }
-
-  /**
-   * @param {string} id 
-   * @returns nada
-   */
-  delete = (id) => this.db.col(NAME).remove(id)
 
   /**
    * Test if backend moght have new data economically
@@ -179,33 +95,4 @@ export default class Notifications extends collection_base {
     
   }
 
-  /**
-   * 
-   * @param {string[]} searchTokens 
-   * @param {number} limit 
-   * @param {boolean} from_cache 
-   * @param {boolean} iterator true will give you a next iterator function for pagination 
-   * @returns {Promise<[string, Data][]>>} a one promise or next handler iterator
-   */
-  list = (searchTokens=[], limit=100, from_cache=false, iterator=false) => {
-    let q = { orderBy: [['updatedAt', 'desc']], limit }
-    if (Array.isArray(searchTokens) && searchTokens.length)
-      q.where = [ ['search', 'array-contains-any', searchTokens] ]
-
-    return this.listWithQuery(q, from_cache, iterator)
-  }
-
-  /**
-   * List with query, make sure you have database indexed for the query
-   * 
-   * @param {object} q { orderBy: [['field1', 'asc']], where: [['name', '=', 'tomer'], limit: 10] } 
-   * @param {boolean} from_cache force cache if available
-   * @param {boolean} iterator true will give you a next iterator function for pagination 
-   * @returns {Promise<[string, Data][]> | ()=>Promise<[string, Data][]>} a one promise or next handler iterator
-   */
-  listWithQuery = async (q, from_cache=false, iterator=false) => {
-    const next = await this.db.col(NAME).paginate2(q, from_cache)
-    return iterator ? next : 
-                      next()
-  }
 }

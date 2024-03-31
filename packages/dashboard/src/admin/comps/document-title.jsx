@@ -26,7 +26,8 @@ const DocumentTitle =
           {
             (ix<major.length-1) &&
             (<span children={delimiter} 
-        className='text-4xl text-pink-400 text-pink-400/50 break-inside-avoid' /> )
+        className='text-4xl text-pink-400 text-pink-400/50 
+            break-inside-avoid' /> )
           }
         </span>
         )

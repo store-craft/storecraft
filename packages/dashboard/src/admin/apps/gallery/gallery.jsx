@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useCommonCollection } from '../../../shelf-cms-react-hooks'
-import { BottomActions } from '../../comps/collection-actions'
-import { Bling } from '../../comps/common-ui'
-import ShowIf from '../../comps/show-if'
-import ImageGrid from './gallery-image-grid'
-import SearchBar from './gallery-searchbar'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import { BottomActions } from '@/admin/comps/collection-actions.jsx'
+import { Bling } from '@/admin/comps/common-ui.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
+import ImageGrid from './gallery-image-grid.jsx'
+import SearchBar from './gallery-searchbar.jsx'
 
 const img_test = [
   "91iHBLGTsIL._SL1500_.jpg",

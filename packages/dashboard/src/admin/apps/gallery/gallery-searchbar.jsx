@@ -1,8 +1,8 @@
 import { forwardRef, useCallback, 
          useImperativeHandle,
          useState } from "react"
-import { IoReloadSharp } from "react-icons/io5"
-import { Bling, BlingInput } from "../../comps/common-ui"
+import { IoReloadSharp } from "react-icons/io5/index.js"
+import { Bling, BlingInput } from "@/admin/comps/common-ui.jsx"
 
 const SearchBar = forwardRef(
   ({count, reload, searchTitle, isLoading, className }, ref) => {

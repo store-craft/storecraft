@@ -1,14 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { 
-  BulkDiscountExtra, BundleDiscountExtra, BuyXGetYDiscountExtra, 
-  DiscountData, DiscountDetails, DiscountMeta, DiscountMetaEnum, Filter, 
-  FilterMetaEnum, OrderDiscountExtra, RegularDiscountExtra 
-} from '../../admin-sdk/js-docs-types'
-import { BlingInput, HR } from './common-ui'
-import ShowIf from './show-if'
-import DiscountFilters from './discount-filters'
-import { FieldContextData } from './fields-view'
-import { TbMath } from 'react-icons/tb'
+  DiscountMetaEnum, FilterMetaEnum
+} from '@storecraft/core/v-api/types.api.enums.js'
+import { BlingInput, HR } from './common-ui.jsx'
+import ShowIf from './show-if.jsx'
+import DiscountFilters from './discount-filters.jsx'
+import { FieldContextData } from './fields-view.jsx'
+import { TbMath } from 'react-icons/tb/index.js'
 
 export const discount_details_validator = v => {
   if(v===undefined)
@@ -92,7 +90,7 @@ const explain_price = (prefix, percent, fixed) => {
 /**
  * @param {object} props
  * @param {'bulk'} props.type
- * @param {BulkDiscountExtra} props.value
+ * @param {import('@storecraft/core/v-api').BulkDiscountExtra} props.value
  */
 const BulkDiscount = ({ type, value, onChange }) => {
 
@@ -199,7 +197,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
 
 /**
  * 
- * @param {Filter} f 
+ * @param {import('@storecraft/core/v-api').Filter} f 
  */
 const explain_filter = (f) => {
   switch (f.meta.op) {
@@ -294,7 +292,7 @@ const filter_legal = f => {
 /**
  * @param {object} p
  * @param {'bundle'} p.type
- * @param {BundleDiscountExtra} p.value
+ * @param {import('@storecraft/core/v-api').BundleDiscountExtra} p.value
  * @param {FieldContextData} p.context
  */
 const BundleDiscount = ({ type, value, context, onChange }) => {

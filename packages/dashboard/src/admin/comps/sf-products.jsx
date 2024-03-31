@@ -1,11 +1,11 @@
 import { useCallback, useRef } from 'react'
-import { BrowseProducts } from './browse-collection'
-import CapsulesView from './capsules-view'
-import { Overlay } from './overlay'
-import { BlingButton } from './common-button'
-import { HR } from './common-ui'
-import { FieldContextData, FieldData } from './fields-view'
-import useNavigateWithState from '../hooks/useNavigateWithState'
+import { BrowseProducts } from './browse-collection.jsx'
+import CapsulesView from './capsules-view.jsx'
+import { Overlay } from './overlay.jsx'
+import { BlingButton } from './common-button.jsx'
+import { HR } from './common-ui.jsx'
+import { FieldContextData, FieldData } from './fields-view.jsx'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 /**
  * 

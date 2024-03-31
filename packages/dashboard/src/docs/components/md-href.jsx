@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link.js'
 
 export default function CustomLink({ href, children, ...rest }) {
   // console.log('children ', href)

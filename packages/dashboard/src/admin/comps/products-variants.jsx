@@ -1,19 +1,22 @@
 import { v4 as uuidv4 } from 'uuid'
-import CapsulesView from './capsules-view'
-import { BiMessageSquareAdd } from 'react-icons/bi'
-import { BlingButton, GradientFillIcon, PromisableLoadingButton } from './common-button'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BlingInput, HR, Label } from './common-ui'
-import ShowIf, { ShowBinarySwitch } from './show-if'
-import { MdClose } from 'react-icons/md'
-import { AiFillCheckCircle } from 'react-icons/ai'
-import { IoAppsOutline } from 'react-icons/io5'
-import { FieldContextData } from './fields-view'
-import { 
-  ProductData,
-  VariantCombination, VariantOption, VariantOptionSelection 
-} from '../../admin-sdk/js-docs-types'
-import useNavigateWithState, { LinkWithState } from '../hooks/useNavigateWithState'
+import CapsulesView from './capsules-view.jsx'
+import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
+import { BlingButton, GradientFillIcon, 
+  PromisableLoadingButton } from './common-button.jsx'
+import { useCallback, useEffect, useMemo, 
+  useRef, useState } from 'react'
+import { BlingInput, HR, Label } from './common-ui.jsx'
+import ShowIf, { ShowBinarySwitch } from './show-if.jsx'
+import { MdClose } from 'react-icons/md/index.js'
+import { AiFillCheckCircle } from 'react-icons/ai/index.js'
+import { IoAppsOutline } from 'react-icons/io5/index.js'
+import { FieldContextData } from './fields-view.jsx'
+// import { 
+//   ProductData,
+//   VariantCombination, VariantOption, VariantOptionSelection 
+// } from '@/admin-sdk/js-docs-types'
+import useNavigateWithState, { 
+  LinkWithState } from '@/admin/hooks/useNavigateWithState.js'
 
 /**@type {VariantOption[]} */
 const OPS = [
@@ -498,7 +501,8 @@ const ProductVariants = ({ value, onChange, context, setError, ...rest }) => {
     </div>
     <ShowBinarySwitch toggle={v?.length ?? false} className='w-full'>
       <VariantsView options={v} context={context} setError={setError} />
-      <div className='w-full shelf-text-minor-light text-base' children={TEXT_INSTRUCT}/>
+      <div className='w-full shelf-text-minor-light text-base' 
+          children={TEXT_INSTRUCT}/>
     </ShowBinarySwitch>
   </div>
 </div>

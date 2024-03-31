@@ -1,19 +1,20 @@
-import { BottomActions } from './collection-actions'
-import CollectionView from './collection-view'
-import { RecordActions, Span, TimeStampView } from './common-fields'
-import { Bling, Card } from './common-ui'
-import { useCommonCollection } from '../../shelf-cms-react-hooks'
+import { BottomActions } from './collection-actions.jsx'
+import CollectionView from './collection-view.jsx'
+import { RecordActions, Span, 
+  TimeStampView } from './common-fields.jsx'
+import { Bling, Card } from './common-ui.jsx'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
-import { getShelf } from '../../admin-sdk'
-import useTrigger from '../../shelf-cms-react-hooks/common/useTrigger'
-import ShowIf from './show-if'
-import { IoMdAdd } from 'react-icons/io'
-import { Overlay } from './overlay'
-import { BrowseProducts } from './browse-collection'
-import { CollectionData } from '../../admin-sdk/js-docs-types'
-import { FieldContextData } from './fields-view'
+import { getSDK } from '@/admin-sdk/index.js'
+import useTrigger from '@/shelf-cms-react-hooks/common/useTrigger.js'
+import ShowIf from './show-if.jsx'
+import { IoMdAdd } from 'react-icons/io/index.js'
+import { Overlay } from './overlay.jsx'
+import { BrowseProducts } from './browse-collection.jsx'
+// import { CollectionData } from '@/admin-sdk/js-docs-types'
+import { FieldContextData } from './fields-view.jsx'
 
 const CollectionBase = forwardRef(
   /**
@@ -70,7 +71,7 @@ const CollectionBase = forwardRef(
           return context?.getState()
         },
         deleteDocument: async id => {
-          await getShelf().products.batchRemoveProductsFromCollection(
+          await getSDK().products.batchRemoveProductsFromCollection(
             [id], collection_term
             )
           const index = page.findIndex(it => it[0]===id)

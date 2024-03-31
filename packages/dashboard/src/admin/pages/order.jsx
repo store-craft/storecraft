@@ -1,31 +1,31 @@
 import { useRef, useEffect, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import FieldsView from '../comps/fields-view'
-import { useCommonApiDocument } from '../../shelf-cms-react-hooks'
-import OrderDeliveryMethod from '../comps/order-delivery-method'
-import OrderDiscountInfo from '../comps/order-coupon-info'
-import OrderLineItems from '../comps/order-line-items'
-import OrderPrice from '../comps/order-price'
-import ShowIf from '../comps/show-if'
+import FieldsView from '@/admin/comps/fields-view.jsx'
+import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
+import OrderDeliveryMethod from '@/admin/comps/order-delivery-method.jsx'
+import OrderDiscountInfo from '@/admin/comps/order-coupon-info.jsx'
+import OrderLineItems from '@/admin/comps/order-line-items.jsx'
+import OrderPrice from '@/admin/comps/order-price.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
 import { 
   MInput, withCard,
   create_select_view 
-} from '../comps/common-fields'
-import DocumentTitle from '../comps/document-title'
-import { RegularDocumentActions } from '../comps/document-actions'
-import EditMessage from '../comps/edit-message'
-import DocumentDetails from '../comps/document-details'
-import { 
-  CheckoutStatusEnum, FulfillOptionsEnum, 
-  OrderData, PaymentOptionsEnum } from '../../admin-sdk/js-docs-types'
-import { JsonViewCard } from '../comps/json'
-import OrderPaymentGateway from '../comps/order-payment-gateway'
-import Attributes from '../comps/attributes'
-import TagsEdit from '../comps/tags-edit'
-import MDEditor from '../comps/md-editor'
-import { CreateDate, Div, HR, withBling } from '../comps/common-ui'
-import { decode, encode } from '../utils'
-import useNavigateWithState from '../hooks/useNavigateWithState'
+} from '@/admin/comps/common-fields.jsx'
+import DocumentTitle from '@/admin/comps/document-title.jsx'
+import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
+import EditMessage from '@/admin/comps/edit-message.jsx'
+import DocumentDetails from '@/admin/comps/document-details.jsx'
+// import { 
+//   CheckoutStatusEnum, FulfillOptionsEnum, 
+//   OrderData, PaymentOptionsEnum } from '@/admin-sdk/js-docs-types'
+import { JsonViewCard } from '@/admin/comps/json.jsx'
+import OrderPaymentGateway from '@/admin/comps/order-payment-gateway.jsx'
+import Attributes from '@/admin/comps/attributes.jsx'
+import TagsEdit from '@/admin/comps/tags-edit.jsx'
+import MDEditor from '@/admin/comps/md-editor.jsx'
+import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
+import { decode, encode } from '@/admin/utils/index.js'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 const contact_schema = {
   name:'Contact Info', key: 'contact', 

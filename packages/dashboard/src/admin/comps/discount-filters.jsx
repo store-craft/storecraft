@@ -1,16 +1,16 @@
 import { useState, useCallback, useRef } from 'react'
-import ShowIf from './show-if'
-import SelectCollection, { SelectTags } from './select-collection'
-import { Bling, BlingInput, HR } from './common-ui'
-import CapsulesView from './capsules-view'
-import { IoMdClose } from 'react-icons/io'
+import ShowIf from './show-if.jsx'
+import SelectCollection, { SelectTags } from './select-collection.jsx'
+import { Bling, BlingInput, HR } from './common-ui.jsx'
+import CapsulesView from './capsules-view.jsx'
+import { IoMdClose } from 'react-icons/io/index.js'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Overlay } from './overlay';
-import { BrowseCustomers, BrowseProducts } from './browse-collection'
-import { Filter, FilterMetaEnum } from '../../admin-sdk/js-docs-types'
-import { BlingButton } from './common-button'
-import { FieldData } from './fields-view'
+import { Overlay } from './overlay.jsx';
+import { BrowseCustomers, BrowseProducts } from './browse-collection.jsx'
+import { BlingButton } from './common-button.jsx'
+import { FieldData } from './fields-view.jsx'
+import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
 
 export const discount_filters_validator = v => {
   const product_filters = v?.filter(it => it.type==='product') ?? []
@@ -531,7 +531,7 @@ const AddFilter = ({ type, onChange, onAdd }) => {
  * 
  * @param {object} p 
  * @param {FieldData} p.field a field
- * @param {Filter[]} p.value bunch of filters
+ * @param {import('@storecraft/core/v-api').Filter[]} p.value bunch of filters
  * @param {('product' | 'order')[]} p.types bunch of filters
  */
 const DiscountFilters = ({ field, value, onChange, types=['product', 'order'], ...rest }) => {

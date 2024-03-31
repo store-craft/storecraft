@@ -1,15 +1,15 @@
-import { useCommonCollection } from '../../shelf-cms-react-hooks'
-import CollectionView from '../comps/collection-view'
-import ShowIf from '../comps/show-if'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import CollectionView from '@/admin/comps/collection-view.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { BottomActions, TopActions } from '../comps/collection-actions'
-import { Span, TimeStampView, RecordActions } from '../comps/common-fields'
+import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
+import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.jsx'
 import { useNavigate, useParams } from 'react-router-dom'
-import { LabelCapsule } from '../comps/capsule'
+import { LabelCapsule } from '@/admin/comps/capsule.jsx'
 import OrdersQuickSearchActions, { id2ColorFulfill } 
-       from '../comps/orders-quick-search-actions'
-import { o2q, q2o } from '../apps/gallery/utils'
-import { Title } from '../comps/common-ui'
+       from '@/admin/comps/orders-quick-search-actions.jsx'
+import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
+import { Title } from '@/admin/comps/common-ui.jsx'
 
 const schema_fields = [
   { key: 'address.firstname', name: 'Customer', comp: Span },

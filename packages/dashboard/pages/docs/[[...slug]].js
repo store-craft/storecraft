@@ -1,10 +1,10 @@
-import components from '../../src/docs/components/mdx-components'
-import Layout from '../../src/docs/components/layout'
+import components from '../../src/docs/components/mdx-components.jsx'
+import Layout from '../../src/docs/components/layout.jsx'
 import { MDXRemote } from 'next-mdx-remote'
 import { _getStaticProps, 
-  _getStaticPaths } from '../../src/docs/utils/next_props'
-import ClientOnly from '../../src/docs/components/client-only'
-import Head from 'next/head';
+  _getStaticPaths } from '../../src/docs/utils/next_props.js'
+import ClientOnly from '../../src/docs/components/client-only.jsx'
+import Head from 'next/head.js';
 
 export default function PostPage( props ) {
   const { data } = props

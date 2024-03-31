@@ -7,7 +7,12 @@ import useInterval from '../hooks/useInterval.js'
 import ShowIf from './show-if.jsx'
 import { MINUTE } from '@/admin/utils/time.js'
 
-const Bubble = ({ outerClass='bg-white animate-bounce', innerClass='bg-red-500', ...rest }) => {
+const Bubble = (
+  { 
+    outerClass='bg-white animate-bounce', 
+    innerClass='bg-red-500', ...rest 
+  }
+) => {
 
   return (
 <div {...rest} >

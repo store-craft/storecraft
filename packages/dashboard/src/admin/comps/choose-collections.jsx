@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
-import SelectCollection, { default_name_fn, default_transform_fn } from './select-collection'
-import CapsulesView from './capsules-view'
-import { FieldContextData, FieldData } from './fields-view'
-import { HR } from './common-ui'
-import useNavigateWithState from '../hooks/useNavigateWithState'
+import SelectCollection, { 
+  default_name_fn, default_transform_fn } from './select-collection.jsx'
+import CapsulesView from './capsules-view.jsx'
+import { FieldContextData, FieldData } from './fields-view.jsx'
+import { HR } from './common-ui.jsx'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 const col2url = c => {
   switch(c) {

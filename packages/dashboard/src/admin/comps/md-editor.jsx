@@ -1,6 +1,6 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import dynamic from "next/dynamic";
+import dynamic from "next/dynamic.js";
 import { useState } from "react";
 
 const Editor = dynamic(

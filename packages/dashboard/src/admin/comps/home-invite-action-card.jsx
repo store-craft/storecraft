@@ -1,6 +1,6 @@
-import { MdNavigateNext } from 'react-icons/md'
+import { MdNavigateNext } from 'react-icons/md/index.js'
 import { Link } from 'react-router-dom'
-import { Bling } from './common-ui'
+import { Bling } from './common-ui.jsx'
 
 
 const InviteActionCard = ({ msg, link='/admin', Icon }) => {

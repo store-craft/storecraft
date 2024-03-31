@@ -1,15 +1,15 @@
 import { useCallback } from 'react'
-import { Bling, BlingInput } from './common-ui'
-import { MdClose } from 'react-icons/md'
-import { BiMessageSquareAdd } from 'react-icons/bi'
-import { GradientFillIcon } from './common-button'
-import { FieldData } from './fields-view'
-import { AttributeData } from '../../admin-sdk/js-docs-types'
+import { Bling, BlingInput } from './common-ui.jsx'
+import { MdClose } from 'react-icons/md/index.js'
+import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
+import { GradientFillIcon } from './common-button.jsx'
+import { FieldData } from './fields-view.jsx'
+// import { AttributeData } from '@/admin/js-docs-types'
 
 /**
  * @param {object} p
- * @param {AttributeData} p.val
- * @param {(attribute: AttributeData) => void} p.onChange
+ * @param {import('@storecraft/core/v-api').AttributeType} p.val
+ * @param {(attribute: import('@storecraft/core/v-api').AttributeType) => void} p.onChange
  * @param {() => void} p.onDelete
  */
 const Attr = ({ val = {}, onChange, onDelete, className }) => {

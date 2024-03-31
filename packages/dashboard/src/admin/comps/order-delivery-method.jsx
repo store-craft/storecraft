@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
-import { BlingInput, HR } from './common-ui'
-import SelectCollection from './select-collection'
-import { ShippingData } from '../../admin-sdk/js-docs-types'
-import { FieldData } from './fields-view'
+import { BlingInput, HR } from './common-ui.jsx'
+import SelectCollection from './select-collection.jsx'
+// import { ShippingData } from '@/admin-sdk/js-docs-types'
+import { FieldData } from './fields-view.jsx'
 
 /**
  * 

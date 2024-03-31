@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, 
          useRef, useState } from 'react'
-import { Bling, BlingInput, HR } from './common-ui'
-import { BrowseProducts } from './browse-collection'
-import { Overlay } from './overlay'
-import { getShelf } from '../../admin-sdk'
-import { IoCloseSharp } from 'react-icons/io5'
-import { LineItem, ProductData } from '../../admin-sdk/js-docs-types'
-import { BlingButton } from './common-button'
-import { FieldContextData, FieldData } from './fields-view'
-import { LinkWithState } from '../hooks/useNavigateWithState'
+import { Bling, BlingInput, HR } from './common-ui.jsx'
+import { BrowseProducts } from './browse-collection.jsx'
+import { Overlay } from './overlay.jsx'
+import { getSDK } from '@/admin-sdk/index.js'
+import { IoCloseSharp } from 'react-icons/io5/index.js'
+// import { LineItem, ProductData } from '@/admin-sdk/js-docs-types'
+import { BlingButton } from './common-button.jsx'
+import { FieldContextData, FieldData } from './fields-view.jsx'
+import { LinkWithState } from '@/admin/hooks/useNavigateWithState.js'
 
 /**
  * @typedef {'change-qty' | 'stock-change'} Op

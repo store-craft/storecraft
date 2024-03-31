@@ -22,7 +22,7 @@ const dates = [
  */
 export const timeSince = (date) => {
 
-  const millis = Math.max(new Date() - date, 0)
+  const millis = Math.max(Date.now() - date, 0)
 
   if(millis<1000)
     return 'now'

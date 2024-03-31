@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react'
-import { AiOutlineMenuFold } from 'react-icons/ai'
-import { MdLogout } from 'react-icons/md'
-import { useUser } from '../../shelf-cms-react-hooks'
-import { GradientFillIcon } from './common-button'
-import useToggle from '../hooks/useToggle'
-import ShowIf from './show-if'
-import Notifications from './notifications'
-import NotificationButton from './notifications-button'
-import DarkMode from './dark-mode'
+import { AiOutlineMenuFold } from 'react-icons/ai/index.js'
+import { MdLogout } from 'react-icons/md/index.js'
+import { useUser } from '@/shelf-cms-react-hooks/index.js'
+import { GradientFillIcon } from './common-button.jsx'
+import useToggle from '../hooks/useToggle.js'
+import ShowIf from './show-if.jsx'
+import Notifications from './notifications.jsx'
+import NotificationButton from './notifications-button.jsx'
+import DarkMode from './dark-mode.jsx'
 
 
 const ActionBar = 

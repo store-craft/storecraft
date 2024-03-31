@@ -1,9 +1,10 @@
-import { RiCoupon3Line } from "react-icons/ri"
+import { RiCoupon3Line } from "react-icons/ri/index.js"
 
 const Code = ({ value, className, context, ...rest }) => {
 
   const cls_color = context.item[1].enabled ? 'bg-teal-500' : 'bg-red-500'
-  const cls = 'whitespace-nowrap pr-2 font-semibold text-base max-w-[150px] sm:max-w-max overflow-x-auto' // + cls_color
+  const cls = 'whitespace-nowrap pr-2 font-semibold text-base \
+        max-w-[150px] sm:max-w-max overflow-x-auto' // + cls_color
   const isCoupon = String(context.item[1].application.id)==='1'
 
   return (

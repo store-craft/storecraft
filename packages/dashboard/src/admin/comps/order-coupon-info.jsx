@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from 'react'
-import CapsulesView from './capsules-view'
-import { BlingInput } from './common-ui'
-import { BlingButton } from './common-button'
-import SelectCollection from './select-collection'
-import { DiscountData } from '../../admin-sdk/js-docs-types'
+import CapsulesView from './capsules-view.jsx'
+import { BlingInput } from './common-ui.jsx'
+import { BlingButton } from './common-button.jsx'
+import SelectCollection from './select-collection.jsx'
+// import { DiscountData } from '@/admin-sdk/js-docs-types'
 import { useNavigate } from 'react-router-dom'
-import { HR } from './common-ui'
+import { HR } from './common-ui.jsx'
 
 const isEmpty = (str) => (!str?.trim().length)
 

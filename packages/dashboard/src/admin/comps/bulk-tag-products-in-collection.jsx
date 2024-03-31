@@ -1,9 +1,9 @@
-import { Card } from './common-ui'
+import { Card } from './common-ui.jsx'
 import { useCallback, useState } from 'react'
-import { getShelf } from '../../admin-sdk'
-import TagsEdit from './tags-edit'
-import { PromisableLoadingBlingButton } from './common-button'
-import { HR } from './common-ui'
+import { getSDK } from '@/admin-sdk/index.js'
+import TagsEdit from './tags-edit.jsx'
+import { PromisableLoadingBlingButton } from './common-button.jsx'
+import { HR } from './common-ui.jsx'
 
 const BulkTagProductsInCollection = ({ collectionId, value }) => {
   const [tags, setTags] = useState([])
@@ -15,7 +15,7 @@ const BulkTagProductsInCollection = ({ collectionId, value }) => {
     async (add=true) => {
       try {
         setError(undefined)
-        await getShelf().collections.bulkAddRemoveTags(collectionId, tags, add)
+        await getSDK().collections.bulkAddRemoveTags(collectionId, tags, add)
       } catch (e) {
         console.error(e)
         setError(e?.message ?? String(e))

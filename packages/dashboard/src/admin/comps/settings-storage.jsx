@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import { SiCloudflare } from 'react-icons/si'
-import { IoLogoFirebase } from 'react-icons/io5'
-import { FaAws } from 'react-icons/fa'
-import { BlingInput, HR } from './common-ui'
-import {
-  CloudflareR2Settings, S3CompatibleStorageSettings, 
-  StorageSettings, StorageTypeEnum 
-} from '../../admin-sdk/js-docs-types'
+import { SiCloudflare } from 'react-icons/si/index.js'
+import { IoLogoFirebase } from 'react-icons/io5/index.js'
+import { FaAws } from 'react-icons/fa/index.js'
+import { BlingInput, HR } from './common-ui.jsx'
+// import {
+//   CloudflareR2Settings, S3CompatibleStorageSettings, 
+//   StorageSettings, StorageTypeEnum 
+// } from '@/admin-sdk/js-docs-types'
 
 /**
  * @typedef {object} StorageProvider

@@ -1,6 +1,7 @@
 import React, { 
-  useImperativeHandle, useState, useCallback, useEffect } from 'react'
-import Transition from './transition'
+  useImperativeHandle, useState, 
+  useCallback, useEffect } from 'react'
+import Transition from './transition.jsx'
 import { useRef } from 'react'
 
 export const Overlay = React.forwardRef(({ children, ...rest }, ref) => {

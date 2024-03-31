@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import { DiscountApplicationEnum, DiscountMetaEnum } from '../../admin-sdk/js-docs-types'
-import { LabelCapsule } from './capsule'
-import { discount_types_to_color } from './discounts-table-type'
+// import { DiscountApplicationEnum, 
+//   DiscountMetaEnum } from '@/admin-sdk/js-docs-types'
+import { LabelCapsule } from './capsule.jsx'
+import { discount_types_to_color } from './discounts-table-type.jsx'
 
 const DiscountsQuickSearchActions = 
   ({ collectionId='orders', ...rest }) => {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { Bling } from './common-ui'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai/index.js'
+import { Bling } from './common-ui.jsx'
 
 export const Button = 
     ({ text, icon=undefined, className, classNameSpan, children, rightView, ...rest }) => {

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
-import BaseChartView from './base-chart-view'
+import BaseChartView from './base-chart-view.jsx'
 const DAY = 86400000
-import useDarkMode from '../hooks/useDarkMode'
+import useDarkMode from '@/admin/hooks/useDarkMode.js'
 import { Chart } from 'chart.js'
 
 // useEffect(

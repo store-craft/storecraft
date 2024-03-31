@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { MInput } from './common-fields'
-import { Bling } from './common-ui'
+import { MInput } from './common-fields.jsx'
+import { Bling } from './common-ui.jsx'
 import { Base64 } from 'js-base64'
-import { FieldContextData, FieldData } from './fields-view'
+import { FieldContextData, FieldData } from './fields-view.jsx'
 
 /**
  * 

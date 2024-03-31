@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react"
-import CapsulesView from "./capsules-view"
-import { BlingInput } from "./common-ui"
-import { BlingButton } from "./common-button"
+import CapsulesView from "./capsules-view.jsx"
+import { BlingInput } from "./common-ui.jsx"
+import { BlingButton } from "./common-button.jsx"
 
 const text2tokens = (text) => {
     return text?.match(/\S+/g)

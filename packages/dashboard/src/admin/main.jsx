@@ -10,7 +10,7 @@ import {
 
   import { 
     Home, 
-    Orders, Order, Users, User, 
+    Orders, Order, Customers, Customer, 
     Tags, Tag, Products, Product, 
     Collections, Collection,
     Discounts, Discount,
@@ -54,11 +54,11 @@ export default function Main(props) {
       <Route path='create/:base?' element={<Storefront collectionId='storefronts' mode='create' /> } />
     </Route>
     <Route path='customers'>
-      <Route path='' element={<Users collectionId='users' segment='customers'/>} />
-      <Route path='q/:query_params' element={<Users collectionId='users' segment='customers' />} />
-      <Route path=':id/edit' element={<User collectionId='users' segment='customers' mode='edit' />} />
-      <Route path=':id/view' element={<User collectionId='users' segment='customers' mode='view' />} />
-      <Route path='create' element={<User collectionId='users' segment='customers' mode='create' /> } />
+      <Route path='' element={<Customers collectionId='users' segment='customers'/>} />
+      <Route path='q/:query_params' element={<Customers collectionId='users' segment='customers' />} />
+      <Route path=':id/edit' element={<Customer collectionId='users' segment='customers' mode='edit' />} />
+      <Route path=':id/view' element={<Customer collectionId='users' segment='customers' mode='view' />} />
+      <Route path='create' element={<Customer collectionId='users' segment='customers' mode='create' /> } />
     </Route>
     <Route path='tags'>
       <Route path='' element={<Tags collectionId='tags' />} />

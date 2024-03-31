@@ -1,4 +1,4 @@
-import { AiFillCloseCircle } from 'react-icons/ai'
+import { AiFillCloseCircle } from 'react-icons/ai/index.js'
 
 const default_name_fn = v => v
 

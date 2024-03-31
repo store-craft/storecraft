@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, 
          useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getShelf } from '../../admin-sdk'
-import { Bling, HR } from './common-ui'
-import SalesChart from './home-sales-chart'
-import TimeFrame from './home-time-frame'
-import ShowIf from './show-if'
-import { SpaceShip, WhiteSpace } from './symbols'
-import { BiTrendingUp } from 'react-icons/bi'
+import { getSDK } from '@/admin-sdk/index.js'
+import { Bling, HR } from './common-ui.jsx'
+import SalesChart from './home-sales-chart.jsx'
+import TimeFrame from './home-time-frame.jsx'
+import ShowIf from './show-if.jsx'
+import { SpaceShip, WhiteSpace } from './symbols.jsx'
+import { BiTrendingUp } from 'react-icons/bi/index.js'
 
 const DAY = 86400000
 
@@ -164,7 +164,7 @@ const Performance = ({ ...rest }) => {
       setError(undefined)
       setLoading(true)  
       try {
-        const data = await getShelf().stats.loadOrdersStats()
+        const data = await getSDK().stats.loadOrdersStats()
         // console.log('data ', data)
         setData(data)
       } catch (e) {

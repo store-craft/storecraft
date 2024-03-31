@@ -1,9 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
-import Gallery from './gallery'
-import GallerySelect from './gallery-select';
-import { o2q, q2o } from './utils';
-import { Title } from '../../comps/common-ui';
+import Gallery from './gallery.jsx'
+import GallerySelect from './gallery-select.jsx';
+import { o2q, q2o } from './utils.js';
+import { Title } from '@/admin/comps/common-ui.jsx';
 
 export default ({}) => {
   const { query_params } = useParams()

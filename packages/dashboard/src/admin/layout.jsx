@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { FaBloggerB, FaOpencart } from 'react-icons/fa'
-import { AiOutlineUser, AiFillTag } from 'react-icons/ai'
-import { TbDiscount2 } from 'react-icons/tb'
-import { BiImages, BiGame } from 'react-icons/bi'
+import { FaBloggerB, FaOpencart } from 'react-icons/fa/index.js'
+import { AiOutlineUser, AiFillTag } from 'react-icons/ai/index.js'
+import { TbDiscount2 } from 'react-icons/tb/index.js'
+import { BiImages, BiGame } from 'react-icons/bi/index.js'
 import { 
   MdPayment, MdOutlineCollectionsBookmark, 
   MdOutlineGamepad, MdOutlineLocalShipping, 
-  MdStorefront } from 'react-icons/md'
-import SideMenu from './comps/side-menu'
-import ActionBar from './comps/action-bar'
-import { Bling } from './comps/common-ui'
+  MdStorefront } from 'react-icons/md/index.js'
+import SideMenu from './comps/side-menu.jsx'
+import ActionBar from './comps/action-bar.jsx'
+import { Bling } from './comps/common-ui.jsx'
 import { Outlet } from 'react-router-dom'
-import useDarkMode from './hooks/useDarkMode'
+import useDarkMode from './hooks/useDarkMode.js'
 
 const menu = {
   info: {

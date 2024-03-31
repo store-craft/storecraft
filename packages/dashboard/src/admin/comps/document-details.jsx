@@ -1,9 +1,9 @@
-import { Span } from './common-fields'
-import ShowIf from './show-if'
+import { Span } from './common-fields.jsx'
+import ShowIf from './show-if.jsx'
 import { Link } from 'react-router-dom'
-import { RxCopy } from 'react-icons/rx'
+import { RxCopy } from 'react-icons/rx/index.js'
 import { useCallback } from 'react'
-import { write_clipboard } from '../utils'
+import { write_clipboard } from '../utils/index.js'
 import { useState } from 'react'
 
 /**

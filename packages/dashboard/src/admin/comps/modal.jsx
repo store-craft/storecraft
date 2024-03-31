@@ -1,11 +1,16 @@
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { Bling, Card } from './common-ui'
-import { Overlay } from './overlay'
-import { BlingButton } from './common-button'
+import { forwardRef, useCallback, 
+  useImperativeHandle, useRef, useState } from 'react'
+import { Bling, Card } from './common-ui.jsx'
+import { Overlay } from './overlay.jsx'
+import { BlingButton } from './common-button.jsx'
 
 const QP = {}
-const Modal = forwardRef(
-  ({ title=(<p children='NA' className='text-gray-500' />), onApprove, ...rest}, ref) => {
+const Modal = forwardRef((
+  { 
+    title=(<p children='NA' className='text-gray-500' />), 
+    onApprove, ...rest
+  }, ref
+) => {
   const [dm, setDM] = useState({ data: undefined, message: 'NA'})
   const ref_overlay = useRef()
   useImperativeHandle(

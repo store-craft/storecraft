@@ -1,6 +1,6 @@
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation.js'
 import { useEffect } from 'react'
-import { Bling } from '../src/admin/comps/common-ui'
+import { Bling } from '../src/admin/comps/common-ui.jsx'
 
 const Logo = () => {
   

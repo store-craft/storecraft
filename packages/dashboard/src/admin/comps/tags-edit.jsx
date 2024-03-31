@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from "react"
-import { BlingButton, Button } from "./common-button"
-import { BlingInput } from "./common-ui"
-import { SelectTags } from "./select-collection"
-import CapsulesView from "./capsules-view"
-import { HR } from "./common-ui"
-import { FieldContextData, FieldData } from "./fields-view"
-import useNavigateWithState from "../hooks/useNavigateWithState"
+import { BlingButton, Button } from "./common-button.jsx"
+import { BlingInput } from "./common-ui.jsx"
+import { SelectTags } from "./select-collection.jsx"
+import CapsulesView from "./capsules-view.jsx"
+import { HR } from "./common-ui.jsx"
+import { FieldContextData, FieldData } from "./fields-view.jsx"
+import useNavigateWithState from "@/admin/hooks/useNavigateWithState.js"
 
 const text2tokens = (text) => {
   return text?.match(/\S+/g)

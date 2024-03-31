@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
-import { getShelf } from '../../admin-sdk'
+import { getSDK } from '@/admin-sdk/index.js'
 
 const Img = forwardRef(
   ({ src, ...rest }, ref) => {
@@ -9,7 +9,7 @@ const Img = forwardRef(
     useEffect(
       () => {
         async function getSource() {
-          const s = await getShelf().storage.getSource(src)
+          const s = await getSDK().storage.getSource(src)
           // console.log('s', s)
           srcRef.current = s
           setSource(s)

@@ -1,33 +1,34 @@
-import { getShelf } from '../../admin-sdk'
-import { useRef, useEffect, useCallback, useState, useMemo } from 'react'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import FieldsView from '../comps/fields-view'
-import { useCommonApiDocument } from '../../shelf-cms-react-hooks'
-import { CreateDate, HR, withBling } from '../comps/common-ui'
+import { getSDK } from '@/admin-sdk/index.js'
+import { useRef, useEffect, useCallback, 
+  useState, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import FieldsView from '@/admin/comps/fields-view.jsx'
+import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
+import { CreateDate, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import { Div, MInput, withCard, 
          create_select_view,
          Switch,
          Handle} 
-         from '../comps/common-fields'
-         import ShowIf from '../comps/show-if'
+         from '@/admin/comps/common-fields.jsx'
+         import ShowIf from '@/admin/comps/show-if.jsx'
 import DiscountFilters, { discount_filters_validator } 
-       from '../comps/discount-filters'
+       from '@/admin/comps/discount-filters.jsx'
 import DiscountDetails, { discount_details_validator } 
-       from '../comps/discount-details'
-import DocumentTitle from '../comps/document-title'
-import EditMessage from '../comps/edit-message'
-import Media from '../comps/media'
-import { PromisableLoadingBlingButton } from '../comps/common-button'
-import { BiAddToQueue } from 'react-icons/bi'
-import DocumentDetails from '../comps/document-details'
-import TagsEdit from '../comps/tags-edit'
-import { RegularDocumentActions } from '../comps/document-actions'
-import { DiscountApplicationEnum, DiscountData } from '../../admin-sdk/js-docs-types'
-import Attributes from '../comps/attributes'
-import { JsonViewCard } from '../comps/json'
-import MDEditor from '../comps/md-editor'
-import { decode, encode } from '../utils'
-import useNavigateWithState from '../hooks/useNavigateWithState'
+       from '@/admin/comps/discount-details.jsx'
+import DocumentTitle from '@/admin/comps/document-title.jsx'
+import EditMessage from '@/admin/comps/edit-message.jsx'
+import Media from '@/admin/comps/media.jsx'
+import { PromisableLoadingBlingButton } from '@/admin/comps/common-button.jsx'
+import { BiAddToQueue } from 'react-icons/bi/index.js'
+import DocumentDetails from '@/admin/comps/document-details.jsx'
+import TagsEdit from '@/admin/comps/tags-edit.jsx'
+import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
+// import { DiscountApplicationEnum, DiscountData } from '@/admin-sdk/js-docs-types'
+import Attributes from '@/admin/comps/attributes.jsx'
+import { JsonViewCard } from '@/admin/comps/json.jsx'
+import MDEditor from '@/admin/comps/md-editor.jsx'
+import { decode, encode } from '@/admin/utils/index.js'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 const validator_code = v => {
   if(v===undefined)
@@ -305,7 +306,7 @@ export default ({ collectionId,
       // console.log('dd', dd);
       setExternalErrors(undefined)
       try {
-        await getShelf().discounts.publish(data, 400, pako.gzip)
+        await getSDK().discounts.publish(data, 400, pako.gzip)
         await reload()
       } catch (e) {
         console.log('e', e);

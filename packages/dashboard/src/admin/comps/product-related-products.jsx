@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BrowseProducts } from './browse-collection'
-import { Overlay } from './overlay'
+import { BrowseProducts } from './browse-collection.jsx'
+import { Overlay } from './overlay.jsx'
 import { Link } from 'react-router-dom'
-import { IoCloseSharp } from 'react-icons/io5'
-import { ProductData } from '../../admin-sdk/js-docs-types'
-import { BlingButton } from './common-button'
-import { HR, Label } from './common-ui'
-import { FieldContextData, FieldData } from './fields-view'
-import useNavigateWithState from '../hooks/useNavigateWithState'
+import { IoCloseSharp } from 'react-icons/io5/index.js'
+// import { ProductData } from '@/admin-sdk/js-docs-types'
+import { BlingButton } from './common-button.jsx'
+import { HR, Label } from './common-ui.jsx'
+import { FieldContextData, FieldData } from './fields-view.jsx'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 
 /**

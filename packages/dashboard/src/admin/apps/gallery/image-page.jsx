@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AiOutlineDelete, AiOutlineLink, AiOutlineTags, AiOutlineWarning } from 'react-icons/ai'
-import { SlActionRedo } from 'react-icons/sl'
+import { AiOutlineDelete, AiOutlineLink, 
+  AiOutlineTags, AiOutlineWarning } from 'react-icons/ai/index.js'
+import { SlActionRedo } from 'react-icons/sl/index.js'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useCommonApiDocument } from '../../../shelf-cms-react-hooks'
-import { Bling, Card } from '../../comps/common-ui'
-import DocumentTitle from '../../comps/document-title'
-import ShowIf from '../../comps/show-if'
-import Header from './image-header'
-import Img from '../../comps/Img'
-import Modal from '../../comps/modal'
-import { LoadingButton } from '../../comps/common-button'
+import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
+import { Bling, Card } from '@/admin/comps/common-ui.jsx'
+import DocumentTitle from '@/admin/comps/document-title.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
+import Header from './image-header.jsx'
+import Img from '@/admin/comps/Img.jsx'
+import Modal from '@/admin/comps/modal.jsx'
+import { LoadingButton } from '@/admin/comps/common-button.jsx'
 
 const LabelCapsule = ({ value, className='', label=value,
                                bgColor='bg-pink-500', ...rest }) => {

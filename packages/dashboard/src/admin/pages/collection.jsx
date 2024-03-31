@@ -1,27 +1,28 @@
 import { useRef, useEffect, useCallback, useState, useMemo } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import FieldsView from '../comps/fields-view'
-import { PromisableLoadingBlingButton } from '../comps/common-button'
-import ShowIf from '../comps/show-if'
-import MDEditor from '../comps/md-editor'
-import Media from '../comps/media'
-import { MInput, Div, withCard, Handle, Switch } from '../comps/common-fields'
-import { useCommonApiDocument } from '../../shelf-cms-react-hooks'
-import { getShelf } from '../../admin-sdk'
-import { MdPublish } from 'react-icons/md'
-import DocumentTitle from '../comps/document-title'
-import ProductsInCollection from '../comps/products-in-collection'
-import EditMessage from '../comps/edit-message'
-import TagsEdit from '../comps/tags-edit'
-import DocumentDetails from '../comps/document-details'
-import { RegularDocumentActions } from '../comps/document-actions'
-import Attributes from '../comps/attributes'
-import BulkTagProductsInCollection from '../comps/bulk-tag-products-in-collection'
-import { JsonViewCard } from '../comps/json'
-import { CreateDate, withBling } from '../comps/common-ui'
-import { CollectionData } from '../../admin-sdk/js-docs-types'
-import { decode, encode } from '../utils'
-import useNavigateWithState from '../hooks/useNavigateWithState'
+import FieldsView from '@/admin/comps/fields-view.jsx'
+import { PromisableLoadingBlingButton } from '@/admin/comps/common-button.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
+import MDEditor from '@/admin/comps/md-editor.jsx'
+import Media from '@/admin/comps/media.jsx'
+import { MInput, Div, withCard, 
+  Handle, Switch } from '@/admin/comps/common-fields.jsx'
+import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
+import { getSDK } from '@/admin-sdk/index.js'
+import { MdPublish } from 'react-icons/md/index.js'
+import DocumentTitle from '@/admin/comps/document-title.jsx'
+import ProductsInCollection from '@/admin/comps/products-in-collection.jsx'
+import EditMessage from '@/admin/comps/edit-message.jsx'
+import TagsEdit from '@/admin/comps/tags-edit.jsx'
+import DocumentDetails from '@/admin/comps/document-details.jsx'
+import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
+import Attributes from '@/admin/comps/attributes.jsx'
+import BulkTagProductsInCollection from '@/admin/comps/bulk-tag-products-in-collection.jsx'
+import { JsonViewCard } from '@/admin/comps/json.jsx'
+import { CreateDate, withBling } from '@/admin/comps/common-ui.jsx'
+// import { CollectionData } from '@/admin-sdk/js-docs-types'
+import { decode, encode } from '@/admin/utils/index.js'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 const left = {
   name:'Root', comp: Div, 
@@ -267,12 +268,12 @@ export default ({ collectionId,
               time={doc?.createdAt} className='mt-8' />            
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >      
     <div className='w-full max-w-[40rem] lg:w-fit lg:max-w-none mx-auto'>
-        <EditMessage messages={error} classname='w-full' />
-        <FieldsView key={key} ref={ref_root} 
-                    field={root_schema} 
-                    context={context}
-                    value={ doc ?? {} } 
-                    isViewMode={isViewMode} className='mt-8' />      
+      <EditMessage messages={error} classname='w-full' />
+      <FieldsView key={key} ref={ref_root} 
+                  field={root_schema} 
+                  context={context}
+                  value={ doc ?? {} } 
+                  isViewMode={isViewMode} className='mt-8' />      
       </div>                
 
   </ShowIf>   

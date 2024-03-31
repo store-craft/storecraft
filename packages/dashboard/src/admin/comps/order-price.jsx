@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
-import { Bling, BlingInput, HR } from './common-ui'
-import { DiscountData, LineItem, PricingData, ShippingData } from '../../admin-sdk/js-docs-types'
-import { getShelf } from '../../admin-sdk'
+import { Bling, BlingInput, HR } from './common-ui.jsx'
+// import { DiscountData, LineItem, 
+//   PricingData, ShippingData } from '@/admin-sdk/js-docs-types'
+import { getSDK } from '@/admin-sdk/index.js'
 
 const Entry = ({title, value}) => {
   return (
@@ -57,7 +58,7 @@ const OrderPrice =
       console.log('uid ', uid)
       try {
         setError(undefined)
-        const pricing_new = await getShelf().orders.calculatePricing(
+        const pricing_new = await getSDK().orders.calculatePricing(
           line_items, coupons, delivery, uid
         )
         setPricing(pricing_new)

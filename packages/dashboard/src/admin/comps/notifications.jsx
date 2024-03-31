@@ -1,16 +1,17 @@
 import React, { 
-  useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { AiFillNotification } from 'react-icons/ai'
-import { NotificationData } from '../../admin-sdk/js-docs-types'
-import MDView from './md-view'
-import { MINUTE, timeSince } from '../utils/time'
-import { getShelf } from '../../admin-sdk'
-import { useCommonCollection } from '../../shelf-cms-react-hooks'
-import { PromisableLoadingButton } from './common-button'
-import useInterval from '../hooks/useInterval'
+  useCallback, useEffect, useMemo, 
+  useRef, useState } from 'react'
+import { AiFillNotification } from 'react-icons/ai/index.js'
+// import { NotificationData } from '@/admin-sdk/js-docs-types'
+import MDView from './md-view.jsx'
+import { MINUTE, timeSince } from '../utils/time.js'
+import { getSDK } from '@/admin-sdk/index.js'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import { PromisableLoadingButton } from './common-button.jsx'
+import useInterval from '@/admin/hooks/useInterval.js'
 import { Link, useNavigate } from 'react-router-dom'
 
-/**@type {NotificationData} */
+/**@type {Notification} */
 const tn = {
   message: 'New `order` *was* **created** New order was created New order was created',
   updatedAt: Date.now(),
@@ -228,7 +229,7 @@ const Notifications =
   ref_query.current = query
   const onInterval = useCallback(
     async () => {
-      const hasChanged = await getShelf().notifications.hasChanged()
+      const hasChanged = await getSDK().notifications.hasChanged()
       if(hasChanged) {
         ref_query.current({
           limit: 5,

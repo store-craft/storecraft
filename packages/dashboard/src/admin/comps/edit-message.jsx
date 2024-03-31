@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
-import { AiOutlineClose } from "react-icons/ai"
-import { Bling } from "./common-ui"
+import { AiOutlineClose } from "react-icons/ai/index.js"
+import { Bling } from "./common-ui.jsx"
 
 const isEmpty = arr => Boolean(arr?.length) && Boolean(arr.filter(it => it!==undefined).length==0)
 

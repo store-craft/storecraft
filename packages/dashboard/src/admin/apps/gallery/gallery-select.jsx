@@ -1,6 +1,6 @@
 import { forwardRef, useCallback } from 'react'
-import { Overlay } from '../../comps/overlay';
-import Gallery from './gallery'
+import { Overlay } from '@/admin/comps/overlay.jsx';
+import Gallery from './gallery.jsx'
 
 const QP = {}
 const GallerySelect = forwardRef(

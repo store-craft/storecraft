@@ -1,8 +1,9 @@
-import { useCommonCollection } from '../../shelf-cms-react-hooks'
-import { IoReloadCircle } from 'react-icons/io5'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import ShowIf from './show-if'
-import { Bling } from './common-ui'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import { IoReloadCircle } from 'react-icons/io5/index.js'
+import { useCallback, useEffect, 
+  useMemo, useState } from 'react'
+import ShowIf from './show-if.jsx'
+import { Bling } from './common-ui.jsx'
 
 // picks the name from every item
 export const default_name_fn = it => it[0]

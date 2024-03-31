@@ -1,11 +1,11 @@
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation.js'
 import { useEffect } from 'react'
 
 export default () => {
   const router = useRouter()
   useEffect(
     () => {
-      router.replace('admin');
+      router.replace('dashboard');
     }, [router]
   );
   return null;

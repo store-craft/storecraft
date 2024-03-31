@@ -1,12 +1,12 @@
-import CollectionView from '../comps/collection-view'
-import ShowIf from '../comps/show-if'
+import CollectionView from '@/admin/comps/collection-view.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BottomActions, TopActions } from '../comps/collection-actions'
-import { RecordActions, Span, TimeStampView } from '../comps/common-fields'
-import { useCommonCollection } from '../../shelf-cms-react-hooks'
+import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
+import { RecordActions, Span, TimeStampView } from '@/admin/comps/common-fields.jsx'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
 import { useNavigate, useParams } from 'react-router-dom'
-import { o2q, q2o } from '../apps/gallery/utils'
-import { Title } from '../comps/common-ui'
+import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
+import { Title } from '@/admin/comps/common-ui.jsx'
 
 const schema_fields = [
   { 

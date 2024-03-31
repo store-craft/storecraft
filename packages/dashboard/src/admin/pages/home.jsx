@@ -1,18 +1,18 @@
-import { withClient } from '../comps/client-only'
-import { FaBlogger, FaOpencart } from 'react-icons/fa'
-import { AiOutlineUser, AiFillTag } from 'react-icons/ai'
-import { TbDiscount2 } from 'react-icons/tb'
+import { withClient } from '@/admin/comps/client-only.jsx'
+import { FaBlogger, FaOpencart } from 'react-icons/fa/index.js'
+import { AiOutlineUser, AiFillTag } from 'react-icons/ai/index.js'
+import { TbDiscount2 } from 'react-icons/tb/index.js'
 import { MdOutlineGamepad, 
          MdOutlineCollectionsBookmark, 
          MdOutlineLocalShipping, 
-         MdStorefront } from 'react-icons/md'
-import { IoStatsChart } from 'react-icons/io5'
-import { IoMdCreate } from 'react-icons/io'
-import { AiFillPieChart } from 'react-icons/ai'
-import Header from '../comps/home-header'
-import Performance from '../comps/home-performace'
-import InviteActionCard from '../comps/home-invite-action-card'
-import StatCard from '../comps/home-stat-card'
+         MdStorefront } from 'react-icons/md/index.js'
+import { IoStatsChart } from 'react-icons/io5/index.js'
+import { IoMdCreate } from 'react-icons/io/index.js'
+import { AiFillPieChart } from 'react-icons/ai/index.js'
+import Header from '@/admin/comps/home-header.jsx'
+import Performance from '@/admin/comps/home-performace.jsx'
+import InviteActionCard from '@/admin/comps/home-invite-action-card.jsx'
+import StatCard from '@/admin/comps/home-stat-card.jsx'
 
 const quick_invite_action_data = [
   { 

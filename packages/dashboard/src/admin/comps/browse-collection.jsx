@@ -1,10 +1,10 @@
-import { Bling } from './common-ui'
-import { useCommonCollection } from '../../shelf-cms-react-hooks'
-import ShowIf from '../comps/show-if'
+import { Bling } from './common-ui.jsx'
+import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { IoCloseSharp } from "react-icons/io5"
-import { BlingButton, PromisableLoadingButton } from "./common-button"
-import { BiSearchAlt } from "react-icons/bi"
+import { IoCloseSharp } from "react-icons/io5/index.js"
+import { BlingButton, PromisableLoadingButton } from "./common-button.jsx"
+import { BiSearchAlt } from "react-icons/bi/index.js"
 
 const BrowseCollection = 
   ({ collectionId, schema, title='Browse products', Comp, onSave, onCancel }) => {

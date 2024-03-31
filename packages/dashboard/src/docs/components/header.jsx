@@ -1,9 +1,10 @@
 import { AiFillGithub, 
-  AiOutlineMenu } from 'react-icons/ai'
-import { HiOutlineLightBulb } from 'react-icons/hi'
-import useDarkMode from '../hooks/useDarkMode'
+  AiOutlineMenu } from 'react-icons/ai/index.js'
+import { HiOutlineLightBulb } from 'react-icons/hi/index.js'
+import useDarkMode from '../hooks/useDarkMode.js'
+import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs/index.js'
 
-import Link from 'next/link'
+import Link from 'next/link.js'
 import pkg from '../../../package.json'
 
 export const Logo = ({ ...rest }) => {
@@ -35,7 +36,6 @@ export const Logo = ({ ...rest }) => {
   )
 }
 
-import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs'
 
 const Header = 
   ({ className, slug, prefix, github_link, onMenuClick, ...rest}) => {

@@ -2,9 +2,12 @@ import { useCallback, useState,
          useImperativeHandle, 
          forwardRef, useEffect } from 'react'
 
-export const Input = forwardRef(
-    ({ className, title='', text='', warning=undefined, onUpdate=undefined, 
-       inputClassName='', type='text', ...rest}, ref) => {
+export const Input = forwardRef((
+  { 
+    className, title='', text='', warning=undefined, 
+    onUpdate=undefined, inputClassName='', type='text', ...rest
+  }, ref
+) => {
 
   const [inner_text, setText] = useState(text)
   const [isFocused, setFocused] = useState(false)

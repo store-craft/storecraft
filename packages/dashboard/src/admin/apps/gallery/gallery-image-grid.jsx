@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Img from '../../comps/Img'
+import Img from '@/admin/comps/Img.jsx'
 
 export const Image = 
   ({ data, onClickImage=()=>{}, className, ...rest }) => {

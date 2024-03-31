@@ -1,18 +1,14 @@
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-} from 'react-image-crop'
+import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
-import { BiRotateRight, BiMove, BiCrop } from 'react-icons/bi'
-import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai'
-import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi'
-import { RxTransparencyGrid } from 'react-icons/rx'
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { CgOptions } from 'react-icons/cg'
-import ShowIf from './show-if'
-import useToggle from '../hooks/useToggle'
+import { BiRotateRight, BiMove, BiCrop } from 'react-icons/bi/index.js'
+import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai/index.js'
+import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi/index.js'
+import { RxTransparencyGrid } from 'react-icons/rx/index.js'
+import { forwardRef, useCallback, 
+  useImperativeHandle, useRef, useState } from 'react'
+import { CgOptions } from 'react-icons/cg/index.js'
+import ShowIf from './show-if.jsx'
+import useToggle from '@/admin/hooks/useToggle.js'
 
 export const Switch = 
   ({ left: $left = true, onSwitch, children, className, ...rest }) => {

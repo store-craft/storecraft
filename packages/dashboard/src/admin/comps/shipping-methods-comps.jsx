@@ -1,10 +1,10 @@
 import { useCallback, useEffect, 
          useState } from 'react'
-import { Bling } from './common-ui'
-import { MdOutlineLocalShipping } from 'react-icons/md'
-import { useCommonApiDocument } from '../../shelf-cms-react-hooks'
+import { Bling } from './common-ui.jsx'
+import { MdOutlineLocalShipping } from 'react-icons/md/index.js'
+import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
 import { v4 as uuidv4 } from 'uuid'
-import ShowIf from './show-if'
+import ShowIf from './show-if.jsx'
 
 export const AddShippingMethod = 
   ({ ...rest }) => {

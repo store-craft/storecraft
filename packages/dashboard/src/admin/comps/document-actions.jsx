@@ -1,14 +1,15 @@
 import { useCallback, useRef, useState } from 'react'
 import { AiOutlineDelete, 
-         AiOutlineWarning } from 'react-icons/ai'
-import { BiAddToQueue } from 'react-icons/bi'
-import { HiOutlineDocumentDuplicate } from 'react-icons/hi'
-import { TbReload } from 'react-icons/tb'
-import { FiSave } from 'react-icons/fi'
-import { LoadingButton, PromisableLoadingBlingButton } from './common-button'
-import { Bling } from './common-ui'
-import Modal from './modal'
-import ShowIf from './show-if'
+         AiOutlineWarning } from 'react-icons/ai/index.js'
+import { BiAddToQueue } from 'react-icons/bi/index.js'
+import { HiOutlineDocumentDuplicate } from 'react-icons/hi/index.js'
+import { TbReload } from 'react-icons/tb/index.js'
+import { FiSave } from 'react-icons/fi/index.js'
+import { LoadingButton, 
+  PromisableLoadingBlingButton } from './common-button.jsx'
+import { Bling } from './common-ui.jsx'
+import Modal from './modal.jsx'
+import ShowIf from './show-if.jsx'
 
 const data = [
   { icon: null, text: '', promise: undefined }

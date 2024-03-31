@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { MdNavigateNext } from 'react-icons/md'
+import { MdNavigateNext } from 'react-icons/md/index.js'
 import { Link } from 'react-router-dom'
-import { getShelf } from '../../admin-sdk'
-import { Bling } from './common-ui'
+import { getSDK } from '@/admin-sdk/index.js'
+import { Bling } from './common-ui.jsx'
 
 const StatCard = ({ colId, msg, link, search=[], Icon }) => {
   const [v, setV] = useState(undefined)
   useEffect(
     () => {
       async function a() {
-        const count = await getShelf().stats.countOf(colId, search)
+        const count = await getSDK().stats.countOf(colId, search)
         setV(count)
       }
       a()

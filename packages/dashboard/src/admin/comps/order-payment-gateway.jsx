@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { OrderData, OrderPaymentGatewayData } from '../../admin-sdk/js-docs-types'
-import { getShelf } from '../../admin-sdk'
-import { PromisableLoadingButton } from './common-button'
-import MDView from './md-view'
-import { HR } from './common-ui'
-import { FieldContextData, FieldData } from './fields-view'
+import { useCallback, useEffect, 
+  useRef, useState } from 'react'
+// import { OrderData, 
+//   OrderPaymentGatewayData } from '@/admin-sdk/js-docs-types'
+import { getSDK } from '@/admin-sdk/index.js'
+import { PromisableLoadingButton } from './common-button.jsx'
+import MDView from './md-view.jsx'
+import { HR } from './common-ui.jsx'
+import { FieldContextData, FieldData } from './fields-view.jsx'
 
 
 /**
@@ -59,7 +61,7 @@ const OrderPaymentGateway = ({field, value, onChange, setError, context, ...rest
   const capture = useCallback(
     async () => {
       try {
-        const stat = await getShelf().payment_gateways.capture(
+        const stat = await getSDK().payment_gateways.capture(
           value.gateway_id, order.id
         )
         onChange({
@@ -79,7 +81,7 @@ const OrderPaymentGateway = ({field, value, onChange, setError, context, ...rest
   const void_authorized = useCallback(
     async () => {
       try {
-        const stat = await getShelf().payment_gateways.void(
+        const stat = await getSDK().payment_gateways.void(
           value.gateway_id, order.id
         )
         onChange({
@@ -99,7 +101,7 @@ const OrderPaymentGateway = ({field, value, onChange, setError, context, ...rest
   const refund = useCallback(
     async () => {
       try {
-        const stat = await getShelf().payment_gateways.refund(
+        const stat = await getSDK().payment_gateways.refund(
           value.gateway_id, order.id
         )
         onChange({

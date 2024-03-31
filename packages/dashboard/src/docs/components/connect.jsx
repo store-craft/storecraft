@@ -1,4 +1,4 @@
-import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs'
+import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs/index.js'
 
 const Connect = ({...rest}) => {
 

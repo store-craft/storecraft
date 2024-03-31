@@ -1,13 +1,13 @@
-import dynamic from 'next/dynamic'
-import Head from 'next/head'
-import CustomLink from './md-href'
-import CodeBlock from './code-block'
-import BlockQuote from './block-quote'
-import Table from './table'
-import Drawer from './drawer'
-import { JsDocTables } from './js-doc-table'
-import { Image } from './image'
-import { Pink, Lime, Purple } from './labels'
+import dynamic from 'next/dynamic.js'
+import Head from 'next/head.js'
+import CustomLink from './md-href.jsx'
+import CodeBlock from './code-block.jsx'
+import BlockQuote from './block-quote.jsx'
+import Table from './table.jsx'
+import Drawer from './drawer.jsx'
+import { JsDocTables } from './js-doc-table.jsx'
+import { Image } from './image.jsx'
+import { Pink, Lime, Purple } from './labels.jsx'
 
 const components = {
   h1: (props) => <h1 {...props} />,

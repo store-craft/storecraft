@@ -1,7 +1,5 @@
 import Auth from './auth.js'
-// import Storage from './storage'
-// import FirebaseDB from './db_driver'
-import Customers from './users.js'
+import Customers from './customers.js'
 import Tags from './tags.js'
 import Products from './products.js'
 import Orders from './orders.js'
@@ -17,9 +15,7 @@ import Settings from './settings.js'
 import Notifications from './notifications.js'
 import Bots from './bots.js'
 import Perfs from './perfs.js'
-// import { materializeConfig } from './firebase'
-import { LS } from './common/utils/browser.js'
-// import './js-docs-types'
+import { LS } from './utils.browser.js'
 
 /**
  * @typedef {object} StorecraftConfig
@@ -88,7 +84,7 @@ export class StorecraftAdminSDK {
   }
 }
 
-export const shelf = new StorecraftAdminSDK()
+export const sdk = new StorecraftAdminSDK()
 
 const CONFIG_KEY = `storecraft_latest_config`
 
@@ -97,7 +93,7 @@ const CONFIG_KEY = `storecraft_latest_config`
  * @returns {boolean}
  */
 export const hasSDKInit = () => { 
-  return shelf.hasInited
+  return sdk.hasInited
 }
 
 /**
@@ -106,7 +102,7 @@ export const hasSDKInit = () => {
 export const initSDK = (config) => {
   console.log('Storecraft:: trying to init with config', config)
   try {
-    shelf.init(config);
+    sdk.init(config);
     LS.set(CONFIG_KEY, config);
     console.log('Storecraft:: inited')
   } catch (err) {
@@ -114,7 +110,7 @@ export const initSDK = (config) => {
     throw err
   }
   // save config
-  return shelf
+  return sdk
 }
 
 /**
@@ -126,14 +122,14 @@ export const getLatestConfig = () => {
 }
 
 export const getSDK = () => { 
-  if(!shelf.hasInited) {
+  if(!sdk.hasInited) {
     // test if we have a config stored
     const config = getLatestConfig()
     if(!config)
       throw('Storecraft SDK has not inited and does not have a stored config')
     return initSDK(config)
   }
-  return shelf
+  return sdk
 }
 
 

@@ -1,3 +1,6 @@
+/**
+ * @param {number} utcMillis 
+ */
 export const toUTCDateString = (utcMillis) => {
     const date = new Date(utcMillis);
     const d = date.getUTCDate();

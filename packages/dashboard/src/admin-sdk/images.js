@@ -1,5 +1,5 @@
 import { StorecraftAdminSDK } from './index.js'
-import { collection_base } from './api.fetch.js';
+import { collection_base } from './utils.api.fetch.js';
 
 /**
  * Base `images` **CRUD**

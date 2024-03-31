@@ -1,7 +1,7 @@
 import { StorecraftAdminSDK } from './index.js';
-import { LS } from './common/utils/browser.js'
-import { url } from './utils.js';
-import { assert } from './common/utils/functional.js';
+import { LS } from './utils.browser.js'
+import { url } from './utils.api.fetch.js';
+import { assert } from './utils.functional.js';
 
 /**
  @typedef {import('@storecraft/core/v-api').ApiAuthResult} ApiAuthResult

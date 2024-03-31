@@ -1,6 +1,6 @@
-import { StorecraftAdminSDK } from '.'
-import { MovingStatsInfo, MovingStatsProduct, 
-         MovingStatsData, MovingStatsDay, LineItem} from './js-docs-types'
+import { StorecraftAdminSDK } from './index.js'
+// import { MovingStatsInfo, MovingStatsProduct, 
+//          MovingStatsData, MovingStatsDay, LineItem} from './js-docs-types'
 
 const NAME = 'stats'
 

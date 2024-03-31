@@ -1,8 +1,16 @@
 
 
 export const hasWindow = () => typeof window !== "undefined"
+
+/**
+ * Use a `LocalStorage` or `SessionStorage`
+ * @param {Storage} driver 
+ */
 const storage = (driver) => {
   return {
+    /**
+     * @param {string} key 
+     */
     get: (key) => {
       if (typeof window === "undefined")
         return null
@@ -12,6 +20,11 @@ const storage = (driver) => {
       if(!item) return null
       return JSON.parse(item)
     },
+
+    /**
+     * @param {string} key 
+     * @param {any} value 
+     */
     set: (key, value) => {
       if (typeof window === "undefined")
         return 
@@ -25,6 +38,10 @@ const storage = (driver) => {
         console.error(`local_storage_adapter ${key} `, error);
       }
     },
+
+    /**
+     * @param {string} key 
+     */
     remove: (key) => {
       if (typeof window !== "undefined")
         driver.removeItem(key)

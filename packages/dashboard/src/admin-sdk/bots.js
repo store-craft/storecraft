@@ -1,5 +1,7 @@
 import { StorecraftAdminSDK } from './index.js'
-import { MINUTE } from '../admin/utils/time.js'
+
+export const SECOND = 1000
+export const MINUTE = SECOND*60
 
 
 /**

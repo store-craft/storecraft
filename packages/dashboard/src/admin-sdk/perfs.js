@@ -1,5 +1,5 @@
 import { StorecraftAdminSDK } from './index.js';
-import { LS } from './common/utils/browser.js'
+import { LS } from './utils.browser.js'
 
 export default class Perfs {
 

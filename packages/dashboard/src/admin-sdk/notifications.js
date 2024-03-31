@@ -1,5 +1,5 @@
 import { StorecraftAdminSDK } from './index.js'
-import { collection_base, fetchApiWithAuth } from './api.fetch.js';
+import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 
 /**
  * Base `notifications` **CRUD**

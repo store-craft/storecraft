@@ -1,6 +1,6 @@
 import { StorecraftAdminSDK } from './index.js'
-import { collection_base } from './api.fetch.js';
-import { filter_fields, filter_unused } from './common/utils/functional.js';
+import { collection_base } from './utils.api.fetch.js';
+import { filter_fields, filter_unused } from './utils.functional.js';
 
 /**
  * Base `collections` **CRUD**

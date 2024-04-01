@@ -1,7 +1,7 @@
-import { StorecraftAdminSDK } from '.'
+import { StorecraftAdminSDK } from './index.js'
 import { assert, text2tokens, 
-         to_handle } from './common/utils/functional'
-import { OrderData, PaymentGatewayData } from './js-docs-types'
+         to_handle } from './utils.functional.js'
+// import { OrderData, PaymentGatewayData } from './js-docs-types'
     
 /**
  * 

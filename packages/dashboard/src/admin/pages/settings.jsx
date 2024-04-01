@@ -15,7 +15,7 @@ import Attributes from '@/admin/comps/attributes.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import SecretView from '@/admin/comps/secret-view.jsx'
 import { CreateDate, withBling } from '@/admin/comps/common-ui.jsx'
-import StorageSettings from '@/admin/comps/settings-storage.jsx'
+// import StorageSettings from '@/admin/comps/settings-storage.jsx'
 
 const Backend = () => {
   
@@ -65,12 +65,12 @@ const storage_schema = {
       comp: ()=>(<div children='Storage' className='text-2xl'/>),  
       comp_params: {className: 'w-full h-fit'} 
     },
-    { 
-      key: 'storage', name: 'Storage',
-      desc: 'Configure your assets storage provider',
-      comp: withCard(StorageSettings, { className:'h-10' }, true, false),  
-      comp_params: {className: 'w-full h-fit'} 
-    },
+    // { 
+    //   key: 'storage', name: 'Storage',
+    //   desc: 'Configure your assets storage provider',
+    //   comp: withCard(StorageSettings, { className:'h-10' }, true, false),  
+    //   comp_params: {className: 'w-full h-fit'} 
+    // },
   ]
 }
 

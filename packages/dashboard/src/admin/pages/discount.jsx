@@ -29,6 +29,7 @@ import { JsonViewCard } from '@/admin/comps/json.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import { decode, encode } from '@/admin/utils/index.js'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
+import { DiscountApplicationEnum } from '@storecraft/core/v-api/types.api.enums.js'
 
 const validator_code = v => {
   if(v===undefined)

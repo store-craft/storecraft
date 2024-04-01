@@ -26,6 +26,8 @@ import MDEditor from '@/admin/comps/md-editor.jsx'
 import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import { decode, encode } from '@/admin/utils/index.js'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
+import { PaymentOptionsEnum, FulfillOptionsEnum, 
+  CheckoutStatusEnum } from '@storecraft/core/v-api/types.api.enums.js'
 
 const contact_schema = {
   name:'Contact Info', key: 'contact', 

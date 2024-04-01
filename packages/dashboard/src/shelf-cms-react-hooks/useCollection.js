@@ -2,6 +2,7 @@ import { useCallback, useEffect,
          useRef, useState } from 'react'
 import useTrigger from './common/useTrigger.js'
 import { getSDK } from '@/admin-sdk/index.js'
+import { list } from '@/admin-sdk/utils.api.fetch.js'
 
 const q = {
   orderBy: [['firstname', 'asc']],
@@ -48,30 +49,73 @@ const delete_from_collection = what => {
 
 
 /**
- * @template T
- * @param {string} colId 
- * @param {object} q query
+ * Next Pagination experiment. `Next` is more important the `previous`,
+ * because `previous` can be cached and we go through it as we do `next`.
+ * @template {any} G
+ * @param {import('@storecraft/core/v-api').ApiQuery} query 
+ * @param {string} resource
+ */
+const paginate_helper = (query, resource) => {
+
+  query.sortBy = query.sortBy ?? ['updated_at', 'id'];
+
+  /** @type {import('@storecraft/core/v-api').Cursor} */
+  let startAfter = undefined
+
+  const next = async () => {
+    console.log('paginate_helper::next')
+    /** @type {typeof query} */
+    const current = { 
+      ...query,
+      startAfter
+    }
+
+    /** @type{G[]} */
+    const l = await list(
+      resource,
+      query
+    );
+
+    // update next cursor
+    if(l?.length) {
+      startAfter = query.sortBy.map(
+        (key) => [key, l.at(-1)?.[key]]
+      );
+    }
+
+    return l;
+  }
+
+  return next;
+}
+
+/**
+ * @template {import('@storecraft/core/v-api').BaseType} T
+ * @param {string} resource the base path of the resource 
+ * @param {import('@storecraft/core/v-api').ApiQuery} q query
  * @param {boolean} autoLoad 
  * @param {T} dummy_type 
  * @returns
  */
 export const useCollection = 
-  (colId, q=undefined, autoLoad=true, dummy_type) => {
+  (resource, q=undefined, autoLoad=true, dummy_type) => {
 
   const _q = useRef(q)
   const _hasEffectRan = useRef(false)
   // const _next = useRef(getShelf().db.col(colId).paginate2(q))
+
+  /** @type {import('react').MutableRefObject<() => Promise<T[]>>} */
   const _next = useRef()
   const [error, setError] = useState(undefined)
-  // /**@type {[[string, T][][], ]} */
-  /**@type {[[string, T][][], import('react').Dispatch<import('react').SetStateAction<[string, T][][]>>]} */
+  /**@type {[T[][], import('react').Dispatch<import('react').SetStateAction<T[][]>>]} */
   const [pages, setPages] = useState([])
   const [index, setIndex] = useState(-1)
   const [loading, setIsLoading] = useState(autoLoad)
   const [queryCount, setQueryCount] = useState(-1)
   const trigger = useTrigger()
   
-  // console.log('windows ',  windows);
+  console.log('resource ',  resource);
+  console.log('pages ',  pages);
 
   useEffect(
     () => getSDK().auth.add_sub(trigger)
@@ -136,7 +180,7 @@ export const useCollection =
     /**@param {string} docId */
     async (docId) => {
       try {
-        await getSDK()[colId].delete(docId)
+        await getSDK()[resource].delete(docId)
         setPages(delete_from_collection(docId))
         return docId
       } catch (err) {
@@ -144,7 +188,7 @@ export const useCollection =
         setIsLoading(false)
         throw err
       }
-    }, [colId]
+    }, [resource]
   )
 
   const query = useCallback(
@@ -155,21 +199,24 @@ export const useCollection =
     async (q={}, from_cache=false) => {
       let result = undefined
       _q.current = q
-      _next.current = await getSDK().db.col(colId).paginate2(
-        q, from_cache
-        ) 
-      result = await _internal_fetch_next(true)  
+      // _next.current = await getSDK().db.col(colId).paginate2(
+      //   q, from_cache
+      //   );
 
+      console.log('query')
+      _next.current = paginate_helper(q, resource);
+      result = await _internal_fetch_next(true)  
+      console.log('result', result)
       // setQueryCount(-1)
       const { 
         limit, startAfter, startAt, endAt, endBefore, 
         startAfterId, startAtId, endAtId, endBeforeId, 
         ...q_minus_limit
       } = q
-      const count = await getSDK().db?.col(colId).count(q_minus_limit)
-      setQueryCount(count)
+      // const count = await getSDK().db?.col(colId).count(q_minus_limit)
+      // setQueryCount(count)
       return result
-    }, [colId, _internal_fetch_next, getSDK()]
+    }, [resource, _internal_fetch_next, getSDK()]
   )
 
   useEffect(
@@ -181,12 +228,12 @@ export const useCollection =
   )
 
   return {
-     pages, page: index>=0 ? pages[index] : [], 
-     loading, error, 
-     prev, next, query, queryCount,
-     deleteDocument, 
-     colId 
-    }
+    pages, page: index>=0 ? pages[index] : [], 
+    loading, error, 
+    prev, next, query, queryCount,
+    deleteDocument, 
+    colId: resource 
+  }
 }
 
 /**

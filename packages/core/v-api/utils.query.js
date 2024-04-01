@@ -151,5 +151,6 @@ export const parse_query = (s) => {
     );
   }
 
+  console.log(q)
   return q;
 }

@@ -72,7 +72,8 @@ export class StorecraftAdminSDK {
         }
       }
     )
-    this._has_inited=true
+    console.log('tomer')
+    this.#_has_inited=true
   }
 
   get config() {
@@ -100,14 +101,16 @@ export const hasSDKInit = () => {
  * @param {StorecraftConfig} config 
  */
 export const initSDK = (config) => {
-  console.log('Storecraft:: trying to init with config', config)
-  try {
-    sdk.init(config);
-    LS.set(CONFIG_KEY, config);
-    console.log('Storecraft:: inited')
-  } catch (err) {
-    console.log('Storecraft init error', err)
-    throw err
+  if(!hasSDKInit()) {
+    console.log('Storecraft:: trying to init with config', config)
+    try {
+      sdk.init(config);
+      LS.set(CONFIG_KEY, config);
+      console.log('Storecraft:: inited')
+    } catch (err) {
+      console.log('Storecraft:: init error', err)
+      throw err
+    }
   }
   // save config
   return sdk

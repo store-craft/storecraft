@@ -14,7 +14,7 @@ export const url = (config, path) => {
   base = base.endsWith('/') ? base.slice(0, -1) : base;
   path = path.startsWith('/') ? path.slice(1) : path;
 
-  return `${base}/${path}`;
+  return `${base}/api/${path}`;
 }
 
 /**
@@ -29,6 +29,7 @@ export const url = (config, path) => {
  * @returns {Promise<R>}
  */ 
 export const fetchApiWithAuth = async (path, init={}) => {
+
   const sdk = getSDK();
   await sdk.init();
   const token = await sdk.auth.working_access_token();
@@ -44,12 +45,16 @@ export const fetchApiWithAuth = async (path, init={}) => {
     }
   );
 
+  // console.log('fetchApiWithAuth::response', response)
+
   const isok = response.ok;
   let payload = undefined;
 
   try {
     payload = await response.json();
-  } catch(e) {}
+  } catch(e) {
+    console.log('fetchApiWithAuth.json()', e)
+  }
 
   if(!isok)
     throw payload;
@@ -108,14 +113,49 @@ export async function remove(resource, handle_or_id) {
 }
 
 /**
+ * Prototype to convert query object to search params
+ * @param {import('@storecraft/core/v-api').ApiQuery} q 
+ */
+const api_query_to_searchparams = q => {
+  q.order = q.order ?? 'desc';
+  q.limit = q.limit ?? 10;
+  q.sortBy = q.sortBy ?? ['updated_at', 'id'];
+
+  const o = {};
+  // cursors
+  [
+    ['startAt', q.startAt], ['startAfter', q.startAfter], 
+    ['endAt', q.endAt], ['endBefore', q.endBefore]
+  ].filter(it => Boolean(it[1])).forEach(
+    ([key, cursor]) => {
+      o[key] = cursor.reduce(
+        (p, tuple) => {
+          return p + tuple[0] + ':' + tuple[1] + ','
+        }, ''
+      )
+    }
+  );
+
+  // sort
+  o.order = q.order.toString();
+  o.limit = String(q.limit);
+  o.sortBy = q.sortBy.reduce((p, c) => p + c + ',', '');
+
+  return new URLSearchParams(Object.entries(o))
+}
+
+
+/**
  * @template {any} G Get type
  * @param {string} resource base path of resource
  * @param {import('@storecraft/core/v-api').ApiQuery} query 
  * @returns {Promise<G[]>}
  */
 export async function list(resource, query) {
+  const sq = api_query_to_searchparams(query).toString();
+  console.log('sq', sq)
   return fetchApiWithAuth(
-    `${this.base_name}`,
+    `${resource}?${sq}`,
     {
       method: 'get'
     }

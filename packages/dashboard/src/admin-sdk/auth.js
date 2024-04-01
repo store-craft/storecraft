@@ -102,7 +102,7 @@ export default class Auth {
   }
 
   notify_subscribers = () => {
-    console.log('this.isAuthenticated', this.isAuthenticated)
+    // console.log('this.isAuthenticated', this.isAuthenticated)
     for(let s of this.#subscribers)
       s([this.currentUser, this.isAuthenticated])
   }
@@ -179,7 +179,7 @@ export default class Auth {
 
     // }
 
-    console.log('auth_result', payload)
+    // console.log('auth_result', payload)
 
     this.#_update_and_notify_subscribers(
       payload, true

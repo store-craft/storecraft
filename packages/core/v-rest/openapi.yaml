@@ -121,6 +121,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -152,12 +158,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         handle:
           type: string
           description: The handle of the entity
@@ -229,6 +229,12 @@ components:
             id:
               type: string
               description: ID
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
             media:
               type: array
               items:
@@ -260,12 +266,6 @@ components:
             active:
               type: boolean
               description: Is the product active ?
-            created_at:
-              type: string
-              description: ISO string creation time
-            updated_at:
-              type: string
-              description: ISO string update time
             handle:
               type: string
               description: The readable unique product `handle`
@@ -295,6 +295,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -326,12 +332,6 @@ components:
                   active:
                     type: boolean
                     description: Is the entity active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   handle:
                     type: string
                     description: The handle of the entity
@@ -357,6 +357,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -388,12 +394,6 @@ components:
                   active:
                     type: boolean
                     description: Is the discount active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   title:
                     type: string
                     description: Title of discount
@@ -1407,6 +1407,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -1438,12 +1444,6 @@ components:
                   active:
                     type: boolean
                     description: Is the product active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   handle:
                     type: string
                     description: The readable unique product `handle`
@@ -1473,6 +1473,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -1504,12 +1510,6 @@ components:
                         active:
                           type: boolean
                           description: Is the entity active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The handle of the entity
@@ -1535,6 +1535,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -1566,12 +1572,6 @@ components:
                         active:
                           type: boolean
                           description: Is the discount active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         title:
                           type: string
                           description: Title of discount
@@ -2671,6 +2671,12 @@ components:
             id:
               type: string
               description: ID
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
             media:
               type: array
               items:
@@ -2702,12 +2708,6 @@ components:
             active:
               type: boolean
               description: Is the product active ?
-            created_at:
-              type: string
-              description: ISO string creation time
-            updated_at:
-              type: string
-              description: ISO string update time
             handle:
               type: string
               description: The readable unique product `handle`
@@ -2737,6 +2737,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -2768,12 +2774,6 @@ components:
                   active:
                     type: boolean
                     description: Is the entity active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   handle:
                     type: string
                     description: The handle of the entity
@@ -2799,6 +2799,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -2830,12 +2836,6 @@ components:
                   active:
                     type: boolean
                     description: Is the discount active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   title:
                     type: string
                     description: Title of discount
@@ -4094,6 +4094,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -4125,12 +4131,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         price:
           type: number
           minimum: 0
@@ -4204,6 +4204,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -4235,12 +4241,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         auth_id:
           type: string
           description: |-
@@ -4409,6 +4409,12 @@ components:
             id:
               type: string
               description: ID
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
             media:
               type: array
               items:
@@ -4458,15 +4464,6 @@ components:
           description: Auth base type
         - type: object
           properties:
-            created_at:
-              type: string
-              description: ISO string creation time
-            updated_at:
-              type: string
-              description: ISO string update time
-          description: Timestamps
-        - type: object
-          properties:
             confirmed_mail:
               type: boolean
               description: Is the email confirmed ?
@@ -4490,6 +4487,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -4521,12 +4524,6 @@ components:
         active:
           type: boolean
           description: Is the discount active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         title:
           type: string
           description: Title of discount
@@ -6546,6 +6543,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -6577,12 +6580,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         handle:
           type: string
           description: Unique handle
@@ -6889,6 +6886,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -6920,12 +6923,6 @@ components:
                   active:
                     type: boolean
                     description: Is the product active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   handle:
                     type: string
                     description: The readable unique product `handle`
@@ -6955,6 +6952,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -6986,12 +6989,6 @@ components:
                         active:
                           type: boolean
                           description: Is the entity active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The handle of the entity
@@ -7017,6 +7014,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -7048,12 +7051,6 @@ components:
                         active:
                           type: boolean
                           description: Is the discount active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         title:
                           type: string
                           description: Title of discount
@@ -8075,6 +8072,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -8106,12 +8109,6 @@ components:
                         active:
                           type: boolean
                           description: Is the product active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The readable unique product `handle`
@@ -8141,6 +8138,12 @@ components:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -8172,12 +8175,6 @@ components:
                               active:
                                 type: boolean
                                 description: Is the entity active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               handle:
                                 type: string
                                 description: The handle of the entity
@@ -8203,6 +8200,12 @@ components:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -8234,12 +8237,6 @@ components:
                               active:
                                 type: boolean
                                 description: Is the discount active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               title:
                                 type: string
                                 description: Title of discount
@@ -9352,6 +9349,12 @@ components:
             id:
               type: string
               description: ID
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
             media:
               type: array
               items:
@@ -9383,12 +9386,6 @@ components:
             active:
               type: boolean
               description: Is the entity active ?
-            created_at:
-              type: string
-              description: ISO string creation time
-            updated_at:
-              type: string
-              description: ISO string update time
             price:
               type: number
               minimum: 0
@@ -9407,6 +9404,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -9438,12 +9441,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         status:
           type: object
           properties:
@@ -9817,6 +9814,12 @@ components:
                       id:
                         type: string
                         description: ID
+                      created_at:
+                        type: string
+                        description: ISO string creation time
+                      updated_at:
+                        type: string
+                        description: ISO string update time
                       media:
                         type: array
                         items:
@@ -9848,12 +9851,6 @@ components:
                       active:
                         type: boolean
                         description: Is the discount active ?
-                      created_at:
-                        type: string
-                        description: ISO string creation time
-                      updated_at:
-                        type: string
-                        description: ISO string update time
                       title:
                         type: string
                         description: Title of discount
@@ -10905,6 +10902,12 @@ components:
                             id:
                               type: string
                               description: ID
+                            created_at:
+                              type: string
+                              description: ISO string creation time
+                            updated_at:
+                              type: string
+                              description: ISO string update time
                             media:
                               type: array
                               items:
@@ -10936,12 +10939,6 @@ components:
                             active:
                               type: boolean
                               description: Is the product active ?
-                            created_at:
-                              type: string
-                              description: ISO string creation time
-                            updated_at:
-                              type: string
-                              description: ISO string update time
                             handle:
                               type: string
                               description: The readable unique product `handle`
@@ -10971,6 +10968,12 @@ components:
                                   id:
                                     type: string
                                     description: ID
+                                  created_at:
+                                    type: string
+                                    description: ISO string creation time
+                                  updated_at:
+                                    type: string
+                                    description: ISO string update time
                                   media:
                                     type: array
                                     items:
@@ -11002,12 +11005,6 @@ components:
                                   active:
                                     type: boolean
                                     description: Is the entity active ?
-                                  created_at:
-                                    type: string
-                                    description: ISO string creation time
-                                  updated_at:
-                                    type: string
-                                    description: ISO string update time
                                   handle:
                                     type: string
                                     description: The handle of the entity
@@ -11033,6 +11030,12 @@ components:
                                   id:
                                     type: string
                                     description: ID
+                                  created_at:
+                                    type: string
+                                    description: ISO string creation time
+                                  updated_at:
+                                    type: string
+                                    description: ISO string update time
                                   media:
                                     type: array
                                     items:
@@ -11064,12 +11067,6 @@ components:
                                   active:
                                     type: boolean
                                     description: Is the discount active ?
-                                  created_at:
-                                    type: string
-                                    description: ISO string creation time
-                                  updated_at:
-                                    type: string
-                                    description: ISO string update time
                                   title:
                                     type: string
                                     description: Title of discount
@@ -12100,6 +12097,12 @@ components:
                                   id:
                                     type: string
                                     description: ID
+                                  created_at:
+                                    type: string
+                                    description: ISO string creation time
+                                  updated_at:
+                                    type: string
+                                    description: ISO string update time
                                   media:
                                     type: array
                                     items:
@@ -12131,12 +12134,6 @@ components:
                                   active:
                                     type: boolean
                                     description: Is the product active ?
-                                  created_at:
-                                    type: string
-                                    description: ISO string creation time
-                                  updated_at:
-                                    type: string
-                                    description: ISO string update time
                                   handle:
                                     type: string
                                     description: The readable unique product `handle`
@@ -12166,6 +12163,12 @@ components:
                                         id:
                                           type: string
                                           description: ID
+                                        created_at:
+                                          type: string
+                                          description: ISO string creation time
+                                        updated_at:
+                                          type: string
+                                          description: ISO string update time
                                         media:
                                           type: array
                                           items:
@@ -12197,12 +12200,6 @@ components:
                                         active:
                                           type: boolean
                                           description: Is the entity active ?
-                                        created_at:
-                                          type: string
-                                          description: ISO string creation time
-                                        updated_at:
-                                          type: string
-                                          description: ISO string update time
                                         handle:
                                           type: string
                                           description: The handle of the entity
@@ -12228,6 +12225,12 @@ components:
                                         id:
                                           type: string
                                           description: ID
+                                        created_at:
+                                          type: string
+                                          description: ISO string creation time
+                                        updated_at:
+                                          type: string
+                                          description: ISO string update time
                                         media:
                                           type: array
                                           items:
@@ -12259,12 +12262,6 @@ components:
                                         active:
                                           type: boolean
                                           description: Is the discount active ?
-                                        created_at:
-                                          type: string
-                                          description: ISO string creation time
-                                        updated_at:
-                                          type: string
-                                          description: ISO string update time
                                         title:
                                           type: string
                                           description: Title of discount
@@ -13401,6 +13398,12 @@ components:
                 id:
                   type: string
                   description: ID
+                created_at:
+                  type: string
+                  description: ISO string creation time
+                updated_at:
+                  type: string
+                  description: ISO string update time
                 media:
                   type: array
                   items:
@@ -13432,12 +13435,6 @@ components:
                 active:
                   type: boolean
                   description: Is the entity active ?
-                created_at:
-                  type: string
-                  description: ISO string creation time
-                updated_at:
-                  type: string
-                  description: ISO string update time
                 price:
                   type: number
                   minimum: 0
@@ -13550,6 +13547,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -13581,12 +13584,6 @@ components:
               active:
                 type: boolean
                 description: Is the discount active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               title:
                 type: string
                 description: Title of discount
@@ -14680,6 +14677,12 @@ components:
                   id:
                     type: string
                     description: ID
+                  created_at:
+                    type: string
+                    description: ISO string creation time
+                  updated_at:
+                    type: string
+                    description: ISO string update time
                   media:
                     type: array
                     items:
@@ -14711,12 +14714,6 @@ components:
                   active:
                     type: boolean
                     description: Is the product active ?
-                  created_at:
-                    type: string
-                    description: ISO string creation time
-                  updated_at:
-                    type: string
-                    description: ISO string update time
                   handle:
                     type: string
                     description: The readable unique product `handle`
@@ -14746,6 +14743,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -14777,12 +14780,6 @@ components:
                         active:
                           type: boolean
                           description: Is the entity active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The handle of the entity
@@ -14808,6 +14805,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -14839,12 +14842,6 @@ components:
                         active:
                           type: boolean
                           description: Is the discount active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         title:
                           type: string
                           description: Title of discount
@@ -15866,6 +15863,12 @@ components:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -15897,12 +15900,6 @@ components:
                         active:
                           type: boolean
                           description: Is the product active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The readable unique product `handle`
@@ -15932,6 +15929,12 @@ components:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -15963,12 +15966,6 @@ components:
                               active:
                                 type: boolean
                                 description: Is the entity active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               handle:
                                 type: string
                                 description: The handle of the entity
@@ -15994,6 +15991,12 @@ components:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -16025,12 +16028,6 @@ components:
                               active:
                                 type: boolean
                                 description: Is the discount active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               title:
                                 type: string
                                 description: Title of discount
@@ -17143,6 +17140,12 @@ components:
             id:
               type: string
               description: ID
+            created_at:
+              type: string
+              description: ISO string creation time
+            updated_at:
+              type: string
+              description: ISO string update time
             media:
               type: array
               items:
@@ -17174,12 +17177,6 @@ components:
             active:
               type: boolean
               description: Is the entity active ?
-            created_at:
-              type: string
-              description: ISO string creation time
-            updated_at:
-              type: string
-              description: ISO string update time
             price:
               type: number
               minimum: 0
@@ -17602,6 +17599,12 @@ components:
                       id:
                         type: string
                         description: ID
+                      created_at:
+                        type: string
+                        description: ISO string creation time
+                      updated_at:
+                        type: string
+                        description: ISO string update time
                       media:
                         type: array
                         items:
@@ -17633,12 +17636,6 @@ components:
                       active:
                         type: boolean
                         description: Is the discount active ?
-                      created_at:
-                        type: string
-                        description: ISO string creation time
-                      updated_at:
-                        type: string
-                        description: ISO string update time
                       title:
                         type: string
                         description: Title of discount
@@ -18690,6 +18687,12 @@ components:
                             id:
                               type: string
                               description: ID
+                            created_at:
+                              type: string
+                              description: ISO string creation time
+                            updated_at:
+                              type: string
+                              description: ISO string update time
                             media:
                               type: array
                               items:
@@ -18721,12 +18724,6 @@ components:
                             active:
                               type: boolean
                               description: Is the product active ?
-                            created_at:
-                              type: string
-                              description: ISO string creation time
-                            updated_at:
-                              type: string
-                              description: ISO string update time
                             handle:
                               type: string
                               description: The readable unique product `handle`
@@ -18756,6 +18753,12 @@ components:
                                   id:
                                     type: string
                                     description: ID
+                                  created_at:
+                                    type: string
+                                    description: ISO string creation time
+                                  updated_at:
+                                    type: string
+                                    description: ISO string update time
                                   media:
                                     type: array
                                     items:
@@ -18787,12 +18790,6 @@ components:
                                   active:
                                     type: boolean
                                     description: Is the entity active ?
-                                  created_at:
-                                    type: string
-                                    description: ISO string creation time
-                                  updated_at:
-                                    type: string
-                                    description: ISO string update time
                                   handle:
                                     type: string
                                     description: The handle of the entity
@@ -18818,6 +18815,12 @@ components:
                                   id:
                                     type: string
                                     description: ID
+                                  created_at:
+                                    type: string
+                                    description: ISO string creation time
+                                  updated_at:
+                                    type: string
+                                    description: ISO string update time
                                   media:
                                     type: array
                                     items:
@@ -18849,12 +18852,6 @@ components:
                                   active:
                                     type: boolean
                                     description: Is the discount active ?
-                                  created_at:
-                                    type: string
-                                    description: ISO string creation time
-                                  updated_at:
-                                    type: string
-                                    description: ISO string update time
                                   title:
                                     type: string
                                     description: Title of discount
@@ -19885,6 +19882,12 @@ components:
                                   id:
                                     type: string
                                     description: ID
+                                  created_at:
+                                    type: string
+                                    description: ISO string creation time
+                                  updated_at:
+                                    type: string
+                                    description: ISO string update time
                                   media:
                                     type: array
                                     items:
@@ -19916,12 +19919,6 @@ components:
                                   active:
                                     type: boolean
                                     description: Is the product active ?
-                                  created_at:
-                                    type: string
-                                    description: ISO string creation time
-                                  updated_at:
-                                    type: string
-                                    description: ISO string update time
                                   handle:
                                     type: string
                                     description: The readable unique product `handle`
@@ -19951,6 +19948,12 @@ components:
                                         id:
                                           type: string
                                           description: ID
+                                        created_at:
+                                          type: string
+                                          description: ISO string creation time
+                                        updated_at:
+                                          type: string
+                                          description: ISO string update time
                                         media:
                                           type: array
                                           items:
@@ -19982,12 +19985,6 @@ components:
                                         active:
                                           type: boolean
                                           description: Is the entity active ?
-                                        created_at:
-                                          type: string
-                                          description: ISO string creation time
-                                        updated_at:
-                                          type: string
-                                          description: ISO string update time
                                         handle:
                                           type: string
                                           description: The handle of the entity
@@ -20013,6 +20010,12 @@ components:
                                         id:
                                           type: string
                                           description: ID
+                                        created_at:
+                                          type: string
+                                          description: ISO string creation time
+                                        updated_at:
+                                          type: string
+                                          description: ISO string update time
                                         media:
                                           type: array
                                           items:
@@ -20044,12 +20047,6 @@ components:
                                         active:
                                           type: boolean
                                           description: Is the discount active ?
-                                        created_at:
-                                          type: string
-                                          description: ISO string creation time
-                                        updated_at:
-                                          type: string
-                                          description: ISO string update time
                                         title:
                                           type: string
                                           description: Title of discount
@@ -21186,6 +21183,12 @@ components:
                 id:
                   type: string
                   description: ID
+                created_at:
+                  type: string
+                  description: ISO string creation time
+                updated_at:
+                  type: string
+                  description: ISO string update time
                 media:
                   type: array
                   items:
@@ -21217,12 +21220,6 @@ components:
                 active:
                   type: boolean
                   description: Is the entity active ?
-                created_at:
-                  type: string
-                  description: ISO string creation time
-                updated_at:
-                  type: string
-                  description: ISO string update time
                 price:
                   type: number
                   minimum: 0
@@ -21335,6 +21332,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -21366,12 +21369,6 @@ components:
               active:
                 type: boolean
                 description: Is the discount active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               title:
                 type: string
                 description: Title of discount
@@ -22384,6 +22381,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -22415,12 +22418,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         handle:
           type: string
           description: Unique `handle`
@@ -22492,6 +22489,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -22523,12 +22526,6 @@ components:
         active:
           type: boolean
           description: Is the entity active ?
-        created_at:
-          type: string
-          description: ISO string creation time
-        updated_at:
-          type: string
-          description: ISO string update time
         handle:
           type: string
           description: Readable `handle`
@@ -22551,6 +22548,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -22582,12 +22585,6 @@ components:
               active:
                 type: boolean
                 description: Is the entity active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               handle:
                 type: string
                 description: The handle of the entity
@@ -22613,6 +22610,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -22644,12 +22647,6 @@ components:
               active:
                 type: boolean
                 description: Is the product active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               handle:
                 type: string
                 description: The readable unique product `handle`
@@ -22679,6 +22676,12 @@ components:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -22710,12 +22713,6 @@ components:
                     active:
                       type: boolean
                       description: Is the entity active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The handle of the entity
@@ -22741,6 +22738,12 @@ components:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -22772,12 +22775,6 @@ components:
                     active:
                       type: boolean
                       description: Is the discount active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     title:
                       type: string
                       description: Title of discount
@@ -23792,6 +23789,12 @@ components:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -23823,12 +23826,6 @@ components:
                     active:
                       type: boolean
                       description: Is the product active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The readable unique product `handle`
@@ -23858,6 +23855,12 @@ components:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -23889,12 +23892,6 @@ components:
                           active:
                             type: boolean
                             description: Is the entity active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           handle:
                             type: string
                             description: The handle of the entity
@@ -23920,6 +23917,12 @@ components:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -23951,12 +23954,6 @@ components:
                           active:
                             type: boolean
                             description: Is the discount active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           title:
                             type: string
                             description: Title of discount
@@ -25061,6 +25058,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -25092,12 +25095,6 @@ components:
               active:
                 type: boolean
                 description: Is the entity active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               price:
                 type: number
                 minimum: 0
@@ -25122,6 +25119,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -25153,12 +25156,6 @@ components:
               active:
                 type: boolean
                 description: Is the discount active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               title:
                 type: string
                 description: Title of discount
@@ -26168,6 +26165,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -26199,12 +26202,6 @@ components:
               active:
                 type: boolean
                 description: Is the entity active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               handle:
                 type: string
                 description: Unique `handle`
@@ -26283,6 +26280,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -26314,12 +26317,6 @@ components:
               active:
                 type: boolean
                 description: Is the entity active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               handle:
                 type: string
                 description: The handle of the entity
@@ -26345,6 +26342,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -26376,12 +26379,6 @@ components:
               active:
                 type: boolean
                 description: Is the product active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               handle:
                 type: string
                 description: The readable unique product `handle`
@@ -26411,6 +26408,12 @@ components:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -26442,12 +26445,6 @@ components:
                     active:
                       type: boolean
                       description: Is the entity active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The handle of the entity
@@ -26473,6 +26470,12 @@ components:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -26504,12 +26507,6 @@ components:
                     active:
                       type: boolean
                       description: Is the discount active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     title:
                       type: string
                       description: Title of discount
@@ -27524,6 +27521,12 @@ components:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -27555,12 +27558,6 @@ components:
                     active:
                       type: boolean
                       description: Is the product active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The readable unique product `handle`
@@ -27590,6 +27587,12 @@ components:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -27621,12 +27624,6 @@ components:
                           active:
                             type: boolean
                             description: Is the entity active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           handle:
                             type: string
                             description: The handle of the entity
@@ -27652,6 +27649,12 @@ components:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -27683,12 +27686,6 @@ components:
                           active:
                             type: boolean
                             description: Is the discount active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           title:
                             type: string
                             description: Title of discount
@@ -28793,6 +28790,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -28824,12 +28827,6 @@ components:
               active:
                 type: boolean
                 description: Is the entity active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               price:
                 type: number
                 minimum: 0
@@ -28854,6 +28851,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -28885,12 +28888,6 @@ components:
               active:
                 type: boolean
                 description: Is the discount active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               title:
                 type: string
                 description: Title of discount
@@ -29900,6 +29897,12 @@ components:
               id:
                 type: string
                 description: ID
+              created_at:
+                type: string
+                description: ISO string creation time
+              updated_at:
+                type: string
+                description: ISO string update time
               media:
                 type: array
                 items:
@@ -29931,12 +29934,6 @@ components:
               active:
                 type: boolean
                 description: Is the entity active ?
-              created_at:
-                type: string
-                description: ISO string creation time
-              updated_at:
-                type: string
-                description: ISO string update time
               handle:
                 type: string
                 description: Unique `handle`
@@ -31755,6 +31752,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -31786,12 +31789,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the product active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The readable unique product `handle`
@@ -31821,6 +31818,12 @@ paths:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -31852,12 +31855,6 @@ paths:
                           active:
                             type: boolean
                             description: Is the entity active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           handle:
                             type: string
                             description: The handle of the entity
@@ -31883,6 +31880,12 @@ paths:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -31914,12 +31917,6 @@ paths:
                           active:
                             type: boolean
                             description: Is the discount active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           title:
                             type: string
                             description: Title of discount
@@ -33501,6 +33498,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -33532,12 +33535,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the entity active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The handle of the entity
@@ -33602,6 +33599,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -33633,12 +33636,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the product active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The readable unique product `handle`
@@ -33668,6 +33665,12 @@ paths:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -33699,12 +33702,6 @@ paths:
                           active:
                             type: boolean
                             description: Is the entity active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           handle:
                             type: string
                             description: The handle of the entity
@@ -33730,6 +33727,12 @@ paths:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -33761,12 +33764,6 @@ paths:
                           active:
                             type: boolean
                             description: Is the discount active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           title:
                             type: string
                             description: Title of discount
@@ -34874,6 +34871,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -34905,12 +34908,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the discount active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     title:
                       type: string
                       description: Title of discount
@@ -36895,6 +36892,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -36926,12 +36929,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the product active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The readable unique product `handle`
@@ -36961,6 +36958,12 @@ paths:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -36992,12 +36995,6 @@ paths:
                           active:
                             type: boolean
                             description: Is the entity active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           handle:
                             type: string
                             description: The handle of the entity
@@ -37023,6 +37020,12 @@ paths:
                           id:
                             type: string
                             description: ID
+                          created_at:
+                            type: string
+                            description: ISO string creation time
+                          updated_at:
+                            type: string
+                            description: ISO string update time
                           media:
                             type: array
                             items:
@@ -37054,12 +37057,6 @@ paths:
                           active:
                             type: boolean
                             description: Is the discount active ?
-                          created_at:
-                            type: string
-                            description: ISO string creation time
-                          updated_at:
-                            type: string
-                            description: ISO string update time
                           title:
                             type: string
                             description: Title of discount
@@ -39291,6 +39288,12 @@ paths:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -39322,12 +39325,6 @@ paths:
                         active:
                           type: boolean
                           description: Is the product active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The readable unique product `handle`
@@ -39357,6 +39354,12 @@ paths:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -39388,12 +39391,6 @@ paths:
                               active:
                                 type: boolean
                                 description: Is the entity active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               handle:
                                 type: string
                                 description: The handle of the entity
@@ -39419,6 +39416,12 @@ paths:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -39450,12 +39453,6 @@ paths:
                               active:
                                 type: boolean
                                 description: Is the discount active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               title:
                                 type: string
                                 description: Title of discount
@@ -40479,6 +40476,12 @@ paths:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -40510,12 +40513,6 @@ paths:
                               active:
                                 type: boolean
                                 description: Is the product active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               handle:
                                 type: string
                                 description: The readable unique product `handle`
@@ -40545,6 +40542,12 @@ paths:
                                     id:
                                       type: string
                                       description: ID
+                                    created_at:
+                                      type: string
+                                      description: ISO string creation time
+                                    updated_at:
+                                      type: string
+                                      description: ISO string update time
                                     media:
                                       type: array
                                       items:
@@ -40576,12 +40579,6 @@ paths:
                                     active:
                                       type: boolean
                                       description: Is the entity active ?
-                                    created_at:
-                                      type: string
-                                      description: ISO string creation time
-                                    updated_at:
-                                      type: string
-                                      description: ISO string update time
                                     handle:
                                       type: string
                                       description: The handle of the entity
@@ -40607,6 +40604,12 @@ paths:
                                     id:
                                       type: string
                                       description: ID
+                                    created_at:
+                                      type: string
+                                      description: ISO string creation time
+                                    updated_at:
+                                      type: string
+                                      description: ISO string update time
                                     media:
                                       type: array
                                       items:
@@ -40638,12 +40641,6 @@ paths:
                                     active:
                                       type: boolean
                                       description: Is the discount active ?
-                                    created_at:
-                                      type: string
-                                      description: ISO string creation time
-                                    updated_at:
-                                      type: string
-                                      description: ISO string update time
                                     title:
                                       type: string
                                       description: Title of discount
@@ -41763,6 +41760,12 @@ paths:
                         id:
                           type: string
                           description: ID
+                        created_at:
+                          type: string
+                          description: ISO string creation time
+                        updated_at:
+                          type: string
+                          description: ISO string update time
                         media:
                           type: array
                           items:
@@ -41794,12 +41797,6 @@ paths:
                         active:
                           type: boolean
                           description: Is the product active ?
-                        created_at:
-                          type: string
-                          description: ISO string creation time
-                        updated_at:
-                          type: string
-                          description: ISO string update time
                         handle:
                           type: string
                           description: The readable unique product `handle`
@@ -41829,6 +41826,12 @@ paths:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -41860,12 +41863,6 @@ paths:
                               active:
                                 type: boolean
                                 description: Is the entity active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               handle:
                                 type: string
                                 description: The handle of the entity
@@ -41891,6 +41888,12 @@ paths:
                               id:
                                 type: string
                                 description: ID
+                              created_at:
+                                type: string
+                                description: ISO string creation time
+                              updated_at:
+                                type: string
+                                description: ISO string update time
                               media:
                                 type: array
                                 items:
@@ -41922,12 +41925,6 @@ paths:
                               active:
                                 type: boolean
                                 description: Is the discount active ?
-                              created_at:
-                                type: string
-                                description: ISO string creation time
-                              updated_at:
-                                type: string
-                                description: ISO string update time
                               title:
                                 type: string
                                 description: Title of discount
@@ -43031,6 +43028,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -43062,12 +43065,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the discount active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     title:
                       type: string
                       description: Title of discount
@@ -44142,6 +44139,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -44173,12 +44176,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the entity active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     price:
                       type: number
                       minimum: 0
@@ -44236,6 +44233,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -44267,12 +44270,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the entity active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: The handle of the entity
@@ -44336,6 +44333,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -44367,12 +44370,6 @@ paths:
                     active:
                       type: boolean
                       description: Is the entity active ?
-                    created_at:
-                      type: string
-                      description: ISO string creation time
-                    updated_at:
-                      type: string
-                      description: ISO string update time
                     handle:
                       type: string
                       description: Unique `handle`

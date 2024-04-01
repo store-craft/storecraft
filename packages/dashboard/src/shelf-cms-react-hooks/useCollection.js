@@ -114,7 +114,7 @@ export const useCollection =
   const [queryCount, setQueryCount] = useState(-1)
   const trigger = useTrigger()
   
-  console.log('resource ',  resource);
+  // console.log('resource ',  resource);
   console.log('pages ',  pages);
 
   useEffect(
@@ -203,10 +203,10 @@ export const useCollection =
       //   q, from_cache
       //   );
 
-      console.log('query')
+      // console.log('query')
       _next.current = paginate_helper(q, resource);
       result = await _internal_fetch_next(true)  
-      console.log('result', result)
+      // console.log('result', result)
       // setQueryCount(-1)
       const { 
         limit, startAfter, startAt, endAt, endBefore, 
@@ -261,18 +261,18 @@ const q_initial = {
  * Modified collection with modified search query
  * 
  * @template T
- * @param {string} colId 
- * @param {number} limit 
- * @param {boolean} autoLoad 
- * @param {T} dummy_type 
+ * @param {string} resource 
+ * @param {boolean} [autoLoad=true] 
+ * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
+ * @param {T} [dummy_type] 
  */
  export const useCommonCollection = 
-  (colId, autoLoad=true, autoLoadQuery=q_initial, dummy_type) => {
+  (resource, autoLoad=true, autoLoadQuery=q_initial, dummy_type=undefined) => {
     
   const { 
     pages, page, loading, error, 
     prev, next, query : queryParent, queryCount, deleteDocument 
-  } = useCollection(colId, autoLoadQuery, autoLoad, dummy_type)
+  } = useCollection(resource, autoLoadQuery, autoLoad, dummy_type)
 
   const query = useCallback(
     /**
@@ -297,7 +297,7 @@ const q_initial = {
     prev, next, 
     query, queryCount, 
     deleteDocument, 
-    colId 
+    colId: resource 
   }
 }
 

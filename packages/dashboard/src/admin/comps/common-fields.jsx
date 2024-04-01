@@ -105,16 +105,19 @@ export const SpanArray = ( {
   )
 }
 
-
+/**
+ * 
+ * @param {object} param0 
+ * @param {import('./collection-view.jsx').CollectionViewField} param0.field
+ * @param {string} param0.value
+ * @param {undefined} param0.onChange
+ * @returns 
+ */
 export const TimeStampView = ({field, value, onChange, ...rest}) => {
   const { key, name, comp_params } = field
-  function toUTCDateString(utcMillis) {
-    const date = new Date(utcMillis).toLocaleDateString();
-    return date
-  }
-
   return (
-    <p children={toUTCDateString(value)} {...comp_params} {...rest} />
+    <p children={new Date(value).toLocaleDateString()} 
+      {...comp_params} {...rest} />
   )
 }
 

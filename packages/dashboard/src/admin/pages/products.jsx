@@ -33,7 +33,7 @@ const schema_fields = [
     comp_params: { className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-max 
                                overflow-x-auto inline-block whitespace-nowrap` } 
   },
-  { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView },
+  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
   { 
     key: undefined, name: 'Actions', 
     comp: RecordActions, 
@@ -123,8 +123,7 @@ export default ({ collectionId, segment }) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`Products ${queryCount>=0 ? `(${queryCount})` : ''}`} 
               className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900 '>      

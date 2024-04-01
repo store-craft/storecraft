@@ -77,7 +77,7 @@ export default class Auth {
    */
   async reAuthenticate() {
     const auth_res = await fetch(
-      url(this.context.config, '/api/auth/refresh'),
+      url(this.context.config, '/auth/refresh'),
       {
         method: 'post',
         body: JSON.stringify(
@@ -159,7 +159,7 @@ export default class Auth {
 
     // try {
       const res = await fetch(
-        url(this.context.config, `/api/auth/signin`),
+        url(this.context.config, `/auth/signin`),
         { 
           method: 'post',
           body: JSON.stringify(info),

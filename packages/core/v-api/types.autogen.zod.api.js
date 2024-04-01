@@ -536,22 +536,23 @@ export const discountErrorSchema = z
     message: z.string().describe("Error message"),
   })
   .describe("Discount error type");
-export const baseTypeSchema = idableSchema.extend({
-  media: z.array(z.string()).optional().describe("List of images urls"),
-  attributes: z
-    .array(attributeTypeSchema)
-    .optional()
-    .describe("List of attributes"),
-  tags: z
-    .array(z.string())
-    .optional()
-    .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
-  description: z.string().optional().describe("Rich description"),
-  active: z.boolean().optional().describe("Is the entity active ?"),
-});
+export const baseTypeSchema = idableSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    media: z.array(z.string()).optional().describe("List of images urls"),
+    attributes: z
+      .array(attributeTypeSchema)
+      .optional()
+      .describe("List of attributes"),
+    tags: z
+      .array(z.string())
+      .optional()
+      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
+    description: z.string().optional().describe("Rich description"),
+    active: z.boolean().optional().describe("Is the entity active ?"),
+  });
 export const authUserTypeSchema = baseTypeSchema
   .and(authBaseTypeSchema)
-  .and(timestampsSchema)
   .and(
     z.object({
       confirmed_mail: z
@@ -565,19 +566,17 @@ export const authUserTypeSchema = baseTypeSchema
     }),
   )
   .describe("Auth user type");
-export const collectionTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    handle: z.string().describe("The handle of the entity"),
-    title: z.string().describe("Title of collection"),
-    active: z.boolean().describe("Is the entity active ?"),
-    published: z
-      .string()
-      .optional()
-      .describe(
-        "Collections can be exported into\njson with products, this is the url",
-      ),
-  });
+export const collectionTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("The handle of the entity"),
+  title: z.string().describe("Title of collection"),
+  active: z.boolean().describe("Is the entity active ?"),
+  published: z
+    .string()
+    .optional()
+    .describe(
+      "Collections can be exported into\njson with products, this is the url",
+    ),
+});
 export const collectionTypeUpsertSchema = collectionTypeSchema.omit({
   created_at: true,
   updated_at: true,
@@ -661,57 +660,49 @@ export const buyXGetYDiscountExtraSchema = z
       ),
   })
   .describe("Parameters of bulk discount");
-export const shippingMethodTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    price: z
-      .number()
-      .min(0, "Please set a price >= 0")
-      .describe("Shipping method price"),
-    title: z.string().describe("Name of shipping method"),
-    handle: z.string().describe("Readable `handle` of shipping"),
-  });
-export const postTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    handle: z.string().describe("Unique `handle`"),
-    title: z.string().describe("Title of post"),
-    text: z.string().describe("Rich text of post"),
-  });
-export const customerTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    auth_id: z
-      .string()
-      .optional()
-      .describe(
-        "The `auth id` of the customer. it is the same as\ncustomer `id` with `au` prefix instead",
-      ),
-    firstname: z.string().describe("Firstname"),
-    lastname: z.string().describe("Lastname"),
-    email: z.string().email().describe("Email of customer"),
-    phone_number: z
-      .string()
-      .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
-      .optional()
-      .describe("The phone number"),
-    address: addressTypeSchema.optional().describe("Address info of customer"),
-  });
+export const shippingMethodTypeSchema = baseTypeSchema.extend({
+  price: z
+    .number()
+    .min(0, "Please set a price >= 0")
+    .describe("Shipping method price"),
+  title: z.string().describe("Name of shipping method"),
+  handle: z.string().describe("Readable `handle` of shipping"),
+});
+export const postTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("Unique `handle`"),
+  title: z.string().describe("Title of post"),
+  text: z.string().describe("Rich text of post"),
+});
+export const customerTypeSchema = baseTypeSchema.extend({
+  auth_id: z
+    .string()
+    .optional()
+    .describe(
+      "The `auth id` of the customer. it is the same as\ncustomer `id` with `au` prefix instead",
+    ),
+  firstname: z.string().describe("Firstname"),
+  lastname: z.string().describe("Lastname"),
+  email: z.string().email().describe("Email of customer"),
+  phone_number: z
+    .string()
+    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
+    .optional()
+    .describe("The phone number"),
+  address: addressTypeSchema.optional().describe("Address info of customer"),
+});
 export const customerTypeUpsertSchema = customerTypeSchema.omit({
   updated_at: true,
   created_at: true,
 });
-export const imageTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    handle: z.string().describe("Unique handle"),
-    name: z.string().describe("Name"),
-    url: z.string().describe("It's published public url"),
-    usage: z
-      .array(z.string())
-      .optional()
-      .describe("List of assets using this image"),
-  });
+export const imageTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("Unique handle"),
+  name: z.string().describe("Name"),
+  url: z.string().describe("It's published public url"),
+  usage: z
+    .array(z.string())
+    .optional()
+    .describe("List of assets using this image"),
+});
 export const imageTypeUpsertSchema = imageTypeSchema.omit({
   updated_at: true,
   created_at: true,
@@ -830,58 +821,52 @@ export const discountInfoSchema = z
       .describe("List of `discount` filters"),
   })
   .describe("details and filters of the discount");
-export const discountTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    active: z.boolean().describe("Is the discount active ?"),
-    title: z.string().describe("Title of discount"),
-    handle: z.string().describe("Discount `code` / `handle`"),
-    priority: z
-      .number()
-      .describe("The order in which to apply the discounts\nstack (priority)"),
-    published: z
-      .string()
-      .optional()
-      .describe(
-        "Discounts may generate collections, this\nis the collection handle that contains the applicable\ndiscount products",
-      ),
-    info: discountInfoSchema.describe("Details and filters of the discount"),
-    application: z
-      .union([
-        discountApplicationEnumSchema.shape.Auto,
-        discountApplicationEnumSchema.shape.Manual,
-      ])
-      .describe("Discount application (`automatic` and `manual`)"),
-  });
+export const discountTypeSchema = baseTypeSchema.extend({
+  active: z.boolean().describe("Is the discount active ?"),
+  title: z.string().describe("Title of discount"),
+  handle: z.string().describe("Discount `code` / `handle`"),
+  priority: z
+    .number()
+    .describe("The order in which to apply the discounts\nstack (priority)"),
+  published: z
+    .string()
+    .optional()
+    .describe(
+      "Discounts may generate collections, this\nis the collection handle that contains the applicable\ndiscount products",
+    ),
+  info: discountInfoSchema.describe("Details and filters of the discount"),
+  application: z
+    .union([
+      discountApplicationEnumSchema.shape.Auto,
+      discountApplicationEnumSchema.shape.Manual,
+    ])
+    .describe("Discount application (`automatic` and `manual`)"),
+});
 export const discountTypeUpsertSchema = discountTypeSchema.omit({
   created_at: true,
   updated_at: true,
 });
-export const baseProductTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    handle: z.string().describe("The readable unique product `handle`"),
-    title: z.string().describe("Title of the product"),
-    active: z.boolean().describe("Is the product active ?"),
-    video: z.string().optional().describe("Video media url"),
-    price: z.number().min(0).describe("Price of the product"),
-    qty: z.number().min(0).describe("Integer stock quantity of product"),
-    compare_at_price: z
-      .number()
-      .min(0)
-      .optional()
-      .describe("Compare at price point"),
-    collections: z
-      .array(collectionTypeSchema)
-      .optional()
-      .describe("Collections this product belongs to, expanded field"),
-    discounts: z
-      .array(discountTypeSchema)
-      .optional()
-      .describe(
-        "Discounts we know were applied to this product,\nexpanded type",
-      ),
-  });
+export const baseProductTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("The readable unique product `handle`"),
+  title: z.string().describe("Title of the product"),
+  active: z.boolean().describe("Is the product active ?"),
+  video: z.string().optional().describe("Video media url"),
+  price: z.number().min(0).describe("Price of the product"),
+  qty: z.number().min(0).describe("Integer stock quantity of product"),
+  compare_at_price: z
+    .number()
+    .min(0)
+    .optional()
+    .describe("Compare at price point"),
+  collections: z
+    .array(collectionTypeSchema)
+    .optional()
+    .describe("Collections this product belongs to, expanded field"),
+  discounts: z
+    .array(discountTypeSchema)
+    .optional()
+    .describe("Discounts we know were applied to this product,\nexpanded type"),
+});
 export const productTypeUpsertSchema = baseProductTypeSchema
   .omit({
     collections: true,
@@ -941,39 +926,37 @@ export const productTypeSchema = baseProductTypeSchema.extend({
     .optional()
     .describe("Variants options info"),
 });
-export const storefrontTypeSchema = baseTypeSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    handle: z.string().describe("Readable `handle`"),
-    title: z.string().describe("Title"),
-    video: z.string().optional().describe("Video url"),
-    published: z
-      .string()
-      .optional()
-      .describe(
-        "Storefronts may be exported to `json` for CDN,\nthis is the `url`",
-      ),
-    collections: z
-      .array(collectionTypeSchema)
-      .optional()
-      .describe("Collections related to this storefront"),
-    products: z
-      .array(productTypeSchema)
-      .optional()
-      .describe("Products related to this storefront"),
-    shipping_methods: z
-      .array(shippingMethodTypeSchema)
-      .optional()
-      .describe("Shipping methods related to this storefront"),
-    discounts: z
-      .array(discountTypeSchema)
-      .optional()
-      .describe("Discounts related to this storefront"),
-    posts: z
-      .array(postTypeSchema)
-      .optional()
-      .describe("Posts related to this storefront"),
-  });
+export const storefrontTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("Readable `handle`"),
+  title: z.string().describe("Title"),
+  video: z.string().optional().describe("Video url"),
+  published: z
+    .string()
+    .optional()
+    .describe(
+      "Storefronts may be exported to `json` for CDN,\nthis is the `url`",
+    ),
+  collections: z
+    .array(collectionTypeSchema)
+    .optional()
+    .describe("Collections related to this storefront"),
+  products: z
+    .array(productTypeSchema)
+    .optional()
+    .describe("Products related to this storefront"),
+  shipping_methods: z
+    .array(shippingMethodTypeSchema)
+    .optional()
+    .describe("Shipping methods related to this storefront"),
+  discounts: z
+    .array(discountTypeSchema)
+    .optional()
+    .describe("Discounts related to this storefront"),
+  posts: z
+    .array(postTypeSchema)
+    .optional()
+    .describe("Posts related to this storefront"),
+});
 export const storefrontTypeUpsertSchema = storefrontTypeSchema.omit({
   created_at: true,
   updated_at: true,
@@ -1079,7 +1062,6 @@ export const pricingDataSchema = z
   );
 export const orderDataSchema = baseCheckoutCreateTypeSchema
   .extend(baseTypeSchema.shape)
-  .extend(timestampsSchema.shape)
   .extend({
     status: orderStatusSchema.describe(
       "Status of `checkout`, `fulfillment` and `payment`",

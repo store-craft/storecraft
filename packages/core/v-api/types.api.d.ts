@@ -35,7 +35,7 @@ export type idable = {
 /** 
  * @description Base properties 
  */
-export interface BaseType extends idable {
+export interface BaseType extends idable, timestamps {
   /** 
    * @description List of images urls 
    */
@@ -168,7 +168,7 @@ export type ApiAuthResult = {
 /**
  * @description Auth user type
  */
-export type AuthUserType = BaseType & AuthBaseType & timestamps & {
+export type AuthUserType = BaseType & AuthBaseType & {
   /**
    * @description Is the email confirmed ?
    */
@@ -225,7 +225,7 @@ export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
 /**
  * @description Collection type
  */
-export interface CollectionType extends BaseType, timestamps {
+export interface CollectionType extends BaseType {
   /** 
    * @description The handle of the entity
    */
@@ -348,7 +348,7 @@ export interface VariantType extends BaseProductType {
 /**
  * @description Base product type
  */
-export interface BaseProductType extends BaseType, timestamps {
+export interface BaseProductType extends BaseType {
   /** 
    * @description The readable unique product `handle`
    */
@@ -445,7 +445,7 @@ export type ProductTypeUpsert = Omit<BaseProductType,
 /**
  * @description Discount type
  */
-export interface DiscountType extends BaseType, timestamps {
+export interface DiscountType extends BaseType {
   /**
    * @description Is the discount active ?
    */
@@ -905,7 +905,7 @@ export type BundleDiscountExtra = {
 /**
  * @description The `storefront` data type
  */
-export interface StorefrontType extends BaseType, timestamps {
+export interface StorefrontType extends BaseType {
   /** 
    * @description Readable `handle` 
    */
@@ -1024,7 +1024,7 @@ export type AddressType = {
 /**
  * @description Customer type
  */
-export interface CustomerType extends BaseType, timestamps {
+export interface CustomerType extends BaseType {
   /** 
    * @description The `auth id` of the customer. it is the same as
    * customer `id` with `au` prefix instead
@@ -1069,7 +1069,7 @@ export type CustomerTypeUpsert = Omit<CustomerType, 'updated_at' | 'created_at'>
 /**
  * @description Image type
  */
-export interface ImageType extends BaseType, timestamps {
+export interface ImageType extends BaseType {
   /** 
    * @description Unique handle 
    */
@@ -1102,7 +1102,7 @@ export type ImageTypeUpsert = Omit<ImageType, 'updated_at' | 'created_at'>
 /**
  * Shipping type
  */
-export interface ShippingMethodType extends BaseType, timestamps {
+export interface ShippingMethodType extends BaseType {
   /**
    * @description Shipping method price
    * @minimum 0 Please set a price >= 0
@@ -1130,7 +1130,7 @@ export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'created_at' | '
 /**
  * Post type
  */
-export interface PostType extends BaseType, timestamps {
+export interface PostType extends BaseType {
   /** 
    * @description Unique `handle` 
    */
@@ -1310,7 +1310,7 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
 /**
  * @description Order type
  */
-export interface OrderData extends BaseCheckoutCreateType, BaseType, timestamps {
+export interface OrderData extends BaseCheckoutCreateType, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */

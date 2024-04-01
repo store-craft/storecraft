@@ -8,7 +8,18 @@ import { BlingButton2,
 import { BlingInput } from './common-ui.jsx'
 
 export const TopActions = forwardRef(
-  ({reload, searchTitle, isLoading, createLink='', className }, ref) => {
+  /**
+   * 
+   * @param {object} p 
+   * @param {() => void} p.reload
+   * @param {string} p.searchTitle
+   * @param {boolean} p.isLoading
+   * @param {string} [p.createLink]
+   * @param {string} [p.className]
+   * @param {*} ref 
+   * @returns 
+   */
+  ({reload, searchTitle, isLoading, createLink='', className='' }, ref) => {
   const [search, setSearch] = useState('')
 
   useImperativeHandle(
@@ -63,7 +74,7 @@ export const TopActions = forwardRef(
 })
 
 export const BottomActions = 
-  ({ next, prev, limit, onLimitChange, className }) => {
+  ({ next, prev, limit, onLimitChange, className='' }) => {
   
   const _onLimitChange = useCallback(
     (e) => {

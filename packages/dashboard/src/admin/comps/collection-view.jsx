@@ -45,15 +45,27 @@ const getValue = (key, item, transform = x => x) => {
  * @param {object} p
  * @param {any} p.context anything to pass to component
  * @param {CollectionViewField[]} p.fields the fields schema
- * @param {any[]} p.data the data
+ * @param {import("@storecraft/core/v-api").BaseType[]} p.data the data
  * @param {string} p.recordClassName
+ * @param {string} [p.className]
  */
-const Table = 
-  ({ context, fields, data, recordClassName, className, ...rest }) => {
+const Table = (
+  { 
+    context, fields, data, recordClassName, className, ...rest 
+  }
+) => {
 
+
+  /**
+   * 
+   * @param {object} param0 
+   * @param {import("@storecraft/core/v-api").BaseType} param0.item 
+   * @param {string} [param0.className] 
+   */
   const Record = ({ item, className, ...rest }) => {
+    
     return (
-      <tr className={recordClassName}>
+      <tr className={recordClassName} {...rest}>
         {
           fields.map(
             (field, ix) => (
@@ -69,7 +81,7 @@ const Table =
                 children={
                   <field.comp context={{ item, ...context}} 
                               field={field} 
-                              value={getValue(field.key, item[1], field.transform)}
+                              value={getValue(field.key, item, field.transform)}
                               {...field.comp_params} />
                           } /> 
             )
@@ -111,14 +123,19 @@ const Table =
  * @param {object} p
  * @param {any} p.context anything
  * @param {CollectionViewField[]} p.fields scehma
- * @param {object[]} p.data actual data
+ * @param {import("@storecraft/core/v-api").BaseType[]} p.data actual data
  * @param {string} p.recordClassName
+ * @param {string} [p.className]
  */
-export default ({ context, fields, data, 
-                  recordClassName=`bg-white dark:bg-white/5 
-                                   dark:border-gray-300/25 border-b 
-                                   --border-gray-300 h-14`, 
-                  className=' ' }) => {
+export default (
+  { 
+    context, fields, data, 
+    recordClassName=`bg-white dark:bg-white/5 
+                      dark:border-gray-300/25 border-b 
+                      --border-gray-300 h-14`, 
+    className=' ' 
+  }
+) => {
 
   return (
 <div className={`w-full --border-x ${className}`}>

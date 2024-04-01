@@ -2,11 +2,11 @@
 /**
  * 
  * @param {object} p
- * @param {boolean} p.show
+ * @param {any} p.show
  * @param {any} p.children
  */
 const ShowIf = ({show, children}) => {
-  if(show) return (children)
+  if(Boolean(show)) return (children)
   return null
 }
 

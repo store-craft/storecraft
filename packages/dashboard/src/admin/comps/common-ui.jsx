@@ -98,8 +98,11 @@ export const CreateDate2 = ({ time, className='', ...rest }) => {
 }
 
 /**
- * @param {object} p
- * @param {boolean} p.dashed
+ * 
+ * @param {React.InputHTMLAttributes<HTMLInputElement> & {
+ *  dashed?: boolean;
+ * }} param0 
+ * @returns 
  */
 export const HR = ({ dashed=false, ...rest }) => {
   const base = 'shelf-border-color'
@@ -111,7 +114,13 @@ export const HR = ({ dashed=false, ...rest }) => {
   )
 }
 
-
+/**
+ * 
+ * @param {React.InputHTMLAttributes<HTMLInputElement> & {
+ *  className?: string;
+ * }} param0 
+ * @returns 
+ */
 export const Title = ({className, ...rest}) => {
   return (
 <p {...rest}
@@ -138,6 +147,19 @@ const InputDefaultClass = `rounded-md pl-3
                             font-normal transition-none`
 
 export const Input = forwardRef(
+  /**
+   * @typedef {object} InputInternalParams
+   * @property {boolean} [overrideClass=false]
+   * @property {string} [className]
+   * 
+   * @typedef {InputInternalParams & 
+   * React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+   * } InputParams
+   * 
+   * @param {InputParams} param0 
+   * @param {*} ref 
+   * @returns 
+   */
   ({ className='h-10 px-3', overrideClass=false, ...rest }, ref) => {
 
   const cls = overrideClass ? className : `${InputDefaultClass} ${className}`
@@ -152,6 +174,15 @@ export const Input = forwardRef(
 )
 
 export const BlingInput = forwardRef(
+  /**
+   * @typedef {object} BlingInputInternalParams
+   * @property {string} [inputClsName]
+   * 
+   * @typedef {BlingInputInternalParams & InternalBlingParams & InputParams} BlingInputParams
+   * 
+   * @param {BlingInputParams} param0 
+   * @param {*} ref 
+   */
   ({ from, to, rounded='rounded-lg', stroke, className,
       inputClsName='h-10 rounded-md px-3', ...rest }, ref) => {
 
@@ -165,21 +196,26 @@ export const BlingInput = forwardRef(
 )
 
 /**
+ * @typedef {{
+ *  className?: string, rounded?: string, 
+ *  children?: any, stroke?: string, from?: string, 
+ *  to?: string
+ * }} InternalBlingParams
  * 
- * @param {object} p 
- * @param {string} [p.className] 
- * @param {string} [p.rounded] 
- * @param {string} [p.stroke] 
- * @param {string} [p.from] 
- * @param {string} [p.to] 
- * @param {object} [p.children] 
- * @param {object[]} [p.rest] 
- * @returns 
+ * @typedef {InternalBlingParams & 
+ * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } BlingParams
+ * @param {BlingParams} p 
+ * 
  */
-export const Bling = ( { className, rounded='rounded-md', 
-                         children, stroke='p-px', 
-                         from='from-pink-500 dark:from-pink-500', 
-                         to='to-kf-500 dark:to-kf-500', ...rest } ) => {
+export const Bling = ( 
+  { 
+    className, rounded='rounded-md', 
+    children, stroke='p-px', 
+    from='from-pink-500 dark:from-pink-500', 
+    to='to-kf-500 dark:to-kf-500', ...rest 
+  }
+) => {
 
   return (
 <div className={`bg-gradient-to-r ${from} ${to} ${stroke} 
@@ -212,11 +248,33 @@ export const withBling2 = (Comp) => {
 }
 
 export const Div = ({setError, ...rest}) => 
-          (<div {...rest} />)
+          (<div {...rest} />);
 
-export const Card = 
-  ({ name, setError, error=undefined, children, 
-     border=true, desc=undefined, rightView, cardClass='shelf-card', ...rest}) => {
+/**
+ * @typedef {object} InternalCardParams
+ * @property {import('react').ReactElement<any, string | import('react').JSXElementConstructor<any>>} name 
+ * @property {(e:string) => void} setError 
+ * @property {string} error 
+ * @property {React.ReactNode} children 
+ * @property {boolean} border 
+ * @property {string} desc 
+ * @property {import('react').ReactElement} rightView 
+ * @property {string} cardClass 
+ * @property {any[]} [rest] 
+ * 
+ * @typedef {InternalCardParams & 
+ * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } CardParams
+ * 
+ * @param {CardParams} params
+ */          
+export const Card = (
+  { 
+    name, setError, error=undefined, children, 
+    border=true, desc=undefined, rightView, 
+    cardClass='shelf-card', ...rest
+  }
+) => {
 
   return (
 <div  {...rest}>
@@ -241,7 +299,7 @@ export const Card =
     <ShowIf show={desc}>
       <p children={desc} className='text-sm shelf-text-minor-light mt-3 
                 tracking-wider whitespace-pre-line'/>
-      <HR className='mt-3 --mb-5' />
+      <HR className='mt-3 --mb-5'  />
     </ShowIf>
 
     <div children={children} className='mt-5' />

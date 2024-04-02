@@ -19,7 +19,12 @@ export const TopActions = forwardRef(
    * @param {*} ref 
    * @returns 
    */
-  ({reload, searchTitle, isLoading, createLink='', className='' }, ref) => {
+  (
+    {
+      reload, searchTitle, isLoading, createLink='', className='' 
+    }, ref
+  ) => {
+
   const [search, setSearch] = useState('')
 
   useImperativeHandle(
@@ -46,7 +51,7 @@ export const TopActions = forwardRef(
   <div className={`--border-x  --bg-kf-50 w-full text-grey-800 
                   flex flex-row justify-between items-center px-0 --border-t`}>
     <Link to={createLink} draggable='false' className="m-2">
-      <BlingButton2 
+      <BlingButton2
         className='h-9 w-16 text-base rounded-lg' stroke='p-0.5' children='add'
         icon={
           <IoCreateOutline className='inline shelf-text-label-color 
@@ -73,8 +78,20 @@ export const TopActions = forwardRef(
   )
 })
 
-export const BottomActions = 
-  ({ next, prev, limit, onLimitChange, className='' }) => {
+/**
+ * 
+ * @param {object} param
+ * @param {() => Promise<void>} param.next
+ * @param {() => Promise<void>} param.prev
+ * @param {number} param.limit
+ * @param {(v: number) => void} param.onLimitChange
+ * @param {string} [param.className]
+ */
+export const BottomActions = (
+  { 
+    next, prev, limit, onLimitChange, className='' 
+  }
+) => {
   
   const _onLimitChange = useCallback(
     (e) => {
@@ -87,8 +104,9 @@ export const BottomActions =
   <div className={`h-fit --bg-slate-50 py-3 w-full flex
                    flex-row justify-between items-center px-3 
                    ${className}`}>
-    <PromisableLoadingButton Icon={<MdNavigateNext className='rotate-180' />} text='' 
-                    className='text-lg' onClick={prev} />
+    <PromisableLoadingButton 
+        Icon={<MdNavigateNext className='rotate-180' />} 
+        text='' className='text-lg' onClick={prev} />
     <select name='limit' onChange={_onLimitChange} value={limit} 
             className='m-1 h-8 px-4 rounded-md text-sm 
                      bg-slate-50 dark:bg-slate-800 --border focus:outline-none'>

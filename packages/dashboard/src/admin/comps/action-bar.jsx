@@ -10,22 +10,39 @@ import NotificationButton from './notifications-button.jsx'
 import DarkMode from './dark-mode.jsx'
 
 
-const ActionBar = 
-  ({ menuOpen, className='w-full', onMenuClick, ...rest }) => {
+/**
+ * @typedef {object} InternalActionBarParams
+ * @prop {boolean} [menuOpen]
+ * @prop {string} [className]
+ * @prop {React.MouseEventHandler} [onMenuClick]
+ * 
+ * @typedef {InternalActionBarParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+ * } ActionBarParams
+ * 
+ * @param {ActionBarParams} param0 
+ * @returns 
+ */
+const ActionBar = (
+  { 
+    menuOpen, className='w-full', onMenuClick, ...rest 
+  }
+) => {
   
-  const [notify_open, toggle_notify] = useToggle(false)
+  const [notify_open, toggle_notify] = useToggle(false);
   const {
     user, isAuthenticated, 
     actions: {
       signin, signup, signout
     }
-  } = useUser()
-
+  } = useUser();
+  
   const user_name = useMemo(
-    () => user?.firstname ? (', ' + user?.firstname) : ''
+    () => user?.firstname ? (', ' + user?.firstname) : '',
     [user]
-  )
+  );
   // console.log(notify_open)
+  
   return (
 <nav className={className} {...rest}>
   <div className='relative w-full flex flex-row h-full justify-between items-center '>

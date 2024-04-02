@@ -3,16 +3,15 @@ import { Bling, BlingInput } from './common-ui.jsx'
 import { MdClose } from 'react-icons/md/index.js'
 import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
 import { GradientFillIcon } from './common-button.jsx'
-import { FieldData } from './fields-view.jsx'
-// import { AttributeData } from '@/admin/js-docs-types'
 
 /**
  * @param {object} p
  * @param {import('@storecraft/core/v-api').AttributeType} p.val
  * @param {(attribute: import('@storecraft/core/v-api').AttributeType) => void} p.onChange
  * @param {() => void} p.onDelete
+ * @param {string} [p.className]
  */
-const Attr = ({ val = {}, onChange, onDelete, className }) => {
+const Attr = ({ val, onChange, onDelete, className }) => {
 
   const onChangeInternal = useCallback(
     (key, e) => {
@@ -58,16 +57,17 @@ const Attr = ({ val = {}, onChange, onDelete, className }) => {
 /**
  * 
  * @param {object} p
- * @param {FieldData} p.field
- * @param {AttributeData[]} p.value
- * @param {(attributes: AttributeData[]) => void} p.onChange
+ * @param {import('./fields-view.jsx').FieldData} p.field
+ * @param {string} [p.className]
+ * @param {import('@storecraft/core/v-api').AttributeType[]} p.value
+ * @param {(attributes: import('@storecraft/core/v-api').AttributeType[]) => void} p.onChange
  */
 const Attributes = 
   ({field, value=[], onChange, className, ...rest}) => {
   
   const onAdd = useCallback(
     () => {
-      onChange([ { key: '', val: '', createdAt: Date.now() }, ...value])
+      onChange([ { key: '', value: '' }, ...value])
     }, [value, onChange]
   )
 
@@ -96,7 +96,7 @@ const Attributes =
     {
       value?.map(
         (it, ix) => 
-          <Attr val={it} key={`${it.createdAt}`} 
+          <Attr val={it} key={`${it.key}_${it.value}_${ix}`} 
                 className='w-full'
                 onDelete={() => onDelete(ix)}
                 onChange={(val) => onChangeInternal(ix, val)} />

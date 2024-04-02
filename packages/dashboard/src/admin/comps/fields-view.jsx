@@ -87,6 +87,7 @@ const validateField = (field, value) => {
 
 /**
  * @typedef {object} FieldData
+ * @property {string} type
  * @property {string} key
  * @property {string} running_key
  * @property {any} defaultValue
@@ -96,7 +97,6 @@ const validateField = (field, value) => {
  * @property {import('react').ComponentType} comp a react component
  * @property {object} comp_params params for comp
  */
-export const FieldData = {}
 
 /**
  * @typedef {object} FieldContextData
@@ -105,7 +105,6 @@ export const FieldData = {}
  * @property {object} [data] the entire original data
  * @property {Object<string, { get: () => any }>} [query] the entire original data
  */
-export const FieldContextData = {}
 
 /**
  * @typedef {object} FieldViewParams

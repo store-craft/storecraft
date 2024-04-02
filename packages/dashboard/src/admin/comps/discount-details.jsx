@@ -5,7 +5,7 @@ import {
 import { BlingInput, HR } from './common-ui.jsx'
 import ShowIf from './show-if.jsx'
 import DiscountFilters from './discount-filters.jsx'
-import { FieldContextData } from './fields-view.jsx'
+// import { FieldContextData } from './fields-view.jsx'
 import { TbMath } from 'react-icons/tb/index.js'
 
 export const discount_details_validator = v => {
@@ -15,16 +15,22 @@ export const discount_details_validator = v => {
 }
 
 export const discount_types = [
-  { id: 0, type: 'regular',          name : 'Regular Discount', 
-    desc: 'All Filtered products you defined will get the same discount. For Example: Every shirt will have 10% discount' },
-  { id: 1, type: 'bulk',          name : 'Bulk Discount', 
-    desc: 'Set an exact bulk discount on filtered products. for Example, 3 for 100$, 5 for 5% off' },
-  { id: 2, type: 'buy_x_get_y' ,  name : 'Buy X Get Y',
-    desc: 'Buy some from the filtered products and get Y for discount. For Example: Buy 3 pants, get a Shirt for 50% off' },
+  { id: 0, type: 'regular',          
+    name : 'Regular Discount', 
+    desc: 'All Filtered products you defined will get the same discount. \
+    For Example: Every shirt will have 10% discount' },
+  { id: 1, type: 'bulk', name : 'Bulk Discount', 
+    desc: 'Set an exact bulk discount on filtered products. \
+    for Example, 3 for 100$, 5 for 5% off' },
+  { id: 2, type: 'buy_x_get_y', name : 'Buy X Get Y',
+    desc: 'Buy some from the filtered products and get Y for discount. \
+    For Example: Buy 3 pants, get a Shirt for 50% off' },
   { id: 3, type: 'order', name : 'Order Discount',
-    desc: 'Offer a discount on the total order including perks such as Free Shipping' },
+    desc: 'Offer a discount on the total order including perks \
+    such as Free Shipping' },
   { id: 4, type: 'bundle', name : 'Bundle Discount',
-    desc: 'Offer a discount on a bundle of products. For Example, buy a Laptop + Headset at discount 💲' },
+    desc: 'Offer a discount on a bundle of products. For Example, \
+    buy a Laptop + Headset at discount 💲' },
 ]
 
 const DiscountTypes = ({ selectedType, onChange }) => {
@@ -788,8 +794,8 @@ const discount_types_comps = [
 /**
  * @param {object} p 
  * @param {string} p.type
- * @param {FieldContextData} p.context
- * @param {typeof(DiscountDetails).extra} p.onChange
+ * @param {import('./fields-view.jsx').FieldContextData} p.context
+ * @param {typeof DiscountDetails.extra} p.onChange
  */
 const Type2Comp = ({ type, context, onChange, ...rest }) => {
   const record = discount_types_comps.find(
@@ -799,11 +805,14 @@ const Type2Comp = ({ type, context, onChange, ...rest }) => {
   if (!record)
     return (<></>)
   const { Comp, CompParams } = record
-  return (<Comp {...CompParams} onChange={onChange} type={type} context={context} {...rest} />)
+  return (
+    <Comp {...CompParams} onChange={onChange} 
+          type={type} context={context} {...rest} />
+  );
 }
 
 /**
- * @param {DiscountMeta} m 
+ * @param {DiscountMetaEnum[keyof DiscountMetaEnum]} m 
  */
 const getDefaultExtraByMeta = m => {
   switch(m.id) {
@@ -839,20 +848,19 @@ const getDefaultExtraByMeta = m => {
 /**
  * 
  * @param {object} p
- * @param {import('./fields-view').FieldViewParams} p.field
- * @param {import('./fields-view').FieldContextData} p.context
- * @param {DiscountDetails} p.value
- * @param {(v: DiscountDetails) => void} p.onChange
+ * @param {import('./fields-view.jsx').FieldViewParams} p.field
+ * @param {import('./fields-view.jsx').FieldContextData} p.context
+ * @param {import('@storecraft/core/v-api').DiscountDetails} p.value
+ * @param {(v: import('@storecraft/core/v-api').DiscountDetails) => void} p.onChange
  */
 const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
   const [type, setType] = useState(value?.meta)
   const [extra, setExtra] = useState(value?.extra)
-  const { key, comp_params } = field
 
   const notify = useCallback(
     /**
-     * @param {DiscountMeta} t 
-     * @param {OrderDiscountExtra | BundleDiscountExtra | RegularDiscountExtra | BulkDiscountExtra | BuyXGetYDiscountExtra} e 
+     * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} t 
+     * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} e 
      */
     (t, e) => {
       setType(t);
@@ -865,14 +873,17 @@ const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
   )
 
   const onTypeSelected = useCallback(
-    /** @param {DiscountMeta} t */
-    (m) => {
+    /** @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} t */
+    (t) => {
       
-      notify(m, getDefaultExtraByMeta(m))
+      notify(t, getDefaultExtraByMeta(t))
     }, [notify]
   )
 
   const onExtraChange = useCallback(
+    /**
+     * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} e
+     */
     (e) => {
       notify(type, e)
     }, [type, notify]

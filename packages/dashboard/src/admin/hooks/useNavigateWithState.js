@@ -2,14 +2,19 @@ import { useCallback } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 /**
+ * @typedef {object} Params
+ * @property {import('react-router-dom').To} to 
+ * @property {() => any | object} current_state object or function 
+ * @property {() => any | object} [next_state] object or function 
+ * @property {() => any} [onClick] callback
  * 
- * @param {object} param0 
- * @param {import('react-router-dom').To} param0.to 
- * @param {() => any | object} param0.current_state object or function 
- * @param {() => any | object} param0.next_state object or function 
- * @param {() => any} param0.onClick callback
+ * @param {Params & import('react').AnchorHTMLAttributes} params
  */
-export const LinkWithState = ({ to, current_state, next_state, onClick, ...rest }) => {
+export const LinkWithState = (
+  { 
+    to, current_state, next_state, onClick, ...rest 
+  }
+) => {
 
   const {
     navWithState
@@ -41,8 +46,8 @@ const useNavigateWithState = () => {
   const navWithState = useCallback(
     /**
      * @param {import('react-router-dom').To} to 
-     * @param {() => any | object} current_state object or function 
-     * @param {() => any | object} next_state object or function 
+     * @param {() => any | object} [current_state] object or function 
+     * @param {() => any | object} [next_state] object or function 
      */
     (to, current_state, next_state) => {
       current_state = (typeof current_state === 'function') ? current_state() : current_state

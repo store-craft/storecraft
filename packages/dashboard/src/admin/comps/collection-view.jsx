@@ -71,10 +71,10 @@ const Table = (
             (field, ix) => (
               <td 
                 className={
-                  ix==0 ? 'text-start pl-3' : 
+                  ix==0 ? 'text-start pl-3 ' : 
                           ix<fields.length-1 ? 
-                          'text-center pl-3' : 
-                          'text-end pr-3'
+                          'text-center pl-3 ' : 
+                          'text-end pr-3 sticky right-0 bg-white border-l-2 shadow-2xl '
                 } 
                 style={{width:'0.0%'}}
                 key={ix} 
@@ -102,7 +102,7 @@ const Table = (
           <th className={
             ix==0 ? 'text-left pl-3' : 
                     ix<fields.length-1 ? 
-                    'text-center' : 'text-end pr-3'
+                    'text-center' : 'text-center pr-3 sticky right-0 border-l-2 '
                         }
               key={ix} 
               children={field.name} /> 
@@ -142,7 +142,7 @@ export default (
   <div className='w-full overflow-auto'>
     <Table context={context} fields={fields} 
            data={data} recordClassName={recordClassName}
-           className='w-full '/>
+           className='w-full table-fixed2 whitespace-nowrap'/>
   </div>
 </div>
   )

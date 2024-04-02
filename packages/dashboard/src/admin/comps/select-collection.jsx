@@ -15,16 +15,17 @@ export const default_transform_fn = window => window ?? []
  * @property {(value: any) => any} onSelect callback when selection is made (value) => any 
  * @property {string} header
  * @property {boolean} add_all add all sentinal
+ * @property {0 | 1} layout add all sentinal
  * @property {string} collectionId collection to query
- * @property {number} limit number of item to query
- * @property {([id, data][] ) => any[]} transform_fn 
- * function to process array of items [[id, data], ...] => ?
- * @property {( [id, data] : [string, any]) => string} name_fn 
- * function to process an item and picks up a name ([id, data] => name)
+ * @property {number} [limit] number of item to query
+ * @property {string} [className] 
+ * @property {string} [clsHeader] 
+ * @property {string} [clsReload] 
+ * @property {typeof default_transform_fn} transform_fn 
+ * @property {typeof default_name_fn} name_fn 
  * 
  * @param {SelectCollectionParams} params
  * 
- * @returns 
  */
 const SelectCollection = 
   ({ onSelect, header, collectionId, limit=100, layout=0,
@@ -81,7 +82,7 @@ const SelectCollection =
     }, [transformed, nada, onSelect]
   )
 
-  const Select = ({ className }) => {
+  const Select = ({ className='' }) => {
     return (
 <select name='limit' onChange={onSelectInternal} 
         value={tag} 

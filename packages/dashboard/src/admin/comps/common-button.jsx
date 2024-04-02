@@ -2,8 +2,27 @@ import { useCallback, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai/index.js'
 import { Bling } from './common-ui.jsx'
 
-export const Button = 
-    ({ text, icon=undefined, className, classNameSpan, children, rightView, ...rest }) => {
+
+/**
+ * @typedef {object} InternalButtonparams
+ * @property {string} [text]
+ * @property {import('react').ReactElement} [icon]
+ * @property {string} [className]
+ * @property {string} [classNameSpan]
+ * @property {any} children
+ * @property {any} [rightView]
+ * 
+ * @typedef {InternalButtonparams & 
+ * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ * } ButtonParams
+ * 
+ * @param {ButtonParams} param0 
+ */
+export const Button = (
+  { 
+    text, icon=undefined, className, classNameSpan, children, rightView, ...rest 
+  }
+) => {
 
   return (
 <button className={`flex flex-row items-center rounded-md 
@@ -19,8 +38,26 @@ export const Button =
   )
 }
 
-export const Button2 = 
-  ({ text, icon=undefined, className, classNameSpan, children, ...rest }) => {
+/**
+ * @typedef {object} InternalButton2params
+ * @property {string} [text]
+ * @property {import('react').ReactElement} [icon]
+ * @property {string} [className]
+ * @property {string} [classNameSpan]
+ * @property {any} children
+ * 
+ * @typedef {InternalButton2params & 
+ * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ * } Button2params
+ * 
+ * @param {Button2params} param0 
+ * @returns 
+ */
+export const Button2 = (
+  { 
+    text, icon=undefined, className, classNameSpan, children, ...rest 
+  }
+) => {
 
   return (
 <button className={`flex flex-row items-center gap-1 rounded-md 
@@ -36,11 +73,31 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
                      w-fit flex flex-row items-center 
                     transition-colors duration-300`
 
-export const LoadingButton = 
-  ({ Icon=null, show=true, text='', 
-     keep_text_on_load=false, className=cls_default, 
-     classNameLoading='inline text-sm',
-     loading, ...rest}) => {
+/**
+ * @typedef {object} InternalLoadingButtonParams
+ * @property {import('react').ReactElement} [Icon]
+ * @property {string} [text]
+ * @property {boolean} [keep_text_on_load]
+ * @property {string} [className]
+ * @property {string} [classNameLoading]
+ * @property {boolean} [loading]
+ * @property {boolean} [show]
+ * 
+ * @typedef {InternalLoadingButtonParams & 
+ * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ * } LoadingButtonParams
+ * 
+ * @param {LoadingButtonParams} param0 
+ * @returns 
+ */
+export const LoadingButton = (
+  { 
+    Icon=null, show=true, text='', 
+    keep_text_on_load=false, className=cls_default, 
+    classNameLoading='inline text-sm',
+    loading, ...rest
+  }
+) => {
 
   if(!show)
     return null
@@ -67,6 +124,19 @@ export const LoadingButton =
 /**
  * A loading button which expects a promise for onClick
  */
+
+/**
+ * A loading button which expects a promise for onClick
+ * 
+ * @typedef {object} InternalPromisableLoadingButton
+ * @prop {() => Promise<Void>} onClick
+ * @prop {boolean} [loading]
+ * 
+ * @typedef {InternalPromisableLoadingButton & 
+* Omit<LoadingButtonParams, 'onClick'>} PromisableLoadingButton
+* 
+* @param {PromisableLoadingBlingButton} param0 
+*/
 export const PromisableLoadingButton = 
   ({ onClick, loading: $loading, ...rest }) => {
 
@@ -86,18 +156,33 @@ export const PromisableLoadingButton =
   )
 }
 
-export const PromisableLoadingBlingButton = 
-  ({onClick, show=true, className, loading: $loading, ...rest}) => {
+/**
+ * @typedef {object} InternalPromisableLoadingBlingButton
+ * @prop {() => Promise<Void>} onClick
+ * @prop {boolean} [show]
+ * @prop {boolean} [loading]
+ * 
+ * @typedef {InternalPromisableLoadingBlingButton & 
+ * Omit<LoadingButtonParams, 'onClick'>} PromisableLoadingBlingButton
+ * 
+ * @param {PromisableLoadingBlingButton} param0 
+ */
+export const PromisableLoadingBlingButton = (
+  {
+    onClick, show=true, className, loading: $loading, ...rest
+  }
+) => {
 
   const [loading, setLoading] = useState($loading)
-  const onClickWrapper = useCallback(() => {
-    const stop_loading = () => setLoading(false)
-    setLoading(true)
-    onClick().catch(()=>{}).finally(stop_loading)
-  }, [onClick])
+  const onClickWrapper = useCallback(
+    () => {
+      const stop_loading = () => setLoading(false)
+      setLoading(true)
+      onClick().catch(()=>{}).finally(stop_loading)
+    }, [onClick]
+  );
 
-  if(!show)
-    return null
+  if(!show) return null
 
   return (   
 <Bling stroke='p-px' className={className} rounded='rounded-full'
@@ -113,6 +198,13 @@ export const PromisableLoadingBlingButton =
   )
 }
 
+/**
+ * 
+ * @param {import('./common-ui.jsx').InternalBlingParams & 
+ * { btnClassName?: string, text?: string } & 
+ * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ * } param0 
+ */
 export const BlingButton = 
   ({ from, to, rounded='rounded-lg', stroke='p-0.5', 
      children, text='what', className='h-10', 
@@ -129,9 +221,16 @@ export const BlingButton =
   )
 }
 
-export const BlingButton2 = 
-  ({ from, to, rounded='rounded-lg', stroke, 
-      ...rest }) => {
+/**
+ * 
+ * @param {Button2params & import('./common-ui.jsx').InternalBlingParams} param0 
+ */
+export const BlingButton2 = (
+  { 
+    from, to, rounded='rounded-lg', stroke, ...rest 
+  }
+) => {
+
   return (
 <Bling from={from} to={to} rounded={rounded} stroke={stroke} 
         className='w-fit h-fit'
@@ -141,8 +240,24 @@ export const BlingButton2 =
   )
 }
 
-export const GradientFillIcon = 
-  ({ Icon, from='#973cff', to='rgb(236 72 153)', ...rest }) => {
+
+/**
+ * 
+ * @typedef {object} InternalGradientFillIconParams
+ * @property {string} [from]
+ * @property {string} [to]
+ * @property {import('react').FC} [Icon]
+ * 
+ * @typedef {InternalGradientFillIconParams & {[x:string]:any}
+* } GradientFillIconParams
+* 
+* @param {GradientFillIconParams} param0 
+*/
+export const GradientFillIcon = (
+  { 
+    Icon, from='#973cff', to='rgb(236 72 153)', ...rest 
+  }
+) => {
   
   const id = btoa(`gradient_${from}_${to}`)
   
@@ -160,8 +275,23 @@ export const GradientFillIcon =
   )
 }
 
-export const GradientStrokeIcon = 
-  ({ Icon, from='#973cff', to='rgb(236 72 153)', ...rest }) => {
+/**
+ * 
+ * @typedef {object} InternalGradientStrokeIconParams
+ * @property {string} [from]
+ * @property {string} [to]
+ * @property {import('react').FC} [Icon]
+ * 
+ * @typedef {InternalGradientFillIconParams & {[x:string]:any}
+* } GradientStrokeIconParams
+* 
+* @param {GradientStrokeIconParams} param0 
+*/
+export const GradientStrokeIcon = (
+  { 
+    Icon, from='#973cff', to='rgb(236 72 153)', ...rest 
+  }
+) => {
   
   const id = btoa(`gradient_${from}_${to}`)
   

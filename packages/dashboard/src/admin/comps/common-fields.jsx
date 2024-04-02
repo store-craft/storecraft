@@ -12,7 +12,6 @@ import { read_clipboard, write_clipboard } from '../utils/index.js'
 import { to_handle } from '@/admin-sdk/utils.functional.js'
 import { Bling, Card, HR, Input } from './common-ui.jsx'
 import { LinkWithState } from '../hooks/useNavigateWithState.js'
-import { FieldData } from './fields-view.jsx'
 
 /**
  * 
@@ -24,14 +23,16 @@ export const create_select_view = (options, defaultIndex=0) => {
   /**
    * 
    * @param {object} p
-   * @param {FieldData} p.field
+   * @param {import('./fields-view.jsx').FieldData} p.field
    * @param {any} p.value
-   * @param {any => any} p.onChange
+   * @param {(v: any) => any} p.onChange
    */
   const Select = ({field, value, onChange}) => {
     const { key, name, comp_params } = field
-    const [selectedOption, setSelectedOption] = 
-                        useState(value ?? options[defaultIndex])
+    const [selectedOption, setSelectedOption] = useState(
+      value ?? options[defaultIndex]
+      );
+
     // useEffect(() => {
     //   onChange(selectedOption)
     // }, [selectedOption, onChange, options])
@@ -63,6 +64,13 @@ export const create_select_view = (options, defaultIndex=0) => {
   return Select
 }
 
+/**
+ * 
+ * @param {object} params 
+ * @param {import('./fields-view.jsx').FieldData} params.field 
+ * @param {any} params.value 
+ * @param {(v:any) => void} params.onChange 
+ */
 export const TextArea = ({field, value, onChange, ...rest}) => {
   const { key, comp_params } = field
   return (
@@ -71,10 +79,25 @@ export const TextArea = ({field, value, onChange, ...rest}) => {
   )
 }
 
-const readable_span_cls = 'pr-3 py-2 max-w-[18rem] overflow-x-auto inline-block whitespace-nowrap'
+const readable_span_cls = 'pr-3 py-2 max-w-[18rem] \
+overflow-x-auto inline-block whitespace-nowrap';
 
-export const Span = 
-  ({value, onChange, children, className, extra='max-w-[8rem] md:max-w-[18rem]', ...rest}) => {
+/**
+ * 
+ * @param {object} param
+ * @param {any} param.value
+ * @param {(v:any) => void} param.onChange 
+ * @param {any} [param.children] 
+ * @param {string} [param.className] 
+ * @param {string} [param.extra] 
+ */
+export const Span = (
+  {
+    value, onChange, children, className, 
+    extra='max-w-[8rem] md:max-w-[18rem]', ...rest
+  }
+) => {
+
   const readable_span_cls = 'overflow-x-auto inline-block whitespace-nowrap'
   const merged = `${readable_span_cls} ${className} ${extra}`
   return (
@@ -84,10 +107,28 @@ export const Span =
   )
 }
 
-export const SpanArray = ( { 
-      field, value, className, 
-      classNameDelimiter='text-pink-600 font-bold text-lg', 
-      delimiter=' / ', ...rest}) => {
+/**
+ * 
+ * @typedef {object} InternalSpanArrayParams
+ * @prop {import('./fields-view.jsx').FieldData} field
+ * @prop {any} value
+ * @prop {string} [className]
+ * @prop {string} [classNameDelimiter]
+ * @prop {string} [delimiter]
+ * 
+ * @typedef {InternalSpanArrayParams & 
+ * React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+ * } SpanArrayParams
+ * 
+ * @param {SpanArrayParams} param
+ */
+export const SpanArray = ( 
+  { 
+    field, value, className, 
+    classNameDelimiter='text-pink-600 font-bold text-lg', 
+    delimiter=' / ', ...rest
+  }
+) => {
         
   const VV = value?.map((it, ix) => (
     <span key={ix}>
@@ -111,7 +152,6 @@ export const SpanArray = ( {
  * @param {import('./collection-view.jsx').CollectionViewField} param0.field
  * @param {string} param0.value
  * @param {undefined} param0.onChange
- * @returns 
  */
 export const TimeStampView = ({field, value, onChange, ...rest}) => {
   const { key, name, comp_params } = field
@@ -121,6 +161,20 @@ export const TimeStampView = ({field, value, onChange, ...rest}) => {
   )
 }
 
+/**
+ * @typedef {object} InternalMInputParams
+ * @prop {import('./fields-view.jsx').FieldData} field
+ * @prop {any} value
+ * @prop {(v: any) => void} onChange
+ * @prop {'text' | 'number'} [type]
+ * 
+ * @typedef {InternalMInputParams & 
+ * import('./common-ui.jsx').InputParams } MInputParams
+ * 
+ * 
+ * @param {MInputParams} param
+ * @returns 
+ */
 export const MInput = ({field, value, onChange, type='text', ...rest}) => {
   const { key, name, comp_params } = field
   const merged = { ...comp_params, ...rest}
@@ -147,13 +201,24 @@ export const MInput = ({field, value, onChange, type='text', ...rest}) => {
 }
 
 /**
+ * @typedef {object} InternalInputWithClipboardParams
+ * @prop {import('./fields-view.jsx').FieldData} field
+ * @prop {any} value
+ * @prop {(v: any) => void} onChange
+ * @prop {(v: string) => void} setError
  * 
- * @param {object} p
- * @param {string | number | undefined} p.value
- * @param {FieldData} p.field
- * @param {(any) => void )} p.onChange
+ * @typedef {InternalInputWithClipboardParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } InputWithClipboardParams
+ * 
+ * @param {InputWithClipboardParams} param
+ * 
  */
-export const InputWithClipboard = ({ value, field, onChange, setError, ...rest}) => {
+export const InputWithClipboard = (
+  { 
+    value, field, onChange, setError, ...rest
+  }
+) => {
 
   const onClick = useCallback(
     async () => {
@@ -183,8 +248,26 @@ export const InputWithClipboard = ({ value, field, onChange, setError, ...rest})
   )
 }
 
-export const Handle = 
-  ({ value, field, onChange, context, setError, ...rest}) => {
+/**
+ * @typedef {object} InternalHandleParams
+ * @prop {import('./fields-view.jsx').FieldData} field
+ * @prop {any} value
+ * @prop {(v: any) => void} onChange
+ * @prop {(v: string) => void} setError
+ * @prop {import('./fields-view.jsx').FieldContextData} context
+ * 
+ * @typedef {InternalHandleParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } HandleParams
+* 
+* @param {HandleParams} param
+* 
+*/
+export const Handle = (
+  { 
+    value, field, onChange, context, setError, ...rest
+  }
+) => {
 
   const onClick = useCallback(
     async () => {
@@ -213,6 +296,21 @@ export const Handle =
   )
 }
 
+/**
+ * @typedef {object} InternalSwitchParams
+ * @prop {import('./fields-view.jsx').FieldData} field
+ * @prop {any} value
+ * @prop {(v: any) => void} onChange
+ * @prop {(v: string) => void} setError
+ * @prop {import('./fields-view.jsx').FieldContextData} context
+ * 
+ * @typedef {InternalSwitchParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } SwitchParams
+* 
+* @param {SwitchParams} param
+* 
+*/
 export const Switch = ({field, value=true, onChange, ...rest}) => {
   const { key, name, comp_params } = field
   const merged = { ...comp_params, ...rest}
@@ -243,8 +341,32 @@ export const Switch = ({field, value=true, onChange, ...rest}) => {
   )
 }
 
-export const CompContainer = 
-  ({Comp, field, value, className, name, onChange, error=undefined, ...rest}) => {
+
+/**
+ * @typedef {object} InternalCompContainerParams
+ * @prop {import('./fields-view.jsx').FieldData} field
+ * @prop {any} value
+ * @prop {(v: any) => void} onChange
+ * @prop {string} [error]
+ * @prop {(v: string) => void} setError
+ * @prop {import('./fields-view.jsx').FieldContextData} context
+ * @prop {import('react').FC<any>} Comp
+ * @prop {string} name
+ * 
+ * @typedef {InternalCompContainerParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } CompContainerParams
+* 
+* @param {CompContainerParams} param
+* 
+*/
+export const CompContainer = (
+  {
+    Comp, field, value, className, name, onChange, 
+    error=undefined, ...rest
+  }
+) => {
+
   return (
 <div className={`rounded-lg bg-white border p-2 mr-2 mb-2 w-full ${className}`} 
       {...rest}>
@@ -255,7 +377,13 @@ export const CompContainer =
   )
 }
 
-export const ClipBoardCopy = ({ value, config=1, onClick }) => {
+/**
+ * 
+ * @param {{
+ *  value: string, config?: 0 | 1
+ * }} param0 
+ */
+export const ClipBoardCopy = ({ value, config=1 }) => {
   const [copied, setCopied] = useState(false)
 
   const onClickCopy = useCallback(
@@ -283,9 +411,28 @@ export const ClipBoardCopy = ({ value, config=1, onClick }) => {
   )
 }
 
-export const withCard = 
-  (Comp, comp_params_inner = {}, border=true, copy=false) => {
+/**
+ * 
+ * @param {import('react').FC} Comp 
+ * @param {any} comp_params_inner 
+ * @param {boolean} [border] 
+ * @param {boolean} [copy] 
+ */
+export const withCard = (
+  Comp, comp_params_inner = {}, border=true, copy=false
+  ) => {
 
+  /**
+   * @param {object} params
+   * @param {import('./fields-view.jsx').FieldData} params.field
+   * @param {any} params.value
+   * @param {any} params.disable
+   * @param {any} params.onChange
+   * @param {any} params.children
+   * @param {string} [params.error]
+   * @param {(e: string) => void} [params.setError]
+   * @param {import('./fields-view.jsx').FieldContextData} [params.context]
+   */
   return ({ field, value, disable, onChange, children, 
             error=undefined, setError, context, ...rest}) => {
     const { key, desc, name, comp_params } = field
@@ -313,18 +460,24 @@ export const withCard =
 
 
 /**
- * 
+ * TODO: context type
  * @param {object} p
+ * @param {object} [p.className]
  * @param {object} p.context
  * @param {(x: string) => Promise<any>} p.context.deleteDocument
  * @param {(x: string) => string} p.context.editDocumentUrl
- * @param {() => any} p.context.state state to store for current page
- * @param {import('./collection-view').CollectionViewField} p.field
+ * @param {() => any} p.context.getState state to store for current page
+ * @param {import('./collection-view.jsx').CollectionViewField} p.field
  * @param {any} p.value
  * @returns 
  */
-export const RecordActions = 
-  ({context, field, value, className, ...rest}) => {
+export const RecordActions = (
+  {
+    context, field, value, className, ...rest
+  }
+) => {
+
+  /** @type {import('react').MutableRefObject<import('./modal.jsx').ImpInterface>} */
   const ref_modal = useRef()
   const [loadingDelete, setLoadingDelete] = useState(false)
   const id = context.item[0]
@@ -344,13 +497,13 @@ export const RecordActions =
       // return
       setLoadingDelete(true)
       context.deleteDocument(data_id)
-             .finally(() => setLoadingDelete(false))
+             .finally(() => setLoadingDelete(false));
     }, [context]
   )
 
   return (
-<span className='flex flex-row items-center text-center 
-                 justify-end text-xl overflow-x-auto'>
+<div className='flex flex-row items-center text-center 
+                 justify-end text-xl overflow-x-auto w-fit mx-auto '>
   {/* { context?.viewDocumentUrl && 
   <Link to={context.viewDocumentUrl(id)}>
     <BiShow className=' text-xl text-teal-600 stroke-[0.5px] hover:stroke-[1px]' />
@@ -383,6 +536,6 @@ export const RecordActions =
                   Warning
                 </p>
               }/>
-</span>
+</div>
   )
 }

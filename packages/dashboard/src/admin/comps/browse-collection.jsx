@@ -6,8 +6,23 @@ import { IoCloseSharp } from "react-icons/io5/index.js"
 import { BlingButton, PromisableLoadingButton } from "./common-button.jsx"
 import { BiSearchAlt } from "react-icons/bi/index.js"
 
-const BrowseCollection = 
-  ({ collectionId, schema, title='Browse products', Comp, onSave, onCancel }) => {
+/**
+ * @typedef {object} BrowseCollectionParams
+ * @prop {string} collectionId
+ * @prop {string} [title]
+ * @prop {import('react').FC<any>} [Comp]
+ * @prop {(v: any) => void} onSave
+ * @prop {(v: any) => void} onCancel
+ * 
+ * 
+ * @param {BrowseCollectionParams} param
+ */
+const BrowseCollection = (
+  { 
+    collectionId, title='Browse products', Comp, onSave, onCancel 
+  }
+) => {
+
   const [focus, setFocus] = useState(false)
   const [selected, setSelected] = useState([])
   const [limit, setLimit] = useState(5)
@@ -35,12 +50,13 @@ const BrowseCollection =
     , [pages]
   )
 
+  /** @type {import('react').LegacyRef<HTMLInputElement>} */
   const ref_input = useRef()
 
   const onSubmit = useCallback(
     (e) => {
       e?.preventDefault()
-      const search_terms = ref_input.current.value
+      const search_terms = ref_input.current.value;
 
       query({ limit, search : search_terms })
     }, [limit, query]

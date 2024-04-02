@@ -1,4 +1,10 @@
 
+
+/**
+ * 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} props 
+ * @returns 
+ */
 export default function Copyright( props ) {
   return (
     <div {...props}>

@@ -4,7 +4,24 @@ import React, {
 import Transition from './transition.jsx'
 import { useRef } from 'react'
 
-export const Overlay = React.forwardRef(({ children, ...rest }, ref) => {
+
+/**
+ * Imperative interface
+ * @typedef {object} ImpInterface
+ * @property {Function} show
+ * @property {Function} hide
+ * @property {() => boolean} isShown
+ */
+
+export const Overlay = React.forwardRef(
+  /**
+   * 
+   * @param {object} param0 
+   * @param {object} param0.children 
+   * @param {*} ref 
+   * @returns 
+   */
+  ({ children, ...rest }, ref) => {
   const [vis, setVis] = useState(false)
 
   useImperativeHandle(

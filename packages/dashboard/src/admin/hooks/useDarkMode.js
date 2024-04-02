@@ -20,9 +20,9 @@ const notify = () => {
 }
 
 /**
- * @param {boolean} defaultValue 
+ * @param {boolean} [defaultValue] 
  */
-export default function useDarkMode(defaultValue) {
+export default function useDarkMode(defaultValue=true) {
   const trigger = useTrigger()
 
   const toggle = useCallback(

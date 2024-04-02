@@ -1,5 +1,10 @@
 import {useEffect, useState} from 'react'
 
+/**
+ * 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} param0 
+ * @returns 
+ */
 export default function ClientOnly({ children, ...rest }) {
   const [hasMounted, setHasMounted] = useState(false)
   useEffect(() => {
@@ -15,6 +20,10 @@ export default function ClientOnly({ children, ...rest }) {
   )
 }
 
+/**
+ * 
+ * @param {import('react').FC} Component 
+ */
 export function withClient(Component) {
 
   return (props) => {

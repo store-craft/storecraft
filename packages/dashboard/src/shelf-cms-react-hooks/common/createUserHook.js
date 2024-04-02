@@ -8,6 +8,8 @@ import { StorecraftAdminSDK } from "@/admin-sdk/index.js"
  */
 export default function createUserHook(getSdk) {
   return () => {
+
+    /** @type {[user: [import("@storecraft/core/v-api").ApiAuthResult, boolean], any]} */
     const [user, setUser] = useState([getSdk().auth.currentUser, getSdk().auth.isAuthenticated])
     // console.log('update ', getShelf().auth.currentUser, getShelf().auth.isAuthenticated);
   
@@ -15,6 +17,9 @@ export default function createUserHook(getSdk) {
       return getSdk().auth.add_sub(setUser)
     }, [getSdk])
     
+    /** @type {import("@storecraft/core/v-api").ApiAuthResult} */
+    const active_user = user[0];
+
     return {
       user: user[0],
       isAuthenticated: user[1],

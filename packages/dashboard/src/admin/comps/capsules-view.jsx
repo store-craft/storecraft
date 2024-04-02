@@ -6,7 +6,7 @@ const default_name_fn = v => v
  * @template T
  * @param {object} p
  * @param {T[]} p.tags
- * @param {(x: T) => string} p.name_fn
+ * @param {(x: T) => string} [p.name_fn]
  * @param {string} p.clsCapsule
  * @param {string} p.className
  * @param {(v: T) => void} p.onRemove

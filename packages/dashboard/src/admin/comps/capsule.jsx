@@ -6,7 +6,7 @@
  * @prop {string} [className]
  * @prop {string | ((v: string) => string)} [bgColor]
  * @prop {string} value
- * @prop {string | ((v: string) => string)} label
+ * @prop {string | ((v: string) => string)} [label]
  * 
  * @typedef {InternalCapsuleParams &
  * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>

@@ -1,17 +1,25 @@
 import { useCallback, useState } from 'react'
 import { BlingInput, HR } from './common-ui.jsx'
 import SelectCollection from './select-collection.jsx'
-// import { ShippingData } from '@/admin-sdk/js-docs-types'
-import { FieldData } from './fields-view.jsx'
 
 /**
+ * @typedef {object} InternalOrderDeliveryMethodParams
+ * @prop {import("./fields-view.jsx").FieldData} [field]
+ * @prop {import('@storecraft/core/v-api').ShippingMethodType} [value]
+ * @prop {(value: import('@storecraft/core/v-api').ShippingMethodType) => void} [onChange]
  * 
- * @param {object} p
- * @param {FieldData} p.field
- * @param {ShippingData} p.value
- * @param {(v: ShippingData) => void} p.onChange
+ * @typedef {InternalOrderDeliveryMethodParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } OrderDeliveryMethodParams
+ * 
+ * @param {OrderDeliveryMethodParams} param
  */
-const OrderDeliveryMethod = ({ field, value, onChange, ...rest }) => {
+const OrderDeliveryMethod = (
+  { 
+    field, value, onChange, ...rest 
+  }
+) => {
+
   const [ v, setV ] = useState(value)
   const { key, comp_params } = field
 
@@ -63,7 +71,7 @@ const OrderDeliveryMethod = ({ field, value, onChange, ...rest }) => {
 
   <BlingInput className='mt-1'
               onChange={onUpdateName} 
-              value={v?.name} 
+              value={v?.title} 
               placeholder='Shipping Method' type='text' />
 
   <p children='Price' className='mt-3 shelf-text-minor'/>

@@ -380,7 +380,7 @@ export default ({ collectionId,
               time={doc?.createdAt} className='mt-8' />            
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} className='mt-8'>
     <div className='w-full mx-auto '>
-      <EditMessage messages={error} classname='w-full' />
+      <EditMessage messages={error} className='w-full' />
       <FieldsView key={key} ref={ref_root} field={root_schema} 
                 value={ doc ?? {} } context={context}
                 isViewMode={isViewMode} className='mt-8 mx-auto' />      

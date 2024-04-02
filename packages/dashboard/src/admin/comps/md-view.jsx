@@ -1,10 +1,15 @@
 import { marked } from 'marked'
 
 /**
+ * @typedef {object} InternalMDViewParams
+ * @prop {string} [text]
  * 
- * @param {object} param0 
- * @param {string} param0.text
- */
+ * @typedef {InternalMDViewParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } MDViewParams
+* 
+* @param {MDViewParams} param
+*/
 const MDView = ({text, ...rest}) => {
   return (
 <div {...rest}>

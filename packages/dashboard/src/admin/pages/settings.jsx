@@ -141,7 +141,7 @@ export default ({ collectionId,
               changes_made={false} />
   <ShowIf show={hasLoaded} className='mt-8'>
     <div className='w-full max-w-[40rem] --lg:w-fit --lg:max-w-none mx-auto'>
-      <EditMessage messages={error} classname='w-full' />
+      <EditMessage messages={error} className='w-full' />
       <FieldsView key={key} ref={ref_root} 
                   field={root_schema} 
                   value={ doc ?? {} } 

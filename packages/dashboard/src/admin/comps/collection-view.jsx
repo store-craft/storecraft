@@ -19,13 +19,19 @@ const data2 = [
 ]
 
 /**
+ * @template {import("@storecraft/core/v-api").BaseType} T
+ * @typedef {object} CollectionViewContext
+ * @property {T} item
+ */
+
+/**
  * 
  * @typedef {object} CollectionViewField
  * @property {string} key Key of field in the data
  * @property {string} name Name of field
  * @property {React.FC<any>} comp Name of field
  * @property {object} comp_params component parameters
- * @property {(x: any) => any} transform transform data
+ * @property {(x: any) => any} [transform] transform data
  */
 
 /**
@@ -94,8 +100,8 @@ const Table = (
   return (
 <table className={className}>
   <thead>
-    <tr className='border-b border-b-gray-300 dark:border-gray-300/25 h-10  text-xs 
-                   font-medium text-gray-400' >
+    <tr className='border-b border-b-gray-300 dark:border-gray-300/25 
+                   h-10 text-xs font-medium text-gray-400' >
     {
       fields.map(
         (field, ix) => 

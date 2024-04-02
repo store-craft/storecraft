@@ -8,6 +8,18 @@ const Editor = dynamic(
   { ssr: false }
 )
 
+/**
+ * @typedef {object} InternalMDEditorParams
+ * @prop {import("./fields-view.jsx").FieldData} [field]
+ * @prop {string} [value]
+ * @prop {(value: string) => void} [onChange]
+ * 
+ * @typedef {InternalMDEditorParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } MDEditorParams
+* 
+* @param {MDEditorParams} param
+*/
 const MDEditor = ({field, value, onChange, ...rest}) => {
   const [md, setMd] = useState(value);
   const { key, name, comp_params } = field
@@ -19,7 +31,8 @@ const MDEditor = ({field, value, onChange, ...rest}) => {
 
   return (
 <div>
-  <Editor preview='edit'  value={md} onChange={handleEditorChange} {...comp_params}
+  <Editor preview='edit'  value={md} 
+    onChange={handleEditorChange} {...comp_params}
     className="bg-slate-400 "
     // data-color-mode='dark'
     style={{

@@ -1,6 +1,11 @@
 import { enums } from '@storecraft/core/v-api'
 import { useMemo } from 'react'
 
+/**
+ * 
+ * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]["type"]} type 
+ * @returns 
+ */
 export const discount_types_to_color = type => {
   switch (type) {
     case enums.DiscountMetaEnum.regular.type: return 'bg-teal-600 dark:bg-teal-600/60'

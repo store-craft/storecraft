@@ -1,5 +1,7 @@
-import { useMemo } from "react"
 
+/**
+ * @param {number} ix 
+ */
 const getClass = (ix) => {
   if(ix==0)
     return 'text-4xl text-black dark:text-gray-300'
@@ -9,9 +11,23 @@ const getClass = (ix) => {
     return 'text-3xl text-gray-500 tracking-wide'
 }
 
-const DocumentTitle = 
-
-  ({ major=[], delimiter=' / ', className, ...rest }) => {
+/**
+ * @typedef {object} InternalDocumentTitleParams
+ * @prop {string[]} [major]
+ * @prop {string} [delimiter]
+ * @prop {string} [className]
+ * 
+ * @typedef {InternalDocumentTitleParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } DocumentTitleParams
+* 
+* @param {DocumentTitleParams} param
+*/
+const DocumentTitle = (
+  { 
+    major=[], delimiter=' / ', className, ...rest 
+  }
+) => {
 
   return (
 <div className={`scrollbar-none break-words ${className}`} {...rest}>

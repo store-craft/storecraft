@@ -137,8 +137,11 @@ export const LoadingButton = (
 * 
 * @param {PromisableLoadingBlingButton} param0 
 */
-export const PromisableLoadingButton = 
-  ({ onClick, loading: $loading, ...rest }) => {
+export const PromisableLoadingButton = (
+  { 
+    onClick, loading: $loading, ...rest 
+  }
+) => {
 
   const [loading, setLoading] = useState($loading)
   const onClickWrapper = useCallback(

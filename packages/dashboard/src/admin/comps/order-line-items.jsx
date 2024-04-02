@@ -5,25 +5,32 @@ import { BrowseProducts } from './browse-collection.jsx'
 import { Overlay } from './overlay.jsx'
 import { getSDK } from '@/admin-sdk/index.js'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
-// import { LineItem, ProductData } from '@/admin-sdk/js-docs-types'
 import { BlingButton } from './common-button.jsx'
-import { FieldContextData, FieldData } from './fields-view.jsx'
 import { LinkWithState } from '@/admin/hooks/useNavigateWithState.js'
 
 /**
  * @typedef {'change-qty' | 'stock-change'} Op
  * 
- * @param {object} p 
- * @param {LineItem[]} p.items
- * @param {FieldContextData} p.context
- * @param {(ix: number, op: Op, extra: any) => void} p.onChangeItem
- * @param {(ix: number, item: LineItem) => void} p.onRemoveItem
+ */
+
+/**
+ * @typedef {object} InternalLineitemsTableParams
+ * @prop {import('@storecraft/core/v-api').LineItem[]} [items]
+ * @prop {import('./fields-view.jsx').FieldContextData} [context]
+ * @prop {(ix: number, op: Op, extra: any) => void} onChangeItem
+ * @prop {(ix: number, item: import('@storecraft/core/v-api').LineItem) => void} onRemoveItem
+ * 
+ * @typedef {InternalLineitemsTableParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } LineitemsTableParams
+ * 
+ * @param {LineitemsTableParams} param
  */
 const LineitemsTable = 
   ({ items, context, onChangeItem, onRemoveItem }) => {
 
   /**
-   * @param {LineItem} it 
+   * @param {import('@storecraft/core/v-api').LineItem} it 
    */
   const msg = it => {
     return it.stock_reserved ? 
@@ -53,7 +60,7 @@ const LineitemsTable =
                               scrollbar-thin'>
                 <LinkWithState to={`/pages/products/${it.id}/edit`} 
                       current_state={() => context?.getState && context?.getState()}
-                      ttarget='_blank' draggable='false'>
+                      draggable='false'>
                   <span children={it.id} className='underline' />
                 </LinkWithState>
                 <br/>
@@ -67,19 +74,21 @@ const LineitemsTable =
             <td children={it.price} 
                 className='py-2 w-14 pr-3'/>
 
-            <td children={it.qty} 
-                className='py-2 w-14 pr-3'>
+            <td className='py-2 w-14 pr-3'>
               <Bling stroke='pb-0.5' className='w-full '>
-                <input placeholder='' 
-                       value={it.qty} type='number' 
-                       onWheel={(e) => e.target.blur()}
-                       min={
-                         (it?.stock_reserved > 0) ? it.stock_reserved : 1
-                       } 
-                       max={it?.data?.qty ?? it.qty ?? 0} 
-                       step='1'
-                       onChange={e => onChangeItem(ix, 'change-qty', e.currentTarget.value)}
-                       className='h-9 w-full px-1 shelf-input-color' />
+                <input 
+                    placeholder='' 
+                    value={it.qty} type='number' 
+                    onWheel={(e) => e.target.blur()}
+                    min={
+                      (it?.stock_reserved > 0) ? it.stock_reserved : 1
+                    } 
+                    max={it?.data?.qty ?? it.qty ?? 0} 
+                    step='1'
+                    onChange={
+                      e => onChangeItem(ix, 'change-qty', e.currentTarget.value)
+                    }
+                    className='h-9 w-full px-1 shelf-input-color' />
               </Bling>
             </td>
 
@@ -99,22 +108,34 @@ const LineitemsTable =
 }
 
 /**
+ * @typedef {object} InternalOrderLineItemsParams
+ * @prop {import('@storecraft/core/v-api').LineItem[]} [value]
+ * @prop {import("./fields-view.jsx").FieldData} [field]
+ * @prop {import('./fields-view.jsx').FieldContextData} [context]
+ * @prop {(value: import('@storecraft/core/v-api').LineItem[]) => void} [onChange]
+ * @prop {(error: any) => void} [setError]
+ * @prop {string} [error]
  * 
- * @param {object} p
- * @param {FieldData} p.field
- * @param {LineItem[]} p.value
- * @param {FieldContextData} p.context
- * @param {(v: LineItem[]) => void} p.onChange
- */
+ * @typedef {InternalOrderLineItemsParams & 
+*   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } OrderLineItemsParams
+* 
+* @param {OrderLineItemsParams} param
+*/
 const OrderLineItems = 
   ({ field, value, onChange, context, error, setError, ...rest }) => {
 
-  const ref_id = useRef()
-  const ref_price = useRef(0.0)
-  const ref_qty = useRef(0)
-  /**@type {[items: LineItem[]]} */
-  const [items, setItems] = useState(value)
-  const ref_overlay = useRef()
+  /** @type {import('react').LegacyRef<HTMLInputElement>}  */
+  const ref_id = useRef();
+  /** @type {import('react').LegacyRef<HTMLInputElement>}  */
+  const ref_price = useRef();
+  /** @type {import('react').LegacyRef<HTMLInputElement>}  */
+  const ref_qty = useRef();
+
+  const [items, setItems] = useState(value);
+
+  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  const ref_overlay = useRef();
 
   const onManualAdd = useCallback(
     () => {
@@ -131,14 +152,14 @@ const OrderLineItems =
           ]
         })
     }, []
-  )
+  );
 
   const onBrowseAdd = useCallback(
     /**
-     * @param {ProductData[]} selected_items 
+     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
      */
     (selected_items) => {
-      /**@type {LineItem[]} */
+      /**@type {import('@storecraft/core/v-api').LineItem[]} */
       const mapped = selected_items.map(
         it => (
           { 
@@ -152,7 +173,14 @@ const OrderLineItems =
         )
       )
     
-      setItems(its => [...mapped.filter(m => its.find(it => it.id===m.id)===undefined), ...its])
+      setItems(
+        its => [
+          ...mapped.filter(
+            m => its.find(it => it.id===m.id)===undefined
+          ), 
+          ...its
+        ]
+      );
       ref_overlay.current.hide()
     }, []
   )
@@ -161,7 +189,7 @@ const OrderLineItems =
     /**
      * 
      * @param {number} ix 
-     * @param {LineItem} item 
+     * @param {import('@storecraft/core/v-api').LineItem} item 
      */
     (ix, item) => {
       if(item.stock_reserved && item.qty>0) {
@@ -171,9 +199,15 @@ const OrderLineItems =
       }
       setItems(its => its.filter((it, jx) => ix!==jx ))
     }, []
-  )
+  );
 
   const onChangeItem = useCallback(
+    /**
+     * 
+     * @param {number} ix 
+     * @param {Op} op 
+     * @param {any} val 
+     */
     async (ix, op, val) => {
       if(op==='change-qty') {
         items[ix].qty = parseInt(val)
@@ -186,8 +220,7 @@ const OrderLineItems =
         const return_stock = line_item.stock_reserved && items[ix].stock_reserved > 0
         const how_much = return_stock ? line_item.stock_reserved : -line_item.qty
         try {
-          await getShelf().products
-                    .changeStockOf(line_item.id, how_much)
+          await getSDK().products.changeStockOf(line_item.id, how_much)
           items[ix].stock_reserved = return_stock ? 0 : line_item.qty
           setItems([...items])
         } catch (e) {

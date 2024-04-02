@@ -23,7 +23,7 @@ export default class Products extends collection_base {
    * @param {number} howmuch 
    * @returns 
    */
-  changeStockOf = (id, howmuch) => {
+  changeStockOf = async (id, howmuch) => {
     // return this.db.doc(NAME, id).incrementField('qty', howmuch, 0)
   }
 

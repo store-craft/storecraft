@@ -214,7 +214,7 @@ export default ({ collectionId, mode, ...rest }) => {
               key={doc?.updatedAt} className='mt-8' 
               changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
-    <EditMessage messages={error} classname='w-full max-w-[35rem] mx-auto' />
+    <EditMessage messages={error} className='w-full max-w-[35rem] mx-auto' />
     <FieldsView key={doc?.updatedAt} ref={ref_root} field={root_schema} 
                 value={ doc ?? {} } 
                 context={context}

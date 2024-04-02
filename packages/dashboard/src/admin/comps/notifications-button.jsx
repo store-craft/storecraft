@@ -7,6 +7,18 @@ import useInterval from '../hooks/useInterval.js'
 import ShowIf from './show-if.jsx'
 import { MINUTE } from '@/admin/utils/time.js'
 
+
+/**
+ * @typedef {object} InternalBubbleParams
+ * @prop {string} [outerClass]
+ * @prop {string} [innerClass]
+ * 
+ * @typedef {InternalBubbleParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } BubbleParams
+ * 
+ * @param {BubbleParams} param
+ */
 const Bubble = (
   { 
     outerClass='bg-white animate-bounce', 
@@ -23,8 +35,23 @@ const Bubble = (
   )
 }
 
-const NotificationButton = 
-  ({ isOpen=false, ...rest }) => {
+
+/**
+ * @typedef {object} InternalNotificationButtonParams
+ * @prop {boolean} [isOpen=false]
+ * @prop {string} [innerClass]
+ * 
+ * @typedef {InternalNotificationButtonParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } NotificationButtonParams
+ * 
+ * @param {NotificationButtonParams} param
+ */
+const NotificationButton = (
+  { 
+    isOpen=false, ...rest 
+  }
+) => {
   
   const [alert, setAlert] = useState(false)
   

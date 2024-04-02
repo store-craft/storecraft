@@ -41,17 +41,28 @@ const ClipBoardCopy = ({ value }) => {
 }
 
 /**
- * @param {object} p
- * @param {any} p.doc
- * @param {string} p.collectionId
+ * @typedef {object} InternalDocumentDetailsParams
+ * @prop {import('@storecraft/core/v-api').BaseType} doc
+ * @prop {string} collectionId
+ * @prop {string} [className]
+ * 
+ * @typedef {InternalDocumentDetailsParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } DocumentDetailsParams
+ * 
+ * @param {DocumentDetailsParams} param
  */
-const DocumentDetails = ({doc, collectionId, className, ...rest}) => {
+const DocumentDetails = (
+  {
+    doc, collectionId, className, ...rest
+  }
+) => {
 
-  if (!doc?.updatedAt || !collectionId)
+  if (!doc?.updated_at || !collectionId)
     return null
 
-  const date_ = new Date(doc.updatedAt)
-  const has_publish = doc._published
+  const date_ = new Date(doc.updated_at);
+  const has_publish = doc._published;
   let dateString = date_.toLocaleDateString() + '\n (last updated)'
   let title = 'exported @ '
   if(collectionId==='discounts')
@@ -70,7 +81,7 @@ const DocumentDetails = ({doc, collectionId, className, ...rest}) => {
                        w-fit 
                        rounded-lg px-1 font-light' />
       <ShowIf show={collectionId==='discounts'}>
-        <Link to={`/pages/collections/discount-${doc.code}/edit`}
+        <Link to={`/pages/collections/discount-${doc?.code}/edit`}
               draggable='false'>
           <Span className='w-full max-w-[30rem] underline' 
                 children={doc?._published ?? ''} />

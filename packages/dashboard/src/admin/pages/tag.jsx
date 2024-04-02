@@ -164,7 +164,7 @@ export default ({ collectionId,
               key={doc?.updatedAt} className='mt-8' 
               changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
-    <EditMessage messages={error} classname='w-full max-w-[35rem] mx-auto' />
+    <EditMessage messages={error} className='w-full max-w-[35rem] mx-auto' />
     <FieldsView key={key} ref={ref_root} field={root_schema} 
                 value={ doc ?? {} } context={context}
                 isViewMode={isViewMode} className='mx-auto' />      

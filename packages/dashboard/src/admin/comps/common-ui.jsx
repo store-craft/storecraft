@@ -253,12 +253,12 @@ export const Div = ({setError, ...rest}) =>
 /**
  * @typedef {object} InternalCardParams
  * @property {import('react').ReactElement<any, string | import('react').JSXElementConstructor<any>>} name 
- * @property {(e:string) => void} setError 
- * @property {string} error 
+ * @property {(e:string) => void} [setError] 
+ * @property {string} [error] 
  * @property {React.ReactNode} children 
- * @property {boolean} border 
- * @property {string} desc 
- * @property {import('react').ReactElement} rightView 
+ * @property {boolean} [border=true] 
+ * @property {string} [desc] 
+ * @property {import('react').ReactElement} [rightView] 
  * @property {string} cardClass 
  * @property {any[]} [rest] 
  * 

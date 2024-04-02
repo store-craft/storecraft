@@ -2,6 +2,18 @@ import { forwardRef, useEffect, useRef, useState } from 'react'
 import { getSDK } from '@/admin-sdk/index.js'
 
 const Img = forwardRef(
+
+  /**
+   * @typedef {object} InternalImgParams
+   * @prop {string} [src]
+   * 
+   * @typedef {InternalImgParams & 
+   *  React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+   * } ImgParams
+   * 
+   * @param {ImgParams} param
+   * @param {*} ref 
+   */
   ({ src, ...rest }, ref) => {
     const srcRef = useRef()
     const [source, setSource] = useState()

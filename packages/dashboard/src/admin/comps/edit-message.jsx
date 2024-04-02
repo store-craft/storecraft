@@ -2,12 +2,31 @@ import { useEffect, useMemo, useState } from "react"
 import { AiOutlineClose } from "react-icons/ai/index.js"
 import { Bling } from "./common-ui.jsx"
 
-const isEmpty = arr => Boolean(arr?.length) && Boolean(arr.filter(it => it!==undefined).length==0)
+const isEmpty = arr => Boolean(arr?.length) && 
+      Boolean(arr.filter(it => it!==undefined).length==0);
 
-const EditMessage = ({ messages, positive=false, classname }) => {
+/**
+ * @typedef {object} InternalEditMessage
+ * @prop {(string | { message: string })[]} [messages]
+ * @prop {boolean} [positive]
+ * @prop {string} [className]
+ * 
+ * @typedef {InternalEditMessage & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } EditMessageParams
+* 
+* @param {EditMessageParams} param
+*/
+const EditMessage = (
+  { 
+    messages, positive=false, className, ...rest 
+  }
+) => {
+
   const [visible, setVisible] = useState(false)
   messages = useMemo(
-    () => Array.isArray(messages) ? messages.map(it => it!==undefined ? String(it) : it) : [messages], 
+    () => Array.isArray(messages) ? messages.map(
+      it => it!==undefined ? String(it) : it) : [messages], 
     [messages]
   )
 
@@ -21,7 +40,7 @@ const EditMessage = ({ messages, positive=false, classname }) => {
   let cls_text = positive ? 'text-green-500' : 'text-red-700 dark:text-red-500'
   let cls = !visible ? 'max-h-0 mt-0 ' : 'max-h-[1000px] mt-0 '
   cls += ' my-8 w-full h-fit transition-max-height duration-500 \
-          rounded-lg overflow-hidden ' + classname
+          rounded-lg overflow-hidden ' + className
 
   return (
 <div className={cls}>

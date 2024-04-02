@@ -2,19 +2,18 @@ import React, {
   useCallback, useEffect, useMemo, 
   useRef, useState } from 'react'
 import { AiFillNotification } from 'react-icons/ai/index.js'
-// import { NotificationData } from '@/admin-sdk/js-docs-types'
 import MDView from './md-view.jsx'
 import { MINUTE, timeSince } from '../utils/time.js'
 import { getSDK } from '@/admin-sdk/index.js'
 import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
 import { PromisableLoadingButton } from './common-button.jsx'
 import useInterval from '@/admin/hooks/useInterval.js'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-/**@type {Notification} */
+/**@type {import('@storecraft/core/v-api').NotificationType} */
 const tn = {
   message: 'New `order` *was* **created** New order was created New order was created',
-  updatedAt: Date.now(),
+  updated_at: new Date().toISOString(),
   author: 'shelf-bot',
   search: ['orders'],
   actions: [
@@ -29,10 +28,10 @@ const tn = {
   ]
 }
 
-/**@type {NotificationData} */
+/**@type {import('@storecraft/core/v-api').NotificationType} */
 const tn2 = {
   message: `* 🚀 a \n* b`,
-  updatedAt: Date.now(),
+  updated_at: new Date().toISOString(),
   author: 'shelf-bot',
   search: ['orders'],
   actions: [
@@ -47,7 +46,7 @@ const tn2 = {
   ]
 }
 
-/**@type {NotificationData[]} */
+/**@type {import('@storecraft/core/v-api').NotificationType[]} */
 const test = [
   tn2, tn, tn, tn, {...tn, search: ['email']},
 ]
@@ -61,16 +60,15 @@ const message = `
       
 /**
  * 
- * @param {object} param0 
- * @param {NotificationData} param0.notification
- * @returns 
+ * @param {object} param 
+ * @param {import('@storecraft/core/v-api').NotificationType} param.notification
  */
 const Notification = ({ notification }) => {
   const nav = useNavigate()
   const onClick = useCallback(
     () => {
       const action = notification?.actions?.at(0)
-      const params = action?.params
+      const params = action?.params;
       if(action)  {
         switch(action.type) {
           case 'route':
@@ -117,8 +115,10 @@ const Notification = ({ notification }) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {NotificationData[]} param0.notis
+ * @param {object} param 
+ * @param {import('@storecraft/core/v-api').NotificationType[]} param.notis
+ * @param {string} [param.selected]
+ * @param {(filter: string) => void} [param.onChange]
  */
 const FilterView = ({ notis=[], selected='All', onChange }) => {
 
@@ -173,9 +173,9 @@ const FilterView = ({ notis=[], selected='All', onChange }) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {NotificationData[]} param0.notis
- * @param {Promise} param0.onLoadMore
+ * @param {object} param 
+ * @param {import('@storecraft/core/v-api').NotificationType[]} param.notis
+ * @param {() => Promise} param.onLoadMore
  */
 const NotificationsView = 
   ({ notis, onLoadMore }) => {
@@ -197,7 +197,8 @@ const NotificationsView =
       onClick={onLoadMore} 
       keep_text_on_load={true}
       className='w-fit mx-auto h-12 p-3 border-b cursor-pointe 
-                text-center text-pink-500 font-medium text-base'  />
+                text-center text-pink-500 font-medium text-base'  
+    />
 
   }
 </div>                 
@@ -220,13 +221,15 @@ const Notifications =
   ({ ...rest }) => {
 
   const [filter, setFilter] = useState('All')
-  const ref_query = useRef()
   const notis = test
   const { 
     pages, page, loading, error, queryCount,
     query, prev, next
-  } = useCommonCollection('notifications', false)
-  ref_query.current = query
+  } = useCommonCollection('notifications', false);
+
+  /** @type {import('react').MutableRefObject<typeof query>} */
+  const ref_query = useRef(query);
+
   const onInterval = useCallback(
     async () => {
       const hasChanged = await getSDK().notifications.hasChanged()
@@ -235,7 +238,7 @@ const Notifications =
           limit: 5,
         }, false)
       }
-    }, [getShelf()]
+    }, [getSDK()]
   )
 
   const {
@@ -256,7 +259,7 @@ const Notifications =
     }, [start]
   )
 
-  /**@type {NotificationData[]} */
+  /**@type {import('@storecraft/core/v-api').NotificationType[]} */
   const flattened = useMemo(
     () => {
       return pages.flat(1).map(

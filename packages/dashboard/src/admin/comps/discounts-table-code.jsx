@@ -1,14 +1,26 @@
+import { DiscountApplicationEnum } from "@storecraft/core/v-api/types.api.enums.js"
 import { RiCoupon3Line } from "react-icons/ri/index.js"
 
-const Code = ({ value, className, context, ...rest }) => {
+/**
+ * 
+ * @param {object} param 
+ * @param {string} param.value 
+ * @param {import("./collection-view.jsx").CollectionViewContext<
+ * import("@storecraft/core/v-api").DiscountType>} param.context 
+ */
+const Code = (
+  { 
+    value, context, ...rest 
+  }
+) => {
 
-  const cls_color = context.item[1].enabled ? 'bg-teal-500' : 'bg-red-500'
+  const cls_color = context.item.active ? 'bg-teal-500' : 'bg-red-500'
   const cls = 'whitespace-nowrap pr-2 font-semibold text-base \
         max-w-[150px] sm:max-w-max overflow-x-auto' // + cls_color
-  const isCoupon = String(context.item[1].application.id)==='1'
+  const isCoupon = context.item.application.id===DiscountApplicationEnum.Manual.id
 
   return (
-<div className={cls} children={value} >
+<div className={cls} >
   <span children={value} />
   {
     isCoupon && 

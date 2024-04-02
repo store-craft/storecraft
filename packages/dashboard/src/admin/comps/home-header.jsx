@@ -1,8 +1,24 @@
 
 
-const Header = ({
-  label='', Icon, className, 
-  iconClassName='inline-block text-kf-500', ...rest}) => {
+/**
+ * @typedef {object} InternalHeaderParams
+ * @prop {string} [label]
+ * @prop {import("react").FC} [Icon]
+ * @prop {string} [className]
+ * @prop {string} [iconClassName]
+ * 
+ * @typedef {InternalHeaderParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } HeaderParams
+* 
+* @param {HeaderParams} param
+*/
+const Header = (
+  {
+    label='', Icon, className, 
+    iconClassName='inline-block text-kf-500', ...rest
+  }
+) => {
 
   return (
 <p className={`text-3xl mb-5 shelf-text-title-color 

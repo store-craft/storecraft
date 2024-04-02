@@ -3,9 +3,15 @@ import { Link } from 'react-router-dom'
 //   DiscountMetaEnum } from '@/admin-sdk/js-docs-types'
 import { LabelCapsule } from './capsule.jsx'
 import { discount_types_to_color } from './discounts-table-type.jsx'
+import { DiscountMetaEnum, DiscountApplicationEnum 
+} from '@storecraft/core/v-api/types.api.enums.js'
 
+/**
+ * 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} param 
+ */
 const DiscountsQuickSearchActions = 
-  ({ collectionId='orders', ...rest }) => {
+  ({ ...rest }) => {
 
   return (
 <div {...rest}>

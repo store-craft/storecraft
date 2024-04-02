@@ -51,7 +51,7 @@ const Modal = forwardRef(
 
   const onSelectInternal = useCallback(
     /**
-     * @param {Event} e 
+     * @param {import('react').MouseEvent<HTMLButtonElement, MouseEvent>} e 
      * @param {*} v 
      */
     (e, v) => { 

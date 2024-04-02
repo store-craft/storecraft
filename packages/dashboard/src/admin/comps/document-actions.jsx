@@ -11,17 +11,36 @@ import { Bling } from './common-ui.jsx'
 import Modal from './modal.jsx'
 import ShowIf from './show-if.jsx'
 
-const data = [
-  { icon: null, text: '', promise: undefined }
-]
+/**
+ * @typedef {object} InternalRegularDocumentActionsParams
+ * @property {() => Promise<void>} onClickSave
+ * @property {() => Promise<void>} onClickCreate
+ * @property {() => Promise<void>} onClickDuplicate
+ * @property {(id: string) => Promise<void>} onClickDelete
+ * @property {() => Promise<void>} onClickReload
+ * @property {import('react').ReactNode} children
+ * @property {string} id
+ * 
+ * @typedef {InternalRegularDocumentActionsParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } RegularDocumentActionsParams
+ * 
+ * @param {RegularDocumentActionsParams} param
+ * 
+ * @returns 
+ */
+export const RegularDocumentActions = (
+  { 
+    onClickSave=undefined, onClickCreate=undefined, 
+    onClickDelete=undefined, onClickDuplicate=undefined, 
+    onClickReload=undefined, 
+    id, children, ...rest 
+  }
+) => {
 
-export const RegularDocumentActions = 
-  ({ onClickSave=undefined, onClickCreate=undefined, 
-     onClickDelete=undefined, onClickDuplicate=undefined, 
-     onClickReload=undefined, 
-     id, children, ...rest }) => {
+  /** @type {import('react').MutableRefObject<import('./modal.jsx').ImpInterface>} */
+  const ref_modal = useRef();  
 
-  const ref_modal = useRef()   
   const [loadingDelete, setLoadingDelete] = useState(false)   
 
   const onClickDeleteInternal = useCallback(
@@ -32,7 +51,7 @@ export const RegularDocumentActions =
       )
       ref_modal.current.show()
     }, [id]
-  )
+  );
   const onApproveDelete = useCallback(
     (data_id) => {
       // console.log('data_id', data_id)
@@ -41,7 +60,7 @@ export const RegularDocumentActions =
       onClickDelete(data_id)
              .finally(() => setLoadingDelete(false))
     }, [onClickDelete]
-  )
+  );
 
 return (
 <div {...rest}>

@@ -308,7 +308,7 @@ export default ({ collectionId,
               changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} className='mt-8'>
     <div className='w-full max-w-[40rem] lg:w-fit lg:max-w-none mx-auto'>
-      <EditMessage messages={error} classname='w-full' />
+      <EditMessage messages={error} className='w-full' />
       <FieldsView ref={ref_root} 
                   key={key}
                   context={context}

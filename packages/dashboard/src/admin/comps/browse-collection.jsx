@@ -203,6 +203,11 @@ const UserComp = ({ data }) => {
   )
 }
 
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').ProductType} param.data
+ */
 const ProductComp = ({ data }) => {
   const d = data[1]
   return (
@@ -222,7 +227,7 @@ export const BrowseCustomers = ({ onSave, onCancel }) => {
 
   return (
 <BrowseCollection 
-        collectionId='users' Comp={UserComp} 
+        collectionId='customers' Comp={UserComp} 
         onSave={onSave} onCancel={onCancel} 
         title='Browse Customers' />    
   )

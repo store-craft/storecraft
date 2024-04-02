@@ -7,16 +7,19 @@ const default_name_fn = v => v
  * @param {object} p
  * @param {T[]} p.tags
  * @param {(x: T) => string} [p.name_fn]
- * @param {string} p.clsCapsule
- * @param {string} p.className
- * @param {(v: T) => void} p.onRemove
+ * @param {string} [p.clsCapsule]
+ * @param {string} [p.className]
+ * @param {(v: T) => void} [p.onRemove]
  * @param {(v: T) => void} p.onClick
  */
-const CapsulesView = 
-  ({ tags=[], name_fn=default_name_fn, className, 
-     clsCapsule='bg-kf-500', 
-     onRemove=undefined, 
-     onClick=undefined }) => {
+const CapsulesView = (
+  { 
+    tags=[], name_fn=default_name_fn, className, 
+    clsCapsule='bg-kf-500', 
+    onRemove=undefined, 
+    onClick=undefined 
+  }
+) => {
 
   if(!tags?.length)
     return null

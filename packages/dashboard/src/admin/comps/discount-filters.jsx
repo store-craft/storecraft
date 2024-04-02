@@ -9,9 +9,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Overlay } from './overlay.jsx';
 import { BrowseCustomers, BrowseProducts } from './browse-collection.jsx'
 import { BlingButton } from './common-button.jsx'
-import { FieldData } from './fields-view.jsx'
 import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
 
+/**
+ * 
+ * @param {import('@storecraft/core/v-api').Filter["meta"][]} v 
+ * @returns 
+ */
 export const discount_filters_validator = v => {
   const product_filters = v?.filter(it => it.type==='product') ?? []
   if(product_filters.length==0)
@@ -19,7 +23,20 @@ export const discount_filters_validator = v => {
   return [true, undefined]
 }
 
-const Filter_ProductInCollections = ({ onChange, value=[], ix }) => {
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_p_in_collections} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_p_in_collections) => void
+ * } param.onChange
+ */
+const Filter_ProductInCollections = (
+  { 
+    onChange, value=[] 
+  }
+) => {
+
   const [tags, setTags] = useState(value)
 
   const onAdd = useCallback(
@@ -36,6 +53,9 @@ const Filter_ProductInCollections = ({ onChange, value=[], ix }) => {
   )
   
   const onRemove = useCallback(
+    /**
+     * @param {{id: string, handle: string}} v handle
+     */
     (v) => {
       const idx = tags.indexOf(v)
       if(idx == -1) return
@@ -53,20 +73,35 @@ const Filter_ProductInCollections = ({ onChange, value=[], ix }) => {
             collectionId='collections' 
             header='Select Collections' 
             clsReload='text-3xl text-kf-400' 
+            name_fn={
+              /** @param {import('@storecraft/core/v-api').CollectionType} it */
+              it => it.handle
+            }
             layout={1}/>
   { tags?.length>0 && <HR className='w-full mt-5' />  }            
   <CapsulesView onClick={onRemove} tags={tags} 
-                className='mt-5' />
+                className='mt-5' name_fn={tag => tag.handle} />
 </div>
   )
 }
 
+/**
+ * @param {Parameters<Filter_ProductInCollections>["0"]} param0 
+ */
 const Filter_ProductNotInCollections = ( { ...rest } ) => {
   return (
     <Filter_ProductInCollections {...rest} />
   )
 }
 
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_p_in_tags} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_p_in_tags) => void
+ * } param.onChange
+ */
 const Filter_ProductHasTags = ( { onChange, value=[] } ) => {
   const [tags, setTags] = useState(value)
 
@@ -106,10 +141,20 @@ const Filter_ProductHasTags = ( { onChange, value=[] } ) => {
   )
 }
 
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_p_in_handles} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_p_in_handles) => void
+ * } param.onChange
+ */
 const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
-  const ref_overlay = useRef()
+  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  const ref_overlay = useRef();
+
   const [tags, setTags] = useState(value)
-  
+
   const onRemove = useCallback(
     (v) => {
       const idx = tags.indexOf(v)
@@ -154,22 +199,39 @@ const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
   )
 }
 
+/**
+ * @param {Parameters<Filter_ProductHasHandle>["0"]} param0 
+ */
 const Filter_ProductNotHasHandle = ( { ...rest } ) => {
   return (
     <Filter_ProductHasHandle {...rest} />
   )
 }
 
+
+/**
+ * @param {Parameters<Filter_ProductHasTags>["0"]} param0 
+ */
 const Filter_ProductNotHasTags = ( { ...rest } ) => {
   return (
     <Filter_ProductHasTags {...rest} />
   )
 }
 
-const Filter_ProductPriceInRange = ( { 
-          onChange, 
-          value={ from : 0.0, to : Infinity}, 
-          onWarning } ) => {
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_p_in_price_range} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_p_in_price_range) => void
+ * } param.onChange
+ */
+const Filter_ProductPriceInRange = (
+  { 
+    onChange, 
+    value={ from : 0.0, to : Infinity}, 
+  }
+) => {
 
   const [v, setV] = useState(value)
 
@@ -210,12 +272,31 @@ const Filter_ProductPriceInRange = ( {
 }
 
 
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_p_all} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_p_all) => void
+ * } param.onChange
+ */
 const Filter_ProductAll = () => (<p children='All products are legable' />)
 
-const Filter_OrderSubTotal = ( { 
-          onChange, 
-          value={ from : 0.0, to : Infinity}, 
-          onWarning } ) => {
+
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range) => void
+ * } param.onChange
+ */
+const Filter_OrderSubTotal = ( 
+  { 
+    onChange, 
+    value={ from : 0.0, to : Infinity}, 
+  }
+) => {
 
   const [v, setV] = useState(value)
 
@@ -254,15 +335,31 @@ const Filter_OrderSubTotal = ( {
   )
 }
 
-const Filter_OrderItemCount = ( { 
-        onChange, 
-        value={ from : 0, to : Infinity}, 
-        onWarning } ) => {
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').FilterValue_o_items_count_in_range} param.value
+ * @param {(filter_value: 
+ *  import('@storecraft/core/v-api').FilterValue_o_items_count_in_range) => void
+ * } param.onChange
+ */
+const Filter_OrderItemCount = ( 
+  { 
+    onChange, 
+    value={ from : 0, to : Infinity}, 
+  }
+) => {
+  
   const [v, setV] = useState(value)
 
   // useEffect(() => { setV(v) }, [value])
   
   const onChangeInternal = useCallback(
+    /**
+     * 
+     * @param {string} who 
+     * @param {any} e 
+     */
     (who, e) => {
       const vv = { ...v, [who] : parseInt(e.currentTarget.value) }
       setV(vv)
@@ -339,8 +436,9 @@ const Filter_OrderDate = ( {
 }
 
 const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
-  const ref_overlay = useRef()
-  const [tags, setTags] = useState(value)
+  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  const ref_overlay = useRef();
+  const [tags, setTags] = useState(value);
   
   const onRemove = useCallback(
     (v) => {
@@ -352,7 +450,7 @@ const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
       setTags(new_tags)
     },
     [tags, onChange]
-  )
+  );
 
   const onBrowseAdd = useCallback(
     (selected_items) => { // array of shape [[id, data], ...]
@@ -389,9 +487,28 @@ const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
 ///
 ///
 
-const ProductFilterContainer = 
-  ({ name, value, type='', Comp, CompParams, 
-     onChange, onRemove, ix, ...rest }) => {
+/**
+ * 
+ * @typedef {object} ProductFilterContainerParams
+ * @prop {string} name
+ * @prop {import('@storecraft/core/v-api').Filter["value"]} value
+ * @prop {filters_2_comp[0]["Comp"]} Comp
+ * @prop {filters_2_comp[0]["CompParams"]} CompParams
+ * @prop {import('@storecraft/core/v-api').Filter["meta"]["type"]} type
+ * @prop {(value: import('@storecraft/core/v-api').Filter["value"]) => void} onChange
+ * @prop {() => void} onRemove
+ * @prop {number} ix
+ * 
+ * @param {ProductFilterContainerParams &
+ * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param
+ */
+const ProductFilterContainer = (
+  { 
+    name, value, type, Comp, CompParams, 
+    onChange, onRemove, ix, ...rest 
+  }
+) => {
 
   const [warn, setWarn] = useState(undefined)
 
@@ -419,7 +536,7 @@ const ProductFilterContainer =
                         flex-shrink-0' />
   </div>
   {
-    Comp && (<Comp {...CompParams} onChange={onChange} ix={ix}
+    Comp && (<Comp {...CompParams} onChange={onChange}
                   value={value} onWarning={onWarning} />)
   }
   <ShowIf show={warn}>
@@ -492,6 +609,10 @@ const fake_data = [
   { id: 4, type:'product', value : ['a', 'b', 'c'] }, 
 ]
 
+/**
+ * 
+ * @param {import('@storecraft/core/v-api').Filter["meta"]["id"]} id Filter id
+ */
 const filterId2Comp = id => {
   const filter = filters_2_comp.find(it => it.id===id)
   return { 
@@ -500,12 +621,17 @@ const filterId2Comp = id => {
     CompParams : filter?.CompParams }
 }
 
-const AddFilter = ({ type, onChange, onAdd }) => {
+/**
+ * 
+ * @param {object} param
+ * @param {string} param.type
+ * @param {(filter_id: string | number) => void} param.onAdd
+ */
+const AddFilter = ({ type, onAdd }) => {
   const options = filters_2_comp.filter(it => it.type===type)
 
   return (
-<button children={`Add ${type} Filter`}
-        className='shelf-bling-fill shelf-border-color
+<button className='shelf-bling-fill shelf-border-color
                    rounded-lg w-full border pl-2 sm:px-3 --pl-3 
                    py-2 shadow-lg flex overflow-x-hidden
                    flex-col justify-between h-full text-base' >
@@ -529,12 +655,19 @@ const AddFilter = ({ type, onChange, onAdd }) => {
 
 /**
  * 
- * @param {object} p 
- * @param {FieldData} p.field a field
- * @param {import('@storecraft/core/v-api').Filter[]} p.value bunch of filters
- * @param {('product' | 'order')[]} p.types bunch of filters
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').Filter[]} param.value bunch of filters
+ * @param {('product' | 'order')[]} param.types bunch of filters
+ * @param {(filters: 
+ *  import('@storecraft/core/v-api').Filter[]) => void
+ * } param.onChange bunch of filters
  */
-const DiscountFilters = ({ field, value, onChange, types=['product', 'order'], ...rest }) => {
+const DiscountFilters = (
+  { 
+    value, onChange, types=['product', 'order'], ...rest 
+  }
+) => {
+
   const [filters, setFilters] = useState(value ?? [])
 
   const setAndChange = useCallback(
@@ -545,6 +678,11 @@ const DiscountFilters = ({ field, value, onChange, types=['product', 'order'], .
   )
 
   const onProductFilterChange = useCallback(
+    /**
+     * 
+     * @param {number} ix Filter index
+     * @param {import('@storecraft/core/v-api').Filter["value"]} v Filter value
+     */
     (ix, v) => {
       filters[ix].value = v
       const vv = [...filters]
@@ -553,6 +691,10 @@ const DiscountFilters = ({ field, value, onChange, types=['product', 'order'], .
   )
 
   const onRemoveProductFilter = useCallback(
+    /**
+     * 
+     * @param {number} ix Filter index
+     */
     (ix) => {
       filters.splice(ix, 1)
       const vv = [...filters]
@@ -561,6 +703,9 @@ const DiscountFilters = ({ field, value, onChange, types=['product', 'order'], .
   )
 
   const onAddFilter = useCallback(
+    /**
+     * @param {number} filter_id 
+     */
     (filter_id) => {
       const fd = filters_2_comp.find(it => it.id==filter_id)
       const f = { 
@@ -600,9 +745,10 @@ const DiscountFilters = ({ field, value, onChange, types=['product', 'order'], .
       filters.map((it, ix) => (
         <ProductFilterContainer {...filterId2Comp(it?.meta?.id)} 
           onChange={ (v) => onProductFilterChange(ix, v)} 
-          onRemove={ (v) => onRemoveProductFilter(ix)} 
+          onRemove={ () => onRemoveProductFilter(ix)} 
           key={ix} ix={ix} value={it.value} 
-          id={it.meta?.id} type={it.meta?.type} />
+          id={String(it.meta?.id)} 
+          type={it.meta?.type} />
       ))
     }      
     </div>    

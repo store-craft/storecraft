@@ -14,25 +14,28 @@ export const default_transform_fn = window => window ?? []
  * @typedef {object} SelectCollectionParams
  * @property {(value: any) => any} onSelect callback when selection is made (value) => any 
  * @property {string} header
- * @property {boolean} add_all add all sentinal
+ * @property {boolean} [add_all] add all sentinal
  * @property {0 | 1} layout add all sentinal
  * @property {string} collectionId collection to query
  * @property {number} [limit] number of item to query
  * @property {string} [className] 
  * @property {string} [clsHeader] 
  * @property {string} [clsReload] 
- * @property {typeof default_transform_fn} transform_fn 
- * @property {typeof default_name_fn} name_fn 
+ * @property {typeof default_transform_fn} [transform_fn] 
+ * @property {typeof default_name_fn} [name_fn] 
  * 
  * @param {SelectCollectionParams} params
  * 
  */
-const SelectCollection = 
-  ({ onSelect, header, collectionId, limit=100, layout=0,
-     add_all=false,
-     transform_fn=default_transform_fn, 
-     name_fn=default_name_fn, 
-     className, clsHeader, clsReload, ...rest }) => {
+const SelectCollection = (
+  { 
+    onSelect, header, collectionId, limit=100, layout=0,
+    add_all=false,
+    transform_fn=default_transform_fn, 
+    name_fn=default_name_fn, 
+    className, clsHeader, clsReload, ...rest 
+  }
+) => {
 
   const nada = '---'
   const ALL = 'ALL'
@@ -140,9 +143,16 @@ const SelectCollection =
   )
 }
 
-export const SelectTags = 
-  ({ onSelect, header, limit=100, layout=0,
-     className, clsHeader, clsReload, ...rest }) => {
+/**
+ * 
+ * @param {Omit<SelectCollectionParams, 'collectionId' | 'transform_fn' | 'name_fn'>} param
+ */
+export const SelectTags = (
+  { 
+    onSelect, header, limit=100, layout=0,
+    className, clsHeader, clsReload, ...rest 
+  }
+) => {
 
   const transform_fn = useCallback(
     window => {

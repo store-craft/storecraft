@@ -5,7 +5,6 @@ import {
 import { BlingInput, HR } from './common-ui.jsx'
 import ShowIf from './show-if.jsx'
 import DiscountFilters from './discount-filters.jsx'
-// import { FieldContextData } from './fields-view.jsx'
 import { TbMath } from 'react-icons/tb/index.js'
 
 export const discount_details_validator = v => {
@@ -33,6 +32,14 @@ export const discount_types = [
     buy a Laptop + Headset at discount 💲' },
 ]
 
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} param.selectedType
+ * @param {(meta: 
+ *  import('@storecraft/core/v-api').DiscountDetails["meta"]) => void
+ * } param.onChange
+ */
 const DiscountTypes = ({ selectedType, onChange }) => {
 
   const desc = useMemo(
@@ -81,8 +88,9 @@ const explain_price = (prefix, percent, fixed) => {
   percent = Number.isNaN(percent) ? 0 : percent
   fixed = Number.isNaN(fixed) ? 0 : fixed
   const factor = (100 - percent)/100
-  const fixed_str = (Number.isNaN(fixed)) ? '' : Math.abs(fixed)!=0 ? `${fixed < 0 ? ' - ' : ' + '} ${Math.abs(fixed)}`: ''
-  let ff = (100 - percent)/100
+  const fixed_str = (Number.isNaN(fixed)) ? '' : 
+    Math.abs(fixed)!=0 ? `${fixed < 0 ? ' - ' : ' + '} ${Math.abs(fixed)}`: '';
+  let ff = (100 - percent)/100;
   ff = (typeof factor === 'number' && !Number.isNaN(factor)) ? factor : `(100 - Percents)/100`
   if(ff==0) {
     return Number.isNaN(fixed) ? 0 : fixed
@@ -97,6 +105,9 @@ const explain_price = (prefix, percent, fixed) => {
  * @param {object} props
  * @param {'bulk'} props.type
  * @param {import('@storecraft/core/v-api').BulkDiscountExtra} props.value
+ * @param {(extra: 
+ *  import('@storecraft/core/v-api').BulkDiscountExtra) => void
+ * } props.onChange
  */
 const BulkDiscount = ({ type, value, onChange }) => {
 
@@ -106,6 +117,10 @@ const BulkDiscount = ({ type, value, onChange }) => {
   // useEffect(() => { onChange(v) }, [])
 
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who 
+     * @param {any} val 
+     */
     (who, val) => {
       // console.log('val ', val);
       const vvv = { ...v, [who] : val }
@@ -218,7 +233,13 @@ const explain_filter = (f) => {
       <>
       a product, that belongs to any of the following <b>collections</b>:
       <ol className='list-disc list-inside'>
-      { f.value?.map(c => <li children={c} className='font-semibold shelf-text-label-color-second' /> )}
+      { f.value?.map(
+          c => <li 
+            children={c} 
+            className='font-semibold shelf-text-label-color-second' 
+            /> 
+        )
+      }
       </ol>
       </>
       )
@@ -289,7 +310,7 @@ const to_order = (ix) => {
 
 /**
  * 
- * @param {Filter} f
+ * @param {import('@storecraft/core/v-api').Filter} f
  */
 const filter_legal = f => {
   return (f.meta.type==='product') 
@@ -297,13 +318,16 @@ const filter_legal = f => {
 
 /**
  * @param {object} p
- * @param {'bundle'} p.type
+ * @param {'bundle'} p.meta
  * @param {import('@storecraft/core/v-api').BundleDiscountExtra} p.value
- * @param {FieldContextData} p.context
+ * @param {import('./fields-view.jsx').FieldContextData} p.context
+ * @param {(extra: 
+ *  import('@storecraft/core/v-api').BundleDiscountExtra) => void
+ * } p.onChange
  */
-const BundleDiscount = ({ type, value, context, onChange }) => {
+const BundleDiscount = ({ meta, value, context, onChange }) => {
 
-  /**@type {[filters: Filter[]]} */
+  /**@type {[filters: import('@storecraft/core/v-api').Filter[], any]} */
   const [filters, setFilters] = useState([]) 
   const [v, setV] = useState(value)
   
@@ -313,7 +337,7 @@ const BundleDiscount = ({ type, value, context, onChange }) => {
   useEffect(
     () => {
       const set_filters = () => {
-        /**@type {Filter[]} */
+        /**@type {import('@storecraft/core/v-api').Filter[]} */
         const fs =  context?.query['info.filters']?.get() ?? []
         setFilters([...fs].filter(filter_legal))
       }
@@ -433,7 +457,7 @@ const BundleDiscount = ({ type, value, context, onChange }) => {
 
 /**
  * @param {object} param0 
- * @param {number} param0.prefix
+ * @param {string} param0.prefix
  * @param {number} param0.percent
  * @param {number} param0.fixed
  */
@@ -458,7 +482,10 @@ const ExplainPrice = ({ prefix, percent, fixed }) => {
 /**
  * @param {object} props
  * @param {'regular'} props.type
- * @param {RegularDiscountExtra} props.value
+ * @param {import('@storecraft/core/v-api').RegularDiscountExtra} props.value
+ * @param {(extra: 
+ *  import('@storecraft/core/v-api').RegularDiscountExtra) => void
+ * } props.onChange
  */
 const RegularDiscount = ( { type, value, onChange } ) => {
 
@@ -468,6 +495,10 @@ const RegularDiscount = ( { type, value, onChange } ) => {
   // useEffect(() => { onChange(v) }, [])
 
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who 
+     * @param {any} val 
+     */
     (who, val) => {
       const vvv = { ...v, [who] : parseFloat(val) }
       setV(vvv)
@@ -530,7 +561,7 @@ const RegularDiscount = ( { type, value, onChange } ) => {
   )
 }
 
-const Dashed = ({ className, ...rest }) => {
+const Dashed = ({ className='', ...rest }) => {
   return (
 <span className={`font-semibold border-b-2 
           shelf-border-color border-dashed ${className}`}
@@ -541,7 +572,10 @@ const Dashed = ({ className, ...rest }) => {
 /**
  * @param {object} props
  * @param {'buy_x_get_y'} props.type
- * @param {BuyXGetYDiscountExtra} props.value
+ * @param {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} props.value
+ * @param {(extra: 
+ *  import('@storecraft/core/v-api').BuyXGetYDiscountExtra) => void
+ * } props.onChange
  */
 const BuyXGetYDiscount = ({ type, value, onChange }) => {
 
@@ -551,6 +585,10 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
   // useEffect(() => { onChange(v) }, [])
 
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who 
+     * @param {any} val 
+     */
     (who, val) => {
       // console.log('val ', val);
       const vvv = { ...v, [who] : val }
@@ -679,7 +717,10 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
 /**
  * @param {object} props
  * @param {'order'} props.type
- * @param {OrderDiscountExtra} props.value
+ * @param {import('@storecraft/core/v-api').OrderDiscountExtra} props.value
+ * @param {(extra: 
+ *  import('@storecraft/core/v-api').OrderDiscountExtra) => void
+ * } props.onChange
  */
 const OrderDiscount = ( { type, value, onChange } ) => {
 
@@ -689,6 +730,10 @@ const OrderDiscount = ( { type, value, onChange } ) => {
   // useEffect(() => { onChange(v) }, [])
 
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who 
+     * @param {any} val 
+     */
     (who, val) => {
       const vvv = { ...v, [who] : val }
       setV(vvv)
@@ -767,6 +812,11 @@ const OrderDiscount = ( { type, value, onChange } ) => {
   )
 }
 
+/**
+ * @typedef {object} CompParams
+ * @prop {}
+ */
+
 const discount_types_comps = [
   { 
     type: 'regular', 
@@ -793,13 +843,16 @@ const discount_types_comps = [
 
 /**
  * @param {object} p 
- * @param {string} p.type
+ * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} p.meta
  * @param {import('./fields-view.jsx').FieldContextData} p.context
- * @param {typeof DiscountDetails.extra} p.onChange
+ * @param {(extra: 
+ *  import('@storecraft/core/v-api').DiscountDetails["extra"]) => void
+ * } p.onChange
+ * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} p.value
  */
-const Type2Comp = ({ type, context, onChange, ...rest }) => {
+const Type2Comp = ({ meta, context, onChange, value, ...rest }) => {
   const record = discount_types_comps.find(
-    it => it.type===type?.type
+    it => it.type===meta?.type
   )
 
   if (!record)
@@ -807,12 +860,13 @@ const Type2Comp = ({ type, context, onChange, ...rest }) => {
   const { Comp, CompParams } = record
   return (
     <Comp {...CompParams} onChange={onChange} 
-          type={type} context={context} {...rest} />
+        value={value} meta={meta} type={meta.type} 
+        context={context} {...rest} />
   );
 }
 
 /**
- * @param {DiscountMetaEnum[keyof DiscountMetaEnum]} m 
+ * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} m 
  */
 const getDefaultExtraByMeta = m => {
   switch(m.id) {
@@ -854,7 +908,7 @@ const getDefaultExtraByMeta = m => {
  * @param {(v: import('@storecraft/core/v-api').DiscountDetails) => void} p.onChange
  */
 const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
-  const [type, setType] = useState(value?.meta)
+  const [meta, setType] = useState(value?.meta)
   const [extra, setExtra] = useState(value?.extra)
 
   const notify = useCallback(
@@ -885,19 +939,19 @@ const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
      * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} e
      */
     (e) => {
-      notify(type, e)
-    }, [type, notify]
+      notify(meta, e)
+    }, [meta, notify]
   )
 
   return (
 <div className='w-full'>
-  <DiscountTypes onChange={onTypeSelected} selectedType={type} />
-  <ShowIf show={type && type!=='free_shipping'}>
+  <DiscountTypes onChange={onTypeSelected} selectedType={meta} />
+  <ShowIf show={meta}>
     <p children='' 
        className='border-b-g mt-5 h-0.5 mb-5 bg-gradient-to-r 
                 from-pink-400 to-kf-300'/>
   </ShowIf>
-  <Type2Comp type={type} context={context}
+  <Type2Comp meta={meta} context={context}
              onChange={onExtraChange} 
              value={value?.extra} />
 </div>

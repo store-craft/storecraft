@@ -10,17 +10,14 @@ import { HR } from './common-ui.jsx'
 const isEmpty = (str) => (!str?.trim().length)
 
 /**
- * @typedef {object} InternalMDEditorParams
- * @prop {import("./fields-view.jsx").FieldData} [field]
- * @prop {import('@storecraft/core/v-api').DiscountType[]} [value]
- * @prop {(value: import('@storecraft/core/v-api').DiscountType[]) => void} [onChange]
  * 
- * @typedef {InternalMDEditorParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } MDEditorParams
- * 
- * @param {MDEditorParams} param
- */
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').DiscountType[]> & 
+*   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } MDEditorParams
+* 
+* @param {MDEditorParams} param
+*/
 const OrderCouponInfo = (
   {
     field, value, onChange, ...rest

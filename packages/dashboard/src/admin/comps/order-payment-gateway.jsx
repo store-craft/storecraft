@@ -1,41 +1,42 @@
 import { useCallback, useEffect, 
   useRef, useState } from 'react'
-// import { OrderData, 
-//   OrderPaymentGatewayData } from '@/admin-sdk/js-docs-types'
 import { getSDK } from '@/admin-sdk/index.js'
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'
-import { FieldContextData, FieldData } from './fields-view.jsx'
-
 
 /**
- * @typedef {object} PaymentStatus
- * @property {string[]} messages
+ * TODO: I need to rewrite it to account for custom actions
  * 
- * @param {object} p 
- * @param {FieldData} p.field
- * @param {FieldContextData} p.context
- * @param {OrderPaymentGatewayData} p.value
- * @param {(pay: OrderPaymentGatewayData) => void} p.onChange
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
+ *   import('@storecraft/core/v-api').OrderPaymentGatewayData> & 
+ *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } OrderPaymentGatewayParams
+ * 
+ * @param {OrderPaymentGatewayParams} param
  */
-const OrderPaymentGateway = ({field, value, onChange, setError, context, ...rest}) => {
+const OrderPaymentGateway = (
+  {
+    field, value, onChange, setError, context, ...rest
+  }
+) => {
+
   const ref_name = useRef()
   const { key, name, comp_params } = field
-  /**@type {[status: PaymentStatus]} */
+
   const [status, setStatus] = useState(value?.latest_status ?? { messages: [] })
 
-  /**@type {OrderData} */
+  /**@type {import('@storecraft/core/v-api').OrderData} */
   const order = context?.data
 
   const fetchStatus = useCallback(
     async () => {
-      if(value?.gateway_id===undefined)
+      if(value?.gateway_handle===undefined)
         return;
       try {
-        const stat = await getShelf().payment_gateways.status(
-          value.gateway_id, order.id
-        )
+        const stat = await getSDK().payment_gateways.status(
+          value.gateway_handle, order.id
+        );
         onChange({
           ...value,
           latest_status: stat
@@ -124,7 +125,7 @@ const OrderPaymentGateway = ({field, value, onChange, setError, context, ...rest
     }, []
   )
 
-  if(value?.gateway_id===undefined)
+  if(value?.gateway_handle===undefined)
     return (
       <p className='text-base' children='No Payment Gateway is linked to this order !!' />
     )

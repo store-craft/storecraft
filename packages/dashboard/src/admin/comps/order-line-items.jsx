@@ -108,23 +108,19 @@ const LineitemsTable =
 }
 
 /**
- * @typedef {object} InternalOrderLineItemsParams
- * @prop {import('@storecraft/core/v-api').LineItem[]} [value]
- * @prop {import("./fields-view.jsx").FieldData} [field]
- * @prop {import('./fields-view.jsx').FieldContextData} [context]
- * @prop {(value: import('@storecraft/core/v-api').LineItem[]) => void} [onChange]
- * @prop {(error: any) => void} [setError]
- * @prop {string} [error]
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').LineItem[]> & 
+ *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } OrderLineItemsParams
  * 
- * @typedef {InternalOrderLineItemsParams & 
-*   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } OrderLineItemsParams
-* 
-* @param {OrderLineItemsParams} param
-*/
-const OrderLineItems = 
-  ({ field, value, onChange, context, error, setError, ...rest }) => {
-
+ * @param {OrderLineItemsParams} param
+ */
+const OrderLineItems = (
+  { 
+    field, value, onChange, context, error, setError, ...rest 
+  }
+) => {
+    
   /** @type {import('react').LegacyRef<HTMLInputElement>}  */
   const ref_id = useRef();
   /** @type {import('react').LegacyRef<HTMLInputElement>}  */

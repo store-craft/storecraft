@@ -1666,7 +1666,8 @@ export type OrderPaymentGatewayData = {
   gateway_handle: string;
 
   /** 
-   * @description Result of gateway at checkout creation 
+   * @description Result of gateway at checkout creation, this will later be given
+   * to the `payment gateway` on any interaction, which will use it to identify the payment.
    */
   on_checkout_create?: any;
 

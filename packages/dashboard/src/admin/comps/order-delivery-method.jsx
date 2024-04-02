@@ -3,12 +3,8 @@ import { BlingInput, HR } from './common-ui.jsx'
 import SelectCollection from './select-collection.jsx'
 
 /**
- * @typedef {object} InternalOrderDeliveryMethodParams
- * @prop {import("./fields-view.jsx").FieldData} [field]
- * @prop {import('@storecraft/core/v-api').ShippingMethodType} [value]
- * @prop {(value: import('@storecraft/core/v-api').ShippingMethodType) => void} [onChange]
- * 
- * @typedef {InternalOrderDeliveryMethodParams & 
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').ShippingMethodType> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } OrderDeliveryMethodParams
  * 
@@ -46,25 +42,30 @@ const OrderDeliveryMethod = (
   )
   
   const onSelect = useCallback(
+    /** @param {typeof value} t  */
     (t) => {
       // console.log('rrr ', t)
       // const { name, price } = t[1]
-      setV(t[1])
+      setV(t)
       // setName(name)
       // setPrice(price)
-      onChange(t[1])
+      onChange(t)
     },
     [onChange]
   )
 
   return (
 <div {...comp_params}>
-  <SelectCollection collectionId='shipping_methods' layout={1}
-                    className='mt-3' onSelect={onSelect}
-                    header='Pick Methods you defined' 
-                    clsHeader='shelf-text-minor' 
-                    clsReload='text-kf-500 text-3xl' 
-                    name_fn={tuple => tuple[1].name} />
+  <SelectCollection 
+      collectionId='shipping_methods' layout={1}
+      className='mt-3' onSelect={onSelect}
+      header='Pick Methods you defined' 
+      clsHeader='shelf-text-minor' 
+      clsReload='text-kf-500 text-3xl' 
+      name_fn={
+        /** @param {typeof value} ship */
+        ship => ship.title
+      } />
 
   <HR className='w-full mt-3' />
   <p children='Method' className='mt-2 shelf-text-minor'/>

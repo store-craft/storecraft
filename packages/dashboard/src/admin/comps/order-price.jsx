@@ -1,7 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Bling, BlingInput, HR } from './common-ui.jsx'
-// import { DiscountData, LineItem, 
-//   PricingData, ShippingData } from '@/admin-sdk/js-docs-types'
+import { BlingInput, HR } from './common-ui.jsx'
 import { getSDK } from '@/admin-sdk/index.js'
 
 const Entry = ({title, value}) => {
@@ -15,11 +13,21 @@ const Entry = ({title, value}) => {
   )
 }
 
-const OrderPrice = 
-  ({ field, context, setError, value, onChange, ...rest }) => {
+/**
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').PricingData> & 
+ *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } OrderPriceParams
+ * 
+ * @param {OrderPriceParams} param
+ */
+const OrderPrice = (
+  { 
+    field, context, setError, value, onChange, ...rest 
+  }
+) => {
 
-  /**@type {[PricingData]} */
-  const [ pricing, setPricing ] = useState(value ?? { total: 0 })
+  const [ pricing, setPricing ] = useState(value)
   const { key, comp_params } = field
 
   // console.log('lineItems ', lineItems)
@@ -41,13 +49,13 @@ const OrderPrice =
   const onCalculatePrice = useCallback(
     async (_) => {
       const { pubsub, query } = context
-      /**@type {LineItem[]} */
+      /**@type {import('@storecraft/core/v-api').LineItem[]} */
       const line_items = query['line_items'].get() ?? []
-      /**@type {DiscountData[]} */
+      /**@type {import('@storecraft/core/v-api').DiscountType[]} */
       const coupons = query['coupons'].get() ?? []
       /**@type {string} */
       const uid = query['contact.uid'].get() ?? []
-      /**@type {ShippingData} */
+      /**@type {import('@storecraft/core/v-api').ShippingMethodType} */
       const delivery = query['delivery'].get() ?? { price: 0 }
       if(!delivery.price)
         delivery.price = 0
@@ -101,7 +109,7 @@ const OrderPrice =
   <BlingInput className='mt-2 w-full' rounded='rounded-md'
               onChange={onUpdatePrice} 
               onWheel={(e) => e.target.blur()}
-              value={pricing.total} placeholder='Price' 
+              value={pricing?.total ?? 0} placeholder='Price' 
               type='number' min='0' />
 
 </div>

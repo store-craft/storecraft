@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 // End Test Data
 export const EVENT_CHANGE = 'pubsub.on_change'
 export const EVENT_REFRESH = 'pubsub.on_refresh'
+
 class PubSub {
   _subscribers = new Set()
 
@@ -103,19 +104,41 @@ const validateField = (field, value) => {
  * @property {string} [running_key] running key for leafs
  * @property {PubSub} [pubsub]
  * @property {object} [data] the entire original data
- * @property {Object<string, { get: () => any }>} [query] the entire original data
+ * @property {Object<string, { get: () => any, set: (val: any) => void }>} [query] the entire original data
  */
 
 /**
+ * @template {any} [V=any]
+ * @template {any} [C=any]
  * @typedef {object} FieldViewParams
+ * @property {string} [running_key] running key for leafs
  * @property {FieldData} field
- * @property {any} value
- * @property {string} className
- * @property {FieldContextData} context
+ * @property {V} value
+ * @property {string} [className]
+ * @property {FieldContextData & C} [context]
  * @property {boolean} isViewMode
  * 
  */
 
+/**
+ * @template {any} [V=any]
+ * @template {any} [C={}]
+ * @typedef {object} FieldLeafViewParams
+ * @property {FieldData} field
+ * @property {V} value
+ * @property {FieldContextData & C} context
+ * @property {boolean} disabled
+ * @property {(value: V) => void} onChange
+ * @property {(error: string) => void} setError
+ * @property {string} error
+ * 
+ */
+
+/**
+ * 
+ * @param {string} running_key 
+ * @param {string} field_key 
+ */
 const compute_running_key = (running_key, field_key) => {
   let running_key_2 = (running_key ?? '')
   if(field_key) {
@@ -128,9 +151,13 @@ const compute_running_key = (running_key, field_key) => {
 
 const FieldViewInternal = forwardRef(
   /**
-   * @param {FieldViewParams} param0 
+   * @template {any} V
+   * @template {any} C
+   * 
+   * @param {FieldViewParams<V, C>} param0 
    * @param {*} ref 
-   * @returns 
+   * 
+   * @returns {React.ReactElement<FieldLeafViewParams>}
    */
   ({ field, value, context, running_key, isViewMode, ...rest}, ref) => {
 
@@ -139,11 +166,13 @@ const FieldViewInternal = forwardRef(
   const [validationError, setValidationError] = useState(undefined)
   const [v, setV] = useState(value ?? field.defaultValue)
 
-  const isFieldEditablePlus = useCallback(() => {
-    return isFieldEditable(field) && !isViewMode
-  }, [field, isViewMode])
+  const isFieldEditablePlus = useCallback(
+    () => isFieldEditable(field) && !isViewMode
+    , [field, isViewMode]
+  );
 
   const onChange_internal = useCallback(
+    /** @param {V} val */
     (val) => {
       if(isFieldEditablePlus()) {
         console.log(running_key, val)
@@ -152,13 +181,13 @@ const FieldViewInternal = forwardRef(
         pubsub.dispatch(running_key, val)
       }
     }, [isFieldEditablePlus, pubsub, running_key]
-  )
+  );
 
   useEffect(
     () => {
       pubsub.dispatch(running_key, v)
     }, [pubsub, running_key, v]
-  )
+  );
 
   useEffect(
     () => {
@@ -170,7 +199,7 @@ const FieldViewInternal = forwardRef(
         }
       }
     }, [field, context, v, onChange_internal]
-  )
+  );
 
   useImperativeHandle(
     ref, 
@@ -226,12 +255,13 @@ const FieldViewInternal = forwardRef(
   )
 
   return (
-  <field.comp field={field} value={v} error={validationError} 
-              setError={setValidationError}
-              onChange={onChange_internal} 
-              context={ctx}
-              disabled={!isFieldEditablePlus()} 
-              {...field.comp_params} />
+  <field.comp 
+      field={field} value={v} error={validationError} 
+      setError={setValidationError}
+      onChange={onChange_internal} 
+      context={ctx}
+      disabled={!isFieldEditablePlus()} 
+      {...field.comp_params} />
   )
     
 })
@@ -240,7 +270,11 @@ const Div = ({...rest}) => (<div {...rest}/>)
 
 const FieldsViewInternal = forwardRef(
   /**
-   * @param {FieldViewParams} param0 
+   * @template {any} [V=any]
+   * @template {any} [C=any]
+   * 
+   * @param {FieldViewParams<V, C>} param0 
+   * 
    * @param {*} ref 
    */
   ({ field, value, className, context={}, running_key, isViewMode=false, ...rest}, ref) => {
@@ -277,7 +311,7 @@ const FieldsViewInternal = forwardRef(
         }
       }
     ), [field]
-  )
+  );
 
   let Render = field.fields.map(
     (f, ix) => {
@@ -297,8 +331,10 @@ const FieldsViewInternal = forwardRef(
   )
 
   const Layout = field.comp ?? Div
-  const { className : clsName, ...rest_comp_params } = field.comp_params ?? {}
-  const combined_className = `${className} ${clsName} ${isViewMode ? 'pointer-events-none' : ''}`
+  const { className : clsName, 
+    ...rest_comp_params } = field.comp_params ?? {};
+  const combined_className = `${className} ${clsName} 
+            ${isViewMode ? 'pointer-events-none' : ''}`;
 
   useEffect(
     () => {
@@ -310,8 +346,9 @@ const FieldsViewInternal = forwardRef(
   )
 
   return (
-<Layout {...rest_comp_params} field={field} value={value} children={Render} 
-        className={combined_className} />
+<Layout 
+    {...rest_comp_params} field={field} value={value} 
+    children={Render} className={combined_className} />
   ) 
 }
 )
@@ -347,10 +384,10 @@ const FieldsView = forwardRef(
 
     return (
       <FieldsViewInternal 
-              ref={ref} field={field} value={value} 
-              className={className} context={ctx} 
-              running_key={undefined} isViewMode={isViewMode} 
-              {...rest} />
+          ref={ref} field={field} value={value} 
+          className={className} context={ctx} 
+          running_key={undefined} isViewMode={isViewMode} 
+          {...rest} />
     )
   }
 )

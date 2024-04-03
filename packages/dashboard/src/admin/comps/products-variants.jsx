@@ -449,7 +449,7 @@ const IamVariant = ({ context, ...rest }) => {
  * @typedef {import('./fields-view.jsx').FieldContextData<
  *  import('@storecraft/core/v-api').VariantType & 
  *  import('@storecraft/core/v-api').ProductType> & 
- *  import('../pages/product.jsx').ProductContext
+ *  import('../pages/product.jsx').Context
  * } Context
  * 
  * 

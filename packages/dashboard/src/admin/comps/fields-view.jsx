@@ -88,15 +88,15 @@ const validateField = (field, value) => {
 
 /**
  * @typedef {object} FieldData
- * @property {string} type
- * @property {string} key
- * @property {string} running_key
- * @property {any} defaultValue
- * @property {string} name
- * @property {string} desc
+ * @property {string} [type]
+ * @property {string} [key]
+ * @property {string} [running_key]
+ * @property {any} [defaultValue]
+ * @property {string} [name]
+ * @property {string} [desc]
  * @property {FieldData[]} [fields] nested fields
- * @property {import('react').ComponentType} comp a react component
- * @property {object} comp_params params for comp
+ * @property {import('react').ComponentType} [comp] a react component
+ * @property {object} [comp_params] params for comp
  */
 
 /**
@@ -125,14 +125,26 @@ const validateField = (field, value) => {
  * @template {any} [V=any]
  * @template {any} [C={}]
  * @typedef {object} FieldLeafViewParams
- * @property {FieldData} field
- * @property {V} value
- * @property {FieldContextData & C} context
- * @property {boolean} disabled
- * @property {(value: V) => void} onChange
- * @property {(error: string) => void} setError
- * @property {string} error
+ * @property {FieldData} [field]
+ * @property {V} [value]
+ * @property {FieldContextData & C} [context]
+ * @property {boolean} [disabled]
+ * @property {(value: V) => void} [onChange]
+ * @property {(error: string) => void} [setError]
+ * @property {string} [error]
  * 
+ */
+
+/**
+ * @template {import('@storecraft/core/v-api').BaseType} [T={}]
+ * @typedef {object} FieldViewImperativeInterface
+ * @prop {(validate?: boolean) => { 
+ *  data: T,
+ *  validation: {
+ *    fine: Record<string, [valid: boolean, message: string, fieldname: string]>,
+ *    has_errors: boolean
+ *  } 
+ * }} get Drill and get all nodes rendered data
  */
 
 /**

@@ -14,7 +14,7 @@ const schema_fields = [
     comp_params: { className: 'font-semibold' } 
   },
   { 
-    key: 'updatedAt', name: 'Last Updated	', 
+    key: 'updated_at', name: 'Last Updated	', 
     comp: TimeStampView, 
     comp_params: { className: 'font-semibold' } 
   },
@@ -24,7 +24,6 @@ const schema_fields = [
   },
 ]
 
-/**@type {PostData} */
 const dt = {}
 
 export default ({ } ) => {
@@ -34,6 +33,11 @@ export default ({ } ) => {
     [query_params]
   )
   const nav = useNavigate()
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
   const ref_actions = useRef()
   const { 
     page, loading, error, 
@@ -92,8 +96,7 @@ export default ({ } ) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`Posts ${queryCount>=0 ? `(${queryCount})` : ''}`} 
                     className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden shadow-md 
                       dark:shadow-slate-900 shelf-border-color'>      

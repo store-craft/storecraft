@@ -1,16 +1,13 @@
-import { forwardRef, useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useCallback, useState } from 'react'
 import { AiOutlineDelete, AiOutlineWarning } from 'react-icons/ai/index.js'
-import { BiEditAlt, BiErrorCircle } from 'react-icons/bi/index.js'
-import { Link } from 'react-router-dom'
+import { BiEditAlt } from 'react-icons/bi/index.js'
 import { LoadingButton } from './common-button.jsx'
 import Modal from './modal.jsx'
-import ShowIf from './show-if.jsx'
 import { RxCopy } from 'react-icons/rx/index.js'
-import { IoClose } from 'react-icons/io5/index.js'
 import { read_clipboard, write_clipboard } from '../utils/index.js'
 import { to_handle } from '@/admin-sdk/utils.functional.js'
-import { Bling, Card, HR, Input } from './common-ui.jsx'
+import { Bling, Card, Input } from './common-ui.jsx'
 import { LinkWithState } from '../hooks/useNavigateWithState.js'
 
 /**
@@ -22,10 +19,7 @@ export const create_select_view = (options, defaultIndex=0) => {
 
   /**
    * 
-   * @param {object} p
-   * @param {import('./fields-view.jsx').FieldData} p.field
-   * @param {any} p.value
-   * @param {(v: any) => any} p.onChange
+   * @param {import('./fields-view.jsx').FieldLeafViewParams<{ id: string }>} param0 
    */
   const Select = ({field, value, onChange}) => {
     const { key, name, comp_params } = field
@@ -39,7 +33,10 @@ export const create_select_view = (options, defaultIndex=0) => {
 
     const onSelect = useCallback(
       (e) => {
-        const option = options.filter(it => it.id==parseInt(e.target.value))[0]
+        const option = options.find(
+          it => it.id==parseInt(e.target.value).toString()
+        );
+
         setSelectedOption(option)
         onChange && onChange(option)
       }, [options])
@@ -66,16 +63,15 @@ export const create_select_view = (options, defaultIndex=0) => {
 
 /**
  * 
- * @param {object} params 
- * @param {import('./fields-view.jsx').FieldData} params.field 
- * @param {any} params.value 
- * @param {(v:any) => void} params.onChange 
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<string>} param 
  */
 export const TextArea = ({field, value, onChange, ...rest}) => {
   const { key, comp_params } = field
   return (
-<textarea value={value} onChange={e=>onChange(e.target.value)} 
-                {...comp_params}  />
+<textarea 
+    value={value} 
+    onChange={e=>onChange(e.target.value)} 
+    {...comp_params}  />
   )
 }
 
@@ -83,17 +79,23 @@ const readable_span_cls = 'pr-3 py-2 max-w-[18rem] \
 overflow-x-auto inline-block whitespace-nowrap';
 
 /**
+ * This is used in `CollectionView`
  * 
- * @param {object} param
- * @param {any} param.value
- * @param {(v:any) => void} param.onChange 
- * @param {any} [param.children] 
- * @param {string} [param.className] 
- * @param {string} [param.extra] 
- */
+ * @typedef {object} InternalSpanParams
+ * @prop {string} [className]
+ * @prop {string} [extra]
+ * @prop {import('react').ReactNode} [children]
+ * 
+ * @typedef {import('./collection-view.jsx').CollectionViewComponentParams<string> & 
+* InternalSpanParams & 
+* React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+* } SpanParams
+* 
+* @param {SpanParams} param
+*/
 export const Span = (
   {
-    value, onChange, children, className, 
+    value, children, className, 
     extra='max-w-[8rem] md:max-w-[18rem]', ...rest
   }
 ) => {
@@ -108,37 +110,40 @@ export const Span = (
 }
 
 /**
+ * This is used in `CollectionView`
  * 
  * @typedef {object} InternalSpanArrayParams
- * @prop {import('./fields-view.jsx').FieldData} field
- * @prop {any} value
  * @prop {string} [className]
  * @prop {string} [classNameDelimiter]
  * @prop {string} [delimiter]
+ * @prop {(value: any) => string} [name_fn]
  * 
- * @typedef {InternalSpanArrayParams & 
- * React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
- * } SpanArrayParams
- * 
- * @param {SpanArrayParams} param
- */
+ * @typedef {import('./collection-view.jsx').CollectionViewComponentParams<any[]> & 
+* InternalSpanArrayParams & 
+* React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+* } SpanArrayParams
+* 
+* @param {SpanArrayParams} param
+*/
 export const SpanArray = ( 
   { 
-    field, value, className, 
+    field, value, className, name_fn = t => t,  
     classNameDelimiter='text-pink-600 font-bold text-lg', 
     delimiter=' / ', ...rest
   }
 ) => {
         
-  const VV = value?.map((it, ix) => (
-    <span key={ix}>
-      <span children={it}  />
-      { ix<value?.length-1 && 
-        <span children={delimiter} 
-              className={classNameDelimiter} />
-      }
-    </span>
-  ))
+  const VV = value?.map(
+    (it, ix) => (
+      <span key={ix}>
+        <span children={name_fn(it)}  />
+        { ix<value?.length-1 && 
+          <span children={delimiter} 
+                className={classNameDelimiter} />
+        }
+      </span>
+    )
+  );
 
   return (
     <p className={`${readable_span_cls} ${className}`} 
@@ -148,12 +153,11 @@ export const SpanArray = (
 
 /**
  * 
- * @param {object} param0 
- * @param {import('./collection-view.jsx').CollectionViewField} param0.field
- * @param {string} param0.value
- * @param {undefined} param0.onChange
- */
-export const TimeStampView = ({field, value, onChange, ...rest}) => {
+ * This component is used in a `CollectionView` 
+ * @param {import('./collection-view.jsx').CollectionViewComponentParams<string>
+* } params 
+*/
+export const TimeStampView = ({field, value, ...rest}) => {
   const { key, name, comp_params } = field
   return (
     <p children={new Date(value).toLocaleDateString()} 
@@ -162,11 +166,8 @@ export const TimeStampView = ({field, value, onChange, ...rest}) => {
 }
 
 /**
- * @typedef {object} InternalMInputParams
- * @prop {import('./fields-view.jsx').FieldData} field
- * @prop {any} value
- * @prop {(v: any) => void} onChange
- * @prop {'text' | 'number'} [type]
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<string>
+ * } InternalMInputParams
  * 
  * @typedef {InternalMInputParams & 
  * import('./common-ui.jsx').InputParams } MInputParams
@@ -201,11 +202,8 @@ export const MInput = ({field, value, onChange, type='text', ...rest}) => {
 }
 
 /**
- * @typedef {object} InternalInputWithClipboardParams
- * @prop {import('./fields-view.jsx').FieldData} field
- * @prop {any} value
- * @prop {(v: any) => void} onChange
- * @prop {(v: string) => void} setError
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<string>
+ * } InternalInputWithClipboardParams
  * 
  * @typedef {InternalInputWithClipboardParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -249,12 +247,8 @@ export const InputWithClipboard = (
 }
 
 /**
- * @typedef {object} InternalHandleParams
- * @prop {import('./fields-view.jsx').FieldData} field
- * @prop {any} value
- * @prop {(v: any) => void} onChange
- * @prop {(v: string) => void} setError
- * @prop {import('./fields-view.jsx').FieldContextData} context
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<string>
+ * } InternalHandleParams
  * 
  * @typedef {InternalHandleParams & 
 *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -297,12 +291,8 @@ export const Handle = (
 }
 
 /**
- * @typedef {object} InternalSwitchParams
- * @prop {import('./fields-view.jsx').FieldData} field
- * @prop {any} value
- * @prop {(v: any) => void} onChange
- * @prop {(v: string) => void} setError
- * @prop {import('./fields-view.jsx').FieldContextData} context
+ * @typedef {import('./fields-view.jsx').FieldLeafViewParams<boolean>
+ * } InternalSwitchParams
  * 
  * @typedef {InternalSwitchParams & 
 *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -343,41 +333,6 @@ export const Switch = ({field, value=true, onChange, ...rest}) => {
 
 
 /**
- * @typedef {object} InternalCompContainerParams
- * @prop {import('./fields-view.jsx').FieldData} field
- * @prop {any} value
- * @prop {(v: any) => void} onChange
- * @prop {string} [error]
- * @prop {(v: string) => void} setError
- * @prop {import('./fields-view.jsx').FieldContextData} context
- * @prop {import('react').FC<any>} Comp
- * @prop {string} name
- * 
- * @typedef {InternalCompContainerParams & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } CompContainerParams
-* 
-* @param {CompContainerParams} param
-* 
-*/
-export const CompContainer = (
-  {
-    Comp, field, value, className, name, onChange, 
-    error=undefined, ...rest
-  }
-) => {
-
-  return (
-<div className={`rounded-lg bg-white border p-2 mr-2 mb-2 w-full ${className}`} 
-      {...rest}>
-  <div children={name} className='text-xs text-gray-500 mb-1 w-fit ' />
-  <Comp field={field} value={value} onChange={onChange} />
-  <p children={error} className='text-xs text-red-600 mt-1'/>
-</div>
-  )
-}
-
-/**
  * 
  * @param {{
  *  value: string, config?: 0 | 1
@@ -414,26 +369,19 @@ export const ClipBoardCopy = ({ value, config=1 }) => {
 /**
  * 
  * @param {import('react').FC} Comp 
- * @param {any} comp_params_inner 
+ * @param {any} [comp_params_inner] 
  * @param {boolean} [border] 
  * @param {boolean} [copy] 
  */
 export const withCard = (
   Comp, comp_params_inner = {}, border=true, copy=false
-  ) => {
+) => {
 
   /**
-   * @param {object} params
-   * @param {import('./fields-view.jsx').FieldData} params.field
-   * @param {any} params.value
-   * @param {any} params.disable
-   * @param {any} params.onChange
-   * @param {any} params.children
-   * @param {string} [params.error]
-   * @param {(e: string) => void} [params.setError]
-   * @param {import('./fields-view.jsx').FieldContextData} [params.context]
+   * @param {import('./fields-view.jsx').FieldLeafViewParams<any> & 
+   * { children: import('react').ReactNode}} params
    */
-  return ({ field, value, disable, onChange, children, 
+  return ({ field, value, disabled, onChange, children, 
             error=undefined, setError, context, ...rest}) => {
     const { key, desc, name, comp_params } = field
     const { className, ...rest_comp_params } = comp_params || {}
@@ -451,7 +399,7 @@ export const withCard = (
       {...comp_params} border={border} desc={desc}
       rightView={Copy} setError={setError}>
   <Comp field={new_field} value={value} onChange={onChange} 
-        disable={disable} children={children} error={error} 
+        disabled={disabled} children={children} error={error} 
         setError={setError} context={context} {...comp_params_inner} />
 </Card>
   )
@@ -460,27 +408,20 @@ export const withCard = (
 
 
 /**
- * TODO: context type
- * @param {object} p
- * @param {object} [p.className]
- * @param {object} p.context
- * @param {(x: string) => Promise<any>} p.context.deleteDocument
- * @param {(x: string) => string} p.context.editDocumentUrl
- * @param {() => any} p.context.getState state to store for current page
- * @param {import('./collection-view.jsx').CollectionViewField} p.field
- * @param {any} p.value
- * @returns 
+ * This component is used in a `CollectionView` 
+ * @param {import('./collection-view.jsx').CollectionViewComponentParams
+ * } params 
  */
 export const RecordActions = (
   {
-    context, field, value, className, ...rest
+    context, field, value, ...rest
   }
 ) => {
 
   /** @type {import('react').MutableRefObject<import('./modal.jsx').ImpInterface>} */
   const ref_modal = useRef()
   const [loadingDelete, setLoadingDelete] = useState(false)
-  const id = context.item[0]
+  const id = context.item.id
   const onClickDelete = useCallback(
     () => {
       ref_modal.current.setDataAndMessage(

@@ -10,14 +10,16 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 
 const schema_fields = [
   { 
-    key: 'name', name: 'Name', 
+    key: 'handle', name: 'Name', 
     comp: Span, 
     comp_params: { className: 'font-semibold' } 
   },
   { 
     key: 'values', name: 'Values', 
     comp: SpanArray, 
-    comp_params: { className: 'font-semibold' } 
+    comp_params: { 
+      className: 'font-semibold',
+    } 
   },
   { 
     key: undefined, name: 'Actions', 
@@ -33,7 +35,12 @@ export default ({ collectionId, segment } ) => {
     [query_params]
   )
   const nav = useNavigate()
-  const ref_actions = useRef()
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
+  const ref_actions = useRef();
   const ref_use_cache = useRef(true)
   const { 
     pages, page, loading, error, 
@@ -109,8 +116,7 @@ export default ({ collectionId, segment } ) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`Tags ${queryCount>=0 ? `(${queryCount})` : ''}`} 
             className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      

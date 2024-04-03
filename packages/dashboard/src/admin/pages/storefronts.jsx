@@ -24,7 +24,7 @@ const test = {
 const schema_fields = [
   { key: 'title', name: 'Title', comp: Span, comp_params: { className: 'font-semibold ' } },
   { key: 'handle', name: 'Handle', comp: Span },
-  { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView },
+  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
   { key: undefined, name: 'Actions', comp: RecordActions, comp_params: { className: '' } },
 ]
 
@@ -34,8 +34,13 @@ export default ({ collectionId, segment } ) => {
     () => q2o(query_params, { search: '', limit: 5}),
     [query_params]
   )
-  const nav = useNavigate()
-  const ref_actions = useRef()
+  const nav = useNavigate();
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
+  const ref_actions = useRef();
   const ref_use_cache = useRef(true)
   const { 
     pages, page, loading, error, 

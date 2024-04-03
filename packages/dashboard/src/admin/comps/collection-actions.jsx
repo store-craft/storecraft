@@ -7,17 +7,25 @@ import { BlingButton2,
   PromisableLoadingButton } from './common-button.jsx'
 import { BlingInput } from './common-ui.jsx'
 
+/**
+ * @typedef {object} ImperativeInterface
+ * @prop {() => string} getSearch
+ * @prop {(value: string) => void} setSearch
+ * 
+ * 
+ * @typedef {object} TopActionsParams
+ * @prop {() => void} reload
+ * @prop {string} searchTitle
+ * @prop {boolean} isLoading
+ * @prop {string} [createLink]
+ * @prop {string} [className]
+ */
+
 export const TopActions = forwardRef(
   /**
    * 
-   * @param {object} p 
-   * @param {() => void} p.reload
-   * @param {string} p.searchTitle
-   * @param {boolean} p.isLoading
-   * @param {string} [p.createLink]
-   * @param {string} [p.className]
+   * @param {TopActionsParams} param0 
    * @param {*} ref 
-   * @returns 
    */
   (
     {

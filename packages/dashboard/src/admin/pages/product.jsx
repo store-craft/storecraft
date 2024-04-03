@@ -6,7 +6,7 @@ import ShowIf from '@/admin/comps/show-if.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import Media from '@/admin/comps/media.jsx'
 import { 
-  MInput, Div, withCard, 
+  MInput, withCard, 
   InputWithClipboard, 
   Handle,
   Switch} from '@/admin/comps/common-fields.jsx'
@@ -19,10 +19,9 @@ import DocumentDetails from '@/admin/comps/document-details.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import RelatedProducts from '@/admin/comps/product-related-products.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
-import { CreateDate, HR, withBling } from '@/admin/comps/common-ui.jsx'
+import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import ProductVariants from '@/admin/comps/products-variants.jsx'
 import { decode, encode } from '@/admin/utils/index.js'
-// import { ProductData } from '@/admin-sdk/js-docs-types'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 import { getSDK } from '@/admin-sdk/index.js'
 
@@ -52,7 +51,8 @@ const root_left_schema = {
     { 
       key: 'handle',  name: 'Handle',  type: 'text', validate: false, editable: true, 
       comp: withCard(Handle, {className:'w-full h-fit'}),
-      desc: 'Product handle uniquely identifies the product. \nWill be computed automatically if not filled by the product title',
+      desc: 'Product handle uniquely identifies the product. \n\
+      Will be computed automatically if not filled by the product title',
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
@@ -64,7 +64,8 @@ const root_left_schema = {
     { 
       key: 'variants_options',  name: 'Product Variants', validate: false, editable: true, 
       comp: withCard(ProductVariants, {className:'w-full h-fit'}),
-      desc: 'Product variants represent children product, that varies with options, such as SIZE / COLOR for a shirt',
+      desc: 'Product variants represent children product, that varies with options, \
+      such as SIZE / COLOR for a shirt',
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
@@ -91,7 +92,8 @@ const root_left_schema = {
     },
     { 
       key: 'compareAtPrice', name: 'Compare At Price', type: 'number',   
-      validate: false, editable: true, desc : 'Compare at price reveals the competitiveness of your price',
+      validate: false, editable: true, desc : 'Compare at price reveals the \
+      competitiveness of your price',
       comp: withCard(withBling(MInput), { className:'h-10', type: 'number' }),  
       comp_params: {className: 'w-full'} 
     },
@@ -128,17 +130,20 @@ const root_right_schema = {
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'related_products', name: 'Related Products', type: 'compund',  validate: false, editable: true, 
+      key: 'related_products', name: 'Related Products', type: 'compund',  
+      validate: false, editable: true, 
       desc: 'Which other products are similar ? Offer your customers similar products',
       comp: withCard(RelatedProducts) 
     },
     { 
-      key: 'tags', name: 'Tags', type: 'compund',  validate: false, editable: true, 
+      key: 'tags', name: 'Tags', type: 'compund',  validate: false, 
+      editable: true, 
       desc: 'Tags help you attach attributes to products',
       comp: withCard(TagsEdit),
     },
     { 
-      key: 'collections', name: 'Collections', type: 'compund',  validate: false, editable: true, 
+      key: 'collections', name: 'Collections', type: 'compund', 
+      validate: false, editable: true, 
       desc: 'Which collections does this product belong to ?',
       comp: withCard(ChooseCollections, {collectionId: 'collections'}) 
     },
@@ -158,20 +163,25 @@ const root_schema = {
 
 /**
  * @typedef {object} State
- * @property {import('@storecraft/core/v-api').ProductType | import('@storecraft/core/v-api').VariantType} data
+ * @property {import('@storecraft/core/v-api').ProductType | 
+ *  import('@storecraft/core/v-api').VariantType} data
  * @property {boolean} hasChanged
  * 
- * @typedef {object} ProductContext
+ * @typedef {object} Context
  * @prop {() => State} getState
  * @prop {(product_variant_handle: string) => Promise<void>} removeVariant
  * @prop {() => Promise<void>} preCreateVariant
  */
 
-export default ({ collectionId, 
-                  mode, ...rest}) => {
+export default (
+  { 
+    collectionId, mode, ...rest
+  }
+) => {
 
   const { id : documentId, base } = useParams()
-  const ref_root = useRef()
+  /** @type {import('react').MutableRefObject<import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<import('@storecraft/core/v-api').ProductType>>} */
+  const ref_root = useRef();
   const { 
     doc: doc_original, loading, hasLoaded, error, op,
     actions: { 
@@ -183,7 +193,7 @@ export default ({ collectionId,
     nav, navWithState, state 
   } = useNavigateWithState()
 
-  /**@type {ProductData} */
+  /**@type {import('@storecraft/core/v-api').ProductType & import('@storecraft/core/v-api').VariantType} */
   const doc = useMemo(
     () => {
       let base_o = {}
@@ -199,14 +209,15 @@ export default ({ collectionId,
   // console.log('state.data', state?.data)
   // console.log('doc', doc)
 
-  const ref_head = useRef()
+  /** @type {import('react').MutableRefObject<import('@/admin/comps/common-ui.jsx').CreateDateImperativeInterface>} */
+  const ref_head = useRef();
   const hasChanged = state?.hasChanged ?? false
   const isEditMode = mode==='edit'
   const isCreateMode = mode==='create'
   const isViewMode = !(isEditMode || isCreateMode)
   const isVariant = Boolean(doc?.parent_handle)
     
-  /** @type {ProductContext} */
+  /** @type {Context} */
   const context = useMemo(
     () => ({
       /** @returns {State} */
@@ -246,9 +257,6 @@ export default ({ collectionId,
       const state_next = { 
         data: { 
           ...state?.data,
-          updatedAt: Date.now(),
-          createdAt: undefined,
-          search: undefined,
           handle: undefined
         },
         hasChanged: false
@@ -257,7 +265,7 @@ export default ({ collectionId,
       navWithState(`/pages/${collectionId}/create`, 
             state, state_next)
     }, [navWithState, collectionId, context]
-  )
+  );
   const savePromise = useCallback(
     async () => {
       // const doc = await reload()
@@ -302,25 +310,28 @@ export default ({ collectionId,
   <DocumentTitle major={[collectionId, ...minor]} className='' />  
   <DocumentDetails doc={doc} className='mt-5' collectionId={collectionId}/>                     
   <RegularDocumentActions             
-             onClickSave={isEditMode ? savePromise : undefined}
-             onClickCreate={isCreateMode ? createPromise : undefined}
-             onClickDelete={!isCreateMode ? deletePromise : undefined} 
-             onClickDuplicate={!isCreateMode ? duplicate : undefined}
-             onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
-             id={docId}
-             className='mt-5'/>
-  <CreateDate ref={ref_head} time={doc?.createdAt} 
-              key={doc?.updatedAt} className='mt-8' 
-              changes_made={hasChanged} />
-  <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} className='mt-8'>
+      onClickSave={isEditMode ? savePromise : undefined}
+      onClickCreate={isCreateMode ? createPromise : undefined}
+      onClickDelete={!isCreateMode ? deletePromise : undefined} 
+      onClickDuplicate={!isCreateMode ? duplicate : undefined}
+      onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
+      id={docId}
+      className='mt-5'/>
+  <CreateDate 
+      ref={ref_head} time={doc?.created_at} 
+      key={doc?.updated_at} className='mt-8' 
+      changes_made={hasChanged} />
+  <ShowIf show={(hasLoaded && isEditMode) || isCreateMode}>
     <div className='w-full max-w-[40rem] lg:w-fit lg:max-w-none mx-auto'>
       <EditMessage messages={error} className='w-full' />
-      <FieldsView ref={ref_root} 
-                  key={key}
-                  context={context}
-                  field={root_schema} 
-                  value={ doc ?? {} } 
-                  isViewMode={isViewMode} className='mt-8' />      
+      <FieldsView 
+          ref={ref_root} 
+          key={key}
+          context={context}
+          field={root_schema} 
+          value={ doc ?? {} } 
+          isViewMode={isViewMode} 
+          className='mt-8' />      
     </div>
   </ShowIf>
 </div>

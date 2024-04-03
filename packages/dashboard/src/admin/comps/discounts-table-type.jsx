@@ -17,7 +17,13 @@ export const discount_types_to_color = type => {
   }
 }
 
-const DiscountType = ({ value, className, ...rest }) => {
+/**
+ * 
+ * @param {import('./collection-view.jsx').CollectionViewComponentParams<
+ * import('@storecraft/core/v-api').DiscountDetails["meta"]>} param0 
+ * @returns 
+ */
+const DiscountType = ({ value, ...rest }) => {
   const name = useMemo(() => 
     Object.values(enums.DiscountMetaEnum)
           .find(it => it.type===value?.type)

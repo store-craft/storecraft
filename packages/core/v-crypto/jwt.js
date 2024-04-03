@@ -63,6 +63,7 @@ const now_seconds = () => Math.floor(Date.now()/1000);
 const fill_claims = (claims, expireIn=JWT_TIMES.HOUR) => {
   claims.iat = now_seconds()
   claims.exp = claims.iat + expireIn;
+  console.log('claims', claims)
   return claims
 }
 
@@ -81,7 +82,10 @@ const fill_claims = (claims, expireIn=JWT_TIMES.HOUR) => {
  * @param {Record<string, string>} extra_headers 
  * @returns {Promise<{ token: string, claims: Partial<JWTClaims>}>}
  */
-export const create = async (key, claims, expiresIn=JWT_TIMES.HOUR, alg='HS256', extra_headers={}) => {
+export const create = async (
+  key, claims, expiresIn=JWT_TIMES.HOUR, alg='HS256', extra_headers={}
+) => {
+
   const header = JSON.stringify({ alg, typ:"JWT", ...extra_headers});
   const payload_header = bEnc(tEnc(header), true);
   const payload_claims = bEnc(tEnc(JSON.stringify(fill_claims(claims, expiresIn))), true);

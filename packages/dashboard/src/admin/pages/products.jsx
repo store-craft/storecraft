@@ -30,8 +30,11 @@ const schema_fields = [
   { key: 'price', name: 'Price', comp: Span },
   { 
     key: 'collections', name: 'Collections', comp: SpanArray, 
-    comp_params: { className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-max 
-                               overflow-x-auto inline-block whitespace-nowrap` } 
+    comp_params: { 
+      className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-max 
+                  overflow-x-auto inline-block whitespace-nowrap`,
+      name_fn: /** @param {import('@storecraft/core/v-api').CollectionType} c */ c => c.handle
+    } 
   },
   { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
   { 
@@ -48,6 +51,11 @@ export default ({ collectionId, segment }) => {
     [query_params]
   )
   const nav = useNavigate()
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
   const ref_actions = useRef()
   const ref_use_cache = useRef(true)
   const { 

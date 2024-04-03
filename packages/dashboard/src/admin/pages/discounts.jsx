@@ -12,9 +12,9 @@ import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
 import { Title } from '@/admin/comps/common-ui.jsx'
 
 const schema_fields = [
-  { key: 'code', name: 'Code', comp: Code },
+  { key: 'handle', name: 'Code', comp: Code },
   { key: 'info.details.meta', name: 'Type', comp: DiscountType },
-  { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView, comp_params : { className : 'font-semibold' } },
+  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView, comp_params : { className : 'font-semibold' } },
   { key: undefined, name: 'Actions', comp: RecordActions },
 ]
 
@@ -25,6 +25,11 @@ export default ({ collectionId, segment } ) => {
     [query_params]
   )
   const nav = useNavigate()
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
   const ref_actions = useRef()
   const ref_use_cache = useRef(true)
   const { 
@@ -101,8 +106,7 @@ export default ({ collectionId, segment } ) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`Discounts ${queryCount>=0 ? `(${queryCount})` : ''}`} 
                   className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
       <DiscountsQuickSearchActions />
         <div className='w-full rounded-md overflow-hidden border 

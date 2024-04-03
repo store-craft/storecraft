@@ -13,11 +13,13 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 const schema_fields = [
   { 
     key: undefined, name: 'Full Name', comp: Span, 
-    transform: item => `${item.firstname} ${item.lastname}`,
+    transform: 
+      /** @param {import('@storecraft/core/v-api').CustomerType} item */
+      item => `${item.firstname} ${item.lastname}`,
     comp_params: { className: 'font-semibold' } 
   },
   { key: 'email', name: 'Email', comp: Span },
-  { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView },
+  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
   { key: 'uid', name: 'UID', comp: Span, comp_params: { extra: 'max-w-[4rem]' } },
   { key: undefined, name: 'Actions', comp: RecordActions },
 ]
@@ -30,12 +32,17 @@ export default ({ collectionId, segment } ) => {
     [query_params]
   )
   const nav = useNavigate()
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
   const ref_actions = useRef()
   const ref_use_cache = useRef(true)
   const { 
     pages, page, loading, error, 
     query, queryCount, deleteDocument 
-  } = useCommonCollection('users', false)
+  } = useCommonCollection('customers', false)
 
   useEffect(
     () => {
@@ -106,8 +113,7 @@ export default ({ collectionId, segment } ) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`${capFirstLetter(segment)} ${queryCount>=0 ? `(${queryCount})` : ''}`} 
            className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      

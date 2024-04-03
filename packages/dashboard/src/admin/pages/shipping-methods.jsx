@@ -10,7 +10,7 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 
 const schema_fields = [
   { 
-    key: 'name', name: 'Name', comp: Span, 
+    key: 'title', name: 'Title', comp: Span, 
     comp_params: {className: 'font-semibold', extra: 'max-w-[10rem] md:max-w-[18rem]'} 
   },
   { 
@@ -18,7 +18,7 @@ const schema_fields = [
     comp_params: {className: 'font-semibold', extra: 'max-w-[10rem] md:max-w-[18rem]'} 
   },
   { 
-    key: 'updatedAt', name: 'Last Updated', comp: TimeStampView 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
   },
   { 
     key: undefined, name: 'Actions', comp: RecordActions, comp_params: { className: '' } 
@@ -31,13 +31,18 @@ export default ({ collectionId, segment } ) => {
     () => q2o(query_params, { search: '', limit: 5}),
     [query_params]
   )
-  const nav = useNavigate()
-  const ref_actions = useRef()
+  const nav = useNavigate();
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
+  const ref_actions = useRef();
   const ref_use_cache = useRef(true)
   const { 
     pages, page, loading, error, 
     query, queryCount, deleteDocument 
-  } = useCommonCollection(collectionId, false)
+  } = useCommonCollection('shipping', false)
 
   useEffect(
     () => {
@@ -110,8 +115,7 @@ export default ({ collectionId, segment } ) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`Shipping Methods ${queryCount>=0 ? `(${queryCount})` : ''}`} 
                   className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      

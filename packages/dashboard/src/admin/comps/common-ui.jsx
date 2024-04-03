@@ -6,16 +6,28 @@ import { IoClose } from 'react-icons/io5/index.js'
 import { pubsub, EVENT_CHANGE, EVENT_REFRESH } from './fields-view.jsx'
 const SAVE_TEXT = "💡 changes made, don't forget to save"
 
+/**
+ * @typedef {object} InternalCreateDateParams
+ * @prop {string} time
+ * @prop {boolean} [changes_made=false]
+ * @prop {string} [rightText] override
+ * @prop {string} className
+ * 
+ * @typedef {InternalCreateDateParams &
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } CreateDateParams
+ * 
+ * @typedef {object} CreateDateImperativeInterface
+ * @prop {() => boolean} get
+ * @prop {(value?: boolean) => void} set
+ */
 export const CreateDate = forwardRef(
 
 /**
- * @param {object} p
- * @param {number} p.time
- * @param {boolean} p.changes_made
- * @param {string} p.rightText override
- * @param {string} p.className
+ * @param {CreateDateParams} params
  */
 ({ time, changes_made=false, rightText='created at: ', ...rest }, ref) => {
+
   const [changed, setChanged] = useState(changes_made)
   const text = time ? rightText + new Date(time).toLocaleString() : '*'
 

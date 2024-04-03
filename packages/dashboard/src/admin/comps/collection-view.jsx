@@ -19,19 +19,35 @@ const data2 = [
 ]
 
 /**
- * @template {import("@storecraft/core/v-api").BaseType} T
- * @typedef {object} CollectionViewContext
- * @property {T} item
+ * 
+ * @typedef {object} CollectionViewContext The context provided to 
+ * components of `CollectionView`
+ * @property {import("@storecraft/core/v-api").BaseType} item item
+ * @property {(id: string) => Promise<void>} deleteDocument
+ * @property {(id: string) => string} editDocumentUrl
+ * @property {(id: string) => string} viewDocumentUrl
  */
 
 /**
  * 
- * @typedef {object} CollectionViewField
+ * @typedef {object} CollectionViewField The `field` parameter given to `CollectionView`
+ * components
+ * 
  * @property {string} key Key of field in the data
  * @property {string} name Name of field
  * @property {React.FC<any>} comp Name of field
  * @property {object} [comp_params] component parameters
  * @property {(x: any) => any} [transform] transform data
+ */
+
+/**
+ * @template {any} [V=any]
+ * @typedef {object} CollectionViewComponentParams The `params` of components of
+ * `CollectionView`
+ * 
+ * @property {CollectionViewField} field Key of field in the data
+ * @property {CollectionViewContext} context Name of field
+ * @property {V} value Name of field
  */
 
 /**

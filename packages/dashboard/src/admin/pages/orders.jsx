@@ -12,7 +12,7 @@ import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
 import { Title } from '@/admin/comps/common-ui.jsx'
 
 const schema_fields = [
-  { key: 'address.firstname', name: 'Customer', comp: Span },
+  { key: 'contact.firstname', name: 'Customer', comp: Span },
   { 
     key: 'pricing.total', name: 'Price', comp: Span, 
     comp_params: { className: 'shelf-text-label-color font-semibold' } 
@@ -25,7 +25,7 @@ const schema_fields = [
     key: 'status.fulfillment', name: 'Status', comp: LabelCapsule, 
     comp_params: { bgColor: v=>id2ColorFulfill(v?.id), label: v=>v?.name.split(' ')[0] } 
   },
-  { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView },
+  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
   { key: undefined, name: 'Actions', comp: RecordActions },
 ]
 
@@ -35,8 +35,13 @@ export default ({ collectionId, segment } ) => {
     () => q2o(query_params, { search: '', limit: 5}),
     [query_params]
   )
-  const nav = useNavigate()
-  const ref_actions = useRef()
+  const nav = useNavigate();
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
+   * } 
+   **/
+  const ref_actions = useRef();
   const { 
     pages, page, loading, error, 
     query, queryCount, deleteDocument 
@@ -110,8 +115,7 @@ export default ({ collectionId, segment } ) => {
   <div className='max-w-[56rem] mx-auto'>
     <Title children={`Orders ${queryCount>=0 ? `(${queryCount})` : ''}`} 
                 className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <OrdersQuickSearchActions />
       <div className='w-full rounded-md overflow-hidden border 

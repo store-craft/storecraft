@@ -33,6 +33,7 @@ export default class Products extends collection_base {
    * @param {string} collectionId 
    */
   batchAddProductsToCollection = async (products, collectionId) => {
+    throw new Error('batchAddProductsToCollection :: not implemented !!')
     try {
       // add collection tag to each product with batch write
       const batch = writeBatch(this.context.firebase.db)

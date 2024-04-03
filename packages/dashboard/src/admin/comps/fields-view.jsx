@@ -100,10 +100,11 @@ const validateField = (field, value) => {
  */
 
 /**
+ * @template {object} [D={}]
  * @typedef {object} FieldContextData
  * @property {string} [running_key] running key for leafs
  * @property {PubSub} [pubsub]
- * @property {object} [data] the entire original data
+ * @property {D} [data] the entire original data
  * @property {Object<string, { get: () => any, set: (val: any) => void }>} [query] the entire original data
  */
 

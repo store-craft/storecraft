@@ -3,18 +3,28 @@ import CapsulesView from "./capsules-view.jsx"
 import { BlingInput } from "./common-ui.jsx"
 import { BlingButton } from "./common-button.jsx"
 
+/**
+ * @param {string} text 
+ */
 const text2tokens = (text) => {
     return text?.match(/\S+/g)
 }
 
+/**
+ * 
+ * @param {import("./fields-view.jsx").FieldLeafViewParams<
+ *  string[]>
+ * } param0 
+ */
 const TagValues = ({field, value, onChange, ...rest}) => {
   const { key, name, comp_params } = field
   const [vs, setVs] = useState(value ?? [])
+  /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
   const ref = useRef()
 
   const onAdd = useCallback(
     (e) => {
-      const tokens = text2tokens(ref.current.value.toString())
+      const tokens = text2tokens(ref.current.value.toString());
       if(!tokens) return
       for (let t of tokens)
         if(vs.indexOf(t) == -1)

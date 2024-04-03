@@ -11,8 +11,8 @@ import { BiSearchAlt } from "react-icons/bi/index.js"
  * @prop {string} collectionId
  * @prop {string} [title]
  * @prop {import('react').FC<any>} [Comp]
- * @prop {(v: any) => void} onSave
- * @prop {(v: any) => void} onCancel
+ * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
+ * @prop {() => void} onCancel
  * 
  * 
  * @param {BrowseCollectionParams} param
@@ -24,6 +24,7 @@ const BrowseCollection = (
 ) => {
 
   const [focus, setFocus] = useState(false)
+  /**@type {[import('@storecraft/core/v-api').BaseType[], import('react').Dispatch<import('react').SetStateAction<import('@storecraft/core/v-api').BaseType[]>>]} */
   const [selected, setSelected] = useState([])
   const [limit, setLimit] = useState(5)
   const { 
@@ -32,17 +33,21 @@ const BrowseCollection = (
   } = useCommonCollection(collectionId, true)
 
   const onAdd = useCallback(
+    /** @param {import('@storecraft/core/v-api').BaseType} item */
     (item) => {
-      setSelected( vs => [item, ...vs.filter(it => it[0]!==item[0])])
+      setSelected(
+        vs => [item, ...vs.filter(it => it.id!==item.id)]
+      );
       setFocus(false)
     }, []
-  )
+  );
 
   const onRemove = useCallback(
+    /** @param {import('@storecraft/core/v-api').BaseType} item */
     (item) => {
-      setSelected( vs => vs.filter(it => it[0]!==item[0]))
+      setSelected( vs => vs.filter(it => it.id!==item.id))
     }, []
-  )
+  );
   
   // console.log('pages', pages);
   const items = useMemo(
@@ -54,6 +59,7 @@ const BrowseCollection = (
   const ref_input = useRef()
 
   const onSubmit = useCallback(
+    /** @param {import('react').BaseSyntheticEvent} e  */
     (e) => {
       e?.preventDefault()
       const search_terms = ref_input.current.value;
@@ -78,7 +84,7 @@ const BrowseCollection = (
 
   <p children={title} className='pb-3 border-b shelf-border-color-soft' />
   <form onSubmit={onSubmit} className='w-full' 
-        onFocus={() => setFocus(true)} tabIndex='4344'>
+        onFocus={() => setFocus(true)} tabIndex={4344}>
     <Bling rounded='rounded-xl' stroke='p-0.5' >
       <div className='flex flex-row justify-between items-center'>
         <input ref={ref_input} type='search' 
@@ -185,20 +191,24 @@ const BrowseCollection = (
   )
 }
 
+/**
+ * 
+ * @param {object} param
+ * @param {import('@storecraft/core/v-api').CustomerType} param.data
+ */
 const UserComp = ({ data }) => {
-  const d = data[1]
   return (
 <div className='w-full h-full flex flex-row justify-between 
                 items-center text-sm gap-3'>
   <span className='text-base overflow-x-auto 
                    whitespace-nowrap h-full 
                    flex flex-row items-center pr-3 flex-1' 
-        children={`${d.firstname} ${d.lastname}`} />
+        children={`${data.firstname} ${data.lastname}`} />
   
   <span className='text-gray-500 max-w-[8rem] sm:max-w-none 
                    overflow-x-auto whitespace-normal h-full 
                    flex flex-row items-center' 
-        children={`(${d.uid})`} />
+        children={`(${data.auth_id})`} />
 </div>    
   )
 }
@@ -209,20 +219,26 @@ const UserComp = ({ data }) => {
  * @param {import('@storecraft/core/v-api').ProductType} param.data
  */
 const ProductComp = ({ data }) => {
-  const d = data[1]
   return (
 <div className='w-full h-full flex flex-row justify-between 
                 items-center text-sm '>
   <span className='text-base max-w-xs overflow-x-auto 
                    whitespace-normal overflow-y-auto h-full 
                    flex flex-row items-center pr-1' 
-        children={d.title} />
+        children={data.title} />
   <span className='text-gray-500 whitespace-nowrap' 
-        children={`(${d.qty} In stock)`} />
+        children={`(${data.qty} In stock)`} />
 </div>    
   )
 }
 
+/**
+ * @typedef {object} BrowseCustomersParams
+ * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
+ * @prop {() => void} onCancel
+ * 
+ * @param {BrowseCustomersParams} param0 
+ */
 export const BrowseCustomers = ({ onSave, onCancel }) => {
 
   return (
@@ -233,6 +249,13 @@ export const BrowseCustomers = ({ onSave, onCancel }) => {
   )
 }
 
+/**
+ * @typedef {object} BrowseProductsParams
+ * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
+ * @prop {() => void} onCancel
+ * 
+ * @param {BrowseProductsParams} param0 
+ */
 export const BrowseProducts = ({ onSave, onCancel }) => {
 
   return (

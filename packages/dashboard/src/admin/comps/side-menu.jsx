@@ -8,8 +8,19 @@ import { FiSettings } from 'react-icons/fi/index.js'
 import { Logo } from './logo.jsx'
 import { useBreakpointValue } from '../hooks/useMediaQuery.js'
 
-const SideMenu = 
-  ({ className, onCloseClick, menu : { groups, info } } ) => {
+/**
+ * TODO: menu items types 
+ * @param {object} param
+ * @param {string} [param.className]
+ * @param {() => void} [param.onCloseClick]
+ * @param {Function} param.menu
+ * @returns 
+ */
+const SideMenu = (
+  { 
+    className, onCloseClick, menu : { groups, info } 
+  }
+) => {
 
   const is_gt_md = useBreakpointValue('md', true, false)
   let location = useLocation()

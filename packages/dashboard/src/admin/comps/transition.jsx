@@ -1,11 +1,18 @@
-import { useEffect, useRef, 
-         useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-const Transition = ( { 
-  show, duration, unMountOnExit, 
-  enter, enterFrom, enterTo, 
-  leave, leaveFrom, leaveTo, 
-  children, className, ...rest } ) => {
+/**
+ * 
+ * @param {object} param
+ * @returns 
+ */
+const Transition = ( 
+  { 
+    show, duration, unMountOnExit, 
+    enter, enterFrom, enterTo, 
+    leave, leaveFrom, leaveTo, 
+    children, className, ...rest 
+  }
+) => {
 
   // animation state is binary
   const [_show, setShow] = useState(false)
@@ -55,11 +62,10 @@ const Transition = ( {
 
   return (    
 <>
-{ final_show && (
-      <div children={children} 
-           className={`${cls} ${className}`} 
-           {...rest} />
-      ) 
+{ 
+  final_show && (
+    <div children={children} className={`${cls} ${className}`} {...rest} />
+  ) 
 }
 </>
   )

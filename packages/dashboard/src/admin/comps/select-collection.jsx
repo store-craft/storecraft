@@ -6,7 +6,7 @@ import ShowIf from './show-if.jsx'
 import { Bling } from './common-ui.jsx'
 
 // picks the name from every item
-export const default_name_fn = it => it[0]
+export const default_name_fn = it => it?.handle ?? it?.title ?? 'unknown'
 // transform the batch of data
 export const default_transform_fn = window => window ?? []
 
@@ -164,16 +164,16 @@ export const SelectTags = (
 
   return(
     <SelectCollection 
-            transform_fn={transform_fn} 
-            name_fn={v => v} 
-            onSelect={onSelect} 
-            header={header}
-            collectionId='tags' 
-            limit={limit} 
-            layout={layout} 
-            className={className} 
-            clsHeader={clsHeader} 
-            clsReload={clsReload} {...rest} />
+        transform_fn={transform_fn} 
+        name_fn={v => v} 
+        onSelect={onSelect} 
+        header={header}
+        collectionId='tags' 
+        limit={limit} 
+        layout={layout} 
+        className={className} 
+        clsHeader={clsHeader} 
+        clsReload={clsReload} {...rest} />
   )
 }
 

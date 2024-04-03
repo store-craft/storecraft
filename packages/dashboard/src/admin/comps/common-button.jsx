@@ -9,7 +9,7 @@ import { Bling } from './common-ui.jsx'
  * @property {import('react').ReactElement} [icon]
  * @property {string} [className]
  * @property {string} [classNameSpan]
- * @property {any} children
+ * @property {any} [children]
  * @property {any} [rightView]
  * 
  * @typedef {InternalButtonparams & 

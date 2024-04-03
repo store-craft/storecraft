@@ -4,19 +4,33 @@ import { BlingInput } from "./common-ui.jsx"
 import { SelectTags } from "./select-collection.jsx"
 import CapsulesView from "./capsules-view.jsx"
 import { HR } from "./common-ui.jsx"
-import { FieldContextData, FieldData } from "./fields-view.jsx"
 import useNavigateWithState from "@/admin/hooks/useNavigateWithState.js"
 
 const text2tokens = (text) => {
   return text?.match(/\S+/g)
 }
 
-const ManualTag = ({onAdd, className, ...rest}) => {
-  const ref_name = useRef()
-  const ref_value = useRef()
+/**
+ * @typedef {object} InternalManualTagParams
+ * @prop {(values: string[]) => void} onAdd 
+ * 
+ * @param {InternalManualTagParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param 
+ * 
+ */
+const ManualTag = ({onAdd, ...rest}) => {
+  /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
+  const ref_name = useRef();
+  /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
+  const ref_value = useRef();
+
+  /** @type {Parameters<BlingButton>["0"]["onClick"]} */
   const onClickAdd = useCallback(
     (e) => {
-      const tokens = text2tokens(ref_value.current.value.toString())
+      const tokens = text2tokens(
+        ref_value.current.value.toString()
+        );
       const name = ref_name.current.value
       if(!tokens) return
       const tags = tokens.map(v => `${name}_${v}`)      
@@ -26,7 +40,7 @@ const ManualTag = ({onAdd, className, ...rest}) => {
   )
 
   return (
-<div className={className} {...rest}>
+<div {...rest}>
   <p children='Name' className='text-gray-500 dark:text-gray-400'/>
   <BlingInput ref={ref_name} placeholder='name of the tag' 
               type='text' className='mt-1' rounded='rounded-md'  /> 
@@ -44,19 +58,17 @@ const ManualTag = ({onAdd, className, ...rest}) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {FieldData} param0.field 
- * @param {FieldContextData} param0.context 
- * @param {string[]} param0.value 
- * @param {(v: string[]) => any} param0.onChange 
- * @returns 
+ * @param {import("./fields-view.jsx").FieldLeafViewParams<string[]> & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param0 
  */
-const TagsEdit = ({field, context, value, onChange, className, ...rest}) => {
+const TagsEdit = ({field, context, value, onChange, ...rest}) => {
   const [tags, setTags] = useState(value ?? [])
 
   const { navWithState } = useNavigateWithState()
 
   const onAdd = useCallback(
+    /** @param {typeof value} new_tags  */
     (new_tags) => {
       let selected_tags = new_tags.filter(
         t => tags.indexOf(t)==-1
@@ -81,6 +93,7 @@ const TagsEdit = ({field, context, value, onChange, className, ...rest}) => {
   )
 
   const onClick = useCallback(
+    /** @param {string} v  */
     (v) => {
       const where = v.split('_')[0]
       // const all = context?.query.all.get(false)?.data
@@ -91,21 +104,22 @@ const TagsEdit = ({field, context, value, onChange, className, ...rest}) => {
   )
 
   return (
-<div className={className}>
+<div {...rest}>
   <ManualTag onAdd={onAdd} />
   <HR className='mt-5' />
 
-  <SelectTags collectionId='tags' 
-              onSelect={t => onAdd([t])} 
-              layout={1} 
-              className='mt-3' clsReload='text-pink-500 text-3xl' 
-              header='Select tags you used' />
+  <SelectTags 
+      onSelect={t => onAdd([t])} 
+      layout={1} 
+      className='mt-3' clsReload='text-pink-500 text-3xl' 
+      header='Select tags you used' />
   {
     tags?.length>0 && 
     <HR className='my-5' />
   }
-  <CapsulesView tags={tags} onClick={onClick} onRemove={onRemove}
-                clsCapsule='bg-pink-500' className='mt-3' />
+  <CapsulesView 
+    tags={tags} onClick={onClick} onRemove={onRemove}
+    clsCapsule='bg-pink-500' className='mt-3' />
  
 </div>
   )

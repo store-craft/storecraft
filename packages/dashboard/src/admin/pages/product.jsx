@@ -158,8 +158,13 @@ const root_schema = {
 
 /**
  * @typedef {object} State
- * @property {ProductData} data
+ * @property {import('@storecraft/core/v-api').ProductType | import('@storecraft/core/v-api').VariantType} data
  * @property {boolean} hasChanged
+ * 
+ * @typedef {object} ProductContext
+ * @prop {() => State} getState
+ * @prop {(product_variant_handle: string) => Promise<void>} removeVariant
+ * @prop {() => Promise<void>} preCreateVariant
  */
 
 export default ({ collectionId, 
@@ -201,6 +206,7 @@ export default ({ collectionId,
   const isViewMode = !(isEditMode || isCreateMode)
   const isVariant = Boolean(doc?.parent_handle)
     
+  /** @type {ProductContext} */
   const context = useMemo(
     () => ({
       /** @returns {State} */
@@ -212,7 +218,7 @@ export default ({ collectionId,
         }
       },
       removeVariant: async (product_variant_handle) => {
-        await getShelf().products.delete(
+        await getSDK().products.delete(
           product_variant_handle
         )
         // reload, because deleting a variant child has a
@@ -221,7 +227,7 @@ export default ({ collectionId,
       },
       preCreateVariant: async () => {
         const variants_options = ref_root.current.get(false)?.data?.variants_options
-        await getShelf().products.update(
+        await getSDK().products.update(
           doc.handle, 
           /**@type {ProductData} */
           {

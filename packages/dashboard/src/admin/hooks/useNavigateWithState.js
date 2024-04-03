@@ -46,8 +46,8 @@ const useNavigateWithState = () => {
   const navWithState = useCallback(
     /**
      * @param {import('react-router-dom').To} to 
-     * @param {() => any | object} [current_state] object or function 
-     * @param {() => any | object} [next_state] object or function 
+     * @param {(() => any) | any} [current_state] object or function 
+     * @param {(() => any) | any} [next_state] object or function 
      */
     (to, current_state, next_state) => {
       current_state = (typeof current_state === 'function') ? current_state() : current_state

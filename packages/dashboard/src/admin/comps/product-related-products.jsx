@@ -3,18 +3,16 @@ import { BrowseProducts } from './browse-collection.jsx'
 import { Overlay } from './overlay.jsx'
 import { Link } from 'react-router-dom'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
-// import { ProductData } from '@/admin-sdk/js-docs-types'
 import { BlingButton } from './common-button.jsx'
 import { HR, Label } from './common-ui.jsx'
-import { FieldContextData, FieldData } from './fields-view.jsx'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 
 /**
- * @param {object} param0 
- * @param {ProductData} param0.product
- * @param {FieldContextData} param0.context
- * @param {(products) => void}} param0.onRemove
+ * @param {object} param 
+ * @param {import('@storecraft/core/v-api').ProductType} param.product
+ * @param {import('./fields-view.jsx').FieldContextData} param.context
+ * @param {() => void} param.onRemove
  */
 const Item = ({ context, product, onRemove }) => {
 
@@ -49,27 +47,26 @@ const Item = ({ context, product, onRemove }) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {FieldData} param0.field
- * @param {string[]} param0.value
- * @param {FieldContextData} param0.context
- * @param {(v: string[]) => any} param0.value
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').ProductType[]> &
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param 
+ * @returns 
  */
 const RelatedProducts = 
-  ({ field, context, value=[], onChange, className, ...rest }) => {
+  ({ field, context, value=[], onChange, ...rest }) => {
 
-  /**@type {[products: ProductData[]]} */
   const [products, setProducts] = useState(value ?? [])
-  const ref_overlay = useRef()
+  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  const ref_overlay = useRef();
 
   const onBrowseAdd = useCallback(
     /**
-     * @param {[id: string, product: ProductData][]} selected_items 
+     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
      */
     (selected_items) => {
       const ps = [
-        ...selected_items.map(
-          it => it[1]).filter(
+        ...selected_items.filter(
             m => products.find(
               it => it.handle===m.handle
               )===undefined), 
@@ -86,7 +83,7 @@ const RelatedProducts =
     (handle) => {
       const ps = products.filter(
         it => it.handle!==handle
-        )
+        );
 
       setProducts(ps)
       onChange && onChange(ps)
@@ -94,7 +91,7 @@ const RelatedProducts =
   )
   
   return (
-<div className={className}>
+<div {...rest}>
   <BlingButton children='Browse products'
       stroke='p-0.5'
       className='w-40 h-10 mx-auto'  

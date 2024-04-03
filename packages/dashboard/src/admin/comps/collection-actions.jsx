@@ -83,13 +83,13 @@ export const TopActions = forwardRef(
  * @param {object} param
  * @param {() => Promise<void>} param.next
  * @param {() => Promise<void>} param.prev
- * @param {number} param.limit
+ * @param {number} [param.limit]
  * @param {(v: number) => void} param.onLimitChange
  * @param {string} [param.className]
  */
 export const BottomActions = (
   { 
-    next, prev, limit, onLimitChange, className='' 
+    next, prev, limit=5, onLimitChange, className='' 
   }
 ) => {
   

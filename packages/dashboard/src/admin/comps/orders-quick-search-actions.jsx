@@ -29,12 +29,17 @@ export const id2ColorPayment = id => {
   }
 }
 
-const OrdersQuickSearchActions = ({ collectionId='orders', ...rest }) => {
+/**
+ * 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} param
+ * @returns 
+ */
+const OrdersQuickSearchActions = ({ ...rest }) => {
 
     return (
   <div {...rest}>
     <div className='flex flex-row gap-2 flex-wrap'>
-      <Link to={`/pages/${collectionId}`} draggable='false'>
+      <Link to={`/pages/orders`} draggable='false'>
         <LabelCapsule value='all' bgColor='bg-pink-400 dark:bg-pink-400/60' />
       </Link>
       {
@@ -42,7 +47,7 @@ const OrdersQuickSearchActions = ({ collectionId='orders', ...rest }) => {
           it => (
           <Link key={it.id} 
                 draggable='false'
-                to={`/pages/${collectionId}/q/search=fulfill:${it.id}`}>
+                to={`/pages/orders/q/search=fulfill:${it.id}`}>
             <LabelCapsule value={it.name2} bgColor={id2ColorFulfill(it.id)} />
           </Link>
             )
@@ -53,7 +58,7 @@ const OrdersQuickSearchActions = ({ collectionId='orders', ...rest }) => {
           it => (
           <Link key={it.id} 
                 draggable='false'
-                to={`/pages/${collectionId}/q/search=payment:${it.id}`}>
+                to={`/pages/orders/q/search=payment:${it.id}`}>
             <LabelCapsule value={it.name} bgColor={id2ColorPayment(it.id)} />
           </Link>
             )

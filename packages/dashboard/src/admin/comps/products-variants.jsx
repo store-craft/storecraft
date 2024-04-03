@@ -10,40 +10,24 @@ import ShowIf, { ShowBinarySwitch } from './show-if.jsx'
 import { MdClose } from 'react-icons/md/index.js'
 import { AiFillCheckCircle } from 'react-icons/ai/index.js'
 import { IoAppsOutline } from 'react-icons/io5/index.js'
-import { FieldContextData } from './fields-view.jsx'
-// import { 
-//   ProductData,
-//   VariantCombination, VariantOption, VariantOptionSelection 
-// } from '@/admin-sdk/js-docs-types'
 import useNavigateWithState, { 
   LinkWithState } from '@/admin/hooks/useNavigateWithState.js'
-
-/**@type {VariantOption[]} */
-const OPS = [
-  {
-    name: 'opt A',
-    id: 0,
-    values: [
-      { id: 1, value: 'v1' },
-      { id: 2, value: 'v2' },
-      { id: 3, value: 'v3' },
-    ]
-  }
-]
 
 /**
  * 
  * @param {object} param0 
- * @param {VariantOption} param0.option
- * @param {(option: VariantOption) => void} param0.onRemove
- * @param {(option: VariantOption) => void} param0.onChange
+ * @param {import('@storecraft/core/v-api').VariantOption} param0.option
+ * @param {(option: import('@storecraft/core/v-api').VariantOption) => void} param0.onRemove
+ * @param {(option: import('@storecraft/core/v-api').VariantOption) => void} param0.onChange
  */
 const ProductOption = ({ option, onRemove, onChange }) => {
-  const [o, setO] = useState(option)
+  const [o, setO] = useState(option);
+
+  /** @type {import('react').LegacyRef<import('react').InputHTMLAttributes>} */
   const ref_value = useRef()
 
   const onChangeInternal = useCallback(
-    /** @param {VariantOption} option */
+    /** @param {import('@storecraft/core/v-api').VariantOption} option */
     (option) => {
       setO(option)
       onChange && onChange(option)
@@ -51,7 +35,7 @@ const ProductOption = ({ option, onRemove, onChange }) => {
   )
 
   const onClickCapsule = useCallback(
-    /**@param {TextEntity} value */
+    /**@param {import('@storecraft/core/v-api').TextEntity} value */
     value => {
       const mod = {
         ...o,
@@ -79,7 +63,7 @@ const ProductOption = ({ option, onRemove, onChange }) => {
       if(value?.trim()==='')
         return
 
-      /**@type {TextEntity} */
+      /**@type {import('@storecraft/core/v-api').TextEntity} */
       const v = {
         id: uuidv4(), value
       }
@@ -138,15 +122,15 @@ const ProductOption = ({ option, onRemove, onChange }) => {
 /**
  * 
  * @param {object} param0 
- * @param {VariantOption[]} param0.options
- * @param {(option: VariantOption[]) => void} param0.onChange
+ * @param {import('@storecraft/core/v-api').VariantOption[]} param0.options
+ * @param {(option: import('@storecraft/core/v-api').VariantOption[]) => void} param0.onChange
  */
 const ProductOptions = ({ options=[], onChange }) => {
 
   const [opts, setOptions] = useState(options)
 
   const onChangeOption = useCallback(
-    /** @param {VariantOption} option */
+    /** @param {import('@storecraft/core/v-api').VariantOption} option */
     (option) => {
       const idx = opts?.findIndex(
         op => op.id===option.id
@@ -162,7 +146,7 @@ const ProductOptions = ({ options=[], onChange }) => {
   )
 
   const onRemoveOption = useCallback(
-    /** @param {VariantOption} option */
+    /** @param {import('@storecraft/core/v-api').VariantOption} option */
     (option) => {
       let mod = [
         ...opts.filter(o => o.id!==option.id)
@@ -174,7 +158,7 @@ const ProductOptions = ({ options=[], onChange }) => {
 
   const onAddOption = useCallback(
     () => {
-      /** @type {VariantOption} */
+      /** @type {import('@storecraft/core/v-api').VariantOption} */
       const option = {
         id: uuidv4(), 
         name: '',
@@ -237,8 +221,8 @@ const compute_combinations = (idx, collection=[]) => {
 
 /**
  * 
- * @param {VariantOptionSelection[]} c1 
- * @param {VariantOptionSelection[]} c2 
+ * @param {import('@storecraft/core/v-api').VariantOptionSelection[]} c1 
+ * @param {import('@storecraft/core/v-api').VariantOptionSelection[]} c2 
  */
 const compareCombinations = (c1, c2) => {
 
@@ -255,9 +239,9 @@ const compareCombinations = (c1, c2) => {
 /**
  * 
  * @param {object} param0 
- * @param {VariantOption[]} param0.options
- * @param {VariantOptionSelection[]} param0.combination
- * @param {FieldContextData} param0.context
+ * @param {import('@storecraft/core/v-api').VariantOption[]} param0.options
+ * @param {import('@storecraft/core/v-api').VariantOptionSelection[]} param0.combination
+ * @param {Context} param0.context
  * @param {(error: string) => void} param0.setError
  */
 const Variant = ({ combination, options, context, setError }) => {
@@ -265,10 +249,10 @@ const Variant = ({ combination, options, context, setError }) => {
   // const nav = useNavigate()
   useEffect(
     () => {
-      const all = context?.query.all.get(false)
+      const all = context?.query.all.get()
       // console.log('all', all)
     }, [context]
-  )
+  );
 
   const text = useMemo(
     () => {
@@ -283,8 +267,17 @@ const Variant = ({ combination, options, context, setError }) => {
     }, [combination, options]
   )
 
-  /**@type {Object.<string, VariantCombination>} */
-  const variants_products = context?.data?.variants_products
+  // TODO: requires testing
+  /**@type {Object.<string, import('@storecraft/core/v-api').VariantCombination>} */
+  const variants_products = context?.data?.variants.reduce(
+    (p, it) => {
+      p[it.handle] = {
+        product: it,
+        selection: it.variant_hint
+      }
+      return p;
+    }, {}
+  );
 
   const match_handle = useMemo(
     () => {
@@ -320,20 +313,17 @@ const Variant = ({ combination, options, context, setError }) => {
   const create = useCallback(
     async () => {
       try {
-        await context?.preCreateVariant()
-        /**@type {import('../pages/product').State} */
-        const state = context?.getState()
+        await context?.preCreateVariant();
+        const state = context?.getState();
 
-        /**@type {import('../pages/product').State} */
+        /**@type {import('../pages/product.jsx').State} */
         const state_next = { 
           data: { 
             ...state?.data,
-            updatedAt: Date.now(),
-            createdAt: undefined,
-            search: undefined,
             handle: undefined,
             parent_handle: state?.data?.handle,
-            _variant_hint: combination,
+            parent_id: state?.data?.id,
+            variant_hint: combination,
             title: `${state?.data.title} ${text}`
           },
           hasChanged: false
@@ -391,13 +381,13 @@ const Variant = ({ combination, options, context, setError }) => {
 /**
  * 
  * @param {object} param0 
- * @param {VariantOption[]} param0.options
- * @param {FieldContextData} param0.context
+ * @param {import('@storecraft/core/v-api').VariantOption[]} param0.options
+ * @param {Context} param0.context
  * @param {(error: string) => void} param0.setError 
  */
 const VariantsView = ({ options, context, setError }) => {
 
-  /**@type {VariantOptionSelection[][]} */
+  /**@type {import('@storecraft/core/v-api').VariantOptionSelection[][]} */
   const combinations = useMemo(
     () => {
       const collections = options?.map(
@@ -434,17 +424,14 @@ const VariantsView = ({ options, context, setError }) => {
   )
 }
 
-const TEXT_INSTRUCT = `
-‼️ Create at least ONE Option with two values
-`
+const TEXT_INSTRUCT = `‼️ Create at least ONE Option with two values`;
 
 /**
  * 
  * @param {object} p
- * @param {FieldContextData} p.context 
+ * @param {Context} p.context 
  */
 const IamVariant = ({ context, ...rest }) => {
-  /**@type {ProductData} */
   const data = context?.data
 
   return (
@@ -459,19 +446,30 @@ const IamVariant = ({ context, ...rest }) => {
 }
 
 /**
+ * @typedef {import('./fields-view.jsx').FieldContextData<
+ *  import('@storecraft/core/v-api').VariantType & 
+ *  import('@storecraft/core/v-api').ProductType> & 
+ *  import('../pages/product.jsx').ProductContext
+ * } Context
  * 
- * @param {object} p 
- * @param {VariantOption[]} p.value 
- * @param {(data: VariantOption[]) => void} p.onChange 
- * @param {FieldContextData} p.context 
- * @param {(error: string) => void} p.setError 
+ * 
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').VariantOption[], 
+ *  Context> & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param 
+ * 
  */
-const ProductVariants = ({ value, onChange, context, setError, ...rest }) => {
+const ProductVariants = (
+  { 
+    value, onChange, context, setError, ...rest 
+  }
+) => {
 
   const [v, setV] = useState(value)
 
   const onChangeOptions = useCallback(
-    /** @param {VariantOption[]} option */
+    /** @param {import('@storecraft/core/v-api').VariantOption[]} options */
     (options) => {
       setV(options)
       onChange && onChange(options)

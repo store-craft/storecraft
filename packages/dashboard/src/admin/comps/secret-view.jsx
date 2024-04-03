@@ -2,14 +2,13 @@ import { useCallback } from 'react'
 import { MInput } from './common-fields.jsx'
 import { Bling } from './common-ui.jsx'
 import { Base64 } from 'js-base64'
-import { FieldContextData, FieldData } from './fields-view.jsx'
 
 /**
  * 
- * @param {object} p
- * @param {string} p.value
- * @param {FieldData} p.field
- * @param {FieldContextData} p.context
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<
+ *  string> & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param0 
  */
 const SecretView = 
   ({ value, field, onChange, context, setError, ...rest}) => {

@@ -178,8 +178,11 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
 
 /**
  * @typedef {object} State
- * @property {StorefrontData} data
+ * @property {import('@storecraft/core/v-api').StorefrontType} data
  * @property {boolean} hasChanged
+ * 
+ * @typedef {object} Context
+ * @prop {() => State} getState
  */
 
 export default ({ collectionId, 

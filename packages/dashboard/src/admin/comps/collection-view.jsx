@@ -30,7 +30,7 @@ const data2 = [
  * @property {string} key Key of field in the data
  * @property {string} name Name of field
  * @property {React.FC<any>} comp Name of field
- * @property {object} comp_params component parameters
+ * @property {object} [comp_params] component parameters
  * @property {(x: any) => any} [transform] transform data
  */
 
@@ -130,7 +130,7 @@ const Table = (
  * @param {any} p.context anything
  * @param {CollectionViewField[]} p.fields scehma
  * @param {import("@storecraft/core/v-api").BaseType[]} p.data actual data
- * @param {string} p.recordClassName
+ * @param {string} [p.recordClassName]
  * @param {string} [p.className]
  */
 export default (

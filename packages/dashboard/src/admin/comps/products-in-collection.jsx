@@ -13,17 +13,17 @@ import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
 import { BrowseProducts } from './browse-collection.jsx'
-// import { CollectionData } from '@/admin-sdk/js-docs-types'
-import { FieldContextData } from './fields-view.jsx'
 
 const CollectionBase = forwardRef(
   /**
+   * @typedef {object} ImpInterface
+   * @prop {() => Promise<void>} refresh
    * 
    * @param {object} param0 
    * @param {string} param0.collection_term
    * @param {number} param0.limit
    * @param {(count: number) => void} param0.onLoaded when loaded reports query count
-   * @param {FieldContextData} param0.context context
+   * @param {import('./fields-view.jsx').FieldContextData} param0.context context
    * @param {object} ref 
    */
   ({ collection_term, limit=5, context, onLoaded, ...rest}, ref) => {
@@ -46,9 +46,11 @@ const CollectionBase = forwardRef(
     }, [queryCount, onLoaded]
   )
 
-  useEffect(() => {
-    query({ search: `col:${collection_term}`, limit})
-  }, [collection_term, query, limit])
+  useEffect(
+    () => {
+      query({ search: `col:${collection_term}`, limit})
+    }, [collection_term, query, limit]
+  );
 
   useImperativeHandle(ref, 
     () => (
@@ -61,7 +63,7 @@ const CollectionBase = forwardRef(
       }
     ), 
     [query, collection_term, limit]
-  )
+  );
 
   const context2 = useMemo(
     () => (
@@ -80,7 +82,7 @@ const CollectionBase = forwardRef(
         }
       }
     ), [trigger, page, context]
-  )
+  );
 
   return (
 <>
@@ -95,15 +97,17 @@ const CollectionBase = forwardRef(
 /**
  * 
  * @param {object} param0 
- * @param {CollectionData} param0.value collection
+ * @param {import('@storecraft/core/v-api').CollectionType} param0.value collection
  * @param {string} param0.docId collection handle
- * @param {FieldContextData} param0.context context
+ * @param {import('./fields-view.jsx').FieldContextData} param0.context context
  */
 const ProductsInCollection = ({ docId, value, context }) => {
   const [loading, setLoading] = useState(false)
   const [count, setCount] = useState(-1)
   const [error, setError] = useState(undefined)
-  const ref_overlay = useRef()
+  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  const ref_overlay = useRef();
+  /** @type {import('react').MutableRefObject<ImpInterface>} */
   const ref_productsByCollection = useRef()
 
   docId = value?.handle ?? docId
@@ -115,7 +119,7 @@ const ProductsInCollection = ({ docId, value, context }) => {
 
       try {
         // Add products to collection through collection and search fields
-        await getShelf().products
+        await getSDK().products
                        .batchAddProductsToCollection(selected_items, docId)
         ref_productsByCollection.current.refresh()
       }
@@ -136,11 +140,12 @@ const ProductsInCollection = ({ docId, value, context }) => {
       border={true}
       error={error}>
   <ShowIf show={docId}>
-    <CollectionBase ref={ref_productsByCollection} 
-                    collection_term={docId} 
-                    context={context}
-                    onLoaded={setCount}
-                    className='text-sm h-fit' />          
+    <CollectionBase 
+        ref={ref_productsByCollection} 
+        collection_term={docId} 
+        context={context}
+        onLoaded={setCount}
+        className='text-sm h-fit' />          
     <div className='flex flex-row justify-end'>
       <div className='flex flex-row items-center w-fit gap-3 mt-7'>
         <span children='Add Product' className='text-gray-500' />

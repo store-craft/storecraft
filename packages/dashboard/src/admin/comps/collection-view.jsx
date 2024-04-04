@@ -1,22 +1,3 @@
-const Span = ({data, ...rest}) => {
-  return (
-    <span {...rest} children={data} />
-  )
-}
-
-const fields_test = [
-  { key: 'firstname', name: 'First Name', type:'text', comp: Span },
-  { key: 'lastname', name: 'Last Name', type:'text', comp: Span },
-  { key: 'email', name: 'Email', type:'text', comp: Span },
-  { key: 'uid', name: 'UID', type:'text', comp: Span },
-]
-
-const data2 = [
-  { firstname: 'Tomer', lastname: 'Shalev', email: 'tsdsd@t.com' },
-  { firstname: 'Daniel', lastname: 'Vaknin', email: 't@t.com' },
-  { firstname: 'Rinat', lastname: 'Vaknin Shalev', email: 't@t.com' },
-  { firstname: 'Dalhya', lastname: 'Shalev', email: 't@t.com' },
-]
 
 /**
  * 
@@ -95,10 +76,12 @@ const Table = (
                 className={
                   ix==0 ? 'text-start pl-3 ' : 
                           ix<fields.length-1 ? 
-                          'text-center pl-3 ' : 
-                          'text-end pr-3 sticky right-0 bg-white border-l-2 shadow-2xl '
+                          'text-center px-3 ' : 
+                          'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
+                          --backdrop-blur-sm --border-l-2 shadow-2xl w-0'
                 } 
-                style={{width:'0.0%'}}
+                // width={'10px'}
+                // style={{width:'0.0%'}}
                 key={ix} 
                 children={
                   <field.comp context={{ item, ...context}} 
@@ -124,7 +107,8 @@ const Table = (
           <th className={
             ix==0 ? 'text-left pl-3' : 
                     ix<fields.length-1 ? 
-                    'text-center' : 'text-center pr-3 sticky right-0 border-l-2 '
+                    'text-center' : 'text-center pr-3 sticky right-0 --border-l-2 w-0 \
+                    --backdrop-blur-sm '
                         }
               key={ix} 
               children={field.name} /> 

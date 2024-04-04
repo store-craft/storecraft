@@ -20,7 +20,7 @@ const schema_fields = [
   },
   { key: 'email', name: 'Email', comp: Span },
   { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
-  { key: 'uid', name: 'UID', comp: Span, comp_params: { extra: 'max-w-[4rem]' } },
+  { key: 'auth_id', name: 'UID', comp: Span, comp_params: { extra: 'max-w-[4rem]' } },
   { key: undefined, name: 'Actions', comp: RecordActions },
 ]
 

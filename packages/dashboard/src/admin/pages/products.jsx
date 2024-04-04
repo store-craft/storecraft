@@ -8,6 +8,7 @@ import { RecordActions, Span, SpanArray,
 import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Title } from '@/admin/comps/common-ui.jsx'
+import { api_query_to_searchparams, parse_query } from '@storecraft/core/v-api/utils.query.js'
 
 const test = {
   title: 'call of duty',
@@ -42,15 +43,40 @@ const schema_fields = [
     comp: RecordActions, 
     comp_params: { className: '' } 
   },
-]
+];
+
+
+const useCollectionsParams = () => {
+  const { query_params } = useParams()
+  const query_api = useMemo(
+    () => {
+      const query_api = parse_query(query_params);
+      return query_api;
+      // q2o(query_params, { search: '', limit: 5})
+    },
+    [query_params]
+  );
+
+  return {
+    query_api
+  }
+}
+
 
 export default ({ collectionId, segment }) => {
+
   const { query_params } = useParams()
   const query_params_o = useMemo(
     () => q2o(query_params, { search: '', limit: 5}),
     [query_params]
-  )
-  const nav = useNavigate()
+  );
+
+  const { query_api } = useCollectionsParams();
+
+  console.log('query_api', query_api)
+
+  const nav = useNavigate();
+  
   /** 
    * @type {import('react').MutableRefObject<
    *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
@@ -61,63 +87,125 @@ export default ({ collectionId, segment }) => {
   const { 
     page, loading, error, 
     query, queryCount, deleteDocument 
-  } = useCommonCollection('products', false)
-  segment = segment ?? collectionId
+  } = useCommonCollection('products', false);
+
+  segment = segment ?? collectionId;
+
   useEffect(
     () => {
       ref_actions.current.setSearch(
-        query_params_o.search
+        query_api.vqlString
         )
       
-      query(query_params_o, ref_use_cache.current)
-    }, [query_params_o, query]
-  )
+      query(query_api, false && ref_use_cache.current)
+    }, [query_api, query]
+  );
+
   const onReload = useCallback(
     () => {
       const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const search = ref_actions.current.getSearch()
-      ref_use_cache.current = false
-      nav(`/pages/${segment}/q/${o2q({ ...rest, search, ts: Date.now()})}`, {replace:true})
-    }, [nav, collectionId, query_params_o]
-  )
+        endBefore, endAt, startAfter, 
+        startAt, limitToLast, ...rest } = query_api
+      const search = ref_actions.current.getSearch();
+      ref_use_cache.current = false;
+
+      const q = api_query_to_searchparams(
+        {
+          ...rest,
+          limit: 5
+        }
+      );
+      nav(
+        `/pages/${segment}/q/${q.toString()}`, 
+        { replace: true }
+      );
+
+      // nav(`/pages/${segment}/q/${o2q({ ...rest, search, ts: Date.now()})}`, {replace:true})
+    }, [nav, collectionId, query_api]
+  );
+
   const onLimitChange = useCallback(
-    (limit) => {
+    /** @param {number} $limit  */
+    ($limit) => {
       const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
+        limit, limitToLast, ...rest } = query_api
       const new_id = page?.at(0)?.[0]
 
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest, limit, startAtId: new_id
-      })}`)
-    }, [nav, collectionId, query_params_o, page]
-  )
+      const q = api_query_to_searchparams(
+        {
+          ...query_api,
+          limit: limit ? $limit : undefined,
+          limitToLast: limitToLast ? $limit : undefined
+        }
+      );
+      nav(`/pages/${segment}/q/${q.toString()}`);
+
+      // nav(`/pages/${segment}/q/${o2q({ 
+      //   ...rest, limit, startAtId: new_id
+      // })}`)
+    }, [nav, collectionId, query_api, page]
+  );
+
   const next = useCallback(
     async () => {
+
+      const item = page?.at(-1);
       const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(-1)?.[0]
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest,
-        startAfterId: new_id
-      })}`)
-    }, [nav, page, query_params_o]
-  )
+        endBefore, endAt, startAfter, 
+        startAt, limit, limitToLast, ...rest } = query_api
+      
+      const q = api_query_to_searchparams(
+        {
+          ...rest,
+          startAfter: [
+            ['updated_at', item.updated_at], ['id', item.id]
+          ],
+          limit: limit ? limit : limitToLast
+        }
+      );
+      nav(`/pages/${segment}/q/${q.toString()}`);
+
+      // const { 
+      //   endBeforeId, startAfterId, startAtId, 
+      //   endAtId, ...rest } = query_params_o
+      // const new_id = page?.at(-1)?.[0]
+      // nav(`/pages/${segment}/q/${o2q({ 
+      //   ...rest,
+      //   startAfterId: new_id
+      // })}`)
+    }, [nav, page, query_api]
+  );
+
   const prev = useCallback(
     async () => {
+      const item = page?.at(0);
       const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(0)?.[0]
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest,
-        endBeforeId: new_id
-      })}`)
-    }, [nav, page, query_params_o]
-  )
+        endBefore, endAt, startAfter, 
+        startAt, limit, limitToLast, ...rest } = query_api
+      
+      console.log('limits ', limit, limitToLast)
+ 
+      const q = api_query_to_searchparams(
+        {
+          ...rest,
+          endBefore: [
+            ['updated_at', item.updated_at], ['id', item.id]
+          ],
+          limitToLast: limitToLast ? limitToLast : limit
+        }
+      );
+      nav(`/pages/${segment}/q/${q.toString()}`);
+
+      // const { 
+      //   endBeforeId, startAfterId, startAtId, 
+      //   endAtId, ...rest } = query_params_o
+      // const new_id = page?.at(0)?.[0]
+      // nav(`/pages/${segment}/q/${o2q({ 
+      //   ...rest,
+      //   endBeforeId: new_id
+      // })}`)
+    }, [nav, page, query_api]
+  );
 
   const context = useMemo(
     () => ({
@@ -125,7 +213,8 @@ export default ({ collectionId, segment }) => {
       editDocumentUrl: id => `/pages/${segment}/${id}/edit`,
       deleteDocument,
     }), [deleteDocument]
-  )
+  );
+
   return (
 <div className='w-full h-full'>
   <div className='max-w-[56rem] mx-auto'>
@@ -142,7 +231,7 @@ export default ({ collectionId, segment }) => {
         <CollectionView context={context} data={page} fields={schema_fields} />
         <ShowIf show={page}>
           <BottomActions prev={prev} next={next} 
-                        limit={query_params_o.limit}
+                        limit={query_api.limit}
                         onLimitChange={onLimitChange} />
         </ShowIf>
       </div>    

@@ -193,7 +193,7 @@ export const useCollection =
 
   const query = useCallback(
     /**
-     * @param {object} q query object
+     * @param {import('@storecraft/core/v-api').ApiQuery} q query object
      * @param {boolean} from_cache 
      */
     async (q={}, from_cache=false) => {
@@ -251,9 +251,10 @@ const text2tokens = (text, max_tokens=10) => {
   return tokens
 }
 
+/** @type {import('@storecraft/core/v-api').ApiQuery} */
 const q_initial = {
-  orderBy: [['updatedAt', 'desc']],
-  // orderBy: [['updatedAt', 'asc']],
+  sortBy: ['updated_at', 'id'],
+  order: 'desc',
   limit: 5
 }
 
@@ -276,16 +277,16 @@ const q_initial = {
 
   const query = useCallback(
     /**
-     * @param {object} q query object
+     * @param {import('@storecraft/core/v-api').ApiQuery} q query object
      * @param {boolean} from_cache 
      */
     (q, from_cache=false) => {
-      const tokens = text2tokens(q.search)
-      const where = tokens?.length ? [['search', 'array-contains-any', tokens]] : undefined
+      // const tokens = text2tokens(q.search)
+      // const where = tokens?.length ? [['search', 'array-contains-any', tokens]] : undefined
       return queryParent(
         {
           ...q_initial, 
-          where,
+          // where,
           ...q
         }, from_cache
       )

@@ -1,4 +1,5 @@
 
+import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
 import { getSDK, StorecraftAdminSDK } from './index.js'
 import { assert } from './utils.functional.js';
 
@@ -110,38 +111,6 @@ export async function remove(resource, handle_or_id) {
       method: 'delete'
     }
   );
-}
-
-/**
- * Prototype to convert query object to search params
- * @param {import('@storecraft/core/v-api').ApiQuery} q 
- */
-const api_query_to_searchparams = q => {
-  q.order = q.order ?? 'desc';
-  q.limit = q.limit ?? 10;
-  q.sortBy = q.sortBy ?? ['updated_at', 'id'];
-
-  const o = {};
-  // cursors
-  [
-    ['startAt', q.startAt], ['startAfter', q.startAfter], 
-    ['endAt', q.endAt], ['endBefore', q.endBefore]
-  ].filter(it => Boolean(it[1])).forEach(
-    ([key, cursor]) => {
-      o[key] = cursor.reduce(
-        (p, tuple) => {
-          return p + tuple[0] + ':' + tuple[1] + ','
-        }, ''
-      )
-    }
-  );
-
-  // sort
-  o.order = q.order.toString();
-  o.limit = String(q.limit);
-  o.sortBy = q.sortBy.reduce((p, c) => p + c + ',', '');
-
-  return new URLSearchParams(Object.entries(o))
 }
 
 

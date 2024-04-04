@@ -102,7 +102,7 @@ const list = (driver) => list_regular(driver, col(driver));
 const list_customer_orders = (driver) => {
   return async (customer_id, query) => {
 
-    const { filter: filter_query, sort } = query_to_mongo(query);
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
 
     console.log('query', query)
     console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -120,9 +120,11 @@ const list_customer_orders = (driver) => {
 
     const items = await driver.orders._col.find(
       filter,  {
-        sort, limit: query.limit
+        sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }
     ).toArray();
+
+    if(reverse_sign==-1) items.reverse();
 
     return sanitize_array(items);
   }

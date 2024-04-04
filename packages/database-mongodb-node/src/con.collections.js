@@ -168,7 +168,7 @@ const list = (driver) => list_regular(driver, col(driver));
 const list_collection_products = (driver) => {
   return async (handle_or_id, query) => {
 
-    const { filter: filter_query, sort } = query_to_mongo(query);
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
 
     // console.log('query', query)
     // console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -186,9 +186,11 @@ const list_collection_products = (driver) => {
 
     const items = await driver.products._col.find(
       filter,  {
-        sort, limit: query.limit
+        sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }
     ).toArray();
+
+    if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
     expand(items, query?.expand);

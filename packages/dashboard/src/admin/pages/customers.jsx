@@ -1,14 +1,10 @@
-import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
 import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
-import { useCallback, useEffect, 
-         useMemo, useRef } from 'react'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.jsx'
-import { useNavigate, useParams } from 'react-router-dom'
-import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
 import { capFirstLetter } from '@/admin/utils/index.js'
 import { Title } from '@/admin/comps/common-ui.jsx'
+import useCollectionsActions from '../hooks/useCollectionsActions.js'
 
 const schema_fields = [
   { 
@@ -24,94 +20,17 @@ const schema_fields = [
   { key: undefined, name: 'Actions', comp: RecordActions },
 ]
 
-export default ({ collectionId, segment } ) => {
-  segment = segment ?? collectionId
-  const { query_params } = useParams()
-  const query_params_o = useMemo(
-    () => q2o(query_params, { search: '', limit: 5}),
-    [query_params]
-  )
-  const nav = useNavigate()
-  /** 
-   * @type {import('react').MutableRefObject<
-   *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
-   * } 
-   **/
-  const ref_actions = useRef()
-  const ref_use_cache = useRef(true)
+export default ({}) => {
   const { 
-    pages, page, loading, error, 
-    query, queryCount, deleteDocument 
-  } = useCommonCollection('customers', false)
-
-  useEffect(
-    () => {
-      ref_actions.current.setSearch(
-        query_params_o.search
-        )
-
-      query(query_params_o, ref_use_cache.current)
-    }, [query_params, query]
-  )
-  const onReload = useCallback(
-    () => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const search = ref_actions.current.getSearch()
-      ref_use_cache.current = false
-      nav(`/pages/${segment}/q/${o2q({ ...rest, search})}`)
-    }, [nav, collectionId, query_params_o]
-  )
-  const onLimitChange = useCallback(
-    (limit) => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(0)?.[0]
-
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest, limit, startAtId: new_id
-      })}`)
-    }, [nav, collectionId, query_params_o, page]
-  )
-  const next = useCallback(
-    async () => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(-1)?.[0]
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest,
-        startAfterId: new_id
-      })}`)
-    }, [nav, page, query_params_o]
-  )
-  const prev = useCallback(
-    async () => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(0)?.[0]
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest,
-        endBeforeId: new_id
-      })}`)
-    }, [nav, page, query_params_o]
-  )
-
-  const context = useMemo(
-    () => ({
-      viewDocumentUrl: id => `/pages/${segment}/${id}/view`,
-      editDocumentUrl: id => `/pages/${segment}/${id}/edit`,
-      deleteDocument,
-    }), [deleteDocument]
-  )
+    query_api, context, ref_actions, page, loading, 
+    error, onLimitChange, onReload, prev, next, 
+    queryCount
+   } = useCollectionsActions('customers', '/pages/customers');
 
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`${capFirstLetter(segment)} ${queryCount>=0 ? `(${queryCount})` : ''}`} 
+    <Title children={`Customers ${queryCount>=0 ? `(${queryCount})` : ''}`} 
            className='mb-5' /> 
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
@@ -123,7 +42,7 @@ export default ({ collectionId, segment } ) => {
                     isLoading={loading} />
         <CollectionView context={context} data={page} fields={schema_fields} />
         <BottomActions prev={prev} next={next} 
-                       limit={query_params_o.limit}
+                       limit={query_api.limit}
                        onLimitChange={onLimitChange} />
       </div>    
     </ShowIf>

@@ -121,10 +121,11 @@ export async function remove(resource, handle_or_id) {
  * @returns {Promise<G[]>}
  */
 export async function list(resource, query) {
-  const sq = api_query_to_searchparams(query).toString();
-  console.log('sq', sq)
+  const sq = api_query_to_searchparams(query);
+
+  console.log('sq', sq.toString())
   return fetchApiWithAuth(
-    `${resource}?${sq}`,
+    `${resource}?${sq.toString()}`,
     {
       method: 'get'
     }

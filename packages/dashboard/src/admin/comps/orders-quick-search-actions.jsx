@@ -47,7 +47,7 @@ const OrdersQuickSearchActions = ({ ...rest }) => {
           it => (
           <Link key={it.id} 
                 draggable='false'
-                to={`/pages/orders/q/search=fulfill:${it.id}`}>
+                to={`/pages/orders/q/vqlString=fulfill:${it.id}`}>
             <LabelCapsule value={it.name2} bgColor={id2ColorFulfill(it.id)} />
           </Link>
             )
@@ -58,7 +58,7 @@ const OrdersQuickSearchActions = ({ ...rest }) => {
           it => (
           <Link key={it.id} 
                 draggable='false'
-                to={`/pages/orders/q/search=payment:${it.id}`}>
+                to={`/pages/orders/q/vqlString=payment:${it.id}`}>
             <LabelCapsule value={it.name} bgColor={id2ColorPayment(it.id)} />
           </Link>
             )

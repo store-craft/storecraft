@@ -162,6 +162,7 @@ export const parse_query = (s) => {
   }
 
   console.log(q)
+  // console.log(JSON.stringify(q, null, 2))
   return q;
 }
 
@@ -221,6 +222,7 @@ export const api_query_to_searchparams = q => {
   sp.set(SORT_BY, string_array_to_string(q.sortBy));
   sp.set(EXPAND, string_array_to_string(q.expand));
   q.vqlString && sp.set(VQL_STRING, q.vqlString);
+  q.vqlString && sp.set(VQL, q.vqlString);
   q.limit && sp.set(LIMIT, q.limit.toString());
   q.limitToLast && sp.set(LIMIT_TO_LAST, q.limitToLast.toString());
 

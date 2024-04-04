@@ -129,8 +129,10 @@ const list = (driver) => {
         }
       )
       .orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
+
+    if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
   }

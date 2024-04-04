@@ -131,6 +131,7 @@ export const query_to_eb = (eb, q, table_name) => {
   if(!q) return undefined;
   const filter = {};
   const clauses = [];
+
   const sort_sign = q.order === 'asc' ? 1 : -1;
   const asc = sort_sign==1;
 
@@ -162,17 +163,26 @@ export const query_to_eb = (eb, q, table_name) => {
   return filter;
 }
 
+const SIGN = {
+  '1': 'asc',
+  '-1': 'desc'
+}
+
 /**
  * Convert an API Query into mongo dialect, also sanitize.
- * @template D
+ * 
  * @param {import("@storecraft/core/v-api").ApiQuery} q 
  */
 export const query_to_sort = (q={}) => {
-  const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
+  // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
+  // `reverse_sign=-1` means we need to reverse because of `limitToLast`
+  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const asc = q.order === 'asc';
+  const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
   // compute sort fields and order
   const sort = (q.sortBy ?? ['updated_at']).map(
-    s => `${s} ${sort_sign}`
+    s => `${s} ${SIGN[sort_sign]}`
   )
   
   return sort;

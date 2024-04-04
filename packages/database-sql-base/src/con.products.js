@@ -264,9 +264,11 @@ const list = (driver) => {
         return query_to_eb(eb, query, table_name).eb;
       }
     ).orderBy(query_to_sort(query))
-    .limit(query.limit ?? 10)
+    .limit(query.limitToLast ?? query.limit ?? 10)
     .execute();
-      // .compile();
+
+  if(query.limitToLast) items.reverse();
+    // .compile();
         // console.log(items)
     
     return sanitize_array(items);

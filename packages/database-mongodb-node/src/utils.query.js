@@ -127,9 +127,12 @@ export const query_to_mongo = (q) => {
   const filter = {};
   const clauses = [];
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = q.limitToLast && !q.limit ? -1 : 1;
-  const sort_sign = (q.order === 'asc' ? 1 : -1) * reverse_sign;
-  const asc = (sort_sign * reverse_sign)==1;
+  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const asc = q.order === 'asc';
+  const sort_sign = (asc ? 1 : -1) * reverse_sign;
+
+  // const sort_sign = (q.order === 'asc' ? 1 : -1) * reverse_sign;
+  // const asc = (sort_sign * reverse_sign)==1;
 
   // compute index clauses
   if(q.startAt) {

@@ -201,7 +201,6 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  * @template {keyof Database} T
  * @param {Transaction<Database>} trx 
  * @param {T} table_name 
- * @param {string} item_id
  * @param {Parameters<InsertQueryBuilder<Database, T>["values"]>[0]} item values of the entity
  */
 export const regular_upsert_me = async (trx, table_name, item) => {

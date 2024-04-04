@@ -152,7 +152,7 @@ export const remove_regular = (driver, col) => {
 export const list_regular = (driver, col) => {
   return async (query) => {
 
-    const { filter, sort } = query_to_mongo(query);
+    const { filter, sort, reverse_sign } = query_to_mongo(query);
 
     // console.log('query', query)
     // console.log('filter', JSON.stringify(filter, null, 2))
@@ -160,8 +160,10 @@ export const list_regular = (driver, col) => {
     // console.log('expand', query?.expand)
 
     const items = await col.find(
-      filter, sort, query.limit
+      filter, sort, reverse_sign==1 ? query.limit : query.limitToLast
     ).toArray();
+
+    if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
     expand(items, query?.expand);

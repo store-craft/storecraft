@@ -95,10 +95,12 @@ const list = (driver) => {
         (eb) => {
           return query_to_eb(eb, query, table_name).eb;
         }
-      ).orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
+    if(query.limitToLast) items.reverse();
     return sanitize_array(items);
   }
 }

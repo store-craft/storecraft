@@ -1,7 +1,8 @@
 import { SQL } from '../driver.js'
-import { sanitize } from './utils.funcs.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { delete_me, regular_upsert_me, 
   where_id_or_handle_table } from './con.shared.js'
+import { query_to_eb, query_to_sort } from './utils.query.js';
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
@@ -107,11 +108,29 @@ const removeByEmail = (driver) => {
   }
 }
 
-// /**
-//  * @param {SQL} driver 
-//  */
-// const list = (driver) => list_regular(driver, col(driver));
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list"]}
+ */
+const list = (driver) => {
+  return async (query) => {
 
+    const items = await driver.client.selectFrom(table_name)
+      .selectAll()
+      .where(
+        (eb) => {
+          return query_to_eb(eb, query, table_name).eb;
+        }
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query.limitToLast ?? query.limit ?? 10)
+      .execute();
+
+    if(query.limitToLast) items.reverse();
+
+    return sanitize_array(items);
+  }
+}
 
 /** 
  * @param {SQL} driver
@@ -125,6 +144,6 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     removeByEmail: removeByEmail(driver),
-    // list: list(driver)
+    list: list(driver)
   }
 }

@@ -129,25 +129,24 @@ export const add_sanity_crud_to_test_suite = s => {
     );
   })
   
-  return s;
+  // return s;
 
-  s('insert new with existing handle should throw', async (ctx) => {
-    const one = ctx.items[0];
-    if(!one.handle)
-      return;
-    // without id and same handle should throw
-    await assert_async_throws(
-      async () => await ctx.ops.upsert(ctx.app, one)
-    );
+  // s('insert new with existing handle should throw', async (ctx) => {
+  //   const one = ctx.items[0];
+  //   if(!one.handle)
+  //     return;
+  //   // without id and same handle should throw
+  //   await assert_async_throws(
+  //     async () => await ctx.ops.upsert(ctx.app, one)
+  //   ); 
+  // })
   
-  })
-  
-  s('update with non existing id should throw', async (ctx) => {
-    const one = { ...ctx.items[0], id: 'lihcwihiwe9ewh' };
-    await assert_async_throws(
-      async () => await ctx.ops.upsert(ctx.app, one)
-    );
-  })
+  // s('update with non existing id should throw', async (ctx) => {
+  //   const one = { ...ctx.items[0], id: 'lihcwihiwe9ewh' };
+  //   await assert_async_throws(
+  //     async () => await ctx.ops.upsert(ctx.app, one)
+  //   );
+  // })
   
   return s;
 }
@@ -168,8 +167,13 @@ const compare_tuples = (vec1, vec2) => {
 }
 
 /**
- * Basic testing to see if a query result is satisfied
- * @template T
+ * Basic testing to see if a query result is satisfied:
+ * - Test `limit` is correct
+ * - Test `sortBy` by comapring consecutive items
+ * - Test `start` / `end` ranges are respected
+ * 
+ * @template {import('@storecraft/core/v-api').BaseType} T
+ * 
  * @param {T[]} list the result of the query
  * @param {import('@storecraft/core/v-api').ApiQuery} q the query used
  */
@@ -177,7 +181,11 @@ export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
 
   // assert limit
-  assert.equal(list.length, q.limit, `limit != ${list.length}`)
+  q.limit && assert.equal(list.length, q.limit, `limit != ${list.length}`);
+  q.limitToLast && assert.equal(
+    list.length, q.limitToLast, `limitToLast != ${list.length}`
+    );
+
   // assert order
   if(q.sortBy) {
     const order_preserved = list.slice(1).every(
@@ -228,8 +236,19 @@ export const assert_query_list_integrity = (list, q) => {
 
 
 /**
- * A simple CRUD sanity
- * @template {import('@storecraft/core/v-api').BaseType & import('@storecraft/core/v-api').timestamps} T
+ * A simple CRUD sanity, we use it to test integrity of lists.
+ * 
+ * However, we have some assumptions:
+ * 
+ * 1. `items` were upserted before the test
+ * 2. We have at least 10 items
+ * 3. `updated_at` is an ISO of a timestamp starting from number `1`
+ * 
+ * 
+ * @template {import('@storecraft/core/v-api').BaseType & 
+ *  import('@storecraft/core/v-api').timestamps
+ * } T
+ * 
  * @template {{
  *  items: T[],
  *  ops: {
@@ -239,6 +258,7 @@ export const assert_query_list_integrity = (list, q) => {
  *  }
  *  app: App
  * }} C
+ * 
  * @param {import('uvu').uvu.Test<C>} s 
  */
 export const add_list_integrity_tests = s => {
@@ -275,6 +295,55 @@ export const add_list_integrity_tests = s => {
           // console.log(original_item)
           assert_partial(p, original_item);
         }
+      }
+      
+    }
+  );
+
+  s('query startAt=(end_at:iso(5)), sortBy=(updated_at), order=asc|desc, limitToLast=2', 
+    async (ctx) => {
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q_asc = {
+        endAt: [['updated_at', iso(5)]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limitToLast: 2,
+        expand: ['*']
+      }
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q_desc = {
+        ...q_asc, order: 'desc'
+      }
+
+      const list_asc = await ctx.ops.list(ctx.app, q_asc);
+      const list_desc = await ctx.ops.list(ctx.app, q_desc);
+
+      assert_query_list_integrity(list_asc, q_asc);
+      assert_query_list_integrity(list_desc, q_desc);
+
+      { 
+        // for each list item find it's original seed item and make sure
+        // all of it's properties are getting back
+        for(const p of list_asc) {
+          const original_item = ctx.items.find(it => it.id===p.id);
+          // console.log(p)
+          assert.ok(original_item, 'Did not find original item of inserted item !!');
+          // assert_partial(p, original_item);
+          // console.log(original_item)
+          assert_partial(p, original_item);
+        }
+      }
+
+      // console.log('list_asc', list_asc)
+      // console.log('list_desc', list_desc)
+
+      // test `limitToLast` works, this is a lame test
+      {
+        assert.ok(list_asc[0].updated_at===iso(4), 'limitToLast asc not working !!');
+        assert.ok(list_asc[1].updated_at===iso(5), 'limitToLast asc not working !!');
+
+        assert.ok(list_desc[0].updated_at===iso(6), 'limitToLast desc not working !!');
+        assert.ok(list_desc[1].updated_at===iso(5), 'limitToLast desc not working !!');
       }
       
     }

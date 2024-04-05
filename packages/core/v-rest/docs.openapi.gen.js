@@ -54,10 +54,10 @@ extendZodWithOpenApi(z);
 
 // Register definitions here
 const create_query = () => {
-  const cursor = z.string().openapi(
+  const cursor = z.string().optional().openapi(
     { 
       examples: [
-        '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)'
+        '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)',
       ],
       description: 'A cursor in CSV format of key and values, example: \
       `(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)`'
@@ -65,43 +65,49 @@ const create_query = () => {
   );
 
   return z.object({
-    limit: z.number().openapi(
+    limit: z.number().optional().openapi(
       { 
         example: 10, default: 10, 
         description: 'Limit of filtered results' 
+      }
+    ),
+    limitToLast: z.number().optional().openapi(
+      { 
+        example: 10,
+        description: 'Limit filtered results from the end of a query range' 
       }
     ),
     startAt: cursor,
     startAfter: cursor,
     endAt: cursor,
     endBefore: cursor,
-    sortBy: z.string().openapi(
+    sortBy: z.string().optional().openapi(
       { 
         examples: ['(updated_at, id)'],
         description: 'A cursor of Keys in CSV format, example: `(updated_at, id)`',
         default: '`(updated_at, id)`'
       }
     ),
-    order: z.enum(['asc', 'desc']).openapi(
+    order: z.enum(['asc', 'desc']).optional().openapi(
       { 
         examples: ['asc', 'desc'],
         description: 'Order of sort cursor, values are `asc` or `desc`',
         default: 'desc'
       }
     ),
-    vql: z.string().openapi(
+    vql: z.string().optional().openapi(
       { 
         examples: ["(term1 & (term2 | -term3))"],
         description: 'Every item has a recorded search terms which you can use \
         to refine your filtering with `VQL` boolean language, example: "term1 & (term2 | -term3)"'
       }
     ),
-    expand: z.string().openapi(
+    expand: z.string().optional().openapi(
       {
         examples: ['*', 'search', 'search, collections'],
         description: 'A **CSV** of keys of connections to expand, example \
         `(search, discounts, collections, *)`',
-        default: '*'
+        default: '(*)'
       }
     )
   });

@@ -410,7 +410,9 @@ export const orderPaymentGatewayDataSchema = z
     on_checkout_create: z
       .any()
       .optional()
-      .describe("Result of gateway at checkout creation"),
+      .describe(
+        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
+      ),
     latest_status: z
       .any()
       .optional()

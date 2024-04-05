@@ -13532,7 +13532,11 @@ components:
               description: The payment gateway identifier
             on_checkout_create:
               nullable: true
-              description: Result of gateway at checkout creation
+              description: >-
+                Result of gateway at checkout creation, this will later be given
+
+                to the `payment gateway` on any interaction, which will use it
+                to identify the payment.
             latest_status:
               nullable: true
               description: Latest status of payment for caching
@@ -21317,7 +21321,11 @@ components:
               description: The payment gateway identifier
             on_checkout_create:
               nullable: true
-              description: Result of gateway at checkout creation
+              description: >-
+                Result of gateway at checkout creation, this will later be given
+
+                to the `payment gateway` on any interaction, which will use it
+                to identify the payment.
             latest_status:
               nullable: true
               description: Latest status of payment for caching
@@ -31342,8 +31350,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -31352,7 +31367,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a7
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -31361,7 +31376,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a7
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -31370,7 +31385,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a7
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -31379,7 +31394,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a7
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -31388,7 +31403,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -31401,7 +31416,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -31411,19 +31426,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -31541,8 +31556,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -31551,7 +31573,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a11
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -31560,7 +31582,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a11
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -31569,7 +31591,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a11
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -31578,7 +31600,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a11
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -31587,7 +31609,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -31600,7 +31622,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -31610,19 +31632,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -31655,8 +31677,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -31665,7 +31694,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a13
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -31674,7 +31703,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a13
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -31683,7 +31712,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a13
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -31692,7 +31721,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a13
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -31701,7 +31730,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -31714,7 +31743,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -31724,19 +31753,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -33376,8 +33405,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -33386,7 +33422,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a16
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -33395,7 +33431,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a16
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -33404,7 +33440,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a16
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -33413,7 +33449,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a16
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -33422,7 +33458,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -33435,7 +33471,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -33445,19 +33481,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -36052,8 +36088,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -36062,7 +36105,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a19
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -36071,7 +36114,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a19
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -36080,7 +36123,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a19
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -36089,7 +36132,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a19
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -36098,7 +36141,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -36111,7 +36154,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -36121,19 +36164,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -36256,8 +36299,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -36266,7 +36316,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a23
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -36275,7 +36325,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a23
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -36284,7 +36334,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a23
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -36293,7 +36343,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a23
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -36302,7 +36352,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -36315,7 +36365,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -36325,19 +36375,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -36446,8 +36496,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -36456,7 +36513,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a28
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -36465,7 +36522,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a28
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -36474,7 +36531,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a28
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -36483,7 +36540,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a28
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -36492,7 +36549,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -36505,7 +36562,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -36515,19 +36572,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -36681,8 +36738,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -36691,7 +36755,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a33
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -36700,7 +36764,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a33
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -36709,7 +36773,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a33
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -36718,7 +36782,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a33
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -36727,7 +36791,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -36740,7 +36804,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -36750,19 +36814,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -36795,8 +36859,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -36805,7 +36876,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a35
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -36814,7 +36885,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a35
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -36823,7 +36894,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a35
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -36832,7 +36903,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a35
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -36841,7 +36912,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -36854,7 +36925,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -36864,19 +36935,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -38235,8 +38306,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -38245,7 +38323,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a37
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -38254,7 +38332,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a37
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -38263,7 +38341,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a37
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -38272,7 +38350,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a37
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -38281,7 +38359,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -38294,7 +38372,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -38304,19 +38382,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -38428,8 +38506,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -38438,7 +38523,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a42
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -38447,7 +38532,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a42
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -38456,7 +38541,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a42
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -38465,7 +38550,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a42
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -38474,7 +38559,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -38487,7 +38572,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -38497,19 +38582,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -38659,8 +38744,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -38669,7 +38761,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a49
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -38678,7 +38770,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a49
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -38687,7 +38779,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a49
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -38696,7 +38788,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a49
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -38705,7 +38797,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -38718,7 +38810,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -38728,19 +38820,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -38852,8 +38944,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -38862,7 +38961,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a52
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -38871,7 +38970,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a52
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -38880,7 +38979,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a52
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -38889,7 +38988,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a52
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -38898,7 +38997,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -38911,7 +39010,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -38921,19 +39020,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:
@@ -39166,8 +39265,15 @@ paths:
             default: 10
             description: Limit of filtered results
             example: 10
-          required: true
+          required: false
           name: limit
+          in: query
+        - schema:
+            type: number
+            description: Limit filtered results from the end of a query range
+            example: 10
+          required: false
+          name: limitToLast
           in: query
         - schema:
             type: string
@@ -39176,7 +39282,7 @@ paths:
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: &a60
               - (updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)
-          required: true
+          required: false
           name: startAt
           in: query
         - schema:
@@ -39185,7 +39291,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a60
-          required: true
+          required: false
           name: startAfter
           in: query
         - schema:
@@ -39194,7 +39300,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a60
-          required: true
+          required: false
           name: endAt
           in: query
         - schema:
@@ -39203,7 +39309,7 @@ paths:
               example:       `(updated_at:2024-01-24T20:28:24.126Z,
               id:tag_65b172ebc4c9552fd46c1027)`"
             examples: *a60
-          required: true
+          required: false
           name: endBefore
           in: query
         - schema:
@@ -39212,7 +39318,7 @@ paths:
             description: "A cursor of Keys in CSV format, example: `(updated_at, id)`"
             examples:
               - (updated_at, id)
-          required: true
+          required: false
           name: sortBy
           in: query
         - schema:
@@ -39225,7 +39331,7 @@ paths:
             examples:
               - asc
               - desc
-          required: true
+          required: false
           name: order
           in: query
         - schema:
@@ -39235,19 +39341,19 @@ paths:
               example: "term1 & (term2 | -term3)"'
             examples:
               - (term1 & (term2 | -term3))
-          required: true
+          required: false
           name: vql
           in: query
         - schema:
             type: string
-            default: "*"
+            default: (*)
             description: A **CSV** of keys of connections to expand,
               example         `(search, discounts, collections, *)`
             examples:
               - "*"
               - search
               - search, collections
-          required: true
+          required: false
           name: expand
           in: query
       responses:

@@ -240,7 +240,7 @@ export default (
         const variants_options = ref_root.current.get(false)?.data?.variants_options
         await getSDK().products.update(
           doc.handle, 
-          /**@type {ProductData} */
+          /** @type {import('@storecraft/core/v-api').ProductType} */
           {
             variants_options
           }

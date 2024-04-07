@@ -429,8 +429,8 @@ export interface ProductType extends BaseProductType {
 /**
  * @description Product upsert type
  */
-export type ProductTypeUpsert = Omit<BaseProductType, 
-  'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+export type ProductTypeUpsert = Omit<ProductType, 
+  'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts' | 'variants'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 

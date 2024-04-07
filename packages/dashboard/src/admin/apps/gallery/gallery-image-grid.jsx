@@ -1,8 +1,28 @@
 import { Link } from 'react-router-dom'
 import Img from '@/admin/comps/Img.jsx'
 
-export const Image = 
-  ({ data, onClickImage=()=>{}, className, ...rest }) => {
+
+/**
+ * @typedef {object} InternalImageParams
+ * @prop {import('@storecraft/core/v-api').ImageType} data
+ * @prop {(
+ *  e: import('react').MouseEvent<HTMLAnchorElement, MouseEvent>, 
+ *  data: import('@storecraft/core/v-api').ImageType
+ * ) => void} onClickImage
+ * @prop {string} [className]
+ * 
+ * @typedef {InternalImageParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } ImageParams
+* 
+* @param {ImageParams} params
+*/
+export const Image = (
+  { 
+    data, onClickImage=()=>{}, className, ...rest 
+  }
+) => {
+
     const { url, handle } = data
 
     return (
@@ -31,6 +51,18 @@ export const Image =
       )
   }
   
+  /**
+   * @typedef {object} InternalImageGridParams
+   * @prop {import('@storecraft/core/v-api').ImageType[]} images
+   * @prop {() => void} onClickImage
+   * @prop {string} [className]
+   * 
+   * @typedef {InternalImageGridParams & 
+   *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+   * } ImageGridParams
+   * 
+   * @param {ImageGridParams} params
+   */
   const ImageGrid = ({images, onClickImage, className, ...rest}) => {
   
     return (
@@ -38,10 +70,12 @@ export const Image =
   <div className={`w-fit flex flex-row flex-wrap gap-10 --mx-10 
                    place-content-center --justify-items-center --justify-center mx-auto `} >
   {
-    images.map((it, ix) => (
-        <Image data={it[1]} key={it[1].handle} 
+    images.map(
+      (it, ix) => (
+        <Image data={it} key={it.handle} 
                onClickImage={onClickImage} />
-    ))
+      )
+    )
   }
   </div>    
   </div>    

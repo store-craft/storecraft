@@ -3940,6 +3940,41 @@ components:
                   type: number
                   minimum: 0
                   description: Compare at price point
+                variants_options:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Variant option name (for example 'Size')
+                      id:
+                        type: string
+                        description: Variant option id
+                      values:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The `id` of the entity
+                            value:
+                              type: string
+                              description: The text value of the entity
+                          required:
+                            - id
+                            - value
+                          description: Identifiable text entity type
+                        description: |-
+                          Variant option values
+                          (for example `Small` / `Medium` / `Large` ..)
+                    required:
+                      - name
+                      - id
+                      - values
+                    description: The data of a variant option
+                  description: Variants options info
               required:
                 - active
                 - handle

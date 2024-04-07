@@ -145,7 +145,9 @@ const SelectCollection = (
 
 /**
  * 
- * @param {Omit<SelectCollectionParams, 'collectionId' | 'transform_fn' | 'name_fn'>} param
+ * @param {Omit<
+ *  SelectCollectionParams, 'collectionId' | 'transform_fn' | 'name_fn'
+ * >} param
  */
 export const SelectTags = (
   { 
@@ -155,9 +157,12 @@ export const SelectTags = (
 ) => {
 
   const transform_fn = useCallback(
+    /**
+     * @param {import('@storecraft/core/v-api').TagType[]} window 
+     */
     window => {
       return window ? window.reduce(
-        (p, [id, value]) => [...p, ...(value?.values ?? []).map(v => `${value.name}_${v}`)]
+        (p, value) => [...p, ...(value?.values ?? []).map(v => `${value.handle}_${v}`)]
         , []) : []
     }, []
   )

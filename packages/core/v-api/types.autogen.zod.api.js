@@ -869,25 +869,6 @@ export const baseProductTypeSchema = baseTypeSchema.extend({
     .optional()
     .describe("Discounts we know were applied to this product,\nexpanded type"),
 });
-export const productTypeUpsertSchema = baseProductTypeSchema
-  .omit({
-    collections: true,
-    created_at: true,
-    updated_at: true,
-    published: true,
-    discounts: true,
-  })
-  .and(
-    z.object({
-      collections: z
-        .array(collectionTypeSchema.pick({ id: true, handle: true }))
-        .optional()
-        .describe(
-          "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
-        ),
-    }),
-  )
-  .describe("Product upsert type");
 export const variantTypeSchema = baseProductTypeSchema.extend({
   parent_handle: z
     .string()
@@ -928,6 +909,26 @@ export const productTypeSchema = baseProductTypeSchema.extend({
     .optional()
     .describe("Variants options info"),
 });
+export const productTypeUpsertSchema = productTypeSchema
+  .omit({
+    collections: true,
+    created_at: true,
+    updated_at: true,
+    published: true,
+    discounts: true,
+    variants: true,
+  })
+  .and(
+    z.object({
+      collections: z
+        .array(collectionTypeSchema.pick({ id: true, handle: true }))
+        .optional()
+        .describe(
+          "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
+        ),
+    }),
+  )
+  .describe("Product upsert type");
 export const storefrontTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("Readable `handle`"),
   title: z.string().describe("Title"),

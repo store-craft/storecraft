@@ -16,13 +16,14 @@ import { getSDK } from '@/admin-sdk/index.js'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
-import ChooseCollections from '@/admin/comps/choose-collections.jsx'
+import SelectResource from '@/admin/comps/select-resource.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 // import { DiscountApplicationEnum, 
 //   StorefrontData } from '@/admin-sdk/js-docs-types'
 import { CreateDate, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import { decode, encode } from '@/admin/utils/index.js'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
+import { DiscountApplicationEnum } from '@storecraft/core/v-api/types.api.enums.js'
 
 const test = {
   title: 'storefront 1',
@@ -63,8 +64,8 @@ const root_left_schema = {
       key: 'collections', name: 'Collections', type: 'text', 
       validate: false, editable: true, 
       desc: 'Decide which collections meta data is used by the Store Front',
-      comp: withCard(ChooseCollections, { 
-        className:'w-full', add_all: true, collectionId: 'collections'
+      comp: withCard(SelectResource, { 
+        className:'w-full', add_all: true, resource: 'collections'
           }
         ),  
       comp_params: {className: 'w-full h-fit'} 
@@ -72,8 +73,8 @@ const root_left_schema = {
     {
       key: 'discounts', name: 'Discounts', type: 'text', validate: false, 
       editable: true, desc: 'Decide which discounts are used by the Store Front',
-      comp: withCard(ChooseCollections, { 
-        className: 'w-full', add_all: true, collectionId: 'discounts',
+      comp: withCard(SelectResource, { 
+        className: 'w-full', add_all: true, resource: 'discounts',
         transform_fn: (w) => w.filter(
           it => it[1].application.id===DiscountApplicationEnum.Auto.id && it[1].enabled
           )
@@ -84,8 +85,8 @@ const root_left_schema = {
     {
       key: 'shipping_methods', name: 'Shipping Methods', type: 'text', validate: false, 
       editable: true, desc: 'Decide which Shipping methods are used by the Store Front',
-      comp: withCard(ChooseCollections, { 
-        className: 'w-full', add_all: true, collectionId: 'shipping_methods',
+      comp: withCard(SelectResource, { 
+        className: 'w-full', add_all: true, resource: 'shipping',
         name_fn: it => it[1].name
           }
         ),  
@@ -94,8 +95,8 @@ const root_left_schema = {
     {
       key: 'posts', name: 'Posts', type: 'text', validate: false, 
       editable: true, desc: 'Decide which Notes / Posts are used by the Store Front',
-      comp: withCard(ChooseCollections, { 
-        className: 'w-full', add_all: true, collectionId: 'posts',
+      comp: withCard(SelectResource, { 
+        className: 'w-full', add_all: true, resource: 'posts',
           }
         ),  
       comp_params: {className: 'w-full h-fit'} 

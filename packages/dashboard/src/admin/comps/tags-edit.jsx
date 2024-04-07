@@ -1,11 +1,12 @@
 import { useCallback, useRef, useState } from "react"
-import { BlingButton, Button } from "./common-button.jsx"
+import { BlingButton } from "./common-button.jsx"
 import { BlingInput } from "./common-ui.jsx"
-import { SelectTags } from "./select-collection.jsx"
 import CapsulesView from "./capsules-view.jsx"
 import { HR } from "./common-ui.jsx"
 import useNavigateWithState from "@/admin/hooks/useNavigateWithState.js"
+import SelectResource from "./select-resource.jsx"
 
+/** @param {string} text */
 const text2tokens = (text) => {
   return text?.match(/\S+/g)
 }
@@ -58,11 +59,57 @@ const ManualTag = ({onAdd, ...rest}) => {
 
 /**
  * 
- * @param {import("./fields-view.jsx").FieldLeafViewParams<string[]> & 
+ * @param {Omit<
+*  import('./select-resource.jsx').SelectResourceParams, 
+*  'resource' | 'transform_fn' | 'name_fn'
+* >} param
+*/
+const SelectTags = (
+ { 
+   onSelect, header, limit=100, layout=0,
+   className, clsHeader, clsReload, ...rest 
+ }
+) => {
+
+ const transform_fn = useCallback(
+   /**
+    * @param {import('@storecraft/core/v-api').TagType[]} window 
+    */
+   window => {
+     return window ? window.reduce(
+       (p, value) => [...p, ...(value?.values ?? []).map(v => `${value.handle}_${v}`)]
+       , []) : []
+   }, []
+ )
+
+ return(
+   <SelectResource 
+       transform_fn={transform_fn} 
+       name_fn={v => v} 
+       onSelect={onSelect} 
+       header={header}
+       resource='tags' 
+       limit={limit} 
+       layout={layout} 
+       className={className} 
+       clsHeader={clsHeader} 
+       clsReload={clsReload} {...rest} />
+ )
+}
+
+/**
+ * 
+ * @param {import("./fields-view.jsx").FieldLeafViewParams<string[], 
+ *  import("../pages/index.jsx").BaseDocumentContext> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } param0 
  */
-const TagsEdit = ({field, context, value, onChange, ...rest}) => {
+const TagsEdit = (
+  {
+    field, context, value, onChange, ...rest
+  }
+) => {
+
   const [tags, setTags] = useState(value ?? [])
 
   const { navWithState } = useNavigateWithState()

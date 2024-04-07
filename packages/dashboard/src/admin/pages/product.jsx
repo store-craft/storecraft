@@ -11,7 +11,7 @@ import {
   Handle,
   Switch} from '@/admin/comps/common-fields.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
-import ChooseCollections from '@/admin/comps/choose-collections.jsx'
+import SelectResource, { SelectResourceWithTags } from '@/admin/comps/select-resource.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
 import EditMessage from '@/admin/comps/edit-message.jsx'
@@ -69,7 +69,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', 
+      key: 'description', name: 'Description', type: 'text', 
       validate: false, editable: true, desc: 'Further describe the product you are selling',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
@@ -91,7 +91,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'compareAtPrice', name: 'Compare At Price', type: 'number',   
+      key: 'compare_at_price', name: 'Compare At Price', type: 'number',   
       validate: false, editable: true, desc : 'Compare at price reveals the \
       competitiveness of your price',
       comp: withCard(withBling(MInput), { className:'h-10', type: 'number' }),  
@@ -145,7 +145,7 @@ const root_right_schema = {
       key: 'collections', name: 'Collections', type: 'compund', 
       validate: false, editable: true, 
       desc: 'Which collections does this product belong to ?',
-      comp: withCard(ChooseCollections, {collectionId: 'collections'}) 
+      comp: withCard(SelectResourceWithTags, { resource: 'collections' }) 
     },
     
   ]
@@ -167,10 +167,15 @@ const root_schema = {
  *  import('@storecraft/core/v-api').VariantType} data
  * @property {boolean} hasChanged
  * 
- * @typedef {object} Context
+ * @typedef {object} InnerProductContext
  * @prop {() => State} getState
  * @prop {(product_variant_handle: string) => Promise<void>} removeVariant
  * @prop {() => Promise<void>} preCreateVariant
+ * 
+ * @typedef {InnerProductContext & 
+ *  import('./index.jsx').BaseDocumentContext<State>
+ * } Context
+ * 
  */
 
 export default (

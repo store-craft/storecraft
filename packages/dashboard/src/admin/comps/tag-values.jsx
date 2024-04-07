@@ -14,7 +14,7 @@ const text2tokens = (text) => {
  * 
  * @param {import("./fields-view.jsx").FieldLeafViewParams<
  *  string[]>
- * } param0 
+ * } params 
  */
 const TagValues = ({field, value, onChange, ...rest}) => {
   const { key, name, comp_params } = field

@@ -4,6 +4,7 @@ const default_name_fn = v => v
 
 /**
  * @template T
+ * 
  * @param {object} p
  * @param {T[]} p.tags
  * @param {(x: T) => string} [p.name_fn]

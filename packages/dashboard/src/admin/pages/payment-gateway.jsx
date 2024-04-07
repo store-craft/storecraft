@@ -7,7 +7,7 @@ import {
   MInput, Div, withCard, 
   } from '@/admin/comps/common-fields.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
-import ChooseCollections from '@/admin/comps/choose-collections.jsx'
+import SelectResource from '@/admin/comps/select-resource.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
 import EditMessage from '@/admin/comps/edit-message.jsx'
@@ -69,7 +69,7 @@ const root_right_schema = {
     { 
       key: 'collections', name: 'Collections', type: 'compund',  validate: false, editable: true, 
       desc: 'Which collections does this product belong to ?',
-      comp: withCard(ChooseCollections, {collectionId: 'collections'}) 
+      comp: withCard(SelectResource, {collectionId: 'collections'}) 
     },
     
   ]

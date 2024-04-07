@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import CapsulesView from './capsules-view.jsx'
 import { BlingInput } from './common-ui.jsx'
 import { BlingButton } from './common-button.jsx'
-import SelectCollection from './select-collection.jsx'
+import SelectResource from './select-resource.jsx'
 import { useNavigate } from 'react-router-dom'
 import { HR } from './common-ui.jsx'
 
@@ -90,8 +90,8 @@ const OrderCouponInfo = (
           children='Add' onClick={onManualAdd} />
   </div>
   <HR className='mt-5'/>
-  <SelectCollection 
-      collectionId='discounts' layout={1}
+  <SelectResource 
+      resource='discounts' layout={1}
       className='mt-3' 
       transform_fn={
         page => page.filter(

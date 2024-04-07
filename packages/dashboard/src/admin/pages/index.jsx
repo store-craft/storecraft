@@ -20,3 +20,9 @@ export { default as PaymentGateways } from './payment-gateways.jsx'
 export { default as PaymentGateway } from './payment-gateway.jsx'
 export { default as Settings } from './settings.jsx'
 
+/**
+ * @template {any} [State=any]
+ * 
+ * @typedef {object} BaseDocumentContext
+ * @prop {() => State} [getState]
+ */

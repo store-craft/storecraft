@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { BlingInput, HR } from './common-ui.jsx'
-import SelectCollection from './select-collection.jsx'
+import SelectResource from './select-resource.jsx'
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
@@ -56,8 +56,8 @@ const OrderDeliveryMethod = (
 
   return (
 <div {...comp_params}>
-  <SelectCollection 
-      collectionId='shipping_methods' layout={1}
+  <SelectResource 
+      resource='shipping_methods' layout={1}
       className='mt-3' onSelect={onSelect}
       header='Pick Methods you defined' 
       clsHeader='shelf-text-minor' 

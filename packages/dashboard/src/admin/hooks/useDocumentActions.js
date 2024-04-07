@@ -60,6 +60,8 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
     }, [doc_original, base, state]
   );
 
+  console.log('doc', doc)
+
   /** 
    * @type {import('react').MutableRefObject<
    *   import('@/admin/comps/common-ui.jsx').CreateDateImperativeInterface>
@@ -110,8 +112,9 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
       const { validation : { has_errors, fine }, data } = all
       const final = { ...doc, ...data}
       console.log('final ', final);
-      const id = await upsert(final);
-      nav(`${slug}/${id}/edit`, { replace: true })
+      const new_doc = await upsert(final);
+      console.log('new doc', new_doc)
+      nav(`${slug}/${new_doc.handle ?? new_doc.id}/edit`, { replace: true })
     }, [upsert, nav, doc, reload, slug]
   );
 

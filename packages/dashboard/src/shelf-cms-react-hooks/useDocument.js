@@ -66,6 +66,7 @@ export function useCommonApiDocument(
      * 
      * @param {T} new_data 
      * @param  {...any} extra 
+     * @returns {Promise<T>}
      */
     async (new_data, ...extra) => {
       setLoading(true)
@@ -78,11 +79,11 @@ export function useCommonApiDocument(
           );
         
         const saved_data = await getSDK()[resource].get(
-          location[1]
+          id
           );
         setData(saved_data)  
         setHasLoaded(true)
-        return id;
+        return saved_data;
       } catch(e) {
         setError(e)
         console.log(JSON.stringify(e, null, 2))

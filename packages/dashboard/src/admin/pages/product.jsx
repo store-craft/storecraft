@@ -198,7 +198,7 @@ export default (
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
   } = useDocumentActions('products', documentId, '/pages/products', mode, base);
-
+  
   /** @type {Context} */
   const context = useMemo(
     () => ({

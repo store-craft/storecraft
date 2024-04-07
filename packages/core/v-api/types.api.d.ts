@@ -1,7 +1,10 @@
 
 export type error_item = {
   message?: string,
-  code?: string
+  code?: string,
+  expected?: string,
+  received?: string,
+  path?: string[]
 }
 
 export type error = {

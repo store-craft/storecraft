@@ -421,7 +421,7 @@ export const RecordActions = (
   /** @type {import('react').MutableRefObject<import('./modal.jsx').ImpInterface>} */
   const ref_modal = useRef()
   const [loadingDelete, setLoadingDelete] = useState(false)
-  const id = context.item.id
+  const id = context.item.handle ?? context.item.id
   const onClickDelete = useCallback(
     () => {
       ref_modal.current.setDataAndMessage(

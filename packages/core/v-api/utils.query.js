@@ -55,11 +55,14 @@ export const parse_tuples = (str="") => {
 /**
  * 
  * @param {URLSearchParams} s 
- * @return {import("./types.api.query.js").ExpandQuery | undefined}
+ * @param {import("./types.api.query.js").ExpandQuery} [def=['*']] default value 
+ * @return {import("./types.api.query.js").ExpandQuery}
  */
-export const parse_expand = s => {
-  return s.get(EXPAND)?.replace(/[()]/g, '').split(',')?.map(
-    s => s.trim()).filter(Boolean);
+export const parse_expand = (s, def = ['*']) => {
+  return (
+    s.get(EXPAND)?.replace(/[()]/g, '').split(',')?.map(
+      s => s.trim()).filter(Boolean)
+    ) ?? def;
 }
 
 /**

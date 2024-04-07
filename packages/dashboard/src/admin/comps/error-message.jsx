@@ -3,12 +3,6 @@ import { AiOutlineClose } from "react-icons/ai/index.js"
 import { Bling } from "./common-ui.jsx"
 
 /**
- * @param {any[]} arr 
- */
-const isEmpty = arr => Boolean(arr?.length) && 
-      Boolean(arr.filter(it => it!==undefined).length==0);
-
-/**
  * @typedef {object} InternalEditMessage
  * @prop {import("@storecraft/core/v-api").error} [error]
  * @prop {boolean} [positive]
@@ -30,7 +24,14 @@ const ErrorMessage = (
   const [visible, setVisible] = useState(false)
   const messages = useMemo(
     () => error?.messages.map(
-      it => it.message ?? 'Unknown Error'
+      it => {
+        let msg = '';
+        if(it.path) {
+          msg += it.path.join('.') + ' - '
+        }
+        msg += it.message ?? 'Unknown Error';
+        return msg;
+      }
     ), 
     [error]
   );

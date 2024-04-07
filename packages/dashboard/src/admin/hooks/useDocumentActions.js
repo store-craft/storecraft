@@ -1,0 +1,144 @@
+import { useCallback, useMemo, useRef } from 'react';
+import { decode } from '../utils/index.js';
+import useNavigateWithState from './useNavigateWithState.js';
+import { useCommonApiDocument } from '@/shelf-cms-react-hooks/useDocument.js';
+
+
+/**
+ * @template T the `document` type
+ * 
+ * @typedef {Omit<ReturnType<useDocumentActions>, 'doc'> & 
+ *  {
+ *    doc: T  
+ *  }
+ * } HookReturnType This `type` will give you the return type of the hook
+ * 
+ */
+
+/**
+ * Your definitive hook for `document` adventures with UI 
+ * 
+ * @template {any} [T={}] The type of `document`
+ * 
+ * @param {string} resource resource `identifier`
+ * @param {string} document document `handle` or `id`
+ * @param {string} slug resource `slug` at backend
+ * @param {'edit' | 'view' | 'create'} mode 
+ * @param {string} [base] base64 encoded base `document` to merge with
+ * 
+ */
+export const useDocumentActions = (resource, document, slug, mode, base) => {
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<
+   *    import('@storecraft/core/v-api').ProductType>>
+   * } 
+   */
+  const ref_root = useRef();
+  const { 
+    doc: doc_original, loading, hasLoaded, error, op,
+    actions: { 
+      reload, set, create, deleteDocument, colId, docId 
+    }
+  } = useCommonApiDocument(resource, document);
+
+  const { 
+    nav, navWithState, state 
+  } = useNavigateWithState();
+
+  /**
+   * @type {T} 
+   */
+  const doc = useMemo(
+    () => {
+      let base_o = {}
+      try {
+        base_o = base ? decode(base) : {}
+      } catch (e) {}
+      const doc = { ...base_o, ...doc_original, ...state?.data }
+      return doc
+    }, [doc_original, base, state]
+  );
+
+  /** 
+   * @type {import('react').MutableRefObject<
+   *   import('@/admin/comps/common-ui.jsx').CreateDateImperativeInterface>
+   * } 
+   */
+  const ref_head = useRef();
+  const hasChanged = state?.hasChanged ?? false
+  const isEditMode = mode==='edit'
+  const isCreateMode = mode==='create'
+  const isViewMode = !(isEditMode || isCreateMode)
+    
+  /** @type {import('../pages/index.jsx').BaseDocumentContext<State>} */
+  const context = useMemo(
+    () => ({
+      /** @returns {State} */
+      getState: () => {
+        const data = ref_root.current.get(false)?.data
+        const hasChanged = Boolean(ref_head.current.get())
+        return {
+          data, hasChanged
+        }
+      },
+    }), []
+  );
+
+  const duplicate = useCallback(
+    async () => {
+      const state = context.getState()
+      /**@type {State} */
+      const state_next = { 
+        data: { 
+          ...state?.data,
+          handle: undefined
+        },
+        hasChanged: false
+      }
+      ref_head.current.set(false)
+      navWithState(`${slug}/create`, 
+            state, state_next
+      );
+    }, [navWithState, context, slug]
+  );
+
+  const savePromise = useCallback(
+    async () => {
+      // const doc = await reload()
+      const all = ref_root.current.get()
+      const { validation : { has_errors, fine }, data } = all
+      const final = { ...doc, ...data}
+      // console.log('final ', final);
+      const [id, _] = await set(final)
+      nav(`${slug}/${id}/edit`, { replace: true })
+    }, [set, nav, doc, reload, slug]
+  );
+
+  const createPromise = useCallback(
+    async () => {
+      const all = ref_root.current.get()
+      const { validation : { has_errors, fine }, data } = all
+      const final = { ...doc, ...data}
+      // console.log('final ', final);
+      const [id, _] = await create(final);
+      nav(`${slug}/${id}/edit`, { replace: true })
+    }, [create, doc, nav, slug]
+  );
+
+  const deletePromise = useCallback(
+    async () => {
+      await deleteDocument()
+      nav(`${slug}`, { replace: true })
+    }, [deleteDocument, nav, slug]
+  );
+
+
+  return {
+    savePromise, createPromise, deletePromise, duplicate,
+    reload, error, 
+    ref_head, ref_root, doc, isEditMode, isCreateMode,
+    isViewMode,
+    loading, hasChanged, hasLoaded, context
+  }
+}

@@ -70,9 +70,9 @@ export default function Main(props) {
     <Route path='products'>
       <Route path='' element={<Products />} />
       <Route path='q/:query_params' element={<Products />} />
-      <Route path=':id/edit' element={<Product collectionId='products' mode='edit' />} />
-      <Route path=':id/view' element={<Product collectionId='products' mode='view' />} />
-      <Route path='create/:base?' element={<Product collectionId='products' mode='create' /> } />
+      <Route path=':id/edit' element={<Product mode='edit' />} />
+      <Route path=':id/view' element={<Product mode='view' />} />
+      <Route path='create/:base?' element={<Product mode='create' /> } />
     </Route>
     <Route path='collections'>
       <Route path='' element={<Collections />} />

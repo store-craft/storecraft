@@ -90,7 +90,7 @@ const paginate_helper = (query, resource) => {
 }
 
 /**
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template T
  * @param {string} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
  * @param {boolean} autoLoad 
@@ -261,7 +261,7 @@ const q_initial = {
 /**
  * Modified collection with modified search query
  * 
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template T
  * @param {string} resource 
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
@@ -301,38 +301,3 @@ const q_initial = {
     colId: resource 
   }
 }
-
-// /**
-//  * Modified collection for users
-//  * @param {*} limit 
-//  * @param {*} autoLoad 
-//  * @returns 
-//  */
-// export const useUsers = (limit=10, autoLoad=true) => {
-//   const q_initial = useRef({
-//     orderBy: [['updatedAt', 'asc']],
-//     limit
-//   })
-
-//   const [windows, window, loading, error, 
-//           { prev, next, setQuery : setQueryParent, deleteDocument, reload, colId }] = 
-//           useCollection('users', q_initial.current, autoLoad)
-
-//   const [query, setQuery] = useState( { limit, search: undefined } )
-
-//   useEffect(() => {
-//     const tokens = text2tokens(query.search)
-//     const where = tokens?.length ? [['search', 'array-contains-any', tokens]] : undefined
-//     setQueryParent({
-//       ...q_initial.current, 
-//       where,
-//       limit : query.limit
-//     })
-//   }, [query])
-
-//   return [windows, window, loading, error, 
-//           { prev, next, 
-//             setQuery, 
-//             deleteDocument, 
-//             reload, colId }]
-// }

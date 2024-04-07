@@ -3,6 +3,18 @@ import { api_query_to_searchparams, parse_query } from '@storecraft/core/v-api/u
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 
+
+/**
+ * @template T the `document` type
+ * 
+ * @typedef {Omit<ReturnType<useCollectionsActions>, 'page'> & 
+ *  {
+ *    page: T[]  
+ *  }
+ * } HookReturnType This `type` will give you the return type of the hook
+ * 
+ */
+
 /**
  * `useCollectionsActions` is a hook designed for the collections pages,
  * for performing:

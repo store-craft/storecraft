@@ -35,6 +35,12 @@ const schema_fields = [
 ]
 
 export default ({}) => {
+
+  /**
+   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
+   *  import('@storecraft/core/v-api').OrderData>
+   * }
+   */ 
   const { 
     query_api, context, ref_actions, page, loading, 
     error, onLimitChange, onReload, prev, next, 

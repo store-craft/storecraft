@@ -1,17 +1,14 @@
-import { useRef, useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import FieldsView from '@/admin/comps/fields-view.jsx'
-import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import Media from '@/admin/comps/media.jsx'
-import { 
-  MInput, withCard, 
-  InputWithClipboard, 
-  Handle,
+import { MInput, withCard, 
+  InputWithClipboard, Handle,
   Switch} from '@/admin/comps/common-fields.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
-import SelectResource, { SelectResourceWithTags } from '@/admin/comps/select-resource.jsx'
+import { SelectResourceWithTags } from '@/admin/comps/select-resource.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
 import EditMessage from '@/admin/comps/edit-message.jsx'
@@ -21,9 +18,8 @@ import RelatedProducts from '@/admin/comps/product-related-products.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import ProductVariants from '@/admin/comps/products-variants.jsx'
-import { decode, encode } from '@/admin/utils/index.js'
-import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 import { getSDK } from '@/admin-sdk/index.js'
+import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const test = {
   title: 'call of duty',
@@ -162,77 +158,51 @@ const root_schema = {
 }
 
 /**
- * @typedef {object} State
+ * 
+ * @typedef {object} State Intrinsic state of `product`
  * @property {import('@storecraft/core/v-api').ProductType | 
  *  import('@storecraft/core/v-api').VariantType} data
  * @property {boolean} hasChanged
  * 
- * @typedef {object} InnerProductContext
- * @prop {() => State} getState
+ *
+ * @typedef {object} InnerProductContext Inner `product` context
  * @prop {(product_variant_handle: string) => Promise<void>} removeVariant
  * @prop {() => Promise<void>} preCreateVariant
  * 
+ * 
  * @typedef {InnerProductContext & 
  *  import('./index.jsx').BaseDocumentContext<State>
- * } Context
+ * } Context Public `product` context
  * 
  */
 
+
 export default (
   { 
-    collectionId, mode, ...rest
+    mode, ...rest
   }
 ) => {
 
-  const { id : documentId, base } = useParams()
-  /** @type {import('react').MutableRefObject<import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<import('@storecraft/core/v-api').ProductType>>} */
-  const ref_root = useRef();
-  const { 
-    doc: doc_original, loading, hasLoaded, error, op,
-    actions: { 
-      reload, set, create, deleteDocument, colId, docId 
-    }
-  } = useCommonApiDocument(collectionId, documentId)
+  const { id : documentId, base } = useParams();
 
-  const { 
-    nav, navWithState, state 
-  } = useNavigateWithState()
+  /** 
+   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+   *  import('@storecraft/core/v-api').ProductType &
+   *  import('@storecraft/core/v-api').VariantType>
+   * } 
+   */
+  const {
+    context: context_base, createPromise, 
+    savePromise, deletePromise, duplicate, reload,
+    doc, isCreateMode, isEditMode, isViewMode, 
+    loading, hasChanged, hasLoaded, error,
+    ref_head, ref_root, 
+  } = useDocumentActions('products', documentId, '/pages/products', mode, base);
 
-  /**@type {import('@storecraft/core/v-api').ProductType & import('@storecraft/core/v-api').VariantType} */
-  const doc = useMemo(
-    () => {
-      let base_o = {}
-      try {
-        base_o = base ? decode(base) : {}
-      } catch (e) {}
-      const doc = { ...base_o, ...doc_original, ...state?.data }
-      return doc
-    }, [doc_original, base, state]
-  )
-
-  // console.log('doc_original', doc_original)
-  // console.log('state.data', state?.data)
-  // console.log('doc', doc)
-
-  /** @type {import('react').MutableRefObject<import('@/admin/comps/common-ui.jsx').CreateDateImperativeInterface>} */
-  const ref_head = useRef();
-  const hasChanged = state?.hasChanged ?? false
-  const isEditMode = mode==='edit'
-  const isCreateMode = mode==='create'
-  const isViewMode = !(isEditMode || isCreateMode)
-  const isVariant = Boolean(doc?.parent_handle)
-    
   /** @type {Context} */
   const context = useMemo(
     () => ({
-      /** @returns {State} */
-      getState: () => {
-        const data = ref_root.current.get(false)?.data
-        const hasChanged = Boolean(ref_head.current.get())
-        return {
-          data, hasChanged
-        }
-      },
+      ...context_base,
       removeVariant: async (product_variant_handle) => {
         await getSDK().products.delete(
           product_variant_handle
@@ -252,55 +222,10 @@ export default (
         )
       }
 
-    }), [doc, reload]
-  )
-
-  const duplicate = useCallback(
-    async () => {
-      const state = context.getState()
-      /**@type {State} */
-      const state_next = { 
-        data: { 
-          ...state?.data,
-          handle: undefined
-        },
-        hasChanged: false
-      }
-      ref_head.current.set(false)
-      navWithState(`/pages/${collectionId}/create`, 
-            state, state_next)
-    }, [navWithState, collectionId, context]
+    }), [doc, reload, context_base]
   );
-  const savePromise = useCallback(
-    async () => {
-      // const doc = await reload()
-      const all = ref_root.current.get()
-      const { validation : { has_errors, fine }, data } = all
-      const final = { ...doc, ...data}
-      // console.log('final ', final);
-      const [id, _] = await set(final)
-      nav(`/pages/${collectionId}/${id}/edit`, { replace: true })
-    }, [set, nav, doc, collectionId, reload]
-  )
 
-  const createPromise = useCallback(
-    async () => {
-      const all = ref_root.current.get()
-      const { validation : { has_errors, fine }, data } = all
-      const final = { ...doc, ...data}
-      // console.log('final ', final);
-      const [id, _] = await create(final);
-      nav(`/pages/${collectionId}/${id}/edit`, { replace: true })
-    }, [create, doc, nav, collectionId]
-  )
-
-  const deletePromise = useCallback(
-    async () => {
-      await deleteDocument()
-      nav(`/pages/${collectionId}`, { replace: true })
-    }, [deleteDocument, nav, collectionId]
-  )
-
+  const isVariant = Boolean(doc?.parent_handle)
   let minor = [documentId ?? 'create']
   if(isVariant)
     minor = [doc?.parent_handle, 'variants', ...minor]
@@ -308,19 +233,19 @@ export default (
   const key = useMemo(
     () => JSON.stringify(doc),
     [doc]
-  )
+  );
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
-  <DocumentTitle major={[collectionId, ...minor]} className='' />  
-  <DocumentDetails doc={doc} className='mt-5' collectionId={collectionId}/>                     
+  <DocumentTitle major={['products', ...minor]} className='' />  
+  <DocumentDetails doc={doc} className='mt-5' collectionId={'products'}/>                     
   <RegularDocumentActions             
       onClickSave={isEditMode ? savePromise : undefined}
       onClickCreate={isCreateMode ? createPromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} 
       onClickDuplicate={!isCreateMode ? duplicate : undefined}
-      onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
-      id={docId}
+      onClickReload={!isCreateMode ? (() => reload(false)) : undefined}
+      id={documentId}
       className='mt-5'/>
   <CreateDate 
       ref={ref_head} time={doc?.created_at} 

@@ -1,4 +1,13 @@
 
+export type error_item = {
+  message?: string,
+  code?: string
+}
+
+export type error = {
+  messages?: error_item[]
+}
+
 /**
  * @description Timestamps
  */
@@ -233,6 +242,7 @@ export interface CollectionType extends BaseType {
 
   /** 
    * @description Title of collection 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -356,6 +366,7 @@ export interface BaseProductType extends BaseType {
 
   /** 
    * @description Title of the product 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -453,6 +464,7 @@ export interface DiscountType extends BaseType {
 
   /** 
    * @description Title of discount 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -913,6 +925,7 @@ export interface StorefrontType extends BaseType {
 
   /** 
    * @description Title 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -1111,6 +1124,7 @@ export interface ShippingMethodType extends BaseType {
 
   /** 
    * @description Name of shipping method 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -1138,6 +1152,7 @@ export interface PostType extends BaseType {
 
   /** 
    * @description Title of post 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -1647,6 +1662,7 @@ export type ValidationEntry = {
 
   /**
    * @description title
+   * @minLength 3 Title should be longer than 3
    */
   title?: string;
 

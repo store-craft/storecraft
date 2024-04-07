@@ -10,7 +10,7 @@ import {
   } from '@/admin/comps/common-fields.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
-import EditMessage from '@/admin/comps/edit-message.jsx'
+import ErrorMessage from '@/admin/comps/error-message.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import SecretView from '@/admin/comps/secret-view.jsx'

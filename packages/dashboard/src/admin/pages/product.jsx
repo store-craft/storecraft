@@ -11,7 +11,7 @@ import TagsEdit from '@/admin/comps/tags-edit.jsx'
 import { SelectResourceWithTags } from '@/admin/comps/select-resource.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
-import EditMessage from '@/admin/comps/edit-message.jsx'
+import ErrorMessage from '@/admin/comps/error-message.jsx'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import RelatedProducts from '@/admin/comps/product-related-products.jsx'
@@ -69,11 +69,11 @@ const root_left_schema = {
       validate: false, editable: true, desc: 'Further describe the product you are selling',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
-    {
-      key: 'media', name: 'Media', type: 'text',   
-      validate: false, editable: true, desc: 'Manage and edit your media files',
-      comp: withCard(Media),  comp_params: {className: 'w-full'} 
-    },
+    // {
+    //   key: 'media', name: 'Media', type: 'text',   
+    //   validate: false, editable: true, desc: 'Manage and edit your media files',
+    //   comp: withCard(Media),  comp_params: {className: 'w-full'} 
+    // },
     { 
       key: 'video', name: 'Video', type: 'text', validate: false, editable: true, 
       comp: withCard(InputWithClipboard),  
@@ -192,7 +192,7 @@ export default (
    * } 
    */
   const {
-    context: context_base, createPromise, 
+    context: context_base, 
     savePromise, deletePromise, duplicate, reload,
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
@@ -241,7 +241,7 @@ export default (
   <DocumentDetails doc={doc} className='mt-5' collectionId={'products'}/>                     
   <RegularDocumentActions             
       onClickSave={isEditMode ? savePromise : undefined}
-      onClickCreate={isCreateMode ? createPromise : undefined}
+      onClickCreate={isCreateMode ? savePromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} 
       onClickDuplicate={!isCreateMode ? duplicate : undefined}
       onClickReload={!isCreateMode ? (() => reload(false)) : undefined}
@@ -253,7 +253,7 @@ export default (
       changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode}>
     <div className='w-full max-w-[40rem] lg:w-fit lg:max-w-none mx-auto'>
-      <EditMessage messages={error} className='w-full' />
+      <ErrorMessage error={error} className='w-full' />
       <FieldsView 
           ref={ref_root} 
           key={key}

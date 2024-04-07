@@ -74,8 +74,9 @@ export function useCommonApiDocument(
 
       try {
         const id = await getSDK()[resource].upsert(
-          location[1], new_data, ...extra
+          new_data
           );
+        
         const saved_data = await getSDK()[resource].get(
           location[1]
           );
@@ -84,6 +85,7 @@ export function useCommonApiDocument(
         return id;
       } catch(e) {
         setError(e)
+        console.log(JSON.stringify(e, null, 2))
         throw e
       } finally {
         setLoading(false)

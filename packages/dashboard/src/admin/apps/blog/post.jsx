@@ -6,7 +6,7 @@ import ShowIf from '@/admin/comps/show-if.jsx'
 import { Div, MInput, withCard } from '@/admin/comps/common-fields.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
-import EditMessage from '@/admin/comps/edit-message.jsx'
+import ErrorMessage from '@/admin/comps/error-message.jsx'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
@@ -214,7 +214,7 @@ export default ({ collectionId, mode, ...rest }) => {
               key={doc?.updatedAt} className='mt-8' 
               changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
-    <EditMessage messages={error} className='w-full max-w-[35rem] mx-auto' />
+    <ErrorMessage messages={error} className='w-full max-w-[35rem] mx-auto' />
     <FieldsView key={doc?.updatedAt} ref={ref_root} field={root_schema} 
                 value={ doc ?? {} } 
                 context={context}

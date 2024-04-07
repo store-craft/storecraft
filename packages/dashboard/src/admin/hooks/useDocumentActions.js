@@ -18,7 +18,7 @@ import { useCommonApiDocument } from '@/shelf-cms-react-hooks/useDocument.js';
 /**
  * Your definitive hook for `document` adventures with UI 
  * 
- * @template {any} [T={}] The type of `document`
+ * @template {{}} [T={}] The type of `document`
  * 
  * @param {string} resource resource `identifier`
  * @param {string} document document `handle` or `id`
@@ -38,7 +38,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   const { 
     doc: doc_original, loading, hasLoaded, error, op,
     actions: { 
-      reload, set, create, deleteDocument, colId, docId 
+      reload, upsert, create, deleteDocument, colId, docId 
     }
   } = useCommonApiDocument(resource, document);
 
@@ -109,22 +109,22 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
       const all = ref_root.current.get()
       const { validation : { has_errors, fine }, data } = all
       const final = { ...doc, ...data}
-      // console.log('final ', final);
-      const [id, _] = await set(final)
+      console.log('final ', final);
+      const id = await upsert(final);
       nav(`${slug}/${id}/edit`, { replace: true })
-    }, [set, nav, doc, reload, slug]
+    }, [upsert, nav, doc, reload, slug]
   );
 
-  const createPromise = useCallback(
-    async () => {
-      const all = ref_root.current.get()
-      const { validation : { has_errors, fine }, data } = all
-      const final = { ...doc, ...data}
-      // console.log('final ', final);
-      const [id, _] = await create(final);
-      nav(`${slug}/${id}/edit`, { replace: true })
-    }, [create, doc, nav, slug]
-  );
+  // const createPromise = useCallback(
+  //   async () => {
+  //     const all = ref_root.current.get()
+  //     const { validation : { has_errors, fine }, data } = all
+  //     const final = { ...doc, ...data}
+  //     // console.log('final ', final);
+  //     const [id, _] = await create(final);
+  //     nav(`${slug}/${id}/edit`, { replace: true })
+  //   }, [create, doc, nav, slug]
+  // );
 
   const deletePromise = useCallback(
     async () => {
@@ -135,7 +135,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
 
 
   return {
-    savePromise, createPromise, deletePromise, duplicate,
+    savePromise, deletePromise, duplicate,
     reload, error, 
     ref_head, ref_root, doc, isEditMode, isCreateMode,
     isViewMode,

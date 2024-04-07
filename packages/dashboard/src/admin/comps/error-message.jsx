@@ -2,39 +2,44 @@ import { useEffect, useMemo, useState } from "react"
 import { AiOutlineClose } from "react-icons/ai/index.js"
 import { Bling } from "./common-ui.jsx"
 
+/**
+ * @param {any[]} arr 
+ */
 const isEmpty = arr => Boolean(arr?.length) && 
       Boolean(arr.filter(it => it!==undefined).length==0);
 
 /**
  * @typedef {object} InternalEditMessage
- * @prop {(string | { message: string })[]} [messages]
+ * @prop {import("@storecraft/core/v-api").error} [error]
  * @prop {boolean} [positive]
  * @prop {string} [className]
  * 
  * @typedef {InternalEditMessage & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } EditMessageParams
-* 
-* @param {EditMessageParams} param
-*/
-const EditMessage = (
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } EditMessageParams
+ * 
+ * @param {EditMessageParams} param
+ */
+const ErrorMessage = (
   { 
-    messages, positive=false, className, ...rest 
+    error, positive=false, className, ...rest 
   }
 ) => {
+  console.log('error ', error)
 
   const [visible, setVisible] = useState(false)
-  messages = useMemo(
-    () => Array.isArray(messages) ? messages.map(
-      it => it!==undefined ? String(it) : it) : [messages], 
-    [messages]
-  )
+  const messages = useMemo(
+    () => error?.messages.map(
+      it => it.message ?? 'Unknown Error'
+    ), 
+    [error]
+  );
 
   useEffect(
     () => {
-      const show = !isEmpty(messages)
+      const show = Boolean(error && error.messages?.length);
       setVisible(show)
-    }, [messages]
+    }, [error]
   )
 
   let cls_text = positive ? 'text-green-500' : 'text-red-700 dark:text-red-500'
@@ -55,8 +60,8 @@ const EditMessage = (
                         onClick={() => setVisible(false)} />
       <ul className='list-disc w-full	list-inside p-5'>
         {
-          messages.map((it, ix) => (
-            <li children={it?.message ?? String(it)} key={ix} 
+          messages?.map((it, ix) => (
+            <li children={it ?? String(it)} key={ix} 
                 className={'px-2 py-1 text-base font-semibold ' + cls_text} />
           ))
         }
@@ -67,4 +72,4 @@ const EditMessage = (
   )
 }
 
-export default EditMessage
+export default ErrorMessage

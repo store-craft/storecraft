@@ -391,7 +391,11 @@ export const orderContactSchema = z
 export const validationEntrySchema = z
   .object({
     id: z.string().describe("`id`"),
-    title: z.string().optional().describe("title"),
+    title: z
+      .string()
+      .min(3, "Title should be longer than 3")
+      .optional()
+      .describe("title"),
     message: z
       .union([
         z.literal("out-of-stock"),
@@ -570,7 +574,10 @@ export const authUserTypeSchema = baseTypeSchema
   .describe("Auth user type");
 export const collectionTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("The handle of the entity"),
-  title: z.string().describe("Title of collection"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Title of collection"),
   active: z.boolean().describe("Is the entity active ?"),
   published: z
     .string()
@@ -667,12 +674,18 @@ export const shippingMethodTypeSchema = baseTypeSchema.extend({
     .number()
     .min(0, "Please set a price >= 0")
     .describe("Shipping method price"),
-  title: z.string().describe("Name of shipping method"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Name of shipping method"),
   handle: z.string().describe("Readable `handle` of shipping"),
 });
 export const postTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("Unique `handle`"),
-  title: z.string().describe("Title of post"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Title of post"),
   text: z.string().describe("Rich text of post"),
 });
 export const customerTypeSchema = baseTypeSchema.extend({
@@ -825,7 +838,10 @@ export const discountInfoSchema = z
   .describe("details and filters of the discount");
 export const discountTypeSchema = baseTypeSchema.extend({
   active: z.boolean().describe("Is the discount active ?"),
-  title: z.string().describe("Title of discount"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Title of discount"),
   handle: z.string().describe("Discount `code` / `handle`"),
   priority: z
     .number()
@@ -850,7 +866,10 @@ export const discountTypeUpsertSchema = discountTypeSchema.omit({
 });
 export const baseProductTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("The readable unique product `handle`"),
-  title: z.string().describe("Title of the product"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Title of the product"),
   active: z.boolean().describe("Is the product active ?"),
   video: z.string().optional().describe("Video media url"),
   price: z.number().min(0).describe("Price of the product"),
@@ -931,7 +950,7 @@ export const productTypeUpsertSchema = productTypeSchema
   .describe("Product upsert type");
 export const storefrontTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("Readable `handle`"),
-  title: z.string().describe("Title"),
+  title: z.string().min(3, "Title should be longer than 3").describe("Title"),
   video: z.string().optional().describe("Video url"),
   published: z
     .string()

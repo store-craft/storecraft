@@ -16,7 +16,7 @@ import DiscountFilters, { discount_filters_validator }
 import DiscountDetails, { discount_details_validator } 
        from '@/admin/comps/discount-details.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
-import EditMessage from '@/admin/comps/edit-message.jsx'
+import ErrorMessage from '@/admin/comps/error-message.jsx'
 import Media from '@/admin/comps/media.jsx'
 import { PromisableLoadingBlingButton } from '@/admin/comps/common-button.jsx'
 import { BiAddToQueue } from 'react-icons/bi/index.js'

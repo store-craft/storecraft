@@ -12,7 +12,7 @@ export const assert_zod = (zod_schema, item) => {
     /** @type {import("zod").SafeParseError<any>} */
     const casted = result;
 
-    // console.log(JSON.stringify(casted.error?.issues, null, 2))
+    console.log(JSON.stringify(casted.error?.issues, null, 2))
 
     throw new StorecraftError(casted.error?.issues, 400);
   };

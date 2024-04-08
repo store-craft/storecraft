@@ -19,66 +19,84 @@ const CollectionBase = forwardRef(
    * @typedef {object} ImpInterface
    * @prop {() => Promise<void>} refresh
    * 
-   * @param {object} param0 
-   * @param {string} param0.collection_term
-   * @param {number} param0.limit
-   * @param {(count: number) => void} param0.onLoaded when loaded reports query count
-   * @param {import('./fields-view.jsx').FieldContextData} param0.context context
-   * @param {object} ref 
+   * @typedef {object} CollectionBaseParams
+   * @prop {string} collection_handle_or_id `handle` or `id`
+   * @prop {number} limit `limit` of query
+   * @prop {(count: number) => void} onLoaded when loaded reports query count
+   * @prop {import('../pages/collection.jsx').Context} context context
+   * 
+   * @param {CollectionBaseParams} param
+   * @param {any} ref
    */
-  ({ collection_term, limit=5, context, onLoaded, ...rest}, ref) => {
+  (
+    { 
+      collection_handle_or_id, limit=5, context, onLoaded, ...rest
+    }, ref
+  ) => {
     
+  /**
+   * @type {import('@/shelf-cms-react-hooks/useCollection.js').HookReturnType<
+   *  import('@storecraft/core/v-api').ProductType>
+   * }
+   */
   const { 
     pages, page, loading, error, 
     prev, next, query, queryCount 
-  } = useCommonCollection('products', false)
+  } = useCommonCollection(
+    `collections/${collection_handle_or_id}/products`, false
+  );
+
   const trigger = useTrigger()
 
   const schema = useRef([
     { key: 'title', name: 'Title', comp: Span },
-    { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView },
+    { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
     { key: undefined, name: 'Actions', comp: RecordActions },
-  ])
+  ]);
 
   useEffect(
     () => {
       onLoaded && onLoaded(queryCount)
     }, [queryCount, onLoaded]
-  )
+  );
 
   useEffect(
     () => {
-      query({ search: `col:${collection_term}`, limit})
-    }, [collection_term, query, limit]
+      query({ limit: limit, sortBy: ['updated_at', 'id'] })
+    }, [query, limit]
   );
 
   useImperativeHandle(ref, 
     () => (
       {
-        refresh : () => query(
-          { 
-            search: `col:${collection_term}`, 
-            limit
-          })
+        refresh : () => query({ limit })
       }
     ), 
-    [query, collection_term, limit]
+    [query, limit]
   );
 
-  const context2 = useMemo(
+  const context_collection_view = useMemo(
     () => (
       {
-        editDocumentUrl: id => `../../products/${id}/edit`,
-        getState: () => {
-          return context?.getState()
-        },
-        deleteDocument: async id => {
+        getState: () => context?.getState(),
+        /**
+         * @param {string} id 
+         */
+        editDocumentUrl: id => `/pages/products/${id}/edit`,
+        /**
+         * @param {string} id_or_handle product `id` or `handle`
+         */
+        deleteDocument: async (id_or_handle) => {
+          const pr_index = page.findIndex(
+            it => (it.id===id_or_handle || it.handle===id_or_handle)
+          );
+          const col = context.getState().data;
+          const pr = page[pr_index];
           await getSDK().products.batchRemoveProductsFromCollection(
-            [id], collection_term
-            )
-          const index = page.findIndex(it => it[0]===id)
-          page.splice(index, 1)
-          trigger()
+            [pr], col
+          );
+          page.splice(pr_index, 1);
+          trigger();
         }
       }
     ), [trigger, page, context]
@@ -86,41 +104,53 @@ const CollectionBase = forwardRef(
 
   return (
 <>
-  <CollectionView context={context2} data={page} 
-                  fields={schema.current} />
-  <BottomActions prev={prev} next={next} 
-                  onLimitChange={undefined} />
+  <CollectionView 
+      context={context_collection_view} data={page} 
+      fields={schema.current} />
+  <BottomActions 
+      prev={prev} next={next} 
+      onLimitChange={undefined} />
 </>
   )
 })
 
 /**
+ * `ProductsInCollection` wraps and show the `products` of a given
+ * collection with pagination.
  * 
- * @param {object} param0 
- * @param {import('@storecraft/core/v-api').CollectionType} param0.value collection
- * @param {string} param0.docId collection handle
- * @param {import('./fields-view.jsx').FieldContextData} param0.context context
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').CollectionType,
+ *  import('../pages/collection.jsx').Context>
+ * } param
  */
-const ProductsInCollection = ({ docId, value, context }) => {
+const ProductsInCollection = ({ value, context }) => {
+
   const [loading, setLoading] = useState(false)
   const [count, setCount] = useState(-1)
   const [error, setError] = useState(undefined)
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('./overlay.jsx').ImpInterface>
+   * } 
+   **/
   const ref_overlay = useRef();
   /** @type {import('react').MutableRefObject<ImpInterface>} */
   const ref_productsByCollection = useRef()
 
-  docId = value?.handle ?? docId
-
   const onBrowseAdd = useCallback(
-    async (selected_items) => { // array of shape [[id, data], ...]
-      // map to handle/id
+    /**
+     * 
+     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
+     */
+    async (selected_items) => {
       setLoading(true)
 
       try {
+        console.log('selected_items ', selected_items)
         // Add products to collection through collection and search fields
-        await getSDK().products
-                       .batchAddProductsToCollection(selected_items, docId)
+        await getSDK().products.batchAddProductsToCollection(
+          selected_items, value
+        );
         ref_productsByCollection.current.refresh()
       }
       catch (err) {
@@ -131,30 +161,32 @@ const ProductsInCollection = ({ docId, value, context }) => {
       }
 
       ref_overlay.current.hide()
-    }, [error, docId]
+    }, [error, value?.handle]
   )
 
   return (
-<Card name={`Products in collection ${count>=0 ? `(${count})` : ''}` }
-      className='w-full --lg:w-[30rem] h-fit' 
-      border={true}
-      error={error}>
-  <ShowIf show={docId}>
+<Card 
+    name={`Products in collection ${count>=0 ? `(${count})` : ''}` }
+    className='w-full --lg:w-[30rem] h-fit' 
+    border={true}
+    error={error}>
+  <ShowIf show={value?.handle}>
     <CollectionBase 
         ref={ref_productsByCollection} 
-        collection_term={docId} 
+        collection_handle_or_id={value?.handle} 
         context={context}
         onLoaded={setCount}
         className='text-sm h-fit' />          
     <div className='flex flex-row justify-end'>
       <div className='flex flex-row items-center w-fit gap-3 mt-7'>
         <span children='Add Product' className='text-gray-500' />
-        <Bling className='text-gray-500 text-sm w-fit mx-auto 
+        <Bling 
+            className='text-gray-500 text-sm w-fit mx-auto 
                         shadow-gray-800/25 shadow-lg hover:scale-110 
                         transition-transform cursor-pointer' 
-              stroke='p-0.5' rounded='rounded-full'
-              from='from-pink-500' to='to-kf-400'
-              onClick={() => !loading && ref_overlay.current.show()}>
+            stroke='p-0.5' rounded='rounded-full'
+            from='from-pink-500' to='to-kf-400'
+            onClick={() => !loading && ref_overlay.current.show()}>
           <IoMdAdd className={'text-4xl text-white ' + 
                         (loading ? 'animate-spin' : '')} />
         </Bling>
@@ -162,11 +194,12 @@ const ProductsInCollection = ({ docId, value, context }) => {
     </div>
 
     <Overlay ref={ref_overlay} >
-      <BrowseProducts onSave={onBrowseAdd} 
-                      onCancel={() => ref_overlay.current.hide()} />
+      <BrowseProducts 
+          onSave={onBrowseAdd} 
+          onCancel={() => ref_overlay.current.hide()} />
     </Overlay>
   </ShowIf>
-  <ShowIf show={!docId}>
+  <ShowIf show={!value?.handle}>
     <p children='Only after Collection is created, 
                 you will be able to add products here'
        className='text-2xl font-semibold text-gray-400' />

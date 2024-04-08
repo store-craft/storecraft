@@ -94,6 +94,7 @@ components:
             type: string
           description: List of values, related to the key
       required:
+        - id
         - handle
         - values
       description: with `id`
@@ -112,6 +113,7 @@ components:
             type: string
           description: List of values, related to the key
       required:
+        - id
         - handle
         - values
       description: with `id`
@@ -163,6 +165,7 @@ components:
           description: The handle of the entity
         title:
           type: string
+          minLength: 3
           description: Title of collection
         published:
           type: string
@@ -170,6 +173,7 @@ components:
             Collections can be exported into
             json with products, this is the url
       required:
+        - id
         - active
         - handle
         - title
@@ -216,8 +220,10 @@ components:
           description: The handle of the entity
         title:
           type: string
+          minLength: 3
           description: Title of collection
       required:
+        - id
         - active
         - handle
         - title
@@ -271,6 +277,7 @@ components:
               description: The readable unique product `handle`
             title:
               type: string
+              minLength: 3
               description: Title of the product
             video:
               type: string
@@ -337,6 +344,7 @@ components:
                     description: The handle of the entity
                   title:
                     type: string
+                    minLength: 3
                     description: Title of collection
                   published:
                     type: string
@@ -344,6 +352,7 @@ components:
                       Collections can be exported into
                       json with products, this is the url
                 required:
+                  - id
                   - active
                   - handle
                   - title
@@ -396,6 +405,7 @@ components:
                     description: Is the discount active ?
                   title:
                     type: string
+                    minLength: 3
                     description: Title of discount
                   handle:
                     type: string
@@ -1389,6 +1399,7 @@ components:
                           - name2
                     description: Discount application (`automatic` and `manual`)
                 required:
+                  - id
                   - active
                   - title
                   - handle
@@ -1449,6 +1460,7 @@ components:
                     description: The readable unique product `handle`
                   title:
                     type: string
+                    minLength: 3
                     description: Title of the product
                   video:
                     type: string
@@ -1515,6 +1527,7 @@ components:
                           description: The handle of the entity
                         title:
                           type: string
+                          minLength: 3
                           description: Title of collection
                         published:
                           type: string
@@ -1522,6 +1535,7 @@ components:
                             Collections can be exported into
                             json with products, this is the url
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -1574,6 +1588,7 @@ components:
                           description: Is the discount active ?
                         title:
                           type: string
+                          minLength: 3
                           description: Title of discount
                         handle:
                           type: string
@@ -2575,6 +2590,7 @@ components:
                                 - name2
                           description: Discount application (`automatic` and `manual`)
                       required:
+                        - id
                         - active
                         - title
                         - handle
@@ -2614,6 +2630,7 @@ components:
                       Internal usage, clarifies the variant
                       projected options
                 required:
+                  - id
                   - active
                   - handle
                   - title
@@ -2660,6 +2677,7 @@ components:
                 description: The data of a variant option
               description: Variants options info
           required:
+            - id
             - active
             - handle
             - title
@@ -2713,6 +2731,7 @@ components:
               description: The readable unique product `handle`
             title:
               type: string
+              minLength: 3
               description: Title of the product
             video:
               type: string
@@ -2779,6 +2798,7 @@ components:
                     description: The handle of the entity
                   title:
                     type: string
+                    minLength: 3
                     description: Title of collection
                   published:
                     type: string
@@ -2786,6 +2806,7 @@ components:
                       Collections can be exported into
                       json with products, this is the url
                 required:
+                  - id
                   - active
                   - handle
                   - title
@@ -2838,6 +2859,7 @@ components:
                     description: Is the discount active ?
                   title:
                     type: string
+                    minLength: 3
                     description: Title of discount
                   handle:
                     type: string
@@ -3831,6 +3853,7 @@ components:
                           - name2
                     description: Discount application (`automatic` and `manual`)
                 required:
+                  - id
                   - active
                   - title
                   - handle
@@ -3870,6 +3893,7 @@ components:
                 Internal usage, clarifies the variant
                 projected options
           required:
+            - id
             - active
             - handle
             - title
@@ -3924,6 +3948,7 @@ components:
                   description: The readable unique product `handle`
                 title:
                   type: string
+                  minLength: 3
                   description: Title of the product
                 video:
                   type: string
@@ -3976,6 +4001,7 @@ components:
                     description: The data of a variant option
                   description: Variants options info
               required:
+                - id
                 - active
                 - handle
                 - title
@@ -3996,6 +4022,7 @@ components:
                         type: string
                         description: The handle of the entity
                     required:
+                      - id
                       - handle
                     description: with `id`
                   description: >-
@@ -4046,6 +4073,7 @@ components:
                   description: The readable unique product `handle`
                 title:
                   type: string
+                  minLength: 3
                   description: Title of the product
                 video:
                   type: string
@@ -4091,6 +4119,7 @@ components:
                     Internal usage, clarifies the variant
                     projected options
               required:
+                - id
                 - active
                 - handle
                 - title
@@ -4114,6 +4143,7 @@ components:
                         type: string
                         description: The handle of the entity
                     required:
+                      - id
                       - handle
                     description: with `id`
                   description: >-
@@ -4172,11 +4202,13 @@ components:
           description: Shipping method price
         title:
           type: string
+          minLength: 3
           description: Name of shipping method
         handle:
           type: string
           description: Readable `handle` of shipping
       required:
+        - id
         - price
         - title
         - handle
@@ -4224,11 +4256,13 @@ components:
           description: Shipping method price
         title:
           type: string
+          minLength: 3
           description: Name of shipping method
         handle:
           type: string
           description: Readable `handle` of shipping
       required:
+        - id
         - price
         - title
         - handle
@@ -4334,6 +4368,7 @@ components:
               description: Postal code
           description: Address info of customer
       required:
+        - id
         - firstname
         - lastname
         - email
@@ -4433,6 +4468,7 @@ components:
               description: Postal code
           description: Address info of customer
       required:
+        - id
         - firstname
         - lastname
         - email
@@ -4481,6 +4517,8 @@ components:
             active:
               type: boolean
               description: Is the entity active ?
+          required:
+            - id
           description: with `id`
         - type: object
           properties:
@@ -4561,6 +4599,7 @@ components:
           description: Is the discount active ?
         title:
           type: string
+          minLength: 3
           description: Title of discount
         handle:
           type: string
@@ -5540,6 +5579,7 @@ components:
                 - name2
           description: Discount application (`automatic` and `manual`)
       required:
+        - id
         - active
         - title
         - handle
@@ -5586,6 +5626,7 @@ components:
           description: Is the discount active ?
         title:
           type: string
+          minLength: 3
           description: Title of discount
         handle:
           type: string
@@ -6565,6 +6606,7 @@ components:
                 - name2
           description: Discount application (`automatic` and `manual`)
       required:
+        - id
         - active
         - title
         - handle
@@ -6630,6 +6672,7 @@ components:
             type: string
           description: List of assets using this image
       required:
+        - id
         - handle
         - name
         - url
@@ -6686,6 +6729,7 @@ components:
             type: string
           description: List of assets using this image
       required:
+        - id
         - handle
         - name
         - url
@@ -6963,6 +7007,7 @@ components:
                     description: The readable unique product `handle`
                   title:
                     type: string
+                    minLength: 3
                     description: Title of the product
                   video:
                     type: string
@@ -7029,6 +7074,7 @@ components:
                           description: The handle of the entity
                         title:
                           type: string
+                          minLength: 3
                           description: Title of collection
                         published:
                           type: string
@@ -7036,6 +7082,7 @@ components:
                             Collections can be exported into
                             json with products, this is the url
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -7088,6 +7135,7 @@ components:
                           description: Is the discount active ?
                         title:
                           type: string
+                          minLength: 3
                           description: Title of discount
                         handle:
                           type: string
@@ -8089,6 +8137,7 @@ components:
                                 - name2
                           description: Discount application (`automatic` and `manual`)
                       required:
+                        - id
                         - active
                         - title
                         - handle
@@ -8149,6 +8198,7 @@ components:
                           description: The readable unique product `handle`
                         title:
                           type: string
+                          minLength: 3
                           description: Title of the product
                         video:
                           type: string
@@ -8215,6 +8265,7 @@ components:
                                 description: The handle of the entity
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of collection
                               published:
                                 type: string
@@ -8222,6 +8273,7 @@ components:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
+                              - id
                               - active
                               - handle
                               - title
@@ -8274,6 +8326,7 @@ components:
                                 description: Is the discount active ?
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of discount
                               handle:
                                 type: string
@@ -9277,6 +9330,7 @@ components:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
+                              - id
                               - active
                               - title
                               - handle
@@ -9316,6 +9370,7 @@ components:
                             Internal usage, clarifies the variant
                             projected options
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -9362,6 +9417,7 @@ components:
                       description: The data of a variant option
                     description: Variants options info
                 required:
+                  - id
                   - active
                   - handle
                   - title
@@ -9427,11 +9483,13 @@ components:
               description: Shipping method price
             title:
               type: string
+              minLength: 3
               description: Name of shipping method
             handle:
               type: string
               description: Readable `handle` of shipping
           required:
+            - id
             - price
             - title
             - handle
@@ -9888,6 +9946,7 @@ components:
                         description: Is the discount active ?
                       title:
                         type: string
+                        minLength: 3
                         description: Title of discount
                       handle:
                         type: string
@@ -10883,6 +10942,7 @@ components:
                               - name2
                         description: Discount application (`automatic` and `manual`)
                     required:
+                      - id
                       - active
                       - title
                       - handle
@@ -10979,6 +11039,7 @@ components:
                               description: The readable unique product `handle`
                             title:
                               type: string
+                              minLength: 3
                               description: Title of the product
                             video:
                               type: string
@@ -11045,6 +11106,7 @@ components:
                                     description: The handle of the entity
                                   title:
                                     type: string
+                                    minLength: 3
                                     description: Title of collection
                                   published:
                                     type: string
@@ -11052,6 +11114,7 @@ components:
                                       Collections can be exported into
                                       json with products, this is the url
                                 required:
+                                  - id
                                   - active
                                   - handle
                                   - title
@@ -11104,6 +11167,7 @@ components:
                                     description: Is the discount active ?
                                   title:
                                     type: string
+                                    minLength: 3
                                     description: Title of discount
                                   handle:
                                     type: string
@@ -12114,6 +12178,7 @@ components:
                                           - name2
                                     description: Discount application (`automatic` and `manual`)
                                 required:
+                                  - id
                                   - active
                                   - title
                                   - handle
@@ -12174,6 +12239,7 @@ components:
                                     description: The readable unique product `handle`
                                   title:
                                     type: string
+                                    minLength: 3
                                     description: Title of the product
                                   video:
                                     type: string
@@ -12240,6 +12306,7 @@ components:
                                           description: The handle of the entity
                                         title:
                                           type: string
+                                          minLength: 3
                                           description: Title of collection
                                         published:
                                           type: string
@@ -12247,6 +12314,7 @@ components:
                                             Collections can be exported into
                                             json with products, this is the url
                                       required:
+                                        - id
                                         - active
                                         - handle
                                         - title
@@ -12299,6 +12367,7 @@ components:
                                           description: Is the discount active ?
                                         title:
                                           type: string
+                                          minLength: 3
                                           description: Title of discount
                                         handle:
                                           type: string
@@ -13321,6 +13390,7 @@ components:
                                                 - name2
                                           description: Discount application (`automatic` and `manual`)
                                       required:
+                                        - id
                                         - active
                                         - title
                                         - handle
@@ -13362,6 +13432,7 @@ components:
                                       Internal usage, clarifies the variant
                                       projected options
                                 required:
+                                  - id
                                   - active
                                   - handle
                                   - title
@@ -13410,6 +13481,7 @@ components:
                                 description: The data of a variant option
                               description: Variants options info
                           required:
+                            - id
                             - active
                             - handle
                             - title
@@ -13476,11 +13548,13 @@ components:
                   description: Shipping method price
                 title:
                   type: string
+                  minLength: 3
                   description: Name of shipping method
                 handle:
                   type: string
                   description: Readable `handle` of shipping
               required:
+                - id
                 - price
                 - title
                 - handle
@@ -13540,6 +13614,7 @@ components:
                 description: "`id`"
               title:
                 type: string
+                minLength: 3
                 description: title
               message:
                 anyOf:
@@ -13625,6 +13700,7 @@ components:
                 description: Is the discount active ?
               title:
                 type: string
+                minLength: 3
                 description: Title of discount
               handle:
                 type: string
@@ -14616,6 +14692,7 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
+              - id
               - active
               - title
               - handle
@@ -14627,6 +14704,7 @@ components:
       required:
         - line_items
         - shipping_method
+        - id
         - status
         - pricing
     orderUpsert:
@@ -14758,6 +14836,7 @@ components:
                     description: The readable unique product `handle`
                   title:
                     type: string
+                    minLength: 3
                     description: Title of the product
                   video:
                     type: string
@@ -14824,6 +14903,7 @@ components:
                           description: The handle of the entity
                         title:
                           type: string
+                          minLength: 3
                           description: Title of collection
                         published:
                           type: string
@@ -14831,6 +14911,7 @@ components:
                             Collections can be exported into
                             json with products, this is the url
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -14883,6 +14964,7 @@ components:
                           description: Is the discount active ?
                         title:
                           type: string
+                          minLength: 3
                           description: Title of discount
                         handle:
                           type: string
@@ -15884,6 +15966,7 @@ components:
                                 - name2
                           description: Discount application (`automatic` and `manual`)
                       required:
+                        - id
                         - active
                         - title
                         - handle
@@ -15944,6 +16027,7 @@ components:
                           description: The readable unique product `handle`
                         title:
                           type: string
+                          minLength: 3
                           description: Title of the product
                         video:
                           type: string
@@ -16010,6 +16094,7 @@ components:
                                 description: The handle of the entity
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of collection
                               published:
                                 type: string
@@ -16017,6 +16102,7 @@ components:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
+                              - id
                               - active
                               - handle
                               - title
@@ -16069,6 +16155,7 @@ components:
                                 description: Is the discount active ?
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of discount
                               handle:
                                 type: string
@@ -17072,6 +17159,7 @@ components:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
+                              - id
                               - active
                               - title
                               - handle
@@ -17111,6 +17199,7 @@ components:
                             Internal usage, clarifies the variant
                             projected options
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -17157,6 +17246,7 @@ components:
                       description: The data of a variant option
                     description: Variants options info
                 required:
+                  - id
                   - active
                   - handle
                   - title
@@ -17222,11 +17312,13 @@ components:
               description: Shipping method price
             title:
               type: string
+              minLength: 3
               description: Name of shipping method
             handle:
               type: string
               description: Readable `handle` of shipping
           required:
+            - id
             - price
             - title
             - handle
@@ -17677,6 +17769,7 @@ components:
                         description: Is the discount active ?
                       title:
                         type: string
+                        minLength: 3
                         description: Title of discount
                       handle:
                         type: string
@@ -18672,6 +18765,7 @@ components:
                               - name2
                         description: Discount application (`automatic` and `manual`)
                     required:
+                      - id
                       - active
                       - title
                       - handle
@@ -18768,6 +18862,7 @@ components:
                               description: The readable unique product `handle`
                             title:
                               type: string
+                              minLength: 3
                               description: Title of the product
                             video:
                               type: string
@@ -18834,6 +18929,7 @@ components:
                                     description: The handle of the entity
                                   title:
                                     type: string
+                                    minLength: 3
                                     description: Title of collection
                                   published:
                                     type: string
@@ -18841,6 +18937,7 @@ components:
                                       Collections can be exported into
                                       json with products, this is the url
                                 required:
+                                  - id
                                   - active
                                   - handle
                                   - title
@@ -18893,6 +18990,7 @@ components:
                                     description: Is the discount active ?
                                   title:
                                     type: string
+                                    minLength: 3
                                     description: Title of discount
                                   handle:
                                     type: string
@@ -19903,6 +20001,7 @@ components:
                                           - name2
                                     description: Discount application (`automatic` and `manual`)
                                 required:
+                                  - id
                                   - active
                                   - title
                                   - handle
@@ -19963,6 +20062,7 @@ components:
                                     description: The readable unique product `handle`
                                   title:
                                     type: string
+                                    minLength: 3
                                     description: Title of the product
                                   video:
                                     type: string
@@ -20029,6 +20129,7 @@ components:
                                           description: The handle of the entity
                                         title:
                                           type: string
+                                          minLength: 3
                                           description: Title of collection
                                         published:
                                           type: string
@@ -20036,6 +20137,7 @@ components:
                                             Collections can be exported into
                                             json with products, this is the url
                                       required:
+                                        - id
                                         - active
                                         - handle
                                         - title
@@ -20088,6 +20190,7 @@ components:
                                           description: Is the discount active ?
                                         title:
                                           type: string
+                                          minLength: 3
                                           description: Title of discount
                                         handle:
                                           type: string
@@ -21110,6 +21213,7 @@ components:
                                                 - name2
                                           description: Discount application (`automatic` and `manual`)
                                       required:
+                                        - id
                                         - active
                                         - title
                                         - handle
@@ -21151,6 +21255,7 @@ components:
                                       Internal usage, clarifies the variant
                                       projected options
                                 required:
+                                  - id
                                   - active
                                   - handle
                                   - title
@@ -21199,6 +21304,7 @@ components:
                                 description: The data of a variant option
                               description: Variants options info
                           required:
+                            - id
                             - active
                             - handle
                             - title
@@ -21265,11 +21371,13 @@ components:
                   description: Shipping method price
                 title:
                   type: string
+                  minLength: 3
                   description: Name of shipping method
                 handle:
                   type: string
                   description: Readable `handle` of shipping
               required:
+                - id
                 - price
                 - title
                 - handle
@@ -21329,6 +21437,7 @@ components:
                 description: "`id`"
               title:
                 type: string
+                minLength: 3
                 description: title
               message:
                 anyOf:
@@ -21414,6 +21523,7 @@ components:
                 description: Is the discount active ?
               title:
                 type: string
+                minLength: 3
                 description: Title of discount
               handle:
                 type: string
@@ -22405,6 +22515,7 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
+              - id
               - active
               - title
               - handle
@@ -22416,6 +22527,7 @@ components:
       required:
         - line_items
         - shipping_method
+        - id
         - status
         - pricing
     post:
@@ -22466,11 +22578,13 @@ components:
           description: Unique `handle`
         title:
           type: string
+          minLength: 3
           description: Title of post
         text:
           type: string
           description: Rich text of post
       required:
+        - id
         - handle
         - title
         - text
@@ -22517,11 +22631,13 @@ components:
           description: Unique `handle`
         title:
           type: string
+          minLength: 3
           description: Title of post
         text:
           type: string
           description: Rich text of post
       required:
+        - id
         - handle
         - title
         - text
@@ -22574,6 +22690,7 @@ components:
           description: Readable `handle`
         title:
           type: string
+          minLength: 3
           description: Title
         video:
           type: string
@@ -22633,6 +22750,7 @@ components:
                 description: The handle of the entity
               title:
                 type: string
+                minLength: 3
                 description: Title of collection
               published:
                 type: string
@@ -22640,6 +22758,7 @@ components:
                   Collections can be exported into
                   json with products, this is the url
             required:
+              - id
               - active
               - handle
               - title
@@ -22695,6 +22814,7 @@ components:
                 description: The readable unique product `handle`
               title:
                 type: string
+                minLength: 3
                 description: Title of the product
               video:
                 type: string
@@ -22761,6 +22881,7 @@ components:
                       description: The handle of the entity
                     title:
                       type: string
+                      minLength: 3
                       description: Title of collection
                     published:
                       type: string
@@ -22768,6 +22889,7 @@ components:
                         Collections can be exported into
                         json with products, this is the url
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -22820,6 +22942,7 @@ components:
                       description: Is the discount active ?
                     title:
                       type: string
+                      minLength: 3
                       description: Title of discount
                     handle:
                       type: string
@@ -23814,6 +23937,7 @@ components:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
+                    - id
                     - active
                     - title
                     - handle
@@ -23874,6 +23998,7 @@ components:
                       description: The readable unique product `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of the product
                     video:
                       type: string
@@ -23940,6 +24065,7 @@ components:
                             description: The handle of the entity
                           title:
                             type: string
+                            minLength: 3
                             description: Title of collection
                           published:
                             type: string
@@ -23947,6 +24073,7 @@ components:
                               Collections can be exported into
                               json with products, this is the url
                         required:
+                          - id
                           - active
                           - handle
                           - title
@@ -23999,6 +24126,7 @@ components:
                             description: Is the discount active ?
                           title:
                             type: string
+                            minLength: 3
                             description: Title of discount
                           handle:
                             type: string
@@ -25001,6 +25129,7 @@ components:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
+                          - id
                           - active
                           - title
                           - handle
@@ -25040,6 +25169,7 @@ components:
                         Internal usage, clarifies the variant
                         projected options
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -25086,6 +25216,7 @@ components:
                   description: The data of a variant option
                 description: Variants options info
             required:
+              - id
               - active
               - handle
               - title
@@ -25144,11 +25275,13 @@ components:
                 description: Shipping method price
               title:
                 type: string
+                minLength: 3
                 description: Name of shipping method
               handle:
                 type: string
                 description: Readable `handle` of shipping
             required:
+              - id
               - price
               - title
               - handle
@@ -25201,6 +25334,7 @@ components:
                 description: Is the discount active ?
               title:
                 type: string
+                minLength: 3
                 description: Title of discount
               handle:
                 type: string
@@ -26192,6 +26326,7 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
+              - id
               - active
               - title
               - handle
@@ -26250,17 +26385,20 @@ components:
                 description: Unique `handle`
               title:
                 type: string
+                minLength: 3
                 description: Title of post
               text:
                 type: string
                 description: Rich text of post
             required:
+              - id
               - handle
               - title
               - text
             description: with `id`
           description: Posts related to this storefront
       required:
+        - id
         - handle
         - title
       description: with `id`
@@ -26306,6 +26444,7 @@ components:
           description: Readable `handle`
         title:
           type: string
+          minLength: 3
           description: Title
         video:
           type: string
@@ -26365,6 +26504,7 @@ components:
                 description: The handle of the entity
               title:
                 type: string
+                minLength: 3
                 description: Title of collection
               published:
                 type: string
@@ -26372,6 +26512,7 @@ components:
                   Collections can be exported into
                   json with products, this is the url
             required:
+              - id
               - active
               - handle
               - title
@@ -26427,6 +26568,7 @@ components:
                 description: The readable unique product `handle`
               title:
                 type: string
+                minLength: 3
                 description: Title of the product
               video:
                 type: string
@@ -26493,6 +26635,7 @@ components:
                       description: The handle of the entity
                     title:
                       type: string
+                      minLength: 3
                       description: Title of collection
                     published:
                       type: string
@@ -26500,6 +26643,7 @@ components:
                         Collections can be exported into
                         json with products, this is the url
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -26552,6 +26696,7 @@ components:
                       description: Is the discount active ?
                     title:
                       type: string
+                      minLength: 3
                       description: Title of discount
                     handle:
                       type: string
@@ -27546,6 +27691,7 @@ components:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
+                    - id
                     - active
                     - title
                     - handle
@@ -27606,6 +27752,7 @@ components:
                       description: The readable unique product `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of the product
                     video:
                       type: string
@@ -27672,6 +27819,7 @@ components:
                             description: The handle of the entity
                           title:
                             type: string
+                            minLength: 3
                             description: Title of collection
                           published:
                             type: string
@@ -27679,6 +27827,7 @@ components:
                               Collections can be exported into
                               json with products, this is the url
                         required:
+                          - id
                           - active
                           - handle
                           - title
@@ -27731,6 +27880,7 @@ components:
                             description: Is the discount active ?
                           title:
                             type: string
+                            minLength: 3
                             description: Title of discount
                           handle:
                             type: string
@@ -28733,6 +28883,7 @@ components:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
+                          - id
                           - active
                           - title
                           - handle
@@ -28772,6 +28923,7 @@ components:
                         Internal usage, clarifies the variant
                         projected options
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -28818,6 +28970,7 @@ components:
                   description: The data of a variant option
                 description: Variants options info
             required:
+              - id
               - active
               - handle
               - title
@@ -28876,11 +29029,13 @@ components:
                 description: Shipping method price
               title:
                 type: string
+                minLength: 3
                 description: Name of shipping method
               handle:
                 type: string
                 description: Readable `handle` of shipping
             required:
+              - id
               - price
               - title
               - handle
@@ -28933,6 +29088,7 @@ components:
                 description: Is the discount active ?
               title:
                 type: string
+                minLength: 3
                 description: Title of discount
               handle:
                 type: string
@@ -29924,6 +30080,7 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
+              - id
               - active
               - title
               - handle
@@ -29982,17 +30139,20 @@ components:
                 description: Unique `handle`
               title:
                 type: string
+                minLength: 3
                 description: Title of post
               text:
                 type: string
                 description: Rich text of post
             required:
+              - id
               - handle
               - title
               - text
             description: with `id`
           description: Posts related to this storefront
       required:
+        - id
         - handle
         - title
       description: with `id`
@@ -31858,6 +32018,7 @@ paths:
                       description: The readable unique product `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of the product
                     video:
                       type: string
@@ -31924,6 +32085,7 @@ paths:
                             description: The handle of the entity
                           title:
                             type: string
+                            minLength: 3
                             description: Title of collection
                           published:
                             type: string
@@ -31931,6 +32093,7 @@ paths:
                               Collections can be exported into
                               json with products, this is the url
                         required:
+                          - id
                           - active
                           - handle
                           - title
@@ -31983,6 +32146,7 @@ paths:
                             description: Is the discount active ?
                           title:
                             type: string
+                            minLength: 3
                             description: Title of discount
                           handle:
                             type: string
@@ -32985,6 +33149,7 @@ paths:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
+                          - id
                           - active
                           - title
                           - handle
@@ -33024,6 +33189,7 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -33307,6 +33473,7 @@ paths:
                       description: The readable unique product `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of the product
                     video:
                       type: string
@@ -33352,6 +33519,7 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -33375,6 +33543,7 @@ paths:
                             type: string
                             description: The handle of the entity
                         required:
+                          - id
                           - handle
                         description: with `id`
                       description: >-
@@ -33611,6 +33780,7 @@ paths:
                       description: The handle of the entity
                     title:
                       type: string
+                      minLength: 3
                       description: Title of collection
                     published:
                       type: string
@@ -33618,6 +33788,7 @@ paths:
                         Collections can be exported into
                         json with products, this is the url
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -33712,6 +33883,7 @@ paths:
                       description: The readable unique product `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of the product
                     video:
                       type: string
@@ -33778,6 +33950,7 @@ paths:
                             description: The handle of the entity
                           title:
                             type: string
+                            minLength: 3
                             description: Title of collection
                           published:
                             type: string
@@ -33785,6 +33958,7 @@ paths:
                               Collections can be exported into
                               json with products, this is the url
                         required:
+                          - id
                           - active
                           - handle
                           - title
@@ -33837,6 +34011,7 @@ paths:
                             description: Is the discount active ?
                           title:
                             type: string
+                            minLength: 3
                             description: Title of discount
                           handle:
                             type: string
@@ -34839,6 +35014,7 @@ paths:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
+                          - id
                           - active
                           - title
                           - handle
@@ -34878,6 +35054,7 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -34981,6 +35158,7 @@ paths:
                       description: Is the discount active ?
                     title:
                       type: string
+                      minLength: 3
                       description: Title of discount
                     handle:
                       type: string
@@ -35975,6 +36153,7 @@ paths:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
+                    - id
                     - active
                     - title
                     - handle
@@ -37040,6 +37219,7 @@ paths:
                       description: The readable unique product `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of the product
                     video:
                       type: string
@@ -37106,6 +37286,7 @@ paths:
                             description: The handle of the entity
                           title:
                             type: string
+                            minLength: 3
                             description: Title of collection
                           published:
                             type: string
@@ -37113,6 +37294,7 @@ paths:
                               Collections can be exported into
                               json with products, this is the url
                         required:
+                          - id
                           - active
                           - handle
                           - title
@@ -37165,6 +37347,7 @@ paths:
                             description: Is the discount active ?
                           title:
                             type: string
+                            minLength: 3
                             description: Title of discount
                           handle:
                             type: string
@@ -38167,6 +38350,7 @@ paths:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
+                          - id
                           - active
                           - title
                           - handle
@@ -38206,6 +38390,7 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -39471,6 +39656,7 @@ paths:
                           description: The readable unique product `handle`
                         title:
                           type: string
+                          minLength: 3
                           description: Title of the product
                         video:
                           type: string
@@ -39537,6 +39723,7 @@ paths:
                                 description: The handle of the entity
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of collection
                               published:
                                 type: string
@@ -39544,6 +39731,7 @@ paths:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
+                              - id
                               - active
                               - handle
                               - title
@@ -39596,6 +39784,7 @@ paths:
                                 description: Is the discount active ?
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of discount
                               handle:
                                 type: string
@@ -40599,6 +40788,7 @@ paths:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
+                              - id
                               - active
                               - title
                               - handle
@@ -40659,6 +40849,7 @@ paths:
                                 description: The readable unique product `handle`
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of the product
                               video:
                                 type: string
@@ -40725,6 +40916,7 @@ paths:
                                       description: The handle of the entity
                                     title:
                                       type: string
+                                      minLength: 3
                                       description: Title of collection
                                     published:
                                       type: string
@@ -40732,6 +40924,7 @@ paths:
                                         Collections can be exported into
                                         json with products, this is the url
                                   required:
+                                    - id
                                     - active
                                     - handle
                                     - title
@@ -40784,6 +40977,7 @@ paths:
                                       description: Is the discount active ?
                                     title:
                                       type: string
+                                      minLength: 3
                                       description: Title of discount
                                     handle:
                                       type: string
@@ -41803,6 +41997,7 @@ paths:
                                             - name2
                                       description: Discount application (`automatic` and `manual`)
                                   required:
+                                    - id
                                     - active
                                     - title
                                     - handle
@@ -41844,6 +42039,7 @@ paths:
                                   Internal usage, clarifies the variant
                                   projected options
                             required:
+                              - id
                               - active
                               - handle
                               - title
@@ -41890,6 +42086,7 @@ paths:
                             description: The data of a variant option
                           description: Variants options info
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -41943,6 +42140,7 @@ paths:
                           description: The readable unique product `handle`
                         title:
                           type: string
+                          minLength: 3
                           description: Title of the product
                         video:
                           type: string
@@ -42009,6 +42207,7 @@ paths:
                                 description: The handle of the entity
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of collection
                               published:
                                 type: string
@@ -42016,6 +42215,7 @@ paths:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
+                              - id
                               - active
                               - handle
                               - title
@@ -42068,6 +42268,7 @@ paths:
                                 description: Is the discount active ?
                               title:
                                 type: string
+                                minLength: 3
                                 description: Title of discount
                               handle:
                                 type: string
@@ -43071,6 +43272,7 @@ paths:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
+                              - id
                               - active
                               - title
                               - handle
@@ -43110,6 +43312,7 @@ paths:
                             Internal usage, clarifies the variant
                             projected options
                       required:
+                        - id
                         - active
                         - handle
                         - title
@@ -43208,6 +43411,7 @@ paths:
                       description: Is the discount active ?
                     title:
                       type: string
+                      minLength: 3
                       description: Title of discount
                     handle:
                       type: string
@@ -44202,6 +44406,7 @@ paths:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
+                    - id
                     - active
                     - title
                     - handle
@@ -44323,11 +44528,13 @@ paths:
                       description: Shipping method price
                     title:
                       type: string
+                      minLength: 3
                       description: Name of shipping method
                     handle:
                       type: string
                       description: Readable `handle` of shipping
                   required:
+                    - id
                     - price
                     - title
                     - handle
@@ -44416,6 +44623,7 @@ paths:
                       description: The handle of the entity
                     title:
                       type: string
+                      minLength: 3
                       description: Title of collection
                     published:
                       type: string
@@ -44423,6 +44631,7 @@ paths:
                         Collections can be exported into
                         json with products, this is the url
                   required:
+                    - id
                     - active
                     - handle
                     - title
@@ -44516,11 +44725,13 @@ paths:
                       description: Unique `handle`
                     title:
                       type: string
+                      minLength: 3
                       description: Title of post
                     text:
                       type: string
                       description: Rich text of post
                   required:
+                    - id
                     - handle
                     - title
                     - text

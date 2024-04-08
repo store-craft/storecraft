@@ -4,8 +4,10 @@ import { collection_base } from './utils.api.fetch.js';
 /**
  * Base `products` **CRUD**
  * 
- * @extends {collection_base<import('@storecraft/core/v-api').ProductTypeUpsert, 
- * import('@storecraft/core/v-api').ProductType>}
+ * @extends {collection_base<
+ *  import('@storecraft/core/v-api').ProductTypeUpsert, 
+ *  import('@storecraft/core/v-api').ProductType>
+ * }
  */
 export default class Products extends collection_base {
 
@@ -28,52 +30,34 @@ export default class Products extends collection_base {
   }
 
   /**
-   * @todo change it to array of ids
-   * @param {[string, ProductData][]} products array of tuples [[id, product_data],...]
-   * @param {string} collectionId 
+   * Add `products` to `collection`
+   * 
+   * @param {import('@storecraft/core/v-api').ProductType[]} products 
+   * @param {import('@storecraft/core/v-api').CollectionType} collection 
    */
-  batchAddProductsToCollection = async (products, collectionId) => {
-    throw new Error('batchAddProductsToCollection :: not implemented !!')
-    try {
-      // add collection tag to each product with batch write
-      const batch = writeBatch(this.context.firebase.db)
-      products.forEach(it => {
-        const ref = doc(this.context.firebase.db, 'products', it[0])
-        batch.update(ref, { 
-          collections : arrayUnion(collectionId),
-          search : arrayUnion(`col:${collectionId}`),
-          updatedAt : Date.now()
-        })
-      })
-      await batch.commit()
-    } catch (e) {
-      throw 'Products update failed: ' + String(e)
+  batchAddProductsToCollection = async (products, collection) => {
+    for (const pr of products) {
+      await this.upsert({
+        ...pr,
+        collections: [...(pr.collections??[]), collection]
+      });
     }
   }
 
   /**
+   * Remove `products` from `collection`
    * 
-   * @param {string[]} products_Ids 
-   * @param {string} collectionId 
+   * @param {import('@storecraft/core/v-api').ProductType[]} products 
+   * @param {import('@storecraft/core/v-api').CollectionType} collection 
    */
-  batchRemoveProductsFromCollection = async (products_Ids, collectionId) => {
-    try {
-      // add collection tag to each product with batch write
-      const batch = writeBatch(this.context.firebase.db)
-      products_Ids.forEach(id => {
-        const ref = doc(this.context.firebase.db, 'products', id)
-        batch.update(ref, { 
-          collections : arrayRemove(collectionId),
-          search : arrayRemove(`col:${collectionId}`),
-          updatedAt : Date.now()
-        })
-      })
-      await batch.commit()
-    } catch (e) {
-      console.log(e);
-      throw 'Products update failed: ' + String(e)
+  batchRemoveProductsFromCollection = async (products, collection) => {
+    // console.log('products', products)
+    for (const pr of products) {
+      await this.upsert({
+        ...pr,
+        collections: (pr.collections??[]).filter(c => c.id!==collection.id)
+      });
     }
-
   }
 
 }

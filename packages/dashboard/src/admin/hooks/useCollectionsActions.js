@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<useCollectionsActions>, 'page'> & 
+ * @typedef {Omit<ReturnType<typeof useCollectionsActions>, 'page'> & 
  *  {
  *    page: T[]  
  *  }

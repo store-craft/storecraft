@@ -73,13 +73,13 @@ const paginate_helper = (query, resource) => {
     /** @type{G[]} */
     const l = await list(
       resource,
-      query
+      current
     );
 
     // update next cursor
     if(l?.length) {
-      startAfter = query.sortBy.map(
-        (key) => [key, l.at(-1)?.[key]]
+      startAfter = current.sortBy.map(
+        (key, ix) => [key, l.at(-1)?.[key]]
       );
     }
 
@@ -257,6 +257,18 @@ const q_initial = {
   order: 'desc',
   limit: 5
 }
+
+/**
+ * @template T the `document` type
+ * 
+ * @typedef {Omit<ReturnType<typeof useCommonCollection>, 'page' | 'pages'> & 
+ *  {
+ *    page: T[]  
+ *    pages: T[][]  
+ *  }
+ * } HookReturnType This `type` will give you the return type of the hook
+ * 
+ */
 
 /**
  * Modified collection with modified search query

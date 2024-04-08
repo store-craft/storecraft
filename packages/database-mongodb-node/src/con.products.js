@@ -54,7 +54,7 @@ const upsert = (driver) => {
           // COLLECTIONS RELATION (explicit)
           ////
           const replacement = await create_explicit_relation(
-            driver, data, 'collections', 'collections', false
+            driver, data, 'collections', 'collections', true
           );
 
           ////

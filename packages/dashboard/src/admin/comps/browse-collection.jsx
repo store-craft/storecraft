@@ -64,7 +64,7 @@ const BrowseCollection = (
       e?.preventDefault()
       const search_terms = ref_input.current.value;
 
-      query({ limit, search : search_terms })
+      query({ limit, vqlString: search_terms })
     }, [limit, query]
   )
 
@@ -260,9 +260,9 @@ export const BrowseProducts = ({ onSave, onCancel }) => {
 
   return (
 <BrowseCollection 
-        collectionId='products' Comp={ProductComp} 
-        onSave={onSave} onCancel={onCancel} 
-        title='Browse Products' />    
+    collectionId='products' Comp={ProductComp} 
+    onSave={onSave} onCancel={onCancel} 
+    title='Browse Products' />    
   )
 }
 

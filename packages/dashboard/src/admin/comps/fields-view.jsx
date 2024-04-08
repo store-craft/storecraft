@@ -122,8 +122,12 @@ const validateField = (field, value) => {
  */
 
 /**
- * @template {any} [V=any]
- * @template {any} [C={}]
+ * Every view in the `fields-view` schema will be injected with
+ * the following parameters
+ * 
+ * @template {any} [V=any] The `value` type
+ * @template {any} [C={}] the extra `context` type
+ * 
  * @typedef {object} FieldLeafViewParams
  * @property {FieldData} [field]
  * @property {V} [value]

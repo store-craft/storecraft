@@ -207,6 +207,7 @@ export const api_query_to_searchparams = q => {
     q.limit = 5;
   }
   // cursors
+  // console.log(q);
   [
     { cursor: q.endAt, key: END_AT},
     { cursor: q.endBefore, key: END_BEFORE},

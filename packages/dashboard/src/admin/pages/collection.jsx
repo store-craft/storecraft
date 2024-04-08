@@ -141,11 +141,7 @@ const Actions = (
  * @property {boolean} hasChanged
  * 
  *
- * @typedef {object} InnerProductContext Inner `collection` context
- * 
- * 
- * @typedef {InnerProductContext & 
- *  import('./index.jsx').BaseDocumentContext<State>
+ * @typedef { import('./index.jsx').BaseDocumentContext<State>
  * } Context Public `collection` context
  * 
  */

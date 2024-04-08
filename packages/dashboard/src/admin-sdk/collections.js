@@ -24,6 +24,7 @@ export default class Collections extends collection_base {
    * @param {number} limit 
    */
   publish = async (collection_handle, limit=1000) => {
+    throw new Error('Implement me !!!')
     // extra filtering for validation
 
     try {

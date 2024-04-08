@@ -101,6 +101,7 @@ const validateField = (field, value) => {
 
 /**
  * @template {object} [D={}] the data type
+ * 
  * @typedef {object} FieldContextData
  * @property {string} [running_key] running key for leafs
  * @property {PubSub} [pubsub]
@@ -111,6 +112,7 @@ const validateField = (field, value) => {
 /**
  * @template {any} [V=any] value type
  * @template {any} [C=any] extra context
+ * 
  * @typedef {object} FieldViewParams
  * @property {string} [running_key] running key for leafs
  * @property {FieldData} field

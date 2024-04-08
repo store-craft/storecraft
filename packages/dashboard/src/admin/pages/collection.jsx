@@ -172,6 +172,8 @@ export default (
     'collections', documentId, '/pages/collections', mode, base
   );
   
+  console.log('DOC', doc);
+  
   const duplicate = useCallback(
     async () => {
       const state = context.getState()

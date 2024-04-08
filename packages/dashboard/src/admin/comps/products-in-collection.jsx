@@ -23,7 +23,10 @@ const CollectionBase = forwardRef(
    * @prop {string} collection_handle_or_id `handle` or `id`
    * @prop {number} limit `limit` of query
    * @prop {(count: number) => void} onLoaded when loaded reports query count
-   * @prop {import('../pages/collection.jsx').Context} context context
+   * @prop {import('./fields-view.jsx').FieldContextData<
+   *  import('@storecraft/core/v-api').CollectionType> & 
+   *  import('../pages/collection.jsx').Context
+   * } context context
    * 
    * @param {CollectionBaseParams} param
    * @param {any} ref
@@ -90,7 +93,10 @@ const CollectionBase = forwardRef(
           const pr_index = page.findIndex(
             it => (it.id===id_or_handle || it.handle===id_or_handle)
           );
-          const col = context.getState().data;
+          if(pr_index==-1)
+            return;
+
+          const col = context.data;
           const pr = page[pr_index];
           await getSDK().products.batchRemoveProductsFromCollection(
             [pr], col
@@ -146,7 +152,6 @@ const ProductsInCollection = ({ value, context }) => {
       setLoading(true)
 
       try {
-        console.log('selected_items ', selected_items)
         // Add products to collection through collection and search fields
         await getSDK().products.batchAddProductsToCollection(
           selected_items, value

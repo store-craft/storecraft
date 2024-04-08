@@ -259,6 +259,7 @@ export const withBling2 = (Comp) => {
   }
 }
 
+
 export const Div = ({setError, ...rest}) => 
           (<div {...rest} />);
 

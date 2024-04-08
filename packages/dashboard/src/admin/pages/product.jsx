@@ -192,8 +192,10 @@ export default (
    * } 
    */
   const {
+    actions: {
+      savePromise, deletePromise, duplicate, reload
+    },
     context: context_base, 
-    savePromise, deletePromise, duplicate, reload,
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 

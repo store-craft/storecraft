@@ -157,7 +157,7 @@ export function useCommonApiDocument(
     doc: stale || (document===location[1] && resource===location[0]) ? data : {} , 
     loading, hasLoaded, error, op, 
     actions: { 
-      reload, upsert, deleteDocument, 
+      reload, upsert, deleteDocument, setError,
       colId: resource, docId : location[1] 
     }
   }

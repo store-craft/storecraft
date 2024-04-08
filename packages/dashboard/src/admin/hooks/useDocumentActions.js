@@ -16,7 +16,11 @@ import { useCommonApiDocument } from '@/shelf-cms-react-hooks/useDocument.js';
  */
 
 /**
- * Your definitive hook for `document` adventures with UI 
+ * Your definitive hook for `document` adventures with UI. Compared
+ * to `useCommonApiDocument`, it adds:
+ * - Aggregating from a functional component
+ * - Paginating by url navigation, for state saving.
+ * - Context
  * 
  * @template {{}} [T={}] The type of `document`
  * 
@@ -38,7 +42,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   const { 
     doc: doc_original, loading, hasLoaded, error, op,
     actions: { 
-      reload, upsert, create, deleteDocument, colId, docId 
+      reload, upsert, setError, create, deleteDocument, colId, docId 
     }
   } = useCommonApiDocument(resource, document);
 
@@ -138,8 +142,11 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
 
 
   return {
-    savePromise, deletePromise, duplicate,
-    reload, error, 
+    actions: {
+      savePromise, deletePromise, duplicate, navWithState, 
+      reload, setError
+    },
+    error, 
     ref_head, ref_root, doc, isEditMode, isCreateMode,
     isViewMode,
     loading, hasChanged, hasLoaded, context

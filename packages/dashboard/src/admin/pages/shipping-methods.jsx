@@ -1,28 +1,31 @@
 import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, TimeStampView } from '@/admin/comps/common-fields.jsx'
-import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
-import { useNavigate, useParams } from 'react-router-dom'
-import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 
-    comp_params: {className: 'font-semibold', extra: 'max-w-[10rem] md:max-w-[18rem]'} 
+    comp_params: {
+      className: 'font-semibold', 
+      extra: 'max-w-[10rem] md:max-w-[18rem]'
+    } 
   },
   { 
     key: 'price', name: 'Price', comp: Span, 
-    comp_params: {className: 'font-semibold', extra: 'max-w-[10rem] md:max-w-[18rem]'} 
+    comp_params: {
+      className: 'font-semibold', 
+      extra: 'max-w-[10rem] md:max-w-[18rem]'
+    } 
   },
   { 
     key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
   },
   { 
-    key: undefined, name: 'Actions', comp: RecordActions, comp_params: { className: '' } 
+    key: undefined, name: 'Actions', 
+    comp: RecordActions, comp_params: { className: '' } 
   },
 ]
 
@@ -49,14 +52,16 @@ export default ({}) => {
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      
-        <TopActions ref={ref_actions} reload={onReload}  
-                    createLink='/pages/shipping-methods/create'
-                    searchTitle='Search by Name or Handle' 
-                    isLoading={loading} />
+        <TopActions 
+            ref={ref_actions} reload={onReload}  
+            createLink='/pages/shipping-methods/create'
+            searchTitle='Search by Name or Handle' 
+            isLoading={loading} />
         <CollectionView context={context} data={page} fields={schema_fields} />
-        <BottomActions prev={prev} next={next} 
-                       limit={query_api.limit}
-                       onLimitChange={onLimitChange} />
+        <BottomActions 
+            prev={prev} next={next} 
+            limit={query_api.limit}
+            onLimitChange={onLimitChange} />
       </div>    
     </ShowIf>
   </div>

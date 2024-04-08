@@ -98,7 +98,11 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
       const state_next = { 
         data: { 
           ...state?.data,
-          handle: undefined
+          handle: undefined,
+          id: undefined,
+          updated_at: undefined,
+          created_at: undefined,
+          search: undefined
         },
         hasChanged: false
       }

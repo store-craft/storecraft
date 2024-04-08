@@ -17,12 +17,12 @@ import {
     ShippingMethods, ShippingMethod,
     Storefronts, Storefront,
     PaymentGateways, PaymentGateway,
+    Posts, Post,
     Settings
   } from './pages/index.jsx'
 
 import {
   Gallery, ImagePage,
-  Posts, Post,
 } from './apps/index.js'
 
 export default function Main(props) {
@@ -36,13 +36,6 @@ export default function Main(props) {
       <Route path='' element={<Gallery />} />
       <Route path='q/:query_params' element={<Gallery />} />
       <Route path='img/:handle' element={<ImagePage />} />
-    </Route>
-    <Route path='blog'>
-      <Route path='' element={<Posts />} />
-      <Route path='q/:query_params' element={<Posts />} />
-      <Route path=':id/edit' element={<Post mode='edit' collectionId='posts' />} />
-      <Route path=':id/view' element={<Post mode='view' collectionId='posts' />} />
-      <Route path='create' element={<Post mode='create' collectionId='posts' /> } />
     </Route>
   </Route>    
   <Route path='pages' element={<Layout className='w-screen h-full' />}>
@@ -77,9 +70,9 @@ export default function Main(props) {
     <Route path='collections'>
       <Route path='' element={<Collections />} />
       <Route path='q/:query_params' element={<Collections />} />
-      <Route path=':id/edit' element={<Collection collectionId='collections' mode='edit' />} />
-      <Route path=':id/view' element={<Collection collectionId='collections' mode='view' />} />
-      <Route path='create/:base?' element={<Collection collectionId='collections' mode='create' /> } />
+      <Route path=':id/edit' element={<Collection mode='edit' />} />
+      <Route path=':id/view' element={<Collection mode='view' />} />
+      <Route path='create/:base?' element={<Collection mode='create' /> } />
     </Route>
     <Route path='orders'>
       <Route path='' element={<Orders />} />
@@ -98,9 +91,16 @@ export default function Main(props) {
     <Route path='shipping-methods'>
       <Route path='' element={<ShippingMethods />} />
       <Route path='q/:query_params' element={<ShippingMethods />} />
-      <Route path=':id/edit' element={<ShippingMethod collectionId='shipping' mode='edit'  segment='shipping-methods'/>} />
-      <Route path=':id/view' element={<ShippingMethod collectionId='shipping' mode='view'  segment='shipping-methods'/>} />
-      <Route path='create/:base?' element={<ShippingMethod collectionId='shipping' mode='create'  segment='shipping-methods'/> } />
+      <Route path=':id/edit' element={<ShippingMethod mode='edit' />} />
+      <Route path=':id/view' element={<ShippingMethod mode='view' />} />
+      <Route path='create/:base?' element={<ShippingMethod mode='create' /> } />
+    </Route>
+    <Route path='posts'>
+      <Route path='' element={<Posts />} />
+      <Route path='q/:query_params' element={<Posts />} />
+      <Route path=':id/edit' element={<Post mode='edit' />} />
+      <Route path=':id/view' element={<Post mode='view' />} />
+      <Route path='create' element={<Post mode='create' /> } />
     </Route>
     <Route path='payment-gateways'>
       <Route path='' element={<PaymentGateways />} />

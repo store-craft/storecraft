@@ -58,6 +58,12 @@ const menu = {
         name: 'Shipping Methods', icon: <MdOutlineLocalShipping className='--text-lg'/>, 
         extra : { active: 'bg-pink-600', hover: 'hover:bg-teal-200' } 
       },
+      { 
+        name: 'Blog', slug: 'posts', icon: <FaBloggerB/>, 
+        extra : { 
+          active: 'bg-orange-400', hover: 'hover:bg-teal-200',
+        } 
+      },
     ]
   },
   {
@@ -66,10 +72,6 @@ const menu = {
       { 
         name: 'Gallery', icon: <BiImages className='--scale-125'/>, 
         extra : { active: 'bg-yellow-400', hover: 'hover:bg-teal-200' } 
-      },
-      { 
-        name: 'Blog', icon: <FaBloggerB/>, 
-        extra : { active: 'bg-orange-400', hover: 'hover:bg-teal-200' } 
       },
       // { name: 'Email', icon: <AiOutlineMail/> },
       // { name: 'Reports', icon: <HiOutlineDocumentReport/> },

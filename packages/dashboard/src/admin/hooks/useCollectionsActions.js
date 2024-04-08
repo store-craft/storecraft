@@ -35,6 +35,8 @@ const useCollectionsActions = (resource, slug=resource) => {
     [query_params]
   );
 
+  // console.log('query_api', query_api);
+
   const nav = useNavigate();
   
   /** 
@@ -54,7 +56,7 @@ const useCollectionsActions = (resource, slug=resource) => {
       ref_actions.current?.setSearch(
         query_api.vqlString
         )
-      
+      // console.log('query_api', query_api)
       query(query_api, false && ref_use_cache.current)
     }, [query_api, query]
   );
@@ -121,6 +123,7 @@ const useCollectionsActions = (resource, slug=resource) => {
           limit: limit ? limit : limitToLast
         }
       );
+      console.log('q', q.toString())
       nav(`${slug}/q/${q.toString()}`);
 
     }, [nav, page, query_api, slug]

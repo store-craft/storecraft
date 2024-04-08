@@ -75,7 +75,7 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
 
 /**
  * @typedef {object} InternalLoadingButtonParams
- * @property {import('react').ReactElement} [Icon]
+ * @property {import('react').ReactNode} [Icon]
  * @property {string} [text]
  * @property {boolean} [keep_text_on_load]
  * @property {string} [className]

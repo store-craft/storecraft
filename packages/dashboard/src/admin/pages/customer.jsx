@@ -140,13 +140,6 @@ const root_schema = {
   fields : [left, right]
 }
 
-const data = [
-  { firstname: 'Tomer', lastname: 'Shalev', email: 'tsdsd@t.com', uid: 1 },
-  { firstname: 'Daniel', lastname: 'Vaknin', email: 't@t.com', uid: 2 },
-  { firstname: 'Rinat', lastname: 'Vaknin Shalev', email: 't@t.com' , uid: 3 },
-  { firstname: 'Dalhya', lastname: 'Shalev', email: 't@t.com' , uid: 4 },
-]
-
 /**
  * 
  * @typedef {object} State Intrinsic state of `tag`

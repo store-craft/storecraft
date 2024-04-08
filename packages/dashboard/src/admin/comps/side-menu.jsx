@@ -85,7 +85,7 @@ const SideMenu = (
           {
             g.items.map(
               (item, ij) => {
-                const slug = `/${to_slug(g.name)}/${to_slug(item.name)}`
+                const slug = `/${to_slug(g.name)}/${to_slug(item.slug ?? item.name)}`
                 return (
                 <Link key={slug} to={slug} draggable='false'>
                   <Button 

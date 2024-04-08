@@ -51,6 +51,14 @@ const delete_from_collection = what => {
 /**
  * Next Pagination experiment. `Next` is more important the `previous`,
  * because `previous` can be cached and we go through it as we do `next`.
+ * 
+ * This is used for programatic pagination, but I now mostly use `url` 
+ * route pagination with query parameters, which results in a simple
+ * `query`.
+ * 
+ * However, this is still used in `products-in-collection-view` for
+ * example.
+ * 
  * @template {any} G
  * @param {import('@storecraft/core/v-api').ApiQuery} query 
  * @param {string} resource
@@ -60,7 +68,7 @@ const paginate_helper = (query, resource) => {
   query.sortBy = query.sortBy ?? ['updated_at', 'id'];
 
   /** @type {import('@storecraft/core/v-api').Cursor} */
-  let startAfter = undefined
+  let startAfter = query.startAfter;
 
   const next = async () => {
     console.log('paginate_helper::next')
@@ -236,20 +244,6 @@ export const useCollection =
   }
 }
 
-/**
- * 
- * @param {string} text 
- * @param {number} max_tokens 
- * @returns 
- */
-const text2tokens = (text, max_tokens=10) => {
-  // console.log('text ', text);
-  text = text?.trim().toLowerCase()
-  const tokens = text?.match(/\S+/g)?.slice(0, max_tokens) ?? []
-  if (text) 
-    tokens.push(text)
-  return tokens
-}
 
 /** @type {import('@storecraft/core/v-api').ApiQuery} */
 const q_initial = {

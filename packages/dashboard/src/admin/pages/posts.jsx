@@ -26,7 +26,7 @@ export default ({}) => {
     query_api, context, ref_actions, page, loading, 
     error, onLimitChange, onReload, prev, next, 
     queryCount
-   } = useCollectionsActions('posts', '/apps/blog');
+   } = useCollectionsActions('posts', '/pages/posts');
 
   return (
 <div className='w-full h-full'>
@@ -42,7 +42,10 @@ export default ({}) => {
             createLink='/apps/blog/create'
             searchTitle='Search by name, values...' 
             isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
         <BottomActions 
             prev={prev} next={next} 
             limit={query_api.limit}        

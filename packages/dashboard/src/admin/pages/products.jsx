@@ -30,7 +30,11 @@ const schema_fields = [
     comp_params: { 
       className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-max 
                   overflow-x-auto inline-block whitespace-nowrap`,
-      name_fn: /** @param {import('@storecraft/core/v-api').CollectionType} c */ c => c.handle
+      name_fn: 
+        /** 
+         * @param {import('@storecraft/core/v-api').CollectionType} c 
+         */ 
+        c => c.handle
     } 
   },
   { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },

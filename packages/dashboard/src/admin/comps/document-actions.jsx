@@ -17,7 +17,7 @@ import ShowIf from './show-if.jsx'
  * @property {() => Promise<void>} [onClickCreate]
  * @property {() => Promise<void>} [onClickDuplicate]
  * @property {(id: string) => Promise<void>} [onClickDelete]
- * @property {() => Promise<void>} [onClickReload]
+ * @property {() => Promise<any>} [onClickReload]
  * @property {import('react').ReactNode} [children]
  * @property {string} [id]
  * 

@@ -46,18 +46,22 @@ const left = {
     { 
       key: 'auth_id', name: 'UID', type: 'text', 
       validate: true, editable: true, 
-      comp: withCard(withBling(MInput), {className : 'h-10 w-full'}), 
+      comp: withCard(
+        withBling(MInput), { className : 'h-10 w-full' }
+      ), 
       desc: 'The authentication platform user id', 
       comp_params: {className: 'w-full h-fit'} 
     },
     {
-      key: 'attributes', name: 'Attributes', validate: false, editable: true, 
+      key: 'attributes', name: 'Attributes', validate: false, 
+      editable: true, 
       desc: 'Attributes can contain richer text values than tags',
       comp: withCard(Attributes),  
       comp_params: {className: 'w-full'} 
     },
     {
-      name: 'JSON', type: 'compund', validate: false, editable: false, 
+      name: 'JSON', type: 'compund', validate: false, 
+      editable: false, 
       desc: 'Observe the RAW data',
       comp: JsonViewCard,
       comp_params: { className: 'w-full' }
@@ -91,28 +95,43 @@ const fields_address = {
       comp_params: {className: 'text-gray-500'}
     },
     { 
-      key: 'city',  name: 'City', type: 'text', validate: false, 
-      comp: withCard(withBling(MInput), {className : 'h-10 w-full'}, false),
+      key: 'city',  name: 'City', type: 'text', 
+      validate: false, 
+      comp: withCard(
+        withBling(MInput), {className : 'h-10 w-full'}, false
+      ),
       comp_params: {className: 'text-gray-500'}
     },
     { 
-      key: 'country',  name: 'Country', type: 'text', validate: false, 
-      comp: withCard(withBling(MInput), {className : 'h-10 w-full'}, false), 
+      key: 'country',  name: 'Country', type: 'text', 
+      validate: false, 
+      comp: withCard(
+        withBling(MInput), {className : 'h-10 w-full'}, false
+      ), 
       comp_params: {className: 'text-gray-500'}
     },
     { 
-      key: 'state',  name: 'State', type: 'text', validate: false, 
-      comp: withCard(withBling(MInput), {className : 'h-10 w-full'}, false), 
+      key: 'state', name: 'State', type: 'text', 
+      validate: false, 
+      comp: withCard(
+        withBling(MInput), {className : 'h-10 w-full'}, false
+      ), 
       comp_params: {className: 'text-gray-500'}
     },
     { 
-      key: 'zip_code',  name: 'Zip Code', type: 'text', validate: false, 
-      comp: withCard(withBling(MInput), {className : 'h-10 w-full'}, false),
+      key: 'zip_code',  name: 'Zip Code', type: 'text', 
+      validate: false, 
+      comp: withCard(
+        withBling(MInput), {className : 'h-10 w-full'}, false
+      ),
       comp_params: {className: 'text-gray-500'}
     },
     { 
-      key: 'postal_code',  name: 'Postal Code', type: 'text', validate: false, 
-      comp: withCard(withBling(MInput), {className : 'h-10 w-full'}, false),
+      key: 'postal_code',  name: 'Postal Code', type: 'text', 
+      validate: false, 
+      comp: withCard(
+        withBling(MInput), {className : 'h-10 w-full'}, false
+      ),
       comp_params: {className: 'text-gray-500'}
     },
   ]
@@ -135,8 +154,10 @@ const right = {
 
 const root_schema = {
   name:'Root', comp: Div, 
-  comp_params : {className:'w-full gap-5 lg:justify-center mx-auto \
-                            lg:w-fit flex flex-col justify-start lg:flex-row '},
+  comp_params : {
+    className: 'w-full gap-5 lg:justify-center mx-auto \
+                lg:w-fit flex flex-col justify-start lg:flex-row '
+  },
   fields : [left, right]
 }
 
@@ -158,24 +179,24 @@ export default (
  }
 ) => {
                    
- const { id : documentId, base } = useParams();
+  const { id : documentId, base } = useParams();
 
- /** 
+  /** 
   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
   *  import('@storecraft/core/v-api').CustomerType>
   * } 
   */
- const {
-   actions: {
-     savePromise, deletePromise, reload,
-   },
-   context, key, 
-   doc, isCreateMode, isEditMode, isViewMode, 
-   loading, hasChanged, hasLoaded, error,
-   ref_head, ref_root, 
- } = useDocumentActions(
-   'customers', documentId, '/pages/customers', mode, base
- );
+  const {
+    actions: {
+      savePromise, deletePromise, reload,
+    },
+    context, key, 
+    doc, isCreateMode, isEditMode, isViewMode, 
+    loading, hasChanged, hasLoaded, error,
+    ref_head, ref_root, 
+  } = useDocumentActions(
+    'customers', documentId, '/pages/customers', mode, base
+  );
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>

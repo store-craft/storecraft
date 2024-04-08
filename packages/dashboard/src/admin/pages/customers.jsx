@@ -2,7 +2,6 @@ import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.jsx'
-import { capFirstLetter } from '@/admin/utils/index.js'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 
@@ -14,10 +13,19 @@ const schema_fields = [
       item => `${item.firstname} ${item.lastname}`,
     comp_params: { className: 'font-semibold' } 
   },
-  { key: 'email', name: 'Email', comp: Span },
-  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
-  { key: 'auth_id', name: 'UID', comp: Span, comp_params: { extra: 'max-w-[4rem]' } },
-  { key: undefined, name: 'Actions', comp: RecordActions },
+  { 
+    key: 'email', name: 'Email', comp: Span 
+  },
+  { 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+  },
+  { 
+    key: 'auth_id', name: 'UID', comp: Span, 
+    comp_params: { extra: 'max-w-[4rem]' } 
+  },
+  { 
+    key: undefined, name: 'Actions', comp: RecordActions 
+  },
 ]
 
 export default ({}) => {
@@ -41,14 +49,20 @@ export default ({}) => {
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      
-        <TopActions ref={ref_actions} reload={onReload}
-                    createLink='/pages/customers/create'
-                    searchTitle='Search by name, email, uid...' 
-                    isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
-        <BottomActions prev={prev} next={next} 
-                       limit={query_api.limit}
-                       onLimitChange={onLimitChange} />
+        <TopActions 
+            ref={ref_actions} reload={onReload}
+            createLink='/pages/customers/create'
+            searchTitle='Search by name, email, uid...' 
+            isLoading={loading} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
+        <BottomActions 
+            prev={prev} 
+            next={next} 
+            limit={query_api.limit}
+            onLimitChange={onLimitChange} />
       </div>    
     </ShowIf>
   </div>

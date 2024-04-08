@@ -14,21 +14,30 @@ import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const root_schema = {
   name:'Root', comp: Div, 
-  comp_params: { className : 'flex flex-col gap-5 w-full max-w-[35rem]' },
+  comp_params: { 
+    className : 'flex flex-col gap-5 w-full max-w-[35rem]' 
+  },
   fields: [
     { 
       key: 'handle',  name: 'Name', type: 'text', validate: true, 
-      comp: withCard(withBling(MInput), { className: 'h-9', placeholder : 'enter the key / name of the tag' }), 
+      comp: withCard(
+        withBling(MInput), 
+        { 
+          className: 'h-9', placeholder : 'enter the key / name of the tag' 
+        }
+      ), 
       comp_params: {className: 'w-full '} 
     },
     { 
-      key: 'values',  name: 'Values', type: 'text', validate: true, validator: values_validator ,
-      comp: withCard(TagValues), comp_params: {className: 'w-full  '} 
+      key: 'values', name: 'Values', type: 'text', validate: true, 
+      validator: values_validator ,
+      comp: withCard(TagValues), 
+      comp_params: { className: 'w-full' } 
     },
     { 
-      key: 'desc',     name: 'Description',      type: 'text', validate: false, editable: true, 
-      desc : 'Describe the purpose of this tag',
-      comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
+      key: 'desc', name: 'Description', type: 'text', validate: false, 
+      editable: true, desc : 'Describe the purpose of this tag',
+      comp: withCard(MDEditor),  comp_params: { className: 'w-full' } 
     },
     {
       name: 'JSON', type: 'compund', validate: false, editable: false, 
@@ -36,7 +45,6 @@ const root_schema = {
       comp: JsonViewCard,
       comp_params: { className: 'w-full' }
     },
-
   ]
 }
 

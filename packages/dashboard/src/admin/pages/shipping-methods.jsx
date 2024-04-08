@@ -57,7 +57,10 @@ export default ({}) => {
             createLink='/pages/shipping-methods/create'
             searchTitle='Search by Name or Handle' 
             isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
         <BottomActions 
             prev={prev} next={next} 
             limit={query_api.limit}

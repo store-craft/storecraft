@@ -52,7 +52,10 @@ export default ({}) => {
             createLink='/pages/tags/create'
             searchTitle='Search by name, values...' 
             isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
         <BottomActions 
             prev={prev} next={next} 
             limit={query_api.limit}

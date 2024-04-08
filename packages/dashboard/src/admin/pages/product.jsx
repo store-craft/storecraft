@@ -39,68 +39,87 @@ const root_left_schema = {
   comp_params : { className:'w-full lg:w-[35rem] flex flex-col gap-5'},
   fields: [
     { 
-      key: 'title', name: 'Title', type: 'text',  validate: true, editable: true, 
-      desc: 'Give an accurate title of the product',
-      comp: withCard(withBling(MInput), { className:'h-10' }, true, true),  
+      key: 'title', name: 'Title', type: 'text',  validate: true, 
+      editable: true, desc: 'Give an accurate title of the product',
+      comp: withCard(
+        withBling(MInput), { className:'h-10' }, true, true
+      ),  
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'handle',  name: 'Handle',  type: 'text', validate: false, editable: true, 
+      key: 'handle',  name: 'Handle',  type: 'text', validate: false, 
+      editable: true, 
       comp: withCard(Handle, {className:'w-full h-fit'}),
       desc: 'Product handle uniquely identifies the product. \n\
       Will be computed automatically if not filled by the product title',
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'isbn', name: 'ISBN', type: 'text', validate: false, editable: true, 
+      key: 'isbn', name: 'ISBN', type: 'text', validate: false, 
+      editable: true, 
       comp: withCard(InputWithClipboard),  
       desc : 'Set ISBN identifier',
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'variants_options',  name: 'Product Variants', validate: false, editable: true, 
+      key: 'variants_options',  name: 'Product Variants', validate: false, 
+      editable: true, 
       comp: withCard(ProductVariants, {className:'w-full h-fit'}),
-      desc: 'Product variants represent children product, that varies with options, \
-      such as SIZE / COLOR for a shirt',
-      comp_params: {className: 'w-full h-fit'} 
+      desc: 'Product variants represent children product, that \
+      varies with options, such as SIZE / COLOR for a shirt',
+      comp_params: { className: 'w-full h-fit' } 
     },
     { 
       key: 'description', name: 'Description', type: 'text', 
-      validate: false, editable: true, desc: 'Further describe the product you are selling',
+      validate: false, editable: true, 
+      desc: 'Further describe the product you are selling',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
-    // {
-    //   key: 'media', name: 'Media', type: 'text',   
-    //   validate: false, editable: true, desc: 'Manage and edit your media files',
-    //   comp: withCard(Media),  comp_params: {className: 'w-full'} 
-    // },
+    {
+      key: 'media', name: 'Media', type: 'text',   
+      validate: false, editable: true, 
+      desc: 'Manage and edit your media files',
+      comp: withCard(Media),  comp_params: {className: 'w-full'} 
+    },
     { 
-      key: 'video', name: 'Video', type: 'text', validate: false, editable: true, 
+      key: 'video', name: 'Video', type: 'text', validate: false, 
+      editable: true, 
       comp: withCard(InputWithClipboard),  
       desc : 'Add a video, that demonstrates the product',
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'price', name: 'Price', type: 'number', validate: true, editable: true, 
-      comp: withCard(withBling(MInput), {className:'h-10', type: 'number'}),  
+      key: 'price', name: 'Price', type: 'number', validate: true, 
+      editable: true, 
+      comp: withCard(
+        withBling(MInput), {className:'h-10', type: 'number'}
+      ),  
       desc: 'How much will you sell the product for ?',
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'compare_at_price', name: 'Compare At Price', type: 'number',   
-      validate: false, editable: true, desc : 'Compare at price reveals the \
+      key: 'compare_at_price', name: 'Compare At Price', 
+      type: 'number', validate: false, editable: true, 
+      desc : 'Compare at price reveals the \
       competitiveness of your price',
-      comp: withCard(withBling(MInput), { className:'h-10', type: 'number' }),  
+      comp: withCard(
+        withBling(MInput), { className:'h-10', type: 'number' }
+      ),  
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'qty', name: 'Quantity', type: 'number', validate: true, editable: true, 
+      key: 'qty', name: 'Quantity', type: 'number', validate: true, 
+      editable: true, 
       desc: 'How many units you have in stock for that product',
-      comp: withCard(withBling(MInput), {className:'h-10', type: 'number', min: '0', step: '1'}),  
+      comp: withCard(
+        withBling(MInput), 
+        { className:'h-10', type: 'number', min: '0', step: '1' }
+      ),  
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'attributes', name: 'Attributes', validate: false, editable: true, 
+      key: 'attributes', name: 'Attributes', validate: false, 
+      editable: true, 
       desc: 'Attributes can contain richer text values than tags',
       comp: withCard(Attributes),  
       comp_params: {className: 'w-full'} 
@@ -120,15 +139,17 @@ const root_right_schema = {
   fields: [
     {
       key: 'active', name: 'Active', validate: true, 
-      desc : 'activate or deactivate the product (It won\'t be published in a collection)', 
+      desc : 'activate or deactivate the product (It won\'t\
+       be published in a collection)', 
       editable: true, defaultValue: true,
       comp: withCard(Switch, { className : 'text-gray-600'}, true),
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'related_products', name: 'Related Products', type: 'compund',  
-      validate: false, editable: true, 
-      desc: 'Which other products are similar ? Offer your customers similar products',
+      key: 'related_products', name: 'Related Products', 
+      type: 'compund', validate: false, editable: true, 
+      desc: 'Which other products are similar ? Offer your \
+      customers similar products',
       comp: withCard(RelatedProducts) 
     },
     { 
@@ -141,17 +162,21 @@ const root_right_schema = {
       key: 'collections', name: 'Collections', type: 'compund', 
       validate: false, editable: true, 
       desc: 'Which collections does this product belong to ?',
-      comp: withCard(SelectResourceWithTags, { resource: 'collections' }) 
+      comp: withCard(
+        SelectResourceWithTags, { resource: 'collections' }
+      ) 
     },
     
   ]
 }
 
 const root_schema = {
-  name:'Root', comp: Div, comp_params : { 
-    className:'w-full --max-w-[35rem] --bg-red-100 items-center \
-              lg:max-w-max lg:items-start lg:w-fit flex flex-col \
-              lg:flex-row gap-5 mx-auto'},
+  name:'Root', comp: Div, 
+  comp_params : { 
+    className: 'w-full --max-w-[35rem] --bg-red-100 items-center \
+                lg:max-w-max lg:items-start lg:w-fit flex flex-col \
+                lg:flex-row gap-5 mx-auto'
+  },
   fields: [
     root_left_schema, root_right_schema
   ]
@@ -199,7 +224,9 @@ export default (
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
-  } = useDocumentActions('products', documentId, '/pages/products', mode, base);
+  } = useDocumentActions(
+    'products', documentId, '/pages/products', mode, base
+  );
   
   /** @type {Context} */
   const context = useMemo(
@@ -213,6 +240,7 @@ export default (
         // side effect on parent
         await reload()
       },
+      // TODO: what is this ???
       preCreateVariant: async () => {
         const variants_options = ref_root.current.get(false)?.data?.variants_options
         await getSDK().products.update(

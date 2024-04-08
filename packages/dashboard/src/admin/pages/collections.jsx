@@ -5,6 +5,7 @@ import { RecordActions, Span, TimeStampView } from '@/admin/comps/common-fields.
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useLocation } from 'react-router-dom'
+
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 

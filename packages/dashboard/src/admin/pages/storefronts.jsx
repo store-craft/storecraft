@@ -19,10 +19,20 @@ const test = {
 }
 
 const schema_fields = [
-  { key: 'title', name: 'Title', comp: Span, comp_params: { className: 'font-semibold ' } },
-  { key: 'handle', name: 'Handle', comp: Span },
-  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
-  { key: undefined, name: 'Actions', comp: RecordActions, comp_params: { className: '' } },
+  { 
+    key: 'title', name: 'Title', comp: Span, 
+    comp_params: { className: 'font-semibold ' } 
+  },
+  { 
+    key: 'handle', name: 'Handle', comp: Span 
+  },
+  { 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+  },
+  { 
+    key: undefined, name: 'Actions', comp: RecordActions, 
+    comp_params: { className: '' } 
+  },
 ]
 
 export default ({}) => {

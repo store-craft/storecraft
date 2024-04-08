@@ -7,6 +7,9 @@ import { BlingButton, PromisableLoadingButton } from "./common-button.jsx"
 import { BiSearchAlt } from "react-icons/bi/index.js"
 
 /**
+ * `BrowseCollection` is used to view and select big collections
+ * with pagination and `vql` search query
+ * 
  * @typedef {object} BrowseCollectionParams
  * @prop {string} collectionId
  * @prop {string} [title]

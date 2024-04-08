@@ -4,25 +4,35 @@ import { useCallback, useEffect,
   useMemo, useState } from 'react'
 import ShowIf from './show-if.jsx'
 import { Bling } from './common-ui.jsx'
+import CapsulesView from './capsules-view.jsx'
+import { HR } from './common-ui.jsx'
+import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 /**
  * picks the name from every item
  * 
  * @param {import('@storecraft/core/v-api').BaseType} it 
  */
-export const default_name_fn = it => it?.title ?? it?.handle ?? 'unknown'
+export const default_name_fn = it => it?.title ?? it?.handle ?? it?.id ?? 'unknown';
 
 /**
  * transform the batch of data
  * 
  * @param {import('@storecraft/core/v-api').BaseType[]} window 
  * 
- * @returns 
  */
 export const default_transform_fn = window => window ?? []
 
 /**
- * A simple `select` control, that fetches all documents
+ * A simple `select` control, that fetches all documents in a `collection`,
+ * this is a good option for super small collections/tables such as:
+ * - `Shipping Methods`
+ * - `Collections`
+ * - `Posts`
+ * - `Discounts`
+ * Which will mostly have no more that 50 items each.
+ * 
+ * If you need something with pagination, try `BrowseCollection` instead.
  * 
  * @typedef {object} SelectResourceParams
  * @property {(value: any) => any} onSelect callback when selection is made (value) => any 
@@ -52,17 +62,26 @@ const SelectResource = (
 
   const nada = '---'
   const ALL = 'ALL'
-  const [tag, setTag] = useState(nada)
+  const [tag, setTag] = useState(nada);
+
+  /**
+   * @type {import('@/shelf-cms-react-hooks/useCollection.js').HookReturnType<
+   *  import('@storecraft/core/v-api').BaseType>
+   * }
+   */
   const { 
     page, loading, error, query 
-  } = useCommonCollection(resource, false)
+  } = useCommonCollection(resource, false);
+
 
   const transformed = useMemo(
     () => transform_fn(page).sort(
-      (a, b) => name_fn(a).localeCompare(name_fn(b))
+      (a, b) => {
+        return name_fn(a)?.localeCompare(name_fn(b)) ?? 0;
+      }
     )
     , [page, transform_fn, name_fn]
-  )
+  );
 
   useEffect(
     () => {
@@ -158,26 +177,6 @@ const SelectResource = (
 
 export default SelectResource;
 
-import CapsulesView from './capsules-view.jsx'
-import { HR } from './common-ui.jsx'
-import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
-
-const col2url = c => {
-  switch(c) {
-    case 'users': 
-      return '/pages/customers'
-    case 'payment_gateways': 
-      return '/pages/payment-gateways'
-    case 'shipping_methods': 
-      return '/pages/shipping-methods'
-    case 'posts': 
-      return '/apps/blog'
-      
-    default:
-      return `/pages/${c}`
-  }
-}
-
 /**
  * A `select` control, that also has a capsule view, to manage selections
  * 
@@ -203,6 +202,7 @@ const col2url = c => {
  * 
  * @typedef {object} InnerSelectResourceWithTagsParams
  * @prop {string} label
+ * @prop {string} slug
  * 
  * @typedef {InnerSelectResourceWithTagsParams<T> & SelectResourceParams & 
  *  import('./fields-view.jsx').FieldLeafViewParams<T[], 
@@ -217,7 +217,7 @@ export const SelectResourceWithTags = (
   { 
     field, context, value, onChange, resource, add_all=false, 
     transform_fn=default_transform_fn,
-    name_fn=default_name_fn,
+    name_fn=default_name_fn, slug,
     label='Select', className, ...rest 
   }
 ) => {
@@ -225,7 +225,7 @@ export const SelectResourceWithTags = (
   const { navWithState } = useNavigateWithState()
 
   const [tags, setTags] = useState(Array.isArray(value) ? value : [])
-  // console.log('value ', value)
+
   const onAdd = useCallback(
     /** @param {T} t  */
     (t) => {
@@ -249,12 +249,9 @@ export const SelectResourceWithTags = (
      * @param {T} v 
      */
     (v) => {
-      const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+      const new_tags = tags.filter(t => t.id!==v.id);
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
   )
@@ -265,15 +262,15 @@ export const SelectResourceWithTags = (
      */
     (v) => {
       if(v==='ALL')
-        return
+        return;
       // const where = v.split('_')[0]
       const where = v.handle ?? v.id; 
       navWithState(
-        `${col2url(resource)}/${where}/edit`, 
+        `${slug}/${where}/edit`, 
         context?.getState()
       );
     },
-    [navWithState, context, resource]
+    [navWithState, context, resource, slug]
   )
 
   return (

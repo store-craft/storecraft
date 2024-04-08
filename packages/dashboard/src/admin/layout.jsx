@@ -80,7 +80,7 @@ const menu = {
   ]
 }
 
-const Layout = ({ children, className, ...rest }) => {
+const Layout = ({ children=undefined, className, ...rest }) => {
   const [menuOpen, setMenuOpen] = useState(true)
   const onMenuClick = useCallback(
     () => {

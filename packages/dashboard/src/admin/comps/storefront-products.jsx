@@ -7,13 +7,16 @@ import { HR } from './common-ui.jsx'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 
 /**
+ * `StorefrontProducts` is located at the `storefront.jsx` page.
+ * It consists of abutton, that opens a modal to query `products`
+ * with pagination and selecting them.
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *  import('@storecraft/core/v-api').ProductType[], 
  *  import('../pages/storefront.jsx').Context>} param0 
  * @returns 
  */
-const SfProducts = ({ field, context, value=[], onChange }) => {
+const StorefrontProducts = ({ field, context, value=[], onChange }) => {
   
   /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef()
@@ -24,50 +27,55 @@ const SfProducts = ({ field, context, value=[], onChange }) => {
      * @param {import('@storecraft/core/v-api').ProductType} v 
      */
     (v) => {
-      const idx = value.indexOf(v)
-      if(idx == -1) return
-      value.splice(idx, 1)
-      const new_vs = [...value]
-      onChange(new_vs)
+      onChange(value.filter(pr => pr.handle!==v.handle));
     },
-    [field, value, onChange]
-  )
+    [value, onChange]
+  );
 
+  /**
+   * Clicking a capsule will lead to item page
+   */
   const onClick = useCallback(
+    /**
+     * @param {import('@storecraft/core/v-api').ProductType} v 
+     */
     (v) => {
-      const where = v.split('_')[0]
+      const where = v.handle ?? v.id;
       navWithState(
         `/pages/products/${where}/edit`, 
         context?.getState()
-        )
+      );
     },
     [navWithState, context]
-  )
+  );
 
   const onBrowseAdd = useCallback(
-    (selected_items) => { // array of shape [[id, data], ...]
-      // map to handle/id
-      const mapped = selected_items.map(it => it[0])
+    /**
+     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
+     */
+    (selected_items) => { 
       // only include unseen handles
       const resolved = [
-        ...mapped.filter(
-          m => value.find(it => it===m)===undefined
+        ...selected_items.filter(
+          pr => !value.find(it => it.handle===pr.handle)
         ), 
         ...value
       ];
       onChange(resolved)
       ref_overlay.current.hide()
-    }, [field, value, onChange]
-  )
+    }, [value, onChange]
+  );
 
   return (
 <div className='w-full'>
-  <BlingButton children='Browse products' 
-                className='--w-fit h-10 w-40 mx-auto' 
-                onClick={() => ref_overlay.current.show()}/>
+  <BlingButton 
+      children='Browse products' 
+      className='--w-fit h-10 w-40 mx-auto' 
+      onClick={() => ref_overlay.current.show()}/>
   <Overlay ref={ref_overlay} >
-    <BrowseProducts onSave={onBrowseAdd} 
-                    onCancel={() => ref_overlay.current.hide()} />
+    <BrowseProducts 
+        onSave={onBrowseAdd} 
+        onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
 
   {
@@ -77,11 +85,17 @@ const SfProducts = ({ field, context, value=[], onChange }) => {
 
   <CapsulesView 
       onClick={onClick} 
-      onRemove={onRemove} 
+      onRemove={onRemove}
+      name_fn={
+        /**
+         * @param {import('@storecraft/core/v-api').ProductType} pr 
+         */
+        pr => pr.title
+      }
       tags={value} 
       className='mt-5' />
 </div>
     )
   }
 
-  export default SfProducts
+  export default StorefrontProducts

@@ -42,9 +42,9 @@ export default function Main(props) {
     <Route path='storefronts'>
       <Route path='' element={<Storefronts />} />
       <Route path='q/:query_params' element={<Storefronts />} />
-      <Route path=':id/edit' element={<Storefront collectionId='storefronts' mode='edit' />} />
-      <Route path=':id/view' element={<Storefront collectionId='storefronts' mode='view' />} />
-      <Route path='create/:base?' element={<Storefront collectionId='storefronts' mode='create' /> } />
+      <Route path=':id/edit' element={<Storefront mode='edit' />} />
+      <Route path=':id/view' element={<Storefront mode='view' />} />
+      <Route path='create/:base?' element={<Storefront mode='create' /> } />
     </Route>
     <Route path='customers'>
       <Route path='' element={<Customers />} />

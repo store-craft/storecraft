@@ -44,9 +44,10 @@ export function useCommonApiDocument(
       setOp('load')
 
       try {
+        /** @type {T} */
         const data = await getSDK()[resource].get(
           location[1], try_cache
-          );
+        );
         setData(data)
         setHasLoaded(true)
         return data

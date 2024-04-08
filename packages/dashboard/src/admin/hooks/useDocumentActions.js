@@ -102,7 +102,8 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
           id: undefined,
           updated_at: undefined,
           created_at: undefined,
-          search: undefined
+          search: undefined,
+          _published: undefined,
         },
         hasChanged: false
       }

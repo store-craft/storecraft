@@ -164,15 +164,13 @@ export default (
       savePromise, deletePromise, setError, reload,
       navWithState
     },
-    context, 
+    context, key, 
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
   } = useDocumentActions(
     'collections', documentId, '/pages/collections', mode, base
   );
-  
-  console.log('DOC', doc);
   
   const duplicate = useCallback(
     async () => {
@@ -214,11 +212,6 @@ export default (
         })
       }
     }, [documentId, savePromise, reload]
-  );
-
-  const key = useMemo(
-    () => JSON.stringify(doc),
-    [doc]
   );
 
   return (

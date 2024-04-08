@@ -140,13 +140,19 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
     }, [deleteDocument, nav, slug]
   );
 
+  // A suggestion for a unique key
+  const key = useMemo(
+    () => JSON.stringify(doc),
+    [doc]
+  );
+
 
   return {
     actions: {
       savePromise, deletePromise, duplicate, navWithState, 
       reload, setError
     },
-    error, 
+    error, key, 
     ref_head, ref_root, doc, isEditMode, isCreateMode,
     isViewMode,
     loading, hasChanged, hasLoaded, context

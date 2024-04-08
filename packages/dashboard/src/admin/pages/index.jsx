@@ -24,5 +24,5 @@ export { default as Settings } from './settings.jsx'
  * @template {any} [State=any]
  * 
  * @typedef {object} BaseDocumentContext
- * @prop {() => State} [getState]
+ * @prop {() => State} [getState] Get the values of the `fields-view` tree
  */

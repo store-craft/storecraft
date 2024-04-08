@@ -56,16 +56,16 @@ export default function Main(props) {
     <Route path='customers'>
       <Route path='' element={<Customers />} />
       <Route path='q/:query_params' element={<Customers />} />
-      <Route path=':id/edit' element={<Customer collectionId='users' segment='customers' mode='edit' />} />
-      <Route path=':id/view' element={<Customer collectionId='users' segment='customers' mode='view' />} />
-      <Route path='create' element={<Customer collectionId='users' segment='customers' mode='create' /> } />
+      <Route path=':id/edit' element={<Customer mode='edit' />} />
+      <Route path=':id/view' element={<Customer mode='view' />} />
+      <Route path='create' element={<Customer mode='create' /> } />
     </Route>
     <Route path='tags'>
       <Route path='' element={<Tags />} />
       <Route path='q/:query_params' element={<Tags />} />
-      <Route path=':id/edit' element={<Tag collectionId='tags' mode='edit' />} />
-      <Route path=':id/view' element={<Tag collectionId='tags' mode='view' />} />
-      <Route path='create' element={<Tag collectionId='tags' mode='create' /> } />
+      <Route path=':id/edit' element={<Tag mode='edit' />} />
+      <Route path=':id/view' element={<Tag mode='view' />} />
+      <Route path='create' element={<Tag mode='create' /> } />
     </Route>
     <Route path='products'>
       <Route path='' element={<Products />} />

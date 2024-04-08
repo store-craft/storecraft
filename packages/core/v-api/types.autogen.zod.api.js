@@ -705,8 +705,14 @@ export const customerTypeSchema = baseTypeSchema.extend({
     .describe(
       "The `auth id` of the customer. it is the same as\ncustomer `id` with `au` prefix instead",
     ),
-  firstname: z.string().describe("Firstname"),
-  lastname: z.string().describe("Lastname"),
+  firstname: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("Firstname"),
+  lastname: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("Lastname"),
   email: z.string().email().describe("Email of customer"),
   phone_number: z
     .string()
@@ -721,8 +727,14 @@ export const customerTypeUpsertSchema = customerTypeSchema.omit({
 });
 export const imageTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("Unique handle"),
-  name: z.string().describe("Name"),
-  url: z.string().describe("It's published public url"),
+  name: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("Name"),
+  url: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("It's published public url"),
   usage: z
     .array(z.string())
     .optional()

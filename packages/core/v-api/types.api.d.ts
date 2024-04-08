@@ -1049,11 +1049,13 @@ export interface CustomerType extends BaseType {
 
   /** 
    * @description Firstname 
+   * @minLength 1 Should be longer than 1 characters
    */
   firstname: string;
 
   /** 
    * @description Lastname 
+   * @minLength 1 Should be longer than 1 characters
    */
   lastname: string;
 
@@ -1093,11 +1095,13 @@ export interface ImageType extends BaseType {
 
   /** 
    * @description Name 
+   * @minLength 1 Should be longer than 1 characters
    */
   name: string;
 
   /** 
    * @description It's published public url 
+   * @minLength 1 Should be longer than 1 characters
    */
   url: string;
 

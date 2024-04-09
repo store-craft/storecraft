@@ -1,7 +1,5 @@
-import { useRef, useEffect, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import FieldsView from '@/admin/comps/fields-view.jsx'
-import { useCommonApiDocument } from '@/shelf-cms-react-hooks/index.js'
 import OrderDeliveryMethod from '@/admin/comps/order-delivery-method.jsx'
 import OrderDiscountInfo from '@/admin/comps/order-coupon-info.jsx'
 import OrderLineItems from '@/admin/comps/order-line-items.jsx'
@@ -15,19 +13,15 @@ import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
 import ErrorMessage from '@/admin/comps/error-message.jsx'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
-// import { 
-//   CheckoutStatusEnum, FulfillOptionsEnum, 
-//   OrderData, PaymentOptionsEnum } from '@/admin-sdk/js-docs-types'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import OrderPaymentGateway from '@/admin/comps/order-payment-gateway.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
-import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
-import { decode, encode } from '@/admin/utils/index.js'
-import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
+import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import { PaymentOptionsEnum, FulfillOptionsEnum, 
   CheckoutStatusEnum } from '@storecraft/core/v-api/types.api.enums.js'
+import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const contact_schema = {
   name:'Contact Info', key: 'contact', 
@@ -36,19 +30,27 @@ const contact_schema = {
   fields: [
 
     { 
-      key: 'email', name: 'Email', type: 'email', validate: true, editable: true, 
-      comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
+      key: 'email', name: 'Email', type: 'email', 
+      validate: true, editable: true, 
+      comp: withCard(
+        withBling(MInput), { className: 'h-10'}, false
+      ), 
       comp_params: {className: 'w-full h-fit mt-5 text-gray-400'} 
     },
     { 
-      key: 'phone_number', name: 'Phone Number', type: 'number', validate: true, editable: true, 
-      comp: withCard(withBling(MInput), { className: 'h-10', type:'tel'}, false), 
+      key: 'phone_number', name: 'Phone Number', type: 'number', 
+      validate: true, editable: true, 
+      comp: withCard(
+        withBling(MInput), { className: 'h-10', type:'tel'}, false
+      ), 
       comp_params: {className: 'w-full h-fit mt-5 text-gray-400'} 
     },
     { 
-      key: 'uid', name: 'User ID (UID)', type: 'text', 
+      key: 'customer_id', name: 'User ID (UID)', type: 'text', 
       validate: false, editable: true, 
-      comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
+      comp: withCard(
+        withBling(MInput), { className: 'h-10'}, false
+      ), 
       comp_params: {className: 'w-full h-fit mt-5 text-gray-400'} 
     },
   ]
@@ -77,35 +79,46 @@ const address_schema = {
       comp: withCard(withBling(MInput), { className: 'h-10'}, false),  
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'} 
     },
-    { key: 'street1',  name: 'Street #1', type: 'text', validate: false, 
+    { 
+      key: 'street1',  name: 'Street #1', type: 'text', validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'}
     },
-    { key: 'street2',  name: 'Street #2', type: 'text', validate: false, 
+    { 
+      key: 'street2',  name: 'Street #2', type: 'text', validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'}
     },
-    { key: 'city',  name: 'City', type: 'text', validate: false, 
+    { 
+      key: 'city',  name: 'City', type: 'text', validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'}
     },
-    { key: 'country',  name: 'Country', type: 'text', validate: false, 
+    { 
+      key: 'country',  name: 'Country', type: 'text', validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'} 
     },
-    { key: 'state',  name: 'State', type: 'text', validate: false, 
+    { 
+      key: 'state',  name: 'State', type: 'text', validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'} 
     },
-    { key: 'zip_code',  name: 'ZIP Code', type: 'text', validate: false, 
+    { 
+      key: 'zip_code',  name: 'ZIP Code', type: 'text', 
+      validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'} 
     },
-    { key: 'postal_code',  name: 'Postal Code', type: 'text', validate: false, 
+    { 
+      key: 'postal_code',  name: 'Postal Code', type: 'text', 
+      validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'} 
     },
-    { key: 'phone_number',  name: 'Phone Number', type: 'text', validate: false, 
+    { 
+      key: 'phone_number',  name: 'Phone Number', type: 'text', 
+      validate: false, 
       comp: withCard(withBling(MInput), { className: 'h-10'}, false), 
       comp_params: {className: 'w-full lg:w-[30%] h-fit text-gray-400'} 
     },
@@ -113,78 +126,93 @@ const address_schema = {
 }
 
 const status_schema = {
-  name:'Status', key: 'status', comp: withCard(Div, {className : ''}), 
-        comp_params : { className:'w-full'},
+  name:'Status', key: 'status', 
+  comp: withCard(Div, {className : ''}), 
+  comp_params : { className:'w-full'},
   fields: [
     { 
-      key: 'payment',  name: 'Payment Status', type: 'text', validate: false,
+      key: 'payment',  name: 'Payment Status', 
+      type: 'text', validate: false,
       desc: 'What is the payment status',
       defaultValue: PaymentOptionsEnum.unpaid, 
-      comp: withCard(withBling(
-        create_select_view(Object.values(PaymentOptionsEnum))
-        ), { 
-          className : 'text-gray-600'
-        }, false
-        ),
+      comp: withCard(
+        withBling(
+          create_select_view(Object.values(PaymentOptionsEnum))
+        ), 
+        { className : 'text-gray-600' }, false
+      ),
       comp_params: {className: 'text-gray-500'} 
     }, 
     { 
-      key: 'fulfillment',  name: 'Fulfillment Status', type: 'text', validate: false, 
+      key: 'fulfillment',  name: 'Fulfillment Status', 
+      type: 'text', validate: false, 
       desc: 'What is the fulfillment status',
       defaultValue: FulfillOptionsEnum.draft, 
       comp: withCard(
         withBling(create_select_view(
           Object.values(FulfillOptionsEnum))
-          ), { className : 'text-gray-600'}, false
-          ) ,
+        ), 
+        { className : 'text-gray-600'}, false
+      ) ,
       comp_params: {className: 'text-gray-500  mt-5'} 
     },
     { 
-      key: 'checkout',  name: 'Checkout Status', type: 'text', validate: false, 
+      key: 'checkout',  name: 'Checkout Status', type: 'text', 
+      validate: false, 
       desc: 'How did the costumer complete checkout',
       defaultValue: CheckoutStatusEnum.created, 
       comp: withCard(
         withBling(
-          create_select_view(Object.values(CheckoutStatusEnum))), 
-          { className : 'text-gray-600'}, false
-        ),
-      comp_params: {className: 'text-gray-500  mt-5'} 
+          create_select_view(Object.values(CheckoutStatusEnum))
+        ), 
+        { className : 'text-gray-600'}, false
+      ),
+      comp_params: { className: 'text-gray-500  mt-5' } 
     },
-   ]
+  ]
 }
 
 const right = {
   name:'Right', comp: Div,
-        comp_params : { className:'flex flex-col w-full lg:w-[19rem] gap-5'},
+  comp_params : { 
+    className:'flex flex-col w-full lg:w-[19rem] gap-5' 
+  },
   fields: [
     { 
       key: 'pricing',  name: 'Pricing', validate: false, 
-      desc: 'Decide the total price of the order including shipping and discounts',
+      desc: 'Decide the total price of the order including shipping \
+      and discounts',
       comp: withCard(OrderPrice, { }), 
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'delivery', name: 'Delivery Method', type: 'compound', 
+      key: 'shipping_method', name: 'Delivery Method', type: 'compound', 
       validate: false, editable: true, 
       desc: 'Decide the delivery method',
-      comp: withCard(OrderDeliveryMethod, { className : 'w-full --bg-red-200 '}),
+      comp: withCard(
+        OrderDeliveryMethod, 
+        { className : 'w-full --bg-red-200 '}
+      ),
       comp_params: {className: 'w-full '} 
     },
     { 
       key: 'coupons', name: 'Coupons', type: 'compound', 
       validate: false, editable: true, 
       desc: 'Which coupons will be applied',
-      comp: withCard(OrderDiscountInfo, { className : 'w-full --bg-red-200 '}),
+      comp: withCard(
+        OrderDiscountInfo, 
+        { className : 'w-full --bg-red-200 '}
+      ),
       comp_params: {className: 'w-full'} 
     },
     status_schema, 
     { 
-      key: 'tags', name: 'Tags', type: 'compund',  validate: false, editable: true, 
+      key: 'tags', name: 'Tags', type: 'compund',  
+      validate: false, editable: true, 
       desc: 'Tags help you attach small attributes',
       comp: withCard(TagsEdit),
     },
-
-   ]
+  ]
 }
 
 const main_schema = {
@@ -210,21 +238,27 @@ const left = {
       key: 'payment_gateway', name: 'Payments', type: 'compound', 
       validate: false, editable: true, 
       desc: "Let's see what the payment gateway status is", 
-      comp: withCard(OrderPaymentGateway, { className : 'w-full  --bg-red-200 '}),
-      comp_params: {className: 'w-full text-xs py-auto --font-semibold'} 
+      comp: withCard(
+        OrderPaymentGateway, 
+        { className : 'w-full  --bg-red-200 '}
+      ),
+      comp_params: { className: 'w-full text-xs py-auto --font-semibold' } 
     },
     { 
       key: 'line_items', name: 'Line Items', type: 'compound', 
       validate: false, editable: true, 
       desc: 'Which items are included in the order', 
       defaultValue: [],
-      comp: withCard(OrderLineItems, { className : 'w-full  --bg-red-200 '}),
+      comp: withCard(
+        OrderLineItems, { className : 'w-full  --bg-red-200 '}
+      ),
       comp_params: {className: 'w-full text-xs py-auto --font-semibold'} 
     },
     contact_schema,
     address_schema,
     {
-      key: 'attributes', name: 'Attributes', validate: false, editable: true, 
+      key: 'attributes', name: 'Attributes', validate: false, 
+      editable: true, 
       desc: 'Attributes can contain richer text values than tags',
       comp: withCard(Attributes),  
       comp_params: {className: 'w-full'} 
@@ -237,7 +271,8 @@ const left = {
       comp_params: {className: 'w-full'} 
     },
     {
-      name: 'JSON', type: 'compund', validate: false, editable: false, 
+      name: 'JSON', type: 'compund', validate: false, 
+      editable: false, 
       desc: 'Observe the RAW data',
       comp: JsonViewCard,
       comp_params: { className: 'w-full' }
@@ -246,144 +281,87 @@ const left = {
 }
 
 const root_schema = {
-  name:'Root', comp: Div, comp_params : { 
-    className:`w-full gap-5 --justify-center --bg-red-100 items-center
+  name:'Root', comp: Div, 
+  comp_params : { 
+    className: `w-full gap-5 --justify-center --bg-red-100 items-center
               lg:max-w-max lg:items-start lg:w-fit flex flex-col
               lg:flex-row --mx-auto`
-            },
+  },
   fields: [
     left, right
   ]
 }
 
 /**
- * @typedef {object} State
- * @property {OrderData} data
+ * 
+ * @typedef {object} State Intrinsic state of `tag`
+ * @property {import('@storecraft/core/v-api').OrderData} data
  * @property {boolean} hasChanged
+ * 
+ *
+ * @typedef { import('./index.jsx').BaseDocumentContext<State>
+ * } Context Public `tag` context
+ * 
  */
 
-export default ({ collectionId, 
-                  mode, ...rest}) => {
+export default (
+ { 
+   mode, ...rest
+ }
+) => {
+                   
+  const { id : documentId, base } = useParams();
 
-  const { id : documentId, base } = useParams()
-  const ref_root = useRef()
-  const { 
-    doc: doc_original, loading, hasLoaded, error, op,
-    actions: { 
-      reload, set, create, deleteDocument, colId, docId 
-    }
-  } = useCommonApiDocument(collectionId, documentId)
-  const [ externalErrors, setExternalErrors] = useState(undefined)
-
-  const { 
-    nav, navWithState, state 
-  } = useNavigateWithState()
-
-  const ref_head = useRef()
-  const hasChanged = state?.hasChanged ?? false
-  const isEditMode = mode==='edit'
-  const isCreateMode = mode==='create'
-  const isViewMode = !(isEditMode || isCreateMode)
-
-  /**@type {OrderData} */
-  const doc = useMemo(
-    () => {
-      let base_o = {}
-      try {
-        base_o = base ? decode(base) : {}
-      } catch (e) {}
-      const doc = { ...base_o, ...doc_original, ...state?.data }
-      return doc
-    }, [doc_original, base, state]
-  )
-
-  const context = useMemo(
-    () => ({
-      /**@returns {State} */
-      getState: () => {
-        const data = ref_root.current.get(false)?.data
-        const hasChanged = Boolean(ref_head.current.get())
-        return {
-          data, hasChanged
-        }
-      }
-    }), []
-  )
-
-  const duplicate = useCallback(
-    async () => {
-      const state = context.getState()
-      /**@type {State} */
-      const state_next = { 
-        data: { 
-          ...state?.data,
-          updatedAt: Date.now(),
-          createdAt: undefined,
-          search: undefined,
-          id: undefined
-        },
-        hasChanged: false
-      }
-      // ref_head.current.set(false)
-      navWithState(`/pages/${collectionId}/create`, 
-            state, state_next)
-    }, [navWithState, collectionId, context]
-  )
-
-  const savePromise = useCallback(
-    async () => {
-      const all = ref_root.current.get()
-      const { validation : { has_errors, fine }, data } = all
-      const final = { ...doc, ...data}
-      // console.log('final ', final);
-      const [id, _] = await set(final)
-      nav(`/pages/${collectionId}/${id}/edit`, { replace: true })
-    }, [set, doc, nav, collectionId]
-  )
-
-  const createPromise = useCallback(
-    async () => {
-      const all = ref_root.current.get()
-      const { validation : { has_errors, fine }, data } = all
-      const final = { ...doc, ...data}
-      // console.log('final ', final);
-      const [id, _] = await create(final);
-      nav(`/pages/${collectionId}/${id}/edit`, { replace: true })
-    }, [create, doc, nav, collectionId]
-  )
-
-  const deletePromise = useCallback(
-    async () => {
-      await deleteDocument()
-      nav(`/pages/${collectionId}`, { replace: true })
-    }, [deleteDocument, nav, collectionId]
-  )
-
-  const key = useMemo(
-    () => JSON.stringify(doc),
-    [doc]
-  )
+  /** 
+  * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+  *  import('@storecraft/core/v-api').OrderData>
+  * } 
+  */
+  const {
+    actions: {
+      savePromise, deletePromise, reload, setError,
+      duplicate
+    },
+    context, key, 
+    doc, isCreateMode, isEditMode, isViewMode, 
+    loading, hasChanged, hasLoaded, error,
+    ref_head, ref_root, 
+  } = useDocumentActions(
+    'orders', documentId, '/pages/orders', mode, base
+  );
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
-  <DocumentTitle major={[collectionId, documentId ?? 'create']} className='' />  
-  <DocumentDetails doc={doc} className='mt-5' collectionId={collectionId}/>                     
-  <RegularDocumentActions id={docId}
-             onClickSave={isEditMode ? savePromise : undefined}
-             onClickCreate={isCreateMode ? createPromise : undefined}
-             onClickDelete={!isCreateMode ? deletePromise : undefined} 
-             onClickDuplicate={!isCreateMode ? duplicate : undefined} 
-             onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
-             className='mt-5 '/>
-  <CreateDate changes_made={hasChanged} ref={ref_head}  
-              key={doc?.updatedAt}
-              time={doc?.createdAt} className='mt-8' />            
-  <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} className='mt-8'>
+  <DocumentTitle 
+      major={['orders', documentId ?? 'create']} className='' />  
+  <DocumentDetails 
+      doc={doc} className='mt-5' collectionId={'orders'}/>                     
+  <RegularDocumentActions 
+      id={doc?.id}
+      onClickSave={isEditMode ? savePromise : undefined}
+      onClickCreate={isCreateMode ? savePromise : undefined}
+      onClickDelete={!isCreateMode ? deletePromise : undefined} 
+      onClickDuplicate={!isCreateMode ? duplicate : undefined} 
+      onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
+      className='mt-5 '/>
+  <CreateDate 
+      changes_made={hasChanged} ref={ref_head}  
+      key={doc?.updated_at}
+      time={doc?.created_at} 
+      className='mt-8' />            
+  <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
     <div className='w-full mx-auto '>
-      <EditMessage messages={error} className='w-full' />
-      <FieldsView key={key} ref={ref_root} field={root_schema} 
-                value={ doc ?? {} } context={context}
-                isViewMode={isViewMode} className='mt-8 mx-auto' />      
+      <ErrorMessage 
+          error={error} 
+          className='w-full' />
+      <FieldsView 
+          key={key} 
+          ref={ref_root} 
+          field={root_schema} 
+          value={ doc ?? {} } 
+          context={context}
+          isViewMode={isViewMode} 
+          className='mt-8 mx-auto' />      
     </div>
   </ShowIf>
 </div>

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
 import { useCommonApiDocument } from '@/shelf-cms-react-hooks/useDocument.js';
-
+import {useNavigate} from 'react-router-dom'
 
 /**
  * @template T the `document` type
@@ -127,22 +127,14 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
     }, [upsert, nav, doc, reload, slug]
   );
 
-  // const createPromise = useCallback(
-  //   async () => {
-  //     const all = ref_root.current.get()
-  //     const { validation : { has_errors, fine }, data } = all
-  //     const final = { ...doc, ...data}
-  //     // console.log('final ', final);
-  //     const [id, _] = await create(final);
-  //     nav(`${slug}/${id}/edit`, { replace: true })
-  //   }, [create, doc, nav, slug]
-  // );
-
   const deletePromise = useCallback(
     async () => {
-      await deleteDocument()
-      nav(`${slug}`, { replace: true })
-    }, [deleteDocument, nav, slug]
+      await deleteDocument();
+      // nav(`${slug}`, { replace: true })
+      // history.back();
+      // console.log(window.history)
+      nav(-2);
+    }, [deleteDocument, nav]
   );
 
   // A suggestion for a unique key

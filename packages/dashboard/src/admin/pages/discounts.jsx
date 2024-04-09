@@ -47,7 +47,10 @@ export default ({}) => {
             createLink='/pages/discounts/create'
             searchTitle='Search by Code, type...' 
             isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
         <BottomActions 
             prev={prev} next={next} 
             limit={query_api.limit}

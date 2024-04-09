@@ -12,7 +12,7 @@ import { LinkWithState } from '../hooks/useNavigateWithState.js'
 
 /**
  * 
- * @param {{id:string, name:string}[]} options [{id, name}, ...]
+ * @param {{id:string|number, name:string}[]} options [{id, name}, ...]
  * @param {number} defaultIndex do not use it (use defaultValue in fieldsview instead)
  */
 export const create_select_view = (options, defaultIndex=0) => {

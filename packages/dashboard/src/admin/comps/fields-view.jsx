@@ -178,7 +178,11 @@ const FieldViewInternal = forwardRef(
    * 
    * @returns {React.ReactElement<FieldLeafViewParams>}
    */
-  ({ field, value, context, running_key, isViewMode, ...rest}, ref) => {
+  (
+    { 
+      field, value, context, running_key, isViewMode, ...rest
+    }, ref
+  ) => {
 
   running_key = compute_running_key(running_key, field.key)
   // console.log('running_key ', running_key)

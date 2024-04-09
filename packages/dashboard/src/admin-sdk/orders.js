@@ -1,3 +1,4 @@
+import { calculate_pricing } from '@storecraft/core/v-api/con.pricing.logic.js';
 import { StorecraftAdminSDK } from './index.js'
 import { collection_base } from './utils.api.fetch.js';
 
@@ -20,21 +21,27 @@ export default class Orders extends collection_base {
   /**
    * calculate pricing of line items
    * 
-   * @param {LineItem[]} line_items 
-   * @param {DiscountData[]} auto_discounts 
-   * @param {DiscountData[]} coupons 
-   * @param {ShippingData} shipping_method 
+   * @param {import('@storecraft/core/v-api').LineItem[]} line_items 
+   * @param {import('@storecraft/core/v-api').DiscountType[]} coupons 
+   * @param {import('@storecraft/core/v-api').ShippingMethodType} shipping_method 
    * @param {string} [uid] 
    */
-  calculatePricing = 
-  async (line_items, coupons=[], shipping_method, uid) => {
+  calculatePricing = async (
+    line_items, coupons=[], shipping_method, uid
+  ) => {
     // fetch auto discounts
-    let auto_discounts = await this.context.discounts.list(['app:0'])
-    auto_discounts = auto_discounts.map(t => t[1])
-    console.log('auto_discounts', auto_discounts)
+    const auto_discounts = await this.sdk.discounts.list(
+      {
+        limit: 100, 
+        vqlString: 'app:automatic'
+      }
+    );
+
+    console.log('uid', uid);
+
     return calculate_pricing(
       line_items, auto_discounts, coupons, shipping_method, uid
-      )
+    );
   }
 
 }

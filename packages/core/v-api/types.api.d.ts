@@ -922,6 +922,11 @@ export type BundleDiscountExtra = {
  */
 export interface StorefrontType extends BaseType {
   /** 
+   * @description Is the entity active ?
+   */
+  active: boolean;
+  
+  /** 
    * @description Readable `handle` 
    */
   handle: string;
@@ -1620,7 +1625,7 @@ export type EvoEntry = {
   discount?: DiscountType;
 
   /** 
-   * @description The discount code 
+   * @description The discount code `handle`
    */
   discount_code?: string;
 

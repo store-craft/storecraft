@@ -95,29 +95,6 @@ export function useCommonApiDocument(
     }, [location]
   )
 
-  // const create = useCallback(
-  //   async new_data => {
-  //     setLoading(true)
-  //     setError(undefined)
-  //     setOp('create')
-  //     const collId = location[0]
-      
-  //     try {
-  //       const [id, saved_data] = await getSDK()[resource].create(new_data)
-  //       setLocation([collId, id])
-  //       setData(saved_data)
-  //       setHasLoaded(true)
-  //       return [id, saved_data]
-  //     } catch(e) {
-  //       console.log('e ', e);
-  //       setError(e)
-  //       throw e
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }, [location]
-  // )
-
   const deleteDocument = useCallback(
     async () => {
       setLoading(true)
@@ -150,12 +127,12 @@ export function useCommonApiDocument(
 
   useEffect(
     () => {
-      if (autoLoad) reload(try_cache_on_autoload)
+      if (autoLoad) reload(try_cache_on_autoload);
     }, [autoLoad, reload, location]
   )
 
   return {
-    doc: stale || (document===location[1] && resource===location[0]) ? data : {} , 
+    doc: stale || (document===location[1] && resource===location[0]) ? data : {}, 
     loading, hasLoaded, error, op, 
     actions: { 
       reload, upsert, deleteDocument, setError,

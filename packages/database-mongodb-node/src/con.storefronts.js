@@ -31,19 +31,19 @@ const upsert = (driver) => {
           // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
           ////
           let replacement = await create_explicit_relation(
-            driver, data, 'products', 'products', false
+            driver, data, 'products', 'products', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'collections', 'collections', false
+            driver, replacement, 'collections', 'collections', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'discounts', 'discounts', false
+            driver, replacement, 'discounts', 'discounts', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'shipping_methods', 'shipping_methods', false
+            driver, replacement, 'shipping_methods', 'shipping_methods', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'posts', 'posts', false
+            driver, replacement, 'posts', 'posts', true
           );
 
           // SEARCH

@@ -971,6 +971,7 @@ export const productTypeUpsertSchema = productTypeSchema
   )
   .describe("Product upsert type");
 export const storefrontTypeSchema = baseTypeSchema.extend({
+  active: z.boolean().describe("Is the entity active ?"),
   handle: z.string().describe("Readable `handle`"),
   title: z.string().min(3, "Title should be longer than 3").describe("Title"),
   video: z.string().optional().describe("Video url"),

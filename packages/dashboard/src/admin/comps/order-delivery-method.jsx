@@ -20,6 +20,9 @@ const OrderDeliveryMethod = (
   const { key, comp_params } = field
 
   const onUpdateName = useCallback(
+    /**
+     * @param {import('react').ChangeEvent<HTMLInputElement>} e 
+     */
     (e) => {
       const name = String(e.currentTarget.value)
       const vnew = {
@@ -31,6 +34,9 @@ const OrderDeliveryMethod = (
   )
   
   const onUpdatePrice = useCallback(
+    /**
+     * @param {import('react').ChangeEvent<HTMLInputElement>} e 
+     */
     (e) => {
       const price = parseFloat(e.currentTarget.value)
       const vnew = {
@@ -44,11 +50,7 @@ const OrderDeliveryMethod = (
   const onSelect = useCallback(
     /** @param {typeof value} t  */
     (t) => {
-      // console.log('rrr ', t)
-      // const { name, price } = t[1]
       setV(t)
-      // setName(name)
-      // setPrice(price)
       onChange(t)
     },
     [onChange]
@@ -57,7 +59,7 @@ const OrderDeliveryMethod = (
   return (
 <div {...comp_params}>
   <SelectResource 
-      resource='shipping_methods' layout={1}
+      resource='shipping' layout={1}
       className='mt-3' onSelect={onSelect}
       header='Pick Methods you defined' 
       clsHeader='shelf-text-minor' 
@@ -70,19 +72,23 @@ const OrderDeliveryMethod = (
   <HR className='w-full mt-3' />
   <p children='Method' className='mt-2 shelf-text-minor'/>
 
-  <BlingInput className='mt-1'
-              onChange={onUpdateName} 
-              value={v?.title} 
-              placeholder='Shipping Method' type='text' />
+  <BlingInput 
+      className='mt-1'
+      onChange={onUpdateName} 
+      value={v?.title} 
+      placeholder='Shipping Method' 
+      type='text' />
 
   <p children='Price' className='mt-3 shelf-text-minor'/>
   <div className='flex flex-row items-center h-fit w-full mt-1'>
 
-    <BlingInput className='mt-1 w-full'
-                onWheel={(e) => e.target.blur()}
-                onChange={onUpdatePrice}
-                value={v?.price} placeholder='Price' 
-                type='number' min='0' />
+    <BlingInput 
+        className='mt-1 w-full'
+        onWheel={(e) => e.target.blur()}
+        onChange={onUpdatePrice}
+        value={v?.price} 
+        placeholder='Price' 
+        type='number' min='0' />
 
   </div>
 </div>

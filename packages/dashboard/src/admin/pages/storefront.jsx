@@ -4,7 +4,7 @@ import FieldsView from '../comps/fields-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import Media from '@/admin/comps/media.jsx'
-import { MInput, withCard, Handle } from '@/admin/comps/common-fields.jsx'
+import { MInput, withCard, Handle, Switch } from '@/admin/comps/common-fields.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ErrorMessage from '@/admin/comps/error-message.jsx'
@@ -148,6 +148,13 @@ const root_right_schema = {
   name:'Root2', comp: Div, 
   comp_params : { className:'w-full lg:w-[19rem] flex flex-col gap-5'},
   fields: [
+    {
+      key: 'active', name: 'Enable', validate: true, 
+      desc : 'Enable or disable the discount', 
+      editable: true, defaultValue: true,
+      comp: withCard(Switch, { className : 'text-gray-600'}, true),
+      comp_params: {className: 'w-full'} 
+    },
     {
       key: 'tags', name: 'Tags', type: 'compund', validate: false, 
       editable: true, 

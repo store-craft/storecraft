@@ -48,15 +48,18 @@ const OrderPrice = (
   
   const onCalculatePrice = useCallback(
     async (_) => {
-      const { pubsub, query } = context
+      const { pubsub, query } = context;
+
+      console.log('query', query)
+
       /**@type {import('@storecraft/core/v-api').LineItem[]} */
       const line_items = query['line_items'].get() ?? []
       /**@type {import('@storecraft/core/v-api').DiscountType[]} */
       const coupons = query['coupons'].get() ?? []
-      /**@type {string} */
-      const uid = query['contact.uid'].get() ?? []
+      /**@type {import('@storecraft/core/v-api').OrderData["contact"]["customer_id"]} */
+      const uid = query['contact.customer_id']?.get();
       /**@type {import('@storecraft/core/v-api').ShippingMethodType} */
-      const delivery = query['delivery'].get() ?? { price: 0 }
+      const delivery = query['shipping_method'].get() ?? { price: 0 }
       if(!delivery.price)
         delivery.price = 0
 
@@ -78,39 +81,43 @@ const OrderPrice = (
       }
     },
     [context]
-  )
-
+  );
 
   return (
 <div {...comp_params}>
   
   <div className='flex flex-col gap-3 w-full --shelf-text-minor'>
-    <Entry title='SubTotal' value={pricing.subtotal_undiscounted ?? 0} />
+    <Entry title='SubTotal' value={pricing?.subtotal_undiscounted ?? 0} />
     <Entry title='Shipping' value={pricing?.shipping_method?.price ?? 0} />
     {
       pricing?.evo?.slice(1).filter(e => e.total_discount>0).map(
         e => (
-          <Entry key={e.discount_code}
-                 title={`${e.discount_code} (discount)`} 
-                 value={-e.total_discount} />
+          <Entry 
+              key={e.discount_code}
+              title={`${e.discount_code} (discount)`} 
+              value={-e.total_discount} />
         )
       )
     }
   </div>
   <HR className='my-5'/>
   <div className='flex flex-row justify-between items-center'>
-    <span children='Total'
-          className='text-sm font-medium '/>
-    <span children='Calculate Price' 
-          className='text-sm font-medium underline 
-                    shelf-text-label-color cursor-pointer' 
-          onClick={onCalculatePrice}/>
+    <span 
+        children='Total'
+        className='text-sm font-medium '/>
+    <span 
+        children='Calculate Price' 
+        className='text-sm font-medium underline 
+                  shelf-text-label-color cursor-pointer' 
+        onClick={onCalculatePrice}/>
   </div>
-  <BlingInput className='mt-2 w-full' rounded='rounded-md'
-              onChange={onUpdatePrice} 
-              onWheel={(e) => e.target.blur()}
-              value={pricing?.total ?? 0} placeholder='Price' 
-              type='number' min='0' />
+  <BlingInput 
+      className='mt-2 w-full' rounded='rounded-md'
+      onChange={onUpdatePrice} 
+      onWheel={(e) => e.target.blur()}
+      value={pricing?.total ?? 0} 
+      placeholder='Price' 
+      type='number' min='0' />
 
 </div>
   )

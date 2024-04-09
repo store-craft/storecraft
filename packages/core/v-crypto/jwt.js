@@ -63,7 +63,7 @@ const now_seconds = () => Math.floor(Date.now()/1000);
 const fill_claims = (claims, expireIn=JWT_TIMES.HOUR) => {
   claims.iat = now_seconds()
   claims.exp = claims.iat + expireIn;
-  console.log('claims', claims)
+  // console.log('claims', claims)
   return claims
 }
 

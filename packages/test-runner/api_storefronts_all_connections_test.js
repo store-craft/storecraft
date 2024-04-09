@@ -27,7 +27,8 @@ const handle_dis = create_handle('dis', file_name(import.meta.url));
 
 /** @type {StorefrontTypeUpsert} */
 const storefront_upsert = {
-    handle: handle_sf(), title: 'sf 1'
+    handle: handle_sf(), title: 'sf 1',
+    active: true
 }
 
 /** @type {ProductTypeUpsert[]} */

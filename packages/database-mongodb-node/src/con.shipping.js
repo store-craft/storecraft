@@ -23,7 +23,6 @@ const upsert = (driver) => {
   return async (data, search_terms=[]) => {
     data = {...data};
     const objid = to_objid(data.id);
-    const replacement = { ...data };
     const session = driver.mongo_client.startSession();
 
     try {
@@ -38,6 +37,7 @@ const upsert = (driver) => {
             { session }
           );
 
+          // console.log('search_terms', search_terms)
           // SEARCH
           add_search_terms_relation_on(data, search_terms);
 
@@ -49,7 +49,7 @@ const upsert = (driver) => {
           // SAVE ME
           const res = await col(driver).replaceOne(
             { _id: objid }, 
-            replacement, 
+            data, 
             { session, upsert: true }
           );
 

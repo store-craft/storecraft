@@ -124,7 +124,7 @@ const BrowseCollection = (
     {
     selected.map(
       (it, ix) => (
-      <div key={it[0]} 
+      <div key={it.id} 
           className='w-full h-16 sm:h-20 p-1 border-b shelf-border-color-soft 
                      flex flex-row justify-between items-center 
                      gap-3' >
@@ -169,7 +169,7 @@ const BrowseCollection = (
           {
           items.map(
             (it, ix) => (
-            <div key={`sr_${it[0]}`} 
+            <div key={`sr_${it.id}`} 
                 className='w-full h-16 sm:h-20 p-1 border-b shelf-border-color-soft
                            cursor-pointer'
                 onClick={() => onAdd(it)}>

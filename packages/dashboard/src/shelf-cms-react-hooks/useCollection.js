@@ -71,7 +71,7 @@ const paginate_helper = (query, resource) => {
   let startAfter = query.startAfter;
 
   const next = async () => {
-    console.log('paginate_helper::next')
+    // console.log('paginate_helper::next')
     /** @type {typeof query} */
     const current = { 
       ...query,
@@ -123,7 +123,7 @@ export const useCollection =
   const trigger = useTrigger()
   
   // console.log('resource ',  resource);
-  console.log('pages ',  pages);
+  // console.log('pages ',  pages);
 
   useEffect(
     () => getSDK().auth.add_sub(trigger)

@@ -64,7 +64,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
     }, [doc_original, base, state]
   );
 
-  console.log('doc', doc)
+  // console.log('doc', doc)
 
   /** 
    * @type {import('react').MutableRefObject<

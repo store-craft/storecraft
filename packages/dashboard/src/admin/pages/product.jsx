@@ -16,7 +16,7 @@ import DocumentDetails from '@/admin/comps/document-details.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import RelatedProducts from '@/admin/comps/product-related-products.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
-import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
+import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import ProductVariants from '@/admin/comps/products-variants.jsx'
 import { getSDK } from '@/admin-sdk/index.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
@@ -38,6 +38,12 @@ const root_left_schema = {
   name:'Root', comp: Div, 
   comp_params : { className:'w-full lg:w-[35rem] flex flex-col gap-5'},
   fields: [
+    {
+      key: 'media', name: 'Media', type: 'text',   
+      validate: false, editable: true, 
+      desc: 'Manage and edit your media files',
+      comp: withCard(Media),  comp_params: {className: 'w-full'} 
+    },
     { 
       key: 'title', name: 'Title', type: 'text',  validate: true, 
       editable: true, desc: 'Give an accurate title of the product',
@@ -75,12 +81,12 @@ const root_left_schema = {
       desc: 'Further describe the product you are selling',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
-    {
-      key: 'media', name: 'Media', type: 'text',   
-      validate: false, editable: true, 
-      desc: 'Manage and edit your media files',
-      comp: withCard(Media),  comp_params: {className: 'w-full'} 
-    },
+    // {
+    //   key: 'media', name: 'Media', type: 'text',   
+    //   validate: false, editable: true, 
+    //   desc: 'Manage and edit your media files',
+    //   comp: withCard(Media),  comp_params: {className: 'w-full'} 
+    // },
     { 
       key: 'video', name: 'Video', type: 'text', validate: false, 
       editable: true, 

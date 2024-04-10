@@ -439,6 +439,17 @@ const register_storage = registry => {
     }
   );
 
+  const query = z.object(
+    {
+      signed: z.boolean().optional().openapi(
+        { 
+          example: true, default: true, 
+          description: 'Prefer signed url if supported' 
+        }
+      )
+    }
+  );
+
   // download (no presigned url)
   registry.registerPath({
     security,
@@ -459,7 +470,7 @@ const register_storage = registry => {
           }
         ),
       }),
-
+      query
     },
     responses: {
       200: {
@@ -491,6 +502,7 @@ const register_storage = registry => {
           }
         ),
       }),
+      query
 
     },
     responses: {
@@ -531,7 +543,8 @@ const register_storage = registry => {
           '*/*': { schema: z.any().openapi({ description: 'Body is any `blob` / `bytearray` stream' }) },
           
         },
-      }
+      },
+      query
 
     },
     responses: {
@@ -558,6 +571,7 @@ const register_storage = registry => {
           }
         ),
       }),
+      query
     },
     responses: {
       200: {

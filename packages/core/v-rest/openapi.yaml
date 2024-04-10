@@ -94,7 +94,6 @@ components:
             type: string
           description: List of values, related to the key
       required:
-        - id
         - handle
         - values
       description: with `id`
@@ -113,7 +112,6 @@ components:
             type: string
           description: List of values, related to the key
       required:
-        - id
         - handle
         - values
       description: with `id`
@@ -173,7 +171,6 @@ components:
             Collections can be exported into
             json with products, this is the url
       required:
-        - id
         - active
         - handle
         - title
@@ -223,7 +220,6 @@ components:
           minLength: 3
           description: Title of collection
       required:
-        - id
         - active
         - handle
         - title
@@ -352,7 +348,6 @@ components:
                       Collections can be exported into
                       json with products, this is the url
                 required:
-                  - id
                   - active
                   - handle
                   - title
@@ -1399,7 +1394,6 @@ components:
                           - name2
                     description: Discount application (`automatic` and `manual`)
                 required:
-                  - id
                   - active
                   - title
                   - handle
@@ -1535,7 +1529,6 @@ components:
                             Collections can be exported into
                             json with products, this is the url
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -2590,7 +2583,6 @@ components:
                                 - name2
                           description: Discount application (`automatic` and `manual`)
                       required:
-                        - id
                         - active
                         - title
                         - handle
@@ -2630,7 +2622,6 @@ components:
                       Internal usage, clarifies the variant
                       projected options
                 required:
-                  - id
                   - active
                   - handle
                   - title
@@ -2677,7 +2668,6 @@ components:
                 description: The data of a variant option
               description: Variants options info
           required:
-            - id
             - active
             - handle
             - title
@@ -2806,7 +2796,6 @@ components:
                       Collections can be exported into
                       json with products, this is the url
                 required:
-                  - id
                   - active
                   - handle
                   - title
@@ -3853,7 +3842,6 @@ components:
                           - name2
                     description: Discount application (`automatic` and `manual`)
                 required:
-                  - id
                   - active
                   - title
                   - handle
@@ -3893,7 +3881,6 @@ components:
                 Internal usage, clarifies the variant
                 projected options
           required:
-            - id
             - active
             - handle
             - title
@@ -4001,7 +3988,6 @@ components:
                     description: The data of a variant option
                   description: Variants options info
               required:
-                - id
                 - active
                 - handle
                 - title
@@ -4022,7 +4008,6 @@ components:
                         type: string
                         description: The handle of the entity
                     required:
-                      - id
                       - handle
                     description: with `id`
                   description: >-
@@ -4119,7 +4104,6 @@ components:
                     Internal usage, clarifies the variant
                     projected options
               required:
-                - id
                 - active
                 - handle
                 - title
@@ -4143,7 +4127,6 @@ components:
                         type: string
                         description: The handle of the entity
                     required:
-                      - id
                       - handle
                     description: with `id`
                   description: >-
@@ -4208,7 +4191,6 @@ components:
           type: string
           description: Readable `handle` of shipping
       required:
-        - id
         - price
         - title
         - handle
@@ -4262,7 +4244,6 @@ components:
           type: string
           description: Readable `handle` of shipping
       required:
-        - id
         - price
         - title
         - handle
@@ -4317,9 +4298,11 @@ components:
             customer `id` with `au` prefix instead
         firstname:
           type: string
+          minLength: 1
           description: Firstname
         lastname:
           type: string
+          minLength: 1
           description: Lastname
         email:
           type: string
@@ -4368,7 +4351,6 @@ components:
               description: Postal code
           description: Address info of customer
       required:
-        - id
         - firstname
         - lastname
         - email
@@ -4417,9 +4399,11 @@ components:
             customer `id` with `au` prefix instead
         firstname:
           type: string
+          minLength: 1
           description: Firstname
         lastname:
           type: string
+          minLength: 1
           description: Lastname
         email:
           type: string
@@ -4468,7 +4452,6 @@ components:
               description: Postal code
           description: Address info of customer
       required:
-        - id
         - firstname
         - lastname
         - email
@@ -4517,8 +4500,6 @@ components:
             active:
               type: boolean
               description: Is the entity active ?
-          required:
-            - id
           description: with `id`
         - type: object
           properties:
@@ -5579,7 +5560,6 @@ components:
                 - name2
           description: Discount application (`automatic` and `manual`)
       required:
-        - id
         - active
         - title
         - handle
@@ -6606,7 +6586,6 @@ components:
                 - name2
           description: Discount application (`automatic` and `manual`)
       required:
-        - id
         - active
         - title
         - handle
@@ -6662,9 +6641,11 @@ components:
           description: Unique handle
         name:
           type: string
+          minLength: 1
           description: Name
         url:
           type: string
+          minLength: 1
           description: It's published public url
         usage:
           type: array
@@ -6672,7 +6653,6 @@ components:
             type: string
           description: List of assets using this image
       required:
-        - id
         - handle
         - name
         - url
@@ -6719,9 +6699,11 @@ components:
           description: Unique handle
         name:
           type: string
+          minLength: 1
           description: Name
         url:
           type: string
+          minLength: 1
           description: It's published public url
         usage:
           type: array
@@ -6729,7 +6711,6 @@ components:
             type: string
           description: List of assets using this image
       required:
-        - id
         - handle
         - name
         - url
@@ -7082,7 +7063,6 @@ components:
                             Collections can be exported into
                             json with products, this is the url
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -8137,7 +8117,6 @@ components:
                                 - name2
                           description: Discount application (`automatic` and `manual`)
                       required:
-                        - id
                         - active
                         - title
                         - handle
@@ -8273,7 +8252,6 @@ components:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
-                              - id
                               - active
                               - handle
                               - title
@@ -9330,7 +9308,6 @@ components:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
-                              - id
                               - active
                               - title
                               - handle
@@ -9370,7 +9347,6 @@ components:
                             Internal usage, clarifies the variant
                             projected options
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -9417,7 +9393,6 @@ components:
                       description: The data of a variant option
                     description: Variants options info
                 required:
-                  - id
                   - active
                   - handle
                   - title
@@ -9489,7 +9464,6 @@ components:
               type: string
               description: Readable `handle` of shipping
           required:
-            - id
             - price
             - title
             - handle
@@ -10942,7 +10916,6 @@ components:
                               - name2
                         description: Discount application (`automatic` and `manual`)
                     required:
-                      - id
                       - active
                       - title
                       - handle
@@ -11114,7 +11087,6 @@ components:
                                       Collections can be exported into
                                       json with products, this is the url
                                 required:
-                                  - id
                                   - active
                                   - handle
                                   - title
@@ -12178,7 +12150,6 @@ components:
                                           - name2
                                     description: Discount application (`automatic` and `manual`)
                                 required:
-                                  - id
                                   - active
                                   - title
                                   - handle
@@ -12314,7 +12285,6 @@ components:
                                             Collections can be exported into
                                             json with products, this is the url
                                       required:
-                                        - id
                                         - active
                                         - handle
                                         - title
@@ -13390,7 +13360,6 @@ components:
                                                 - name2
                                           description: Discount application (`automatic` and `manual`)
                                       required:
-                                        - id
                                         - active
                                         - title
                                         - handle
@@ -13432,7 +13401,6 @@ components:
                                       Internal usage, clarifies the variant
                                       projected options
                                 required:
-                                  - id
                                   - active
                                   - handle
                                   - title
@@ -13481,7 +13449,6 @@ components:
                                 description: The data of a variant option
                               description: Variants options info
                           required:
-                            - id
                             - active
                             - handle
                             - title
@@ -13554,7 +13521,6 @@ components:
                   type: string
                   description: Readable `handle` of shipping
               required:
-                - id
                 - price
                 - title
                 - handle
@@ -14692,7 +14658,6 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
-              - id
               - active
               - title
               - handle
@@ -14704,7 +14669,6 @@ components:
       required:
         - line_items
         - shipping_method
-        - id
         - status
         - pricing
     orderUpsert:
@@ -14911,7 +14875,6 @@ components:
                             Collections can be exported into
                             json with products, this is the url
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -15966,7 +15929,6 @@ components:
                                 - name2
                           description: Discount application (`automatic` and `manual`)
                       required:
-                        - id
                         - active
                         - title
                         - handle
@@ -16102,7 +16064,6 @@ components:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
-                              - id
                               - active
                               - handle
                               - title
@@ -17159,7 +17120,6 @@ components:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
-                              - id
                               - active
                               - title
                               - handle
@@ -17199,7 +17159,6 @@ components:
                             Internal usage, clarifies the variant
                             projected options
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -17246,7 +17205,6 @@ components:
                       description: The data of a variant option
                     description: Variants options info
                 required:
-                  - id
                   - active
                   - handle
                   - title
@@ -17318,7 +17276,6 @@ components:
               type: string
               description: Readable `handle` of shipping
           required:
-            - id
             - price
             - title
             - handle
@@ -18765,7 +18722,6 @@ components:
                               - name2
                         description: Discount application (`automatic` and `manual`)
                     required:
-                      - id
                       - active
                       - title
                       - handle
@@ -18937,7 +18893,6 @@ components:
                                       Collections can be exported into
                                       json with products, this is the url
                                 required:
-                                  - id
                                   - active
                                   - handle
                                   - title
@@ -20001,7 +19956,6 @@ components:
                                           - name2
                                     description: Discount application (`automatic` and `manual`)
                                 required:
-                                  - id
                                   - active
                                   - title
                                   - handle
@@ -20137,7 +20091,6 @@ components:
                                             Collections can be exported into
                                             json with products, this is the url
                                       required:
-                                        - id
                                         - active
                                         - handle
                                         - title
@@ -21213,7 +21166,6 @@ components:
                                                 - name2
                                           description: Discount application (`automatic` and `manual`)
                                       required:
-                                        - id
                                         - active
                                         - title
                                         - handle
@@ -21255,7 +21207,6 @@ components:
                                       Internal usage, clarifies the variant
                                       projected options
                                 required:
-                                  - id
                                   - active
                                   - handle
                                   - title
@@ -21304,7 +21255,6 @@ components:
                                 description: The data of a variant option
                               description: Variants options info
                           required:
-                            - id
                             - active
                             - handle
                             - title
@@ -21377,7 +21327,6 @@ components:
                   type: string
                   description: Readable `handle` of shipping
               required:
-                - id
                 - price
                 - title
                 - handle
@@ -22515,7 +22464,6 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
-              - id
               - active
               - title
               - handle
@@ -22527,7 +22475,6 @@ components:
       required:
         - line_items
         - shipping_method
-        - id
         - status
         - pricing
     post:
@@ -22584,7 +22531,6 @@ components:
           type: string
           description: Rich text of post
       required:
-        - id
         - handle
         - title
         - text
@@ -22637,7 +22583,6 @@ components:
           type: string
           description: Rich text of post
       required:
-        - id
         - handle
         - title
         - text
@@ -22758,7 +22703,6 @@ components:
                   Collections can be exported into
                   json with products, this is the url
             required:
-              - id
               - active
               - handle
               - title
@@ -22889,7 +22833,6 @@ components:
                         Collections can be exported into
                         json with products, this is the url
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -23937,7 +23880,6 @@ components:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
-                    - id
                     - active
                     - title
                     - handle
@@ -24073,7 +24015,6 @@ components:
                               Collections can be exported into
                               json with products, this is the url
                         required:
-                          - id
                           - active
                           - handle
                           - title
@@ -25129,7 +25070,6 @@ components:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
-                          - id
                           - active
                           - title
                           - handle
@@ -25169,7 +25109,6 @@ components:
                         Internal usage, clarifies the variant
                         projected options
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -25216,7 +25155,6 @@ components:
                   description: The data of a variant option
                 description: Variants options info
             required:
-              - id
               - active
               - handle
               - title
@@ -25281,7 +25219,6 @@ components:
                 type: string
                 description: Readable `handle` of shipping
             required:
-              - id
               - price
               - title
               - handle
@@ -26326,7 +26263,6 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
-              - id
               - active
               - title
               - handle
@@ -26391,14 +26327,13 @@ components:
                 type: string
                 description: Rich text of post
             required:
-              - id
               - handle
               - title
               - text
             description: with `id`
           description: Posts related to this storefront
       required:
-        - id
+        - active
         - handle
         - title
       description: with `id`
@@ -26512,7 +26447,6 @@ components:
                   Collections can be exported into
                   json with products, this is the url
             required:
-              - id
               - active
               - handle
               - title
@@ -26643,7 +26577,6 @@ components:
                         Collections can be exported into
                         json with products, this is the url
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -27691,7 +27624,6 @@ components:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
-                    - id
                     - active
                     - title
                     - handle
@@ -27827,7 +27759,6 @@ components:
                               Collections can be exported into
                               json with products, this is the url
                         required:
-                          - id
                           - active
                           - handle
                           - title
@@ -28883,7 +28814,6 @@ components:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
-                          - id
                           - active
                           - title
                           - handle
@@ -28923,7 +28853,6 @@ components:
                         Internal usage, clarifies the variant
                         projected options
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -28970,7 +28899,6 @@ components:
                   description: The data of a variant option
                 description: Variants options info
             required:
-              - id
               - active
               - handle
               - title
@@ -29035,7 +28963,6 @@ components:
                 type: string
                 description: Readable `handle` of shipping
             required:
-              - id
               - price
               - title
               - handle
@@ -30080,7 +30007,6 @@ components:
                       - name2
                 description: Discount application (`automatic` and `manual`)
             required:
-              - id
               - active
               - title
               - handle
@@ -30145,14 +30071,13 @@ components:
                 type: string
                 description: Rich text of post
             required:
-              - id
               - handle
               - title
               - text
             description: with `id`
           description: Posts related to this storefront
       required:
-        - id
+        - active
         - handle
         - title
       description: with `id`
@@ -31346,6 +31271,14 @@ paths:
           required: true
           name: file_key
           in: path
+        - schema:
+            type: boolean
+            default: true
+            description: Prefer signed url if supported
+            example: true
+          required: false
+          name: signed
+          in: query
       responses:
         "200":
           description: image bytearray
@@ -31367,6 +31300,14 @@ paths:
           required: true
           name: file_key
           in: path
+        - schema:
+            type: boolean
+            default: true
+            description: Prefer signed url if supported
+            example: true
+          required: false
+          name: signed
+          in: query
       requestBody:
         content:
           "*/*":
@@ -31392,6 +31333,14 @@ paths:
           required: true
           name: file_key
           in: path
+        - schema:
+            type: boolean
+            default: true
+            description: Prefer signed url if supported
+            example: true
+          required: false
+          name: signed
+          in: query
       responses:
         "200":
           description: A `http` request instruction, that you should execute
@@ -31421,6 +31370,14 @@ paths:
           required: true
           name: file_key
           in: path
+        - schema:
+            type: boolean
+            default: true
+            description: Prefer signed url if supported
+            example: true
+          required: false
+          name: signed
+          in: query
       responses:
         "200":
           description: A `http` request instruction, that you should execute
@@ -32093,7 +32050,6 @@ paths:
                               Collections can be exported into
                               json with products, this is the url
                         required:
-                          - id
                           - active
                           - handle
                           - title
@@ -33149,7 +33105,6 @@ paths:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
-                          - id
                           - active
                           - title
                           - handle
@@ -33189,7 +33144,6 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -33519,7 +33473,6 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -33543,7 +33496,6 @@ paths:
                             type: string
                             description: The handle of the entity
                         required:
-                          - id
                           - handle
                         description: with `id`
                       description: >-
@@ -33788,7 +33740,6 @@ paths:
                         Collections can be exported into
                         json with products, this is the url
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -33958,7 +33909,6 @@ paths:
                               Collections can be exported into
                               json with products, this is the url
                         required:
-                          - id
                           - active
                           - handle
                           - title
@@ -35014,7 +34964,6 @@ paths:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
-                          - id
                           - active
                           - title
                           - handle
@@ -35054,7 +35003,6 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -36153,7 +36101,6 @@ paths:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
-                    - id
                     - active
                     - title
                     - handle
@@ -37294,7 +37241,6 @@ paths:
                               Collections can be exported into
                               json with products, this is the url
                         required:
-                          - id
                           - active
                           - handle
                           - title
@@ -38350,7 +38296,6 @@ paths:
                                   - name2
                             description: Discount application (`automatic` and `manual`)
                         required:
-                          - id
                           - active
                           - title
                           - handle
@@ -38390,7 +38335,6 @@ paths:
                         Internal usage, clarifies the variant
                         projected options
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -39731,7 +39675,6 @@ paths:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
-                              - id
                               - active
                               - handle
                               - title
@@ -40788,7 +40731,6 @@ paths:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
-                              - id
                               - active
                               - title
                               - handle
@@ -40924,7 +40866,6 @@ paths:
                                         Collections can be exported into
                                         json with products, this is the url
                                   required:
-                                    - id
                                     - active
                                     - handle
                                     - title
@@ -41997,7 +41938,6 @@ paths:
                                             - name2
                                       description: Discount application (`automatic` and `manual`)
                                   required:
-                                    - id
                                     - active
                                     - title
                                     - handle
@@ -42039,7 +41979,6 @@ paths:
                                   Internal usage, clarifies the variant
                                   projected options
                             required:
-                              - id
                               - active
                               - handle
                               - title
@@ -42086,7 +42025,6 @@ paths:
                             description: The data of a variant option
                           description: Variants options info
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -42215,7 +42153,6 @@ paths:
                                   Collections can be exported into
                                   json with products, this is the url
                             required:
-                              - id
                               - active
                               - handle
                               - title
@@ -43272,7 +43209,6 @@ paths:
                                       - name2
                                 description: Discount application (`automatic` and `manual`)
                             required:
-                              - id
                               - active
                               - title
                               - handle
@@ -43312,7 +43248,6 @@ paths:
                             Internal usage, clarifies the variant
                             projected options
                       required:
-                        - id
                         - active
                         - handle
                         - title
@@ -44406,7 +44341,6 @@ paths:
                             - name2
                       description: Discount application (`automatic` and `manual`)
                   required:
-                    - id
                     - active
                     - title
                     - handle
@@ -44534,7 +44468,6 @@ paths:
                       type: string
                       description: Readable `handle` of shipping
                   required:
-                    - id
                     - price
                     - title
                     - handle
@@ -44631,7 +44564,6 @@ paths:
                         Collections can be exported into
                         json with products, this is the url
                   required:
-                    - id
                     - active
                     - handle
                     - title
@@ -44731,7 +44663,6 @@ paths:
                       type: string
                       description: Rich text of post
                   required:
-                    - id
                     - handle
                     - title
                     - text

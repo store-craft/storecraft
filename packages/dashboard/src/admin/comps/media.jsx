@@ -18,7 +18,7 @@ import { HR } from './common-ui.jsx'
 import Img from './Img.jsx'
 
 /**
- * `CameraSource` will fetch imae from local camera
+ * `CameraSource` will fetch image from local camera
  * 
  * @typedef {object} CameraSourceParams
  * @prop {(value: FileList) => void} onFile
@@ -78,7 +78,7 @@ const CameraSource = (
 }
 
 /**
- * `LocalSource` will fetch file from a local device
+ * `LocalSource` will fetch image from a local device
  * 
  * @typedef {object} LocalSourceParams
  * @prop {(value: FileList) => void} onFile
@@ -251,16 +251,16 @@ const GallerySource = (
 const test_url = 'https://images-na.ssl-images-amazon.com/images/I/91iHBLGTsIL._SL1500_.jpg'
 
 /**
- * `UrlSource` will fetch file from a simple `url`
+ * `UrlSource` will fetch image from a simple `url`
  * 
  * @typedef {object} UrlSourceParams
  * @prop {(url: string, requires_edit?: boolean) => void} onFinish
  * @prop {string} className
  * 
  * @param {UrlSourceParams & 
-*  React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
-* } params
-*/
+ *  React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
+ * } params
+ */
 const UrlSource = (
   {
     onFinish, className, ...rest

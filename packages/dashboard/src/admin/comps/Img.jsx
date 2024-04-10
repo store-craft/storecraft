@@ -4,11 +4,8 @@ import { getSDK } from '@/admin-sdk/index.js'
 const Img = forwardRef(
 
   /**
-   * @typedef {object} InternalImgParams
-   * @prop {string} [src]
    * 
-   * @typedef {InternalImgParams & 
-   *  React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+   * @typedef { React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
    * } ImgParams
    * 
    * @param {ImgParams} param

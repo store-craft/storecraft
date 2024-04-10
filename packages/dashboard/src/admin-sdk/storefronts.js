@@ -4,8 +4,10 @@ import { collection_base } from './utils.api.fetch.js';
 /**
  * Base `storefronts` **CRUD**
  * 
- * @extends {collection_base<import('@storecraft/core/v-api').StorefrontTypeUpsert, 
- * import('@storecraft/core/v-api').StorefrontType>}
+ * @extends {collection_base<
+ *  import('@storecraft/core/v-api').StorefrontTypeUpsert, 
+ *  import('@storecraft/core/v-api').StorefrontType>
+ * }
  */
 export default class Storefronts extends collection_base {
 

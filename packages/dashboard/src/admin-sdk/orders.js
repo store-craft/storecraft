@@ -5,8 +5,10 @@ import { collection_base } from './utils.api.fetch.js';
 /**
  * Base `orders` **CRUD**
  * 
- * @extends {collection_base<import('@storecraft/core/v-api').OrderDataUpsert, 
- * import('@storecraft/core/v-api').OrderData>}
+ * @extends {collection_base<
+ *  import('@storecraft/core/v-api').OrderDataUpsert, 
+ *  import('@storecraft/core/v-api').OrderData>
+ * }
  */
 export default class Orders extends collection_base {
 

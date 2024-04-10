@@ -42,8 +42,9 @@ export const TopActions = forwardRef(
       setSearch: setSearch,
     }),
     [search],
-  )
+  );
 
+  /** @type {import('react').KeyboardEventHandler<HTMLInputElement>} */
   const onKeyPress = useCallback(
     (e) => {
       var code = (e.keyCode ? e.keyCode : e.which);
@@ -52,7 +53,7 @@ export const TopActions = forwardRef(
           reload()
       }
     }, [reload]
-  )
+  );
 
   return (
 <div className={className}>
@@ -60,14 +61,17 @@ export const TopActions = forwardRef(
                   flex flex-row justify-between items-center px-0 --border-t`}>
     <Link to={createLink} draggable='false' className="m-2">
       <BlingButton2
-        className='h-9 w-16 text-base rounded-lg' stroke='p-0.5' children='add'
-        icon={
-          <IoCreateOutline className='inline shelf-text-label-color 
-                                      text-xl text-grey-800'/>
-        }
-      />
+          className='h-9 w-16 text-base rounded-lg' 
+          stroke='p-0.5' children='add'
+          icon={
+            <IoCreateOutline 
+                className='inline shelf-text-label-color 
+                           text-xl text-grey-800'/>
+          }
+        />
     </Link>            
-    <BlingInput className='m-1 flex-1 h-fit max-w-[20rem]' 
+    <BlingInput 
+        className='m-1 flex-1 h-fit max-w-[20rem]' 
          stroke='p-px' rounded='rounded-md'
          type='search' placeholder={searchTitle} 
          value={search}
@@ -75,11 +79,12 @@ export const TopActions = forwardRef(
          onKeyPress={onKeyPress} 
          inputClsName='h-9' />        
 
-    <IoReloadSharp className={' bg-kf-500 text-3xl mx-3 \
+    <IoReloadSharp 
+        className={' bg-kf-500 text-3xl mx-3 \
             cursor-pointer transition-all duration-300 rounded-full \
              md:hover:bg-pink-500 text-white \
              hover:p-1 ' + (isLoading ? 'animate-spin p-1 bg-pink-500' : 'p-1.5') }
-            onClick={reload} 
+        onClick={reload} 
      />
   </div>
 </div>
@@ -88,12 +93,14 @@ export const TopActions = forwardRef(
 
 /**
  * 
- * @param {object} param
- * @param {() => Promise<void>} param.next
- * @param {() => Promise<void>} param.prev
- * @param {number} [param.limit]
- * @param {(v: number) => void} param.onLimitChange
- * @param {string} [param.className]
+ * @typedef {object} BottomActionsParams
+ * @prop {() => Promise<void>} next
+ * @prop {() => Promise<void>} prev
+ * @prop {number} [limit=5]
+ * @prop {(v: number) => void} onLimitChange
+ * @prop {string} [className]
+ * 
+ * @param {BottomActionsParams} params
  */
 export const BottomActions = (
   { 
@@ -101,12 +108,13 @@ export const BottomActions = (
   }
 ) => {
   
+  /** @type {import('react').ChangeEventHandler<HTMLSelectElement>} */
   const _onLimitChange = useCallback(
     (e) => {
       const l = parseInt(e.target.value)
       onLimitChange && onLimitChange(l)
     }, [onLimitChange]
-  )
+  );
   
   return (
   <div className={`h-fit --bg-slate-50 py-3 w-full flex
@@ -115,16 +123,21 @@ export const BottomActions = (
     <PromisableLoadingButton 
         Icon={<MdNavigateNext className='rotate-180' />} 
         text='' className='text-lg' onClick={prev} />
-    <select name='limit' onChange={_onLimitChange} value={limit} 
-            className='m-1 h-8 px-4 rounded-md text-sm 
-                     bg-slate-50 dark:bg-slate-800 --border focus:outline-none'>
+    <select 
+        name='limit' 
+        onChange={_onLimitChange} value={limit} 
+        className='m-1 h-8 px-4 rounded-md text-sm 
+                  bg-slate-50 dark:bg-slate-800 
+                  --border focus:outline-none'>
       <option value='5'>5</option>
       <option value='10'>10</option>
       <option value='15'>15</option>
       <option value='20'>20</option>
     </select>                    
-    <PromisableLoadingButton Icon={<MdNavigateNext />} text=''
-                    className='text-lg ' onClick={next} />
+    <PromisableLoadingButton 
+        Icon={<MdNavigateNext />} text=''
+        className='text-lg ' 
+        onClick={next} />
   </div>
   )
 }

@@ -13,8 +13,9 @@ import { useState } from 'react'
 const ClipBoardCopy = ({ value }) => {
   const [copied, setCopied] = useState(false)
 
+  /** @type {import('react').MouseEventHandler<SVGElement>} */
   const onClickCopy = useCallback(
-    e => {
+    (e) => {
       setCopied(true)
       write_clipboard(value)
       setTimeout(
@@ -26,14 +27,16 @@ const ClipBoardCopy = ({ value }) => {
 
   return (
 <>
-  <RxCopy className='text-base cursor-pointer text-gray-500 
-                      hover:text-gray-800 dark:hover:text-gray-400 inline 
-                      -translate-y-0.5' 
-          onClick={onClickCopy} />
+  <RxCopy 
+      className='text-base cursor-pointer text-gray-500 
+                hover:text-gray-800 dark:hover:text-gray-400 
+                inline -translate-y-0.5' 
+      onClick={onClickCopy} />
   { copied && 
     (
-      <span children='(copied)' 
-            className='text-xs -translate-x-2' />      
+      <span 
+          children='(copied)' 
+          className='text-xs -translate-x-2' />      
     )
   }
 </>        

@@ -25,10 +25,9 @@
  * @template {any} [V=any]
  * @typedef {object} CollectionViewComponentParams The `params` of components of
  * `CollectionView`
- * 
- * @property {CollectionViewField} field Key of field in the data
- * @property {CollectionViewContext} context Name of field
- * @property {V} value Name of field
+ * @property {CollectionViewField} [field] Key of field in the data
+ * @property {CollectionViewContext} [context] Name of field
+ * @property {V} [value] Name of field
  */
 
 /**

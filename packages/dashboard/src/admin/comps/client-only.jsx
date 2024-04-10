@@ -1,11 +1,15 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 
 /**
  * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} param0 
- * @returns 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params 
  */
-export default function ClientOnly({ children, ...rest }) {
+export default function ClientOnly(
+  { 
+    ...rest 
+  }
+) {
+
   const [hasMounted, setHasMounted] = useState(false)
   useEffect(() => {
     setHasMounted(true)
@@ -14,9 +18,7 @@ export default function ClientOnly({ children, ...rest }) {
     return null;
   }
   return (
-    <div {...rest}>
-      {children}
-    </div>
+    <div {...rest}/>
   )
 }
 

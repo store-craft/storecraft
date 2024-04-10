@@ -8,7 +8,7 @@ import { forwardRef, useCallback,
 import { CgOptions } from 'react-icons/cg/index.js'
 import useToggle from '@/admin/hooks/useToggle.js'
 import Drawer from './drawer.jsx'
-import Img from './Img.jsx'
+import Img from './img.jsx'
 
 /**
  * A simple switch view for image editor
@@ -115,12 +115,14 @@ const Options = forwardRef(
     {
       options.map(
         (it, ix) => (
-          <div key={it} children={it} className={
-            `rounded-md shelf-border-color border px-2 py-px
-             cursor-pointer 
-            ${selected==ix ? 'bg-black/10 dark:bg-black/50' : 'bg-transparent'}`
-            } 
-            onClick={_ => setSelected(ix)} />
+          <div 
+              key={it} children={it} 
+              className={
+                `rounded-md shelf-border-color border px-2 py-px
+                cursor-pointer 
+                ${selected==ix ? 'bg-black/10 dark:bg-black/50' : 'bg-transparent'}`
+              } 
+              onClick={_ => setSelected(ix)} />
         )
       )
     }

@@ -9,7 +9,7 @@
  * @prop {string | ((v: string) => string)} [label]
  * 
  * @typedef {InternalCapsuleParams &
- * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } CapsuleParams
  * 
  * @param {CapsuleParams} param

@@ -27,13 +27,13 @@ const BrowseCollection = (
 ) => {
 
   const [focus, setFocus] = useState(false)
-  /**@type {[import('@storecraft/core/v-api').BaseType[], import('react').Dispatch<import('react').SetStateAction<import('@storecraft/core/v-api').BaseType[]>>]} */
-  const [selected, setSelected] = useState([])
+  /**@type {ReturnType<typeof useState<import('@storecraft/core/v-api').BaseType[]>>} */
+  const [selected, setSelected] = useState([]);
   const [limit, setLimit] = useState(5)
   const { 
     pages, page, loading, error, 
     prev, next, query, queryCount, deleteDocument 
-  } = useCommonCollection(collectionId, true)
+  } = useCommonCollection(collectionId, true);
 
   const onAdd = useCallback(
     /** @param {import('@storecraft/core/v-api').BaseType} item */
@@ -61,8 +61,8 @@ const BrowseCollection = (
   /** @type {import('react').LegacyRef<HTMLInputElement>} */
   const ref_input = useRef()
 
+  /** @type {import('react').EventHandler<import('react').SyntheticEvent>} */
   const onSubmit = useCallback(
-    /** @param {import('react').BaseSyntheticEvent} e  */
     (e) => {
       e?.preventDefault()
       const search_terms = ref_input.current.value;
@@ -86,8 +86,11 @@ const BrowseCollection = (
                 text-base flex flex-col overflow-hidden'>
 
   <p children={title} className='pb-3 border-b shelf-border-color-soft' />
-  <form onSubmit={onSubmit} className='w-full' 
-        onFocus={() => setFocus(true)} tabIndex={4344}>
+  <form 
+      onSubmit={onSubmit} className='w-full' 
+      onFocus={() => setFocus(true)} 
+      tabIndex={4344}>
+        
     <Bling rounded='rounded-xl' stroke='p-0.5' >
       <div className='flex flex-row justify-between items-center'>
         <input ref={ref_input} type='search' 
@@ -138,12 +141,15 @@ const BrowseCollection = (
     }
       </div>
       <div className='self-end flex flex-row gap-5'>
-        <BlingButton stroke='p-0.5' className='opacity-60' 
-                children='cancel' 
-                onClick={onCancel} />
-        <BlingButton stroke='p-0.5' 
-                children='save' 
-                onClick={() => onSave(selected)} />
+        <BlingButton 
+            stroke='p-0.5' 
+            className='opacity-60' 
+            children='cancel' 
+            onClick={onCancel} />
+        <BlingButton 
+            stroke='p-0.5' 
+            children='save' 
+            onClick={() => onSave(selected)} />
       </div>
     </div>   
 
@@ -153,8 +159,9 @@ const BrowseCollection = (
         <p children={`Select from search results ` + (queryCount>=0 ? `(${queryCount})` : '')}
                 className='font-semibold text-base '/>
         <IoCloseSharp 
-                  className='h-6 w-9 pl-3 border-l shelf-border-color-soft cursor-pointer' 
-                  onClick={() => setFocus(false)}/>
+            className='h-6 w-9 pl-3 border-l 
+                  shelf-border-color-soft cursor-pointer' 
+            onClick={() => setFocus(false)}/>
       </div>
       <Bling rounded='rounded-xl'
              className='flex-1 overflow-y-auto'>

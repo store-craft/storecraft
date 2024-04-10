@@ -15,7 +15,7 @@ import { DragDropContainer, DropTarget } from 'react-drag-drop-container'
 import { hasTouchScreen, read_clipboard } from '../utils/index.js'
 import { BlingButton } from './common-button.jsx'
 import { HR } from './common-ui.jsx'
-import Img from './Img.jsx'
+import Img from './img.jsx'
 
 /**
  * `CameraSource` will fetch image from local camera
@@ -688,7 +688,8 @@ const Images = (
       (u, ix) => (
         <div className='py-3 w-24 h-24 relative --bg-red-200' key={ix}>
           <div className='relative w-20 h-20'>
-            <Img src={u.preview} 
+            <Img 
+                src={u.preview} 
                 crossOrigin='anonymous'
                 className='object-cover w-20 h-20 rounded-xl shadow-lg 
                             border border-black opacity-30 relative'/>

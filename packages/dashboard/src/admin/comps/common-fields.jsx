@@ -87,8 +87,8 @@ overflow-x-auto inline-block whitespace-nowrap';
  * @prop {import('react').ReactNode} [children]
  * 
  * @typedef {import('./collection-view.jsx').CollectionViewComponentParams<string> & 
-* InternalSpanParams & 
-* React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+*   InternalSpanParams & 
+*   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
 * } SpanParams
 * 
 * @param {SpanParams} param

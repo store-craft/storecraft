@@ -362,14 +362,14 @@ const URLS = [
  */
 const Media = (
   {
-    field, value, onChange, className, ...rest
+    field, value = [], onChange, className, ...rest
   }
 ) => {
 
   const [_hasTouchScreen, setHasTouchScreen] = useState(false);
   /** @type {useStateInfer<Upload[]>} */
   const [uploads, setUploads] = useState([]);
-  const [urls, setUrls] = useState(value);
+  const [urls, setUrls] = useState(value ?? []);
   
   // crop
   /** @type {useStateInfer<string>} */
@@ -448,7 +448,7 @@ const Media = (
         return;
         
       const obj_url = URL.createObjectURL(blob)
-      const id = Date.now()
+      const id = Date.now();
       setUploads(
         us => [
           { status: 'working', id, preview: obj_url}, 
@@ -466,12 +466,12 @@ const Media = (
 
       // upload here
       try {
-        const [url] = await getSDK().storage.uploadImage(
-          `images/${name}`, blob, type, { 
-            cacheControl: `public, max-age=${60*60*24*365}, immutable`
-          }
+        const ok = await getSDK().storage.putBytes(
+          `images/${name}`, blob
         );
 
+        if(!ok) throw 'wow';
+        const url = `storage://images/${name}`
         const us = [url, ...urls]                        ;
         setUrls(us);
         onChange && onChange(us);
@@ -684,7 +684,7 @@ const Images = (
   <div className='flex flex-row justify-start flex-wrap w-full
                   h-fit gap-3 '>
     { 
-    uploads.map(
+    uploads?.map(
       (u, ix) => (
         <div className='py-3 w-24 h-24 relative --bg-red-200' key={ix}>
           <div className='relative w-20 h-20'>
@@ -703,7 +703,7 @@ const Images = (
     )
     }
     {
-    urls.map(
+    urls?.map(
       (u, ix) => (
         <DragDropContainer 
             key={`urls_draggable_${ix + uploads.length}`}

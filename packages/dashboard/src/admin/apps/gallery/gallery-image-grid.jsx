@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Img from '@/admin/comps/Img.jsx'
+import Img from '@/admin/comps/img.jsx'
 
 
 /**
@@ -34,18 +34,20 @@ export const Image = (
           draggable='false'
           onClick={e => onClickImage(e, data)} >
       <div className='w-full h-24 sm:h-40 relative rounded-md overflow-hidden'>
-        <Img src={url} 
+        <Img 
+            src={url} 
             crossOrigin='anonymous'
             draggable='false'
-             className='object-cover w-[99%] mx-auto h-full -opacity-20 
-                        group-hover:opacity-100 transition-opacity duration-300 
-                        ease-linear' />
+            className='object-cover w-[99%] mx-auto h-full -opacity-20 
+                       group-hover:opacity-100 transition-opacity duration-300 
+                       ease-linear' />
       </div>
     </Link>
     <div className='mx-px --my-2'>
-      <input value={url} readOnly
-        className='w-full p-1 mt-0 whitespace-pre break-words 
-                   border bg-gray-200 text-gray-600 rounded-b-md'/>
+      <input 
+          value={url} readOnly
+          className='w-full p-1 mt-0 whitespace-pre break-words 
+                     border bg-gray-200 text-gray-600 rounded-b-md'/>
     </div>
   </div>
       )
@@ -54,7 +56,10 @@ export const Image = (
   /**
    * @typedef {object} InternalImageGridParams
    * @prop {import('@storecraft/core/v-api').ImageType[]} images
-   * @prop {() => void} onClickImage
+   * @prop {(
+   *  e: import('react').MouseEvent<HTMLAnchorElement, MouseEvent>, 
+   *  data: import('@storecraft/core/v-api').ImageType
+   * ) => void} onClickImage
    * @prop {string} [className]
    * 
    * @typedef {InternalImageGridParams & 
@@ -63,7 +68,11 @@ export const Image = (
    * 
    * @param {ImageGridParams} params
    */
-  const ImageGrid = ({images, onClickImage, className, ...rest}) => {
+  const ImageGrid = (
+    {
+      images, onClickImage, className, ...rest
+    }
+  ) => {
   
     return (
 <div className={`${className} overflow-y-auto`} {...rest}>
@@ -72,8 +81,10 @@ export const Image = (
   {
     images.map(
       (it, ix) => (
-        <Image data={it} key={it.handle} 
-               onClickImage={onClickImage} />
+        <Image 
+            data={it} 
+            key={it.handle} 
+            onClickImage={onClickImage} />
       )
     )
   }

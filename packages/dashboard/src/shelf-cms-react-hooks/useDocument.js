@@ -2,31 +2,46 @@ import { useCallback, useEffect, useState } from "react"
 import useTrigger from "./common/useTrigger.js"
 import { getSDK } from '@/admin-sdk/index.js'
 
- 
 /**
- * @template {import("@storecraft/core/v-api").BaseType} T the document type
+ * @template T the `document` type
+ * 
+ * @typedef {Omit<ReturnType<typeof useCommonApiDocument<T>>, 'doc'> & 
+ *  {
+ *    doc: T
+ *  }
+ * } HookReturnType This `type` will give you the return type of the hook
+ * 
+ */
+
+/**
+ * @typedef {'load' | 'update' | 'delete'} Op
+ */
+
+/**
+ * @template T the document type
  * 
  * @param {string} resource the table `identifier`
  * @param {string} document the document `id` or `handle`
  * @param {boolean} autoLoad 
  * @param {boolean} try_cache_on_autoload 
- * @param {boolean} stale 
  * 
- * @returns 
  */
 export function useCommonApiDocument(
   resource=undefined, document=undefined, autoLoad=true, 
-  try_cache_on_autoload=true, stale=false
+  try_cache_on_autoload=true
 ) {
 
   const [location, setLocation] = useState([resource, document])
   const [loading, setLoading] = useState(
     (resource && document && autoLoad) ? true : false
   );
-  const [data, setData] = useState({})
+  
+  /** @type {ReturnType<typeof useState<T>>} */
+  const [data, setData] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
-  const [error, setError] = useState(undefined)
-  const [op, setOp] = useState(undefined)
+  const [error, setError] = useState(undefined);
+  /** @type {ReturnType<typeof useState<Op>>} */
+  const [op, setOp] = useState(undefined);
   const trigger = useTrigger()
 
   useEffect(
@@ -103,7 +118,7 @@ export function useCommonApiDocument(
 
       try {
         await getSDK()[resource].delete(location[1]);
-        setData({})
+        setData(undefined)
         setHasLoaded(true)
         return location[1]
       } catch (e) {
@@ -121,7 +136,7 @@ export function useCommonApiDocument(
         throw new Error('useDocument: no Collection Id')
         
       setLocation([resource, document])
-      setData({})
+      setData(undefined)
     }, [resource, document]
   )
 
@@ -132,7 +147,8 @@ export function useCommonApiDocument(
   )
 
   return {
-    doc: stale || (document===location[1] && resource===location[0]) ? data : {}, 
+    // doc: (document===location[1] && resource===location[0]) ? data : {}, 
+    doc: data, 
     loading, hasLoaded, error, op, 
     actions: { 
       reload, upsert, deleteDocument, setError,

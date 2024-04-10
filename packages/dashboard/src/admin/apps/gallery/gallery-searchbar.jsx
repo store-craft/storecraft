@@ -1,22 +1,53 @@
 import { forwardRef, useCallback, 
-         useImperativeHandle,
-         useState } from "react"
+  useImperativeHandle, useState } from "react"
 import { IoReloadSharp } from "react-icons/io5/index.js"
-import { Bling, BlingInput } from "@/admin/comps/common-ui.jsx"
+import { BlingInput } from "@/admin/comps/common-ui.jsx"
+
+/**
+ * @typedef {object} ImpInterface
+ * @prop {() => string} getSearch
+ * @prop {(value: string) => void} setSearch
+ */
 
 const SearchBar = forwardRef(
-  ({count, reload, searchTitle, isLoading, className }, ref) => {
+  /**
+   * 
+   * @typedef {object} InnerSearchBarParams
+   * @prop {number} count
+   * @prop {string} searchTitle
+   * @prop {boolean} isLoading
+   * @prop {() => void} reload
+   * 
+   * @param {InnerSearchBarParams & 
+   *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+   * } params
+   * @param {*} ref 
+   * 
+   */
+  (
+    {
+      count, reload, searchTitle, isLoading, ...rest 
+    }, ref
+  ) => {
+
   const [search, setSearch] = useState('')
 
   useImperativeHandle(
     ref,
-    () => ({
-      getSearch: () => search,
-      setSearch: setSearch,
-    }),
+
+    /**
+     * @returns {ImpInterface}
+     */
+    () => (
+      {
+        getSearch: () => search,
+        setSearch: setSearch,
+      }
+    ),
     [search],
   )
 
+  /** @type {React.KeyboardEventHandler<HTMLInputElement>} */
   const onKeyPress = useCallback(
     (e) => {
       var code = (e.keyCode ? e.keyCode : e.which);
@@ -24,11 +55,12 @@ const SearchBar = forwardRef(
           e.preventDefault();
           reload()
       }
-  }, [reload])
+    }, [reload]
+  );
   
 
   return (
-<div className={className}>
+<div {...rest} >
   <div className={`py-5 w-full text-grey-800 
                   flex flex-row justify-between items-center px-3`}>
 
@@ -41,12 +73,12 @@ const SearchBar = forwardRef(
         value={search}
         onChange={e => setSearch(e.currentTarget.value)} 
         onKeyPress={onKeyPress} />          
-    <IoReloadSharp className={' bg-kf-500 text-3xl \
-            cursor-pointer transition-all duration-300 rounded-full \
-             hover:bg-pink-400 text-white \
-            p-1.5 hover:p-1 ' + (isLoading ? 'animate-spin' : '') }
-            onClick={reload} />
-            
+    <IoReloadSharp 
+        className={' bg-kf-500 text-3xl \
+                  cursor-pointer transition-all duration-300 rounded-full \
+                  hover:bg-pink-400 text-white \
+                  p-1.5 hover:p-1 ' + (isLoading ? 'animate-spin' : '') }
+        onClick={reload} />
   </div>
 </div>
   )

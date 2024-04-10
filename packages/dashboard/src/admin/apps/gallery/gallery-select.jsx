@@ -7,7 +7,8 @@ const QP = {}
 const GallerySelect = forwardRef(
   /**
    * @typedef {import('./overlay.jsx').ImpInterface} ImpInterface
-   * TODO: 
+   * 
+   * 
    * @typedef {object} GallerySelectParams
    * @prop {object} [query_params={}]
    * @prop {(img: import('@storecraft/core/v-api').ImageType) => void} onSelect
@@ -21,6 +22,7 @@ const GallerySelect = forwardRef(
     }, ref
   ) => {
 
+  /** @type {import('./gallery.jsx').InnerGalleryParams["onClickImage"]} */
   const onSelectInternal = useCallback(
     (e, img) => { 
       if(onSelect===undefined)
@@ -34,7 +36,7 @@ const GallerySelect = forwardRef(
       ref.current.hide()
       onSelect(img)
     }, [onSelect]
-  )
+  );
 
   return (
 <Overlay ref={ref} >

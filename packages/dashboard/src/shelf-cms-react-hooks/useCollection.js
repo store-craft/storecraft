@@ -99,11 +99,11 @@ const paginate_helper = (query, resource) => {
 
 /**
  * @template T
+ * 
  * @param {string} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
  * @param {boolean} autoLoad 
  * @param {T} dummy_type 
- * @returns
  */
 export const useCollection = 
   (resource, q=undefined, autoLoad=true, dummy_type) => {

@@ -6,34 +6,6 @@ import ShowIf from '@/admin/comps/show-if.jsx'
 import ImageGrid from './gallery-image-grid.jsx'
 import SearchBar from './gallery-searchbar.jsx'
 
-const img_test = [
-  "91iHBLGTsIL._SL1500_.jpg",
-  {
-    "usage": [
-        "products/jax-and-daxter-093384"
-    ],
-    "updatedAt": 1675951280187,
-    "url": "https://images-na.ssl-images-amazon.com/images/I/91iHBLGTsIL._SL1500_.jpg",
-    "name": "91iHBLGTsIL._SL1500_.jpg",
-    "search": [
-        "jax-and-daxter-093384",
-        "jax and daxter 2",
-        "jax",
-        "and",
-        "daxter",
-        "2",
-        "ps2",
-        "cib",
-        "action",
-        "wewe",
-        "sds"
-    ],
-    "handle": "91iHBLGTsIL._SL1500_.jpg"
-  }
-]
-
-const imgs = Array.from({length: 25}, (v, k) => img_test)
-
 /**
  * A gallery component. if contstrained on height, then image-grid
  * will be scrollable
@@ -44,27 +16,45 @@ const imgs = Array.from({length: 25}, (v, k) => img_test)
  * 2. onSearchUpdate!=undefined will cause the comp to delegate the search params outside,
  *    where you can redirect again, this is useful for re-routing of all kinds
  * 
- * @param {Object} query_params { search: '', limit: 5}
- * @param {Function} onSearchUpdate a Function, that gets called when user searches
- * @param {Function} onClickImage a callback when image is clicked
- * @returns 
+ * @typedef {object} InnerGalleryParams
+ * @prop {Object} query_params { search: '', limit: 5}
+ * @prop {(search: string) => void} [onSearchUpdate] a Function, 
+ * that gets called when user searches
+ * @prop {(
+ *  e: import('react').MouseEvent<HTMLAnchorElement, MouseEvent>, 
+ *  data: import('@storecraft/core/v-api').ImageType
+ * ) => void} [onClickImage]
+ * @prop {(q: import('@storecraft/core/v-api').ApiQuery) => void} [onNavUpdate]
+ * 
+ * 
+ * @param {InnerGalleryParams &
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ * 
  */
-const Gallery = ({ className, query_params, onSearchUpdate, 
-                   onClickImage, onNavUpdate,
-                   ...rest }) => {
+const Gallery = (
+  { 
+    query_params, onSearchUpdate, onClickImage, 
+    onNavUpdate, className, ...rest 
+  }
+) => {
 
-  const ref_actions = useRef()
+  /** @type {React.MutableRefObject<import('./gallery-searchbar.jsx').ImpInterface>} */
+  const ref_actions = useRef();
   const [query_params_o, setQP] = useState(query_params)
   const { 
     pages, page, loading, error, 
     query, queryCount 
-  } = useCommonCollection('images', false)
-  const ref_use_cache = useRef(true)
+  } = useCommonCollection('images', false);
+
+  const ref_use_cache = useRef(true);
+
   useEffect(
     () => {
       setQP(query_params)
     }, [query_params]
-  )
+  );
+  
   useEffect(
     () => {
       ref_actions.current.setSearch(
@@ -73,7 +63,8 @@ const Gallery = ({ className, query_params, onSearchUpdate,
 
       query(query_params_o, ref_use_cache.current)
     }, [query_params_o, query]
-  )
+  );
+
   const onReload = useCallback(
     () => {
       const { 
@@ -96,6 +87,7 @@ const Gallery = ({ className, query_params, onSearchUpdate,
     }, [onNavUpdate, query_params_o]
   )
   const onLimitChange = useCallback(
+    /** @param {number} limit  */
     (limit) => {
       const { 
         endBeforeId, startAfterId, startAtId, 
@@ -112,7 +104,8 @@ const Gallery = ({ className, query_params, onSearchUpdate,
 
       setQP(qp)
     }, [onNavUpdate, query_params_o, page]
-  )
+  );
+
   const next = useCallback(
     async () => {
       const { 
@@ -131,7 +124,8 @@ const Gallery = ({ className, query_params, onSearchUpdate,
 
       setQP(qp)
     }, [onNavUpdate, page, query_params_o]
-  )
+  );
+
   const prev = useCallback(
     async () => {
       const { 
@@ -150,29 +144,34 @@ const Gallery = ({ className, query_params, onSearchUpdate,
 
       setQP(qp)
     }, [onNavUpdate, page, query_params_o]
-  )
-
+  );
   
   return (
 <div className={`flex flex-col justify-between ${className}`} {...rest} >
   <Bling stroke='p-[1px]' rounded='rounded-md' 
          className='shadow-md w-full h-fit' >
-    <SearchBar ref={ref_actions} 
-             count={queryCount}
-             reload={onReload}
-             className='shelf-card rounded-md' 
-             searchTitle='search by used products/collections/tags'
-             isLoading={loading}/>
+    <SearchBar 
+        ref={ref_actions} 
+        count={queryCount}
+        reload={onReload}
+        className='shelf-card rounded-md' 
+        searchTitle='search by used products/collections/tags'
+        isLoading={loading}/>
   </Bling>             
-  <ImageGrid images={page} className='mt-5 w-full --h-fit flex-1' 
-             onClickImage={onClickImage} />   
+  <ImageGrid 
+      images={page} 
+      className='mt-5 w-full --h-fit flex-1' 
+      onClickImage={onClickImage} />   
   <ShowIf show={pages?.length} >
-    <Bling stroke='p-[1px]' rounded='rounded-md' 
-           className='mt-5 shadow-md w-full h-fit' >
-      <BottomActions prev={prev} next={next} 
-                     limit={query_params_o?.limit ?? 5}
-                     onLimitChange={onLimitChange} 
-                     className='rounded-md shelf-card' />
+    <Bling 
+        stroke='p-[1px]' 
+        rounded='rounded-md' 
+        className='mt-5 shadow-md w-full h-fit' >
+      <BottomActions 
+          prev={prev} next={next} 
+          limit={query_params_o?.limit ?? 5}
+          onLimitChange={onLimitChange} 
+          className='rounded-md shelf-card' />
     </Bling>             
   </ShowIf>              
 </div>

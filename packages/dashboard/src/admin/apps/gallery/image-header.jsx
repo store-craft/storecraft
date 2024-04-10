@@ -1,5 +1,19 @@
 
-const Header = ({label='', Icon, className, ...rest}) => {
+/**
+ * @typedef {object} InnerHeaderParams
+ * @prop {string} label
+ * @prop {React.FC<{ className: string }>} Icon
+ * 
+ * @param {InnerHeaderParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+ * } params 
+ * 
+ */
+const Header = (
+  {
+    label='', Icon, className, ...rest
+  }
+) => {
 
     return (
   <p className={`text-2xl mb-5 w-full overflow-auto --text-gray-500

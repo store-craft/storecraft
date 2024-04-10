@@ -41,7 +41,8 @@ export const create_routes = (app) => {
       if(does_prefer_signed(req?.query)) {
         if(!app.storage.putSigned) {
           throw new StorecraftError(
-            'Storage driver does not support signed urls'
+            'Storage driver does not support signed urls',
+            501
           );
         }
 
@@ -70,7 +71,8 @@ export const create_routes = (app) => {
       if(does_prefer_signed(req?.query)) {
         if(!app.storage.getSigned) {
           throw new StorecraftError(
-            'Storage driver does not support signed urls'
+            'Storage driver does not support signed urls',
+            501
           );
         }
 

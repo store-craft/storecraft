@@ -25,8 +25,12 @@ export const onError = async (error, req, res) => {
   let messages;
 
   if(error instanceof StorecraftError) {
-    code = error?.cause?.code ?? extract_code(error) ?? code;
+    code = error?.code ?? extract_code(error) ?? code;
+    console.log('error?.cause', error?.cause)
     messages = error?.message ?? 'unknown-error';
+    if(!Array.isArray(messages)) {
+      messages = [{message: messages}];
+    }
   } else if(typeof error === 'string') {
     messages = [{ message: error ?? 'unknown-error'}];
   } else {

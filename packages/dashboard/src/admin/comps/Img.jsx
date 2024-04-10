@@ -6,6 +6,7 @@ const Img = forwardRef(
   /**
    * `Img` wraps the regular `<img/>` tag and analyzes the `src`
    * url to decide: 
+   * 
    * - If to use `storecraft` backend to fetch the image
    *   through a full download or signed urls.
    * - Fetch a regular `url`

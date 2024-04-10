@@ -265,7 +265,7 @@ export const Div = ({setError, ...rest}) =>
 
 /**
  * @typedef {object} InternalCardParams
- * @property {import('react').ReactNode} name 
+ * @property {import('react').ReactNode} [name] 
  * @property {(e:string) => void} [setError] 
  * @property {string} [error] 
  * @property {React.ReactNode} children 

@@ -1,12 +1,13 @@
 import { forwardRef, useCallback, 
   useImperativeHandle, useRef, useState } from 'react'
-import { Bling, Card, Title } from './common-ui.jsx'
+import { Card } from './common-ui.jsx'
 import { Overlay } from './overlay.jsx'
 import { BlingButton } from './common-button.jsx'
 
 
 /**
  * Imperative interface
+ * 
  * @typedef {object} ImpInterface
  * @property {Function} show
  * @property {Function} hide

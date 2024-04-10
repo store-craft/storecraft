@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { AiOutlineDelete, AiOutlineLink, 
   AiOutlineTags, AiOutlineWarning } from 'react-icons/ai/index.js'
 import { SlActionRedo } from 'react-icons/sl/index.js'
@@ -8,17 +8,34 @@ import { Bling, Card } from '@/admin/comps/common-ui.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import Header from './image-header.jsx'
-import Img from '@/admin/comps/Img.jsx'
+import Img from '@/admin/comps/img.jsx'
 import Modal from '@/admin/comps/modal.jsx'
 import { LoadingButton } from '@/admin/comps/common-button.jsx'
 
-const LabelCapsule = ({ value, className='', label=value,
-                               bgColor='bg-pink-500', ...rest }) => {
+/**
+ * 
+ * @typedef {object} InnerLabelCapsuleParams
+ * @prop {string} value
+ * @prop {string | ((value: string) => string)} [label]
+ * @prop {string | ((value: string) => string)} [bgColor]
+ * 
+ * @param {InnerLabelCapsuleParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ * 
+ */
+const LabelCapsule = (
+  { 
+    value, className='', label=value,
+    bgColor='bg-pink-500', ...rest 
+  }
+) => {
+
   const bg_color = (typeof bgColor === 'function') ? 
-                    bgColor(value): bgColor
+                    bgColor(value) : bgColor;
   const lbl = (typeof label === 'function') ? label(value) : 
               (typeof label==='string' ? label :
-              (typeof value==='string' ? value : 'missing')) 
+              (typeof value==='string' ? value : 'missing')) ;
 
   return (
 <div className={`font-medium cursor-pointer text-white w-fit 
@@ -26,11 +43,24 @@ const LabelCapsule = ({ value, className='', label=value,
                hover:scale-105 transition-transform inline-block
                max-w-full overflow-x-auto
                ${className} ${bg_color}`} 
-               children={lbl} {...rest} />
+     children={lbl} {...rest} />
   )
 }
 
-const Tags = ({ search=[], className, ...rest }) => {
+/**
+ * 
+ * @typedef {object} InnerTagsParams
+ * @prop {string[]} search
+ * 
+ * @param {InnerTagsParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ */
+const Tags = (
+  { 
+    search=[], className, ...rest 
+  }
+) => {
 
   return (
 <div className={`flex flex-row flex-wrap gap-2 ${className} `} {...rest}>
@@ -43,6 +73,17 @@ const Tags = ({ search=[], className, ...rest }) => {
   )
 }
 
+
+/**
+ * 
+ * @typedef {object} InnerUsageParams
+ * @prop {string[]} usage
+ * 
+ * @param {InnerUsageParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ * 
+ */
 const Usage = ({ usage=[], ...rest }) => {
 
   if(usage.length==0)
@@ -63,16 +104,31 @@ const Usage = ({ usage=[], ...rest }) => {
   )
 }
 
+/**
+ * 
+ */
 const ImagePage = ({}) => {
-  const { handle } = useParams()
+
+  const { handle } = useParams();
+
+  /** 
+   * @type {import('@/shelf-cms-react-hooks/useDocument.js').HookReturnType<
+   *  import('@storecraft/core/v-api').ImageType>
+   * } 
+   */
   const { 
     doc, loading, hasLoaded, error, op,
     actions: { deleteDocument }
-  } = useCommonApiDocument('images', handle)
+  } = useCommonApiDocument('images', handle);
 
-  const ref_modal = useRef()   
-  const [loadingDelete, setLoadingDelete] = useState(false)  
-  const nav = useNavigate() 
+  /** 
+   * @type {import('react').MutableRefObject<
+   *  import('@/admin/comps/modal.jsx').ImpInterface>
+   * } 
+   */
+  const ref_modal = useRef(); 
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const nav = useNavigate();
 
   const onClickDeleteInternal = useCallback(
     () => {
@@ -82,21 +138,21 @@ const ImagePage = ({}) => {
       )
       ref_modal.current.show()
     }, [handle]
-  )
+  );
   
   const onApproveDelete = useCallback(
     async (data_id) => {
       setLoadingDelete(true)
       try {
         await deleteDocument();
-        nav(-2, {replace: true})
+        nav(-2);
       } catch(e) {
         console.log(e)
       } finally {
         setLoadingDelete(false)
       }
     }, [deleteDocument, nav]
-  )
+  );
   
   return (
 <div className='w-full h-full'>
@@ -107,14 +163,14 @@ const ImagePage = ({}) => {
         <div className='self-end'>
           <Bling stroke='p-0.5' className='w-fit h-fit' rounded='rounded-full'>
             <LoadingButton 
-                    className='h-6 px-2 
-                    bg-slate-50 dark:bg-slate-800 
-                    text-gray-600 dark:text-gray-400 
-                    rounded-full text-base font-semibold tracking-tight' 
-                    Icon={<AiOutlineDelete className='--text-red-500 text-base'/>}                        
-                    loading={loadingDelete} 
-                    text='delete'
-                    onClick={onClickDeleteInternal}  />
+                className='h-6 px-2 
+                bg-slate-50 dark:bg-slate-800 
+                text-gray-600 dark:text-gray-400 
+                rounded-full text-base font-semibold tracking-tight' 
+                Icon={<AiOutlineDelete className='--text-red-500 text-base'/>}                        
+                loading={loadingDelete} 
+                text='delete'
+                onClick={onClickDeleteInternal}  />
           </Bling>     
 
         </div>
@@ -132,16 +188,6 @@ const ImagePage = ({}) => {
             </a>
           </div>    
 
-          <ShowIf show={doc?.ref}>
-            <div className='w-full'>
-              <Header label='Ref' Icon={AiOutlineLink} className='' />
-              <div href={doc?.ref} target='_blank' >
-                <div children={doc?.ref} 
-                    className='break-words w-full' />
-              </div>
-            </div>    
-          </ShowIf>
-
           <div className='w-full'>
             <Header label='Usage' Icon={SlActionRedo} className='' />
 
@@ -158,15 +204,16 @@ const ImagePage = ({}) => {
       </div>
     </Card>
   </ShowIf>
-  <Modal ref={ref_modal} 
-         onApprove={onApproveDelete} 
-         title={
-                <p className='text-xl flex 
-                              flex-row items-center gap-3'>
-                  <AiOutlineWarning className='text-2xl'/> 
-                  Warning
-                </p>
-              }/>  
+  <Modal 
+      ref={ref_modal} 
+      onApprove={onApproveDelete} 
+      title={
+            <p className='text-xl flex 
+                          flex-row items-center gap-3'>
+              <AiOutlineWarning className='text-2xl'/> 
+              Warning
+            </p>
+          }/>  
 
 </div>    
   )

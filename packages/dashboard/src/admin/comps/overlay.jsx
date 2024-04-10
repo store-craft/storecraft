@@ -6,7 +6,8 @@ import { useRef } from 'react'
 
 
 /**
- * Imperative interface
+ * Imperative interface for public `ref` and for `useImperativeHandle`
+ * 
  * @typedef {object} ImpInterface
  * @property {Function} show
  * @property {Function} hide
@@ -16,12 +17,19 @@ import { useRef } from 'react'
 export const Overlay = React.forwardRef(
   /**
    * 
-   * @param {object} param0 
-   * @param {object} param0.children 
+   * @typedef {React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+   * } OverlayParams
+   * 
+   * @param {OverlayParams} params
    * @param {*} ref 
-   * @returns 
+   * 
    */
-  ({ children, ...rest }, ref) => {
+  (
+    { 
+      children, ...rest 
+    }, ref
+  ) => {
+
   const [vis, setVis] = useState(false)
 
   useImperativeHandle(
@@ -32,28 +40,32 @@ export const Overlay = React.forwardRef(
       isShown: ()=>vis
     }),
     [vis, ref],
-  )
+  );
 
+  /** @type {import('react').KeyboardEventHandler} */
   const onKeyDown = useCallback(
     (e) => {
-      if (e.key === 'Escape') setVis(false)
-  }, [])
+      if (e.key === 'Escape') setVis(false);
+    }, []
+  );
 
   const unsub = useRef(() => {})
 
+  /** @type {import('react').EventHandler<import('react').MouseEvent>} */
   const onClickOutside = useCallback(
-    e => {
+    (e) => {
       e.preventDefault()
       history.back()
       setVis(false)
     }, [history]
-  )
+  );
 
   useEffect(
     () => {
       unsub.current && unsub.current()
 
-      const sub = e => {
+      /** @type {EventListener} */
+      const sub = (e) => {
         e.stopPropagation()
         e.preventDefault()
         setVis(false)
@@ -76,11 +88,14 @@ export const Overlay = React.forwardRef(
       } 
       return unsub.current
     }, [vis, window]
-  )
+  );
   
   return (
-<Transition unMountOnExit={false} show={vis} 
-            duration={400} onKeyDown={onKeyDown}
+<Transition 
+    unMountOnExit={false} 
+    show={vis} 
+    duration={400} 
+    onKeyDown={onKeyDown}
     enter='transition-all duration-300 ease-in-out' 
     enterFrom='opacity-0' enterTo='opacity-100' 
     leave='transition-all duration-300' 

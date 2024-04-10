@@ -1,21 +1,24 @@
+import React, { useMemo } from 'react'
 
 /**
  * 
- * @param {object} p
- * @param {any} p.show
- * @param {any} p.children
+ * @typedef {object} ShowIfParams
+ * @prop {any} show
+ * @prop {import('react').ReactNode} children
  */
-const ShowIf = ({show, children}) => {
+const ShowIf = (
+  {
+    show, children
+  }
+) => {
+
   if(Boolean(show)) return (children)
   return null
 }
 
-import React, { useMemo } from 'react'
-
 /**
  * @typedef {object} internalShowSwitchParams
  * @prop {number} [index=0]
- * @prop {import('react').ReactNode} children
  * 
  * @typedef {internalShowSwitchParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -23,7 +26,12 @@ import React, { useMemo } from 'react'
  * 
  * @param {ShowSwitchParams} param
  */
-export const ShowSwitch = ({ index=0, children, ...rest }) => {
+export const ShowSwitch = (
+  { 
+    index=0, children, ...rest 
+  }
+) => {
+
   if(index >= React.Children.count(children))
     return (null)
 
@@ -45,9 +53,8 @@ export const ShowSwitch = ({ index=0, children, ...rest }) => {
  * @typedef {object} InternalShowBinarySwitchParams
  * @prop {any} [toggle=true]
  * 
- * @param {InternalShowBinarySwitchParams & ShowSwitchParams} param0 
+ * @param {InternalShowBinarySwitchParams & ShowSwitchParams} params 
  * 
- * @returns 
  */
 export const ShowBinarySwitch = (
   { 

@@ -64,7 +64,7 @@ const ManualTag = ({onAdd, ...rest}) => {
 *  'resource' | 'transform_fn' | 'name_fn'
 * >} param
 */
-const SelectTags = (
+export const SelectTags = (
  { 
    onSelect, header, limit=100, layout=0,
    className, clsHeader, clsReload, ...rest 

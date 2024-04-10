@@ -47,6 +47,7 @@ export const default_transform_fn = window => window ?? []
  * @property {typeof default_transform_fn} [transform_fn] 
  * @property {typeof default_name_fn} [name_fn] 
  * 
+ * 
  * @param {SelectResourceParams} params
  * 
  */
@@ -73,7 +74,6 @@ const SelectResource = (
     page, loading, error, query 
   } = useCommonCollection(resource, false);
 
-
   const transformed = useMemo(
     () => transform_fn(page).sort(
       (a, b) => {
@@ -91,17 +91,18 @@ const SelectResource = (
           query({ limit }, false) 
         }
       )
-    }, [limit]
-  )
+    }, [limit, query]
+  );
 
   const onReload = useCallback(
     () => {
       query({limit}, false) 
     }, [query, limit]
-  )
+  );
 
+  /** @type {React.ChangeEventHandler<HTMLSelectElement>} */
   const onSelectInternal = useCallback(
-    e => {
+    (e) => {
       const val = e.target.value
       if(val===nada)
         return
@@ -115,17 +116,19 @@ const SelectResource = (
       setTag(idx)
       onSelect(transformed[idx])  
     }, [transformed, nada, onSelect]
-  )
+  );
 
   const Select = ({ className='' }) => {
     return (
-<select name='limit' onChange={onSelectInternal} 
-        value={tag} 
-        className={`h-10 px-1 w-full 
-                    shelf-input-color
-                    rounded-md text-sm 
-                    focus:outline-none 
-                    ${className}`}>
+<select 
+    name='limit' 
+    onChange={onSelectInternal} 
+    value={tag} 
+    className={`h-10 px-1 w-full 
+                shelf-input-color
+                rounded-md text-sm 
+                focus:outline-none 
+                ${className}`}>
   <option value={nada} children={nada}/>
   { add_all && <option value={ALL} children={ALL}/> }
   {
@@ -178,21 +181,22 @@ const SelectResource = (
 export default SelectResource;
 
 /**
- * A `select` control, that also has a capsule view, to manage selections
+ * A `FieldView` `select` control with `capsules` 
  * 
- * @template {import('@storecraft/core/v-api').BaseType} [T=any]
+ * @typedef {object} InnerSelectResourceWithTagsParams
+ * @prop {string} label
+ * @prop {string} slug
+ */
+
+/**
  * 
- * @param {object} p 
- * @param {import('./fields-view.jsx').FieldData} p.field
- * @param {import('./fields-view.jsx').FieldContextData} p.context
- * @param {T[]} p.value
- * @param {(value: any) => void} p.onChange
- * @param {boolean} p.add_all
- * @param {string} p.className
- * @param {string} p.resource the id of the collection
- * @param {string} p.label the label
- * @param {typeof default_transform_fn} p.transform_fn the label
- * @param {typeof default_name_fn} p.name_fn the label
+ * @template T
+ * 
+ * @typedef {InnerSelectResourceWithTagsParams & SelectResourceParams & 
+ *  import('./fields-view.jsx').FieldLeafViewParams<T[], 
+ *  import('../pages/index.jsx').BaseDocumentContext
+ * >} SelectResourceWithTagsParams
+ * 
  */
 
 /**
@@ -200,18 +204,7 @@ export default SelectResource;
  * 
  * @template {import('@storecraft/core/v-api').BaseType} T
  * 
- * @typedef {object} InnerSelectResourceWithTagsParams
- * @prop {string} label
- * @prop {string} slug
- * 
- * @typedef {InnerSelectResourceWithTagsParams<T> & SelectResourceParams & 
- *  import('./fields-view.jsx').FieldLeafViewParams<T[], 
- *  import('../pages/index.jsx').BaseDocumentContext
- * >} SelectResourceWithTagsParams
- * 
- * 
- * @param {SelectResourceWithTagsParams<T>} param 
- * 
+ * @param {SelectResourceWithTagsParams<T>} params
  */
 export const SelectResourceWithTags = (
   { 
@@ -271,20 +264,20 @@ export const SelectResourceWithTags = (
       );
     },
     [navWithState, context, resource, slug]
-  )
+  );
 
   return (
 <div className={className}>
   <SelectResource 
-    transform_fn={transform_fn}
-    name_fn={name_fn}
-    add_all={add_all}
-    resource={resource}
-    onSelect={onAdd} 
-    layout={1} 
-    className='mt-3' 
-    clsReload='text-kf-500 text-3xl' 
-    header={label} />
+      transform_fn={transform_fn}
+      name_fn={name_fn}
+      add_all={add_all}
+      resource={resource}
+      onSelect={onAdd} 
+      layout={1} 
+      className='mt-3' 
+      clsReload='text-kf-500 text-3xl' 
+      header={label} />
 
   {
     tags?.length>0 &&

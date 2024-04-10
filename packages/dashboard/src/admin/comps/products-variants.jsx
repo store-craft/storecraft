@@ -15,12 +15,19 @@ import useNavigateWithState, {
 
 /**
  * 
- * @param {object} param0 
- * @param {import('@storecraft/core/v-api').VariantOption} param0.option
- * @param {(option: import('@storecraft/core/v-api').VariantOption) => void} param0.onRemove
- * @param {(option: import('@storecraft/core/v-api').VariantOption) => void} param0.onChange
+ * @typedef {object} ProductOptionParams
+ * @property {import('@storecraft/core/v-api').VariantOption} option
+ * @property {(option: import('@storecraft/core/v-api').VariantOption) => void} onRemove
+ * @property {(option: import('@storecraft/core/v-api').VariantOption) => void} onChange
+ * 
+ * @param {ProductOptionParams} params
  */
-const ProductOption = ({ option, onRemove, onChange }) => {
+const ProductOption = (
+  { 
+    option, onRemove, onChange 
+  }
+) => {
+
   const [o, setO] = useState(option);
 
   /** @type {import('react').LegacyRef<import('react').InputHTMLAttributes>} */
@@ -59,7 +66,7 @@ const ProductOption = ({ option, onRemove, onChange }) => {
 
   const onClickAddOptionValue = useCallback(
     (_) => {
-      const value = ref_value.current.value 
+      const value = String(ref_value.current.value);
       if(value?.trim()==='')
         return
 
@@ -87,28 +94,32 @@ const ProductOption = ({ option, onRemove, onChange }) => {
 <div className='relative w-full shadow-md'>
   <fieldset className='border shelf-border-color p-5 '>
     <legend className='text-base'>
-      <BlingInput ref={ref_value} placeholder='Option Name' 
-                  from='from-kf-400' to='to-pink-400/25'
-                    inputClsName=' text-base px-1 shelf-card rounded-md h-10' 
-                    overrideClass={true}
-                    onChange={onOptionNameChange}
-                    value={o?.name}
-                    type='text' 
-                    rounded='rounded-md' sstroke='pb-px' /> 
+      <BlingInput 
+          ref={ref_value} placeholder='Option Name' 
+          from='from-kf-400' to='to-pink-400/25'
+          inputClsName=' text-base px-1 shelf-card rounded-md h-10' 
+          overrideClass={true}
+          onChange={onOptionNameChange}
+          value={o?.name}
+          type='text' 
+          rounded='rounded-md' sstroke='pb-px' /> 
     </legend>
     <ShowIf show={(o?.values?.length??0) > 0}>
-      <CapsulesView tags={o?.values} 
-              name_fn={e => e?.value} 
-              onClick={onClickCapsule} />
+      <CapsulesView 
+          tags={o?.values} 
+          name_fn={e => e?.value} 
+          onClick={onClickCapsule} />
     </ShowIf>
     <div className='flex flex-row items-center h-fit w-full mt-5 gap-3'>
-      <BlingInput ref={ref_value} placeholder='Add new option' 
-                  inputClsName='text-base px-1 shelf-card w-full rounded-md h-10' 
-                  overrideClass={true}
-                  type='text' className='mt-1 flex-1' 
-                  rounded='rounded-md' stroke='pb-px' /> 
-      <BlingButton children='add' className='h-10 ' 
-                  onClick={onClickAddOptionValue} />
+      <BlingInput 
+          ref={ref_value} placeholder='Add new option' 
+          inputClsName='text-base px-1 shelf-card w-full rounded-md h-10' 
+          overrideClass={true}
+          type='text' className='mt-1 flex-1' 
+          rounded='rounded-md' stroke='pb-px' /> 
+      <BlingButton 
+          children='add' className='h-10 ' 
+          onClick={onClickAddOptionValue} />
     </div>
 
   </fieldset>      
@@ -121,11 +132,17 @@ const ProductOption = ({ option, onRemove, onChange }) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {import('@storecraft/core/v-api').VariantOption[]} param0.options
- * @param {(option: import('@storecraft/core/v-api').VariantOption[]) => void} param0.onChange
+ * @typedef {object} ProductOptionsParams
+ * @property {import('@storecraft/core/v-api').VariantOption[]} options
+ * @property {(option: import('@storecraft/core/v-api').VariantOption[]) => void} onChange
+ * 
+ * @param {ProductOptionsParams} params
  */
-const ProductOptions = ({ options=[], onChange }) => {
+const ProductOptions = (
+  { 
+    options=[], onChange 
+  }
+) => {
 
   const [opts, setOptions] = useState(options)
 
@@ -143,7 +160,7 @@ const ProductOptions = ({ options=[], onChange }) => {
       setOptions(mod)
       onChange && onChange(mod)
     }, [opts, onChange]
-  )
+  );
 
   const onRemoveOption = useCallback(
     /** @param {import('@storecraft/core/v-api').VariantOption} option */
@@ -154,7 +171,7 @@ const ProductOptions = ({ options=[], onChange }) => {
       setOptions(mod)
       onChange && onChange(mod)
     }, [opts, onChange]
-  )
+  );
 
   const onAddOption = useCallback(
     () => {
@@ -170,24 +187,25 @@ const ProductOptions = ({ options=[], onChange }) => {
       setOptions(mod)
       onChange && onChange(mod)
     }, [opts, onChange]
-  )
+  );
 
   return (
 <div className='w-full flex flex-col gap-5 items-center'>
   {
     options.map(
       o => (
-        <ProductOption option={o} key={o?.id} 
-                  onRemove={onRemoveOption} 
-                  onChange={onChangeOption} />
+        <ProductOption 
+            option={o} key={o?.id} 
+            onRemove={onRemoveOption} 
+            onChange={onChangeOption} />
       )
     )
   }
   <GradientFillIcon 
-        onClick={onAddOption}
-        Icon={BiMessageSquareAdd} 
-        className='cursor-pointer text-6xl hover:scale-110 
-                   transition-transform' /> 
+      onClick={onAddOption}
+      Icon={BiMessageSquareAdd} 
+      className='cursor-pointer text-6xl hover:scale-110 
+                  transition-transform' /> 
 
 </div>
   )
@@ -238,13 +256,19 @@ const compareCombinations = (c1, c2) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {import('@storecraft/core/v-api').VariantOption[]} param0.options
- * @param {import('@storecraft/core/v-api').VariantOptionSelection[]} param0.combination
- * @param {Context} param0.context
- * @param {(error: string) => void} param0.setError
+ * @typedef {object} VariantParams
+ * @prop {import('@storecraft/core/v-api').VariantOption[]} options
+ * @prop {import('@storecraft/core/v-api').VariantOptionSelection[]} combination
+ * @prop {Context} context
+ * @prop {(error: string) => void} setError
+ * 
+ * @param {VariantParams} params
  */
-const Variant = ({ combination, options, context, setError }) => {
+const Variant = (
+  { 
+    combination, options, context, setError 
+  }
+) => {
 
   // const nav = useNavigate()
   useEffect(
@@ -296,7 +320,7 @@ const Variant = ({ combination, options, context, setError }) => {
       const url = `/pages/products/${match_handle}/edit`
       navWithState(url, state)
     }, [match_handle, navWithState, context]
-  )
+  );
 
   const remove = useCallback(
     async () => {
@@ -308,7 +332,7 @@ const Variant = ({ combination, options, context, setError }) => {
         setError('There was a problem removing the variant 😔')
       }
     }, [match_handle, navWithState, context]
-  )
+  );
 
   const create = useCallback(
     async () => {
@@ -334,7 +358,7 @@ const Variant = ({ combination, options, context, setError }) => {
         console.error(e)
       }
     }, [context, navWithState, combination, text]
-  )
+  );
 
   return (
 <div className='w-full flex flex-row justify-between 
@@ -354,12 +378,13 @@ const Variant = ({ combination, options, context, setError }) => {
           {/* <span children={'remove'} className='cursor-pointer'
                   onClick={remove} /> */}
         <PromisableLoadingButton 
-              Icon={undefined} text='remove' 
-              show={true} 
-              onClick={remove}
-              keep_text_on_load={true}
-              classNameLoading='text-xs'
-              className='w-fit underline '/>                  
+            Icon={undefined} 
+            text='remove' 
+            show={true} 
+            onClick={remove}
+            keep_text_on_load={true}
+            classNameLoading='text-xs'
+            className='w-fit underline '/>                  
         </Label>
         <span children='/' className='font-normal text-xl' />
         <Label>
@@ -370,7 +395,7 @@ const Variant = ({ combination, options, context, setError }) => {
 
       <Label>
           <span children={'create'} className='cursor-pointer'
-                  onClick={create} />
+                onClick={create} />
       </Label>
     </ShowBinarySwitch>
 
@@ -380,12 +405,18 @@ const Variant = ({ combination, options, context, setError }) => {
 
 /**
  * 
- * @param {object} param0 
- * @param {import('@storecraft/core/v-api').VariantOption[]} param0.options
- * @param {Context} param0.context
- * @param {(error: string) => void} param0.setError 
+ * @typedef {object} VariantsViewParams
+ * @prop {import('@storecraft/core/v-api').VariantOption[]} options
+ * @prop {Context} context
+ * @prop {(error: string) => void} setError 
+ * 
+ * @param {VariantsViewParams} params
  */
-const VariantsView = ({ options, context, setError }) => {
+const VariantsView = (
+  { 
+    options, context, setError 
+  }
+) => {
 
   /**@type {import('@storecraft/core/v-api').VariantOptionSelection[][]} */
   const combinations = useMemo(
@@ -457,7 +488,7 @@ const IamVariant = ({ context, ...rest }) => {
  *  import('@storecraft/core/v-api').VariantOption[], 
  *  Context> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param 
+ * } params
  * 
  */
 const ProductVariants = (

@@ -19,17 +19,15 @@ export const create_select_view = (options, defaultIndex=0) => {
 
   /**
    * 
-   * @param {import('./fields-view.jsx').FieldLeafViewParams<{ id: string }>} param0 
+   * @param {import('./fields-view.jsx').FieldLeafViewParams<
+   *  { id: string }>
+   * } params 
    */
   const Select = ({field, value, onChange}) => {
-    const { key, name, comp_params } = field
+    const { key, name, comp_params } = field;
     const [selectedOption, setSelectedOption] = useState(
       value ?? options[defaultIndex]
-      );
-
-    // useEffect(() => {
-    //   onChange(selectedOption)
-    // }, [selectedOption, onChange, options])
+    );
 
     const onSelect = useCallback(
       (e) => {
@@ -39,11 +37,12 @@ export const create_select_view = (options, defaultIndex=0) => {
 
         setSelectedOption(option)
         onChange && onChange(option)
-      }, [options])
+      }, [options]
+    )
 
-      const { className, ...restInnerParams } = comp_params
-      const cls = 'h-10 px-1 w-full shelf-input-color rounded-md text-sm \
-                  focus:outline-none ' + className
+    const { className, ...restInnerParams } = comp_params;
+    const cls = 'h-10 px-1 w-full shelf-input-color rounded-md text-sm \
+                focus:outline-none ' + className;
 
     return (
   <select name="limit" onChange={onSelect} 

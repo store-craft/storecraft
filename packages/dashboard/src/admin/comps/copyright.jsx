@@ -2,8 +2,8 @@
 
 /**
  * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} props 
- * @returns 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } props 
  */
 export default function Copyright( props ) {
   return (

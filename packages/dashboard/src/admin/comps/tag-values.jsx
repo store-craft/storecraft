@@ -22,6 +22,7 @@ const TagValues = ({field, value, onChange, ...rest}) => {
   /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
   const ref = useRef()
 
+  /** @type {Parameters<BlingButton>["0"]["onClick"]} */
   const onAdd = useCallback(
     (e) => {
       const tokens = text2tokens(ref.current.value.toString());
@@ -36,6 +37,7 @@ const TagValues = ({field, value, onChange, ...rest}) => {
     [vs, onChange]
   )
   
+  /** @type {import("./capsules-view.jsx").CapsulesViewParams<string>["onClick"]} */
   const onRemove = useCallback(
     (v) => {
       const idx = vs.indexOf(v)
@@ -52,15 +54,20 @@ const TagValues = ({field, value, onChange, ...rest}) => {
 <div {...comp_params}>
   <div className='flex flex-row items-center h-9 w-full gap-3 '>
 
-    <BlingInput placeholder='space separated values' 
-            className='flex-grow'
-            ref={ref} type='text'/>
+    <BlingInput 
+        placeholder='space separated values' 
+        className='flex-grow'
+        ref={ref} type='text'/>
 
-    <BlingButton children='Add' stroke='p-0.5 h-10' 
-                 onClick={onAdd}/>
+    <BlingButton 
+        children='Add' stroke='p-0.5 h-10' 
+        onClick={onAdd}/>
   </div>
-  <CapsulesView tags={vs} onClick={onRemove} 
-                clsCapsule='bg-pink-500' className='mt-3' />  
+  <CapsulesView 
+      tags={vs} 
+      onClick={onRemove} 
+      clsCapsule='bg-pink-500' 
+      className='mt-3' />  
 </div>
   )
 }

@@ -51,7 +51,7 @@ export const Overlay = React.forwardRef(
 
   const unsub = useRef(() => {})
 
-  /** @type {import('react').EventHandler<import('react').MouseEvent>} */
+  /** @type {React.EventHandler<React.MouseEvent>} */
   const onClickOutside = useCallback(
     (e) => {
       e.preventDefault()

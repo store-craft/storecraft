@@ -120,7 +120,11 @@ const Notification = ({ notification }) => {
  * @param {string} [param.selected]
  * @param {(filter: string) => void} [param.onChange]
  */
-const FilterView = ({ notis=[], selected='All', onChange }) => {
+const FilterView = (
+  { 
+    notis=[], selected='All', onChange 
+  }
+) => {
 
   const tags = useMemo(
     () => {
@@ -217,8 +221,7 @@ const Header = ({}) => {
   )
 }
 
-const Notifications = 
-  ({ ...rest }) => {
+const Notifications = ({ ...rest }) => {
 
   const [filter, setFilter] = useState('All')
   const notis = test

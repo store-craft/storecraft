@@ -47,7 +47,7 @@ export const Button = (
  * @property {any} children
  * 
  * @typedef {InternalButton2params & 
- * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ *  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
  * } Button2params
  * 
  * @param {Button2params} param0 
@@ -84,7 +84,7 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
  * @property {boolean} [show]
  * 
  * @typedef {InternalLoadingButtonParams & 
- * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ *  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
  * } LoadingButtonParams
  * 
  * @param {LoadingButtonParams} param0 
@@ -121,9 +121,6 @@ export const LoadingButton = (
   )
 }
 
-/**
- * A loading button which expects a promise for onClick
- */
 
 /**
  * A loading button which expects a promise for onClick
@@ -205,13 +202,17 @@ export const PromisableLoadingBlingButton = (
  * 
  * @param {import('./common-ui.jsx').InternalBlingParams & 
  * { btnClassName?: string, text?: string } & 
- * React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ *  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
  * } param0 
  */
-export const BlingButton = 
-  ({ from, to, rounded='rounded-lg', stroke='p-0.5', 
-     children, text='what', className='h-10', 
-     btnClassName='', ...rest }) => {
+export const BlingButton = (
+  { 
+    from, to, rounded='rounded-lg', stroke='p-0.5', 
+    children, text='what', className='h-10', 
+    btnClassName='', ...rest 
+  }
+) => {
+
   return (
 <Bling from={from} to={to} rounded={rounded} stroke={stroke} 
        className={className} >
@@ -235,9 +236,10 @@ export const BlingButton2 = (
 ) => {
 
   return (
-<Bling from={from} to={to} rounded={rounded} stroke={stroke} 
-        className='w-fit h-fit'
-        >
+<Bling 
+    from={from} to={to} 
+    rounded={rounded} stroke={stroke} 
+    className='w-fit h-fit'>
   <Button2 {...rest}/>
 </Bling>            
   )

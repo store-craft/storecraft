@@ -5,6 +5,9 @@ import React, { useMemo } from 'react'
  * @typedef {object} ShowIfParams
  * @prop {any} show
  * @prop {import('react').ReactNode} children
+ * 
+ * 
+ * @param {ShowIfParams} params
  */
 const ShowIf = (
   {

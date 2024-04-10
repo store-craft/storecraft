@@ -3,8 +3,7 @@ import { AiFillCloseCircle, AiOutlineLoading3Quarters,
 import { BsClipboardPlus } from 'react-icons/bs/index.js'
 import ImageEditor from './image-editor.jsx'
 import { BsCloudUpload } from 'react-icons/bs/index.js'
-import { 
-  useCallback, useEffect, useRef, 
+import { useCallback, useEffect, useRef, 
   useState } from 'react'
 import ShowIf from './show-if.jsx'
 import { getSDK } from '@/admin-sdk/index.js'

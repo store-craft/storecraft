@@ -1,17 +1,25 @@
 import { Inspector } from 'react-inspector'
 import { chromeLight, chromeDark } from 'react-inspector'
 import { Card } from './common-ui.jsx'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import useDarkMode from '@/admin/hooks/useDarkMode.js'
 import { ClipBoardCopy } from './common-fields.jsx'
 
 /**
+ * @typedef {object} InnerJsonViewParams
+ * @prop {any} value
  * 
- * @param {object} p
- * @param {object} p.value
+ * @param {InnerJsonViewParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
  */
-const JsonView = ({ value, ...rest }) => {
-  const { darkMode } = useDarkMode()
+const JsonView = (
+  { 
+    value, ...rest 
+  }
+) => {
+
+  const { darkMode } = useDarkMode();
 
   if(!value)
     return null
@@ -28,7 +36,7 @@ const JsonView = ({ value, ...rest }) => {
           TREENODE_FONT_SIZE: '14px',
         }
       } 
-      data={value}  />
+      data={value} />
   </div>
 </div>
   )
@@ -44,10 +52,15 @@ const copyContent = async (text) => {
 }
 
 /**
- * @param {object} p
- * @param {object} p.value
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<object> & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
  */
-export const JsonViewCard = ({ value, setError, ...rest }) => {
+export const JsonViewCard = (
+  { 
+    value, setError, ...rest 
+  }
+) => {
 
   if(!value)
     return null
@@ -57,19 +70,14 @@ export const JsonViewCard = ({ value, setError, ...rest }) => {
       <ClipBoardCopy value={JSON.stringify(value)}/>
     ),
     [value]
-  ) 
+  );
     
-  const onClick = useCallback(
-    e => {
-      copyContent(JSON.stringify(value))
-    }, [value, copyContent]
-  )
-
   return (
 <div {...rest}>
-  <Card className='w-full h-fit' name='JSON' 
-        desc='View the RAW JSON data'
-        rightView={Copy}>
+  <Card 
+      className='w-full h-fit' name='JSON' 
+      desc='View the RAW JSON data'
+      rightView={Copy}>
     <JsonView value={value} />
   </Card>      
 </div>

@@ -1,9 +1,10 @@
 
 /**
+ * @template {import("@storecraft/core/v-api").BaseType} T
  * 
  * @typedef {object} CollectionViewContext The context provided to 
  * components of `CollectionView`
- * @property {import("@storecraft/core/v-api").BaseType} item item
+ * @property {T} item item
  * @property {(id: string) => Promise<void>} deleteDocument
  * @property {(id: string) => string} editDocumentUrl
  * @property {(id: string) => string} viewDocumentUrl

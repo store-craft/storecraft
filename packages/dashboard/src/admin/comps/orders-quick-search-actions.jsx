@@ -31,8 +31,8 @@ export const id2ColorPayment = id => {
 
 /**
  * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} param
- * @returns 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } param
  */
 const OrdersQuickSearchActions = ({ ...rest }) => {
 

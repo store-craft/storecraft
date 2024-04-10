@@ -1,15 +1,12 @@
-import React, { 
-  useCallback, useEffect, useState } from 'react'
-import { GradientFillIcon, 
-  GradientStrokeIcon } from './common-button.jsx'
+import React from 'react'
+import { GradientFillIcon } from './common-button.jsx'
 import { MdLightMode, MdNightlight } from 'react-icons/md/index.js'
 import useDarkMode from '../hooks/useDarkMode.js'
 
 
-const DarkMode = 
-  ({ ...rest }) => {
+const DarkMode = ({ ...rest }) => {
   
-  const { darkMode, toggle } = useDarkMode()
+  const { darkMode, toggle } = useDarkMode();
 
   return (
 <div className='relative'>

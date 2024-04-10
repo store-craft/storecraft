@@ -133,7 +133,7 @@ const validateField = (field, value) => {
  * @typedef {object} FieldLeafViewParams
  * @property {FieldData} [field]
  * @property {V} [value]
- * @property {FieldContextData & C} [context]
+ * @property {FieldContextData<V> & C} [context]
  * @property {boolean} [disabled]
  * @property {(value: V) => void} [onChange]
  * @property {(error: string) => void} [setError]

@@ -8,7 +8,7 @@ import { Base64 } from 'js-base64'
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *  string> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param0 
+ * } params
  */
 const SecretView = 
   ({ value, field, onChange, context, setError, ...rest}) => {
@@ -46,9 +46,10 @@ const SecretView =
       onClick={onClick} />
   </div>
   <Bling className='w-full h-fit mt-2'>
-    <MInput field={field} value={value} 
-            onChange={onChange} 
-            className='w-full h-10' />
+    <MInput 
+        field={field} value={value} 
+        onChange={onChange} 
+        className='w-full h-10' />
   </Bling>
 </div>    
   )

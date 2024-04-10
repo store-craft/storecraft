@@ -77,16 +77,16 @@ export default function Main(props) {
     <Route path='orders'>
       <Route path='' element={<Orders />} />
       <Route path='q/:query_params' element={<Orders />} />
-      <Route path=':id/edit' element={<Order collectionId='orders' mode='edit' />} />
-      <Route path=':id/view' element={<Order collectionId='orders' mode='view' />} />
-      <Route path='create/:base?' element={<Order collectionId='orders' mode='create' /> } />
+      <Route path=':id/edit' element={<Order mode='edit' />} />
+      <Route path=':id/view' element={<Order mode='view' />} />
+      <Route path='create/:base?' element={<Order mode='create' /> } />
     </Route>
     <Route path='discounts'>
       <Route path='' element={<Discounts />} />
       <Route path='q/:query_params' element={<Discounts />} />
-      <Route path=':id/edit' element={<Discount collectionId='discounts' mode='edit' />} />
-      <Route path=':id/view' element={<Discount collectionId='discounts' mode='view' />} />
-      <Route path='create/:base?' element={<Discount collectionId='discounts' mode='create' /> } />
+      <Route path=':id/edit' element={<Discount mode='edit' />} />
+      <Route path=':id/view' element={<Discount mode='view' />} />
+      <Route path='create/:base?' element={<Discount mode='create' /> } />
     </Route>
     <Route path='shipping-methods'>
       <Route path='' element={<ShippingMethods />} />
@@ -105,9 +105,9 @@ export default function Main(props) {
     <Route path='payment-gateways'>
       <Route path='' element={<PaymentGateways />} />
       <Route path='q/:query_params' element={<PaymentGateways />} />
-      <Route path=':id/edit' element={<PaymentGateway collectionId='payment_gateways' segment='payment-gateways' mode='edit' />} />
-      <Route path=':id/view' element={<PaymentGateway collectionId='payment_gateways' segment='payment-gateways' mode='view' />} />
-      <Route path='create/:base?' element={<PaymentGateway collectionId='payment_gateways' segment='payment-gateways' mode='create' /> } />
+      <Route path=':id/edit' element={<PaymentGateway mode='edit' />} />
+      <Route path=':id/view' element={<PaymentGateway mode='view' />} />
+      <Route path='create/:base?' element={<PaymentGateway mode='create' /> } />
     </Route>
   </Route>
 </Routes>

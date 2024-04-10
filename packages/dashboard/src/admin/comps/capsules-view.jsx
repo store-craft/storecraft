@@ -15,6 +15,7 @@ const default_name_fn = v => v
  * @property {string} [className]
  * @property {(v: T) => void} [onRemove]
  * @property {(v: T) => void} onClick
+ * 
  */
 
 /** 

@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react'
 import ShowIf from './show-if.jsx'
-import SelectResource, { SelectTags } from './select-resource.jsx'
+import SelectResource from './select-resource.jsx'
 import { Bling, BlingInput, HR } from './common-ui.jsx'
 import CapsulesView from './capsules-view.jsx'
 import { IoMdClose } from 'react-icons/io/index.js'
@@ -10,6 +10,7 @@ import { Overlay } from './overlay.jsx';
 import { BrowseCustomers, BrowseProducts } from './browse-collection.jsx'
 import { BlingButton } from './common-button.jsx'
 import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
+import { SelectTags } from './tags-edit.jsx'
 
 /**
  * 

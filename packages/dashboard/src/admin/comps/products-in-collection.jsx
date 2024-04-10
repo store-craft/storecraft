@@ -28,8 +28,10 @@ const CollectionBase = forwardRef(
    *  import('../pages/collection.jsx').Context
    * } context context
    * 
+   * 
    * @param {CollectionBaseParams} param
    * @param {any} ref
+   * 
    */
   (
     { 

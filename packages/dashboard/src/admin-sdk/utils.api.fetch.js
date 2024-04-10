@@ -22,20 +22,19 @@ export const url = (config, path) => {
  * - Prepends `backend` endpoint. 
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
- * - Throws a `json` representation of the `error`, if the request is `bad`
  * 
- * @template {any} R
  * @param { string } path relative path in api
  * @param {RequestInit} [init] request `init` type
- * @returns {Promise<R>}
+ * 
+ * @returns {Promise<Response>}
  */ 
-export const fetchApiWithAuth = async (path, init={}) => {
+export const fetchOnlyApiResponseWithAuth = async (path, init={}) => {
 
   const sdk = getSDK();
   await sdk.init();
   const token = await sdk.auth.working_access_token();
 
-  const response = await fetch(
+  return fetch(
     url(sdk.config, path),
     {
       ...init,
@@ -44,6 +43,28 @@ export const fetchApiWithAuth = async (path, init={}) => {
         'Authorization': `Bearer ${token}`
       }
     }
+  );
+}
+
+
+/**
+ * - Prepends `backend` endpoint. 
+ * - Fetches with `authentication` middleware. 
+ * - Refreshed `auth` if needed. 
+ * - Throws a `json` representation of the `error`, 
+ * if the request is `bad`
+ * 
+ * @template {any} R
+ * 
+ * @param { string } path relative path in api
+ * @param {RequestInit} [init] request `init` type
+ * 
+ * @returns {Promise<R>}
+ */ 
+export const fetchApiWithAuth = async (path, init={}) => {
+
+  const response = await fetchOnlyApiResponseWithAuth(
+    path, init
   );
 
   // console.log('fetchApiWithAuth::response', response)

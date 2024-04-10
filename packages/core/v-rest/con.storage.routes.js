@@ -1,6 +1,9 @@
 import { Polka } from '../v-polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { does_prefer_signed } from '../v-api/con.storage.logic.js';
+import { StorecraftError } from '../v-api/utils.func.js';
+
+export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
  * @typedef {import('../v-api/types.api.js').TagType} ItemType
@@ -35,11 +38,19 @@ export const create_routes = (app) => {
 
       // console.log('req?.params ', req?.params);
 
-      if(does_prefer_signed(req?.query) && app.storage.putSigned) {
-        const r = await app.storage.putSigned(file_key)
+      if(does_prefer_signed(req?.query)) {
+        if(!app.storage.putSigned) {
+          throw new StorecraftError(
+            'Storage driver does not support signed urls'
+          );
+        }
+
+        const r = await app.storage.putSigned(file_key);
+        res.headers.set(HEADER_PRESIGNED, 'true');
         res.sendJson(r);
       } else {
         await app.storage.putStream(file_key, req.body);
+        res.headers.set(HEADER_PRESIGNED, 'false');
         res.end();
       }
     }
@@ -56,8 +67,15 @@ export const create_routes = (app) => {
       }
 
       // try to see if redirect is supported
-      if(does_prefer_signed(req?.query) && app.storage.getSigned) {
-        const r = await app.storage.getSigned(file_key)
+      if(does_prefer_signed(req?.query)) {
+        if(!app.storage.getSigned) {
+          throw new StorecraftError(
+            'Storage driver does not support signed urls'
+          );
+        }
+
+        const r = await app.storage.getSigned(file_key);
+        res.headers.set(HEADER_PRESIGNED, 'true');
         res.sendJson(r);
       } else {
         const s = await app.storage.getStream(file_key);
@@ -66,6 +84,7 @@ export const create_routes = (app) => {
           s?.metadata?.contentType && res.headers.set(
             'Content-Type', s?.metadata?.contentType
           );
+          res.headers.set(HEADER_PRESIGNED, 'false');
         } else {
           res.end(); 
         }

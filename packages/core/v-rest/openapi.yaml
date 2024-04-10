@@ -64,6 +64,7 @@ components:
           enum:
             - GET
             - POST
+            - PUT
           description: The request method
         headers:
           type: object
@@ -30081,6 +30082,26 @@ components:
         - handle
         - title
       description: with `id`
+    Error:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              code:
+                type: string
+              expected:
+                type: string
+              received:
+                type: string
+              path:
+                type: array
+                items:
+                  type: string
     CheckoutStatusEnum:
       type: object
       properties:
@@ -31059,6 +31080,30 @@ paths:
                     iat: 1710851009
                     exp: 1711455809
                     aud: /refresh
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /auth/signin:
     post:
       description: Signin a user
@@ -31156,6 +31201,30 @@ paths:
                   - refresh_token
                 description: Result of `auth` request
               example: *a2
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /auth/refresh:
     post:
       description: Refresh a token
@@ -31253,6 +31322,30 @@ paths:
                   - refresh_token
                 description: Result of `auth` request
               example: *a2
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storage/{file_key}?signed=false:
     get:
       security: &a3
@@ -31281,11 +31374,35 @@ paths:
           in: query
       responses:
         "200":
-          description: image bytearray
+          description: bytearray
           content:
             image/*:
               schema:
                 nullable: true
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
     put:
       security: *a3
       description: Upload a file directly into the backend, this is discouraged, we do
@@ -31317,6 +31434,30 @@ paths:
       responses:
         "200":
           description: success
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storage/{file_key}?signed=true:
     get:
       security: *a3
@@ -31356,6 +31497,30 @@ paths:
               example:
                 url: https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710878150&Signature=XQttB9RJbIQalNoHENZenlq9LEIVf3jKU4zdJJEXLO1cdnjZ8CqRUgM4exbh5nclakrGA7waNwfHpaaAAs5nUnUPhoDBYv7y8wcDMK%2BJL9%2F4uNSSAX4TutudLZ1EMQ4CoGTfPCPXnoTPcGjOm2L5TPB6PeTeWgq%2BUiPZ%2FoMrDDHe8Xjy0WCuAJQo6LPWQtdcnRsLedJB77K8NYxjWzxqNgrhft08d3YjugFDAvDcCz7hOgA8mXBAinKH6JvBQhjRgQaUCCIQr0qJPyroX7rfgxBKCFs0jJjdtVlwDCm535BOENWCI5bgcxSy4yUu9b%2BI59v%2B8Zg74ANAFGIQq0zXdA%3D%3D
                 method: GET
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
     put:
       security: *a3
       description: Upload a file indirectly into the backend, most cloud storages
@@ -31395,6 +31560,30 @@ paths:
                 method: PUT
                 headers:
                   Content-Type: image/png
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storage/{file_key}:
     delete:
       security: *a3
@@ -31412,6 +31601,30 @@ paths:
       responses:
         "200":
           description: success
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /tags/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -31455,6 +31668,30 @@ paths:
                 id: tag_65f2ae568bf30e6cd0ca95ea
                 created_at: 1970-01-01T00:00:00.002Z
                 updated_at: 1970-01-01T00:00:00.002Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /tags:
     post:
       description: Upsert a `tag`
@@ -31481,6 +31718,30 @@ paths:
               schema:
                 type: string
               example: tag_65f2ae568bf30e6cd0ca95ea
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /tags/{id_or_handle}:
     delete:
       description: Delete a `tag`
@@ -31491,6 +31752,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/tags?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter tag items
@@ -31604,6 +31889,30 @@ paths:
                   $ref: "#/components/schemas/tagUpsert"
               example:
                 - *a8
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /collections/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -31659,6 +31968,30 @@ paths:
                   - active:true
                   - summer
                   - hello
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /collections:
     post:
       description: Upsert a `collection`
@@ -31687,6 +32020,30 @@ paths:
               schema:
                 type: string
               example: col_65f2ae568bf30e6cd0ca95ea
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /collections/{id_or_handle}:
     delete:
       description: Delete a `collection`
@@ -31697,6 +32054,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/collections?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter collection items
@@ -31810,6 +32191,30 @@ paths:
                   $ref: "#/components/schemas/collectionUpsert"
               example:
                 - *a12
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /collections/{id_or_handle}/products:
     get:
       description: Each `collection` is linked to `products`, you can query and filter
@@ -33181,6 +33586,30 @@ paths:
                     - color
                     - tshirt variant 1 - red color
                     - discount:3-for-100
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products/{id_or_handle}?expand={expand}:
     get:
       description: |-
@@ -33326,6 +33755,30 @@ paths:
                   - discount:3-for-100
                   - discount:dis_65e75bbb3e40cc70cb17d131
                   - discount:dis_65f2ae768bf30e6cd0ca95fc
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products:
     post:
       description: "When upserting a `product`,\ 
@@ -33375,6 +33828,30 @@ paths:
               schema:
                 type: string
               example: pr_65f2ae998bf30e6cd0ca9605
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products/:
     post:
       summary: Upsert a single variant
@@ -33540,6 +34017,30 @@ paths:
               schema:
                 type: string
               example: pr_65f2ae998bf30e6cd0ca9605
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products/{id_or_handle}:
     delete:
       description: Delete a `product`
@@ -33550,6 +34051,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/products?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter product items
@@ -33663,6 +34188,30 @@ paths:
                   $ref: "#/components/schemas/productUpsert"
               example:
                 - *a17
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products/{id_or_handle}/collections:
     get:
       description: Each `products` has linked collections, you can list all these
@@ -33765,6 +34314,30 @@ paths:
                     - active:true
                     - summer
                     - hello
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products/{id_or_handle}/variants:
     get:
       description: Each `products` may have linked product variants, you can list all
@@ -35040,6 +35613,30 @@ paths:
                     - color
                     - tshirt variant 1 - red color
                     - discount:3-for-100
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /products/{id_or_handle}/discounts:
     get:
       description: Each `products` may have linked `discounts`, you can list all these
@@ -36152,6 +36749,30 @@ paths:
                     - app:automatic
                     - type:0
                     - type:regular
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /shipping/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -36201,6 +36822,30 @@ paths:
                   - Shipping
                 created_at: 2024-02-26T10:02:00.139Z
                 updated_at: 2024-02-26T10:02:00.139Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /shipping:
     post:
       description: Upsert a `shipping`
@@ -36228,6 +36873,30 @@ paths:
               schema:
                 type: string
               example: ship_65dc6198c40344c9a1dd674f
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /shipping/{id_or_handle}:
     delete:
       description: Delete a `shipping`
@@ -36238,6 +36907,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/shipping?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter shipping items
@@ -36351,6 +37044,30 @@ paths:
                   $ref: "#/components/schemas/shippingUpsert"
               example:
                 - *a20
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /customers/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -36401,6 +37118,30 @@ paths:
                   - name 1
                   - last 1
                   - a1@a.com
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /customers:
     post:
       description: Upsert a `customer`
@@ -36428,6 +37169,30 @@ paths:
               schema:
                 type: string
               example: cus_65f2ae6e8bf30e6cd0ca95fa
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /customers/{id_or_handle}:
     delete:
       description: "When removing a `customer`, the\ 
@@ -36448,6 +37213,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/customers?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter customer items
@@ -36562,6 +37351,30 @@ paths:
                   $ref: "#/components/schemas/customerUpsert"
               example:
                 - *a24
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /auth_users/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -36607,6 +37420,30 @@ paths:
                   - admin
                 created_at: 2024-03-14T07:59:20.031Z
                 updated_at: 2024-03-14T07:59:20.031Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /auth_users:
     post:
       description: Upsert a `auth_user`
@@ -36635,6 +37472,30 @@ paths:
               schema:
                 type: string
               example: au_65f2ae588bf30e6cd0ca95f3
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /auth_users/{id_or_handle}:
     delete:
       description: Delete a `auth_user`
@@ -36645,6 +37506,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/auth_users?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter auth_user items
@@ -36759,6 +37644,30 @@ paths:
                   $ref: "#/components/schemas/auth_user"
               example:
                 - *a29
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /discounts/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -36837,6 +37746,30 @@ paths:
                   - app:automatic
                   - type:0
                   - type:regular
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /discounts:
     post:
       description: "When upserting a `discount`,\ 
@@ -36878,6 +37811,30 @@ paths:
               schema:
                 type: string
               example: dis_65f2ae888bf30e6cd0ca9600
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /discounts/{id_or_handle}:
     delete:
       description: Delete a `discount`
@@ -36888,6 +37845,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/discounts?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter discount items
@@ -37001,6 +37982,30 @@ paths:
                   $ref: "#/components/schemas/discountUpsert"
               example:
                 - *a34
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /discounts/{id_or_handle}/products:
     get:
       description: Each `discount` has eligible `products`,       you can query and
@@ -38372,6 +39377,30 @@ paths:
                     - color
                     - tshirt variant 1 - red color
                     - discount:3-for-100
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /images/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -38422,6 +39451,30 @@ paths:
                   - a2
                   - png
                   - a2.png
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /images:
     post:
       description: Upsert a `image`
@@ -38449,6 +39502,30 @@ paths:
               schema:
                 type: string
               example: img_65f2ae8d8bf30e6cd0ca9603
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /images/{id_or_handle}:
     delete:
       description: Delete a `image`
@@ -38459,6 +39536,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/images?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter image items
@@ -38572,6 +39673,30 @@ paths:
                   $ref: "#/components/schemas/imageUpsert"
               example:
                 - *a38
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /notifications/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -38624,6 +39749,30 @@ paths:
                   id: not_65f2ae998bf30e6cd0ca9605
                   created_at: 2024-03-14T08:00:25.859Z
                   updated_at: 2024-03-14T08:00:25.859Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /notifications:
     post:
       description: Upsert Bulk `notifications`
@@ -38648,6 +39797,30 @@ paths:
               schema:
                 type: string
               example: not_65f2ae998bf30e6cd0ca9605
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /notifications/{id_or_handle}:
     delete:
       description: Delete a `notification`
@@ -38658,6 +39831,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/notifications?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter notification items
@@ -38772,6 +39969,30 @@ paths:
                   $ref: "#/components/schemas/notificationUpsert"
               example:
                 - *a43
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /orders/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -38853,6 +40074,30 @@ paths:
                   - li:pr-2-id
                 created_at: 2024-02-22T16:22:30.095Z
                 updated_at: 2024-02-22T16:22:30.095Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /orders:
     post:
       description: Upsert a `order`
@@ -38881,6 +40126,30 @@ paths:
               schema:
                 type: string
               example: order_65f2ae998bf30e6cd0ca9605
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /orders/{id_or_handle}:
     delete:
       description: Delete a `order`
@@ -38891,6 +40160,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/orders?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter order items
@@ -39010,6 +40303,30 @@ paths:
                   $ref: "#/components/schemas/orderUpsert"
               example:
                 - *a50
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /posts/{id_or_handle}?expand={expand}:
     get:
       description: |
@@ -39060,6 +40377,30 @@ paths:
                   - post
                   - "1"
                   - post 1
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /posts:
     post:
       description: Upsert a `post`
@@ -39087,6 +40428,30 @@ paths:
               schema:
                 type: string
               example: post_65f2ae998bf30e6cd0ca9605
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /posts/{id_or_handle}:
     delete:
       description: Delete a `post`
@@ -39097,6 +40462,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/posts?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter post items
@@ -39210,6 +40599,30 @@ paths:
                   $ref: "#/components/schemas/postUpsert"
               example:
                 - *a53
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}?expand={expand}:
     get:
       description: |-
@@ -39360,6 +40773,30 @@ paths:
                       - post 2
                     created_at: 2024-02-26T10:02:00.845Z
                     updated_at: 2024-02-26T10:02:00.845Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts:
     post:
       description: "When upserting a `storefront`, the   following side effects will
@@ -39408,6 +40845,30 @@ paths:
               schema:
                 type: string
               example: sf_65dc619ac40344c9a1dd6755
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}:
     delete:
       description: Delete a `storefront`
@@ -39418,6 +40879,30 @@ paths:
       responses:
         "200":
           description: Item was deleted
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   "/storefronts?limit={limit}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
     get:
       summary: List and filter storefront items
@@ -39531,6 +41016,30 @@ paths:
                   $ref: "#/components/schemas/storefrontUpsert"
               example:
                 - *a61
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}/products:
     get:
       description: Each `storefront` has linked products, you can list these `products`
@@ -43281,6 +44790,30 @@ paths:
                     - discount:3-for-100
                     - discount:dis_65e75bbb3e40cc70cb17d131
                     - discount:dis_65f2ae768bf30e6cd0ca95fc
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}/discounts:
     get:
       description: Each `storefront` has linked discounts, you can list these `discounts`
@@ -44392,6 +45925,30 @@ paths:
                     - app:automatic
                     - type:0
                     - type:regular
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}/shipping:
     get:
       description: Each `storefront` has linked shipping methods, you can list these
@@ -44487,6 +46044,30 @@ paths:
                     - Shipping
                   created_at: 2024-02-26T10:02:00.139Z
                   updated_at: 2024-02-26T10:02:00.139Z
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}/collections:
     get:
       description: Each `storefront` has linked collections, you can list these
@@ -44589,6 +46170,30 @@ paths:
                     - active:true
                     - summer
                     - hello
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /storefronts/{id_or_handle}/posts:
     get:
       description: Each `storefront` has linked posts, you can list these `posts`
@@ -44683,3 +46288,27 @@ paths:
                     - post
                     - "1"
                     - post 1
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string

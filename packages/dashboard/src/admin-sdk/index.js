@@ -16,6 +16,7 @@ import Notifications from './notifications.js'
 import Bots from './bots.js'
 import Perfs from './perfs.js'
 import { LS } from './utils.browser.js'
+import Storage from './storage.js'
 
 /**
  * @typedef {object} StorecraftConfig
@@ -41,7 +42,8 @@ export class StorecraftAdminSDK {
 
     this.#_config = config
     this.auth = new Auth(this)
-    // this.storage = new Storage(this)
+    this.storage = new Storage(this);
+
     this.customers = new Customers(this)
     this.tags = new Tags(this)
     this.products = new Products(this)

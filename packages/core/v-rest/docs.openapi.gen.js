@@ -20,6 +20,7 @@ import {
   discountMetaEnumSchema,
   discountTypeSchema,
   discountTypeUpsertSchema,
+  errorSchema,
   filterMetaEnumSchema,
   fulfillOptionsEnumSchema,
   imageTypeSchema,
@@ -142,6 +143,7 @@ const create_all = () => {
   register_storefronts(registry);
 
   // register some utility types
+  registry.register('Error', errorSchema);
   registry.register('CheckoutStatusEnum', checkoutStatusEnumSchema);
   registry.register('PaymentOptionsEnum', paymentOptionsEnumSchema);
   registry.register('FulfillOptionsEnum', fulfillOptionsEnumSchema);
@@ -225,6 +227,7 @@ const register_base_get = (
           },
         },
       },
+      ...error() 
     },
     ...extra
   });
@@ -273,6 +276,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
           },
         },
       },
+      ...error() 
     },
     security: [{ bearerAuth: [] }]
   });
@@ -298,7 +302,8 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
     responses: {
       200: {
         description: 'Item was deleted',
-      }
+      },
+      ...error() 
     },
     security: [{ bearerAuth: [] }]
   });
@@ -338,6 +343,7 @@ const register_base_list = (
           },
         },
       },
+      ...error() 
     },
     ...extra
   });
@@ -411,10 +417,24 @@ const register_auth = registry => {
               },
             },
           },
+          ...error() 
         },
       });
     }
   )
+}
+
+const error = () => {
+  return {
+    '400-500': {
+      description: 'error',
+      content: {
+        "application/json": {
+          schema: errorSchema,
+        },
+      },
+    }
+  }
 }
 
 /**
@@ -426,7 +446,7 @@ const register_storage = registry => {
   const zod_presigned = z.object(
     {
       url: z.string().openapi({ description: 'The request url to follow' }),
-      method: z.enum(['GET', 'POST']).openapi({ description: 'The request method' }),
+      method: z.enum(['GET', 'POST', 'PUT']).openapi({ description: 'The request method' }),
       headers: z.record(z.string()).optional().openapi({ description: 'Additional request headers'}),
     }
   )
@@ -474,13 +494,14 @@ const register_storage = registry => {
     },
     responses: {
       200: {
-        description: 'image bytearray',
+        description: 'bytearray',
         content: {
           "image/*": {
             schema: z.any(),
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -518,6 +539,7 @@ const register_storage = registry => {
           },
         },
       },
+      ...error() 
     },
   });  
 
@@ -551,6 +573,7 @@ const register_storage = registry => {
       200: {
         description: 'success'
       },
+      ...error() 
     },
   });
 
@@ -590,6 +613,7 @@ const register_storage = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -615,6 +639,7 @@ const register_storage = registry => {
       200: {
         description: 'success',
       },
+      ...error() 
     },
   });  
 }
@@ -732,6 +757,7 @@ const register_collections = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1033,6 +1059,7 @@ const register_discounts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1483,6 +1510,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1570,6 +1598,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1618,6 +1647,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
   
@@ -1673,6 +1703,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1722,6 +1753,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1957,6 +1989,7 @@ const register_products = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -2018,6 +2051,7 @@ const register_products = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -2082,6 +2116,7 @@ const register_products = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -2169,7 +2204,8 @@ const register_products = registry => {
           },
         },
       },
-    },
+      ...error() 
+     },
   });
 
 }

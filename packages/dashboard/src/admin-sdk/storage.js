@@ -1,92 +1,156 @@
-import S3 from './drivers/storage/s3'
-import Google from './drivers/storage/google'
 
-import { StorecraftAdminSDK } from '.'
-import { 
-  FirebaseStorageSettings, ImageData, 
-  S3CompatibleStorageSettings, 
-  StorageTypeEnum } from './js-docs-types'
+import { StorecraftAdminSDK } from './index.js'
+import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
 
+/**
+ * 
+ * `Storecraft` storage service.
+ * 
+ * Supports:
+ * - direct `downloads` / `uploads`
+ * - presigned-urls for `download` / `upload` (If supported)
+ * - `delete` files
+ * 
+ */
 export default class Storage {
 
-  /** @param {StorecraftAdminSDK} ctx of*/
-  constructor(ctx) {
-    this.ctx = ctx
+  /** 
+   * @param {StorecraftAdminSDK} sdk of
+   */
+  constructor(sdk) {
+    this.sdk = sdk
   }
   
   /**
-   * get a blob from the current selected storage
-   * @param {string} path 
-   * @param {(x: Blob) => any} process 
-   * @returns
+   * Get a blob from `storage` driver with `presigned` urls
+   * 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
+   * 
+   * @return {Promise<Blob>}
+   * 
+   * @throws {import('@storecraft/core/v-api').error}
    */
-  getBlob = async (path, process = x => x) => {
-    const [exists, _, main_settings] = await this.ctx.settings.get('main')
+  getBlobSigned = async (key) => {
 
-    const id = main_settings?.storage?.selected ?? StorageTypeEnum.google_cloud_storage
-    const storage_settings = main_settings?.storage?.items?.[id]
-    const driver = this.storageById(id, storage_settings)
+    const r = await fetchOnlyApiResponseWithAuth(
+      `storage/${key}?signed=true`,
+      { method: 'get' }
+    );
 
-    const blob = await driver.getBlob(path)
-    return process(blob)
+    const ctype = r.headers.get('Content-Type');
+
+    if(!r.ok) {
+      const error = await r.json();
+      throw error;
+    }
+
+    // `presigned` url instructions
+    if(ctype === 'application/json') {
+      /** @type {import('@storecraft/core/v-storage').StorageSignedOperation} */
+      const presigned_req = await r.json();
+      const presigned_res = await fetch(
+        presigned_req.url, 
+        {
+          method: presigned_req.method,
+          headers: presigned_req.headers
+        }
+      );
+      const blob = await presigned_res.blob();
+      return blob;
+    } 
+
+    throw 'unknown'
   }
 
-  /** @param {string} path  */
-  getString = (path) => this.getBlob(path, blob => blob.text())
-  /** @param {string} path  */
-  getJson = (path) => this.getBlob(path, blob => blob.text().then(JSON.parse))
-  /** @param {string} path  */
-  getImage = (path) => this.getBlob(path, blob => URL.createObjectURL(blob))
+  /**
+   * Get a blob from `storage` driver, straight download. (Not recommended)
+   * 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
+   * 
+   * @return {Promise<Blob>}
+   * 
+   * @throws {import('@storecraft/core/v-api').error}
+   */
+  getBlobUnsigned = async (key) => {
+
+    const r = await fetchOnlyApiResponseWithAuth(
+      `storage/${key}?signed=false`,
+      { method: 'get' }
+    );
+
+    const ctype = r.headers.get('Content-Type');
+
+    if(!r.ok) {
+      const error = await r.json();
+      throw error;
+    }
+
+    return r.blob();
+  }  
 
   /**
-   * given a url like reference, find the storage it belongs to
-   * @param {string} ref url or uri like
+   * Get a blob from `storage` driver with the following strategy:
+   * First try `presigned` urls, and if they are not supported, then
+   * try direct download.
+   * 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
+   * 
+   * @return {Promise<Blob>}
+   * 
+   * @throws {import('@storecraft/core/v-api').error}
    */
-  getDriverByRef = async (ref) => {
-    const [exists, _, main_settings] = await this.ctx.settings.get('main', true)
-
-    const id = main_settings?.storage?.selected ?? StorageTypeEnum.google_cloud_storage
-    const items = {       
-      [StorageTypeEnum.google_cloud_storage]: {},
-      ...main_settings?.storage?.items
-    }
+  getBlob = async (key) => {
 
     try {
-      const storage = Object.entries(items).map(
-        ([key, settings]) => this.storageById(key, settings)
-      ).find(
-        s => s.doesThisRefBelongsToMe(ref)
-      )
-      return storage
-    } catch(e) {
+      const blob = await this.getBlobSigned(key);
+      return blob
+    } catch (e) {
     }
 
-    return undefined
+    // We allow this to `throw`
+    const blob = await this.getBlobUnsigned(key);
+    return blob;
   }
 
-  deleteByRef = async (ref) => {
-    const driver = await this.getDriverByRef(ref)
-    if(driver===undefined)
-      return;
+  /** @param {string} path  */
+  getText = (path) => 
+      this.getBlob(path).then(blob => blob.text());
 
-    return driver.deleteByRef(ref)
-  }
+  /** @param {string} path  */
+  getJson = (path) => 
+      this.getBlob(path).then(blob => blob.text().then(JSON.parse));
+
+  /** @param {string} path  */
+  getImageObjectURL = (path) => 
+      this.getBlob(path).then(blob => URL.createObjectURL(blob));
 
   /**
-   * get file source by inspecting the url and figuring out in which
-   * storage ir resides and then fetch it by the correct storage driver
+   * get file source by inspecting the url:
+   * 
+   * - If it starts with `storage://`, then use `backend` 
+   * storage service, to download and convert it to encoded 
+   * `object-url` for `<img/>`
+   * 
+   * - Else. it is assumed to be a public `url`, and will 
+   * return the given url.
+   * 
    * @param {string} url 
    * @param {boolean} isImage 
    */
   getSource = async (url, isImage=true) => {
     try {
-      const driver = await this.getDriverByRef(url)
+
+      const is_storage = url.startsWith('storage://');
 
       // if we havent found a driver, rturn the url
-      if(driver===undefined)
+      if(!is_storage)
         return url;
 
-      const blob = await driver.getBlobByRef(url)
+      const key = url.split('storage://').at(-1);
+      const blob = await this.getBlob(key);
       if(isImage)
         return URL.createObjectURL(blob)
       else
@@ -98,134 +162,112 @@ export default class Storage {
   }
 
   /**
-   * get file source by inspecting the url and figuring out in which
-   * storage ir resides and then fetch it by the correct storage driver
-   * @param {string} url 
-   * @param {boolean} isImage 
+   * Put a blob into `storage` driver with `presigned` urls
+   * 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
+   * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
+   * 
    */
-  getSource2 = async (url, isImage=true) => {
-    const [exists, _, main_settings] = await this.ctx.settings.get('main', true)
+  putBytesSigned = async (key, data) => {
 
-    const id = main_settings?.storage?.selected ?? StorageTypeEnum.google_cloud_storage
-    const items = main_settings?.storage?.items ?? {}
+    const r = await fetchOnlyApiResponseWithAuth(
+      `storage/${key}?signed=true`,
+      { method: 'put' }
+    );
+
+    const ctype = r.headers.get('Content-Type');
+
+    if(!r.ok) {
+      const error = await r.json();
+      throw error;
+    }
+
+    // `presigned` url instructions
+    if(ctype === 'application/json') {
+      /** @type {import('@storecraft/core/v-storage').StorageSignedOperation} */
+      const presigned_req = await r.json();
+      const presigned_res = await fetch(
+        presigned_req.url, 
+        {
+          method: presigned_req.method,
+          headers: presigned_req.headers,
+          body: data
+        }
+      );
+      return presigned_res.ok;
+    }
+
+    throw 'unknown'
+  }
+
+  /**
+   * Put a blob into `storage` driver with direct `upload` (Not Recommended)
+   * 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
+   * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
+   * 
+   */
+  putBytesUnsigned = async (key, data) => {
+
+    const r = await fetchOnlyApiResponseWithAuth(
+      `storage/${key}?signed=false`,
+      { 
+        method: 'put',
+        body: data
+      }
+    );
+
+    const ctype = r.headers.get('Content-Type');
+
+    if(!r.ok) {
+      const error = await r.json();
+      throw error;
+    }
+
+    return r.ok;
+  }
+
+  /**
+   * Put bytes into `storage` driver with the following strategy:
+   * First try `presigned` urls, and if they are not supported, then
+   * try direct upload.
+   * 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
+   * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
+   * 
+   * @return {Promise<boolean>}
+   * 
+   * @throws {import('@storecraft/core/v-api').error}
+   */
+  putBytes = async (key, data) => {
 
     try {
-
-      const match = Object.entries(items).find(
-        ([key, settings]) => {
-          const isS3 = key!==StorageTypeEnum.google_cloud_storage
-
-          if(!isS3)
-            return false
-
-          /**@type {S3CompatibleStorageSettings} */  
-          let settings_casted = settings
-          const endpoint = settings_casted?.endpoint
-
-          if(!endpoint)
-            return false
-
-          const eurl = new URL(endpoint)
-            
-          const includes = url.includes(eurl.hostname)
-          return includes
-        }
-      )
-
-      if(match) {
-        const [key, value] = match
-        const isS3 = key!== StorageTypeEnum.google_cloud_storage
-        if(!isS3)
-          return url;
-
-        // handle S3
-        /**@type {S3CompatibleStorageSettings} */
-        const settings = value
-        const force_path_style = settings?.force_path_style ?? false
-        const driver = this.storageById(key, settings)
-        const eurl = new URL(settings.endpoint)
-        const uurrll = new URL(url)
-        let pathname = uurrll.pathname
-        if(pathname.startsWith('/'))
-          pathname = pathname.slice(1)
-
-        // detect if s3 url is path style or virtual style
-        const is_path_style = uurrll.host.startsWith(eurl.host)
-
-        let path_key = pathname
-        if(is_path_style)
-          path_key = pathname.split('/').slice(1).join('/')
-
-        const blob = await driver.getBlob(path_key)
-        if(isImage)
-          return URL.createObjectURL(blob)
-        else
-          return blob.text().then(JSON.parse)
-      }
-    } catch(e) {
-      console.log(e)
+      const ok = await this.putBytesSigned(key, data);
+      return ok;
+    } catch (e) {
     }
 
-    return url;
+    // We allow this to `throw`
+    const ok = await this.putBytesUnsigned(key, data);
+    return ok;
   }
 
   /**
+   * Delete a `file` by key
    * 
-   * @param {string} id 
-   * @param {S3CompatibleStorageSettings | FirebaseStorageSettings} settings 
-   * @returns 
+   * @param {string} key file path key, 
+   * examples `image.png`, `collections/thumb.jpeg`
    */
-  storageById = (id, settings) => {
-    switch (id) {
-      case StorageTypeEnum.google_cloud_storage:
-        return new Google(this.ctx, settings)
-     default:
-        return new S3(this.ctx, settings)
-    }
-  }
+  delete = async (key) => {
+    const r = await fetchOnlyApiResponseWithAuth(
+      `storage/${key}`,
+      { method: 'delete' }
+    );
 
-  /**
-   * 
-   * @param {string} path 'a/b/c.jpeg'
-   * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
-   * @param { import('firebase/storage').UploadMetadata | undefined} data 
-   * @returns {[url: string, name: string, ref: string]} a triple [url, name, firebase uri]
-   */
-  uploadBytes = async (path, data, metaData = undefined) => {
-
-    const [exists, _, main_settings] = await this.ctx.settings.get('main')
-
-    const id = main_settings?.storage?.selected ?? StorageTypeEnum.google_cloud_storage
-    const storage_settings = main_settings?.storage?.items?.[id]
-
-    const driver = this.storageById(id, storage_settings)
-    return driver.uploadBytes(path, data, metaData)
-  }
-
-  /**
-   * 
-   * @param {string} path 'a/b/c.jpeg'
-   * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
-   * @param {'jpeg' | 'png' | 'webp'} type image type
-   * @returns {[string, string, string]} a triple [url, name, firebase uri]
-   */
-  uploadImage = async (path, data, type='jpeg', metaData={}) => {
-    const [url, name, ref] = await this.uploadBytes(
-      path, data, { 
-        contentType : `image/${type}`,
-        ...metaData
-      }
-    )
-
-    /**@type {ImageData} */
-    const img_data = {
-      handle: name,
-      name,
-      url, 
-      ref
-    }
-    await this.ctx.images.create(img_data)
-    return [url, name, ref]                        
+    return r.ok;
   }
 
 }

@@ -8,7 +8,10 @@ import { get, list, list_collection_products, remove, upsert } from '../v-api/co
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * 
+ * @param {import("../types.public.js").App<
+ *  PlatformNativeRequest, PlatformContext
+ * >} app
  */
 export const create_routes = (app) => {
 

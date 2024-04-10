@@ -12,7 +12,10 @@ import { get, list, remove, addBulk } from '../v-api/con.notifications.logic.js'
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * 
+ * @param {import("../types.public.js").App<
+ *  PlatformNativeRequest, PlatformContext
+ * >} app
  */
 export const create_routes = (app) => {
 

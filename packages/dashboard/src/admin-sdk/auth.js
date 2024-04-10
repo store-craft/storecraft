@@ -11,7 +11,7 @@ export default class Auth {
 
   /**
    * @typedef {(
-   * [user, isAuthenticated] : [ApiAuthResult, boolean]) => void
+   *  [user, isAuthenticated] : [ApiAuthResult, boolean]) => void
    * } SubscriberCallback 
    */
   /**@type {Set<SubscriberCallback>} */
@@ -25,9 +25,7 @@ export default class Auth {
    */
   constructor(context) {
     this.context = context
-    // this.auth = context.firebase.auth
     this.USER_KEY = `storecraft_admin_${context.config.email}`
-    this.db = context.db
     this.broadcast_channel = new BroadcastChannel(this.USER_KEY)
   }
 

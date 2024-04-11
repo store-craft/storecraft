@@ -14,7 +14,6 @@ const useSDK = () => {
 
   useEffect(
     () => {
-      console.log('effect')
       try {
         const sdk = getSDK()
         if(sdk.auth.isAuthenticated)
@@ -22,36 +21,36 @@ const useSDK = () => {
 
         const unsub = sdk.auth.add_sub(
           ([user, isAuth]) => {
-            console.log('[user, isAuth]', [user, isAuth]);
             setIsAuth(isAuth)
           }
-        )
+        );
 
         setIsInit(true)
 
         return unsub
       } catch (e) {
         setIsInit(false)
-        console.log('Shelf Error ', e)
+        console.log('Storecraft Error ', e)
       }
     }, [trigger, getSDK]
-  )
+  );
 
-  return [
+  return {
     isInit, isAuth, 
-    isInit ? getSDK() : undefined, 
+    sdk: isInit ? getSDK() : undefined, 
     trigger
-  ]
+  }
 }
 
 
 export default function Index({children, ...rest}) {
-  // useEffect(() => {
-  //   dynamic(() => import('./shelf'))
-  // }, [])
-  const [isInit, isAuth, _, trigger] = useSDK()
+  const {
+    isInit, isAuth, trigger
+  } = useSDK();
+
   const isGood = isInit && isAuth
   // console.log(isInit, isAuth)
+
   return (
 
   <Router >

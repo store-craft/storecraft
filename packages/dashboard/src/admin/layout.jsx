@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FaBloggerB, FaOpencart } from 'react-icons/fa/index.js'
 import { AiOutlineUser, AiFillTag } from 'react-icons/ai/index.js'
 import { TbDiscount2 } from 'react-icons/tb/index.js'
@@ -12,13 +12,15 @@ import ActionBar from './comps/action-bar.jsx'
 import { Bling } from './comps/common-ui.jsx'
 import { Outlet } from 'react-router-dom'
 import useDarkMode from './hooks/useDarkMode.js'
+import { useScrollDelta } from './hooks/useScrollDelta.js'
 
+/** @type {import('./comps/side-menu.jsx').MenuType} */
 const menu = {
   info: {
-    name: 'Shelf',
+    name: 'Storecraft',
     icon: <BiGame className='inline' />
   },
-  groups: [
+  items: [
   {
     name: 'pages',
     items : [
@@ -80,89 +82,39 @@ const menu = {
   ]
 }
 
-const Layout = ({ children=undefined, className, ...rest }) => {
-  const [menuOpen, setMenuOpen] = useState(true)
+
+/**
+ * 
+ * @typedef {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } LayoutParams
+ * 
+ * @param {LayoutParams} params
+ * 
+ */
+const Layout = (
+  { 
+    children=undefined, className, ...rest 
+  }
+) => {
+
+  const { open, ref_scroll_element } = useScrollDelta();
+  const [menuOpen, setMenuOpen] = useState(true);
+  const { darkMode } = useDarkMode();
+
   const onMenuClick = useCallback(
     () => {
       setMenuOpen(v => !v)
     }, []
-  )
+  );
+
   const onCloseClick = useCallback(
     () => {
       setMenuOpen(false)
     }, []
-  )
+  );
 
-  const main_ref = useRef()
-  useEffect(
-    () => {
-      main_ref.current.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      })
-    }, []
-  )
+  const open_class = open ? 'translate-y-0' : '-translate-y-full';
 
-  const { darkMode } = useDarkMode()
-
-  //
-  const [open, setOpen] = useState(true)
-  const state = useRef({})
-
-  useEffect(
-    () => {
-      const DOWN = 0
-      const UP = 1
-      const D = 100
-
-      state.current.state = DOWN
-      state.current.latestPos = undefined//main_ref.current.scrollTop
-      state.current.latestTurn = undefined//main_ref.current.scrollTop
-      main_ref.current.onscroll = function(e) {
-        var currentScrollPos = main_ref.current.scrollTop;
-        const s = state.current
-        if(s.latestPos===undefined)
-          s.latestPos=currentScrollPos
-        if(s.latestTurn===undefined)
-          s.latestTurn=currentScrollPos
-
-        if(currentScrollPos==0) {
-          setOpen(true)
-          return
-        }
-        const goes_down = currentScrollPos - s.latestPos > 0
-
-        if(goes_down) {
-          if(s.state!=DOWN) {
-            s.latestTurn = currentScrollPos
-            s.state=DOWN
-            // console.log(s)
-          }
-          if(currentScrollPos - s.latestTurn>=D)
-            setOpen(false)
-        } else {
-          if(s.state!=UP) {
-            s.latestTurn = currentScrollPos
-            s.state=UP
-            // console.log(s)
-
-          }
-          if(currentScrollPos - s.latestTurn<=-D)
-            setOpen(true)
-
-        }
-        s.latestPos=currentScrollPos
-      }
-      return () => {
-        main_ref.current && (main_ref.current.onscroll = undefined)
-      }
-    }, []
-  )
-
-  const open_class = open ? 'translate-y-0' : '-translate-y-full'
-
-  // console.log(darkMode)
   return (
 <div className={`${darkMode ? 'dark' : ''}`}
       data-color-mode={darkMode ? 'dark' : 'light'}>
@@ -170,15 +122,13 @@ const Layout = ({ children=undefined, className, ...rest }) => {
                   shelf-body-bg
                   w-full sm:h-full ${className}
                   `} {...rest}
-                  style={{height: '100dvh'}}>
+      style={{height: '100dvh'}}>
 
-    <div className={`fixed left-0 top-0 w-screen h-full 
-                  bg-teal-900/10 z-50 
-                    transition-all
-                    
-                    md:hidden
+    <div 
+        className={`fixed left-0 top-0 w-screen h-full bg-teal-900/10 
+                    z-50 transition-all md:hidden
                   ${menuOpen ? 'block backdrop-blur-sm' : 'hidden backdrop-blur-0'}`} 
-                  onClick={onCloseClick}/>
+        onClick={onCloseClick}/>
 
     {/* side menu   */}
     <div className={`absolute left-0 top-0 md:relative flex flex-shrink-0 
@@ -187,24 +137,27 @@ const Layout = ({ children=undefined, className, ...rest }) => {
                       md:transition-max-width md:duration-500 ease-in-out
                       ${menuOpen ? 'max-w-[72rem]' : 'max-w-0 '}`}>
 
-      <Bling className='my-3 ml-3 shadow-sm' 
-            rounded='rounded-tr-3xl rounded-tl-md rounded-br-3xl' 
-            stroke='pr-px pt-1 pb-4' 
-            from='from-kf-400 dark:from-kf-500' 
-            to='to-pink-400 dark:to-pink-500'>
-        <SideMenu menu={menu} 
-                  onCloseClick={onCloseClick} 
-                  className='bg-gradient-to-r 
-                           from-slate-100 to-white 
-                           dark:from-slate-800 dark:to-slate-800
-                            shadow-md 
-                            shadow-gray-800 h-full rounded-tr-3xl 
-                            rounded-br-3xl' />
+      <Bling 
+          className='my-3 ml-3 shadow-sm' 
+          rounded='rounded-tr-3xl rounded-tl-md rounded-br-3xl' 
+          stroke='pr-px pt-1 pb-4' 
+          from='from-kf-400 dark:from-kf-500' 
+          to='to-pink-400 dark:to-pink-500'>
+        <SideMenu 
+            menu={menu} 
+            onCloseClick={onCloseClick} 
+            className='bg-gradient-to-r 
+                      from-slate-100 to-white 
+                      dark:from-slate-800 dark:to-slate-800
+                      shadow-md 
+                      shadow-gray-800 h-full rounded-tr-3xl 
+                      rounded-br-3xl' />
       </Bling>
     </div>
 
     {/* main content */}
-    <div className='relative flex-1 h-full flex flex-col mx-0 sm:mx-3 md:mx-6 overflow-auto'>
+    <div className='relative flex-1 h-full flex flex-col 
+                    mx-0 sm:mx-3 md:mx-6 overflow-auto'>
 
       <ActionBar 
           className={`w-full 
@@ -219,20 +172,20 @@ const Layout = ({ children=undefined, className, ...rest }) => {
           onMenuClick={onMenuClick} 
           menuOpen={menuOpen} />
 
-      <div ref={main_ref} 
+      <div ref={ref_scroll_element} 
           className='relative w-full 
                     h-full pt-16 pb-5 overflow-y-auto scrollbar-none '>
         <div className='bg-gradient-to-tl from-kf-50/50 to-slate-50/10
                         dark:from-transparent/0 dark:to-transparent/0   
                           px-3 sm:px-5 lg:px-10 py-3 sm:py-5 lg:py-8 
                           rounded-3xl text-sm font-medium --text-gray-500 
-                          border dark:border-slate-700 w-full h-fit min-h-full overflow-x-auto'>
+                          border dark:border-slate-700 w-full h-fit 
+                          min-h-full overflow-x-auto'>
           <Outlet />
           { children }
         </div>                    
       </div>
     </div>
-
   </div>
 </div>
 )

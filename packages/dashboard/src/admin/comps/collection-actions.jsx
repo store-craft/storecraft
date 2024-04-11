@@ -94,8 +94,8 @@ export const TopActions = forwardRef(
 /**
  * 
  * @typedef {object} BottomActionsParams
- * @prop {() => Promise<void>} next
- * @prop {() => Promise<void>} prev
+ * @prop {() => Promise<any>} next
+ * @prop {() => Promise<any>} prev
  * @prop {number} [limit=5]
  * @prop {(v: number) => void} onLimitChange
  * @prop {string} [className]

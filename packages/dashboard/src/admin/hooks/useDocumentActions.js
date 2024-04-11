@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom'
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<useDocumentActions>, 'doc'> & 
+ * @typedef {Omit<ReturnType<useDocumentActions<T>>, 'doc'> & 
  *  {
  *    doc: T  
  *  }

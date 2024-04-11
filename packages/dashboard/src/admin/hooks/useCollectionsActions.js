@@ -1,4 +1,4 @@
-import { useCommonCollection } from '@/shelf-cms-react-hooks/useCollection.js';
+import { q_initial, useCommonCollection } from '@/shelf-cms-react-hooks/useCollection.js';
 import { api_query_to_searchparams, parse_query } from '@storecraft/core/v-api/utils.query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
@@ -7,9 +7,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<typeof useCollectionsActions>, 'page'> & 
+ * @typedef {Omit<ReturnType<typeof useCollectionsActions<T>>, 'page' | 'pages'> & 
  *  {
- *    page: T[]  
+ *    page: T[],  
+ *    pages: T[][]
  *  }
  * } HookReturnType This `type` will give you the return type of the hook
  * 
@@ -22,10 +23,17 @@ import { useNavigate, useParams } from 'react-router-dom'
  * - Pagination
  * - Querying
  * 
+ * @template {import('@storecraft/core/v-api').BaseType} T
+ * 
  * @param {string} resource the collection id in backend 
- * @param {string} slug front end slug
+ * @param {string} [slug] front end slug
+ * @param {boolean} [autoLoad=true] 
+ * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
  */
-const useCollectionsActions = (resource, slug=resource) => {
+const useCollectionsActions = (
+  resource, slug=resource, autoLoad=false, autoLoadQuery=q_initial
+) => {
+
   const { query_params } = useParams()
   const query_api = useMemo(
     () => {
@@ -46,10 +54,14 @@ const useCollectionsActions = (resource, slug=resource) => {
    **/
   const ref_actions = useRef()
   const ref_use_cache = useRef(true)
+
+  /**
+   * @type {import('@/shelf-cms-react-hooks/useCollection.js').HookReturnType<T>}
+   */
   const { 
-    page, loading, error, 
+    pages, page, loading, error, 
     query, queryCount, deleteDocument 
-  } = useCommonCollection(resource, false);
+  } = useCommonCollection(resource, autoLoad, autoLoadQuery);
 
   useEffect(
     () => {
@@ -62,7 +74,11 @@ const useCollectionsActions = (resource, slug=resource) => {
   );
 
   const onReload = useCallback(
-    () => {
+    /**
+     * @param {boolean} [perform_navigation=true] perform `url` 
+     * navigation with `search` params to enable query.
+     */
+    async (perform_navigation=true) => {
       const { 
         endBefore, endAt, startAfter, 
         startAt, limitToLast, ...rest 
@@ -71,42 +87,62 @@ const useCollectionsActions = (resource, slug=resource) => {
       const search = ref_actions.current.getSearch();
       ref_use_cache.current = false;
 
-      const q = api_query_to_searchparams(
-        {
-          ...rest,
-          limit: 5,
-          vqlString: search
-        }
-      );
-      nav(
-        `${slug}/q/${q.toString()}`, 
-        { replace: true }
-      );
+      const q = {
+        ...rest,
+        limit: 5,
+        vqlString: search
+      }
 
-    }, [nav, slug, query_api]
+      if(perform_navigation) {
+        nav(
+          `${slug}/q/${api_query_to_searchparams(q).toString()}`, 
+          { replace: true }
+        );
+      } else {
+        await query(q);
+      }
+
+      return q;
+
+    }, [nav, query, slug, query_api]
   );
 
   const onLimitChange = useCallback(
-    /** @param {number} $limit  */
-    ($limit) => {
+    /** 
+     * @param {number} $limit  
+     * @param {boolean} [perform_navigation=true] perform `url` 
+     * navigation with `search` params to enable query.
+     * 
+     */
+    ($limit, perform_navigation=true) => {
       const { 
         limit, limitToLast, ...rest 
       } = query_api
 
-      const q = api_query_to_searchparams(
-        {
-          ...query_api,
-          limit: limit ? $limit : undefined,
-          limitToLast: limitToLast ? $limit : undefined
-        }
-      );
-      nav(`${slug}/q/${q.toString()}`);
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q = {
+        ...query_api,
+        limit: limit ? $limit : undefined,
+        limitToLast: limitToLast ? $limit : undefined
+      }
 
-    }, [nav, slug, query_api, page]
+      if(perform_navigation) {
+        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
+      } else {
+        query(q);
+      }
+
+      return q;
+
+    }, [nav, query, slug, query_api, page]
   );
 
   const next = useCallback(
-    async () => {
+    /**
+     * @param {boolean} [perform_navigation=true] perform `url` 
+     * navigation with `search` params to enable query.
+     */
+    async (perform_navigation=true) => {
 
       const item = page?.at(-1);
       const { 
@@ -114,40 +150,57 @@ const useCollectionsActions = (resource, slug=resource) => {
         startAt, limit, limitToLast, ...rest 
       } = query_api
       
-      const q = api_query_to_searchparams(
-        {
-          ...rest,
-          startAfter: [
-            ['updated_at', item.updated_at], ['id', item.id]
-          ],
-          limit: limit ? limit : limitToLast
-        }
-      );
-      console.log('q', q.toString())
-      nav(`${slug}/q/${q.toString()}`);
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q = {
+        ...rest,
+        startAfter: [
+          ['updated_at', item.updated_at], ['id', item.id]
+        ],
+        limit: limit ? limit : limitToLast
+      }
 
-    }, [nav, page, query_api, slug]
+      // console.log('q', q)
+      if(perform_navigation) {
+        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
+      } else {
+        await query(q);
+      }
+
+      return q;
+
+    }, [nav, query, page, query_api, slug]
   );
 
   const prev = useCallback(
-    async () => {
+    /**
+     * @param {boolean} [perform_navigation=true] perform `url` 
+     * navigation with `search` params to enable query.
+     */
+    async (perform_navigation=true) => {
       const item = page?.at(0);
       const { 
         endBefore, endAt, startAfter, 
         startAt, limit, limitToLast, ...rest 
       } = query_api
       
-      const q = api_query_to_searchparams(
-        {
-          ...rest,
-          endBefore: [
-            ['updated_at', item.updated_at], ['id', item.id]
-          ],
-          limitToLast: limitToLast ? limitToLast : limit
-        }
-      );
-      nav(`${slug}/q/${q.toString()}`);
-    }, [nav, page, query_api, slug]
+      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      const q = {
+        ...rest,
+        endBefore: [
+          ['updated_at', item.updated_at], ['id', item.id]
+        ],
+        limitToLast: limitToLast ? limitToLast : limit
+      }
+
+      if(perform_navigation) {
+        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
+      } else {
+        await query(q);
+      }
+
+      return q;
+
+    }, [nav, query, page, query_api, slug]
   );
 
   const context = useMemo(
@@ -160,7 +213,7 @@ const useCollectionsActions = (resource, slug=resource) => {
 
   return {
     query_api, ref_actions, context,
-    page, loading, error, 
+    pages, page, loading, error, 
     onLimitChange, onReload, prev, 
     next, queryCount
   }

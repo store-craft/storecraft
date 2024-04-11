@@ -103,10 +103,9 @@ const paginate_helper = (query, resource) => {
  * @param {string} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
  * @param {boolean} autoLoad 
- * @param {T} dummy_type 
  */
 export const useCollection = 
-  (resource, q=undefined, autoLoad=true, dummy_type) => {
+  (resource, q=undefined, autoLoad=true) => {
 
   const _q = useRef(q)
   const _hasEffectRan = useRef(false)
@@ -246,7 +245,7 @@ export const useCollection =
 
 
 /** @type {import('@storecraft/core/v-api').ApiQuery} */
-const q_initial = {
+export const q_initial = {
   sortBy: ['updated_at', 'id'],
   order: 'desc',
   limit: 5
@@ -255,7 +254,7 @@ const q_initial = {
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<typeof useCommonCollection>, 'page' | 'pages'> & 
+ * @typedef {Omit<ReturnType<typeof useCommonCollection<T>>, 'page' | 'pages'> & 
  *  {
  *    page: T[]  
  *    pages: T[][]  
@@ -268,18 +267,18 @@ const q_initial = {
  * Modified collection with modified search query
  * 
  * @template T
+ * 
  * @param {string} resource 
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
- * @param {T} [dummy_type] 
  */
  export const useCommonCollection = 
-  (resource, autoLoad=true, autoLoadQuery=q_initial, dummy_type=undefined) => {
+  (resource, autoLoad=true, autoLoadQuery=q_initial) => {
     
   const { 
     pages, page, loading, error, 
     prev, next, query : queryParent, queryCount, deleteDocument 
-  } = useCollection(resource, autoLoadQuery, autoLoad, dummy_type)
+  } = useCollection(resource, autoLoadQuery, autoLoad)
 
   const query = useCallback(
     /**

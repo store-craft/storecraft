@@ -2,15 +2,13 @@ import { forwardRef, useCallback } from 'react'
 import { Overlay } from '@/admin/comps/overlay.jsx';
 import Gallery from './gallery.jsx'
 
-const QP = {}
-
 const GallerySelect = forwardRef(
   /**
    * @typedef {import('./overlay.jsx').ImpInterface} ImpInterface
    * 
    * 
    * @typedef {object} GallerySelectParams
-   * @prop {object} [query_params={}]
+   * @prop {import('@storecraft/core/v-api').ApiQuery} [query_params]
    * @prop {(img: import('@storecraft/core/v-api').ImageType) => void} onSelect
    * 
    * @param {GallerySelectParams} params 
@@ -18,7 +16,7 @@ const GallerySelect = forwardRef(
    */
   (
     {
-      query_params=QP, onSelect, ...rest
+      query_params, onSelect, ...rest
     }, ref
   ) => {
 
@@ -42,6 +40,7 @@ const GallerySelect = forwardRef(
 <Overlay ref={ref} >
   <div className='w-full h-full max-w-[60rem] px-5 py-10  '>
     <Gallery 
+        useSearchParamsForQuery={false}
         query_params={query_params} 
         onClickImage={onSelectInternal}
         onClick={e => e.stopPropagation()}

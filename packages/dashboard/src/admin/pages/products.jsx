@@ -24,7 +24,9 @@ const schema_fields = [
     key: 'title', name: 'Title', comp: Span, 
     comp_params: { className: 'font-semibold max-w-[8rem] overflow-x-auto' } 
   },
-  { key: 'price', name: 'Price', comp: Span },
+  { 
+    key: 'price', name: 'Price', comp: Span 
+  },
   { 
     key: 'collections', name: 'Collections', comp: SpanArray, 
     comp_params: { 
@@ -37,7 +39,9 @@ const schema_fields = [
         c => c.handle
     } 
   },
-  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
+  { 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+  },
   { 
     key: undefined, name: 'Actions', 
     comp: RecordActions, 
@@ -69,13 +73,17 @@ export default ({}) => {
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md dark:shadow-slate-900 '>      
+                      shelf-border-color shadow-md 
+                      dark:shadow-slate-900 '>      
         <TopActions 
             ref={ref_actions} reload={onReload} 
             createLink='/pages/products/create'
             searchTitle='Search by Name, Handle, Tag values, Collections...' 
             isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
         <ShowIf show={page}>
           <BottomActions 
               prev={prev} next={next} 

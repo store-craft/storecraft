@@ -16,6 +16,10 @@ import {useNavigate} from 'react-router-dom'
  */
 
 /**
+ * @typedef {'edit' | 'view' | 'create'} DocumentActionsMode
+ */
+
+/**
  * Your definitive hook for `document` adventures with UI. Compared
  * to `useCommonApiDocument`, it adds:
  * - Aggregating from a functional component
@@ -27,7 +31,7 @@ import {useNavigate} from 'react-router-dom'
  * @param {string} resource resource `identifier`
  * @param {string} document document `handle` or `id`
  * @param {string} slug resource `slug` at backend
- * @param {'edit' | 'view' | 'create'} mode 
+ * @param {DocumentActionsMode} mode 
  * @param {string} [base] base64 encoded base `document` to merge with
  * 
  */

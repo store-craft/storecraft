@@ -121,10 +121,16 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
  * 
  *
  * @typedef { import('./index.jsx').BaseDocumentContext<State>
-* } Context Public `shipping` context
-* 
-*/
+ * } Context Public `shipping` context
+ * 
+ */
 
+
+/**
+ * @param {{ 
+ *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ * }} params
+ */
 export default (
  { 
    mode, ...rest

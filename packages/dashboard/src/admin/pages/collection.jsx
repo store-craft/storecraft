@@ -146,6 +146,12 @@ const Actions = (
  * 
  */
 
+
+/**
+ * @param {{ 
+ *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ * }} params
+ */
 export default (
   { 
     mode, ...rest

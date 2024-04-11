@@ -116,10 +116,16 @@ const root_schema22 = {
  * 
  *
  * @typedef { import('./index.jsx').BaseDocumentContext<State>
-* } Context Public `post` context
-* 
-*/
+ * } Context Public `post` context
+ * 
+ */
 
+
+/**
+ * @param {{ 
+ *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ * }} params
+ */
 export default (
  { 
    mode, ...rest

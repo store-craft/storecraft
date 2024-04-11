@@ -304,6 +304,11 @@ const root_schema = {
  * 
  */
 
+/**
+ * @param {{ 
+ *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ * }} params
+ */
 export default (
  { 
    mode, ...rest

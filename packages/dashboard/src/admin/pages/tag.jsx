@@ -56,10 +56,16 @@ const root_schema = {
  * 
  *
  * @typedef { import('./index.jsx').BaseDocumentContext<State>
-* } Context Public `tag` context
-* 
-*/
+ * } Context Public `tag` context
+ * 
+ */
 
+
+/**
+ * @param {{ 
+ *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ * }} params
+ */
 export default (
  { 
    mode, ...rest

@@ -208,6 +208,11 @@ const root_schema = {
  */
 
 
+/**
+ * @param {{ 
+ *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ * }} params
+ */
 export default (
   { 
     mode, ...rest
@@ -226,7 +231,7 @@ export default (
     actions: {
       savePromise, deletePromise, duplicate, reload
     },
-    context: context_base, 
+    context: context_base, key, 
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
@@ -265,11 +270,6 @@ export default (
   let minor = [documentId ?? 'create']
   if(isVariant)
     minor = [doc?.parent_handle, 'variants', ...minor]
-
-  const key = useMemo(
-    () => JSON.stringify(doc),
-    [doc]
-  );
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>

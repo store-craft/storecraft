@@ -2,8 +2,23 @@ import { useEffect, useRef, useState } from 'react'
 
 /**
  * 
- * @param {object} param
- * @returns 
+ * @typedef {object} InnerTransitionParams
+ * @prop {boolean} show
+ * @prop {boolean} unMountOnExit
+ * @prop {number} duration
+ * @prop {string} enter class-names for `event`
+ * @prop {string} enterFrom class-names for `event`
+ * @prop {string} enterTo class-names for `event`
+ * @prop {string} leave class-names for `event`
+ * @prop {string} leaveFrom class-names for `event`
+ * @prop {string} leaveTo class-names for `event`
+ * 
+ * 
+ * 
+ * @param {InnerTransitionParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ * 
  */
 const Transition = ( 
   { 
@@ -17,6 +32,8 @@ const Transition = (
   // animation state is binary
   const [_show, setShow] = useState(false)
   const [cls, setC] = useState('hidden')
+
+  /** @type {React.MutableRefObject<{ timer?: any }>} */
   const animation = useRef({})
 
   // console.log({
@@ -64,7 +81,10 @@ const Transition = (
 <>
 { 
   final_show && (
-    <div children={children} className={`${cls} ${className}`} {...rest} />
+    <div 
+        children={children} 
+        className={`${cls} ${className}`} 
+        {...rest} />
   ) 
 }
 </>

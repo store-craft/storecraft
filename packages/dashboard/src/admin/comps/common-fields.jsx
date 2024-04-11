@@ -172,10 +172,15 @@ export const TimeStampView = ({field, value, ...rest}) => {
  * import('./common-ui.jsx').InputParams } MInputParams
  * 
  * 
- * @param {MInputParams} param
- * @returns 
+ * @param {MInputParams} params
+ * 
  */
-export const MInput = ({field, value, onChange, type='text', ...rest}) => {
+export const MInput = (
+  {
+    field, value, onChange, type='text', ...rest
+  }
+) => {
+  
   const { key, name, comp_params } = field
   const merged = { ...comp_params, ...rest}
   const { className, setError, error, ...rest_rest } = merged

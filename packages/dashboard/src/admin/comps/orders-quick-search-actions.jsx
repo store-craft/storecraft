@@ -40,15 +40,20 @@ const OrdersQuickSearchActions = ({ ...rest }) => {
   <div {...rest}>
     <div className='flex flex-row gap-2 flex-wrap'>
       <Link to={`/pages/orders`} draggable='false'>
-        <LabelCapsule value='all' bgColor='bg-pink-400 dark:bg-pink-400/60' />
+        <LabelCapsule 
+            value='all' 
+            bgColor='bg-pink-400 dark:bg-pink-400/60' />
       </Link>
       {
         Object.values(FulfillOptionsEnum).map(
           it => (
-          <Link key={it.id} 
-                draggable='false'
-                to={`/pages/orders/q/vqlString=fulfill:${it.id}`}>
-            <LabelCapsule value={it.name2} bgColor={id2ColorFulfill(it.id)} />
+          <Link 
+              key={it.id} 
+              draggable='false'
+              to={`/pages/orders/q/vqlString=fulfill:${it.id}`}>
+            <LabelCapsule 
+                value={it.name2} 
+                bgColor={id2ColorFulfill(it.id)} />
           </Link>
             )
         )
@@ -56,10 +61,13 @@ const OrdersQuickSearchActions = ({ ...rest }) => {
       {
         Object.values(PaymentOptionsEnum).map(
           it => (
-          <Link key={it.id} 
-                draggable='false'
-                to={`/pages/orders/q/vqlString=payment:${it.id}`}>
-            <LabelCapsule value={it.name} bgColor={id2ColorPayment(it.id)} />
+          <Link 
+              key={it.id} 
+              draggable='false'
+              to={`/pages/orders/q/vqlString=payment:${it.id}`}>
+            <LabelCapsule 
+                value={it.name} 
+                bgColor={id2ColorPayment(it.id)} />
           </Link>
             )
         )

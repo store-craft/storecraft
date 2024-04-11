@@ -3,12 +3,12 @@ import CollectionView from './collection-view.jsx'
 import { RecordActions, Span, 
   TimeStampView } from './common-fields.jsx'
 import { Bling, Card } from './common-ui.jsx'
-import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
 import { getSDK } from '@/admin-sdk/index.js'
-import useTrigger from '@/shelf-cms-react-hooks/common/useTrigger.js'
+import useTrigger from '@/admin-sdk-react-hooks/useTrigger.js'
 import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
@@ -40,7 +40,7 @@ const CollectionBase = forwardRef(
   ) => {
     
   /**
-   * @type {import('@/shelf-cms-react-hooks/useCollection.js').HookReturnType<
+   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
    *  import('@storecraft/core/v-api').ProductType>
    * }
    */

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
-import { useCommonApiDocument } from '@/shelf-cms-react-hooks/useDocument.js';
+import { useCommonApiDocument } from '@/admin-sdk-react-hooks/useDocument.js';
 import {useNavigate} from 'react-router-dom'
 
 /**

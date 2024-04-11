@@ -4,7 +4,7 @@ import { HashRouter as Router } from 'react-router-dom'
 import { getSDK } from '@/admin-sdk/index.js'
 import ShowIf from './comps/show-if.jsx'
 import Login from './login.jsx'
-import useTrigger from '@/shelf-cms-react-hooks/common/useTrigger.js'
+import useTrigger from '@/admin-sdk-react-hooks/useTrigger.js'
 import Head from 'next/head.js';
 
 const useSDK = () => {

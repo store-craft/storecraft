@@ -1,4 +1,4 @@
-import { q_initial, useCommonCollection } from '@/shelf-cms-react-hooks/useCollection.js';
+import { q_initial, useCommonCollection } from '@/admin-sdk-react-hooks/useCollection.js';
 import { api_query_to_searchparams, parse_query } from '@storecraft/core/v-api/utils.query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
@@ -58,7 +58,7 @@ const useCollectionsActions = (
   const ref_use_cache = useRef(true)
 
   /**
-   * @type {import('@/shelf-cms-react-hooks/useCollection.js').HookReturnType<T>}
+   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<T>}
    */
   const { 
     pages, page, loading, error, 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import useTrigger from "./common/useTrigger.js"
+import useTrigger from "./useTrigger.js"
 import { getSDK } from '@/admin-sdk/index.js'
 
 /**

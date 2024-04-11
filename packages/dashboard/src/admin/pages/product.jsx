@@ -169,7 +169,9 @@ const root_right_schema = {
       validate: false, editable: true, 
       desc: 'Which collections does this product belong to ?',
       comp: withCard(
-        SelectResourceWithTags, { resource: 'collections' }
+        SelectResourceWithTags, { 
+          resource: 'collections', slug: '/pages/collections'
+        }
       ) 
     },
     

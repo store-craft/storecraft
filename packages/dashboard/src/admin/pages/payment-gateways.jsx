@@ -1,4 +1,4 @@
-import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
 import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useEffect, useMemo, useRef } from 'react'

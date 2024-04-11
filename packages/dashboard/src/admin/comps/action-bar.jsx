@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { AiOutlineMenuFold } from 'react-icons/ai/index.js'
 import { MdLogout } from 'react-icons/md/index.js'
-import { useUser } from '@/shelf-cms-react-hooks/index.js'
+import { useUser } from '@/admin-sdk-react-hooks/index.js'
 import { GradientFillIcon } from './common-button.jsx'
 import useToggle from '../hooks/useToggle.js'
 import ShowIf from './show-if.jsx'

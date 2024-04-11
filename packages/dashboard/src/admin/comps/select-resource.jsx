@@ -1,4 +1,4 @@
-import { useCommonCollection } from '@/shelf-cms-react-hooks/index.js'
+import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
 import { IoReloadCircle } from 'react-icons/io5/index.js'
 import { useCallback, useEffect, 
   useMemo, useState } from 'react'
@@ -66,7 +66,7 @@ const SelectResource = (
   const [tag, setTag] = useState(nada);
 
   /**
-   * @type {import('@/shelf-cms-react-hooks/useCollection.js').HookReturnType<
+   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
    *  import('@storecraft/core/v-api').BaseType>
    * }
    */

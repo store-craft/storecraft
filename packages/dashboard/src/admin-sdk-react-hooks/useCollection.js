@@ -1,6 +1,6 @@
 import { useCallback, useEffect, 
          useRef, useState } from 'react'
-import useTrigger from './common/useTrigger.js'
+import useTrigger from './useTrigger.js'
 import { getSDK } from '@/admin-sdk/index.js'
 import { list } from '@/admin-sdk/utils.api.fetch.js'
 

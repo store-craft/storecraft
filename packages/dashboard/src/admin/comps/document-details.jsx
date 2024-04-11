@@ -13,7 +13,7 @@ import { useState } from 'react'
 const ClipBoardCopy = ({ value }) => {
   const [copied, setCopied] = useState(false)
 
-  /** @type {import('react').MouseEventHandler<SVGElement>} */
+  /** @type {React.MouseEventHandler<SVGElement>} */
   const onClickCopy = useCallback(
     (e) => {
       setCopied(true)

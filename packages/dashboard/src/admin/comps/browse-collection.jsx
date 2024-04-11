@@ -13,7 +13,7 @@ import { BiSearchAlt } from "react-icons/bi/index.js"
  * @typedef {object} BrowseCollectionParams
  * @prop {string} collectionId
  * @prop {string} [title]
- * @prop {import('react').FC<any>} [Comp]
+ * @prop {React.FC<any>} [Comp]
  * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
@@ -58,10 +58,10 @@ const BrowseCollection = (
     , [pages]
   )
 
-  /** @type {import('react').LegacyRef<HTMLInputElement>} */
+  /** @type {React.LegacyRef<HTMLInputElement>} */
   const ref_input = useRef()
 
-  /** @type {import('react').EventHandler<import('react').SyntheticEvent>} */
+  /** @type {React.EventHandler<React.SyntheticEvent>} */
   const onSubmit = useCallback(
     (e) => {
       e?.preventDefault()

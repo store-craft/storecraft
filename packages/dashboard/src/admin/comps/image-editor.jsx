@@ -301,12 +301,12 @@ const ImageEditor = (
   const [completedCrop, setCompletedCrop] = useState()
   /** @type {useStateInfer<import('react-image-crop/index.js').Crop>} */
   const [crop, setCrop] = useState();
-  /** @type {import('react').MutableRefObject<import('react').PointerEvent>} */
+  /** @type {React.MutableRefObject<React.PointerEvent>} */
   const ref_xy =  useRef(undefined)
   const [processing, setProcessing] = useState(false)
   const [panelValues, setPanelValues] = useState(INITAL_PANEL)
 
-  /** @type {import('react').ReactEventHandler<HTMLImageElement>} e  */
+  /** @type {React.ReactEventHandler<HTMLImageElement>} e  */
   const onImageLoad = useCallback(
     (e) => {
       const { width, height } = e.currentTarget
@@ -396,13 +396,13 @@ const ImageEditor = (
   )
 
   // touch
-  /** @type {import('react').LegacyRef<HTMLDivElement>} */
+  /** @type {React.LegacyRef<HTMLDivElement>} */
   const ref_a = useRef()
   const isCropMode = panelValues.mode === 'crop'
 
   const onPointerDown = useCallback(
     /**
-     * @param {import('react').PointerEvent} e 
+     * @param {React.PointerEvent} e 
      */    
     (e) => {
       if(isCropMode)
@@ -413,7 +413,7 @@ const ImageEditor = (
       ref_xy.current = e
 
       /**
-       * @param {import('react').PointerEvent} e 
+       * @param {React.PointerEvent} e 
        */
       const onPointerMove = e => {
         e.preventDefault()
@@ -433,7 +433,7 @@ const ImageEditor = (
       }
 
       /**
-       * @param {import('react').PointerEvent} e 
+       * @param {React.PointerEvent} e 
        */
       const onPointerUp = (e) => {
         e.preventDefault()

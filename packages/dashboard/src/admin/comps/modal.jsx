@@ -19,7 +19,7 @@ const Modal = forwardRef(
   /**
    * 
    * @param {object} param0 
-   * @param {import('react').ReactElement} param0.title 
+   * @param {React.ReactElement} param0.title 
    * @param {(key: string, value: any) => void} param0.onApprove 
    * @param {any} ref 
    * @returns 
@@ -32,7 +32,7 @@ const Modal = forwardRef(
 ) => {
   const [dm, setDM] = useState({ data: undefined, message: 'NA'});
 
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
   useImperativeHandle(
@@ -52,7 +52,7 @@ const Modal = forwardRef(
 
   const onSelectInternal = useCallback(
     /**
-     * @param {import('react').MouseEvent<HTMLButtonElement, MouseEvent>} e 
+     * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e 
      * @param {*} v 
      */
     (e, v) => { 

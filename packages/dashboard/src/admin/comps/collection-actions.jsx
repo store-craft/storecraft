@@ -44,7 +44,7 @@ export const TopActions = forwardRef(
     [search],
   );
 
-  /** @type {import('react').KeyboardEventHandler<HTMLInputElement>} */
+  /** @type {React.KeyboardEventHandler<HTMLInputElement>} */
   const onKeyPress = useCallback(
     (e) => {
       var code = (e.keyCode ? e.keyCode : e.which);
@@ -108,7 +108,7 @@ export const BottomActions = (
   }
 ) => {
   
-  /** @type {import('react').ChangeEventHandler<HTMLSelectElement>} */
+  /** @type {React.ChangeEventHandler<HTMLSelectElement>} */
   const _onLimitChange = useCallback(
     (e) => {
       const l = parseInt(e.target.value)

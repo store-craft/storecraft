@@ -21,7 +21,7 @@ import useCollectionsActions from '@/admin/hooks/useCollectionsActions.js'
  * @prop {import('@storecraft/core/v-api').ApiQuery
  * } [query_params={}] { vqlString: '', limit: 5}
  * @prop {(
- *  e: import('react').MouseEvent<HTMLAnchorElement, MouseEvent>, 
+ *  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
  *  data: import('@storecraft/core/v-api').ImageType
  * ) => void} [onClickImage]
  * @prop {boolean} [useSearchParamsForQuery=true] Use url navigation

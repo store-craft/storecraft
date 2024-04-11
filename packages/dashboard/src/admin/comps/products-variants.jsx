@@ -30,7 +30,7 @@ const ProductOption = (
 
   const [o, setO] = useState(option);
 
-  /** @type {import('react').LegacyRef<import('react').InputHTMLAttributes>} */
+  /** @type {React.LegacyRef<React.InputHTMLAttributes>} */
   const ref_value = useRef()
 
   const onChangeInternal = useCallback(

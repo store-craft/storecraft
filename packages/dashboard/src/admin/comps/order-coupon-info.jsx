@@ -24,7 +24,7 @@ const OrderCouponInfo = (
   }
 ) => {
   
-  /** @type {import('react').LegacyRef<HTMLInputElement>} */
+  /** @type {React.LegacyRef<HTMLInputElement>} */
   const ref_name = useRef();
 
   const { key, name, comp_params } = field

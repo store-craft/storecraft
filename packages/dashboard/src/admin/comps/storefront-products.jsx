@@ -13,12 +13,12 @@ import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *  import('@storecraft/core/v-api').ProductType[], 
- *  import('../pages/storefront.jsx').Context>} param0 
- * @returns 
+ *  import('../pages/storefront.jsx').Context>} params 
+ * 
  */
 const StorefrontProducts = ({ field, context, value=[], onChange }) => {
   
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef()
   const { navWithState } = useNavigateWithState()
 

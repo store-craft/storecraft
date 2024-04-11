@@ -137,12 +137,12 @@ const ProductsInCollection = ({ value, context }) => {
   const [count, setCount] = useState(-1)
   const [error, setError] = useState(undefined)
   /** 
-   * @type {import('react').MutableRefObject<
+   * @type {React.MutableRefObject<
    *  import('./overlay.jsx').ImpInterface>
    * } 
    **/
   const ref_overlay = useRef();
-  /** @type {import('react').MutableRefObject<ImpInterface>} */
+  /** @type {React.MutableRefObject<ImpInterface>} */
   const ref_productsByCollection = useRef()
 
   const onBrowseAdd = useCallback(

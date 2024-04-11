@@ -47,7 +47,7 @@ const CameraSource = (
   )
   const onFileSelect = useCallback(
     /**
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e 
+     * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     e => {
       e.preventDefault()
@@ -114,7 +114,7 @@ const LocalSource = (
   )
   const onDrop = useCallback(
     /**
-     * @param {import('react').DragEvent<HTMLLabelElement>} e 
+     * @param {React.DragEvent<HTMLLabelElement>} e 
      */
     (e) => {
       e.preventDefault();
@@ -124,7 +124,7 @@ const LocalSource = (
 
   const onFileSelect = useCallback(
     /**
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e 
+     * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     e => {
       e.preventDefault()
@@ -134,7 +134,7 @@ const LocalSource = (
 
   const onDragEnter = useCallback(
     /**
-     * @param {import('react').DragEvent<HTMLLabelElement>} e 
+     * @param {React.DragEvent<HTMLLabelElement>} e 
      */
     (e) => {
       e.preventDefault();
@@ -143,7 +143,7 @@ const LocalSource = (
 
   const onDragLeave = useCallback(
     /**
-     * @param {import('react').DragEvent<HTMLLabelElement>} e 
+     * @param {React.DragEvent<HTMLLabelElement>} e 
      */
     (e) => {
       e.preventDefault();
@@ -153,7 +153,7 @@ const LocalSource = (
   
   const onDragOver = useCallback(
     /**
-     * @param {import('react').DragEvent<HTMLLabelElement>} e 
+     * @param {React.DragEvent<HTMLLabelElement>} e 
      */
     (e) => {
       e.preventDefault()

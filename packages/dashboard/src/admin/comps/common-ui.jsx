@@ -265,13 +265,13 @@ export const Div = ({setError, ...rest}) =>
 
 /**
  * @typedef {object} InternalCardParams
- * @property {import('react').ReactNode} [name] 
+ * @property {React.ReactNode} [name] 
  * @property {(e:string) => void} [setError] 
  * @property {string} [error] 
  * @property {React.ReactNode} children 
  * @property {boolean} [border=true] 
  * @property {string} [desc] 
- * @property {import('react').ReactElement} [rightView] 
+ * @property {React.ReactElement} [rightView] 
  * @property {string} [cardClass] 
  * @property {any[]} [rest] 
  * 

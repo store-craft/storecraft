@@ -83,7 +83,7 @@ overflow-x-auto inline-block whitespace-nowrap';
  * @typedef {object} InternalSpanParams
  * @prop {string} [className]
  * @prop {string} [extra]
- * @prop {import('react').ReactNode} [children]
+ * @prop {React.ReactNode} [children]
  * 
  * @typedef {import('./collection-view.jsx').CollectionViewComponentParams<string> & 
 *   InternalSpanParams & 
@@ -180,7 +180,7 @@ export const MInput = (
     field, value, onChange, type='text', ...rest
   }
 ) => {
-  
+
   const { key, name, comp_params } = field
   const merged = { ...comp_params, ...rest}
   const { className, setError, error, ...rest_rest } = merged
@@ -372,7 +372,7 @@ export const ClipBoardCopy = ({ value, config=1 }) => {
 
 /**
  * 
- * @param {import('react').FC} Comp 
+ * @param {React.FC} Comp 
  * @param {any} [comp_params_inner] 
  * @param {boolean} [border] 
  * @param {boolean} [copy] 
@@ -383,7 +383,7 @@ export const withCard = (
 
   /**
    * @param {import('./fields-view.jsx').FieldLeafViewParams<any> & 
-   * { children: import('react').ReactNode}} params
+   * { children: React.ReactNode}} params
    */
   return ({ field, value, disabled, onChange, children, 
             error=undefined, setError, context, ...rest}) => {
@@ -422,7 +422,7 @@ export const RecordActions = (
   }
 ) => {
 
-  /** @type {import('react').MutableRefObject<import('./modal.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./modal.jsx').ImpInterface>} */
   const ref_modal = useRef()
   const [loadingDelete, setLoadingDelete] = useState(false)
   const id = context.item.handle ?? context.item.id

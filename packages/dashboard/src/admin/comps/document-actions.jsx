@@ -18,7 +18,7 @@ import ShowIf from './show-if.jsx'
  * @property {() => Promise<void>} [onClickDuplicate]
  * @property {(id: string) => Promise<void>} [onClickDelete]
  * @property {() => Promise<any>} [onClickReload]
- * @property {import('react').ReactNode} [children]
+ * @property {React.ReactNode} [children]
  * @property {string} [id]
  * 
  * @typedef {InternalRegularDocumentActionsParams & 
@@ -38,7 +38,7 @@ export const RegularDocumentActions = (
   }
 ) => {
 
-  /** @type {import('react').MutableRefObject<import('./modal.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./modal.jsx').ImpInterface>} */
   const ref_modal = useRef();  
 
   const [loadingDelete, setLoadingDelete] = useState(false)   

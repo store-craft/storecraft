@@ -230,7 +230,7 @@ const Notifications = ({ ...rest }) => {
     query, prev, next
   } = useCommonCollection('notifications', false);
 
-  /** @type {import('react').MutableRefObject<typeof query>} */
+  /** @type {React.MutableRefObject<typeof query>} */
   const ref_query = useRef(query);
 
   const onInterval = useCallback(

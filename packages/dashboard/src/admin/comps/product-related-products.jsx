@@ -57,7 +57,7 @@ const RelatedProducts =
   ({ field, context, value=[], onChange, ...rest }) => {
 
   const [products, setProducts] = useState(value ?? [])
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
   const onBrowseAdd = useCallback(

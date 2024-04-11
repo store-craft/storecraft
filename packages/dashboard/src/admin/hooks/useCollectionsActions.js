@@ -48,7 +48,7 @@ const useCollectionsActions = (
   const nav = useNavigate();
   
   /** 
-   * @type {import('react').MutableRefObject<
+   * @type {React.MutableRefObject<
    *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
    * } 
    **/

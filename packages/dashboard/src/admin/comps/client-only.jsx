@@ -24,7 +24,7 @@ export default function ClientOnly(
 
 /**
  * 
- * @param {import('react').FC} Component 
+ * @param {React.FC} Component 
  */
 export function withClient(Component) {
 

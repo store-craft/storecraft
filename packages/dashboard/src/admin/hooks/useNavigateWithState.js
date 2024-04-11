@@ -8,7 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
  * @property {() => any | object} [next_state] object or function 
  * @property {() => any} [onClick] callback
  * 
- * @param {Params & import('react').AnchorHTMLAttributes} params
+ * @param {Params & React.AnchorHTMLAttributes} params
  */
 export const LinkWithState = (
   { 

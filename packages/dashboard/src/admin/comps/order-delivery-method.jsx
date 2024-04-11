@@ -21,7 +21,7 @@ const OrderDeliveryMethod = (
 
   const onUpdateName = useCallback(
     /**
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e 
+     * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     (e) => {
       const name = String(e.currentTarget.value)
@@ -35,7 +35,7 @@ const OrderDeliveryMethod = (
   
   const onUpdatePrice = useCallback(
     /**
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e 
+     * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     (e) => {
       const price = parseFloat(e.currentTarget.value)

@@ -122,7 +122,7 @@ const ImagePage = ({}) => {
   } = useCommonApiDocument('images', handle);
 
   /** 
-   * @type {import('react').MutableRefObject<
+   * @type {React.MutableRefObject<
    *  import('@/admin/comps/modal.jsx').ImpInterface>
    * } 
    */

@@ -33,7 +33,7 @@ import {useNavigate} from 'react-router-dom'
  */
 export const useDocumentActions = (resource, document, slug, mode, base) => {
   /** 
-   * @type {import('react').MutableRefObject<
+   * @type {React.MutableRefObject<
    *  import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<
    *    import('@storecraft/core/v-api').ProductType>>
    * } 
@@ -67,7 +67,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   // console.log('doc', doc)
 
   /** 
-   * @type {import('react').MutableRefObject<
+   * @type {React.MutableRefObject<
    *   import('@/admin/comps/common-ui.jsx').CreateDateImperativeInterface>
    * } 
    */

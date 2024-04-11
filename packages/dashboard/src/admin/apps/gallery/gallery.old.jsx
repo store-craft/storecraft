@@ -23,7 +23,7 @@ import SearchBar from './gallery-searchbar.jsx'
  * @prop {(search: string) => void} [onSearchUpdate] a Function, 
  * that gets called when user searches
  * @prop {(
- *  e: import('react').MouseEvent<HTMLAnchorElement, MouseEvent>, 
+ *  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
  *  data: import('@storecraft/core/v-api').ImageType
  * ) => void} [onClickImage]
  * @prop {(q: import('@storecraft/core/v-api').ApiQuery) => void} [onNavUpdate]

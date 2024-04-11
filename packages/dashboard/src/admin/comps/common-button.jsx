@@ -6,7 +6,7 @@ import { Bling } from './common-ui.jsx'
 /**
  * @typedef {object} InternalButtonparams
  * @property {string} [text]
- * @property {import('react').ReactElement} [icon]
+ * @property {React.ReactElement} [icon]
  * @property {string} [className]
  * @property {string} [classNameSpan]
  * @property {any} [children]
@@ -41,7 +41,7 @@ export const Button = (
 /**
  * @typedef {object} InternalButton2params
  * @property {string} [text]
- * @property {import('react').ReactElement} [icon]
+ * @property {React.ReactElement} [icon]
  * @property {string} [className]
  * @property {string} [classNameSpan]
  * @property {any} children
@@ -75,7 +75,7 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
 
 /**
  * @typedef {object} InternalLoadingButtonParams
- * @property {import('react').ReactNode} [Icon]
+ * @property {React.ReactNode} [Icon]
  * @property {string} [text]
  * @property {boolean} [keep_text_on_load]
  * @property {string} [className]
@@ -251,7 +251,7 @@ export const BlingButton2 = (
  * @typedef {object} InternalGradientFillIconParams
  * @property {string} [from]
  * @property {string} [to]
- * @property {import('react').FC} [Icon]
+ * @property {React.FC} [Icon]
  * 
  * @typedef {InternalGradientFillIconParams & {[x:string]:any}
 * } GradientFillIconParams
@@ -285,7 +285,7 @@ export const GradientFillIcon = (
  * @typedef {object} InternalGradientStrokeIconParams
  * @property {string} [from]
  * @property {string} [to]
- * @property {import('react').FC} [Icon]
+ * @property {React.FC} [Icon]
  * 
  * @typedef {InternalGradientFillIconParams & {[x:string]:any}
 * } GradientStrokeIconParams

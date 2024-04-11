@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 const BaseChartView = ({ config, ...rest }) => {
   const canvas_ref = useRef();
-  /** @type {import('react').MutableRefObject<Chart>} */
+  /** @type {React.MutableRefObject<Chart>} */
   const chart = useRef();
 
   useEffect(

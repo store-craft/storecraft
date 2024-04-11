@@ -131,16 +131,16 @@ const OrderLineItems = (
   }
 ) => {
     
-  /** @type {import('react').LegacyRef<HTMLInputElement>}  */
+  /** @type {React.LegacyRef<HTMLInputElement>}  */
   const ref_id = useRef();
-  /** @type {import('react').LegacyRef<HTMLInputElement>}  */
+  /** @type {React.LegacyRef<HTMLInputElement>}  */
   const ref_price = useRef();
-  /** @type {import('react').LegacyRef<HTMLInputElement>}  */
+  /** @type {React.LegacyRef<HTMLInputElement>}  */
   const ref_qty = useRef();
 
   const [items, setItems] = useState(value);
 
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
   const onManualAdd = useCallback(

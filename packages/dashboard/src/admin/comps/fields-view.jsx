@@ -95,7 +95,7 @@ const validateField = (field, value) => {
  * @property {string} [name]
  * @property {string} [desc]
  * @property {FieldData[]} [fields] nested fields
- * @property {import('react').ComponentType} [comp] a react component
+ * @property {React.ComponentType} [comp] a react component
  * @property {object} [comp_params] params for comp
  */
 

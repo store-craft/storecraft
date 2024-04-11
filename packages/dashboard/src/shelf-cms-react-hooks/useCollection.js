@@ -111,10 +111,10 @@ export const useCollection =
   const _hasEffectRan = useRef(false)
   // const _next = useRef(getShelf().db.col(colId).paginate2(q))
 
-  /** @type {import('react').MutableRefObject<() => Promise<T[]>>} */
+  /** @type {React.MutableRefObject<() => Promise<T[]>>} */
   const _next = useRef()
   const [error, setError] = useState(undefined)
-  /**@type {[T[][], import('react').Dispatch<import('react').SetStateAction<T[][]>>]} */
+  /**@type {ReturnType<typeof useState<T[][]>>} */
   const [pages, setPages] = useState([])
   const [index, setIndex] = useState(-1)
   const [loading, setIsLoading] = useState(autoLoad)

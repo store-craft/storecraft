@@ -151,7 +151,7 @@ const Filter_ProductHasTags = ( { onChange, value=[] } ) => {
  * } param.onChange
  */
 const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
   const [tags, setTags] = useState(value)
@@ -437,7 +437,7 @@ const Filter_OrderDate = ( {
 }
 
 const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
-  /** @type {import('react').MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
   const [tags, setTags] = useState(value);
   

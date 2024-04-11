@@ -42,7 +42,7 @@ export const Overlay = React.forwardRef(
     [vis, ref],
   );
 
-  /** @type {import('react').KeyboardEventHandler} */
+  /** @type {React.KeyboardEventHandler} */
   const onKeyDown = useCallback(
     (e) => {
       if (e.key === 'Escape') setVis(false);

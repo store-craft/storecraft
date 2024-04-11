@@ -215,11 +215,6 @@ export const useCollection =
       result = await _internal_fetch_next(true)  
       // console.log('result', result)
       // setQueryCount(-1)
-      const { 
-        limit, startAfter, startAt, endAt, endBefore, 
-        startAfterId, startAtId, endAtId, endBeforeId, 
-        ...q_minus_limit
-      } = q
       // const count = await getSDK().db?.col(colId).count(q_minus_limit)
       // setQueryCount(count)
       return result

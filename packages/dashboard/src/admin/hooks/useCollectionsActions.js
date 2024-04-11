@@ -20,8 +20,10 @@ import { useNavigate, useParams } from 'react-router-dom'
  * `useCollectionsActions` is a hook designed for the collections pages,
  * for performing:
  * - Viewing of collections
- * - Pagination
+ * - Pagination through querying or navigation
  * - Querying
+ * 
+ * This hook wraps `useCommonCollection` hook
  * 
  * @template {import('@storecraft/core/v-api').BaseType} T
  * 

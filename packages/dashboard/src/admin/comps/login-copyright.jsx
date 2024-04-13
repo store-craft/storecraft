@@ -5,7 +5,7 @@
  * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } props 
  */
-export default function Copyright(props) {
+const LoginCopyright = (props) => {
   return (
     <div {...props}>
       <p className='w-full py-4 text-sm font-semibold text-center 
@@ -15,4 +15,6 @@ export default function Copyright(props) {
     </div>  
   )
 }
+
+export default LoginCopyright;
 

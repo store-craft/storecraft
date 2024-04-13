@@ -97,7 +97,7 @@ const Layout = (
   }
 ) => {
 
-  const { open, ref_scroll_element } = useScrollDelta();
+  const { open, ref_scroll_element } = useScrollDelta(100, true);
   const [menuOpen, setMenuOpen] = useState(true);
   const { darkMode } = useDarkMode();
 

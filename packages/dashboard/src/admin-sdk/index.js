@@ -7,7 +7,7 @@ import Discounts from './discounts.js'
 import Collections from './collections.js'
 import ShippingMethods from './shipping-methods.js'
 import StoreFronts from './storefronts.js'
-import Stats from './stats.js'
+import Statistics from './statistics.js'
 import Images from './images.js'
 import Posts from './posts.js'
 import PaymentGateways from './payment_gateways.js'
@@ -53,7 +53,7 @@ export class StorecraftAdminSDK {
     this.discounts = new Discounts(this)
     this.shipping = new ShippingMethods(this)
     this.storefronts = new StoreFronts(this)
-    // this.stats = new Stats(this)
+    this.statistics = new Statistics(this)
     this.images = new Images(this)
     this.posts = new Posts(this)
     // this.payment_gateways = new PaymentGateways(this)

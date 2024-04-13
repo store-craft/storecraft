@@ -3,7 +3,21 @@ import { Link } from 'react-router-dom'
 import { Bling } from './common-ui.jsx'
 
 
-const InviteActionCard = ({ msg='', link='/admin', Icon }) => {
+/**
+ * 
+ * @typedef {object} InviteActionCardParams
+ * @prop {string} [msg='']
+ * @prop {string} [link='/admin']
+ * @prop {React.ReactElement} Icon
+ * 
+ * @param {InviteActionCardParams} params
+ * 
+ */
+const InviteActionCard = (
+  { 
+    msg='', link='/admin', Icon
+  }
+) => {
   
   return (
 <Link to={link} className='cursor-pointer'

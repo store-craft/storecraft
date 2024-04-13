@@ -6,82 +6,142 @@ import { Bling, HR } from './common-ui.jsx'
 import SalesChart from './home-sales-chart.jsx'
 import TimeFrame from './home-time-frame.jsx'
 import ShowIf from './show-if.jsx'
-import { SpaceShip, WhiteSpace } from './symbols.jsx'
 import { BiTrendingUp } from 'react-icons/bi/index.js'
 
 const DAY = 86400000
 
 /**
+ * @param {number | string | Date} d 
+ */
+const to_millis = d => (new Date(d)).getTime()
+
+/**
  * Compute top-K over latest span of time from the server stats
- * @param {*} data server stats
+ * 
+ * @param {import('@storecraft/core/v-api').StatisticsType} data server stats
  * @param {number} span up to 90 days from now
+ * 
  * @returns 
  */
-const compute_top_k_stats = 
-  (data, span) => {
-    if(data===undefined) return undefined
+const compute_top_k_stats = (data, span) => {
 
-    const reduced = Object.entries(data.info.days)
-          .filter(([day, v]) => ((parseInt(day)-data.fromDay)/DAY)>90-span)
-          .reduce(
-      (p, c) => {
-        const [day, { products, tags, collections, discounts}] = c
-        
-        Object.entries(tags).forEach(
-          ([k, v]) => {
-            p.tags[k] = (p.tags[k] ?? 0) + v
-          }
-        )
-        Object.entries(collections).forEach(
-          ([k, v]) => {
-            p.collections[k] = (p.collections[k] ?? 0) + v
-          }
-        )
-        Object.entries(discounts).forEach(
-          ([k, v]) => {
-            p.discounts[k] = (p.discounts[k] ?? 0) + v
-          }
-        )
-        Object.entries(products).forEach(
-          ([k, v]) => {
-            p.products[k] = {
-              ...p.products[k], 
-              val: (p.products[k]?.val ?? 0) + v.val,
-              title: v.title
-            }
-          }
-        )
-        return p
-      }, {
-        tags: {},
-        products: {},
-        collections: {},
-        discounts: {},
-      }
-    )
+  if(data===undefined) return undefined
 
-    //
-    // console.log('reduced ', reduced)
+  /**
+   * @type {{
+   *  tags?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>,
+   *  products?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>,
+   *  collections?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>,
+   *  discounts?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>
+   * }}
+   */
+  const result = {
+    tags: {},
+    products: {},
+    collections: {},
+    discounts: {},
+  };
 
-    const sortP = ([k1, v1], [k2, v2]) => -v1.val+v2.val
-    const sortA = ([k1, v1], [k2, v2]) => -v1+v2
-    const pickK = (o, sort) => {
-      // convert o to array of kv tuples ->sort ->pick first K
-      return Object.entries(o)
-                   .sort(sort)
-                   .slice(0, 10)
-    }
+  const reduced = Object
+    .entries(data.days)
+    .filter(([day, v]) => ((to_millis(day)-to_millis(data.from_day))/DAY)>90-span)
+    .reduce(
+    (p, c) => {
+      const [
+        day, 
+        { 
+          products, tags, collections, discounts
+        }
+      ] = c;
+      
+      Object.entries(tags).forEach(
+        ([k, v]) => {
+          p.tags[k] = (p.tags[k] ?? v);
+          p.tags[k].count += v.count;
+        }
+      );
 
-    //
-    reduced.collections = pickK(reduced.collections, sortA)
-    reduced.tags = pickK(reduced.tags, sortA)
-    reduced.discounts = pickK(reduced.discounts, sortA)
-    reduced.products = pickK(reduced.products, sortP)
+      Object.entries(collections).forEach(
+        ([k, v]) => {
+          p.collections[k] = (p.collections[k] ?? v);
+          p.collections[k].count += v.count;
+        }
+      );
 
-    return reduced
+      Object.entries(discounts).forEach(
+        ([k, v]) => {
+          p.discounts[k] = (p.discounts[k] ?? v);
+          p.discounts[k].count += v.count;
+        }
+      );
+
+      Object.entries(products).forEach(
+        ([k, v]) => {
+          p.products[k] = (p.products[k] ?? v);
+          p.products[k].count += v.count;
+        }
+      );
+
+      return p
+    }, result
+  );
+
+  // console.log('reduced ', reduced)
+
+  /**
+   * @typedef {[
+   *  k1: string, v1: import('@storecraft/core/v-api').StatisticsEntity
+   * ]} StatisticsEntityTuple
+   * 
+   * @param {StatisticsEntityTuple} param0 
+   * @param {StatisticsEntityTuple} param1 
+   */
+  const sortFn = ([k1, v1], [k2, v2]) => -v1.count+v2.count
+
+  /**
+   * 
+   * @param {import('@storecraft/core/v-api').StatisticsEntity} o 
+   * @param {typeof sortFn} sort 
+   * 
+   * @return {[string, import('@storecraft/core/v-api').StatisticsEntity][]}
+   */
+  const pickK = (o, sort) => {
+    // convert o to array of kv tuples ->sort ->pick first K
+    return Object.entries(o)
+                  .sort(sort)
+                  .slice(0, 10);
   }
 
-const InfoCapsule = ({label, value, ...rest}) => {
+  //
+  const entries = {};
+  entries.collections = pickK(reduced.collections, sortFn)
+  entries.tags = pickK(reduced.tags, sortFn)
+  entries.discounts = pickK(reduced.discounts, sortFn)
+  entries.products = pickK(reduced.products, sortFn)
+
+  return entries;
+}
+
+
+
+/**
+ * 
+ * @typedef {object} InnerHomeInfoCapsuleParams
+ * @prop {string} label
+ * @prop {string} value
+ * 
+ * @typedef {InnerHomeInfoCapsuleParams &
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } HomeInfoCapsuleParams
+ * 
+ * @param {HomeInfoCapsuleParams} params
+ * 
+ */
+const InfoCapsule = (
+  {
+    label, value, ...rest
+  }
+) => {
 
   return (
 <div className={`p-1 pl-2 px-1 rounded-full border shelf-border-color
@@ -91,18 +151,51 @@ const InfoCapsule = ({label, value, ...rest}) => {
                w-fit h-fit 
                flex flex-row justify-between gap-3 text-sm shadow-lg
                hover:scale-105 transition-transform`} {...rest}>
-  <span children={label} 
-        className='whitespace-nowrap max-w-max --max-w-[5rem] overflow-x-auto' />        
-  <div children={value} 
-       className='rounded-full bg-white 
-                text-pink-500 px-2 font-semibold'/>
+  <span 
+      children={label} 
+      className='whitespace-nowrap max-w-max 
+                --max-w-[5rem] overflow-x-auto' />        
+  <div 
+      children={value} 
+      className='rounded-full bg-white 
+              text-pink-500 px-2 font-semibold'/>
 </div>        
   )
 }
 
-const TopSoldCard = ({ data, label_prefix = '', label='Top Sold', linkFn,
-                       valFn=(k, v)=>v, labelFn=(k,v)=>k, 
-                       ...rest }) => {
+/**
+ * @template V
+ * 
+ * @typedef {(
+ *  k: string, v: import('@storecraft/core/v-api').StatisticsEntity
+ * ) => V} stat_entity_fn
+ * 
+ */
+
+/**
+ * 
+ * @typedef {object} InnerHomeTopSoldCardParams
+ * @prop {[string, import('@storecraft/core/v-api').StatisticsEntity][]} data
+ * @prop {string} [label_prefix='']
+ * @prop {string} [label='Top Sold']
+ * @prop {stat_entity_fn<string>} linkFn
+ * @prop {stat_entity_fn<number>} [valFn]
+ * @prop {stat_entity_fn<string>} [labelFn]
+ * 
+ * @typedef {InnerHomeTopSoldCardParams &
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } HomeTopSoldCardParams
+ * 
+ * @param {HomeTopSoldCardParams} params
+ * 
+ */
+const TopSoldCard = (
+  { 
+    data, label_prefix='', label='Top Sold', 
+    linkFn, valFn=(k, v)=>v.count ?? 0, 
+    labelFn=(k,v)=>k, ...rest 
+  }
+) => {
 
   return (
 <Bling rounded='rounded-xl' stroke='p-[2px]'>
@@ -119,24 +212,30 @@ const TopSoldCard = ({ data, label_prefix = '', label='Top Sold', linkFn,
                     text-kf-400  bg-white/50
                     dark:text-kf-400 dark:bg-white/10
                      border border-kf-500/25 p-px' />  
-      <div children={label} 
-            className='p-1 tracking-wider font-mono 
-                    bg-pink-50 text-pink-500
-                    dark:bg-pink-50/10 dark:text-pink-500
-                      font-semibold h-20 mx-1
-                       rounded-md --border text-sm inline' />
+      <div 
+          children={label} 
+          className='p-1 tracking-wider font-mono 
+                  bg-pink-50 text-pink-500
+                  dark:bg-pink-50/10 dark:text-pink-500
+                    font-semibold h-20 mx-1
+                      rounded-md --border text-sm inline' />
 
     </div> 
     <ShowIf show={data.length}>
       <div className='w-full rounded-lg flex flex-row flex-wrap gap-1 py-3
                       flex-1 overflow-y-auto content-start'>
       {
-        data.map(([k, v], ix) => (
-          <Link key={k} to={linkFn(k, v)} draggable='false' className='w-full'>
-            <InfoCapsule label={labelFn(k, v)} 
-                      value={valFn(k, v)} />
-          </Link>                     
-        ))
+        data.map(
+          ([k, v], ix) => (
+            <Link 
+                key={k} to={linkFn(k, v)} 
+                draggable='false' className='w-full'>
+              <InfoCapsule 
+                  label={labelFn(k, v)} 
+                  value={String(valFn(k, v))} />
+            </Link>                     
+          )
+        )
       }
       </div>
     </ShowIf>
@@ -152,19 +251,41 @@ const TopSoldCard = ({ data, label_prefix = '', label='Top Sold', linkFn,
   )
 }
 
-const Performance = ({ ...rest }) => {
-  const ref_effect_ran = useRef(false)
-  const [data, setData] = useState(undefined)
+/**
+ * 
+ * @typedef {object} InnerHomePerformanceParams
+ * @prop {object} nada
+ * 
+ * @typedef {InnerHomePerformanceParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } HomePerformanceParams
+ * 
+ * @param {HomePerformanceParams} params
+ * 
+ */
+const Performance = (
+  { 
+    ...rest 
+  }
+) => {
+
+  const ref_effect_ran = useRef(false);
+  /** 
+   * @type {ReturnType<typeof useState<
+   *  import('@storecraft/core/v-api').StatisticsType>
+   * >} 
+   */
+  const [data, setData] = useState();
   const [span, setSpan] = useState(30)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
-
+  console.log('ddddddd', data)
   const load = useCallback(
     async () => {
       setError(undefined)
       setLoading(true)  
       try {
-        const data = await getSDK().stats.loadOrdersStats()
+        const data = await getSDK().statistics.get();
         // console.log('data ', data)
         setData(data)
       } catch (e) {
@@ -173,38 +294,39 @@ const Performance = ({ ...rest }) => {
         setLoading(false)  
       }
     }, []
-  )
+  );
   
   const onSpanChanged = useCallback(
     (v) => {
       setSpan(v)
       if(!data)
-        load(v)
+        load();
     },
     [load, data],
-  )
+  );
   
   useEffect(
     () => {
       if(ref_effect_ran.current)
-        return
-      ref_effect_ran.current = true
-      onSpanChanged(span)
+        return;
+      ref_effect_ran.current = true;
+      onSpanChanged(span);
     }, [onSpanChanged, span]
-  )
+  );
 
   const days_reduced = useMemo(
     () => {
       if(data===undefined) 
-        return undefined
-      return compute_top_k_stats(data, span)
+        return undefined;
+      return compute_top_k_stats(data, span);
     }, [data, span]
-  )
+  );
 
   const msg = loading ? 'Loading ...' : 
               error ? String(error) : 
               data===undefined ? 'Not enough data...' :
-              undefined
+              undefined;
+
   return (
 <div {...rest} >
   <ShowIf show={msg}>
@@ -218,26 +340,34 @@ const Performance = ({ ...rest }) => {
   
   <ShowIf show={days_reduced && data && !msg}>
     <div className='w-full h-fit'>
-      <TimeFrame onChange={onSpanChanged} span={span} />
-      <SalesChart data={data} span={span}
+      <TimeFrame 
+          onChange={onSpanChanged} 
+          span={span} />
+      <SalesChart 
+          data={data} 
+          span={span}
           className='w-full max-w-screen-md h-52 mt-5' /> 
       <HR className='my-5' />
       <div className='w-full h-fit flex flex-row justify-center 
                       lg:justify-start flex-wrap mt-5 gap-5'>
-        <TopSoldCard data={days_reduced?.products} 
-                     label='products' 
-                     labelFn={(k, v)=>v.title??k} 
-                     valFn={(k, v)=>v.val} 
-                     linkFn={(k, v) => `/pages/products/${k}/edit`} />
-        <TopSoldCard data={days_reduced?.collections} 
-                     label='collections' 
-                     linkFn={(k, v) => `/pages/collections/${k}/edit`}/>
-        <TopSoldCard data={days_reduced?.discounts} 
-                     label='discounts' 
-                     linkFn={(k, v) => `/pages/discounts/${k}/edit`}/>
-        <TopSoldCard data={days_reduced?.tags} 
-                     label='tags' 
-                     linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}/edit`}/>
+        <TopSoldCard 
+            data={days_reduced?.products} 
+            label='products' 
+            labelFn={(k, v)=>v.title??k} 
+            valFn={(k, v)=>v.val} 
+            linkFn={(k, v) => `/pages/products/${k}/edit`} />
+        <TopSoldCard 
+            data={days_reduced?.collections} 
+            label='collections' 
+            linkFn={(k, v) => `/pages/collections/${k}/edit`}/>
+        <TopSoldCard 
+            data={days_reduced?.discounts} 
+            label='discounts' 
+            linkFn={(k, v) => `/pages/discounts/${k}/edit`}/>
+        <TopSoldCard 
+            data={days_reduced?.tags} 
+            label='tags' 
+            linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}/edit`}/>
       </div>  
     </div>        
   </ShowIf>         

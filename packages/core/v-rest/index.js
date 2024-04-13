@@ -15,6 +15,7 @@ import { create_routes as create_products_route } from "./con.products.routes.js
 import { create_routes as create_storage_route } from "./con.storage.routes.js";
 import { create_routes as create_checkout_route } from "./con.checkout.routes.js";
 import { create_routes as create_payment_gateways_route } from "./con.payment-gateways.routes.js";
+import { create_routes as create_statistics_route } from "./con.statistics.routes.js";
 import { create_routes as create_others_route } from "./con.others.routes.js";
 import { cors } from "../v-polka/cors.js";
 
@@ -57,6 +58,7 @@ export const create_rest_api = (app) => {
       this.#factory['/api/checkout'] = create_checkout_route;
       this.#factory['/api/payments'] = create_payment_gateways_route;
       this.#factory['/api/info'] = create_others_route;
+      this.#factory['/api/statistics'] = create_statistics_route;
     }
 
     /** @param {string} path */

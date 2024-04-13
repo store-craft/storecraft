@@ -116,8 +116,10 @@ const SideMenu = (
                 <Button 
                     icon={
                       (
-                        <div className='rounded-md border p-[3px] --shelf-border-color-soft ' 
-                            children={item.icon} />
+                      <div 
+                          className='rounded-md border p-[3px] 
+                                    --shelf-border-color-soft ' 
+                          children={item.icon} />
                       )
                     } 
                     text={item.name} key={ij}

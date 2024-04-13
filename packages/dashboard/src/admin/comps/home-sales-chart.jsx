@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 import BaseChartView from './base-chart-view.jsx'
-const DAY = 86400000
 import useDarkMode from '@/admin/hooks/useDarkMode.js'
 import { Chart } from 'chart.js'
+
+const DAY = 86400000
 
 // useEffect(
 //   () => {
@@ -15,23 +16,63 @@ import { Chart } from 'chart.js'
 
 //   }, [darkMode]
 // )
-const SalesChart = ({ data, span, ...rest }) => {
+
+/**
+ * @param {number | string | Date} d 
+ */
+const to_millis = d => (new Date(d)).getTime()
+
+
+/**
+ * 
+ * @typedef {object} InnerSalesChartParams
+ * @prop {import('@storecraft/core/v-api').StatisticsType} data
+ * @prop {number} span
+ * 
+ * 
+ * @typedef {InnerSalesChartParams & 
+ *  Omit<import('./base-chart-view.jsx').BaseChartViewParams, 'config'>
+ * } SalesChartParams
+ * 
+ * 
+ * @param {SalesChartParams} params
+ * 
+ */
+const SalesChart = (
+  { 
+    data, span, ...rest 
+  }
+) => {
+
   const [showIndex, setShowIndex] = useState(0)
   const { darkMode } = useDarkMode()
   const config = useMemo(
     () => {
-      let arr = Array.from({length : 91})
-      Object.entries(data.info.days)
-            .forEach(([k, v]) => arr[(k-data.fromDay)/DAY] = v)
+      /** @type {import('@storecraft/core/v-api').StatisticsDay[]} */
+      let arr = Array.from({length : 91});
+      Object.
+        entries(data.days).
+        forEach(
+          ([k, v]) => {
+            arr[(to_millis(Number(k))-to_millis(data.from_day))/DAY] = v
+          }
+        );
 
       arr = arr.slice(arr.length - span)
       const xs = arr.map((it, ix) => it?.day ? 
                 new Date(it?.day).toLocaleDateString() : '')
-      const ys1 = arr.map((it, ix) => it?.total ?? 0) // Math.random()*2000)
-      const ys2 = arr.map((it, ix) => it?.orders ?? 0) // Math.random()*40)
+      const ys1 = arr.map((it, ix) => it?.total_income_of_payments_captured ?? 0) // Math.random()*2000)
+      const ys2 = arr.map((it, ix) => it?.count_orders_checkout_completed ?? 0) // Math.random()*40)
 
       Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
       Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';
+
+      console.log('arr', arr)
+      console.log('data', data)
+      console.log('data.info.days', data.days)
+      console.log('xs', xs)
+      console.log('ys1', ys1)
+      console.log('ys2', ys2)
 
       return {
         type: 'bar',
@@ -113,7 +154,10 @@ const SalesChart = ({ data, span, ...rest }) => {
   )
 
   return (
-<BaseChartView key={darkMode} config={config} {...rest} />   
+<BaseChartView 
+    key={String(darkMode)} 
+    config={config} 
+    {...rest} />   
   )
 }
 

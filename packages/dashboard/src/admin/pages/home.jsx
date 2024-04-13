@@ -1,4 +1,3 @@
-import { withClient } from '@/admin/comps/client-only.jsx'
 import { FaBlogger, FaOpencart } from 'react-icons/fa/index.js'
 import { AiOutlineUser, AiFillTag } from 'react-icons/ai/index.js'
 import { TbDiscount2 } from 'react-icons/tb/index.js'
@@ -111,25 +110,33 @@ const stats_data = [
   
 ]
 
-export default ({ }) => {
+export default ({}) => {
   
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
   <div className='max-w-[56rem] mx-auto'>
-    <Header label='Performance' Icon={IoStatsChart} 
-            className='--mt-10 items-baseline' />
+    <Header
+        label='Performance' 
+        Icon={IoStatsChart} 
+        className='--mt-10 items-baseline' />
     <Performance className='relative w-full h-fit'/>
-    <Header label='Stats' Icon={AiFillPieChart} 
-            className='mt-20 items-center' />
+    <Header 
+        label='Stats' 
+        Icon={AiFillPieChart} 
+        className='mt-20 items-center' />
     <div className='flex flex-row flex-wrap gap-5 justify-left mt-8'>
       {
-        stats_data.map((it, ix) => (
+      stats_data.map(
+        (it, ix) => (
           <StatCard key={ix} {...it} />
-        ))
+        )
+      )
       }
     </div>
-    <Header label='Quick Actions' Icon={IoMdCreate} 
-            className='mt-20 items-center' />
+    <Header 
+        label='Quick Actions' 
+        Icon={IoMdCreate} 
+        className='mt-20 items-center' />
     <div className='flex flex-row flex-wrap gap-5 justify-left mt-8'>
       {
         quick_invite_action_data.map(

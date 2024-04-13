@@ -3,16 +3,16 @@
 /**
  * @typedef {object} InternalHeaderParams
  * @prop {string} [label]
- * @prop {import("react").FC} [Icon]
+ * @prop {import("react").FC<{className?: string}>} [Icon]
  * @prop {string} [className]
  * @prop {string} [iconClassName]
  * 
  * @typedef {InternalHeaderParams & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } HeaderParams
-* 
-* @param {HeaderParams} param
-*/
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } HeaderParams
+ * 
+ * @param {HeaderParams} param
+ */
 const Header = (
   {
     label='', Icon, className, 

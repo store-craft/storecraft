@@ -11,6 +11,9 @@ export type error = {
   messages?: error_item[]
 }
 
+export type Handle = string;
+export type ID = string;
+
 /**
  * @description Timestamps
  */
@@ -1703,4 +1706,116 @@ export type OrderPaymentGatewayData = {
    * @description Latest status of payment for caching 
    */
   latest_status?: any; 
+}
+
+
+// statistics
+
+/**
+ * @description Stats of an `entity` in a day
+ */
+export type StatisticsEntity = {
+  /**
+   * @description `handle` of entity
+   */
+  handle?: string;
+
+  /**
+   * @description `id` of entity
+   */
+  id?: string;
+
+  /**
+   * @description `title` of entity
+   */  
+  title?: string;
+
+  /**
+   * @description `count` of entity occurences in the day
+   */  
+  count?: number;
+
+  [x: string]: any;
+}
+
+/**
+ * @description Stats of a day
+ */
+export type StatisticsDay = {
+  /**
+   * @description The total income captured in a day
+   */
+  total_income_of_payments_captured: number;
+
+  /**
+   * @description The total un-captured income in a day
+   */
+  total_income_of_checkout_complete_orders: number;
+
+  /**
+   * @description The total un-captured income in a day
+   */
+  total_income_of_checkout_create_orders: number;
+
+  /**
+   * @description The total amount of `captured` orders
+   */
+  count_orders_payment_captured: number;
+
+  /**
+   * @description The total amount of `completed` checkout orders
+   */
+  count_orders_checkout_completed: number;
+
+  /**
+   * @description The total amount of `created` checkout orders
+   */
+  count_orders_checkout_created: number;
+  
+  /**
+   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   */
+  day: string | number;
+
+  /**
+   * @description The `products` found in all created orders
+   */
+  products?: Record<Handle | ID, StatisticsEntity>;
+
+  /**
+   * @description The `collections` found in all created orders
+   */
+  collections?: Record<Handle | ID, StatisticsEntity>;
+
+  /**
+   * @description The `discounts` found in all created orders
+   */
+  discounts?: Record<Handle | ID, StatisticsEntity>;
+
+  /**
+   * @description The `tags` found in all created orders `products`
+   */
+  tags?: Record<Handle | ID, StatisticsEntity>;
+}
+
+
+/**
+ * @description `Statisitics` of requested days
+ */
+export type StatisticsType = {
+
+  /**
+   * @description The days statistics
+   */
+  days?: Record<number | string, StatisticsDay>;
+
+  /**
+   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   */
+  from_day?: string | number;
+
+  /**
+   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   */
+  to_day?: string | number;
 }

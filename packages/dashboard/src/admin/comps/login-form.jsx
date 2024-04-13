@@ -21,10 +21,13 @@ import { Bling } from "./common-ui.jsx"
  * 
  * 
  * @param {InnerFieldParams & 
-*  Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'value'>
-* } params
-* 
-*/
+ *  Omit<
+ *    React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 
+ *    'value' | 'onChange'
+ *  >
+ * } params
+ * 
+ */
 const Field = (
  { 
    value, desc, id, label, onChange, ...rest 

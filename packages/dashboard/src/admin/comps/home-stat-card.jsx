@@ -4,17 +4,34 @@ import { Link } from 'react-router-dom'
 import { getSDK } from '@/admin-sdk/index.js'
 import { Bling } from './common-ui.jsx'
 
-const StatCard = ({ colId, msg, link, search=[], Icon }) => {
+/**
+ * 
+ * @typedef {object} StatCardParams
+ * @prop {string} which_table
+ * @prop {string} msg
+ * @prop {string} link
+ * @prop {string[]} [search]
+ * @prop {React.ReactElement} [Icon]
+ * 
+ * @param {StatCardParams} params
+ * 
+ */
+const StatCard = (
+  { 
+    which_table, msg, link, search=[], Icon 
+  }
+) => {
+
   const [v, setV] = useState(undefined)
   useEffect(
     () => {
       async function a() {
-        const count = await getSDK().stats.countOf(colId, search)
-        setV(count)
+        const count = await getSDK().statistics.countOf(which_table, search)
+        setV(count);
       }
       a()
-    }, []
-  )
+    }, [which_table]
+  );
 
   return (
 <Link to={link} className='cursor-pointer' draggable='false'>

@@ -6,10 +6,6 @@ import { StorecraftError } from '../v-api/utils.func.js';
 export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
- * @typedef {import('../v-api/types.api.js').TagType} ItemType
- */
-
-/**
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
@@ -28,7 +24,7 @@ export const create_routes = (app) => {
   // upload file
   polka.put(
     '/*',
-    // middle_authorize_admin,
+    middle_authorize_admin,
     async (req, res) => {
       const file_key = req?.params?.['*'];
       if(!file_key) {

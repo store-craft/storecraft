@@ -1,3 +1,3 @@
-import Index from '../../src/admin/index.jsx'
+import Index from '@/admin/index.jsx'
 
-export default Index
+export default Index;

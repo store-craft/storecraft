@@ -290,17 +290,22 @@ export interface db_driver {
    */
   app: App<any, any, any> | undefined;
 
-  // controllers
-  auth_users: db_auth_users;
-  tags: db_tags;
-  collections: db_collections;
-  customers: db_customers;
-  products: db_products;
-  storefronts: db_storefronts;
-  images: db_images;
-  posts: db_posts;
-  shipping: db_shipping;
-  notifications: db_notifications;
-  discounts: db_discounts;
-  orders: db_orders;
+  /**
+   * The main `resources` and `tables`
+   */
+  resources: {
+    auth_users: db_auth_users;
+    tags: db_tags;
+    collections: db_collections;
+    customers: db_customers;
+    products: db_products;
+    storefronts: db_storefronts;
+    images: db_images;
+    posts: db_posts;
+    shipping: db_shipping;
+    notifications: db_notifications;
+    discounts: db_discounts;
+    orders: db_orders;
+  }
+
 }

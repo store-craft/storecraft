@@ -73,7 +73,7 @@ export default class Statistics  {
   /**
    * Load **count** `statistics`
    * 
-   * @param {keyof App["db"]} table 
+   * @param {keyof App["db"]["resources"]} table 
    * @param {import('@storecraft/core/v-api').ApiQuery} [query]
    * 
    * 

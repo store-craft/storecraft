@@ -13,7 +13,7 @@ import { App } from '../index.js'
  * @param {string} id
  */  
 export const removeById = async (app, id) => {
-  return app.db.auth_users.remove(id);
+  return app.db.resources.auth_users.remove(id);
 }
 
 /**
@@ -22,7 +22,7 @@ export const removeById = async (app, id) => {
  * @param {string} email
  */  
 export const removeByEmail = async (app, email) => {
-  return app.db.auth_users.removeByEmail(email);
+  return app.db.resources.auth_users.removeByEmail(email);
 }
 
 /**
@@ -47,7 +47,7 @@ export const signup = async (app, body) => {
   const { email, password } = body;
   
   // Check if the user already exists
-  const existingUser = await app.db.auth_users.getByEmail(email)
+  const existingUser = await app.db.resources.auth_users.getByEmail(email)
 
   assert(!existingUser, 'auth/already-signed-up', 400)
 
@@ -60,7 +60,7 @@ export const signup = async (app, body) => {
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
 
-  await app.db.auth_users.upsert(
+  await app.db.resources.auth_users.upsert(
     apply_dates(
       {
         id: id,
@@ -108,12 +108,12 @@ export const signin = async (app, body, fail_if_not_admin=false) => {
   const { email, password } = body;
 
   // Check if the user already exists
-  let existingUser = await app.db.auth_users.getByEmail(email);
+  let existingUser = await app.db.resources.auth_users.getByEmail(email);
   const isAdmin = isAdminEmail(app, email);
   // An admin first login will register the default `admin` password
   if(!existingUser && isAdmin) {
     await signup(app, { ...body, password: 'admin' });
-    existingUser = await app.db.auth_users.getByEmail(email);
+    existingUser = await app.db.resources.auth_users.getByEmail(email);
   }
 
   assert(isAdmin || !fail_if_not_admin, 'auth/error', 401)

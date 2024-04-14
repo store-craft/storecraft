@@ -3,6 +3,7 @@ import { useCallback, useEffect,
 import useTrigger from './useTrigger.js'
 import { getSDK } from '@/admin-sdk/index.js'
 import { list } from '@/admin-sdk/utils.api.fetch.js'
+import { App } from '@storecraft/core'
 
 const q = {
   orderBy: [['firstname', 'asc']],
@@ -25,7 +26,7 @@ const delete_from_collection = what => {
     let br = false
     for (wx=0; wx < list.length; wx++) {
       for (ix = 0; ix < list[wx].length; ix++) {
-        const id = list[wx][ix][0]
+        const id = list[wx][ix].id
         if(id===what) {
           br=true; break
         }
@@ -36,12 +37,10 @@ const delete_from_collection = what => {
     if(!br)
       return list
       
-    // console.log('list1 ', list);
-    list = [...list]    
-    list[wx] = [...list[wx]]
-    list[wx].splice(ix, 1)
-    // console.log('wx ', wx, 'ix ', ix);
-    // console.log('list ', list);
+    list = [...list];
+    list[wx] = [...list[wx]];
+    list[wx].splice(ix, 1);
+
     return list
   }
   
@@ -100,12 +99,13 @@ const paginate_helper = (query, resource) => {
 /**
  * @template T
  * 
- * @param {string} resource the base path of the resource 
+ * @param {keyof App["db"]["resources"]} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
  * @param {boolean} autoLoad 
  */
-export const useCollection = 
-  (resource, q=undefined, autoLoad=true) => {
+export const useCollection = (
+  resource, q=undefined, autoLoad=true
+) => {
 
   const _q = useRef(q)
   const _hasEffectRan = useRef(false)
@@ -196,7 +196,7 @@ export const useCollection =
         throw err
       }
     }, [resource]
-  )
+  );
 
   const query = useCallback(
     /**
@@ -204,22 +204,17 @@ export const useCollection =
      * @param {boolean} from_cache 
      */
     async (q={}, from_cache=false) => {
-      let result = undefined
-      _q.current = q
-      // _next.current = await getSDK().db.col(colId).paginate2(
-      //   q, from_cache
-      //   );
-
-      // console.log('query')
+      _q.current = q;
       _next.current = paginate_helper(q, resource);
-      result = await _internal_fetch_next(true)  
-      // console.log('result', result)
-      // setQueryCount(-1)
-      // const count = await getSDK().db?.col(colId).count(q_minus_limit)
-      // setQueryCount(count)
+      const result = await _internal_fetch_next(true)  
+      setQueryCount(-1);
+      const count = await getSDK().statistics.countOf(
+        resource, q
+      );
+      setQueryCount(count);
       return result
     }, [resource, _internal_fetch_next, getSDK()]
-  )
+  );
 
   useEffect(
     () => {
@@ -227,7 +222,7 @@ export const useCollection =
         query(_q.current)
       }
     }, []
-  )
+  );
 
   return {
     pages, page: index>=0 ? pages[index] : [], 
@@ -263,7 +258,7 @@ export const q_initial = {
  * 
  * @template T
  * 
- * @param {string} resource 
+ * @param {keyof App["db"]["resources"]} resource 
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
  */

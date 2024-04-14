@@ -70,7 +70,7 @@ const remove = (driver) => {
       
           // delete the auth user
           if(res?.auth_id) {
-            await driver.auth_users._col.deleteOne(
+            await driver.resources.auth_users._col.deleteOne(
               { _id: to_objid(res.auth_id) },
               { session }
             );
@@ -122,7 +122,7 @@ const list_customer_orders = (driver) => {
     // add the query filter
     isDef(filter_query) && filter.$and.push(filter_query);
 
-    const items = await driver.orders._col.find(
+    const items = await driver.resources.orders._col.find(
       filter,  {
         sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }

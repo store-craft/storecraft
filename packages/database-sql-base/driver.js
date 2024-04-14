@@ -33,10 +33,20 @@ const assert = (b, msg) => {
  */
 export class SQL {
 
-  /** @type {boolean} */ #_is_ready;
-  /** @type {App<any, any, any>} */ #_app;
-  /** @type {Config} */ #_config;
-  /** @type {Kysely<Database>} */ #_client;
+  /** @type {boolean} */ 
+  #_is_ready;
+
+  /** @type {App<any, any, any>} */ 
+  #_app;
+
+  /** @type {Config} */ 
+  #_config;
+
+  /** @type {Kysely<Database>} */ 
+  #_client;
+  
+  /** @type {db_driver["resources"]} */ 
+  #_resources;
 
   /**
    * 
@@ -80,18 +90,21 @@ export class SQL {
       return this;
 
     this.#_app = app;
-    this.auth_users = auth_users(this);
-    this.tags = tags(this);
-    this.collections = collections(this);
-    this.customers = customers(this);
-    this.discounts = discounts(this);
-    this.images = images(this);
-    this.notifications = notifications(this);
-    this.orders = orders(this);
-    this.posts = posts(this);
-    this.products = products(this);
-    this.storefronts = storefronts(this);
-    this.shipping = shipping(this);
+    
+    this.#_resources = {
+      auth_users: auth_users(this),
+      collections: collections(this),
+      customers: customers(this),
+      discounts: discounts(this),
+      images: images(this),
+      notifications: notifications(this),
+      orders: orders(this),
+      posts: posts(this),
+      products: products(this),
+      storefronts: storefronts(this),
+      tags: tags(this),
+      shipping: shipping(this),
+    }
     
     this.#_is_ready = true; 
 
@@ -103,6 +116,13 @@ export class SQL {
     return true;
   }
 
+  /**
+   * `database` resources
+   */
+  get resources () {
+    return this.#_resources;
+  }
+  
   get name () { 
     return 'main'; 
   }

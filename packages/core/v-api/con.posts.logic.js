@@ -11,7 +11,7 @@ import { regular_get, regular_list,
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.posts;
+export const db = app => app.db.resources.posts;
 
 /**
  * 

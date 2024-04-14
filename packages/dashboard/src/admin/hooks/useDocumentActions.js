@@ -3,6 +3,7 @@ import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
 import { useCommonApiDocument } from '@/admin-sdk-react-hooks/useDocument.js';
 import {useNavigate} from 'react-router-dom'
+import { App } from '@storecraft/core';
 
 /**
  * @template T the `document` type
@@ -28,7 +29,7 @@ import {useNavigate} from 'react-router-dom'
  * 
  * @template {{}} [T={}] The type of `document`
  * 
- * @param {string} resource resource `identifier`
+ * @param {keyof App["db"]["resources"]} resource resource `identifier`
  * @param {string} document document `handle` or `id`
  * @param {string} slug resource `slug` at backend
  * @param {DocumentActionsMode} mode 

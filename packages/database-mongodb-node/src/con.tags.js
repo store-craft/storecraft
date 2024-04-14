@@ -44,7 +44,7 @@ const count = (driver) => count_regular(driver, col(driver));
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {
-  driver
+
   return {
     _col: col(driver),
     get: get(driver),

@@ -62,7 +62,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
       new Date(new Date(to_day).getTime() - 90 * DAY)
   );
 
-  const orders = await app.db.orders.list(
+  const orders = await app.db.resources.orders.list(
     {
       sortBy: ['created_at'],
       order: 'asc',
@@ -221,8 +221,8 @@ export const compute_statistics = async (app, from_day, to_day) => {
 
 }
 
+/** @type {(keyof App["db"]["resources"])[]} */
 const tables = [
-  'disconnect',
   'auth_users',
   'tags',
   'collections',
@@ -242,7 +242,7 @@ const tables = [
  * Compute the count `statistics` of a table with `query`
  *  
  * @param {import("../types.public.js").App} app
- * @param {keyof App["db"]} [table] which `table` to get count of query
+ * @param {keyof App["db"]["resources"]} [table] which `table` to get count of query
  * @param {import('./types.api.query.js').ApiQuery} [query] The `query` used for counting
  * 
  * @returns {Promise<number>}
@@ -255,7 +255,7 @@ export const compute_count_of_query = async (app, table, query) => {
   );
 
   /** @type {import('../v-database/types.public.d.ts').db_crud} */
-  const db = app.db?.[table];
+  const db = app.db?.resources?.[table];
 
   return db.count(query);
 }

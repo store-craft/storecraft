@@ -14,7 +14,7 @@ import { App } from '../index.js';
 /**
  * @param {App} app
  */
-export const db = app => app.db.products;
+export const db = app => app.db.resources.products;
 
 
 /**

@@ -48,12 +48,12 @@ const remove = (driver) => {
 
           await Promise.all(
             [
-              driver.collections._col.updateMany(filter, update, options),
-              driver.discounts._col.updateMany(filter, update, options),
-              driver.posts._col.updateMany(filter, update, options),
-              driver.products._col.updateMany(filter, update, options),
-              driver.shipping._col.updateMany(filter, update, options),
-              driver.storefronts._col.updateMany(filter, update, options),
+              driver.resources.collections._col.updateMany(filter, update, options),
+              driver.resources.discounts._col.updateMany(filter, update, options),
+              driver.resources.posts._col.updateMany(filter, update, options),
+              driver.resources.products._col.updateMany(filter, update, options),
+              driver.resources.shipping._col.updateMany(filter, update, options),
+              driver.resources.storefronts._col.updateMany(filter, update, options),
             ]
           );
 
@@ -121,7 +121,7 @@ export const report_document_media = (driver) => {
 
     const ops = data.media.map(url_to_update);
 
-    await driver.images._col.bulkWrite(
+    await driver.resources.images._col.bulkWrite(
       ops, { session }
     );
 

@@ -1,5 +1,10 @@
-import { q_initial, useCommonCollection } from '@/admin-sdk-react-hooks/useCollection.js';
-import { api_query_to_searchparams, parse_query } from '@storecraft/core/v-api/utils.query.js';
+import { 
+  q_initial, useCommonCollection 
+} from '@/admin-sdk-react-hooks/useCollection.js';
+import { App } from '@storecraft/core';
+import { 
+  api_query_to_searchparams, parse_query 
+} from '@storecraft/core/v-api/utils.query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -27,7 +32,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  * 
  * @template {import('@storecraft/core/v-api').BaseType} T
  * 
- * @param {string} resource the collection id in backend 
+ * @param {keyof App["db"]["resources"]} resource the collection id in backend 
  * @param {string} [slug] front end slug
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
@@ -71,7 +76,8 @@ const useCollectionsActions = (
         query_api.vql
         )
       // console.log('query_api', query_api)
-      query(query_api, false && ref_use_cache.current)
+      query(query_api, false && ref_use_cache.current);
+      
     }, [query_api, query]
   );
 

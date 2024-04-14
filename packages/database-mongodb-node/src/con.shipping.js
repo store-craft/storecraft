@@ -31,7 +31,7 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS --> SHIPPING RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.shipping_methods.ids' : objid },
             { $set: { [`_relations.shipping_methods.entries.${objid.toString()}`]: data } },
             { session }
@@ -89,7 +89,7 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> SHIPPING RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.shipping_methods.ids' : objid },
             { 
               $pull: { '_relations.shipping_methods.ids': objid },

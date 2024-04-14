@@ -32,7 +32,7 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.posts.ids' : objid },
             { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
             { session }
@@ -88,7 +88,7 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.posts.ids' : objid },
             { 
               $pull: { '_relations.posts.ids': objid, },

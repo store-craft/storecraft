@@ -41,7 +41,7 @@ const upsert = (driver) => {
           // PRODUCT -> COLLECTION RELATION
           ////
           // update collection document in products, that reference this collection
-          await driver.products._col.updateMany(
+          await driver.resources.products._col.updateMany(
             { '_relations.collections.ids' : objid },
             { 
               $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
@@ -52,7 +52,7 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS -> COLLECTIONS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.collections.ids' : objid },
             { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
             { session }
@@ -108,7 +108,7 @@ const remove = (driver) => {
           ////
           // PRODUCTS --> COLLECTIONS RELATION
           ////
-          const rr = await driver.products._col.updateMany(
+          const rr = await driver.resources.products._col.updateMany(
             { '_relations.collections.ids' : objid },
             { 
               $pull: { 
@@ -126,7 +126,7 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> COLLECTIONS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.collections.ids' : objid },
             { 
               $pull: { '_relations.collections.ids': objid, },
@@ -191,7 +191,7 @@ const list_collection_products = (driver) => {
     // add the query filter
     isDef(filter_query) && filter.$and.push(filter_query);
 
-    const items = await driver.products._col.find(
+    const items = await driver.resources.products._col.find(
       filter,  {
         sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }

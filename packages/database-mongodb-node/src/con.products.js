@@ -273,7 +273,7 @@ const add_product_to_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
 
     // 
-    const coll = await driver.collections._col.findOne(
+    const coll = await driver.resources.collections._col.findOne(
       handle_or_id(collection_handle_or_id)
     );
 
@@ -281,7 +281,7 @@ const add_product_to_collection = (driver) => {
       return;
 
     const objid = to_objid(coll.id);
-    await driver.products._col.updateOne(
+    await driver.resources.products._col.updateOne(
       handle_or_id(product_id_or_handle),
       { 
         $set: { [`_relations.collections.entries.${objid.toString()}`]: coll },
@@ -303,14 +303,14 @@ const remove_product_from_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
 
     // 
-    const coll = await driver.collections._col.findOne(
+    const coll = await driver.resources.collections._col.findOne(
       handle_or_id(collection_handle_or_id)
     );
     if(!coll)
       return;
 
     const objid = to_objid(coll.id);
-    await driver.products._col.updateOne(
+    await driver.resources.products._col.updateOne(
       handle_or_id(product_id_or_handle),
       { 
         $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },

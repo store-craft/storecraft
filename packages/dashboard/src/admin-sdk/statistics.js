@@ -1,5 +1,7 @@
+import { App } from '@storecraft/core';
 import { StorecraftAdminSDK } from './index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
+import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
 
 export default class Statistics  {
   /** @type {StorecraftAdminSDK} */
@@ -13,20 +15,6 @@ export default class Statistics  {
    */
   constructor(sdk) {
     this.#sdk = sdk
-  }
-
-  /**
-   * Get the count of documents in a query of a collection
-   * @param {string} which_table collection ID
-   * @param {string} vql `vql` search query
-   */
-  countOf = async (which_table, vql) => {
-    return 5;
-    // let q = {}
-    // if (Array.isArray(search) && search.length)
-    //   q.where = [ ['search', 'array-contains-any', search] ]
-
-    // return this.db.col(colId).count(q)
   }
 
   /**
@@ -79,6 +67,25 @@ export default class Statistics  {
 
     return fetchApiWithAuth(
       `statistics/orders?${search.toString()}`
+    );
+  }
+
+  /**
+   * Load **count** `statistics`
+   * 
+   * @param {keyof App["db"]} table 
+   * @param {import('@storecraft/core/v-api').ApiQuery} [query]
+   * 
+   * 
+   * @returns {Promise<number>}
+   * 
+   * @throws
+   */
+  countOf = async (table, query) => {
+    const search = api_query_to_searchparams(query);
+
+    return fetchApiWithAuth(
+      `statistics/count/${table}?${search.toString()}`
     );
   }
 

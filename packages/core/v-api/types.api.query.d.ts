@@ -18,8 +18,9 @@ export type ApiQuery = {
    * boolean `DSL` for filtering the terms
    * `(whatever-indexed tag:a -(tag:b | tag:c) handle:product*)`
    */
-  vql?: VQL.AST;
-  vqlString?: string;
+  vql?: string;
+  vqlParsed?: VQL.AST;
+  // vqlString?: string;
 
   /**
    * `(updated_at)`

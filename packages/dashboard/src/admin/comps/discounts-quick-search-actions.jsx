@@ -23,7 +23,7 @@ const DiscountsQuickSearchActions =
         it => (
           <Link key={it.id} 
                 draggable='false'
-                to={`/pages/discounts/q/vqlString=type:${it.id}`}>
+                to={`/pages/discounts/q/vql=type:${it.id}`}>
             <LabelCapsule value={it.name} 
                           bgColor={discount_types_to_color(it.type)} />
           </Link>
@@ -37,7 +37,7 @@ const DiscountsQuickSearchActions =
       it => (
         <Link key={it.id} 
               draggable='false'
-              to={`/pages/discounts/q/vqlString=app:${it.name.toLowerCase()}`}>
+              to={`/pages/discounts/q/vql=app:${it.name.toLowerCase()}`}>
           <LabelCapsule value={it.name} 
                         bgColor={discount_types_to_color(it.type)} />
         </Link>
@@ -49,7 +49,7 @@ const DiscountsQuickSearchActions =
       (it, ix) => (
       <Link key={ix} 
             draggable='false'
-            to={`/pages/discounts/q/vqlString=active:${it.v}`}>
+            to={`/pages/discounts/q/vql=active:${it.v}`}>
         <LabelCapsule value={it.name} 
                       bgColor={discount_types_to_color(undefined)} />
       </Link>

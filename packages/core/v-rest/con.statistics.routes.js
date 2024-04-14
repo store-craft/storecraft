@@ -46,7 +46,7 @@ export const create_routes = (app) => {
       let q = parse_query(req.query);
       const table = req?.params?.table;
 
-      const count = compute_count_of_query(
+      const count = await compute_count_of_query(
         app, table, q
       );
 

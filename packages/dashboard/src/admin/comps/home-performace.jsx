@@ -254,7 +254,7 @@ const TopSoldCard = (
 /**
  * 
  * @typedef {object} InnerHomePerformanceParams
- * @prop {object} nada
+ * @prop {object} [nada]
  * 
  * @typedef {InnerHomePerformanceParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>

@@ -19,7 +19,7 @@ import useCollectionsActions from '@/admin/hooks/useCollectionsActions.js'
  * 
  * @typedef {object} InnerGalleryParams
  * @prop {import('@storecraft/core/v-api').ApiQuery
- * } [query_params={}] { vqlString: '', limit: 5}
+ * } [query_params={}] { vql: '', limit: 5}
  * @prop {(
  *  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
  *  data: import('@storecraft/core/v-api').ImageType

@@ -149,7 +149,7 @@ export const query_to_eb = (eb, q, table_name) => {
   }
 
   // compute VQL clauses 
-  const vql_clause = query_vql_to_eb(eb, q.vql, table_name)
+  const vql_clause = query_vql_to_eb(eb, q.vqlParsed, table_name)
   vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order

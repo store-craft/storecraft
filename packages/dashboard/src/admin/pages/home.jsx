@@ -57,54 +57,75 @@ const quick_invite_action_data = [
   { 
     msg : 'Write a Blog post', 
     Icon : <FaBlogger className='text-pink-400 text-3xl'/> , 
-    link: '/apps/blog/create' 
+    link: '/pages/posts/create' 
   },
 ]
 
 const stats_data = [
   { 
-    msg : 'customers', colId: 'users', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
+    msg : 'customers', 
+    which_table: 'customers', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
     link: '/pages/customers' 
   },
   { 
-    msg : 'products', colId: 'products', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/>,
+    msg : 'products', 
+    which_table: 'products', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/>,
     link: '/pages/products' 
   },
   { 
-    msg : 'collections', colId: 'collections', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
+    msg : 'collections', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
+    which_table: 'collections', 
     link: '/pages/collections' 
   },
   { 
-    msg : 'unfulfilled orders', colId: 'orders', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
-    link: '/pages/orders/q/search=fulfill:1', search: ['fulfill:1']
+    msg : 'unfulfilled orders', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
+    link: '/pages/orders/q/vql=fulfill:1', 
+    which_table: 'orders', 
+    search: 'fulfill:1'
   },
   { 
-    msg : 'all time orders', colId: 'orders', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
+    msg : 'all time orders', 
+    which_table: 'orders', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
     link: '/pages/orders' 
   },
   { 
-    msg : 'automatic discounts', colId: 'discounts', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
-    link: '/pages/discounts/q/search=app:automatic', search: ['app:automatic'] 
+    msg : 'automatic discounts', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
+    link: '/pages/discounts/q/vql=app:automatic', 
+    which_table: 'discounts', 
+    search: 'app:automatic'
   },
   { 
-    msg : 'coupons', colId: 'discounts', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
-    link: '/pages/discounts/q/search=app:manual', search: ['app:manual'] 
+    msg : 'coupons', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
+    link: '/pages/discounts/q/vql=app:manual', 
+    which_table: 'discounts', 
+    search: 'app:manual' 
   },
   { 
-    msg : 'storefronts', colId: 'storefronts', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
+    msg : 'storefronts', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
+    which_table: 'storefronts', 
     link: '/pages/storefronts' 
   },
   { 
-    msg : 'tags', colId: 'tags', 
-    Icon : <MdOutlineGamepad className='text-pink-400 text-3xl'/> , 
+    msg : 'tags', 
+    which_table: 'tags', 
+    Icon : <MdOutlineGamepad 
+    className='text-pink-400 text-3xl'/> , 
     link: '/pages/tags' 
   },
   

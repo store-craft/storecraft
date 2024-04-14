@@ -68,7 +68,7 @@ const useCollectionsActions = (
   useEffect(
     () => {
       ref_actions.current?.setSearch(
-        query_api.vqlString
+        query_api.vql
         )
       // console.log('query_api', query_api)
       query(query_api, false && ref_use_cache.current)
@@ -92,7 +92,7 @@ const useCollectionsActions = (
       const q = {
         ...rest,
         limit: 5,
-        vqlString: search
+        vql: search
       }
 
       if(perform_navigation) {

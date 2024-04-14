@@ -35,7 +35,7 @@ export default class Orders extends collection_base {
     const auto_discounts = await this.sdk.discounts.list(
       {
         limit: 100, 
-        vqlString: 'app:automatic'
+        vql: 'app:automatic'
       }
     );
 

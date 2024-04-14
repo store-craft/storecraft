@@ -13,7 +13,7 @@ const ORDER = 'order';
 const LIMIT = 'limit';
 const LIMIT_TO_LAST = 'limitToLast';
 const VQL = 'vql';
-const VQL_STRING = 'vqlString';
+// const VQL_STRING = 'vqlString';
 const START_AT = 'startAt';
 const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
@@ -114,7 +114,7 @@ export const parse_query = (s) => {
     const vql = s.get(VQL);
 
     if(vql) {
-      q.vql = parse(vql);
+      q.vqlParsed = parse(vql);
     }
   } catch (e) {
     console.log(e);
@@ -122,7 +122,7 @@ export const parse_query = (s) => {
     assert(false, 'VQL parsing failed', 401);
   }
 
-  q.vqlString = s.get(VQL_STRING);
+  q.vql = s.get(VQL);
 
   ////
   // RANGE CURSORS PARSING and VALIDATE
@@ -225,8 +225,8 @@ export const api_query_to_searchparams = q => {
   sp.set(ORDER, q.order);
   sp.set(SORT_BY, string_array_to_string(q.sortBy));
   sp.set(EXPAND, string_array_to_string(q.expand));
-  q.vqlString && sp.set(VQL_STRING, q.vqlString);
-  q.vqlString && sp.set(VQL, q.vqlString);
+  q.vql && sp.set(VQL, q.vql);
+  // q.vqlString && sp.set(VQL, q.vqlString);
   q.limit && sp.set(LIMIT, q.limit.toString());
   q.limitToLast && sp.set(LIMIT_TO_LAST, q.limitToLast.toString());
 

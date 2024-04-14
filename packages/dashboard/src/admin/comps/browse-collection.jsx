@@ -56,7 +56,7 @@ const BrowseCollection = (
   const items = useMemo(
     () => pages.reduce((prev, curr) => [...prev, ...curr], [])
     , [pages]
-  )
+  );
 
   /** @type {React.LegacyRef<HTMLInputElement>} */
   const ref_input = useRef()
@@ -67,9 +67,9 @@ const BrowseCollection = (
       e?.preventDefault()
       const search_terms = ref_input.current.value;
 
-      query({ limit, vqlString: search_terms })
+      query({ limit, vql: search_terms })
     }, [limit, query]
-  )
+  );
 
   const onKeyPress = useCallback(
     (e) => {
@@ -77,7 +77,8 @@ const BrowseCollection = (
       if(e.key === "Escape") {
       }
     }, []
-  )
+  );
+  
   return (
 <div onClick={e => e.stopPropagation()} 
      className='w-full m-3 md:w-[35rem] h-3/4 

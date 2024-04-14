@@ -39,7 +39,7 @@ export default ({}) => {
                       dark:shadow-slate-900 shelf-border-color'>      
         <TopActions 
             ref={ref_actions} reload={onReload}
-            createLink='/apps/blog/create'
+            createLink='/pages/posts/create'
             searchTitle='Search by name, values...' 
             isLoading={loading} />
         <CollectionView 

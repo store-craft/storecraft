@@ -148,7 +148,7 @@ export const query_to_mongo = (q) => {
   }
 
   // compute VQL clauses 
-  const vql_clause = query_vql_to_mongo(q.vql)
+  const vql_clause = query_vql_to_mongo(q.vqlParsed)
   vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order

@@ -36,23 +36,6 @@ const upsert = (driver) => {
           // remove all products relation to this discount
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
             trx, item.id, item.handle);
-          // remove discount search terms from related products search terms
-          // await trx
-          //   .deleteFrom('entity_to_search_terms')
-          //   .where(eb => eb.and(
-          //     [
-          //       eb.or(
-          //         [
-          //           eb('value', '=', `dis:${item.id}`),
-          //           eb('value', '=', `dis:${item.handle}`)
-          //         ]
-          //       ),
-          //       eb('context', '=', 'products') // makes sure it is only products records
-          //     ])
-          //   )
-          //   .execute();
-          // insert new relations
-          // INSERT INTO SELECT FROM
           if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
             // make connections
             await trx
@@ -71,8 +54,6 @@ const upsert = (driver) => {
                   eb => eb.and(discount_to_conjunctions(eb, item))
                 )
             ).execute();
-
-            // now add search terms for eligible products
 
           }
 

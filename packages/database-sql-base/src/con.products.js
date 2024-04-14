@@ -169,7 +169,9 @@ const get = (driver) => {
  */
 const remove_internal = (driver) => {
   /**
-   * @param {import('@storecraft/core/v-api').ProductType & import('@storecraft/core/v-api').VariantType} product
+   * @param {import('@storecraft/core/v-api').ProductType & 
+   *  import('@storecraft/core/v-api').VariantType
+   * } product
    * @param {Transaction<import('../index.js').Database>} trx
    */
   return async (product, trx) => {

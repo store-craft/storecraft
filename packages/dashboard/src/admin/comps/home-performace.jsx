@@ -19,7 +19,7 @@ const to_millis = d => (new Date(d)).getTime()
 /**
  * Compute top-K over latest span of time from the server stats
  * 
- * @param {import('@storecraft/core/v-api').StatisticsType} data server stats
+ * @param {import('@storecraft/core/v-api').OrdersStatisticsType} data server stats
  * 
  */
 const compute_top_k_stats = (data) => {
@@ -28,10 +28,10 @@ const compute_top_k_stats = (data) => {
 
   /**
    * @type {{
-   *  tags?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>,
-   *  products?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>,
-   *  collections?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>,
-   *  discounts?: Record<string, import('@storecraft/core/v-api').StatisticsEntity>
+   *  tags?: Record<string, import('@storecraft/core/v-api').OrdersStatisticsEntity>,
+   *  products?: Record<string, import('@storecraft/core/v-api').OrdersStatisticsEntity>,
+   *  collections?: Record<string, import('@storecraft/core/v-api').OrdersStatisticsEntity>,
+   *  discounts?: Record<string, import('@storecraft/core/v-api').OrdersStatisticsEntity>
    * }}
    */
   const result = {
@@ -88,7 +88,7 @@ const compute_top_k_stats = (data) => {
 
   /**
    * @typedef {[
-   *  k1: string, v1: import('@storecraft/core/v-api').StatisticsEntity
+   *  k1: string, v1: import('@storecraft/core/v-api').OrdersStatisticsEntity
    * ]} StatisticsEntityTuple
    * 
    * @param {StatisticsEntityTuple} param0 
@@ -98,10 +98,10 @@ const compute_top_k_stats = (data) => {
 
   /**
    * 
-   * @param {import('@storecraft/core/v-api').StatisticsEntity} o 
+   * @param {import('@storecraft/core/v-api').OrdersStatisticsEntity} o 
    * @param {typeof sortFn} sort 
    * 
-   * @return {[string, import('@storecraft/core/v-api').StatisticsEntity][]}
+   * @return {[string, import('@storecraft/core/v-api').OrdersStatisticsEntity][]}
    */
   const pickK = (o, sort) => {
     // convert o to array of kv tuples ->sort ->pick first K
@@ -165,7 +165,7 @@ const InfoCapsule = (
  * @template V 
  * 
  * @typedef {(
- *  k: string, v: import('@storecraft/core/v-api').StatisticsEntity
+ *  k: string, v: import('@storecraft/core/v-api').OrdersStatisticsEntity
  * ) => V} stat_entity_fn
  * 
  */
@@ -173,7 +173,7 @@ const InfoCapsule = (
 /**
  * 
  * @typedef {object} InnerHomeTopSoldCardParams
- * @prop {[string, import('@storecraft/core/v-api').StatisticsEntity][]} data
+ * @prop {[string, import('@storecraft/core/v-api').OrdersStatisticsEntity][]} data
  * @prop {string} [label_prefix='']
  * @prop {string} [label='Top Sold']
  * @prop {stat_entity_fn<string>} linkFn
@@ -272,7 +272,7 @@ const Performance = (
   const ref_effect_ran = useRef(false);
   /** 
    * @type {ReturnType<typeof useState<
-   *  import('@storecraft/core/v-api').StatisticsType>
+   *  import('@storecraft/core/v-api').OrdersStatisticsType>
    * >} 
    */
   const [data, setData] = useState();
@@ -292,7 +292,7 @@ const Performance = (
         setLoading(true);
 
       try {
-        const new_data = await getSDK().statistics.get(
+        const new_data = await getSDK().statistics.orders(
           Date.now() - span * DAY, Date.now()
         );
         // console.log('data ', data)

@@ -1,7 +1,7 @@
 import { MongoDB } from '../driver.js'
 import { Collection } from 'mongodb'
 import { sanitize_one, to_objid } from './utils.funcs.js'
-import { get_regular, list_regular, upsert_regular } from './con.shared.js'
+import { count_regular, get_regular, list_regular, upsert_regular } from './con.shared.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
@@ -75,6 +75,10 @@ const removeByEmail = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
@@ -89,6 +93,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     removeByEmail: removeByEmail(driver),
-    list: list(driver)
+    list: list(driver),
+    count: count(driver)
   }
 }

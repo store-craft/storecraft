@@ -24,8 +24,9 @@ const Img = forwardRef(
     }, ref
   ) => {
 
-    const srcRef = useRef()
-    const [source, setSource] = useState()
+    const srcRef = useRef();
+    const [source, setSource] = useState();
+    
     // console.log(src)
     useEffect(
       () => {
@@ -40,7 +41,7 @@ const Img = forwardRef(
           srcRef.current && URL.revokeObjectURL(srcRef.current)
         }
       }, [src]
-    )
+    );
 
     return (
   <img {...rest} ref={ref} src={source} />    

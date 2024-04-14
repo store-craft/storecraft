@@ -1714,7 +1714,7 @@ export type OrderPaymentGatewayData = {
 /**
  * @description Stats of an `entity` in a day
  */
-export type StatisticsEntity = {
+export type OrdersStatisticsEntity = {
   /**
    * @description `handle` of entity
    */
@@ -1738,7 +1738,7 @@ export type StatisticsEntity = {
   [x: string]: any;
 }
 
-export type StatisticsDayMetric = {
+export type OrdersStatisticsDayMetric = {
 
   /**
    * @description The total income in a day for a metric
@@ -1754,21 +1754,21 @@ export type StatisticsDayMetric = {
 /**
  * @description Stats of a day
  */
-export type StatisticsDay = {
+export type OrdersStatisticsDay = {
 
   /**
    * @description metrics for many `order` statuses
    */
   metrics: {
-    payments_captured?: StatisticsDayMetric,
-    payments_failed?: StatisticsDayMetric,
-    payments_unpaid?: StatisticsDayMetric,
-    checkouts_created?: StatisticsDayMetric,
-    checkouts_completed?: StatisticsDayMetric,
-    fulfillment_draft?: StatisticsDayMetric,
-    fulfillment_shipped?: StatisticsDayMetric,
-    fulfillment_processing?: StatisticsDayMetric,
-    fulfillment_cancelled?: StatisticsDayMetric,
+    payments_captured?: OrdersStatisticsDayMetric,
+    payments_failed?: OrdersStatisticsDayMetric,
+    payments_unpaid?: OrdersStatisticsDayMetric,
+    checkouts_created?: OrdersStatisticsDayMetric,
+    checkouts_completed?: OrdersStatisticsDayMetric,
+    fulfillment_draft?: OrdersStatisticsDayMetric,
+    fulfillment_shipped?: OrdersStatisticsDayMetric,
+    fulfillment_processing?: OrdersStatisticsDayMetric,
+    fulfillment_cancelled?: OrdersStatisticsDayMetric,
   }
 
   /**
@@ -1779,34 +1779,34 @@ export type StatisticsDay = {
   /**
    * @description The `products` found in all created orders
    */
-  products?: Record<Handle | ID, StatisticsEntity>;
+  products?: Record<Handle | ID, OrdersStatisticsEntity>;
 
   /**
    * @description The `collections` found in all created orders
    */
-  collections?: Record<Handle | ID, StatisticsEntity>;
+  collections?: Record<Handle | ID, OrdersStatisticsEntity>;
 
   /**
    * @description The `discounts` found in all created orders
    */
-  discounts?: Record<Handle | ID, StatisticsEntity>;
+  discounts?: Record<Handle | ID, OrdersStatisticsEntity>;
 
   /**
    * @description The `tags` found in all created orders `products`
    */
-  tags?: Record<Handle | ID, StatisticsEntity>;
+  tags?: Record<Handle | ID, OrdersStatisticsEntity>;
 }
 
 
 /**
  * @description `Statisitics` of requested days
  */
-export type StatisticsType = {
+export type OrdersStatisticsType = {
 
   /**
    * @description The days statistics
    */
-  days?: Record<number | string, StatisticsDay>;
+  days?: Record<number | string, OrdersStatisticsDay>;
 
   /**
    * @description The date in string `ISO` / `UTC` / `timestamp` format

@@ -10,7 +10,7 @@ import { Bling } from './common-ui.jsx'
  * @prop {string} which_table
  * @prop {string} msg
  * @prop {string} link
- * @prop {string[]} [search]
+ * @prop {string} [search] `VQL` search query
  * @prop {React.ReactElement} [Icon]
  * 
  * @param {StatCardParams} params

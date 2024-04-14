@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { expand, get_regular, list_regular } from './con.shared.js'
+import { count_regular, expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
@@ -161,6 +161,13 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
+
 /**
  * @param {MongoDB} driver 
  * @returns {db_col["list_collection_products"]}
@@ -211,6 +218,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_collection_products: list_collection_products(driver) 
   }
 }

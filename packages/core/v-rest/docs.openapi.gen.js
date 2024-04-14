@@ -324,7 +324,7 @@ const register_base_list = (
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}?limit={limit}&startAt={startAt}&endAt={endAt}
+    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}
       &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
       &order={order}&vql={vql}&expand={expand}`,
     summary: `List and filter ${name} items`,

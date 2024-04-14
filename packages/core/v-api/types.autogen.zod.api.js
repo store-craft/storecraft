@@ -10,6 +10,8 @@ export const errorItemSchema = z.object({
 export const errorSchema = z.object({
   messages: z.array(errorItemSchema).optional(),
 });
+export const handleSchema = z.string();
+export const idSchema = z.string();
 export const timestampsSchema = z
   .object({
     created_at: z.string().optional().describe("ISO string creation time"),
@@ -552,6 +554,117 @@ export const discountErrorSchema = z
     message: z.string().describe("Error message"),
   })
   .describe("Discount error type");
+export const statisticsEntitySchema = z
+  .record(z.any())
+  .and(
+    z.object({
+      handle: z.string().optional().describe("`handle` of entity"),
+      id: z.string().optional().describe("`id` of entity"),
+      title: z.string().optional().describe("`title` of entity"),
+      count: z
+        .number()
+        .optional()
+        .describe("`count` of entity occurences in the day"),
+    }),
+  )
+  .describe("Stats of an `entity` in a day");
+export const statisticsDayMetricSchema = z.object({
+  total_income: z
+    .number()
+    .optional()
+    .describe("The total income in a day for a metric"),
+  count: z
+    .number()
+    .optional()
+    .describe("The `count` of orders in a day for a metric"),
+});
+export const statisticsDaySchema = z
+  .object({
+    metrics: z
+      .object({
+        payments_captured: statisticsDayMetricSchema.optional(),
+        payments_failed: statisticsDayMetricSchema.optional(),
+        payments_unpaid: statisticsDayMetricSchema.optional(),
+        checkouts_created: statisticsDayMetricSchema.optional(),
+        checkouts_completed: statisticsDayMetricSchema.optional(),
+        fulfillment_draft: statisticsDayMetricSchema.optional(),
+        fulfillment_shipped: statisticsDayMetricSchema.optional(),
+        fulfillment_processing: statisticsDayMetricSchema.optional(),
+        fulfillment_cancelled: statisticsDayMetricSchema.optional(),
+      })
+      .describe("metrics for many `order` statuses"),
+    day: z
+      .union([z.string(), z.number()])
+      .describe("The date in string `ISO` / `UTC` / `timestamp` format"),
+    products: z
+      .record(
+        z
+          .union([handleSchema, idSchema])
+          .describe("The `products` found in all created orders"),
+        statisticsEntitySchema.describe(
+          "The `products` found in all created orders",
+        ),
+      )
+      .optional()
+      .describe("The `products` found in all created orders"),
+    collections: z
+      .record(
+        z
+          .union([handleSchema, idSchema])
+          .describe("The `collections` found in all created orders"),
+        statisticsEntitySchema.describe(
+          "The `collections` found in all created orders",
+        ),
+      )
+      .optional()
+      .describe("The `collections` found in all created orders"),
+    discounts: z
+      .record(
+        z
+          .union([handleSchema, idSchema])
+          .describe("The `discounts` found in all created orders"),
+        statisticsEntitySchema.describe(
+          "The `discounts` found in all created orders",
+        ),
+      )
+      .optional()
+      .describe("The `discounts` found in all created orders"),
+    tags: z
+      .record(
+        z
+          .union([handleSchema, idSchema])
+          .describe("The `tags` found in all created orders `products`"),
+        statisticsEntitySchema.describe(
+          "The `tags` found in all created orders `products`",
+        ),
+      )
+      .optional()
+      .describe("The `tags` found in all created orders `products`"),
+  })
+  .describe("Stats of a day");
+export const statisticsTypeSchema = z
+  .object({
+    days: z
+      .record(
+        z.union([z.number(), z.string()]).describe("The days statistics"),
+        statisticsDaySchema.describe("The days statistics"),
+      )
+      .optional()
+      .describe("The days statistics"),
+    from_day: z
+      .union([z.string(), z.number()])
+      .optional()
+      .describe("The date in string `ISO` / `UTC` / `timestamp` format"),
+    to_day: z
+      .union([z.string(), z.number()])
+      .optional()
+      .describe("The date in string `ISO` / `UTC` / `timestamp` format"),
+    count_days: z
+      .number()
+      .optional()
+      .describe("The count of days in `from_day` to `to_day`"),
+  })
+  .describe("`Statisitics` of requested days");
 export const baseTypeSchema = idableSchema
   .extend(timestampsSchema.shape)
   .extend({
@@ -1027,7 +1140,7 @@ export const lineItemSchema = z
 export const evoEntrySchema = z
   .object({
     discount: discountTypeSchema.optional().describe("Discount at this step"),
-    discount_code: z.string().optional().describe("The discount code"),
+    discount_code: z.string().optional().describe("The discount code `handle`"),
     total_discount: z
       .number()
       .optional()

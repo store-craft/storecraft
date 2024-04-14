@@ -25,10 +25,15 @@ import Storage from './storage.js'
  * @property {import('./auth.js').ApiAuthResult} [auth]
  */
 
+/**
+ * The official `storecraft` admin **SDK** for `javascript`
+ */
 export class StorecraftAdminSDK {
-  #_has_inited = false
+
+  #_has_inited = false;
+
   /**@type {StorecraftConfig} */
-  #_config = undefined
+  #_config = undefined;
 
   constructor() {
   }
@@ -104,13 +109,21 @@ export const hasSDKInit = () => {
  */
 export const initSDK = (config) => {
   if(!hasSDKInit()) {
-    console.log('Storecraft:: trying to init with config', config)
+    console.log(
+      'Storecraft:: trying to init with config', 
+      config
+    );
+
     try {
       sdk.init(config);
+
       LS.set(CONFIG_KEY, config);
-      console.log('Storecraft:: inited')
+
+      console.log('Storecraft:: inited');
+
     } catch (err) {
-      console.log('Storecraft:: init error', err)
+      console.log('Storecraft:: init error', err);
+
       throw err
     }
   }
@@ -128,10 +141,15 @@ export const getLatestConfig = () => {
 
 export const getSDK = () => { 
   if(!sdk.hasInited) {
-    // test if we have a config stored
-    const config = getLatestConfig()
+
+    const config = getLatestConfig();
+
     if(!config)
-      throw('Storecraft SDK has not inited and does not have a stored config')
+      throw(
+        'Storecraft SDK has not inited \
+        and does not have a stored config'
+      );
+
     return initSDK(config)
   }
   return sdk

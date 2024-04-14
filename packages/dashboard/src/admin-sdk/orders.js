@@ -39,8 +39,6 @@ export default class Orders extends collection_base {
       }
     );
 
-    console.log('uid', uid);
-
     return calculate_pricing(
       line_items, auto_discounts, coupons, shipping_method, uid
     );

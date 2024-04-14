@@ -189,3 +189,27 @@ export const list_regular = (driver, col) => {
   }
 }
 
+/**
+ * @template {any} T
+ * @template {any} G
+ * 
+ * 
+ * @param {MongoDB} driver 
+ * @param {Collection<G>} col 
+ * 
+ * 
+ * @returns {import('@storecraft/core/v-database').db_crud<T, G>["count"]}
+ */
+export const count_regular = (driver, col) => {
+  return async (query) => {
+
+    const { filter } = query_to_mongo(query);
+
+    const count = await col.countDocuments(
+      filter
+    );
+
+    return count;
+  }
+}
+

@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
+import { count_regular, get_regular, list_regular, 
   remove_regular } from './con.shared.js'
 import { sanitize_array, to_objid } from './utils.funcs.js'
 import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js';
@@ -91,6 +91,11 @@ const list = (driver) => list_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
+/**
+ * @param {MongoDB} driver 
  * @returns {db_col["list_storefront_products"]}
  */
 const list_storefront_products = (driver) => {
@@ -176,6 +181,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_storefront_products: list_storefront_products(driver),
     list_storefront_collections: list_storefront_collections(driver),
     list_storefront_discounts: list_storefront_discounts(driver),

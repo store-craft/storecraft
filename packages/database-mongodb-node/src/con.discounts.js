@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { expand, get_bulk, get_regular, list_regular } from './con.shared.js'
+import { count_regular, expand, get_bulk, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
@@ -177,6 +177,13 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
+
 /**
  * @param {MongoDB} driver 
  * @returns {db_col["list_discount_products"]}
@@ -228,6 +235,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_discount_products: list_discount_products(driver)
   }
 }

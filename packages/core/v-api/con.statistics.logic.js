@@ -47,7 +47,7 @@ const DAY = 86400000
  * @param {string} [from_day] `ISO` / `UTC` / `timestamp` date
  * @param {string} [to_day] `ISO` / `UTC` / `timestamp` date
  * 
- * @returns {Promise<import('./types.api.js').StatisticsType>}
+ * @returns {Promise<import('./types.api.js').OrdersStatisticsType>}
  * 
  */
 export const compute_statistics = async (app, from_day, to_day) => {
@@ -76,7 +76,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
 
   // process days stats
 
-  /** @type {import('./types.api.js').StatisticsType} */
+  /** @type {import('./types.api.js').OrdersStatisticsType} */
   const stat = {
     from_day: date_from_day.toISOString(),
     to_day: date_to_day.toISOString(),
@@ -110,7 +110,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
 
       /**
        * 
-       * @param {keyof import('./types.api.js').StatisticsDay["metrics"]} key 
+       * @param {keyof import('./types.api.js').OrdersStatisticsDay["metrics"]} key 
        */
       const metric_adjust = key => {
         day_d.metrics[key] = day_d.metrics[key] ?? {

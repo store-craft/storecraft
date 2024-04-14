@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
+import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
 import { images, func } from '@storecraft/core/v-api';
@@ -133,6 +133,13 @@ export const report_document_media = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
+
 /** 
  * @param {MongoDB} driver
  * @return {db_col & { _col: ReturnType<col>}}
@@ -145,6 +152,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     report_document_media: report_document_media(driver)
   }
 }

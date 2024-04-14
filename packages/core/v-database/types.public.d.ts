@@ -76,10 +76,15 @@ export declare interface db_crud<U extends idable_concrete, G=U> {
   remove: (id_or_handle: HandleOrId) => Promise<boolean>
 
   /**
-   * TBD
-   * @returns 
+   * List items with `query`
    */
-  list: (query: ApiQuery) => Promise<G[]>
+  list: (query: ApiQuery) => Promise<G[]>;
+
+  /**
+   * Count items with `query`
+   */
+  count?: (query: ApiQuery) => Promise<number>;
+
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;

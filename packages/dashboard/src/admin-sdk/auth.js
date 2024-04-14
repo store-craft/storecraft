@@ -7,6 +7,11 @@ import { assert } from './utils.functional.js';
  @typedef {import('@storecraft/core/v-api').ApiAuthResult} ApiAuthResult
  */
 
+/**
+ * `Storecraft` authentication module:
+ * - Supports `subscribtion` to `auth` events
+ * 
+ */
 export default class Auth {
 
   /**
@@ -53,7 +58,9 @@ export default class Auth {
     // let's findout and re-auth of needed
     if(this.currentUser) {
       if(this.isAuthenticated) {
-        this.#_update_and_notify_subscribers(this.currentUser, false);
+        this.#_update_and_notify_subscribers(
+          this.currentUser, false
+        );
       } else {
         // let's try to authenticate
         this.reAuthenticate();
@@ -91,6 +98,7 @@ export default class Auth {
 
     /** @type {ApiAuthResult | undefined} */
     let payload = undefined;
+
     if(auth_res.ok) {
       payload = await auth_res.json();
     }
@@ -110,7 +118,8 @@ export default class Auth {
    * @returns {() => void} unsubscribe function
    */
   add_sub = cb => {
-    this.#subscribers.add(cb)
+    this.#subscribers.add(cb);
+
     return () => {
       this.#subscribers.delete(cb)
     }
@@ -140,12 +149,12 @@ export default class Auth {
     );
   }
 
-  
   /**
    * 
    * @param {string} email 
    * @param {string} password 
-   * @returns 
+   * 
+   * @returns {Promise<ApiAuthResult>}
    */
   signin_with_email_pass = async (email, password) => {
     // console.log('ep ', email, password)
@@ -155,42 +164,40 @@ export default class Auth {
       email, password
     }
 
-    // try {
-      const res = await fetch(
-        url(this.context.config, `/auth/signin`),
-        { 
-          method: 'post',
-          body: JSON.stringify(info),
-          headers: {
-            'Content-Type' : 'application/json'
-          }
-
+    const res = await fetch(
+      url(this.context.config, `/auth/signin`),
+      { 
+        method: 'post',
+        body: JSON.stringify(info),
+        headers: {
+          'Content-Type' : 'application/json'
         }
-      );
-      
-      assert(res.ok, 'auth/error');
 
-      /** @type {ApiAuthResult} */
-      const payload = await res.json();
+      }
+    );
+    
+    assert(res.ok, 'auth/error');
 
-    // } catch(e) {
-
-    // }
+    /** @type {ApiAuthResult} */
+    const payload = await res.json();
 
     // console.log('auth_result', payload)
 
     this.#_update_and_notify_subscribers(
       payload, true
-      );
+    );
+
     return payload;
   }
 
   signout = async () => {
     console.log('signout');
-    LS.set(this.USER_KEY, null)
+
+    LS.set(this.USER_KEY, null);
+
     this.#_update_and_notify_subscribers(
       undefined, true
-      );
+    );
   }
 
 }

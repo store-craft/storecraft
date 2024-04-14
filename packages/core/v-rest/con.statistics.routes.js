@@ -20,7 +20,7 @@ export const create_routes = (app) => {
 
   // `Compute Statistics`
   polka.get(
-    '/',
+    '/orders',
     middle_authorize_admin,
     async (req, res) => {
 

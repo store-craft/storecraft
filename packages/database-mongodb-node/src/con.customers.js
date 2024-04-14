@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
+import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
@@ -94,6 +94,10 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
@@ -143,6 +147,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_customer_orders: list_customer_orders(driver) 
   }
 }

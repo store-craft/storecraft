@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_bulk, get_regular, list_regular } from './con.shared.js'
+import { count_regular, get_bulk, get_regular, list_regular } from './con.shared.js'
 import { delete_keys, handle_or_id, sanitize_array, to_objid } from './utils.funcs.js'
 import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js'
 import { enums } from '@storecraft/core/v-api'
@@ -205,6 +205,11 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
 
 /**
  * For now and because each product is related to very few
@@ -337,6 +342,7 @@ export const impl = (driver) => {
     list_product_collections: list_product_collections(driver),
     list_product_variants: list_product_variants(driver),
     list_product_discounts: list_product_discounts(driver),
+    count: count(driver)
   }
 }
  

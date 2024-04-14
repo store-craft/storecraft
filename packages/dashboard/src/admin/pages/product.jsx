@@ -38,12 +38,6 @@ const root_left_schema = {
   name:'Root', comp: Div, 
   comp_params : { className:'w-full lg:w-[35rem] flex flex-col gap-5'},
   fields: [
-    {
-      key: 'media', name: 'Media', type: 'text',   
-      validate: false, editable: true, 
-      desc: 'Manage and edit your media files',
-      comp: withCard(Media),  comp_params: {className: 'w-full'} 
-    },
     { 
       key: 'title', name: 'Title', type: 'text',  validate: true, 
       editable: true, desc: 'Give an accurate title of the product',
@@ -81,12 +75,12 @@ const root_left_schema = {
       desc: 'Further describe the product you are selling',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
-    // {
-    //   key: 'media', name: 'Media', type: 'text',   
-    //   validate: false, editable: true, 
-    //   desc: 'Manage and edit your media files',
-    //   comp: withCard(Media),  comp_params: {className: 'w-full'} 
-    // },
+    {
+      key: 'media', name: 'Media', type: 'text',   
+      validate: false, editable: true, 
+      desc: 'Manage and edit your media files',
+      comp: withCard(Media),  comp_params: {className: 'w-full'} 
+    },
     { 
       key: 'video', name: 'Video', type: 'text', validate: false, 
       editable: true, 

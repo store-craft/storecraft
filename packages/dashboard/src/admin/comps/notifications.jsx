@@ -293,10 +293,14 @@ const Notifications = ({ ...rest }) => {
 
     <Header />
 
-    <FilterView notis={flattened} selected={filter} 
-                onChange={setFilter} />
+    <FilterView 
+        notis={flattened} 
+        selected={filter} 
+        onChange={setFilter} />
 
-    <NotificationsView notis={filtered} onLoadMore={next} />
+    <NotificationsView 
+        notis={filtered} 
+        onLoadMore={next} />
 
     {/* <button children='add' className='absolute top-0 right-0' 
             onClick={async () => await getShelf().notifications.addBulk(test)}/> */}

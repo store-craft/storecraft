@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 /**
  * 
  * @typedef {object} InnerBaseChartViewParams
- * @prop {import('chart.js').ChartConfiguration} config
+ * @prop {import('chart.js').ChartConfiguration<>} config
  * 
  * 
  * @typedef {InnerBaseChartViewParams & 

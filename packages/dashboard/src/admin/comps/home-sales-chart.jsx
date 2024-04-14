@@ -27,7 +27,6 @@ const to_millis = d => (new Date(d)).getTime()
  * 
  * @typedef {object} InnerSalesChartParams
  * @prop {import('@storecraft/core/v-api').StatisticsType} data
- * @prop {number} span
  * 
  * 
  * @typedef {InnerSalesChartParams & 
@@ -40,29 +39,34 @@ const to_millis = d => (new Date(d)).getTime()
  */
 const SalesChart = (
   { 
-    data, span, ...rest 
+    data, ...rest 
   }
 ) => {
 
   const [showIndex, setShowIndex] = useState(0)
   const { darkMode } = useDarkMode()
+
+  /** @type {import('chart.js').ChartConfiguration} */
   const config = useMemo(
     () => {
       /** @type {import('@storecraft/core/v-api').StatisticsDay[]} */
-      let arr = Array.from({length : 91});
+      let arr = Array.from({ length: data.count_days });
       Object.
         entries(data.days).
         forEach(
           ([k, v]) => {
-            arr[(to_millis(Number(k))-to_millis(data.from_day))/DAY] = v
+            arr[(to_millis(k)-to_millis(data.from_day))/DAY] = v
           }
         );
 
-      arr = arr.slice(arr.length - span)
       const xs = arr.map((it, ix) => it?.day ? 
                 new Date(it?.day).toLocaleDateString() : '')
-      const ys1 = arr.map((it, ix) => it?.total_income_of_payments_captured ?? 0) // Math.random()*2000)
-      const ys2 = arr.map((it, ix) => it?.count_orders_checkout_completed ?? 0) // Math.random()*40)
+      const ys1 = arr.map(
+        (it, ix) => it?.metrics?.checkouts_created?.total_income ?? 0
+      );
+      const ys2 = arr.map(
+        (it, ix) => it?.metrics?.checkouts_created?.count ?? 0
+      );
 
       Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
       Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';
@@ -92,7 +96,7 @@ const SalesChart = (
           scales: {
             x: {
               grid: {
-                ccolor: darkMode ? '#334155' : '#d1d5db'
+                // ccolor: darkMode ? '#334155' : '#d1d5db'
               },
               beginAtZero:true,
               ticks: {
@@ -101,7 +105,7 @@ const SalesChart = (
             },
             y: {
               grid: {
-                ccolor: darkMode ? '#334155' : '#d1d5db'
+                // ccolor: darkMode ? '#334155' : '#d1d5db'
               },
               beginAtZero:true,
               ticks: {
@@ -150,7 +154,7 @@ const SalesChart = (
           ]
         }
       }
-    }, [data, showIndex, span, darkMode]
+    }, [data, showIndex, darkMode]
   )
 
   return (

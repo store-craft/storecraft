@@ -2446,11 +2446,11 @@ export default class Statistics  {
    */
   get = async (from_day, to_day) => {
     const search = new URLSearchParams();
-
+    
     if(from_day)
-      search.set('fromDay', from_day.toString());
+      search.set('fromDay', new Date(from_day).toISOString());
     if(to_day)
-      search.set('toDay', to_day.toString());
+      search.set('toDay', new Date(to_day).toISOString());
 
     return fetchApiWithAuth(
       `statistics?${search.toString()}`

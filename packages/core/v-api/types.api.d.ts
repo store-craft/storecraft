@@ -1738,40 +1738,39 @@ export type StatisticsEntity = {
   [x: string]: any;
 }
 
+export type StatisticsDayMetric = {
+
+  /**
+   * @description The total income in a day for a metric
+   */
+  total_income?: number;
+
+  /**
+   * @description The `count` of orders in a day for a metric
+   */
+  count?: number;
+}
+
 /**
  * @description Stats of a day
  */
 export type StatisticsDay = {
-  /**
-   * @description The total income captured in a day
-   */
-  total_income_of_payments_captured: number;
 
   /**
-   * @description The total un-captured income in a day
+   * @description metrics for many `order` statuses
    */
-  total_income_of_checkout_complete_orders: number;
+  metrics: {
+    payments_captured?: StatisticsDayMetric,
+    payments_failed?: StatisticsDayMetric,
+    payments_unpaid?: StatisticsDayMetric,
+    checkouts_created?: StatisticsDayMetric,
+    checkouts_completed?: StatisticsDayMetric,
+    fulfillment_draft?: StatisticsDayMetric,
+    fulfillment_shipped?: StatisticsDayMetric,
+    fulfillment_processing?: StatisticsDayMetric,
+    fulfillment_cancelled?: StatisticsDayMetric,
+  }
 
-  /**
-   * @description The total un-captured income in a day
-   */
-  total_income_of_checkout_create_orders: number;
-
-  /**
-   * @description The total amount of `captured` orders
-   */
-  count_orders_payment_captured: number;
-
-  /**
-   * @description The total amount of `completed` checkout orders
-   */
-  count_orders_checkout_completed: number;
-
-  /**
-   * @description The total amount of `created` checkout orders
-   */
-  count_orders_checkout_created: number;
-  
   /**
    * @description The date in string `ISO` / `UTC` / `timestamp` format
    */
@@ -1818,4 +1817,9 @@ export type StatisticsType = {
    * @description The date in string `ISO` / `UTC` / `timestamp` format
    */
   to_day?: string | number;
+
+  /**
+   * @description The count of days in `from_day` to `to_day`
+   */
+  count_days?: number
 }

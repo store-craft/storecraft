@@ -1,4 +1,6 @@
-import { CheckoutStatusEnum, PaymentOptionsEnum } from './types.api.enums.js';
+import { 
+  CheckoutStatusEnum, FulfillOptionsEnum, PaymentOptionsEnum 
+} from './types.api.enums.js';
 
 /**
  * Get the start of a day
@@ -7,7 +9,7 @@ import { CheckoutStatusEnum, PaymentOptionsEnum } from './types.api.enums.js';
  */
 const startOfDay = (date=Date.now()) => {
   var d = new Date(date);
-  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCHours(0, 0, 0, 0);
   return d;
 }
 
@@ -18,8 +20,19 @@ const startOfDay = (date=Date.now()) => {
  */
 const endOfDay = (date=Date.now()) => {
   var d = new Date(date);
-  d.setUTCHours(23, 59, 59, 999);
+  d.setUTCHours(23, 59, 59, 999);
   return d;
+}
+
+/**
+ * 
+ * @param {string | number | Date} from 
+ * @param {string | number | Date} to 
+ */
+const how_many_days = (from, to) => {
+  const delta = (new Date(to).getTime()) - (new Date(from).getTime());
+  const days = Math.floor(delta / DAY);
+  return days;
 }
 
 const MINUTE = 60000
@@ -28,7 +41,7 @@ const DAY = 86400000
 
 /**
  * 
- * Compute the `statistics` of `sales` / `orders` a period of time
+ * Compute the `statistics` of `sales` / `orders` a period of time per day.
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} [from_day] `ISO` / `UTC` / `timestamp` date
@@ -57,6 +70,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
       endAt:  [
         ['created_at', date_to_day.toISOString()]
       ],
+      limit: 1000000
     }
   );
 
@@ -66,6 +80,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
   const stat = {
     from_day: date_from_day.toISOString(),
     to_day: date_to_day.toISOString(),
+    count_days: how_many_days(date_from_day, date_to_day) + 1,
     days: {
     }
   };
@@ -81,39 +96,62 @@ export const compute_statistics = async (app, from_day, to_day) => {
         line_items, created_at 
       } = order;
       
-      const day = startOfDay(created_at).getTime();
+      const day = startOfDay(created_at).toISOString();
 
       const day_d = p.days[day] = p.days[day] ?? {
         day,
-        total_income_of_checkout_complete_orders: 0,
-        total_income_of_payments_captured: 0,
-        count_orders_checkout_completed: 0,
-        count_orders_payment_captured: 0,
-        count_orders_checkout_created: 0,
+        metrics: {
+        },
         products: {},
         collections: {},
         tags: {},
         discounts: {}
       }
 
-      // update total and number of orders
-      if(order.status.checkout.id === CheckoutStatusEnum.complete.id) {
-        day_d.count_orders_checkout_completed += 1;
-        day_d.total_income_of_checkout_complete_orders += total_order_price;
-      }
-      if(order.status.checkout.id === CheckoutStatusEnum.created.id) {
-        day_d.count_orders_checkout_created += 1;
-        day_d.total_income_of_checkout_complete_orders += total_order_price;
-      }
-      if(order.status.payment.id === PaymentOptionsEnum.captured.id) {
-        day_d.count_orders_payment_captured += 1;
-        day_d.total_income_of_payments_captured += total_order_price;
+      /**
+       * 
+       * @param {keyof import('./types.api.js').StatisticsDay["metrics"]} key 
+       */
+      const metric_adjust = key => {
+        day_d.metrics[key] = day_d.metrics[key] ?? {
+          count: 0, total_income: 0
+        };
+        day_d.metrics[key].count += 1;
+        day_d.metrics[key].total_income += total_order_price;
       }
 
-      // iterate line items to collect used 
-      // products/discounts/collections/tags
-      // embedded in the line items
-      line_items.forEach(
+      // update total and number of orders
+      // checkouts
+      if(order.status.checkout.id === CheckoutStatusEnum.complete.id) {
+        metric_adjust('checkouts_completed');
+      } else if(order.status.checkout.id === CheckoutStatusEnum.created.id) {
+        metric_adjust('checkouts_created');
+      }
+
+      // payments
+      if(order.status.payment.id === PaymentOptionsEnum.captured.id) {
+        metric_adjust('payments_captured')
+      } else if(order.status.payment.id === PaymentOptionsEnum.failed.id) {
+        metric_adjust('payments_failed')
+      } else if(order.status.payment.id === PaymentOptionsEnum.unpaid.id) {
+        metric_adjust('payments_unpaid')
+      }
+
+      // fulfillment
+      if(order.status.payment.id === FulfillOptionsEnum.draft.id) {
+        metric_adjust('fulfillment_draft')
+      } else if(order.status.payment.id === FulfillOptionsEnum.processing.id) {
+        metric_adjust('fulfillment_processing')
+      } else if(order.status.payment.id === FulfillOptionsEnum.shipped.id) {
+        metric_adjust('fulfillment_shipped')
+      } else if(order.status.payment.id === FulfillOptionsEnum.cancelled.id) {
+        metric_adjust('fulfillment_cancelled')
+      }
+
+      // iterate `line items` to collect used 
+      // `products` / `discounts` / `collections` / `tags`
+      // embedded in the `line items`
+      line_items?.forEach(
         li => {
 
           const { id: id_pr, qty, data } = li;
@@ -122,14 +160,14 @@ export const compute_statistics = async (app, from_day, to_day) => {
           // we prefer `handles`
           const id = handle ?? id_pr;
 
-          // products
+          // `products`
           day_d.products[id] = day_d.products[id] ?? {
-            handle: id, id: id_pr, title, count: 0
+            handle: id, id: id_pr, title, count: 0, 
           }
 
-          day_d.products[id].count += qty
+          day_d.products[id].count += qty;
 
-          // collections
+          // `collections`
           collections?.forEach(
             (k) => {
               day_d.collections[k.handle] = day_d.collections[k.handle] ?? {
@@ -142,7 +180,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
             }
           );
 
-          // tags
+          // `tags`
           tags?.forEach(
             (k) => {
               day_d.tags[k] = day_d.tags[k] ?? {
@@ -158,7 +196,7 @@ export const compute_statistics = async (app, from_day, to_day) => {
         }
       );
 
-      // discounts
+      // `discounts`
       evo?.filter(
         e => Boolean(e?.total_discount > 0) && e.discount?.active
       )

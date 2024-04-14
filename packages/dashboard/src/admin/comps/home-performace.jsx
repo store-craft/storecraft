@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, 
-         useRef, useState } from 'react'
+import { 
+  useCallback, useEffect, useMemo, 
+  useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getSDK } from '@/admin-sdk/index.js'
 import { Bling, HR } from './common-ui.jsx'
@@ -19,13 +20,11 @@ const to_millis = d => (new Date(d)).getTime()
  * Compute top-K over latest span of time from the server stats
  * 
  * @param {import('@storecraft/core/v-api').StatisticsType} data server stats
- * @param {number} span up to 90 days from now
  * 
- * @returns 
  */
-const compute_top_k_stats = (data, span) => {
+const compute_top_k_stats = (data) => {
 
-  if(data===undefined) return undefined
+  if(data===undefined) return undefined;
 
   /**
    * @type {{
@@ -44,7 +43,6 @@ const compute_top_k_stats = (data, span) => {
 
   const reduced = Object
     .entries(data.days)
-    .filter(([day, v]) => ((to_millis(day)-to_millis(data.from_day))/DAY)>90-span)
     .reduce(
     (p, c) => {
       const [
@@ -56,29 +54,29 @@ const compute_top_k_stats = (data, span) => {
       
       Object.entries(tags).forEach(
         ([k, v]) => {
-          p.tags[k] = (p.tags[k] ?? v);
-          p.tags[k].count += v.count;
+          p.tags[k] = (p.tags[k] ?? {...v});
+          p.tags[k].count += v.count ? v.count : 0;
         }
       );
 
       Object.entries(collections).forEach(
         ([k, v]) => {
-          p.collections[k] = (p.collections[k] ?? v);
-          p.collections[k].count += v.count;
+          p.collections[k] = (p.collections[k] ?? {...v});
+          p.collections[k].count += v.count ? v.count : 0;
         }
       );
 
       Object.entries(discounts).forEach(
         ([k, v]) => {
-          p.discounts[k] = (p.discounts[k] ?? v);
-          p.discounts[k].count += v.count;
+          p.discounts[k] = (p.discounts[k] ?? {...v});
+          p.discounts[k].count += v.count ? v.count : 0;
         }
       );
 
       Object.entries(products).forEach(
         ([k, v]) => {
-          p.products[k] = (p.products[k] ?? v);
-          p.products[k].count += v.count;
+          p.products[k] = (p.products[k] ?? {...v});
+          p.products[k].count += v.count ? v.count : 0;
         }
       );
 
@@ -86,7 +84,7 @@ const compute_top_k_stats = (data, span) => {
     }, result
   );
 
-  // console.log('reduced ', reduced)
+  console.log('reduced ', data)
 
   /**
    * @typedef {[
@@ -164,7 +162,7 @@ const InfoCapsule = (
 }
 
 /**
- * @template V
+ * @template V 
  * 
  * @typedef {(
  *  k: string, v: import('@storecraft/core/v-api').StatisticsEntity
@@ -193,9 +191,11 @@ const TopSoldCard = (
   { 
     data, label_prefix='', label='Top Sold', 
     linkFn, valFn=(k, v)=>v.count ?? 0, 
-    labelFn=(k,v)=>k, ...rest 
+    labelFn=(k,v)=>v.title ?? k, ...rest 
   }
 ) => {
+
+  console.log('topsold', data);
 
   return (
 <Bling rounded='rounded-xl' stroke='p-[2px]'>
@@ -276,33 +276,42 @@ const Performance = (
    * >} 
    */
   const [data, setData] = useState();
-  const [span, setSpan] = useState(30)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState()
-  console.log('ddddddd', data)
+  const [span, setSpan] = useState(30);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+
+  console.log('ddddddd', data);
+
   const load = useCallback(
-    async () => {
-      setError(undefined)
-      setLoading(true)  
+    /**
+     * @param {number} span 
+     */
+    async (span) => {
+      setError(undefined);
+      if(!data)
+        setLoading(true);
+
       try {
-        const data = await getSDK().statistics.get();
+        const new_data = await getSDK().statistics.get(
+          Date.now() - span * DAY, Date.now()
+        );
         // console.log('data ', data)
-        setData(data)
+        setData(new_data);
       } catch (e) {
         setError(e)
       } finally {
-        setLoading(false)  
+        setLoading(false);
       }
-    }, []
+    }, [data]
   );
   
+  /** @type {import('./home-time-frame.jsx').TimeFrameParams["onChange"]} */
   const onSpanChanged = useCallback(
     (v) => {
-      setSpan(v)
-      if(!data)
-        load();
+      setSpan(v);
+      load(v);
     },
-    [load, data],
+    [load],
   );
   
   useEffect(
@@ -318,8 +327,8 @@ const Performance = (
     () => {
       if(data===undefined) 
         return undefined;
-      return compute_top_k_stats(data, span);
-    }, [data, span]
+      return compute_top_k_stats(data);
+    }, [data]
   );
 
   const msg = loading ? 'Loading ...' : 
@@ -345,7 +354,6 @@ const Performance = (
           span={span} />
       <SalesChart 
           data={data} 
-          span={span}
           className='w-full max-w-screen-md h-52 mt-5' /> 
       <HR className='my-5' />
       <div className='w-full h-fit flex flex-row justify-center 
@@ -354,19 +362,22 @@ const Performance = (
             data={days_reduced?.products} 
             label='products' 
             labelFn={(k, v)=>v.title??k} 
-            valFn={(k, v)=>v.val} 
+            valFn={(k, v)=>v.count ?? 0} 
             linkFn={(k, v) => `/pages/products/${k}/edit`} />
         <TopSoldCard 
             data={days_reduced?.collections} 
             label='collections' 
+            valFn={(k, v)=>v.count ?? 0} 
             linkFn={(k, v) => `/pages/collections/${k}/edit`}/>
         <TopSoldCard 
             data={days_reduced?.discounts} 
             label='discounts' 
+            valFn={(k, v)=>v.count ?? 0} 
             linkFn={(k, v) => `/pages/discounts/${k}/edit`}/>
         <TopSoldCard 
             data={days_reduced?.tags} 
             label='tags' 
+            valFn={(k, v)=>v.count ?? 0} 
             linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}/edit`}/>
       </div>  
     </div>        

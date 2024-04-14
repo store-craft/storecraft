@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "description": "Storecraft Official Dashboard",
   "type": "module",
-  "types": "",
   "scripts": {
-    "start": "next dev",
+    "start": "npm run dashboard:dev",
     "dashboard:dev": "next dev",
     "dashboard:build": "next build",
     "dashboard:start": "next start",
@@ -13,6 +12,7 @@
     "dashboard:export": "next build && next export"
   },
   "dependencies": {
+    "@storecraft/core": "*",
     "@uiw/react-md-editor": "^3.18.1",
     "chart.js": "^4.2.0",
     "gray-matter": "^4.0.3",
@@ -33,7 +33,6 @@
     "react-router-dom": "^6.14.1"
   },
   "devDependencies": {
-    "@storecraft/core": "*",
     "@types/react-image-crop": "^8.1.6",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",

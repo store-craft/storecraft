@@ -1,6 +1,9 @@
 import { Polka } from '../v-polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { compute_statistics } from '../v-api/con.statistics.logic.js';
+import { 
+  compute_count_of_query, compute_statistics 
+} from '../v-api/con.statistics.logic.js';
+import { parse_query } from '../v-api/utils.query.js';
 
 /**
  * 
@@ -32,6 +35,22 @@ export const create_routes = (app) => {
       );
 
       res.sendJson(stats);
+    }
+  );
+
+  polka.get(
+    '/count/:table',
+    middle_authorize_admin,
+    async (req, res) => {
+
+      let q = parse_query(req.query);
+      const table = req?.params?.table;
+
+      const count = compute_count_of_query(
+        app, table, q
+      );
+
+      res.sendJson(count);
     }
   );
 

@@ -1,6 +1,8 @@
+import { App } from '../index.js';
 import { 
   CheckoutStatusEnum, FulfillOptionsEnum, PaymentOptionsEnum 
 } from './types.api.enums.js';
+import { assert } from './utils.func.js';
 
 /**
  * Get the start of a day
@@ -217,4 +219,43 @@ export const compute_statistics = async (app, from_day, to_day) => {
     }, stat
   );
 
+}
+
+const tables = [
+  'disconnect',
+  'auth_users',
+  'tags',
+  'collections',
+  'customers',
+  'products',
+  'storefronts',
+  'images',
+  'posts',
+  'shipping',
+  'notifications',
+  'discounts',
+  'orders',
+]
+
+/**
+ * 
+ * Compute the count `statistics` of a table with `query`
+ *  
+ * @param {import("../types.public.js").App} app
+ * @param {keyof App["db"]} [table] which `table` to get count of query
+ * @param {import('./types.api.query.js').ApiQuery} [query] The `query` used for counting
+ * 
+ * @returns {Promise<number>}
+ * 
+ */
+export const compute_count_of_query = async (app, table, query) => {
+  assert(
+    tables.includes(table),
+    `Table ${table} is not allowed for counting !`
+  );
+
+  /** @type {import('../v-database/types.public.d.ts').db_crud} */
+  const db = app.db?.[table];
+
+  return db.count(query);
 }

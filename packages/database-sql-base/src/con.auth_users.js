@@ -1,6 +1,6 @@
 import { SQL } from '../driver.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { delete_me, regular_upsert_me, 
+import { count_regular, delete_me, regular_upsert_me, 
   where_id_or_handle_table } from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js';
 
@@ -144,6 +144,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     removeByEmail: removeByEmail(driver),
-    list: list(driver)
+    list: list(driver),
+    count: count_regular(driver, table_name),
   }
 }

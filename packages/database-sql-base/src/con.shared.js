@@ -1,5 +1,35 @@
 import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
+import { SQL } from '../index.js';
+import { query_to_eb } from './utils.query.js';
+
+
+/**
+ * @param {SQL} driver 
+ * @param {keyof Database} table_name 
+ * 
+ * 
+ * @returns {import('@storecraft/core/v-database').db_crud["count"]}
+ */
+export const count_regular = (driver, table_name) => {
+  return async (query) => {
+
+    const result = await driver.client.selectFrom(table_name)
+      .select(
+        ({ eb, fn, val, ref }) => [
+          fn.countAll(table_name).as('count'),
+        ]
+      )
+      .where(
+        (eb) => {
+          return query_to_eb(eb, query, table_name).eb;
+        }
+      )
+      .executeTakeFirst();
+
+    return Number(result.count);
+  }
+}
 
 /**
  * 

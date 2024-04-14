@@ -1,6 +1,6 @@
 import { func, images } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
-import { delete_me, delete_search_of, 
+import { count_regular, delete_me, delete_search_of, 
   insert_entity_array_values_of, 
   insert_search_of, regular_upsert_me, where_id_or_handle_table 
 } from './con.shared.js'
@@ -225,7 +225,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    report_document_media: report_document_media(driver)
-
+    report_document_media: report_document_media(driver),
+    count: count_regular(driver, table_name),
   }
 }

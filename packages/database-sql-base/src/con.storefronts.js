@@ -7,7 +7,8 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   storefront_with_discounts, storefront_with_posts, 
   storefront_with_products, storefront_with_shipping, 
   regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags } from './con.shared.js'
+  with_media, with_tags, 
+  count_regular} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -293,7 +294,8 @@ export const impl = (driver) => {
     list_storefront_collections: list_storefront_collections(driver),
     list_storefront_discounts: list_storefront_discounts(driver),
     list_storefront_posts: list_storefront_posts(driver),
-    list_storefront_shipping_methods: list_storefront_shipping_methods(driver)
+    list_storefront_shipping_methods: list_storefront_shipping_methods(driver),
+    count: count_regular(driver, table_name),
   }
 }
 

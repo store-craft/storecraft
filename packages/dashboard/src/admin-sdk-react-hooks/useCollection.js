@@ -5,10 +5,6 @@ import { getSDK } from '@/admin-sdk/index.js'
 import { list } from '@/admin-sdk/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 
-const q = {
-  orderBy: [['firstname', 'asc']],
-  limit: -1,
-}
 
 /**
  * 
@@ -59,8 +55,12 @@ const delete_from_collection = what => {
  * example.
  * 
  * @template {any} G
+ * 
+ * 
  * @param {import('@storecraft/core/v-api').ApiQuery} query 
  * @param {string} resource
+ * 
+ * 
  */
 const paginate_helper = (query, resource) => {
 
@@ -97,7 +97,7 @@ const paginate_helper = (query, resource) => {
 }
 
 /**
- * @template T
+ * @template T The type of the item
  * 
  * @param {keyof App["db"]["resources"]} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
@@ -107,27 +107,22 @@ export const useCollection = (
   resource, q=undefined, autoLoad=true
 ) => {
 
-  const _q = useRef(q)
-  const _hasEffectRan = useRef(false)
-  // const _next = useRef(getShelf().db.col(colId).paginate2(q))
-
+  const _q = useRef(q);
+  const _hasEffectRan = useRef(false);
   /** @type {React.MutableRefObject<() => Promise<T[]>>} */
-  const _next = useRef()
-  const [error, setError] = useState(undefined)
+  const _next = useRef();
+  const [error, setError] = useState(undefined);
   /**@type {ReturnType<typeof useState<T[][]>>} */
-  const [pages, setPages] = useState([])
-  const [index, setIndex] = useState(-1)
-  const [loading, setIsLoading] = useState(autoLoad)
-  const [queryCount, setQueryCount] = useState(-1)
-  const trigger = useTrigger()
+  const [pages, setPages] = useState([]);
+  const [index, setIndex] = useState(-1);
+  const [loading, setIsLoading] = useState(autoLoad);
+  const [queryCount, setQueryCount] = useState(-1);
+  const trigger = useTrigger();
   
-  // console.log('resource ',  resource);
-  // console.log('pages ',  pages);
-
   useEffect(
     () => getSDK().auth.add_sub(trigger)
     , [trigger]
-  )
+  );
 
   const _internal_fetch_next = useCallback(
     /**
@@ -200,20 +195,19 @@ export const useCollection = (
 
   const query = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ApiQuery} q query object
-     * @param {boolean} from_cache 
+     * @param {import('@storecraft/core/v-api').ApiQuery} [q={}] query object
+     * @param {boolean} [from_cache] 
      */
     async (q={}, from_cache=false) => {
       _q.current = q;
       _next.current = paginate_helper(q, resource);
-      const result = await _internal_fetch_next(true)  
-      setQueryCount(-1);
+      const result = await _internal_fetch_next(true);
       const count = await getSDK().statistics.countOf(
         resource, q
       );
       setQueryCount(count);
       return result
-    }, [resource, _internal_fetch_next, getSDK()]
+    }, [resource, _internal_fetch_next]
   );
 
   useEffect(
@@ -262,8 +256,9 @@ export const q_initial = {
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
  */
- export const useCommonCollection = 
-  (resource, autoLoad=true, autoLoadQuery=q_initial) => {
+ export const useCommonCollection = (
+  resource, autoLoad=true, autoLoadQuery=q_initial
+) => {
     
   const { 
     pages, page, loading, error, 

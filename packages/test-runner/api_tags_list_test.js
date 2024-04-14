@@ -50,7 +50,7 @@ export const create = app => {
           await tags.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.tags.upsert(p);
+          await app.db.resources.tags.upsert(p);
         }
       } catch(e) {
         console.log(e)

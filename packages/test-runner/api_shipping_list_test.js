@@ -50,7 +50,7 @@ export const create = app => {
           await shipping.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-            await app.db.shipping.upsert(p);
+            await app.db.resources.shipping.upsert(p);
         }
       } catch(e) {
         console.log(e)

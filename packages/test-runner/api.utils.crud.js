@@ -129,25 +129,6 @@ export const add_sanity_crud_to_test_suite = s => {
     );
   })
   
-  // return s;
-
-  // s('insert new with existing handle should throw', async (ctx) => {
-  //   const one = ctx.items[0];
-  //   if(!one.handle)
-  //     return;
-  //   // without id and same handle should throw
-  //   await assert_async_throws(
-  //     async () => await ctx.ops.upsert(ctx.app, one)
-  //   ); 
-  // })
-  
-  // s('update with non existing id should throw', async (ctx) => {
-  //   const one = { ...ctx.items[0], id: 'lihcwihiwe9ewh' };
-  //   await assert_async_throws(
-  //     async () => await ctx.ops.upsert(ctx.app, one)
-  //   );
-  // })
-  
   return s;
 }
 
@@ -255,6 +236,7 @@ export const assert_query_list_integrity = (list, q) => {
  *    upsert?: (app: App, item: T) => Promise<string>,
  *    get?: (app: App, id: string) => Promise<T>,
  *    list?: (app: App, q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
+ *    count?: (app: App, resource: string, q: import('@storecraft/core/v-api').ApiQuery) => Promise<number>
  *  }
  *  app: App
  * }} C

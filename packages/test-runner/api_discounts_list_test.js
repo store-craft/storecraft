@@ -22,7 +22,12 @@ const handle_gen = create_handle('dis', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core/v-api').DiscountType & import('@storecraft/core/v-database').idable_concrete)[]} */
+/** 
+ * @type {(
+ *  import('@storecraft/core/v-api').DiscountType & 
+ *  import('@storecraft/core/v-database').idable_concrete
+ * )[]} 
+ */
 const items = get_static_ids('dis').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -73,7 +78,7 @@ export const create = app => {
           await discounts.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.discounts.upsert(p);
+          await app.db.resources.discounts.upsert(p);
         }
       } catch(e) {
         console.log(e)

@@ -13,7 +13,12 @@ import { App } from '@storecraft/core';
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core/v-api').OrderData & import('@storecraft/core/v-database').idable_concrete)[]} */
+/** 
+ * @type {(
+ *  import('@storecraft/core/v-api').OrderData & 
+ *  import('@storecraft/core/v-database').idable_concrete
+ * )[]} 
+ */
 const items = get_static_ids('order').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -63,7 +68,7 @@ export const create = app => {
           await orders.remove(app, p.id);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-            await app.db.orders.upsert(p);
+            await app.db.resources.orders.upsert(p);
         }
       } catch(e) {
         console.log(e)

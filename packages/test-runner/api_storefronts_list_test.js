@@ -52,7 +52,7 @@ export const create = app => {
           await storefronts.remove(app, p.id);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-            await app.db.storefronts.upsert(p);
+            await app.db.resources.storefronts.upsert(p);
         }
       } catch(e) {
         console.log(e)

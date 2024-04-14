@@ -15,7 +15,12 @@ const handle = create_handle('col', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core/v-api').CollectionType & import('@storecraft/core/v-database').idable_concrete)[]} */
+/** 
+ * @type {(
+ *  import('@storecraft/core/v-api').CollectionType & 
+ *  import('@storecraft/core/v-database').idable_concrete
+ * )[]} 
+ */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -52,7 +57,7 @@ export const create = app => {
           await collections.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.collections.upsert(p);
+          await app.db.resources.collections.upsert(p);
         }
       } catch(e) {
         console.log(e)

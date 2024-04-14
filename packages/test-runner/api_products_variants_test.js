@@ -100,7 +100,7 @@ export const create = app => {
 
   s('upsert 1st product -> upsert both variants -> test variants were applied', async () => {
     // upsert 1st product straight to the db because we have ID
-    await app.db.products.upsert(pr_upsert);
+    await app.db.resources.products.upsert(pr_upsert);
     // upsert all variants
     const ids = await promises_sequence(
       var_upsert.map(v => () => products.upsert(app, v))

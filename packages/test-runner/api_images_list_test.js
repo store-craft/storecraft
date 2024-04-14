@@ -46,7 +46,10 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: images }
+    { 
+      items: items, app, ops: images,
+      resource: 'images'
+    }
   );
 
   s.before(

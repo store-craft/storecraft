@@ -44,7 +44,10 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: customers }
+    { 
+      items: items, app, ops: customers,
+      resource: 'customers' 
+    }
   );
 
   s.before(

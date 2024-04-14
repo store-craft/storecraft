@@ -176,17 +176,18 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
-        with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id'), driver.dialectType),
-      ].filter(Boolean))
+          with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
+          with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id'), driver.dialectType),
+        ].filter(Boolean)
+      )
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .orderBy(query_to_sort(query))

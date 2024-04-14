@@ -123,13 +123,14 @@ export const query_vql_to_eb = (eb, root, table_name) => {
 
 /**
  * Convert an API Query into mongo dialect, also sanitize.
+ * 
+ * 
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
  * @param {import("@storecraft/core/v-api").ApiQuery} q 
  * @param {keyof Database} table_name 
+ * 
  */
-export const query_to_eb = (eb, q, table_name) => {
-  if(!q) return undefined;
-  const filter = {};
+export const query_to_eb = (eb, q={}, table_name) => {
   const clauses = [];
 
   const sort_sign = q.order === 'asc' ? 1 : -1;
@@ -152,15 +153,7 @@ export const query_to_eb = (eb, q, table_name) => {
   const vql_clause = query_vql_to_eb(eb, q.vqlParsed, table_name)
   vql_clause && clauses.push(vql_clause);
 
-  // compute sort fields and order
-  // const sort = (q.sortBy ?? []).reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});
-
-  if(clauses?.length) {
-    // filter['$and'] = clauses;
-    filter.eb = eb.and(clauses);
-  }
-
-  return filter;
+  return eb.and(clauses);
 }
 
 const SIGN = {

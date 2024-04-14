@@ -6,6 +6,7 @@ import { assert_async_throws, assert_partial } from './utils.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
 import { image_url_to_handle, 
   image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
+import { compute_count_of_query } from '@storecraft/core/v-api/con.statistics.logic.js';
 
 /** timestamp to iso */
 export const iso = number => {
@@ -231,6 +232,7 @@ export const assert_query_list_integrity = (list, q) => {
  * } T
  * 
  * @template {{
+ *  resource: (keyof App["db"]["resources"])
  *  items: T[],
  *  ops: {
  *    upsert?: (app: App, item: T) => Promise<string>,
@@ -244,6 +246,18 @@ export const assert_query_list_integrity = (list, q) => {
  * @param {import('uvu').uvu.Test<C>} s 
  */
 export const add_list_integrity_tests = s => {
+  s('basic count() test',
+    async (ctx) => {
+      const count = await compute_count_of_query(
+        ctx.app, ctx.resource, {}
+      );
+
+      assert.ok(
+        count>=ctx.items.length,
+        'count < items.length'
+      )
+    }
+  );
 
   s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
     async (ctx) => {

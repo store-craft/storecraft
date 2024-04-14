@@ -134,7 +134,7 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .orderBy(query_to_sort(query))
@@ -164,7 +164,7 @@ const list_customer_orders = (driver) => {
       .where(
         (eb) => eb.and(
           [
-            query_to_eb(eb, query, table_name)?.eb,
+            query_to_eb(eb, query, table_name),
             eb('_customer_id', '=', id)
           ].filter(Boolean)
         )

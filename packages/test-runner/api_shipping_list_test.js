@@ -3,7 +3,7 @@ import { shipping } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_list_integrity_tests } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
@@ -15,7 +15,12 @@ const handle = create_handle('ship', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core/v-api').ShippingMethodType & import('@storecraft/core/v-database').idable_concrete)[]} */
+/** 
+ * @type {(
+ *  import('@storecraft/core/v-api').ShippingMethodType & 
+ *  import('@storecraft/core/v-database').idable_concrete
+ * )[]} 
+ */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -39,7 +44,10 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: shipping }
+    { 
+      items: items, app, ops: shipping,
+      resource: 'shipping'
+    }
   );
 
   s.before(
@@ -50,7 +58,7 @@ export const create = app => {
           await shipping.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-            await app.db.resources.shipping.upsert(p);
+          await app.db.resources.shipping.upsert(p);
         }
       } catch(e) {
         console.log(e)

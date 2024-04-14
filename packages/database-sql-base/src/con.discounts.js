@@ -161,7 +161,7 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .orderBy(query_to_sort(query))
@@ -191,7 +191,7 @@ const list_discount_products = (driver) => {
       .where(
         (eb) => eb.and(
           [
-            query_to_eb(eb, query, 'products')?.eb,
+            query_to_eb(eb, query, 'products'),
             eb('products.id', 'in', 
               eb => select_entity_ids_by_value_or_reporter( // select all the product ids by discount id
                 eb, 'products_to_discounts', handle_or_id

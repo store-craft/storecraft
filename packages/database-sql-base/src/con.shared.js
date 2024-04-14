@@ -14,15 +14,14 @@ import { query_to_eb } from './utils.query.js';
 export const count_regular = (driver, table_name) => {
   return async (query) => {
 
-    const result = await driver.client.selectFrom(table_name)
+    const result = await driver.client
+      .selectFrom(table_name)
       .select(
-        ({ eb, fn, val, ref }) => [
-          fn.countAll(table_name).as('count'),
-        ]
+        (eb) => eb.fn.countAll().as('count')
       )
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .executeTakeFirst();

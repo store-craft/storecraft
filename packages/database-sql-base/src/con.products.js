@@ -264,7 +264,7 @@ const list = (driver) => {
     ].filter(Boolean))
     .where(
       (eb) => {
-        return query_to_eb(eb, query, table_name).eb;
+        return query_to_eb(eb, query, table_name);
       }
     ).orderBy(query_to_sort(query))
     .limit(query.limitToLast ?? query.limit ?? 10)

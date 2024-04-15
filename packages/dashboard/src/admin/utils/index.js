@@ -1,10 +1,18 @@
 
 import { Base64 } from 'js-base64'
 
+/**
+ * 
+ * @param {string} val 
+ */
 export const to_slug = (val) => {
   return val.toLowerCase().split(' ').join('-')
 }
 
+/**
+ * 
+ * @param {string} v 
+ */
 export const capFirstLetter = v => {
   return v.charAt(0).toUpperCase() + v.slice(1)
 }
@@ -21,6 +29,10 @@ export const read_clipboard = async () => {
   return text
 }
 
+/**
+ * 
+ * @param {string} text 
+ */
 export const write_clipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text);
@@ -37,10 +49,18 @@ export const hasTouchScreen = () => {
   return false
 }
 
+/**
+ * 
+ * @param {object} o 
+ */
 export const encode = o => encodeURIComponent(
   Base64.encode(JSON.stringify(o))
   )
 
+/**
+ * 
+ * @param {string} c 
+ */
 export const decode = c => JSON.parse(
   Base64.decode(decodeURIComponent(c))
   )

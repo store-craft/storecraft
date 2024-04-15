@@ -9,15 +9,19 @@ import { MINUTE } from '@/admin/utils/time.js'
 
 
 /**
+ * 
  * @typedef {object} InternalBubbleParams
  * @prop {string} [outerClass]
  * @prop {string} [innerClass]
+ * 
  * 
  * @typedef {InternalBubbleParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } BubbleParams
  * 
- * @param {BubbleParams} param
+ * 
+ * @param {BubbleParams} params
+ * 
  */
 const Bubble = (
   { 
@@ -37,15 +41,19 @@ const Bubble = (
 
 
 /**
+ * 
  * @typedef {object} InternalNotificationButtonParams
  * @prop {boolean} [isOpen=false]
  * @prop {string} [innerClass]
+ * 
  * 
  * @typedef {InternalNotificationButtonParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } NotificationButtonParams
  * 
- * @param {NotificationButtonParams} param
+ * 
+ * @param {NotificationButtonParams} params
+ * 
  */
 const NotificationButton = (
   { 
@@ -60,14 +68,14 @@ const NotificationButton = (
       const hasChanged = await getSDK().notifications.hasChanged()
       console.log('CHANGED ' + hasChanged)
       setAlert(hasChanged)
-    }, [getSDK()]
-  )
+    }, []
+  );
 
   const {
     stop, start 
   } = useInterval(
     onInterval, MINUTE*10, false
-  )
+  );
 
   useEffect(
     () => {
@@ -77,7 +85,7 @@ const NotificationButton = (
       }
       else start()
     }, [isOpen, start, stop]
-  )
+  );
   
   return (
 <div className='relative'>

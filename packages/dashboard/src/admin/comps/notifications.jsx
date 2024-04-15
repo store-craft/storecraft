@@ -60,11 +60,20 @@ const message = `
       
 /**
  * 
- * @param {object} param 
- * @param {import('@storecraft/core/v-api').NotificationType} param.notification
+ * @typedef {object} NotificationParams
+ * @prop {import('@storecraft/core/v-api').NotificationType} notification
+ * 
+ * 
+ * @param {NotificationParams} params
+ * 
  */
-const Notification = ({ notification }) => {
-  const nav = useNavigate()
+const Notification = (
+  { 
+    notification 
+  }
+) => {
+
+  const nav = useNavigate();
   const onClick = useCallback(
     () => {
       const action = notification?.actions?.at(0)
@@ -79,7 +88,7 @@ const Notification = ({ notification }) => {
         }
       }
     }, [notification, nav, window]
-  )
+  );
   
   return (
 <div className='flex flex-row justify-between items-center w-full
@@ -92,7 +101,7 @@ const Notification = ({ notification }) => {
             text={notification.message} />
     <div className='flex flex-row items-center w-full
                     justify-between mt-1'>
-      <p children={timeSince(notification.updatedAt ?? Date.now())} 
+      <p children={timeSince(notification.updated_at ?? Date.now())} 
          className='text-pink-500 --text-gray-400 
                       font-semibold text-xs w-fit' />
       <div className='flex flex-row items-baseline 
@@ -115,10 +124,13 @@ const Notification = ({ notification }) => {
 
 /**
  * 
- * @param {object} param 
- * @param {import('@storecraft/core/v-api').NotificationType[]} param.notis
- * @param {string} [param.selected]
- * @param {(filter: string) => void} [param.onChange]
+ * @typedef {object} FilterViewParams
+ * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
+ * @prop {string} [selected='All']
+ * @prop {(filter: string) => void} [onChange]
+ * 
+ * @param {FilterViewParams} params
+ * 
  */
 const FilterView = (
   { 
@@ -147,29 +159,30 @@ const FilterView = (
      
       return ['All', ...Array.from(s)]
     }, [notis]
-  )
+  );
 
   const onFilterClick = useCallback(
     /** @param {string} t */
     (t) => {
-      onChange && onChange(t)
+      onChange && onChange(t);
     }, [onChange]
-  )
+  );
 
   return (
 <div className='flex flex-row flex-wrap gap-2'>
   {
-    tags.map(
-      t => (
-        <div key={t} children={t} 
-             className={`text-base rounded-full px-2
-                         cursor-pointer
-                         shelf-text-label-color py-1 box-border
-                       ${selected===t ? 'bg-kf-50 dark:bg-white/10 shelf-border-color border ' : 'bg-transparent'}`
-                      } 
-             onClick={() => onFilterClick(t)}/>
-      )
+  tags.map(
+    t => (
+      <div 
+          key={t} children={t} 
+          className={`text-base rounded-full px-2
+                      cursor-pointer
+                      shelf-text-label-color py-1 box-border
+                    ${selected===t ? 'bg-kf-50 dark:bg-white/10 shelf-border-color border ' : 'bg-transparent'}`
+          } 
+          onClick={() => onFilterClick(t)}/>
     )
+  )
   }
 </div>    
   )
@@ -177,12 +190,18 @@ const FilterView = (
 
 /**
  * 
- * @param {object} param 
- * @param {import('@storecraft/core/v-api').NotificationType[]} param.notis
- * @param {() => Promise} param.onLoadMore
+ * @typedef {object} NotificationsViewParams
+ * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
+ * @prop {() => Promise<void>} onLoadMore
+ * 
+ * @param {NotificationsViewParams} params
+ * 
  */
-const NotificationsView = 
-  ({ notis, onLoadMore }) => {
+const NotificationsView = (
+  { 
+    notis, onLoadMore 
+  }
+) => {
 
   return (
 <div className='flex flex-col gap-5 text-sm 
@@ -197,11 +216,11 @@ const NotificationsView =
   {
     notis?.length>0 &&
     <PromisableLoadingButton
-      text='Load more' 
-      onClick={onLoadMore} 
-      keep_text_on_load={true}
-      className='w-fit mx-auto h-12 p-3 border-b cursor-pointe 
-                text-center text-pink-500 font-medium text-base'  
+        text='Load more' 
+        onClick={onLoadMore} 
+        keep_text_on_load={true}
+        className='w-fit mx-auto h-12 p-3 border-b cursor-pointe 
+                  text-center text-pink-500 font-medium text-base'  
     />
 
   }
@@ -224,7 +243,13 @@ const Header = ({}) => {
 const Notifications = ({ ...rest }) => {
 
   const [filter, setFilter] = useState('All')
-  const notis = test
+  const notis = test;
+
+  /**
+   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
+   *  import('@storecraft/core/v-api').NotificationType
+   * >}
+   */
   const { 
     pages, page, loading, error, queryCount,
     query, prev, next
@@ -241,14 +266,14 @@ const Notifications = ({ ...rest }) => {
           limit: 5,
         }, false)
       }
-    }, [getSDK()]
-  )
+    }, []
+  );
 
   const {
     start, stop
   } = useInterval(
     onInterval, MINUTE*10, false
-  )
+  );
 
   useEffect(
     () => {
@@ -260,7 +285,7 @@ const Notifications = ({ ...rest }) => {
       }
       swr()
     }, [start]
-  )
+  );
 
   /**@type {import('@storecraft/core/v-api').NotificationType[]} */
   const flattened = useMemo(
@@ -269,7 +294,7 @@ const Notifications = ({ ...rest }) => {
         it => it[1]
       )
     }, [pages]
-  )
+  );
 
   let filtered = useMemo(
     () => {
@@ -279,7 +304,7 @@ const Notifications = ({ ...rest }) => {
         n => Boolean(n?.search?.includes(filter))
       )
     }, [flattened, filter]
-  )
+  );
 
   // console.log(filtered)
 

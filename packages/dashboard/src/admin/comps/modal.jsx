@@ -8,87 +8,107 @@ import { BlingButton } from './common-button.jsx'
 /**
  * Imperative interface
  * 
- * @typedef {object} ImpInterface
+ * @typedef {object} ImpInterface Imperative interface
  * @property {Function} show
  * @property {Function} hide
- * @property {(data: any, message: string, show?: boolean) => void} setDataAndMessage
+ * @property {(
+ *  data: any, message: string, show?: boolean
+ * ) => void} setDataAndMessage
+ * 
  */
 
 const QP = {}
 const Modal = forwardRef(
   /**
    * 
-   * @param {object} param0 
-   * @param {React.ReactElement} param0.title 
-   * @param {(key: string, value: any) => void} param0.onApprove 
+   * @typedef {object} InnerModalParams
+   * @prop {React.ReactElement} [title] 
+   * @prop {(key: string, value: any) => void} onApprove 
+   * 
+   * 
+   * @typedef {InnerModalParams & 
+   *  Omit<
+   *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+   *    'title'
+   *  >
+   * } ModalParams
+   * 
+   * 
+   * @param {ModalParams} params 
    * @param {any} ref 
-   * @returns 
+   * 
    */
   (
-  { 
-    title=(<p children='NA' className='text-gray-500' />), 
-    onApprove, ...rest
-  }, ref
-) => {
-  const [dm, setDM] = useState({ data: undefined, message: 'NA'});
+    { 
+      title=(<p children='NA' className='text-gray-500' />), 
+      onApprove, ...rest
+    }, ref
+  ) => {
 
-  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
-  const ref_overlay = useRef();
+    const [dm, setDM] = useState({ data: undefined, message: 'NA'});
 
-  useImperativeHandle(
-    ref,
-    /** @returns {ImpInterface} */
-    () => ({
-      hide: () => ref_overlay.current.hide(),
-      show: () => ref_overlay.current.show(),
-      setDataAndMessage: (data, message, show) => {
-        setDM({data, message})
-        if (show)
-          ref_overlay.current.show()
-      }
-    }),
-    []
-  );
+    /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+    const ref_overlay = useRef();
 
-  const onSelectInternal = useCallback(
-    /**
-     * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e 
-     * @param {*} v 
-     */
-    (e, v) => { 
-      if(onApprove===undefined)
-        return
+    useImperativeHandle(
+      ref,
+      /** @returns {ImpInterface} */
+      () => ({
+        hide: () => ref_overlay.current.hide(),
+        show: () => ref_overlay.current.show(),
+        setDataAndMessage: (data, message, show) => {
+          setDM({data, message})
+          if (show)
+            ref_overlay.current.show()
+        }
+      }),
+      []
+    );
 
-      // // steal the event from processing
-      e.preventDefault()
-      e.stopPropagation()
+    const onSelectInternal = useCallback(
+      /**
+       * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e 
+       * @param {*} v 
+       */
+      (e, v) => { 
+        if(onApprove===undefined)
+          return
 
-      // // console.log('img', img);
-      ref.current.hide()
-      onApprove(dm.data, v)
-    }, [dm, onApprove]
-  );
-  
-  return (
-<Overlay ref={ref_overlay} >
-  <Card name={title} cardClass='shelf-card-light' 
+        // steal the event from processing
+        e.preventDefault();
+        e.stopPropagation();
+
+        ref.current.hide();
+        onApprove(dm.data, v);
+      }, [dm, onApprove]
+    );
+    
+    return (
+  <Overlay ref={ref_overlay} >
+    <Card 
+        name={title} 
+        cardClass='shelf-card-light' 
         className='w-96' onClick={e => e.stopPropagation()} >
-    <p children={dm.message} className='text-red-500 text-base break-words' />
-    <div className='flex flex-row justify-between mt-10 text-base'>
-      <BlingButton stroke='pb-0.5' 
-              btnClassName='rounded-none'
-              rounded='rounded-none'
-              children='No' 
-              onClick={() => ref.current.hide()} />
-      <BlingButton stroke='pb-0.5' 
+      <p 
+          children={dm.message} 
+          className='text-red-500 text-base break-words' />
+      <div className='flex flex-row justify-between mt-10 text-base'>
+        <BlingButton 
+            stroke='pb-0.5' 
+            btnClassName='rounded-none'
+            rounded='rounded-none'
+            children='No' 
+            onClick={() => ref.current.hide()} />
+        <BlingButton stroke='pb-0.5' 
             btnClassName='rounded-none'
             rounded='rounded-none'
             children='Yes' 
             onClick={e => onSelectInternal(e)} />
-    </div>
-  </Card>
-</Overlay>
-  )
-})
+      </div>
+    </Card>
+  </Overlay>
+    )
+  }
+)
 
 export default Modal

@@ -17,12 +17,15 @@ const dates = [
 
 /**
  * 
- * @param {number} date 
+ * @param {number | string | Date} date 
+ * 
  * @returns {string}
  */
 export const timeSince = (date) => {
 
-  const millis = Math.max(Date.now() - date, 0)
+  const millis = Math.max(
+    Date.now() - (new Date(date)).getTime(), 0
+  );
 
   if(millis<1000)
     return 'now'

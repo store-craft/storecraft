@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { BlingInput, HR } from './common-ui.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 
 const Entry = ({title, value}) => {
   return (

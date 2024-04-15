@@ -3,7 +3,7 @@ import { AiOutlineDelete, AiOutlineLink,
   AiOutlineTags, AiOutlineWarning } from 'react-icons/ai/index.js'
 import { SlActionRedo } from 'react-icons/sl/index.js'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useCommonApiDocument } from '@/admin-sdk-react-hooks/index.js'
+import { useCommonApiDocument } from '@storecraft/sdk-react-hooks'
 import { Bling, Card } from '@/admin/comps/common-ui.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
@@ -112,7 +112,7 @@ const ImagePage = ({}) => {
   const { handle } = useParams();
 
   /** 
-   * @type {import('@/admin-sdk-react-hooks/useDocument.js').HookReturnType<
+   * @type {import('@storecraft/sdk-react-hooks').useCommonApiDocumentHookReturnType<
    *  import('@storecraft/core/v-api').ImageType>
    * } 
    */

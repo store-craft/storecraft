@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 
 const Img = forwardRef(
 

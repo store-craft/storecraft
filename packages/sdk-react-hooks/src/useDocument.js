@@ -9,7 +9,7 @@ import { getSDK } from '@storecraft/sdk'
  *  {
  *    doc: T
  *  }
- * } HookReturnType This `type` will give you the return type of the hook
+ * } useCommonApiDocumentHookReturnType This `type` will give you the return type of the hook
  * 
  */
 

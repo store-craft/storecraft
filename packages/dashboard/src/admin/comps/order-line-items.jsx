@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo,
 import { Bling, BlingInput, HR } from './common-ui.jsx'
 import { BrowseProducts } from './browse-collection.jsx'
 import { Overlay } from './overlay.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
 import { BlingButton } from './common-button.jsx'
 import { LinkWithState } from '@/admin/hooks/useNavigateWithState.js'

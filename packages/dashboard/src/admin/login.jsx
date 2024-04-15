@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { getSDK, initSDK, getLatestConfig } from '@/admin-sdk/index.js'
+import { getSDK, initSDK, getLatestConfig } from '@storecraft/sdk'
 import LoginContent from './comps/login-content.jsx'
 import LoginConnect from './comps/login-connect.jsx'
 import LoginMarquee from './comps/login-marquee.jsx'

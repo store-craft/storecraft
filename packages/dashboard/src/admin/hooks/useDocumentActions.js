@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
-import { useCommonApiDocument } from '@/admin-sdk-react-hooks/useDocument.js';
+import { useCommonApiDocument } from '@storecraft/sdk-react-hooks';
 import { App } from '@storecraft/core';
 
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<useDocumentActions<T>>, 'doc'> & 
+ * @typedef {Omit<ReturnType<typeof useDocumentActions<T>>, 'doc'> & 
  *  {
  *    doc: T  
  *  }
@@ -26,7 +26,7 @@ import { App } from '@storecraft/core';
  * - Paginating by url navigation, for state saving.
  * - Context
  * 
- * @template {{}} [T={}] The type of `document`
+ * @template T The type of `document`
  * 
  * @param {keyof App["db"]["resources"]} resource resource `identifier`
  * @param {string} document document `handle` or `id`
@@ -45,7 +45,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   const ref_root = useRef();
 
   /**
-   * @type {import('@/admin-sdk-react-hooks/useDocument.js').HookReturnType<T>}
+   * @type {import('@storecraft/sdk-react-hooks').useCommonApiDocumentHookReturnType<T>}
    */
   const { 
     doc: doc_original, loading, hasLoaded, error, op,

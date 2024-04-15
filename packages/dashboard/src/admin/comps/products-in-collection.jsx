@@ -3,16 +3,16 @@ import CollectionView from './collection-view.jsx'
 import { RecordActions, Span, 
   TimeStampView } from './common-fields.jsx'
 import { Bling, Card } from './common-ui.jsx'
-import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
+import { useCommonCollection } from '@storecraft/sdk-react-hooks'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
-import { getSDK } from '@/admin-sdk/index.js'
-import useTrigger from '@/admin-sdk-react-hooks/useTrigger.js'
+import { getSDK } from '@storecraft/sdk'
 import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
 import { BrowseProducts } from './browse-collection.jsx'
+import useTrigger from '../hooks/useTrigger.js'
 
 const CollectionBase = forwardRef(
   /**
@@ -40,7 +40,7 @@ const CollectionBase = forwardRef(
   ) => {
     
   /**
-   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
+   * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<
    *  import('@storecraft/core/v-api').ProductType>
    * }
    */
@@ -51,7 +51,7 @@ const CollectionBase = forwardRef(
     `collections/${collection_handle_or_id}/products`, false
   );
 
-  const trigger = useTrigger()
+  const trigger = useTrigger();
 
   const schema = useRef([
     { key: 'title', name: 'Title', comp: Span },

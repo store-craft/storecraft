@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useTrigger from "./useTrigger.js";
-import { getSDK } from "@/admin-sdk/index.js";
+import { getSDK } from "@storecraft/sdk";
 
 /**
  * A simple `react` hook to get access to `sdk`

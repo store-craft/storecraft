@@ -2,7 +2,7 @@ import {
   useCallback, useEffect, useMemo, 
   useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { Bling, HR } from './common-ui.jsx'
 import SalesChart from './home-sales-chart.jsx'
 import TimeFrame from './home-time-frame.jsx'

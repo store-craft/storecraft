@@ -1,6 +1,6 @@
 import { useCallback, useEffect, 
   useRef, useState } from 'react'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'

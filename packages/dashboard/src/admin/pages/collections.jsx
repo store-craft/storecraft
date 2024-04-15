@@ -4,7 +4,6 @@ import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, TimeStampView } from '@/admin/comps/common-fields.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
-import { useLocation } from 'react-router-dom'
 
 const schema_fields = [
   { 
@@ -35,10 +34,6 @@ export default ({}) => {
     error, onLimitChange, onReload, prev, next, 
     queryCount
    } = useCollectionsActions('collections', '/pages/collections');
-
-   const location = useLocation();
-   console.log('location ', location);
-
 
   return (
 <div className='h-full w-full'>

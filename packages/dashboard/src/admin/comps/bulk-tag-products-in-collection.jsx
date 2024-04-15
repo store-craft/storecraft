@@ -1,6 +1,6 @@
 import { Card } from './common-ui.jsx'
 import { useCallback, useState } from 'react'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import TagsEdit from './tags-edit.jsx'
 import { PromisableLoadingBlingButton } from './common-button.jsx'
 import { HR } from './common-ui.jsx'

@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import useTrigger from './useTrigger.js'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 
 let darkMode = false
 const subs = new Set()

@@ -1,6 +1,6 @@
 import { 
   q_initial, useCommonCollection 
-} from '@/admin-sdk-react-hooks/useCollection.js';
+} from '@storecraft/sdk-react-hooks';
 import { App } from '@storecraft/core';
 import { 
   api_query_to_searchparams, parse_query 
@@ -64,7 +64,7 @@ const useCollectionsActions = (
   const ref_use_cache = useRef(true)
 
   /**
-   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<T>}
+   * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<T>}
    */
   const { 
     pages, page, loading, error, 

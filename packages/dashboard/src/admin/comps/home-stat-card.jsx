@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { MdNavigateNext } from 'react-icons/md/index.js'
 import { Link } from 'react-router-dom'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { Bling } from './common-ui.jsx'
-import Statistics from '@/admin-sdk/statistics.js'
+import Statistics from '@storecraft/sdk/src/statistics.js'
 
 /**
  * 

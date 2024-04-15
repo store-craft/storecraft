@@ -283,7 +283,7 @@ export const q_initial = {
  *    page: T[]  
  *    pages: T[][]  
  *  }
- * } HookReturnType This `type` will give you the return type of the hook
+ * } useCommonCollectionHookReturnType This `type` will give you the return type of the hook
  * 
  */
 

@@ -6,7 +6,7 @@ import { LoadingButton } from './common-button.jsx'
 import Modal from './modal.jsx'
 import { RxCopy } from 'react-icons/rx/index.js'
 import { read_clipboard, write_clipboard } from '../utils/index.js'
-import { to_handle } from '@/admin-sdk/utils.functional.js'
+import { to_handle } from '@storecraft/sdk/src/utils.functional.js'
 import { Bling, Card, Input } from './common-ui.jsx'
 import { LinkWithState } from '../hooks/useNavigateWithState.js'
 

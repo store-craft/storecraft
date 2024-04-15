@@ -6,7 +6,7 @@ import { BsCloudUpload } from 'react-icons/bs/index.js'
 import { useCallback, useEffect, useRef, 
   useState } from 'react'
 import ShowIf from './show-if.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { BlingInput } from './common-ui.jsx'
 import { RiGalleryLine } from 'react-icons/ri/index.js'
 import GallerySelect from '../apps/gallery/gallery-select.jsx'

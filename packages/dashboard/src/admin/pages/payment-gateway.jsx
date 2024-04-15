@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import FieldsView from '@/admin/comps/fields-view.jsx'
-import { useCommonApiDocument } from '@/admin-sdk-react-hooks/index.js'
+import { useCommonApiDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { 
   MInput, Div, withCard, 

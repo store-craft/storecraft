@@ -7,7 +7,7 @@ import MDEditor from '@/admin/comps/md-editor.jsx'
 import Media from '@/admin/comps/media.jsx'
 import { MInput, withCard, 
   Handle, Switch } from '@/admin/comps/common-fields.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { MdPublish } from 'react-icons/md/index.js'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ProductsInCollection from '@/admin/comps/products-in-collection.jsx'

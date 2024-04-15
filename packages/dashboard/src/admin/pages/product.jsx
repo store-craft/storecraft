@@ -18,7 +18,7 @@ import RelatedProducts from '@/admin/comps/product-related-products.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import ProductVariants from '@/admin/comps/products-variants.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
+import { getSDK } from '@storecraft/sdk'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const test = {

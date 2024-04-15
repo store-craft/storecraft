@@ -201,6 +201,7 @@ const FilterView = (
   )
 }
 
+
 /**
  * 
  * @typedef {object} NotificationsViewParams

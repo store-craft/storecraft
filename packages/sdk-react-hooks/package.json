@@ -1,0 +1,16 @@
+{
+  "name": "@storecraft/sdk-react-hooks",
+  "version": "0.1.0",
+  "description": "Storecraft Official Javascript SDK React Hooks",
+  "type": "module",
+  "types": "./types.d.ts",
+  "main": "./index.js",
+  "dependencies": {
+    "@storecraft/core": "*",
+    "@storecraft/sdk": "*"
+  },
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}

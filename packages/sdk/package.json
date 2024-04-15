@@ -1,0 +1,11 @@
+{
+  "name": "@storecraft/sdk",
+  "version": "0.1.0",
+  "description": "Storecraft Official Universal Javascript SDK",
+  "type": "module",
+  "types": "./types.d.ts",
+  "main": "./index.js",
+  "dependencies": {
+    "@storecraft/core": "*"
+  }
+}

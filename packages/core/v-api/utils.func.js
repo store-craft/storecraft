@@ -33,7 +33,7 @@ export const ID = (prefix='') => {
 export const assert = (c, message, code=400) => {
   if(!Boolean(c)) {
     throw new StorecraftError(
-      message, code
+      [{message}], code
     );
   };
 }

@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { expand, get_bulk, get_regular, list_regular } from './con.shared.js'
+import { count_regular, expand, get_bulk, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
@@ -36,7 +36,7 @@ const upsert = (driver) => {
           ////
 
           // first remove discount from anywhere
-          await driver.products._col.updateMany(
+          await driver.resources.products._col.updateMany(
             { '_relations.discounts.ids' : objid },
             { 
               $pull: { 
@@ -52,7 +52,7 @@ const upsert = (driver) => {
           if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
             const conjunctions = discount_to_mongo_conjunctions(data);
             if(conjunctions.length) {
-              await driver.products._col.updateMany(
+              await driver.resources.products._col.updateMany(
                 { $and: conjunctions },
                 { 
                   $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
@@ -70,7 +70,7 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS -> DISCOUNTS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.discounts.ids' : objid },
             { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
             { session }
@@ -128,7 +128,7 @@ const remove = (driver) => {
           ////
           // PRODUCT RELATION
           ////
-          await driver.products._col.updateMany(
+          await driver.resources.products._col.updateMany(
             { '_relations.discounts.ids' : objid },
             { 
               $pull: { 
@@ -143,7 +143,7 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> DISCOUNTS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.discounts.ids' : objid },
             { 
               $pull: { '_relations.discounts.ids': objid, },
@@ -177,6 +177,13 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
+
 /**
  * @param {MongoDB} driver 
  * @returns {db_col["list_discount_products"]}
@@ -184,7 +191,7 @@ const list = (driver) => list_regular(driver, col(driver));
 const list_discount_products = (driver) => {
   return async (handle_or_id, query) => {
 
-    const { filter: filter_query, sort } = query_to_mongo(query);
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
 
     // console.log('query', query)
     // console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -200,11 +207,13 @@ const list_discount_products = (driver) => {
     // add the query filter
     isDef(filter_query) && filter.$and.push(filter_query);
 
-    const items = await driver.products._col.find(
+    const items = await driver.resources.products._col.find(
       filter,  {
-        sort, limit: query.limit
+        sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }
     ).toArray();
+
+    if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
     expand(items, query?.expand);
@@ -226,6 +235,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_discount_products: list_discount_products(driver)
   }
 }

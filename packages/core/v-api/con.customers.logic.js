@@ -14,7 +14,7 @@ import { assert_zod } from './middle.zod-validate.js';
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.customers;
+export const db = app => app.db.resources.customers;
 
 /**
  * 

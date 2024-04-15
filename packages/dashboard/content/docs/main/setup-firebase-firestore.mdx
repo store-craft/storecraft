@@ -1,0 +1,99 @@
+# Firestore
+
+`shelf` uses `Firestore` to operate your store and manage collections, products and more
+
+## Activate `Firestore` Database
+
+<div className='flex flex-row flex-wrap --bg-red-400 gap-5 mt-10'>
+  {
+    [
+      { url: 'firestore-1.webp', label: 'Click on Build > Firestore' },
+      { url: 'firestore-2.webp', label: 'Activate Firestore. Click on Create Database' },
+      { url: 'firestore-3.webp', label: 'Firestore > Rules' },
+    ].map(
+      (it, ix) => (
+        <Image key={ix} 
+               src={`/docs/main/${it.url}`} className='--w-full sm:h-[400px] sm:w-[400px]' 
+               label={`${++ix}. ${it.label}`}/>
+
+      )
+    )
+  }
+</div>
+
+Copy the following with your own `UID`, then click **Publish**
+<div className='h-4'/>
+```lang=js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	function loggedIn() {
+      return request.auth!=null
+    }
+    function isAdmin() {
+      return loggedIn() && (request.auth.uid in ['YOUR_UID']);
+    }
+     
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /{col}/{doc} {
+      allow read: if col in ['discounts', 'products', 'collections', 'posts', 'shipping_methods', 'store_fronts', 'tags'];
+    }
+
+    match /users/{userId} {
+      allow read, write: if loggedIn() && request.auth.uid == userId;
+      allow create: if loggedIn();
+    }
+    
+    match /orders/{orderId} {
+      // always allow if you know the document id
+      allow get: if true;
+      // list only your
+      allow list: if loggedIn() && (('uid:' + request.auth.uid) in resource.data.search);
+    }
+  }
+}
+```
+
+## Setup Indexes
+You can create indexes and rules through the `firebase CLI` with our published configurations
+found in our repository. But, if you prefer manually, the following indexes have to be created:
+
+<table className='mt-10 w-full rounded-t-xl overflow-hidden'>
+  <thead className='text-left bg-slate-100 dark:bg-slate-100/10 h-10 '>
+    <tr >
+      <th children='Collection ID' className='pl-1'/>
+      <th children='Field 1' className='pl-5'/>
+      <th children='Field 2' className='px-3 text-right'/>
+    </tr>  
+  </thead>
+
+  <tbody className='font-normal text-sm'>
+  {
+    [
+      'products', 'collections', 'tags', 'discounts', 'users', 
+      'posts', 'orders', 'images', 'payment_gateways', 'storefronts', 
+      'notifications', 'shipping_methods'
+    ].map(
+      (it, ix) => (
+    <>    
+      <tr className='border-y border-kf-300 h-10  ' key={ix*2}>
+        <td children={it} className='pl-1' />
+        <td children='search (Arrays)' className='pl-5 ' />
+        <td children='updatedAt (Ascending)' className='px-3 text-right' />
+      </tr>  
+      <tr className='border-y border-kf-300 h-10  ' key={ix*2+1}>
+        <td children={it} className='pl-1' />
+        <td children='search (Arrays)' className='pl-5' />
+        <td children='updatedAt (Descending)' className='px-3 text-right' />
+      </tr>  
+    </>  
+      )
+    )
+  }
+  </tbody>
+
+</table>
+

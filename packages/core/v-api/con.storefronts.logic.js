@@ -11,7 +11,7 @@ import { regular_get, regular_list,
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.storefronts;
+export const db = app => app.db.resources.storefronts;
 
 /**
  * 
@@ -31,14 +31,13 @@ export const upsert = (app, item) => regular_upsert(
   }
 )(item);
 
-
 /**
  * 
  * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id
  * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
-export const get = (app, handle_or_id, options) => 
+export const get = (app, handle_or_id, options={ expand: ['*']}) => 
       regular_get(app, db(app))(handle_or_id, options);
 
 /**

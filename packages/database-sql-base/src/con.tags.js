@@ -1,5 +1,5 @@
 import { SQL } from '../driver.js'
-import { delete_me, delete_search_of, insert_search_of, 
+import { count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, where_id_or_handle_table } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -93,12 +93,14 @@ const list = (driver) => {
       .selectAll()
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
-      ).orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
+      )
+      .orderBy(query_to_sort(query))
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
+    if(query.limitToLast) items.reverse();
     return sanitize_array(items);
   }
 }
@@ -114,6 +116,7 @@ export const impl = (driver) => {
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    count: count_regular(driver, table_name),
   }
 }

@@ -14,7 +14,10 @@ import { add_product_to_collection, get, list,
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * 
+ * @param {import("../types.public.js").App<
+ *  PlatformNativeRequest, PlatformContext
+ * >} app
  */
 export const create_routes = (app) => {
 

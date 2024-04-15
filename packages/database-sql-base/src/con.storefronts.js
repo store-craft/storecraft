@@ -7,7 +7,8 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   storefront_with_discounts, storefront_with_posts, 
   storefront_with_products, storefront_with_shipping, 
   regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags } from './con.shared.js'
+  with_media, with_tags, 
+  count_regular} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -175,22 +176,25 @@ const list = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
-        with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id'), driver.dialectType),
-        expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id'), driver.dialectType),
-      ].filter(Boolean))
+          with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
+          with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id'), driver.dialectType),
+        ].filter(Boolean)
+      )
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
+
+    if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
   }
@@ -291,7 +295,8 @@ export const impl = (driver) => {
     list_storefront_collections: list_storefront_collections(driver),
     list_storefront_discounts: list_storefront_discounts(driver),
     list_storefront_posts: list_storefront_posts(driver),
-    list_storefront_shipping_methods: list_storefront_shipping_methods(driver)
+    list_storefront_shipping_methods: list_storefront_shipping_methods(driver),
+    count: count_regular(driver, table_name),
   }
 }
 

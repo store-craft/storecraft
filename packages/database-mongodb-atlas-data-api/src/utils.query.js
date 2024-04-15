@@ -126,8 +126,9 @@ const transform = c => {
 export const query_to_mongo = (q) => {
   const filter = {};
   const clauses = [];
-  const sort_sign = q.order === 'asc' ? 1 : -1;
-  const asc = sort_sign==1;
+  const reverse_sign = q.limitToLast && !q.limit ? -1 : 1;
+  const asc = q.order === 'asc';
+  const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
   // compute index clauses
   if(q.startAt) {
@@ -155,7 +156,8 @@ export const query_to_mongo = (q) => {
 
   return {
     filter,
-    sort
+    sort,
+    reverse_sign
   }
 
 }

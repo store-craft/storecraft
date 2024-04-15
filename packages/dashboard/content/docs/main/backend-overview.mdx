@@ -1,0 +1,51 @@
+# Overview
+
+`shelf` backend is an optional open source component, that you may decide to use
+and deploy just to get started with Google **Functions**.
+
+> You can use whatever backend solution you want
+
+We do recommend visiting our open source backend proposal. It is light weight
+(160 **kb**) and has enought features to get you started.
+
+## Features
+
+#### 1. Processing <Purple c='payments'/>
+Process [Payments](backend/payments) using your own integration plugin. currently,
+we support 
+- `stripe` - Supports many payment methods
+- `PayPal Standard Checkout` - Supports every credit card and PayPal Wallet
+
+> You can write your own prefered integration easily in 1 source file
+
+#### 2. Creating <Purple c='checkouts'/>
+Creating [Payments](backend/checkouts) from your frontend to initiate
+- Draft `order`
+- Starting a `payment` action
+- Completing a synchronous checkout
+
+
+#### 3. Handling <Purple c='events'/>
+Handle `events` in your backend, for example
+- Send **email** when a new user is created
+- Send **email** when a checkout completes
+- Send **email** when an order transitions into `shipped` state
+- and whatever you may require
+
+
+#### 4. Publishing Admin <Purple c='notifications'/>
+When important events happen in the backend, you can publish a `notification`,
+these are captured and displayed at `shelf-admin`
+
+<Image src='/docs/main/backend-1.webp' className='w-full sm:w-1/2 mx-auto  mt-5'  />
+
+
+#### 5. And <Purple c='security'/>
+
+Each `shelf-admin` call to your backend for `payments` (status / void / capture / refund),
+is sent with
+- `apiKey` - for basic authorization
+- `JWT` signed with a secret known to you only (<Purple c='Coming soon !'/>)
+
+You can use any of any of these to decide to process the requests coming from `shelf-admin`.
+

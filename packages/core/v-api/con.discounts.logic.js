@@ -12,7 +12,7 @@ import { isDef } from './utils.index.js';
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.discounts;
+export const db = app => app.db.resources.discounts;
 
 /**
  * 

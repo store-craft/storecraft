@@ -76,10 +76,15 @@ export declare interface db_crud<U extends idable_concrete, G=U> {
   remove: (id_or_handle: HandleOrId) => Promise<boolean>
 
   /**
-   * TBD
-   * @returns 
+   * List items with `query`
    */
-  list: (query: ApiQuery) => Promise<G[]>
+  list: (query: ApiQuery) => Promise<G[]>;
+
+  /**
+   * Count items with `query`
+   */
+  count?: (query: ApiQuery) => Promise<number>;
+
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -285,17 +290,22 @@ export interface db_driver {
    */
   app: App<any, any, any> | undefined;
 
-  // controllers
-  auth_users: db_auth_users;
-  tags: db_tags;
-  collections: db_collections;
-  customers: db_customers;
-  products: db_products;
-  storefronts: db_storefronts;
-  images: db_images;
-  posts: db_posts;
-  shipping: db_shipping;
-  notifications: db_notifications;
-  discounts: db_discounts;
-  orders: db_orders;
+  /**
+   * The main `resources` and `tables`
+   */
+  resources: {
+    auth_users: db_auth_users;
+    tags: db_tags;
+    collections: db_collections;
+    customers: db_customers;
+    products: db_products;
+    storefronts: db_storefronts;
+    images: db_images;
+    posts: db_posts;
+    shipping: db_shipping;
+    notifications: db_notifications;
+    discounts: db_discounts;
+    orders: db_orders;
+  }
+
 }

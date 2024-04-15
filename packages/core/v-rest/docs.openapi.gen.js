@@ -20,6 +20,7 @@ import {
   discountMetaEnumSchema,
   discountTypeSchema,
   discountTypeUpsertSchema,
+  errorSchema,
   filterMetaEnumSchema,
   fulfillOptionsEnumSchema,
   imageTypeSchema,
@@ -54,10 +55,10 @@ extendZodWithOpenApi(z);
 
 // Register definitions here
 const create_query = () => {
-  const cursor = z.string().openapi(
+  const cursor = z.string().optional().openapi(
     { 
       examples: [
-        '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)'
+        '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)',
       ],
       description: 'A cursor in CSV format of key and values, example: \
       `(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)`'
@@ -65,43 +66,49 @@ const create_query = () => {
   );
 
   return z.object({
-    limit: z.number().openapi(
+    limit: z.number().optional().openapi(
       { 
         example: 10, default: 10, 
         description: 'Limit of filtered results' 
+      }
+    ),
+    limitToLast: z.number().optional().openapi(
+      { 
+        example: 10,
+        description: 'Limit filtered results from the end of a query range' 
       }
     ),
     startAt: cursor,
     startAfter: cursor,
     endAt: cursor,
     endBefore: cursor,
-    sortBy: z.string().openapi(
+    sortBy: z.string().optional().openapi(
       { 
         examples: ['(updated_at, id)'],
         description: 'A cursor of Keys in CSV format, example: `(updated_at, id)`',
         default: '`(updated_at, id)`'
       }
     ),
-    order: z.enum(['asc', 'desc']).openapi(
+    order: z.enum(['asc', 'desc']).optional().openapi(
       { 
         examples: ['asc', 'desc'],
         description: 'Order of sort cursor, values are `asc` or `desc`',
         default: 'desc'
       }
     ),
-    vql: z.string().openapi(
+    vql: z.string().optional().openapi(
       { 
         examples: ["(term1 & (term2 | -term3))"],
         description: 'Every item has a recorded search terms which you can use \
         to refine your filtering with `VQL` boolean language, example: "term1 & (term2 | -term3)"'
       }
     ),
-    expand: z.string().openapi(
+    expand: z.string().optional().openapi(
       {
         examples: ['*', 'search', 'search, collections'],
         description: 'A **CSV** of keys of connections to expand, example \
         `(search, discounts, collections, *)`',
-        default: '*'
+        default: '(*)'
       }
     )
   });
@@ -136,6 +143,7 @@ const create_all = () => {
   register_storefronts(registry);
 
   // register some utility types
+  registry.register('Error', errorSchema);
   registry.register('CheckoutStatusEnum', checkoutStatusEnumSchema);
   registry.register('PaymentOptionsEnum', paymentOptionsEnumSchema);
   registry.register('FulfillOptionsEnum', fulfillOptionsEnumSchema);
@@ -219,6 +227,7 @@ const register_base_get = (
           },
         },
       },
+      ...error() 
     },
     ...extra
   });
@@ -233,9 +242,10 @@ const register_base_get = (
  * @param {ZodSchema} zod_schema 
  * @param {z.infer<typeof zod_schema>} example 
  * @param {string} [description] 
+ * @param {string} [summary] 
  */
 const register_base_upsert = (registry, slug_base, name, tags, example_id, 
-  zod_schema, example, description) => {
+  zod_schema, example, description, summary) => {
   example = {...example};
 
   delete example['search'];
@@ -244,7 +254,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
     method: 'post',
     path: `/${slug_base}`,
     description: description ?? `Upsert a \`${name}\``,
-    summary: `Upsert a single ${name}`,
+    summary: summary ?? `Upsert a single ${name}`,
     tags,
     request: {
       body: {
@@ -266,6 +276,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
           },
         },
       },
+      ...error() 
     },
     security: [{ bearerAuth: [] }]
   });
@@ -291,7 +302,8 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
     responses: {
       200: {
         description: 'Item was deleted',
-      }
+      },
+      ...error() 
     },
     security: [{ bearerAuth: [] }]
   });
@@ -312,7 +324,7 @@ const register_base_list = (
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}?limit={limit}&startAt={startAt}&endAt={endAt}
+    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}
       &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
       &order={order}&vql={vql}&expand={expand}`,
     summary: `List and filter ${name} items`,
@@ -331,6 +343,7 @@ const register_base_list = (
           },
         },
       },
+      ...error() 
     },
     ...extra
   });
@@ -404,10 +417,24 @@ const register_auth = registry => {
               },
             },
           },
+          ...error() 
         },
       });
     }
   )
+}
+
+const error = () => {
+  return {
+    '400-500': {
+      description: 'error',
+      content: {
+        "application/json": {
+          schema: errorSchema,
+        },
+      },
+    }
+  }
 }
 
 /**
@@ -419,7 +446,7 @@ const register_storage = registry => {
   const zod_presigned = z.object(
     {
       url: z.string().openapi({ description: 'The request url to follow' }),
-      method: z.enum(['GET', 'POST']).openapi({ description: 'The request method' }),
+      method: z.enum(['GET', 'POST', 'PUT']).openapi({ description: 'The request method' }),
       headers: z.record(z.string()).optional().openapi({ description: 'Additional request headers'}),
     }
   )
@@ -429,6 +456,17 @@ const register_storage = registry => {
       description: '`presigned` urls endpoints generate a description of `http` request \
       that a client can assemble and use it\'s own resources and network to execute to perform\
       image download or upload. This is highly recommended'
+    }
+  );
+
+  const query = z.object(
+    {
+      signed: z.boolean().optional().openapi(
+        { 
+          example: true, default: true, 
+          description: 'Prefer signed url if supported' 
+        }
+      )
     }
   );
 
@@ -452,17 +490,18 @@ const register_storage = registry => {
           }
         ),
       }),
-
+      query
     },
     responses: {
       200: {
-        description: 'image bytearray',
+        description: 'bytearray',
         content: {
           "image/*": {
             schema: z.any(),
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -484,6 +523,7 @@ const register_storage = registry => {
           }
         ),
       }),
+      query
 
     },
     responses: {
@@ -499,6 +539,7 @@ const register_storage = registry => {
           },
         },
       },
+      ...error() 
     },
   });  
 
@@ -524,13 +565,15 @@ const register_storage = registry => {
           '*/*': { schema: z.any().openapi({ description: 'Body is any `blob` / `bytearray` stream' }) },
           
         },
-      }
+      },
+      query
 
     },
     responses: {
       200: {
         description: 'success'
       },
+      ...error() 
     },
   });
 
@@ -551,6 +594,7 @@ const register_storage = registry => {
           }
         ),
       }),
+      query
     },
     responses: {
       200: {
@@ -569,6 +613,7 @@ const register_storage = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -594,6 +639,7 @@ const register_storage = registry => {
       200: {
         description: 'success',
       },
+      ...error() 
     },
   });  
 }
@@ -711,6 +757,7 @@ const register_collections = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1012,6 +1059,7 @@ const register_discounts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1062,27 +1110,29 @@ const register_notifications = registry => {
   const example_id = 'not_65f2ae998bf30e6cd0ca9605';
   const _typeSchema = registry.register(name, notificationTypeSchema);
   const _typeUpsertSchema = registry.register(`${name}Upsert`, notificationTypeUpsertSchema);
-  const example = {
-    "message": "message 1",
-    "search": [
-      "checkout",
-      "backend",
-      "author:backend-bot"
-    ],
-    "author": "backend-bot",
-    "actions": [
-      {
-        "type": "url",
-        "name": "name",
-        "params": {
-          "url": "https://storecraft.com"
+  const example = [
+    {
+      "message": "message 1",
+      "search": [
+        "checkout",
+        "backend",
+        "author:backend-bot"
+      ],
+      "author": "backend-bot",
+      "actions": [
+        {
+          "type": "url",
+          "name": "name",
+          "params": {
+            "url": "https://storecraft.com"
+          }
         }
-      }
-    ],
-    "id": "not_65f2ae998bf30e6cd0ca9605",
-    "created_at": "2024-03-14T08:00:25.859Z",
-    "updated_at": "2024-03-14T08:00:25.859Z"
-  }
+      ],
+      "id": "not_65f2ae998bf30e6cd0ca9605",
+      "created_at": "2024-03-14T08:00:25.859Z",
+      "updated_at": "2024-03-14T08:00:25.859Z"
+    }
+  ];
   const security = [ { bearerAuth: [] } ];
 
   register_base_get(
@@ -1091,7 +1141,8 @@ const register_notifications = registry => {
   );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
-    _typeUpsertSchema, example);
+    z.array(_typeUpsertSchema), example, 
+    'Upsert Bulk `notifications`', 'Upsert Bulk notifications');
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(
     registry, slug_base, name, tags, 
@@ -1459,6 +1510,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1546,6 +1598,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1594,6 +1647,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
   
@@ -1649,6 +1703,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1698,6 +1753,7 @@ const register_storefronts = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1933,6 +1989,7 @@ const register_products = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -1994,6 +2051,7 @@ const register_products = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -2058,6 +2116,7 @@ const register_products = registry => {
           },
         },
       },
+      ...error() 
     },
   });
 
@@ -2145,7 +2204,8 @@ const register_products = registry => {
           },
         },
       },
-    },
+      ...error() 
+     },
   });
 
 }

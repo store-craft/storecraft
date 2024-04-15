@@ -5,7 +5,8 @@ import { delete_entity_values_by_value_or_reporter,
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, select_entity_ids_by_value_or_reporter, regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags} from './con.shared.js'
+  with_media, with_tags,
+  count_regular} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
@@ -36,23 +37,6 @@ const upsert = (driver) => {
           // remove all products relation to this discount
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
             trx, item.id, item.handle);
-          // remove discount search terms from related products search terms
-          // await trx
-          //   .deleteFrom('entity_to_search_terms')
-          //   .where(eb => eb.and(
-          //     [
-          //       eb.or(
-          //         [
-          //           eb('value', '=', `dis:${item.id}`),
-          //           eb('value', '=', `dis:${item.handle}`)
-          //         ]
-          //       ),
-          //       eb('context', '=', 'products') // makes sure it is only products records
-          //     ])
-          //   )
-          //   .execute();
-          // insert new relations
-          // INSERT INTO SELECT FROM
           if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
             // make connections
             await trx
@@ -71,8 +55,6 @@ const upsert = (driver) => {
                   eb => eb.and(discount_to_conjunctions(eb, item))
                 )
             ).execute();
-
-            // now add search terms for eligible products
 
           }
 
@@ -179,12 +161,14 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
+
+    if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
   }
@@ -207,7 +191,7 @@ const list_discount_products = (driver) => {
       .where(
         (eb) => eb.and(
           [
-            query_to_eb(eb, query, 'products')?.eb,
+            query_to_eb(eb, query, 'products'),
             eb('products.id', 'in', 
               eb => select_entity_ids_by_value_or_reporter( // select all the product ids by discount id
                 eb, 'products_to_discounts', handle_or_id
@@ -217,8 +201,10 @@ const list_discount_products = (driver) => {
         )
       )
       .orderBy(query_to_sort(query))
-      .limit(query?.limit ?? 10)
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
+
+    if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
   }
@@ -235,6 +221,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    list_discount_products: list_discount_products(driver)
+    list_discount_products: list_discount_products(driver),
+    count: count_regular(driver, table_name),
   }
 }

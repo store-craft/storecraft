@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_bulk, get_regular, list_regular } from './con.shared.js'
+import { count_regular, get_bulk, get_regular, list_regular } from './con.shared.js'
 import { delete_keys, handle_or_id, sanitize_array, to_objid } from './utils.funcs.js'
 import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js'
 import { enums } from '@storecraft/core/v-api'
@@ -54,7 +54,7 @@ const upsert = (driver) => {
           // COLLECTIONS RELATION (explicit)
           ////
           const replacement = await create_explicit_relation(
-            driver, data, 'collections', 'collections', false
+            driver, data, 'collections', 'collections', true
           );
 
           ////
@@ -205,6 +205,11 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
 
 /**
  * For now and because each product is related to very few
@@ -268,7 +273,7 @@ const add_product_to_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
 
     // 
-    const coll = await driver.collections._col.findOne(
+    const coll = await driver.resources.collections._col.findOne(
       handle_or_id(collection_handle_or_id)
     );
 
@@ -276,7 +281,7 @@ const add_product_to_collection = (driver) => {
       return;
 
     const objid = to_objid(coll.id);
-    await driver.products._col.updateOne(
+    await driver.resources.products._col.updateOne(
       handle_or_id(product_id_or_handle),
       { 
         $set: { [`_relations.collections.entries.${objid.toString()}`]: coll },
@@ -298,14 +303,14 @@ const remove_product_from_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
 
     // 
-    const coll = await driver.collections._col.findOne(
+    const coll = await driver.resources.collections._col.findOne(
       handle_or_id(collection_handle_or_id)
     );
     if(!coll)
       return;
 
     const objid = to_objid(coll.id);
-    await driver.products._col.updateOne(
+    await driver.resources.products._col.updateOne(
       handle_or_id(product_id_or_handle),
       { 
         $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
@@ -337,6 +342,7 @@ export const impl = (driver) => {
     list_product_collections: list_product_collections(driver),
     list_product_variants: list_product_variants(driver),
     list_product_discounts: list_product_discounts(driver),
+    count: count(driver)
   }
 }
  

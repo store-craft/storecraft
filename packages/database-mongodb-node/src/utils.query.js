@@ -126,8 +126,13 @@ const transform = c => {
 export const query_to_mongo = (q) => {
   const filter = {};
   const clauses = [];
-  const sort_sign = q.order === 'asc' ? 1 : -1;
-  const asc = sort_sign==1;
+  // `reverse_sign=-1` means we need to reverse because of `limitToLast`
+  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const asc = q.order === 'asc';
+  const sort_sign = (asc ? 1 : -1) * reverse_sign;
+
+  // const sort_sign = (q.order === 'asc' ? 1 : -1) * reverse_sign;
+  // const asc = (sort_sign * reverse_sign)==1;
 
   // compute index clauses
   if(q.startAt) {
@@ -143,11 +148,14 @@ export const query_to_mongo = (q) => {
   }
 
   // compute VQL clauses 
-  const vql_clause = query_vql_to_mongo(q.vql)
+  const vql_clause = query_vql_to_mongo(q.vqlParsed)
   vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order
-  const sort = (q.sortBy ?? []).reduce((p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p , {});
+  const sort = (q.sortBy ?? []).reduce(
+    (p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p, 
+    {}
+  );
 
   if(clauses?.length) {
     filter['$and'] = clauses;
@@ -155,7 +163,8 @@ export const query_to_mongo = (q) => {
 
   return {
     filter,
-    sort
+    sort,
+    reverse_sign
   }
 
 }

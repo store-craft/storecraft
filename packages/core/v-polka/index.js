@@ -1,3 +1,4 @@
+import { StorecraftError } from '../v-api/utils.func.js';
 import { STATUS_CODES } from './codes.js';
 import { Trouter } from './trouter/index.js';
 
@@ -15,27 +16,31 @@ const extract_code = e => {
 
 /**
  * a robust error handler
- * @param { Error | string | { message: any, code: number } } error
+ * @param { StorecraftError | Error | string | { message: any, code: number } } error
  * @param {VPolkaRequest} req 
  * @param {VPolkaResponse} res 
  */
 export const onError = async (error, req, res) => {
   let code = 500;
-  let message = 'error';
+  let messages;
 
-  if(error instanceof Error) {
-    code = error?.cause?.code ?? extract_code(error) ?? code;
-    message = error?.message ?? message;
+  if(error instanceof StorecraftError) {
+    code = error?.code ?? extract_code(error) ?? code;
+    console.log('error?.cause', error?.cause)
+    messages = error?.message ?? 'unknown-error';
+    if(!Array.isArray(messages)) {
+      messages = [{message: messages}];
+    }
   } else if(typeof error === 'string') {
-    message = error ?? message;
+    messages = [{ message: error ?? 'unknown-error'}];
   } else {
     // assume { message: string, code: number }
     code = error?.code ?? code;
-    message = error?.message ?? message;
+    messages = [{ message: error.message ?? 'unknown-error'}];
   }
 
   res.setStatus(code, STATUS_CODES[code.toString()])
-  res.sendJson({ error: message });
+  res.sendJson({ messages });
 }
 
 /**

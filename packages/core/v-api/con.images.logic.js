@@ -12,7 +12,7 @@ import { assert_zod } from './middle.zod-validate.js';
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.images;
+export const db = app => app.db.resources.images;
 
 /**
  * 
@@ -60,7 +60,7 @@ export const remove = async (app, id) => {
     await app.storage.remove(img.url.substring('storage://'.length));
 
   // db remove image side-effect
-  return app.db.images.remove(img.id);
+  return app.db.resources.images.remove(img.id);
 }
 
 /**

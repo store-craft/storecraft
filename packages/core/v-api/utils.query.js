@@ -11,7 +11,9 @@ import { assert } from "./utils.func.js";
 const SORT_BY = 'sortBy';
 const ORDER = 'order';
 const LIMIT = 'limit';
+const LIMIT_TO_LAST = 'limitToLast';
 const VQL = 'vql';
+// const VQL_STRING = 'vqlString';
 const START_AT = 'startAt';
 const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
@@ -53,10 +55,14 @@ export const parse_tuples = (str="") => {
 /**
  * 
  * @param {URLSearchParams} s 
- * @return {import("./types.api.query.js").ExpandQuery | undefined}
+ * @param {import("./types.api.query.js").ExpandQuery} [def=['*']] default value 
+ * @return {import("./types.api.query.js").ExpandQuery}
  */
-export const parse_expand = s => {
-  return s.get(EXPAND)?.split(',')?.map(s => s.trim()).filter(Boolean);
+export const parse_expand = (s, def = ['*']) => {
+  return (
+    s.get(EXPAND)?.replace(/[()]/g, '').split(',')?.map(
+      s => s.trim()).filter(Boolean)
+    ) ?? def;
 }
 
 /**
@@ -94,7 +100,12 @@ export const parse_query = (s) => {
   const q = {};
 
   q.expand = parse_expand(s);
-  q.limit = Math.abs(parseInt(s.get(LIMIT))) || 10;
+  q.limit = parseInt(s.get(LIMIT)) ? Math.abs(parseInt(s.get(LIMIT))) : undefined;
+  q.limitToLast = parseInt(s.get(LIMIT_TO_LAST)) ? Math.abs(parseInt(s.get(LIMIT_TO_LAST))) : undefined;
+
+  if(!q.limitToLast && !q.limit) {
+    q.limit = 5;
+  } 
 
   ////
   // VQL PARSING and VALIDATE
@@ -103,13 +114,15 @@ export const parse_query = (s) => {
     const vql = s.get(VQL);
 
     if(vql) {
-      q.vql = parse(vql);
+      q.vqlParsed = parse(vql);
     }
   } catch (e) {
     console.log(e);
 
     assert(false, 'VQL parsing failed', 401);
   }
+
+  q.vql = s.get(VQL);
 
   ////
   // RANGE CURSORS PARSING and VALIDATE
@@ -151,5 +164,71 @@ export const parse_query = (s) => {
     );
   }
 
+  // console.log(q)
+  // console.log(JSON.stringify(q, null, 2))
   return q;
+}
+
+/////
+
+
+/**
+ * 
+ * @param {string[]} array 
+ */
+const string_array_to_string = array => {
+  const fill = array.join(',');
+  return '(' + fill + ')';
+}
+
+/**
+ * 
+ * @param {Cursor} c 
+ */
+const cursor_to_string = c => {
+  const string_array = c.map(
+    tuple => `${tuple[0]}:${tuple[1]}`
+  );
+  return string_array_to_string(string_array);
+}
+
+/**
+ * 
+ * @param {import("./types.api.query.js").ApiQuery} q 
+ */
+export const api_query_to_searchparams = q => {
+  const sp = new URLSearchParams();
+
+  // set some defaults
+  q.order = q?.order ?? 'desc';
+  q.sortBy = q?.sortBy ?? ['updated_at', 'id'];
+  q.expand = q?.expand ?? ['*'];
+  if(!q.limit && !q.limitToLast) {
+    q.limit = 5;
+  }
+  // cursors
+  // console.log(q);
+  [
+    { cursor: q.endAt, key: END_AT},
+    { cursor: q.endBefore, key: END_BEFORE},
+    { cursor: q.startAt, key: START_AT},
+    { cursor: q.startAfter, key: START_AFTER},
+  ]
+  .filter(item => Boolean(item.cursor) && item.cursor?.length)
+  .forEach(
+    item => {
+      sp.set(item.key, cursor_to_string(item.cursor));
+    }
+  );
+
+  // sort
+  sp.set(ORDER, q.order);
+  sp.set(SORT_BY, string_array_to_string(q.sortBy));
+  sp.set(EXPAND, string_array_to_string(q.expand));
+  q.vql && sp.set(VQL, q.vql);
+  // q.vqlString && sp.set(VQL, q.vqlString);
+  q.limit && sp.set(LIMIT, q.limit.toString());
+  q.limitToLast && sp.set(LIMIT_TO_LAST, q.limitToLast.toString());
+
+  return sp;
 }

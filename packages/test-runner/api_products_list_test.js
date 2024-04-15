@@ -65,7 +65,10 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: products }
+    { 
+      items: items, app, ops: products,
+      resource: 'products'
+    }
   );
 
   s.before(
@@ -74,7 +77,7 @@ export const create = app => {
       try {
         for(const p of collections_upsert) {
           await collections.remove(app, p.handle);
-          await app.db.collections.upsert(p);
+          await app.db.resources.collections.upsert(p);
         }
 
         for(const p of items) {
@@ -83,7 +86,7 @@ export const create = app => {
           p.collections = collections_upsert;
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.products.upsert(p);
+          await app.db.resources.products.upsert(p);
         }
       } catch(e) {
         console.log(e)

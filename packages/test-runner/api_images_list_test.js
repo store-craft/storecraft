@@ -18,7 +18,12 @@ const url_handle_name = image_mock_url_handle_name(
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
-/** @type {(import('@storecraft/core/v-api').ImageType & import('@storecraft/core/v-database').idable_concrete)[]} */
+/** 
+ * @type {(
+ *  import('@storecraft/core/v-api').ImageType & 
+ *  import('@storecraft/core/v-database').idable_concrete
+ * )[]} 
+ */
 const items = get_static_ids('img').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -41,7 +46,10 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items, app, ops: images }
+    { 
+      items: items, app, ops: images,
+      resource: 'images'
+    }
   );
 
   s.before(
@@ -52,7 +60,7 @@ export const create = app => {
           await images.remove(app, p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.images.upsert(p);
+          await app.db.resources.images.upsert(p);
         }
       } catch(e) {
         console.log(e)

@@ -1,0 +1,114 @@
+name: docs
+
+groups:
+
+  - title: Getting Started
+    items:
+    - title: Setup
+      route: getting-started/setup
+      path: content/docs/main/setup.mdx
+
+    - title: Features
+      route: getting-started/features
+      path: content/docs/main/features.mdx
+
+  - title: Concepts
+    items:
+    - title: Numbers
+      route: concepts/numbers
+      path: content/docs/microgl/numbers.mdx
+
+    - title: Math
+      route: concepts/math
+      path: content/docs/microgl/math.mdx
+
+    - title: RGBA
+      route: concepts/rgba
+      path: content/docs/microgl/rgba.mdx
+
+    - title: Pixel Coders
+      route: concepts/pixel-coders
+      path: content/docs/microgl/pixel-coders.mdx
+
+    - title: Samplers
+      route: concepts/samplers
+      path: content/docs/microgl/samplers.mdx
+
+    - title: Composition
+      route: concepts/composition
+      path: content/docs/microgl/composition.mdx
+    
+    - title: Bitmaps
+      route: concepts/bitmaps
+      path: content/docs/microgl/bitmaps.mdx
+
+    - title: 3D Shaders
+      route: concepts/3d
+      path: content/docs/microgl/3d.mdx
+
+    - title: Canvas
+      route: concepts/canvas
+      path: content/docs/microgl/canvas.mdx
+    
+  - title: Drawing
+    items:
+    - title: Rectangles
+      route: drawing/rectangles
+      path: content/docs/microgl/rectangles.mdx
+
+    - title: Rounded Shapes
+      route: drawing/rounded
+      path: content/docs/microgl/rounded.mdx
+
+    - title: Quadrilaterals
+      route: drawing/quadrilaterals
+      path: content/docs/microgl/quadrilaterals.mdx
+
+    - title: Triangle
+      route: drawing/triangle
+      path: content/docs/microgl/triangle.mdx
+
+    - title: Triangle Batches
+      route: drawing/triangle-batches
+      path: content/docs/microgl/triangle-batches.mdx
+
+    - title: Polygons
+      route: drawing/polygons
+      path: content/docs/microgl/polygons.mdx
+
+    - title: Masks
+      route: drawing/masks
+      path: content/docs/microgl/masks.mdx
+    
+    - title: Path Fills
+      route: drawing/path-fills
+      path: content/docs/microgl/path-fills.mdx
+
+    - title: Path Strokes
+      route: drawing/path-stroke
+      path: content/docs/microgl/path-stroke.mdx
+
+    - title: Bezier Patches
+      route: drawing/bezier-patches
+      path: content/docs/microgl/patches.mdx
+
+    - title: Lines
+      route: drawing/lines
+      path: content/docs/microgl/lines.mdx
+
+    - title: Text
+      route: drawing/text
+      path: content/docs/microgl/text.mdx
+
+    - title: Gradients
+      route: drawing/gradients
+      path: content/docs/microgl/gradients.mdx
+
+    - title: More Samplers
+      route: drawing/more-samplers
+      path: content/docs/microgl/more-samplers.mdx
+
+    - title: 3D
+      route: drawing/3d
+      path: content/docs/microgl/draw-3d.mdx
+  

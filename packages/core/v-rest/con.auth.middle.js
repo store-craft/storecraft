@@ -33,13 +33,14 @@ export const parse_auth_user = (app) => {
       return;
     
     const jwt = await verify(
-      app.platform.env.AUTH_SECRET_ACCESS_TOKEN, token, true
+      app.config.auth_secret_access_token, token, true
     );
-
-    if(jwt.verified)
-     req.user = jwt.claims;
+    // console.log('jwt', jwt)
+    if(jwt.verified) 
+      req.user = jwt.claims;
   }
 }
+
 
 /**
  * 

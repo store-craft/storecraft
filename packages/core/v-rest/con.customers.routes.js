@@ -13,7 +13,10 @@ import { owner_or_admin_guard } from './con.customers.middle.js'
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * 
+ * @param {import("../types.public.js").App<
+ *  PlatformNativeRequest, PlatformContext
+ * >} app
  */
 export const create_routes = (app) => {
 

@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
+import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
@@ -70,7 +70,7 @@ const remove = (driver) => {
       
           // delete the auth user
           if(res?.auth_id) {
-            await driver.auth_users._col.deleteOne(
+            await driver.resources.auth_users._col.deleteOne(
               { _id: to_objid(res.auth_id) },
               { session }
             );
@@ -94,6 +94,10 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
@@ -102,7 +106,7 @@ const list = (driver) => list_regular(driver, col(driver));
 const list_customer_orders = (driver) => {
   return async (customer_id, query) => {
 
-    const { filter: filter_query, sort } = query_to_mongo(query);
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
 
     console.log('query', query)
     console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -118,11 +122,13 @@ const list_customer_orders = (driver) => {
     // add the query filter
     isDef(filter_query) && filter.$and.push(filter_query);
 
-    const items = await driver.orders._col.find(
+    const items = await driver.resources.orders._col.find(
       filter,  {
-        sort, limit: query.limit
+        sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }
     ).toArray();
+
+    if(reverse_sign==-1) items.reverse();
 
     return sanitize_array(items);
   }
@@ -141,6 +147,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_customer_orders: list_customer_orders(driver) 
   }
 }

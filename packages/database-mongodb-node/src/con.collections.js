@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { expand, get_regular, list_regular } from './con.shared.js'
+import { count_regular, expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
@@ -41,7 +41,7 @@ const upsert = (driver) => {
           // PRODUCT -> COLLECTION RELATION
           ////
           // update collection document in products, that reference this collection
-          await driver.products._col.updateMany(
+          await driver.resources.products._col.updateMany(
             { '_relations.collections.ids' : objid },
             { 
               $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
@@ -52,7 +52,7 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS -> COLLECTIONS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.collections.ids' : objid },
             { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
             { session }
@@ -108,7 +108,7 @@ const remove = (driver) => {
           ////
           // PRODUCTS --> COLLECTIONS RELATION
           ////
-          const rr = await driver.products._col.updateMany(
+          const rr = await driver.resources.products._col.updateMany(
             { '_relations.collections.ids' : objid },
             { 
               $pull: { 
@@ -126,7 +126,7 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> COLLECTIONS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.collections.ids' : objid },
             { 
               $pull: { '_relations.collections.ids': objid, },
@@ -161,6 +161,13 @@ const remove = (driver) => {
  */
 const list = (driver) => list_regular(driver, col(driver));
 
+
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
+
+
 /**
  * @param {MongoDB} driver 
  * @returns {db_col["list_collection_products"]}
@@ -168,7 +175,7 @@ const list = (driver) => list_regular(driver, col(driver));
 const list_collection_products = (driver) => {
   return async (handle_or_id, query) => {
 
-    const { filter: filter_query, sort } = query_to_mongo(query);
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
 
     // console.log('query', query)
     // console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -184,11 +191,13 @@ const list_collection_products = (driver) => {
     // add the query filter
     isDef(filter_query) && filter.$and.push(filter_query);
 
-    const items = await driver.products._col.find(
+    const items = await driver.resources.products._col.find(
       filter,  {
-        sort, limit: query.limit
+        sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }
     ).toArray();
+
+    if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
     expand(items, query?.expand);
@@ -209,6 +218,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_collection_products: list_collection_products(driver) 
   }
 }

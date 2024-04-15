@@ -112,13 +112,13 @@ export class App {
                   env.SC_AUTH_SECRET_REFRESH_TOKEN,
       auth_password_hash_rounds: c?.auth_password_hash_rounds ?? 
                 parse_int(env.SC_AUTH_PASS_HASH_ROUNDS, 1000),
-      admins_emails: c?.admins_emails ?? 
+      admins_emails: c?.admins_emails ??  
               env.SC_ADMINS_EMAILS?.split(',').map(
                 s => s.trim()).filter(Boolean) ?? []
     }
 
     console.log('store-craft config', this.#_config);
-  }
+  } 
 
   /**
    * 
@@ -130,13 +130,15 @@ export class App {
       this.#settle_config_after_init();
 
       await this.db.init(this);
+
       this.storage && await this.storage.init(this)
     } catch (e) {
-      console.error(e)
+      console.log(e)
     }
-    // this._polka = create_api(this);
+
     this.#_rest_controller = create_rest_api(this);
     this.#_is_ready = true;
+    
     return this;
   }
 

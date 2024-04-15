@@ -12,13 +12,13 @@ const handle_sf = create_handle('sf', file_name(import.meta.url));
 /** @type {import('@storecraft/core/v-api').StorefrontTypeUpsert[]} */
 const items_upsert = [
   {
-    handle: handle_sf(), title: 'sf 1'
+    handle: handle_sf(), title: 'sf 1', active: true
   },
   {
-    handle: handle_sf(), title: 'sf 2'
+    handle: handle_sf(), title: 'sf 2', active: true
   },
   {
-    handle: handle_sf(), title: 'sf 3'
+    handle: handle_sf(), title: 'sf 3', active: true
   },
 ]
 

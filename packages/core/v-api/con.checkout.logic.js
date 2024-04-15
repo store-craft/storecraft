@@ -152,10 +152,10 @@ export const complete_checkout =
 export const validate_checkout = 
   async (app, checkout) => {
 
-  const snap_shipping = await app.db.shipping.get(
+  const snap_shipping = await app.db.resources.shipping.get(
     checkout.shipping_method.id
     );
-  const snaps_products = await app.db.products.getBulk(
+  const snaps_products = await app.db.resources.products.getBulk(
     checkout.line_items.map(li => li.id)
   );
 

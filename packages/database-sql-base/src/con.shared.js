@@ -1,5 +1,34 @@
 import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
+import { SQL } from '../index.js';
+import { query_to_eb } from './utils.query.js';
+
+
+/**
+ * @param {SQL} driver 
+ * @param {keyof Database} table_name 
+ * 
+ * 
+ * @returns {import('@storecraft/core/v-database').db_crud["count"]}
+ */
+export const count_regular = (driver, table_name) => {
+  return async (query) => {
+
+    const result = await driver.client
+      .selectFrom(table_name)
+      .select(
+        (eb) => eb.fn.countAll().as('count')
+      )
+      .where(
+        (eb) => {
+          return query_to_eb(eb, query, table_name);
+        }
+      )
+      .executeTakeFirst();
+
+    return Number(result.count);
+  }
+}
 
 /**
  * 
@@ -201,7 +230,6 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  * @template {keyof Database} T
  * @param {Transaction<Database>} trx 
  * @param {T} table_name 
- * @param {string} item_id
  * @param {Parameters<InsertQueryBuilder<Database, T>["values"]>[0]} item values of the entity
  */
 export const regular_upsert_me = async (trx, table_name, item) => {

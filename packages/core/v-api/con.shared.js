@@ -55,7 +55,7 @@ export const regular_get = (app, db) =>
   * @param {string} handle_or_id 
   * @param {RegularGetOptions} [options] 
   */
-  async (handle_or_id, options) => {
+  async (handle_or_id, options={ expand: ['*'] }) => {
     const item = await db.get(handle_or_id, options);
     return item;
   };

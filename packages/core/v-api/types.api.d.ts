@@ -1,4 +1,19 @@
 
+export type error_item = {
+  message?: string,
+  code?: string,
+  expected?: string,
+  received?: string,
+  path?: string[]
+}
+
+export type error = {
+  messages?: error_item[]
+}
+
+export type Handle = string;
+export type ID = string;
+
 /**
  * @description Timestamps
  */
@@ -35,7 +50,7 @@ export type idable = {
 /** 
  * @description Base properties 
  */
-export interface BaseType extends idable {
+export interface BaseType extends idable, timestamps {
   /** 
    * @description List of images urls 
    */
@@ -168,7 +183,7 @@ export type ApiAuthResult = {
 /**
  * @description Auth user type
  */
-export type AuthUserType = BaseType & AuthBaseType & timestamps & {
+export type AuthUserType = BaseType & AuthBaseType & {
   /**
    * @description Is the email confirmed ?
    */
@@ -225,7 +240,7 @@ export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
 /**
  * @description Collection type
  */
-export interface CollectionType extends BaseType, timestamps {
+export interface CollectionType extends BaseType {
   /** 
    * @description The handle of the entity
    */
@@ -233,6 +248,7 @@ export interface CollectionType extends BaseType, timestamps {
 
   /** 
    * @description Title of collection 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -348,7 +364,7 @@ export interface VariantType extends BaseProductType {
 /**
  * @description Base product type
  */
-export interface BaseProductType extends BaseType, timestamps {
+export interface BaseProductType extends BaseType {
   /** 
    * @description The readable unique product `handle`
    */
@@ -356,6 +372,7 @@ export interface BaseProductType extends BaseType, timestamps {
 
   /** 
    * @description Title of the product 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -429,8 +446,8 @@ export interface ProductType extends BaseProductType {
 /**
  * @description Product upsert type
  */
-export type ProductTypeUpsert = Omit<BaseProductType, 
-  'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+export type ProductTypeUpsert = Omit<ProductType, 
+  'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts' | 'variants'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
@@ -445,7 +462,7 @@ export type ProductTypeUpsert = Omit<BaseProductType,
 /**
  * @description Discount type
  */
-export interface DiscountType extends BaseType, timestamps {
+export interface DiscountType extends BaseType {
   /**
    * @description Is the discount active ?
    */
@@ -453,6 +470,7 @@ export interface DiscountType extends BaseType, timestamps {
 
   /** 
    * @description Title of discount 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -905,7 +923,12 @@ export type BundleDiscountExtra = {
 /**
  * @description The `storefront` data type
  */
-export interface StorefrontType extends BaseType, timestamps {
+export interface StorefrontType extends BaseType {
+  /** 
+   * @description Is the entity active ?
+   */
+  active: boolean;
+  
   /** 
    * @description Readable `handle` 
    */
@@ -913,6 +936,7 @@ export interface StorefrontType extends BaseType, timestamps {
 
   /** 
    * @description Title 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -1024,7 +1048,7 @@ export type AddressType = {
 /**
  * @description Customer type
  */
-export interface CustomerType extends BaseType, timestamps {
+export interface CustomerType extends BaseType {
   /** 
    * @description The `auth id` of the customer. it is the same as
    * customer `id` with `au` prefix instead
@@ -1033,11 +1057,13 @@ export interface CustomerType extends BaseType, timestamps {
 
   /** 
    * @description Firstname 
+   * @minLength 1 Should be longer than 1 characters
    */
   firstname: string;
 
   /** 
    * @description Lastname 
+   * @minLength 1 Should be longer than 1 characters
    */
   lastname: string;
 
@@ -1069,7 +1095,7 @@ export type CustomerTypeUpsert = Omit<CustomerType, 'updated_at' | 'created_at'>
 /**
  * @description Image type
  */
-export interface ImageType extends BaseType, timestamps {
+export interface ImageType extends BaseType {
   /** 
    * @description Unique handle 
    */
@@ -1077,11 +1103,13 @@ export interface ImageType extends BaseType, timestamps {
 
   /** 
    * @description Name 
+   * @minLength 1 Should be longer than 1 characters
    */
   name: string;
 
   /** 
    * @description It's published public url 
+   * @minLength 1 Should be longer than 1 characters
    */
   url: string;
 
@@ -1102,7 +1130,7 @@ export type ImageTypeUpsert = Omit<ImageType, 'updated_at' | 'created_at'>
 /**
  * Shipping type
  */
-export interface ShippingMethodType extends BaseType, timestamps {
+export interface ShippingMethodType extends BaseType {
   /**
    * @description Shipping method price
    * @minimum 0 Please set a price >= 0
@@ -1111,6 +1139,7 @@ export interface ShippingMethodType extends BaseType, timestamps {
 
   /** 
    * @description Name of shipping method 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -1130,7 +1159,7 @@ export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'created_at' | '
 /**
  * Post type
  */
-export interface PostType extends BaseType, timestamps {
+export interface PostType extends BaseType {
   /** 
    * @description Unique `handle` 
    */
@@ -1138,6 +1167,7 @@ export interface PostType extends BaseType, timestamps {
 
   /** 
    * @description Title of post 
+   * @minLength 3 Title should be longer than 3
    */
   title: string;
 
@@ -1310,7 +1340,7 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
 /**
  * @description Order type
  */
-export interface OrderData extends BaseCheckoutCreateType, BaseType, timestamps {
+export interface OrderData extends BaseCheckoutCreateType, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -1598,7 +1628,7 @@ export type EvoEntry = {
   discount?: DiscountType;
 
   /** 
-   * @description The discount code 
+   * @description The discount code `handle`
    */
   discount_code?: string;
 
@@ -1647,6 +1677,7 @@ export type ValidationEntry = {
 
   /**
    * @description title
+   * @minLength 3 Title should be longer than 3
    */
   title?: string;
 
@@ -1666,7 +1697,8 @@ export type OrderPaymentGatewayData = {
   gateway_handle: string;
 
   /** 
-   * @description Result of gateway at checkout creation 
+   * @description Result of gateway at checkout creation, this will later be given
+   * to the `payment gateway` on any interaction, which will use it to identify the payment.
    */
   on_checkout_create?: any;
 
@@ -1675,3 +1707,121 @@ export type OrderPaymentGatewayData = {
    */
   latest_status?: any; 
 }
+
+
+// statistics
+
+/**
+ * @description Stats of an `entity` in a day
+ */
+export type OrdersStatisticsEntity = {
+  /**
+   * @description `handle` of entity
+   */
+  handle?: string;
+
+  /**
+   * @description `id` of entity
+   */
+  id?: string;
+
+  /**
+   * @description `title` of entity
+   */  
+  title?: string;
+
+  /**
+   * @description `count` of entity occurences in the day
+   */  
+  count?: number;
+
+  [x: string]: any;
+}
+
+export type OrdersStatisticsDayMetric = {
+
+  /**
+   * @description The total income in a day for a metric
+   */
+  total_income?: number;
+
+  /**
+   * @description The `count` of orders in a day for a metric
+   */
+  count?: number;
+}
+
+/**
+ * @description Stats of a day
+ */
+export type OrdersStatisticsDay = {
+
+  /**
+   * @description metrics for many `order` statuses
+   */
+  metrics: {
+    payments_captured?: OrdersStatisticsDayMetric,
+    payments_failed?: OrdersStatisticsDayMetric,
+    payments_unpaid?: OrdersStatisticsDayMetric,
+    checkouts_created?: OrdersStatisticsDayMetric,
+    checkouts_completed?: OrdersStatisticsDayMetric,
+    fulfillment_draft?: OrdersStatisticsDayMetric,
+    fulfillment_shipped?: OrdersStatisticsDayMetric,
+    fulfillment_processing?: OrdersStatisticsDayMetric,
+    fulfillment_cancelled?: OrdersStatisticsDayMetric,
+  }
+
+  /**
+   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   */
+  day: string | number;
+
+  /**
+   * @description The `products` found in all created orders
+   */
+  products?: Record<Handle | ID, OrdersStatisticsEntity>;
+
+  /**
+   * @description The `collections` found in all created orders
+   */
+  collections?: Record<Handle | ID, OrdersStatisticsEntity>;
+
+  /**
+   * @description The `discounts` found in all created orders
+   */
+  discounts?: Record<Handle | ID, OrdersStatisticsEntity>;
+
+  /**
+   * @description The `tags` found in all created orders `products`
+   */
+  tags?: Record<Handle | ID, OrdersStatisticsEntity>;
+}
+
+
+/**
+ * @description `Statisitics` of requested days
+ */
+export type OrdersStatisticsType = {
+
+  /**
+   * @description The days statistics
+   */
+  days?: Record<number | string, OrdersStatisticsDay>;
+
+  /**
+   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   */
+  from_day?: string | number;
+
+  /**
+   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   */
+  to_day?: string | number;
+
+  /**
+   * @description The count of days in `from_day` to `to_day`
+   */
+  count_days?: number
+}
+
+

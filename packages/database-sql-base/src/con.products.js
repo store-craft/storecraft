@@ -8,7 +8,8 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
   with_tags, with_media, 
   delete_entity_values_by_value_or_reporter,
   products_with_discounts,
-  products_with_variants} from './con.shared.js'
+  products_with_variants,
+  count_regular} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { pricing } from '@storecraft/core/v-api'
@@ -169,7 +170,9 @@ const get = (driver) => {
  */
 const remove_internal = (driver) => {
   /**
-   * @param {import('@storecraft/core/v-api').ProductType & import('@storecraft/core/v-api').VariantType} product
+   * @param {import('@storecraft/core/v-api').ProductType & 
+   *  import('@storecraft/core/v-api').VariantType
+   * } product
    * @param {Transaction<import('../index.js').Database>} trx
    */
   return async (product, trx) => {
@@ -261,12 +264,14 @@ const list = (driver) => {
     ].filter(Boolean))
     .where(
       (eb) => {
-        return query_to_eb(eb, query, table_name).eb;
+        return query_to_eb(eb, query, table_name);
       }
     ).orderBy(query_to_sort(query))
-    .limit(query.limit ?? 10)
+    .limit(query.limitToLast ?? query.limit ?? 10)
     .execute();
-      // .compile();
+
+  if(query.limitToLast) items.reverse();
+    // .compile();
         // console.log(items)
     
     return sanitize_array(items);
@@ -332,6 +337,7 @@ export const impl = (driver) => {
     list: list(driver),
     list_product_collections: list_product_collections(driver),
     list_product_discounts: list_product_discounts(driver),
-    list_product_variants: list_product_variants(driver)
+    list_product_variants: list_product_variants(driver),
+    count: count_regular(driver, table_name),
   }
 }

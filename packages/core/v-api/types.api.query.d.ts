@@ -18,7 +18,9 @@ export type ApiQuery = {
    * boolean `DSL` for filtering the terms
    * `(whatever-indexed tag:a -(tag:b | tag:c) handle:product*)`
    */
-  vql?: VQL.AST;
+  vql?: string;
+  vqlParsed?: VQL.AST;
+  // vqlString?: string;
 
   /**
    * `(updated_at)`
@@ -34,6 +36,10 @@ export type ApiQuery = {
    * limit of items returned
    */
   limit?: number;
+  /**
+   * limit to last items returned from the last
+   */
+  limitToLast?: number;
 
   /**
    * `(updated_at:2012-09)`

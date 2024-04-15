@@ -9,7 +9,10 @@ import openapi_json from './openapi.json' assert { type: 'json' }
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * 
+ * @param {import("../types.public.js").App<
+ *  PlatformNativeRequest, PlatformContext
+ * >} app
  */
 export const create_routes = (app) => {
 

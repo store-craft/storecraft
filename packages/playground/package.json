@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start" : "node --watch index.js",
-    "server" : "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start" : "npm run playground:start",
+    "playground:start" : "node --watch index.js",
+    "playground:server" : "node --watch index.js",
+    "playground:test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

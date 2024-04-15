@@ -24,6 +24,7 @@ import { impl as tags } from './src/con.tags.js';
  * @param {import('mongodb').MongoClientOptions} [options] 
  */
 const connect = async (uri, options) => {
+
   options = options ?? {
     serverApi: {
       version: ServerApiVersion.v1,
@@ -41,10 +42,19 @@ const connect = async (uri, options) => {
  */
 export class MongoDB {
 
-  /** @type {boolean} */ #_is_ready;
-  /** @type {App<any, any, any>} */ #_app;
-  /** @type {MongoClient} */ #_mongo_client;
-  /** @type {Config} */ #_config;
+  /** @type {boolean} */ 
+  #_is_ready;
+
+  /** @type {App<any, any, any>} */ 
+  #_app;
+
+  /** @type {MongoClient} */ 
+  #_mongo_client;
+
+  /** @type {Config} */ 
+  #_config;
+
+  #_resources;
 
   /**
    * 
@@ -77,18 +87,21 @@ export class MongoDB {
     );
 
     this.#_app = app;
-    this.auth_users = auth_users(this);
-    this.collections = collections(this);
-    this.customers = customers(this);
-    this.discounts = discounts(this);
-    this.images = images(this);
-    this.notifications = notifications(this);
-    this.orders = orders(this);
-    this.posts = posts(this);
-    this.products = products(this);
-    this.storefronts = storefronts(this);
-    this.tags = tags(this);
-    this.shipping = shipping(this);
+
+    this.#_resources = {
+      auth_users: auth_users(this),
+      collections: collections(this),
+      customers: customers(this),
+      discounts: discounts(this),
+      images: images(this),
+      notifications: notifications(this),
+      orders: orders(this),
+      posts: posts(this),
+      products: products(this),
+      storefronts: storefronts(this),
+      tags: tags(this),
+      shipping: shipping(this),
+    }
     
     this.#_is_ready = true; 
 
@@ -112,7 +125,15 @@ export class MongoDB {
     if(!this.isReady)
       throw new Error('Database not ready !!! you need to `.init()` it')
   }
+
+  /**
+   * `database` resources
+   */
+  get resources () {
+    return this.#_resources;
+  }
   
+
   /**
    * database name
    */

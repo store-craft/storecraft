@@ -1,0 +1,68 @@
+import CollectionView from '@/admin/comps/collection-view.jsx'
+import ShowIf from '@/admin/comps/show-if.jsx'
+import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
+import { Span, SpanArray, RecordActions } from '@/admin/comps/common-fields.jsx'
+import { Title } from '@/admin/comps/common-ui.jsx'
+import useCollectionsActions from '../hooks/useCollectionsActions.js'
+
+const schema_fields = [
+  { 
+    key: 'handle', name: 'Name', 
+    comp: Span, 
+    comp_params: { className: 'font-semibold' } 
+  },
+  { 
+    key: 'values', name: 'Values', 
+    comp: SpanArray, 
+    comp_params: { 
+      className: 'font-semibold',
+    } 
+  },
+  { 
+    key: undefined, name: 'Actions', 
+    comp: RecordActions, 
+    comp_params: { className: '' } 
+  },
+]
+
+export default ({}) => {
+
+  /**
+   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
+   *  import('@storecraft/core/v-api').TagType>
+   * }
+   */ 
+  const { 
+    query_api, context, ref_actions, page, loading, 
+    error, onLimitChange, onReload, prev, next, 
+    queryCount
+   } = useCollectionsActions('tags', '/pages/tags');
+
+  return (
+<div className='w-full h-full'>
+  <div className='max-w-[56rem] mx-auto'>
+    <Title children={`Tags ${queryCount>=0 ? `(${queryCount})` : ''}`} 
+            className='mb-5' /> 
+    <ShowIf show={error} children={error?.toString()} />
+    <ShowIf show={!error}>
+      <div className='w-full rounded-md overflow-hidden border 
+                      shelf-border-color shadow-md dark:shadow-slate-900'>      
+        <TopActions 
+            ref={ref_actions} reload={onReload}
+            createLink='/pages/tags/create'
+            searchTitle='Search by name, values...' 
+            isLoading={loading} />
+        <CollectionView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
+        <BottomActions 
+            prev={prev} next={next} 
+            limit={query_api.limit}
+            onLimitChange={onLimitChange} />
+      </div>    
+    </ShowIf>
+  </div>
+</div>
+  )
+}

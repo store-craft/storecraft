@@ -6,13 +6,15 @@ import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.js').ProductType} ItemType
- * @typedef {import('./types.api.js').ProductTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.js').ProductTypeUpsert & 
+ *  import('./types.api.d.ts').VariantTypeUpsert
+ * } ItemTypeUpsert
  */
 
 /**
  * @param {App} app
  */
-export const db = app => app.db.products;
+export const db = app => app.db.resources.products;
 
 
 /**

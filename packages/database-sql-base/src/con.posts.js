@@ -1,6 +1,6 @@
 import { SQL } from '../driver.js'
 import { report_document_media } from './con.images.js'
-import { delete_entity_values_by_value_or_reporter, 
+import { count_regular, delete_entity_values_by_value_or_reporter, 
   delete_me, delete_media_of, delete_search_of, delete_tags_of, 
   insert_media_of, insert_search_of, insert_tags_of, 
   regular_upsert_me, where_id_or_handle_table, 
@@ -118,12 +118,14 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name).eb;
+          return query_to_eb(eb, query, table_name);
         }
       )
       .orderBy(query_to_sort(query))
-      .limit(query.limit ?? 10)
+      .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
+
+    if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
   }
@@ -140,6 +142,7 @@ export const impl = (driver) => {
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
-    list: list(driver)
+    list: list(driver),
+    count: count_regular(driver, table_name),
   }
 }

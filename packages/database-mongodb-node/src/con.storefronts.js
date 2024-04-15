@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { get_regular, list_regular, 
+import { count_regular, get_regular, list_regular, 
   remove_regular } from './con.shared.js'
 import { sanitize_array, to_objid } from './utils.funcs.js'
 import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js';
@@ -31,19 +31,19 @@ const upsert = (driver) => {
           // PRODUCTS/COLLECTIONS/DISCOUNTS/SHIPPING/POSTS RELATIONS (explicit)
           ////
           let replacement = await create_explicit_relation(
-            driver, data, 'products', 'products', false
+            driver, data, 'products', 'products', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'collections', 'collections', false
+            driver, replacement, 'collections', 'collections', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'discounts', 'discounts', false
+            driver, replacement, 'discounts', 'discounts', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'shipping_methods', 'shipping_methods', false
+            driver, replacement, 'shipping_methods', 'shipping_methods', true
           );
           replacement = await create_explicit_relation(
-            driver, replacement, 'posts', 'posts', false
+            driver, replacement, 'posts', 'posts', true
           );
 
           // SEARCH
@@ -88,6 +88,11 @@ const remove = (driver) => remove_regular(driver, col(driver));
  * @param {MongoDB} driver 
  */
 const list = (driver) => list_regular(driver, col(driver));
+
+/**
+ * @param {MongoDB} driver 
+ */
+const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
@@ -176,6 +181,7 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
+    count: count(driver),
     list_storefront_products: list_storefront_products(driver),
     list_storefront_collections: list_storefront_collections(driver),
     list_storefront_discounts: list_storefront_discounts(driver),

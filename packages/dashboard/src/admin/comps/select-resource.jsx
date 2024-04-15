@@ -7,6 +7,7 @@ import { Bling } from './common-ui.jsx'
 import CapsulesView from './capsules-view.jsx'
 import { HR } from './common-ui.jsx'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
+import { App } from '@storecraft/core'
 
 /**
  * picks the name from every item
@@ -39,7 +40,7 @@ export const default_transform_fn = window => window ?? []
  * @property {string} header
  * @property {boolean} [add_all] add all sentinal
  * @property {0 | 1} layout add all sentinal
- * @property {string} resource table identifier to query
+ * @property {keyof App["db"]["resources"]} resource table identifier to query
  * @property {number} [limit] number of item to query
  * @property {string} [className] 
  * @property {string} [clsHeader] 

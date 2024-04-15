@@ -1,10 +1,10 @@
 import React, { 
-  useCallback, useEffect, useMemo, 
-  useRef, useState } from 'react'
+  forwardRef, useCallback, useEffect, useMemo, 
+  useRef, useState 
+} from 'react'
 import { AiFillNotification } from 'react-icons/ai/index.js'
 import MDView from './md-view.jsx'
 import { MINUTE, timeSince } from '../utils/time.js'
-import { getSDK } from '@/admin-sdk/index.js'
 import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
 import { PromisableLoadingButton } from './common-button.jsx'
 import useInterval from '@/admin/hooks/useInterval.js'
@@ -205,7 +205,7 @@ const FilterView = (
  * 
  * @typedef {object} NotificationsViewParams
  * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
- * @prop {() => Promise<void>} onLoadMore
+ * @prop {() => Promise<any>} onLoadMore
  * 
  * 
  * @param {NotificationsViewParams} params
@@ -254,96 +254,110 @@ const Header = ({}) => {
   )
 }
 
-const Notifications = ({ ...rest }) => {
-
-  const [filter, setFilter] = useState('All')
-  const notis = test;
-
+const Notifications = forwardRef(
   /**
-   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
-   *  import('@storecraft/core/v-api').NotificationType
-   * >}
+   * 
+   * @param {object} params 
+   * @param {*} ref 
    */
-  const { 
-    pages, page, loading, error, queryCount,
-    query, prev, next
-  } = useCommonCollection('notifications', false);
+  ({ ...rest }, ref) => {
 
-  // console.log('notifications', page);
+    const [filter, setFilter] = useState('All')
+    const notis = test;
 
-  /** @type {React.MutableRefObject<typeof query>} */
-  const ref_query = useRef(query);
+    /**
+     * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
+     *  import('@storecraft/core/v-api').NotificationType
+     * >}
+     */
+    const { 
+      pages, page, loading, error, queryCount,
+      query, prev, next
+    } = useCommonCollection('notifications', false);
 
-  const onInterval = useCallback(
-    async () => {
-      ref_query.current(
-        {
-          limit: 5,
-        }, false
-      );
-    }, []
-  );
+    // console.log('notifications', page);
 
-  const {
-    start, stop
-  } = useInterval(
-    onInterval, MINUTE*10, false
-  );
+    /** @type {React.MutableRefObject<typeof query>} */
+    const ref_query = useRef(query);
 
-  useEffect(
-    () => {
-      async function swr() {
-        await query({
-          limit: 5,
-        }, true)
-        start()
-      }
-      swr()
-    }, [start]
-  );
+    const onInterval = useCallback(
+      async () => {
+        ref_query.current(
+          {
+            limit: 5,
+          }, false
+        );
+      }, []
+    );
 
-  /**@type {import('@storecraft/core/v-api').NotificationType[]} */
-  const flattened = useMemo(
-    () => pages.flat(1), 
-    [pages]
-  );
+    const {
+      start, stop
+    } = useInterval(
+      onInterval, MINUTE * 10, false
+    );
 
-  let filtered = useMemo(
-    () => {
-      if(filter==='All')
-        return flattened
-      return flattened.filter(
-        n => Boolean(n?.search?.includes(filter))
-      )
-    }, [flattened, filter]
-  );
+    useEffect(
+      () => {
+        async function swr() {
+          await query(
+            {
+              limit: 5,
+            }, true
+          );
 
-  // console.log(filtered)
+          start();
+        }
 
-  // filtered=test
+        swr();
 
-  return (
-  <div className='absolute w-[23rem] max-w-full top-full right-0 
+      }, [start]
+    );
+
+    /**@type {import('@storecraft/core/v-api').NotificationType[]} */
+    const flattened = useMemo(
+      () => pages.flat(1), 
+      [pages]
+    );
+
+    let filtered = useMemo(
+      () => {
+        if(filter==='All')
+          return flattened
+        return flattened.filter(
+          n => Boolean(n?.search?.includes(filter))
+        )
+      }, [flattened, filter]
+    );
+
+    // console.log(filtered)
+
+    // filtered=test
+
+    return (
+    <div 
+        ref={ref} 
+        className='absolute w-[23rem] max-w-full top-full right-0 
                   shelf-plain-card-fill h-[600px] rounded-b-xl --shadow-xl 
-                   border shadow-lg p-4
+                  border shadow-lg p-4
                   overflow-y-auto flex flex-col gap-5'>
 
-    <Header />
+      <Header />
 
-    <FilterView 
-        notis={flattened} 
-        selected={filter} 
-        onChange={setFilter} />
+      <FilterView 
+          notis={flattened} 
+          selected={filter} 
+          onChange={setFilter} />
 
-    <NotificationsView 
-        notis={filtered} 
-        onLoadMore={next} />
+      <NotificationsView 
+          notis={filtered} 
+          onLoadMore={next} />
 
-    {/* <button children='add' className='absolute top-0 right-0' 
-            onClick={async () => await getShelf().notifications.addBulk(test)}/> */}
+      {/* <button children='add' className='absolute top-0 right-0' 
+              onClick={async () => await getShelf().notifications.addBulk(test)}/> */}
 
-  </div>
-  )
-}
+    </div>
+    )
+  }
+)
 
 export default Notifications

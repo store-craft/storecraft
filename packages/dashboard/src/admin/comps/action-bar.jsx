@@ -3,25 +3,28 @@ import { AiOutlineMenuFold } from 'react-icons/ai/index.js'
 import { MdLogout } from 'react-icons/md/index.js'
 import { useUser } from '@/admin-sdk-react-hooks/index.js'
 import { GradientFillIcon } from './common-button.jsx'
-import useToggle from '../hooks/useToggle.js'
 import ShowIf from './show-if.jsx'
 import Notifications from './notifications.jsx'
 import NotificationButton from './notifications-button.jsx'
 import DarkMode from './dark-mode.jsx'
+import useOnClickOutside from '../hooks/useOnClickOutside.js'
 
 
 /**
+ * 
  * @typedef {object} InternalActionBarParams
  * @prop {boolean} [menuOpen]
  * @prop {string} [className]
  * @prop {React.MouseEventHandler} [onMenuClick]
  * 
+ * 
  * @typedef {InternalActionBarParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
  * } ActionBarParams
  * 
- * @param {ActionBarParams} param0 
- * @returns 
+ * 
+ * @param {ActionBarParams} params
+ * 
  */
 const ActionBar = (
   { 
@@ -29,7 +32,7 @@ const ActionBar = (
   }
 ) => {
   
-  const [notify_open, toggle_notify] = useToggle(false);
+  const [openNotifications, setOpenNotifications] = useState(false);
   const {
     user, isAuthenticated, 
     actions: {
@@ -37,10 +40,15 @@ const ActionBar = (
     }
   } = useUser();
   
+  const ref_element = useOnClickOutside(
+    () => setOpenNotifications(false)
+  );
+
   const user_name = useMemo(
     () => user?.firstname ? (', ' + user?.firstname) : '',
     [user]
   );
+
   // console.log(notify_open)
   
   return (
@@ -65,14 +73,14 @@ const ActionBar = (
           onClick={signout}
           className='text-2xl cursor-pointer' />   
       <NotificationButton 
-          isOpen={notify_open}
-          onClick={() => toggle_notify()}
+          isOpen={openNotifications}
+          onClick={() => !openNotifications && setOpenNotifications(true)}
           /> 
       <DarkMode />
 
     </div>
-    <ShowIf show={notify_open}>
-      <Notifications />
+    <ShowIf show={openNotifications}>
+      <Notifications ref={ref_element} />
     </ShowIf>
   </div>
 </nav>

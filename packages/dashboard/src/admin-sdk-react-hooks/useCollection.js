@@ -70,7 +70,6 @@ const paginate_helper = (query, resource) => {
   let startAfter = query.startAfter;
 
   const next = async () => {
-    // console.log('paginate_helper::next')
     /** @type {typeof query} */
     const current = { 
       ...query,
@@ -97,6 +96,18 @@ const paginate_helper = (query, resource) => {
 }
 
 /**
+ * @template T the `document` type
+ * 
+ * @typedef {Omit<ReturnType<typeof useCollection<T>>, 'page' | 'pages'> & 
+ *  {
+ *    page: T[]  
+ *    pages: T[][]  
+ *  }
+ * } useCollectionHookReturnType This `type` will give you the return type of the hook
+ * 
+ */
+
+/**
  * @template T The type of the item
  * 
  * @param {keyof App["db"]["resources"]} resource the base path of the resource 
@@ -109,9 +120,12 @@ export const useCollection = (
 
   const _q = useRef(q);
   const _hasEffectRan = useRef(false);
+
   /** @type {React.MutableRefObject<() => Promise<T[]>>} */
   const _next = useRef();
+
   const [error, setError] = useState(undefined);
+
   /**@type {ReturnType<typeof useState<T[][]>>} */
   const [pages, setPages] = useState([]);
   const [index, setIndex] = useState(-1);
@@ -120,8 +134,8 @@ export const useCollection = (
   const trigger = useTrigger();
   
   useEffect(
-    () => getSDK().auth.add_sub(trigger)
-    , [trigger]
+    () => getSDK().auth.add_sub(trigger),
+    [trigger]
   );
 
   const _internal_fetch_next = useCallback(
@@ -129,25 +143,34 @@ export const useCollection = (
      * @param {boolean} is_new_query 
      */
     async (is_new_query=false) => {
+
+      /** @type {T[]} */
+      let result;
+
       setIsLoading(true)
+
       try {
-        const res = await _next.current()
+        result = await _next.current();
+
         if(is_new_query) {
-          setIndex(0)
-          setPages([[...res]])
+          setIndex(0);
+          setPages([[...result]]);
         } else {
-          setIndex(idx => idx + 1)
-          setPages(ws => [...ws, [...res]])
+          setIndex(idx => idx + 1);
+          setPages(ws => [...ws, [...result]]);
         }
 
       } catch (err) {
-        setError(err?.code)
+        setError(err?.code);
         // throw err
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
+
+      return result;
+
     }, []
-  )
+  );
 
   // A wrapped optimized pagination
   const paginate = useCallback(
@@ -156,15 +179,24 @@ export const useCollection = (
      * @returns 
      */
     (up) => {
-      if(!_next.current) return Promise.resolve()
-      const hm = up ? 1 : -1
-      if(index + hm < 0) return Promise.resolve()
+
+      if(!_next.current) 
+        return Promise.resolve();
+
+      const hm = up ? 1 : -1;
+
+      if(index + hm < 0) 
+        return Promise.resolve();
+
       if(index+hm < pages.length) {
-        setIndex(index+hm)
-        return Promise.resolve()
+        setIndex(index+hm);
+
+        return Promise.resolve();
       }
+
       // else let's fetch
-      return _internal_fetch_next()
+      return _internal_fetch_next();
+
     }, [pages, index, _internal_fetch_next]
   )
 
@@ -182,14 +214,18 @@ export const useCollection = (
     /**@param {string} docId */
     async (docId) => {
       try {
-        await getSDK()[resource].delete(docId)
-        setPages(delete_from_collection(docId))
-        return docId
+        await getSDK()[resource].delete(docId);
+
+        setPages(delete_from_collection(docId));
+
+        return docId;
+
       } catch (err) {
-        setError(err)
-        setIsLoading(false)
-        throw err
+        setError(err);
+        setIsLoading(false);
+        throw err;
       }
+
     }, [resource]
   );
 
@@ -201,12 +237,16 @@ export const useCollection = (
     async (q={}, from_cache=false) => {
       _q.current = q;
       _next.current = paginate_helper(q, resource);
+
       const result = await _internal_fetch_next(true);
       const count = await getSDK().statistics.countOf(
         resource, q
       );
+
       setQueryCount(count);
-      return result
+
+      return result;
+
     }, [resource, _internal_fetch_next]
   );
 
@@ -260,6 +300,9 @@ export const q_initial = {
   resource, autoLoad=true, autoLoadQuery=q_initial
 ) => {
     
+  /**
+   * @type {useCollectionHookReturnType<T>}
+   */
   const { 
     pages, page, loading, error, 
     prev, next, query : queryParent, queryCount, deleteDocument 
@@ -271,17 +314,15 @@ export const q_initial = {
      * @param {boolean} from_cache 
      */
     (q, from_cache=false) => {
-      // const tokens = text2tokens(q.search)
-      // const where = tokens?.length ? [['search', 'array-contains-any', tokens]] : undefined
+
       return queryParent(
         {
           ...q_initial, 
-          // where,
           ...q
         }, from_cache
       )
     }, [queryParent]
-  )
+  );
 
   return {
     pages, page, loading, error, 

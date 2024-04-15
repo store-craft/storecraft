@@ -12,11 +12,6 @@ import { BiTrendingUp } from 'react-icons/bi/index.js'
 const DAY = 86400000
 
 /**
- * @param {number | string | Date} d 
- */
-const to_millis = d => (new Date(d)).getTime()
-
-/**
  * Compute top-K over latest span of time from the server stats
  * 
  * @param {import('@storecraft/core/v-api').OrdersStatisticsType} data server stats
@@ -83,8 +78,6 @@ const compute_top_k_stats = (data) => {
       return p
     }, result
   );
-
-  console.log('reduced ', data)
 
   /**
    * @typedef {[
@@ -195,8 +188,6 @@ const TopSoldCard = (
   }
 ) => {
 
-  console.log('topsold', data);
-
   return (
 <Bling rounded='rounded-xl' stroke='p-[2px]'>
   <div className='w-56 h-52 
@@ -279,8 +270,6 @@ const Performance = (
   const [span, setSpan] = useState(30);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
-
-  console.log('ddddddd', data);
 
   const load = useCallback(
     /**

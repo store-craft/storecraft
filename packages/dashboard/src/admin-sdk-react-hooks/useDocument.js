@@ -42,40 +42,43 @@ export function useCommonApiDocument(
   const [error, setError] = useState(undefined);
   /** @type {ReturnType<typeof useState<Op>>} */
   const [op, setOp] = useState(undefined);
-  const trigger = useTrigger()
+  const trigger = useTrigger();
 
   useEffect(
     () => getSDK().auth.add_sub(trigger)
     ,[trigger]
-  )
+  );
 
   const reload = useCallback(
     async (try_cache=true) => {
-      if(!(location[0] && location[1]))
-        throw 'no doc id'
 
-      setLoading(true)
-      setError(undefined)
-      setOp('load')
+      if(!(location[0] && location[1]))
+        throw 'no doc id';
+
+      setLoading(true);
+      setError(undefined);
+      setOp('load');
 
       try {
         /** @type {T} */
         const data = await getSDK()[resource].get(
           location[1], try_cache
         );
-        setData(data)
-        setHasLoaded(true)
-        return data
+        setData(data);
+        setHasLoaded(true);
+
+        return data;
       } catch (e) {
-        console.log(e)
-        setError(e)
-        throw e
+        console.log(e);
+
+        setError(e);
+        throw e;
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
 
     }, [location]
-  )
+  );
 
   const upsert = useCallback(
     /**
@@ -92,59 +95,72 @@ export function useCommonApiDocument(
       try {
         const id = await getSDK()[resource].upsert(
           new_data
-          );
+        );
         
         const saved_data = await getSDK()[resource].get(
           id
-          );
-        setData(saved_data)  
-        setHasLoaded(true)
+        );
+
+        setData(saved_data);
+        setHasLoaded(true);
+
         return saved_data;
       } catch(e) {
-        setError(e)
-        console.log(JSON.stringify(e, null, 2))
-        throw e
+        setError(e);
+
+        console.log(JSON.stringify(e, null, 2));
+
+        throw e;
+
       } finally {
         setLoading(false)
       }
+
     }, [location]
-  )
+  );
 
   const deleteDocument = useCallback(
     async () => {
-      setLoading(true)
-      setError(undefined)
-      setOp('delete')
+      setLoading(true);
+      setError(undefined);
+      setOp('delete');
 
       try {
         await getSDK()[resource].delete(location[1]);
-        setData(undefined)
-        setHasLoaded(true)
-        return location[1]
+
+        setData(undefined);
+        setHasLoaded(true);
+
+        return location[1];
       } catch (e) {
-        setError(e)
-        throw e
+        setError(e);
+
+        throw e;
       } finally {
-        setLoading(false)
-      }      
+        setLoading(false);
+      }
+
     }, [location]
   );
 
   useEffect(
     () => {
       if(resource==undefined)
-        throw new Error('useDocument: no Collection Id')
+        throw new Error('useDocument: no Collection Id');
         
-      setLocation([resource, document])
-      setData(undefined)
+      setLocation([resource, document]);
+      setData(undefined);
+
     }, [resource, document]
-  )
+  );
 
   useEffect(
     () => {
-      if (autoLoad) reload(try_cache_on_autoload);
+      if (autoLoad) 
+        reload(try_cache_on_autoload);
+      
     }, [autoLoad, reload, location]
-  )
+  );
 
   return {
     // doc: (document===location[1] && resource===location[0]) ? data : {}, 

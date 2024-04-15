@@ -81,10 +81,20 @@ const Notification = (
       if(action)  {
         switch(action.type) {
           case 'route':
-            nav(`/pages/${params.collection}/${params.document}/edit`)
+            /** @type {import('@storecraft/core/v-api').NotificationActionRouteParams} */
+            let casted_params = params;
+
+            nav(
+              `/pages/${casted_params.collection}/${casted_params.document}/edit`
+            );
             break;
           case 'url':
-            window.open(params.url, params.new_window ? '_blank' : '_self')
+            /** @type {import('@storecraft/core/v-api').NotificationActionUrlParams} */
+            let casted_params_2 = params;
+
+            window.open(
+              casted_params_2.url, casted_params_2.new_window ? '_blank' : '_self'
+            );
         }
       }
     }, [notification, nav, window]
@@ -96,9 +106,9 @@ const Notification = (
       onClick={onClick}>
 
   <div className='w-full'>
-    <MDView className='text-base' 
-            // text={message} />
-            text={notification.message} />
+    <MDView 
+        className='text-base' 
+        text={notification.message} />
     <div className='flex flex-row items-center w-full
                     justify-between mt-1'>
       <p children={timeSince(notification.updated_at ?? Date.now())} 
@@ -106,18 +116,18 @@ const Notification = (
                       font-semibold text-xs w-fit' />
       <div className='flex flex-row items-baseline 
                       gap-0.5 text-xs'>
-        <span children='by' 
-              className='inline --text-gray-500' />
-        <p children={notification.author ?? 'unknown'} 
-          className='bg-lime-100 text-green-700 
-                     dark:bg-white/10 dark:text-green-300
-                     dark:border-none 
-                      inline
-                      border italic rounded-md text-xs px-1' />
+        <span 
+            children='by' 
+            className='inline --text-gray-500' />
+        <p 
+            children={notification.author ?? 'unknown'} 
+            className='bg-lime-100 text-green-700 
+                      dark:bg-white/10 dark:text-green-300
+                        dark:border-none inline
+                        border italic rounded-md text-xs px-1' />
       </div>  
     </div>
   </div>
-  {/* <BiDotsVerticalRounded className='flex-shrink-0 text-xl'/> */}
 </div>   
   )
 }
@@ -128,6 +138,7 @@ const Notification = (
  * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
  * @prop {string} [selected='All']
  * @prop {(filter: string) => void} [onChange]
+ * 
  * 
  * @param {FilterViewParams} params
  * 
@@ -148,7 +159,7 @@ const FilterView = (
         (p, c) => {
           // console.log(c.search)
 
-          c.search?.forEach(
+          c?.search?.forEach(
             t => {
               p.add(t)
             }
@@ -175,10 +186,12 @@ const FilterView = (
     t => (
       <div 
           key={t} children={t} 
-          className={`text-base rounded-full px-2
-                      cursor-pointer
-                      shelf-text-label-color py-1 box-border
-                    ${selected===t ? 'bg-kf-50 dark:bg-white/10 shelf-border-color border ' : 'bg-transparent'}`
+          className={
+            `text-base rounded-full px-2
+             cursor-pointer shelf-text-label-color py-1 box-border
+             ${selected===t ? 
+              'bg-kf-50 dark:bg-white/10 shelf-border-color border ' : 
+              'bg-transparent'}`
           } 
           onClick={() => onFilterClick(t)}/>
     )
@@ -193,6 +206,7 @@ const FilterView = (
  * @typedef {object} NotificationsViewParams
  * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
  * @prop {() => Promise<void>} onLoadMore
+ * 
  * 
  * @param {NotificationsViewParams} params
  * 
@@ -255,17 +269,18 @@ const Notifications = ({ ...rest }) => {
     query, prev, next
   } = useCommonCollection('notifications', false);
 
+  // console.log('notifications', page);
+
   /** @type {React.MutableRefObject<typeof query>} */
   const ref_query = useRef(query);
 
   const onInterval = useCallback(
     async () => {
-      const hasChanged = await getSDK().notifications.hasChanged()
-      if(hasChanged) {
-        ref_query.current({
+      ref_query.current(
+        {
           limit: 5,
-        }, false)
-      }
+        }, false
+      );
     }, []
   );
 
@@ -289,11 +304,8 @@ const Notifications = ({ ...rest }) => {
 
   /**@type {import('@storecraft/core/v-api').NotificationType[]} */
   const flattened = useMemo(
-    () => {
-      return pages.flat(1).map(
-        it => it[1]
-      )
-    }, [pages]
+    () => pages.flat(1), 
+    [pages]
   );
 
   let filtered = useMemo(

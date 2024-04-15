@@ -21,6 +21,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  * 
  */
 
+
 /**
  * `useCollectionsActions` is a hook designed for the collections pages,
  * for performing:

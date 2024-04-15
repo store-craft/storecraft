@@ -2,7 +2,6 @@ import { useCallback, useMemo, useRef } from 'react';
 import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
 import { useCommonApiDocument } from '@/admin-sdk-react-hooks/useDocument.js';
-import {useNavigate} from 'react-router-dom'
 import { App } from '@storecraft/core';
 
 /**
@@ -44,6 +43,10 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
    * } 
    */
   const ref_root = useRef();
+
+  /**
+   * @type {import('@/admin-sdk-react-hooks/useDocument.js').HookReturnType<T>}
+   */
   const { 
     doc: doc_original, loading, hasLoaded, error, op,
     actions: { 
@@ -77,28 +80,32 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
    * } 
    */
   const ref_head = useRef();
-  const hasChanged = state?.hasChanged ?? false
-  const isEditMode = mode==='edit'
-  const isCreateMode = mode==='create'
-  const isViewMode = !(isEditMode || isCreateMode)
+  const hasChanged = state?.hasChanged ?? false;
+  const isEditMode = mode==='edit';
+  const isCreateMode = mode==='create';
+  const isViewMode = !(isEditMode || isCreateMode);
     
   /** @type {import('../pages/index.jsx').BaseDocumentContext<State>} */
   const context = useMemo(
-    () => ({
-      /** @returns {State} */
-      getState: () => {
-        const data = ref_root.current.get(false)?.data
-        const hasChanged = Boolean(ref_head.current.get())
-        return {
-          data, hasChanged
-        }
-      },
-    }), []
+    () => (
+      {
+        /** @returns {State} */
+        getState: () => {
+          const data = ref_root.current.get(false)?.data
+          const hasChanged = Boolean(ref_head.current.get())
+          return {
+            data, hasChanged
+          }
+        },
+      }
+    ), []
   );
 
   const duplicate = useCallback(
     async () => {
-      const state = context.getState()
+
+      const state = context.getState();
+
       /**@type {State} */
       const state_next = { 
         data: { 
@@ -112,34 +119,52 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
         },
         hasChanged: false
       }
+
       ref_head.current.set(false)
-      navWithState(`${slug}/create`, 
-            state, state_next
-      );
+
+      if(slug) {
+        navWithState(
+          `${slug}/create`, state, state_next
+        );
+      }
+
     }, [navWithState, context, slug]
   );
 
   const savePromise = useCallback(
     async () => {
       // const doc = await reload()
-      const all = ref_root.current.get()
-      const { validation : { has_errors, fine }, data } = all
-      const final = { ...doc, ...data}
+      const all = ref_root.current.get();
+
+      const { validation : { has_errors, fine }, data } = all;
+
+      const final = { ...doc, ...data };
       console.log('final ', final);
+
       const new_doc = await upsert(final);
-      console.log('new doc', new_doc)
-      nav(`${slug}/${new_doc.handle ?? new_doc.id}/edit`, { replace: true })
+      console.log('new doc', new_doc);
+
+      if(slug) {
+        nav(
+          `${slug}/${new_doc.handle ?? new_doc.id}/edit`, 
+          { replace: true }
+        );
+      } 
+
+      return new_doc;
+
     }, [upsert, nav, doc, reload, slug]
   );
 
   const deletePromise = useCallback(
     async () => {
-      await deleteDocument();
-      // nav(`${slug}`, { replace: true })
-      // history.back();
-      // console.log(window.history)
-      nav(-2);
-    }, [deleteDocument, nav]
+      const id_or_handle = await deleteDocument();
+
+      if(slug) nav(-2);
+
+      return id_or_handle;
+
+    }, [deleteDocument, nav, slug]
   );
 
   // A suggestion for a unique key
@@ -151,12 +176,11 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
 
   return {
     actions: {
-      savePromise, deletePromise, duplicate, navWithState, 
-      reload, setError
+      savePromise, deletePromise, duplicate, 
+      navWithState, reload, setError
     },
-    error, key, 
-    ref_head, ref_root, doc, isEditMode, isCreateMode,
-    isViewMode,
+    error, key, ref_head, ref_root, doc, 
+    isEditMode, isCreateMode, isViewMode,
     loading, hasChanged, hasLoaded, context
   }
 }

@@ -5,13 +5,14 @@ import { useStorecraft } from "./useStorecraft.js";
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<typeof useCommonApiDocument<T>>, 'doc'> & 
+ * @typedef {Omit<ReturnType<typeof useDocument<T>>, 'doc'> & 
  *  {
  *    doc: T
  *  }
- * } useCommonApiDocumentHookReturnType This `type` will give you the return type of the hook
+ * } useDocumentHookReturnType This `type` will give you the return type of the hook
  * 
  */
+
 
 /**
  * @typedef {'load' | 'update' | 'delete'} Op
@@ -26,13 +27,13 @@ import { useStorecraft } from "./useStorecraft.js";
  * @param {boolean} try_cache_on_autoload 
  * 
  */
-export function useCommonApiDocument(
-  resource=undefined, document=undefined, autoLoad=true, 
+export function useDocument(
+  resource, document, 
+  autoLoad=true, 
   try_cache_on_autoload=true
 ) {
 
   const { sdk } = useStorecraft();
-  const [location, setLocation] = useState([resource, document])
   const [loading, setLoading] = useState(
     (resource && document && autoLoad) ? true : false
   );
@@ -53,7 +54,7 @@ export function useCommonApiDocument(
   const reload = useCallback(
     async (try_cache=true) => {
 
-      if(!(location[0] && location[1]))
+      if(!(resource && document))
         throw 'no doc id';
 
       setLoading(true);
@@ -63,7 +64,7 @@ export function useCommonApiDocument(
       try {
         /** @type {T} */
         const data = await sdk[resource].get(
-          location[1], try_cache
+          document, try_cache
         );
         setData(data);
         setHasLoaded(true);
@@ -78,7 +79,7 @@ export function useCommonApiDocument(
         setLoading(false);
       }
 
-    }, [location]
+    }, [resource, document]
   );
 
   const upsert = useCallback(
@@ -117,7 +118,7 @@ export function useCommonApiDocument(
         setLoading(false)
       }
 
-    }, [location]
+    }, [resource, document]
   );
 
   const deleteDocument = useCallback(
@@ -127,12 +128,12 @@ export function useCommonApiDocument(
       setOp('delete');
 
       try {
-        await sdk[resource].delete(location[1]);
+        await sdk[resource].delete(document);
 
         setData(undefined);
         setHasLoaded(true);
 
-        return location[1];
+        return document;
       } catch (e) {
         setError(e);
 
@@ -141,7 +142,7 @@ export function useCommonApiDocument(
         setLoading(false);
       }
 
-    }, [location]
+    }, [resource, document]
   );
 
   useEffect(
@@ -149,7 +150,6 @@ export function useCommonApiDocument(
       if(resource==undefined)
         throw new Error('useDocument: no Collection Id');
         
-      setLocation([resource, document]);
       setData(undefined);
 
     }, [resource, document]
@@ -160,16 +160,22 @@ export function useCommonApiDocument(
       if (autoLoad) 
         reload(try_cache_on_autoload);
       
-    }, [autoLoad, reload, location]
+    }, [autoLoad, reload]
   );
 
   return {
-    // doc: (document===location[1] && resource===location[0]) ? data : {}, 
-    doc: data, sdk,
-    loading, hasLoaded, error, op, 
+    doc: data, 
+    sdk,
+    loading, 
+    hasLoaded, 
+    error, 
+    op, 
+    resource,
+    document,
     actions: { 
-      reload, upsert, deleteDocument, setError,
-      colId: resource, docId : location[1] 
+      reload, upsert, 
+      deleteDocument, 
+      setError,
     }
   }
 }

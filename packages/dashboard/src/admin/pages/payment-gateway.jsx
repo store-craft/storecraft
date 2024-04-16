@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import FieldsView from '@/admin/comps/fields-view.jsx'
-import { useCommonApiDocument } from '@storecraft/sdk-react-hooks'
+import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { 
   MInput, Div, withCard, 
@@ -101,7 +101,7 @@ export default ({ collectionId,
     actions: { 
       reload, set, create, deleteDocument, colId, docId 
     }
-  } = useCommonApiDocument(collectionId, documentId)
+  } = useDocument(collectionId, documentId)
 
   const { 
     nav, navWithState, state 

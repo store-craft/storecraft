@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
-import { useCommonApiDocument } from '@storecraft/sdk-react-hooks';
+import { useDocument } from '@storecraft/sdk-react-hooks';
 import { App } from '@storecraft/core';
 
 /**
@@ -21,7 +21,7 @@ import { App } from '@storecraft/core';
 
 /**
  * Your definitive hook for `document` adventures with UI. Compared
- * to `useCommonApiDocument`, it adds:
+ * to `useDocument`, it adds:
  * - Aggregating from a functional component
  * - Paginating by url navigation, for state saving.
  * - Context
@@ -45,14 +45,14 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   const ref_root = useRef();
 
   /**
-   * @type {import('@storecraft/sdk-react-hooks').useCommonApiDocumentHookReturnType<T>}
+   * @type {import('@storecraft/sdk-react-hooks').useDocumentHookReturnType<T>}
    */
   const { 
     doc: doc_original, loading, hasLoaded, error, op, sdk,
     actions: { 
-      reload, upsert, setError, create, deleteDocument, colId, docId 
+      reload, upsert, setError, deleteDocument,
     }
-  } = useCommonApiDocument(resource, document);
+  } = useDocument(resource, document);
 
   const { 
     nav, navWithState, state 

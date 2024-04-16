@@ -111,7 +111,7 @@ const paginate_helper = (sdk, query, resource) => {
  */
 
 /**
- * @template T The type of the item
+ * @template {import('@storecraft/core/v-api').BaseType} T The type of the item
  * 
  * @param {keyof App["db"]["resources"]} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
@@ -254,6 +254,32 @@ export const useCollection = (
     }, [resource, _internal_fetch_next]
   );
 
+  /**
+   * Let's `poll` if the resource added more documents
+   */
+  const pollHasChanged = useCallback(
+    async () => {
+      const last = pages?.at(-1)?.at(-1);
+
+      if(!last) {
+        return false;
+      }
+
+      const count = await sdk.statistics.countOf(
+        resource, 
+        {
+          startAfter: [
+            ['updated_at', last.updated_at],
+            ['id', last.id],
+          ]
+        }
+      )
+
+      return count > 0;
+
+    }, [pages]
+  );
+
   useEffect(
     () => {
       if(autoLoad && index==-1 && !_hasEffectRan.current) {
@@ -263,11 +289,17 @@ export const useCollection = (
   );
 
   return {
-    pages, page: index>=0 ? pages[index] : [], 
-    loading, error, sdk,
-    prev, next, query, queryCount,
-    deleteDocument, 
-    colId: resource 
+    pages, 
+    page: index>=0 ? pages[index] : [], 
+    loading, 
+    error, 
+    sdk,
+    queryCount, 
+    colId: resource,
+    actions: {
+      pollHasChanged, prev, next, query,
+      deleteDocument
+    },
   }
 }
 
@@ -309,7 +341,11 @@ export const q_initial = {
    */
   const { 
     pages, page, loading, error, sdk,
-    prev, next, query : queryParent, queryCount, deleteDocument 
+    queryCount,
+    actions: {
+      query : queryParent, prev, next, pollHasChanged,
+      deleteDocument
+    }
   } = useCollection(resource, autoLoadQuery, autoLoad)
 
   const query = useCallback(
@@ -329,10 +365,16 @@ export const q_initial = {
   );
 
   return {
-    pages, page, loading, error, 
-    prev, next, sdk,
-    query, queryCount, 
-    deleteDocument, 
-    colId: resource 
+    pages, 
+    page, 
+    loading, 
+    error, 
+    sdk, 
+    queryCount, 
+    colId: resource,
+    actions: {
+      prev, next, query, pollHasChanged,
+      deleteDocument
+    }
   }
 }

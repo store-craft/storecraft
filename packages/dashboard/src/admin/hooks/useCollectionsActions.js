@@ -67,8 +67,10 @@ const useCollectionsActions = (
    * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<T>}
    */
   const { 
-    pages, page, loading, error, 
-    query, queryCount, deleteDocument 
+    pages, page, loading, error, sdk, queryCount, 
+    actions: {
+      deleteDocument, query
+    }
   } = useCommonCollection(resource, autoLoad, autoLoadQuery);
 
   useEffect(

@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 
 /**
  * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params 
  */
 export default function ClientOnly(
   { 

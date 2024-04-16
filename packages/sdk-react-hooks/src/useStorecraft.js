@@ -10,9 +10,10 @@ const CONFIG_KEY = `storecraft_latest_config`;
  * @returns {import("@storecraft/sdk").StorecraftConfig}
  */
 export const getLatestConfig = () => {
-  return LS.get(CONFIG_KEY)
+  return sdk?.config ?? LS.get(CONFIG_KEY);
 }
 
+var sdk = create(getLatestConfig());
 
 /**
  * 
@@ -23,15 +24,25 @@ const save_config = (config={}) => {
 }
 
 
-const sdk = create(getLatestConfig());
 
+/**
+ * @param {import("@storecraft/sdk").StorecraftConfig} config 
+ */
+const internal_updateConfig = (config) => {
+  sdk.updateConfig(config);
+
+  save_config(config);
+}
 
 /**
  * A simple `react` hook to get access to `sdk`
  * with realtime reports about `auth`
  * 
+ * 
+ * @param {import("@storecraft/sdk").StorecraftConfig} [config]
+ * 
  */
-export const useStorecraft = () => {
+export const useStorecraft = (config=getLatestConfig()) => {
 
   const [error, setError] = useState(undefined);
   const trigger = useTrigger();
@@ -42,20 +53,19 @@ export const useStorecraft = () => {
      * @param {import("@storecraft/sdk").StorecraftConfig} config 
      */
     (config) => {
-      try {
-        sdk.updateConfig(config);
-        save_config(config);
-      } catch(e) {
-        setError(e);
-      } finally {
-        trigger();
-      }
+      internal_updateConfig(config);
+      trigger();
     }, [trigger]
   );
 
   useEffect(
     () => {
+      updateConfig(config);
+    }, [config]
+  );
 
+  useEffect(
+    () => {
       const unsub = sdk.auth.add_sub(
         ([user, isAuth]) => {
           updateConfig(
@@ -71,7 +81,7 @@ export const useStorecraft = () => {
 
       return unsub;
 
-    }, [updateConfig]
+    }, []
   );
 
   return {

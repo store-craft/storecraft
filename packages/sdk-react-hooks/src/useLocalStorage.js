@@ -10,7 +10,7 @@ import { LS } from './utils.browser.js';
  * @template S
  * 
  * @param {string} key 
- * @param {S} defaultValue 
+ * @param {S} [defaultValue] 
  */
 export const create_local_storage_hook = (key, defaultValue) => {
   
@@ -26,7 +26,9 @@ export const create_local_storage_hook = (key, defaultValue) => {
    * @param {(state: S) => void} cb 
    */
   const subscribe = cb => {
+
     subs.add(cb)
+
     return () => {
       subs.delete(cb)
     }
@@ -37,7 +39,9 @@ export const create_local_storage_hook = (key, defaultValue) => {
    */
   const notify = ($state) => {
     state = $state;
+
     LS.set(KEY, $state);
+
     subs.forEach(
       cb => cb(state)
     );
@@ -60,15 +64,20 @@ export const create_local_storage_hook = (key, defaultValue) => {
        */
       ($state) => {
         let new_state = $state;
+
         if(typeof $state === 'function') {
           new_state = $state(state);
         }
+
         notify($state);
+
       }, []
     );
   
     return {
       state, setState
     }
+
   }
+
 }

@@ -16,7 +16,12 @@ const text2tokens = (text) => {
  *  string[]>
  * } params 
  */
-const TagValues = ({field, value, onChange, ...rest}) => {
+const TagValues = (
+  {
+    field, value, onChange, ...rest
+  }
+) => {
+  
   const { key, name, comp_params } = field
   const [vs, setVs] = useState(value ?? [])
   /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */

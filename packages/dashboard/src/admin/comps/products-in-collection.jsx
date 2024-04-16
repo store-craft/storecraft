@@ -46,8 +46,10 @@ const CollectionBase = forwardRef(
    * }
    */
   const { 
-    pages, page, loading, error, 
-    prev, next, query, queryCount 
+    pages, page, loading, error, queryCount,
+    actions: {
+      deleteDocument, prev, next, query
+    }
   } = useCommonCollection(
     `collections/${collection_handle_or_id}/products`, false
   );

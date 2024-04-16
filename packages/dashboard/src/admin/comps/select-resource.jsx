@@ -72,7 +72,10 @@ const SelectResource = (
    * }
    */
   const { 
-    page, loading, error, query 
+    page, loading, error,
+    actions: {
+      deleteDocument, prev, next, query
+    }
   } = useCommonCollection(resource, false);
 
   const transformed = useMemo(

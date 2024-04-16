@@ -273,7 +273,9 @@ const Notifications = forwardRef(
      */
     const { 
       pages, page, loading, error, queryCount,
-      query, prev, next
+      actions: {
+        deleteDocument, prev, next, query
+      }
     } = useCommonCollection('notifications', false);
 
     // console.log('notifications', page);

@@ -1,29 +1,14 @@
 import { useCallback } from 'react'
-import { create_local_storage_hook } from '@storecraft/sdk-react-hooks'
-
-/**
- * 
- * @typedef {object} StorecraftDashboardPreferences
- * @prop {boolean} [darkMode]
- * 
- */
-
-
-/** @type {StorecraftDashboardPreferences} */
-const default_value = {
-  darkMode: true
-}
-
-const KEY = 'storecraft_dashboard_preferences';
-
-const useLocalStorage = create_local_storage_hook(KEY, default_value);
+import { usePreferences } from './usePreferences.js';
 
 
 /**
- * @param {boolean} [defaultValue] 
+ * 
+ * The `dark-mode` state hook
+ * 
  */
-export default function useDarkMode(defaultValue=true) {
-  const { state, setState } = useLocalStorage();
+export default function useDarkMode() {
+  const { state, setState } = usePreferences();
 
   const toggle = useCallback(
     () => {

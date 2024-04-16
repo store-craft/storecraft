@@ -31,9 +31,10 @@ const Login = ({ }) => {
     }
   } = useStorecraft();
 
-  const [credentials, setCredentials] = useState(config ?? {})
-  const [error, setError] = useState(undefined)
-  console.log('credentials ', credentials)
+  const [credentials, setCredentials] = useState(config ?? {});
+  const [error, setError] = useState(undefined);
+
+  // console.log('credentials ', credentials)
 
   useEffect(
     () => {

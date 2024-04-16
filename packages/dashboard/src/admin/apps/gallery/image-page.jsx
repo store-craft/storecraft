@@ -119,7 +119,7 @@ const ImagePage = ({}) => {
   const { 
     doc, loading, hasLoaded, error, op,
     actions: { 
-      deleteDocument 
+      remove 
     }
   } = useDocument('images', handle);
 
@@ -146,14 +146,14 @@ const ImagePage = ({}) => {
     async (data_id) => {
       setLoadingDelete(true)
       try {
-        await deleteDocument();
+        await remove();
         nav(-2);
       } catch(e) {
         console.log(e)
       } finally {
         setLoadingDelete(false)
       }
-    }, [deleteDocument, nav]
+    }, [remove, nav]
   );
   
   return (
@@ -210,12 +210,12 @@ const ImagePage = ({}) => {
       ref={ref_modal} 
       onApprove={onApproveDelete} 
       title={
-            <p className='text-xl flex 
-                          flex-row items-center gap-3'>
-              <AiOutlineWarning className='text-2xl'/> 
-              Warning
-            </p>
-          }/>  
+        <p className='text-xl flex 
+                      flex-row items-center gap-3'>
+          <AiOutlineWarning className='text-2xl'/> 
+          Warning
+        </p>
+      }/>  
 
 </div>    
   )

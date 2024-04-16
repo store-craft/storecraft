@@ -50,7 +50,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   const { 
     doc: doc_original, loading, hasLoaded, error, op, sdk,
     actions: { 
-      reload, upsert, setError, deleteDocument,
+      reload, upsert, setError, remove,
     }
   } = useDocument(resource, document);
 
@@ -158,13 +158,13 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
 
   const deletePromise = useCallback(
     async () => {
-      const id_or_handle = await deleteDocument();
+      const id_or_handle = await remove();
 
       if(slug) nav(-2);
 
       return id_or_handle;
 
-    }, [deleteDocument, nav, slug]
+    }, [remove, nav, slug]
   );
 
   // A suggestion for a unique key

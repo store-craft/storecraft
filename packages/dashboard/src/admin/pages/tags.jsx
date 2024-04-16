@@ -34,9 +34,11 @@ export default ({}) => {
    */ 
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, onLimitChange, onReload, prev, next, 
-    queryCount
-   } = useCollectionsActions('tags', '/pages/tags');
+    error, queryCount, 
+    actions: {
+      onLimitChange, onReload, prev, next
+    }
+  } = useCollectionsActions('tags', '/pages/tags');
 
   return (
 <div className='w-full h-full'>

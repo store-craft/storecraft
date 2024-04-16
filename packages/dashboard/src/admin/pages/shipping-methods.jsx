@@ -38,9 +38,11 @@ export default ({}) => {
    */ 
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, onLimitChange, onReload, prev, next, 
-    queryCount
-   } = useCollectionsActions('shipping', '/pages/shipping-methods');
+    error, queryCount, 
+    actions: {
+      onLimitChange, onReload, prev, next
+    }
+  } = useCollectionsActions('shipping', '/pages/shipping-methods');
 
 
   return (

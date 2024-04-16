@@ -69,7 +69,7 @@ const useCollectionsActions = (
   const { 
     pages, page, loading, error, sdk, queryCount, 
     actions: {
-      deleteDocument, query
+      removeDocument, query
     }
   } = useCollection(resource, autoLoadQuery, autoLoad);
 
@@ -218,15 +218,25 @@ const useCollectionsActions = (
     () => ({
       viewDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/view`,
       editDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/edit`,
-      deleteDocument,
-    }), [deleteDocument, slug]
+      deleteDocument: removeDocument,
+    }), [removeDocument, slug]
   );
 
   return {
-    query_api, ref_actions, context,
-    pages, page, loading, error, 
-    onLimitChange, onReload, prev, 
-    next, queryCount
+    query_api, 
+    ref_actions, 
+    context,
+    pages, 
+    page, 
+    loading, 
+    error, 
+    queryCount,
+    actions: {
+      onLimitChange, 
+      onReload, 
+      prev, 
+      next, 
+    } 
   }
 }
 

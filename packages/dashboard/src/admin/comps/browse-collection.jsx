@@ -34,7 +34,7 @@ const BrowseCollection = (
   const { 
     pages, page, loading, error, queryCount, 
     actions: {
-      deleteDocument, prev, next, query
+      prev, next, query
     }
   } = useCollection(collectionId);
 

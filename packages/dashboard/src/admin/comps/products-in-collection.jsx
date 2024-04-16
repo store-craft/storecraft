@@ -48,7 +48,7 @@ const CollectionBase = forwardRef(
   const { 
     pages, page, loading, error, queryCount,
     actions: {
-      deleteDocument, prev, next, query
+      prev, next, query
     }
   } = useCollection(
     `collections/${collection_handle_or_id}/products`, 

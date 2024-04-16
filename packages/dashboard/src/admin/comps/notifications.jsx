@@ -274,7 +274,7 @@ const Notifications = forwardRef(
     const { 
       pages, page, loading, error, queryCount,
       actions: {
-        deleteDocument, prev, next, query
+        removeDocument, prev, next, query
       }
     } = useCollection('notifications', q_initial, false);
 

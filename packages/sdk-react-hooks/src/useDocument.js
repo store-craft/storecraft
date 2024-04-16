@@ -121,7 +121,7 @@ export function useDocument(
     }, [resource, document]
   );
 
-  const deleteDocument = useCallback(
+  const remove = useCallback(
     async () => {
       setLoading(true);
       setError(undefined);
@@ -174,7 +174,7 @@ export function useDocument(
     document,
     actions: { 
       reload, upsert, 
-      deleteDocument, 
+      remove, 
       setError,
     }
   }

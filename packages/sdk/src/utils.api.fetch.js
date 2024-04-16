@@ -227,7 +227,7 @@ export class collection_base {
    * 
    * @returns {Promise<boolean>}
    */
-  async delete(handle_or_id) {
+  async remove(handle_or_id) {
     return remove(this.sdk, this.base_name, handle_or_id);
   }
 

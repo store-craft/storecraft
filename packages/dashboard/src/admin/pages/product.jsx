@@ -239,7 +239,7 @@ export default (
     () => ({
       ...context_base,
       removeVariant: async (product_variant_handle) => {
-        await sdk.products.delete(
+        await sdk.products.remove(
           product_variant_handle
         )
         // reload, because deleting a variant child has a

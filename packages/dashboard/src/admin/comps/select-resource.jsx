@@ -74,7 +74,7 @@ const SelectResource = (
   const { 
     page, loading, error,
     actions: {
-      deleteDocument, prev, next, query
+      query
     }
   } = useCollection(resource, q_initial, false);
 

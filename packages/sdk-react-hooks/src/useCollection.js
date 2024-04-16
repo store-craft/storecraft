@@ -223,19 +223,21 @@ export const useCollection = (
     , [paginate]
   );
 
-  const deleteDocument = useCallback(
+  const removeDocument = useCallback(
     /**@param {string} docId */
     async (docId) => {
       try {
-        await sdk[resource].delete(docId);
+        await sdk[resource].remove(docId);
 
         setPages(delete_from_collection(docId));
 
         return docId;
 
       } catch (err) {
+
         setError(err);
         setIsLoading(false);
+
         throw err;
       }
 
@@ -319,7 +321,7 @@ export const useCollection = (
     actions: {
       prev, next, query,
       pollHasChanged, 
-      deleteDocument
+      removeDocument
     },
   }
 }

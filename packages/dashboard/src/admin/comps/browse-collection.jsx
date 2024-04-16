@@ -1,5 +1,5 @@
 import { Bling } from './common-ui.jsx'
-import { useCommonCollection } from '@storecraft/sdk-react-hooks'
+import { useCollection } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { IoCloseSharp } from "react-icons/io5/index.js"
@@ -36,7 +36,7 @@ const BrowseCollection = (
     actions: {
       deleteDocument, prev, next, query
     }
-  } = useCommonCollection(collectionId, true);
+  } = useCollection(collectionId);
 
   const onAdd = useCallback(
     /** @param {import('@storecraft/core/v-api').BaseType} item */

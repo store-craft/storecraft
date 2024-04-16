@@ -3,7 +3,7 @@ import CollectionView from './collection-view.jsx'
 import { RecordActions, Span, 
   TimeStampView } from './common-fields.jsx'
 import { Bling, Card } from './common-ui.jsx'
-import { useCommonCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
+import { q_initial, useCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
@@ -41,7 +41,7 @@ const CollectionBase = forwardRef(
   const { sdk } = useStorecraft();
     
   /**
-   * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
    *  import('@storecraft/core/v-api').ProductType>
    * }
    */
@@ -50,8 +50,9 @@ const CollectionBase = forwardRef(
     actions: {
       deleteDocument, prev, next, query
     }
-  } = useCommonCollection(
-    `collections/${collection_handle_or_id}/products`, false
+  } = useCollection(
+    `collections/${collection_handle_or_id}/products`, 
+    q_initial, false
   );
 
   const trigger = useTrigger();

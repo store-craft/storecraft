@@ -111,6 +111,14 @@ const paginate_helper = (sdk, query, resource) => {
  * 
  */
 
+
+/** @type {import('@storecraft/core/v-api').ApiQuery} */
+export const q_initial = {
+  sortBy: ['updated_at', 'id'],
+  order: 'desc',
+  limit: 5
+}
+
 /**
  * @template {import('@storecraft/core/v-api').BaseType} T The type of the item
  * 
@@ -119,7 +127,7 @@ const paginate_helper = (sdk, query, resource) => {
  * @param {boolean} autoLoad 
  */
 export const useCollection = (
-  resource, q=undefined, autoLoad=true
+  resource, q=q_initial, autoLoad=true
 ) => {
 
   const { sdk } = useStorecraft();
@@ -236,16 +244,23 @@ export const useCollection = (
 
   const query = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ApiQuery} [q={}] query object
+     * @param {import('@storecraft/core/v-api').ApiQuery} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
-    async (q={}, from_cache=false) => {
-      _q.current = q;
-      _next.current = paginate_helper(sdk, q, resource);
+    async (q=q_initial, from_cache=false) => {
+      let q_modified = {
+        ...q_initial,
+        ...q
+      }
+
+      _q.current = q_modified;
+      _next.current = paginate_helper(
+        sdk, q_modified, resource
+      );
 
       const result = await _internal_fetch_next(true);
       const count = await sdk.statistics.countOf(
-        resource, q
+        resource, q_modified
       );
 
       setQueryCount(count);
@@ -260,18 +275,22 @@ export const useCollection = (
    */
   const pollHasChanged = useCallback(
     async () => {
-      const last = pages?.at(-1)?.at(-1);
 
-      if(!last) {
+      if(!pages?.length) {
         return false;
       }
+
+      const max_updated = pages.flat(1).reduce(
+        (p, c) => c > p ? c : p,
+        pages?.at(0)?.at(0)
+      );
 
       const count = await sdk.statistics.countOf(
         resource, 
         {
           startAfter: [
-            ['updated_at', last.updated_at],
-            ['id', last.id],
+            ['updated_at', max_updated.updated_at],
+            ['id', max_updated.id],
           ]
         }
       )
@@ -296,87 +315,12 @@ export const useCollection = (
     error, 
     sdk,
     queryCount, 
-    colId: resource,
+    resource,
     actions: {
-      pollHasChanged, prev, next, query,
+      prev, next, query,
+      pollHasChanged, 
       deleteDocument
     },
   }
 }
 
-
-/** @type {import('@storecraft/core/v-api').ApiQuery} */
-export const q_initial = {
-  sortBy: ['updated_at', 'id'],
-  order: 'desc',
-  limit: 5
-}
-
-/**
- * @template T the `document` type
- * 
- * @typedef {Omit<ReturnType<typeof useCommonCollection<T>>, 'page' | 'pages'> & 
- *  {
- *    page: T[]  
- *    pages: T[][]  
- *  }
- * } useCommonCollectionHookReturnType 
- * This `type` will give you the return type of the hook
- * 
- */
-
-/**
- * Modified collection with modified search query
- * 
- * @template T
- * 
- * @param {keyof App["db"]["resources"]} resource 
- * @param {boolean} [autoLoad=true] 
- * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
- */
- export const useCommonCollection = (
-  resource, autoLoad=true, autoLoadQuery=q_initial
-) => {
-    
-  /**
-   * @type {useCollectionHookReturnType<T>}
-   */
-  const { 
-    pages, page, loading, error, sdk,
-    queryCount,
-    actions: {
-      query : queryParent, prev, next, pollHasChanged,
-      deleteDocument
-    }
-  } = useCollection(resource, autoLoadQuery, autoLoad)
-
-  const query = useCallback(
-    /**
-     * @param {import('@storecraft/core/v-api').ApiQuery} q query object
-     * @param {boolean} from_cache 
-     */
-    (q, from_cache=false) => {
-
-      return queryParent(
-        {
-          ...q_initial, 
-          ...q
-        }, from_cache
-      )
-    }, [queryParent]
-  );
-
-  return {
-    pages, 
-    page, 
-    loading, 
-    error, 
-    sdk, 
-    queryCount, 
-    colId: resource,
-    actions: {
-      prev, next, query, pollHasChanged,
-      deleteDocument
-    }
-  }
-}

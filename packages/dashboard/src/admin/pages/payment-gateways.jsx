@@ -1,4 +1,4 @@
-import { useCommonCollection } from '@storecraft/sdk-react-hooks'
+import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
 import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -38,7 +38,7 @@ export default ({ collectionId, segment }) => {
   const { 
     page, loading, error, 
     query, queryCount, deleteDocument 
-  } = useCommonCollection('payment_gateways', false)
+  } = useCollection('payment_gateways', q_initial, false)
   segment = segment ?? collectionId
   useEffect(
     () => {

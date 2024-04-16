@@ -1,5 +1,5 @@
 import { 
-  q_initial, useCommonCollection 
+  q_initial, useCollection 
 } from '@storecraft/sdk-react-hooks';
 import { App } from '@storecraft/core';
 import { 
@@ -29,7 +29,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  * - Pagination through querying or navigation
  * - Querying
  * 
- * This hook wraps `useCommonCollection` hook
+ * This hook wraps `useCollection` hook
  * 
  * @template {import('@storecraft/core/v-api').BaseType} T
  * 
@@ -64,14 +64,14 @@ const useCollectionsActions = (
   const ref_use_cache = useRef(true)
 
   /**
-   * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<T>}
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
    */
   const { 
     pages, page, loading, error, sdk, queryCount, 
     actions: {
       deleteDocument, query
     }
-  } = useCommonCollection(resource, autoLoad, autoLoadQuery);
+  } = useCollection(resource, autoLoadQuery, autoLoad);
 
   useEffect(
     () => {

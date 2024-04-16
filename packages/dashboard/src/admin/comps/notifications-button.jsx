@@ -5,6 +5,7 @@ import { IoIosNotifications } from 'react-icons/io/index.js'
 import useInterval from '../hooks/useInterval.js'
 import ShowIf from './show-if.jsx'
 import { MINUTE } from '@/admin/utils/time.js'
+import { useCollection } from '@storecraft/sdk-react-hooks'
 
 
 /**
@@ -59,7 +60,7 @@ const NotificationButton = (
     isOpen=false, ...rest 
   }
 ) => {
-  
+
   const [alert, setAlert] = useState(false)
   
   const onInterval = useCallback(
@@ -73,7 +74,7 @@ const NotificationButton = (
   const {
     stop, start 
   } = useInterval(
-    onInterval, MINUTE*10, false
+    onInterval, MINUTE * 10, false
   );
 
   useEffect(
@@ -97,6 +98,7 @@ const NotificationButton = (
   <ShowIf show={alert}>
     <Bubble className='absolute w-3 h-3 top-px right-0' />
   </ShowIf>
+
 </div>    
   )
 }

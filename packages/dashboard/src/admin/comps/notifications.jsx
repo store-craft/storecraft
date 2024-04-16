@@ -5,7 +5,7 @@ import React, {
 import { AiFillNotification } from 'react-icons/ai/index.js'
 import MDView from './md-view.jsx'
 import { MINUTE, timeSince } from '../utils/time.js'
-import { useCommonCollection } from '@storecraft/sdk-react-hooks'
+import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
 import { PromisableLoadingButton } from './common-button.jsx'
 import useInterval from '@/admin/hooks/useInterval.js'
 import { useNavigate } from 'react-router-dom'
@@ -267,7 +267,7 @@ const Notifications = forwardRef(
     const notis = test;
 
     /**
-     * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<
+     * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
      *  import('@storecraft/core/v-api').NotificationType
      * >}
      */
@@ -276,7 +276,7 @@ const Notifications = forwardRef(
       actions: {
         deleteDocument, prev, next, query
       }
-    } = useCommonCollection('notifications', false);
+    } = useCollection('notifications', q_initial, false);
 
     // console.log('notifications', page);
 

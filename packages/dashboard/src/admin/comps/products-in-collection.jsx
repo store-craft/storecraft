@@ -3,11 +3,10 @@ import CollectionView from './collection-view.jsx'
 import { RecordActions, Span, 
   TimeStampView } from './common-fields.jsx'
 import { Bling, Card } from './common-ui.jsx'
-import { useCommonCollection } from '@storecraft/sdk-react-hooks'
+import { useCommonCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
-import { getSDK } from '@storecraft/sdk'
 import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
@@ -38,6 +37,8 @@ const CollectionBase = forwardRef(
       collection_handle_or_id, limit=5, context, onLoaded, ...rest
     }, ref
   ) => {
+
+  const { sdk } = useStorecraft();
     
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCommonCollectionHookReturnType<
@@ -100,7 +101,7 @@ const CollectionBase = forwardRef(
 
           const col = context.data;
           const pr = page[pr_index];
-          await getSDK().products.batchRemoveProductsFromCollection(
+          await sdk.products.batchRemoveProductsFromCollection(
             [pr], col
           );
           page.splice(pr_index, 1);
@@ -133,6 +134,7 @@ const CollectionBase = forwardRef(
  */
 const ProductsInCollection = ({ value, context }) => {
 
+  const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false)
   const [count, setCount] = useState(-1)
   const [error, setError] = useState(undefined)
@@ -155,7 +157,7 @@ const ProductsInCollection = ({ value, context }) => {
 
       try {
         // Add products to collection through collection and search fields
-        await getSDK().products.batchAddProductsToCollection(
+        await sdk.products.batchAddProductsToCollection(
           selected_items, value
         );
         ref_productsByCollection.current.refresh()
@@ -173,7 +175,7 @@ const ProductsInCollection = ({ value, context }) => {
 
   return (
 <Card 
-    name={`Products in collection ${count>=0 ? `(${count})` : ''}` }
+    name={'Products in collection ' + (count>=0 ? count : '') }
     className='w-full --lg:w-[30rem] h-fit' 
     border={true}
     error={error}>

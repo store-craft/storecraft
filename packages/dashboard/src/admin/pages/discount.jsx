@@ -230,7 +230,7 @@ export default (
       savePromise, deletePromise, reload, setError,
       duplicate
     },
-    context, key, 
+    context, key, sdk,
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
@@ -244,7 +244,7 @@ export default (
       const data = await reload();
       setError(undefined)
       try {
-        // await getSDK().discounts.publish(data, 400, pako.gzip)
+        // await sdk.discounts.publish(data, 400, pako.gzip)
         await reload()
       } catch (e) {
         console.log('e', e);

@@ -48,7 +48,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
    * @type {import('@storecraft/sdk-react-hooks').useCommonApiDocumentHookReturnType<T>}
    */
   const { 
-    doc: doc_original, loading, hasLoaded, error, op,
+    doc: doc_original, loading, hasLoaded, error, op, sdk,
     actions: { 
       reload, upsert, setError, create, deleteDocument, colId, docId 
     }
@@ -179,7 +179,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
       savePromise, deletePromise, duplicate, 
       navWithState, reload, setError
     },
-    error, key, ref_head, ref_root, doc, 
+    error, key, ref_head, ref_root, doc, sdk,
     isEditMode, isCreateMode, isViewMode,
     loading, hasChanged, hasLoaded, context
   }

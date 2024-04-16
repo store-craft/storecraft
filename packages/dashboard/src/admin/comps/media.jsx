@@ -6,7 +6,6 @@ import { BsCloudUpload } from 'react-icons/bs/index.js'
 import { useCallback, useEffect, useRef, 
   useState } from 'react'
 import ShowIf from './show-if.jsx'
-import { getSDK } from '@storecraft/sdk'
 import { BlingInput } from './common-ui.jsx'
 import { RiGalleryLine } from 'react-icons/ri/index.js'
 import GallerySelect from '../apps/gallery/gallery-select.jsx'
@@ -15,6 +14,7 @@ import { hasTouchScreen, read_clipboard } from '../utils/index.js'
 import { BlingButton } from './common-button.jsx'
 import { HR } from './common-ui.jsx'
 import Img from './img.jsx'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**
  * `CameraSource` will fetch image from local camera
@@ -365,6 +365,7 @@ const Media = (
   }
 ) => {
 
+  const { sdk } = useStorecraft();
   const [_hasTouchScreen, setHasTouchScreen] = useState(false);
   /** @type {useStateInfer<Upload[]>} */
   const [uploads, setUploads] = useState([]);
@@ -465,7 +466,7 @@ const Media = (
 
       // upload here
       try {
-        const ok = await getSDK().storage.putBytes(
+        const ok = await sdk.storage.putBytes(
           `images/${name}`, blob
         );
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import useTrigger from "./useTrigger.js"
-import { getSDK } from '@storecraft/sdk'
+import { useStorecraft } from "./useStorecraft.js";
 
 /**
  * @template T the `document` type
@@ -31,6 +31,7 @@ export function useCommonApiDocument(
   try_cache_on_autoload=true
 ) {
 
+  const { sdk } = useStorecraft();
   const [location, setLocation] = useState([resource, document])
   const [loading, setLoading] = useState(
     (resource && document && autoLoad) ? true : false
@@ -45,7 +46,7 @@ export function useCommonApiDocument(
   const trigger = useTrigger();
 
   useEffect(
-    () => getSDK().auth.add_sub(trigger)
+    () => sdk.auth.add_sub(trigger)
     ,[trigger]
   );
 
@@ -61,7 +62,7 @@ export function useCommonApiDocument(
 
       try {
         /** @type {T} */
-        const data = await getSDK()[resource].get(
+        const data = await sdk[resource].get(
           location[1], try_cache
         );
         setData(data);
@@ -93,11 +94,11 @@ export function useCommonApiDocument(
       setOp('update')
 
       try {
-        const id = await getSDK()[resource].upsert(
+        const id = await sdk[resource].upsert(
           new_data
         );
         
-        const saved_data = await getSDK()[resource].get(
+        const saved_data = await sdk[resource].get(
           id
         );
 
@@ -126,7 +127,7 @@ export function useCommonApiDocument(
       setOp('delete');
 
       try {
-        await getSDK()[resource].delete(location[1]);
+        await sdk[resource].delete(location[1]);
 
         setData(undefined);
         setHasLoaded(true);
@@ -164,7 +165,7 @@ export function useCommonApiDocument(
 
   return {
     // doc: (document===location[1] && resource===location[0]) ? data : {}, 
-    doc: data, 
+    doc: data, sdk,
     loading, hasLoaded, error, op, 
     actions: { 
       reload, upsert, deleteDocument, setError,

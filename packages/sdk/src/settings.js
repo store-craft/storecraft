@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
@@ -10,7 +10,7 @@ export default class Settings extends collection_base {
 
   /**
    * 
-   * @param {StorecraftAdminSDK} sdk 
+   * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
     super(sdk, 'settings');

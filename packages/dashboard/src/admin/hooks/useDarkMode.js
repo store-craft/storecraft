@@ -1,51 +1,43 @@
-import { useCallback, useEffect } from 'react'
-import useTrigger from './useTrigger.js'
-import { getSDK } from '@storecraft/sdk'
+import { useCallback } from 'react'
+import { create_local_storage_hook } from '@storecraft/sdk-react-hooks'
 
-let darkMode = false
-const subs = new Set()
+/**
+ * 
+ * @typedef {object} StorecraftDashboardPreferences
+ * @prop {boolean} [darkMode]
+ * 
+ */
 
-const subscribe = cb => {
-  subs.add(cb)
-  return () => {
-    subs.delete(cb)
-  }
+
+/** @type {StorecraftDashboardPreferences} */
+const default_value = {
+  darkMode: true
 }
 
-const notify = () => {
-  getSDK().perfs.set('dark_mode', darkMode)
-  subs.forEach(
-    cb => cb(darkMode)
-  )
-}
+const KEY = 'storecraft_dashboard_preferences';
+
+const useLocalStorage = create_local_storage_hook(KEY, default_value);
+
 
 /**
  * @param {boolean} [defaultValue] 
  */
 export default function useDarkMode(defaultValue=true) {
-  const trigger = useTrigger()
+  const { state, setState } = useLocalStorage();
 
   const toggle = useCallback(
     () => {
-      darkMode = !darkMode
-      notify()
-    }, []
-  )
+      setState(
+        {
+          ...state,
+          darkMode: !state.darkMode
+        }
+      )
+    }, [state]
+  );
 
-  useEffect(
-    () => {
-      darkMode = getSDK().perfs.get('dark_mode') ?? false; 
-      notify();
-      trigger();
-    }, [trigger]
-  )
-
-  useEffect(
-    () => subscribe(
-      trigger
-    ),
-    [trigger]
-  )
-
-  return { darkMode, toggle }
+  return { 
+    darkMode: state.darkMode, 
+    toggle 
+  }
 }

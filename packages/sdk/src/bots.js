@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 
 export const SECOND = 1000
 export const MINUTE = SECOND*60
@@ -15,7 +15,7 @@ const NAME = 'bots'
 export default class Bots {
 
   /**
-   * @param {StorecraftAdminSDK} context 
+   * @param {StorecraftSDK} context 
    */
   constructor(context) {
     this.context = context

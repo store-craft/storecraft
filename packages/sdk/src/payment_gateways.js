@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { assert, text2tokens, 
          to_handle } from './utils.functional.js'
 // import { OrderData, PaymentGatewayData } from './js-docs-types'
@@ -42,7 +42,7 @@ import { jwtVerify, SignJWT } from 'jose'
 export default class PaymentGateways {
 
   /**
-   * @param {StorecraftAdminSDK} context 
+   * @param {StorecraftSDK} context 
    */
   constructor(context) {
     this.context = context

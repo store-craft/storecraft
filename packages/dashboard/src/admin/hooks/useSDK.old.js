@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import useTrigger from "./useTrigger.js";
-import { getSDK } from "@storecraft/sdk";
 
 /**
  * A simple `react` hook to get access to `sdk`
@@ -8,6 +7,7 @@ import { getSDK } from "@storecraft/sdk";
  * 
  */
 export const useSDK = () => {
+  const { sdk } = useStorecraft();
   const [isInit, setIsInit] = useState(false)
   const [isAuth, setIsAuth] = useState(undefined)
   const trigger = useTrigger()
@@ -15,7 +15,7 @@ export const useSDK = () => {
   useEffect(
     () => {
       try {
-        const sdk = getSDK()
+        const sdk = sdk
         if(sdk.auth.isAuthenticated)
           setIsAuth(true)
 
@@ -32,12 +32,12 @@ export const useSDK = () => {
         setIsInit(false)
         console.log('Storecraft Error ', e)
       }
-    }, [trigger, getSDK]
+    }, [trigger]
   );
 
   return {
     isInit, isAuth, 
-    sdk: isInit ? getSDK() : undefined, 
+    sdk: isInit ? sdk : undefined, 
     trigger
   }
 }

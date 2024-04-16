@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { LS } from './utils.browser.js'
 
 export default class Perfs {
@@ -8,7 +8,7 @@ export default class Perfs {
 
   /**
    * 
-   * @param {StorecraftAdminSDK} context 
+   * @param {StorecraftSDK} context 
    */
   constructor(context) {
     this.context = context

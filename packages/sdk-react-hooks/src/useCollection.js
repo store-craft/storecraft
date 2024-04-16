@@ -1,9 +1,10 @@
 import { useCallback, useEffect, 
          useRef, useState } from 'react'
 import useTrigger from './useTrigger.js'
-import { getSDK } from '@storecraft/sdk'
 import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
+import { useStorecraft } from './useStorecraft.js'
+import { StorecraftSDK } from '@storecraft/sdk'
 
 
 /**
@@ -57,12 +58,13 @@ const delete_from_collection = what => {
  * @template {any} G
  * 
  * 
+ * @param {StorecraftSDK} sdk
  * @param {import('@storecraft/core/v-api').ApiQuery} query 
  * @param {string} resource
  * 
  * 
  */
-const paginate_helper = (query, resource) => {
+const paginate_helper = (sdk, query, resource) => {
 
   query.sortBy = query.sortBy ?? ['updated_at', 'id'];
 
@@ -78,6 +80,7 @@ const paginate_helper = (query, resource) => {
 
     /** @type{G[]} */
     const l = await list(
+      sdk,
       resource,
       current
     );
@@ -118,6 +121,7 @@ export const useCollection = (
   resource, q=undefined, autoLoad=true
 ) => {
 
+  const { sdk } = useStorecraft();
   const _q = useRef(q);
   const _hasEffectRan = useRef(false);
 
@@ -134,7 +138,7 @@ export const useCollection = (
   const trigger = useTrigger();
   
   useEffect(
-    () => getSDK().auth.add_sub(trigger),
+    () => sdk.auth.add_sub(trigger),
     [trigger]
   );
 
@@ -214,7 +218,7 @@ export const useCollection = (
     /**@param {string} docId */
     async (docId) => {
       try {
-        await getSDK()[resource].delete(docId);
+        await sdk[resource].delete(docId);
 
         setPages(delete_from_collection(docId));
 
@@ -236,10 +240,10 @@ export const useCollection = (
      */
     async (q={}, from_cache=false) => {
       _q.current = q;
-      _next.current = paginate_helper(q, resource);
+      _next.current = paginate_helper(sdk, q, resource);
 
       const result = await _internal_fetch_next(true);
-      const count = await getSDK().statistics.countOf(
+      const count = await sdk.statistics.countOf(
         resource, q
       );
 
@@ -260,7 +264,7 @@ export const useCollection = (
 
   return {
     pages, page: index>=0 ? pages[index] : [], 
-    loading, error, 
+    loading, error, sdk,
     prev, next, query, queryCount,
     deleteDocument, 
     colId: resource 
@@ -304,7 +308,7 @@ export const q_initial = {
    * @type {useCollectionHookReturnType<T>}
    */
   const { 
-    pages, page, loading, error, 
+    pages, page, loading, error, sdk,
     prev, next, query : queryParent, queryCount, deleteDocument 
   } = useCollection(resource, autoLoadQuery, autoLoad)
 
@@ -326,7 +330,7 @@ export const q_initial = {
 
   return {
     pages, page, loading, error, 
-    prev, next, 
+    prev, next, sdk,
     query, queryCount, 
     deleteDocument, 
     colId: resource 

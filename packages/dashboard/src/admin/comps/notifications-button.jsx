@@ -1,6 +1,5 @@
 import React, { 
   useCallback, useEffect, useState } from 'react'
-import { getSDK } from '@storecraft/sdk'
 import { GradientFillIcon } from './common-button.jsx'
 import { IoIosNotifications } from 'react-icons/io/index.js'
 import useInterval from '../hooks/useInterval.js'
@@ -65,7 +64,7 @@ const NotificationButton = (
   
   const onInterval = useCallback(
     async () => {
-      const hasChanged = await getSDK().notifications.hasChanged()
+      const hasChanged = false;//await sdk.notifications.hasChanged()
       console.log('CHANGED ' + hasChanged)
       setAlert(hasChanged)
     }, []

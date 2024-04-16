@@ -8,11 +8,11 @@ const useTrigger = () => {
   const [ count, setCount] = useState(0)
   const cb = useCallback(
     () => {
-      setCount(v=>++v)
-      return count
+      setCount(v=>++v);
+      return count;
     }, []
   )
-  return cb
+  return cb;
 }
 
 export default useTrigger

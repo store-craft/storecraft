@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { 
   collection_base, fetchApiWithAuth 
 } from './utils.api.fetch.js';
@@ -15,7 +15,7 @@ export default class Notifications extends collection_base {
 
   /**
    * 
-   * @param {StorecraftAdminSDK} sdk 
+   * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
     super(sdk, 'notifications');
@@ -27,6 +27,7 @@ export default class Notifications extends collection_base {
    */
   upsertBulk = items => {
     return fetchApiWithAuth(
+      this.sdk, 
       `${this.base_name}`,
       {
         method: 'post',

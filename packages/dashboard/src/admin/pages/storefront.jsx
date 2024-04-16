@@ -11,7 +11,6 @@ import ErrorMessage from '@/admin/comps/error-message.jsx'
 import StorefrontProducts from '@/admin/comps/storefront-products.jsx'
 import { PromisableLoadingBlingButton } from '@/admin/comps/common-button.jsx'
 import { MdPublish } from 'react-icons/md/index.js'
-import { getSDK } from '@storecraft/sdk'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
@@ -242,7 +241,7 @@ export default (
       savePromise, deletePromise, reload, duplicate,
       setError
     },
-    context, key, 
+    context, key, sdk,
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
@@ -256,7 +255,7 @@ export default (
       const sf = await reload();
       setError(undefined)
       try {
-        await getSDK().storefronts.publish(sf);
+        await sdk.storefronts.publish(sf);
         await reload();
       } catch (e) {
         setError({ 

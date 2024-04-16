@@ -1,9 +1,9 @@
 import { useCallback, useEffect, 
   useRef, useState } from 'react'
-import { getSDK } from '@storecraft/sdk'
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**
  * TODO: I need to rewrite it to account for custom actions
@@ -21,8 +21,9 @@ const OrderPaymentGateway = (
   }
 ) => {
 
-  const ref_name = useRef()
-  const { key, name, comp_params } = field
+  const { sdk } = useStorecraft();
+  const ref_name = useRef();
+  const { key, name, comp_params } = field;
 
   const [status, setStatus] = useState(value?.latest_status ?? { messages: [] })
 
@@ -34,7 +35,7 @@ const OrderPaymentGateway = (
       if(value?.gateway_handle===undefined)
         return;
       try {
-        const stat = await getSDK().payment_gateways.status(
+        const stat = await sdk.payment_gateways.status(
           value.gateway_handle, order.id
         );
         onChange({
@@ -62,7 +63,7 @@ const OrderPaymentGateway = (
   const capture = useCallback(
     async () => {
       try {
-        const stat = await getSDK().payment_gateways.capture(
+        const stat = await sdk.payment_gateways.capture(
           value.gateway_id, order.id
         )
         onChange({
@@ -82,7 +83,7 @@ const OrderPaymentGateway = (
   const void_authorized = useCallback(
     async () => {
       try {
-        const stat = await getSDK().payment_gateways.void(
+        const stat = await sdk.payment_gateways.void(
           value.gateway_id, order.id
         )
         onChange({
@@ -102,7 +103,7 @@ const OrderPaymentGateway = (
   const refund = useCallback(
     async () => {
       try {
-        const stat = await getSDK().payment_gateways.refund(
+        const stat = await sdk.payment_gateways.refund(
           value.gateway_id, order.id
         )
         onChange({

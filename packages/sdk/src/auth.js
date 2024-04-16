@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js';
+import { StorecraftSDK } from '../index.js';
 import { LS } from './utils.browser.js'
 import { url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
@@ -19,24 +19,37 @@ export default class Auth {
    *  [user, isAuthenticated] : [ApiAuthResult, boolean]) => void
    * } SubscriberCallback 
    */
+
+
   /**@type {Set<SubscriberCallback>} */
-  #subscribers = new Set()
-  /**@type {ApiAuthResult} */
-  currentUser = undefined
+  #subscribers = new Set();
+
 
   /**
    * 
-   * @param {StorecraftAdminSDK} context 
+   * @param {StorecraftSDK} context 
    */
   constructor(context) {
     this.context = context
-    this.USER_KEY = `storecraft_admin_${context.config.email}`
-    this.broadcast_channel = new BroadcastChannel(this.USER_KEY)
+    // this.USER_KEY = `storecraft_admin_${context.config.email}`
+    // this.broadcast_channel = new BroadcastChannel(this.USER_KEY)
   }
 
   #save_user() {
-    this.USER_KEY && LS.set(this.USER_KEY, this.currentUser);
+    // this.USER_KEY && LS.set(this.USER_KEY, this.currentUser);
   }
+
+  get currentAuth() {
+    return this.context?.config?.auth;
+  }
+
+  /**
+   * @param {ApiAuthResult} value 
+   */
+  set currentAuth(value) {
+    this.context.config.auth = value;
+  }
+
 
   init() {
     const that = this
@@ -46,9 +59,9 @@ export default class Auth {
     }
 
     // load saved user
-    this.currentUser = LS.get(this.USER_KEY)
+    this.currentAuth = LS.get(this.USER_KEY)
 
-    console.log('this.currentUser', this.currentUser);
+    console.log('this.currentUser', this.currentAuth);
 
     if (typeof window !== 'undefined') {
       window.addEventListener('blur', this.#save_user);
@@ -56,10 +69,10 @@ export default class Auth {
     }
 
     // let's findout and re-auth of needed
-    if(this.currentUser) {
+    if(this.currentAuth) {
       if(this.isAuthenticated) {
         this.#_update_and_notify_subscribers(
-          this.currentUser, false
+          this.currentAuth, false
         );
       } else {
         // let's try to authenticate
@@ -74,7 +87,7 @@ export default class Auth {
   async working_access_token() {
     if(!this.isAuthenticated)
       await this.reAuthenticate();
-    return this.currentUser.access_token.token;
+    return this.currentAuth.access_token.token;
   }
 
   /**
@@ -87,7 +100,7 @@ export default class Auth {
         method: 'post',
         body: JSON.stringify(
           {
-            refresh_token: this.currentUser.refresh_token.token
+            refresh_token: this.currentAuth.refresh_token.token
           }
         ),
         headers: {
@@ -110,7 +123,7 @@ export default class Auth {
   notify_subscribers = () => {
     // console.log('this.isAuthenticated', this.isAuthenticated)
     for(let s of this.#subscribers)
-      s([this.currentUser, this.isAuthenticated])
+      s([this.currentAuth, this.isAuthenticated])
   }
   
   /**
@@ -126,7 +139,7 @@ export default class Auth {
   }
 
   get isAuthenticated() {
-    const exp = this.currentUser?.access_token?.claims?.exp;
+    const exp = this.currentAuth?.access_token?.claims?.exp;
     return exp && exp*1000 > Date.now() - 60*1000;
   }
 
@@ -136,7 +149,7 @@ export default class Auth {
    * @param {boolean} [broadcast=false] 
    */
   #_update_and_notify_subscribers = (user, broadcast=false) => {
-    this.currentUser = user
+    this.currentAuth = user
     this.notify_subscribers();
     this.#save_user();
     if(broadcast)
@@ -144,9 +157,9 @@ export default class Auth {
   }
 
   #_broadcast = () => {
-    this.broadcast_channel.postMessage(
-      this.currentUser
-    );
+    // this.broadcast_channel.postMessage(
+    //   this.currentUser
+    // );
   }
 
   /**
@@ -156,7 +169,7 @@ export default class Auth {
    * 
    * @returns {Promise<ApiAuthResult>}
    */
-  signin_with_email_pass = async (email, password) => {
+  signin = async (email, password) => {
     // console.log('ep ', email, password)
 
     /** @type {import('@storecraft/core/v-api').ApiAuthSigninType} */
@@ -193,7 +206,7 @@ export default class Auth {
   signout = async () => {
     console.log('signout');
 
-    LS.set(this.USER_KEY, null);
+    // LS.set(this.USER_KEY, null);
 
     this.#_update_and_notify_subscribers(
       undefined, true

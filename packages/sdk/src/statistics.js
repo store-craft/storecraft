@@ -1,22 +1,26 @@
 import { App } from '@storecraft/core';
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
 import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
 
 export default class Statistics  {
-  /** @type {StorecraftAdminSDK} */
+  /** @type {StorecraftSDK} */
   #sdk;
   /** @type {Record<string, any>} */
   #cache = {};
 
   /**
    * 
-   * @param {StorecraftAdminSDK} sdk 
+   * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
     this.#sdk = sdk
   }
 
+  get sdk() {
+    return this.#sdk;
+  }
+ 
   /**
    * @param {string} key
    * 
@@ -66,6 +70,7 @@ export default class Statistics  {
       search.set('toDay', new Date(to_day).toISOString());
 
     return fetchApiWithAuth(
+      this.sdk, 
       `statistics/orders?${search.toString()}`
     );
   }
@@ -85,6 +90,7 @@ export default class Statistics  {
     const search = api_query_to_searchparams(query);
 
     return fetchApiWithAuth(
+      this.sdk, 
       `statistics/count/${table}?${search.toString()}`
     );
   }

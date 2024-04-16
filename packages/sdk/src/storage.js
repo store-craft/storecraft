@@ -1,5 +1,5 @@
 
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
 
 /**
@@ -15,7 +15,7 @@ import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
 export default class Storage {
 
   /** 
-   * @param {StorecraftAdminSDK} sdk of
+   * @param {StorecraftSDK} sdk of
    */
   constructor(sdk) {
     this.sdk = sdk
@@ -34,6 +34,7 @@ export default class Storage {
   getBlobSigned = async (key) => {
 
     const r = await fetchOnlyApiResponseWithAuth(
+      this.sdk, 
       `storage/${key}?signed=true`,
       { method: 'get' }
     );
@@ -76,6 +77,7 @@ export default class Storage {
   getBlobUnsigned = async (key) => {
 
     const r = await fetchOnlyApiResponseWithAuth(
+      this.sdk, 
       `storage/${key}?signed=false`,
       { method: 'get' }
     );
@@ -172,6 +174,7 @@ export default class Storage {
   putBytesSigned = async (key, data) => {
 
     const r = await fetchOnlyApiResponseWithAuth(
+      this.sdk, 
       `storage/${key}?signed=true`,
       { method: 'put' }
     );
@@ -212,6 +215,7 @@ export default class Storage {
   putBytesUnsigned = async (key, data) => {
 
     const r = await fetchOnlyApiResponseWithAuth(
+      this.sdk, 
       `storage/${key}?signed=false`,
       { 
         method: 'put',
@@ -263,6 +267,7 @@ export default class Storage {
    */
   delete = async (key) => {
     const r = await fetchOnlyApiResponseWithAuth(
+      this.sdk, 
       `storage/${key}`,
       { method: 'delete' }
     );

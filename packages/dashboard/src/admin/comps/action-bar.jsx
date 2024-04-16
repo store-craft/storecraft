@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { AiOutlineMenuFold } from 'react-icons/ai/index.js'
 import { MdLogout } from 'react-icons/md/index.js'
-import { useUser } from '@storecraft/sdk-react-hooks'
+import { useAuth } from '@storecraft/sdk-react-hooks'
 import { GradientFillIcon } from './common-button.jsx'
 import ShowIf from './show-if.jsx'
 import Notifications from './notifications.jsx'
@@ -35,10 +35,10 @@ const ActionBar = (
   const [openNotifications, setOpenNotifications] = useState(false);
   const {
     user, isAuthenticated, 
-    actions: {
-      signin, signup, signout
+    actions: { 
+      signout
     }
-  } = useUser();
+  } = useAuth();
   
   const ref_element = useOnClickOutside(
     () => setOpenNotifications(false)

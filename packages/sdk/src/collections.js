@@ -1,4 +1,4 @@
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 import { filter_fields, filter_unused } from './utils.functional.js';
 
@@ -14,7 +14,7 @@ export default class Collections extends collection_base {
 
   /**
    * 
-   * @param {StorecraftAdminSDK} sdk 
+   * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
     super(sdk, 'collections');

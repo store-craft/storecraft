@@ -1,5 +1,5 @@
+import { useStorecraft } from '@storecraft/sdk-react-hooks';
 import { forwardRef, useEffect, useRef, useState } from 'react'
-import { getSDK } from '@storecraft/sdk'
 
 const Img = forwardRef(
 
@@ -26,12 +26,13 @@ const Img = forwardRef(
 
     const srcRef = useRef();
     const [source, setSource] = useState();
-    
+    const { sdk } = useStorecraft();
+
     // console.log(src)
     useEffect(
       () => {
         async function getSource() {
-          const s = await getSDK().storage.getSource(src)
+          const s = await sdk.storage.getSource(src)
           // console.log('s', s)
           srcRef.current = s
           setSource(s)

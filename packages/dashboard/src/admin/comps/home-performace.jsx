@@ -2,12 +2,12 @@ import {
   useCallback, useEffect, useMemo, 
   useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getSDK } from '@storecraft/sdk'
 import { Bling, HR } from './common-ui.jsx'
 import SalesChart from './home-sales-chart.jsx'
 import TimeFrame from './home-time-frame.jsx'
 import ShowIf from './show-if.jsx'
 import { BiTrendingUp } from 'react-icons/bi/index.js'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 const DAY = 86400000
 
@@ -260,6 +260,7 @@ const Performance = (
   }
 ) => {
 
+  const { sdk } = useStorecraft();
   const ref_effect_ran = useRef(false);
   /** 
    * @type {ReturnType<typeof useState<
@@ -281,7 +282,7 @@ const Performance = (
         setLoading(true);
 
       try {
-        const new_data = await getSDK().statistics.orders(
+        const new_data = await sdk.statistics.orders(
           Date.now() - span * DAY, Date.now()
         );
         // console.log('data ', data)

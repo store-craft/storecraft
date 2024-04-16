@@ -1,5 +1,5 @@
 import { calculate_pricing } from '@storecraft/core/v-api/con.pricing.logic.js';
-import { StorecraftAdminSDK } from '../index.js'
+import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
@@ -14,7 +14,7 @@ export default class Orders extends collection_base {
 
   /**
    * 
-   * @param {StorecraftAdminSDK} sdk 
+   * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
     super(sdk, 'orders');

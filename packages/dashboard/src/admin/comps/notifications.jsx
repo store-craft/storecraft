@@ -5,7 +5,7 @@ import React, {
 import { AiFillNotification } from 'react-icons/ai/index.js'
 import MDView from './md-view.jsx'
 import { MINUTE, timeSince } from '../utils/time.js'
-import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
+import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
 import { PromisableLoadingButton } from './common-button.jsx'
 import useInterval from '@/admin/hooks/useInterval.js'
 import { useNavigate } from 'react-router-dom'
@@ -201,6 +201,7 @@ const FilterView = (
   )
 }
 
+
 /**
  * 
  * @typedef {object} NotificationsViewParams
@@ -266,14 +267,16 @@ const Notifications = forwardRef(
     const notis = test;
 
     /**
-     * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
+     * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
      *  import('@storecraft/core/v-api').NotificationType
      * >}
      */
     const { 
       pages, page, loading, error, queryCount,
-      query, prev, next
-    } = useCommonCollection('notifications', false);
+      actions: {
+        removeDocument, prev, next, query
+      }
+    } = useCollection('notifications', q_initial, false);
 
     // console.log('notifications', page);
 

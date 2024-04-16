@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { getSDK, initSDK, getLatestConfig } from '@/admin-sdk/index.js'
 import LoginContent from './comps/login-content.jsx'
 import LoginConnect from './comps/login-connect.jsx'
 import LoginMarquee from './comps/login-marquee.jsx'
 import LoginForm from './comps/login-form.jsx'
 import LoginCopyright from './comps/login-copyright.jsx'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 const createConfig = c => {
   
@@ -14,10 +14,27 @@ const createConfig = c => {
   }
 }
 
-const Login = ({ trigger }) => {
-  const [credentials, setCredentials] = useState(getLatestConfig() ?? {})
-  const [error, setError] = useState(undefined)
-  console.log('credentials ', credentials)
+/**
+ * 
+ * @typedef {object} LoginParams
+ * @prop {() => void} trigger
+ * 
+ * 
+ * @param {LoginParams} params
+ * 
+ */
+const Login = ({ }) => {
+  const {
+    config, sdk,
+    actions: {
+      updateConfig
+    }
+  } = useStorecraft();
+
+  const [credentials, setCredentials] = useState(config ?? {});
+  const [error, setError] = useState(undefined);
+
+  // console.log('credentials ', credentials)
 
   useEffect(
     () => {
@@ -43,21 +60,22 @@ const Login = ({ trigger }) => {
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const onSubmit = useCallback(
     async (e) => {
-      e.preventDefault()
+
+      e.preventDefault();
+
       console.log('submit');
 
       try {
-        console.log('credentials ', credentials);
-        initSDK(createConfig(credentials))
-        trigger()
+        // console.log('credentials ', credentials);
+        updateConfig(createConfig(credentials));
       } catch (e) {
         const msg = e ? String(e) : 'check your project ID or API Key'
         setError(`Error initializing Shelf, code : ${msg}`)
       }
- 
+  
       try {
-        await getSDK().auth.signin_with_email_pass(
-          credentials.email, 
+        await sdk.auth.signin(
+          credentials.email,    
           credentials.password
         );
 
@@ -66,7 +84,7 @@ const Login = ({ trigger }) => {
         setError(`Error signing, code : ${code}`)
       }
     },
-    [credentials, trigger],
+    [sdk, updateConfig, credentials],
   );
 
   return (

@@ -13,10 +13,10 @@ import ShowIf from './show-if.jsx'
 
 /**
  * @typedef {object} InternalRegularDocumentActionsParams
- * @property {() => Promise<void>} [onClickSave]
- * @property {() => Promise<void>} [onClickCreate]
- * @property {() => Promise<void>} [onClickDuplicate]
- * @property {(id: string) => Promise<void>} [onClickDelete]
+ * @property {() => Promise<any>} [onClickSave]
+ * @property {() => Promise<any>} [onClickCreate]
+ * @property {() => Promise<any>} [onClickDuplicate]
+ * @property {(id: string) => Promise<any>} [onClickDelete]
  * @property {() => Promise<any>} [onClickReload]
  * @property {React.ReactNode} [children]
  * @property {string} [id]

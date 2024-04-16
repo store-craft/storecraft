@@ -44,9 +44,11 @@ export default ({}) => {
    */ 
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, onLimitChange, onReload, prev, next, 
-    queryCount
-   } = useCollectionsActions('storefronts', '/pages/storefronts');
+    error, queryCount, 
+    actions: {
+      onLimitChange, onReload, prev, next
+    }
+  } = useCollectionsActions('storefronts', '/pages/storefronts');
 
   return (
 <div className='h-full w-full'>

@@ -71,12 +71,12 @@ const SalesChart = (
       Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
       Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';
 
-      console.log('arr', arr)
-      console.log('data', data)
-      console.log('data.info.days', data.days)
-      console.log('xs', xs)
-      console.log('ys1', ys1)
-      console.log('ys2', ys2)
+      // console.log('arr', arr)
+      // console.log('data', data)
+      // console.log('data.info.days', data.days)
+      // console.log('xs', xs)
+      // console.log('ys1', ys1)
+      // console.log('ys2', ys2)
 
       return {
         type: 'bar',

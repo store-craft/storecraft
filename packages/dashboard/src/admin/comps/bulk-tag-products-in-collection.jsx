@@ -1,13 +1,15 @@
 import { Card } from './common-ui.jsx'
 import { useCallback, useState } from 'react'
-import { getSDK } from '@/admin-sdk/index.js'
 import TagsEdit from './tags-edit.jsx'
 import { PromisableLoadingBlingButton } from './common-button.jsx'
 import { HR } from './common-ui.jsx'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 const BulkTagProductsInCollection = ({ collectionId, value }) => {
-  const [tags, setTags] = useState([])
-  const [error, setError] = useState()
+  const [tags, setTags] = useState([]);
+  const [error, setError] = useState();
+
+  const { sdk } = useStorecraft();
 
   collectionId = value?.handle ?? collectionId
 
@@ -15,7 +17,7 @@ const BulkTagProductsInCollection = ({ collectionId, value }) => {
     async (add=true) => {
       try {
         setError(undefined)
-        await getSDK().collections.bulkAddRemoveTags(collectionId, tags, add)
+        await sdk.collections.bulkAddRemoveTags(collectionId, tags, add)
       } catch (e) {
         console.error(e)
         setError(e?.message ?? String(e))

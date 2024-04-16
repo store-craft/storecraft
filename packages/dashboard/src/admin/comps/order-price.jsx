@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { BlingInput, HR } from './common-ui.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 const Entry = ({title, value}) => {
   return (
@@ -27,8 +27,9 @@ const OrderPrice = (
   }
 ) => {
 
-  const [ pricing, setPricing ] = useState(value)
-  const { key, comp_params } = field
+  const { sdk } = useStorecraft();
+  const [ pricing, setPricing ] = useState(value);
+  const { key, comp_params } = field;
 
   // console.log('lineItems ', lineItems)
   // console.log('context ', context)
@@ -69,7 +70,7 @@ const OrderPrice = (
       console.log('uid ', uid)
       try {
         setError(undefined)
-        const pricing_new = await getSDK().orders.calculatePricing(
+        const pricing_new = await sdk.orders.calculatePricing(
           line_items, coupons, delivery, uid
         )
         setPricing(pricing_new)

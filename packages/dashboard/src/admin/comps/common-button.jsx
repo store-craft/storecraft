@@ -158,7 +158,7 @@ export const PromisableLoadingButton = (
 
 /**
  * @typedef {object} InternalPromisableLoadingBlingButton
- * @prop {() => Promise<Void>} onClick
+ * @prop {() => Promise<any>} onClick
  * @prop {boolean} [show]
  * @prop {boolean} [loading]
  * 

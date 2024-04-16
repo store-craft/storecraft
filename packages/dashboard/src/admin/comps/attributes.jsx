@@ -11,8 +11,12 @@ import { GradientFillIcon } from './common-button.jsx'
  * @prop {(attribute: import('@storecraft/core/v-api').AttributeType) => void} onChange
  * @prop {() => void} onDelete
  * 
+ * 
  * @param {InnerAttrParams &
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ *  Omit<
+ *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 
+ *    'onChange'
+ *  >
  * } params
  * 
  */
@@ -28,7 +32,16 @@ const Attr = (
      * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     (key, e) => {
-      onChange({ ...val, [key]: e.currentTarget.value })
+      e.preventDefault();
+      e.stopPropagation();
+
+      onChange(
+        { 
+          ...val, 
+          [key]: e.currentTarget.value 
+        }
+      );
+
     }, [onChange, val]
   );
 
@@ -45,7 +58,8 @@ const Attr = (
 
     <p children='Key' className=''/>
     <BlingInput 
-        className='mt-1' stroke='pb-px'
+        className='mt-1' 
+        stroke='pb-px'
         onChange={e => onChangeInternal('key', e)}
         value={val.key}
         placeholder='attribute key' 
@@ -54,7 +68,7 @@ const Attr = (
     <p children='Value' className='mt-3'/>
     <BlingInput 
         className='mt-1' stroke='pb-px'
-        onChange={e => onChangeInternal('val', e)}
+        onChange={e => onChangeInternal('value', e)}
         value={val.value}
         placeholder='attribute value' 
         type='text' 

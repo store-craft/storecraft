@@ -1,4 +1,4 @@
-import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
+import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
 import { IoReloadCircle } from 'react-icons/io5/index.js'
 import { useCallback, useEffect, 
   useMemo, useState } from 'react'
@@ -67,13 +67,16 @@ const SelectResource = (
   const [tag, setTag] = useState(nada);
 
   /**
-   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
    *  import('@storecraft/core/v-api').BaseType>
    * }
    */
   const { 
-    page, loading, error, query 
-  } = useCommonCollection(resource, false);
+    page, loading, error,
+    actions: {
+      query
+    }
+  } = useCollection(resource, q_initial, false);
 
   const transformed = useMemo(
     () => transform_fn(page).sort(

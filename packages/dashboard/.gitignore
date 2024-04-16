@@ -32,3 +32,6 @@ yarn-error.log*
 .vercel
 promo.md
 my-app
+
+src/admin-sdk-old
+src/admin-sdk-react-hooks-old

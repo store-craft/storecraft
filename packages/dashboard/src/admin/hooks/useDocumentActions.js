@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { decode } from '../utils/index.js';
 import useNavigateWithState from './useNavigateWithState.js';
-import { useCommonApiDocument } from '@/admin-sdk-react-hooks/useDocument.js';
+import { useDocument } from '@storecraft/sdk-react-hooks';
 import { App } from '@storecraft/core';
 
 /**
  * @template T the `document` type
  * 
- * @typedef {Omit<ReturnType<useDocumentActions<T>>, 'doc'> & 
+ * @typedef {Omit<ReturnType<typeof useDocumentActions<T>>, 'doc'> & 
  *  {
  *    doc: T  
  *  }
@@ -21,12 +21,12 @@ import { App } from '@storecraft/core';
 
 /**
  * Your definitive hook for `document` adventures with UI. Compared
- * to `useCommonApiDocument`, it adds:
+ * to `useDocument`, it adds:
  * - Aggregating from a functional component
  * - Paginating by url navigation, for state saving.
  * - Context
  * 
- * @template {{}} [T={}] The type of `document`
+ * @template T The type of `document`
  * 
  * @param {keyof App["db"]["resources"]} resource resource `identifier`
  * @param {string} document document `handle` or `id`
@@ -45,14 +45,14 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
   const ref_root = useRef();
 
   /**
-   * @type {import('@/admin-sdk-react-hooks/useDocument.js').HookReturnType<T>}
+   * @type {import('@storecraft/sdk-react-hooks').useDocumentHookReturnType<T>}
    */
   const { 
-    doc: doc_original, loading, hasLoaded, error, op,
+    doc: doc_original, loading, hasLoaded, error, op, sdk,
     actions: { 
-      reload, upsert, setError, create, deleteDocument, colId, docId 
+      reload, upsert, setError, remove,
     }
-  } = useCommonApiDocument(resource, document);
+  } = useDocument(resource, document);
 
   const { 
     nav, navWithState, state 
@@ -158,13 +158,13 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
 
   const deletePromise = useCallback(
     async () => {
-      const id_or_handle = await deleteDocument();
+      const id_or_handle = await remove();
 
       if(slug) nav(-2);
 
       return id_or_handle;
 
-    }, [deleteDocument, nav, slug]
+    }, [remove, nav, slug]
   );
 
   // A suggestion for a unique key
@@ -179,7 +179,7 @@ export const useDocumentActions = (resource, document, slug, mode, base) => {
       savePromise, deletePromise, duplicate, 
       navWithState, reload, setError
     },
-    error, key, ref_head, ref_root, doc, 
+    error, key, ref_head, ref_root, doc, sdk,
     isEditMode, isCreateMode, isViewMode,
     loading, hasChanged, hasLoaded, context
   }

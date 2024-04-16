@@ -3,16 +3,15 @@ import CollectionView from './collection-view.jsx'
 import { RecordActions, Span, 
   TimeStampView } from './common-fields.jsx'
 import { Bling, Card } from './common-ui.jsx'
-import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
+import { q_initial, useCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
-import { getSDK } from '@/admin-sdk/index.js'
-import useTrigger from '@/admin-sdk-react-hooks/useTrigger.js'
 import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
 import { BrowseProducts } from './browse-collection.jsx'
+import useTrigger from '../hooks/useTrigger.js'
 
 const CollectionBase = forwardRef(
   /**
@@ -38,20 +37,25 @@ const CollectionBase = forwardRef(
       collection_handle_or_id, limit=5, context, onLoaded, ...rest
     }, ref
   ) => {
+
+  const { sdk } = useStorecraft();
     
   /**
-   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
    *  import('@storecraft/core/v-api').ProductType>
    * }
    */
   const { 
-    pages, page, loading, error, 
-    prev, next, query, queryCount 
-  } = useCommonCollection(
-    `collections/${collection_handle_or_id}/products`, false
+    pages, page, loading, error, queryCount,
+    actions: {
+      prev, next, query
+    }
+  } = useCollection(
+    `collections/${collection_handle_or_id}/products`, 
+    q_initial, false
   );
 
-  const trigger = useTrigger()
+  const trigger = useTrigger();
 
   const schema = useRef([
     { key: 'title', name: 'Title', comp: Span },
@@ -100,7 +104,7 @@ const CollectionBase = forwardRef(
 
           const col = context.data;
           const pr = page[pr_index];
-          await getSDK().products.batchRemoveProductsFromCollection(
+          await sdk.products.batchRemoveProductsFromCollection(
             [pr], col
           );
           page.splice(pr_index, 1);
@@ -133,6 +137,7 @@ const CollectionBase = forwardRef(
  */
 const ProductsInCollection = ({ value, context }) => {
 
+  const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false)
   const [count, setCount] = useState(-1)
   const [error, setError] = useState(undefined)
@@ -155,7 +160,7 @@ const ProductsInCollection = ({ value, context }) => {
 
       try {
         // Add products to collection through collection and search fields
-        await getSDK().products.batchAddProductsToCollection(
+        await sdk.products.batchAddProductsToCollection(
           selected_items, value
         );
         ref_productsByCollection.current.refresh()
@@ -173,7 +178,7 @@ const ProductsInCollection = ({ value, context }) => {
 
   return (
 <Card 
-    name={`Products in collection ${count>=0 ? `(${count})` : ''}` }
+    name={'Products in collection ' + (count>=0 ? count : '') }
     className='w-full --lg:w-[30rem] h-fit' 
     border={true}
     error={error}>

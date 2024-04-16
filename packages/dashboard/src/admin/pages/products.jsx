@@ -59,9 +59,11 @@ export default ({}) => {
    */
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, onLimitChange, onReload, prev, next, 
-    queryCount
-   } = useCollectionsActions('products', '/pages/products');
+    error, queryCount, 
+    actions: {
+      onLimitChange, onReload, prev, next
+    }
+  } = useCollectionsActions('products', '/pages/products');
 
   // console.log('query_api', query_api)
 

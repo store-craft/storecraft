@@ -24,9 +24,11 @@ const schema_fields = [
 export default ({}) => {
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, onLimitChange, onReload, prev, next, 
-    queryCount
-   } = useCollectionsActions('posts', '/pages/posts');
+    error, queryCount, 
+    actions: {
+      onLimitChange, onReload, prev, next
+    }
+  } = useCollectionsActions('posts', '/pages/posts');
 
   return (
 <div className='w-full h-full'>

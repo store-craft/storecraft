@@ -160,19 +160,26 @@ const InputDefaultClass = `rounded-md pl-3
 
 export const Input = forwardRef(
   /**
+   * 
    * @typedef {object} InputInternalParams
    * @property {boolean} [overrideClass=false]
    * @property {string} [className]
    * 
+   * 
    * @typedef {InputInternalParams & 
-   * React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+   *  React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
    * } InputParams
+   * 
    * 
    * @param {InputParams} param0 
    * @param {*} ref 
-   * @returns 
+   * 
    */
-  ({ className='h-10 px-3', overrideClass=false, ...rest }, ref) => {
+  (
+    { 
+      className='h-10 px-3', overrideClass=false, ...rest 
+    }, ref
+  ) => {
 
   const cls = overrideClass ? className : `${InputDefaultClass} ${className}`
     return (
@@ -192,16 +199,25 @@ export const BlingInput = forwardRef(
    * 
    * @typedef {BlingInputInternalParams & InternalBlingParams & InputParams} BlingInputParams
    * 
-   * @param {BlingInputParams} param0 
+   * @param {BlingInputParams} params 
    * @param {*} ref 
    */
-  ({ from, to, rounded='rounded-lg', stroke, className,
-      inputClsName='h-10 rounded-md px-3', ...rest }, ref) => {
+  (
+    { 
+      from, to, rounded='rounded-lg', stroke, className,
+      inputClsName='h-10 rounded-md px-3', ...rest 
+    }, ref
+  ) => {
 
     return (
-<Bling from={from} to={to} rounded={rounded} stroke={stroke} 
-       className={className}>      
-  <Input ref={ref} className={inputClsName} {...rest} /> 
+<Bling 
+    from={from} to={to} 
+    rounded={rounded} stroke={stroke} 
+    className={className}>      
+  <Input 
+      ref={ref} 
+      className={inputClsName} 
+      {...rest} /> 
 </Bling>           
     )
   }

@@ -18,7 +18,6 @@ import RelatedProducts from '@/admin/comps/product-related-products.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import ProductVariants from '@/admin/comps/products-variants.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const test = {
@@ -227,7 +226,7 @@ export default (
     actions: {
       savePromise, deletePromise, duplicate, reload
     },
-    context: context_base, key, 
+    context: context_base, key, sdk,
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
@@ -240,7 +239,7 @@ export default (
     () => ({
       ...context_base,
       removeVariant: async (product_variant_handle) => {
-        await getSDK().products.delete(
+        await sdk.products.remove(
           product_variant_handle
         )
         // reload, because deleting a variant child has a
@@ -250,7 +249,7 @@ export default (
       // TODO: what is this ???
       preCreateVariant: async () => {
         const variants_options = ref_root.current.get(false)?.data?.variants_options
-        await getSDK().products.update(
+        await sdk.products.update(
           doc.handle, 
           /** @type {import('@storecraft/core/v-api').ProductType} */
           {

@@ -7,7 +7,6 @@ import MDEditor from '@/admin/comps/md-editor.jsx'
 import Media from '@/admin/comps/media.jsx'
 import { MInput, withCard, 
   Handle, Switch } from '@/admin/comps/common-fields.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
 import { MdPublish } from 'react-icons/md/index.js'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ProductsInCollection from '@/admin/comps/products-in-collection.jsx'
@@ -170,7 +169,7 @@ export default (
       savePromise, deletePromise, setError, reload,
       navWithState
     },
-    context, key, 
+    context, key, sdk,
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
     ref_head, ref_root, 
@@ -204,7 +203,7 @@ export default (
       await savePromise();
       setError(undefined)
       try {
-        await getSDK().collections.publish(documentId, 400);
+        await sdk.collections.publish(documentId, 400);
         await reload();
       } catch (e) {
         setError({ 

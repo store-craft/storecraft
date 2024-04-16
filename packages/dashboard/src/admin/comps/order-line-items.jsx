@@ -3,10 +3,10 @@ import { useCallback, useEffect, useMemo,
 import { Bling, BlingInput, HR } from './common-ui.jsx'
 import { BrowseProducts } from './browse-collection.jsx'
 import { Overlay } from './overlay.jsx'
-import { getSDK } from '@/admin-sdk/index.js'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
 import { BlingButton } from './common-button.jsx'
 import { LinkWithState } from '@/admin/hooks/useNavigateWithState.js'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**
  * @typedef {'change-qty' | 'stock-change'} Op
@@ -131,6 +131,7 @@ const OrderLineItems = (
   }
 ) => {
     
+  const { sdk } = useStorecraft();
   /** @type {React.LegacyRef<HTMLInputElement>}  */
   const ref_id = useRef();
   /** @type {React.LegacyRef<HTMLInputElement>}  */
@@ -226,7 +227,7 @@ const OrderLineItems = (
         const return_stock = line_item.stock_reserved && items[ix].stock_reserved > 0
         const how_much = return_stock ? line_item.stock_reserved : -line_item.qty
         try {
-          await getSDK().products.changeStockOf(line_item.id, how_much)
+          await sdk.products.changeStockOf(line_item.id, how_much)
           items[ix].stock_reserved = return_stock ? 0 : line_item.qty
           setItems([...items])
         } catch (e) {

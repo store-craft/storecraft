@@ -1,17 +1,18 @@
 import { Bling } from './common-ui.jsx'
-import { useCommonCollection } from '@/admin-sdk-react-hooks/index.js'
+import { useCollection } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { IoCloseSharp } from "react-icons/io5/index.js"
 import { BlingButton, PromisableLoadingButton } from "./common-button.jsx"
 import { BiSearchAlt } from "react-icons/bi/index.js"
+import { App } from '@storecraft/core'
 
 /**
  * `BrowseCollection` is used to view and select big collections
  * with pagination and `vql` search query
  * 
  * @typedef {object} BrowseCollectionParams
- * @prop {string} collectionId
+ * @prop {keyof App["db"]["resources"]} collectionId
  * @prop {string} [title]
  * @prop {React.FC<any>} [Comp]
  * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
@@ -31,9 +32,11 @@ const BrowseCollection = (
   const [selected, setSelected] = useState([]);
   const [limit, setLimit] = useState(5)
   const { 
-    pages, page, loading, error, 
-    prev, next, query, queryCount, deleteDocument 
-  } = useCommonCollection(collectionId, true);
+    pages, page, loading, error, queryCount, 
+    actions: {
+      prev, next, query
+    }
+  } = useCollection(collectionId);
 
   const onAdd = useCallback(
     /** @param {import('@storecraft/core/v-api').BaseType} item */
@@ -188,7 +191,7 @@ const BrowseCollection = (
           }
           <PromisableLoadingButton 
                 text='Load more' 
-                onClick={() => next().catch(e => {})} 
+                onClick={() => next().catch(e => {}) } 
                 keep_text_on_load={true}
                 className='w-fit mx-auto h-12 p-3 border-b cursor-pointer
                            shelf-border-color-soft

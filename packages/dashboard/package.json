@@ -13,10 +13,11 @@
   },
   "dependencies": {
     "@storecraft/core": "*",
+    "@storecraft/sdk": "^0.1.0",
+    "@storecraft/sdk-react-hooks": "^0.1.0",
     "@uiw/react-md-editor": "^3.18.1",
     "chart.js": "^4.2.0",
     "gray-matter": "^4.0.3",
-    "jose": "^4.14.4",
     "js-base64": "^3.7.5",
     "marked": "^5.0.2",
     "next": "^14.1.4",

@@ -3,7 +3,7 @@ import Header from '@/admin/comps/home-header.jsx'
 import { useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import FieldsView from '@/admin/comps/fields-view.jsx'
-import { useCommonApiDocument } from '@/admin-sdk-react-hooks/index.js'
+import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { 
   MInput, Div, withCard, 
@@ -108,7 +108,7 @@ export default ({ collectionId,
     actions: { 
       reload, set, create, deleteDocument, colId, docId 
     }
-  } = useCommonApiDocument('settings', 'main', true, false)
+  } = useDocument('settings', 'main', true, false)
   // console.log('doc_original', doc_original)
   
   const nav = useNavigate()

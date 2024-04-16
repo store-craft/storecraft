@@ -3,15 +3,18 @@ import { HashRouter as Router } from 'react-router-dom'
 import ShowIf from './comps/show-if.jsx'
 import Login from './login.jsx'
 import Head from 'next/head.js';
-import { useSDK } from './hooks/useSDK.js'
+import { useStorecraft } from '@storecraft/sdk-react-hooks';
 
 
 const Index = ({}) => {
   const {
-    isInit, isAuth, trigger
-  } = useSDK();
+    isAuthenticated, 
+    actions: {
+      trigger
+    }
+  } = useStorecraft();
 
-  const isGood = isInit && isAuth
+  const isGood = isAuthenticated;
 
   return (
 <Router >

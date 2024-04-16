@@ -47,11 +47,13 @@ const Gallery = (
   *  import('@storecraft/core/v-api').ImageType>
   * }
   */
- const { 
-   query_api, context, ref_actions, 
-   page, pages, loading, 
-   error, onLimitChange, onReload, prev, next, 
-   queryCount
+  const { 
+    query_api, context, ref_actions, 
+    page, pages, loading, 
+    error, queryCount,
+    actions: {
+      onLimitChange, onReload, prev, next 
+    }
   } = useCollectionsActions('images', '/apps/gallery');
 
   return (

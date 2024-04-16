@@ -3,7 +3,7 @@ import { AiOutlineDelete, AiOutlineLink,
   AiOutlineTags, AiOutlineWarning } from 'react-icons/ai/index.js'
 import { SlActionRedo } from 'react-icons/sl/index.js'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useCommonApiDocument } from '@/admin-sdk-react-hooks/index.js'
+import { useDocument } from '@storecraft/sdk-react-hooks'
 import { Bling, Card } from '@/admin/comps/common-ui.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
@@ -112,14 +112,16 @@ const ImagePage = ({}) => {
   const { handle } = useParams();
 
   /** 
-   * @type {import('@/admin-sdk-react-hooks/useDocument.js').HookReturnType<
+   * @type {import('@storecraft/sdk-react-hooks').useDocumentHookReturnType<
    *  import('@storecraft/core/v-api').ImageType>
    * } 
    */
   const { 
     doc, loading, hasLoaded, error, op,
-    actions: { deleteDocument }
-  } = useCommonApiDocument('images', handle);
+    actions: { 
+      remove 
+    }
+  } = useDocument('images', handle);
 
   /** 
    * @type {React.MutableRefObject<
@@ -144,14 +146,14 @@ const ImagePage = ({}) => {
     async (data_id) => {
       setLoadingDelete(true)
       try {
-        await deleteDocument();
+        await remove();
         nav(-2);
       } catch(e) {
         console.log(e)
       } finally {
         setLoadingDelete(false)
       }
-    }, [deleteDocument, nav]
+    }, [remove, nav]
   );
   
   return (
@@ -208,12 +210,12 @@ const ImagePage = ({}) => {
       ref={ref_modal} 
       onApprove={onApproveDelete} 
       title={
-            <p className='text-xl flex 
-                          flex-row items-center gap-3'>
-              <AiOutlineWarning className='text-2xl'/> 
-              Warning
-            </p>
-          }/>  
+        <p className='text-xl flex 
+                      flex-row items-center gap-3'>
+          <AiOutlineWarning className='text-2xl'/> 
+          Warning
+        </p>
+      }/>  
 
 </div>    
   )

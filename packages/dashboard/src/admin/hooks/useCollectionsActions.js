@@ -1,6 +1,6 @@
 import { 
-  q_initial, useCommonCollection 
-} from '@/admin-sdk-react-hooks/useCollection.js';
+  q_initial, useCollection 
+} from '@storecraft/sdk-react-hooks';
 import { App } from '@storecraft/core';
 import { 
   api_query_to_searchparams, parse_query 
@@ -29,7 +29,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  * - Pagination through querying or navigation
  * - Querying
  * 
- * This hook wraps `useCommonCollection` hook
+ * This hook wraps `useCollection` hook
  * 
  * @template {import('@storecraft/core/v-api').BaseType} T
  * 
@@ -64,12 +64,14 @@ const useCollectionsActions = (
   const ref_use_cache = useRef(true)
 
   /**
-   * @type {import('@/admin-sdk-react-hooks/useCollection.js').HookReturnType<T>}
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
    */
   const { 
-    pages, page, loading, error, 
-    query, queryCount, deleteDocument 
-  } = useCommonCollection(resource, autoLoad, autoLoadQuery);
+    pages, page, loading, error, sdk, queryCount, 
+    actions: {
+      removeDocument, query
+    }
+  } = useCollection(resource, autoLoadQuery, autoLoad);
 
   useEffect(
     () => {
@@ -216,15 +218,25 @@ const useCollectionsActions = (
     () => ({
       viewDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/view`,
       editDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/edit`,
-      deleteDocument,
-    }), [deleteDocument, slug]
+      deleteDocument: removeDocument,
+    }), [removeDocument, slug]
   );
 
   return {
-    query_api, ref_actions, context,
-    pages, page, loading, error, 
-    onLimitChange, onReload, prev, 
-    next, queryCount
+    query_api, 
+    ref_actions, 
+    context,
+    pages, 
+    page, 
+    loading, 
+    error, 
+    queryCount,
+    actions: {
+      onLimitChange, 
+      onReload, 
+      prev, 
+      next, 
+    } 
   }
 }
 

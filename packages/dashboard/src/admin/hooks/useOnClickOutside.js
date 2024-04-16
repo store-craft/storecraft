@@ -12,6 +12,9 @@ const useOnClickOutside = (handler) => {
 
   useEffect(
     () => {
+      /**
+       * @param {any} event
+       */
       const listener = (event) => {
         if (
           !ref_element.current || 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { MdNavigateNext } from 'react-icons/md/index.js'
 import { Link } from 'react-router-dom'
-import { getSDK } from '@/admin-sdk/index.js'
 import { Bling } from './common-ui.jsx'
-import Statistics from '@/admin-sdk/statistics.js'
+import Statistics from '@storecraft/sdk/src/statistics.js'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**
  * 
@@ -23,6 +23,7 @@ const StatCard = (
   }
 ) => {
 
+  const { sdk } = useStorecraft();
   const [v, setV] = useState('-');
 
   useEffect(
@@ -30,7 +31,7 @@ const StatCard = (
       async function load() {
         let count = '-';
         try {
-          count = await getSDK().statistics.countOf(
+          count = await sdk.statistics.countOf(
             which_table,
             {
               vql: search

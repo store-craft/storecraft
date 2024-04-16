@@ -1,5 +1,6 @@
-import { useCallback, useEffect, 
-         useRef, useState } from 'react'
+import { 
+  useCallback, useEffect, 
+  useRef, useState } from 'react'
 import useTrigger from './useTrigger.js'
 import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
@@ -319,7 +320,8 @@ export const q_initial = {
  *    page: T[]  
  *    pages: T[][]  
  *  }
- * } useCommonCollectionHookReturnType This `type` will give you the return type of the hook
+ * } useCommonCollectionHookReturnType 
+ * This `type` will give you the return type of the hook
  * 
  */
 

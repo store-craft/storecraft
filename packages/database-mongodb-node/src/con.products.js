@@ -38,7 +38,7 @@ const upsert = (driver) => {
           const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
           if(is_variant) {
             // update parent product
-            await driver.products._col.updateOne(
+            await driver.resources.products._col.updateOne(
               { _id : to_objid(data.parent_id) },
               { 
                 $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
@@ -61,7 +61,7 @@ const upsert = (driver) => {
           // DISCOUNTS RELATION
           ////
           // get all automatic + active discounts
-          const discounts = await driver.discounts._col.find(
+          const discounts = await driver.resources.discounts._col.find(
             { 
               'application.id': enums.DiscountApplicationEnum.Auto.id,
               active: true
@@ -91,7 +91,7 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS -> PRODUCTS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.products.ids' : objid },
             { $set: { [`_relations.products.entries.${objid.toString()}`]: data } },
             { session }
@@ -104,7 +104,7 @@ const upsert = (driver) => {
 
           // SAVE ME
           delete_keys('collections', 'variants', 'discounts')(replacement)
-          const res = await driver.products._col.replaceOne(
+          const res = await driver.resources.products._col.replaceOne(
             { _id: objid }, replacement, { session, upsert: true }
           );
 
@@ -149,7 +149,7 @@ const remove = (driver) => {
           const is_variant = item?.parent_handle && item?.parent_id && item?.variant_hint;
           if(is_variant) {
             // remove me from parent
-            await driver.products._col.updateOne(
+            await driver.resources.products._col.updateOne(
               { _id : to_objid(item.parent_id) },
               { 
                 $pull: { '_relations.variants.ids': objid },
@@ -161,7 +161,7 @@ const remove = (driver) => {
             // I am a parent, let's delete all of the children variants
             const ids = item?._relations?.variants?.ids;
             if(ids) {
-              await driver.products._col.deleteMany(
+              await driver.resources.products._col.deleteMany(
                 { _id: { $in: ids } },
                 { session }
               );
@@ -171,7 +171,7 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> PRODUCTS RELATION
           ////
-          await driver.storefronts._col.updateMany(
+          await driver.resources.storefronts._col.updateMany(
             { '_relations.products.ids' : objid },
             { 
               $pull: { '_relations.products.ids': objid, },

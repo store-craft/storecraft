@@ -276,7 +276,7 @@ export const useCollection = (
    * Let's `poll` if the resource added more documents
    */
   const pollHasChanged = useCallback(
-    async () => {
+    async (reload_if_changed=true) => {
 
       if(!pages?.length) {
         return false;
@@ -290,16 +290,27 @@ export const useCollection = (
       const count = await sdk.statistics.countOf(
         resource, 
         {
+          ..._q.current,
           startAfter: [
             ['updated_at', max_updated.updated_at],
             ['id', max_updated.id],
-          ]
+          ],
+          order: 'asc'
         }
-      )
+      );
 
-      return count > 0;
+      // console.log('_q.current', _q.current)
+      // console.log('count', count)
 
-    }, [pages]
+      const hasChanged = count > 0;
+
+      if(hasChanged && reload_if_changed) {
+        query(_q.current);
+      }
+
+      return hasChanged;
+
+    }, [pages, query]
   );
 
   useEffect(
@@ -319,7 +330,9 @@ export const useCollection = (
     queryCount, 
     resource,
     actions: {
-      prev, next, query,
+      prev, 
+      next, 
+      query,
       pollHasChanged, 
       removeDocument
     },

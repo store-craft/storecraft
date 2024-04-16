@@ -47,7 +47,7 @@ const useInterval = (
         }, millis
       );
 
-    }, [stop, millis, cb]
+    }, [stop, millis]
   );
 
   useEffect(

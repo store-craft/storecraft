@@ -62,19 +62,27 @@ const NotificationButton = (
 ) => {
 
   const [alert, setAlert] = useState(false)
-  
+  const { 
+    actions: {
+      pollHasChanged
+    } 
+  } = useCollection('notifications', { limit: 1 });
+
+
   const onInterval = useCallback(
     async () => {
-      const hasChanged = false;//await sdk.notifications.hasChanged()
+      // const hasChanged =  false;//await sdk.notifications.hasChanged()
+      const hasChanged = await pollHasChanged(true);
       console.log('CHANGED ' + hasChanged)
       setAlert(hasChanged)
-    }, []
+    }, [pollHasChanged]
   );
 
   const {
     stop, start 
   } = useInterval(
-    onInterval, MINUTE * 10, false
+    onInterval, 10000, false
+    // onInterval, MINUTE * 10, false
   );
 
   useEffect(

@@ -1,5 +1,4 @@
 import { StorecraftSDK } from '../index.js';
-import { LS } from './utils.browser.js'
 import { url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
 
@@ -35,10 +34,6 @@ export default class Auth {
     // this.broadcast_channel = new BroadcastChannel(this.USER_KEY)
   }
 
-  #save_user() {
-    // this.USER_KEY && LS.set(this.USER_KEY, this.currentUser);
-  }
-
   get currentAuth() {
     return this.context?.config?.auth;
   }
@@ -52,33 +47,33 @@ export default class Auth {
 
 
   init() {
-    const that = this
-    //
-    this.broadcast_channel.onmessage = (e) => {
-      this.#_update_and_notify_subscribers(e.data, false)
-    }
+    // const that = this
+    // //
+    // this.broadcast_channel.onmessage = (e) => {
+    //   this.#_update_and_notify_subscribers(e.data, false)
+    // }
 
-    // load saved user
-    this.currentAuth = LS.get(this.USER_KEY)
+    // // load saved user
+    // this.currentAuth = LS.get(this.USER_KEY)
 
-    console.log('this.currentUser', this.currentAuth);
+    // console.log('this.currentUser', this.currentAuth);
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('blur', this.#save_user);
-      window.addEventListener('beforeunload', this.#save_user)
-    }
+    // if (typeof window !== 'undefined') {
+    //   window.addEventListener('blur', this.#save_user);
+    //   window.addEventListener('beforeunload', this.#save_user)
+    // }
 
-    // let's findout and re-auth of needed
-    if(this.currentAuth) {
-      if(this.isAuthenticated) {
-        this.#_update_and_notify_subscribers(
-          this.currentAuth, false
-        );
-      } else {
-        // let's try to authenticate
-        this.reAuthenticate();
-      }
-    }
+    // // let's findout and re-auth of needed
+    // if(this.currentAuth) {
+    //   if(this.isAuthenticated) {
+    //     this.#_update_and_notify_subscribers(
+    //       this.currentAuth, false
+    //     );
+    //   } else {
+    //     // let's try to authenticate
+    //     this.reAuthenticate();
+    //   }
+    // }
   }
 
   /**
@@ -151,7 +146,6 @@ export default class Auth {
   #_update_and_notify_subscribers = (user, broadcast=false) => {
     this.currentAuth = user
     this.notify_subscribers();
-    this.#save_user();
     if(broadcast)
       this.#_broadcast();
   }
@@ -205,8 +199,6 @@ export default class Auth {
 
   signout = async () => {
     console.log('signout');
-
-    // LS.set(this.USER_KEY, null);
 
     this.#_update_and_notify_subscribers(
       undefined, true

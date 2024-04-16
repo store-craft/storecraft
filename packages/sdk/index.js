@@ -14,7 +14,6 @@ import PaymentGateways from './src/payment_gateways.js'
 import Settings from './src/settings.js'
 import Notifications from './src/notifications.js'
 import Bots from './src/bots.js'
-import Perfs from './src/perfs.js'
 import Storage from './src/storage.js'
 
 /**
@@ -55,7 +54,6 @@ export class StorecraftSDK {
     this.settings = new Settings(this);
     this.notifications = new Notifications(this);
     this.bots = new Bots(this);
-    // this.perfs = new Perfs(this);
   }
 
   /**

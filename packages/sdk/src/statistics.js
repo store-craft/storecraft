@@ -84,6 +84,7 @@ export default class Statistics  {
    * 
    * @returns {Promise<number>}
    * 
+   * 
    * @throws
    */
   countOf = async (table, query) => {
@@ -94,6 +95,5 @@ export default class Statistics  {
       `statistics/count/${table}?${search.toString()}`
     );
   }
-
 
 }

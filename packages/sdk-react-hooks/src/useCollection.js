@@ -294,13 +294,15 @@ export const useCollection = (
           setPages([[...items]]);
           console.log('foundin cache')
           // in the background
-          _internal_fetch_next(true);
-        } else {
-          items = await _internal_fetch_next(true);
-          cache_query_put(resource, q_modified, items);
-        }
-
-      } else {
+          _internal_fetch_next(true).then(
+            new_items => {
+              cache_query_put(resource, q_modified, new_items);
+            }
+          );
+        } 
+      } 
+      
+      if(!items) {
         items = await _internal_fetch_next(true);
 
         cache_query_put(resource, q_modified, items);

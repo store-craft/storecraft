@@ -57,7 +57,7 @@ export function useDocument(
 
   useEffect(
     () => sdk.auth.add_sub(trigger)
-    ,[trigger]
+    , [trigger]
   );
 
   const reload = useCallback(

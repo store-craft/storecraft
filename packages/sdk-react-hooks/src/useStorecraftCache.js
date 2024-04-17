@@ -15,6 +15,9 @@ import {
 
 /**
  * 
+ * A `react-hook` for managing cached documents
+ * 
+ * 
  * @template {import("@storecraft/core/v-api").BaseType} T
  * 
  */
@@ -91,6 +94,8 @@ export const useDocumentCache = () => {
  */
 
 /**
+ * A `react-hook` for managing cached queries
+ * 
  * 
  * @template {import("@storecraft/core/v-api").BaseType} T
  * 

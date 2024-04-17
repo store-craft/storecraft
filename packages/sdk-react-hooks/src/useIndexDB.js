@@ -1,6 +1,6 @@
 import { 
-  useCallback, useEffect, 
-  useState } from 'react'
+  useCallback, useEffect, useState 
+} from 'react'
 
 /**
  * 
@@ -8,6 +8,7 @@ import {
  * 
  * 
  * @returns {Promise<IDBDatabase>}
+ * 
  */
 const idb_database = (name) => new Promise(
   (resolve, reject) => {
@@ -55,6 +56,7 @@ const idb_database = (name) => new Promise(
  * 
  * 
  * @returns {(key: string, value: T) => Promise<string>}
+ * 
  */
 const idb_put = (db_name, object_store_name='main') => {
   /**
@@ -100,6 +102,7 @@ const idb_put = (db_name, object_store_name='main') => {
  * 
  * 
  * @returns {(key: string) => Promise<T>}
+ * 
  */
 const idb_get = (db_name, object_store_name='main') => {
   /**
@@ -134,14 +137,12 @@ const idb_get = (db_name, object_store_name='main') => {
 
 /**
  * 
- * @template T
- * 
- * 
  * @param {string} db_name 
  * @param {string} [object_store_name='main'] 
  * 
  * 
  * @returns {(key: string) => Promise<string>}
+ * 
  */
 const idb_remove = (db_name, object_store_name='main') => {
   /**
@@ -239,7 +240,7 @@ export const useIndexDB = (db_name) => {
   return {
     db, 
     error,
-    action: {
+    actions: {
       get,
       put,
       remove

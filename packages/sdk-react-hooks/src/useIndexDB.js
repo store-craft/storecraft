@@ -173,6 +173,9 @@ const idb_remove = (db_name, object_store_name='main') => {
 }
 
 /**
+ * A `react hook` for using `IndexDB` at the browser.
+ * Useful for creating cache systems
+ * 
  * 
  * @template T
  * 
@@ -200,10 +203,14 @@ export const useIndexDB = (db_name) => {
      */
     async (key, value) => {
       try {
-        return idb_put(db_name, 'main')(key, value);
+        const result = await idb_put(db_name, 'main')(key, value);
+
+        return result;
       } catch (e) {
         setError(e);
       }
+
+      return undefined;
     }, []
   );
 
@@ -216,10 +223,14 @@ export const useIndexDB = (db_name) => {
      */
     async (key) => {
       try {
-        return idb_get(db_name, 'main')(key);
+        const result = await idb_get(db_name, 'main')(key);
+
+        return result;
       } catch (e) {
         setError(e);
       }
+
+      return undefined;
     }, []
   );
 
@@ -230,10 +241,14 @@ export const useIndexDB = (db_name) => {
      */
     async (key) => {
       try {
-        return idb_remove(db_name, 'main')(key);
+        const result = await idb_remove(db_name, 'main')(key);
+
+        return result;
       } catch (e) {
         setError(e);
       }
+
+      return undefined;
     }, []
   );
 

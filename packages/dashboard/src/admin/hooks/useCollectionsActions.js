@@ -79,7 +79,7 @@ const useCollectionsActions = (
         query_api.vql
         )
       // console.log('query_api', query_api)
-      query(query_api, false && ref_use_cache.current);
+      query(query_api, ref_use_cache.current);
       
     }, [query_api, query]
   );

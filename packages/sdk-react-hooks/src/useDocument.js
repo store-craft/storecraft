@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import useTrigger from "./useTrigger.js"
 import { useStorecraft } from "./useStorecraft.js";
+import { useDocumentCache } from "./useStorecraftCache.js";
 
 /**
  * @template T the `document` type
@@ -19,7 +20,7 @@ import { useStorecraft } from "./useStorecraft.js";
  */
 
 /**
- * @template T the document type
+ * @template {import("@storecraft/core/v-api").BaseType} T the document type
  * 
  * @param {string} resource the table `identifier`
  * @param {string} document the document `id` or `handle`
@@ -33,6 +34,14 @@ export function useDocument(
   try_cache_on_autoload=true
 ) {
 
+  /** @type {import('./useStorecraftCache.js').inferDocumentCache<T>} */
+  const {
+    actions: {
+      get: cache_document_get,
+      put: cache_document_put, 
+      remove: cache_document_remove
+    }
+  } = useDocumentCache();
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(
     (resource && document && autoLoad) ? true : false
@@ -62,14 +71,38 @@ export function useDocument(
       setOp('load');
 
       try {
-        /** @type {T} */
-        const data = await sdk[resource].get(
-          document, try_cache
-        );
-        setData(data);
+
+        let item;
+
+        if(try_cache) {
+          item = await cache_document_get(document);
+          
+          // found in cache
+          if(item) {
+            // background fetch from server
+            sdk[resource].get(document).then(
+              item_server => {
+                cache_document_put(item_server);
+                setData(item_server);
+              }
+            );
+          }
+
+        }
+
+        if(!item) {
+          /** @type {T} */
+          item = await sdk[resource].get(
+            document, try_cache
+          );
+
+          cache_document_put(item);
+        }
+
+        setData(item);
         setHasLoaded(true);
 
-        return data;
+        return item;
       } catch (e) {
         console.log(e);
 
@@ -129,6 +162,8 @@ export function useDocument(
 
       try {
         await sdk[resource].delete(document);
+
+        cache_document_remove(document);
 
         setData(undefined);
         setHasLoaded(true);

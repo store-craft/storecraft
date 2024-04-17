@@ -26,7 +26,7 @@ import { App } from '@storecraft/core';
  * - Paginating by url navigation, for state saving.
  * - Context
  * 
- * @template T The type of `document`
+ * @template {import('@storecraft/core/v-api').BaseType} T The type of `document`
  * 
  * @param {keyof App["db"]["resources"]} resource resource `identifier`
  * @param {string} document document `handle` or `id`

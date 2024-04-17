@@ -1,11 +1,12 @@
 import { 
-  useCallback, useEffect, 
-  useRef, useState } from 'react'
+  useCallback, useEffect, useRef, useState 
+} from 'react'
 import useTrigger from './useTrigger.js'
 import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 import { useStorecraft } from './useStorecraft.js'
 import { StorecraftSDK } from '@storecraft/sdk'
+import { useDocumentCache, useQueryCache } from './useStorecraftCache.js'
 
 
 /**
@@ -130,6 +131,21 @@ export const useCollection = (
   resource, q=q_initial, autoLoad=true
 ) => {
 
+  /** @type {import('./useStorecraftCache.js').inferUseQueryCache<T>} */
+  const {
+    actions: {
+      get: cache_query_get, 
+      put: cache_query_put, 
+    }
+  } = useQueryCache();
+
+  /** @type {import('./useStorecraftCache.js').inferDocumentCache<T>} */
+  const {
+    actions: {
+      put: cache_document_put, remove: cache_document_remove
+    }
+  } = useDocumentCache();
+
   const { sdk } = useStorecraft();
   const _q = useRef(q);
   const _hasEffectRan = useRef(false);
@@ -164,6 +180,10 @@ export const useCollection = (
 
       try {
         result = await _next.current();
+
+        for(let item of result) {
+          cache_document_put(item);
+        }
 
         if(is_new_query) {
           setIndex(0);
@@ -229,6 +249,8 @@ export const useCollection = (
       try {
         await sdk[resource].remove(docId);
 
+        cache_document_remove(docId);
+
         setPages(delete_from_collection(docId));
 
         return docId;
@@ -249,7 +271,7 @@ export const useCollection = (
      * @param {import('@storecraft/core/v-api').ApiQuery} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
-    async (q=q_initial, from_cache=false) => {
+    async (q=q_initial, from_cache=true) => {
       let q_modified = {
         ...q_initial,
         ...q
@@ -260,16 +282,45 @@ export const useCollection = (
         sdk, q_modified, resource
       );
 
-      const result = await _internal_fetch_next(true);
-      const count = await sdk.statistics.countOf(
-        resource, q_modified
-      );
+      let items;
 
-      setQueryCount(count);
+      if(from_cache) {
+        items = await cache_query_get(resource, q_modified);
 
-      return result;
+        const found_in_cache = items?.length;
 
-    }, [resource, _internal_fetch_next]
+        if(found_in_cache) {
+          setIndex(0);
+          setPages([[...items]]);
+          console.log('foundin cache')
+          // in the background
+          _internal_fetch_next(true);
+        } else {
+          items = await _internal_fetch_next(true);
+          cache_query_put(resource, q_modified, items);
+        }
+
+      } else {
+        items = await _internal_fetch_next(true);
+
+        cache_query_put(resource, q_modified, items);
+      }
+
+      // statistics in the background
+      {
+        const { 
+          limit, limitToLast, startAfter, startAt, endAt, endBefore, 
+          ...q_minus_filters
+        } = q_modified;
+
+        sdk.statistics.countOf(
+          resource, q_minus_filters
+        ).then(setQueryCount).catch(console.log);
+      }
+
+      return items;
+
+    }, [resource, _internal_fetch_next, cache_query_get, cache_query_put]
   );
 
   /**
@@ -316,7 +367,7 @@ export const useCollection = (
   useEffect(
     () => {
       if(autoLoad && index==-1 && !_hasEffectRan.current) {
-        query(_q.current)
+        query(_q.current);
       }
     }, []
   );

@@ -6,6 +6,6 @@
   "types": "./types.d.ts",
   "main": "./index.js",
   "dependencies": {
-    "@storecraft/core": "*"
+    "@storecraft/core": "^1.0.0"
   }
 }

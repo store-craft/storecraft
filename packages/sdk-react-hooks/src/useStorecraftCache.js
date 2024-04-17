@@ -111,6 +111,15 @@ export const useDocumentCache = () => {
   }
 }
 
+/**
+ * 
+ * A `react-hook` for managing misc cached
+ * 
+ */
+export const useMiscCache = () => {
+  return useIndexDB('storecraft_misc_cache');
+}
+
 
 /**
  * 

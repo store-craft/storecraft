@@ -374,7 +374,9 @@ export const useCollection = (
 
       const KEY = `storecraft_max_updated_seen_${resource}`;
       const max_updated_seen_item = await cache_document_get(KEY);
-console.log('max_updated_seen_item', max_updated_seen_item)
+
+      // console.log('max_updated_seen_item', max_updated_seen_item)
+
       if(!max_updated_seen_item)
         return true;
 
@@ -390,7 +392,7 @@ console.log('max_updated_seen_item', max_updated_seen_item)
       );
 
       // console.log('_q.current', _q.current)
-      console.log('count', count)
+      // console.log('count', count)
 
       const hasChanged = count > 0;
 

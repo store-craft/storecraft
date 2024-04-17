@@ -87,6 +87,8 @@ export const regular_list = (app, db) =>
    * @param {import('./types.api.query.js').ApiQuery} q 
    */
   async (q) => {
+    console.log('query', q);
+
     return db.list(q);
   }
 

@@ -1,11 +1,12 @@
 import { 
-  useCallback, useEffect, 
-  useRef, useState } from 'react'
+  useCallback, useEffect, useRef, useState 
+} from 'react'
 import useTrigger from './useTrigger.js'
 import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 import { useStorecraft } from './useStorecraft.js'
 import { StorecraftSDK } from '@storecraft/sdk'
+import { useDocumentCache, useQueryCache } from './useStorecraftCache.js'
 
 
 /**
@@ -130,6 +131,24 @@ export const useCollection = (
   resource, q=q_initial, autoLoad=true
 ) => {
 
+  /** @type {import('./useStorecraftCache.js').inferUseQueryCache<T>} */
+  const {
+    actions: {
+      get: cache_query_get, 
+      put: cache_query_put, 
+    }
+  } = useQueryCache();
+
+  /** @type {import('./useStorecraftCache.js').inferDocumentCache<T>} */
+  const {
+    actions: {
+      get: cache_document_get, 
+      put: cache_document_put, 
+      putWithKey: cache_document_put_with_key, 
+      remove: cache_document_remove
+    }
+  } = useDocumentCache();
+
   const { sdk } = useStorecraft();
   const _q = useRef(q);
   const _hasEffectRan = useRef(false);
@@ -164,6 +183,10 @@ export const useCollection = (
 
       try {
         result = await _next.current();
+
+        for(let item of result) {
+          cache_document_put(item);
+        }
 
         if(is_new_query) {
           setIndex(0);
@@ -229,6 +252,8 @@ export const useCollection = (
       try {
         await sdk[resource].remove(docId);
 
+        cache_document_remove(docId);
+
         setPages(delete_from_collection(docId));
 
         return docId;
@@ -249,7 +274,7 @@ export const useCollection = (
      * @param {import('@storecraft/core/v-api').ApiQuery} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
-    async (q=q_initial, from_cache=false) => {
+    async (q=q_initial, from_cache=true) => {
       let q_modified = {
         ...q_initial,
         ...q
@@ -260,40 +285,107 @@ export const useCollection = (
         sdk, q_modified, resource
       );
 
-      const result = await _internal_fetch_next(true);
-      const count = await sdk.statistics.countOf(
-        resource, q_modified
-      );
+      let items;
 
-      setQueryCount(count);
+      if(from_cache) {
+        items = await cache_query_get(resource, q_modified);
 
-      return result;
+        const found_in_cache = items?.length;
 
-    }, [resource, _internal_fetch_next]
+        if(found_in_cache) {
+          setIndex(0);
+          setPages([[...items]]);
+          console.log('foundin cache')
+          // in the background
+          _internal_fetch_next(true).then(
+            new_items => {
+              cache_query_put(resource, q_modified, new_items);
+            }
+          );
+        } 
+      } 
+      
+      // fetch from server
+      if(!items) {
+        items = await _internal_fetch_next(true);
+
+        cache_query_put(resource, q_modified, items);
+      }
+
+      // statistics in the background
+      {
+        const { 
+          limit, limitToLast, startAfter, startAt, endAt, endBefore, 
+          ...q_minus_filters
+        } = q_modified;
+
+        sdk.statistics.countOf(
+          resource, q_minus_filters
+        ).then(setQueryCount).catch(console.log);
+      }
+
+      return items;
+
+    }, [resource, _internal_fetch_next, cache_query_get, cache_query_put]
   );
+
+  /**
+   * `Record` the max `updated_at` document we encounter and cache it.
+   */
+  useEffect(
+    () => {
+      async function doit() {
+        const max_updated = pages.flat(1).reduce(
+          (p, c) => c > p ? c : p,
+          pages?.at(0)?.at(0)
+        );
+
+        const KEY = `storecraft_max_updated_seen_${resource}`;
+        let max = await cache_document_get(KEY);
+
+        if(max_updated || max) {
+          if(max_updated && max) {
+            const is_bigger = (
+              (max_updated.updated_at > max.updated_at) || 
+              (max_updated.updated_at==max.updated_at && max_updated.id>max.id)
+            );
+
+            is_bigger && (max = max_updated);
+          }
+          else {
+            max = max ?? max_updated
+          }
+        }
+
+        if(max) {
+          cache_document_put_with_key(KEY, max);
+        }
+      }
+
+      doit();
+    }, [pages, resource]
+  )
 
   /**
    * Let's `poll` if the resource added more documents
    */
-  const pollHasChanged = useCallback(
-    async (reload_if_changed=true) => {
+  const poll = useCallback(
+    async () => {
 
-      if(!pages?.length) {
-        return false;
-      }
+      const KEY = `storecraft_max_updated_seen_${resource}`;
+      const max_updated_seen_item = await cache_document_get(KEY);
 
-      const max_updated = pages.flat(1).reduce(
-        (p, c) => c > p ? c : p,
-        pages?.at(0)?.at(0)
-      );
+      // console.log('max_updated_seen_item', max_updated_seen_item)
+
+      if(!max_updated_seen_item)
+        return true;
 
       const count = await sdk.statistics.countOf(
         resource, 
         {
-          ..._q.current,
           startAfter: [
-            ['updated_at', max_updated.updated_at],
-            ['id', max_updated.id],
+            ['updated_at', max_updated_seen_item.updated_at],
+            ['id', max_updated_seen_item.id],
           ],
           order: 'asc'
         }
@@ -304,19 +396,15 @@ export const useCollection = (
 
       const hasChanged = count > 0;
 
-      if(hasChanged && reload_if_changed) {
-        query(_q.current);
-      }
-
       return hasChanged;
 
-    }, [pages, query]
+    }, []
   );
 
   useEffect(
     () => {
       if(autoLoad && index==-1 && !_hasEffectRan.current) {
-        query(_q.current)
+        query(_q.current);
       }
     }, []
   );
@@ -333,7 +421,7 @@ export const useCollection = (
       prev, 
       next, 
       query,
-      pollHasChanged, 
+      poll, 
       removeDocument
     },
   }

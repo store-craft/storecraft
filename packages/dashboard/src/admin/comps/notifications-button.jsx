@@ -64,7 +64,7 @@ const NotificationButton = (
   const [alert, setAlert] = useState(false)
   const { 
     actions: {
-      pollHasChanged
+      poll
     } 
   } = useCollection('notifications', { limit: 1 });
 
@@ -72,10 +72,10 @@ const NotificationButton = (
   const onInterval = useCallback(
     async () => {
       // const hasChanged =  false;//await sdk.notifications.hasChanged()
-      const hasChanged = await pollHasChanged(true);
+      const hasChanged = await poll();
       console.log('CHANGED ' + hasChanged)
       setAlert(hasChanged)
-    }, [pollHasChanged]
+    }, [poll]
   );
 
   const {

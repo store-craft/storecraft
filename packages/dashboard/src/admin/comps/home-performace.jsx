@@ -8,6 +8,7 @@ import TimeFrame from './home-time-frame.jsx'
 import ShowIf from './show-if.jsx'
 import { BiTrendingUp } from 'react-icons/bi/index.js'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
+import { useDocumentCache, useMiscCache } from '@storecraft/sdk-react-hooks/src/useStorecraftCache.js'
 
 const DAY = 86400000
 
@@ -271,6 +272,11 @@ const Performance = (
   const [span, setSpan] = useState(30);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
+  const { 
+    actions: {
+      get: cache_get, put: cache_put
+    }
+  } = useMiscCache();
 
   const load = useCallback(
     /**
@@ -278,14 +284,40 @@ const Performance = (
      */
     async (span) => {
       setError(undefined);
+
       if(!data)
         setLoading(true);
 
       try {
+
+        let working_data = data;
+
+        const KEY = `statistics_orders_latest_span_${span}`;
+
+        /** @type {import('@storecraft/core/v-api').OrdersStatisticsType} */
+        working_data = await cache_get(KEY);
+        
+        if(working_data?.from_day!==data?.from_day) {
+          setData(working_data);
+          setLoading(false);
+        }
+
         const new_data = await sdk.statistics.orders(
           Date.now() - span * DAY, Date.now()
         );
-        // console.log('data ', data)
+
+        const hasNotChanged = (
+          new_data?.from_day===working_data?.from_day &&
+          new_data?.to_day===working_data?.to_day
+        );
+
+        // console.log('hasChanged', !hasNotChanged);
+
+        if(hasNotChanged)
+          return;
+
+        cache_put(KEY, new_data);
+
         setData(new_data);
       } catch (e) {
         setError(e)

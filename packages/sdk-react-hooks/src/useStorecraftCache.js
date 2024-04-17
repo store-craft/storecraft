@@ -41,19 +41,45 @@ export const useDocumentCache = () => {
   );
 
 
+  /**
+   * Put a `document`, the key, that will be used for
+   * `fetching` are both `id` or `handle` (if has it)
+   */
   const put = useCallback(
     /**
      * @param {T} item 
      */
     async (item) => {
-      const promises = [];
-      if(item?.handle) {
-        promises.push(_put(item.handle, item));
+      try {
+        const promises = [];
+        if(item?.handle) {
+          promises.push(_put(item.handle, item));
+        }
+        promises.push(_put(item.id, item));
+  
+        await Promise.all(promises);
+      } catch (e) {
+        
       }
-      promises.push(_put(item.id, item));
 
-      await Promise.all(promises);
+      return item.id;
+    }, [_put]
+  );
 
+
+  /**
+   * `Put` with your own key instead of automatic `put`
+   */
+  const putWithKey = useCallback(
+    /**
+     * @param {string} key 
+     * @param {T} item 
+     */
+    async (key, item) => {
+      try { 
+        await _put(key, item);
+      } catch (e) {
+      }
       return item.id;
     }, [_put]
   );
@@ -78,7 +104,8 @@ export const useDocumentCache = () => {
     error,
     actions: {
       get,
-      put,
+      put, 
+      putWithKey,
       remove
     }
   }

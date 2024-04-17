@@ -81,6 +81,7 @@ export function useDocument(
           if(item) {
             // background fetch from server
             sdk[resource].get(document).then(
+              /** @param {T} item_server  */
               item_server => {
                 cache_document_put(item_server);
                 setData(item_server);

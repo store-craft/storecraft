@@ -135,7 +135,7 @@ export default class Auth {
 
   get isAuthenticated() {
     const exp = this.currentAuth?.access_token?.claims?.exp;
-    return exp && exp*1000 > Date.now() - 60*1000;
+    return exp && (exp*1000 > Date.now() - 60*1000);
   }
 
   /**

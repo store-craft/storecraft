@@ -1,9 +1,12 @@
 import { App } from "../index.js";
 import { verify } from "../v-crypto/jwt.js";
 import { assert } from "../v-api/utils.func.js";
+import { verify_api_key } from "../v-api/con.auth.logic.js";
 
 const Authorization = 'Authorization'
 const Bearer = 'Bearer'
+const Basic = 'Basic'
+const API_KEY_HEADER = 'X-API-KEY'
 
 /** @param {any} o */
 export const assert_generic_auth = (o) => {
@@ -26,6 +29,25 @@ export const parse_auth_user = (app) => {
    * @param {ApiResponse} res 
    */
   return async (req, res) => {
+    await parse_bearer_auth(app)(req, res);
+    await parse_basic_auth_or_apikey(app)(req, res);
+  }
+}
+
+/**
+ * 
+ * @param {App} app 
+ */
+export const parse_bearer_auth = (app) => {
+  /**
+   * 
+   * @param {ApiRequest} req 
+   * @param {ApiResponse} res 
+   */
+  return async (req, res) => {
+    if(req.user)
+      return;
+
     const a = req.headers.get(Authorization);
     const token = a?.split(Bearer)?.at(-1).trim();
 
@@ -35,9 +57,49 @@ export const parse_auth_user = (app) => {
     const jwt = await verify(
       app.config.auth_secret_access_token, token, true
     );
+
     // console.log('jwt', jwt)
+
     if(jwt.verified) 
       req.user = jwt.claims;
+  }
+}
+
+/**
+ * 
+ * @param {App} app 
+ */
+export const parse_basic_auth_or_apikey = (app) => {
+  /**
+   * 
+   * @param {ApiRequest} req 
+   * @param {ApiResponse} res 
+   */
+  return async (req, res) => {
+    if(req.user)
+      return;
+
+    const apikey_1 = req.headers.get(Authorization)?.split(Basic)?.at(-1).trim();
+    const apikey_2 = req.headers.get(API_KEY_HEADER);
+    const apikey = apikey_1 ?? apikey_2;
+
+    if(!apikey)
+      return;
+    
+    try {
+      const auth_user = await verify_api_key(app, { apikey });
+
+      if(auth_user) {
+        req.user = {
+          sub: auth_user.id,
+          aud: auth_user.email,
+          roles: auth_user.roles
+        };
+      }
+    } catch (e) {
+
+    }
+
   }
 }
 

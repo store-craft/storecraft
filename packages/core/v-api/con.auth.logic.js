@@ -5,6 +5,7 @@ import { assert_zod } from './middle.zod-validate.js'
 import { apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema, 
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
+import { decode, encode, fromUint8Array } from '../v-crypto/base64.js'
 
 
 /**
@@ -38,6 +39,8 @@ const isAdminEmail = (app, email) => {
  * 
  * @param {App} app 
  * @param {import('./types.api.js').ApiAuthSignupType} body 
+ * 
+ * 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
  */  
 export const signup = async (app, body) => {
@@ -100,6 +103,8 @@ export const signup = async (app, body) => {
  * @param {App} app 
  * @param {import('./types.api.js').ApiAuthSigninType} body 
  * @param {boolean} [fail_if_not_admin=false] 
+ * 
+ * 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
  */  
 export const signin = async (app, body, fail_if_not_admin=false) => {
@@ -122,7 +127,7 @@ export const signin = async (app, body, fail_if_not_admin=false) => {
   // verify the password
   const verified = await phash.verify(
     existingUser.password, password
-    );
+  );
   
   assert(verified, 'auth/error', 401)
 
@@ -156,6 +161,8 @@ export const signin = async (app, body, fail_if_not_admin=false) => {
  * 
  * @param {App} app 
  * @param {import('./types.api.js').ApiAuthRefreshType} body 
+ * 
+ * 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
  */  
 export const refresh = async (app, body) => {
@@ -193,5 +200,167 @@ export const refresh = async (app, body) => {
       claims: claims
     }
   }
+}
+
+export const API_KEY_AUTH_USER_EMAIL = 'apikey@storecraft.api'
+
+/**
+ * 
+ * @param {App} app 
+ * 
+ * 
+ * @returns {Promise<import('./types.api.js').ApiKeyResult>}
+ */  
+export const create_api_key = async (app) => {
+
+  const key = await window.crypto.subtle.generateKey(
+    {
+      name: "HMAC",
+      hash: {
+        name: "SHA-256"
+      }
+    },
+    true,
+    ["sign", "verify"]
+  )
+  const exported = await crypto.subtle.exportKey("raw", key);
+  const ui8a = new Uint8Array(exported);
+  const password = fromUint8Array(ui8a, true);
+
+  // Hash the password using pbkdf2
+  const hashedPassword = await phash.hash(
+    password, app.config.auth_password_hash_rounds
+  );
+
+  // this is just `identifier`
+  const email = API_KEY_AUTH_USER_EMAIL;
+
+  // Create a new user in the database
+  const id = ID('au');
+
+  await app.db.resources.auth_users.upsert(
+    apply_dates(
+      {
+        id: id,
+        email, password: hashedPassword,
+        confirmed_mail: false,
+        roles: ['admin']
+      }
+    )
+  );
+
+  const apikey = encode(`${email}:${password}`, true);
+
+  return {
+    apikey
+  }
+}
+
+/**
+ * 
+ * @param {import('./types.api.js').ApiKeyResult} body 
+ */
+export const parse_api_key = (body) => {
+  const a = decode(body.apikey);
+  const parts = a.split(':');
+  const email = parts?.[0];
+  const password = parts?.[1];
+
+  assert(
+    email===API_KEY_AUTH_USER_EMAIL &&
+    password,
+    `auth/error`
+  );
+
+  return {
+    email,
+    password,
+  }
+}
+
+
+/**
+ * 
+ * @param {App} app 
+ * @param {string} email 
+ * 
+ */  
+export const remove_auth_user = async (app, email) => {
+
+  await app.db.resources.auth_users.removeByEmail(
+    email
+  );
+}
+
+
+/**
+ * 
+ * Verifying `apikey` is slow, because we need to consult
+ * with the database every time.
+ * 
+ * @param {App} app 
+ * @param {import('./types.api.js').ApiKeyResult} body 
+ * 
+ * 
+ * @returns {Promise<import('./types.api.js').AuthUserType>}
+ */  
+export const verify_api_key = async (app, body) => {
+
+  const {
+    email, password
+  } = parse_api_key(body);
+
+  assert(
+    email===API_KEY_AUTH_USER_EMAIL,
+    'auth/error'
+  );
+
+  const apikey_user = await app.db.resources.auth_users.getByEmail(
+    email
+  );
+
+  assert(
+    apikey_user, 'auth/error'
+  );
+
+  // verify the password
+  const verified = await phash.verify(
+    apikey_user.password, password
+  );
+ 
+  assert(
+    verified, 'auth/error'
+  )
+
+  return apikey_user;
+}
+
+/**
+ * 
+ * Verifying `apikey` is slow, because we need to consult
+ * with the database every time.
+ * 
+ * @param {App} app 
+ * 
+ * 
+ * @returns {Promise<{
+ *  created_at?: string,
+ *  updated_at?: string,
+ *  email?: string;
+ * }>}
+ * 
+ */  
+export const get_existing_api_key_info = async (app) => {
+
+  const auth_user = await app.db.resources.auth_users.get(
+    API_KEY_AUTH_USER_EMAIL
+  );
+
+  return {
+    created_at: auth_user.created_at,
+    updated_at: auth_user.updated_at,
+    email: auth_user.email
+  }
+
 }
 

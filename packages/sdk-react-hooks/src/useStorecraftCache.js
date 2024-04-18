@@ -5,7 +5,7 @@ import {
 } from "@storecraft/core/v-api/utils.query.js";
 
 /**
- * 
+ * []
  * @template T
  * 
  * @typedef {ReturnType<typeof useDocumentCache<T>>} inferDocumentCache

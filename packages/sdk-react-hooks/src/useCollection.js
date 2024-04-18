@@ -5,8 +5,8 @@ import useTrigger from './useTrigger.js'
 import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 import { useStorecraft } from './useStorecraft.js'
-import { StorecraftSDK } from '@storecraft/sdk'
 import { useDocumentCache, useQueryCache } from './useStorecraftCache.js'
+import { StorecraftSDK } from '@storecraft/sdk'
 
 
 /**
@@ -290,7 +290,7 @@ export const useCollection = (
       if(from_cache) {
         items = await cache_query_get(resource, q_modified);
 
-        const found_in_cache = items?.length;
+        const found_in_cache = Boolean(items);
 
         if(found_in_cache) {
           setIndex(0);

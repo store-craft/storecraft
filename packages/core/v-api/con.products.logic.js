@@ -6,7 +6,7 @@ import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.js').ProductType} ItemType
- * @typedef {import('./types.api.js').ProductTypeUpsert |
+ * @typedef {import('./types.api.js').ProductTypeUpsert &
  *  import('./types.api.d.ts').VariantTypeUpsert
  * } ItemTypeUpsert
  */

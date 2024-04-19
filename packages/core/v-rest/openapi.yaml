@@ -207,6 +207,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         handle:
           type: string
           description: The key name
@@ -218,7 +224,7 @@ components:
       required:
         - handle
         - values
-      description: with `id`
+      description: Tag upsert type
     collection:
       type: object
       properties:
@@ -285,6 +291,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -323,11 +335,16 @@ components:
           type: string
           minLength: 3
           description: Title of collection
+        published:
+          type: string
+          description: |-
+            Collections can be exported into
+            json with products, this is the url
       required:
         - active
         - handle
         - title
-      description: with `id`
+      description: Collection upsert type
     product:
       anyOf:
         - type: object
@@ -375,6 +392,9 @@ components:
             handle:
               type: string
               description: The readable unique product `handle`
+            isbn:
+              type: string
+              description: The International Standard Book Number (`ISBN`)
             title:
               type: string
               minLength: 3
@@ -1556,6 +1576,9 @@ components:
                   handle:
                     type: string
                     description: The readable unique product `handle`
+                  isbn:
+                    type: string
+                    description: The International Standard Book Number (`ISBN`)
                   title:
                     type: string
                     minLength: 3
@@ -2823,6 +2846,9 @@ components:
             handle:
               type: string
               description: The readable unique product `handle`
+            isbn:
+              type: string
+              description: The International Standard Book Number (`ISBN`)
             title:
               type: string
               minLength: 3
@@ -4003,6 +4029,12 @@ components:
                 id:
                   type: string
                   description: ID
+                created_at:
+                  type: string
+                  description: ISO string creation time
+                updated_at:
+                  type: string
+                  description: ISO string update time
                 media:
                   type: array
                   items:
@@ -4037,6 +4069,9 @@ components:
                 handle:
                   type: string
                   description: The readable unique product `handle`
+                isbn:
+                  type: string
+                  description: The International Standard Book Number (`ISBN`)
                 title:
                   type: string
                   minLength: 3
@@ -4126,6 +4161,12 @@ components:
                 id:
                   type: string
                   description: ID
+                created_at:
+                  type: string
+                  description: ISO string creation time
+                updated_at:
+                  type: string
+                  description: ISO string update time
                 media:
                   type: array
                   items:
@@ -4160,6 +4201,9 @@ components:
                 handle:
                   type: string
                   description: The readable unique product `handle`
+                isbn:
+                  type: string
+                  description: The International Standard Book Number (`ISBN`)
                 title:
                   type: string
                   minLength: 3
@@ -4305,6 +4349,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -4351,7 +4401,7 @@ components:
         - price
         - title
         - handle
-      description: with `id`
+      description: Shipping upsert type
     customer:
       type: object
       properties:
@@ -4465,6 +4515,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -4559,7 +4615,7 @@ components:
         - firstname
         - lastname
         - email
-      description: with `id`
+      description: Customer upsert type
     auth_user:
       allOf:
         - type: object
@@ -5677,6 +5733,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -6696,7 +6758,7 @@ components:
         - priority
         - info
         - application
-      description: with `id`
+      description: Discount upsert type
     image:
       type: object
       properties:
@@ -6767,6 +6829,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -6818,7 +6886,7 @@ components:
         - handle
         - name
         - url
-      description: with `id`
+      description: Image upsert type
     notification:
       type: object
       properties:
@@ -7090,6 +7158,9 @@ components:
                   handle:
                     type: string
                     description: The readable unique product `handle`
+                  isbn:
+                    type: string
+                    description: The International Standard Book Number (`ISBN`)
                   title:
                     type: string
                     minLength: 3
@@ -8279,6 +8350,9 @@ components:
                         handle:
                           type: string
                           description: The readable unique product `handle`
+                        isbn:
+                          type: string
+                          description: The International Standard Book Number (`ISBN`)
                         title:
                           type: string
                           minLength: 3
@@ -11114,6 +11188,9 @@ components:
                             handle:
                               type: string
                               description: The readable unique product `handle`
+                            isbn:
+                              type: string
+                              description: The International Standard Book Number (`ISBN`)
                             title:
                               type: string
                               minLength: 3
@@ -12312,6 +12389,9 @@ components:
                                   handle:
                                     type: string
                                     description: The readable unique product `handle`
+                                  isbn:
+                                    type: string
+                                    description: The International Standard Book Number (`ISBN`)
                                   title:
                                     type: string
                                     minLength: 3
@@ -14902,6 +14982,9 @@ components:
                   handle:
                     type: string
                     description: The readable unique product `handle`
+                  isbn:
+                    type: string
+                    description: The International Standard Book Number (`ISBN`)
                   title:
                     type: string
                     minLength: 3
@@ -16091,6 +16174,9 @@ components:
                         handle:
                           type: string
                           description: The readable unique product `handle`
+                        isbn:
+                          type: string
+                          description: The International Standard Book Number (`ISBN`)
                         title:
                           type: string
                           minLength: 3
@@ -17387,6 +17473,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -18920,6 +19012,9 @@ components:
                             handle:
                               type: string
                               description: The readable unique product `handle`
+                            isbn:
+                              type: string
+                              description: The International Standard Book Number (`ISBN`)
                             title:
                               type: string
                               minLength: 3
@@ -20118,6 +20213,9 @@ components:
                                   handle:
                                     type: string
                                     description: The readable unique product `handle`
+                                  isbn:
+                                    type: string
+                                    description: The International Standard Book Number (`ISBN`)
                                   title:
                                     type: string
                                     minLength: 3
@@ -22581,6 +22679,7 @@ components:
         - shipping_method
         - status
         - pricing
+      description: Order upsert type
     post:
       type: object
       properties:
@@ -22645,6 +22744,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -22690,7 +22795,7 @@ components:
         - handle
         - title
         - text
-      description: with `id`
+      description: Post upsert type
     storefront:
       type: object
       properties:
@@ -22860,6 +22965,9 @@ components:
               handle:
                 type: string
                 description: The readable unique product `handle`
+              isbn:
+                type: string
+                description: The International Standard Book Number (`ISBN`)
               title:
                 type: string
                 minLength: 3
@@ -24042,6 +24150,9 @@ components:
                     handle:
                       type: string
                       description: The readable unique product `handle`
+                    isbn:
+                      type: string
+                      description: The International Standard Book Number (`ISBN`)
                     title:
                       type: string
                       minLength: 3
@@ -26447,6 +26558,12 @@ components:
         id:
           type: string
           description: ID
+        created_at:
+          type: string
+          description: ISO string creation time
+        updated_at:
+          type: string
+          description: ISO string update time
         media:
           type: array
           items:
@@ -26604,6 +26721,9 @@ components:
               handle:
                 type: string
                 description: The readable unique product `handle`
+              isbn:
+                type: string
+                description: The International Standard Book Number (`ISBN`)
               title:
                 type: string
                 minLength: 3
@@ -27786,6 +27906,9 @@ components:
                     handle:
                       type: string
                       description: The readable unique product `handle`
+                    isbn:
+                      type: string
+                      description: The International Standard Book Number (`ISBN`)
                     title:
                       type: string
                       minLength: 3
@@ -30184,7 +30307,7 @@ components:
         - active
         - handle
         - title
-      description: with `id`
+      description: Storefront upsert type
     Error:
       type: object
       properties:
@@ -32386,6 +32509,9 @@ paths:
                     handle:
                       type: string
                       description: The readable unique product `handle`
+                    isbn:
+                      type: string
+                      description: The International Standard Book Number (`ISBN`)
                     title:
                       type: string
                       minLength: 3
@@ -33878,6 +34004,12 @@ paths:
                     id:
                       type: string
                       description: ID
+                    created_at:
+                      type: string
+                      description: ISO string creation time
+                    updated_at:
+                      type: string
+                      description: ISO string update time
                     media:
                       type: array
                       items:
@@ -33912,6 +34044,9 @@ paths:
                     handle:
                       type: string
                       description: The readable unique product `handle`
+                    isbn:
+                      type: string
+                      description: The International Standard Book Number (`ISBN`)
                     title:
                       type: string
                       minLength: 3
@@ -34417,6 +34552,9 @@ paths:
                     handle:
                       type: string
                       description: The readable unique product `handle`
+                    isbn:
+                      type: string
+                      description: The International Standard Book Number (`ISBN`)
                     title:
                       type: string
                       minLength: 3
@@ -38207,6 +38345,9 @@ paths:
                     handle:
                       type: string
                       description: The readable unique product `handle`
+                    isbn:
+                      type: string
+                      description: The International Standard Book Number (`ISBN`)
                     title:
                       type: string
                       minLength: 3
@@ -41172,6 +41313,9 @@ paths:
                         handle:
                           type: string
                           description: The readable unique product `handle`
+                        isbn:
+                          type: string
+                          description: The International Standard Book Number (`ISBN`)
                         title:
                           type: string
                           minLength: 3
@@ -42363,6 +42507,9 @@ paths:
                               handle:
                                 type: string
                                 description: The readable unique product `handle`
+                              isbn:
+                                type: string
+                                description: The International Standard Book Number (`ISBN`)
                               title:
                                 type: string
                                 minLength: 3
@@ -43650,6 +43797,9 @@ paths:
                         handle:
                           type: string
                           description: The readable unique product `handle`
+                        isbn:
+                          type: string
+                          description: The International Standard Book Number (`ISBN`)
                         title:
                           type: string
                           minLength: 3

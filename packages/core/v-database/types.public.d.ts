@@ -131,7 +131,7 @@ export interface db_collections extends db_crud<CollectionTypeUpsert, Collection
 }
 
 /** products crud */
-export interface db_products extends db_crud<ProductTypeUpsert | VariantTypeUpsert, (ProductType | VariantType)> {
+export interface db_products extends db_crud<ProductTypeUpsert & VariantTypeUpsert, ProductType & VariantType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,

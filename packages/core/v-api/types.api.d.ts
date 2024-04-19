@@ -247,7 +247,7 @@ export interface TagType extends idable, timestamps {
 /**
  * @description Tag upsert type
  */
-export type TagTypeUpsert = Omit<TagType, 'created_at' | 'updated_at'>;
+export type TagTypeUpsert = TagType;
   
 // collections
 
@@ -281,7 +281,7 @@ export interface CollectionType extends BaseType {
 /**
  * @description Collection upsert type
  */
-export type CollectionTypeUpsert = Omit<CollectionType, 'created_at' | 'updated_at' | 'published'>;
+export type CollectionTypeUpsert = CollectionType;
 
 
 // products
@@ -439,7 +439,7 @@ export interface BaseProductType extends BaseType {
  * @description Variant upsert type
  */
 export type VariantTypeUpsert = Omit<VariantType, 
-'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts'> & {
+'collections' | 'published' | 'discounts'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
@@ -466,7 +466,7 @@ export interface ProductType extends BaseProductType {
  * @description Product upsert type
  */
 export type ProductTypeUpsert = Omit<ProductType, 
-  'collections' | 'created_at' | 'updated_at' | 'published' | 'discounts' | 'variants'> & {
+  'collections' | 'published' | 'discounts' | 'variants'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
@@ -526,7 +526,7 @@ export interface DiscountType extends BaseType {
 /**
  * @description Discount upsert type
  */
-export type DiscountTypeUpsert = Omit<DiscountType, 'created_at' | 'updated_at'>;
+export type DiscountTypeUpsert = DiscountType;
 
 /** 
  * @description details and filters of the discount 
@@ -999,7 +999,7 @@ export interface StorefrontType extends BaseType {
 /** 
  * @description Storefront upsert type
  */
-export type StorefrontTypeUpsert = Omit<StorefrontType, 'created_at' | 'updated_at'>;
+export type StorefrontTypeUpsert = StorefrontType;
 
 //
 
@@ -1107,7 +1107,7 @@ export interface CustomerType extends BaseType {
 /**
  * @description Customer upsert type
  */
-export type CustomerTypeUpsert = Omit<CustomerType, 'updated_at' | 'created_at'>
+export type CustomerTypeUpsert = CustomerType;
 
 // image
 
@@ -1141,7 +1141,7 @@ export interface ImageType extends BaseType {
 /**
  * @description Image upsert type
  */
-export type ImageTypeUpsert = Omit<ImageType, 'updated_at' | 'created_at'>
+export type ImageTypeUpsert = ImageType;
 
 // shipping
 
@@ -1171,7 +1171,7 @@ export interface ShippingMethodType extends BaseType {
 /**
  * @description Shipping upsert type
  */
-export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'created_at' | 'updated_at'>;
+export type ShippingMethodTypeUpsert = ShippingMethodType;
 
 // posts
 
@@ -1199,7 +1199,7 @@ export interface PostType extends BaseType {
 /**
  * @description Post upsert type
  */
-export type PostTypeUpsert = Omit<PostType, 'updated_at' | 'created_at'>;
+export type PostTypeUpsert = PostType;
 
 // settings
 
@@ -1389,7 +1389,7 @@ export interface OrderData extends BaseCheckoutCreateType, BaseType {
 /**
  * @description Order upsert type
  */
-export type OrderDataUpsert = Omit<OrderData, 'updated_at' | 'created_at'>;
+export type OrderDataUpsert = OrderData;
 
 
 

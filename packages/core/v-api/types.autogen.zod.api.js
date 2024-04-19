@@ -95,10 +95,7 @@ export const tagTypeSchema = idableSchema
     handle: z.string().describe("The key name"),
     values: z.array(z.string()).describe("List of values, related to the key"),
   });
-export const tagTypeUpsertSchema = tagTypeSchema.omit({
-  created_at: true,
-  updated_at: true,
-});
+export const tagTypeUpsertSchema = tagTypeSchema.describe("Tag upsert type");
 export const variantOptionSelectionSchema = z
   .object({
     option_id: z.string().describe("Variant option id"),
@@ -718,11 +715,9 @@ export const collectionTypeSchema = baseTypeSchema.extend({
       "Collections can be exported into\njson with products, this is the url",
     ),
 });
-export const collectionTypeUpsertSchema = collectionTypeSchema.omit({
-  created_at: true,
-  updated_at: true,
-  published: true,
-});
+export const collectionTypeUpsertSchema = collectionTypeSchema.describe(
+  "Collection upsert type",
+);
 export const variantOptionSchema = z
   .object({
     name: z.string().describe("Variant option name (for example 'Size')"),
@@ -843,10 +838,9 @@ export const customerTypeSchema = baseTypeSchema.extend({
     .describe("The phone number"),
   address: addressTypeSchema.optional().describe("Address info of customer"),
 });
-export const customerTypeUpsertSchema = customerTypeSchema.omit({
-  updated_at: true,
-  created_at: true,
-});
+export const customerTypeUpsertSchema = customerTypeSchema.describe(
+  "Customer upsert type",
+);
 export const imageTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("Unique handle"),
   name: z
@@ -862,18 +856,12 @@ export const imageTypeSchema = baseTypeSchema.extend({
     .optional()
     .describe("List of assets using this image"),
 });
-export const imageTypeUpsertSchema = imageTypeSchema.omit({
-  updated_at: true,
-  created_at: true,
-});
-export const shippingMethodTypeUpsertSchema = shippingMethodTypeSchema.omit({
-  created_at: true,
-  updated_at: true,
-});
-export const postTypeUpsertSchema = postTypeSchema.omit({
-  updated_at: true,
-  created_at: true,
-});
+export const imageTypeUpsertSchema =
+  imageTypeSchema.describe("Image upsert type");
+export const shippingMethodTypeUpsertSchema = shippingMethodTypeSchema.describe(
+  "Shipping upsert type",
+);
+export const postTypeUpsertSchema = postTypeSchema.describe("Post upsert type");
 export const settingsTypeSchema = baseTypeSchema;
 export const notificationActionSchema = z
   .object({
@@ -1004,12 +992,15 @@ export const discountTypeSchema = baseTypeSchema.extend({
     ])
     .describe("Discount application (`automatic` and `manual`)"),
 });
-export const discountTypeUpsertSchema = discountTypeSchema.omit({
-  created_at: true,
-  updated_at: true,
-});
+export const discountTypeUpsertSchema = discountTypeSchema.describe(
+  "Discount upsert type",
+);
 export const baseProductTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("The readable unique product `handle`"),
+  isbn: z
+    .string()
+    .optional()
+    .describe("The International Standard Book Number (`ISBN`)"),
   title: z
     .string()
     .min(3, "Title should be longer than 3")
@@ -1044,13 +1035,7 @@ export const variantTypeSchema = baseProductTypeSchema.extend({
     .describe("Internal usage, clarifies the variant\nprojected options"),
 });
 export const variantTypeUpsertSchema = variantTypeSchema
-  .omit({
-    collections: true,
-    created_at: true,
-    updated_at: true,
-    published: true,
-    discounts: true,
-  })
+  .omit({ collections: true, published: true, discounts: true })
   .and(
     z.object({
       collections: z
@@ -1073,14 +1058,7 @@ export const productTypeSchema = baseProductTypeSchema.extend({
     .describe("Variants options info"),
 });
 export const productTypeUpsertSchema = productTypeSchema
-  .omit({
-    collections: true,
-    created_at: true,
-    updated_at: true,
-    published: true,
-    discounts: true,
-    variants: true,
-  })
+  .omit({ collections: true, published: true, discounts: true, variants: true })
   .and(
     z.object({
       collections: z
@@ -1124,10 +1102,9 @@ export const storefrontTypeSchema = baseTypeSchema.extend({
     .optional()
     .describe("Posts related to this storefront"),
 });
-export const storefrontTypeUpsertSchema = storefrontTypeSchema.omit({
-  created_at: true,
-  updated_at: true,
-});
+export const storefrontTypeUpsertSchema = storefrontTypeSchema.describe(
+  "Storefront upsert type",
+);
 export const lineItemSchema = z
   .object({
     id: z.string().describe("`id` or `handle` of product"),
@@ -1246,7 +1223,5 @@ export const orderDataSchema = baseCheckoutCreateTypeSchema
       .optional()
       .describe("A list of manual coupons snapshots that were used"),
   });
-export const orderDataUpsertSchema = orderDataSchema.omit({
-  updated_at: true,
-  created_at: true,
-});
+export const orderDataUpsertSchema =
+  orderDataSchema.describe("Order upsert type");

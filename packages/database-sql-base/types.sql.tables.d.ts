@@ -124,6 +124,7 @@ export interface ProductsTable extends Base {
   title: string;
   video: string;
   price: number;
+  isbn: string;
   qty: number;
   compare_at_price: number;
   variants_options: JSONColumnType<VariantOption[]>;

@@ -1,12 +1,12 @@
 import { assert, to_handle, union } from './utils.func.js'
-import { productTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { productTypeUpsertSchema, variantTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.js').ProductType} ItemType
- * @typedef {import('./types.api.js').ProductTypeUpsert & 
+ * @typedef {import('./types.api.js').ProductTypeUpsert |
  *  import('./types.api.d.ts').VariantTypeUpsert
  * } ItemTypeUpsert
  */
@@ -23,7 +23,7 @@ export const db = app => app.db.resources.products;
  * @param {ItemTypeUpsert} item
  */
 export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'pr', productTypeUpsertSchema, 
+  app, db(app), 'pr', productTypeUpsertSchema.or(variantTypeUpsertSchema), 
   (final) => {
 
     assert(
@@ -35,6 +35,8 @@ export const upsert = (app, item) => regular_upsert(
     return union(
       final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
       final?.collections?.map(c => `col:${c?.id}`),
+      item.isbn && `isbn:${item.isbn}`,
+      item.isbn
     );
   }
 )(item);

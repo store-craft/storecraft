@@ -385,6 +385,11 @@ export interface BaseProductType extends BaseType {
   handle: string;
 
   /** 
+   * @description The International Standard Book Number (`ISBN`)
+   */
+  isbn?: string;
+
+  /** 
    * @description Title of the product 
    * @minLength 3 Title should be longer than 3
    */

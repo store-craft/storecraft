@@ -13,18 +13,22 @@ import { ZodSchema } from 'zod'
  * This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {import('./types.api.js').BaseType} T
  * @template {import('./types.api.js').BaseType} G
+ * @template {import('./types.api.js').BaseType} U
+ * 
+ * 
  * @param {import("../types.public.js").App} app app instance
- * @param {import("../v-database/types.public.js").db_crud<T & {id:string}, G>} db db instance
+ * @param {import("../v-database/types.public.js").db_crud<U, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
- * @param {<H extends T>(final: H) => string[]} hook hook into final state, returns extra search terms
+ * @param {<H extends U>(final: H) => string[]} hook hook into final state, returns extra search terms
+ * 
+ * 
  */
 export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
 
   /**
-   * @param {T} item
+   * @param {U} item
    */
   return async (item) => {
     schema && assert_zod(schema, item);
@@ -38,16 +42,21 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
     ];
 
     const success = await db.upsert(final, search);
+
     assert(success, 'upsert-failed', 400);
+
     return final.id;
   }
 }
 
 /**
- * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template U
  * @template G
+ * 
+ * 
  * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<T, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<U, G>} db
+ * 
 */
 export const regular_get = (app, db) => 
 /**
@@ -62,10 +71,13 @@ export const regular_get = (app, db) =>
 
   
 /**
- * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template U
  * @template G
+ * 
+ * 
  * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<T, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<U, G>} db
+ * 
  */
 export const regular_remove = (app, db) => 
   /**
@@ -77,10 +89,13 @@ export const regular_remove = (app, db) =>
   }
 
 /**
- * @template {import('../v-database/types.public.js').idable_concrete} T 
+ * @template U
  * @template G
+ * 
+ * 
  * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<T, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<U, G>} db
+ * 
  */
 export const regular_list = (app, db) => 
   /**

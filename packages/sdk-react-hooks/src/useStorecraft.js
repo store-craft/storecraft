@@ -67,11 +67,11 @@ export const useStorecraft = (config=getLatestConfig()) => {
   useEffect(
     () => {
       const unsub = sdk.auth.add_sub(
-        ([user, isAuth]) => {
+        ({ auth }) => {
           updateConfig(
             {
               ...sdk.config,
-              auth: user
+              auth
             }
           );
         }

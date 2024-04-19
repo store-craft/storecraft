@@ -4,22 +4,27 @@ import { assert } from './utils.functional.js';
 
 
 /**
+ * 
  * @typedef {import('../index.js').SdkConfigAuth} SdkConfigAuth
+ * 
+ * 
+ * @typedef {object} SubscriberCallbackPayload
+ * @prop {SdkConfigAuth} auth
+ * @prop {boolean} isAuthenticated
+ * 
+ * 
+ * @typedef {(payload: SubscriberCallbackPayload) => void
+ * } SubscriberCallback Subscribe to `auth` updates for `JWT` auth
+ * 
  */
-
+  
+  
 /**
  * `Storecraft` authentication module:
  * - Supports `subscribtion` to `auth` events
  * 
  */
 export default class Auth {
-
-  /**
-   * @typedef {(
-   *  [user, isAuthenticated] : [SdkConfigAuth, boolean]) => void
-   * } SubscriberCallback 
-   */
-
 
   /**@type {Set<SubscriberCallback>} */
   #subscribers = new Set();
@@ -108,13 +113,15 @@ export default class Auth {
    * 
    */
   async working_auth_token() {
-    if('apikey' in this.currentAuth) {
-      return this.currentAuth.apikey;
-    }
-    if('access_token' in this.currentAuth) {
-      if(!this.isAuthenticated)
-        await this.reAuthenticate();
-      return this.currentAuth.access_token.token;
+    if(this.currentAuth) {
+      if('apikey' in this.currentAuth) {
+        return this.currentAuth.apikey;
+      }
+      else if('access_token' in this.currentAuth) {
+        if(!this.isAuthenticated)
+          await this.reAuthenticate();
+        return this.currentAuth.access_token.token;
+      }
     }
 
     return undefined;
@@ -129,6 +136,9 @@ export default class Auth {
    * 
    */
   async reAuthenticate() {
+    if(!this.currentAuth)
+      return undefined;
+    
     if('access_token' in this.currentAuth) {
       const auth_res = await fetch(
         url(this.context.config, '/auth/refresh'),
@@ -160,8 +170,15 @@ export default class Auth {
 
   notify_subscribers = () => {
     // console.log('this.isAuthenticated', this.isAuthenticated)
-    for(let s of this.#subscribers)
-      s([this.currentAuth, this.isAuthenticated])
+    for(let s of this.#subscribers) {
+      s(
+        {
+          auth: this.currentAuth, 
+          isAuthenticated: this.isAuthenticated
+        }
+      );
+    
+    }
   }
   
   /**
@@ -177,22 +194,26 @@ export default class Auth {
   }
 
   get authStrategy() {
-    if('apikey' in this.context?.config?.auth)
-      return 'apikey';
-    else if('access_token' in this.context?.config?.auth)
-      return 'jwt';
+    if(this.currentAuth) {
+      if('apikey' in this.currentAuth)
+        return 'apikey';
+      else if('access_token' in this.currentAuth)
+        return 'jwt';
+    }
 
     return 'unknown';
   }
 
   get isAuthenticated() {
     
-    if('apikey' in this.currentAuth) {
-      return Boolean(this.currentAuth.apikey);
-    }
-    else if('access_token' in this.currentAuth) {
-      const exp = this.currentAuth?.access_token?.claims?.exp;
-      return exp && (exp*1000 > Date.now() - 60*1000);
+    if(this.currentAuth) {
+      if('apikey' in this.currentAuth) {
+        return Boolean(this.currentAuth.apikey);
+      }
+      else if('access_token' in this.currentAuth) {
+        const exp = this.currentAuth?.access_token?.claims?.exp;
+        return exp && (exp*1000 > Date.now() - 60*1000);
+      }
     }
 
     return false;

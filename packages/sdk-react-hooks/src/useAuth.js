@@ -9,7 +9,7 @@ export const useAuth = () => {
 
   return {
     /** @type {import("@storecraft/core/v-api").ApiAuthResult} */ 
-    user: sdk.auth?.currentAuth,
+    auth: sdk.auth?.currentAuth,
     isAuthenticated: sdk.auth?.isAuthenticated,
     actions: {
       signin : sdk.auth.signin, 

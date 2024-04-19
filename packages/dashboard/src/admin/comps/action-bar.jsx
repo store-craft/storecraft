@@ -34,7 +34,7 @@ const ActionBar = (
   
   const [openNotifications, setOpenNotifications] = useState(false);
   const {
-    user, isAuthenticated, 
+    auth, isAuthenticated, 
     actions: { 
       signout
     }
@@ -45,8 +45,8 @@ const ActionBar = (
   );
 
   const user_name = useMemo(
-    () => user?.firstname ? (', ' + user?.firstname) : '',
-    [user]
+    () => auth?.firstname ? (', ' + auth?.firstname) : '',
+    [auth]
   );
 
   // console.log(notify_open)

@@ -31,18 +31,30 @@ export const url = (config, path) => {
  */ 
 export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
 
-  const token = await sdk.auth.working_access_token();
+  const auth_token = await sdk.auth.working_auth_token();
+  const auth_header_value = (
+    sdk.auth.authStrategy==='apikey' ? 'Basic' : 'Bearer'
+  ) + ` ${auth_token}`;
+  
 
-  return fetch(
+  const response = await fetch(
     url(sdk.config, path),
     {
       ...init,
       headers: {
         ...(init?.headers ?? {}),
-        'Authorization': `Bearer ${token}`
+        'Authorization': auth_header_value
       }
     }
   );
+
+  return response;
+
+  // const auth_problem = response.status >= 400 && response.status < 500;
+
+  // if(auth_problem) {
+
+  // }
 }
 
 

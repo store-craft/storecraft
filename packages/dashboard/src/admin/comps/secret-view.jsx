@@ -11,7 +11,11 @@ import { Base64 } from 'js-base64'
  * } params
  */
 const SecretView = 
-  ({ value, field, onChange, context, setError, ...rest}) => {
+  (
+    { 
+      value, field, onChange, context, setError, ...rest
+    }
+  ) => {
 
   const onClick = useCallback(
     async () => {

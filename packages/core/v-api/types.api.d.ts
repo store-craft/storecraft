@@ -108,6 +108,8 @@ export type AuthBaseType = {
   email: string;
 
   /**
+   * Upon `upsert` only the hash will be saved
+   * 
    * @description password
    * @minLength 4
    * @maxLength 20   
@@ -153,6 +155,18 @@ export type ApiTokenWithClaims = {
    * @description Claims the `JSON Web Token` holds
    */
   claims: Partial<JWTClaims>;
+}
+
+/**
+ * @description Result of `auth` `apikey` creation
+ */
+export type ApiKeyResult = {
+  /**
+   * @description The `apikey` is `base64_uri(apikey@storecraft.api:{password})`.
+   * It will be shown only once to the user, at the `backend`, the password hash
+   * will be saved, thus, the real password is only known to the user.
+   */
+  apikey: string;
 }
 
 /**

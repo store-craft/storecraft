@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import useTrigger from "./useTrigger.js";
-import { create } from "@storecraft/sdk";
+import { StorecraftSDK } from "@storecraft/sdk";
 import { LS } from "./utils.browser.js";
 
 const CONFIG_KEY = `storecraft_latest_config`;
@@ -13,7 +13,12 @@ export const getLatestConfig = () => {
   return sdk?.config ?? LS.get(CONFIG_KEY);
 }
 
-var sdk = create(getLatestConfig());
+
+/**
+ * @type {StorecraftSDK}
+ */
+var sdk = new StorecraftSDK();
+
 
 /**
  * 
@@ -54,6 +59,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
      */
     (config) => {
       internal_updateConfig(config);
+      
       trigger();
     }, [trigger]
   );
@@ -63,6 +69,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
       updateConfig(config);
     }, [config]
   );
+
 
   useEffect(
     () => {
@@ -77,7 +84,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
         }
       );
 
-      // sdk.auth.reAuthenticate();
+      sdk.auth.reAuthenticateIfNeeded();
 
       return unsub;
 

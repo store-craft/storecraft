@@ -75,11 +75,15 @@ const fill_claims = (claims, expireIn=JWT_TIMES.HOUR) => {
 /**
  * 
  * Create a JWT with symmetric HMAC secret
+ * 
+ * 
  * @param {string} key 
  * @param {Partial<JWTClaims>} claims 
  * @param {number} expiresIn in seconds
  * @param {string} alg 
  * @param {Record<string, string>} extra_headers 
+ * 
+ * 
  * @returns {Promise<{ token: string, claims: Partial<JWTClaims>}>}
  */
 export const create = async (

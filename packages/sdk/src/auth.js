@@ -111,15 +111,17 @@ export default class Auth {
    * 
    * - If you are in `Api Key` strategy, simply returns the `apikey`
    * 
+   * @param {boolean} [force_reauth=false] 
+   * 
    */
-  async working_auth_token() {
+  async working_auth_token(force_reauth=false) {
     if(this.currentAuth) {
       if('apikey' in this.currentAuth) {
         return this.currentAuth.apikey;
       }
       else if('access_token' in this.currentAuth) {
-        if(!this.isAuthenticated)
-          await this.reAuthenticate();
+        if(force_reauth || !this.isAuthenticated)
+          await this.reAuthenticateIfNeeded(force_reauth);
         return this.currentAuth.access_token.token;
       }
     }
@@ -134,11 +136,16 @@ export default class Auth {
    * 
    * - use the `refresh_token` to gain a new `access_token`
    * 
+   * @param {boolean} [force=false] 
+   * 
    */
-  async reAuthenticate() {
+  async reAuthenticateIfNeeded(force=false) {
     if(!this.currentAuth)
-      return undefined;
+      return;
     
+    if(this.isAuthenticated && !force)
+      return;
+
     if('access_token' in this.currentAuth) {
       const auth_res = await fetch(
         url(this.context.config, '/auth/refresh'),

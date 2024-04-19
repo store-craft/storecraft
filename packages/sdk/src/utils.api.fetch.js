@@ -37,7 +37,7 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
   ) + ` ${auth_token}`;
   
 
-  return fetch(
+  const response = await fetch(
     url(sdk.config, path),
     {
       ...init,
@@ -47,6 +47,14 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
       }
     }
   );
+
+  return response;
+
+  const auth_problem = response.status >= 400 && response.status < 500;
+
+  if(auth_problem) {
+
+  }
 }
 
 

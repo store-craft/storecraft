@@ -70,6 +70,15 @@ export const apiTokenWithClaimsSchema = z
       .describe("Claims the `JSON Web Token` holds"),
   })
   .describe("API token with parsed claims");
+export const apiKeyResultSchema = z
+  .object({
+    apikey: z
+      .string()
+      .describe(
+        "The `apikey` is `base64_uri(apikey@storecraft.api:{password})`.\nIt will be shown only once to the user, at the `backend`, the password hash\nwill be saved, thus, the real password is only known to the user.",
+      ),
+  })
+  .describe("Result of `auth` `apikey` creation");
 export const apiAuthResultSchema = z
   .object({
     token_type: z
@@ -554,7 +563,7 @@ export const discountErrorSchema = z
     message: z.string().describe("Error message"),
   })
   .describe("Discount error type");
-export const statisticsEntitySchema = z
+export const ordersStatisticsEntitySchema = z
   .record(z.any())
   .and(
     z.object({
@@ -568,7 +577,7 @@ export const statisticsEntitySchema = z
     }),
   )
   .describe("Stats of an `entity` in a day");
-export const statisticsDayMetricSchema = z.object({
+export const ordersStatisticsDayMetricSchema = z.object({
   total_income: z
     .number()
     .optional()
@@ -578,19 +587,19 @@ export const statisticsDayMetricSchema = z.object({
     .optional()
     .describe("The `count` of orders in a day for a metric"),
 });
-export const statisticsDaySchema = z
+export const ordersStatisticsDaySchema = z
   .object({
     metrics: z
       .object({
-        payments_captured: statisticsDayMetricSchema.optional(),
-        payments_failed: statisticsDayMetricSchema.optional(),
-        payments_unpaid: statisticsDayMetricSchema.optional(),
-        checkouts_created: statisticsDayMetricSchema.optional(),
-        checkouts_completed: statisticsDayMetricSchema.optional(),
-        fulfillment_draft: statisticsDayMetricSchema.optional(),
-        fulfillment_shipped: statisticsDayMetricSchema.optional(),
-        fulfillment_processing: statisticsDayMetricSchema.optional(),
-        fulfillment_cancelled: statisticsDayMetricSchema.optional(),
+        payments_captured: ordersStatisticsDayMetricSchema.optional(),
+        payments_failed: ordersStatisticsDayMetricSchema.optional(),
+        payments_unpaid: ordersStatisticsDayMetricSchema.optional(),
+        checkouts_created: ordersStatisticsDayMetricSchema.optional(),
+        checkouts_completed: ordersStatisticsDayMetricSchema.optional(),
+        fulfillment_draft: ordersStatisticsDayMetricSchema.optional(),
+        fulfillment_shipped: ordersStatisticsDayMetricSchema.optional(),
+        fulfillment_processing: ordersStatisticsDayMetricSchema.optional(),
+        fulfillment_cancelled: ordersStatisticsDayMetricSchema.optional(),
       })
       .describe("metrics for many `order` statuses"),
     day: z
@@ -601,7 +610,7 @@ export const statisticsDaySchema = z
         z
           .union([handleSchema, idSchema])
           .describe("The `products` found in all created orders"),
-        statisticsEntitySchema.describe(
+        ordersStatisticsEntitySchema.describe(
           "The `products` found in all created orders",
         ),
       )
@@ -612,7 +621,7 @@ export const statisticsDaySchema = z
         z
           .union([handleSchema, idSchema])
           .describe("The `collections` found in all created orders"),
-        statisticsEntitySchema.describe(
+        ordersStatisticsEntitySchema.describe(
           "The `collections` found in all created orders",
         ),
       )
@@ -623,7 +632,7 @@ export const statisticsDaySchema = z
         z
           .union([handleSchema, idSchema])
           .describe("The `discounts` found in all created orders"),
-        statisticsEntitySchema.describe(
+        ordersStatisticsEntitySchema.describe(
           "The `discounts` found in all created orders",
         ),
       )
@@ -634,7 +643,7 @@ export const statisticsDaySchema = z
         z
           .union([handleSchema, idSchema])
           .describe("The `tags` found in all created orders `products`"),
-        statisticsEntitySchema.describe(
+        ordersStatisticsEntitySchema.describe(
           "The `tags` found in all created orders `products`",
         ),
       )
@@ -642,12 +651,12 @@ export const statisticsDaySchema = z
       .describe("The `tags` found in all created orders `products`"),
   })
   .describe("Stats of a day");
-export const statisticsTypeSchema = z
+export const ordersStatisticsTypeSchema = z
   .object({
     days: z
       .record(
         z.union([z.number(), z.string()]).describe("The days statistics"),
-        statisticsDaySchema.describe("The days statistics"),
+        ordersStatisticsDaySchema.describe("The days statistics"),
       )
       .optional()
       .describe("The days statistics"),

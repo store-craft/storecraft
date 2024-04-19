@@ -10,6 +10,7 @@ import {
   apiAuthResultSchema,
   apiAuthSigninTypeSchema,
   apiAuthSignupTypeSchema,
+  apiKeyResultSchema,
   authUserTypeSchema,
   checkoutStatusEnumSchema,
   collectionTypeSchema,
@@ -114,6 +115,19 @@ const create_query = () => {
   });
 }
 
+const apply_security = () => {
+
+  return {
+    security: [
+      {
+        apiKeyAuth: [],
+        bearerAuth: [],
+        basicAuth: []
+      }
+    ]
+  }
+}
+
 const create_all = () => {
   const registry = new OpenAPIRegistry();
   const bearerAuth = registry.registerComponent(
@@ -123,6 +137,25 @@ const create_all = () => {
       type: 'http',
       scheme: 'bearer',
       bearerFormat: 'JWT',
+    }
+  );
+
+  const basicAuth = registry.registerComponent(
+    'securitySchemes',
+    'basicAuth',
+    {
+      type: 'http',
+      scheme: 'basic',
+    }
+  );
+
+  const apiKeyAuth = registry.registerComponent(
+    'securitySchemes',
+    'apiKeyAuth',
+    {
+      type: 'apiKey',
+      in: 'header',
+      name: 'X-API-KEY'
     }
   );
 
@@ -278,7 +311,7 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
       },
       ...error() 
     },
-    security: [{ bearerAuth: [] }]
+    ...apply_security()
   });
 }
 
@@ -305,7 +338,7 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
       },
       ...error() 
     },
-    security: [{ bearerAuth: [] }]
+    ...apply_security()
   });
 }
 
@@ -358,6 +391,8 @@ const register_auth = registry => {
   const _signupTypeSchema = registry.register('AuthSignup', apiAuthSignupTypeSchema);
   const _signinTypeSchema = registry.register('AuthSignin', apiAuthSigninTypeSchema);
   const _refreshTypeSchema = registry.register(`AuthRefresh`, apiAuthRefreshTypeSchema);
+  const _apiAuthResultSchema = registry.register(`ApiAuthResult`, apiAuthResultSchema);
+  const _apiKeyResultSchema = registry.register(`ApiKey`, apiKeyResultSchema);
   const example = {
     "token_type": "Bearer",
     "user_id": "au_65f98390d6a34550cdc651a1",
@@ -387,9 +422,9 @@ const register_auth = registry => {
   };
 
   [
-    { slug: '/auth/signup', schema: _signupTypeSchema, desc: 'Signup a user' },
-    { slug: '/auth/signin', schema: _signinTypeSchema, desc: 'Signin a user' },
-    { slug: '/auth/refresh', schema: _refreshTypeSchema, desc: 'Refresh a token' }
+    { slug: '/auth/signup', schema_request: _signupTypeSchema, desc: 'Signup a user' },
+    { slug: '/auth/signin', schema_request: _signinTypeSchema, desc: 'Signin a user' },
+    { slug: '/auth/refresh', schema_request: _refreshTypeSchema, desc: 'Refresh a token' },
   ].forEach(
     it => {
       registry.registerPath({
@@ -402,7 +437,7 @@ const register_auth = registry => {
           body: {
             content: {
               "application/json": {
-                schema: it.schema,
+                schema: it.schema_request,
               },
             },
           }
@@ -412,16 +447,89 @@ const register_auth = registry => {
             description: 'auth info',
             content: {
               "application/json": {
-                schema: apiAuthResultSchema,
+                schema: _apiAuthResultSchema,
                 example
               },
             },
           },
           ...error() 
         },
+        ...apply_security()
       });
     }
-  )
+  );
+
+
+  // api keys
+
+  const exmaple_api_key = {
+    apikey: 'eyJzdWIiOiJhdV82NWY5ODM5MGQ2YTM0NTUwY2RjNjUxYTEiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTA4NTEwMDksImV4cCI6MTcxMDg1NDYwOX0'
+  }
+
+  registry.registerPath(
+    {
+      method: 'post',
+      path: '/auth/apikey',
+      description: `Renew the current API Key. Api key is a \`base64\` url encoded 
+      \`base64_url(apikey@storecraft.api:password)\`, the \`password\` is **not saved** at the database, only 
+      the hashed password. This can be used in **ANY** the following headers \n
+      - Authorization: Basic <apikey> \n
+      - X-API-KEY: <apikey>`,
+      summary: 'Renew the current API Key',
+      tags,
+      responses: {
+        200: {
+          description: 'api key info',
+          content: {
+            "application/json": {
+              schema: _apiKeyResultSchema,
+              example: exmaple_api_key
+            },
+          },
+        },
+        ...error() 
+      },
+      ...apply_security()
+    },
+  );
+
+  registry.registerPath(
+    {
+      method: 'get',
+      path: '/auth/apikey',
+      description: 'get the **API** Key',
+      summary: 'Get the current API Key',
+      tags,
+      responses: {
+        200: {
+          description: 'api key info',
+          content: {
+            "application/json": {
+              schema: _apiKeyResultSchema,
+              example: exmaple_api_key
+            },
+          },
+        },
+        ...error() 
+      },
+    }
+  );
+
+  registry.registerPath(
+    {
+      method: 'delete',
+      path: '/auth/apikey',
+      description: 'Revoke the current **API** Key',
+      summary: 'Revoke the current API Key',
+      tags,
+      responses: {
+        200: {
+          description: 'api key info',
+        },
+        ...error() 
+      },
+    }
+  );  
 }
 
 const error = () => {
@@ -442,7 +550,6 @@ const error = () => {
  */
 const register_storage = registry => {
   const tags = ['storage'];
-  const security = [ { bearerAuth: [] } ];
   const zod_presigned = z.object(
     {
       url: z.string().openapi({ description: 'The request url to follow' }),
@@ -472,7 +579,6 @@ const register_storage = registry => {
 
   // download (no presigned url)
   registry.registerPath({
-    security,
     method: 'get',
     path: '/storage/{file_key}?signed=false',
     description: 'Download a file directly from the backend, \
@@ -507,7 +613,6 @@ const register_storage = registry => {
 
   // download (presigned url)
   registry.registerPath({
-    security,
     method: 'get',
     path: '/storage/{file_key}?signed=true',
     description: 'Cloud storage providers allow the creation of Presigned links, \
@@ -545,7 +650,6 @@ const register_storage = registry => {
 
   // upload (no presigned url)
   registry.registerPath({
-    security,
     method: 'put',
     path: '/storage/{file_key}?signed=false',
     description: 'Upload a file directly into the backend, this is discouraged, we do encourage to use `presigned` url variant',
@@ -575,11 +679,11 @@ const register_storage = registry => {
       },
       ...error() 
     },
+    ...apply_security()
   });
 
   // upload (presigned url)
   registry.registerPath({
-    security,
     method: 'put',
     path: '/storage/{file_key}?signed=true',
     description: 'Upload a file indirectly into the backend, most cloud storages allow this feature',
@@ -615,11 +719,11 @@ const register_storage = registry => {
       },
       ...error() 
     },
+    ...apply_security()
   });
 
   // delete
   registry.registerPath({
-    security,
     method: 'delete',
     path: '/storage/{file_key}',
     description: 'Delete a file',
@@ -641,6 +745,7 @@ const register_storage = registry => {
       },
       ...error() 
     },
+    ...apply_security()
   });  
 }
 
@@ -853,11 +958,10 @@ const register_customers = registry => {
       "a1@a.com"
     ]
   }
-  const security = [ { bearerAuth: [] } ];
 
   register_base_get(
     registry, slug_base, name, tags, example_id,
-    _typeSchema, example, '', { security }
+    _typeSchema, example, '', apply_security(),
     );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
@@ -872,7 +976,7 @@ const register_customers = registry => {
   register_base_delete(registry, slug_base, name, tags, desc_delete);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example, { security }
+    _typeUpsertSchema, example, apply_security()
     );
 }
 
@@ -896,18 +1000,17 @@ const register_auth_users = registry => {
     "created_at": "2024-03-14T07:59:20.031Z",
     "updated_at": "2024-03-14T07:59:20.031Z",
   }
-  const security = [ { bearerAuth: [] } ];
 
   register_base_get(
     registry, slug_base, name, tags, example_id, 
-    _typeSchema, example, '', { security } );
+    _typeSchema, example, '', apply_security() );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
     _typeSchema, example
     );
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(
-    registry, slug_base, name, tags, _typeSchema, example, { security });
+    registry, slug_base, name, tags, _typeSchema, example, apply_security());
 }
 
 /**
@@ -1133,11 +1236,10 @@ const register_notifications = registry => {
       "updated_at": "2024-03-14T08:00:25.859Z"
     }
   ];
-  const security = [ { bearerAuth: [] } ];
 
   register_base_get(
     registry, slug_base, name, tags, example_id, 
-    _typeSchema, example, '', { security }
+    _typeSchema, example, '', apply_security()
   );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
@@ -1146,7 +1248,7 @@ const register_notifications = registry => {
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example, { security }
+    _typeUpsertSchema, example, apply_security()
     );
 }
 
@@ -1222,8 +1324,6 @@ const register_orders = registry => {
     "created_at": "2024-02-22T16:22:30.095Z",
     "updated_at": "2024-02-22T16:22:30.095Z"
   }
-  const security = [ { bearerAuth: [] } ];
-
   register_base_get(
     registry, slug_base, name, tags, example_id, 
     _typeSchema, example);
@@ -1234,7 +1334,7 @@ const register_orders = registry => {
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example, { security },
+    _typeUpsertSchema, example, apply_security(),
     'List operates differently in the following cases: \n \
     - If user is `admin`, orders of all customers will be returned \n \
     - If user is not `admin`, then only his own orders will be returned '

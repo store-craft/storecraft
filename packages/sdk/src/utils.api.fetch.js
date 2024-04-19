@@ -50,11 +50,11 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
 
   return response;
 
-  const auth_problem = response.status >= 400 && response.status < 500;
+  // const auth_problem = response.status >= 400 && response.status < 500;
 
-  if(auth_problem) {
+  // if(auth_problem) {
 
-  }
+  // }
 }
 
 

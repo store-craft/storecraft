@@ -33,7 +33,7 @@ export const TopActions = forwardRef(
     }, ref
   ) => {
 
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
 
   useImperativeHandle(
     ref,
@@ -74,7 +74,7 @@ export const TopActions = forwardRef(
         className='m-1 flex-1 h-fit max-w-[20rem]' 
          stroke='p-px' rounded='rounded-md'
          type='search' placeholder={searchTitle} 
-         value={search}
+         value={search ?? ''}
          onChange={e => setSearch(e.currentTarget.value)} 
          onKeyPress={onKeyPress} 
          inputClsName='h-9' />        

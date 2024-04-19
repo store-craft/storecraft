@@ -16,10 +16,22 @@ import Notifications from './src/notifications.js'
 import Bots from './src/bots.js'
 import Storage from './src/storage.js'
 
+
 /**
+ * @typedef {import('@storecraft/core/v-api').ApiAuthResult |
+ *  import('@storecraft/core/v-api').ApiKeyResult
+ * } SdkConfigAuth The `storecraft` **SDK** `auth` config, represents
+ * either `apikey` or `jwt` authentication
+ * 
+ */
+
+
+/**
+ * 
  * @typedef {object} StorecraftConfig The `storecraft` **SDK** config
  * @property {string} [endpoint] Endpoint of `backend`
- * @property {import('./src/auth.js').ApiAuthResult} [auth] `auth` info
+ * @property {SdkConfigAuth} [auth] `auth` info, may be either `apikey` or
+ * `jwt` results
  */
 
 /**

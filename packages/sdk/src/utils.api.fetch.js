@@ -31,7 +31,11 @@ export const url = (config, path) => {
  */ 
 export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
 
-  const token = await sdk.auth.working_access_token();
+  const auth_token = await sdk.auth.working_auth_token();
+  const auth_header_value = (
+    sdk.auth.authStrategy==='apikey' ? 'Basic' : 'Bearer'
+  ) + ` ${auth_token}`;
+  
 
   return fetch(
     url(sdk.config, path),
@@ -39,7 +43,7 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
       ...init,
       headers: {
         ...(init?.headers ?? {}),
-        'Authorization': `Bearer ${token}`
+        'Authorization': auth_header_value
       }
     }
   );

@@ -159,6 +159,7 @@ export async function up(db) {
       .addColumn('title', 'text')
       .addColumn('video', 'text')
       .addColumn('price', 'numeric')
+      .addColumn('isbn', 'text', (col) => col.unique())
       .addColumn('compare_at_price', 'numeric')
       .addColumn('qty', 'integer')
       .addColumn('variants_options', 'json')

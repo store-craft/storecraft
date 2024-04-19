@@ -24,7 +24,7 @@ export const table_name = 'products'
 
 /**
  * 
- * @param {db_col["$type_get"]} item 
+ * @param {db_col["$type_upsert"]} item 
  * @returns 
  */
 const is_variant = item => {
@@ -69,6 +69,7 @@ const upsert = (driver) => {
             updated_at: item.updated_at,
             id: item.id,
             handle: item.handle,
+            isbn: item.isbn,
             active: item.active ? 1 : 0,
             attributes: JSON.stringify(item.attributes),
             description: item.description,

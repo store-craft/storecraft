@@ -25,7 +25,7 @@ export const create_app = async () => {
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
   );
-
+ 
   await app.init();
   await app.db.migrateToLatest();
   return app;

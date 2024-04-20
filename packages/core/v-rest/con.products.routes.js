@@ -1,10 +1,12 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { parse_expand as parse_expand, parse_query } from '../v-api/utils.query.js'
-import { add_product_to_collection, get, list, 
+import { parse_expand, parse_query } from '../v-api/utils.query.js'
+import { 
+  add_product_to_collection, get, list, 
   list_product_collections, list_product_discounts, list_product_variants, 
-  remove, remove_product_from_collection, upsert } from '../v-api/con.products.logic.js'
+  list_related_products, remove, remove_product_from_collection, upsert 
+} from '../v-api/con.products.logic.js'
 
 /**
  * @typedef {import('../v-api/types.api.js').ProductType} ItemType
@@ -104,7 +106,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // get all variants of a product
   polka.get(
     '/:product/variants',
     async (req, res) => {
@@ -119,6 +120,15 @@ export const create_routes = (app) => {
     async (req, res) => {
       const { product } = req?.params;
       const items = await list_product_discounts(app, product);
+      res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/:product/related',
+    async (req, res) => {
+      const { product } = req?.params;
+      const items = await list_related_products(app, product);
       res.sendJson(items);
     }
   );

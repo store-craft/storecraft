@@ -32,23 +32,6 @@ const upsert = (driver) => {
     try {
       await session.withTransaction(
         async () => {
-          ////
-          // VARIANTS RELATION
-          ////
-          const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
-          if(is_variant) {
-            // update parent product
-            await driver.resources.products._col.updateOne(
-              { _id : to_objid(data.parent_id) },
-              { 
-                $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
-                $addToSet: { '_relations.variants.ids': objid }
-              },
-              { upsert: false, session }
-            );
-          } else {
-            // in the future, support also explicit relation with `create_explicit_relation`
-          }
 
           ////
           // COLLECTIONS RELATION (explicit)
@@ -62,18 +45,6 @@ const upsert = (driver) => {
           ////
           replacement = await create_explicit_relation(
             driver, replacement, 'related_products', 'products', true
-          );
-
-          //// 
-          // Related Products -> PRODUCTS RELATION (explicit)
-          ////
-          await driver.resources.products._col.updateMany(
-            { '_relations.related_products.ids' : objid },
-            { 
-              $set: { [`_relations.related_products.entries.${objid.toString()}`]: data },
-              $addToSet: { '_relations.related_products.ids': objid }
-            },
-            { upsert: false, session }
           );
 
           ////
@@ -95,24 +66,62 @@ const upsert = (driver) => {
           replacement._relations = replacement._relations ?? {};
           replacement._relations.discounts = {
             ids: eligible_discounts.map(d => d._id),
-            entries: Object.fromEntries(eligible_discounts.map(d => [d._id.toString(), d]))
+            entries: Object.fromEntries(
+              eligible_discounts.map(d => [d._id.toString(), d])
+            )
           }
 
           // SEARCH
           add_search_terms_relation_on(
-            replacement, union([
-              search_terms, 
-              eligible_discounts.map(d => `discount:${d.handle}`),
-              eligible_discounts.map(d => `discount:${d.id}`),
-            ])
+            replacement, union(
+              [
+                search_terms, 
+                eligible_discounts.map(d => `discount:${d.handle}`),
+                eligible_discounts.map(d => `discount:${d.id}`),
+              ]
+            )
           );
+
+          delete_keys('collections', 'variants', 'discounts', 'related_products', 'search')(replacement);
+
+          // Now update other relations, that point to me
+
+          //// 
+          // Related Products -> PRODUCTS RELATION (explicit)
+          ////
+          await driver.resources.products._col.updateMany(
+            { '_relations.related_products.ids' : objid },
+            { 
+              $set: { [`_relations.related_products.entries.${objid.toString()}`]: replacement },
+              $addToSet: { '_relations.related_products.ids': objid }
+            },
+            { upsert: false, session }
+          );
+
+          ////
+          // VARIANTS RELATION
+          ////
+          const is_variant = data?.parent_handle && data?.parent_id && data?.variant_hint;
+          if(is_variant) {
+            // update parent product
+            await driver.resources.products._col.updateOne(
+              { _id : to_objid(data.parent_id) },
+              { 
+                $set: { [`_relations.variants.entries.${objid.toString()}`]: replacement },
+                $addToSet: { '_relations.variants.ids': objid }
+              },
+              { upsert: false, session }
+            );
+          } else {
+            // in the future, support also explicit relation with `create_explicit_relation`
+          }
 
           ////
           // STOREFRONTS -> PRODUCTS RELATION
           ////
           await driver.resources.storefronts._col.updateMany(
             { '_relations.products.ids' : objid },
-            { $set: { [`_relations.products.entries.${objid.toString()}`]: data } },
+            { $set: { [`_relations.products.entries.${objid.toString()}`]: replacement } },
             { session }
           );
           
@@ -122,7 +131,6 @@ const upsert = (driver) => {
           await report_document_media(driver)(replacement, session);
 
           // SAVE ME
-          delete_keys('collections', 'variants', 'discounts', 'related_products')(replacement)
           const res = await driver.resources.products._col.replaceOne(
             { _id: objid }, replacement, { session, upsert: true }
           );

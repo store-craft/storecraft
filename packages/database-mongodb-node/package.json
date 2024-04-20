@@ -6,7 +6,8 @@
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "test": "uvu -c"
+    "test": "uvu -c",
+    "test:mongodb-node": "node ./tests/runner.test.js"
   },
   "keywords": [],
   "author": "Tomer Shalev <tomer.shalev@gmail.com>",

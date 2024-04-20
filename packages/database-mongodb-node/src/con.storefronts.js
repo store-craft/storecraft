@@ -47,7 +47,7 @@ const upsert = (driver) => {
           );
 
           // SEARCH
-          add_search_terms_relation_on(data, search_terms);
+          add_search_terms_relation_on(replacement, search_terms);
 
           ////
           // REPORT IMAGES USAGE

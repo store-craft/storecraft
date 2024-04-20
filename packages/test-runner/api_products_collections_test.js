@@ -106,7 +106,10 @@ export const create = app => {
 
     // simple get with exapnd collections, should also return the collections
     { 
-      const product_with_collections = await products.get(app, prs[0].handle, { expand: ['*']});
+      const product_with_collections = await products.get(
+        app, prs[0].handle, { expand: ['*']}
+      );
+      
       // console.log(JSON.stringify(product_with_collections, null, 2))
       for (const expected of cols) {
         const actual = product_with_collections.collections.find(

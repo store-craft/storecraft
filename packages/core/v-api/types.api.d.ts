@@ -47,6 +47,7 @@ export type idable = {
   id?: string;
 }
 
+
 /** 
  * @description Base properties 
  */

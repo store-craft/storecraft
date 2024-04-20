@@ -996,7 +996,10 @@ export const discountTypeUpsertSchema = discountTypeSchema.describe(
   "Discount upsert type",
 );
 export const baseProductTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The readable unique product `handle`"),
+  handle: z
+    .string()
+    .optional()
+    .describe("The readable unique product `handle`"),
   isbn: z
     .string()
     .optional()

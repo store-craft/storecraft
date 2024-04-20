@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../driver.js';
+import { expand } from './con.shared.js';
 
 /**
  * @template {any} T

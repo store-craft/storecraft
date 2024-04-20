@@ -29,6 +29,9 @@ const upsert = (driver) => {
       await session.withTransaction(
         async () => {
 
+          // SEARCH
+          add_search_terms_relation_on(data, search_terms);
+
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
@@ -37,9 +40,6 @@ const upsert = (driver) => {
             { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
             { session }
           );
-
-          // SEARCH
-          add_search_terms_relation_on(data, search_terms);
 
           ////
           // REPORT IMAGES USAGE

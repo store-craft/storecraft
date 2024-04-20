@@ -91,13 +91,22 @@ export const expand = (items, expand_query=undefined) => {
       // try to find embedded documents relations
       const rel = item?._relations?.[e];
       item[e] = [];
+
       if(Array.isArray(rel)) {
         item[e] = rel;
       } else if(rel?.entries) {
-        item[e] = sanitize_array(Object.values(rel.entries));
+        item[e] = sanitize_array(
+          expand(
+            Object.values(rel.entries),
+            ['*']
+          )
+        );
       }
+
     }
   }
+
+  return items;
 }
 
 
@@ -117,7 +126,6 @@ export const get_regular = (driver, col) => {
 
     /** @type {import('./utils.relations.js').WithRelations<G>} */
     const res = await col.findOne(filter);
-
 
     // try to expand relations
     expand([res], options?.expand);

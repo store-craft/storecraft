@@ -36,6 +36,8 @@ const upsert = (driver) => {
     try {
       await session.withTransaction(
         async () => {
+          // SEARCH
+          add_search_terms_relation_on(data, search_terms);
 
           ////
           // PRODUCT -> COLLECTION RELATION
@@ -62,9 +64,6 @@ const upsert = (driver) => {
           // REPORT IMAGES USAGE
           ////
           await report_document_media(driver)(data, session);
-
-          // SEARCH
-          add_search_terms_relation_on(data, search_terms);
 
           // SAVE ME
           const res = await col(driver).replaceOne(

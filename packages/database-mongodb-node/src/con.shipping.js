@@ -28,6 +28,10 @@ const upsert = (driver) => {
     try {
       await session.withTransaction(
         async () => {
+          // SEARCH
+          add_search_terms_relation_on(data, search_terms);
+
+          
           ////
           // STOREFRONTS --> SHIPPING RELATION
           ////
@@ -38,8 +42,6 @@ const upsert = (driver) => {
           );
 
           // console.log('search_terms', search_terms)
-          // SEARCH
-          add_search_terms_relation_on(data, search_terms);
 
           ////
           // REPORT IMAGES USAGE

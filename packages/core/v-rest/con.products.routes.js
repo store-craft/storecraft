@@ -1,7 +1,7 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { parse_expand as parse_expand, parse_query } from '../v-api/utils.query.js'
+import { parse_expand, parse_query } from '../v-api/utils.query.js'
 import { 
   add_product_to_collection, get, list, 
   list_product_collections, list_product_discounts, list_product_variants, 
@@ -106,7 +106,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // get all variants of a product
   polka.get(
     '/:product/variants',
     async (req, res) => {

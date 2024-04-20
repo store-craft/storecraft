@@ -1,4 +1,6 @@
-# Storecraft MongoDB Data API `fetch` driver (only http required)
+# **EXPERIMENTAL** Storecraft MongoDB Data API `fetch` driver (only http required)
+
+**DO NOT USE IN PRODUCTION**
 
 Official `mongodb` driver for `StoreCraft` on **atlas** Data API using only http and `fetch`.  
 What is it?  

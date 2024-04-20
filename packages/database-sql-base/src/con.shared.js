@@ -1,4 +1,4 @@
-import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
+import { ExpressionWrapper, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';
 import { query_to_eb } from './utils.query.js';
@@ -7,7 +7,6 @@ import { query_to_eb } from './utils.query.js';
 /**
  * @param {SQL} driver 
  * @param {keyof Database} table_name 
- * 
  * 
  * @returns {import('@storecraft/core/v-database').db_crud["count"]}
  */
@@ -67,12 +66,13 @@ export const where_id_or_handle_table = (id_or_handle) => {
  * 'entity_to_media' | 'entity_to_search_terms' 
  * | 'entity_to_tags_projections' | 'products_to_collections' 
  * | 'products_to_discounts' | 'products_to_variants' 
- * | 'storefronts_to_other'>
+ * | 'products_to_related_products' | 'storefronts_to_other'>
  * } EntityTableKeys
  */
 
 /**
  * helper to generate entity values delete
+ * 
  * @param {EntityTableKeys} entity_table_name 
  */
 export const delete_entity_values_by_value_or_reporter = (entity_table_name) => {
@@ -97,6 +97,7 @@ export const delete_entity_values_by_value_or_reporter = (entity_table_name) => 
 
 /**
  * helper to generate entity values delete
+ * 
  * @param {EntityTableKeys} entity_table_name 
  */
 export const delete_entity_values_of_by_entity_id_or_handle = 
@@ -130,8 +131,10 @@ export const insert_entity_array_values_of = (entity_table_name) => {
    * @param {string[]} values values of the entity
    * @param {string} item_id whom the tags belong to
    * @param {string} [item_handle] whom the tags belong to
-   * @param {boolean} [delete_previous=true] if true and `reporter`, then will delete by reporter, otherwise by `item_id/item_handle`
-   * @param {string} [reporter=undefined] the reporter of the batch values (another segment technique)
+   * @param {boolean} [delete_previous=true] if true and `reporter`, 
+   * then will delete by reporter, otherwise by `item_id/item_handle`
+   * @param {string} [reporter=undefined] the reporter of the batch values 
+   * (another segment technique)
    * @param {string} [context=undefined] the context (another segment technique)
    */
   return async (trx, values, item_id, item_handle, delete_previous=true, 
@@ -166,6 +169,7 @@ export const insert_entity_array_values_of = (entity_table_name) => {
 
 /**
  * helper to generate entity values delete
+ * 
  * @param {EntityTableKeys} entity_table_name 
  */
 export const insert_entity_values_of = (entity_table_name) => {
@@ -197,6 +201,7 @@ export const insert_entity_values_of = (entity_table_name) => {
 
 /**
  * Delete previous entities by `id/handle` and insert new ones
+ * 
  * @param {EntityTableKeys} entity_table 
  */
 export const insert_entity_array_values_with_delete_of = (entity_table) => {
@@ -227,10 +232,12 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  */
 
 /**
- * @template {keyof Database} T
+ * @template {import('@storecraft/core/v-api').BaseType} T
+ * 
  * @param {Transaction<Database>} trx 
- * @param {T} table_name 
- * @param {Parameters<InsertQueryBuilder<Database, T>["values"]>[0]} item values of the entity
+ * @param {keyof Database} table_name 
+ * @param {T} item values of the entity
+ * 
  */
 export const regular_upsert_me = async (trx, table_name, item) => {
 // export const regular_upsert_me = async (trx, table_name, item_id, item) => {
@@ -318,6 +325,7 @@ const select_base_from = (eb, table) => {
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -341,6 +349,7 @@ export const products_with_collections = (eb, product_id_or_handle, sql_type) =>
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -367,6 +376,7 @@ export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -397,6 +407,39 @@ export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
 
 /**
  * select as json array collections of a product
+ * 
+ * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
+ * @param {import('../types.public.js').SqlDialectType} sql_type 
+ */
+export const products_with_related_products = (eb, product_id_or_handle, sql_type) => {
+  return jsonArrayFrom(
+    select_base_from(eb, 'products')
+      .select('products.compare_at_price')
+      .select('products.parent_handle')
+      .select('products.parent_id')
+      .select('products.price')
+      .select('products.qty')
+      .select('products.title')
+      .select('products.variant_hint')
+      .select('products.variants_options')
+      .select('products.video')
+      .select(eb => [
+        with_tags(eb, eb.ref('products.id'), sql_type),
+        with_media(eb, eb.ref('products.id'), sql_type),
+      ])
+      .where('products.id', 'in', 
+        eb => select_values_of_entity_by_entity_id_or_handle(
+          eb, 'products_to_related_products', product_id_or_handle
+        )
+      ), sql_type
+    ).as('related_products');
+}
+
+
+/**
+ * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database, 'storefronts'>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -420,6 +463,7 @@ export const storefront_with_collections = (eb, sf_id_or_handle, sql_type) => {
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -450,6 +494,7 @@ export const storefront_with_products = (eb, sf_id_or_handle, sql_type) => {
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -476,6 +521,7 @@ export const storefront_with_discounts = (eb, sf_id_or_handle, sql_type) => {
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -499,6 +545,7 @@ export const storefront_with_posts = (eb, sf_id_or_handle, sql_type) => {
 
 /**
  * select as json array collections of a product
+ * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
  * @param {import('../types.public.js').SqlDialectType} sql_type 
@@ -522,6 +569,7 @@ export const storefront_with_shipping = (eb, sf_id_or_handle, sql_type) => {
 
 /**
  * select all the entity values by entity id or handle
+ * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} entity_id_or_handle 
@@ -543,6 +591,7 @@ export const select_values_of_entity_by_entity_id_or_handle =
 
 /**
  * select the entity ids which are constrained by value or reporter
+ * 
  * @param {import('kysely').ExpressionBuilder<Database>} eb 
  * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} value 
@@ -554,10 +603,10 @@ export const select_entity_ids_by_value_or_reporter =
     .selectFrom(entity_junction_table)
     .select(`${entity_junction_table}.entity_id`)
     .where(eb2 => eb2.or(
-      [
-        eb2(`${entity_junction_table}.value`, '=', value ?? reporter),
-        eb2(`${entity_junction_table}.reporter`, '=', reporter ?? value),
-      ]
+        [
+          eb2(`${entity_junction_table}.value`, '=', value ?? reporter),
+          eb2(`${entity_junction_table}.reporter`, '=', reporter ?? value),
+        ]
       )
     )
     .orderBy(`${entity_junction_table}.entity_id`);

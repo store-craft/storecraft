@@ -266,7 +266,11 @@ const list_product_collections = (driver) => {
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
+ * 
+ * 
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_product_variants"]}
  */
 const list_product_variants = (driver) => {
@@ -280,6 +284,30 @@ const list_product_variants = (driver) => {
     return sanitize_array(item?.variants ?? []);
   }
 }
+
+/**
+ * For now and because each product is related to very few
+ * collections, I will not expose the query api, and use aggregate
+ * instead.
+ * 
+ * 
+ * @param {MongoDB} driver 
+ * 
+ * 
+ * @returns {db_col["list_related_products"]}
+ */
+const list_related_products = (driver) => {
+  return async (product) => {
+    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
+    const options = {
+      expand: ['related_products']
+    };
+    // We have collections embedded in products, so let's use it
+    const item = await get_regular(driver, col(driver))(product, options);
+    return sanitize_array(item?.related_products ?? []);
+  }
+}
+
 
 /**
  * @param {MongoDB} driver 
@@ -373,6 +401,7 @@ export const impl = (driver) => {
     remove_product_from_collection: remove_product_from_collection(driver),
     list_product_collections: list_product_collections(driver),
     list_product_variants: list_product_variants(driver),
+    list_related_products: list_related_products(driver),
     list_product_discounts: list_product_discounts(driver),
     count: count(driver)
   }

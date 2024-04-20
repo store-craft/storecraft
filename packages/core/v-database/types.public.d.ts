@@ -1,5 +1,5 @@
 import { 
-  AuthUserType, BaseType, CollectionType, 
+  AuthUserType, BaseProductType, BaseType, CollectionType, 
   CollectionTypeUpsert, 
   CustomerType, CustomerTypeUpsert, DiscountType, DiscountTypeUpsert, ImageType, 
   ImageTypeUpsert, 
@@ -62,7 +62,7 @@ export declare interface db_crud<U, G=U> {
    * @param data 
    * @param [search_terms] array of search terms realte to the item
    */
-  upsert: (data: U & idable_concrete, search_terms?: string[]) => Promise<boolean>;
+  upsert: (data: U, search_terms?: string[]) => Promise<boolean>;
 
   /**
    * TODO: remove and put only in notifications
@@ -71,7 +71,7 @@ export declare interface db_crud<U, G=U> {
    * @param search_terms 
    * @returns 
    */
-  upsertBulk?: (data: (U & idable_concrete)[], search_terms?: string[][]) => Promise<boolean>;
+  upsertBulk?: (data: (U)[], search_terms?: string[][]) => Promise<boolean>;
 
   /**
    * Delete an item
@@ -131,7 +131,7 @@ export interface db_collections extends db_crud<CollectionTypeUpsert, Collection
 }
 
 /** products crud */
-export interface db_products extends db_crud<ProductTypeUpsert & VariantTypeUpsert, ProductType & VariantType> {
+export interface db_products extends db_crud<ProductTypeUpsert | VariantTypeUpsert, ProductType | VariantType> {
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -152,10 +152,21 @@ export interface db_products extends db_crud<ProductTypeUpsert & VariantTypeUpse
   /**
    * list all of the product related collections, returns eveything, this is not query based,
    * we assume, there are a handful of collection per product
+   * 
    * @param product handle or id
    * @param options options like expand
    */
   list_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
+  
+  /**
+   * list all of the product related collections, returns eveything, this is not query based,
+   * we assume, there are a handful of collection per product
+   * 
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_related_products: (product: HandleOrId) => Promise<BaseProductType[]>;
+  
   
   /**
    * Add product to collection

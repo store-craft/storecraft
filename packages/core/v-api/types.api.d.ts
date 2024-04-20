@@ -389,7 +389,7 @@ export interface BaseProductType extends BaseType {
   /** 
    * @description The readable unique product `handle`
    */
-  handle: string;
+  handle?: string;
 
   /** 
    * @description The International Standard Book Number (`ISBN`)

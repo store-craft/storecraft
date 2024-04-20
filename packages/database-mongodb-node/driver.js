@@ -33,6 +33,7 @@ const connect = async (uri, options) => {
     }
   }
   const client = new MongoClient(uri, options);
+
   return client.connect();
 }
 
@@ -54,7 +55,8 @@ export class MongoDB {
   /** @type {Config} */ 
   #_config;
 
-  #_resources;
+  // /** @type {db_driver["resources"]} */
+  // #_resources;
 
   /**
    * 
@@ -69,6 +71,8 @@ export class MongoDB {
   /**
    * 
    * @param {App<any, any, any>} app 
+   * 
+   * 
    * @returns {Promise<this>}
    */
   async init(app) {
@@ -88,7 +92,7 @@ export class MongoDB {
 
     this.#_app = app;
 
-    this.#_resources = {
+    this.resources = {
       auth_users: auth_users(this),
       collections: collections(this),
       customers: customers(this),
@@ -127,14 +131,6 @@ export class MongoDB {
   }
 
   /**
-   * `database` resources
-   */
-  get resources () {
-    return this.#_resources;
-  }
-  
-
-  /**
    * database name
    */
   get name () {
@@ -165,7 +161,11 @@ export class MongoDB {
   /**
    * 
    * @template {import('@storecraft/core/v-api').BaseType} T
+   * 
+   * 
    * @param {string} name 
+   * 
+   * 
    * @returns {Collection<T>}
    */
   collection(name) {

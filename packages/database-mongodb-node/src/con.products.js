@@ -44,7 +44,7 @@ const upsert = (driver) => {
                 $set: { [`_relations.variants.entries.${objid.toString()}`]: data },
                 $addToSet: { '_relations.variants.ids': objid }
               },
-              { session }
+              { upsert: false, session }
             );
           } else {
             // in the future, support also explicit relation with `create_explicit_relation`
@@ -53,8 +53,27 @@ const upsert = (driver) => {
           ////
           // COLLECTIONS RELATION (explicit)
           ////
-          const replacement = await create_explicit_relation(
+          let replacement = await create_explicit_relation(
             driver, data, 'collections', 'collections', true
+          );
+
+          //// 
+          // PRODUCTS -> Related Products RELATION (explicit)
+          ////
+          replacement = await create_explicit_relation(
+            driver, replacement, 'related_products', 'products', true
+          );
+
+          //// 
+          // Related Products -> PRODUCTS RELATION (explicit)
+          ////
+          await driver.resources.products._col.updateMany(
+            { '_relations.related_products.ids' : objid },
+            { 
+              $set: { [`_relations.related_products.entries.${objid.toString()}`]: data },
+              $addToSet: { '_relations.related_products.ids': objid }
+            },
+            { upsert: false, session }
           );
 
           ////
@@ -69,7 +88,7 @@ const upsert = (driver) => {
           ).toArray();
           // now test locally
           const eligible_discounts = discounts.filter(
-            d => pricing.test_product_filters_against_product(d.info.filters, data)
+            d => pricing.test_product_filters_against_product(d.info.filters, replacement)
           );
           // console.log('eligible_discounts', eligible_discounts)
           // now replace discounts relation
@@ -100,10 +119,10 @@ const upsert = (driver) => {
           ////
           // REPORT IMAGES USAGE
           ////
-          await report_document_media(driver)(data, session);
+          await report_document_media(driver)(replacement, session);
 
           // SAVE ME
-          delete_keys('collections', 'variants', 'discounts')(replacement)
+          delete_keys('collections', 'variants', 'discounts', 'related_products')(replacement)
           const res = await driver.resources.products._col.replaceOne(
             { _id: objid }, replacement, { session, upsert: true }
           );
@@ -151,6 +170,7 @@ const remove = (driver) => {
             // remove me from parent
             await driver.resources.products._col.updateOne(
               { _id : to_objid(item.parent_id) },
+              // { '_relations.variants.ids' : objid }, // maybe prefer this
               { 
                 $pull: { '_relations.variants.ids': objid },
                 $unset: { [`_relations.variants.entries.${objid.toString()}`]: '' },
@@ -177,7 +197,19 @@ const remove = (driver) => {
               $pull: { '_relations.products.ids': objid, },
               $unset: { [`_relations.products.entries.${objid.toString()}`]: '' },
             },
-            { session }
+            { upsert: false, session }
+          );
+
+          ////
+          // PRODUCTS --> RELATED PRODUCTS RELATION
+          ////
+          await driver.resources.products._col.updateMany(
+            { '_relations.related_products.ids' : objid },
+            { 
+              $pull: { '_relations.related_products.ids': objid, },
+              $unset: { [`_relations.related_products.entries.${objid.toString()}`]: '' },
+            },
+            { upsert: false, session }
           );
 
           // DELETE ME

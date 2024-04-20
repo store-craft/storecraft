@@ -94,7 +94,7 @@ export function useDocument(
         if(!item) {
           /** @type {T} */
           item = await sdk[resource].get(
-            document, try_cache
+            document
           );
 
           cache_document_put(item);
@@ -162,7 +162,7 @@ export function useDocument(
       setOp('delete');
 
       try {
-        await sdk[resource].delete(document);
+        await sdk[resource].remove(document);
 
         cache_document_remove(document);
 

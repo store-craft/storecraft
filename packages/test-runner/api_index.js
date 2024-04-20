@@ -28,6 +28,7 @@ export * as api_products_collections_test from './api_products_collections_test.
 export * as api_products_crud_test from './api_products_crud_test.js'
 export * as api_products_discounts_test from './api_products_discounts_test.js'
 export * as api_products_variants_test from './api_products_variants_test.js'
+export * as api_products_related_products_test from './api_products_related_products_test.js'
 
 export * as api_shipping_crud_test from './api_shipping_crud_test.js'
 export * as api_shipping_list_test from './api_shipping_list_test.js'

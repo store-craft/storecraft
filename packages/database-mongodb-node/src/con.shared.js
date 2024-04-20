@@ -9,9 +9,14 @@ import { add_search_terms_relation_on } from './utils.relations.js'
 
 /**
  * @template T, G
+ * 
+ * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * 
+ * 
  * @returns {import('@storecraft/core/v-database').db_crud<T, G>["upsert"]}
+ * 
  */
 export const upsert_regular = (driver, col) => {
   return async (data, search_terms=[]) => {
@@ -61,9 +66,14 @@ export const get_relations_names = item => {
 
 /**
  * Expand relations in-place
+ * 
+ * 
  * @template {any} T
+ * 
+ * 
  * @param {T[]} items
  * @param {import('@storecraft/core/v-api').ExpandQuery} [expand_query] 
+ * 
  */
 export const expand = (items, expand_query=undefined) => {
   
@@ -93,17 +103,25 @@ export const expand = (items, expand_query=undefined) => {
 
 /**
  * @template T, G
+ * 
+ * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * 
+ * 
  * @returns {import('@storecraft/core/v-database').db_crud<T, G>["get"]}
  */
 export const get_regular = (driver, col) => {
   return async (id_or_handle, options) => {
     const filter = handle_or_id(id_or_handle);
+
     /** @type {import('./utils.relations.js').WithRelations<G>} */
     const res = await col.findOne(filter);
+
+
     // try to expand relations
     expand([res], options?.expand);
+
     return sanitize_one(res);
   }
 }
@@ -111,10 +129,16 @@ export const get_regular = (driver, col) => {
 /**
  * get bulk of items, ordered, if something is missing, `undefined`
  * should be instead
+ * 
+ * 
  * @template {import('@storecraft/core/v-api').idable} T
  * @template {import('@storecraft/core/v-api').idable} G
+ * 
+ * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * 
+ * 
  * @returns {import('@storecraft/core/v-database').db_crud<T, G>["getBulk"]}
  */
 export const get_bulk = (driver, col) => {
@@ -140,8 +164,12 @@ export const get_bulk = (driver, col) => {
 
 /**
  * @template T, G
+ * 
+ * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * 
+ * 
  * @returns {import('@storecraft/core/v-database').db_crud<T, G>["remove"]}
  */
 export const remove_regular = (driver, col) => {
@@ -156,8 +184,12 @@ export const remove_regular = (driver, col) => {
 /**
  * @template {any} T
  * @template {any} G
+ * 
+ * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * 
+ * 
  * @returns {import('@storecraft/core/v-database').db_crud<T, G>["list"]}
  */
 export const list_regular = (driver, col) => {

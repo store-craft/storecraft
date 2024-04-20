@@ -94,7 +94,7 @@ const remove = (driver) => {
               $pull: { '_relations.posts.ids': objid, },
               $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
             },
-            { session }
+            { upsert: false, session }
           );
 
           // DELETE ME

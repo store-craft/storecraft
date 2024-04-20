@@ -1033,9 +1033,20 @@ export const variantTypeSchema = baseProductTypeSchema.extend({
   variant_hint: z
     .array(variantOptionSelectionSchema)
     .describe("Internal usage, clarifies the variant\nprojected options"),
+  related_products: z
+    .array(baseProductTypeSchema)
+    .optional()
+    .describe(
+      "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
+    ),
 });
 export const variantTypeUpsertSchema = variantTypeSchema
-  .omit({ collections: true, published: true, discounts: true })
+  .omit({
+    collections: true,
+    published: true,
+    discounts: true,
+    related_products: true,
+  })
   .and(
     z.object({
       collections: z
@@ -1043,6 +1054,12 @@ export const variantTypeUpsertSchema = variantTypeSchema
         .optional()
         .describe(
           "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
+        ),
+      related_products: z
+        .array(baseProductTypeSchema.pick({ id: true, handle: true }))
+        .optional()
+        .describe(
+          "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
         ),
     }),
   )
@@ -1056,9 +1073,21 @@ export const productTypeSchema = baseProductTypeSchema.extend({
     .array(variantOptionSchema)
     .optional()
     .describe("Variants options info"),
+  related_products: z
+    .array(baseProductTypeSchema)
+    .optional()
+    .describe(
+      "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
+    ),
 });
 export const productTypeUpsertSchema = productTypeSchema
-  .omit({ collections: true, published: true, discounts: true, variants: true })
+  .omit({
+    collections: true,
+    published: true,
+    related_products: true,
+    discounts: true,
+    variants: true,
+  })
   .and(
     z.object({
       collections: z
@@ -1066,6 +1095,12 @@ export const productTypeUpsertSchema = productTypeSchema
         .optional()
         .describe(
           "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
+        ),
+      related_products: z
+        .array(baseProductTypeSchema.pick({ id: true, handle: true }))
+        .optional()
+        .describe(
+          "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
         ),
     }),
   )

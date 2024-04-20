@@ -92,7 +92,7 @@ const create_base_indexes = async (db, table_name, include_id=true, include_hand
  * @param {keyof Pick<Database, 'entity_to_media' | 
  * 'entity_to_search_terms' | 'entity_to_tags_projections' | 
  * 'products_to_collections' | 'products_to_discounts' | 
- * 'products_to_variants' | 'storefronts_to_other'>} table_name 
+ * 'products_to_variants' | 'products_to_related_products' | 'storefronts_to_other'>} table_name 
  */
 const create_entity_table_indexes = async (db, table_name) => {
   await db.schema.createIndex(`index_${table_name}_entity_id`)
@@ -183,6 +183,11 @@ export async function up(db) {
   { // products_to_variants
     await create_entity_to_value_table(db, 'products_to_variants').execute();
     await create_entity_table_indexes(db, 'products_to_variants');
+  }
+
+  { // products_to_related_products
+    await create_entity_to_value_table(db, 'products_to_related_products').execute();
+    await create_entity_table_indexes(db, 'products_to_related_products');
   }
 
   { // shipping_methods

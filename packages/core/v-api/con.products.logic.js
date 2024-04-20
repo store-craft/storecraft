@@ -6,7 +6,7 @@ import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.js').ProductType} ItemType
- * @typedef {import('./types.api.js').ProductTypeUpsert &
+ * @typedef {import('./types.api.js').ProductTypeUpsert |
  *  import('./types.api.d.ts').VariantTypeUpsert
  * } ItemTypeUpsert
  */
@@ -101,6 +101,17 @@ export const list_product_collections = (app, handle_or_id) => {
 export const list_product_variants = (app, product) => {
   return db(app).list_product_variants(product);
 }
+
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ * @param {string} product handle or id
+ */
+export const list_related_products = (app, product) => {
+  return db(app).list_related_products(product);
+}
+
 
 /**
  * 

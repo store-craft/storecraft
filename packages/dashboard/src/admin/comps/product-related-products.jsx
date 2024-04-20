@@ -50,13 +50,16 @@ const Item = ({ context, product, onRemove }) => {
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *  import('@storecraft/core/v-api').ProductType[]> &
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param 
- * @returns 
+ * } params 
+ * 
  */
-const RelatedProducts = 
-  ({ field, context, value=[], onChange, ...rest }) => {
+const RelatedProducts = (
+  { 
+    field, context, value=[], onChange, ...rest 
+  }
+) => {
 
-  const [products, setProducts] = useState(value ?? [])
+  const [products, setProducts] = useState(value ?? []);
   /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
@@ -71,12 +74,19 @@ const RelatedProducts =
               it => it.handle===m.handle
               )===undefined), 
         ...products
-      ]
-      setProducts(ps)
-      onChange && onChange(ps)
-      ref_overlay.current.hide()
+      ];
+
+      setProducts(ps);
+
+
+      console.log('pra', ps)
+
+      onChange && onChange(ps);
+
+      ref_overlay.current.hide();
+
     }, [products, onChange]
-  )
+  );
 
   const onRemoveItem = useCallback(
     /**@param {string} handle  */

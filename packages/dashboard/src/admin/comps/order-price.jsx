@@ -51,7 +51,7 @@ const OrderPrice = (
     async (_) => {
       const { pubsub, query } = context;
 
-      console.log('query', query)
+      // console.log('query', query)
 
       /**@type {import('@storecraft/core/v-api').LineItem[]} */
       const line_items = query['line_items'].get() ?? []

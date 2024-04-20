@@ -373,6 +373,13 @@ export interface VariantType extends BaseProductType {
    * projected options 
    */
   variant_hint: VariantOptionSelection[];
+
+  /** 
+   * @description List of related products to add the product into, 
+   * this is an explicit connection, to form a better UX experience 
+   */
+  related_products?: BaseProductType[];
+  
 }
 
 /**
@@ -382,7 +389,7 @@ export interface BaseProductType extends BaseType {
   /** 
    * @description The readable unique product `handle`
    */
-  handle: string;
+  handle?: string;
 
   /** 
    * @description The International Standard Book Number (`ISBN`)
@@ -439,13 +446,20 @@ export interface BaseProductType extends BaseType {
  * @description Variant upsert type
  */
 export type VariantTypeUpsert = Omit<VariantType, 
-'collections' | 'published' | 'discounts'> & {
+'collections' | 'published' | 'discounts' | 'related_products'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
   collections?: Pick<CollectionType, 'id' | 'handle'>[];
+
+  /** 
+   * @description List of related products to add the product into, 
+   * this is an explicit connection, to form a better UX experience 
+   */
+  related_products?: Pick<BaseProductType, 'id' | 'handle'>[];
 }
+
 
 /**
  * @description Product type
@@ -460,21 +474,35 @@ export interface ProductType extends BaseProductType {
    * @description Variants options info 
    */
   variants_options?: VariantOption[];
+
+  /** 
+   * @description List of related products to add the product into, 
+   * this is an explicit connection, to form a better UX experience 
+   */
+  related_products?: BaseProductType[];
+  
 }
+
 
 /**
  * @description Product upsert type
  */
 export type ProductTypeUpsert = Omit<ProductType, 
-  'collections' | 'published' | 'discounts' | 'variants'> & {
+  'collections' | 'published' | 'related_products' | 'discounts' | 'variants'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
   collections?: Pick<CollectionType, 'id' | 'handle'>[];
+
+  /** 
+   * @description List of related products to add the product into, 
+   * this is an explicit connection, to form a better UX experience 
+   */
+  related_products?: Pick<BaseProductType, 'id' | 'handle'>[];
 }
 
-//
+
 
 // discounts
 

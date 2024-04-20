@@ -173,18 +173,23 @@ export async function up(db) {
   }
 
   { // products_to_collections
-    let tb = create_entity_to_value_table(db, 'products_to_collections').execute();
+    await create_entity_to_value_table(db, 'products_to_collections').execute();
     await create_entity_table_indexes(db, 'products_to_collections');
   }
 
   { // products_to_discounts
-    let tb = create_entity_to_value_table(db, 'products_to_discounts').execute();
+    await create_entity_to_value_table(db, 'products_to_discounts').execute();
     await create_entity_table_indexes(db, 'products_to_discounts');
   }
   
   { // products_to_variants
-    let tb = create_entity_to_value_table(db, 'products_to_variants').execute();
+    await create_entity_to_value_table(db, 'products_to_variants').execute();
     await create_entity_table_indexes(db, 'products_to_variants');
+  }
+
+  { // products_to_related_products
+    await create_entity_to_value_table(db, 'products_to_related_products').execute();
+    await create_entity_table_indexes(db, 'products_to_related_products');
   }
 
   { // shipping_methods

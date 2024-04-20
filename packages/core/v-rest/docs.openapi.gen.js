@@ -2308,6 +2308,94 @@ const register_products = registry => {
      },
   });
 
+  // list related products
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/related`,
+    description: 'Each `products` may have related `products`, you can list all these `products`',
+    summary: 'List all related products',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: `\`${example_id}\` or a \`handle\``,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List all related products`,
+        content: {
+          'application/json': {
+            schema: z.array(discountTypeSchema),
+            example: [
+              {
+                "active": true,
+                "handle": "10-off-for-product-1",
+                "title": "10% OFF for product 1",
+                "priority": 0,
+                "application": {
+                  "id": 0,
+                  "name": "Automatic",
+                  "name2": "automatic"
+                },
+                "info": {
+                  "details": {
+                    "meta": {
+                      "id": 0,
+                      "type": "regular",
+                      "name": "Regular Discount"
+                    },
+                    "extra": {
+                      "fixed": 0,
+                      "percent": 10
+                    }
+                  },
+                  "filters": [
+                    {
+                      "meta": {
+                        "id": 2,
+                        "type": "product",
+                        "op": "p-in-handles",
+                        "name": "Product has ID"
+                      },
+                      "value": [
+                        "pr-api-discounts-products-test-js-1"
+                      ]
+                    }
+                  ]
+                },
+                "id": "dis_65f2ae888bf30e6cd0ca9600",
+                "created_at": "2024-03-14T08:00:08.138Z",
+                "updated_at": "2024-03-14T08:00:08.138Z",
+                "search": [
+                  "handle:10-off-for-product-1",
+                  "10-off-for-product-1",
+                  "id:dis_65f2ae888bf30e6cd0ca9600",
+                  "dis_65f2ae888bf30e6cd0ca9600",
+                  "65f2ae888bf30e6cd0ca9600",
+                  "active:true",
+                  "10",
+                  "product",
+                  "1",
+                  "10% off for product 1",
+                  "app:0",
+                  "app:automatic",
+                  "type:0",
+                  "type:regular"
+                ]
+              }
+            ]
+          },
+        },
+      },
+      ...error() 
+     },
+  });
+
 }
 
 //

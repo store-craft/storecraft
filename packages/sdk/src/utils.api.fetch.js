@@ -1,5 +1,7 @@
 
-import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
+import { 
+  api_query_to_searchparams 
+} from '@storecraft/core/v-api/utils.query.js';
 import { assert } from './utils.functional.js';
 
 /**

@@ -39,6 +39,8 @@ const connect = async (uri, options) => {
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_driver} db_driver
+ * 
+ * 
  * @implements {db_driver}
  */
 export class MongoDB {

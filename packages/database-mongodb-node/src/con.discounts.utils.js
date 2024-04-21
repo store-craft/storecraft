@@ -18,6 +18,8 @@ const extract_abs_number = v => {
 /**
  * create a mongodb conjunctions clauses from discount, intended
  * for filtering.
+ * 
+ * 
  * @param {import("@storecraft/core/v-api").DiscountType} d 
  */
 export const discount_to_mongo_conjunctions = d => {

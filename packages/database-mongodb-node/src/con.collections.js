@@ -4,7 +4,12 @@ import { count_regular, expand, get_regular, list_regular } from './con.shared.j
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
-import { add_search_terms_relation_on } from './utils.relations.js'
+import { 
+  add_search_terms_relation_on, delete_me, 
+  remove_entry_from_all_connection_of_relation, 
+  save_me, 
+  update_entry_on_all_connection_of_relation 
+} from './utils.relations.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_collections} db_col
@@ -43,21 +48,15 @@ const upsert = (driver) => {
           // PRODUCT -> COLLECTION RELATION
           ////
           // update collection document in products, that reference this collection
-          await driver.resources.products._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { 
-              $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
-            },
-            { session }
+          await update_entry_on_all_connection_of_relation(
+            driver, 'products', 'collections', objid, data, session
           );
 
           ////
           // STOREFRONTS -> COLLECTIONS RELATION
           ////
-          await driver.resources.storefronts._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
-            { session }
+          await update_entry_on_all_connection_of_relation(
+            driver, 'storefronts', 'collections', objid, data, session
           );
 
           ////
@@ -66,8 +65,8 @@ const upsert = (driver) => {
           await report_document_media(driver)(data, session);
 
           // SAVE ME
-          const res = await col(driver).replaceOne(
-            { _id: objid }, data, { upsert: true, session }
+          await save_me(
+            driver, 'collections', objid, data, session
           );
 
         }, transactionOptions
@@ -91,12 +90,19 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
-    const item = await col(driver).findOne(handle_or_id(id_or_handle));
+
+    const item = await col(driver).findOne(
+      handle_or_id(id_or_handle)
+    );
+
     if(!item) return;
+
     const objid = to_objid(item.id);
     const session = driver.mongo_client.startSession();
 
@@ -107,43 +113,30 @@ const remove = (driver) => {
           ////
           // PRODUCTS --> COLLECTIONS RELATION
           ////
-          const rr = await driver.resources.products._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { 
-              $pull: { 
-                '_relations.collections.ids': objid,
-                '_relations.search': { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
-              },
-              $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
-            },
-            { upsert: false, session }
+          await remove_entry_from_all_connection_of_relation(
+            driver, 'products', 'collections', objid, session,
+            [
+              `col:${item.id}`, `col:${item.handle}`
+            ]
           );
-
-          // console.log(objid)
-          // console.log(rr)
 
           ////
           // STOREFRONTS --> COLLECTIONS RELATION
           ////
-          await driver.resources.storefronts._col.updateMany(
-            { '_relations.collections.ids' : objid },
-            { 
-              $pull: { '_relations.collections.ids': objid, },
-              $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
-            },
-            { session }
+          await remove_entry_from_all_connection_of_relation(
+            driver, 'storefronts', 'collections', objid, session
           );
 
           // DELETE ME
-          const res = await col(driver).deleteOne(
-            { _id: objid },
-            { session }
+          await delete_me(
+            driver, 'collections', objid, session
           );
 
         }, transactionOptions
       );
     } catch(e) {
       console.log(e);
+      
       return false;
     } finally {
       await session.endSession();

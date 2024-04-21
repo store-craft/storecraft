@@ -133,7 +133,7 @@ export const add_search_terms_relation_on = (data, terms=[]) => {
  */
 export const update_entry_on_all_connection_of_relation = (
   driver, collection, relation_name, entry_objid, entry, session,
-  search_terms_to_add
+  search_terms_to_add=[]
 ) => {
 
   return driver.collection(collection).updateMany(
@@ -178,7 +178,7 @@ export const update_entry_on_all_connection_of_relation = (
  */
 export const update_specific_connection_of_relation_with_filter = (
   driver, collection, relation_name, from_object_filter, 
-  entry_objid, entry, session, search_terms_to_add
+  entry_objid, entry, session, search_terms_to_add=[]
 ) => {
 
   return driver.collection(collection).updateOne(
@@ -220,7 +220,7 @@ export const update_specific_connection_of_relation_with_filter = (
  */
 export const update_specific_connection_of_relation = (
   driver, collection, relation_name, from_objid, entry_objid, 
-  entry, session, search_terms_to_add
+  entry, session, search_terms_to_add=[]
 ) => {
 
   return update_specific_connection_of_relation_with_filter(
@@ -295,7 +295,7 @@ export const remove_entry_from_all_connection_of_relation = (
  */
 export const remove_specific_connection_of_relation = (
   driver, collection, relation_name, from_objid, entry_objid, session,
-  search_terms_to_remove
+  search_terms_to_remove=[]
 ) => {
 
   return remove_specific_connection_of_relation_with_filter(

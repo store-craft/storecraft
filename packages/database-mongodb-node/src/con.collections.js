@@ -24,7 +24,11 @@ const transactionOptions = {
 
 /**
  * @param {MongoDB} d 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
+ * 
+ * 
+ * @returns {Collection<
+ *  import('./utils.relations.js').WithRelations<db_col["$type_get"]>
+ * >}
  */
 const col = (d) => d.collection('collections');
 
@@ -162,6 +166,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_collection_products"]}
  */
 const list_collection_products = (driver) => {
@@ -200,6 +206,8 @@ const list_collection_products = (driver) => {
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

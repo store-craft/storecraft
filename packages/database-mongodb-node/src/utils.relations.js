@@ -7,8 +7,6 @@ import { MongoDB } from '../driver.js';
  * 
  * 
  * @typedef {Object} Relation
- * 
- * 
  * @property {ObjectId[]} [ids]
  * @property {Record<
  *  import('@storecraft/core/v-database').ID, T>
@@ -17,7 +15,6 @@ import { MongoDB } from '../driver.js';
 
 /**
  * @template {any} T
- * 
  * 
  * @typedef {T & { _relations? : Record<string, Relation<any>> }} WithRelations
  */

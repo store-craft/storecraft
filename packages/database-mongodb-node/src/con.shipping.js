@@ -29,6 +29,7 @@ const col = (d) => d.collection('shipping_methods');
  */
 const upsert = (driver) => {
   return async (data, search_terms=[]) => {
+
     data = {...data};
 
     const objid = to_objid(data.id);
@@ -37,9 +38,9 @@ const upsert = (driver) => {
     try {
       await session.withTransaction(
         async () => {
+
           // SEARCH
           add_search_terms_relation_on(data, search_terms);
-
           
           ////
           // STOREFRONTS --> SHIPPING RELATION
@@ -95,6 +96,7 @@ const remove = (driver) => {
     try {
       await session.withTransaction(
         async () => {
+
           ////
           // STOREFRONTS --> SHIPPING RELATION
           ////
@@ -111,6 +113,7 @@ const remove = (driver) => {
       );
     } catch(e) {
       console.log(e);
+      
       return false;
     } finally {
       await session.endSession();

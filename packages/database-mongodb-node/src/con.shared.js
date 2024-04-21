@@ -29,13 +29,20 @@ export const upsert_regular = (driver, col) => {
           // SEARCH
           add_search_terms_relation_on(
             data, 
-            [...(data?.search ?? []), ...search_terms]
+            [
+              ...(data?.search ?? []), 
+              ...search_terms
+            ]
           );
 
           const res = await col.replaceOne(
-            { _id: to_objid(data.id) }, 
+            { 
+              _id: to_objid(data.id) 
+            }, 
             data,
-            { session, upsert: true }
+            { 
+              session, upsert: true 
+            }
           );
 
           ////
@@ -46,6 +53,7 @@ export const upsert_regular = (driver, col) => {
       );
     } catch(e) {
       // console.log(e);
+
       return false;
     } finally {
       await session.endSession();
@@ -57,7 +65,11 @@ export const upsert_regular = (driver, col) => {
 
 /**
  * Extract relations names from item
+ * 
+ * 
  * @template {import('./utils.relations.js').WithRelations<{}>} T
+ * 
+ * 
  * @param {T} item
  */
 export const get_relations_names = item => {
@@ -71,7 +83,7 @@ export const get_relations_names = item => {
  * @template {any} T
  * 
  * 
- * @param {T[]} items
+ * @param {import('./utils.relations.js').WithRelations<T>[]} items
  * @param {import('@storecraft/core/v-api').ExpandQuery} [expand_query] 
  * 
  */
@@ -95,6 +107,7 @@ export const expand = (items, expand_query=undefined) => {
       if(Array.isArray(rel)) {
         item[e] = rel;
       } else if(rel?.entries) {
+        // recurse
         item[e] = sanitize_array(
           expand(
             Object.values(rel.entries),
@@ -102,13 +115,13 @@ export const expand = (items, expand_query=undefined) => {
           )
         );
       }
-
     }
   }
 
   return items;
 }
 
+import { ObjectId } from 'mongodb';
 
 /**
  * @template T, G
@@ -154,7 +167,9 @@ export const get_bulk = (driver, col) => {
     const objids = ids.map(to_objid);
 
     const res = await col.find(
-      { _id: { $in: objids } }
+      { 
+        _id: { $in: objids } 
+      }
     ).toArray();
 
     // try to expand relations
@@ -182,9 +197,11 @@ export const get_bulk = (driver, col) => {
  */
 export const remove_regular = (driver, col) => {
   return async (id_or_handle) => {
+
     const res = await col.deleteOne( 
       handle_or_id(id_or_handle)
     );
+
     return res.acknowledged && res.deletedCount>0;
   }
 }
@@ -224,7 +241,9 @@ export const list_regular = (driver, col) => {
     expand(items, query?.expand);
 
     const sanitized = sanitize_array(items);
+
     // console.log('sanitized', sanitized)
+
     return sanitized;
   }
 }

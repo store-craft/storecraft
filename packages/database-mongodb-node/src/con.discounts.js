@@ -1,12 +1,19 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
-import { count_regular, expand, get_bulk, get_regular, list_regular } from './con.shared.js'
+import { 
+  count_regular, expand, get_bulk, get_regular, list_regular 
+} from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 import { enums } from '@storecraft/core/v-api'
-import { add_search_terms_relation_on } from './utils.relations.js'
+import { 
+  add_search_terms_relation_on, delete_me, 
+  remove_entry_from_all_connection_of_relation, 
+  save_me, 
+  update_entry_on_all_connection_of_relation 
+} from './utils.relations.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
@@ -14,12 +21,16 @@ import { add_search_terms_relation_on } from './utils.relations.js'
 
 /**
  * @param {MongoDB} d 
+ * 
+ * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('discounts');
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -74,11 +85,15 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS -> DISCOUNTS RELATION
           ////
-          await driver.resources.storefronts._col.updateMany(
-            { '_relations.discounts.ids' : objid },
-            { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
-            { session }
+          await update_entry_on_all_connection_of_relation(
+            driver, 'storefronts', 'discounts', objid, data, session
           );
+
+          // await driver.resources.storefronts._col.updateMany(
+          //   { '_relations.discounts.ids' : objid },
+          //   { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
+          //   { session }
+          // );
 
           ////
           // REPORT IMAGES USAGE
@@ -87,10 +102,14 @@ const upsert = (driver) => {
 
           // SAVE ME
 
-          const res = await col(driver).replaceOne(
-            { _id: objid }, data, 
-            { session, upsert: true }
+          await save_me(
+            driver, 'discounts', objid, data, session
           );
+
+          // const res = await col(driver).replaceOne(
+          //   { _id: objid }, data, 
+          //   { session, upsert: true }
+          // );
 
         }
       );
@@ -114,6 +133,8 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -127,7 +148,7 @@ const remove = (driver) => {
       await session.withTransaction(
         async () => {
           ////
-          // PRODUCT RELATION
+          // PRODUCT -> DISCOUNTS RELATION
           ////
           await driver.resources.products._col.updateMany(
             { '_relations.discounts.ids' : objid },
@@ -144,20 +165,28 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> DISCOUNTS RELATION
           ////
-          await driver.resources.storefronts._col.updateMany(
-            { '_relations.discounts.ids' : objid },
-            { 
-              $pull: { '_relations.discounts.ids': objid, },
-              $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
-            },
-            { session }
+          await remove_entry_from_all_connection_of_relation(
+            driver, 'storefronts', 'discounts', objid, session
           );
 
+          // await driver.resources.storefronts._col.updateMany(
+          //   { '_relations.discounts.ids' : objid },
+          //   { 
+          //     $pull: { '_relations.discounts.ids': objid, },
+          //     $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
+          //   },
+          //   { session }
+          // );
+
           // DELETE ME
-          const res = await col(driver).deleteOne( 
-            { _id: objid },
-            { session }
+          await delete_me(
+            driver, 'discounts', objid, session
           );
+
+          // const res = await col(driver).deleteOne( 
+          //   { _id: objid },
+          //   { session }
+          // );
 
         }
       );
@@ -187,6 +216,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_discount_products"]}
  */
 const list_discount_products = (driver) => {
@@ -225,10 +256,12 @@ const list_discount_products = (driver) => {
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
-  driver
+
   return {
     _col: col(driver),
     get: get(driver),

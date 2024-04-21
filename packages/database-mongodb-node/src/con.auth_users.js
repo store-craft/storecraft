@@ -9,6 +9,8 @@ import { count_regular, get_regular, list_regular, upsert_regular } from './con.
 
 /**
  * @param {MongoDB} d 
+ * 
+ * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('auth_users');
@@ -20,12 +22,16 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["get"]}
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
@@ -43,6 +49,8 @@ const getByEmail = (driver) => {
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -57,6 +65,8 @@ const remove = (driver) => {
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["removeByEmail"]}
  */
 const removeByEmail = (driver) => {
@@ -82,6 +92,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

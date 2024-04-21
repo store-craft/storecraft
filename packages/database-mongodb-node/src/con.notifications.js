@@ -10,6 +10,8 @@ import { to_objid } from './utils.funcs.js';
 
 /**
  * @param {MongoDB} d 
+ * 
+ * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('notifications');
@@ -21,6 +23,8 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["upsertBulk"]}
  */
 const upsertBulk = (driver) => {
@@ -61,10 +65,12 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
-  driver
+  
   return {
     _col: col(driver),
     get: get(driver),

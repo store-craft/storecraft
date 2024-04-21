@@ -3,7 +3,9 @@ import { MongoDB } from '../driver.js'
 import { count_regular, get_regular, list_regular, 
   remove_regular } from './con.shared.js'
 import { sanitize_array, to_objid } from './utils.funcs.js'
-import { add_search_terms_relation_on, create_explicit_relation } from './utils.relations.js';
+import { 
+  add_search_terms_relation_on, create_explicit_relation, save_me 
+} from './utils.relations.js';
 import { report_document_media } from './con.images.js';
 
 /**
@@ -12,18 +14,24 @@ import { report_document_media } from './con.images.js';
 
 /**
  * @param {MongoDB} d 
+ * 
+ * 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('storefronts');
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @return {db_col["upsert"]}
  */
 const upsert = (driver) => {
   return async (data, search_terms=[]) => {
     data = {...data};
+
     const session = driver.mongo_client.startSession();
+
     try {
       await session.withTransaction(
         async () => {
@@ -55,11 +63,16 @@ const upsert = (driver) => {
           await report_document_media(driver)(replacement, session);
           
           // SAVE ME
-          const res = await col(driver).replaceOne(
-            { _id: to_objid(data.id) }, 
-            replacement, 
-            { session, upsert: true }
+          await save_me(
+            driver, 'storefronts', to_objid(data.id), replacement, session
           );
+
+          // const res = await col(driver).replaceOne(
+          //   { _id: to_objid(data.id) }, 
+          //   replacement, 
+          //   { session, upsert: true }
+          // );
+
         }
       );
     } catch (e) {
@@ -96,6 +109,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_storefront_products"]}
  */
 const list_storefront_products = (driver) => {
@@ -104,13 +119,17 @@ const list_storefront_products = (driver) => {
     const options = {
       expand: ['products']
     };
+
     const item = await get_regular(driver, col(driver))(product, options);
+
     return sanitize_array(item?.products ?? []);
   }
 }
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_storefront_collections"]}
  */
 const list_storefront_collections = (driver) => {
@@ -119,13 +138,17 @@ const list_storefront_collections = (driver) => {
     const options = {
       expand: ['collections']
     };
+
     const item = await get_regular(driver, col(driver))(product, options);
+
     return sanitize_array(item?.collections ?? []);
   }
 }
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_storefront_discounts"]}
  */
 const list_storefront_discounts = (driver) => {
@@ -134,13 +157,16 @@ const list_storefront_discounts = (driver) => {
     const options = {
       expand: ['discounts']
     };
+
     const item = await get_regular(driver, col(driver))(product, options);
+
     return sanitize_array(item?.discounts ?? []);
   }
 }
 
 /**
  * @param {MongoDB} driver 
+ * 
  * @returns {db_col["list_storefront_shipping_methods"]}
  */
 const list_storefront_shipping_methods = (driver) => {
@@ -149,13 +175,17 @@ const list_storefront_shipping_methods = (driver) => {
     const options = {
       expand: ['shipping_methods']
     };
+
     const item = await get_regular(driver, col(driver))(product, options);
+
     return sanitize_array(item?.shipping_methods ?? []);
   }
 }
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_storefront_posts"]}
  */
 const list_storefront_posts = (driver) => {
@@ -164,13 +194,17 @@ const list_storefront_posts = (driver) => {
     const options = {
       expand: ['posts']
     };
+
     const item = await get_regular(driver, col(driver))(product, options);
+
     return sanitize_array(item?.posts ?? []);
   }
 }
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

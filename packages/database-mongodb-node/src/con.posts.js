@@ -3,7 +3,12 @@ import { MongoDB } from '../driver.js'
 import { count_regular, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
 import { report_document_media } from './con.images.js';
-import { add_search_terms_relation_on } from './utils.relations.js';
+import { 
+  add_search_terms_relation_on, delete_me, 
+  remove_entry_from_all_connection_of_relation, save_me, 
+  update_entry_on_all_connection_of_relation 
+} from './utils.relations.js';
+
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_posts} db_col
@@ -11,12 +16,16 @@ import { add_search_terms_relation_on } from './utils.relations.js';
 
 /**
  * @param {MongoDB} d 
+ * 
+ * 
  * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('posts');
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -35,11 +44,16 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
-          await driver.resources.storefronts._col.updateMany(
-            { '_relations.posts.ids' : objid },
-            { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
-            { session }
+
+          await update_entry_on_all_connection_of_relation(
+            driver, 'storefronts', 'posts', objid, data, session
           );
+
+          // await driver.resources.storefronts._col.updateMany(
+          //   { '_relations.posts.ids' : objid },
+          //   { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
+          //   { session }
+          // );
 
           ////
           // REPORT IMAGES USAGE
@@ -48,11 +62,12 @@ const upsert = (driver) => {
 
           // SAVE ME
 
-          const res = await col(driver).replaceOne(
-            { _id: objid }, 
-            data, 
-            { session, upsert: true }
-          );
+          await save_me(driver, 'posts', objid, data, session);
+          // const res = await col(driver).replaceOne(
+          //   { _id: objid }, 
+          //   data, 
+          //   { session, upsert: true }
+          // );
         }
       );
     } catch(e) {
@@ -73,12 +88,16 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
     const item = await col(driver).findOne(handle_or_id(id_or_handle));
+
     if(!item) return;
+
     const objid = to_objid(item.id)
     const session = driver.mongo_client.startSession();
 
@@ -88,20 +107,28 @@ const remove = (driver) => {
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
-          await driver.resources.storefronts._col.updateMany(
-            { '_relations.posts.ids' : objid },
-            { 
-              $pull: { '_relations.posts.ids': objid, },
-              $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
-            },
-            { upsert: false, session }
+          await remove_entry_from_all_connection_of_relation(
+            driver, 'storefronts', 'posts', objid, session
           );
 
+          // await driver.resources.storefronts._col.updateMany(
+          //   { '_relations.posts.ids' : objid },
+          //   { 
+          //     $pull: { '_relations.posts.ids': objid, },
+          //     $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
+          //   },
+          //   { upsert: false, session }
+          // );
+
           // DELETE ME
-          const res = await col(driver).deleteOne( 
-            { _id: objid },
-            { session }
+          await delete_me(
+            driver, 'posts', objid, session
           );
+
+          // const res = await col(driver).deleteOne( 
+          //   { _id: objid },
+          //   { session }
+          // );
 
         }
       );
@@ -130,10 +157,12 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
-  driver
+
   return {
     _col: col(driver),
     get: get(driver),

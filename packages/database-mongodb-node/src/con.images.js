@@ -28,6 +28,8 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -78,7 +80,11 @@ const remove = (driver) => {
 
 /**
  * report media usages
+ * 
+ * 
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["report_document_media"]}
  */
 export const report_document_media = (driver) => {
@@ -94,7 +100,11 @@ export const report_document_media = (driver) => {
     
     /** 
      * @param {string} url 
-     * @returns {import('mongodb').AnyBulkWriteOperation<import('@storecraft/core/v-api').ImageType>}
+     * 
+     * 
+     * @returns {import('mongodb').AnyBulkWriteOperation<
+     *  import('@storecraft/core/v-api').ImageType>
+     * }
      */
     const url_to_update = url => {
       const id_on_insert = ID('img');
@@ -142,6 +152,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

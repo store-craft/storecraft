@@ -11,6 +11,8 @@ import { query_to_mongo } from './utils.query.js';
 
 /**
  * @param {MongoDB} d 
+ * 
+ * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('customers');
@@ -27,6 +29,8 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
@@ -40,6 +44,8 @@ const getByEmail = (driver) => {
 /**
  * 
  * @param {string} email_or_id 
+ * 
+ * 
  * @returns { {_id:ObjectId} | {email: string}}
  */
 export const email_or_id = (email_or_id) => {
@@ -54,6 +60,8 @@ export const email_or_id = (email_or_id) => {
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -101,6 +109,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
@@ -136,10 +146,12 @@ const list_customer_orders = (driver) => {
 
 /** 
  * @param {MongoDB} driver
+ * 
+ * 
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {
-  driver
+
   return {
     _col: col(driver),
     get: get(driver),

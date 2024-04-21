@@ -58,6 +58,15 @@ export class NodeLocalStorage {
     this.#path = path;
   }
 
+  features() {
+    /** @type {import('@storecraft/core/v-storage').StorageFeatures} */
+    const f = {
+      supports_signed_urls: false
+    }
+
+    return f;
+  }
+
   /**
    * 
    * @param {App<any, any>} app 

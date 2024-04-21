@@ -20,6 +20,16 @@ export default class Storage {
   constructor(sdk) {
     this.sdk = sdk
   }
+
+  /**
+   * 
+   * Retrieve the `features` of `storage`, which informs:
+   * - Does `storage` supports `pre-signed` urls for `download` / `upload`
+   * 
+   */
+  features = async () => {
+
+  }
   
   /**
    * Get a blob from `storage` driver with `presigned` urls

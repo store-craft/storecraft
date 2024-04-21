@@ -747,6 +747,39 @@ const register_storage = registry => {
     },
     ...apply_security()
   });  
+
+  // options features
+  registry.registerPath({
+    method: 'options',
+    path: '/storage',
+    description: 'You can query the features, that are supported by the current `storage` driver. We use it\
+    mainly to confirm if the `storage` supports `pre-signed` urls for `download` / `upload`',
+    summary: 'Get Storage features',
+    tags,
+    responses: {
+      200: {
+        description: `Object with \`features\``,
+        content: {
+          'application/json': {
+            schema: z.object(
+              {
+                supports_signed_urls: z.boolean().openapi(
+                  {
+                    example: true,
+                    description: 'Does the `storage` driver supports pre-signed urls ?'
+                  }
+                )
+              }
+            ),
+            example: {
+              supports_signed_urls: true
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });    
 }
 
 /**

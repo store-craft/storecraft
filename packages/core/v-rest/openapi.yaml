@@ -49978,6 +49978,53 @@ paths:
                           type: array
                           items:
                             type: string
+  /storage:
+    options:
+      description: You can query the features, that are supported by the current
+        `storage` driver. We use it    mainly to confirm if the `storage`
+        supports `pre-signed` urls for `download` / `upload`
+      summary: Get Storage features
+      tags: *a4
+      responses:
+        "200":
+          description: Object with `features`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  supports_signed_urls:
+                    type: boolean
+                    description: Does the `storage` driver supports pre-signed urls ?
+                    example: true
+                required:
+                  - supports_signed_urls
+              example:
+                supports_signed_urls: true
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /tags/{id_or_handle}?expand={expand}:
     get:
       description: |

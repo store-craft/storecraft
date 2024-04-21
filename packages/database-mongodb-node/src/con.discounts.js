@@ -3,7 +3,9 @@ import { MongoDB } from '../driver.js'
 import { 
   count_regular, expand, get_bulk, get_regular, list_regular 
 } from './con.shared.js'
-import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
+import { 
+  handle_or_id, isDef, sanitize_array, to_objid 
+} from './utils.funcs.js'
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
@@ -15,9 +17,11 @@ import {
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js'
 
+
 /**
  * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
  */
+
 
 /**
  * @param {MongoDB} d 
@@ -27,6 +31,7 @@ import {
  */
 const col = (d) => d.collection('discounts');
 
+
 /**
  * @param {MongoDB} driver 
  * 
@@ -35,7 +40,9 @@ const col = (d) => d.collection('discounts');
  */
 const upsert = (driver) => {
   return async (data, search_terms=[]) => {
+
     data = {...data};
+
     const objid = to_objid(data.id);
     const session = driver.mongo_client.startSession();
 
@@ -51,18 +58,13 @@ const upsert = (driver) => {
           ////
 
           // first remove discount from anywhere
-          await driver.resources.products._col.updateMany(
-            { '_relations.discounts.ids' : objid },
-            { 
-              $pull: { 
-                '_relations.discounts.ids': objid,
-                '_relations.search': { $in : [ `discount:${data.handle}`, `discount:${data.id}` ] }
-              },
-              $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
-            },
-            { session }
+          await remove_entry_from_all_connection_of_relation(
+            driver, 'products', 'discounts', objid, session,
+            [
+              `discount:${data.handle}`, `discount:${data.id}`
+            ]
           );
-          
+
           // now filter and update for products
           if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
             const conjunctions = discount_to_mongo_conjunctions(data);
@@ -73,7 +75,9 @@ const upsert = (driver) => {
                   $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
                   $addToSet: { 
                     '_relations.discounts.ids': objid,
-                    '_relations.search': { $each : [`discount:${data.handle}`, `discount:${data.id}`]} 
+                    '_relations.search': { 
+                      $each : [ `discount:${data.handle}`, `discount:${data.id}` ]
+                    } 
                   },
                   
                 },
@@ -89,12 +93,6 @@ const upsert = (driver) => {
             driver, 'storefronts', 'discounts', objid, data, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.discounts.ids' : objid },
-          //   { $set: { [`_relations.discounts.entries.${objid.toString()}`]: data } },
-          //   { session }
-          // );
-
           ////
           // REPORT IMAGES USAGE
           ////
@@ -105,11 +103,6 @@ const upsert = (driver) => {
           await save_me(
             driver, 'discounts', objid, data, session
           );
-
-          // const res = await col(driver).replaceOne(
-          //   { _id: objid }, data, 
-          //   { session, upsert: true }
-          // );
 
         }
       );
@@ -139,8 +132,13 @@ const get = (driver) => get_regular(driver, col(driver));
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
-    const item = await col(driver).findOne(handle_or_id(id_or_handle));
+
+    const item = await col(driver).findOne(
+      handle_or_id(id_or_handle)
+    );
+
     if(!item) return;
+
     const objid = to_objid(item.id)
     const session = driver.mongo_client.startSession();
 
@@ -150,16 +148,11 @@ const remove = (driver) => {
           ////
           // PRODUCT -> DISCOUNTS RELATION
           ////
-          await driver.resources.products._col.updateMany(
-            { '_relations.discounts.ids' : objid },
-            { 
-              $pull: { 
-                '_relations.discounts.ids': objid,
-                '_relations.search': { $in : [ `discount:${item.handle}`, `discount:${item.id}` ] }
-              },
-              $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
-            },
-            { session }
+          await remove_entry_from_all_connection_of_relation(
+            driver, 'products', 'discounts', objid, session,
+            [
+              `discount:${item.handle}`, `discount:${item.id}`
+            ]
           );
 
           ////
@@ -169,29 +162,16 @@ const remove = (driver) => {
             driver, 'storefronts', 'discounts', objid, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.discounts.ids' : objid },
-          //   { 
-          //     $pull: { '_relations.discounts.ids': objid, },
-          //     $unset: { [`_relations.discounts.entries.${objid.toString()}`]: '' },
-          //   },
-          //   { session }
-          // );
-
           // DELETE ME
           await delete_me(
             driver, 'discounts', objid, session
           );
 
-          // const res = await col(driver).deleteOne( 
-          //   { _id: objid },
-          //   { session }
-          // );
-
         }
       );
     } catch(e) {
       console.log(e);
+
       return false;
     } finally {
       await session.endSession();

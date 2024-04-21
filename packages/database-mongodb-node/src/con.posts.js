@@ -49,25 +49,14 @@ const upsert = (driver) => {
             driver, 'storefronts', 'posts', objid, data, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.posts.ids' : objid },
-          //   { $set: { [`_relations.posts.entries.${objid.toString()}`]: data } },
-          //   { session }
-          // );
-
           ////
           // REPORT IMAGES USAGE
           ////
           await report_document_media(driver)(data, session);
 
           // SAVE ME
-
           await save_me(driver, 'posts', objid, data, session);
-          // const res = await col(driver).replaceOne(
-          //   { _id: objid }, 
-          //   data, 
-          //   { session, upsert: true }
-          // );
+
         }
       );
     } catch(e) {
@@ -111,24 +100,10 @@ const remove = (driver) => {
             driver, 'storefronts', 'posts', objid, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.posts.ids' : objid },
-          //   { 
-          //     $pull: { '_relations.posts.ids': objid, },
-          //     $unset: { [`_relations.posts.entries.${objid.toString()}`]: '' },
-          //   },
-          //   { upsert: false, session }
-          // );
-
           // DELETE ME
           await delete_me(
             driver, 'posts', objid, session
           );
-
-          // const res = await col(driver).deleteOne( 
-          //   { _id: objid },
-          //   { session }
-          // );
 
         }
       );

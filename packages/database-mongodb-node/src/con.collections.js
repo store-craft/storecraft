@@ -52,26 +52,12 @@ const upsert = (driver) => {
             driver, 'products', 'collections', objid, data, session
           );
 
-          // await driver.resources.products._col.updateMany(
-          //   { '_relations.collections.ids' : objid },
-          //   { 
-          //     $set: { [`_relations.collections.entries.${objid.toString()}`]: data },
-          //   },
-          //   { session }
-          // );
-
           ////
           // STOREFRONTS -> COLLECTIONS RELATION
           ////
           await update_entry_on_all_connection_of_relation(
             driver, 'storefronts', 'collections', objid, data, session
           );
-
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.collections.ids' : objid },
-          //   { $set: { [`_relations.collections.entries.${objid.toString()}`]: data } },
-          //   { session }
-          // );
 
           ////
           // REPORT IMAGES USAGE
@@ -82,10 +68,6 @@ const upsert = (driver) => {
           await save_me(
             driver, 'collections', objid, data, session
           );
-
-          // const res = await col(driver).replaceOne(
-          //   { _id: objid }, data, { upsert: true, session }
-          // );
 
         }, transactionOptions
       );
@@ -108,12 +90,19 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
   return async (id_or_handle) => {
-    const item = await col(driver).findOne(handle_or_id(id_or_handle));
+
+    const item = await col(driver).findOne(
+      handle_or_id(id_or_handle)
+    );
+
     if(!item) return;
+
     const objid = to_objid(item.id);
     const session = driver.mongo_client.startSession();
 
@@ -125,23 +114,11 @@ const remove = (driver) => {
           // PRODUCTS --> COLLECTIONS RELATION
           ////
           await remove_entry_from_all_connection_of_relation(
-            driver, 'products', 'collections', objid, session
+            driver, 'products', 'collections', objid, session,
+            [
+              `col:${item.id}`, `col:${item.handle}`
+            ]
           );
-
-          // const rr = await driver.resources.products._col.updateMany(
-          //   { '_relations.collections.ids' : objid },
-          //   { 
-          //     $pull: { 
-          //       '_relations.collections.ids': objid,
-          //       '_relations.search': { $in : [ `col:${item.id}`, `col:${item.handle}` ] }
-          //     },
-          //     $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
-          //   },
-          //   { upsert: false, session }
-          // );
-
-          // console.log(objid)
-          // console.log(rr)
 
           ////
           // STOREFRONTS --> COLLECTIONS RELATION
@@ -150,29 +127,16 @@ const remove = (driver) => {
             driver, 'storefronts', 'collections', objid, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.collections.ids' : objid },
-          //   { 
-          //     $pull: { '_relations.collections.ids': objid, },
-          //     $unset: { [`_relations.collections.entries.${objid.toString()}`]: '' },
-          //   },
-          //   { session }
-          // );
-
           // DELETE ME
           await delete_me(
             driver, 'collections', objid, session
           );
 
-          // const res = await col(driver).deleteOne(
-          //   { _id: objid },
-          //   { session }
-          // );
-
         }, transactionOptions
       );
     } catch(e) {
       console.log(e);
+      
       return false;
     } finally {
       await session.endSession();

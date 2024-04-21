@@ -48,14 +48,6 @@ const upsert = (driver) => {
             driver, 'storefronts', 'shipping_methods', objid, data, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.shipping_methods.ids' : objid },
-          //   { $set: { [`_relations.shipping_methods.entries.${objid.toString()}`]: data } },
-          //   { session }
-          // );
-
-          // console.log('search_terms', search_terms)
-
           ////
           // REPORT IMAGES USAGE
           ////
@@ -65,12 +57,6 @@ const upsert = (driver) => {
           await save_me(
             driver, 'shipping_methods', objid, data, session
           );
-
-          // const res = await col(driver).replaceOne(
-          //   { _id: objid }, 
-          //   data, 
-          //   { session, upsert: true }
-          // );
 
         }
       );
@@ -116,24 +102,11 @@ const remove = (driver) => {
             driver, 'storefronts', 'shipping_methods', objid, session
           );
 
-          // await driver.resources.storefronts._col.updateMany(
-          //   { '_relations.shipping_methods.ids' : objid },
-          //   { 
-          //     $pull: { '_relations.shipping_methods.ids': objid },
-          //     $unset: { [`_relations.shipping_methods.entries.${objid.toString()}`]: '' },
-          //   },
-          //   { session }
-          // );
-
           // DELETE ME
           await delete_me(
             driver, 'shipping_methods', objid, session
           );
 
-          // const res = await col(driver).deleteOne( 
-          //   { _id: objid }, 
-          //   { session }
-          // );
         }
       );
     } catch(e) {

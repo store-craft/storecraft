@@ -16,7 +16,10 @@ import { report_document_media } from './con.images.js';
  * @param {MongoDB} d 
  * 
  * 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
+ * @returns {Collection<
+ *  import('./utils.relations.js').WithRelations<db_col["$type_get"]>>
+ * }
+ * 
  */
 const col = (d) => d.collection('storefronts');
 
@@ -66,12 +69,6 @@ const upsert = (driver) => {
           await save_me(
             driver, 'storefronts', to_objid(data.id), replacement, session
           );
-
-          // const res = await col(driver).replaceOne(
-          //   { _id: to_objid(data.id) }, 
-          //   replacement, 
-          //   { session, upsert: true }
-          // );
 
         }
       );

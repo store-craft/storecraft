@@ -1,17 +1,24 @@
 import { ClientSession, ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../driver.js';
-import { expand } from './con.shared.js';
 
 /**
  * @template {any} T
+ * 
+ * 
  * @typedef {Object} Relation
+ * 
+ * 
  * @property {ObjectId[]} [ids]
- * @property {Record<import('@storecraft/core/v-database').ID, T>} [entries]
+ * @property {Record<
+ *  import('@storecraft/core/v-database').ID, T>
+ * } [entries]
  */
 
 /**
  * @template {any} T
+ * 
+ * 
  * @typedef {T & { _relations? : Record<string, Relation<any>> }} WithRelations
  */
 
@@ -85,6 +92,8 @@ export const create_explicit_relation = async (
 }
 
 /**
+ * Create a `search` relation on the document (embed it)
+ * 
  * @template {Object.<string, any>} T
  * 
  * @param {T} data 
@@ -94,11 +103,14 @@ export const create_explicit_relation = async (
 export const add_search_terms_relation_on = (data, terms=[]) => {
   if(!data)
     return;
+
   if(!Array.isArray(terms))
     throw new Error('terms is not an array !');
-  
+
   data._relations = data._relations ?? {};
   data._relations.search = terms;
+
+  return data;
 }
 
 
@@ -115,10 +127,13 @@ export const add_search_terms_relation_on = (data, terms=[]) => {
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {object} entry the entry data
  * @param {ClientSession} [session] client `session` for atomicity purposes
+ * @param {string[]} [search_terms_to_add=[]] Extra `search` terms to add
+ * to all the affected connections
  * 
  */
 export const update_entry_on_all_connection_of_relation = (
-  driver, collection, relation_name, entry_objid, entry, session
+  driver, collection, relation_name, entry_objid, entry, session,
+  search_terms_to_add
 ) => {
 
   return driver.collection(collection).updateMany(
@@ -129,6 +144,9 @@ export const update_entry_on_all_connection_of_relation = (
       $set: { 
         [`_relations.${relation_name}.entries.${entry_objid.toString()}`]: entry 
       },
+      $addToSet: { 
+        '_relations.search': { $each : search_terms_to_add} 
+      },
     },
     { 
       session,
@@ -138,6 +156,49 @@ export const update_entry_on_all_connection_of_relation = (
 
 }
 
+
+/**
+ * 
+ * Update / Create an `entry` on a specific connection, that is 
+ * found by `mongodb` filter in the `relation`.
+ * Suppose, we have a many-to-x relation, then we create a new
+ * connection a-to-x
+ * 
+ * 
+ * @param {MongoDB} driver mongodb driver instance
+ * @param {string} collection the collection from which the `relation` is from
+ * @param {string} relation_name the `relation` name
+ * @param {import('mongodb').Filter<any>} from_object_filter the proper `ObjectId` of the from connection
+ * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
+ * @param {object} entry the entry data
+ * @param {ClientSession} [session] client `session` for atomicity purposes
+ * @param {string[]} [search_terms_to_add=[]] Extra `search` terms to add
+ * to the affected connection
+ * 
+ */
+export const update_specific_connection_of_relation_with_filter = (
+  driver, collection, relation_name, from_object_filter, 
+  entry_objid, entry, session, search_terms_to_add
+) => {
+
+  return driver.collection(collection).updateOne(
+    from_object_filter,
+    { 
+      $set: { 
+        [`_relations.${relation_name}.entries.${entry_objid.toString()}`]: entry 
+      },
+      $addToSet: { 
+        [`_relations.${relation_name}.ids`]: entry_objid,
+        '_relations.search': { $each : search_terms_to_add} 
+      },
+    },
+    { 
+      session,
+      upsert: false
+    }
+  );
+
+}
 
 /**
  * 
@@ -153,28 +214,22 @@ export const update_entry_on_all_connection_of_relation = (
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {object} entry the entry data
  * @param {ClientSession} [session] client `session` for atomicity purposes
+ * @param {string[]} [search_terms_to_add=[]] Extra `search` terms to add
+ * to the affected connection
  * 
  */
 export const update_specific_connection_of_relation = (
-  driver, collection, relation_name, from_objid, entry_objid, entry, session
+  driver, collection, relation_name, from_objid, entry_objid, 
+  entry, session, search_terms_to_add
 ) => {
 
-  return driver.collection(collection).updateOne(
-    { 
-      _id : from_objid
+  return update_specific_connection_of_relation_with_filter(
+    driver, collection, relation_name, 
+    {
+      _id: from_objid
     },
-    { 
-      $set: { 
-        [`_relations.${relation_name}.entries.${entry_objid.toString()}`]: entry 
-      },
-      $addToSet: { 
-        [`_relations.${relation_name}.ids`]: entry_objid 
-      },
-    },
-    { 
-      session,
-      upsert: false
-    }
+    entry_objid, entry, session, 
+    search_terms_to_add
   );
 
 }
@@ -192,10 +247,13 @@ export const update_specific_connection_of_relation = (
  * @param {string} relation_name the `relation` name
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {ClientSession} [session] client `session` for atomicity purposes
+ * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
+ * from all the connections
  * 
  */
 export const remove_entry_from_all_connection_of_relation = (
-  driver, collection, relation_name, entry_objid, session
+  driver, collection, relation_name, entry_objid, session,
+  search_terms_to_remove=[]
 ) => {
   return driver.collection(collection).updateMany(
     { 
@@ -203,7 +261,8 @@ export const remove_entry_from_all_connection_of_relation = (
     },
     { 
       $pull: {
-        [`_relations.${relation_name}.ids`] : entry_objid 
+        [`_relations.${relation_name}.ids`] : entry_objid,
+        '_relations.search': { $in : search_terms_to_remove }
       },
       $unset: { 
         [`_relations.${relation_name}.entries.${entry_objid.toString()}`]: '' 
@@ -230,19 +289,57 @@ export const remove_entry_from_all_connection_of_relation = (
  * @param {ObjectId} from_objid the proper `ObjectId` of the from connection
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {ClientSession} [session] client `session` for atomicity purposes
+ * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
+ * from the affected connection
  * 
  */
 export const remove_specific_connection_of_relation = (
-  driver, collection, relation_name, from_objid, entry_objid, session
+  driver, collection, relation_name, from_objid, entry_objid, session,
+  search_terms_to_remove
+) => {
+
+  return remove_specific_connection_of_relation_with_filter(
+    driver, collection, relation_name, 
+    {
+      _id: from_objid
+    }, 
+    entry_objid, session,
+    search_terms_to_remove
+  );
+}
+
+
+/**
+ * 
+ * Remove an `entry` from a specific connection in the `relation`.
+ * Suppose, we have a a-to-x relation, then we remove `x` from
+ * `a` connection. 
+ * 
+ * We locate `a` by a `mongodb` filter
+ * 
+ * 
+ * @param {MongoDB} driver mongodb driver instance
+ * @param {string} collection the collection from which the `relation` is from
+ * @param {string} relation_name the `relation` name
+ * @param {import('mongodb').Filter<any>} from_object_filter 
+ * `mongodb` Filter to locate the first document, the from part of the connection
+ * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
+ * @param {ClientSession} [session] client `session` for atomicity purposes
+ * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
+ * from the affected connection
+ * 
+ */
+export const remove_specific_connection_of_relation_with_filter = (
+  driver, collection, relation_name, from_object_filter, entry_objid, session,
+  search_terms_to_remove
 ) => {
 
   return driver.collection(collection).updateOne(
-    { 
-      _id : from_objid
-    },
+    from_object_filter,
     { 
       $pull: {
-        [`_relations.${relation_name}.ids`] : entry_objid 
+        [`_relations.${relation_name}.ids`] : entry_objid,
+        '_relations.search': { $in : search_terms_to_remove }
       },
       $unset: { 
         [`_relations.${relation_name}.entries.${entry_objid.toString()}`]: '' 
@@ -254,7 +351,6 @@ export const remove_specific_connection_of_relation = (
   );
   
 }
-
 
 
 /**

@@ -31,6 +31,7 @@ const infer_content_type = (name) => {
 /**
  * Google Storage
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
+ * 
  * @implements {storage}
  */
 export class GoogleStorage {
@@ -60,7 +61,17 @@ export class GoogleStorage {
       private_key: app.platform.env.GS_PRIVATE_KEY,
       private_key_id: app.platform.env.GS_PRIVATE_KEY_ID,
     }
+
     return this; 
+  }
+
+  features() {
+    /** @type {import('@storecraft/core/v-storage').StorageFeatures} */
+    const f = {
+      supports_signed_urls: true
+    }
+
+    return f;
   }
 
   // puts

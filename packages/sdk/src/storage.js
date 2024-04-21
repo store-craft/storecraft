@@ -14,11 +14,60 @@ import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
  */
 export default class Storage {
 
+  /**
+   * @type {{
+   *  features: import('@storecraft/core/v-storage').StorageFeatures
+   * }}
+   */
+  #cache = {
+    features: undefined
+  }
+
   /** 
    * @param {StorecraftSDK} sdk of
    */
   constructor(sdk) {
     this.sdk = sdk
+  }
+
+  /**
+   * 
+   * Retrieve the `features` of `storage`, which informs:
+   * - Does `storage` supports `pre-signed` urls for `download` / `upload`
+   * 
+   * 
+   * @returns {Promise<import('@storecraft/core/v-storage').StorageFeatures>}
+   */
+  features = async () => {
+    if(this.#cache.features)
+      return this.#cache.features;
+
+    try {
+      const r = await fetchOnlyApiResponseWithAuth(
+        this.sdk, 
+        `storage`,
+        { 
+          method: 'get' 
+        }
+      );
+
+      if(!r.ok)
+        throw new Error();
+
+      const json = await r.json();
+
+      this.#cache.features = json;;
+
+      return json;
+
+    } catch (e) {
+      console.log(e)
+    }
+
+    return {
+      supports_signed_urls: false
+    }
+
   }
   
   /**
@@ -43,6 +92,7 @@ export default class Storage {
 
     if(!r.ok) {
       const error = await r.json();
+
       throw error;
     }
 
@@ -50,6 +100,7 @@ export default class Storage {
     if(ctype === 'application/json') {
       /** @type {import('@storecraft/core/v-storage').StorageSignedOperation} */
       const presigned_req = await r.json();
+
       const presigned_res = await fetch(
         presigned_req.url, 
         {
@@ -57,8 +108,8 @@ export default class Storage {
           headers: presigned_req.headers
         }
       );
-      const blob = await presigned_res.blob();
-      return blob;
+
+      return presigned_res.blob();
     } 
 
     throw 'unknown'
@@ -86,6 +137,7 @@ export default class Storage {
 
     if(!r.ok) {
       const error = await r.json();
+
       throw error;
     }
 
@@ -93,9 +145,7 @@ export default class Storage {
   }  
 
   /**
-   * Get a blob from `storage` driver with the following strategy:
-   * First try `presigned` urls, and if they are not supported, then
-   * try direct download.
+   * Get a blob from `storage` driver.
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -106,15 +156,12 @@ export default class Storage {
    */
   getBlob = async (key) => {
 
-    try {
-      const blob = await this.getBlobSigned(key);
-      return blob
-    } catch (e) {
-    }
+    const features = await this.features();
 
-    // We allow this to `throw`
-    const blob = await this.getBlobUnsigned(key);
-    return blob;
+    if(features.supports_signed_urls)
+      return this.getBlobSigned(key);
+
+    return this.getBlobUnsigned(key);
   }
 
   /** @param {string} path  */
@@ -153,6 +200,7 @@ export default class Storage {
 
       const key = url.split('storage://').at(-1);
       const blob = await this.getBlob(key);
+
       if(isImage)
         return URL.createObjectURL(blob)
       else
@@ -160,8 +208,10 @@ export default class Storage {
     } catch(e) {
       console.log(e)
     }
+
     return url;
   }
+
 
   /**
    * Put a blob into `storage` driver with `presigned` urls
@@ -198,6 +248,7 @@ export default class Storage {
           body: data
         }
       );
+
       return presigned_res.ok;
     }
 
@@ -227,6 +278,7 @@ export default class Storage {
 
     if(!r.ok) {
       const error = await r.json();
+      
       throw error;
     }
 
@@ -234,9 +286,7 @@ export default class Storage {
   }
 
   /**
-   * Put bytes into `storage` driver with the following strategy:
-   * First try `presigned` urls, and if they are not supported, then
-   * try direct upload.
+   * Put bytes into `storage` driver.
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -248,15 +298,12 @@ export default class Storage {
    */
   putBytes = async (key, data) => {
 
-    try {
-      const ok = await this.putBytesSigned(key, data);
-      return ok;
-    } catch (e) {
-    }
+    const features = await this.features();
 
-    // We allow this to `throw`
-    const ok = await this.putBytesUnsigned(key, data);
-    return ok;
+    if(features.supports_signed_urls)
+      return this.putBytesSigned(key, data);
+
+    return this.putBytesUnsigned(key, data);
   }
 
   /**

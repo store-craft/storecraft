@@ -31,6 +31,7 @@ const infer_content_type = (name) => {
 /**
  * The base S3 compatible class
  * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
+ * 
  * @implements {storage}
  */
 export class S3CompatibleStorage {
@@ -71,6 +72,20 @@ export class S3CompatibleStorage {
   get url() { return this.#_url; }
   get client() { return this.#_client; }
   get config() { return this.#_config; }
+
+  features() {
+    /** @type {import('@storecraft/core/v-storage').StorageFeatures} */
+    const f = {
+      supports_signed_urls: true
+    }
+
+    return f;
+  }
+
+  /**
+   * 
+   * @type {storage["init"]}
+   */
   async init(app) { return this; }
 
   // puts

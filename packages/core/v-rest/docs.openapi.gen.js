@@ -750,7 +750,7 @@ const register_storage = registry => {
 
   // options features
   registry.registerPath({
-    method: 'options',
+    method: 'get',
     path: '/storage',
     description: 'You can query the features, that are supported by the current `storage` driver. We use it\
     mainly to confirm if the `storage` supports `pre-signed` urls for `download` / `upload`',

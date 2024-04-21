@@ -49979,7 +49979,7 @@ paths:
                           items:
                             type: string
   /storage:
-    options:
+    get:
       description: You can query the features, that are supported by the current
         `storage` driver. We use it    mainly to confirm if the `storage`
         supports `pre-signed` urls for `download` / `upload`

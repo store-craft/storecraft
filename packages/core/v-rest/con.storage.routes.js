@@ -23,6 +23,15 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
 
+  // get features
+  polka.get(
+    '/',
+    async (req, res) => {
+      console.log('features')
+      res.sendJson(features);
+    }
+  );
+  
   // upload file
   polka.put(
     '/*',
@@ -115,13 +124,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // get features
-  polka.options(
-    '/',
-    async (req, res) => {
-      res.sendJson(features);
-    }
-  );
 
   return polka;
 }

@@ -14,6 +14,15 @@ import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
  */
 export default class Storage {
 
+  /**
+   * @type {{
+   *  features: import('@storecraft/core/v-storage').StorageFeatures
+   * }}
+   */
+  #cache = {
+    features: undefined
+  }
+
   /** 
    * @param {StorecraftSDK} sdk of
    */
@@ -26,8 +35,35 @@ export default class Storage {
    * Retrieve the `features` of `storage`, which informs:
    * - Does `storage` supports `pre-signed` urls for `download` / `upload`
    * 
+   * 
+   * @returns {Promise<import('@storecraft/core/v-storage').StorageFeatures>}
    */
   features = async () => {
+    if(this.#cache.features)
+      return this.#cache.features;
+
+    try {
+      const r = await fetchOnlyApiResponseWithAuth(
+        this.sdk, 
+        `storage`,
+        { method: 'options' }
+      );
+
+      if(!r.ok)
+        throw new Error();
+
+      const json = await r.json();
+
+      this.#cache.features = json;;
+
+      return json;
+
+    } catch (e) {
+    }
+
+    return {
+      supports_signed_urls: false
+    }
 
   }
   

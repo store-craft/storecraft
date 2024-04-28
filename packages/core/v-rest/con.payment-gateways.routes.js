@@ -66,8 +66,9 @@ export const create_routes = (app) => {
     async (req, res) => {
       const { action_handle, order_id } = req.params;
       const r = await invoke_payment_action_on_order(
-        app, order_id, action_handle
+        app, order_id, action_handle, req.parsedBody
       );
+      
       res.sendJson(r);
     }
   );

@@ -58,6 +58,24 @@ export class PaypalStandard {
   }
 
   /**
+   * 
+   * @type {payment_gateway["invokeAction"]}
+   */
+  async invokeAction(action_handle) {
+    switch (action_handle) {
+      case 'capture':
+        return this.capture;
+      case 'void':
+        return this.void;
+      case 'refund':
+        return this.refund;
+    
+      default:
+        break;
+    }
+  }
+
+  /**
    * TODO: the user prefers to capture intent instead
    * 
    * @param {OrderData} order 

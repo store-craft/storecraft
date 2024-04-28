@@ -1,6 +1,6 @@
 import { assert } from '../v-api/utils.func.js'
 import { get } from '../v-api/con.orders.logic.js'
-import { App } from '../types.public.js';
+import { App } from '../index.js';
 
 /** @param {any} o */
 const is_function = o => {
@@ -41,7 +41,7 @@ export const list_payment_gateways = (app) => {
 
 
 /**
- * return the status of payment of an order
+ * return the `status` of payment of an order
  * 
  * 
  * @template PlatformNativeRequest
@@ -69,20 +69,25 @@ export const payment_status_of_order = async (app, order_id) => {
 }
 
 /**
- * invoke a payment action (capture/void/refund/whatever) on the payment gateway
- * of the order.
+ * Invoke a payment action (`capture`/`void`/`refund`/`whatever`) on 
+ * the payment gateway of the order.
  * 
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
  * 
  * 
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
- * @param {string} order_id the ID of the order
- * @param {string} action_handle the payment action of the gateway (o.e capture/void/refund)
+ * @param {App<PlatformNativeRequest, PlatformContext>} app `storecraft` app
+ * @param {string} order_id the `id` of the order
+ * @param {string} action_handle the payment action of the 
+ * gateway (o.e `capture`/`void`/`refund`/`whatever`)
+ * @param {any} [extra_action_parameters] extra `action` parameters
  * 
  */
-export const invoke_payment_action_on_order = async (app, order_id, action_handle) => {
+export const invoke_payment_action_on_order = async (
+  app, order_id, action_handle, extra_action_parameters
+) => {
+
   const order = await get(app, order_id);
 
   assert(order, `Order ${order_id} not found`, 400);
@@ -92,7 +97,7 @@ export const invoke_payment_action_on_order = async (app, order_id, action_handl
 
   assert(gateway, `gateway ${gateway_handle} not found`, 400);
 
-  // test actionn is a published action by the gateway
+  // test action is a published action by the gateway
   const is_allowed = gateway.actions?.some(a => a?.handle===action_handle) && 
                      is_function(gateway[action_handle]);
 
@@ -102,6 +107,7 @@ export const invoke_payment_action_on_order = async (app, order_id, action_handl
     400
   );
 
-  /** @type {import('./types.payments.js').PaymentGatewayStatus} */
-  return gateway[action_handle](order?.payment_gateway?.on_checkout_create);
+  return gateway.invokeAction(action_handle)(
+    order?.payment_gateway?.on_checkout_create, extra_action_parameters
+  );
 }

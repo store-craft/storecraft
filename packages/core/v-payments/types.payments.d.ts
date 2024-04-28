@@ -40,13 +40,25 @@ export type ConfigField = {
  * Payment gateway description, logos and urls
  */
 export type PaymentGatewayInfo = {
-  /** description of the gateway */
+  /** 
+   * 
+   * @description name of the gateway 
+   */
   name?: string;
-  /** description of the gateway */
+
+  /** 
+   * @description description of the gateway 
+   */
   description?: string;
-  /** logo url (or even data-url) of the gateway */
+
+  /** 
+   * @description logo url (or even data-url) of the gateway 
+   */
   logo_url?: string;
-  /** url of the gateway website */
+
+  /** 
+   * @description url of the gateway website 
+   */
   url?: string;
 }
 
@@ -55,23 +67,63 @@ export type PaymentGatewayInfo = {
  * such as `void`, `capture`, `refund` etc...
  */
 export type PaymentGatewayAction = {
-  /** action name for display */
+  /** 
+   * @description action name for display 
+   */
   name: string;
-  /** action handle for invocation at backend */
+
+  /** 
+   * @description action handle for invocation at backend 
+   */
   handle: string;
-  /** optional description of what will happen if the action is executed */
+
+  /** 
+   * @description optional description of what will happen 
+   * if the action is executed 
+   */
   description?: string;
+
+  /**
+   * @description Action might have extra parameters, 
+   * for example a partial refund action, may specify a variable value 
+   * for refunding, also with some of the `capture` actions, 
+   * which may capture less than intended.
+   */
+  parameters?: ConfigField[]
 }
+
+/**
+ * @description A gateway `action` is a `function` recieving the 
+ * **original** payment creation result and optional extra parameters
+ * 
+ */
+export type PaymentGatewayActionHandler<CreateResult, Extra> = 
+  /**
+   * @param input The original result of checkout creation in the payment gateway.
+   * @param extra (Optional) extra parameters
+   */
+  (input: CreateResult, extra: Extra) => Promise<PaymentGatewayStatus>
 
 
 export type PaymentGatewayStatus = {
-  /** List of possible actions to take */
+  /** 
+   * @description List of possible actions to take 
+   */
   actions?: PaymentGatewayAction[];
-  /** A list of messages of the current payment status, for example `150$ were authorized...` */
+
+  /** 
+   * @description A list of messages of the current payment status, 
+   * for example `150$ were authorized...` 
+   */
   messages?: string[];
 }
 
+/**
+ * @description checkout complete result, I am still unsure about it, but currently
+ * it holds new `payment` and `checkout` status
+ */
 export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfillment">>;
+
 
 /**
  * Payment Gateway interface.
@@ -131,8 +183,10 @@ export declare interface payment_gateway<
   /**
    * 
    * @param action_handle the identifier of the `action`
+   * @param extra extra parameters for the action
    */
-  invokeAction(action_handle: string): Promise<any>;
+  invokeAction<E extends any=any>(action_handle: string): 
+      PaymentGatewayActionHandler<CreateResult, E>;
 
   /**
    * 

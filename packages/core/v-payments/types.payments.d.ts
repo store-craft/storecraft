@@ -1,96 +1,7 @@
-import type { OrderData } from "../v-api/types.api.js";
+import type { 
+  OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
+} from "../v-api/types.api.js";
 
-export type ConfigField = {
-  /**
-   * @description the `key` of the field
-   */
-  key: string;
-
-  /**
-   * @description the `value` of the field
-   */
-  value?: any;
-
-  /**
-   * @description the `description` of the field
-   */
-  description?: string;
-
-  /**
-   * @description the `name` of the field
-   */
-  name: string;
-  
-  /**
-   * @description Is the field editable ?
-   */
-  editable?: boolean;
-
-  /**
-   * @description The type of the `field`
-   */
-  metadata: {
-    component: 'select' | 'input' | 'label' | 'textarea';
-    params: object;
-  }
-
-}
-
-/**
- * Payment gateway description, logos and urls
- */
-export type PaymentGatewayInfo = {
-  /** 
-   * 
-   * @description name of the gateway 
-   */
-  name: string;
-
-  /** 
-   * @description description of the gateway 
-   */
-  description?: string;
-
-  /** 
-   * @description logo url (or even data-url) of the gateway 
-   */
-  logo_url?: string;
-
-  /** 
-   * @description url of the gateway website 
-   */
-  url?: string;
-}
-
-/**
- * Upon status query, the gateway return a list of possible actions,
- * such as `void`, `capture`, `refund` etc...
- */
-export type PaymentGatewayAction = {
-  /** 
-   * @description action name for display 
-   */
-  name: string;
-
-  /** 
-   * @description action handle for invocation at backend 
-   */
-  handle: string;
-
-  /** 
-   * @description optional description of what will happen 
-   * if the action is executed 
-   */
-  description?: string;
-
-  /**
-   * @description Action might have extra parameters, 
-   * for example a partial refund action, may specify a variable value 
-   * for refunding, also with some of the `capture` actions, 
-   * which may capture less than intended.
-   */
-  parameters?: ConfigField[]
-}
 
 /**
  * @description A gateway `action` is a `function` recieving the 
@@ -102,21 +13,8 @@ export type PaymentGatewayActionHandler<CreateResult, Extra> =
    * @param input The original result of checkout creation in the payment gateway.
    * @param extra (Optional) extra parameters
    */
-  (input: CreateResult, extra: Extra) => Promise<PaymentGatewayStatus>
+  (input: CreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
 
-
-export type PaymentGatewayStatus = {
-  /** 
-   * @description List of possible actions to take 
-   */
-  actions?: PaymentGatewayAction[];
-
-  /** 
-   * @description A list of messages of the current payment status, 
-   * for example `150$ were authorized...` 
-   */
-  messages?: string[];
-}
 
 /**
  * @description checkout complete result, I am still unsure about it, but currently

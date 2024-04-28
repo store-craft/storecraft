@@ -48538,6 +48538,113 @@ components:
         - handle
         - title
       description: Storefront upsert type
+    paymentGatewayItemGet:
+      type: object
+      properties:
+        info:
+          type: object
+          properties:
+            name:
+              type: string
+              description: name of the gateway
+            description:
+              type: string
+              description: description of the gateway
+            logo_url:
+              type: string
+              description: logo url (or even data-url) of the gateway
+            url:
+              type: string
+              description: url of the gateway website
+          required:
+            - name
+          description: The info such as `name`, `description` etc..
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: action name for display
+              handle:
+                type: string
+                description: action handle for invocation at backend
+              description:
+                type: string
+                description: |-
+                  optional description of what will happen
+                  if the action is executed
+              parameters:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: the `key` of the field
+                    value:
+                      nullable: true
+                      description: the `value` of the field
+                    description:
+                      type: string
+                      description: the `description` of the field
+                    name:
+                      type: string
+                      description: the `name` of the field
+                    editable:
+                      type: boolean
+                      description: Is the field editable ?
+                    metadata:
+                      type: object
+                      properties:
+                        component:
+                          anyOf:
+                            - type: string
+                              enum:
+                                - select
+                            - type: string
+                              enum:
+                                - input
+                            - type: string
+                              enum:
+                                - label
+                            - type: string
+                              enum:
+                                - textarea
+                        params:
+                          nullable: true
+                      required:
+                        - component
+                      description: The type of the `field`
+                  required:
+                    - key
+                    - name
+                    - metadata
+                description: >-
+                  Action might have extra parameters,
+
+                  for example a partial refund action, may specify a variable
+                  value
+
+                  for refunding, also with some of the `capture` actions,
+
+                  which may capture less than intended.
+            required:
+              - name
+              - handle
+          description: A list of `actions` supported by the gateway
+        config:
+          nullable: true
+          description: The gateway's configuration
+        handle:
+          type: string
+          description: The `handle` of the `gateway`
+      required:
+        - info
+        - actions
+        - handle
+      description: Upon querying the payment gateways
     Error:
       type: object
       properties:
@@ -73230,6 +73337,416 @@ paths:
                     - post
                     - "1"
                     - post 1
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /payments/gateways/{gateway_handle}:
+    get:
+      description: Get a Payment Gateway data by its `handle`
+      summary: Get a payment gateway
+      tags: &a59
+        - payments gateways
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `handle` of gateway
+          required: true
+          name: gateway_handle
+          in: path
+      responses:
+        "200":
+          description: Object with gateway data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/paymentGatewayItemGet"
+              example: &a60
+                config:
+                  default_currency_code: USD
+                  env: prod
+                  intent_on_checkout: AUTHORIZE
+                  client_id: client_id
+                  secret: secret
+                info:
+                  name: Paypal standard payments
+                  description: >-
+                    Set up standard payments to present payment
+                    buttons         to your payers so they can pay with PayPal,
+                    debit and credit cards,         Pay Later options, Venmo,
+                    and alternative payment methods.
+                                  You can get started quickly with this 15-minute copy-and-paste integration.         If you have an older Checkout integration, you can upgrade your Checkout integration.
+                  url: https://developer.paypal.com/docs/checkout/standard/
+                  logo_url: https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg
+                handle: paypal_standard
+                actions:
+                  - handle: capture
+                    name: Capture
+                    description: Capture an authorized payment
+                  - handle: void
+                    name: Void
+                    description: Cancel an authorized payment
+                  - handle: refund
+                    name: Refund
+                    description: Refund a captured payment
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /payments/gateways:
+    get:
+      description: List payment gateways
+      summary: List payment gateways
+      tags: *a59
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      responses:
+        "200":
+          description: Object with gateway data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/paymentGatewayItemGet"
+              example:
+                - *a60
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /payments/status/{order_id}:
+    get:
+      description: Get the payment status of an order
+      summary: Get the payment status of an order
+      tags: *a59
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `id` of the order
+          required: true
+          name: order_id
+          in: path
+      responses:
+        "200":
+          description: Object with status data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: action name for display
+                        handle:
+                          type: string
+                          description: action handle for invocation at backend
+                        description:
+                          type: string
+                          description: |-
+                            optional description of what will happen
+                            if the action is executed
+                        parameters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: the `key` of the field
+                              value:
+                                nullable: true
+                                description: the `value` of the field
+                              description:
+                                type: string
+                                description: the `description` of the field
+                              name:
+                                type: string
+                                description: the `name` of the field
+                              editable:
+                                type: boolean
+                                description: Is the field editable ?
+                              metadata:
+                                type: object
+                                properties:
+                                  component:
+                                    anyOf:
+                                      - type: string
+                                        enum:
+                                          - select
+                                      - type: string
+                                        enum:
+                                          - input
+                                      - type: string
+                                        enum:
+                                          - label
+                                      - type: string
+                                        enum:
+                                          - textarea
+                                  params:
+                                    nullable: true
+                                required:
+                                  - component
+                                description: The type of the `field`
+                            required:
+                              - key
+                              - name
+                              - metadata
+                          description: >-
+                            Action might have extra parameters,
+
+                            for example a partial refund action, may specify a
+                            variable value
+
+                            for refunding, also with some of the `capture`
+                            actions,
+
+                            which may capture less than intended.
+                      required:
+                        - name
+                        - handle
+                    description: List of possible actions to take
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                    description: |-
+                      A list of messages of the current payment status,
+                      for example `150$ were authorized...`
+                description: A payment `status`
+              example: &a61
+                actions:
+                  - handle: capture
+                    name: Capture
+                    description: Capture an authorized payment
+                  - handle: void
+                    name: Void
+                    description: Cancel an authorized payment
+                  - handle: refund
+                    name: Refund
+                    description: Refund a captured payment
+                messages:
+                  - 200USD were tried to be Captured
+                  - The capture is COMPLETE
+                  - date is ...
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /payments/{action_handle}/{order_id}:
+    post:
+      description: Payment gateways support custom actions to complete things such as
+        `capture / refund / etc`,     This endpoint, will fetch the order,
+        lookup the matched payment gateway and invoke the specified     `action`
+        in the gateway
+      summary: Invoke a payment gateway action
+      tags: *a59
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `handle` of the action supported by the payment gateway, that
+              processed this order
+          required: true
+          name: action_handle
+          in: path
+        - schema:
+            type: string
+            description: The `id` of the order
+          required: true
+          name: order_id
+          in: path
+      responses:
+        "200":
+          description: Object with status data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: action name for display
+                        handle:
+                          type: string
+                          description: action handle for invocation at backend
+                        description:
+                          type: string
+                          description: |-
+                            optional description of what will happen
+                            if the action is executed
+                        parameters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: the `key` of the field
+                              value:
+                                nullable: true
+                                description: the `value` of the field
+                              description:
+                                type: string
+                                description: the `description` of the field
+                              name:
+                                type: string
+                                description: the `name` of the field
+                              editable:
+                                type: boolean
+                                description: Is the field editable ?
+                              metadata:
+                                type: object
+                                properties:
+                                  component:
+                                    anyOf:
+                                      - type: string
+                                        enum:
+                                          - select
+                                      - type: string
+                                        enum:
+                                          - input
+                                      - type: string
+                                        enum:
+                                          - label
+                                      - type: string
+                                        enum:
+                                          - textarea
+                                  params:
+                                    nullable: true
+                                required:
+                                  - component
+                                description: The type of the `field`
+                            required:
+                              - key
+                              - name
+                              - metadata
+                          description: >-
+                            Action might have extra parameters,
+
+                            for example a partial refund action, may specify a
+                            variable value
+
+                            for refunding, also with some of the `capture`
+                            actions,
+
+                            which may capture less than intended.
+                      required:
+                        - name
+                        - handle
+                    description: List of possible actions to take
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                    description: |-
+                      A list of messages of the current payment status,
+                      for example `150$ were authorized...`
+                description: A payment `status`
+              example: *a61
         400-500:
           description: error
           content:

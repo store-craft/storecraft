@@ -14,6 +14,8 @@ const is_function = o => {
  * 
  * @param {App} app 
  * @param {string} gateway_handle 
+ * 
+ * @returns {import('../v-api/types.api.js').PaymentGatewayItemGet}
  */
 export const get_payment_gateway = (app, gateway_handle) => {
   const pg = app.gateway(gateway_handle);
@@ -26,7 +28,8 @@ export const get_payment_gateway = (app, gateway_handle) => {
   return {
     config: pg.config,
     info: pg.info,
-    handle: gateway_handle
+    handle: gateway_handle, 
+    actions: pg.actions
   }
 }
 
@@ -35,6 +38,9 @@ export const get_payment_gateway = (app, gateway_handle) => {
  * `List` payment gateways with `config` and `info` 
  * 
  * @param {App} app 
+ * 
+ * 
+ * @returns {import('../v-api/types.api.js').PaymentGatewayItemGet[]}
  */
 export const list_payment_gateways = (app) => {
   return Object.entries(app.gateways ?? {}).map(
@@ -42,7 +48,8 @@ export const list_payment_gateways = (app) => {
       {
         config: pg.config,
         info: pg.info,
-        handle: handle
+        handle: handle,
+        actions: pg.actions
       }
     )
   )

@@ -30,6 +30,8 @@ import {
   notificationTypeUpsertSchema,
   orderDataSchema,
   orderDataUpsertSchema,
+  paymentGatewayItemGetSchema,
+  paymentGatewayStatusSchema,
   paymentOptionsEnumSchema,
   postTypeSchema,
   postTypeUpsertSchema,
@@ -174,6 +176,7 @@ const create_all = () => {
   register_orders(registry);
   register_posts(registry);
   register_storefronts(registry);
+  register_payments(registry);
 
   // register some utility types
   registry.register('Error', errorSchema);
@@ -1891,6 +1894,203 @@ const register_storefronts = registry => {
   });
 
 }
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_payments = registry => {
+  const name = 'storefront'
+  const slug_base = 'payments/gateways'
+  const tags = ['payments gateways'];
+  const example_id = 'sf_65dc619ac40344c9a1dd6755';
+  const paymentGatewayItemGet = registry.register(
+    'paymentGatewayItemGet', paymentGatewayItemGetSchema
+  );
+
+  const example_get = {
+    "config": {
+        "default_currency_code": "USD",
+        "env": "prod",
+        "intent_on_checkout": "AUTHORIZE",
+        "client_id": "client_id",
+        "secret": "secret"
+    },
+    "info": {
+        "name": "Paypal standard payments",
+        "description": "Set up standard payments to present payment buttons \
+        to your payers so they can pay with PayPal, debit and credit cards, \
+        Pay Later options, Venmo, and alternative payment methods.\n      \
+        You can get started quickly with this 15-minute copy-and-paste integration. \
+        If you have an older Checkout integration, you can upgrade your Checkout integration.",
+        "url": "https://developer.paypal.com/docs/checkout/standard/",
+        "logo_url": "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg"
+    },
+    "handle": "paypal_standard",
+    "actions": [
+        {
+            "handle": "capture",
+            "name": "Capture",
+            "description": "Capture an authorized payment"
+        },
+        {
+            "handle": "void",
+            "name": "Void",
+            "description": "Cancel an authorized payment"
+        },
+        {
+            "handle": "refund",
+            "name": "Refund",
+            "description": "Refund a captured payment"
+        }
+    ]
+  }
+
+  const example_status = {
+    "actions": [
+        {
+            "handle": "capture",
+            "name": "Capture",
+            "description": "Capture an authorized payment"
+        },
+        {
+            "handle": "void",
+            "name": "Void",
+            "description": "Cancel an authorized payment"
+        },
+        {
+            "handle": "refund",
+            "name": "Refund",
+            "description": "Refund a captured payment"
+        }
+    ],
+    "messages": [
+      "200USD were tried to be Captured",
+      "The capture is COMPLETE",
+      "date is ..."
+    ]
+  }  
+
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{gateway_handle}`,
+    description: `Get a Payment Gateway data by its \`handle\``,
+    summary: `Get a payment gateway`,
+    tags,
+    request: {
+      params: z.object({
+        gateway_handle: z.string().openapi(
+          { 
+            description: `The \`handle\` of gateway`
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Object with gateway data.`,
+        content: {
+          'application/json': {
+            schema: paymentGatewayItemGet,
+            example: example_get
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}`,
+    description: `List payment gateways`,
+    summary: `List payment gateways`,
+    tags,
+    responses: {
+      200: {
+        description: `Object with gateway data.`,
+        content: {
+          'application/json': {
+            schema: z.array(paymentGatewayItemGet),
+            example: [example_get]
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/payments/status/{order_id}`,
+    description: `Get the payment status of an order`,
+    summary: `Get the payment status of an order`,
+    tags,
+    request: {
+      params: z.object({
+        order_id: z.string().openapi(
+          { 
+            description: `The \`id\` of the order`
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Object with status data.`,
+        content: {
+          'application/json': {
+            schema: paymentGatewayStatusSchema,
+            example: example_status
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });  
+ 
+  
+  registry.registerPath({
+    method: 'post',
+    path: `/payments/{action_handle}/{order_id}`,
+    description: `Payment gateways support custom actions to complete things such as \`capture / refund / etc\`, \
+    This endpoint, will fetch the order, lookup the matched payment gateway and invoke the specified \
+    \`action\` in the gateway`,
+    summary: `Invoke a payment gateway action`,
+    tags,
+    request: {
+      params: z.object({
+        action_handle: z.string().openapi(
+          { 
+            description: `The \`handle\` of the action supported by the payment gateway, that processed this order`
+          }
+        ),
+        order_id: z.string().openapi(
+          { 
+            description: `The \`id\` of the order`
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Object with status data.`,
+        content: {
+          'application/json': {
+            schema: paymentGatewayStatusSchema,
+            example: example_status
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });  
+
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 

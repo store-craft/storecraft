@@ -16,9 +16,17 @@ const is_function = o => {
  * @param {string} gateway_handle 
  */
 export const get_payment_gateway = (app, gateway_handle) => {
+  const pg = app.gateway(gateway_handle);
+
+  assert(
+    pg,
+    `Payment Gateway with handle=${gateway_handle} not found`
+  );
+
   return {
-    config: app.gateway(gateway_handle).config,
-    info: app.gateway(gateway_handle).info
+    config: pg.config,
+    info: pg.info,
+    handle: gateway_handle
   }
 }
 
@@ -29,11 +37,12 @@ export const get_payment_gateway = (app, gateway_handle) => {
  * @param {App} app 
  */
 export const list_payment_gateways = (app) => {
-  return Object.values(app.gateways ?? {}).map(
-    pg => (
+  return Object.entries(app.gateways ?? {}).map(
+    ([handle, pg]) => (
       {
         config: pg.config,
-        info: pg.info
+        info: pg.info,
+        handle: handle
       }
     )
   )

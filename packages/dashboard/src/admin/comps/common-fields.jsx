@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useCallback, useState } from 'react'
 import { AiOutlineDelete, AiOutlineWarning } from 'react-icons/ai/index.js'
-import { BiEditAlt } from 'react-icons/bi/index.js'
+import { BiEditAlt, BiShow } from 'react-icons/bi/index.js'
 import { LoadingButton } from './common-button.jsx'
 import Modal from './modal.jsx'
 import { RxCopy } from 'react-icons/rx/index.js'
@@ -9,6 +9,7 @@ import { read_clipboard, write_clipboard } from '../utils/index.js'
 import { to_handle } from '@storecraft/sdk/src/utils.functional.js'
 import { Bling, Card, Input } from './common-ui.jsx'
 import { LinkWithState } from '../hooks/useNavigateWithState.js'
+import { Link } from 'react-router-dom'
 
 /**
  * 
@@ -449,11 +450,12 @@ export const RecordActions = (
   return (
 <div className='flex flex-row items-center text-center 
                  justify-end text-xl overflow-x-auto w-fit mx-auto '>
-  {/* { context?.viewDocumentUrl && 
+  { 
+  !context?.editDocumentUrl && context?.viewDocumentUrl &&
   <Link to={context.viewDocumentUrl(id)}>
     <BiShow className=' text-xl text-teal-600 stroke-[0.5px] hover:stroke-[1px]' />
   </Link>
-  } */}
+  }
   { 
   context?.editDocumentUrl && 
   <LinkWithState 

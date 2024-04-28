@@ -1,128 +1,106 @@
-import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
 import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
-import { RecordActions, Span, SpanArray, 
-  TimeStampView } from '@/admin/comps/common-fields.jsx'
-import { o2q, q2o } from '@/admin/apps/gallery/utils.js'
-import { useNavigate, useParams } from 'react-router-dom'
+import { RecordActions } from '@/admin/comps/common-fields.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
+import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import { useMemo } from 'react'
+
+/**
+ * 
+ * @typedef {ReturnType<
+ *  import('@storecraft/core/v-payments').get_payment_gateway>
+ * } PaymentGatewayItemGet
+ * 
+ */
+
+/**
+ * This is used in `CollectionView`
+ * 
+ * @typedef {object} InternalSpanWithLogoParams
+ * @prop {string} [className]
+ * @prop {string} [extra]
+ * @prop {React.ReactNode} [children]
+ * 
+ * @typedef {import('../comps//collection-view.jsx').CollectionViewComponentParams<
+ *  string, PaymentGatewayItemGet> & 
+*   InternalSpanWithLogoParams & 
+*   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+* } SpanWithLogoParams
+* 
+* @param {SpanWithLogoParams} param
+*/
+export const SpanWithLogo = (
+  {
+    value, children, className, context,
+    extra='max-w-[8rem] md:max-w-[18rem]', ...rest
+  }
+) => {
+  const logo = context.item.info.logo_url;
+
+  const readable_span_cls = 'overflow-x-auto flex flex-row items-center \
+    gap-2 inline-block whitespace-nowrap'
+  const merged = `${readable_span_cls} ${className} ${extra}`
+  return (
+    <div className={merged} {...rest} >
+      {
+        logo &&
+        <img src={context?.item?.info?.logo_url} 
+            className='rounded-md w-6 h-6 object-cover border dark:opacity-80' />
+      }
+      
+      <div children={value ?? children} />
+    </div>
+  )
+}
 
 const schema_fields = [
   { 
-    key: 'title', name: 'Title', comp: Span, 
-    comp_params: { className: 'font-semibold max-w-[8rem] overflow-x-auto' } 
+    key: 'info.name', name: 'Name', comp: SpanWithLogo, 
+    comp_params: {
+      className: 'font-semibold', 
+      extra: 'max-w-[10rem] md:max-w-[18rem]'
+    } 
   },
-  { 
-    key: 'id', name: 'Gateway ID', comp: Span, 
-    comp_params: { className: 'font-semibold max-w-[8rem] overflow-x-auto' } 
-  },
-  { key: 'updatedAt', name: 'Last Updated', comp: TimeStampView },
   { 
     key: undefined, name: 'Actions', 
-    comp: RecordActions, 
-    comp_params: { className: '' } 
+    comp: RecordActions, comp_params: { className: '' } 
   },
 ]
 
-export default ({ collectionId, segment }) => {
-  const { query_params } = useParams()
-  const query_params_o = useMemo(
-    () => q2o(query_params, { search: '', limit: 5}),
-    [query_params]
-  )
-  const nav = useNavigate()
-  const ref_actions = useRef()
-  const ref_use_cache = useRef(true)
+export default ({}) => {
+
+  /**
+   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
+   *  PaymentGatewayItemGet>
+   * }
+   */ 
   const { 
-    page, loading, error, 
-    query, queryCount, deleteDocument 
-  } = useCollection('payment_gateways', q_initial, false)
-  segment = segment ?? collectionId
-  useEffect(
+    context, page, loading, 
+    error, queryCount, 
+  } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
+  const context_mod = useMemo(
     () => {
-      ref_actions.current.setSearch(
-        query_params_o.search
-        )
+      const { viewDocumentUrl } = context;
       
-      query(query_params_o, ref_use_cache.current)
-    }, [query_params_o, query]
-  )
-  const onReload = useCallback(
-    () => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const search = ref_actions.current.getSearch()
-      ref_use_cache.current = false
-      nav(`/pages/${segment}/q/${o2q({ ...rest, search})}`)
-    }, [nav, collectionId, query_params_o]
-  )
-  const onLimitChange = useCallback(
-    (limit) => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(0)?.[0]
+      return {
+        viewDocumentUrl
+      }
+    }, [context]
+  );
 
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest, limit, startAtId: new_id
-      })}`)
-    }, [nav, collectionId, query_params_o, page]
-  )
-  const next = useCallback(
-    async () => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(-1)?.[0]
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest,
-        startAfterId: new_id
-      })}`)
-    }, [nav, page, query_params_o]
-  )
-  const prev = useCallback(
-    async () => {
-      const { 
-        endBeforeId, startAfterId, startAtId, 
-        endAtId, ...rest } = query_params_o
-      const new_id = page?.at(0)?.[0]
-      nav(`/pages/${segment}/q/${o2q({ 
-        ...rest,
-        endBeforeId: new_id
-      })}`)
-    }, [nav, page, query_params_o]
-  )
-
-  const context = useMemo(
-    () => ({
-      viewDocumentUrl: id => `/pages/${segment}/${id}/view`,
-      editDocumentUrl: id => `/pages/${segment}/${id}/edit`,
-      deleteDocument,
-    }), [deleteDocument]
-  )
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`payment gateways configs ${queryCount>=0 ? `(${queryCount})` : ''}`} 
-                className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()} 
-            className='text-xl text-red-600' />
+    <Title children={`Payment Gateways ${page?.length>=0 ? `(${page?.length})` : ''}`} 
+                  className='mb-5' /> 
+    <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      
-        <TopActions ref={ref_actions} reload={onReload} 
-                    createLink='/pages/payment-gateways/create'
-                    searchTitle='Search by Name, Handle, Tag values, Collections...' 
-                    isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
-        <ShowIf show={page}>
-          <BottomActions prev={prev} next={next} 
-                        limit={query_params_o.limit}
-                        onLimitChange={onLimitChange} />
-        </ShowIf>
+        <CollectionView 
+            context={context_mod} 
+            data={page} 
+            fields={schema_fields} />
       </div>    
     </ShowIf>
   </div>

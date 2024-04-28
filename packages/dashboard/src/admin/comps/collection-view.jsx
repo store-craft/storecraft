@@ -23,12 +23,15 @@
  */
 
 /**
- * @template {any} [V=any]
+ * @template {any} [V=any] The field value type
+ * @template {any} [T=any] The item general type
+ * 
+ * 
  * @typedef {object} CollectionViewComponentParams The `params` of components of
  * `CollectionView`
  * @property {CollectionViewField} [field] Key of field in the data
- * @property {CollectionViewContext<V>} [context] Name of field
- * @property {V} [value] Name of field
+ * @property {CollectionViewContext<T>} [context] Context
+ * @property {V} [value] Value of field
  */
 
 /**
@@ -129,7 +132,7 @@ const Table = (
  * @param {object} p
  * @param {any} p.context anything
  * @param {CollectionViewField[]} p.fields scehma
- * @param {import("@storecraft/core/v-api").BaseType[]} p.data actual data
+ * @param {object[]} p.data actual data
  * @param {string} [p.recordClassName]
  * @param {string} [p.className]
  */

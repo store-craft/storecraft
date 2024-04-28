@@ -104,10 +104,7 @@ export default function Main(props) {
     </Route>
     <Route path='payment-gateways'>
       <Route path='' element={<PaymentGateways />} />
-      <Route path='q/:query_params' element={<PaymentGateways />} />
-      <Route path=':id/edit' element={<PaymentGateway mode='edit' />} />
-      <Route path=':id/view' element={<PaymentGateway mode='view' />} />
-      <Route path='create/:base?' element={<PaymentGateway mode='create' /> } />
+      <Route path=':id/view' element={<PaymentGateway />} />
     </Route>
   </Route>
 </Routes>

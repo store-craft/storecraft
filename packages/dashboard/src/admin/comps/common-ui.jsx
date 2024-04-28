@@ -292,7 +292,7 @@ export const Div = ({setError, ...rest}) =>
  * @property {any[]} [rest] 
  * 
  * @typedef {InternalCardParams & 
- * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } CardParams
  * 
  * @param {CardParams} params

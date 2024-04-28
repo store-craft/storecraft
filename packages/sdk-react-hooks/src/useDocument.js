@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from "react"
 import useTrigger from "./useTrigger.js"
 import { useStorecraft } from "./useStorecraft.js";
 import { useDocumentCache } from "./useStorecraftCache.js";
+import { 
+  get as sdk_get, upsert as upsert_sdk, remove as sdk_remove 
+} from "@storecraft/sdk/src/utils.api.fetch.js";
 
 /**
  * @template T the `document` type
@@ -72,6 +75,7 @@ export function useDocument(
 
       try {
 
+        /** @type {T} */
         let item;
 
         if(try_cache) {
@@ -80,7 +84,8 @@ export function useDocument(
           // found in cache
           if(item) {
             // background fetch from server
-            sdk[resource].get(document).then(
+            sdk_get(sdk, resource, document)
+            .then(
               /** @param {T} item_server  */
               item_server => {
                 cache_document_put(item_server);
@@ -92,10 +97,7 @@ export function useDocument(
         }
 
         if(!item) {
-          /** @type {T} */
-          item = await sdk[resource].get(
-            document
-          );
+          item = await sdk_get(sdk, resource, document);
 
           cache_document_put(item);
         }
@@ -129,13 +131,10 @@ export function useDocument(
       setOp('update')
 
       try {
-        const id = await sdk[resource].upsert(
-          new_data
-        );
+        const id = await upsert_sdk(sdk, resource, new_data);
         
-        const saved_data = await sdk[resource].get(
-          id
-        );
+        /** @type {T} */
+        const saved_data = await sdk_get(sdk, resource, id);
 
         setData(saved_data);
         setHasLoaded(true);
@@ -162,7 +161,7 @@ export function useDocument(
       setOp('delete');
 
       try {
-        await sdk[resource].remove(document);
+        await sdk_remove(sdk, resource, document);
 
         cache_document_remove(document);
 

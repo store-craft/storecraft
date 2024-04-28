@@ -8,14 +8,19 @@ import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
+import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 import { App } from '@storecraft/core';
  
 let app = new App(
   new NodePlatform(),
-  new MongoDB({db_name: 'test'}),
+  new MongoDB({ db_name: 'test' }),
   new NodeLocalStorage(join(homedir(), 'tomer'))
   // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
   // new GoogleStorage()
+  ,
+  {
+    'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' })
+  }
 );
 
 await app.init();

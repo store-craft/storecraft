@@ -7,21 +7,27 @@ export type Config = {
   /**
    * default currency code
    */
-  currency_code: string;
+  default_currency_code?: string;
+
   /**
    * the environment
    */
   env: 'prod' | 'test';
+
   /**
    * private client id
    */
   client_id: string;
+
   /**
    * private secret
    */
   secret: string;
+  
   /**
    * default intent to `authorize` or `capture` on order creation
    */
-  intent_on_checkout: 'AUTHORIZE' | 'CAPTURE';
+  intent_on_checkout?: 'AUTHORIZE' | 'CAPTURE';
 }
+
+

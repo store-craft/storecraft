@@ -37,13 +37,15 @@ const DocumentTitle = (
         return (
         <span key={ix}>
           <span children={s} 
-                className={getClass(ix)} 
-                /> 
+                className={getClass(ix)} /> 
           {
             (ix<major.length-1) &&
-            (<span children={delimiter} 
-        className='text-4xl text-pink-400 text-pink-400/50 
-            break-inside-avoid' /> )
+            (
+            <span 
+                children={delimiter} 
+                className='text-4xl text-pink-400 text-pink-400/50 
+                          break-inside-avoid' /> 
+            )
           }
         </span>
         )

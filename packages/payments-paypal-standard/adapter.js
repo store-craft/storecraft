@@ -1,5 +1,6 @@
-import { enums } from '@storecraft/core/v-api';
+import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js';
 import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
+import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
 
 /**
  * @typedef {import('./types.private.js').paypal_order} CreateResult
@@ -8,6 +9,7 @@ import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
  * @typedef {import('./types.public.js').Config} Config
  * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
+ * 
  * @implements {payment_gateway}
  * 
  * Paypal standard payment gateway (https://developer.paypal.com/docs/checkout/standard/)
@@ -21,17 +23,47 @@ export class PaypalStandard {
    * @param {Config} config 
    */
   constructor(config) {
-    this.#_config = config;
+    this.#_config = this.#validate_and_resolve_config(config);
+  }
+
+  /**
+   * 
+   * @param {Config} config 
+   */
+  #validate_and_resolve_config(config) {
+    config = {
+      default_currency_code: 'USD',
+      env: 'prod',
+      intent_on_checkout: 'AUTHORIZE',
+      ...config
+    }
+
+    const is_valid = config.client_id && config.secret;
+
+    if(!is_valid) {
+      throw new StorecraftError(
+        `Payment gateway ${this.info.name ?? 'unknown'} has invalid config !!! 
+        Missing client_id or secret`
+      )
+    }
+
+    return config;
   }
 
   get info() {
     return {
-      description: 'Paypal standard payments',
+      name: 'Paypal standard payments',
+      description: `Set up standard payments to present payment buttons to your payers so they can pay with PayPal, debit and credit cards, Pay Later options, Venmo, and alternative payment methods.
+      You can get started quickly with this 15-minute copy-and-paste integration. If you have an older Checkout integration, you can upgrade your Checkout integration.`,
       url: 'https://developer.paypal.com/docs/checkout/standard/',
       logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
     }
   }
-  get config() { return this.#_config; }
+  
+  get config() { 
+    return this.#_config; 
+  }
+
   get actions() {
     return [
       {
@@ -53,11 +85,30 @@ export class PaypalStandard {
   }
 
   /**
+   * 
+   * @type {payment_gateway["invokeAction"]}
+   */
+  async invokeAction(action_handle) {
+    switch (action_handle) {
+      case 'capture':
+        return this.capture;
+      case 'void':
+        return this.void;
+      case 'refund':
+        return this.refund;
+    
+      default:
+        break;
+    }
+  }
+
+  /**
    * TODO: the user prefers to capture intent instead
+   * 
    * @param {OrderData} order 
    */
   async onCheckoutCreate(order) {
-    const { currency_code, intent_on_checkout } = this.config; 
+    const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
 
     /** @type {import('./types.private.js').paypal_order_request} */
     const body = {
@@ -89,7 +140,9 @@ export class PaypalStandard {
 
   /**
    * todo: logic for if user wanted capture at approval
+   * 
    * @param {CreateResult} create_result 
+   * 
    * @return {ReturnType<payment_gateway["onCheckoutComplete"]>} create_result 
    */
   async onCheckoutComplete(create_result) {
@@ -110,19 +163,15 @@ export class PaypalStandard {
     switch(payload.status) {
       case 'COMPLETED':
         return {
-          // @ts-ignore
           payment: PaymentOptionsEnum.authorized,
-          // @ts-ignore
           checkout: CheckoutStatusEnum.complete
         }
       case 'PAYER_ACTION_REQUIRED':
         return {
-          // @ts-ignore
           checkout: CheckoutStatusEnum.requires_action
         }
       default:
         return {
-          // @ts-ignore
           checkout: CheckoutStatusEnum.failed
         }
     }
@@ -130,7 +179,11 @@ export class PaypalStandard {
 
   /**
    * Fetch the order and analyze it's status
+   * 
+   * 
    * @param {CreateResult} create_result 
+   * 
+   * 
    * @returns {Promise<PaymentGatewayStatus>}
    */
   async status(create_result) {
@@ -209,7 +262,9 @@ export class PaypalStandard {
 
   /**
    * Retrieve latest order payload
+   * 
    * @param {CreateResult} create_result first create result, holds paypal id
+   * 
    * @return {Promise<import('./types.private.js').paypal_order>} 
    */
   retrieve_order = async (create_result) => {
@@ -230,6 +285,7 @@ export class PaypalStandard {
 
   /**
    * todo: logic for if user wanted capture at approval
+   * 
    * @param {CreateResult} create_result 
    */
   async void(create_result) {

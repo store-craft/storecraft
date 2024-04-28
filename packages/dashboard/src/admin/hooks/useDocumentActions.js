@@ -26,9 +26,9 @@ import { App } from '@storecraft/core';
  * - Paginating by url navigation, for state saving.
  * - Context
  * 
- * @template {import('@storecraft/core/v-api').BaseType} T The type of `document`
+ * @template {{}} T The type of `document`
  * 
- * @param {keyof App["db"]["resources"]} resource resource `identifier`
+ * @param {(keyof App["db"]["resources"] | 'payments/gateways')} resource resource `identifier`
  * @param {string} document document `handle` or `id`
  * @param {string} slug resource `slug` at backend
  * @param {DocumentActionsMode} mode 

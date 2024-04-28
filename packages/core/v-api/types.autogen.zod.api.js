@@ -671,6 +671,75 @@ export const ordersStatisticsTypeSchema = z
       .describe("The count of days in `from_day` to `to_day`"),
   })
   .describe("`Statisitics` of requested days");
+export const configFieldSchema = z.object({
+  key: z.string().describe("the `key` of the field"),
+  value: z.any().optional().describe("the `value` of the field"),
+  description: z.string().optional().describe("the `description` of the field"),
+  name: z.string().describe("the `name` of the field"),
+  editable: z.boolean().optional().describe("Is the field editable ?"),
+  metadata: z
+    .object({
+      component: z.union([
+        z.literal("select"),
+        z.literal("input"),
+        z.literal("label"),
+        z.literal("textarea"),
+      ]),
+      params: z.any(),
+    })
+    .describe("The type of the `field`"),
+});
+export const paymentGatewayInfoSchema = z.object({
+  name: z.string().describe("name of the gateway"),
+  description: z.string().optional().describe("description of the gateway"),
+  logo_url: z
+    .string()
+    .optional()
+    .describe("logo url (or even data-url) of the gateway"),
+  url: z.string().optional().describe("url of the gateway website"),
+});
+export const paymentGatewayActionSchema = z.object({
+  name: z.string().describe("action name for display"),
+  handle: z.string().describe("action handle for invocation at backend"),
+  description: z
+    .string()
+    .optional()
+    .describe(
+      "optional description of what will happen\nif the action is executed",
+    ),
+  parameters: z
+    .array(configFieldSchema)
+    .optional()
+    .describe(
+      "Action might have extra parameters,\nfor example a partial refund action, may specify a variable value\nfor refunding, also with some of the `capture` actions,\nwhich may capture less than intended.",
+    ),
+});
+export const paymentGatewayStatusSchema = z
+  .object({
+    actions: z
+      .array(paymentGatewayActionSchema)
+      .optional()
+      .describe("List of possible actions to take"),
+    messages: z
+      .array(z.string())
+      .optional()
+      .describe(
+        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
+      ),
+  })
+  .describe("A payment `status`");
+export const paymentGatewayItemGetSchema = z
+  .object({
+    info: paymentGatewayInfoSchema.describe(
+      "The info such as `name`, `description` etc..",
+    ),
+    actions: z
+      .array(paymentGatewayActionSchema)
+      .describe("A list of `actions` supported by the gateway"),
+    config: z.any().describe("The gateway's configuration"),
+    handle: z.string().describe("The `handle` of the `gateway`"),
+  })
+  .describe("Upon querying the payment gateways");
 export const baseTypeSchema = idableSchema
   .extend(timestampsSchema.shape)
   .extend({

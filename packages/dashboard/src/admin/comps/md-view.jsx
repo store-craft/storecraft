@@ -2,22 +2,22 @@ import { marked } from 'marked'
 
 /**
  * @typedef {object} InternalMDViewParams
- * @prop {string} [text]
+ * @prop {string} [value]
  * 
  * @typedef {InternalMDViewParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
  * } MDViewParams
  * 
  * @param {MDViewParams} param
  */
-const MDView = ({text, ...rest}) => {
+const MDView = ({value, ...rest}) => {
   return (
 <div {...rest}>
   <p className='md-view' 
     dangerouslySetInnerHTML={
       {
         __html : marked.parse(
-          text ?? '', { 
+          value ?? '', { 
             mangle: false, headerIds: false, 
             sanitize:false
           }

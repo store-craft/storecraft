@@ -108,7 +108,7 @@ const Notification = (
   <div className='w-full'>
     <MDView 
         className='text-base' 
-        text={notification.message} />
+        value={notification.message} />
     <div className='flex flex-row items-center w-full
                     justify-between mt-1'>
       <p children={timeSince(notification.updated_at ?? Date.now())} 

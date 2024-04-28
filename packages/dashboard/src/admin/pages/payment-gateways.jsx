@@ -1,6 +1,6 @@
 import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
-import { RecordActions } from '@/admin/comps/common-fields.jsx'
+import { RecordActions, Span } from '@/admin/comps/common-fields.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useMemo } from 'react'
@@ -56,6 +56,13 @@ export const SpanWithLogo = (
 const schema_fields = [
   { 
     key: 'info.name', name: 'Name', comp: SpanWithLogo, 
+    comp_params: {
+      className: 'font-semibold', 
+      extra: 'max-w-[10rem] md:max-w-[18rem]'
+    } 
+  },
+  { 
+    key: 'handle', name: 'Handle', comp: Span, 
     comp_params: {
       className: 'font-semibold', 
       extra: 'max-w-[10rem] md:max-w-[18rem]'

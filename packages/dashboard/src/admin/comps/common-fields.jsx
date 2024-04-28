@@ -386,26 +386,44 @@ export const withCard = (
    * @param {import('./fields-view.jsx').FieldLeafViewParams<any> & 
    * { children: React.ReactNode}} params
    */
-  return ({ field, value, disabled, onChange, children, 
-            error=undefined, setError, context, ...rest}) => {
-    const { key, desc, name, comp_params } = field
-    const { className, ...rest_comp_params } = comp_params || {}
-    const new_field = { ...field, comp_params : comp_params_inner }
+  return (
+    { 
+      field, value, disabled, onChange, children, 
+      error=undefined, setError, context, ...rest
+    }
+  ) => {
+
+    const { key, desc, name, comp_params } = field;
+    const { className, ...rest_comp_params } = comp_params || {};
+    const new_field = { ...field, comp_params : comp_params_inner };
 
     const Copy = useMemo(
       () => copy ? (
         <ClipBoardCopy value={JSON.stringify(value)}/>
       ) : null,
       [copy, value]
-    ) 
+    );
 
     return (
-<Card id='card' name={name} error={error} 
-      {...comp_params} border={border} desc={desc}
-      rightView={Copy} setError={setError}>
-  <Comp field={new_field} value={value} onChange={onChange} 
-        disabled={disabled} children={children} error={error} 
-        setError={setError} context={context} {...comp_params_inner} />
+<Card 
+    id='card' 
+    name={name} 
+    error={error} 
+    {...comp_params} 
+    border={border} 
+    desc={desc}
+    rightView={Copy} 
+    setError={setError}>
+  <Comp 
+      field={new_field} 
+      value={value} 
+      onChange={onChange} 
+      disabled={disabled} 
+      children={children} 
+      error={error} 
+      setError={setError} 
+      context={context} 
+      {...comp_params_inner} />
 </Card>
   )
   }

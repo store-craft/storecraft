@@ -149,7 +149,7 @@ const OrderPaymentGateway = (
     {
       status.messages.map(
         (s, ix) => (
-          <MDView text={s} key={ix} />
+          <MDView value={s} key={ix} />
         )
       )
     }

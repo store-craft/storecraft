@@ -27,7 +27,7 @@
  * @typedef {object} CollectionViewComponentParams The `params` of components of
  * `CollectionView`
  * @property {CollectionViewField} [field] Key of field in the data
- * @property {CollectionViewContext} [context] Name of field
+ * @property {CollectionViewContext<V>} [context] Name of field
  * @property {V} [value] Name of field
  */
 
@@ -74,9 +74,9 @@ const Table = (
             (field, ix) => (
               <td 
                 className={
-                  ix==0 ? 'text-start pl-3 ' : 
+                  ix==0 ? 'text-start pl-3 overflow-x-scroll' : 
                           ix<fields.length-1 ? 
-                          'text-center px-3 ' : 
+                          'text-center px-3 overflow-x-clip ' : 
                           'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
                           --backdrop-blur-sm --border-l-2 shadow-2xl w-0'
                 } 

@@ -3,7 +3,9 @@ import { App } from "../index.js";
 export type StorageFeatures = {
   
   /**
-   * @description Does `storage` supports `pre-signed` urls for `download` / `upload` 
+   * @description Does `storage` supports `pre-signed` urls 
+   * for `download` / `upload` 
+   * 
    */
   supports_signed_urls: boolean;
 
@@ -11,8 +13,10 @@ export type StorageFeatures = {
 }
 
 /**
- * @description In case, the `storage` supports `pre-signed` urls, we would
- * like ofcourse to know how to construct the new requests locally
+ * @description In case, the `storage` supports `pre-signed` urls, 
+ * we would like ofcourse to know how to construct the new 
+ * requests locally
+ * 
  */
 export type StorageSignedOperation = {
   /**

@@ -73,7 +73,7 @@ const NotificationButton = (
     async () => {
       // const hasChanged =  false;//await sdk.notifications.hasChanged()
       const hasChanged = await poll();
-      console.log('CHANGED ' + hasChanged)
+      // console.log('CHANGED ' + hasChanged)
       setAlert(hasChanged)
     }, [poll]
   );

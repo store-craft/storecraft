@@ -49,11 +49,12 @@ const schema_fields = [
   },
 ];
 
+
 export default ({}) => {
 
   /**
    * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  import('@storecraft/core/v-api').ProductType & 
+   *  import('@storecraft/core/v-api').ProductType | 
    *  import('@storecraft/core/v-api').VariantType>
    * }
    */

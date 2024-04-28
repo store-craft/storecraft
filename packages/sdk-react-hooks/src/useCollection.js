@@ -295,7 +295,7 @@ export const useCollection = (
         if(found_in_cache) {
           setIndex(0);
           setPages([[...items]]);
-          console.log('foundin cache')
+          // console.log('foundin cache')
           // in the background
           _internal_fetch_next(true).then(
             new_items => {

@@ -1,4 +1,4 @@
-import { enums } from '@storecraft/core/v-api';
+import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js';
 import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
 
 /**
@@ -8,6 +8,7 @@ import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
  * @typedef {import('./types.public.js').Config} Config
  * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
+ * 
  * @implements {payment_gateway}
  * 
  * Paypal standard payment gateway (https://developer.paypal.com/docs/checkout/standard/)
@@ -31,7 +32,11 @@ export class PaypalStandard {
       logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
     }
   }
-  get config() { return this.#_config; }
+  
+  get config() { 
+    return this.#_config; 
+  }
+
   get actions() {
     return [
       {
@@ -54,6 +59,7 @@ export class PaypalStandard {
 
   /**
    * TODO: the user prefers to capture intent instead
+   * 
    * @param {OrderData} order 
    */
   async onCheckoutCreate(order) {
@@ -89,7 +95,9 @@ export class PaypalStandard {
 
   /**
    * todo: logic for if user wanted capture at approval
+   * 
    * @param {CreateResult} create_result 
+   * 
    * @return {ReturnType<payment_gateway["onCheckoutComplete"]>} create_result 
    */
   async onCheckoutComplete(create_result) {
@@ -110,19 +118,15 @@ export class PaypalStandard {
     switch(payload.status) {
       case 'COMPLETED':
         return {
-          // @ts-ignore
           payment: PaymentOptionsEnum.authorized,
-          // @ts-ignore
           checkout: CheckoutStatusEnum.complete
         }
       case 'PAYER_ACTION_REQUIRED':
         return {
-          // @ts-ignore
           checkout: CheckoutStatusEnum.requires_action
         }
       default:
         return {
-          // @ts-ignore
           checkout: CheckoutStatusEnum.failed
         }
     }
@@ -130,7 +134,11 @@ export class PaypalStandard {
 
   /**
    * Fetch the order and analyze it's status
+   * 
+   * 
    * @param {CreateResult} create_result 
+   * 
+   * 
    * @returns {Promise<PaymentGatewayStatus>}
    */
   async status(create_result) {
@@ -209,7 +217,9 @@ export class PaypalStandard {
 
   /**
    * Retrieve latest order payload
+   * 
    * @param {CreateResult} create_result first create result, holds paypal id
+   * 
    * @return {Promise<import('./types.private.js').paypal_order>} 
    */
   retrieve_order = async (create_result) => {
@@ -230,6 +240,7 @@ export class PaypalStandard {
 
   /**
    * todo: logic for if user wanted capture at approval
+   * 
    * @param {CreateResult} create_result 
    */
   async void(create_result) {

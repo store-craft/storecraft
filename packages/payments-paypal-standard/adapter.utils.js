@@ -29,7 +29,7 @@ export const getAccessToken = async (config) => {
   const { client_id, secret } = config;
   const endpoint = get_endpoint(config);
 
-  const auth = Buffer.from(client_id + ':' + secret).toString('base64');
+  const auth = btoa(client_id + ':' + secret);
   // const expired = current_auth.expires_at - Date.now() <= 10*1000
   // if(!expired)
   //   return current_auth.latest_auth_response.access_token

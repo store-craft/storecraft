@@ -44,7 +44,7 @@ export type PaymentGatewayInfo = {
    * 
    * @description name of the gateway 
    */
-  name?: string;
+  name: string;
 
   /** 
    * @description description of the gateway 

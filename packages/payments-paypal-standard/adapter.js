@@ -1,5 +1,6 @@
 import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js';
 import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
+import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
 
 /**
  * @typedef {import('./types.private.js').paypal_order} CreateResult
@@ -22,11 +23,36 @@ export class PaypalStandard {
    * @param {Config} config 
    */
   constructor(config) {
-    this.#_config = config;
+    this.#_config = this.#validate_and_resolve_config(config);
+  }
+
+  /**
+   * 
+   * @param {Config} config 
+   */
+  #validate_and_resolve_config(config) {
+    config = {
+      default_currency_code: 'USD',
+      env: 'prod',
+      intent_on_checkout: 'AUTHORIZE',
+      ...config
+    }
+
+    const is_valid = config.client_id && config.secret;
+
+    if(!is_valid) {
+      throw new StorecraftError(
+        `Payment gateway ${this.info.name ?? 'unknown'} has invalid config !!! 
+        Missing client_id or secret`
+      )
+    }
+
+    return config;
   }
 
   get info() {
     return {
+      name: 'Paypal standard payments',
       description: 'Paypal standard payments',
       url: 'https://developer.paypal.com/docs/checkout/standard/',
       logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
@@ -81,7 +107,7 @@ export class PaypalStandard {
    * @param {OrderData} order 
    */
   async onCheckoutCreate(order) {
-    const { currency_code, intent_on_checkout } = this.config; 
+    const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
 
     /** @type {import('./types.private.js').paypal_order_request} */
     const body = {

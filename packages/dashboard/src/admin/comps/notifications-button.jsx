@@ -81,7 +81,7 @@ const NotificationButton = (
   const {
     stop, start 
   } = useInterval(
-    onInterval, 10000, false
+    onInterval, MINUTE * 10, false
     // onInterval, MINUTE * 10, false
   );
 

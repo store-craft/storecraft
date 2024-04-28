@@ -19,7 +19,7 @@ let app = new App(
   // new GoogleStorage()
   ,
   {
-    'paypal_standard': new PaypalStandard({})
+    'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' })
   }
 );
 

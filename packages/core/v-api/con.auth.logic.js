@@ -266,12 +266,6 @@ export const parse_api_key = (body) => {
   const email = parts?.[0];
   const password = parts?.[1];
 
-  assert(
-    email===API_KEY_AUTH_USER_EMAIL &&
-    password,
-    `auth/error`
-  );
-
   return {
     email,
     password,
@@ -309,11 +303,6 @@ export const verify_api_key = async (app, body) => {
   const {
     email, password
   } = parse_api_key(body);
-
-  assert(
-    email===API_KEY_AUTH_USER_EMAIL,
-    'auth/error'
-  );
 
   const apikey_user = await app.db.resources.auth_users.getByEmail(
     email

@@ -7,6 +7,7 @@ export * from './v-api/types.api.enums.js'
  * @typedef {import('./v-storage/types.storage.js').storage_driver} storage_driver
  * @typedef {import('./v-database/types.public.js').db_driver} db_driver
  * @typedef {import('./v-payments/types.payments.js').payment_gateway} payment_gateway
+ * @typedef {import('./v-extensions/types.public.js').extension} extension
  * @typedef {import('./v-mailer/types.mailer.js').mailer} mailer
  */
 
@@ -52,10 +53,18 @@ export class App {
   #_payment_gateways;
 
   /** 
+   * 
    * The mailer driver
    * @type {mailer} 
    **/ 
   #_mailer;
+
+  /** 
+   * 
+   * The extensions
+   * @type {Record<string, extension>} 
+   **/ 
+  #_extensions;
 
   /** 
    * The Storecraft App Config
@@ -82,15 +91,20 @@ export class App {
    * @param {S} [storage] storage The storage driver
    * @param {Record<string, payment_gateway>} [payment_gateways] The Payment Gateways
    * @param {mailer} [mailer] mailer The Email driver
+   * @param {Record<string, extension>} [extensions] extensions
    * @param {Config} [config] config The Storecraft Application config
    */
-  constructor(platform, db_driver, storage, payment_gateways, mailer, config) {
+  constructor(
+    platform, db_driver, storage, payment_gateways, mailer, 
+    extensions, config
+  ) {
 
     this.#_platform = platform;
     this.#_db_driver = db_driver;
     this.#_storage = storage;
     this.#_payment_gateways = payment_gateways;
     this.#_mailer = mailer;
+    this.#_extensions = extensions;
     this.#_config = config;
     this.#_is_ready = false;
   }
@@ -188,6 +202,14 @@ export class App {
    **/
   get mailer() { 
     return this.#_mailer; 
+  }
+
+  /** 
+   * 
+   * extensions
+   */
+  get extensions() { 
+    return this.#_extensions; 
   }
 
   /** 

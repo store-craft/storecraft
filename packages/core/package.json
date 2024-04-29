@@ -45,6 +45,10 @@
     "./v-platform": {
       "import": "./v-platform/public.js",
       "types": "./v-platform/types.public.d.ts"
+    },
+    "./v-extensions": {
+      "import": "./v-extensions/public.js",
+      "types": "./v-extensions/types.public.d.ts"
     }
   },
   "scripts": {

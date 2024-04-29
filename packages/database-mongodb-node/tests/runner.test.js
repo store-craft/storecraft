@@ -7,7 +7,7 @@ export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
     new MongoDB({ db_name: 'test'}),
-    null, null, null, {
+    null, null, null, null, {
       admins_emails: ['admin@sc.com'],
       auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',

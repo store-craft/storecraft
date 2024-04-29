@@ -36,7 +36,7 @@ export const get_extension = (app, extension_handle) => {
  * 
  * @returns {import('../v-api/types.api.js').ExtensionItemGet[]}
  */
-export const list_payment_gateways = (app) => {
+export const list_extensions = (app) => {
   return Object.entries(app.extensions ?? {}).map(
     ([handle, ext]) => (
       {
@@ -60,16 +60,17 @@ export const list_payment_gateways = (app) => {
  * 
  * @param {App<PlatformNativeRequest, PlatformContext>} app `storecraft` app
  * @param {string} extension_handle `extension` handle for identification
+ * @param {string} action_handle `action` handle of extension
  * @param {any} [body] `action` input
  * 
  */
 export const invoke_extension_action = async (
-  app, extension_handle, body
+  app, extension_handle, action_handle, body
 ) => {
 
   const ext = app.extensions?.[extension_handle];
 
   assert(ext, `extension with handle ${extension_handle} was not found`, 400);
 
-  return ext.invokeAction(extension_handle)(body);
+  return ext.invokeAction(action_handle)(body);
 }

@@ -1,4 +1,6 @@
+import { parse_query } from "@storecraft/core/v-api/utils.query.js";
 import { to_objid } from "./utils.funcs.js";
+import { parse } from "@storecraft/core/v-ql";
 
 let a = { 
   $or: [
@@ -133,6 +135,12 @@ const transform = c => {
  * @param {import("@storecraft/core/v-api").ApiQuery} q 
  */
 export const query_to_mongo = (q) => {
+  try {
+    if(q.vql && !q.vqlParsed) {
+      q.vqlParsed = parse(q.vql)
+    }
+  } catch(e) {}
+
   const filter = {};
   const clauses = [];
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`

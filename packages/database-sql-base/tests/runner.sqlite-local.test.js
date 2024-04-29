@@ -49,7 +49,7 @@ test();
 async function test2() {
   const app = await create_app();
 
-  // api_index.api_auth_test.create(app).run();
+  api_index.api_auth_test.create(app).run();
 
   // api_index.api_tags_crud_test.create(app).run();
   // api_index.api_tags_list_test.create(app).run();
@@ -77,7 +77,7 @@ async function test2() {
   // api_index.api_orders_list_test.create(app).run();
 
   // api_index.api_storefronts_crud_test.create(app).run();
-  api_index.api_storefronts_list_test.create(app).run();
+  // api_index.api_storefronts_list_test.create(app).run();
   // api_index.api_storefronts_all_connections_test.create(app).run();
 
   // api_index.api_notifications_crud_test.create(app).run();

@@ -136,7 +136,7 @@ export const to_tokens = (text) => {
  */
 export const union = (...args) => [
   ...new Set(args.flat(Infinity))
-].filter(a => a!==undefined && a!==null);
+].filter(Boolean);
 
 export const isEmpty = (str) => (!str?.trim().length);
 

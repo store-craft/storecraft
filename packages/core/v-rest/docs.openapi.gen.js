@@ -169,7 +169,6 @@ const create_all = () => {
   register_products(registry);
   register_shipping(registry);
   register_customers(registry);
-  register_auth_users(registry);
   register_discounts(registry);
   register_images(registry);
   register_notifications(registry);
@@ -360,9 +359,7 @@ const register_base_list = (
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}
-      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
-      &order={order}&vql={vql}&expand={expand}`,
+    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
     summary: `List and filter ${name} items`,
     description: `List and filter items \n ${aug_description}`,
     tags,
@@ -396,6 +393,7 @@ const register_auth = registry => {
   const _refreshTypeSchema = registry.register(`AuthRefresh`, apiAuthRefreshTypeSchema);
   const _apiAuthResultSchema = registry.register(`ApiAuthResult`, apiAuthResultSchema);
   const _apiKeyResultSchema = registry.register(`ApiKey`, apiKeyResultSchema);
+  const _authUserTypeSchema = registry.register(`AuthUserType`, authUserTypeSchema);
   const example = {
     "token_type": "Bearer",
     "user_id": "au_65f98390d6a34550cdc651a1",
@@ -462,6 +460,33 @@ const register_auth = registry => {
     }
   );
 
+  // remove a auth user
+  registry.registerPath(
+    {
+      method: 'delete',
+      path: '/auth/remove/{email_or_id}',
+      description: 'Remove auth user',
+      summary: 'Remove auth user',
+      tags,
+      request: {
+        params: z.object({
+          email_or_id: z.string().openapi(
+            { 
+              example: `\`au_65f98390d6a34550cdc651a1\` or email like \`a@a.com\``,
+              description: `The \`id\` or \`email\` of auth user`
+            }
+          ),
+        }),
+      },
+      responses: {
+        200: {
+          description: 'api key info',
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
 
   // api keys
 
@@ -472,13 +497,13 @@ const register_auth = registry => {
   registry.registerPath(
     {
       method: 'post',
-      path: '/auth/apikey',
-      description: `Renew the current API Key. Api key is a \`base64\` url encoded 
-      \`base64_url(apikey@storecraft.api:password)\`, the \`password\` is **not saved** at the database, only 
+      path: '/auth/apikeys',
+      description: `Create a new API Key. Api key is a \`base64\` url encoded 
+      \`base64_url(id@apikey.storecraft.api:password)\`, the \`password\` is **not saved** at the database, only 
       the hashed password. This can be used in **ANY** the following headers \n
       - Authorization: Basic <apikey> \n
       - X-API-KEY: <apikey>`,
-      summary: 'Renew the current API Key',
+      summary: 'Create API Key',
       tags,
       responses: {
         200: {
@@ -499,38 +524,243 @@ const register_auth = registry => {
   registry.registerPath(
     {
       method: 'get',
-      path: '/auth/apikey',
-      description: 'get the **API** Key',
-      summary: 'Get the current API Key',
+      path: '/auth/apikeys',
+      description: 'List All API Keys Auth users',
+      summary: 'List All API Key Auth users',
       tags,
       responses: {
         200: {
-          description: 'api key info',
+          description: 'auth user list',
           content: {
             "application/json": {
-              schema: _apiKeyResultSchema,
-              example: exmaple_api_key
+              schema: z.array(authUserTypeSchema),
+              example: [
+                {
+                    "id": "au_662f70821937f16320a8debb",
+                    "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:03:46.835Z",
+                    "updated_at": "2024-04-29T10:03:46.835Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
+                        "au_662f70821937f16320a8debb@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f70821937f16320a8debb",
+                        "role:admin"
+                    ]
+                },
+                {
+                    "id": "au_662f708f631a446324fd9b56",
+                    "email": "au_662f708f631a446324fd9b56@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:03:59.970Z",
+                    "updated_at": "2024-04-29T10:03:59.970Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f708f631a446324fd9b56@apikey.storecraft.api",
+                        "au_662f708f631a446324fd9b56@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f708f631a446324fd9b56",
+                        "role:admin"
+                    ]
+                },
+                {
+                    "id": "au_662f70d5097c01634d3f9b41",
+                    "email": "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:05:09.001Z",
+                    "updated_at": "2024-04-29T10:05:09.001Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
+                        "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f70d5097c01634d3f9b41",
+                        "role:admin"
+                    ]
+                },
+                {
+                    "id": "au_662f75221cd845663fa3de0b",
+                    "email": "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:23:30.399Z",
+                    "updated_at": "2024-04-29T10:23:30.399Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f75221cd845663fa3de0b@apikey.storecraft.api",
+                        "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f75221cd845663fa3de0b",
+                        "role:admin"
+                    ]
+                },
+              ]
             },
           },
         },
         ...error() 
       },
+      ...apply_security()
     }
   );
 
   registry.registerPath(
     {
-      method: 'delete',
-      path: '/auth/apikey',
-      description: 'Revoke the current **API** Key',
-      summary: 'Revoke the current API Key',
+      method: 'get',
+      path: `/auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
+      description: 'Query and Filter Authenticated users',
+      summary: 'Query / Filter auth users',
       tags,
+      request: {
+        query: create_query()
+      },
       responses: {
         200: {
-          description: 'api key info',
+          description: 'auth user list',
+          content: {
+            "application/json": {
+              schema: z.array(authUserTypeSchema),
+              example: [
+                {
+                    "id": "au_662f70821937f16320a8debb",
+                    "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:03:46.835Z",
+                    "updated_at": "2024-04-29T10:03:46.835Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
+                        "au_662f70821937f16320a8debb@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f70821937f16320a8debb",
+                        "role:admin"
+                    ]
+                },
+                {
+                    "id": "au_662f708f631a446324fd9b56",
+                    "email": "au_662f708f631a446324fd9b56@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:03:59.970Z",
+                    "updated_at": "2024-04-29T10:03:59.970Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f708f631a446324fd9b56@apikey.storecraft.api",
+                        "au_662f708f631a446324fd9b56@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f708f631a446324fd9b56",
+                        "role:admin"
+                    ]
+                },
+                {
+                    "id": "au_662f70d5097c01634d3f9b41",
+                    "email": "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:05:09.001Z",
+                    "updated_at": "2024-04-29T10:05:09.001Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
+                        "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f70d5097c01634d3f9b41",
+                        "role:admin"
+                    ]
+                },
+                {
+                    "id": "au_662f75221cd845663fa3de0b",
+                    "email": "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
+                    "confirmed_mail": false,
+                    "roles": [
+                        "admin"
+                    ],
+                    "tags": [
+                        "apikey"
+                    ],
+                    "active": true,
+                    "description": "This user is a created apikey with roles: [admin]",
+                    "created_at": "2024-04-29T10:23:30.399Z",
+                    "updated_at": "2024-04-29T10:23:30.399Z",
+                    "search": [
+                        "email:true",
+                        "email:au_662f75221cd845663fa3de0b@apikey.storecraft.api",
+                        "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
+                        "confirmed_mail:false",
+                        "tag:apikey",
+                        "au_662f75221cd845663fa3de0b",
+                        "role:admin"
+                    ]
+                },
+              ]
+            },
+          },
         },
         ...error() 
       },
+      ...apply_security()
     }
   );  
 }
@@ -1016,38 +1246,6 @@ const register_customers = registry => {
     );
 }
 
-/**
- * @param {OpenAPIRegistry} registry 
- */
-const register_auth_users = registry => {
-  const name = 'auth_user'
-  const slug_base = 'auth_users'
-  const tags = [slug_base];
-  const example_id = 'au_65f2ae588bf30e6cd0ca95f3';
-  const _typeSchema = registry.register(name, authUserTypeSchema);
-  const example = {
-    "id": "au_65f2ae588bf30e6cd0ca95f3",
-    "email": "admin@sc.com",
-    "password": "djAxaUodw7NHExEjHkRLJ3RdwoTDigAAZMKXwrYkw7pCw6XClcOXBlU_wrXDh8KXw7PDuMKAWMOww5pIGsOsworDrUhlwoFbwrrCvsKw",
-    "confirmed_mail": false,
-    "roles": [
-      "admin"
-    ],
-    "created_at": "2024-03-14T07:59:20.031Z",
-    "updated_at": "2024-03-14T07:59:20.031Z",
-  }
-
-  register_base_get(
-    registry, slug_base, name, tags, example_id, 
-    _typeSchema, example, '', apply_security() );
-  register_base_upsert(
-    registry, slug_base, name, tags, example_id, 
-    _typeSchema, example
-    );
-  register_base_delete(registry, slug_base, name, tags);
-  register_base_list(
-    registry, slug_base, name, tags, _typeSchema, example, apply_security());
-}
 
 /**
  * @param {OpenAPIRegistry} registry 

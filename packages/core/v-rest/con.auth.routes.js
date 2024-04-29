@@ -1,8 +1,11 @@
 import { Polka } from '../v-polka/index.js'
 import { 
-  create_api_key, get_existing_api_key_info, refresh, remove_auth_user, signin, signup 
+  create_api_key, list_all_api_keys_info, 
+  list_auth_users, 
+  refresh, remove_auth_user, signin, signup 
 } from '../v-api/con.auth.logic.js'
 import { authorize_admin } from './con.auth.middle.js';
+import { parse_query } from '../v-api/utils.query.js';
 
 /**
  * 
@@ -46,9 +49,34 @@ export const create_routes = (app) => {
     }
   )
 
-  // create and get a new `api key`
+  // delete existing `api key`
+  polka.delete(
+    '/remove/:email',
+    middle_authorize_admin,
+    async (req, res) => {
+
+      await remove_auth_user(app, req.params?.email);
+
+      res.end();
+    }
+  )
+
+  // delete existing `api key`
+  polka.get(
+    '/list',
+    middle_authorize_admin,
+    async (req, res) => {
+      let q = parse_query(req.query);
+
+      const items = await list_auth_users(app, q);
+
+      res.sendJson(items);
+    }
+  )
+
+  // create and get a new `apikey`
   polka.post(
-    '/apikey',
+    '/apikeys',
     middle_authorize_admin,
     async (req, res) => {
       const result = await create_api_key(app);
@@ -58,28 +86,17 @@ export const create_routes = (app) => {
   )
 
 
-  // get existing `api key`
+  // get all existing `apikeys`
   polka.get(
-    '/apikey',
+    '/apikeys',
     middle_authorize_admin,
     async (req, res) => {
-      const result = await get_existing_api_key_info(app);
+      const result = await list_all_api_keys_info(app);
 
       res.sendJson(result);
     }
   )
 
-  // delete existing `api key`
-  polka.delete(
-    '/apikey',
-    middle_authorize_admin,
-    async (req, res) => {
-
-      await remove_auth_user(app, req.params?.email);
-
-      res.end();
-    }
-  )
 
   return polka;
 }

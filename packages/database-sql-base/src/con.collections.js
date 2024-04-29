@@ -181,6 +181,8 @@ const list_collection_products = (driver) => {
 
 /** 
  * @param {SQL} driver
+ * 
+ * 
  * @return {db_col}}
  * */
 export const impl = (driver) => {

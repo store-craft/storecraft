@@ -1,11 +1,12 @@
 import * as phash from '../v-crypto/crypto-pbkdf2.js'
 import * as jwt from '../v-crypto/jwt.js'
-import { ID, apply_dates, assert } from './utils.func.js'
+import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema, 
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../v-crypto/base64.js'
+import { isDef } from './utils.index.js'
 
 
 /**
@@ -63,16 +64,21 @@ export const signup = async (app, body) => {
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
 
+  /** @type {import('./types.api.js').AuthUserType} */
+  const au = {
+    id: id,
+    email, 
+    password: hashedPassword,
+    confirmed_mail: false,
+    roles,
+    description: `This user is a created with roles: [admin]`
+  }
+
   await app.db.resources.auth_users.upsert(
-    apply_dates(
-      {
-        id: id,
-        email, password: hashedPassword,
-        confirmed_mail: false,
-        roles
-      }
-    )
+    apply_dates(au),
+    create_search_terms(au)
   );
+
 
   /** @type {Partial<import("../v-crypto/jwt.js").JWTClaims>} */
   const claims = {
@@ -202,7 +208,24 @@ export const refresh = async (app, body) => {
   }
 }
 
-export const API_KEY_AUTH_USER_EMAIL = 'apikey@storecraft.api'
+
+/**
+ * 
+ * Compute the search terms of an `auth_user`
+ * 
+ * @param {import('./types.api.js').AuthUserType} item 
+ */
+export const create_search_terms = item => {
+  return union(
+    isDef(item.active) && `email:${item.active}`,
+    isDef(item.email) && `email:${item.email}`,
+    isDef(item.email) && item.email,
+    `confirmed_mail:${item.confirmed_mail ?? false}`,
+    (item.tags ?? []).map(tag => `tag:${tag}`),
+    item.id,
+    (item.roles ?? []).map(role => `role:${role}`),
+  ).filter(Boolean)
+}
 
 /**
  * 
@@ -213,7 +236,7 @@ export const API_KEY_AUTH_USER_EMAIL = 'apikey@storecraft.api'
  */  
 export const create_api_key = async (app) => {
 
-  const key = await window.crypto.subtle.generateKey(
+  const key = await crypto.subtle.generateKey(
     {
       name: "HMAC",
       hash: {
@@ -222,7 +245,8 @@ export const create_api_key = async (app) => {
     },
     true,
     ["sign", "verify"]
-  )
+  );
+
   const exported = await crypto.subtle.exportKey("raw", key);
   const ui8a = new Uint8Array(exported);
   const password = fromUint8Array(ui8a, true);
@@ -232,21 +256,27 @@ export const create_api_key = async (app) => {
     password, app.config.auth_password_hash_rounds
   );
 
-  // this is just `identifier`
-  const email = API_KEY_AUTH_USER_EMAIL;
-
   // Create a new user in the database
   const id = ID('au');
 
+  // this is just `email`
+  const email = `${id}@apikey.storecraft.api`;
+
+  /** @type {import('./types.api.js').AuthUserType} */
+  const au = {
+    id,
+    email, 
+    password: hashedPassword,
+    confirmed_mail: false,
+    roles: ['admin'],
+    tags: ['apikey'],
+    active: true,
+    description: `This user is a created apikey with roles: [admin]`
+  }
+
   await app.db.resources.auth_users.upsert(
-    apply_dates(
-      {
-        id: id,
-        email, password: hashedPassword,
-        confirmed_mail: false,
-        roles: ['admin']
-      }
-    )
+    apply_dates(au),
+    create_search_terms(au)
   );
 
   const apikey = encode(`${email}:${password}`, true);
@@ -270,20 +300,6 @@ export const parse_api_key = (body) => {
     email,
     password,
   }
-}
-
-
-/**
- * 
- * @param {App} app 
- * @param {string} email 
- * 
- */  
-export const remove_auth_user = async (app, email) => {
-
-  await app.db.resources.auth_users.removeByEmail(
-    email
-  );
 }
 
 
@@ -321,35 +337,71 @@ export const verify_api_key = async (app, body) => {
     verified, 'auth/error'
   )
 
+  // delete the hashed password
+  delete apikey_user.password;
+
   return apikey_user;
 }
 
 /**
  * 
- * Verifying `apikey` is slow, because we need to consult
- * with the database every time.
+ * List all of the api keys
+ * 
  * 
  * @param {App} app 
  * 
- * 
- * @returns {Promise<{
- *  created_at?: string,
- *  updated_at?: string,
- *  email?: string;
- * }>}
- * 
  */  
-export const get_existing_api_key_info = async (app) => {
+export const list_all_api_keys_info = async (app) => {
 
-  const auth_user = await app.db.resources.auth_users.get(
-    API_KEY_AUTH_USER_EMAIL
+  const apikeys = await app.db.resources.auth_users.list(
+    {
+      vql: 'tag:apikey',
+      limit: 1000,
+      expand: ['*']
+    }
   );
 
-  return {
-    created_at: auth_user.created_at,
-    updated_at: auth_user.updated_at,
-    email: auth_user.email
+  for(const item of apikeys) {
+    delete item['password'];
   }
 
+  return apikeys
 }
 
+
+/**
+ * 
+ * Query auth users.
+ * 
+ * 
+ * @param {App} app 
+ * @param {import('./types.api.query.js').ApiQuery} [query={}] 
+ * 
+ */  
+export const list_auth_users = async (app, query={}) => {
+
+  const items = await app.db.resources.auth_users.list(
+    query
+  );
+
+  for(const item of items) {
+    delete item['password'];
+  }
+
+  return items;
+}
+
+
+
+/**
+ * 
+ * @param {App} app 
+ * @param {string} id_or_email 
+ * 
+ */  
+export const remove_auth_user = async (app, id_or_email) => {
+
+  await app.db.resources.auth_users.remove(
+    id_or_email
+  );
+}

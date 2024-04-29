@@ -58,6 +58,16 @@ export const create = app => {
     const ok = r.access_token && r.refresh_token && r.user_id && has_admin_role; 
     assert.ok(ok, 'nope');
   });
+
+  s('apikey create and validate', async () => {
+  
+    const apikey = await auth.create_api_key(app);
+    const isvalid = await auth.verify_api_key(app, {
+      apikey: apikey.apikey
+    })
+
+    assert.ok(isvalid, 'apikey is invalid');
+  });
   
   return s;
 }

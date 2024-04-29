@@ -171,7 +171,7 @@ export type ApiKeyResult = {
 }
 
 /**
- * @description Result of `auth` request
+ * @description Result of `auth` request for `signin` / `signup` / `refresh`
  */
 export type ApiAuthResult = {
   /**

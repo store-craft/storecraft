@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { FaBloggerB, FaOpencart } from 'react-icons/fa/index.js'
-import { AiOutlineUser, AiFillTag } from 'react-icons/ai/index.js'
+import { AiOutlineUser, AiFillTag, AiOutlineAppstoreAdd } from 'react-icons/ai/index.js'
 import { TbDiscount2 } from 'react-icons/tb/index.js'
 import { BiImages, BiGame } from 'react-icons/bi/index.js'
 import { 
@@ -74,6 +74,10 @@ const menu = {
       { 
         name: 'Gallery', icon: <BiImages className='--scale-125'/>, 
         extra : { active: 'bg-yellow-400', hover: 'hover:bg-teal-200' } 
+      },
+      { 
+        name: 'Extensions', icon: <AiOutlineAppstoreAdd className='--scale-125'/>, 
+        extra : { active: 'bg-teal-400', hover: 'hover:bg-teal-200' } 
       },
       // { name: 'Email', icon: <AiOutlineMail/> },
       // { name: 'Reports', icon: <HiOutlineDocumentReport/> },

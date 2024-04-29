@@ -69,21 +69,6 @@ const root_schema = {
   ]
 }
 
-const root_schema2 = {
-  name:'Root', comp: Div, 
-  comp_params: { 
-    className : 'flex flex-col gap-5 w-full max-w-[35rem]' 
-  },
-  fields: [
-
-    {
-      key: 'config', name: 'Config',
-      desc: 'RAW Config JSON data',
-      comp: withCard(JsonView, { name: 'tomer'}, true, true),
-      comp_params: { className: 'w-full' }
-    },
-  ]
-}
 
 /**
  * 
@@ -118,7 +103,7 @@ export default (
 
  /** 
   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-  *  import('./payment-gateways.jsx').PaymentGatewayItemGet>
+  *  import('./extensions.jsx').ExtensionItemGet>
   * } 
   */
  const {
@@ -126,7 +111,7 @@ export default (
    doc, loading, hasLoaded, error,
    ref_root, 
  } = useDocumentActions(
-   'payments/gateways', documentId, '/pages/payment-gateways'
+   'extensions', documentId, '/apps/extensions'
  );
 
  const logo_url = doc?.info?.logo_url;
@@ -136,7 +121,7 @@ export default (
     
   <div className='flex flex-col --justify-between --h-full'>
     <span 
-        children='Payment Gateway' 
+        children='Extension' 
         className='text-3xl text-black dark:text-gray-300' />
     <div className='flex flex-row items-center gap-2 h-20'>
       <Logo src={logo_url} className='w-8 h-8' />

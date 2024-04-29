@@ -18,6 +18,7 @@ import {
     Storefronts, Storefront,
     PaymentGateways, PaymentGateway,
     Posts, Post,
+    Extensions, Extension,
     Settings
   } from './pages/index.jsx'
 
@@ -36,6 +37,10 @@ export default function Main(props) {
       <Route path='' element={<Gallery />} />
       <Route path='q/:query_params' element={<Gallery />} />
       <Route path='img/:handle' element={<ImagePage />} />
+    </Route>
+    <Route path='extensions'>
+      <Route path='' element={<Extensions />} />
+      <Route path=':id/view' element={<Extension />} />
     </Route>
   </Route>    
   <Route path='pages' element={<Layout className='w-screen h-full' />}>

@@ -9,12 +9,14 @@ import { Logo } from './logo.jsx'
 import { useBreakpointValue } from '../hooks/useMediaQuery.js'
 
 /**
+ * 
  * @typedef {object} MenuItemType
  * @prop {string} name
  * @prop {string} [slug]
  * @prop {React.JSX.Element} [icon]
  * @prop {object} [extra]
  * @prop {MenuItemType[]} [items]
+ * 
  * 
  * @typedef {object} MenuType
  * @prop {MenuItemType[]} items
@@ -117,7 +119,7 @@ const SideMenu = (
                     icon={
                       (
                       <div 
-                          className='rounded-md border p-[3px] 
+                          className='rounded-md border dark:border-none p-[3px] 
                                     --shelf-border-color-soft ' 
                           children={item.icon} />
                       )

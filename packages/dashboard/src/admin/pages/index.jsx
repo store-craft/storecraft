@@ -20,6 +20,8 @@ export { default as Posts } from './posts.jsx'
 export { default as Post } from './post.jsx'
 export { default as PaymentGateways } from './payment-gateways.jsx'
 export { default as PaymentGateway } from './payment-gateway.jsx'
+export { default as Extensions } from './extensions.jsx'
+export { default as Extension } from './extension.jsx'
 export { default as Settings } from './settings.jsx'
 
 /**

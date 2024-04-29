@@ -59,14 +59,50 @@ export const create = app => {
     assert.ok(ok, 'nope');
   });
 
-  s('apikey create and validate', async () => {
+  s('apikey create, validate, list and remove', async () => {
   
-    const apikey = await auth.create_api_key(app);
+    const apikey_created = await auth.create_api_key(app);
     const isvalid = await auth.verify_api_key(app, {
-      apikey: apikey.apikey
-    })
+      apikey: apikey_created.apikey
+    });
+    const apikey_created_decoded_email = atob(apikey_created.apikey).split(':').at(0);
 
     assert.ok(isvalid, 'apikey is invalid');
+
+    // now list only api keys
+    {
+      const apikeys = await auth.list_all_api_keys_info(app);
+      let is_apikey_created_present = false;
+
+      assert.ok(apikeys?.length, 'no api keys were found');
+
+      for (const apikey of apikeys) {
+        if(apikey.email === apikey_created_decoded_email) {
+          is_apikey_created_present  =true;
+        }
+
+        assert.ok(apikey.tags.includes('apikey'), 'invalid tag for api key');
+      }
+
+      assert.ok(is_apikey_created_present, 'created api key was not found !');
+
+      // now find the `apikey_created` in the list
+
+    }
+
+    {
+      // now remove
+      await auth.remove_auth_user(app, apikey_created_decoded_email);
+
+      const apikeys = await auth.list_all_api_keys_info(app);
+
+      assert.ok(
+        apikeys.every(ak => ak.email!==apikey_created_decoded_email), 
+        'apikey could not be removed'
+      );
+
+    }
+
   });
   
   return s;

@@ -1,7 +1,9 @@
 import { SQL } from '../driver.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { count_regular, delete_me, regular_upsert_me, 
-  where_id_or_handle_table } from './con.shared.js'
+import { count_regular, delete_me, insert_search_of, insert_tags_of, regular_upsert_me, 
+  where_id_or_handle_table, 
+  with_media, 
+  with_tags} from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js';
 
 /**
@@ -20,6 +22,10 @@ const upsert = (driver) => {
     try {
       const t = await c.transaction().execute(
         async (trx) => {
+
+          await insert_tags_of(trx, item.tags, item.id, item.email, table_name);
+          await insert_search_of(trx, search_terms, item.id, item.email, table_name);
+
           return await regular_upsert_me(trx, table_name, {
             confirmed_mail: item.confirmed_mail ? 1 : 0,
             email: item.email,
@@ -46,11 +52,11 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id_or_handle, options) => {
+  return async (id_or_email, options) => {
     const r = await driver.client
       .selectFrom(table_name)
       .selectAll()
-      .where(where_id_or_handle_table(id_or_handle))
+      .where(where_id_or_handle_table(id_or_email))
       .executeTakeFirst();
 
     return sanitize(r);
@@ -77,14 +83,14 @@ const getByEmail = (driver) => {
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
-  return async (id_or_handle) => {
+  return async (id_or_email) => {
     try {
       await driver.client.transaction().execute(
         async (trx) => {
             
           // entities
           // delete me
-          await delete_me(trx, table_name, id_or_handle);
+          await delete_me(trx, table_name, id_or_email);
         }
       );
     } catch(e) {
@@ -110,6 +116,8 @@ const removeByEmail = (driver) => {
 
 /**
  * @param {SQL} driver 
+ * 
+ * 
  * @returns {db_col["list"]}
  */
 const list = (driver) => {
@@ -117,6 +125,10 @@ const list = (driver) => {
 
     const items = await driver.client.selectFrom(table_name)
       .selectAll()
+      .select(eb => [
+        with_tags(eb, eb.ref('auth_users.id'), driver.dialectType),
+        with_media(eb, eb.ref('auth_users.id'), driver.dialectType),
+      ])
       .where(
         (eb) => {
           return query_to_eb(eb, query, table_name);

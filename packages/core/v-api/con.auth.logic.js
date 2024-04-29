@@ -224,7 +224,7 @@ export const create_search_terms = item => {
     (item.tags ?? []).map(tag => `tag:${tag}`),
     item.id,
     (item.roles ?? []).map(role => `role:${role}`),
-  )
+  ).filter(Boolean)
 }
 
 /**

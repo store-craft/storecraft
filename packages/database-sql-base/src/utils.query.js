@@ -78,21 +78,26 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
  */
 export const query_vql_node_to_eb = (eb, node, table_name) => {
   if(node.op==='LEAF') {
+    // console.log('value', node.value)
     return eb
-      .exists(
-        eb => eb
-          .selectFrom('entity_to_search_terms')
-          .select('id')
-          .where(
-            eb => eb.and([
-              eb.or([
+    .exists(
+      eb => eb
+      .selectFrom('entity_to_search_terms')
+      .select('id')
+      .where(
+        eb => eb.and(
+          [
+            eb.or(
+              [
                 eb(`entity_to_search_terms.entity_id`, '=', eb.ref(`${table_name}.id`)),
                 eb(`entity_to_search_terms.entity_handle`, '=', eb.ref(`${table_name}.handle`)),
-              ]),
-              eb(`entity_to_search_terms.value`, 'ilike', node.value)
-            ])
-          )
+              ]
+            ),
+            eb(`entity_to_search_terms.value`, 'like', node.value.toLowerCase())
+          ]
+        )
       )
+    )
   }
 
   let conjunctions = [];

@@ -236,7 +236,7 @@ export const create_search_terms = item => {
  */  
 export const create_api_key = async (app) => {
 
-  const key = await window.crypto.subtle.generateKey(
+  const key = await crypto.subtle.generateKey(
     {
       name: "HMAC",
       hash: {
@@ -260,7 +260,7 @@ export const create_api_key = async (app) => {
   const id = ID('au');
 
   // this is just `email`
-  const email = `${id}@storecraft.api`;
+  const email = `${id}@apikey.storecraft.api`;
 
   /** @type {import('./types.api.js').AuthUserType} */
   const au = {
@@ -353,22 +353,16 @@ export const list_all_api_keys_info = async (app) => {
   const apikeys = await app.db.resources.auth_users.list(
     {
       vql: 'tag:apikey',
-      limit: 1000
+      limit: 1000,
+      expand: ['*']
     }
   );
 
-  return apikeys.map(
-    apikey => (
-      {
-        id: apikey.id,
-        email: apikey.email,
-        roles: apikey.roles,
-        tags: apikey.tags,
-        created_at: apikey.created_at,
-        updated_at: apikey.updated_at,
-      }
-    )
-  )
+  for(const item of apikeys) {
+    delete item['password'];
+  }
+
+  return apikeys
 }
 
 
@@ -383,9 +377,15 @@ export const list_all_api_keys_info = async (app) => {
  */  
 export const list_auth_users = async (app, query={}) => {
 
-  return app.db.resources.auth_users.list(
+  const items = await app.db.resources.auth_users.list(
     query
   );
+
+  for(const item of items) {
+    delete item['password'];
+  }
+
+  return items;
 }
 
 
@@ -393,12 +393,12 @@ export const list_auth_users = async (app, query={}) => {
 /**
  * 
  * @param {App} app 
- * @param {string} email 
+ * @param {string} id_or_email 
  * 
  */  
-export const remove_auth_user = async (app, email) => {
+export const remove_auth_user = async (app, id_or_email) => {
 
-  await app.db.resources.auth_users.removeByEmail(
-    email
+  await app.db.resources.auth_users.remove(
+    id_or_email
   );
 }

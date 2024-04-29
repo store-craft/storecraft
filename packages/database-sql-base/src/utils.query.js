@@ -2,6 +2,8 @@
  * @typedef {import("../index.js").Database} Database
  */
 
+import { parse } from "@storecraft/core/v-ql";
+
 /**
  * Convert an API Query cursor into mongo dialect, also sanitize.
  * 
@@ -150,6 +152,12 @@ export const query_to_eb = (eb, q={}, table_name) => {
   }
 
   // compute VQL clauses 
+  try {
+    if(q.vql && !q.vqlParsed) {
+      q.vqlParsed = parse(q.vql)
+    }
+  } catch(e) {}
+
   const vql_clause = query_vql_to_eb(eb, q.vqlParsed, table_name)
   vql_clause && clauses.push(vql_clause);
 

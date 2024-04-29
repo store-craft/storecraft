@@ -698,22 +698,26 @@ export const paymentGatewayInfoSchema = z.object({
     .describe("logo url (or even data-url) of the gateway"),
   url: z.string().optional().describe("url of the gateway website"),
 });
-export const paymentGatewayActionSchema = z.object({
-  name: z.string().describe("action name for display"),
-  handle: z.string().describe("action handle for invocation at backend"),
-  description: z
-    .string()
-    .optional()
-    .describe(
-      "optional description of what will happen\nif the action is executed",
-    ),
-  parameters: z
-    .array(configFieldSchema)
-    .optional()
-    .describe(
-      "Action might have extra parameters,\nfor example a partial refund action, may specify a variable value\nfor refunding, also with some of the `capture` actions,\nwhich may capture less than intended.",
-    ),
-});
+export const paymentGatewayActionSchema = z
+  .object({
+    name: z.string().describe("action name for display"),
+    handle: z.string().describe("action handle for invocation at backend"),
+    description: z
+      .string()
+      .optional()
+      .describe(
+        "optional description of what will happen\nif the action is executed",
+      ),
+    parameters: z
+      .array(configFieldSchema)
+      .optional()
+      .describe(
+        "Action might have extra parameters,\nfor example a partial refund action, may specify a variable value\nfor refunding, also with some of the `capture` actions,\nwhich may capture less than intended.",
+      ),
+  })
+  .describe(
+    "Upon status query, the gateway return a list of possible actions,\nsuch as `void`, `capture`, `refund` etc...",
+  );
 export const paymentGatewayStatusSchema = z
   .object({
     actions: z
@@ -756,9 +760,11 @@ export const baseTypeSchema = idableSchema
     active: z.boolean().optional().describe("Is the entity active ?"),
   });
 export const authUserTypeSchema = baseTypeSchema
+  .omit({ id: true })
   .and(authBaseTypeSchema)
   .and(
     z.object({
+      id: z.string().describe("ID"),
       confirmed_mail: z
         .boolean()
         .optional()
@@ -767,6 +773,7 @@ export const authUserTypeSchema = baseTypeSchema
         .array(roleSchema)
         .optional()
         .describe("list of roles and authorizations of the user"),
+      tags: z.array(z.string()).optional().describe("tags"),
     }),
   )
   .describe("Auth user type");

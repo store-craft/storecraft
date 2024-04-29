@@ -198,7 +198,12 @@ export type ApiAuthResult = {
 /**
  * @description Auth user type
  */
-export type AuthUserType = BaseType & AuthBaseType & {
+export type AuthUserType = Omit<BaseType, 'id'> & AuthBaseType & {
+  /** 
+   * @description ID 
+   */
+  id: string;
+
   /**
    * @description Is the email confirmed ?
    */
@@ -208,6 +213,11 @@ export type AuthUserType = BaseType & AuthBaseType & {
    * @description list of roles and authorizations of the user
    */
   roles?: Role[];
+
+  /**
+   * @description tags
+   */
+  tags?: string[];
 }
 
 // attributes

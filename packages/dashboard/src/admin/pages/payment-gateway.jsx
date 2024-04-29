@@ -109,14 +109,8 @@ const Logo = ({className, ...rest}) => {
 }
 
 
-/**
- * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
- * }} params
- */
 export default (
  { 
-   mode, ...rest
  }
 ) => {
                    

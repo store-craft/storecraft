@@ -359,9 +359,7 @@ const register_base_list = (
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}
-      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
-      &order={order}&vql={vql}&expand={expand}`,
+    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
     summary: `List and filter ${name} items`,
     description: `List and filter items \n ${aug_description}`,
     tags,
@@ -646,9 +644,7 @@ const register_auth = registry => {
   registry.registerPath(
     {
       method: 'get',
-      path: `/auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}
-      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}
-      &order={order}&vql={vql}&expand={expand}`,
+      path: `/auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
       description: 'Query and Filter Authenticated users',
       summary: 'Query / Filter auth users',
       tags,

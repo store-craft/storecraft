@@ -49989,7 +49989,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       description: Query and Filter Authenticated users
       summary: Query / Filter auth users
@@ -50776,7 +50776,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/tags?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /tags?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter tag items
       description: "List and filter items\ \n "
@@ -51082,7 +51082,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/collections?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /collections?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter collection items
       description: "List and filter items\ \n "
@@ -54317,7 +54317,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/products?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /products?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter product items
       description: "List and filter items\ \n "
@@ -59522,7 +59522,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/shipping?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /shipping?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter shipping items
       description: "List and filter items\ \n "
@@ -59834,7 +59834,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/customers?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /customers?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter customer items
       description: "List and filter items\ \n "
@@ -60180,7 +60180,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/discounts?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /discounts?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter discount items
       description: "List and filter items\ \n "
@@ -63084,7 +63084,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/images?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /images?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter image items
       description: "List and filter items\ \n "
@@ -63385,7 +63385,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/notifications?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /notifications?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter notification items
       description: "List and filter items\ \n "
@@ -63721,7 +63721,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/orders?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /orders?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter order items
       description: >-
@@ -64029,7 +64029,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/posts?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /posts?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter post items
       description: "List and filter items\ \n "
@@ -64450,7 +64450,7 @@ paths:
                           type: array
                           items:
                             type: string
-  "/storefronts?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}\n      &startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}\n      &order={order}&vql={vql}&expand={expand}":
+  /storefronts?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       summary: List and filter storefront items
       description: "List and filter items\ \n "

@@ -126,7 +126,7 @@ export default (
    doc, loading, hasLoaded, error,
    ref_root, 
  } = useDocumentActions(
-   'payments/gateways', documentId, '/pages/payment-gateways', mode
+   'payments/gateways', documentId, '/pages/payment-gateways'
  );
 
  const logo_url = doc?.info?.logo_url;

@@ -35,7 +35,7 @@ import { App } from '@storecraft/core';
  * @param {string} [base] base64 encoded base `document` to merge with
  * 
  */
-export const useDocumentActions = (resource, document, slug, mode, base) => {
+export const useDocumentActions = (resource, document, slug, mode='edit', base) => {
   /** 
    * @type {React.MutableRefObject<
    *  import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<

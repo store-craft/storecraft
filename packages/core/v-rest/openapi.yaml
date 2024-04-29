@@ -48553,16 +48553,132 @@ components:
           properties:
             name:
               type: string
-              description: name of the gateway
+              description: name of the `extension`
             description:
               type: string
-              description: description of the gateway
+              description: description of the `extension`
             logo_url:
               type: string
-              description: logo url (or even data-url) of the gateway
+              description: logo url (or even data-url) of the `extension`
             url:
               type: string
-              description: url of the gateway website
+              description: url of the extension website
+          required:
+            - name
+          description: The info such as `name`, `description` etc..
+        actions:
+          type: array
+          items:
+            allOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    description: action name for display
+                  handle:
+                    type: string
+                    description: action handle for invocation at backend
+                  description:
+                    type: string
+                    description: |-
+                      optional description of what will happen
+                      if the action is executed
+                required:
+                  - name
+                  - handle
+                description: |-
+                  Every `extension` have `actions`,  that are registered as
+                  **REST** endpoints
+              - type: object
+                properties:
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          description: the `key` of the field
+                        value:
+                          nullable: true
+                          description: the `value` of the field
+                        description:
+                          type: string
+                          description: the `description` of the field
+                        name:
+                          type: string
+                          description: the `name` of the field
+                        editable:
+                          type: boolean
+                          description: Is the field editable ?
+                        metadata:
+                          type: object
+                          properties:
+                            component:
+                              anyOf:
+                                - type: string
+                                  enum:
+                                    - select
+                                - type: string
+                                  enum:
+                                    - input
+                                - type: string
+                                  enum:
+                                    - label
+                                - type: string
+                                  enum:
+                                    - textarea
+                            params:
+                              nullable: true
+                          required:
+                            - component
+                          description: The type of the `field`
+                      required:
+                        - key
+                        - name
+                        - metadata
+                    description: >-
+                      Action might have extra parameters,
+
+                      for example a partial refund action, may specify a
+                      variable value
+
+                      for refunding, also with some of the `capture` actions,
+
+                      which may capture less than intended.
+            description: |-
+              Upon status query, the gateway return a list of possible actions,
+              such as `void`, `capture`, `refund` etc...
+          description: A list of `actions` supported by the gateway
+        config:
+          nullable: true
+          description: The gateway's configuration
+        handle:
+          type: string
+          description: The `handle` of the `gateway`
+      required:
+        - info
+        - actions
+        - handle
+      description: Upon querying the payment gateways
+    extensionItemGet:
+      type: object
+      properties:
+        info:
+          type: object
+          properties:
+            name:
+              type: string
+              description: name of the `extension`
+            description:
+              type: string
+              description: description of the `extension`
+            logo_url:
+              type: string
+              description: logo url (or even data-url) of the `extension`
+            url:
+              type: string
+              description: url of the extension website
           required:
             - name
           description: The info such as `name`, `description` etc..
@@ -48582,79 +48698,24 @@ components:
                 description: |-
                   optional description of what will happen
                   if the action is executed
-              parameters:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    key:
-                      type: string
-                      description: the `key` of the field
-                    value:
-                      nullable: true
-                      description: the `value` of the field
-                    description:
-                      type: string
-                      description: the `description` of the field
-                    name:
-                      type: string
-                      description: the `name` of the field
-                    editable:
-                      type: boolean
-                      description: Is the field editable ?
-                    metadata:
-                      type: object
-                      properties:
-                        component:
-                          anyOf:
-                            - type: string
-                              enum:
-                                - select
-                            - type: string
-                              enum:
-                                - input
-                            - type: string
-                              enum:
-                                - label
-                            - type: string
-                              enum:
-                                - textarea
-                        params:
-                          nullable: true
-                      required:
-                        - component
-                      description: The type of the `field`
-                  required:
-                    - key
-                    - name
-                    - metadata
-                description: >-
-                  Action might have extra parameters,
-
-                  for example a partial refund action, may specify a variable
-                  value
-
-                  for refunding, also with some of the `capture` actions,
-
-                  which may capture less than intended.
             required:
               - name
               - handle
             description: |-
-              Upon status query, the gateway return a list of possible actions,
-              such as `void`, `capture`, `refund` etc...
-          description: A list of `actions` supported by the gateway
+              Every `extension` have `actions`,  that are registered as
+              **REST** endpoints
+          description: A list of `actions` supported by the `extension`
         config:
           nullable: true
-          description: The gateway's configuration
+          description: The extension's configuration
         handle:
           type: string
-          description: The `handle` of the `gateway`
+          description: The `handle` of the `extension`
       required:
         - info
         - actions
         - handle
-      description: Upon querying the payment gateways
+      description: Upon querying the `extension`
     Error:
       type: object
       properties:
@@ -73695,78 +73756,86 @@ paths:
                   actions:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: action name for display
-                        handle:
-                          type: string
-                          description: action handle for invocation at backend
-                        description:
-                          type: string
-                          description: |-
-                            optional description of what will happen
-                            if the action is executed
-                        parameters:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              key:
-                                type: string
-                                description: the `key` of the field
-                              value:
-                                nullable: true
-                                description: the `value` of the field
-                              description:
-                                type: string
-                                description: the `description` of the field
-                              name:
-                                type: string
-                                description: the `name` of the field
-                              editable:
-                                type: boolean
-                                description: Is the field editable ?
-                              metadata:
+                      allOf:
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                              description: action name for display
+                            handle:
+                              type: string
+                              description: action handle for invocation at backend
+                            description:
+                              type: string
+                              description: |-
+                                optional description of what will happen
+                                if the action is executed
+                          required:
+                            - name
+                            - handle
+                          description: >-
+                            Every `extension` have `actions`,  that are
+                            registered as
+
+                            **REST** endpoints
+                        - type: object
+                          properties:
+                            parameters:
+                              type: array
+                              items:
                                 type: object
                                 properties:
-                                  component:
-                                    anyOf:
-                                      - type: string
-                                        enum:
-                                          - select
-                                      - type: string
-                                        enum:
-                                          - input
-                                      - type: string
-                                        enum:
-                                          - label
-                                      - type: string
-                                        enum:
-                                          - textarea
-                                  params:
+                                  key:
+                                    type: string
+                                    description: the `key` of the field
+                                  value:
                                     nullable: true
+                                    description: the `value` of the field
+                                  description:
+                                    type: string
+                                    description: the `description` of the field
+                                  name:
+                                    type: string
+                                    description: the `name` of the field
+                                  editable:
+                                    type: boolean
+                                    description: Is the field editable ?
+                                  metadata:
+                                    type: object
+                                    properties:
+                                      component:
+                                        anyOf:
+                                          - type: string
+                                            enum:
+                                              - select
+                                          - type: string
+                                            enum:
+                                              - input
+                                          - type: string
+                                            enum:
+                                              - label
+                                          - type: string
+                                            enum:
+                                              - textarea
+                                      params:
+                                        nullable: true
+                                    required:
+                                      - component
+                                    description: The type of the `field`
                                 required:
-                                  - component
-                                description: The type of the `field`
-                            required:
-                              - key
-                              - name
-                              - metadata
-                          description: >-
-                            Action might have extra parameters,
+                                  - key
+                                  - name
+                                  - metadata
+                              description: >-
+                                Action might have extra parameters,
 
-                            for example a partial refund action, may specify a
-                            variable value
+                                for example a partial refund action, may specify
+                                a variable value
 
-                            for refunding, also with some of the `capture`
-                            actions,
+                                for refunding, also with some of the `capture`
+                                actions,
 
-                            which may capture less than intended.
-                      required:
-                        - name
-                        - handle
+                                which may capture less than intended.
                       description: >-
                         Upon status query, the gateway return a list of possible
                         actions,
@@ -73857,78 +73926,86 @@ paths:
                   actions:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: action name for display
-                        handle:
-                          type: string
-                          description: action handle for invocation at backend
-                        description:
-                          type: string
-                          description: |-
-                            optional description of what will happen
-                            if the action is executed
-                        parameters:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              key:
-                                type: string
-                                description: the `key` of the field
-                              value:
-                                nullable: true
-                                description: the `value` of the field
-                              description:
-                                type: string
-                                description: the `description` of the field
-                              name:
-                                type: string
-                                description: the `name` of the field
-                              editable:
-                                type: boolean
-                                description: Is the field editable ?
-                              metadata:
+                      allOf:
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                              description: action name for display
+                            handle:
+                              type: string
+                              description: action handle for invocation at backend
+                            description:
+                              type: string
+                              description: |-
+                                optional description of what will happen
+                                if the action is executed
+                          required:
+                            - name
+                            - handle
+                          description: >-
+                            Every `extension` have `actions`,  that are
+                            registered as
+
+                            **REST** endpoints
+                        - type: object
+                          properties:
+                            parameters:
+                              type: array
+                              items:
                                 type: object
                                 properties:
-                                  component:
-                                    anyOf:
-                                      - type: string
-                                        enum:
-                                          - select
-                                      - type: string
-                                        enum:
-                                          - input
-                                      - type: string
-                                        enum:
-                                          - label
-                                      - type: string
-                                        enum:
-                                          - textarea
-                                  params:
+                                  key:
+                                    type: string
+                                    description: the `key` of the field
+                                  value:
                                     nullable: true
+                                    description: the `value` of the field
+                                  description:
+                                    type: string
+                                    description: the `description` of the field
+                                  name:
+                                    type: string
+                                    description: the `name` of the field
+                                  editable:
+                                    type: boolean
+                                    description: Is the field editable ?
+                                  metadata:
+                                    type: object
+                                    properties:
+                                      component:
+                                        anyOf:
+                                          - type: string
+                                            enum:
+                                              - select
+                                          - type: string
+                                            enum:
+                                              - input
+                                          - type: string
+                                            enum:
+                                              - label
+                                          - type: string
+                                            enum:
+                                              - textarea
+                                      params:
+                                        nullable: true
+                                    required:
+                                      - component
+                                    description: The type of the `field`
                                 required:
-                                  - component
-                                description: The type of the `field`
-                            required:
-                              - key
-                              - name
-                              - metadata
-                          description: >-
-                            Action might have extra parameters,
+                                  - key
+                                  - name
+                                  - metadata
+                              description: >-
+                                Action might have extra parameters,
 
-                            for example a partial refund action, may specify a
-                            variable value
+                                for example a partial refund action, may specify
+                                a variable value
 
-                            for refunding, also with some of the `capture`
-                            actions,
+                                for refunding, also with some of the `capture`
+                                actions,
 
-                            which may capture less than intended.
-                      required:
-                        - name
-                        - handle
+                                which may capture less than intended.
                       description: >-
                         Upon status query, the gateway return a list of possible
                         actions,
@@ -73944,6 +74021,185 @@ paths:
                       for example `150$ were authorized...`
                 description: A payment `status`
               example: *a57
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /extensions/{handle}:
+    get:
+      description: Get extension data by its `handle`
+      summary: Get extension
+      tags: &a58
+        - extensions
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `handle` of the extension
+          required: true
+          name: handle
+          in: path
+      responses:
+        "200":
+          description: Object with extension data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/extensionItemGet"
+              example: &a59
+                config:
+                  default_currency_code: USD
+                  env: prod
+                  intent_on_checkout: AUTHORIZE
+                  client_id: client_id
+                  secret: secret
+                info:
+                  name: Paypal standard payments
+                  description: >-
+                    Set up standard payments to present payment
+                    buttons         to your payers so they can pay with PayPal,
+                    debit and credit cards,         Pay Later options, Venmo,
+                    and alternative payment methods.
+                                  You can get started quickly with this 15-minute copy-and-paste integration.         If you have an older Checkout integration, you can upgrade your Checkout integration.
+                  url: https://developer.paypal.com/docs/checkout/standard/
+                  logo_url: https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg
+                handle: paypal_standard
+                actions:
+                  - handle: capture
+                    name: Capture
+                    description: Capture an authorized payment
+                  - handle: void
+                    name: Void
+                    description: Cancel an authorized payment
+                  - handle: refund
+                    name: Refund
+                    description: Refund a captured payment
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /extensions:
+    get:
+      description: List all extensions
+      summary: List all extensions
+      tags: *a58
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      responses:
+        "200":
+          description: array of extension data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/extensionItemGet"
+              example:
+                - *a59
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+  /extensions/{extension_handle}/{action_handle}:
+    post:
+      description: Invoke an `action` of extension
+      summary: Invoke action
+      tags: *a58
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `handle` of the extension
+          required: true
+          name: extension_handle
+          in: path
+        - schema:
+            type: string
+            description: The `handle` of the action
+          required: true
+          name: action_handle
+          in: path
+      requestBody:
+        description: The payload the specific action of the extension expects
+        content:
+          application/json:
+            schema:
+              nullable: true
+      responses:
+        "200":
+          description: Object with status data.
+          content:
+            application/json:
+              schema:
+                nullable: true
         400-500:
           description: error
           content:

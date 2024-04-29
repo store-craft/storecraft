@@ -22,6 +22,7 @@ import {
   discountTypeSchema,
   discountTypeUpsertSchema,
   errorSchema,
+  extensionItemGetSchema,
   filterMetaEnumSchema,
   fulfillOptionsEnumSchema,
   imageTypeSchema,
@@ -176,6 +177,7 @@ const create_all = () => {
   register_posts(registry);
   register_storefronts(registry);
   register_payments(registry);
+  register_extensions(registry);
 
   // register some utility types
   registry.register('Error', errorSchema);
@@ -2287,6 +2289,149 @@ const register_payments = registry => {
     ...apply_security()
   });  
 
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_extensions = registry => {
+  const slug_base = 'extensions'
+  const tags = ['extensions'];
+  const example_id = 'sf_65dc619ac40344c9a1dd6755';
+  const _extensionItemGetSchema = registry.register(
+    'extensionItemGet', extensionItemGetSchema
+  );
+
+  const example_get = {
+    "config": {
+        "default_currency_code": "USD",
+        "env": "prod",
+        "intent_on_checkout": "AUTHORIZE",
+        "client_id": "client_id",
+        "secret": "secret"
+    },
+    "info": {
+        "name": "Paypal standard payments",
+        "description": "Set up standard payments to present payment buttons \
+        to your payers so they can pay with PayPal, debit and credit cards, \
+        Pay Later options, Venmo, and alternative payment methods.\n      \
+        You can get started quickly with this 15-minute copy-and-paste integration. \
+        If you have an older Checkout integration, you can upgrade your Checkout integration.",
+        "url": "https://developer.paypal.com/docs/checkout/standard/",
+        "logo_url": "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg"
+    },
+    "handle": "paypal_standard",
+    "actions": [
+        {
+            "handle": "capture",
+            "name": "Capture",
+            "description": "Capture an authorized payment"
+        },
+        {
+            "handle": "void",
+            "name": "Void",
+            "description": "Cancel an authorized payment"
+        },
+        {
+            "handle": "refund",
+            "name": "Refund",
+            "description": "Refund a captured payment"
+        }
+    ]
+  }
+
+
+  registry.registerPath({
+    method: 'get',
+    path: `/extensions/{handle}`,
+    description: `Get extension data by its \`handle\``,
+    summary: `Get extension`,
+    tags,
+    request: {
+      params: z.object({
+        handle: z.string().openapi(
+          { 
+            description: `The \`handle\` of the extension`
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Object with extension data.`,
+        content: {
+          'application/json': {
+            schema: _extensionItemGetSchema,
+            example: example_get
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+
+
+  registry.registerPath({
+    method: 'get',
+    path: `/extensions`,
+    description: `List all extensions`,
+    summary: `List all extensions`,
+    tags,
+    responses: {
+      200: {
+        description: `array of extension data`,
+        content: {
+          'application/json': {
+            schema: z.array(_extensionItemGetSchema),
+            example: [example_get]
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+  
+
+  registry.registerPath({
+    method: 'post',
+    path: `/extensions/{extension_handle}/{action_handle}`,
+    description: 'Invoke an `action` of extension',
+    summary: `Invoke action`,
+    tags,
+    request: {
+      params: z.object({
+        extension_handle: z.string().openapi(
+          { 
+            description: `The \`handle\` of the extension`
+          }
+        ),
+        action_handle: z.string().openapi(
+          { 
+            description: `The \`handle\` of the action`
+          }
+        ),
+      }),
+      body: {
+        content: { "application/json": { schema:z.any() }},
+        description: 'The payload the specific action of the extension expects'
+      }
+    },
+    responses: {
+      200: {
+        description: `Object with status data.`,
+        content: {
+          'application/json': {
+            schema: z.any(),
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });  
+ 
 }
 
 

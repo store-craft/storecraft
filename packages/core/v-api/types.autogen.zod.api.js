@@ -689,16 +689,21 @@ export const configFieldSchema = z.object({
     })
     .describe("The type of the `field`"),
 });
-export const paymentGatewayInfoSchema = z.object({
-  name: z.string().describe("name of the gateway"),
-  description: z.string().optional().describe("description of the gateway"),
-  logo_url: z
-    .string()
-    .optional()
-    .describe("logo url (or even data-url) of the gateway"),
-  url: z.string().optional().describe("url of the gateway website"),
-});
-export const paymentGatewayActionSchema = z
+export const extensionInfoSchema = z
+  .object({
+    name: z.string().describe("name of the `extension`"),
+    description: z
+      .string()
+      .optional()
+      .describe("description of the `extension`"),
+    logo_url: z
+      .string()
+      .optional()
+      .describe("logo url (or even data-url) of the `extension`"),
+    url: z.string().optional().describe("url of the extension website"),
+  })
+  .describe("`extension` description, logos and urls");
+export const extensionActionSchema = z
   .object({
     name: z.string().describe("action name for display"),
     handle: z.string().describe("action handle for invocation at backend"),
@@ -708,13 +713,36 @@ export const paymentGatewayActionSchema = z
       .describe(
         "optional description of what will happen\nif the action is executed",
       ),
-    parameters: z
-      .array(configFieldSchema)
-      .optional()
-      .describe(
-        "Action might have extra parameters,\nfor example a partial refund action, may specify a variable value\nfor refunding, also with some of the `capture` actions,\nwhich may capture less than intended.",
-      ),
   })
+  .describe(
+    "Every `extension` have `actions`,  that are registered as\n**REST** endpoints",
+  );
+export const extensionItemGetSchema = z
+  .object({
+    info: extensionInfoSchema.describe(
+      "The info such as `name`, `description` etc..",
+    ),
+    actions: z
+      .array(extensionActionSchema)
+      .describe("A list of `actions` supported by the `extension`"),
+    config: z.any().describe("The extension's configuration"),
+    handle: z.string().describe("The `handle` of the `extension`"),
+  })
+  .describe("Upon querying the `extension`");
+export const paymentGatewayInfoSchema = extensionInfoSchema.describe(
+  "Payment gateway description, logos and urls",
+);
+export const paymentGatewayActionSchema = extensionActionSchema
+  .and(
+    z.object({
+      parameters: z
+        .array(configFieldSchema)
+        .optional()
+        .describe(
+          "Action might have extra parameters,\nfor example a partial refund action, may specify a variable value\nfor refunding, also with some of the `capture` actions,\nwhich may capture less than intended.",
+        ),
+    }),
+  )
   .describe(
     "Upon status query, the gateway return a list of possible actions,\nsuch as `void`, `capture`, `refund` etc...",
   );

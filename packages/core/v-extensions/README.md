@@ -1,0 +1,1 @@
+# Storecraft `extensions` types and logic

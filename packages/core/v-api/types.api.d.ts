@@ -1883,7 +1883,9 @@ export type OrdersStatisticsType = {
 }
 
 
-// payments
+// extensions
+
+
 
 export type ConfigField = {
   /**
@@ -1922,36 +1924,37 @@ export type ConfigField = {
 }
 
 /**
- * Payment gateway description, logos and urls
+ * @description `extension` description, logos and urls
  */
-export type PaymentGatewayInfo = {
+export type ExtensionInfo = {
   /** 
    * 
-   * @description name of the gateway 
+   * @description name of the `extension` 
    */
   name: string;
 
   /** 
-   * @description description of the gateway 
+   * @description description of the `extension` 
    */
   description?: string;
 
   /** 
-   * @description logo url (or even data-url) of the gateway 
+   * @description logo url (or even data-url) of the `extension` 
    */
   logo_url?: string;
 
   /** 
-   * @description url of the gateway website 
+   * @description url of the extension website 
    */
   url?: string;
 }
 
+
 /**
- * @description Upon status query, the gateway return a list of possible actions,
- * such as `void`, `capture`, `refund` etc... 
+ * @description Every `extension` have `actions`,  that are registered as 
+ * **REST** endpoints
  */
-export type PaymentGatewayAction = {
+export type ExtensionAction = {
   /** 
    * @description action name for display 
    */
@@ -1967,6 +1970,48 @@ export type PaymentGatewayAction = {
    * if the action is executed 
    */
   description?: string;
+}
+
+/**
+ * 
+ * @description Upon querying the `extension`
+ */
+export type ExtensionItemGet = {
+  /**
+   * @description The info such as `name`, `description` etc..
+   */
+  info: ExtensionInfo,
+  
+  /**
+   * @description A list of `actions` supported by the `extension`
+   */
+  actions: ExtensionAction[],
+
+  /**
+   * @description The extension's configuration
+   */
+  config: any,
+
+  /**
+   * @description The `handle` of the `extension`
+   */
+  handle: string;
+}
+
+
+// payments
+
+
+/**
+ * @description Payment gateway description, logos and urls
+ */
+export type PaymentGatewayInfo = ExtensionInfo
+
+/**
+ * @description Upon status query, the gateway return a list of possible actions,
+ * such as `void`, `capture`, `refund` etc... 
+ */
+export type PaymentGatewayAction = ExtensionAction & {
 
   /**
    * @description Action might have extra parameters, 

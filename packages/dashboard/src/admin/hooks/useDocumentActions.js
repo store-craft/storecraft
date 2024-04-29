@@ -26,16 +26,19 @@ import { App } from '@storecraft/core';
  * - Paginating by url navigation, for state saving.
  * - Context
  * 
+ * 
  * @template {{}} T The type of `document`
  * 
- * @param {(keyof App["db"]["resources"] | 'payments/gateways')} resource resource `identifier`
+ * 
+ * @param {(keyof App["db"]["resources"] | 'payments/gateways' | 'extensions')} resource 
+ * resource `identifier`
  * @param {string} document document `handle` or `id`
  * @param {string} slug resource `slug` at backend
  * @param {DocumentActionsMode} mode 
  * @param {string} [base] base64 encoded base `document` to merge with
  * 
  */
-export const useDocumentActions = (resource, document, slug, mode, base) => {
+export const useDocumentActions = (resource, document, slug, mode='edit', base) => {
   /** 
    * @type {React.MutableRefObject<
    *  import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<

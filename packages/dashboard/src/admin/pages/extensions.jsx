@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 
 /**
  * 
- * @typedef {import('@storecraft/core/v-api').PaymentGatewayItemGet} PaymentGatewayItemGet
+ * @typedef {import('@storecraft/core/v-api').ExtensionItemGet} ExtensionItemGet
  * 
  */
 
@@ -20,7 +20,7 @@ import { useMemo } from 'react'
  * @prop {React.ReactNode} [children]
  * 
  * @typedef {import('../comps//collection-view.jsx').CollectionViewComponentParams<
- *  string, PaymentGatewayItemGet> & 
+ *  string, ExtensionItemGet> & 
 *   InternalSpanWithLogoParams & 
 *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
 * } SpanWithLogoParams
@@ -76,13 +76,13 @@ export default ({}) => {
 
   /**
    * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  PaymentGatewayItemGet>
+   *  ExtensionItemGet>
    * }
    */ 
   const { 
     context, page, loading, 
     error, queryCount, 
-  } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
+  } = useCollectionsActions('extensions', '/apps/extensions');
   const context_mod = useMemo(
     () => {
       const { viewDocumentUrl } = context;
@@ -96,8 +96,9 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Payment Gateways ${page?.length>=0 ? `(${page?.length})` : ''}`} 
-                  className='mb-5' /> 
+    <Title 
+        children={`Extensions ${page?.length>=0 ? `(${page?.length})` : ''}`} 
+        className='mb-5' /> 
     <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 

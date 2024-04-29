@@ -88,7 +88,7 @@ export const apiAuthResultSchema = z
     access_token: apiTokenWithClaimsSchema.describe("The access token"),
     refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
   })
-  .describe("Result of `auth` request");
+  .describe("Result of `auth` request for `signin` / `signup` / `refresh`");
 export const tagTypeSchema = idableSchema
   .extend(timestampsSchema.shape)
   .extend({

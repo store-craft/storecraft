@@ -78,7 +78,7 @@ export const create = app => {
 
       for (const apikey of apikeys) {
         if(apikey.email === apikey_created_decoded_email) {
-          is_apikey_created_present  =true;
+          is_apikey_created_present = true;
         }
 
         assert.ok(apikey.tags.includes('apikey'), 'invalid tag for api key');

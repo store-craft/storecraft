@@ -337,6 +337,9 @@ export const verify_api_key = async (app, body) => {
     verified, 'auth/error'
   )
 
+  // delete the hashed password
+  delete apikey_user.password;
+
   return apikey_user;
 }
 

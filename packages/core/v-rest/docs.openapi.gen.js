@@ -40,6 +40,7 @@ import {
   productTypeUpsertSchema,
   shippingMethodTypeSchema,
   shippingMethodTypeUpsertSchema,
+  storecraftConfigSchema,
   storefrontTypeSchema,
   storefrontTypeUpsertSchema,
   tagTypeSchema, tagTypeUpsertSchema,
@@ -163,6 +164,7 @@ const create_all = () => {
   );
 
   // register routes
+  register_settings(registry);
   register_auth(registry);
   register_storage(registry);
   register_tags(registry);
@@ -388,6 +390,45 @@ const register_base_list = (
 /**
  * @param {OpenAPIRegistry} registry 
  */
+const register_settings = (registry) => {
+  registry.register('storecraftConfigSchema', storecraftConfigSchema);
+
+  registry.registerPath({
+    method: 'get',
+    path: `/settings`,
+    description: `Get the settings of your store`,
+    summary: `Get the settings of your store`,
+    tags: ['settings'],
+    responses: {
+      200: {
+        description: `Your storecraft settings`,
+        content: {
+          'application/json': {
+            schema: storecraftConfigSchema,
+            example: {
+              general_store_name: 'Wush Wush Games',
+              general_store_website: 'https://wish.games',
+              general_store_description: 'We sell retro video games',
+              general_store_support_email: 'support@wush.games',
+              auth_admins_emails: ['admin@wush.games'],
+              auth_password_hash_rounds: 10,
+              auth_secret_access_token: '<secret>',
+              auth_secret_refresh_token: '<secret>',
+              checkout_reserve_stock_on: 'never',
+              storage_rewrite_urls: 'https://cdn.wush.games/'
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
 const register_auth = registry => {
   const tags = ['auth'];
   const _signupTypeSchema = registry.register('AuthSignup', apiAuthSignupTypeSchema);
@@ -425,9 +466,9 @@ const register_auth = registry => {
   };
 
   [
-    { slug: '/auth/signup', schema_request: _signupTypeSchema, desc: 'Signup a user' },
-    { slug: '/auth/signin', schema_request: _signinTypeSchema, desc: 'Signin a user' },
-    { slug: '/auth/refresh', schema_request: _refreshTypeSchema, desc: 'Refresh a token' },
+    { slug: '/auth/signup', schema_request: _signupTypeSchema, desc: 'Signup a user', extra: {} },
+    { slug: '/auth/signin', schema_request: _signinTypeSchema, desc: 'Signin a user', extra: {} },
+    { slug: '/auth/refresh', schema_request: _refreshTypeSchema, desc: 'Refresh a token', extra: {} },
   ].forEach(
     it => {
       registry.registerPath({
@@ -457,7 +498,6 @@ const register_auth = registry => {
           },
           ...error() 
         },
-        ...apply_security()
       });
     }
   );

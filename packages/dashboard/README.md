@@ -11,6 +11,8 @@ First, run the development server:
 npm run dashboard:dev
 # or
 yarn dashboard:dev
+# or
+npm start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

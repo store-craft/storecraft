@@ -6,7 +6,7 @@ import FieldsView from '@/admin/comps/fields-view.jsx'
 import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { 
-  MInput, Div, withCard, 
+  MInput, withCard, 
   } from '@/admin/comps/common-fields.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
@@ -14,7 +14,7 @@ import ErrorMessage from '@/admin/comps/error-message.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import SecretView from '@/admin/comps/secret-view.jsx'
-import { CreateDate, withBling } from '@/admin/comps/common-ui.jsx'
+import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 // import StorageSettings from '@/admin/comps/settings-storage.jsx'
 
 const Backend = () => {
@@ -98,8 +98,7 @@ const root_schema = {
   ]
 }
 
-export default ({ collectionId, 
-                  mode, ...rest}) => {
+export default ({ ...rest }) => {
 
   const { id, base } = useParams()
   const ref_root = useRef()
@@ -131,17 +130,9 @@ export default ({ collectionId,
   return (
 <div className='w-full mx-auto'>
   <DocumentTitle major={['settings', 'main']} className='' />  
-  <RegularDocumentActions             
-             onClickSave={savePromise}
-             onClickReload={(async () => reload(false))}
-             id={docId}
-             className='mt-5'/>
-  <CreateDate time={doc?.updatedAt} rightText='updated at: '
-              key={doc?.updatedAt} className='mt-8' 
-              changes_made={false} />
-  <ShowIf show={hasLoaded} className='mt-8'>
+  <ShowIf show={hasLoaded}>
     <div className='w-full max-w-[40rem] --lg:w-fit --lg:max-w-none mx-auto'>
-      <EditMessage messages={error} className='w-full' />
+      <ErrorMessage error={error} className='w-full' />
       <FieldsView key={key} ref={ref_root} 
                   field={root_schema} 
                   value={ doc ?? {} } 

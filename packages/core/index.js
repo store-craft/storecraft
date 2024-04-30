@@ -1,5 +1,6 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
+import * as api from './v-api/index.js'
 export * from './v-api/types.api.enums.js'
 
 /** 
@@ -131,7 +132,7 @@ export class App {
 
     const c = this.#_config;
     const env = this.platform.env;
-    
+
     this.#_config = {
       ...c,
       auth_secret_access_token: c?.auth_secret_access_token ?? 
@@ -139,10 +140,23 @@ export class App {
       auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
                   env.SC_AUTH_SECRET_REFRESH_TOKEN,
       auth_password_hash_rounds: c?.auth_password_hash_rounds ?? 
-                parse_int(env.SC_AUTH_PASS_HASH_ROUNDS, 1000),
+                  parse_int(env.SC_AUTH_PASS_HASH_ROUNDS, 1000),
       auth_admins_emails: c?.auth_admins_emails ??  
-              env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
-                s => s.trim()).filter(Boolean) ?? []
+                  env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
+                    s => s.trim()).filter(Boolean) ?? [],
+      checkout_reserve_stock_on: c?.checkout_reserve_stock_on ?? 
+                  env.SC_CHECKOUT_RESERVE_STOCK_ON ?? 'never',
+      storage_rewrite_urls: c?.storage_rewrite_urls ?? 
+                  env.SC_STORAGE_REWRITE_URLS,
+      general_store_name: c?.general_store_name ?? 
+                  env.SC_GENERAL_STORE_NAME,
+      general_store_website: c?.general_store_website ?? 
+                  env.SC_GENERAL_STORE_WEBSITE,
+      general_store_description: c?.general_store_description ?? 
+                  env.SC_GENERAL_STORE_DESCRIPTION,
+      general_store_support_email: c?.general_store_support_email ?? 
+                  env.SC_GENERAL_STORE_SUPPORT_EMAIL
+
     }
 
     console.log('store-craft config', this.#_config);
@@ -174,8 +188,16 @@ export class App {
    * 
    * @description Get the REST API controller 
    */
-  get rest_api() { 
+  get rest_controller() { 
     return this.#_rest_controller; 
+  }
+
+  /** 
+   * 
+   * @description Get the main **API** logic 
+   */
+  get api() {
+    return api
   }
 
   /** 
@@ -325,7 +347,7 @@ export class App {
 
     console.log(request.url)
 
-    await this.rest_api.handler(request, polka_response);
+    await this.rest_controller.handler(request, polka_response);
     // await this._polka.handler(request, polka_response);
 
     // console.log('polka_response.body ', polka_response.body);

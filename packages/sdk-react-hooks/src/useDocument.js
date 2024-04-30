@@ -23,7 +23,7 @@ import {
  */
 
 /**
- * @template {import("@storecraft/core/v-api").BaseType} T the document type
+ * @template {any} T the document type
  * 
  * @param {string} resource the table `identifier`
  * @param {string} document the document `id` or `handle`

@@ -49695,12 +49695,12 @@ components:
         see <a href='#DiscountApplicationEnum'>#DiscountApplicationEnum</a>
   parameters: {}
 paths:
-  /settings:
+  /info/settings:
     get:
       description: Get the settings of your store
       summary: Get the settings of your store
       tags:
-        - settings
+        - info
       security:
         - apiKeyAuth: []
           bearerAuth: []

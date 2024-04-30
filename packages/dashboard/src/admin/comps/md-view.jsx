@@ -13,7 +13,7 @@ import { marked } from 'marked'
 const MDView = ({value, ...rest}) => {
   return (
 <div {...rest}>
-  <p className='md-view' 
+  <p className='--mdx md-view' 
     dangerouslySetInnerHTML={
       {
         __html : marked.parse(

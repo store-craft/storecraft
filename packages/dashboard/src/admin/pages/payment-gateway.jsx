@@ -29,8 +29,7 @@ const root_left_schema = {
           comp: withCard(MDView), comp_params: { className: 'w-full' },
         },
         {
-          key: 'description', name: 'Description', type: 'text', validate: false, 
-          editable: true, 
+          key: 'description', name: 'Description', 
           comp: withCard(MDView),  comp_params: { className: 'w-full' },
         },
         {

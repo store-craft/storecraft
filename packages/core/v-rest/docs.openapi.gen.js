@@ -395,10 +395,10 @@ const register_settings = (registry) => {
 
   registry.registerPath({
     method: 'get',
-    path: `/settings`,
+    path: `/info/settings`,
     description: `Get the settings of your store`,
     summary: `Get the settings of your store`,
-    tags: ['settings'],
+    tags: ['info'],
     responses: {
       200: {
         description: `Your storecraft settings`,

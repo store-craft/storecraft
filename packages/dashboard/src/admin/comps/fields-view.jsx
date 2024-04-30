@@ -106,19 +106,38 @@ const validateField = (field, value) => {
  * @property {string} [running_key] running key for leafs
  * @property {PubSub} [pubsub]
  * @property {D} [data] the entire original data
- * @property {Object<string, { get: () => any, set: (val: any) => void }>} [query] the entire original data
+ * @property {Record<string, { get: () => any, set?: (val: any) => void }>} [query] the entire original data
  */
 
 /**
- * @template {any} [V=any] value type
- * @template {any} [C=any] extra context
+ * Root view params
+ * 
+ * @template {any} [O={}] the entire original data type
+ * @template {any} [C={}] extra context
+ * 
  * 
  * @typedef {object} FieldViewParams
  * @property {string} [running_key] running key for leafs
  * @property {FieldData} field
+ * @property {O} value
+ * @property {string} [className]
+ * @property {C} [context]
+ * @property {boolean} isViewMode
+ * 
+ */
+
+/**
+ * @template {any} [V=any] value type
+ * @template {{}} [C={}] extra context
+ * @template {any} [O={}] the entire original data type
+ * 
+ * 
+ * @typedef {object} FieldNodeViewParams
+ * @property {string} [running_key] running key for leafs
+ * @property {FieldData} field
  * @property {V} value
  * @property {string} [className]
- * @property {FieldContextData & C} [context]
+ * @property {FieldContextData<O> & C} [context]
  * @property {boolean} isViewMode
  * 
  */
@@ -127,13 +146,14 @@ const validateField = (field, value) => {
  * Every view in the `fields-view` schema will be injected with
  * the following parameters
  * 
- * @template {any} [V=any] The `value` type
- * @template {any} [C={}] the extra `context` type
+ * @template V The `value` type
+ * @template [C={}] the extra `context` type
+ * @template [O={}] the entire original data type
  * 
  * @typedef {object} FieldLeafViewParams
  * @property {FieldData} [field]
  * @property {V} [value]
- * @property {FieldContextData<V> & C} [context]
+ * @property {FieldContextData<O> & C} [context]
  * @property {boolean} [disabled]
  * @property {(value: V) => void} [onChange]
  * @property {(error: string) => void} [setError]
@@ -170,13 +190,14 @@ const compute_running_key = (running_key, field_key) => {
 
 const FieldViewInternal = forwardRef(
   /**
-   * @template {any} V
-   * @template {any} C
+   * @template V
+   * @template C
+   * @template O
    * 
-   * @param {FieldViewParams<V, C>} param0 
+   * @param {FieldNodeViewParams<V, C, O>} param0 
    * @param {*} ref 
    * 
-   * @returns {React.ReactElement<FieldLeafViewParams>}
+   * @returns {React.ReactElement<FieldLeafViewParams<V, C, O>>}
    */
   (
     { 
@@ -190,8 +211,8 @@ const FieldViewInternal = forwardRef(
   const [v, setV] = useState(value ?? field.defaultValue)
 
   const isFieldEditablePlus = useCallback(
-    () => isFieldEditable(field) && !isViewMode
-    , [field, isViewMode]
+    () => isFieldEditable(field) && !isViewMode, 
+    [field, isViewMode]
   );
 
   const onChange_internal = useCallback(
@@ -203,13 +224,15 @@ const FieldViewInternal = forwardRef(
         pubsub.dispatch(EVENT_CHANGE)
         pubsub.dispatch(running_key, val)
       }
-    }, [isFieldEditablePlus, pubsub, running_key]
+    }, 
+    [isFieldEditablePlus, pubsub, running_key]
   );
 
   useEffect(
     () => {
       pubsub.dispatch(running_key, v)
-    }, [pubsub, running_key, v]
+    }, 
+    [pubsub, running_key, v]
   );
 
   useEffect(
@@ -279,7 +302,9 @@ const FieldViewInternal = forwardRef(
 
   return (
   <field.comp 
-      field={field} value={v} error={validationError} 
+      field={field} 
+      value={v} 
+      error={validationError} 
       setError={setValidationError}
       onChange={onChange_internal} 
       context={ctx}
@@ -293,14 +318,20 @@ const Div = ({...rest}) => (<div {...rest}/>)
 
 const FieldsViewInternal = forwardRef(
   /**
-   * @template {any} [V=any]
-   * @template {any} [C=any]
+   * @template V current value type
+   * @template C context type
+   * @template O original data type
    * 
-   * @param {FieldViewParams<V, C>} param0 
+   * @param {FieldNodeViewParams<V, C, O>} params 
    * 
    * @param {*} ref 
    */
-  ({ field, value, className, context={}, running_key, isViewMode=false, ...rest}, ref) => {
+  (
+    { 
+      field, value, className, context, running_key, isViewMode=false, ...rest
+    }, 
+    ref
+  ) => {
     
   running_key = compute_running_key(running_key, field.key)
     
@@ -354,8 +385,10 @@ const FieldsViewInternal = forwardRef(
   )
 
   const Layout = field.comp ?? Div
-  const { className : clsName, 
-    ...rest_comp_params } = field.comp_params ?? {};
+  const { 
+    className : clsName, 
+    ...rest_comp_params 
+  } = field.comp_params ?? {};
   const combined_className = `${className} ${clsName} 
             ${isViewMode ? 'pointer-events-none' : ''}`;
 
@@ -370,19 +403,25 @@ const FieldsViewInternal = forwardRef(
 
   return (
 <Layout 
-    {...rest_comp_params} field={field} value={value} 
-    children={Render} className={combined_className} />
+    {...rest_comp_params} 
+    field={field} 
+    value={value} 
+    children={Render} 
+    className={combined_className} />
   ) 
-}
+  }
 )
 
 const FieldsView = forwardRef(
   /**
    * 
-   * @param {FieldViewParams} param0 
+   * @template V
+   * @template {{}} [EC={}]
+   * 
+   * @param {FieldViewParams<V, EC>} params
    * @param {*} ref 
    */
-  ({ field, value, className, context={}, isViewMode=false, ...rest}, ref) => {
+  ({ field, value, className, context, isViewMode=false, ...rest}, ref) => {
 
     useEffect(
       () => {
@@ -390,11 +429,11 @@ const FieldsView = forwardRef(
       }, [value]
     )
 
-    /**@type {FieldContextData} */
+    /**@type {FieldContextData<V>} */
     const ctx = useMemo(
       () => {
         return {
-          ...context, 
+          ...(context ?? {}), 
           query: {
             all: {
               get: (validate=false) => ref.current.get(validate)
@@ -403,33 +442,37 @@ const FieldsView = forwardRef(
           data: value
         }
       }, [context, value]
-    )
+    );
 
     return (
       <FieldsViewInternal 
-          ref={ref} field={field} value={value} 
-          className={className} context={ctx} 
-          running_key={undefined} isViewMode={isViewMode} 
+          ref={ref} 
+          field={field} 
+          value={value} 
+          className={className} 
+          context={ctx} 
+          running_key={undefined} 
+          isViewMode={isViewMode} 
           {...rest} />
     )
   }
 )
 
-export const collect_validation_errors = (val) => {
+// export const collect_validation_errors = (val) => {
 
-  const drill = val => {
-    if(Array.isArray(val))
-    return val
+//   const drill = val => {
+//     if(Array.isArray(val))
+//     return val
   
-    return Object.entries(val).map(([k, v]) => {
-      return { 
-        key: k,
-        val: drill(v)
-      }
-    }).filter(it => !it.val[0])
-  }
+//     return Object.entries(val).map(([k, v]) => {
+//       return { 
+//         key: k,
+//         val: drill(v)
+//       }
+//     }).filter(it => !it.val[0])
+//   }
 
-  return drill(val).map(({key, val : [_, desc, name]}) => `${name}, ${desc}`)
-}
+//   return drill(val).map(({key, val : [_, desc, name]}) => `${name}, ${desc}`)
+// }
 
 export default FieldsView

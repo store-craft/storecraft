@@ -6,7 +6,7 @@ import { assert } from './utils.functional.js';
 
 /**
  * 
- * @param {import("../index.js").StorecraftConfig} config 
+ * @param {import("../index.js").StorecraftSDKConfig} config 
  * @param {string} path 
  */
 export const url = (config, path) => {

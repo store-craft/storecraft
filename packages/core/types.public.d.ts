@@ -14,14 +14,15 @@ export type ApiResponse = VPolkaResponse & {
 export type ApiPolka = Polka<ApiRequest, ApiResponse>;
 
 /**
- * Basic config for storecraft
+ * 
+ * @description Basic config for `storecraft`
  */
 export type Config = {
   
   /**
    *  
    * @description Seed admin emails, if absent will be infered at init by 
-   * `platform.env.SC_ADMIN_EMAILS` environment as CSV of emails 
+   * `platform.env.SC_AUTH_ADMIN_EMAILS` environment as CSV of emails 
    */
   auth_admins_emails?: string[];
 
@@ -34,17 +35,44 @@ export type Config = {
 
   /** 
    * 
-   * @description access token signing secret, if absent will be infered at init by 
-   * `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  
+   * @description access token signing secret, if absent will be infered 
+   * at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  
    */
   auth_secret_access_token: string;
 
   /** 
    * 
-   * @description refresh token signing secret, if absent will be infered at init by 
-   * `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment  
+   * @description refresh token signing secret, if absent will be infered at 
+   * init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment  
    */
   auth_secret_refresh_token: string;
+
+  /** 
+   * 
+   * @description (Optional) automatically reserve stock, if absent will be 
+   * infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` environment.
+   * @default 'never'
+   */
+  checkout_reserve_stock_on?: 'checkout_create' | 'checkout_complete' | 'never'
+
+  /** 
+   * 
+   * @description (Optional) Once object `storage` is used, you may have connected a 
+   * **CDN** to buckets to take advantage of faster assets serving instead of serving 
+   * from your server / the storage service directly. If you are using an cloud based 
+   * storage service such as AWS S3, it is very recommended to attach the bucket to 
+   * a **CDN** for super fast and efficient serving.
+   * 
+   * Take note, most cloud based storage services and `storecraft` drivers support creating 
+   * `presigned` urls for `download` / `upload`, which essentially delegate these operations
+   * to the storage services. However, **CDN** is always the best choice for assets serving
+   * cost and latency wise.
+   * 
+   * if absent will be infered at init by `platform.env.SC_STORAGE_REWRITE_URLS` environment.
+   * @default 'undefined'
+   */
+  storage_rewrite_urls?: string;
+
 }
 
 export { App } from './index.js'

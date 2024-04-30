@@ -27,61 +27,72 @@ const parse_int = (s, def) => {
 export class App {
 
   /** 
+   * 
    * @typedef {import('./v-platform/types.public.js').PlatformAdapter<
-   * PlatformNativeRequest, PlatformContext, H>
+   *  PlatformNativeRequest, PlatformContext, H>
    * } Platform
+   * 
    * @type {Platform} 
    */
   #_platform;
+
   /** 
-   * The private database driver
+   * 
+   * @description The private database driver
    * @type {D} 
-   **/ 
+   */ 
   #_db_driver;
 
   /** 
-   * The private storage driver
+   * 
+   * @description The private storage driver
    * @type {S} 
-   **/ 
+   */ 
   #_storage;
 
   /** 
-   * The payment gateways
+   * 
+   * @description The payment gateways
    * 
    * @type {Record<string, payment_gateway>} 
-   **/ 
+   */ 
   #_payment_gateways;
 
   /** 
    * 
-   * The mailer driver
+   * @description The mailer driver
+   * 
    * @type {mailer} 
-   **/ 
+   */ 
   #_mailer;
 
   /** 
    * 
-   * The extensions
+   * @description The extensions
+   * 
    * @type {Record<string, extension>} 
-   **/ 
+   */ 
   #_extensions;
 
   /** 
-   * The Storecraft App Config
+   * @description The Storecraft App Config
+   * 
    * @type {Config} 
-   **/ 
+   */ 
   #_config;
 
   /** 
-   * The REST API controller
+   * @description The REST API controller
+   * 
    * @type {ReturnType<create_rest_api>} 
-   **/ 
+   */ 
   #_rest_controller;
 
   /** 
-   * Flag for app is ready 
+   * @description Flag for app is ready 
+   * 
    * @type {boolean} 
-   **/ 
+   */ 
   #_is_ready;
 
   /**
@@ -110,14 +121,17 @@ export class App {
   }
 
   /**
-   * After init, we inspect for missing config values and try to 
+   * 
+   * @description After init, we inspect for missing config values and try to 
    * find them in platform environment.
    */
   #settle_config_after_init() {
     if(!this.platform)
       return;
+
     const c = this.#_config;
     const env = this.platform.env;
+    
     this.#_config = {
       ...c,
       auth_secret_access_token: c?.auth_secret_access_token ?? 
@@ -136,7 +150,7 @@ export class App {
 
   /**
    * 
-   * Initialize the Application
+   * @description Initialize the Application
    */
   async init() {
     try{
@@ -158,76 +172,76 @@ export class App {
 
   /** 
    * 
-   * Get the REST API controller 
-   **/
+   * @description Get the REST API controller 
+   */
   get rest_api() { 
     return this.#_rest_controller; 
   }
 
   /** 
    * 
-   * Get the Database driver 
-   **/
+   * @description Get the Database driver 
+   */
   get db() { 
     return this.#_db_driver; 
   }
 
   /** 
    * 
-   * Get the native platform object 
-   **/
+   * @description Get the native platform object 
+   */
   get platform() { 
     return this.#_platform; 
   }
 
   /** 
    * 
-   * Get the native storage object 
-   **/
+   * @description Get the native storage object 
+   */
   get storage() { 
     return this.#_storage; 
   }
 
   /** 
    * 
-   * Get the payment gateways 
-   **/
+   * @description Get the payment gateways 
+   */
   get gateways() { 
     return this.#_payment_gateways; 
   }
 
   /** 
    * 
-   * Mailer driver 
-   **/
+   * @description Mailer driver 
+   */
   get mailer() { 
     return this.#_mailer; 
   }
 
   /** 
    * 
-   * extensions
+   * @description extensions
    */
   get extensions() { 
     return this.#_extensions; 
   }
 
   /** 
-   * Config 
-   **/
+   * @description Config 
+   */
   get config() { 
     return this.#_config; 
   }
 
   /**
-   * Is the app ready ?
+   * @description Is the app ready ?
    */
   get ready() { 
     return this.#_is_ready; 
   }
 
   /**
-   * Get a payment gateway by handle
+   * @description Get a payment gateway by handle
    * 
    * @param {string} handle 
    */
@@ -236,7 +250,7 @@ export class App {
   }
 
   /**
-   * Process a request with context in the native platform
+   * @description Process a request with context in the native platform
    * 
    * @param {PlatformNativeRequest} req
    * @param {PlatformContext} context 

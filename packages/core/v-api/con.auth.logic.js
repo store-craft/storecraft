@@ -33,7 +33,7 @@ export const removeByEmail = async (app, email) => {
  * @param {string} email 
  */  
 const isAdminEmail = (app, email) => {
-  return app.config.admins_emails.includes(email);
+  return app.config.auth_admins_emails.includes(email);
 }
 
 /**

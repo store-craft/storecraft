@@ -126,8 +126,8 @@ export class App {
                   env.SC_AUTH_SECRET_REFRESH_TOKEN,
       auth_password_hash_rounds: c?.auth_password_hash_rounds ?? 
                 parse_int(env.SC_AUTH_PASS_HASH_ROUNDS, 1000),
-      admins_emails: c?.admins_emails ??  
-              env.SC_ADMINS_EMAILS?.split(',').map(
+      auth_admins_emails: c?.auth_admins_emails ??  
+              env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
                 s => s.trim()).filter(Boolean) ?? []
     }
 

@@ -17,12 +17,13 @@ export type ApiPolka = Polka<ApiRequest, ApiResponse>;
  * Basic config for storecraft
  */
 export type Config = {
+  
   /**
    *  
    * @description Seed admin emails, if absent will be infered at init by 
    * `platform.env.SC_ADMIN_EMAILS` environment as CSV of emails 
    */
-  admins_emails?: string[];
+  auth_admins_emails?: string[];
 
   /** 
    * 

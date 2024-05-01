@@ -1,3 +1,4 @@
+import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
 import { StorecraftSDK } from '../index.js';
 import { fetchApiWithAuth, url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
@@ -38,8 +39,6 @@ export default class Auth {
    */
   constructor(sdk) {
     this.#sdk = sdk
-    // this.USER_KEY = `storecraft_admin_${context.config.email}`
-    // this.broadcast_channel = new BroadcastChannel(this.USER_KEY)
   }
 
   /**
@@ -74,33 +73,6 @@ export default class Auth {
 
 
   init() {
-    // const that = this
-    // //
-    // this.broadcast_channel.onmessage = (e) => {
-    //   this.#_update_and_notify_subscribers(e.data, false)
-    // }
-
-    // // load saved user
-    // this.currentAuth = LS.get(this.USER_KEY)
-
-    // console.log('this.currentUser', this.currentAuth);
-
-    // if (typeof window !== 'undefined') {
-    //   window.addEventListener('blur', this.#save_user);
-    //   window.addEventListener('beforeunload', this.#save_user)
-    // }
-
-    // // let's findout and re-auth of needed
-    // if(this.currentAuth) {
-    //   if(this.isAuthenticated) {
-    //     this.#_update_and_notify_subscribers(
-    //       this.currentAuth, false
-    //     );
-    //   } else {
-    //     // let's try to authenticate
-    //     this.reAuthenticate();
-    //   }
-    // }
   }
 
   /**
@@ -171,7 +143,7 @@ export default class Auth {
         payload = await auth_res.json();
       }
 
-      this.#_update_and_notify_subscribers(payload, false);
+      this.#_update_and_notify_subscribers(payload);
 
       return payload;
     }
@@ -231,25 +203,18 @@ export default class Auth {
   /**
    * 
    * @param {import('@storecraft/core/v-api').ApiAuthResult} user 
-   * @param {boolean} [broadcast=false] 
    */
-  #_update_and_notify_subscribers = (user, broadcast=false) => {
+  #_update_and_notify_subscribers = (user) => {
     this.currentAuth = user
     this.notify_subscribers();
-    if(broadcast)
-      this.#_broadcast();
   }
 
-  #_broadcast = () => {
-    // this.broadcast_channel.postMessage(
-    //   this.currentUser
-    // );
-  }
 
   /**
    * 
    * @param {string} email 
    * @param {string} password 
+   * 
    * 
    * @returns {Promise<import('@storecraft/core/v-api').ApiAuthResult>}
    */
@@ -280,7 +245,7 @@ export default class Auth {
     // console.log('auth_result', payload)
 
     this.#_update_and_notify_subscribers(
-      payload, true
+      payload
     );
 
     return payload;
@@ -315,7 +280,7 @@ export default class Auth {
     const payload = await res.json();
 
     this.#_update_and_notify_subscribers(
-      payload, true
+      payload
     );
 
     return payload;
@@ -326,23 +291,9 @@ export default class Auth {
     console.log('signout');
 
     this.#_update_and_notify_subscribers(
-      undefined, true
+      undefined
     );
 
-  }
-
-  list_api_keys_auth_users = async () => {
-
-    /** @type {import('@storecraft/core/v-api').AuthUserType[]} */
-    const items = await fetchApiWithAuth(
-      this.#sdk,
-      '/auth/apikeys',
-      {
-        method: 'get'
-      }
-    );
-
-    return items;
   }
 
 
@@ -360,17 +311,71 @@ export default class Auth {
   }
 
 
-  remove_auth_user = async () => {
-    /** @type {import('@storecraft/core/v-api').ApiKeyResult} */
+  /**
+   * 
+   * 
+   * @param {string} email_or_id
+   */
+  get_auth_user = async (email_or_id) => {
+    /** @type {import('@storecraft/core/v-api').AuthUserType} */
     const item = await fetchApiWithAuth(
       this.#sdk,
-      '/auth/apikeys',
+      `/auth/users/${email_or_id}`,
       {
-        method: 'post'
+        method: 'get'
       }
     );
 
-    return item.apikey;
+    return item;
+  }
+
+  /**
+   * 
+   * 
+   * @param {string} email_or_id
+   * 
+   */
+  remove_auth_user = async (email_or_id) => {
+    return fetchApiWithAuth(
+      this.#sdk,
+      `/auth/users/${email_or_id}`,
+      {
+        method: 'delete'
+      }
+    );
+  }
+
+  /**
+   * 
+   * 
+   * @param {import('@storecraft/core/v-api').ApiQuery} query
+   * 
+   */
+  list_auth_user = async (query) => {
+    const sq = api_query_to_searchparams(query);
+
+    return fetchApiWithAuth(
+      this.#sdk,
+      `/auth/users?${sq.toString()}`,
+      {
+        method: 'get'
+      }
+    );
+  }
+
+
+  list_api_keys_auth_users = async () => {
+
+    /** @type {import('@storecraft/core/v-api').AuthUserType[]} */
+    const items = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/apikeys',
+      {
+        method: 'get'
+      }
+    );
+
+    return items;
   }
 
 }

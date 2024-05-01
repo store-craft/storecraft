@@ -7,7 +7,7 @@ const CONFIG_KEY = `storecraft_latest_config`;
 
 /**
  * 
- * @returns {import("@storecraft/sdk").StorecraftConfig}
+ * @returns {import("@storecraft/sdk").StorecraftSDKConfig}
  */
 export const getLatestConfig = () => {
   return sdk?.config ?? LS.get(CONFIG_KEY);
@@ -22,7 +22,7 @@ var sdk = new StorecraftSDK();
 
 /**
  * 
- * @param {import("@storecraft/sdk").StorecraftConfig} [config]
+ * @param {import("@storecraft/sdk").StorecraftSDKConfig} [config]
  */
 const save_config = (config={}) => {
   LS.set(CONFIG_KEY, config);
@@ -31,7 +31,7 @@ const save_config = (config={}) => {
 
 
 /**
- * @param {import("@storecraft/sdk").StorecraftConfig} config 
+ * @param {import("@storecraft/sdk").StorecraftSDKConfig} config 
  */
 const internal_updateConfig = (config) => {
   sdk.updateConfig(config);
@@ -44,7 +44,7 @@ const internal_updateConfig = (config) => {
  * with realtime reports about `auth`
  * 
  * 
- * @param {import("@storecraft/sdk").StorecraftConfig} [config]
+ * @param {import("@storecraft/sdk").StorecraftSDKConfig} [config]
  * 
  */
 export const useStorecraft = (config=getLatestConfig()) => {
@@ -55,7 +55,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
 
   const updateConfig = useCallback(
     /**
-     * @param {import("@storecraft/sdk").StorecraftConfig} config 
+     * @param {import("@storecraft/sdk").StorecraftSDKConfig} config 
      */
     (config) => {
       internal_updateConfig(config);
@@ -63,6 +63,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
       trigger();
     }, [trigger]
   );
+  
 
   useEffect(
     () => {

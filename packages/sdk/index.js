@@ -28,7 +28,7 @@ import Storage from './src/storage.js'
 
 /**
  * 
- * @typedef {object} StorecraftConfig The `storecraft` **SDK** config
+ * @typedef {object} StorecraftSDKConfig The `storecraft` **SDK** config
  * @property {string} [endpoint] Endpoint of `backend`
  * @property {SdkConfigAuth} [auth] `auth` info, may be either `apikey` or
  * `jwt` results
@@ -39,11 +39,11 @@ import Storage from './src/storage.js'
  */
 export class StorecraftSDK {
 
-  /**@type {StorecraftConfig} */
+  /**@type {StorecraftSDKConfig} */
   #_config = undefined;
 
   /**
-   * @param {StorecraftConfig} [config] 
+   * @param {StorecraftSDKConfig} [config] 
    */  
   constructor(config) {
     this.#_config = config;
@@ -69,7 +69,7 @@ export class StorecraftSDK {
   }
 
   /**
-   * @param {StorecraftConfig} [config] 
+   * @param {StorecraftSDKConfig} [config] 
    */  
   updateConfig(config) {
     this.#_config = config;
@@ -82,14 +82,14 @@ export class StorecraftSDK {
 }
 
 /**
- * @param {StorecraftConfig} config 
+ * @param {StorecraftSDKConfig} config 
  */
 export const validateConfig = (config) => {
   return true;
 }
 
 /**
- * @param {StorecraftConfig} [config] 
+ * @param {StorecraftSDKConfig} [config] 
  */  
 export const create = (config) => { 
   const sdk = new StorecraftSDK(config);

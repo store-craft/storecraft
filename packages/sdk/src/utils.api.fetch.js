@@ -6,7 +6,7 @@ import { assert } from './utils.functional.js';
 
 /**
  * 
- * @param {import("../index.js").StorecraftConfig} config 
+ * @param {import("../index.js").StorecraftSDKConfig} config 
  * @param {string} path 
  */
 export const url = (config, path) => {
@@ -73,6 +73,8 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * 
+ * 
+ * @throws {import('@storecraft/core/v-api').error}
  * 
  * @returns {Promise<R>}
  */ 

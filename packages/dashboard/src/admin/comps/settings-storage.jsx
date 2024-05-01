@@ -45,7 +45,7 @@ const FirebaseStorage = ({ onChange, params }) => {
                 border-gray-700 dark:border-gray-400'
       children='Firebase Storage' />
   <HR dashed={true} className='my-5' />
-  </div>    
+  </div>
   {
     [
       {

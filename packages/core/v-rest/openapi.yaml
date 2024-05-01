@@ -19,6 +19,104 @@ components:
       in: header
       name: X-API-KEY
   schemas:
+    storecraftConfigSchema:
+      type: object
+      properties:
+        general_store_name:
+          type: string
+          description: |-
+            The store name
+            `platform.env.SC_GENERAL_STORE_NAME` environment
+        general_store_website:
+          type: string
+          description: |-
+            The store website
+            `platform.env.SC_GENERAL_STORE_WEBSITE` environment
+        general_store_description:
+          type: string
+          description: |-
+            The store description
+            `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
+        general_store_support_email:
+          type: string
+          description: |-
+            The store support email
+            `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
+        auth_admins_emails:
+          type: array
+          items:
+            type: string
+          description: |-
+            Seed admin emails, if absent will be infered at init by
+            `platform.env.SC_AUTH_ADMIN_EMAILS` environment as CSV of emails
+        auth_password_hash_rounds:
+          type: number
+          description: |-
+            password hash rounds, if absent will be infered at init by
+            `platform.env.SC_AUTH_PASS_HASH_ROUNDS` environment
+        auth_secret_access_token:
+          type: string
+          description: |-
+            access token signing secret, if absent will be infered
+            at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment
+        auth_secret_refresh_token:
+          type: string
+          description: |-
+            refresh token signing secret, if absent will be infered at
+            init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment
+        checkout_reserve_stock_on:
+          anyOf:
+            - type: string
+              enum:
+                - checkout_create
+            - type: string
+              enum:
+                - checkout_complete
+            - type: string
+              enum:
+                - never
+          default: never
+          description: >-
+            (Optional) automatically reserve stock, if absent will be
+
+            infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON`
+            environment.
+        storage_rewrite_urls:
+          type: string
+          default: undefined
+          description: >-
+            (Optional) Once object `storage` is used, you may have connected a
+
+            **CDN** to buckets to take advantage of faster assets serving
+            instead of serving
+
+            from your server / the storage service directly. If you are using an
+            cloud based
+
+            storage service such as AWS S3, it is very recommended to attach the
+            bucket to
+
+            a **CDN** for super fast and efficient serving.
+
+
+            Take note, most cloud based storage services and `storecraft`
+            drivers support creating
+
+            `presigned` urls for `download` / `upload`, which essentially
+            delegate these operations
+
+            to the storage services. However, **CDN** is always the best choice
+            for assets serving
+
+            cost and latency wise.
+
+
+            if absent will be infered at init by
+            `platform.env.SC_STORAGE_REWRITE_URLS` environment.
+      required:
+        - auth_secret_access_token
+        - auth_secret_refresh_token
+      description: Basic config for `storecraft`
     AuthSignup:
       type: object
       properties:
@@ -49597,16 +49695,168 @@ components:
         see <a href='#DiscountApplicationEnum'>#DiscountApplicationEnum</a>
   parameters: {}
 paths:
+  /info/settings:
+    get:
+      description: Get the settings of your store
+      summary: Get the settings of your store
+      tags:
+        - info
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      responses:
+        "200":
+          description: Your storecraft settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  general_store_name:
+                    type: string
+                    description: |-
+                      The store name
+                      `platform.env.SC_GENERAL_STORE_NAME` environment
+                  general_store_website:
+                    type: string
+                    description: |-
+                      The store website
+                      `platform.env.SC_GENERAL_STORE_WEBSITE` environment
+                  general_store_description:
+                    type: string
+                    description: |-
+                      The store description
+                      `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
+                  general_store_support_email:
+                    type: string
+                    description: |-
+                      The store support email
+                      `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
+                  auth_admins_emails:
+                    type: array
+                    items:
+                      type: string
+                    description: >-
+                      Seed admin emails, if absent will be infered at init by
+
+                      `platform.env.SC_AUTH_ADMIN_EMAILS` environment as CSV of
+                      emails
+                  auth_password_hash_rounds:
+                    type: number
+                    description: |-
+                      password hash rounds, if absent will be infered at init by
+                      `platform.env.SC_AUTH_PASS_HASH_ROUNDS` environment
+                  auth_secret_access_token:
+                    type: string
+                    description: >-
+                      access token signing secret, if absent will be infered
+
+                      at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN`
+                      environment
+                  auth_secret_refresh_token:
+                    type: string
+                    description: >-
+                      refresh token signing secret, if absent will be infered at
+
+                      init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN`
+                      environment
+                  checkout_reserve_stock_on:
+                    anyOf:
+                      - type: string
+                        enum:
+                          - checkout_create
+                      - type: string
+                        enum:
+                          - checkout_complete
+                      - type: string
+                        enum:
+                          - never
+                    default: never
+                    description: >-
+                      (Optional) automatically reserve stock, if absent will be
+
+                      infered at init by
+                      `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` environment.
+                  storage_rewrite_urls:
+                    type: string
+                    default: undefined
+                    description: >-
+                      (Optional) Once object `storage` is used, you may have
+                      connected a
+
+                      **CDN** to buckets to take advantage of faster assets
+                      serving instead of serving
+
+                      from your server / the storage service directly. If you
+                      are using an cloud based
+
+                      storage service such as AWS S3, it is very recommended to
+                      attach the bucket to
+
+                      a **CDN** for super fast and efficient serving.
+
+
+                      Take note, most cloud based storage services and
+                      `storecraft` drivers support creating
+
+                      `presigned` urls for `download` / `upload`, which
+                      essentially delegate these operations
+
+                      to the storage services. However, **CDN** is always the
+                      best choice for assets serving
+
+                      cost and latency wise.
+
+
+                      if absent will be infered at init by
+                      `platform.env.SC_STORAGE_REWRITE_URLS` environment.
+                required:
+                  - auth_secret_access_token
+                  - auth_secret_refresh_token
+                description: Basic config for `storecraft`
+              example:
+                general_store_name: Wush Wush Games
+                general_store_website: https://wish.games
+                general_store_description: We sell retro video games
+                general_store_support_email: support@wush.games
+                auth_admins_emails:
+                  - admin@wush.games
+                auth_password_hash_rounds: 10
+                auth_secret_access_token: <secret>
+                auth_secret_refresh_token: <secret>
+                checkout_reserve_stock_on: never
+                storage_rewrite_urls: https://cdn.wush.games/
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
   /auth/signup:
     post:
       description: Signup a user
       summary: Signup a user
       tags: &a1
         - auth
-      security:
-        - apiKeyAuth: []
-          bearerAuth: []
-          basicAuth: []
       requestBody:
         content:
           application/json:
@@ -49668,10 +49918,6 @@ paths:
       description: Signin a user
       summary: Signin a user
       tags: *a1
-      security:
-        - apiKeyAuth: []
-          bearerAuth: []
-          basicAuth: []
       requestBody:
         content:
           application/json:
@@ -49714,10 +49960,6 @@ paths:
       description: Refresh a token
       summary: Refresh a token
       tags: *a1
-      security:
-        - apiKeyAuth: []
-          bearerAuth: []
-          basicAuth: []
       requestBody:
         content:
           application/json:
@@ -49755,7 +49997,158 @@ paths:
                           type: array
                           items:
                             type: string
-  /auth/remove/{email_or_id}:
+  /auth/users/{email_or_id}:
+    get:
+      description: get auth user
+      summary: Get auth user
+      tags: *a1
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `id` or `email` of auth user
+            example: "`au_65f98390d6a34550cdc651a1` or email like `a@a.com`"
+          required: true
+          name: email_or_id
+          in: path
+      responses:
+        "200":
+          description: api key info
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      created_at:
+                        type: string
+                        description: ISO string creation time
+                      updated_at:
+                        type: string
+                        description: ISO string update time
+                      media:
+                        type: array
+                        items:
+                          type: string
+                        description: List of images urls
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                              description: The key
+                            value:
+                              type: string
+                              description: The value
+                          required:
+                            - key
+                          description: Attribute type, a key/value storage
+                        description: List of attributes
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                        description: List of tags , example ['genere_action', 'rated_M', ...]
+                      description:
+                        type: string
+                        description: Rich description
+                      active:
+                        type: boolean
+                        description: Is the entity active ?
+                    description: with `id`
+                  - type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        description: Email of user
+                      password:
+                        type: string
+                        minLength: 4
+                        maxLength: 20
+                        description: password
+                    required:
+                      - email
+                      - password
+                    description: Auth base type
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID
+                      confirmed_mail:
+                        type: boolean
+                        description: Is the email confirmed ?
+                      roles:
+                        type: array
+                        items:
+                          anyOf:
+                            - type: string
+                              enum:
+                                - admin
+                            - type: string
+                              enum:
+                                - user
+                            - type: string
+                          description: Role of authenticated user
+                        description: list of roles and authorizations of the user
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                        description: tags
+                    required:
+                      - id
+                description: Auth user type
+              example:
+                id: au_662f70821937f16320a8debb
+                email: au_662f70821937f16320a8debb@apikey.storecraft.api
+                confirmed_mail: false
+                roles:
+                  - admin
+                tags:
+                  - apikey
+                active: true
+                description: "This user is a created apikey with roles: [admin]"
+                created_at: 2024-04-29T10:03:46.835Z
+                updated_at: 2024-04-29T10:03:46.835Z
+                search:
+                  - email:true
+                  - email:au_662f70821937f16320a8debb@apikey.storecraft.api
+                  - au_662f70821937f16320a8debb@apikey.storecraft.api
+                  - confirmed_mail:false
+                  - tag:apikey
+                  - au_662f70821937f16320a8debb
+                  - role:admin
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
     delete:
       description: Remove auth user
       summary: Remove auth user
@@ -50050,7 +50443,7 @@ paths:
                           type: array
                           items:
                             type: string
-  /auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
+  /auth/users?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       description: Query and Filter Authenticated users
       summary: Query / Filter auth users

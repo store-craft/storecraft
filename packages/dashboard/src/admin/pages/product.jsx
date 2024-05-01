@@ -167,7 +167,6 @@ const root_right_schema = {
         }
       ) 
     },
-    
   ]
 }
 

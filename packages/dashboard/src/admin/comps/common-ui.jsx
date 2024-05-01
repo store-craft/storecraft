@@ -307,7 +307,8 @@ export const Card = (
 
   return (
 <div  {...rest}>
-  <div className={`w-full text-left 
+  <div 
+      className={`w-full text-left 
                   ${border ? 'border rounded-lg shadow-sm dark:shadow-xl  p-5 ' + cardClass : ''}
                 `}>
 
@@ -340,9 +341,10 @@ export const Card = (
                   bg-red-400/25 border border-red-400 rounded-md p-3 mt-5 '>
         <BiErrorCircle className='flex-inline text-xl flex-shrink-0 opacity-70' /> 
         <div children={error} className='ml-3' />
-        <IoClose className='flex-inline absolute top-1 right-1 
-                            cursor-pointer text-base flex-shrink-0 opacity-90' 
-                 onClick={() => setError(undefined)}/>
+        <IoClose 
+            className='flex-inline absolute top-1 right-1 
+                       cursor-pointer text-base flex-shrink-0 opacity-90' 
+            onClick={() => setError && setError(undefined)}/>
       </div>
     }
   </div>

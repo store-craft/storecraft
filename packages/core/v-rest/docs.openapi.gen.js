@@ -40,6 +40,7 @@ import {
   productTypeUpsertSchema,
   shippingMethodTypeSchema,
   shippingMethodTypeUpsertSchema,
+  storecraftConfigSchema,
   storefrontTypeSchema,
   storefrontTypeUpsertSchema,
   tagTypeSchema, tagTypeUpsertSchema,
@@ -163,6 +164,7 @@ const create_all = () => {
   );
 
   // register routes
+  register_settings(registry);
   register_auth(registry);
   register_storage(registry);
   register_tags(registry);
@@ -388,6 +390,45 @@ const register_base_list = (
 /**
  * @param {OpenAPIRegistry} registry 
  */
+const register_settings = (registry) => {
+  registry.register('storecraftConfigSchema', storecraftConfigSchema);
+
+  registry.registerPath({
+    method: 'get',
+    path: `/info/settings`,
+    description: `Get the settings of your store`,
+    summary: `Get the settings of your store`,
+    tags: ['info'],
+    responses: {
+      200: {
+        description: `Your storecraft settings`,
+        content: {
+          'application/json': {
+            schema: storecraftConfigSchema,
+            example: {
+              general_store_name: 'Wush Wush Games',
+              general_store_website: 'https://wish.games',
+              general_store_description: 'We sell retro video games',
+              general_store_support_email: 'support@wush.games',
+              auth_admins_emails: ['admin@wush.games'],
+              auth_password_hash_rounds: 10,
+              auth_secret_access_token: '<secret>',
+              auth_secret_refresh_token: '<secret>',
+              checkout_reserve_stock_on: 'never',
+              storage_rewrite_urls: 'https://cdn.wush.games/'
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
 const register_auth = registry => {
   const tags = ['auth'];
   const _signupTypeSchema = registry.register('AuthSignup', apiAuthSignupTypeSchema);
@@ -425,9 +466,9 @@ const register_auth = registry => {
   };
 
   [
-    { slug: '/auth/signup', schema_request: _signupTypeSchema, desc: 'Signup a user' },
-    { slug: '/auth/signin', schema_request: _signinTypeSchema, desc: 'Signin a user' },
-    { slug: '/auth/refresh', schema_request: _refreshTypeSchema, desc: 'Refresh a token' },
+    { slug: '/auth/signup', schema_request: _signupTypeSchema, desc: 'Signup a user', extra: {} },
+    { slug: '/auth/signin', schema_request: _signinTypeSchema, desc: 'Signin a user', extra: {} },
+    { slug: '/auth/refresh', schema_request: _refreshTypeSchema, desc: 'Refresh a token', extra: {} },
   ].forEach(
     it => {
       registry.registerPath({
@@ -457,7 +498,6 @@ const register_auth = registry => {
           },
           ...error() 
         },
-        ...apply_security()
       });
     }
   );
@@ -465,8 +505,65 @@ const register_auth = registry => {
   // remove a auth user
   registry.registerPath(
     {
+      method: 'get',
+      path: '/auth/users/{email_or_id}',
+      description: 'get auth user',
+      summary: 'Get auth user',
+      tags,
+      request: {
+        params: z.object({
+          email_or_id: z.string().openapi(
+            { 
+              example: `\`au_65f98390d6a34550cdc651a1\` or email like \`a@a.com\``,
+              description: `The \`id\` or \`email\` of auth user`
+            }
+          ),
+        }),
+      },
+      responses: {
+        200: {
+          description: 'api key info',
+          content: {
+            "application/json": {
+              schema: authUserTypeSchema,
+              example: {
+                "id": "au_662f70821937f16320a8debb",
+                "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
+                "confirmed_mail": false,
+                "roles": [
+                    "admin"
+                ],
+                "tags": [
+                    "apikey"
+                ],
+                "active": true,
+                "description": "This user is a created apikey with roles: [admin]",
+                "created_at": "2024-04-29T10:03:46.835Z",
+                "updated_at": "2024-04-29T10:03:46.835Z",
+                "search": [
+                    "email:true",
+                    "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
+                    "au_662f70821937f16320a8debb@apikey.storecraft.api",
+                    "confirmed_mail:false",
+                    "tag:apikey",
+                    "au_662f70821937f16320a8debb",
+                    "role:admin"
+                ]
+              }
+            }
+          }
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
+
+  // remove a auth user
+  registry.registerPath(
+    {
       method: 'delete',
-      path: '/auth/remove/{email_or_id}',
+      path: '/auth/users/{email_or_id}',
       description: 'Remove auth user',
       summary: 'Remove auth user',
       tags,
@@ -496,6 +593,7 @@ const register_auth = registry => {
     apikey: 'eyJzdWIiOiJhdV82NWY5ODM5MGQ2YTM0NTUwY2RjNjUxYTEiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTA4NTEwMDksImV4cCI6MTcxMDg1NDYwOX0'
   }
 
+  
   registry.registerPath(
     {
       method: 'post',
@@ -646,7 +744,7 @@ const register_auth = registry => {
   registry.registerPath(
     {
       method: 'get',
-      path: `/auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
+      path: `/auth/users?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
       description: 'Query and Filter Authenticated users',
       summary: 'Query / Filter auth users',
       tags,

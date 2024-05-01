@@ -351,7 +351,7 @@ export default class Auth {
    * @param {import('@storecraft/core/v-api').ApiQuery} query
    * 
    */
-  list_auth_user = async (query) => {
+  list_auth_users = async (query) => {
     const sq = api_query_to_searchparams(query);
 
     return fetchApiWithAuth(

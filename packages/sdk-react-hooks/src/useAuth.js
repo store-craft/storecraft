@@ -35,7 +35,17 @@ export const useAuth = () => {
     actions: {
       signin : sdk.auth.signin, 
       signup : sdk.auth.signup, 
-      signout : sdk.auth.signout
+      signout : sdk.auth.signout,
+      refresh: sdk.auth.reAuthenticateIfNeeded, 
+      apikeys: {
+        list: sdk.auth.list_api_keys_auth_users,
+        create: sdk.auth.create_api_key
+      },
+      users: {
+        get: sdk.auth.get_auth_user,
+        remove: sdk.auth.remove_auth_user,
+        list: sdk.auth.list_auth_users
+      }
     }
   }
 }

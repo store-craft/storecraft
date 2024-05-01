@@ -63,6 +63,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
       trigger();
     }, [trigger]
   );
+  
 
   useEffect(
     () => {

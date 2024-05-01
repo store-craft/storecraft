@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'

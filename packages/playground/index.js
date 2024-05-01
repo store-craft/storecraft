@@ -11,6 +11,7 @@ import { GoogleStorage } from '@storecraft/storage-google'
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 import { App } from '@storecraft/core';
  
+const now = Date.now();
 let app = new App(
   new NodePlatform(),
   new MongoDB({ db_name: 'test' }),
@@ -25,6 +26,11 @@ let app = new App(
 
 await app.init();
  
+const now2 = Date.now();
+const delta = ((now2 - now));
+console.log('init in ' + delta + ' ms')
+
+
 const server = http.createServer(app.handler).listen(
   8000,
   () => {

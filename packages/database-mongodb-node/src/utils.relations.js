@@ -31,8 +31,10 @@ import { MongoDB } from '../driver.js';
  * 
  * @param {MongoDB} driver our driver
  * @param {T} data data to create the connection from
- * @param {string} fieldName the field name, that represents a relation, a field with { id } property
- * @param {string} belongsToCollection which collection does the field relate to
+ * @param {string} fieldName the field name, that represents 
+ * a relation, a field with { id } property
+ * @param {string} belongsToCollection which collection 
+ * does the field relate to
  * @param {boolean} [reload=false] re-retrive documents ?
  * 
  * 
@@ -93,7 +95,7 @@ export const create_explicit_relation = async (
  * 
  * @template {Object.<string, any>} T
  * 
- * @param {T} data 
+ * @param {WithRelations<T>} data 
  * @param {string[]} terms 
  * 
  */

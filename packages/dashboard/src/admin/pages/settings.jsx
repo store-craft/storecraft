@@ -1,77 +1,20 @@
-import { useRef } from 'react'
+import { useMemo } from 'react'
 import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import ErrorMessage from '@/admin/comps/error-message.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { 
-  Bling, BlingInput, Card, Div, HR, withBling 
+  HR
 } from '@/admin/comps/common-ui.jsx'
-import MDView from '../comps/md-view.jsx'
+import { MarkdownViewCard } from '../comps/markdown-card.jsx'
 
 
 /**
- * @typedef {object} GeneralSettingsParams
- * @prop {import('@storecraft/core').StorecraftConfig} value
  * 
- * 
- * @param {GeneralSettingsParams & 
- *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
- * } params
- * 
+ * @param {import('@storecraft/core').StorecraftConfig} value 
  */
-const GeneralSettings = (
-   { 
-     value, ...rest
-   }
-) => {
-
-  const name = value?.general_store_name ?? 'unknown right now';
-  const website = value?.general_store_website ?? 'unknown right now';
-  const email = value?.general_store_support_email ?? 'unknown right now';
-  const description = value?.general_store_description ?? 'You still have not written one';
-
-  let text = `Hi 👋, **your** store name is \`${name}\`, your store's 
-  website is ${website} and the support email is ${email} .\n\n
-  <br/>
-
-  The following is the description of your store 
-  > ${description}
-  `
-
- return (
-<Card 
-    name='🛍️ Your General Store information'
-    border={true} 
-    {...rest}>
-  <Bling stroke='pb-px' rounded='rounded-lg' >
-    <MDView
-        className='rounded-md p-3 
-          w-full text-base min-h-8 align-middle
-          shelf-input-color flex flex-row items-center' 
-        value={text} />
-  </Bling>
-</Card>    
- )
-}
-
-
-/**
- * @typedef {object} AuthSettingsParams
- * @prop {import('@storecraft/core').StorecraftConfig} value
- * 
- * 
- * @param {AuthSettingsParams & 
- *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
- * } params
- * 
- */
-const AuthSettings = (
-  { 
-    value, ...rest
-  }
-) => {
-
+const info_auth = value => {
   let text = 'Here is what you need to know: \n\n';
 
   if(value?.auth_admins_emails) {
@@ -91,78 +34,59 @@ const AuthSettings = (
     text += `\n- **JWT** refresh token \`secret\` is **${value?.auth_secret_refresh_token}**`
   }
 
-  return (
-  <Card 
-    name='🔑 Auth information'
-    border={true} 
-    {...rest}>
-  <Bling stroke='pb-px' rounded='rounded-lg' >
-    <MDView
-        className='rounded-md p-3 
-          w-full text-base min-h-8 align-middle
-          shelf-input-color flex flex-row items-center' 
-        value={text} />
-  </Bling>
-  </Card>    
-  )
+  return text;
 }
-
 
 /**
- * @typedef {object} AuthSettingsParams
- * @prop {import('@storecraft/core').StorecraftConfig} value
  * 
- * 
- * @param {AuthSettingsParams & 
-*  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
-* } params
-* 
-*/
-const CheckoutSettings = (
- { 
-   value, ...rest
- }
-) => {
+ * @param {import('@storecraft/core').StorecraftConfig} value 
+ */
+const info_general = value => {
+  const name = value?.general_store_name ?? 'unknown right now';
+  const website = value?.general_store_website ?? 'unknown right now';
+  const email = value?.general_store_support_email ?? 'unknown right now';
+  const description = value?.general_store_description ?? 'You still have not written one';
 
- let text = 'Here is what you need to know: \n\n';
+  let text = `Hi 👋, **your** store name is \`${name}\`, your store's 
+  website is ${website} and the support email is ${email} .\n\n
+  <br/>
 
- if(value?.auth_admins_emails) {
-   text = `- The following are the **admin** emails: \n` + 
-   value?.checkout_reserve_stock_on.map(mail => `  - ${mail}`).join('\n');
- }
-
- if(value?.auth_password_hash_rounds) {
-   text += `\n- Passwords are hashed with **${value?.auth_password_hash_rounds}** rounds`
- }
-
- if(value?.auth_secret_access_token) {
-   text += `\n- **JWT** access token \`secret\` is **${value?.auth_secret_access_token}**`
- }
-
- if(value?.auth_secret_refresh_token) {
-   text += `\n- **JWT** refresh token \`secret\` is **${value?.auth_secret_refresh_token}**`
- }
-
- return (
- <Card 
-   name='🔑 Auth information'
-   border={true} 
-   {...rest}>
- <Bling stroke='pb-px' rounded='rounded-lg' >
-   <MDView
-       className='rounded-md p-3 
-         w-full text-base min-h-8 align-middle
-         shelf-input-color flex flex-row items-center' 
-       value={text} />
- </Bling>
- </Card>    
- )
+  The following is the description of your store 
+  > ${description}
+  `
+  return text;
 }
 
+/**
+ * 
+ * @param {import('@storecraft/core').StorecraftConfig} value 
+ */
+const info_more = value => {
+  let text = '**Checkout** info \n\n';
+
+  switch(value?.checkout_reserve_stock_on) {
+    case 'checkout_create':
+      text += '> Stock is **automatically** reserved upon \`checkout creation\`'
+    case 'checkout_complete':
+      text += '> Stock is **automatically** reserved upon \`checkout completion\`'
+    default:
+      text += '> Stock is **manually** reserved'
+  }
+
+  text += '\n\n **Storage** info\n\n \n\n';
+
+  {
+    if(value?.storage_rewrite_urls) {
+      text += `> Media urls stored at \`storage\` will be rewritten to ${value.storage_rewrite_urls} **CDN**`
+    } else {
+      text += `> Media urls stored at \`storage\` will **not** be rewritten for **CDN**`
+    }
+  }
+
+  return text;
+}
 
 export default ({ ...rest }) => {
-
-  const ref_root = useRef();
 
   /**
    * 
@@ -174,30 +98,62 @@ export default ({ ...rest }) => {
     doc, loading, hasLoaded, error,
   } = useDocument('info', 'settings', true, true);
 
-  console.log('doc', doc);
-  
+
+  const texts = useMemo(
+    () => { 
+      const texts = {};
+
+      { // general text
+        const name = doc?.general_store_name ?? 'unknown right now';
+        const website = doc?.general_store_website ?? 'unknown right now';
+        const email = doc?.general_store_support_email ?? 'unknown right now';
+        const description = doc?.general_store_description ?? 'You still have not written one';
+      
+        let text = `Hi 👋, **your** store name is \`${name}\`, your store's 
+        website is ${website} and the support email is ${email} .\n\n
+        <br/>
+      
+        The following is the description of your store 
+        > ${description}
+        `
+        texts.general = text;
+      }
+
+
+      return texts;
+
+    }, [doc]
+  )
 
   return (
-<div className='w-full mx-auto'>
+<div className='w-full lg:min-w-fit mx-auto'>
   <DocumentTitle 
       major={['settings', 'main']} 
       className='' />  
   <HR  className='my-5' />
   <ShowIf show={hasLoaded}>
-    <div className='w-full max-w-[40rem] --lg:w-fit --lg:max-w-none mx-auto flex flex-col gap-5'>
+    <div className='w-full max-w-[40rem] lg:w-fit lg:max-w-none mx-auto'>
       <ErrorMessage  
           error={error} 
           className='w-full' />
-      <GeneralSettings value={doc}/>  
-      <AuthSettings value={doc}/>  
-      <JsonViewCard value={doc} />        
-      {/* <FieldsView 
-          key={'key'} 
-          ref={ref_root} 
-          field={root_schema} 
-          value={ doc ?? {} } 
-          isViewMode={false} 
-          className='mt-8' />       */}
+      <div 
+          className='w-full items-center lg:max-w-max lg:items-start \
+                    lg:w-fit flex flex-col lg:flex-row gap-5 mx-auto'>
+        <div className='w-full lg:w-[35rem] flex flex-col gap-5'>
+          <MarkdownViewCard 
+              value={info_general(doc)} 
+              title='🛍️ Your General Store information'/>  
+          <MarkdownViewCard 
+              value={info_auth(doc)} 
+              title='🔑 Auth information'/>  
+          <JsonViewCard value={doc} />        
+        </div>
+        <div className='w-full lg:w-[19rem] flex flex-col gap-5'>
+          <MarkdownViewCard 
+              value={info_more(doc)} 
+              title='🛒 More information'/>  
+        </div>
+      </div>                
     </div>                
   </ShowIf>
 </div>

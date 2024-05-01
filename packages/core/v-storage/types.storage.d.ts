@@ -30,6 +30,7 @@ export type StorageSignedOperation = {
    */
   url: string,
 
+
   /**
    * @description The **HTTP** `headers` to use
    */
@@ -49,31 +50,59 @@ export type MetaData = {
 };
 
 /**
- * Basic collection or table
+ * 
+ * @description `storage` driver type
  */
 export declare interface storage_driver {
 
   /**
-   * Init the storage
+   * 
+   * @description Init the storage
    */
   init: (app: App<any, any, any>) => Promise<storage_driver>;
 
   /**
    * 
-   * Get the `storage` official **Features**
+   * @description Get the `storage` official **Features**
    */
   features: () => StorageFeatures;
 
+  /**
+   * 
+   * @description A human readable information about the `storage` in `markdown`
+   */
+  info?: () => string[];
+
+  /**
+   * Put a `blob` in the storage
+   * 
+   * 
+   * @param key The put key
+   * @param blob asset as `blob`
+   * @param meta (Optional) meta data
+   */
   putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<boolean>; 
   putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<boolean>; 
   putStream: (key: string, stream: ReadableStream, meta?: MetaData) => Promise<boolean>; 
   putSigned?: (key: string) => Promise<StorageSignedOperation | undefined>; 
 
+  /**
+   * Get a `blob` from the storage
+   * 
+   * 
+   * @param key The retrival key
+   */
   getBlob: (key: string) => Promise<Get<Blob>>;
   getArraybuffer: (key: string) => Promise<Get<ArrayBuffer>>;
   getStream: (key: string) => Promise<Get<ReadableStream>>;
   getSigned?: (key: string) => Promise<StorageSignedOperation>;
 
+  /**
+   * Remove asset from the storage
+   * 
+   * 
+   * @param key The retrival key
+   */
   remove: (key: string) => Promise<boolean>;
   list?: () => Promise<any>;
 }

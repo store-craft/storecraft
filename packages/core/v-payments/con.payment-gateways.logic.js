@@ -1,5 +1,4 @@
 import { assert } from '../v-api/utils.func.js'
-import { get } from '../v-api/con.orders.logic.js'
 import { App } from '../index.js';
 
 /** @param {any} o */
@@ -69,7 +68,7 @@ export const list_payment_gateways = (app) => {
  * 
  */
 export const payment_status_of_order = async (app, order_id) => {
-  const order = await get(app, order_id);
+  const order = await app.api.orders.get(order_id);
 
   assert(order, `Order ${order_id} not found`, 400);
 
@@ -104,7 +103,7 @@ export const invoke_payment_action_on_order = async (
   app, order_id, action_handle, extra_action_parameters
 ) => {
 
-  const order = await get(app, order_id);
+  const order = await app.api.orders.get(order_id);
 
   assert(order, `Order ${order_id} not found`, 400);
 

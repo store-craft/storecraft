@@ -2,7 +2,6 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
-import { get, list, list_discounts_products, remove, upsert } from '../v-api/con.discounts.logic.js'
 
 /**
  * @typedef {import('../v-api/types.api.js').DiscountType} ItemType
@@ -29,7 +28,8 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await upsert(app, req.parsedBody);
+      const final = await app.api.discounts.upsert(req.parsedBody);
+
       res.sendJson(final);
     }
   )
@@ -39,8 +39,10 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
+      const item = await app.api.discounts.get(handle_or_id);
+
       assert(item, 'not-found', 404);
+
       res.sendJson(item);
     }
   );
@@ -51,7 +53,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await remove(app, handle_or_id);
+      const removed = handle_or_id && await app.api.discounts.remove(handle_or_id);
+
       res.setStatus(removed ? 200 : 404).end();
     }
   );
@@ -60,8 +63,9 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      let q = parse_query(req.query);
-      const items = await list(app, q);
+      const q = parse_query(req.query);
+      const items = await app.api.discounts.list(q);
+
       res.sendJson(items);
     }
   );
@@ -71,8 +75,9 @@ export const create_routes = (app) => {
     '/:discount/products',
     async (req, res) => {
       const { discount } = req?.params;
-      let q = parse_query(req.query);
-      const items = await list_discounts_products(app, discount, q);
+      const q = parse_query(req.query);
+      const items = await app.api.discounts.list_discounts_products(discount, q);
+
       res.sendJson(items);
     }
   );

@@ -2,7 +2,6 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
-import { get, list, list_collection_products, remove, upsert } from '../v-api/con.collections.logic.js'
 
 /**
  * 
@@ -20,12 +19,12 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
 
-  // save tag
+  // save tag 
   polka.post(
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await upsert(app, req.parsedBody);
+      const final = await app.api.collections.upsert(req.parsedBody);
       res.sendJson(final);
     }
   )
@@ -35,8 +34,10 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
+      const item = await app.api.collections.get(handle_or_id);
+
       assert(item, 'not-found', 404);
+
       res.sendJson(item);
     }
   );
@@ -47,7 +48,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await remove(app, handle_or_id);
+      const removed = handle_or_id && await app.api.collections.remove(handle_or_id);
+
       res.setStatus(removed ? 200 : 404).end();
     }
   );
@@ -57,7 +59,8 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       let q = parse_query(req.query);
-      const items = await list(app, q);
+      const items = await app.api.collections.list(q);
+
       res.sendJson(items);
     }
   );
@@ -67,8 +70,9 @@ export const create_routes = (app) => {
     '/:collection/products',
     async (req, res) => {
       const { collection } = req.params;
-      let q = parse_query(req.query);
-      const items = await list_collection_products(app, collection, q);
+      const q = parse_query(req.query);
+      const items = await app.api.collections.list_collection_products(collection, q);
+      
       res.sendJson(items);
     }
   );

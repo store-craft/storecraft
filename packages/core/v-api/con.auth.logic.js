@@ -9,21 +9,17 @@ import { decode, encode, fromUint8Array } from '../v-crypto/base64.js'
 import { isDef } from './utils.index.js'
 
 
-/**
- * 
- * @param {App} app 
- * @param {string} id
- */  
-export const removeById = async (app, id) => {
-  return app.db.resources.auth_users.remove(id);
-}
 
 /**
  * 
  * @param {App} app 
- * @param {string} email
  */  
-export const removeByEmail = async (app, email) => {
+export const removeByEmail = async (app) => 
+/**
+ * 
+ * @param {string} email
+ */
+(email) => {
   return app.db.resources.auth_users.removeByEmail(email);
 }
 
@@ -39,12 +35,16 @@ const isAdminEmail = (app, email) => {
 /**
  * 
  * @param {App} app 
+ * 
+ */  
+export const signup = (app) => 
+/**
+ * 
  * @param {import('./types.api.js').ApiAuthSignupType} body 
  * 
- * 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
- */  
-export const signup = async (app, body) => {
+ */
+async (body) => {
 
   assert_zod(apiAuthSignupTypeSchema, body);
   
@@ -107,13 +107,17 @@ export const signup = async (app, body) => {
 /**
  * 
  * @param {App} app 
+ */  
+export const signin = (app) => 
+/**
+ * 
  * @param {import('./types.api.js').ApiAuthSigninType} body 
  * @param {boolean} [fail_if_not_admin=false] 
  * 
  * 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
- */  
-export const signin = async (app, body, fail_if_not_admin=false) => {
+ */
+async (body, fail_if_not_admin=false) => {
   assert_zod(apiAuthSigninTypeSchema, body);
 
   const { email, password } = body;
@@ -123,7 +127,7 @@ export const signin = async (app, body, fail_if_not_admin=false) => {
   const isAdmin = isAdminEmail(app, email);
   // An admin first login will register the default `admin` password
   if(!existingUser && isAdmin) {
-    await signup(app, { ...body, password: 'admin' });
+    await signup(app)({ ...body, password: 'admin' });
     existingUser = await app.db.resources.auth_users.getByEmail(email);
   }
 
@@ -166,12 +170,15 @@ export const signin = async (app, body, fail_if_not_admin=false) => {
 /**
  * 
  * @param {App} app 
+ */  
+export const refresh = (app) => 
+/**
+ * 
  * @param {import('./types.api.js').ApiAuthRefreshType} body 
  * 
- * 
  * @returns {Promise<import('./types.api.js').ApiAuthResult>}
- */  
-export const refresh = async (app, body) => {
+ */
+async (body) => {
   assert_zod(apiAuthRefreshTypeSchema, body);
 
   const { refresh_token } = body;
@@ -230,11 +237,13 @@ export const create_search_terms = item => {
 /**
  * 
  * @param {App} app 
- * 
+ */  
+export const create_api_key = (app) => 
+/**
  * 
  * @returns {Promise<import('./types.api.js').ApiKeyResult>}
- */  
-export const create_api_key = async (app) => {
+ */
+async () => {
 
   const key = await crypto.subtle.generateKey(
     {
@@ -309,12 +318,15 @@ export const parse_api_key = (body) => {
  * with the database every time.
  * 
  * @param {App} app 
+ */  
+export const verify_api_key = (app) => 
+/**
+ * 
  * @param {import('./types.api.js').ApiKeyResult} body 
  * 
- * 
  * @returns {Promise<import('./types.api.js').AuthUserType>}
- */  
-export const verify_api_key = async (app, body) => {
+ */
+async (body) => {
 
   const {
     email, password
@@ -351,7 +363,8 @@ export const verify_api_key = async (app, body) => {
  * @param {App} app 
  * 
  */  
-export const list_all_api_keys_info = async (app) => {
+export const list_all_api_keys_info = (app) => 
+async () => {
 
   const apikeys = await app.db.resources.auth_users.list(
     {
@@ -375,10 +388,12 @@ export const list_all_api_keys_info = async (app) => {
  * 
  * 
  * @param {App} app 
- * @param {import('./types.api.query.js').ApiQuery} [query={}] 
- * 
  */  
-export const list_auth_users = async (app, query={}) => {
+export const list_auth_users = (app) => 
+/**
+ * @param {import('./types.api.query.js').ApiQuery} [query={}] 
+ */
+async (query={}) => {
 
   const items = await app.db.resources.auth_users.list(
     query
@@ -394,10 +409,13 @@ export const list_auth_users = async (app, query={}) => {
 /**
  * 
  * @param {App} app 
- * @param {string} id_or_email 
- * 
  */  
-export const get_auth_user = (app, id_or_email) => {
+export const get_auth_user = (app) => 
+/**
+ * 
+ * @param {string} id_or_email 
+ */
+async (id_or_email) => {
 
   return app.db.resources.auth_users.get(
     id_or_email
@@ -408,12 +426,37 @@ export const get_auth_user = (app, id_or_email) => {
 /**
  * 
  * @param {App} app 
- * @param {string} id_or_email 
- * 
  */  
-export const remove_auth_user = async (app, id_or_email) => {
+export const remove_auth_user = (app) => 
+/**
+ * 
+ * @param {string} id_or_email 
+ */
+async (id_or_email) => {
 
   await app.db.resources.auth_users.remove(
     id_or_email
   );
+}
+
+/**
+ * 
+ * @param {App} app 
+ */
+export const inter = app => {
+
+  return {
+    signin: signin(app),
+    signup: signup(app),
+    refresh: refresh(app),
+    create_api_key: create_api_key(app),
+    list_all_api_keys_info: list_all_api_keys_info(app),
+    parse_api_key: parse_api_key,
+    verify_api_key: verify_api_key(app),
+    get_auth_user: get_auth_user(app),
+    list_auth_users: list_auth_users(app),
+    remove_auth_user: remove_auth_user(app),
+    removeByEmail: removeByEmail(app),
+  }
+
 }

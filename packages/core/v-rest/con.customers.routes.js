@@ -2,7 +2,6 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { parse_auth_user, roles_guard } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
-import { get, list, remove, upsert } from '../v-api/con.customers.logic.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
 
 /**
@@ -32,7 +31,7 @@ export const create_routes = (app) => {
     '/',
     owner_or_admin_guard,
     async (req, res) => {
-      const final = await upsert(app, req.parsedBody);
+      const final = await app.api.customers.upsert(req.parsedBody);
       res.sendJson(final);
     }
   )
@@ -43,8 +42,10 @@ export const create_routes = (app) => {
     owner_or_admin_guard,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
+      const item = await app.api.customers.get(handle_or_id);
+
       assert(item, 'not-found', 404);
+
       res.sendJson(item);
     }
   );
@@ -55,7 +56,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await remove(app, handle_or_id);
+      const removed = handle_or_id && await app.api.customers.remove(handle_or_id);
+
       res.setStatus(removed ? 200 : 404).end();
     }
   );
@@ -65,8 +67,9 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      let q = parse_query(req.query);
-      const items = await list(app, q);
+      const q = parse_query(req.query);
+      const items = await app.api.customers.list(q);
+
       res.sendJson(items);
     }
   );

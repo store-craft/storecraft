@@ -18,9 +18,11 @@ import {
   update_specific_connection_of_relation_with_filter
 } from './utils.relations.js'
 import { enums } from '@storecraft/core/v-api'
-import { pricing } from '@storecraft/core/v-api'
 import { report_document_media } from './con.images.js'
 import { union } from '@storecraft/core/v-api/utils.func.js'
+import { 
+  test_product_filters_against_product 
+} from '@storecraft/core/v-api/con.pricing.logic.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_products} db_col
@@ -81,7 +83,7 @@ const upsert = (driver) => {
           ).toArray();
           // now test locally
           const eligible_discounts = discounts.filter(
-            d => pricing.test_product_filters_against_product(
+            d => test_product_filters_against_product(
               d.info.filters, replacement
             )
           );
@@ -172,7 +174,7 @@ const upsert = (driver) => {
     return true;
   }
 }
-
+ 
 /**
  * @param {MongoDB} driver 
  */

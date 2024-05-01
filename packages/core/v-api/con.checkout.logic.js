@@ -1,7 +1,5 @@
 import { App, CheckoutStatusEnum, DiscountApplicationEnum, 
   FulfillOptionsEnum, PaymentOptionsEnum } from "../index.js";
-import { list } from "./con.discounts.logic.js";
-import { get, upsert } from "./con.orders.logic.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
 import { assert } from "./utils.func.js";
 import { parse_query } from "./utils.query.js"
@@ -15,13 +13,17 @@ import { parse_query } from "./utils.query.js"
 
 /**
  * calculate pricing
+ * 
  * @param {App} app 
+ */
+export const eval_pricing = (app) => 
+/**
+ * 
  * @param {OrderData} order 
  * @returns {Promise<OrderData>}
  */
-export const eval_pricing = 
-  async (app, order) => {
-  const discounts = await list(app, parse_query(`vql=(active:true)`));
+async (order) => {
+  const discounts = await app.api.discounts.list(parse_query(`vql=(active:true)`));
 
   const auto_discounts = discounts.filter(
     it => it.application.id===DiscountApplicationEnum.Auto.id
@@ -49,23 +51,24 @@ export const eval_pricing =
 
 /**
  * Create a checkout, which is a draft order
+ * 
  * @param {App} app 
+ */
+export const create_checkout = app =>
+/**
+ * 
  * @param {OrderData} order
  * @param {string} gateway_handle chosen payment gateway
+ * 
  * @returns {Promise<OrderData>}
  */
-export const create_checkout = 
-  async (app, order, gateway_handle) => {
+async (order, gateway_handle) => {
 
   // fetch correct data from backend. we dont trust client
-  order = await validate_checkout(
-    app, order
-  );
+  order = await validate_checkout(app)(order);
 
   // eval pricing with discounts
-  order = await eval_pricing(
-    app, order
-  );
+  order = await eval_pricing(app)(order);
 
   /**@type {OrderData} */
   order = {
@@ -101,7 +104,7 @@ export const create_checkout =
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
-  await upsert(app, order);
+  await app.api.orders.upsert(order);
 
   return order
 }
@@ -109,14 +112,18 @@ export const create_checkout =
 
 /**
  * Complete a checkout sync
+ * 
  * @param {App} app 
+ */
+export const complete_checkout = app =>
+/**
+ * 
  * @param {string} checkoutId 
  * @param {object} client_payload 
  */
-export const complete_checkout = 
-  async (app, checkoutId, client_payload) => {
+async (checkoutId, client_payload) => {
   
-  const order = await get(app, checkoutId);
+  const order = await app.api.orders.get(checkoutId);
 
   assert(order, 'checkout-not-found', 400);
 
@@ -137,7 +144,7 @@ export const complete_checkout =
     ...status
   }
   
-  await upsert(app, order);
+  await app.api.orders.upsert(order);
 
   return order;
 }
@@ -145,12 +152,18 @@ export const complete_checkout =
 
 /**
  * fetch latest prices and shipping, soft-test for quantities
+ * 
+ * 
  * @param {App} app
+ */
+export const validate_checkout = app =>
+/**
+ * 
  * @param {OrderData} checkout
+ * 
  * @returns {Promise<OrderData>}
  */
-export const validate_checkout = 
-  async (app, checkout) => {
+async (checkout) => {
 
   const snap_shipping = await app.db.resources.shipping.get(
     checkout.shipping_method.id
@@ -200,4 +213,19 @@ export const validate_checkout =
     validation: errors 
   }
 
+}
+
+
+/**
+ * 
+ * @param {App} app 
+ */
+export const inter = app => {
+
+  return {
+    eval_pricing: eval_pricing(app),
+    validate_checkout: validate_checkout(app),
+    create_checkout: create_checkout(app),
+    complete_checkout: complete_checkout(app),
+  }
 }

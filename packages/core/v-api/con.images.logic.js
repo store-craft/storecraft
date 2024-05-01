@@ -13,13 +13,17 @@ import { assert_zod } from './middle.zod-validate.js';
  * @param {import("../types.public.js").App} app
  */
 export const db = app => app.db.resources.images;
-
+ 
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const upsert = (app) => 
+/**
+ * 
  * @param {ItemTypeUpsert} item
  */
-export const upsert = async (app, item) => {
+async (item) => {
   assert_zod(imageTypeUpsertSchema, item);
 
   item.handle = to_handle(decodeURIComponent(item.name));
@@ -34,25 +38,24 @@ export const upsert = async (app, item) => {
   );
 
   await db(app).upsert(final, search);
+
   return final.id;
 }
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
- */
-export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const remove = (app) => 
+/**
+ * 
  * @param {string} id
  */
-export const remove = async (app, id) => {
+async (id) => {
   // remove from storage
-  const img = await get(app, id);
+  const img = await regular_get(app, db(app))(id);
+
   if(!img) return;
 
   // remove from storage if it belongs
@@ -62,13 +65,6 @@ export const remove = async (app, id) => {
   // db remove image side-effect
   return app.db.resources.images.remove(img.id);
 }
-
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);
 
 /**
  * url to name
@@ -90,4 +86,19 @@ export const image_url_to_handle = url => to_handle(image_url_to_name(url));
  */
 export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
   await db(app).report_document_media(data)
+}
+
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ */  
+export const inter = app => {
+
+  return {
+    get: regular_get(app, db(app)),
+    upsert: upsert(app),
+    remove: remove(app),
+    list: regular_list(app, db(app)),
+  }
 }

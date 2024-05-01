@@ -45,9 +45,13 @@ const create_search_index = (data) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const upsert = (app) => 
+/**
+ * 
  * @param {ItemTypeUpsert} item
  */
-export const upsert = (app, item) => regular_upsert(
+(item) => regular_upsert(
   app, db(app), 'order', orderDataUpsertSchema, 
   (final) => {
     return create_search_index(final);
@@ -58,22 +62,15 @@ export const upsert = (app, item) => regular_upsert(
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
- */
-export const get = (app, id, options) => regular_get(app, db(app))(id, options);
+ */  
+export const inter = app => {
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} id
- */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
+  return {
+    get: regular_get(app, db(app)),
+    upsert: upsert(app),
+    remove: regular_remove(app, db(app)),
+    list: regular_list(app, db(app)),
+  }
+}
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);
 

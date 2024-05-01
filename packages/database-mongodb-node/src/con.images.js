@@ -3,8 +3,11 @@ import { MongoDB } from '../driver.js'
 import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
-import { images, func } from '@storecraft/core/v-api';
+import { func } from '@storecraft/core/v-api';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
+import { 
+  image_url_to_handle, image_url_to_name 
+} from '@storecraft/core/v-api/con.images.logic.js';
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_images} db_col
@@ -110,11 +113,11 @@ export const report_document_media = (driver) => {
       const id_on_insert = ID('img');
       return {
         updateOne: {
-          filter: { handle: images.image_url_to_handle(url) },
+          filter: { handle: image_url_to_handle(url) },
           update: { 
             $addToSet : { '_relations.search': { $each: add_to_search_index} },
             $set: { 
-              name: images.image_url_to_name(url),
+              name: image_url_to_name(url),
               url: url,
               updated_at: dates.updated_at
             },

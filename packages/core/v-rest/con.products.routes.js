@@ -2,11 +2,7 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_expand, parse_query } from '../v-api/utils.query.js'
-import { 
-  add_product_to_collection, get, list, 
-  list_product_collections, list_product_discounts, list_product_variants, 
-  list_related_products, remove, remove_product_from_collection, upsert 
-} from '../v-api/con.products.logic.js'
+
 
 /**
  * @typedef {import('../v-api/types.api.js').ProductType} ItemType
@@ -33,7 +29,8 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await upsert(app, req.parsedBody);
+      const final = await app.api.products.upsert(req.parsedBody);
+
       res.sendJson(final);
     }
   )
@@ -47,8 +44,10 @@ export const create_routes = (app) => {
       const options = {
         expand: parse_expand(req.query)
       };
-      const item = await get(app, handle_or_id, options);
+      const item = await app.api.products.get(handle_or_id, options);
+
       assert(item, 'not-found', 404);
+
       res.sendJson(item);
     }
   );
@@ -59,7 +58,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await remove(app, handle_or_id);
+      const removed = handle_or_id && await app.api.products.remove(handle_or_id);
+
       res.setStatus(removed ? 200 : 404).end();
     }
   );
@@ -68,9 +68,9 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      let q = parse_query(req.query);
-      
-      const items = await list(app, q);
+      const q = parse_query(req.query);
+      const items = await app.api.products.list(q);
+
       res.sendJson(items);
     }
   );
@@ -81,7 +81,7 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const { product, collection } = req?.params;
-      await add_product_to_collection(app, product, collection);
+      await app.api.products.add_product_to_collection(product, collection);
       res.end();
     }
   );
@@ -92,7 +92,7 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const { product, collection } = req?.params;
-      await remove_product_from_collection(app, product, collection);
+      await app.api.products.remove_product_from_collection(product, collection);
       res.end();
     }
   );
@@ -101,7 +101,7 @@ export const create_routes = (app) => {
     '/:product/collections',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await list_product_collections(app, product);
+      const items = await app.api.products.list_product_collections(product);
       res.sendJson(items);
     }
   );
@@ -110,7 +110,7 @@ export const create_routes = (app) => {
     '/:product/variants',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await list_product_variants(app, product);
+      const items = await app.api.products.list_product_variants(product);
       res.sendJson(items);
     }
   );
@@ -119,7 +119,7 @@ export const create_routes = (app) => {
     '/:product/discounts',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await list_product_discounts(app, product);
+      const items = await app.api.products.list_product_discounts(product);
       res.sendJson(items);
     }
   );
@@ -128,7 +128,7 @@ export const create_routes = (app) => {
     '/:product/related',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await list_related_products(app, product);
+      const items = await app.api.products.list_related_products(product);
       res.sendJson(items);
     }
   );

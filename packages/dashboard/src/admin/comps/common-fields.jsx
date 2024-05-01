@@ -338,34 +338,47 @@ export const Switch = ({field, value=true, onChange, ...rest}) => {
 
 
 /**
+ * A `copy` to clipboard button
  * 
- * @param {{
- *  value: string, config?: 0 | 1
- * }} param0 
+ * @typedef {object} ClipBoardCopyButtonParams
+ * @prop {string} value
+ * @prop {0 | 1} [config=1]
+ * @prop {(value: string) => string} [process_before_copy] process the value
+ * before copying
+ * 
+ * 
+ * @param {ClipBoardCopyButtonParams} params
  */
-export const ClipBoardCopy = ({ value, config=1 }) => {
+export const ClipBoardCopy = (
+  { 
+    value, config=1, process_before_copy=x=>x
+  }
+) => {
+
   const [copied, setCopied] = useState(false)
 
   const onClickCopy = useCallback(
-    e => {
+    () => {
       setCopied(true)
-      write_clipboard(value)
+      write_clipboard(process_before_copy(value))
       setTimeout(
         () => setCopied(false),
         2000
       )
-    }, [value, write_clipboard]
-  )
+    }, [value, process_before_copy]
+  );
 
   return (
 <div className={`flex ${config==0 ? 'flex-row' : 'flex-row-reverse'} gap-1`}>
-  <RxCopy className='text-lg cursor-pointer text-gray-500 
-                      hover:text-gray-800 dark:hover:text-gray-400 inline 
-                      --translate-y-0.5' 
-          onClick={onClickCopy} />
-  { copied && 
-    <span children='(copied)' 
-          className='text-xs --translate-x-2' />      
+  <RxCopy 
+      className='text-lg cursor-pointer text-gray-500 
+                hover:text-gray-800 dark:hover:text-gray-400 inline' 
+      onClick={onClickCopy} />
+  { 
+    copied && 
+    <span 
+        children='(copied)' 
+        className='text-xs' />      
   }
 </div>        
   )

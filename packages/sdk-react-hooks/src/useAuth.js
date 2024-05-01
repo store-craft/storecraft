@@ -29,6 +29,7 @@ export const useAuth = () => {
   );
 
   return {
+    sdk,
     /** @type {import("@storecraft/core/v-api").ApiAuthResult} */ 
     auth: sdk.auth.currentAuth,
     isAuthenticated: sdk.auth.isAuthenticated,

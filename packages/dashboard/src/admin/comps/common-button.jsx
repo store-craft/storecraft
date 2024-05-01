@@ -83,9 +83,7 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
  * @property {boolean} [loading]
  * @property {boolean} [show]
  * 
- * @typedef {InternalLoadingButtonParams & 
- *  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
- * } LoadingButtonParams
+ * @typedef {InternalLoadingButtonParams} LoadingButtonParams
  * 
  * @param {LoadingButtonParams} param0 
  * @returns 
@@ -151,8 +149,10 @@ export const PromisableLoadingButton = (
   )
 
   return (
-    <LoadingButton {...rest} loading={loading} 
-            onClick={onClickWrapper} />
+    <LoadingButton 
+        {...rest} 
+        loading={loading} 
+        onClick={onClickWrapper} />
   )
 }
 
@@ -161,15 +161,25 @@ export const PromisableLoadingButton = (
  * @prop {() => Promise<any>} onClick
  * @prop {boolean} [show]
  * @prop {boolean} [loading]
+ * @prop {string} [stroke]
+ * @prop {string} [rounded]
+ * @prop {string} [from]
+ * @prop {string} [to]
+ * 
  * 
  * @typedef {InternalPromisableLoadingBlingButton & 
  * Omit<LoadingButtonParams, 'onClick'>} PromisableLoadingBlingButton
+ * 
  * 
  * @param {PromisableLoadingBlingButton} param0 
  */
 export const PromisableLoadingBlingButton = (
   {
-    onClick, show=true, className, loading: $loading, ...rest
+    onClick, show=true, className, loading: $loading, 
+    stroke='p-px', rounded='rounded-full', 
+    from='from-pink-300 dark:from-pink-500',
+    to='to-kf-300 dark:to-kf-500',
+    ...rest
   }
 ) => {
 
@@ -182,18 +192,22 @@ export const PromisableLoadingBlingButton = (
     }, [onClick]
   );
 
-  if(!show) return null
+  if(!show) return null;
 
   return (   
-<Bling stroke='p-px' className={className} rounded='rounded-full'
-        from='from-pink-300 dark:from-pink-500' to='to-kf-300 dark:to-kf-500'>
+<Bling 
+    stroke={stroke}
+    className={className} 
+    rounded={rounded}
+    from={from}
+    to={to} >
   <LoadingButton 
-          className='h-6 px-2 
-                    bg-slate-50 dark:bg-slate-800 
-                    text-gray-600 dark:text-gray-400 
-                    rounded-full text-base font-semibold tracking-tight' 
-          loading={loading} 
-          onClick={onClickWrapper} {...rest}  />
+      className={`${rounded} px-2 h-full bg-slate-50 dark:bg-slate-800 
+                text-gray-600 dark:text-gray-400 
+                text-base font-semibold tracking-tight`} 
+      loading={loading} 
+      onClick={onClickWrapper} 
+      {...rest}  />
 </Bling> 
   )
 }
@@ -214,13 +228,16 @@ export const BlingButton = (
 ) => {
 
   return (
-<Bling from={from} to={to} rounded={rounded} stroke={stroke} 
-       className={className} >
-  <button className={`h-full w-full align-middle text-center px-3 
-                     rounded-md 
-                     shelf-button-color-soft
-                     whitespace-nowrap ${btnClassName}`} 
-          children={children ?? text} {...rest}/>
+<Bling 
+    from={from} to={to} 
+    rounded={rounded} 
+    stroke={stroke} 
+    className={className} >
+  <button 
+      className={`h-full w-full align-middle text-center px-3 
+                  rounded-md shelf-button-color-soft
+                  whitespace-nowrap ${btnClassName}`} 
+      children={children ?? text} {...rest}/>
 </Bling>            
   )
 }

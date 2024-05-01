@@ -118,7 +118,7 @@ export const SettingsApiKeys = (
    name='🔑 API Keys'
    desc='Manage your API keys'
    border={true} 
-   error={error}
+   error={error?.messages?.[0]?.message}
    setError={setError}
    {...rest}>
 

@@ -74,6 +74,8 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
  * @param {RequestInit} [init] request `init` type
  * 
  * 
+ * @throws {import('@storecraft/core/v-api').error}
+ * 
  * @returns {Promise<R>}
  */ 
 export const fetchApiWithAuth = async (sdk, path, init={}) => {

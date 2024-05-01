@@ -31,29 +31,37 @@ const TagValues = (
   const onAdd = useCallback(
     (e) => {
       const tokens = text2tokens(ref.current.value.toString());
-      if(!tokens) return
+
+      if(!tokens) return;
+
       for (let t of tokens)
         if(vs.indexOf(t) == -1)
-          vs.push(t)
-      const new_vs = [...vs]
-      onChange(new_vs)
-      setVs(new_vs)
+          vs.push(t);
+
+      const new_vs = [...vs];
+
+      onChange(new_vs);
+      setVs(new_vs);
     },
     [vs, onChange]
-  )
+  );
   
   /** @type {import("./capsules-view.jsx").CapsulesViewParams<string>["onClick"]} */
   const onRemove = useCallback(
     (v) => {
-      const idx = vs.indexOf(v)
-      if(idx == -1) return
-      vs.splice(idx, 1)
-      const new_vs = [...vs]
-      onChange(new_vs)
-      setVs(new_vs)
+      const idx = vs.indexOf(v);
+
+      if(idx == -1) return;
+
+      vs.splice(idx, 1);
+
+      const new_vs = [...vs];
+
+      onChange(new_vs);
+      setVs(new_vs);
     },
     [vs, onChange]
-  )
+  );
   
   return (
 <div {...comp_params}>
@@ -71,6 +79,7 @@ const TagValues = (
   <CapsulesView 
       tags={vs} 
       onClick={onRemove} 
+      onRemove={onRemove}
       clsCapsule='bg-pink-500' 
       className='mt-3' />  
 </div>

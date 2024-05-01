@@ -391,6 +391,18 @@ export const list_auth_users = async (app, query={}) => {
   return items;
 }
 
+/**
+ * 
+ * @param {App} app 
+ * @param {string} id_or_email 
+ * 
+ */  
+export const get_auth_user = (app, id_or_email) => {
+
+  return app.db.resources.auth_users.get(
+    id_or_email
+  );
+}
 
 
 /**

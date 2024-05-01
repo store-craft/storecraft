@@ -49997,7 +49997,158 @@ paths:
                           type: array
                           items:
                             type: string
-  /auth/remove/{email_or_id}:
+  /auth/users/{email_or_id}:
+    get:
+      description: get auth user
+      summary: Get auth user
+      tags: *a1
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+          basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: The `id` or `email` of auth user
+            example: "`au_65f98390d6a34550cdc651a1` or email like `a@a.com`"
+          required: true
+          name: email_or_id
+          in: path
+      responses:
+        "200":
+          description: api key info
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      created_at:
+                        type: string
+                        description: ISO string creation time
+                      updated_at:
+                        type: string
+                        description: ISO string update time
+                      media:
+                        type: array
+                        items:
+                          type: string
+                        description: List of images urls
+                      attributes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                              description: The key
+                            value:
+                              type: string
+                              description: The value
+                          required:
+                            - key
+                          description: Attribute type, a key/value storage
+                        description: List of attributes
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                        description: List of tags , example ['genere_action', 'rated_M', ...]
+                      description:
+                        type: string
+                        description: Rich description
+                      active:
+                        type: boolean
+                        description: Is the entity active ?
+                    description: with `id`
+                  - type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        description: Email of user
+                      password:
+                        type: string
+                        minLength: 4
+                        maxLength: 20
+                        description: password
+                    required:
+                      - email
+                      - password
+                    description: Auth base type
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID
+                      confirmed_mail:
+                        type: boolean
+                        description: Is the email confirmed ?
+                      roles:
+                        type: array
+                        items:
+                          anyOf:
+                            - type: string
+                              enum:
+                                - admin
+                            - type: string
+                              enum:
+                                - user
+                            - type: string
+                          description: Role of authenticated user
+                        description: list of roles and authorizations of the user
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                        description: tags
+                    required:
+                      - id
+                description: Auth user type
+              example:
+                id: au_662f70821937f16320a8debb
+                email: au_662f70821937f16320a8debb@apikey.storecraft.api
+                confirmed_mail: false
+                roles:
+                  - admin
+                tags:
+                  - apikey
+                active: true
+                description: "This user is a created apikey with roles: [admin]"
+                created_at: 2024-04-29T10:03:46.835Z
+                updated_at: 2024-04-29T10:03:46.835Z
+                search:
+                  - email:true
+                  - email:au_662f70821937f16320a8debb@apikey.storecraft.api
+                  - au_662f70821937f16320a8debb@apikey.storecraft.api
+                  - confirmed_mail:false
+                  - tag:apikey
+                  - au_662f70821937f16320a8debb
+                  - role:admin
+        400-500:
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        code:
+                          type: string
+                        expected:
+                          type: string
+                        received:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
     delete:
       description: Remove auth user
       summary: Remove auth user
@@ -50292,7 +50443,7 @@ paths:
                           type: array
                           items:
                             type: string
-  /auth/list?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
+  /auth/users?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}:
     get:
       description: Query and Filter Authenticated users
       summary: Query / Filter auth users

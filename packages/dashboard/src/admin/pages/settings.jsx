@@ -8,6 +8,7 @@ import {
   HR
 } from '@/admin/comps/common-ui.jsx'
 import { MarkdownViewCard } from '../comps/markdown-card.jsx'
+import { SettingsApiKeys } from '../comps/settings-api-keys.jsx'
 
 
 /**
@@ -98,33 +99,6 @@ export default ({ ...rest }) => {
     doc, loading, hasLoaded, error,
   } = useDocument('info', 'settings', true, true);
 
-
-  const texts = useMemo(
-    () => { 
-      const texts = {};
-
-      { // general text
-        const name = doc?.general_store_name ?? 'unknown right now';
-        const website = doc?.general_store_website ?? 'unknown right now';
-        const email = doc?.general_store_support_email ?? 'unknown right now';
-        const description = doc?.general_store_description ?? 'You still have not written one';
-      
-        let text = `Hi 👋, **your** store name is \`${name}\`, your store's 
-        website is ${website} and the support email is ${email} .\n\n
-        <br/>
-      
-        The following is the description of your store 
-        > ${description}
-        `
-        texts.general = text;
-      }
-
-
-      return texts;
-
-    }, [doc]
-  )
-
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
   <DocumentTitle 
@@ -140,6 +114,7 @@ export default ({ ...rest }) => {
           className='w-full items-center lg:max-w-max lg:items-start \
                     lg:w-fit flex flex-col lg:flex-row gap-5 mx-auto'>
         <div className='w-full lg:w-[35rem] flex flex-col gap-5'>
+          <SettingsApiKeys />
           <MarkdownViewCard 
               value={info_general(doc)} 
               title='🛍️ Your General Store information'/>  

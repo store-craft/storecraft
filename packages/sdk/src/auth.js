@@ -1,5 +1,5 @@
 import { StorecraftSDK } from '../index.js';
-import { url } from './utils.api.fetch.js';
+import { fetchApiWithAuth, url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
 
 
@@ -29,13 +29,15 @@ export default class Auth {
   /**@type {Set<SubscriberCallback>} */
   #subscribers = new Set();
 
+  /** @type {StorecraftSDK} */
+  #sdk;
 
   /**
    * 
-   * @param {StorecraftSDK} context 
+   * @param {StorecraftSDK} sdk 
    */
-  constructor(context) {
-    this.context = context
+  constructor(sdk) {
+    this.#sdk = sdk
     // this.USER_KEY = `storecraft_admin_${context.config.email}`
     // this.broadcast_channel = new BroadcastChannel(this.USER_KEY)
   }
@@ -60,14 +62,14 @@ export default class Auth {
    * 
    */
   get currentAuth() {
-    return this.context?.config?.auth;
+    return this.#sdk?.config?.auth;
   }
 
   /**
    * @param {import('../index.js').SdkConfigAuth} value 
    */
   set currentAuth(value) {
-    this.context.config.auth = value;
+    this.#sdk.config.auth = value;
   }
 
 
@@ -148,7 +150,7 @@ export default class Auth {
 
     if('access_token' in this.currentAuth) {
       const auth_res = await fetch(
-        url(this.context.config, '/auth/refresh'),
+        url(this.#sdk.config, '/auth/refresh'),
         {
           method: 'post',
           body: JSON.stringify(
@@ -260,7 +262,7 @@ export default class Auth {
     }
 
     const res = await fetch(
-      url(this.context.config, `/auth/signin`),
+      url(this.#sdk.config, `/auth/signin`),
       { 
         method: 'post',
         body: JSON.stringify(info),
@@ -297,7 +299,7 @@ export default class Auth {
     }
 
     const res = await fetch(
-      url(this.context.config, `/auth/signup`),
+      url(this.#sdk.config, `/auth/signup`),
       { 
         method: 'post',
         body: JSON.stringify(info),
@@ -319,6 +321,7 @@ export default class Auth {
     return payload;
   }
 
+
   signout = async () => {
     console.log('signout');
 
@@ -326,6 +329,48 @@ export default class Auth {
       undefined, true
     );
 
+  }
+
+  list_api_keys_auth_users = async () => {
+
+    /** @type {import('@storecraft/core/v-api').AuthUserType[]} */
+    const items = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/apikeys',
+      {
+        method: 'get'
+      }
+    );
+
+    return items;
+  }
+
+
+  create_api_key = async () => {
+    /** @type {import('@storecraft/core/v-api').ApiKeyResult} */
+    const item = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/apikeys',
+      {
+        method: 'post'
+      }
+    );
+
+    return item.apikey;
+  }
+
+
+  remove_auth_user = async () => {
+    /** @type {import('@storecraft/core/v-api').ApiKeyResult} */
+    const item = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/apikeys',
+      {
+        method: 'post'
+      }
+    );
+
+    return item.apikey;
   }
 
 }

@@ -1,6 +1,6 @@
 import { Polka } from '../v-polka/index.js'
 import { 
-  create_api_key, list_all_api_keys_info, 
+  create_api_key, get_auth_user, list_all_api_keys_info, 
   list_auth_users, 
   refresh, remove_auth_user, signin, signup 
 } from '../v-api/con.auth.logic.js'
@@ -51,7 +51,7 @@ export const create_routes = (app) => {
 
   // delete existing `api key`
   polka.delete(
-    '/remove/:email',
+    '/users/:email',
     middle_authorize_admin,
     async (req, res) => {
 
@@ -61,9 +61,19 @@ export const create_routes = (app) => {
     }
   )
 
-  // delete existing `api key`
   polka.get(
-    '/list',
+    '/users/:email',
+    middle_authorize_admin,
+    async (req, res) => {
+      const item = await get_auth_user(app, req.params?.email);
+
+      res.sendJson(item);
+    }
+  )
+
+  // delete existing `auth user`
+  polka.get(
+    '/users',
     middle_authorize_admin,
     async (req, res) => {
       let q = parse_query(req.query);

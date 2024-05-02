@@ -81,11 +81,11 @@ const upsert = (driver) => {
             price: item.price,
             video: item.video,
             qty: item.qty,
-            variants_options: JSON.stringify(item.variants_options),
+            variants_options: 'variants_options' in item ? JSON.stringify(item.variants_options) : undefined,
             // no variants yet
-            parent_handle: item.parent_handle,
-            parent_id: item.parent_id,
-            variant_hint: JSON.stringify(item.variant_hint),
+            parent_handle: 'parent_handle' in item ? item.parent_handle : undefined,
+            parent_id: 'parent_id' in item ? item.parent_id : undefined,
+            variant_hint: 'variant_hint' in item ? JSON.stringify(item.variant_hint) : undefined,
           });
 
           // PRODUCTS => VARIANTS
@@ -174,7 +174,8 @@ const get = (driver) => {
     const r = await driver.client
     .selectFrom(table_name)
     .selectAll('products')
-    .select(eb => [
+    .select(
+      eb => [
         with_tags(eb, id_or_handle, dtype),
         with_media(eb, id_or_handle, dtype),
         expand_collections && products_with_collections(eb, id_or_handle, dtype),
@@ -210,7 +211,8 @@ const getBulk = (driver) => {
     const r = await driver.client
     .selectFrom(table_name)
     .selectAll('products')
-    .select(eb => [
+    .select(
+      eb => [
         with_tags(eb, eb.ref('products.id'), dtype),
         with_media(eb, eb.ref('products.id'), dtype),
         expand_collections && products_with_collections(eb, eb.ref('products.id'), dtype),

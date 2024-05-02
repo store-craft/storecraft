@@ -22,7 +22,10 @@ let app = new App(
     'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' })
   }, null, null, 
   {
-    storage_rewrite_urls: undefined
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games'
   }
 );
 

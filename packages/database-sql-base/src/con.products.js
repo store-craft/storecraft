@@ -81,11 +81,11 @@ const upsert = (driver) => {
             price: item.price,
             video: item.video,
             qty: item.qty,
-            variants_options: JSON.stringify(item.variants_options),
+            variants_options: 'variants_options' in item ? JSON.stringify(item.variants_options) : undefined,
             // no variants yet
-            parent_handle: item.parent_handle,
-            parent_id: item.parent_id,
-            variant_hint: JSON.stringify(item.variant_hint),
+            parent_handle: 'parent_handle' in item ? item.parent_handle : undefined,
+            parent_id: 'parent_id' in item ? item.parent_id : undefined,
+            variant_hint: 'variant_hint' in item ? JSON.stringify(item.variant_hint) : undefined,
           });
 
           // PRODUCTS => VARIANTS
@@ -157,6 +157,8 @@ const upsert = (driver) => {
 
 /**
  * @param {SQL} driver 
+ * 
+ * 
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
@@ -168,21 +170,67 @@ const get = (driver) => {
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
+
     const r = await driver.client
     .selectFrom(table_name)
     .selectAll('products')
-    .select(eb => [
-      with_tags(eb, id_or_handle, dtype),
-      with_media(eb, id_or_handle, dtype),
-      expand_collections && products_with_collections(eb, id_or_handle, dtype),
-      expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
-      expand_variants && products_with_variants(eb, id_or_handle, dtype),
-      expand_related_products && products_with_related_products(eb, id_or_handle, dtype)
-    ].filter(Boolean)
+    .select(
+      eb => [
+        with_tags(eb, id_or_handle, dtype),
+        with_media(eb, id_or_handle, dtype),
+        expand_collections && products_with_collections(eb, id_or_handle, dtype),
+        expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
+        expand_variants && products_with_variants(eb, id_or_handle, dtype),
+        expand_related_products && products_with_related_products(eb, id_or_handle, dtype)
+      ].filter(Boolean)
     )
     .where(where_id_or_handle_table(id_or_handle))
     // .compile()
     .executeTakeFirst();
+
+    return sanitize(r);
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * 
+ * 
+ * @returns {db_col["getBulk"]}
+ */
+const getBulk = (driver) => {
+  return async (ids, options) => {
+
+    const expand = options?.expand ?? ['*'];
+    const expand_collections = expand.includes('*') || expand.includes('collections');
+    const expand_discounts = expand.includes('*') || expand.includes('discounts');
+    const expand_variants = expand.includes('*') || expand.includes('variants');
+    const expand_related_products = expand.includes('*') || expand.includes('related_products');
+    const dtype = driver.config.dialect_type;
+
+    const r = await driver.client
+    .selectFrom(table_name)
+    .selectAll('products')
+    .select(
+      eb => [
+        with_tags(eb, eb.ref('products.id'), dtype),
+        with_media(eb, eb.ref('products.id'), dtype),
+        expand_collections && products_with_collections(eb, eb.ref('products.id'), dtype),
+        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), dtype),
+        expand_variants && products_with_variants(eb, eb.ref('products.id'), dtype),
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), dtype)
+      ].filter(Boolean)
+    )
+    .where(
+      (eb) => eb.or(
+        [
+          eb('id', 'in', ids),
+          eb('handle', '=', ids),
+        ]
+      )
+    )
+    // .compile()
+    .execute();
 
     return sanitize(r);
   }
@@ -283,22 +331,26 @@ const list = (driver) => {
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
+
     const items = await driver.client
     .selectFrom(table_name)
     .selectAll()
-    .select(eb => [
-      with_tags(eb, eb.ref('products.id'), driver.dialectType),
-      with_media(eb, eb.ref('products.id'), driver.dialectType),
-      expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
-      expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
-      expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
-      expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType)
-    ].filter(Boolean))
+    .select(
+      eb => [
+        with_tags(eb, eb.ref('products.id'), driver.dialectType),
+        with_media(eb, eb.ref('products.id'), driver.dialectType),
+        expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
+        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
+        expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType)
+      ].filter(Boolean)
+    )
     .where(
       (eb) => {
         return query_to_eb(eb, query, table_name);
       }
-    ).orderBy(query_to_sort(query))
+    )
+    .orderBy(query_to_sort(query))
     .limit(query.limitToLast ?? query.limit ?? 10)
     .execute();
 
@@ -377,6 +429,44 @@ const list_related_products = (driver) => {
   }
 }
 
+
+/**
+ * @param {SQL} driver 
+ * 
+ * @returns {db_col["changeStockOfBy"]}
+ */
+const changeStockOfBy = (driver) => {
+  return async (product_ids_or_handles, deltas) => {
+
+    await driver.client.transaction().execute(
+      async (trx) => {
+        for(let ix=0; ix < product_ids_or_handles.length; ix++ ) {
+          const id = product_ids_or_handles[ix];
+          const delta = deltas[ix];
+
+          await trx
+          .updateTable('products')
+          .set(
+            eb => (
+              {
+                qty: eb('qty', '+', delta)
+              }
+            )
+          )
+          .where(
+            where_id_or_handle_table(id)
+          )
+          .execute()
+
+        }
+      }
+    );
+
+  }
+  
+}
+
+
 /** 
  * @param {SQL} driver
  * 
@@ -385,8 +475,9 @@ const list_related_products = (driver) => {
 export const impl = (driver) => {
 
   return {
-
+    changeStockOfBy: changeStockOfBy(driver),
     get: get(driver),
+    getBulk: getBulk(driver),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),

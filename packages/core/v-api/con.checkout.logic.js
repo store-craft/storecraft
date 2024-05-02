@@ -1,6 +1,7 @@
 import { App, CheckoutStatusEnum, DiscountApplicationEnum, 
   FulfillOptionsEnum, PaymentOptionsEnum } from "../index.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
+import { enums } from "./index.js";
 import { assert } from "./utils.func.js";
 import { parse_query } from "./utils.query.js"
 
@@ -12,7 +13,7 @@ import { parse_query } from "./utils.query.js"
  */
 
 /**
- * calculate pricing
+ * calculate pricing with `discounts`, `shipping`, `coupons`
  * 
  * @param {App} app 
  */
@@ -20,6 +21,8 @@ export const eval_pricing = (app) =>
 /**
  * 
  * @param {OrderData} order 
+ * 
+ * 
  * @returns {Promise<OrderData>}
  */
 async (order) => {
@@ -40,13 +43,13 @@ async (order) => {
     manual_discounts, 
     order.shipping_method, 
     order?.contact?.customer_id
-  )
+  );
 
-   return {
+  return {
     ...order,
     pricing
-   }
- }
+  }
+}
 
 
 /**
@@ -83,10 +86,20 @@ async (order, gateway_handle) => {
     },
   }
   
-  const has_pending_errors = order.validation.length > 0
+  const has_pending_errors = order.validation.length > 0;
+
   // we had reserve errors, so publish it with pricing etc..
   if(has_pending_errors) {
     return order;
+  }
+
+  { // reserve stock
+    if(app.config.checkout_reserve_stock_on==='checkout_create') {
+      await app.api.products.changeStockOf(
+        order.line_items.map(li => li.id),
+        order.line_items.map(li => li.qty)
+      )
+    }
   }
 
   const gateway = app.gateway(gateway_handle);
@@ -103,6 +116,8 @@ async (order, gateway_handle) => {
 
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
+
+
 
   await app.api.orders.upsert(order);
 
@@ -143,6 +158,17 @@ async (checkoutId, client_payload) => {
     ...order.status,
     ...status
   }
+
+  if(
+      (status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&
+      (app.config.checkout_reserve_stock_on==='checkout_complete')
+  ) {
+
+    await app.api.products.changeStockOf(
+      order.line_items.map(li => li.id),
+      order.line_items.map(li => li.qty)
+    )
+  }
   
   await app.api.orders.upsert(order);
 
@@ -151,7 +177,8 @@ async (checkoutId, client_payload) => {
 
 
 /**
- * fetch latest prices and shipping, soft-test for quantities
+ * fetch latest prices and shipping, soft-test for quantities,
+ * re-merge latest products data inside the line-items
  * 
  * 
  * @param {App} app
@@ -167,7 +194,8 @@ async (checkout) => {
 
   const snap_shipping = await app.db.resources.shipping.get(
     checkout.shipping_method.id
-    );
+  );
+
   const snaps_products = await app.db.resources.products.getBulk(
     checkout.line_items.map(li => li.id)
   );
@@ -175,6 +203,11 @@ async (checkout) => {
   /**@type {import("./types.api.js").ValidationEntry[]} */
   const errors = []
 
+  /**
+   * 
+   * @param {string} id 
+   * @param {import("./types.api.js").ValidationEntry["message"]} message 
+   */
   const errorWith = (id, message) => {
     errors.push({ id, message });
   }

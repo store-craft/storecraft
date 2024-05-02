@@ -151,6 +151,7 @@ export const inter = app => {
     list_product_discounts: list_product_discounts(app),
     list_product_variants: list_product_variants(app),
     list_related_products: list_related_products(app),
+    changeStockOf: db(app).changeStockOfBy
   }
 }
 

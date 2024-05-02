@@ -432,6 +432,63 @@ const remove_product_from_collection = (driver) => {
   }
 }
 
+/**
+ * @param {MongoDB} driver 
+ * 
+ * 
+ * @returns {db_col["changeStockOfBy"]}
+ */
+const changeStockOfBy = (driver) => {
+  return async (product_ids_or_handles, deltas) => {
+
+    /** 
+     * @type {import('mongodb').AnyBulkWriteOperation<
+     *  import('./utils.relations.js').WithRelations<
+     *    import('@storecraft/core/v-api/con.pricing.logic.js').ProductType | 
+     *    import('@storecraft/core/v-api').VariantType
+     *  >
+     * >[]} 
+     */
+    let ops = []
+
+    product_ids_or_handles.forEach(
+      (id, ix) => {
+        ops.push(
+          {
+            updateOne: {
+              filter: handle_or_id(id),
+              update: {
+                $inc: { qty: Math.round(deltas[ix]) }
+              }
+            }
+          }
+        );
+
+        ops.push(
+          {
+            updateOne: {
+              filter: handle_or_id(id),
+              update: {
+                $max: { qty: 0 }
+              }
+            }
+          }
+        );
+
+      }
+    );
+
+    if(!ops.length)
+      return;
+
+    await driver.resources.products._col.bulkWrite(
+      ops
+    );
+
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -442,6 +499,7 @@ export const impl = (driver) => {
 
   return {
     _col: col(driver),
+    changeStockOfBy: changeStockOfBy(driver), 
     get: get(driver),
     getBulk: get_bulk(driver, col(driver)),
     upsert: upsert(driver),

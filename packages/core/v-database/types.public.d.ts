@@ -132,7 +132,15 @@ export interface db_collections extends db_crud<CollectionTypeUpsert, Collection
 
 /** products crud */
 export interface db_products extends db_crud<ProductTypeUpsert | VariantTypeUpsert, ProductType | VariantType> {
-  
+
+  /**
+   * increment / decrement stock of multiple products
+   * 
+   * @param product_id_or_handles array of `id` or `handle`
+   * @param deltas corresponding array of non-zero `positive` or `negative` integer
+   */
+  changeStockOfBy: (product_id_or_handles: HandleOrId[], deltas: number[]) => Promise<void>;
+
   /**
    * list all of the product related collections, returns eveything, this is not query based,
    * we assume, there are a handful of collection per product
@@ -181,6 +189,7 @@ export interface db_products extends db_crud<ProductTypeUpsert | VariantTypeUpse
    * @param collection_handle_or_id collection handle or id
    */
   remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
+
 }
 
 /**

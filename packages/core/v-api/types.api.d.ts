@@ -63,8 +63,10 @@ export type StorecraftConfig = {
 
   /** 
    * 
-   * @description (Optional) automatically reserve stock, if absent will be 
-   * infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` environment.
+   * @description (Optional) automatically reserve stock, we recommend to use `never`.
+   * Depending on your needs you can alter this setting.
+   * if absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` 
+   * environment and then will default to `never`.
    * @default never
    */
   checkout_reserve_stock_on?: 'checkout_create' | 'checkout_complete' | 'never'

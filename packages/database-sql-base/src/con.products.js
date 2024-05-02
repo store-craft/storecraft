@@ -157,6 +157,8 @@ const upsert = (driver) => {
 
 /**
  * @param {SQL} driver 
+ * 
+ * 
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
@@ -168,21 +170,65 @@ const get = (driver) => {
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
+
     const r = await driver.client
     .selectFrom(table_name)
     .selectAll('products')
     .select(eb => [
-      with_tags(eb, id_or_handle, dtype),
-      with_media(eb, id_or_handle, dtype),
-      expand_collections && products_with_collections(eb, id_or_handle, dtype),
-      expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
-      expand_variants && products_with_variants(eb, id_or_handle, dtype),
-      expand_related_products && products_with_related_products(eb, id_or_handle, dtype)
-    ].filter(Boolean)
+        with_tags(eb, id_or_handle, dtype),
+        with_media(eb, id_or_handle, dtype),
+        expand_collections && products_with_collections(eb, id_or_handle, dtype),
+        expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
+        expand_variants && products_with_variants(eb, id_or_handle, dtype),
+        expand_related_products && products_with_related_products(eb, id_or_handle, dtype)
+      ].filter(Boolean)
     )
     .where(where_id_or_handle_table(id_or_handle))
     // .compile()
     .executeTakeFirst();
+
+    return sanitize(r);
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * 
+ * 
+ * @returns {db_col["getBulk"]}
+ */
+const getBulk = (driver) => {
+  return async (ids, options) => {
+
+    const expand = options?.expand ?? ['*'];
+    const expand_collections = expand.includes('*') || expand.includes('collections');
+    const expand_discounts = expand.includes('*') || expand.includes('discounts');
+    const expand_variants = expand.includes('*') || expand.includes('variants');
+    const expand_related_products = expand.includes('*') || expand.includes('related_products');
+    const dtype = driver.config.dialect_type;
+
+    const r = await driver.client
+    .selectFrom(table_name)
+    .selectAll('products')
+    .select(eb => [
+        with_tags(eb, eb.ref('products.id'), dtype),
+        with_media(eb, eb.ref('products.id'), dtype),
+        expand_collections && products_with_collections(eb, eb.ref('products.id'), dtype),
+        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), dtype),
+        expand_variants && products_with_variants(eb, eb.ref('products.id'), dtype),
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), dtype)
+      ].filter(Boolean)
+    )
+    .where(
+      (eb) => eb.or(
+        [
+          eb('id', 'in', ids),
+          eb('handle', '=', ids),
+        ]
+      )
+    )
+    // .compile()
+    .execute();
 
     return sanitize(r);
   }
@@ -283,6 +329,7 @@ const list = (driver) => {
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
+
     const items = await driver.client
     .selectFrom(table_name)
     .selectAll()
@@ -387,6 +434,7 @@ export const impl = (driver) => {
   return {
 
     get: get(driver),
+    getBulk: getBulk(driver),
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),

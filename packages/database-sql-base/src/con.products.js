@@ -333,19 +333,22 @@ const list = (driver) => {
     const items = await driver.client
     .selectFrom(table_name)
     .selectAll()
-    .select(eb => [
-      with_tags(eb, eb.ref('products.id'), driver.dialectType),
-      with_media(eb, eb.ref('products.id'), driver.dialectType),
-      expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
-      expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
-      expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
-      expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType)
-    ].filter(Boolean))
+    .select(
+      eb => [
+        with_tags(eb, eb.ref('products.id'), driver.dialectType),
+        with_media(eb, eb.ref('products.id'), driver.dialectType),
+        expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
+        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
+        expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType)
+      ].filter(Boolean)
+    )
     .where(
       (eb) => {
         return query_to_eb(eb, query, table_name);
       }
-    ).orderBy(query_to_sort(query))
+    )
+    .orderBy(query_to_sort(query))
     .limit(query.limitToLast ?? query.limit ?? 10)
     .execute();
 
@@ -424,6 +427,44 @@ const list_related_products = (driver) => {
   }
 }
 
+
+/**
+ * @param {SQL} driver 
+ * 
+ * @returns {db_col["changeStockOfBy"]}
+ */
+const changeStockOfBy = (driver) => {
+  return async (product_ids_or_handles, deltas) => {
+
+    await driver.client.transaction().execute(
+      async (trx) => {
+        for(let ix=0; ix < product_ids_or_handles.length; ix++ ) {
+          const id = product_ids_or_handles[ix];
+          const delta = deltas[ix];
+
+          await trx
+          .updateTable('products')
+          .set(
+            eb => (
+              {
+                qty: eb('qty', '+', delta)
+              }
+            )
+          )
+          .where(
+            where_id_or_handle_table(id)
+          )
+          .execute()
+
+        }
+      }
+    );
+
+  }
+  
+}
+
+
 /** 
  * @param {SQL} driver
  * 
@@ -432,7 +473,7 @@ const list_related_products = (driver) => {
 export const impl = (driver) => {
 
   return {
-
+    changeStockOfBy: changeStockOfBy(driver),
     get: get(driver),
     getBulk: getBulk(driver),
     upsert: upsert(driver),

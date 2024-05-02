@@ -43,13 +43,13 @@ async (order) => {
     manual_discounts, 
     order.shipping_method, 
     order?.contact?.customer_id
-  )
+  );
 
-   return {
+  return {
     ...order,
     pricing
-   }
- }
+  }
+}
 
 
 /**

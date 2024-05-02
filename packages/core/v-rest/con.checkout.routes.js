@@ -24,17 +24,19 @@ export const create_routes = (app) => {
     async (req, res) => {
       const gateway_handle = req.query?.get('gateway');
 
-      assert(app.gateway(gateway_handle), `gateway ${gateway_handle} not found`, 400);
+      assert(
+        app.gateway(gateway_handle), 
+        `gateway ${gateway_handle} not found`, 400
+      );
 
-      const r = await app.api.checkout.create_checkout(req.parsedBody, gateway_handle);
-
-      if(!is_admin(req.user)) {
-        delete r?.payment_gateway?.on_checkout_create;
-      }
+      const r = await app.api.checkout.create_checkout(
+        req.parsedBody, gateway_handle
+      );
 
       res.sendJson(r);
     }
   );
+
 
   // complete a checkout, this is optional if you use web-hooks
   polka.post(
@@ -43,10 +45,6 @@ export const create_routes = (app) => {
       const checkout_id = req?.params?.checkout_id;
 
       const r = await app.api.checkout.complete_checkout(checkout_id);
-
-      if(!is_admin(req.user)) {
-        delete r?.payment_gateway?.on_checkout_create;
-      }
 
       res.sendJson(r);
     }
@@ -58,11 +56,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const r = await app.api.checkout.eval_pricing(req.parsedBody);
 
-      if(!is_admin(req.user)) {
-        delete r?.payment_gateway?.on_checkout_create;
-      }
-
-      res.sendJson(r);
+      res.sendJson(r.pricing);
     }
   );
 

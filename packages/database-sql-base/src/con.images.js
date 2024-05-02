@@ -1,15 +1,15 @@
 import { func } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { count_regular, delete_me, delete_search_of, 
-  insert_entity_array_values_of, 
   insert_search_of, regular_upsert_me, where_id_or_handle_table 
 } from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
-// import { ID } from '@storecraft/core/v-api/utils.func.js'
 import { Transaction } from 'kysely'
 import { ID } from '@storecraft/core/v-api/utils.func.js'
-import { image_url_to_handle, image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js'
+import { 
+  image_url_to_handle, image_url_to_name 
+} from '@storecraft/core/v-api/con.images.logic.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_images} db_col

@@ -466,18 +466,22 @@ const Media = (
 
       // upload here
       try {
+        const key = `images/${name}`;
         const ok = await sdk.storage.putBytes(
-          `images/${name}`, blob
+          key, blob
         );
 
         if(!ok) throw 'wow';
-        const url = `storage://images/${name}`
+
+        const url = `storage://${key}`
         const us = [url, ...urls]                        ;
+
         setUrls(us);
         onChange && onChange(us);
 
         setUploads(ups => ups.filter(up => up.id!==id));
         URL.revokeObjectURL(obj_url);
+        
       } catch (err) {
         console.log(err);
         setUploads(

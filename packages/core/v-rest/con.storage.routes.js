@@ -27,7 +27,6 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      console.log('features')
       res.sendJson(features);
     }
   );

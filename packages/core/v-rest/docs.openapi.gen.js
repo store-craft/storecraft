@@ -36,6 +36,7 @@ import {
   paymentOptionsEnumSchema,
   postTypeSchema,
   postTypeUpsertSchema,
+  pricingDataSchema,
   productTypeSchema,
   productTypeUpsertSchema,
   shippingMethodTypeSchema,
@@ -167,6 +168,9 @@ const create_all = () => {
   register_settings(registry);
   register_auth(registry);
   register_storage(registry);
+  register_checkout(registry);
+  register_payments(registry);
+  register_extensions(registry);
   register_tags(registry);
   register_collections(registry);
   register_products(registry);
@@ -178,8 +182,6 @@ const create_all = () => {
   register_orders(registry);
   register_posts(registry);
   register_storefronts(registry);
-  register_payments(registry);
-  register_extensions(registry);
 
   // register some utility types
   registry.register('Error', errorSchema);
@@ -386,6 +388,189 @@ const register_base_list = (
   });
 
 }
+
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_checkout = (registry) => {
+  registry.register('pricingData', pricingDataSchema);
+
+  const example_draft_order = {
+    "status": {
+      "checkout": {
+        "id": 0,
+        "name2": "created",
+        "name": "Created"
+      },
+      "payment": {
+        "id": 1,
+        "name": "Authorized",
+        "name2": "authorized"
+      },
+      "fulfillment": {
+        "id": 0,
+        "name2": "draft",
+        "name": "Draft"
+      }
+    },
+    "pricing": {
+      "quantity_discounted": 3,
+      "quantity_total": 5,
+      "subtotal": 100,
+      "subtotal_discount": 30,
+      "subtotal_undiscounted": 70,
+      "total": 120
+    },
+    "line_items": [
+      {
+        "id": "pr-1-id",
+        "qty": 3
+      },
+      {
+        "id": "pr-2-id",
+        "qty": 2
+      }
+    ],
+    "shipping_method": {
+      "handle": "ship-a",
+      "name": "ship a",
+      "price": 30
+    },
+    "id": "order_65d774c6445e4581b9e34c11",
+    "search": [
+      "id:order_65d774c6445e4581b9e34c11",
+      "order_65d774c6445e4581b9e34c11",
+      "65d774c6445e4581b9e34c11",
+      "order_65d774c6445e4581b9e34c11",
+      120,
+      "payment:authorized",
+      "payment:1",
+      "fulfill:draft",
+      "fulfill:0",
+      "checkout:created",
+      "checkout:0",
+      "li:pr-1-id",
+      "li:pr-2-id"
+    ],
+    "created_at": "2024-02-22T16:22:30.095Z",
+    "updated_at": "2024-02-22T16:22:30.095Z"
+  }
+
+
+  registry.registerPath({
+    method: 'post',
+    path: `/checkout/create?gateway={gateway}`,
+    description: `Create a Checkout for an order`,
+    summary: `Create a Checkout for an order`,
+    tags: ['checkout'],
+    request: {
+      query: z.object(
+        {
+          gateway: z.number().openapi(
+            { 
+              example: 'paypal_standard', 
+              description: 'The payment gateway to use' 
+            }
+          ),
+      
+        }
+      ),
+      body: {
+        description: 'draft `order` data',
+        content: {
+          "application/json": {
+            schema: orderDataSchema,
+            example: example_draft_order
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: 'draft `order` data with payment gateway result',
+        content: {
+          'application/json': {
+            schema: orderDataSchema,
+            example: {
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+
+  registry.registerPath({
+    method: 'post',
+    path: `/checkout/{order_id}/complete`,
+    description: `Complete a Checkout for an \`order\`, on result, you get back an order with updated status, which you can use to inspect success`,
+    summary: `Complete a Checkout for an order`,
+    tags: ['checkout'],
+    request: {
+      params: z.object(
+        {
+          order_id: z.string().openapi(
+            { 
+              example: 'order_66333f8605ea3a380bbc96fc', 
+              description: 'The `order` id' 
+            }
+          ),
+      
+        }
+      ),
+    },
+    responses: {
+      200: {
+        description: 'draft `order` data with payment gateway result',
+        content: {
+          'application/json': {
+            schema: orderDataSchema,
+            example: example_draft_order
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+
+  registry.registerPath({
+    method: 'post',
+    path: `/pricing`,
+    description: `Get a pricing for an order. order should at least have the line items, shipping and coupons`,
+    summary: `Get a pricing for an order`,
+    tags: ['checkout'],
+    request: {
+      body: {
+        description: 'draft `order` data ',
+        content: {
+          "application/json": {
+            schema: orderDataSchema,
+            example: {
+
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: 'Pricing data',
+        content: {
+          'application/json': {
+            schema: pricingDataSchema,
+            example: {
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 

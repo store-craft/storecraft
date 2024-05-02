@@ -15,3 +15,5 @@ export namespace VQL {
 
   export type AST = Node;
 }
+
+export * from './index.js'

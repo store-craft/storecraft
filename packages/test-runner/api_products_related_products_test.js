@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App } from '@storecraft/core';
@@ -58,9 +57,9 @@ export const create = app => {
     async () => { 
       assert.ok(app.ready);
       try {
-        await products.remove(app, pr_upsert.handle);
+        await app.api.products.remove(pr_upsert.handle);
         for(const p of related_product_upsert)
-          await products.remove(app, p.handle);
+          await app.api.products.remove(p.handle);
       } catch(e) {
         console.log(e)
         throw e;
@@ -76,7 +75,7 @@ export const create = app => {
 
     // upsert all variants
     const ids = await promises_sequence(
-      related_product_upsert.map(v => () => products.upsert(app, v))
+      related_product_upsert.map(v => () => app.api.products.upsert(v))
     )
 
     // console.log('ids', ids)
@@ -91,15 +90,17 @@ export const create = app => {
 
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const related_products = await products.list_related_products(
-      app, pr_upsert.handle
+    const related_products = await app.api.products.list_related_products(
+      pr_upsert.handle
     );
 
     // console.log('related_products', related_products)
 
     assert.ok(related_products.length>=related_product_upsert.length, 'got less')
     assert.ok(
-      related_product_upsert.every((v) => related_products.find(x => x.handle===v.handle)), 
+      related_product_upsert.every(
+        (v) => related_products.find(x => x.handle===v.handle)
+      ), 
       'got less'
     );
   });
@@ -108,13 +109,13 @@ export const create = app => {
     // upsert 1st product straight to the db because we have ID
     const remove_handle = related_product_upsert[0].handle;
 
-    await products.remove(
-      app, remove_handle
+    await app.api.products.remove(
+      remove_handle
     );
     
     // now query the product's discounts to see if discount was applied to 1st product
-    const related_products = await products.list_related_products(
-      app, pr_upsert.handle
+    const related_products = await app.api.products.list_related_products(
+      pr_upsert.handle
     ) ?? [];
 
     assert.ok(

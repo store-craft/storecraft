@@ -1,9 +1,4 @@
 import { Polka } from '../v-polka/index.js'
-import { 
-  create_api_key, get_auth_user, list_all_api_keys_info, 
-  list_auth_users, 
-  refresh, remove_auth_user, signin, signup 
-} from '../v-api/con.auth.logic.js'
 import { authorize_admin } from './con.auth.middle.js';
 import { parse_query } from '../v-api/utils.query.js';
 
@@ -22,11 +17,11 @@ export const create_routes = (app) => {
   /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
-  // signup
+  // signup 
   polka.post(
     '/signup',
     async (req, res) => {
-      const result = await signup(app, req.parsedBody);
+      const result = await app.api.auth.signup(req.parsedBody);
       res.sendJson(result);
     }
   )
@@ -35,7 +30,7 @@ export const create_routes = (app) => {
   polka.post(
     '/signin',
     async (req, res) => {
-      const result = await signin(app, req.parsedBody);
+      const result = await app.api.auth.signin(req.parsedBody);
       res.sendJson(result);
     }
   )
@@ -44,7 +39,7 @@ export const create_routes = (app) => {
   polka.post(
     '/refresh',
     async (req, res) => {
-      const result = await refresh(app, req.parsedBody);
+      const result = await app.api.auth.refresh(req.parsedBody);
       res.sendJson(result);
     }
   )
@@ -55,7 +50,7 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
 
-      await remove_auth_user(app, req.params?.email);
+      await app.api.auth.remove_auth_user(req.params?.email);
 
       res.end();
     }
@@ -65,7 +60,7 @@ export const create_routes = (app) => {
     '/users/:email',
     middle_authorize_admin,
     async (req, res) => {
-      const item = await get_auth_user(app, req.params?.email);
+      const item = await app.api.auth.get_auth_user(req.params?.email);
 
       res.sendJson(item);
     }
@@ -78,7 +73,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       let q = parse_query(req.query);
 
-      const items = await list_auth_users(app, q);
+      const items = await app.api.auth.list_auth_users(q);
 
       res.sendJson(items);
     }
@@ -89,7 +84,7 @@ export const create_routes = (app) => {
     '/apikeys',
     middle_authorize_admin,
     async (req, res) => {
-      const result = await create_api_key(app);
+      const result = await app.api.auth.create_api_key();
 
       res.sendJson(result);
     }
@@ -101,7 +96,7 @@ export const create_routes = (app) => {
     '/apikeys',
     middle_authorize_admin,
     async (req, res) => {
-      const result = await list_all_api_keys_info(app);
+      const result = await app.api.auth.list_all_api_keys_info();
 
       res.sendJson(result);
     }

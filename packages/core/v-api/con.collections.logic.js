@@ -16,50 +16,56 @@ export const db = app => app.db.resources.collections;
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {ItemTypeUpsert} item
  */
-export const upsert = (app, item) => regular_upsert(
-  app, db(app), 'col', collectionTypeUpsertSchema, 
-  (final) => {
-    assert(
-      [final.handle].every(
-        h => to_handle(h)===h
-      ),
-      'Handle is invalid', 400
-    );
-    return [];
-  }
-)(item);
+export const upsert = (app) => 
+  /**
+   * 
+   * @param {ItemTypeUpsert} item
+   */
+  (item) => regular_upsert(
+    app, db(app), 'col', collectionTypeUpsertSchema, 
+    (final) => {
+      assert(
+        [final.handle].every(
+          h => to_handle(h)===h
+        ),
+        'Handle is invalid', 400
+      );
+      return [];
+    }
+  )(item);
 
 
 /**
  * given a collection handle and query, return products of that collection
+ * 
+ * 
  * @param {import("../types.public.js").App} app
- * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
- * @param {import('./types.api.query.js').ApiQuery} q 
  */
-export const list_collection_products = async (app, handle_or_id, q) => {
-  return db(app).list_collection_products(handle_or_id, q);
+export const list_collection_products = (app) => 
+  /**
+   * 
+   * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
+   * @param {import('./types.api.query.js').ApiQuery} q 
+   */
+  (handle_or_id, q) => {
+    return db(app).list_collection_products(handle_or_id, q);
+  }
+
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ */  
+export const inter = app => {
+
+  return {
+    get: regular_get(app, db(app)),
+    upsert: upsert(app),
+    remove: regular_remove(app, db(app)),
+    list: regular_list(app, db(app)),
+    list_collection_products: list_collection_products(app)
+  }
 }
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
- */
-export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} id
- */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
-
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);

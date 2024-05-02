@@ -19,10 +19,14 @@ export const db = app => app.db.resources.notifications;
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const addBulk = (app) => 
+/**
+ * 
  * @param {ItemTypeUpsert[]} items
  * @return {Promise<import('../v-database/types.public.js').ID[]>}
  */
-export const addBulk = async (app, items) => {
+async (items) => {
   
   /** @type {(ItemTypeUpsert & import('../v-database/types.public.js').idable_concrete)[]} */
   const items_with_id = Array.isArray(items) ? items : [items] ;
@@ -40,27 +44,21 @@ export const addBulk = async (app, items) => {
   );
 
   await db(app).upsertBulk(items_with_id, search_terms);
+  
   return items_with_id.map(it => it.id);
 }
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
- */
-export const get = (app, id, options) => regular_get(app, db(app))(id, options);
 
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} id
- */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
+ */  
+export const inter = app => {
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);
+  return {
+    get: regular_get(app, db(app)),
+    remove: regular_remove(app, db(app)),
+    list: regular_list(app, db(app)),
+    addBulk: addBulk(app)
+  }
+}

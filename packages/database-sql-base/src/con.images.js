@@ -1,4 +1,4 @@
-import { func, images } from '@storecraft/core/v-api'
+import { func } from '@storecraft/core/v-api'
 import { SQL } from '../driver.js'
 import { count_regular, delete_me, delete_search_of, 
   insert_entity_array_values_of, 
@@ -9,6 +9,7 @@ import { query_to_eb, query_to_sort } from './utils.query.js'
 // import { ID } from '@storecraft/core/v-api/utils.func.js'
 import { Transaction } from 'kysely'
 import { ID } from '@storecraft/core/v-api/utils.func.js'
+import { image_url_to_handle, image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js'
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_images} db_col
@@ -122,9 +123,9 @@ export const report_document_media = (driver) => {
       const ms = item.media.map(
         m => (
           {
-            handle: images.image_url_to_handle(m),
+            handle: image_url_to_handle(m),
             url: m,
-            name: images.image_url_to_name(m),
+            name: image_url_to_name(m),
             id: ID('img'),
             created_at: dates.created_at,
             updated_at: dates.updated_at,

@@ -23,7 +23,7 @@ export const create_app = async () => {
       dialect_type: 'MYSQL'
     }),
     null, null, null, null, {
-      admins_emails: ['admin@sc.com'],
+      auth_admins_emails: ['admin@sc.com'],
       auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'

@@ -2,10 +2,7 @@ import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
-import { get, list, list_storefront_collections, 
-  list_storefront_discounts, list_storefront_posts, 
-  list_storefront_products, list_storefront_shipping_methods, 
-  remove, upsert } from '../v-api/con.storefronts.logic.js'
+
 
 /**
  * @typedef {import('../v-api/types.api.js').TagType} ItemType
@@ -32,7 +29,7 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await upsert(app, req.parsedBody);
+      const final = await app.api.storefronts.upsert(req.parsedBody);
       res.sendJson(final);
     }
   )
@@ -42,8 +39,10 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const item = await get(app, handle_or_id);
+      const item = await app.api.storefronts.get(handle_or_id);
+
       assert(item, 'not-found', 404);
+      
       res.sendJson(item);
     }
   );
@@ -54,7 +53,8 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await remove(app, handle_or_id);
+      const removed = handle_or_id && await app.api.storefronts.remove(handle_or_id);
+
       res.setStatus(removed ? 200 : 404).end();
     }
   );
@@ -63,8 +63,9 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      let q = parse_query(req.query);
-      const items = await list(app, q);
+      const q = parse_query(req.query);
+      const items = await app.api.storefronts.list(q);
+
       res.sendJson(items);
     }
   );
@@ -74,7 +75,8 @@ export const create_routes = (app) => {
     '/:handle/products',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await list_storefront_products(app, handle);
+      const items = await app.api.storefronts.list_storefront_products(handle);
+
       res.sendJson(items);
     }
   );
@@ -83,7 +85,8 @@ export const create_routes = (app) => {
     '/:handle/collections',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await list_storefront_collections(app, handle);
+      const items = await app.api.storefronts.list_storefront_collections(handle);
+
       res.sendJson(items);
     }
   );
@@ -92,7 +95,8 @@ export const create_routes = (app) => {
     '/:handle/discounts',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await list_storefront_discounts(app, handle);
+      const items = await app.api.storefronts.list_storefront_discounts(handle);
+
       res.sendJson(items);
     }
   );
@@ -101,7 +105,8 @@ export const create_routes = (app) => {
     '/:handle/shipping_methods',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await list_storefront_shipping_methods(app, handle);
+      const items = await app.api.storefronts.list_storefront_shipping_methods(handle);
+      
       res.sendJson(items);
     }
   );
@@ -110,7 +115,8 @@ export const create_routes = (app) => {
     '/:handle/posts',
     async (req, res) => {
       const { handle } = req.params;
-      const items = await list_storefront_posts(app, handle);
+      const items = await app.api.storefronts.list_storefront_posts(handle);
+
       res.sendJson(items);
     }
   );

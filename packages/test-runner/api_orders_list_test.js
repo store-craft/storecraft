@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { orders } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, iso, add_list_integrity_tests,
@@ -58,7 +57,7 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: orders,
+      items: items, app, ops: app.api.orders,
       resource: 'orders'
     }
   );
@@ -68,7 +67,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await orders.remove(app, p.id);
+          await app.api.orders.remove(p.id);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
             await app.db.resources.orders.upsert(p);

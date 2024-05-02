@@ -1,8 +1,6 @@
 import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { parse_auth_user, is_admin } from './con.auth.middle.js'
-import { complete_checkout, create_checkout, 
-  eval_pricing } from '../v-api/con.checkout.logic.js'
 
 /**
  * 
@@ -25,11 +23,15 @@ export const create_routes = (app) => {
     '/create',
     async (req, res) => {
       const gateway_handle = req.query?.get('gateway');
+
       assert(app.gateway(gateway_handle), `gateway ${gateway_handle} not found`, 400);
-      const r = await create_checkout(app, req.parsedBody, gateway_handle);
+
+      const r = await app.api.checkout.create_checkout(req.parsedBody, gateway_handle);
+
       if(!is_admin(req.user)) {
         delete r?.payment_gateway?.on_checkout_create;
       }
+
       res.sendJson(r);
     }
   );
@@ -39,10 +41,13 @@ export const create_routes = (app) => {
     '/:checkout_id/complete',
     async (req, res) => {
       const checkout_id = req?.params?.checkout_id;
-      const r = await complete_checkout(app, checkout_id);
+
+      const r = await app.api.checkout.complete_checkout(checkout_id);
+
       if(!is_admin(req.user)) {
         delete r?.payment_gateway?.on_checkout_create;
       }
+
       res.sendJson(r);
     }
   );
@@ -51,10 +56,12 @@ export const create_routes = (app) => {
   polka.post(
     '/pricing',
     async (req, res) => {
-      const r = await eval_pricing(app, req.parsedBody);
+      const r = await app.api.checkout.eval_pricing(req.parsedBody);
+
       if(!is_admin(req.user)) {
         delete r?.payment_gateway?.on_checkout_create;
       }
+
       res.sendJson(r);
     }
   );

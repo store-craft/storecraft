@@ -27,9 +27,13 @@ export const db = app => app.db.resources.products;
 /**
  * 
  * @param {App} app
+ */
+export const upsert = (app) => 
+/**
+ * 
  * @param {ItemTypeUpsert} item
  */
-export const upsert = (app, item) => regular_upsert(
+(item) => regular_upsert(
   app, db(app), 'pr', productTypeUpsertSchema.or(variantTypeUpsertSchema), 
   (final) => {
 
@@ -52,60 +56,54 @@ export const upsert = (app, item) => regular_upsert(
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
  */
-export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
-
+export const add_product_to_collection = (app) => 
 /**
  * 
- * @param {import("../types.public.js").App} app
- * @param {string} id
- */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
-
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);
-
-/**
- * 
- * @param {import("../types.public.js").App} app
  * @param {string} product handle or id
  * @param {string} collection handle or id
  */
-export const add_product_to_collection = (app, product, collection) => {
+(product, collection) => {
   return db(app).add_product_to_collection(product, collection);
 }
 
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const remove_product_from_collection = (app) => 
+/**
+ * 
  * @param {string} product handle or id
  * @param {string} collection handle or id
  */
-export const remove_product_from_collection = (app, product, collection) => {
+(product, collection) => {
   return db(app).remove_product_from_collection(product, collection);
 }
 
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const list_product_collections = (app) => 
+/**
+ * 
  * @param {string} handle_or_id handle or id
  */
-export const list_product_collections = (app, handle_or_id) => {
+(handle_or_id) => {
   return db(app).list_product_collections(handle_or_id);
 }
 
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const list_product_variants = (app) => 
+/**
+ * 
  * @param {string} product handle or id
  */
-export const list_product_variants = (app, product) => {
+(product) => {
   return db(app).list_product_variants(product);
 }
 
@@ -113,9 +111,13 @@ export const list_product_variants = (app, product) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const list_related_products = (app) => 
+/**
+ * 
  * @param {string} product handle or id
  */
-export const list_related_products = (app, product) => {
+(product) => {
   return db(app).list_related_products(product);
 }
 
@@ -123,8 +125,33 @@ export const list_related_products = (app, product) => {
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const list_product_discounts = (app) => 
+/**
+ * 
  * @param {string} product handle or id
  */
-export const list_product_discounts = (app, product) => {
+(product) => {
   return db(app).list_product_discounts(product);
 }
+
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ */  
+export const inter = app => {
+
+  return {
+    get: regular_get(app, db(app)),
+    upsert: upsert(app),
+    remove: regular_remove(app, db(app)),
+    list: regular_list(app, db(app)),
+    list_product_collections: list_product_collections(app),
+    list_product_discounts: list_product_discounts(app),
+    list_product_variants: list_product_variants(app),
+    list_related_products: list_related_products(app),
+  }
+}
+
+

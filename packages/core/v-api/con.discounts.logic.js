@@ -17,9 +17,13 @@ export const db = app => app.db.resources.discounts;
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const upsert = (app) => 
+/**
+ * 
  * @param {ItemTypeUpsert} item
  */
-export const upsert = (app, item) => regular_upsert(
+(item) => regular_upsert(
   app, db(app), 'dis', discountTypeUpsertSchema, 
   (final) => {
     assert(
@@ -40,33 +44,33 @@ export const upsert = (app, item) => regular_upsert(
 
 
 /**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
- */
-export const get = (app, handle_or_id, options) => regular_get(app, db(app))(handle_or_id, options);
-
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} id
- */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
-
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);
-
-/**
  * given a discount handle and query, return products of that discount
+ * 
+ * 
  * @param {import("../types.public.js").App} app
+ */
+export const list_discounts_products = (app) => 
+/**
+ * 
  * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
  * @param {import('./types.api.query.js').ApiQuery} [q] 
  */
-export const list_discounts_products = async (app, handle_or_id, q) => {
+(handle_or_id, q) => {
   return db(app).list_discount_products(handle_or_id, q);
+}
+
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ */  
+export const inter = app => {
+
+  return {
+    get: regular_get(app, db(app)),
+    upsert: upsert(app),
+    remove: regular_remove(app, db(app)),
+    list: regular_list(app, db(app)),
+    list_discounts_products: list_discounts_products(app)
+  }
 }

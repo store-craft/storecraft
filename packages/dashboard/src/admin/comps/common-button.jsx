@@ -175,7 +175,7 @@ export const PromisableLoadingButton = (
  */
 export const PromisableLoadingBlingButton = (
   {
-    onClick, show=true, className, loading: $loading, 
+    onClick, show=true, className='h-6', loading: $loading, 
     stroke='p-px', rounded='rounded-full', 
     from='from-pink-300 dark:from-pink-500',
     to='to-kf-300 dark:to-kf-500',

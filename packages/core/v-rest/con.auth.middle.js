@@ -87,7 +87,7 @@ export const parse_basic_auth_or_apikey = (app) => {
       return;
     
     try {
-      const auth_user = await verify_api_key(app, { apikey });
+      const auth_user = await verify_api_key(app)({ apikey });
 
       if(auth_user) {
         req.user = {

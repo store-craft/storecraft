@@ -1,9 +1,7 @@
 import { Polka } from '../v-polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js'
-import { 
-  compute_count_of_query, compute_statistics 
-} from '../v-api/con.statistics.logic.js';
 import { parse_query } from '../v-api/utils.query.js';
+
 
 /**
  * 
@@ -30,8 +28,8 @@ export const create_routes = (app) => {
       const from_day = req?.query.get('fromDay');
       const to_day = req?.query.get('toDay');
 
-      const stats = await compute_statistics(
-        app, from_day, to_day
+      const stats = await app.api.statistics.compute_statistics(
+        from_day, to_day
       );
 
       res.sendJson(stats);
@@ -46,8 +44,8 @@ export const create_routes = (app) => {
       let q = parse_query(req.query);
       const table = req?.params?.table;
 
-      const count = await compute_count_of_query(
-        app, table, q
+      const count = await app.api.statistics.compute_count_of_query(
+        table, q
       );
 
       res.sendJson(count);

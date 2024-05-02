@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { discounts } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
@@ -57,7 +56,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: discounts }
+    { items: items_upsert, app, ops: app.api.discounts }
   );
 
   s.before(
@@ -65,7 +64,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items_upsert) {
-          const get = await discounts.remove(app, p.handle);
+          const get = await app.api.discounts.remove(p.handle);
         }
       } catch(e) {
         console.log(e)

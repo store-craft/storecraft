@@ -91,7 +91,7 @@ export class MongoDB {
       this.config.url,
       this.config.options
     );
-
+   
     this.#_app = app;
 
     this.resources = {

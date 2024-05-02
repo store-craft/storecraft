@@ -16,9 +16,13 @@ export const db = app => app.db.resources.storefronts;
 /**
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const upsert = (app) => 
+/**
+ * 
  * @param {ItemTypeUpsert} item
  */
-export const upsert = (app, item) => regular_upsert(
+(item) => regular_upsert(
   app, db(app), 'sf', storefrontTypeUpsertSchema, 
   (final) => {
     assert(
@@ -31,66 +35,84 @@ export const upsert = (app, item) => regular_upsert(
   }
 )(item);
 
-/**
- * 
- * @param {import("../types.public.js").App} app
- * @param {string} handle_or_id
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
- */
-export const get = (app, handle_or_id, options={ expand: ['*']}) => 
-      regular_get(app, db(app))(handle_or_id, options);
 
 /**
  * 
  * @param {import("../types.public.js").App} app
- * @param {string} id
  */
-export const remove = (app, id) => regular_remove(app, db(app))(id);
-
+export const list_storefront_products = (app) => 
 /**
  * 
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.query.js').ApiQuery} q
- */
-export const list = (app, q) => regular_list(app, db(app))(q);
-
-/**
- * 
- * @param {import("../types.public.js").App} app
  * @param {string} handle_or_id handle or id
  */
-export const list_storefront_products = (app, handle_or_id) => {
+(handle_or_id) => {
   return db(app).list_storefront_products(handle_or_id);
 }
 
 /**
  * @param {import("../types.public.js").App} app
+ */
+export const list_storefront_collections = (app) => 
+/**
+ * 
  * @param {string} handle_or_id handle or id
  */
-export const list_storefront_collections = (app, handle_or_id) => {
+(handle_or_id) => {
   return db(app).list_storefront_collections(handle_or_id);
 }
 
 /**
  * @param {import("../types.public.js").App} app
+ */
+export const list_storefront_discounts = (app) => 
+/**
+ * 
  * @param {string} handle_or_id handle or id
  */
-export const list_storefront_discounts = (app, handle_or_id) => {
+(handle_or_id) => {
   return db(app).list_storefront_discounts(handle_or_id);
 }
 
 /**
  * @param {import("../types.public.js").App} app
+ */
+export const list_storefront_shipping_methods = (app) => 
+/**
+ * 
  * @param {string} handle_or_id handle or id
  */
-export const list_storefront_shipping_methods = (app, handle_or_id) => {
+(handle_or_id) => {
   return db(app).list_storefront_shipping_methods(handle_or_id);
 }
 
 /**
  * @param {import("../types.public.js").App} app
+ */
+export const list_storefront_posts = (app) => 
+/**
+ * 
  * @param {string} handle_or_id handle or id
  */
-export const list_storefront_posts = (app, handle_or_id) => {
+(handle_or_id) => {
   return db(app).list_storefront_posts(handle_or_id);
+}
+
+
+/**
+ * 
+ * @param {import("../types.public.js").App} app
+ */  
+export const inter = app => {
+
+  return {
+    get: regular_get(app, db(app)),
+    upsert: upsert(app),
+    remove: regular_remove(app, db(app)),
+    list: regular_list(app, db(app)),
+    list_storefront_products: list_storefront_products(app),
+    list_storefront_collections: list_storefront_collections(app),
+    list_storefront_discounts: list_storefront_discounts(app),
+    list_storefront_posts: list_storefront_posts(app),
+    list_storefront_shipping_methods: list_storefront_shipping_methods(app),
+  }
 }

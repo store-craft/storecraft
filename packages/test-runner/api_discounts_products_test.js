@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
@@ -99,9 +98,9 @@ export const create = app => {
       assert.ok(app.ready);
 
       for(const p of pr_upsert)
-        await products.remove(app, p.handle);
+        await app.api.products.remove(p.handle);
       for(const p of discounts_upsert)
-        await discounts.remove(app, p.handle);
+        await app.api.discounts.remove(p.handle);
     }
   );
 
@@ -110,8 +109,8 @@ export const create = app => {
     const prs = await promises_sequence(
       pr_upsert.map(
         c => async () => {
-          await products.upsert(app, c);
-          return products.get(app, c.handle);
+          await app.api.products.upsert(c);
+          return app.api.products.get(c.handle);
         }
       )
     );
@@ -120,8 +119,8 @@ export const create = app => {
     const dis = await promises_sequence(
       discounts_upsert.map(
         c => async () => {
-          await discounts.upsert(app, c);
-          return discounts.get(app, c.handle);
+          await app.api.discounts.upsert(c);
+          return app.api.discounts.get(c.handle);
         }
       )
     );
@@ -130,8 +129,8 @@ export const create = app => {
 
     // now assert, each product and discount applied
     for(let ix = 0; ix < discounts_upsert.length; ix++) {
-      const products_queried = await discounts.list_discounts_products(
-        app, discounts_upsert[ix].handle,
+      const products_queried = await app.api.discounts.list_discounts_products(
+        discounts_upsert[ix].handle,
         {
           startAt: [['id', prs[ix].id]],
           sortBy: ['id'],

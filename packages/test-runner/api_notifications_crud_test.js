@@ -1,4 +1,3 @@
-import { notifications } from '@storecraft/core/v-api';
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -37,12 +36,12 @@ export const create = app => {
   );
   
   s.before(async () => { assert.ok(app.ready) });
-  const ops = notifications;
+  const ops = app.api.notifications;
 
   s('add', async () => {
     const one = items_upsert[0];
     const ids = await ops.addBulk(
-      app, items_upsert
+      items_upsert
     );
 
     assert.ok(ids?.length)

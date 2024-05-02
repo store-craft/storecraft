@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { products, collections } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
@@ -59,9 +58,9 @@ export const create = app => {
       assert.ok(app.ready);
 
       for(const p of pr_upsert)
-        await products.remove(app, p.handle);
+        await app.api.products.remove(p.handle);
       for(const p of col_upsert)
-        await collections.remove(app, p.handle);
+        await app.api.collections.remove(p.handle);
     }
   );
 
@@ -70,8 +69,8 @@ export const create = app => {
     const cols = await promises_sequence(
       col_upsert.map(
         c => async () => {
-          await collections.upsert(app, c);
-          return collections.get(app, c.handle);
+          await app.api.collections.upsert(c);
+          return app.api.collections.get(c.handle);
         }
       )
     );
@@ -80,15 +79,15 @@ export const create = app => {
     const prs = await promises_sequence(
       pr_upsert.map(
         c => async () => {
-          await products.upsert(app, c);
-          return products.get(app, c.handle);
+          await app.api.products.upsert(c);
+          return app.api.products.get(c.handle);
         }
       )
     );
 
     // upsert products with collections relation
     for (const pr of prs) {
-      await products.upsert(app, {
+      await app.api.products.upsert({
         ...pr, 
         collections: cols
       });
@@ -96,7 +95,7 @@ export const create = app => {
 
     // test relation on the first product, we get what we put
     {
-      const cols_of_pr = await products.list_product_collections(app, prs[0].handle);
+      const cols_of_pr = await app.api.products.list_product_collections(prs[0].handle);
       // console.log(JSON.stringify(cols_of_pr,null,2))
       for (const expected of cols) {
         const actual = cols_of_pr.find(c => c.handle===expected.handle);
@@ -106,8 +105,8 @@ export const create = app => {
 
     // simple get with exapnd collections, should also return the collections
     { 
-      const product_with_collections = await products.get(
-        app, prs[0].handle, { expand: ['*']}
+      const product_with_collections = await app.api.products.get(
+        prs[0].handle, { expand: ['*']}
       );
       
       // console.log(JSON.stringify(product_with_collections, null, 2))
@@ -121,16 +120,16 @@ export const create = app => {
 
     // test collection delete, collection was deleted from product
     {
-      await collections.remove(app, cols[0].id);
-      const cols_of_pr = await products.list_product_collections(app, prs[0].handle);
+      await app.api.collections.remove(cols[0].id);
+      const cols_of_pr = await app.api.products.list_product_collections(prs[0].handle);
       assert_partial(cols_of_pr, cols.slice(1));
     }
 
     // test collection update, collection was updated at product
     {
       const update_second_col = { ...cols[1], title: `random title ${Math.random().toFixed(2)}` }
-      await collections.upsert(app, update_second_col);
-      const cols_of_pr = await products.list_product_collections(app, prs[0].handle);
+      await app.api.collections.upsert(update_second_col);
+      const cols_of_pr = await app.api.products.list_product_collections(prs[0].handle);
       assert.equal(cols_of_pr[0].title, update_second_col.title);
     }
 

@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { customers } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, add_sanity_crud_to_test_suite, 
@@ -28,7 +27,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: customers }
+    { items: items_upsert, app, ops: app.api.customers }
   );
 
   s.before(
@@ -36,9 +35,9 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items_upsert) {
-          const get = await customers.getByEmail(app, p.email);
+          const get = await app.api.customers.getByEmail(p.email);
           if(get)
-            await customers.remove(app, get.id);
+            await app.api.customers.remove(get.id);
         }
       } catch(e) {
         console.log(e)

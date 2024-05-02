@@ -1,4 +1,3 @@
-import { parse_query } from "@storecraft/core/v-api/utils.query.js";
 import { to_objid } from "./utils.funcs.js";
 import { parse } from "@storecraft/core/v-ql";
 

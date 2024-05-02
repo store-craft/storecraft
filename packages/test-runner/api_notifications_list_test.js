@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { notifications } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, 
@@ -53,7 +52,7 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: notifications,
+      items: items, app, ops: app.api.notifications,
       resource: 'notifications'
     }
   );
@@ -63,7 +62,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await notifications.remove(app, p.id);
+          await app.api.notifications.remove(p.id);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
           await app.db.resources.notifications.upsert(p);

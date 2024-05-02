@@ -1,6 +1,6 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
-import * as api from './v-api/index.js'
+import { create_api } from './v-api/index.js'
 export * from './v-api/types.api.enums.js'
 
 /** 
@@ -83,6 +83,13 @@ export class App {
   #_config;
 
   /** 
+   * @description The API logic
+   * 
+   * @type {ReturnType<create_api>} 
+   */ 
+  #_api;
+  
+  /** 
    * @description The REST API controller
    * 
    * @type {ReturnType<create_rest_api>} 
@@ -119,7 +126,7 @@ export class App {
     this.#_extensions = extensions;
     this.#_config = config;
     this.#_is_ready = false;
-  }
+  } 
 
   /**
    * 
@@ -178,6 +185,7 @@ export class App {
       console.log(e)
     }
 
+    this.#_api = create_api(this);
     this.#_rest_controller = create_rest_api(this);
     this.#_is_ready = true;
     
@@ -197,7 +205,7 @@ export class App {
    * @description Get the main **API** logic 
    */
   get api() {
-    return api
+    return this.#_api;
   }
 
   /** 

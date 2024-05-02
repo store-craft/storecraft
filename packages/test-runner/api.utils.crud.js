@@ -4,23 +4,36 @@ import { fileURLToPath } from "node:url";
 import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
-import { image_url_to_handle, 
-  image_url_to_name } from '@storecraft/core/v-api/con.images.logic.js';
-import { compute_count_of_query } from '@storecraft/core/v-api/con.statistics.logic.js';
+import { 
+  image_url_to_handle, image_url_to_name 
+} from '@storecraft/core/v-api/con.images.logic.js';
 
-/** timestamp to iso */
+/**
+ * timestamp to iso
+ * 
+ * 
+ * @param {number} number 
+ */
 export const iso = number => {
   return new Date(number).toISOString();
 }
 
+/**
+ * @param {string | URL} meta_url 
+ */
 export const file_name = (meta_url) => {
   return basename(fileURLToPath(meta_url));
 }
 
+
 /**
  * Execute a bunch of functions, that create promises sequentially.
  * All tests promises run in serial to avoid transactions locks.
+ * 
+ * 
  * @template T
+ * 
+ * 
  * @param {(() => Promise<T>)[]} items 
  */
 export const promises_sequence = async (items) => {
@@ -90,8 +103,8 @@ export const pick_random = items => {
  * @template {{
  *  items: G[],
  *  ops: {
- *    upsert?: (app: App, item: G) => Promise<string>,
- *    get?: (app: App, id: string) => Promise<G>,
+ *    upsert?: (item: G) => Promise<string>,
+ *    get?: (id: string) => Promise<G>,
  *  }
  *  app: App
  * }} T
@@ -101,24 +114,24 @@ export const add_sanity_crud_to_test_suite = s => {
   
   s('create', async (ctx) => {
     const one = ctx.items[0];
-    const id = await ctx.ops.upsert(ctx.app, one);
+    const id = await ctx.ops.upsert(one);
   
     assert.ok(id, 'insertion failed');
   
-    const item_get = await ctx.ops.get(ctx.app, id);
+    const item_get = await ctx.ops.get(id);
     assert_partial(item_get, {...one, id});
   });
   
   s('update', async (ctx) => {
     const one = ctx.items[1];
-    const id = await ctx.ops.upsert(ctx.app, one);
+    const id = await ctx.ops.upsert(one);
   
     assert.ok(id, 'insertion failed');
   
     // now let's update, for that we use the id
     // one.active = false;  
-    await ctx.ops.upsert(ctx.app, {...one, id});
-    const item_get = await ctx.ops.get(ctx.app, id);
+    await ctx.ops.upsert({...one, id});
+    const item_get = await ctx.ops.get(id);
   
     assert_partial(item_get, {...one, id});
   });
@@ -126,7 +139,7 @@ export const add_sanity_crud_to_test_suite = s => {
 
   s('missing fields should throw', async (ctx) => {
     await assert_async_throws(
-      async () => await ctx.ops.upsert(ctx.app, {})
+      async () => await ctx.ops.upsert({})
     );
   })
   
@@ -235,10 +248,9 @@ export const assert_query_list_integrity = (list, q) => {
  *  resource: (keyof App["db"]["resources"])
  *  items: T[],
  *  ops: {
- *    upsert?: (app: App, item: T) => Promise<string>,
- *    get?: (app: App, id: string) => Promise<T>,
- *    list?: (app: App, q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
- *    count?: (app: App, resource: string, q: import('@storecraft/core/v-api').ApiQuery) => Promise<number>
+ *    upsert?: (item: T) => Promise<string>,
+ *    get?: (id: string) => Promise<T>,
+ *    list?: (q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
  *  }
  *  app: App
  * }} C
@@ -248,8 +260,8 @@ export const assert_query_list_integrity = (list, q) => {
 export const add_list_integrity_tests = s => {
   s('basic count() test',
     async (ctx) => {
-      const count = await compute_count_of_query(
-        ctx.app, ctx.resource, {}
+      const count = await ctx.app.api.statistics.compute_count_of_query(
+        ctx.resource, {}
       );
 
       assert.ok(
@@ -274,8 +286,8 @@ export const add_list_integrity_tests = s => {
         ...q_asc, order: 'desc'
       }
 
-      const list_asc = await ctx.ops.list(ctx.app, q_asc);
-      const list_desc = await ctx.ops.list(ctx.app, q_desc);
+      const list_asc = await ctx.ops.list(q_asc);
+      const list_desc = await ctx.ops.list(q_desc);
 
       assert_query_list_integrity(list_asc, q_asc);
       assert_query_list_integrity(list_desc, q_desc);
@@ -311,8 +323,8 @@ export const add_list_integrity_tests = s => {
         ...q_asc, order: 'desc'
       }
 
-      const list_asc = await ctx.ops.list(ctx.app, q_asc);
-      const list_desc = await ctx.ops.list(ctx.app, q_desc);
+      const list_asc = await ctx.ops.list(q_asc);
+      const list_desc = await ctx.ops.list(q_desc);
 
       assert_query_list_integrity(list_asc, q_asc);
       assert_query_list_integrity(list_desc, q_desc);
@@ -359,9 +371,7 @@ export const add_list_integrity_tests = s => {
         expand: ['*']
       }
 
-      const list = await ctx.ops.list(
-        ctx.app, q
-      );
+      const list = await ctx.ops.list(q);
 
       // console.log(list)
       // console.log(items)
@@ -374,9 +384,14 @@ export const add_list_integrity_tests = s => {
         // all of it's properties are getting back
         for(const p of list) {
           const original_item = ctx.items.find(it => it.id===p.id);
-          assert.ok(original_item, 'Did not find original item of inserted item !!');
+
+          assert.ok(
+            original_item, 'Did not find original item of inserted item !!'
+          );
+
           assert_partial(p, original_item);
         }
+
       }
 
     }

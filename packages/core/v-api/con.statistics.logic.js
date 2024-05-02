@@ -43,16 +43,19 @@ const DAY = 86400000
 
 /**
  * 
- * Compute the `statistics` of `sales` / `orders` a period of time per day.
  * 
  * @param {import("../types.public.js").App} app
+ */
+export const compute_statistics = app => 
+/**
+ * Compute the `statistics` of `sales` / `orders` a period of time per day.
+ * 
  * @param {string} [from_day] `ISO` / `UTC` / `timestamp` date
  * @param {string} [to_day] `ISO` / `UTC` / `timestamp` date
  * 
  * @returns {Promise<import('./types.api.js').OrdersStatisticsType>}
- * 
  */
-export const compute_statistics = async (app, from_day, to_day) => {
+async (from_day, to_day) => {
 
   const date_to_day = endOfDay(
     to_day ? new Date(to_day) : new Date()
@@ -242,13 +245,16 @@ const tables = [
  * Compute the count `statistics` of a table with `query`
  *  
  * @param {import("../types.public.js").App} app
+ */
+export const compute_count_of_query = app => 
+/**
+ * 
  * @param {keyof App["db"]["resources"]} [table] which `table` to get count of query
  * @param {import('./types.api.query.js').ApiQuery} [query] The `query` used for counting
  * 
  * @returns {Promise<number>}
- * 
  */
-export const compute_count_of_query = async (app, table, query) => {
+(table, query) => {
   assert(
     tables.includes(table),
     `Table ${table} is not allowed for counting !`
@@ -258,4 +264,17 @@ export const compute_count_of_query = async (app, table, query) => {
   const db = app.db?.resources?.[table];
 
   return db.count(query);
+}
+
+
+/**
+ * 
+ * @param {App} app 
+ */
+export const inter = app => {
+
+  return {
+    compute_count_of_query: compute_count_of_query(app),
+    compute_statistics: compute_statistics(app),
+  }
 }

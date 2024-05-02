@@ -1,5 +1,5 @@
 import { id } from '../v-crypto/object-id.js';
-
+ 
 export class StorecraftError extends Error {
   /**
    * 

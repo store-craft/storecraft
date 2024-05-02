@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App } from '@storecraft/core';
@@ -86,9 +85,9 @@ export const create = app => {
     async () => { 
       assert.ok(app.ready);
       try {
-        await products.remove(app, pr_upsert.handle);
+        await app.api.products.remove(pr_upsert.handle);
         for(const p of var_upsert)
-          await products.remove(app, p.handle);
+          await app.api.products.remove(p.handle);
       } catch(e) {
         console.log(e)
         throw e;
@@ -103,12 +102,12 @@ export const create = app => {
     await app.db.resources.products.upsert(pr_upsert);
     // upsert all variants
     const ids = await promises_sequence(
-      var_upsert.map(v => () => products.upsert(app, v))
+      var_upsert.map(v => () => app.api.products.upsert(v))
     )
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const product_variants = await products.list_product_variants(
-      app, pr_upsert.handle
+    const product_variants = await app.api.products.list_product_variants(
+      pr_upsert.handle
     );
 
     // console.log(product_variants)
@@ -118,11 +117,11 @@ export const create = app => {
   // return s;
 
   s('remove 2nd variant -> test only one variant for product', async () => {
-    await products.remove(app, var_upsert[0].handle);
+    await app.api.products.remove(var_upsert[0].handle);
     // now query the product's discounts to see if 
     // discount was applied to 1st product
-    const product_variants = await products.list_product_variants(
-      app, pr_upsert.handle
+    const product_variants = await app.api.products.list_product_variants(
+      pr_upsert.handle
     );
 
     // console.log(product_variants)
@@ -134,17 +133,17 @@ export const create = app => {
   });
 
   s('remove product -> confirm all the variants are gone', async () => {
-    await products.remove(app, pr_upsert.handle);
+    await app.api.products.remove(pr_upsert.handle);
     // now query the product's discounts to see if 
     // discount was applied to 1st product
-    const product_variants = await products.list_product_variants(
-      app, pr_upsert.handle
+    const product_variants = await app.api.products.list_product_variants(
+      pr_upsert.handle
     );
     assert.ok(product_variants.length==0, 
       'product removed, but it\'s variants are in place');
 
     const variants_explicit = await Promise.all(
-      var_upsert.map(v => products.get(app, v.handle))
+      var_upsert.map(v => app.api.products.get(v.handle))
     )
     assert.ok(
       variants_explicit.filter(Boolean).length==0, 

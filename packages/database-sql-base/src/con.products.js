@@ -13,7 +13,6 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
   products_with_related_products} from './con.shared.js'
 import { sanitize_array, sanitize } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
-import { pricing } from '@storecraft/core/v-api'
 import { Transaction } from 'kysely'
 import { report_document_media } from './con.images.js'
 
@@ -42,6 +41,7 @@ const is_variant = item => {
 const upsert = (driver) => {
   return async (item, search_terms) => {
     const c = driver.client;
+    
     try {
       // The product has changed, it's discounts eligibility may have changed.
       // get all automatic + active discounts
@@ -55,7 +55,7 @@ const upsert = (driver) => {
         ])
       ).execute();
       const eligible_discounts = discounts.filter(
-        d => pricing.test_product_filters_against_product(d.info.filters, item)
+        d => driver.app.api.pricing.test_product_filters_against_product(d.info.filters, item)
       );      
 
       const t = await driver.client.transaction().execute(

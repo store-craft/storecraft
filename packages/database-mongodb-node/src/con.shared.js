@@ -30,7 +30,6 @@ export const upsert_regular = (driver, col) => {
           add_search_terms_relation_on(
             data, 
             [
-              ...(data?.search ?? []), 
               ...search_terms
             ]
           );

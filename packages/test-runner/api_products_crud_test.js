@@ -2,7 +2,8 @@ import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { 
-  add_sanity_crud_to_test_suite, create_handle, file_name 
+  add_sanity_crud_to_test_suite, create_handle, file_name, 
+  promises_sequence
 } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
@@ -60,6 +61,56 @@ export const create = app => {
   );
 
   add_sanity_crud_to_test_suite(s);
+
+  s('change stock of', async (ctx) => {
+    const items = [
+      {
+        handle: 'pr-stock-test-1',
+        active: true,
+        price: 250,
+        qty: 2,
+        title: 'product stock test 1',
+      },
+      {
+        handle: 'pr-stock-test-2',
+        active: true,
+        price: 250,
+        qty: 3,
+        title: 'product stock test 2',
+      },
+    ];
+
+    for(const item of items) {
+      await app.api.products.remove(item.handle);
+    }
+
+    const ids = await promises_sequence(
+      items.map(
+        item => () => app.api.products.upsert(item)
+      )
+    );
+
+    const deltas = [-1, -1];
+
+    await app.api.products.changeStockOf(
+      ids,
+      deltas
+    );
+
+    const items_get = await promises_sequence(
+      ids.map(
+        id => () => app.api.products.get(id)
+      )
+    );
+
+    const expected_qtys = items.map((item, ix) => item.qty + deltas[ix]);
+    const actual_qtys = items_get.map(item => item.qty);
+
+    assert.equal(
+      actual_qtys, expected_qtys, 'changed quantities do not match'
+    );
+  });
+
   return s;
 }
 

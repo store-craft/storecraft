@@ -2,6 +2,7 @@ import { ID, apply_dates, assert } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { create_search_index } from './utils.index.js'
 import { ZodSchema } from 'zod'
+import { rewrite_media_from_storage, rewrite_media_to_storage } from './con.storage.logic.js'
 
 /**
  * @typedef {import('./types.api.js').searchable} searchable
@@ -41,6 +42,8 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
       ...hook(final)
     ];
 
+    rewrite_media_to_storage(app)(item);
+
     const success = await db.upsert(final, search);
 
     assert(success, 'upsert-failed', 400);
@@ -66,6 +69,9 @@ export const regular_get = (app, db) =>
   */
   async (handle_or_id, options={ expand: ['*'] }) => {
     const item = await db.get(handle_or_id, options);
+
+    rewrite_media_from_storage(app)(item);
+
     return item;
   };
 
@@ -104,6 +110,10 @@ export const regular_list = (app, db) =>
   async (q) => {
     // console.log('query', q);
 
-    return db.list(q);
+    const items = await db.list(q);
+
+    rewrite_media_from_storage(app)(items);
+
+    return items;
   }
 

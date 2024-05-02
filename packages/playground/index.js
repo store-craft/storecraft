@@ -20,6 +20,9 @@ let app = new App(
   ,
   {
     'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' })
+  }, null, null, 
+  {
+    storage_rewrite_urls: undefined
   }
 );
 

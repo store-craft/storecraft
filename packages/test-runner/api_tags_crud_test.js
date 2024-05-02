@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { tags } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { assert_async_throws } from './utils.js';
@@ -34,7 +33,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: tags }
+    { items: items_upsert, app, ops: app.api.tags }
   );
 
   s.before(
@@ -42,7 +41,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items_upsert)
-          await tags.remove(app, p.handle);
+          await app.api.tags.remove(p.handle);
       } catch(e) {
         // console.log(e)
         throw e;
@@ -61,13 +60,13 @@ export const create = app => {
       handle: 'tag 2', values:['a', 'b']
     }
     await assert_async_throws(
-      async () => await tags.upsert(app, {
+      async () => await app.api.tags.upsert({
         handle: 'tag 2', values: ['a', 'b']
       })
     );
 
     await assert_async_throws(
-      async () => await tags.upsert(app, {
+      async () => await app.api.tags.upsert({
         handle: 'tag-2', values: ['a c', 'b']
       })
     );

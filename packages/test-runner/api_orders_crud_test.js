@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { orders } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
@@ -59,7 +58,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: orders }
+    { items: items_upsert, app, ops: app.api.orders }
   );
 
   s.before(

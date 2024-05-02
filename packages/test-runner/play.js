@@ -9,8 +9,8 @@ export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
     new MongoDB({ db_name: 'test'}),
-    null, null, null, {
-      admins_emails: [admin_email],
+    null, null, null, null, {
+      auth_admins_emails: [admin_email],
     }
   );
   

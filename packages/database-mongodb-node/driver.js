@@ -87,12 +87,10 @@ export class MongoDB {
       db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
     }
 
-    const now = Date.now();
     this.#_mongo_client = await connect(
       this.config.url,
       this.config.options
     );
-    console.log('mongo connect: ' + (Date.now()-now));
    
     this.#_app = app;
 

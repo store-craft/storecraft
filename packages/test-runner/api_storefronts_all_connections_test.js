@@ -1,6 +1,4 @@
 import 'dotenv/config';
-import { storefronts, products, collections, 
-  discounts, posts, shipping } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
@@ -134,16 +132,16 @@ export const create = app => {
       assert.ok(app.ready) ;
 
       for(const p of posts_upsert)
-        await posts.remove(app, p.handle);
+        await app.api.posts.remove(p.handle);
       for(const p of discounts_upsert)
-        await discounts.remove(app, p.handle);
+        await app.api.discounts.remove(p.handle);
       for(const p of shipping_upsert)
-        await shipping.remove(app, p.handle);
+        await app.api.shipping.remove(p.handle);
       for(const p of collections_upsert)
-        await collections.remove(app, p.handle);
+        await app.api.collections.remove(p.handle);
       for(const p of products_upsert)
-        await products.remove(app, p.handle);
-      await storefronts.remove(app, storefront_upsert.handle);
+        await app.api.products.remove(p.handle);
+      await app.api.storefronts.remove(storefront_upsert.handle);
     }
   );
 
@@ -152,8 +150,8 @@ export const create = app => {
     const collections_get = await promises_sequence(
       collections_upsert.map(
         c => async () => {
-          await collections.upsert(app, c);
-          return collections.get(app, c.handle);
+          await app.api.collections.upsert(c);
+          return app.api.collections.get(c.handle);
         }
       )
     );
@@ -161,8 +159,8 @@ export const create = app => {
     const products_get = await promises_sequence(
       products_upsert.map(
         c => async () => {
-          await products.upsert(app, c);
-          return products.get(app, c.handle);
+          await app.api.products.upsert(c);
+          return app.api.products.get(c.handle);
         }
       )
     );
@@ -170,8 +168,8 @@ export const create = app => {
     const shipping_get = await promises_sequence(
       shipping_upsert.map(
         c => async () => {
-          await shipping.upsert(app, c);
-          return shipping.get(app, c.handle);
+          await app.api.shipping.upsert(c);
+          return app.api.shipping.get(c.handle);
         }
       )
     );
@@ -179,8 +177,8 @@ export const create = app => {
     const posts_get = await promises_sequence(
       posts_upsert.map(
         c => async () => {
-          await posts.upsert(app, c);
-          return posts.get(app, c.handle);
+          await app.api.posts.upsert(c);
+          return app.api.posts.get(c.handle);
         }
       )
     );
@@ -188,8 +186,8 @@ export const create = app => {
     const discounts_get = await promises_sequence(
       discounts_upsert.map(
         c => async () => {
-          await discounts.upsert(app, c);
-          return discounts.get(app, c.handle);
+          await app.api.discounts.upsert(c);
+          return app.api.discounts.get(c.handle);
         }
       )
     );
@@ -197,13 +195,13 @@ export const create = app => {
 
     // now connect them to storefront
     // upsert products with collections relation
-    await storefronts.upsert(app, storefront_upsert);
-    const storefront_get = await storefronts.get(
-      app, storefront_upsert.handle
-      );
+    await app.api.storefronts.upsert(storefront_upsert);
+    const storefront_get = await app.api.storefronts.get(
+      storefront_upsert.handle
+    );
+
     // now, connect
-    await storefronts.upsert(
-      app,
+    await app.api.storefronts.upsert(
       {
         ...storefront_get, 
         collections: collections_get,
@@ -216,8 +214,8 @@ export const create = app => {
 
     // now verify
     { // verify initial collections
-      const queried = await storefronts.list_storefront_collections(
-        app, storefront_upsert.handle
+      const queried = await app.api.storefronts.list_storefront_collections(
+        storefront_upsert.handle
       );
 
       const verified = collections_upsert.every(
@@ -228,8 +226,8 @@ export const create = app => {
     }
 
     { // verify products
-      const queried = await storefronts.list_storefront_products(
-        app, storefront_upsert.handle
+      const queried = await app.api.storefronts.list_storefront_products(
+        storefront_upsert.handle
       );
 
       const verified = products_upsert.every(
@@ -240,8 +238,8 @@ export const create = app => {
     }
 
     { // verify discounts
-      const queried = await storefronts.list_storefront_discounts(
-        app, storefront_upsert.handle
+      const queried = await app.api.storefronts.list_storefront_discounts(
+        storefront_upsert.handle
       );
 
       const verified = discounts_upsert.every(
@@ -252,8 +250,8 @@ export const create = app => {
     }
 
     { // verify shipping
-      const queried = await storefronts.list_storefront_shipping_methods(
-        app, storefront_upsert.handle
+      const queried = await app.api.storefronts.list_storefront_shipping_methods(
+        storefront_upsert.handle
       );
 
       const verified = shipping_upsert.every(
@@ -264,8 +262,8 @@ export const create = app => {
     }
 
     { // verify posts
-      const queried = await storefronts.list_storefront_posts(
-        app, storefront_upsert.handle
+      const queried = await app.api.storefronts.list_storefront_posts(
+        storefront_upsert.handle
       );
 
       const verified = posts_upsert.every(
@@ -287,15 +285,15 @@ export const create = app => {
       const shipping_id_to_remove = shipping_get.at(0).id;
       const post_id_to_remove = posts_get.at(0).id;
 
-      await collections.remove(app, collection_id_to_remove);
-      await products.remove(app, product_id_to_remove);
-      await discounts.remove(app, discount_id_to_remove);
-      await shipping.remove(app, shipping_id_to_remove);
-      await posts.remove(app, post_id_to_remove);
+      await app.api.collections.remove(collection_id_to_remove);
+      await app.api.products.remove(product_id_to_remove);
+      await app.api.discounts.remove(discount_id_to_remove);
+      await app.api.shipping.remove(shipping_id_to_remove);
+      await app.api.posts.remove(post_id_to_remove);
 
       {
-        let queried = await storefronts.list_storefront_collections(
-          app, storefront_upsert.handle
+        let queried = await app.api.storefronts.list_storefront_collections(
+          storefront_upsert.handle
         );
         assert.not(
           queried.find(q => q.id===collection_id_to_remove), 
@@ -304,9 +302,10 @@ export const create = app => {
       }
       //
       {
-        let queried = await storefronts.list_storefront_discounts(
-          app, storefront_upsert.handle
+        let queried = await app.api.storefronts.list_storefront_discounts(
+          storefront_upsert.handle
         );
+
         assert.not(
           queried.find(q => q.id===discount_id_to_remove), 
           'list discounts does not include original collections !'
@@ -314,8 +313,8 @@ export const create = app => {
       }
       //
       {
-        let queried = await storefronts.list_storefront_posts(
-          app, storefront_upsert.handle
+        let queried = await app.api.storefronts.list_storefront_posts(
+          storefront_upsert.handle
         );
         assert.not(
           queried.find(q => q.id===post_id_to_remove), 
@@ -324,8 +323,8 @@ export const create = app => {
       }
       //
       {
-        let queried = await storefronts.list_storefront_products(
-          app, storefront_upsert.handle
+        let queried = await app.api.storefronts.list_storefront_products(
+          storefront_upsert.handle
         );
         assert.not(
           queried.find(q => q.id===product_id_to_remove), 
@@ -334,8 +333,8 @@ export const create = app => {
       }
       //
       {
-        let queried = await storefronts.list_storefront_shipping_methods(
-          app, storefront_upsert.handle
+        let queried = await app.api.storefronts.list_storefront_shipping_methods(
+          storefront_upsert.handle
         );
         assert.not(
           queried.find(q => q.id===shipping_id_to_remove), 

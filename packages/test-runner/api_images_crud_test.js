@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { images } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
@@ -27,7 +26,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: images }
+    { items: items_upsert, app, ops: app.api.images }
   );
 
   s.before(
@@ -35,7 +34,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items_upsert)
-          await images.remove(app, p.handle);
+          await app.api.images.remove(p.handle);
       } catch(e) {
         console.log(e)
         throw e;

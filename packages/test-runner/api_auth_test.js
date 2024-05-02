@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { auth } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from './api.utils.crud.js';
@@ -22,8 +21,8 @@ export const create = app => {
   s.before(async () => { assert.ok(app.ready) });
   
   s('remove and signup admin', async () => {
-    await auth.removeByEmail(app, admin_email);
-    const r = await auth.signup(app, {
+    await app.api.auth.removeByEmail(admin_email);
+    const r = await app.api.auth.signup({
       email: admin_email,
       password: admin_password
     });
@@ -34,7 +33,7 @@ export const create = app => {
   });
   
   s('signin admin', async () => {
-    const r = await auth.signin(app, {
+    const r = await app.api.signin(app, {
       email: admin_email,
       password: admin_password
     });
@@ -46,11 +45,11 @@ export const create = app => {
   
   s('refresh admin', async () => {
   
-    const u = await auth.signin(app, {
+    const u = await app.api.auth.signin({
       email: admin_email,
       password: admin_password
     });
-    const r = await auth.refresh(app, {
+    const r = await app.api.auth.refresh({
       refresh_token: u.refresh_token.token
     });
   
@@ -61,8 +60,8 @@ export const create = app => {
 
   s('apikey create, validate, list and remove', async () => {
   
-    const apikey_created = await auth.create_api_key(app);
-    const isvalid = await auth.verify_api_key(app, {
+    const apikey_created = await app.api.auth.create_api_key();
+    const isvalid = await app.api.auth.verify_api_key({
       apikey: apikey_created.apikey
     });
     const apikey_created_decoded_email = atob(apikey_created.apikey).split(':').at(0);
@@ -71,7 +70,7 @@ export const create = app => {
 
     // now list only api keys
     {
-      const apikeys = await auth.list_all_api_keys_info(app);
+      const apikeys = await app.api.auth.list_all_api_keys_info();
       let is_apikey_created_present = false;
 
       assert.ok(apikeys?.length, 'no api keys were found');
@@ -92,9 +91,9 @@ export const create = app => {
 
     {
       // now remove
-      await auth.remove_auth_user(app, apikey_created_decoded_email);
+      await app.api.auth.remove_auth_user(apikey_created_decoded_email);
 
-      const apikeys = await auth.list_all_api_keys_info(app);
+      const apikeys = await app.api.auth.list_all_api_keys_info();
 
       assert.ok(
         apikeys.every(ak => ak.email!==apikey_created_decoded_email), 

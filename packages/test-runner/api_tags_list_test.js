@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { tags } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
@@ -45,7 +44,7 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: tags,
+      items: items, app, ops: app.api.tags,
       resource: 'tags'
     }
   );
@@ -55,7 +54,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await tags.remove(app, p.handle);
+          await app.api.tags.remove(p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
           await app.db.resources.tags.upsert(p);

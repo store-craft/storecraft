@@ -1,9 +1,10 @@
 import 'dotenv/config';
-import { discounts, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
-import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
+import { 
+  create_handle, file_name, promises_sequence 
+} from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -75,10 +76,10 @@ export const create = app => {
       assert.ok(app.ready);
       try {
         for(const p of pr_upsert)
-          await products.remove(app, p.handle);
+          await app.api.products.remove(p.handle);
 
         for(const d of discounts_upsert)
-          await discounts.remove(app, d.handle);
+          await app.api.discounts.remove(d.handle);
       } catch(e) {
         console.log(e)
         throw e;
@@ -89,16 +90,16 @@ export const create = app => {
 
   s('upsert 1st product -> upsert Discount -> test discount was applied', async () => {
     // upsert 1st product
-    await products.upsert(app, pr_upsert[0]);
+    await app.api.products.upsert(pr_upsert[0]);
 
     // upsert all discount
     const ids = await promises_sequence(
-      discounts_upsert.map(d => () => discounts.upsert(app, d))
+      discounts_upsert.map(d => () => app.api.discounts.upsert(d))
     )
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const product_discounts = await products.list_product_discounts(
-      app, pr_upsert[0].handle
+    const product_discounts = await app.api.products.list_product_discounts(
+      pr_upsert[0].handle
     );
 
     // console.log(product_discounts.length)
@@ -113,11 +114,11 @@ export const create = app => {
     // because it is qualified
 
     const pr_2 = pr_upsert[1];
-    await products.upsert(app, pr_2); 
+    await app.api.products.upsert(pr_2); 
 
     // now query the product's discounts to see it was applied
-    const product_discounts = await products.list_product_discounts(
-      app, pr_2.handle
+    const product_discounts = await app.api.products.list_product_discounts(
+      pr_2.handle
     );
     assert.ok(product_discounts.length>=discounts_upsert.length, 'got less')
   });
@@ -125,11 +126,11 @@ export const create = app => {
   s('remove Discount -> test discount was removed from products too', async () => {
     const discount = discounts_upsert[0];
     // remove the discount and then test it does not show in product's discounts
-    await discounts.remove(app, discount.handle); 
+    await app.api.discounts.remove(discount.handle); 
 
     for(const p of pr_upsert) {
-      const product_discounts = await products.list_product_discounts(
-        app, p.handle
+      const product_discounts = await app.api.products.list_product_discounts(
+        p.handle
       );
       const no_discount = product_discounts.every(
         d => d.handle!==discount.handle

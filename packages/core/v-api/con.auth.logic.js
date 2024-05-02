@@ -14,7 +14,7 @@ import { isDef } from './utils.index.js'
  * 
  * @param {App} app 
  */  
-export const removeByEmail = async (app) => 
+export const removeByEmail = (app) => 
 /**
  * 
  * @param {string} email

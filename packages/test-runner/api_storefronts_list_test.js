@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { storefronts } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
@@ -7,7 +6,6 @@ import { create_handle, file_name,
   get_static_ids} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { compute_count_of_query } from '@storecraft/core/v-api/con.statistics.logic.js';
 
 const handle = create_handle('sf', file_name(import.meta.url));
 
@@ -48,7 +46,7 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: storefronts, 
+      items: items, app, ops: app.api.storefronts, 
       resource: 'storefronts' 
     }
   );
@@ -58,7 +56,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await storefronts.remove(app, p.id);
+          await app.api.storefronts.remove(p.id);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
           await app.db.resources.storefronts.upsert(p);

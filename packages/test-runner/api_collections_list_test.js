@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { collections } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
@@ -47,7 +46,7 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: collections,
+      items: items, app, ops: app.api.collections,
       resource: 'collections'
     }
   );
@@ -57,7 +56,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await collections.remove(app, p.handle);
+          await app.api.collections.remove(p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
           await app.db.resources.collections.upsert(p);

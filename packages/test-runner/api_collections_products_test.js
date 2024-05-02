@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { collections, products } from '@storecraft/core/v-api';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
@@ -64,9 +63,9 @@ export const create = app => {
       assert.ok(app.ready);
 
       for(const p of pr_upsert)
-        await products.remove(app, p.handle);
+        await app.api.products.remove(p.handle);
       for(const p of col_upsert)
-        await collections.remove(app, p.handle);
+        await app.api.collections.remove(p.handle);
     }
   );
 
@@ -78,8 +77,8 @@ export const create = app => {
     const cols = await promises_sequence(
       col_upsert.map(
         c => async () => {
-          await collections.upsert(app, c);
-          return collections.get(app, c.handle);
+          await app.api.collections.upsert(c);
+          return app.api.collections.get(c.handle);
         }
       )
     );
@@ -88,8 +87,8 @@ export const create = app => {
     const prs = await promises_sequence(
       pr_upsert.map(
         c => async () => {
-          await products.upsert(app, c);
-          return products.get(app, c.handle);
+          await app.api.products.upsert(c);
+          return app.api.products.get(c.handle);
         }
       )
     );
@@ -97,7 +96,7 @@ export const create = app => {
     // console.log('prs', prs)
     // upsert products with collections relation
     for (const pr of prs) {
-      await products.upsert(app, {
+      await app.api.products.upsert({
         ...pr, 
         collections: cols
       });
@@ -105,8 +104,8 @@ export const create = app => {
 
     // console.log('prs', prs)
     // now query list of products of collection
-    const products_queried = await collections.list_collection_products(
-      app, col_upsert[0].handle,
+    const products_queried = await app.api.collections.list_collection_products(
+      col_upsert[0].handle,
       {
         startAt: [['id', prs[0].id]], 
         sortBy: ['id'],

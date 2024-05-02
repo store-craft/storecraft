@@ -33,7 +33,7 @@ export const create = app => {
   });
   
   s('signin admin', async () => {
-    const r = await app.api.signin(app, {
+    const r = await app.api.auth.signin({
       email: admin_email,
       password: admin_password
     });

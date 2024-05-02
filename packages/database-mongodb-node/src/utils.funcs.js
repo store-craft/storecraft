@@ -101,6 +101,20 @@ export const to_objid = id => new ObjectId(id.split('_').at(-1))
 
 /**
  * 
+ * @param {string} id 
+ * 
+ */
+export const to_objid_safe = id => {
+  try {
+    return  new ObjectId(id.split('_').at(-1))
+  } catch(e) {
+  }
+
+  return undefined;
+}
+
+/**
+ * 
  * @param {string} handle_or_id 
  * 
  * 

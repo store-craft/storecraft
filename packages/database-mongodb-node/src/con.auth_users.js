@@ -1,6 +1,6 @@
 import { MongoDB } from '../driver.js'
 import { Collection } from 'mongodb'
-import { sanitize_one, to_objid } from './utils.funcs.js'
+import { sanitize_one, to_objid, to_objid_safe } from './utils.funcs.js'
 import { 
   count_regular, get_regular, list_regular, upsert_regular 
 } from './con.shared.js'
@@ -61,7 +61,7 @@ const remove = (driver) => {
     const res = await col(driver).deleteOne(
       { 
         '$or': [
-          { _id: to_objid(id) },
+          { _id: to_objid_safe(id) },
           { email: String(id) }
         ]
       }

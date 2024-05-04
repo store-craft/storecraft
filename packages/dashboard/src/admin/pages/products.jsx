@@ -79,7 +79,8 @@ export default ({}) => {
                       shelf-border-color shadow-md 
                       dark:shadow-slate-900 '>      
         <TopActions 
-            ref={ref_actions} reload={onReload} 
+            ref={ref_actions} 
+            reload={onReload} 
             createLink='/pages/products/create'
             searchTitle='Search by Name, Handle, Tag values, Collections...' 
             isLoading={loading} />
@@ -89,7 +90,8 @@ export default ({}) => {
             fields={schema_fields} />
         <ShowIf show={page}>
           <BottomActions 
-              prev={prev} next={next} 
+              prev={prev} 
+              next={next} 
               limit={query_api.limit}
               onLimitChange={onLimitChange} />
         </ShowIf>

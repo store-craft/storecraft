@@ -445,6 +445,8 @@ export const withCard = (
 
 /**
  * This component is used in a `TableSchemaView` 
+ * 
+ * 
  * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams
  * } params 
  */
@@ -455,9 +457,11 @@ export const RecordActions = (
 ) => {
 
   /** @type {React.MutableRefObject<import('./modal.jsx').ImpInterface>} */
-  const ref_modal = useRef()
-  const [loadingDelete, setLoadingDelete] = useState(false)
-  const id = context.item.handle ?? context.item.id
+  const ref_modal = useRef();
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const id = context.item.handle ?? context.item.id;
+
   const onClickDelete = useCallback(
     () => {
       ref_modal.current.setDataAndMessage(
@@ -466,7 +470,7 @@ export const RecordActions = (
       )
       ref_modal.current.show()
     }, [context]
-  )
+  );
 
   const onApproveDelete = useCallback(
     (data_id) => {
@@ -476,7 +480,7 @@ export const RecordActions = (
       context.deleteDocument(data_id)
              .finally(() => setLoadingDelete(false));
     }, [context]
-  )
+  );
 
   return (
 <div className='flex flex-row items-center text-center 

@@ -188,6 +188,7 @@ export interface OrdersTable extends Base {
   coupons: JSONColumnType<DiscountType[]>; 
   /** Internal for querying */
   _customer_id: string;
+  _customer_email: string;
   _status_payment_id: number;
   _status_checkout_id: number;
   _status_fulfillment_id: number;

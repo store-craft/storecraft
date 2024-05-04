@@ -241,6 +241,7 @@ export async function up(db) {
       .addColumn('payment_gateway', 'json')
       .addColumn('coupons', 'json')
       .addColumn('_customer_id', 'text')
+      .addColumn('_customer_email', 'text')
       .addColumn('_status_payment_id', 'integer')
       .addColumn('_status_checkout_id', 'integer')
       .addColumn('_status_fulfillment_id', 'integer')

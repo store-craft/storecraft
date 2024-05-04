@@ -11,6 +11,7 @@ import Attributes from '@/admin/comps/attributes.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import CustomerOrders from '../comps/customer-orders.jsx'
 
 const left = {
   comp: Div, 
@@ -19,6 +20,11 @@ const left = {
     lg:w-[35rem] flex flex-col '
   },
   fields : [
+    { 
+      key: undefined, name: 'Orders', 
+      comp: withCard(CustomerOrders, {className : 'w-full'}), 
+      comp_params: {className: 'w-full h-fit'} 
+    },
     { 
       key: 'firstname', name: 'First Name', type: 'text', 
       validate: true, editable: true, 

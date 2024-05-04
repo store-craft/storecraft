@@ -149,6 +149,8 @@ const list = (driver) => {
 
 /**
  * @param {SQL} driver 
+ * 
+ * 
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
@@ -165,7 +167,12 @@ const list_customer_orders = (driver) => {
         (eb) => eb.and(
           [
             query_to_eb(eb, query, table_name),
-            eb('_customer_id', '=', id)
+            eb.or(
+              [
+                eb('_customer_id', '=', id),
+                eb('_customer_email', '=', id),
+              ]
+            )
           ].filter(Boolean)
         )
       )

@@ -5,7 +5,7 @@ import { parse_query } from '../v-api/utils.query.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
 
 /**
- * @typedef {import('../v-api/types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.js').CustomerType} ItemType
  */
 
 /**
@@ -26,7 +26,7 @@ export const create_routes = (app) => {
 
   polka.use(parse_auth_user(app));
 
-  // save tag
+  // save
   polka.post(
     '/',
     owner_or_admin_guard,
@@ -70,6 +70,19 @@ export const create_routes = (app) => {
       const q = parse_query(req.query);
       const items = await app.api.customers.list(q);
 
+      res.sendJson(items);
+    }
+  );
+
+  // list orders of customer
+  polka.get(
+    '/:id_or_email/products',
+    owner_or_admin_guard,
+    async (req, res) => {
+      const { id_or_email } = req.params;
+      const q = parse_query(req.query);
+      const items = await app.api.customers.list_customer_orders(id_or_email, q);
+      
       res.sendJson(items);
     }
   );

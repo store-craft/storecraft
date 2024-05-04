@@ -24,6 +24,7 @@ const create_search_index = (data) => {
     data?.contact?.firstname?.toLowerCase(),
     data?.contact?.lastname?.toLowerCase(),
     data?.contact?.customer_id && `customer:${data?.contact?.customer_id}`,
+    data?.contact?.email && `customer:${data?.contact?.email}`,
     data?.contact?.customer_id,
     data?.contact?.email,
     data?.pricing?.total && Math.floor(data.pricing?.total),
@@ -35,10 +36,9 @@ const create_search_index = (data) => {
     isDef(data?.status?.checkout?.id) && `checkout:${data.status.checkout.id}`,
     data?.pricing?.evo?.slice(1)?.filter(
       e => e.total_discount>0
-      ).map(e => `discount:${e.discount_code}`),
-    data?.line_items?.map(
-      li => `li:${li.id ?? li?.data?.handle}`
-    )
+    ).map(e => `discount:${e.discount_code}`),
+    data?.line_items?.map(li => li.id).filter(Boolean).map(id => `li:${id}`),
+    data?.line_items?.map(li => li.data?.handle).filter(Boolean).map(h => `li:${h}`),
   );
 }
 

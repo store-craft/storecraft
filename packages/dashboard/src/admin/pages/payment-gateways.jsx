@@ -1,9 +1,9 @@
-import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { RecordActions, Span } from '@/admin/comps/common-fields.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useMemo } from 'react'
+import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
 /**
  * 
@@ -12,14 +12,14 @@ import { useMemo } from 'react'
  */
 
 /**
- * This is used in `CollectionView`
+ * This is used in `TableSchemaView`
  * 
  * @typedef {object} InternalSpanWithLogoParams
  * @prop {string} [className]
  * @prop {string} [extra]
  * @prop {React.ReactNode} [children]
  * 
- * @typedef {import('../comps//collection-view.jsx').CollectionViewComponentParams<
+ * @typedef {import('../comps/table-schema-view.jsx').TableSchemaViewComponentParams<
  *  string, PaymentGatewayItemGet> & 
 *   InternalSpanWithLogoParams & 
 *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
@@ -102,7 +102,7 @@ export default ({}) => {
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md dark:shadow-slate-900'>      
-        <CollectionView 
+        <TableSchemaView 
             context={context_mod} 
             data={page} 
             fields={schema_fields} />

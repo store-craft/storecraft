@@ -1,5 +1,4 @@
 import { BottomActions } from './collection-actions.jsx'
-import CollectionView from './collection-view.jsx'
 import { RecordActions, Span, 
   TimeStampView } from './common-fields.jsx'
 import { Bling, Card } from './common-ui.jsx'
@@ -10,8 +9,9 @@ import { forwardRef, useCallback, useEffect,
 import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
-import { BrowseProducts } from './browse-collection.jsx'
+import { BrowseProducts } from './resource-browse.jsx'
 import useTrigger from '../hooks/useTrigger.js'
+import { TableSchemaView } from './table-schema-view.jsx'
 
 const CollectionBase = forwardRef(
   /**
@@ -116,7 +116,7 @@ const CollectionBase = forwardRef(
 
   return (
 <>
-  <CollectionView 
+  <TableSchemaView 
       context={context_collection_view} 
       data={page} 
       fields={schema.current} />
@@ -129,7 +129,7 @@ const CollectionBase = forwardRef(
 })
 
 /**
- * `ProductsInCollection` wraps and show the `products` of a given
+ * `CollectionProducts` wraps and show the `products` of a given
  * collection with pagination.
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<

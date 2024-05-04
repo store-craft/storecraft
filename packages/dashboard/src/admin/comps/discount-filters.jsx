@@ -7,7 +7,7 @@ import { IoMdClose } from 'react-icons/io/index.js'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Overlay } from './overlay.jsx';
-import { BrowseCustomers, BrowseProducts } from './browse-collection.jsx'
+import { BrowseCustomers, BrowseProducts } from './resource-browse.jsx'
 import { BlingButton } from './common-button.jsx'
 import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
 import { SelectTags } from './tags-edit.jsx'

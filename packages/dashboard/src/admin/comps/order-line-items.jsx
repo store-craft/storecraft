@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, 
          useRef, useState } from 'react'
 import { Bling, BlingInput, HR } from './common-ui.jsx'
-import { BrowseProducts } from './browse-collection.jsx'
+import { BrowseProducts } from './resource-browse.jsx'
 import { Overlay } from './overlay.jsx'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
 import { BlingButton } from './common-button.jsx'

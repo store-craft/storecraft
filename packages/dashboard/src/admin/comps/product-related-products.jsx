@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BrowseProducts } from './browse-collection.jsx'
+import { BrowseProducts } from './resource-browse.jsx'
 import { Overlay } from './overlay.jsx'
 import { Link } from 'react-router-dom'
 import { IoCloseSharp } from 'react-icons/io5/index.js'

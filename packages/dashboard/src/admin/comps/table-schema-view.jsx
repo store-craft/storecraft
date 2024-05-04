@@ -2,8 +2,8 @@
 /**
  * @template {import("@storecraft/core/v-api").BaseType} T
  * 
- * @typedef {object} CollectionViewContext The context provided to 
- * components of `CollectionView`
+ * @typedef {object} TableSchemaViewContext The context provided to 
+ * components of `TableSchemaView`
  * @property {T} item item
  * @property {(id: string) => Promise<void>} deleteDocument
  * @property {(id: string) => string} editDocumentUrl
@@ -12,7 +12,7 @@
 
 /**
  * 
- * @typedef {object} CollectionViewField The `field` parameter given to `CollectionView`
+ * @typedef {object} TableSchemaViewField The `field` parameter given to `TableSchemaView`
  * components
  * 
  * @property {string} key Key of field in the data
@@ -27,10 +27,10 @@
  * @template {any} [T=any] The item general type
  * 
  * 
- * @typedef {object} CollectionViewComponentParams The `params` of components of
- * `CollectionView`
- * @property {CollectionViewField} [field] Key of field in the data
- * @property {CollectionViewContext<T>} [context] Context
+ * @typedef {object} TableSchemaViewComponentParams The `params` of components of
+ * `TableSchemaView`
+ * @property {TableSchemaViewField} [field] Key of field in the data
+ * @property {TableSchemaViewContext<T>} [context] Context
  * @property {V} [value] Value of field
  */
 
@@ -50,7 +50,7 @@ const getValue = (key, item, transform = x => x) => {
  * 
  * @param {object} p
  * @param {any} p.context anything to pass to component
- * @param {CollectionViewField[]} p.fields the fields schema
+ * @param {TableSchemaViewField[]} p.fields the fields schema
  * @param {import("@storecraft/core/v-api").BaseType[]} p.data the data
  * @param {string} p.recordClassName
  * @param {string} [p.className]
@@ -131,12 +131,12 @@ const Table = (
 /**
  * @param {object} p
  * @param {any} p.context anything
- * @param {CollectionViewField[]} p.fields scehma
+ * @param {TableSchemaViewField[]} p.fields scehma
  * @param {object[]} p.data actual data
  * @param {string} [p.recordClassName]
  * @param {string} [p.className]
  */
-export default (
+export const TableSchemaView = (
   { 
     context, fields, data, 
     recordClassName=`bg-white dark:bg-white/5 

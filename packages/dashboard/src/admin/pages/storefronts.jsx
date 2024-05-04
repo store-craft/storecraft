@@ -1,9 +1,9 @@
-import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, TimeStampView } from '@/admin/comps/common-fields.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
 const test = {
   title: 'call of duty',
@@ -65,7 +65,7 @@ export default ({}) => {
             createLink='/pages/storefronts/create'
             searchTitle='Search by title or handle' 
             isLoading={loading} />
-        <CollectionView 
+        <TableSchemaView 
             context={context} data={page} 
             fields={schema_fields} />
         <BottomActions 

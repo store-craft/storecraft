@@ -11,6 +11,9 @@ import { App } from '@storecraft/core';
 /** @type {import('@storecraft/core/v-api').OrderDataUpsert[]} */
 const items_upsert = [
   {
+    contact: {
+      email: 'a1@a.com',
+    },
     status: {
       checkout: enums.CheckoutStatusEnum.created,
       payment: enums.PaymentOptionsEnum.authorized,
@@ -30,6 +33,9 @@ const items_upsert = [
     }
   },
   {
+    contact: {
+      email: 'a1@a.com',
+    },
     status: {
       checkout: enums.CheckoutStatusEnum.created,
       payment: enums.PaymentOptionsEnum.captured,

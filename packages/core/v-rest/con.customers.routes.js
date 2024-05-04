@@ -76,7 +76,7 @@ export const create_routes = (app) => {
 
   // list orders of customer
   polka.get(
-    '/:id_or_email/products',
+    '/:id_or_email/orders',
     owner_or_admin_guard,
     async (req, res) => {
       const { id_or_email } = req.params;

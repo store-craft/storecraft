@@ -35,7 +35,7 @@ const CustomerOrders = (
 <div {...rest}>
   <ResourceView 
       limit={5}
-      resource={`customer/${value?.id}/orders`}
+      resource={`customers/${value?.email}/orders`}
       schema={schema.current}/>
  
 </div>

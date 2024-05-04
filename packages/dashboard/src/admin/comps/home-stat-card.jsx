@@ -53,7 +53,7 @@ const StatCard = (
     className='cursor-pointer' 
     draggable='false'>
   <Bling 
-      stroke='p-0.5' 
+      stroke='border-2' 
       rounded='rounded-lg'
       className='w-fit shadow-md hover:scale-105 
                 transition-transform'>

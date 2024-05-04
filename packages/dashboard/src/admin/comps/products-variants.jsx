@@ -116,7 +116,7 @@ const ProductOption = (
           inputClsName='text-base px-1 shelf-card w-full rounded-md h-10' 
           overrideClass={true}
           type='text' className='mt-1 flex-1' 
-          rounded='rounded-md' stroke='pb-px' /> 
+          rounded='rounded-md' stroke='border-b' /> 
       <BlingButton 
           children='add' className='h-10 ' 
           onClick={onClickAddOptionValue} />

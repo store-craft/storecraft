@@ -73,7 +73,7 @@ const TagValues = (
         ref={ref} type='text'/>
 
     <BlingButton 
-        children='Add' stroke='p-0.5 h-10' 
+        children='Add' stroke='border-2 h-10' 
         onClick={onAdd}/>
   </div>
   <CapsulesView 

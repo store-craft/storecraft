@@ -57,7 +57,7 @@ const Capsule = ({}) => {
 
   return (
 <Bling 
-    rounded='rounded-full' stroke='p-0.5' 
+    rounded='rounded-full' stroke='border-2' 
     from='from-pink-400' to='to-pink-500'>
   <div 
       className='rounded-full my-auto bg-kf-800 w-fit text-sm

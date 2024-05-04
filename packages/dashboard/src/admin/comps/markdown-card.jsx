@@ -28,7 +28,7 @@ return (
    desc={description}
    border={true} 
    {...rest}>
- <Bling stroke='pb-px' rounded='rounded-lg' >
+ <Bling stroke='border-b' rounded='rounded-lg' >
    <MDView
        className='rounded-md p-3 
          w-full text-base min-h-8 align-middle

@@ -196,7 +196,7 @@ const ProductsInCollection = ({ value, context }) => {
             className='text-gray-500 text-sm w-fit mx-auto 
                         shadow-gray-800/25 shadow-lg hover:scale-110 
                         transition-transform cursor-pointer' 
-            stroke='p-0.5' rounded='rounded-full'
+            stroke='border-2' rounded='rounded-full'
             from='from-pink-500' to='to-kf-400'
             onClick={() => !loading && ref_overlay.current.show()}>
           <IoMdAdd className={'text-4xl text-white ' + 

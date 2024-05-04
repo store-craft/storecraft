@@ -58,7 +58,7 @@ const FirebaseStorage = ({ onChange, params }) => {
       (it, ix) => (
         <div className='flex flex-col gap-1' key={ix}>
           <p children={it.name} />
-          <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='pb-px' 
+          <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='border-b' 
                       value={it.value ?? params?.[it.key] ?? ''}
                       inputClsName='h-8 w-full' 
                       className='w-full' 
@@ -125,7 +125,7 @@ const CloudflareStorage = ({ onChange, params }) => {
     (it, ix) => (
       <div className='flex flex-col gap-1' key={ix}>
         <p children={it.name} />
-        <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='pb-px' 
+        <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='border-b' 
                     value={it.value ?? params?.[it.key] ?? ''}
                     inputClsName='h-8 w-full' 
                     className='w-full' 
@@ -192,7 +192,7 @@ const AWSS3Storage = ({ onChange, params }) => {
     (it, ix) => (
       <div className='flex flex-col gap-1' key={ix}>
         <p children={it.name} />
-        <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='pb-px' 
+        <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='border-b' 
                     value={it.value ?? params?.[it.key] ?? ''}
                     inputClsName='h-8 w-full' 
                     className='w-full' 
@@ -255,7 +255,7 @@ const S3CompatibleStorage = ({ onChange, params }) => {
       (it, ix) => (
         <div className='flex flex-col gap-1' key={ix}>
           <p children={it.name} />
-          <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='pb-px' 
+          <BlingInput placeHolder={it.placeHolder ?? it.name} stroke='border-b' 
                       value={it.value ?? params?.[it.key] ?? ''}
                       inputClsName='h-8 w-full' 
                       className='w-full' 

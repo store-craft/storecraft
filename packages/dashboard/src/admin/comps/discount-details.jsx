@@ -150,7 +150,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
             )
           }
         inputClsName='h-7'
-        stroke='pb-px'
+        stroke='border-b'
         className='rounded-md w-14'/>
     <p>
       <Dashed>products</Dashed> specified by the filters <b>ABOVE ⬆️</b> 
@@ -618,7 +618,7 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
             )
           }
         inputClsName='h-7'
-        stroke='pb-px'
+        stroke='border-b'
         className='rounded-md w-14 inline-block'/>
     <p>
       <Dashed>products</Dashed> specified by the filters <b>ABOVE ⬆️</b> 
@@ -644,7 +644,7 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
             Math.max(parseInt(e.currentTarget.value), 1)
             )
           }
-        stroke='pb-px'
+        stroke='border-b'
         rounded='rounded-md'
         className='w-14'/>
     <p>

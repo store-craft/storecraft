@@ -49,7 +49,6 @@ const Attr = (
     
 <Bling 
     className={`shadow-md shadow-slate-300 dark:shadow-slate-800 ${className}`} 
-    stroke='p-px' 
     rounded='rounded-lg'>
   <div className='w-full relative rounded-lg
                   shelf-bling-fill
@@ -59,7 +58,7 @@ const Attr = (
     <p children='Key' className=''/>
     <BlingInput 
         className='mt-1' 
-        stroke='pb-px'
+        stroke='border-b'
         onChange={e => onChangeInternal('key', e)}
         value={val.key}
         placeholder='attribute key' 
@@ -67,7 +66,7 @@ const Attr = (
 
     <p children='Value' className='mt-3'/>
     <BlingInput 
-        className='mt-1' stroke='pb-px'
+        className='mt-1' stroke='border-b'
         onChange={e => onChangeInternal('value', e)}
         value={val.value}
         placeholder='attribute value' 

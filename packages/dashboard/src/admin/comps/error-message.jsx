@@ -54,7 +54,7 @@ const ErrorMessage = (
   return (
 <div className={cls}>
   <Bling 
-      stroke='p-[2px] dark:p-[1px] mt-5' 
+      stroke='border-2 dark:border mt-5' 
       rounded='rounded-lg' >
     <div 
         className=' relative rounded-md dark:rounded-lg bg-gradient-to-br 

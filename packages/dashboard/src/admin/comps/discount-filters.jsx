@@ -187,7 +187,7 @@ const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
 <div className='w-full'>
   <BlingButton 
         className='text-sm mx-auto h-10 w-40 ' 
-        stroke='p-0.5'
+        stroke='border-2'
         children='Browse products' 
         onClick={() => ref_overlay.current.show()} />
   <Overlay ref={ref_overlay} >
@@ -470,7 +470,7 @@ const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
   <BlingButton 
       children='Browse Customers' 
       className='text-sm mx-auto h-10 w-40' 
-      stroke='p-0.5'
+      stroke='border-2'
       onClick={() => ref_overlay.current.show()} />
 
   <Overlay ref={ref_overlay} >

@@ -224,6 +224,28 @@ export const BlingInput = forwardRef(
 )
 
 /**
+ * 
+ * @param {string[]} color_stops 
+ * @returns 
+ */
+export const border_bling_style = (color_stops=['#efefec', '#973cff']) => {
+
+  return {
+    style: {
+      'background-image': `linear-gradient(white, white), linear-gradient(to right, ${color_stops.join(',')})`,
+      'background-clip': 'padding-box, border-box',
+      'border-color': 'transparent',
+      'background-origin': 'padding-box, border-box',
+      // 'background-color': 'light-dark(#ccc, #333)'
+    }
+  }
+}
+
+
+// 
+/**
+ * Background container with gradient
+ * 
  * @typedef {{
  *  className?: string, rounded?: string, 
  *  children?: any, stroke?: string, from?: string, 
@@ -239,11 +261,23 @@ export const BlingInput = forwardRef(
 export const Bling = ( 
   { 
     className, rounded='rounded-md', 
-    children, stroke='p-px', 
+    children, stroke='border', 
     from='from-pink-500 dark:from-pink-500', 
     to='to-kf-500 dark:to-kf-500', ...rest 
   }
 ) => {
+
+  return (
+<div className={`bg-gradient-to-r ${from} ${to} ${stroke} 
+                ${rounded} ${className}`} {...rest}
+      style={{
+  'background-clip': 'border-box',
+  'border-color': 'transparent',
+  'background-origin': 'border-box'
+      }}>
+{ children }
+</div>    
+  )
 
   return (
 <div className={`bg-gradient-to-r ${from} ${to} ${stroke} 

@@ -84,7 +84,7 @@ const LineitemsTable =
               className='py-2 w-14 pr-3'/>
 
           <td className='py-2 w-14 pr-3'>
-            <Bling stroke='pb-0.5' className='w-full '>
+            <Bling stroke='border-b-2' className='w-full '>
               <input 
                   placeholder='' 
                   value={it.qty} type='number' 

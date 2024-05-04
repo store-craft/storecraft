@@ -62,7 +62,7 @@ export const TopActions = forwardRef(
     <Link to={createLink} draggable='false' className="m-2">
       <BlingButton2
           className='h-9 w-16 text-base rounded-lg' 
-          stroke='p-0.5' children='add'
+          stroke='border-2' children='add'
           icon={
             <IoCreateOutline 
                 className='inline shelf-text-label-color 
@@ -72,7 +72,7 @@ export const TopActions = forwardRef(
     </Link>            
     <BlingInput 
         className='m-1 flex-1 h-fit max-w-[20rem]' 
-         stroke='p-px' rounded='rounded-md'
+         rounded='rounded-md'
          type='search' placeholder={searchTitle} 
          value={search ?? ''}
          onChange={e => setSearch(e.currentTarget.value)} 

@@ -117,10 +117,12 @@ const CollectionBase = forwardRef(
   return (
 <>
   <CollectionView 
-      context={context_collection_view} data={page} 
+      context={context_collection_view} 
+      data={page} 
       fields={schema.current} />
   <BottomActions 
-      prev={prev} next={next} 
+      prev={prev} 
+      next={next} 
       onLimitChange={undefined} />
 </>
   )
@@ -135,7 +137,7 @@ const CollectionBase = forwardRef(
  *  import('../pages/collection.jsx').Context>
  * } param
  */
-const ProductsInCollection = ({ value, context }) => {
+const CollectionProducts = ({ value, context }) => {
 
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false)
@@ -220,4 +222,4 @@ const ProductsInCollection = ({ value, context }) => {
   )
 }
 
-export default ProductsInCollection
+export default CollectionProducts

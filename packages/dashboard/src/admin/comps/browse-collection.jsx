@@ -8,22 +8,26 @@ import { BiSearchAlt } from "react-icons/bi/index.js"
 import { App } from '@storecraft/core'
 
 /**
- * `BrowseCollection` is used to view and select big collections
- * with pagination and `vql` search query
+ * `BrowseCollection` is used to :
+ * - **view** and **select** items in big collections
+ * - Infinite pagination 
+ * - query and filtering with `vql` search query
+ * - designed to be used inside a popup modal.
+ * 
  * 
  * @typedef {object} BrowseCollectionParams
- * @prop {keyof App["db"]["resources"]} collectionId
+ * @prop {keyof App["db"]["resources"]} resource
  * @prop {string} [title]
- * @prop {React.FC<any>} [Comp]
+ * @prop {React.FC<{data: object}>} [Comp]
  * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
  * 
- * @param {BrowseCollectionParams} param
+ * @param {BrowseCollectionParams} params
  */
 const BrowseCollection = (
   { 
-    collectionId, title='Browse products', Comp, onSave, onCancel 
+    resource, title='Browse products', Comp, onSave, onCancel 
   }
 ) => {
 
@@ -36,7 +40,7 @@ const BrowseCollection = (
     actions: {
       prev, next, query
     }
-  } = useCollection(collectionId);
+  } = useCollection(resource);
 
   const onAdd = useCallback(
     /** @param {import('@storecraft/core/v-api').BaseType} item */
@@ -97,11 +101,12 @@ const BrowseCollection = (
         
     <Bling rounded='rounded-xl' stroke='border-2' >
       <div className='flex flex-row justify-between items-center'>
-        <input ref={ref_input} type='search' 
-          placeholder='search' 
-          className='w-full h-12 border shelf-input-color 
-                     shelf-border-color-soft px-3 text-base 
-                     focus:outline-none rounded-xl'  />
+        <input 
+            ref={ref_input} type='search' 
+            placeholder='search' 
+            className='w-full h-12 border shelf-input-color 
+                      shelf-border-color-soft px-3 text-base 
+                      focus:outline-none rounded-xl'  />
         <BiSearchAlt 
                 className='text-white text-4xl mx-1 sm:mx-5 
                            cursor-pointer' 
@@ -136,9 +141,10 @@ const BrowseCollection = (
                      flex flex-row justify-between items-center 
                      gap-3' >
         <Comp data={it} />
-        <IoCloseSharp onClick={() => onRemove(it)} 
-                className='h-6 w-9 pl-3 border-l shelf-border-color-soft
-                            cursor-pointer'/>
+        <IoCloseSharp 
+            onClick={() => onRemove(it)} 
+            className='h-6 w-9 pl-3 border-l shelf-border-color-soft
+                        cursor-pointer'/>
       </div>
       )
     )
@@ -180,7 +186,8 @@ const BrowseCollection = (
           {
           items.map(
             (it, ix) => (
-            <div key={`sr_${it.id}`} 
+            <div 
+                key={`sr_${it.id}`} 
                 className='w-full h-16 sm:h-20 p-1 border-b shelf-border-color-soft
                            cursor-pointer'
                 onClick={() => onAdd(it)}>
@@ -190,12 +197,12 @@ const BrowseCollection = (
           )
           }
           <PromisableLoadingButton 
-                text='Load more' 
-                onClick={() => next().catch(e => {}) } 
-                keep_text_on_load={true}
-                className='w-fit mx-auto h-12 p-3 border-b cursor-pointer
-                           shelf-border-color-soft
-                           text-center text-pink-500 font-medium text-base'  />
+              text='Load more' 
+              onClick={() => next().catch(e => {}) } 
+              keep_text_on_load={true}
+              className='w-fit mx-auto h-12 p-3 border-b cursor-pointer
+                          shelf-border-color-soft
+                          text-center text-pink-500 font-medium text-base'  />
 
         </div>    
       </Bling>    
@@ -256,10 +263,12 @@ const ProductComp = ({ data }) => {
 export const BrowseCustomers = ({ onSave, onCancel }) => {
 
   return (
-<BrowseCollection 
-        collectionId='customers' Comp={UserComp} 
-        onSave={onSave} onCancel={onCancel} 
-        title='Browse Customers' />    
+  <BrowseCollection 
+      resource='customers' 
+      Comp={UserComp} 
+      onSave={onSave} 
+      onCancel={onCancel} 
+      title='Browse Customers' />    
   )
 }
 
@@ -268,14 +277,16 @@ export const BrowseCustomers = ({ onSave, onCancel }) => {
  * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
- * @param {BrowseProductsParams} param0 
+ * @param {BrowseProductsParams} params
  */
 export const BrowseProducts = ({ onSave, onCancel }) => {
 
   return (
 <BrowseCollection 
-    collectionId='products' Comp={ProductComp} 
-    onSave={onSave} onCancel={onCancel} 
+    resource='products' 
+    Comp={ProductComp} 
+    onSave={onSave} 
+    onCancel={onCancel} 
     title='Browse Products' />    
   )
 }

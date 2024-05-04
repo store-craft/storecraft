@@ -190,7 +190,7 @@ const TopSoldCard = (
 ) => {
 
   return (
-<Bling rounded='rounded-xl' stroke='p-[2px]'>
+<Bling rounded='rounded-xl' stroke='border-2'>
   <div className='w-56 h-52 
                 shelf-plain-card-fill
                 rounded-xl shadow-xl dark:shadow-xl px-3 pt-2

@@ -163,7 +163,7 @@ const ImagePage = ({}) => {
     <Card className='mt-10' error={error}>
       <div className='flex flex-col gap-10'>
         <div className='self-end'>
-          <Bling stroke='p-0.5' className='w-fit h-fit' rounded='rounded-full'>
+          <Bling stroke='border-2' className='w-fit h-fit' rounded='rounded-full'>
             <LoadingButton 
                 className='h-6 px-2 
                 bg-slate-50 dark:bg-slate-800 

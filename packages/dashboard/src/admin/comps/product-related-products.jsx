@@ -103,7 +103,7 @@ const RelatedProducts = (
   return (
 <div {...rest}>
   <BlingButton children='Browse products'
-      stroke='p-0.5'
+      stroke='border-2'
       className='w-40 h-10 mx-auto'  
       onClick={() => ref_overlay.current.show()} />
   <Overlay ref={ref_overlay} >

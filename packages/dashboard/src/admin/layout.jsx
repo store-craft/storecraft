@@ -144,7 +144,7 @@ const Layout = (
       <Bling 
           className='my-3 ml-3 shadow-sm' 
           rounded='rounded-tr-3xl rounded-tl-md rounded-br-3xl' 
-          stroke='pr-px pt-1 pb-4' 
+          stroke='border-r pt-1 border-b-[16px]' 
           from='from-kf-400 dark:from-kf-500' 
           to='to-pink-400 dark:to-pink-500'>
         <SideMenu 

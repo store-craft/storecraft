@@ -94,12 +94,12 @@ const Modal = forwardRef(
           className='text-red-500 text-base break-words' />
       <div className='flex flex-row justify-between mt-10 text-base'>
         <BlingButton 
-            stroke='pb-0.5' 
+            stroke='border-b-2' 
             btnClassName='rounded-none'
             rounded='rounded-none'
             children='No' 
             onClick={() => ref.current.hide()} />
-        <BlingButton stroke='pb-0.5' 
+        <BlingButton stroke='border-b-2' 
             btnClassName='rounded-none'
             rounded='rounded-none'
             children='Yes' 

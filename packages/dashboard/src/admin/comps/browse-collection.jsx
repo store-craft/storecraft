@@ -95,7 +95,7 @@ const BrowseCollection = (
       onFocus={() => setFocus(true)} 
       tabIndex={4344}>
         
-    <Bling rounded='rounded-xl' stroke='p-0.5' >
+    <Bling rounded='rounded-xl' stroke='border-2' >
       <div className='flex flex-row justify-between items-center'>
         <input ref={ref_input} type='search' 
           placeholder='search' 
@@ -146,12 +146,12 @@ const BrowseCollection = (
       </div>
       <div className='self-end flex flex-row gap-5'>
         <BlingButton 
-            stroke='p-0.5' 
+            stroke='border-2' 
             className='opacity-60' 
             children='cancel' 
             onClick={onCancel} />
         <BlingButton 
-            stroke='p-0.5' 
+            stroke='border-2' 
             children='save' 
             onClick={() => onSave(selected)} />
       </div>

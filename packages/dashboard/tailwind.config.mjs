@@ -14,6 +14,7 @@ const config = {
 		"./src/comps/**/*.{js,ts,jsx,tsx}",
 		"./src/admin/**/*.{js,ts,jsx,tsx}",
 		"./src/docs/**/*.{js,ts,jsx,tsx}",
+		"./styles/*.scss",
 	  ],
 	theme: {
 		screens: screens,

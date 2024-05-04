@@ -68,7 +68,7 @@ const SearchBar = forwardRef(
           className='text-2xl w-fit font-mono min-w-[5rem]'/>
 
     <BlingInput 
-        className='m-1 flex-1 max-w-[30rem] h-12' stroke='p-0'
+        className='m-1 flex-1 max-w-[30rem] h-12' stroke='border-none'
         type='search' placeholder={searchTitle} 
         value={search}
         onChange={e => setSearch(e.currentTarget.value)} 

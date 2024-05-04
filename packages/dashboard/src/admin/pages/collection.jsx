@@ -126,9 +126,11 @@ const Actions = (
       onClickReload={onClickReload}
       onClickSave={onClickSave}>
     <PromisableLoadingBlingButton 
-        Icon={<MdPublish />} text='publish' 
+        Icon={<MdPublish />} 
+        text='publish' 
         show={Boolean(onClickPublish)}
-        onClick={onClickPublish} className='' />
+        onClick={onClickPublish} 
+        className='' />
   </RegularDocumentActions>  
   )
 }

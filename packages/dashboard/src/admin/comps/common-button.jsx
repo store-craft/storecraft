@@ -176,7 +176,7 @@ export const PromisableLoadingButton = (
 export const PromisableLoadingBlingButton = (
   {
     onClick, show=true, className='h-6', loading: $loading, 
-    stroke='p-px', rounded='rounded-full', 
+    stroke='border', rounded='rounded-full', 
     from='from-pink-300 dark:from-pink-500',
     to='to-kf-300 dark:to-kf-500',
     ...rest
@@ -221,7 +221,7 @@ export const PromisableLoadingBlingButton = (
  */
 export const BlingButton = (
   { 
-    from, to, rounded='rounded-lg', stroke='p-0.5', 
+    from, to, rounded='rounded-lg', stroke='border-2', 
     children, text='what', className='h-10', 
     btnClassName='', ...rest 
   }

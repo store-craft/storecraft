@@ -7,7 +7,7 @@ const Logo = () => {
   return (
 <div className='w-[512px] h-[512px] bg-slate-100 p-3'>
 
-  <Bling className='w-full h-full' stroke='p-3'
+  <Bling className='w-full h-full' stroke='border-[12px]'
           from='from-pink-500 dark:from-pink-500' 
           to='to-kf-600 dark:to-kf-500'>
     <div className='w-full h-full bg-slate-100 rounded-3xl shadow-xl

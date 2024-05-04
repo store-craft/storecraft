@@ -58,7 +58,7 @@ const Gallery = (
 
   return (
 <div className={`flex flex-col justify-between ${className}`} {...rest} >
-  <Bling stroke='p-[1px]' rounded='rounded-md' 
+  <Bling rounded='rounded-md' 
          className='shadow-md w-full h-fit' >
     <SearchBar 
         ref={ref_actions} 
@@ -74,7 +74,6 @@ const Gallery = (
       onClickImage={onClickImage} />   
   <ShowIf show={pages?.length} >
     <Bling 
-        stroke='p-[1px]' 
         rounded='rounded-md' 
         className='mt-5 shadow-md w-full h-fit' >
       <BottomActions 

@@ -86,7 +86,7 @@ const OrderCouponInfo = (
     <BlingInput ref={ref_name} rounded='rounded-md'
             placeholder='coupon' type='text' 
             className='mt-1'/>
-    <BlingButton className='mt-1 ml-3 h-10 flex-1' stroke='p-0.5'
+    <BlingButton className='mt-1 ml-3 h-10 flex-1' stroke='border-2'
           children='Add' onClick={onManualAdd} />
   </div>
   <HR className='mt-5'/>

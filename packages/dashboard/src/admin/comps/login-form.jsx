@@ -84,7 +84,7 @@ const LoginForm = (
  return (
 <div className={className}>
  <Bling className='shadow-lg shadow-gray-300'
-        stroke='p-1' to='to-kf-400'>
+        stroke='border-4' to='to-kf-400'>
    <form className='w-full p-5 bg-white flex flex-col text-sm 
                      tracking-wider font-medium gap-5 rounded-md'
          onSubmit={onSubmit}>
@@ -100,7 +100,7 @@ const LoginForm = (
          value={credentials} 
          onChange={onChange}  autoComplete='on' 
          name='password' />
-     <Bling stroke='p-1 w-full' from='from-kf-500' to='to-pink-400'>
+     <Bling stroke='border-4 w-full' from='from-kf-500' to='to-pink-400'>
        <input 
            type='submit' value='LOGIN' 
            title='Login' alt='Login'

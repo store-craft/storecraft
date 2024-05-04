@@ -92,7 +92,7 @@ return (
     </div>
     <ShowIf show={Boolean(onClickDelete)}>
 
-      <Bling stroke='p-0.5' className='h-fit' rounded='rounded-full'>
+      <Bling stroke='border-2' className='h-fit' rounded='rounded-full'>
         <LoadingButton 
             className='h-6 px-2 
             bg-slate-50 dark:bg-slate-800 

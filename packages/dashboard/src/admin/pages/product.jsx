@@ -19,6 +19,7 @@ import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import ProductVariants from '@/admin/comps/products-variants.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import ProductDiscounts from '../comps/product-discounts.jsx'
 
 const test = {
   title: 'call of duty',
@@ -37,6 +38,14 @@ const root_left_schema = {
   name:'Root', comp: Div, 
   comp_params : { className:'w-full lg:w-[35rem] flex flex-col gap-5'},
   fields: [
+    { 
+      key: 'discounts', name: 'Eligible Discounts',
+      desc: 'The following discounts may be aaplied to this product',
+      comp: withCard(
+        ProductDiscounts, { className:'' }, true, false
+      ),  
+      comp_params: {className: 'w-full h-fit'} 
+    },
     { 
       key: 'title', name: 'Title', type: 'text',  validate: true, 
       editable: true, desc: 'Give an accurate title of the product',

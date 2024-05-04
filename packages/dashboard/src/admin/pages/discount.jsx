@@ -23,6 +23,7 @@ import { JsonViewCard } from '@/admin/comps/json.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import { DiscountApplicationEnum } from '@storecraft/core/v-api/types.api.enums.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import DiscountPerformance from '../comps/discount-performance.jsx'
 
 /**
  * @param {string} v 
@@ -128,6 +129,12 @@ const right = {
       editable: true, defaultValue: true,
       comp: withCard(Switch, { className : 'text-gray-600'}, true),
       comp_params: {className: 'w-full'} 
+    },
+    {
+      key: undefined, name: '🚀 Performance',
+      desc : 'This is how this discount performs', 
+      comp: withCard(DiscountPerformance, { className : ''}, true),
+      comp_params: {className: 'w-full'}  
     },
     {
       key: 'application', name: 'Automatic or Coupon', 

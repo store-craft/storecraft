@@ -1,5 +1,5 @@
 import { StorecraftSDK } from '../index.js'
-import { collection_base } from './utils.api.fetch.js';
+import { collection_base, fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js';
 
 /**
  * Base `products` **CRUD**
@@ -21,12 +21,22 @@ export default class Products extends collection_base {
 
   /**
    * 
-   * @param {string} id 
-   * @param {number} howmuch 
-   * @returns 
+   * Change stock quantity of a `product` by a delta difference
+   * number.
+   * 
+   * @param {string} id_or_handle `id` ot `handle`
+   * @param {number} howmuch a diff number by how much to update stock
    */
-  changeStockOf = async (id, howmuch) => {
-    // return this.db.doc(NAME, id).incrementField('qty', howmuch, 0)
+  changeStockOfBy = async (id_or_handle, howmuch) => {
+    const response = await fetchOnlyApiResponseWithAuth(
+      this.sdk,
+      `products/${id_or_handle}?quantityBy=${howmuch}`,
+      {
+        method: 'put'
+      }
+    );
+
+    return response.ok;
   }
 
   /**

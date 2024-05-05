@@ -45,6 +45,7 @@ const upsert = (driver) => {
             status: JSON.stringify(item.status),
             validation: JSON.stringify(item.validation),
             _customer_id: item?.contact?.customer_id,
+            _customer_email: item?.contact?.email,
             _status_checkout_id: item?.status?.checkout?.id,
             _status_payment_id: item?.status?.payment?.id,
             _status_fulfillment_id: item?.status?.fulfillment?.id,

@@ -1,4 +1,3 @@
-import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.jsx'
@@ -7,6 +6,7 @@ import OrdersQuickSearchActions, { id2ColorFulfill }
        from '@/admin/comps/orders-quick-search-actions.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
 const schema_fields = [
   { 
@@ -65,7 +65,10 @@ export default ({}) => {
             createLink='/pages/orders/create'
             searchTitle='Search by ID, status, date, customer info...' 
             isLoading={loading} />
-        <CollectionView context={context} data={page} fields={schema_fields} />
+        <TableSchemaView 
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
         <BottomActions 
             prev={prev} next={next} 
             limit={query_api.limit}

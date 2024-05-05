@@ -1,4 +1,4 @@
-import CollectionView from '@/admin/comps/collection-view.jsx'
+import { TableSchemaView } from '@/admin/comps/table-schema-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, SpanArray, 
@@ -79,17 +79,19 @@ export default ({}) => {
                       shelf-border-color shadow-md 
                       dark:shadow-slate-900 '>      
         <TopActions 
-            ref={ref_actions} reload={onReload} 
+            ref={ref_actions} 
+            reload={onReload} 
             createLink='/pages/products/create'
             searchTitle='Search by Name, Handle, Tag values, Collections...' 
             isLoading={loading} />
-        <CollectionView 
+        <TableSchemaView 
             context={context} 
             data={page} 
             fields={schema_fields} />
         <ShowIf show={page}>
           <BottomActions 
-              prev={prev} next={next} 
+              prev={prev} 
+              next={next} 
               limit={query_api.limit}
               onLimitChange={onLimitChange} />
         </ShowIf>

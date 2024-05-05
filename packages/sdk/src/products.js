@@ -51,9 +51,6 @@ export default class Products extends collection_base {
    * @param {import('@storecraft/core/v-api').CollectionType} collection 
    */
   batchRemoveProductsFromCollection = async (products, collection) => {
-    console.log('products', products)
-    console.log('collection', collection)
-    console.log('(pr.collections??[]).filter(c => c.id!==collection.id)', (products[0].collections??[]).filter(c => c.id!==collection.id))
     for (const pr of products) {
       await this.upsert({
         ...pr,

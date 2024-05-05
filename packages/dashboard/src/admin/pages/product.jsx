@@ -40,7 +40,7 @@ const root_left_schema = {
   fields: [
     { 
       key: 'discounts', name: 'Eligible Discounts',
-      desc: 'The following discounts may be aaplied to this product',
+      desc: 'The following discounts may be applied to this product',
       comp: withCard(
         ProductDiscounts, { className:'' }, true, false
       ),  

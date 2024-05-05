@@ -79,14 +79,14 @@ const readable_span_cls = 'pr-3 py-2 max-w-[18rem] \
 overflow-x-auto inline-block whitespace-nowrap';
 
 /**
- * This is used in `CollectionView`
+ * This is used in `TableSchemaView`
  * 
  * @typedef {object} InternalSpanParams
  * @prop {string} [className]
  * @prop {string} [extra]
  * @prop {React.ReactNode} [children]
  * 
- * @typedef {import('./collection-view.jsx').CollectionViewComponentParams<string> & 
+ * @typedef {import('./table-schema-view.jsx').TableSchemaViewComponentParams<string> & 
 *   InternalSpanParams & 
 *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
 * } SpanParams
@@ -110,7 +110,7 @@ export const Span = (
 }
 
 /**
- * This is used in `CollectionView`
+ * This is used in `TableSchemaView`
  * 
  * @typedef {object} InternalSpanArrayParams
  * @prop {string} [className]
@@ -118,7 +118,7 @@ export const Span = (
  * @prop {string} [delimiter]
  * @prop {(value: any) => string} [name_fn]
  * 
- * @typedef {import('./collection-view.jsx').CollectionViewComponentParams<any[]> & 
+ * @typedef {import('./table-schema-view.jsx').TableSchemaViewComponentParams<any[]> & 
 * InternalSpanArrayParams & 
 * React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
 * } SpanArrayParams
@@ -153,8 +153,8 @@ export const SpanArray = (
 
 /**
  * 
- * This component is used in a `CollectionView` 
- * @param {import('./collection-view.jsx').CollectionViewComponentParams<string>
+ * This component is used in a `TableSchemaView` 
+ * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams<string>
 * } params 
 */
 export const TimeStampView = ({field, value, ...rest}) => {
@@ -444,8 +444,10 @@ export const withCard = (
 
 
 /**
- * This component is used in a `CollectionView` 
- * @param {import('./collection-view.jsx').CollectionViewComponentParams
+ * This component is used in a `TableSchemaView` 
+ * 
+ * 
+ * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams
  * } params 
  */
 export const RecordActions = (
@@ -455,9 +457,11 @@ export const RecordActions = (
 ) => {
 
   /** @type {React.MutableRefObject<import('./modal.jsx').ImpInterface>} */
-  const ref_modal = useRef()
-  const [loadingDelete, setLoadingDelete] = useState(false)
-  const id = context.item.handle ?? context.item.id
+  const ref_modal = useRef();
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const id = context.item.handle ?? context.item.id;
+
   const onClickDelete = useCallback(
     () => {
       ref_modal.current.setDataAndMessage(
@@ -466,7 +470,7 @@ export const RecordActions = (
       )
       ref_modal.current.show()
     }, [context]
-  )
+  );
 
   const onApproveDelete = useCallback(
     (data_id) => {
@@ -476,7 +480,7 @@ export const RecordActions = (
       context.deleteDocument(data_id)
              .finally(() => setLoadingDelete(false));
     }, [context]
-  )
+  );
 
   return (
 <div className='flex flex-row items-center text-center 

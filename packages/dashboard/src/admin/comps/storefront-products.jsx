@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react'
-import { BrowseProducts } from './browse-collection.jsx'
+import { BrowseProducts } from './resource-browse.jsx'
 import CapsulesView from './capsules-view.jsx'
 import { Overlay } from './overlay.jsx'
 import { BlingButton } from './common-button.jsx'

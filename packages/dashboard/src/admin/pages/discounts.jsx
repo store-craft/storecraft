@@ -1,4 +1,3 @@
-import CollectionView from '@/admin/comps/collection-view.jsx'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { TimeStampView, RecordActions } from '@/admin/comps/common-fields.jsx'
@@ -7,6 +6,7 @@ import DiscountType from '@/admin/comps/discounts-table-type.jsx'
 import Code from '@/admin/comps/discounts-table-code.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
 const schema_fields = [
   { key: 'handle', name: 'Code', comp: Code },
@@ -49,7 +49,7 @@ export default ({}) => {
             createLink='/pages/discounts/create'
             searchTitle='Search by Code, type...' 
             isLoading={loading} />
-        <CollectionView 
+        <TableSchemaView 
             context={context} 
             data={page} 
             fields={schema_fields} />

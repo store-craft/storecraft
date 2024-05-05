@@ -9,7 +9,7 @@ import { MInput, withCard,
   Handle, Switch } from '@/admin/comps/common-fields.jsx'
 import { MdPublish } from 'react-icons/md/index.js'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
-import ProductsInCollection from '@/admin/comps/products-in-collection.jsx'
+import CollectionProducts from '@/admin/comps/collection-products.jsx'
 import ErrorMessage from '@/admin/comps/error-message.jsx'
 import TagsEdit from '@/admin/comps/tags-edit.jsx'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
@@ -25,7 +25,7 @@ const left = {
   comp_params : { className:'w-full flex flex-col gap-5 max-w- lg:w-[35rem]'},
   fields: [
     {
-      comp: ProductsInCollection,
+      comp: CollectionProducts,
       comp_params: {className: 'w-full'} 
     },
     { 

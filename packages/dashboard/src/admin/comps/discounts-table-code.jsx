@@ -5,7 +5,7 @@ import { RiCoupon3Line } from "react-icons/ri/index.js"
  * 
  * @param {object} param 
  * @param {string} param.value 
- * @param {import("./collection-view.jsx").CollectionViewContext<
+ * @param {import("./table-schema-view.jsx").TableSchemaViewContext<
  * import("@storecraft/core/v-api").DiscountType>} param.context 
  */
 const Code = (

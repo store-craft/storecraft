@@ -133,7 +133,7 @@ const list_customer_orders = (driver) => {
     isDef(filter_query) && filter.$and.push(filter_query);
 
     const items = await driver.resources.orders._col.find(
-      filter,  {
+      filter, {
         sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
       }
     ).toArray();

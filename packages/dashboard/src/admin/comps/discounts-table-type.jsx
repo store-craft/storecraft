@@ -19,7 +19,7 @@ export const discount_types_to_color = type => {
 
 /**
  * 
- * @param {import('./collection-view.jsx').CollectionViewComponentParams<
+ * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams<
  * import('@storecraft/core/v-api').DiscountDetails["meta"]>} param0 
  * @returns 
  */

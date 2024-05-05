@@ -9,6 +9,7 @@ import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
  
 let app = new App(
@@ -19,7 +20,8 @@ let app = new App(
   // new GoogleStorage()
   ,
   {
-    'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' })
+    'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' }),
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
   }, null, null, 
   {
     storage_rewrite_urls: undefined,
@@ -30,6 +32,27 @@ let app = new App(
 );
 
 await app.init();
+
+await app.api.checkout.create_checkout(
+  {
+    line_items: [
+      {
+        id: 'pr-1',
+        qty: 1,
+        price: 50
+      }
+    ],
+    shipping_method: {
+      title: 'title',
+      handle: 'ship-fast',
+      price: 50
+    },
+    contact: {
+      email: 'a1@a.com'
+    }
+  }, 'dummy_payments'
+);
+
  
 const server = http.createServer(app.handler).listen(
   8000,

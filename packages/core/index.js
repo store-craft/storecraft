@@ -22,8 +22,9 @@ const parse_int = (s, def) => {
  * @template {any} [PlatformNativeRequest=any]
  * @template {any} [PlatformContext=any]
  * @template {any} [H=any]
- * @template {db_driver} [D=db_driver]
- * @template {storage_driver} [S=storage_driver]
+ * @template {db_driver} [D=any]
+ * @template {storage_driver} [S=any]
+ * @template {Record<string, payment_gateway>} [G=any]
  */
 export class App {
 
@@ -55,7 +56,7 @@ export class App {
    * 
    * @description The payment gateways
    * 
-   * @type {Record<string, payment_gateway>} 
+   * @satisfies {G} 
    */ 
   #_payment_gateways;
 
@@ -82,12 +83,12 @@ export class App {
    */ 
   #_config;
 
-  /** 
-   * @description The API logic
-   * 
-   * @type {ReturnType<create_api>} 
-   */ 
-  #_api;
+  // /** 
+  //  * @description The API logic
+  //  * 
+  //  * @satisfies {ReturnType<create_api<any,any,any,D,S,G>>} 
+  //  */ 
+  // #_api;
   
   /** 
    * @description The REST API controller
@@ -108,7 +109,7 @@ export class App {
    * @param {Platform} platform platform The Platform driver
    * @param {D} db_driver datatbase The Database driver
    * @param {S} [storage] storage The storage driver
-   * @param {Record<string, payment_gateway>} [payment_gateways] The Payment Gateways
+   * @param {G} [payment_gateways] The Payment Gateways
    * @param {mailer} [mailer] mailer The Email driver
    * @param {Record<string, extension>} [extensions] extensions
    * @param {StorecraftConfig} [config] config The Storecraft Application config
@@ -127,6 +128,13 @@ export class App {
     this.#_config = config;
     this.#_is_ready = false;
   } 
+
+  /**
+   * @return {G}
+   */
+  type_g() {
+    return undefined;
+  }
 
   /**
    * 
@@ -185,7 +193,9 @@ export class App {
       console.log(e)
     }
 
-    this.#_api = create_api(this);
+    this.d=1;
+    // this.#_api = create_api(this);
+    this.api = create_api(this);
     this.#_rest_controller = create_rest_api(this);
     this.#_is_ready = true;
     
@@ -200,13 +210,13 @@ export class App {
     return this.#_rest_controller; 
   }
 
-  /** 
-   * 
-   * @description Get the main **API** logic 
-   */
-  get api() {
-    return this.#_api;
-  }
+  // /** 
+  //  * 
+  //  * @description Get the main **API** logic 
+  //  */
+  // get api() {
+  //   return this.#_api;
+  // }
 
   /** 
    * 
@@ -273,7 +283,7 @@ export class App {
   /**
    * @description Get a payment gateway by handle
    * 
-   * @param {string} handle 
+   * @param {keyof G} handle 
    */
   gateway = (handle) => {
     return this.gateways?.[handle];

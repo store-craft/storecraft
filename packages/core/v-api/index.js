@@ -23,8 +23,14 @@ import { App } from '../index.js';
 
 
 /**
+ * @template {any} [A=any]
+ * @template {any} [B=any]
+ * @template {any} [C=any]
+ * @template {import('../index.js').db_driver} [D=any]
+ * @template {import('../index.js').storage_driver} [E=any]
+ * @template {Record<string, import('../index.js').payment_gateway>} [F=any]
  * 
- * @param {App} app 
+ * @param {App<A,B,C,D,E,F>} app
  */
 export const create_api = app => {
   

@@ -54,21 +54,25 @@ async (order) => {
 
 /**
  * Create a checkout, which is a draft order
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} F
  * 
- * @param {App} app 
+ * @param {App<any, any, any, D, E, F>} app 
  */
 export const create_checkout = app =>
 /**
  * 
- * @param {OrderData} order
- * @param {string} gateway_handle chosen payment gateway
+ * @param {import("./types.api.js").CheckoutCreateType} order_checkout
+ * @param {keyof F} gateway_handle chosen payment gateway
+ * 
  * 
  * @returns {Promise<OrderData>}
  */
-async (order, gateway_handle) => {
+async (order_checkout, gateway_handle) => {
 
   // fetch correct data from backend. we dont trust client
-  order = await validate_checkout(app)(order);
+  let order = await validate_checkout(app)(order_checkout);
 
   // eval pricing with discounts
   order = await eval_pricing(app)(order);
@@ -116,8 +120,6 @@ async (order, gateway_handle) => {
 
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
-
-
 
   await app.api.orders.upsert(order);
 
@@ -186,7 +188,7 @@ async (checkoutId, client_payload) => {
 export const validate_checkout = app =>
 /**
  * 
- * @param {OrderData} checkout
+ * @param {import("./types.api.js").CheckoutCreateType} checkout
  * 
  * @returns {Promise<OrderData>}
  */
@@ -251,7 +253,10 @@ async (checkout) => {
 
 /**
  * 
- * @param {App} app 
+ * @template {import("../index.js").db_driver} [D=any]
+ * @template {import("../index.js").storage_driver} [E=any]
+ * @template {Record<string, payment_gateway>} [F=any]
+ * @param {App<any,any,any,D,E,F>} app 
  */
 export const inter = app => {
 

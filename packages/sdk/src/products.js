@@ -1,5 +1,7 @@
 import { StorecraftSDK } from '../index.js'
-import { collection_base, fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js';
+import { 
+  collection_base, fetchOnlyApiResponseWithAuth 
+} from './utils.api.fetch.js';
 
 /**
  * Base `products` **CRUD**

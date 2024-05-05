@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, 
-         useRef, useState } from 'react'
+import { 
+  useCallback, useEffect, useMemo, 
+  useRef, useState } from 'react'
 import { Bling, BlingInput, HR } from './common-ui.jsx'
 import { BrowseProducts } from './resource-browse.jsx'
 import { Overlay } from './overlay.jsx'
@@ -226,11 +227,15 @@ const OrderLineItems = (
         // if we have stock reserved > 0, then we offer to return stock_reserved amount,
         // otherwise, we offer to reduce the line_item.qty quantity amount from stock
         const return_stock = line_item.stock_reserved && items[ix].stock_reserved > 0
-        const how_much = return_stock ? line_item.stock_reserved : -line_item.qty
+        const how_much = return_stock ? line_item.stock_reserved : -line_item.qty;
+
         try {
-          await sdk.products.changeStockOf(line_item.id, how_much)
-          items[ix].stock_reserved = return_stock ? 0 : line_item.qty
-          setItems([...items])
+          await sdk.products.changeStockOfBy(line_item.id, how_much);
+
+          items[ix].stock_reserved = return_stock ? 0 : line_item.qty;
+
+          setItems([...items]);
+
         } catch (e) {
           switch (e.code) {
             case 'doc-not-exists':

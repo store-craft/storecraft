@@ -46,6 +46,8 @@ export const create_routes = (app) => {
         await app.api.products.changeStockOfBy(
           [handle_or_id], [stockBy]
         );
+      } else {
+        res.status = 400;
       }
 
       res.end();

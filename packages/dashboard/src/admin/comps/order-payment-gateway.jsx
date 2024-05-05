@@ -35,8 +35,8 @@ const OrderPaymentGateway = (
       if(value?.gateway_handle===undefined)
         return;
       try {
-        const stat = await sdk.payment_gateways.status(
-          value.gateway_handle, order.id
+        const stat = await sdk.payments.paymentStatusOfOrder(
+          order.id
         );
         onChange({
           ...value,

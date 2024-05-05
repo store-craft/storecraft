@@ -60,8 +60,6 @@ async (order) => {
 
 
 /**
- * Create a checkout, which is a draft order
- * 
  * 
  * @template {import("../index.js").db_driver} D
  * @template {import("../index.js").storage_driver} E
@@ -71,6 +69,8 @@ async (order) => {
  */
 export const create_checkout = app =>
 /**
+ * @description Create a checkout, which is a draft order
+ * 
  * 
  * @param {import("./types.api.js").CheckoutCreateType} order_checkout
  * @param {keyof F} gateway_handle chosen payment gateway
@@ -119,20 +119,21 @@ async (order_checkout, gateway_handle) => {
 
   assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
 
-  const { onCheckoutCreate } = gateway;
-
   // save the creation payload
   order.payment_gateway = {
-    on_checkout_create: await onCheckoutCreate(order),
+    on_checkout_create: await gateway.onCheckoutCreate(order),
     gateway_handle: String(gateway_handle)
   };
 
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
-  await app.api.orders.upsert(order);
+  const id = await app.api.orders.upsert(order);
 
-  return order
+  return {
+    ...order,
+    id
+  }
 }
 
 
@@ -159,9 +160,7 @@ async (checkoutId, client_payload) => {
 
   assert(gateway, `gateway not found`, 400);
 
-  const { onCheckoutComplete } = gateway;
-
-  const status = await onCheckoutComplete(
+  const status = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create
   );
 
@@ -209,7 +208,7 @@ export const validate_checkout = app =>
 async (checkout) => {
 
   const snap_shipping = await app.db.resources.shipping.get(
-    checkout.shipping_method.id
+    checkout.shipping_method.id ?? checkout.shipping_method.handle
   );
 
   const snaps_products = await app.db.resources.products.getBulk(
@@ -230,7 +229,7 @@ async (checkout) => {
 
   // assert shipping is valid
   if(!snap_shipping)
-    errorWith(snap_shipping.id, 'shipping-method-not-found')
+    errorWith(snap_shipping?.id, 'shipping-method-not-found')
   else { // else patch the latest
     checkout.shipping_method = snap_shipping;
   }
@@ -239,15 +238,15 @@ async (checkout) => {
   snaps_products.forEach(
     (it, ix) => {
       if(!it) {
-        errorWith(it.id, 'product-not-exists')
+        errorWith(it?.id, 'product-not-exists')
       } else {
         const pd = it;
         const li = checkout.line_items[ix]
 
         if(pd.qty==0)
-          errorWith(it.id, 'product-out-of-stock')
+          errorWith(it?.id, 'product-out-of-stock')
         else if(li.qty>pd.qty)
-          errorWith(it.id, 'product-not-enough-stock')
+          errorWith(it?.id, 'product-not-enough-stock')
 
         // patch line items inline
         li.data = pd

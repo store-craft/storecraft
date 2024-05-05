@@ -1,9 +1,8 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { Label } from './common-ui.jsx'
 import useNavigateWithState from '@/admin/hooks/useNavigateWithState.js'
 import ShowIf from './show-if.jsx'
 import MDView from './md-view.jsx'
-import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 
 /**

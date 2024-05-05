@@ -42,7 +42,8 @@ const LineitemsTable =
       `(${it.stock_reserved} stock reserved, return stock)` :
       `(reduce ${it.qty} stock units)` 
   }
-
+  console.log('items', items)
+  
   return (
 <div className='w-full flex flex-row mt-3'>
   <table className='w-full border-collapse text-left'>

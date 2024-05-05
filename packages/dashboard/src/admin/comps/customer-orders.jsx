@@ -1,16 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
-import ShowIf from './show-if.jsx'
+import { useRef } from 'react'
 import MDView from './md-view.jsx'
-import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import ResourceView from './resource-view.jsx'
 import { Span, TimeStampView } from './common-fields.jsx'
+import { SimpleLink } from './common-table-fields.jsx'
 
 
 /**
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *    import('@storecraft/core/v-api').CustomerType,
- *    import('../pages/discount.jsx').Context,
+ *    import('../pages/customer.jsx').Context,
  *    import('@storecraft/core/v-api').CustomerType
  *  > &
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -24,9 +23,22 @@ const CustomerOrders = (
 ) => { 
   const schema = useRef(
     [
-      { key: 'id', name: 'ID', comp: Span },
+      { 
+        key: 'id', name: 'ID', 
+        comp: ({...rest}) => (
+          <SimpleLink {...rest} 
+              url_fn={item=>`/pages/orders/${item?.id}/edit`} 
+              get_state={() => context.getState()}/>
+        ) 
+      },
       { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
-      { key: 'price', name: 'Price', comp: Span },
+      { key: 'pricing.total', name: 'Price', comp: Span },
+      { 
+        key: 'status.fulfillment.name', name: 'Status', 
+        comp: ({value}) => (
+          value && <MDView value={`**\`${value.toString()}\`**`} />
+        ) 
+      },
     ]
   );
 

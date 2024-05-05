@@ -21,7 +21,8 @@ const left = {
   },
   fields : [
     { 
-      key: undefined, name: 'Orders', 
+      key: undefined, name: '🛍️ Orders', 
+      desc: 'Here are the orders made by ',
       comp: withCard(CustomerOrders, {className : 'w-full'}), 
       comp_params: {className: 'w-full h-fit'} 
     },

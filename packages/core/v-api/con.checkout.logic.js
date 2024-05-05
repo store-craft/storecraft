@@ -1,4 +1,5 @@
-import { App, CheckoutStatusEnum, DiscountApplicationEnum, 
+import { 
+  App, CheckoutStatusEnum, DiscountApplicationEnum, 
   FulfillOptionsEnum, PaymentOptionsEnum } from "../index.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
 import { enums } from "./index.js";
@@ -13,9 +14,15 @@ import { parse_query } from "./utils.query.js"
  */
 
 /**
- * calculate pricing with `discounts`, `shipping`, `coupons`
+ * @description calculate pricing with `discounts`, `shipping`, `coupons`
  * 
- * @param {App} app 
+ * 
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
+ * 
+ * 
+ * @param {App<any, any, any, D, E, F>} app 
  */
 export const eval_pricing = (app) => 
 /**
@@ -54,11 +61,13 @@ async (order) => {
 
 /**
  * Create a checkout, which is a draft order
+ * 
+ * 
  * @template {import("../index.js").db_driver} D
  * @template {import("../index.js").storage_driver} E
- * @template {Record<string, payment_gateway>} F
+ * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
  * 
- * @param {App<any, any, any, D, E, F>} app 
+ * @param {App<any, any, any, D, E, F>} app 
  */
 export const create_checkout = app =>
 /**
@@ -108,14 +117,14 @@ async (order_checkout, gateway_handle) => {
 
   const gateway = app.gateway(gateway_handle);
 
-  assert(gateway, `gateway ${gateway_handle} not found`, 400);
+  assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
 
   const { onCheckoutCreate } = gateway;
 
   // save the creation payload
   order.payment_gateway = {
     on_checkout_create: await onCheckoutCreate(order),
-    gateway_handle
+    gateway_handle: String(gateway_handle)
   };
 
   // @ts-ignore
@@ -183,7 +192,12 @@ async (checkoutId, client_payload) => {
  * re-merge latest products data inside the line-items
  * 
  * 
- * @param {App} app
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} F
+ * 
+ * 
+ * @param {App<any, any, any, D, E, F>} app
  */
 export const validate_checkout = app =>
 /**

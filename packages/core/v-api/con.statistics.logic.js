@@ -257,7 +257,7 @@ export const compute_count_of_query = app =>
 (table, query) => {
   assert(
     tables.includes(table),
-    `Table ${table} is not allowed for counting !`
+    `Table ${String(table)} is not allowed for counting !`
   );
 
   /** @type {import('../v-database/types.public.d.ts').db_crud} */

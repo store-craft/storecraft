@@ -29,8 +29,9 @@ import { App } from '../index.js';
  * @template {import('../index.js').db_driver} [D=any]
  * @template {import('../index.js').storage_driver} [E=any]
  * @template {Record<string, import('../index.js').payment_gateway>} [F=any]
+ * @template {Record<string, import('../index.js').extension>} [G=any]
  * 
- * @param {App<A,B,C,D,E,F>} app
+ * @param {App<A, B, C, D, E, F, G>} app
  */
 export const create_api = app => {
   

@@ -22,9 +22,10 @@ const parse_int = (s, def) => {
  * @template {any} [PlatformNativeRequest=any]
  * @template {any} [PlatformContext=any]
  * @template {any} [H=any]
- * @template {db_driver} [D=any]
- * @template {storage_driver} [S=any]
- * @template {Record<string, payment_gateway>} [G=any]
+ * @template {db_driver} [Database=db_driver]
+ * @template {storage_driver} [Storage=storage_driver]
+ * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] `payments` map type
+ * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>] `extensions` map type
  */
 export class App {
 
@@ -41,14 +42,16 @@ export class App {
   /** 
    * 
    * @description The private database driver
-   * @type {D} 
+   * 
+   * 
+   * @type {Database} 
    */ 
   #_db_driver;
 
   /** 
    * 
    * @description The private storage driver
-   * @type {S} 
+   * @type {Storage} 
    */ 
   #_storage;
 
@@ -56,7 +59,7 @@ export class App {
    * 
    * @description The payment gateways
    * 
-   * @satisfies {G} 
+   * @satisfies {PaymentMap} 
    */ 
   #_payment_gateways;
 
@@ -72,7 +75,7 @@ export class App {
    * 
    * @description The extensions
    * 
-   * @type {Record<string, extension>} 
+   * @type {ExtensionsMap} 
    */ 
   #_extensions;
 
@@ -83,13 +86,6 @@ export class App {
    */ 
   #_config;
 
-  // /** 
-  //  * @description The API logic
-  //  * 
-  //  * @satisfies {ReturnType<create_api<any,any,any,D,S,G>>} 
-  //  */ 
-  // #_api;
-  
   /** 
    * @description The REST API controller
    * 
@@ -107,11 +103,11 @@ export class App {
   /**
    * 
    * @param {Platform} platform platform The Platform driver
-   * @param {D} db_driver datatbase The Database driver
-   * @param {S} [storage] storage The storage driver
-   * @param {G} [payment_gateways] The Payment Gateways
+   * @param {Database} db_driver datatbase The Database driver
+   * @param {Storage} [storage] storage The storage driver
+   * @param {PaymentMap} [payment_gateways] The Payment Gateways
    * @param {mailer} [mailer] mailer The Email driver
-   * @param {Record<string, extension>} [extensions] extensions
+   * @param {ExtensionsMap} [extensions] extensions
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
@@ -130,7 +126,7 @@ export class App {
   } 
 
   /**
-   * @return {G}
+   * @return {PaymentMap}
    */
   type_g() {
     return undefined;
@@ -193,7 +189,6 @@ export class App {
       console.log(e)
     }
 
-    this.d=1;
     // this.#_api = create_api(this);
     this.api = create_api(this);
     this.#_rest_controller = create_rest_api(this);
@@ -209,14 +204,6 @@ export class App {
   get rest_controller() { 
     return this.#_rest_controller; 
   }
-
-  // /** 
-  //  * 
-  //  * @description Get the main **API** logic 
-  //  */
-  // get api() {
-  //   return this.#_api;
-  // }
 
   /** 
    * 
@@ -283,7 +270,7 @@ export class App {
   /**
    * @description Get a payment gateway by handle
    * 
-   * @param {keyof G} handle 
+   * @param {keyof PaymentMap} handle 
    */
   gateway = (handle) => {
     return this.gateways?.[handle];

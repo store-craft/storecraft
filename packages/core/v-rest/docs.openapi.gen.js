@@ -2489,6 +2489,10 @@ const register_payments = registry => {
     'paymentGatewayItemGet', paymentGatewayItemGetSchema
   );
 
+  const paymentGatewayStatus = registry.register(
+    'paymentGatewayStatus', paymentGatewayStatusSchema
+  );
+
   const example_get = {
     "config": {
         "default_currency_code": "USD",
@@ -2623,7 +2627,7 @@ const register_payments = registry => {
         description: `Object with status data.`,
         content: {
           'application/json': {
-            schema: paymentGatewayStatusSchema,
+            schema: paymentGatewayStatus,
             example: example_status
           },
         },

@@ -174,12 +174,12 @@ export async function remove(sdk, resource, handle_or_id) {
  * 
  * @param {import('../index.js').StorecraftSDK} sdk
  * @param {string} resource base path of resource
- * @param {import('@storecraft/core/v-api').ApiQuery} query 
+ * @param {import('@storecraft/core/v-api').ApiQuery} [query] 
  * 
  * 
  * @returns {Promise<G[]>}
  */
-export async function list(sdk, resource, query) {
+export async function list(sdk, resource, query={}) {
   const sq = api_query_to_searchparams(query);
 
   // console.log('sq', sq.toString())
@@ -201,6 +201,7 @@ export class collection_base {
   
   /** @type {import('../index.js').StorecraftSDK} */
   #sdk = undefined;
+  
   /** @type {string} */
   #base_name = undefined;
 

@@ -164,7 +164,7 @@ async (checkoutId, client_payload) => {
       (app.config.checkout_reserve_stock_on==='checkout_complete')
   ) {
 
-    await app.api.products.changeStockOf(
+    await app.api.products.changeStockOfBy(
       order.line_items.map(li => li.id),
       order.line_items.map(li => li.qty)
     )

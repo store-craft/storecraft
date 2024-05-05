@@ -2980,11 +2980,47 @@ const register_products = registry => {
     _typeSchema, example, 
     `- Eligible  expand connection are \`('collections, 
     search, variants, discounts')\``
-    );
+  );
+
+  // update product's stock
+  registry.registerPath({
+    method: 'put',
+    path: `/${slug_base}/{product_id_or_handle}?quantityBy={quantityBy}`,
+    summary: `Update stock quantity of a product`,
+    description: 'Update stock quantity of a product by a diff number',
+    tags,
+    request: {
+      query: z.object({
+        quantityBy: z.number().openapi(
+          { 
+            examples: [2, -1, 3, -4],
+            description: 'A delta (difference) number by how much to update the stock. May be `positive` / `negative` **integer**',
+          }
+        ),
+      }),
+      params: z.object({
+        product_id_or_handle: z.string().openapi(
+          { 
+            examples: [example_id, 'white-shirt-xl'],
+            description: 'A product `handle` or `id`',
+          }
+        ),
+      })
+    },
+    responses: {
+      200: {
+        description: 'ok',
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+
+
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
     _typeUpsertSchema, example, desc_upsert
-    );
+  );
 
   // upsert a variant
 

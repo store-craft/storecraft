@@ -24,7 +24,7 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
 
-  // save tag
+  // save 
   polka.post(
     '/',
     middle_authorize_admin,
@@ -34,6 +34,24 @@ export const create_routes = (app) => {
       res.sendJson(final);
     }
   )
+
+  // update item stock by a delta number
+  polka.put(
+    '/:handle',
+    async (req, res) => {
+      const handle_or_id = req?.params?.handle;
+      const stockBy = parseInt(req?.query?.get('quantityBy'));
+
+      if(stockBy) {
+        await app.api.products.changeStockOfBy(
+          [handle_or_id], [stockBy]
+        );
+      }
+
+      res.end();
+    }
+  );
+
 
   // get item
   polka.get(

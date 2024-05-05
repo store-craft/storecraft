@@ -1528,7 +1528,106 @@ const register_customers = registry => {
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example, apply_security()
-    );
+  );
+
+  // list customer order
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_email}/orders`,
+    description: 'List and filter customer orders, this is only available \
+    to `admin` and the `customer` (with auth token)',
+    summary: 'Query customer orders',
+    tags,
+    request: {
+      params: z.object({
+        id_or_email: z.string().openapi(
+          { 
+            example: `\`a@a.com\``,
+            description: '`id` or `email`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `Filtered orders`,
+        content: {
+          'application/json': {
+            schema: z.array(variantTypeSchema),
+            example: [
+              {
+                "contact": {
+                  "email": "a@a.com",
+                  "customer_id": "cus_....."
+                },
+                "status": {
+                  "checkout": {
+                    "id": 0,
+                    "name2": "created",
+                    "name": "Created"
+                  },
+                  "payment": {
+                    "id": 1,
+                    "name": "Authorized",
+                    "name2": "authorized"
+                  },
+                  "fulfillment": {
+                    "id": 0,
+                    "name2": "draft",
+                    "name": "Draft"
+                  }
+                },
+                "pricing": {
+                  "quantity_discounted": 3,
+                  "quantity_total": 5,
+                  "subtotal": 100,
+                  "subtotal_discount": 30,
+                  "subtotal_undiscounted": 70,
+                  "total": 120
+                },
+                "line_items": [
+                  {
+                    "id": "pr-1-id",
+                    "qty": 3
+                  },
+                  {
+                    "id": "pr-2-id",
+                    "qty": 2
+                  }
+                ],
+                "shipping_method": {
+                  "handle": "ship-a",
+                  "name": "ship a",
+                  "price": 30
+                },
+                "id": "order_65d774c6445e4581b9e34c11",
+                "search": [
+                  "id:order_65d774c6445e4581b9e34c11",
+                  "order_65d774c6445e4581b9e34c11",
+                  "65d774c6445e4581b9e34c11",
+                  "order_65d774c6445e4581b9e34c11",
+                  120,
+                  "payment:authorized",
+                  "payment:1",
+                  "fulfill:draft",
+                  "fulfill:0",
+                  "checkout:created",
+                  "checkout:0",
+                  "li:pr-1-id",
+                  "li:pr-2-id"
+                ],
+                "created_at": "2024-02-22T16:22:30.095Z",
+                "updated_at": "2024-02-22T16:22:30.095Z"
+              }
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
 }
 
 

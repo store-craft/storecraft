@@ -150,7 +150,7 @@ export class DummyPayments {
 
     assert(
       result,
-      `transaction ${id} was not found !!!`
+      `transaction \`${id}\` was not found !!!`
     );
 
     return result;

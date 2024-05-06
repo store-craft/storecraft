@@ -373,11 +373,11 @@ export const Card = (
         className='flex relative flex-row flex-nowrap items-center text-base 
                   text-red-700 dark:text-red-400
                   bg-red-400/25 border border-red-400 rounded-md p-3 mt-5 '>
-        <BiErrorCircle className='flex-inline text-xl flex-shrink-0 opacity-70' /> 
-        <div children={error} className='ml-3' />
+        <BiErrorCircle className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 
+        <div children={error} className='mx-3' />
         <IoClose 
             className='flex-inline absolute top-1 right-1 
-                       cursor-pointer text-base flex-shrink-0 opacity-90' 
+                       cursor-pointer text-2xl flex-shrink-0 opacity-90' 
             onClick={() => setError && setError(undefined)}/>
       </div>
     }

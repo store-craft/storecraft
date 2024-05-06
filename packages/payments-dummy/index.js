@@ -15,15 +15,20 @@ import { DummyDatabase } from './dummy-database.js';
  */
 
 /**
+ * 
  * @typedef {string} CreateResult
  * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
  * @typedef {import('./types.public.js').Config} Config
  * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
+ */
+
+/** 
+ * @description `Dummy payment gateway`, used for:
+ * - testing purposes
+ * - playground and shaping new features
  * 
  * @implements {payment_gateway}
- * 
- * Dummy payment gateway
  */
 export class DummyPayments {
   
@@ -141,8 +146,16 @@ export class DummyPayments {
    * @param {string} id 
    */
   async retrieve_gateway_order(id) {
-    return this.db.get(id);
+    const result = await this.db.get(id);
+
+    assert(
+      result,
+      `transaction ${id} was not found !!!`
+    );
+
+    return result;
   }
+
 
   /**
    * 
@@ -164,7 +177,8 @@ export class DummyPayments {
     );
 
     return {
-      payment: this.config.intent_on_checkout==='AUTHORIZE' ? PaymentOptionsEnum.authorized : PaymentOptionsEnum.captured,
+      payment: this.config.intent_on_checkout==='AUTHORIZE' ? 
+            PaymentOptionsEnum.authorized : PaymentOptionsEnum.captured,
       checkout: CheckoutStatusEnum.complete
     }
   }

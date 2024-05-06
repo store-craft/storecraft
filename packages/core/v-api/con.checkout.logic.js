@@ -27,9 +27,10 @@ import { parse_query } from "./utils.query.js"
 export const validate_checkout = app =>
 /**
  * 
- * @description fetch latest prices and shipping, soft-test 
- * for quantities, re-merge latest products data inside 
- * the line-items
+ * @description `validate` a `checkout`:
+ * 1. re-fetch latest `product` prices and `shipping`
+ * 2. soft-test for quantities
+ * 3. re-merge latest `products` data inside the `line-items`
  * 
  * 
  * @template {import("./types.api.js").CheckoutCreateType} T
@@ -113,6 +114,11 @@ async (checkout) => {
  */
 export const eval_pricing = (app) => 
 /**
+ * @description Calculate `pricing`:
+ * 1. Fetch **active** `discounts`
+ * 2. Fetch `coupons` used
+ * 3. calculate `pricing`
+ * 4. return the `order` with `pricing` information
  * 
  * @template {import("./types.api.js").CheckoutCreateType} T
  * 
@@ -159,7 +165,14 @@ async (order) => {
  */
 export const create_checkout = app =>
 /**
- * @description Create a checkout, which is a draft order
+ * 
+ * @description Create a `checkout`, which is a `draft` order, with the following stages:
+ * 1. `validate` the checkout
+ *  - if `invalid` return the `errors` in `validation` property
+ * 2. `evaluate` pricing with `discounts`, `shipping` and `coupons`
+ * 3. update appropriate `status`
+ * 4. invoke the `onCheckoutCreate` hook on the `payment-gateway`
+ * 5. `upsert` the draft `order` into the database.
  * 
  * 
  * @param {import("./types.api.js").CheckoutCreateType} order_checkout
@@ -238,6 +251,14 @@ async (order_checkout, gateway_handle) => {
 export const complete_checkout = app =>
 /**
  * 
+ * @description Complete a `checkout`:
+ * 1. find the payment gateway and corresponding order.
+ * 2. invoke `onCheckoutComplete` hook of the gateway
+ * 3. update the `order` payment and checkout `status`
+ * 4. change stock automatically if configured so
+ * 5. `upsert` the order with the new `status`
+ * 
+ * 
  * @param {string} checkoutId 
  * @param {object} client_payload 
  */
@@ -254,7 +275,7 @@ async (checkoutId, client_payload) => {
   assert(gateway, `gateway not found`, 400);
 
   const status = await gateway.onCheckoutComplete(
-    order.payment_gateway?.on_checkout_create
+    order.payment_gateway?.on_checkout_create, client_payload
   );
 
   order.status = {
@@ -270,7 +291,12 @@ async (checkoutId, client_payload) => {
     await app.api.products.changeStockOfBy(
       order.line_items.map(li => li.id),
       order.line_items.map(li => li.qty)
-    )
+    );
+
+    order.status = {
+      ...order.status,
+      fulfillment: enums.FulfillOptionsEnum.processing
+    }
   }
   
   await app.api.orders.upsert(order);
@@ -284,6 +310,8 @@ async (checkoutId, client_payload) => {
  * @template {import("../index.js").db_driver} [D=any]
  * @template {import("../index.js").storage_driver} [E=any]
  * @template {Record<string, payment_gateway>} [F=any]
+ * 
+ * 
  * @param {App<any,any,any,D,E,F>} app 
  */
 export const inter = app => {

@@ -6,10 +6,7 @@ import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 import { DummyPayments } from '@storecraft/payments-dummy'
-import { assert_partial } from './utils.js';
-// const app = await create_app();
 
-const handle = create_handle('pr', file_name(import.meta.url));
 
 /** @type {import('@storecraft/core/v-api').ShippingMethodType} */
 const shipping = {
@@ -30,7 +27,7 @@ const products = [
   {
     price: 70,
     title: 'product checkout 2',
-    handle: 'pr-checkout-1',
+    handle: 'pr-checkout-2',
     active: true,
     qty: 2
   }
@@ -55,29 +52,9 @@ const items_upsert = {
 export const create = app => {
 
   const app2 = app.withNewPaymentGateways({
-    'dummy' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+    'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
   });
 
-  
-// const order = await app.api.checkout.create_checkout(
-//   {
-//     line_items: [
-//       {
-//         id: 'pr-api-collections-products-test-js-1',
-//         qty: 1, 
-//         price: 50
-//       }
-//     ],
-//     shipping_method: {
-//       title: 'title',
-//       handle: 'ship-api-storefronts-all-connections-test-js-2',
-//       price: 50
-//     },
-//     contact: {
-//       email: 'a1@a.com'
-//     }
-//   }, ''
-// );
 
   const s = suite(
     file_name(import.meta.url), 
@@ -99,8 +76,11 @@ export const create = app => {
     }
   );
 
-  s('create checkout', async (ctx) => {
-    const draft_order = await app2.api.checkout.create_checkout(
+  /** @type {import('@storecraft/core/v-api').OrderData} */
+  let draft_order;
+
+  s('create checkout should succeed', async (ctx) => {
+    draft_order = await app2.api.checkout.create_checkout(
       {
         line_items: [
           { id: products[0].handle, qty: 1 },
@@ -110,17 +90,77 @@ export const create = app => {
         contact: {
           email: 'a1@a.com'
         }
-      }, 'dummy'
+      }, 'dummy_payments'
     );
 
-    const one = ctx.items[0];
-    const id = await ctx.ops.upsert(one);
-  
-    assert.ok(id, 'insertion failed');
-  
-    const item_get = await ctx.ops.get(id);
-    assert_partial(item_get, {...one, id});
+    // general
+
+    assert.ok(
+      draft_order?.id,
+      `draft has no id`
+    );
+
+    assert.not(
+      draft_order?.validation?.length>0,
+      `validation errors were found`
+    );
+
+    // status
+
+    assert.ok(
+      draft_order.status.checkout.id===enums.CheckoutStatusEnum.created.id,
+      `status error`
+    );
+
+    // payment
+    assert.ok(
+      draft_order?.pricing?.total,
+      'pricing was not set'
+    );
+
+    assert.ok(
+      (
+        (draft_order?.payment_gateway.gateway_handle==='dummy_payments') &&
+        (draft_order?.payment_gateway.latest_status) &&
+        (draft_order?.payment_gateway.on_checkout_create)
+      ),
+      'payment gateway was not set'
+    );
+
   });
+
+  s('complete checkout should succeed', async (ctx) => {
+    const order = await app2.api.checkout.complete_checkout(
+      draft_order.id
+    );
+
+    // general
+
+    assert.ok(
+      order?.id,
+      `order has no id`
+    );
+
+    // status
+
+    assert.ok(
+      order.status.checkout.id==enums.CheckoutStatusEnum.complete.id,
+      `checkout status error`
+    );
+
+    const authorize_on_checkout = app2.gateways.dummy_payments.config.intent_on_checkout==='AUTHORIZE';
+    const expected_payment_status = (
+      authorize_on_checkout ? enums.PaymentOptionsEnum.authorized.id : 
+                enums.PaymentOptionsEnum.captured.id
+    );
+
+    assert.ok(
+      order.status.payment.id===expected_payment_status,
+      `payment status error`
+    );
+
+  });
+
 
   return s;
 }

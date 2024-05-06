@@ -104,9 +104,10 @@ export declare interface payment_gateway<
    * 
    * @param create_result the result of checkout creation, 
    * use it to know the gateays order id etc..
+   * @param extra_client_payload `anything` the client might send
    * 
    */
-  onCheckoutComplete: (create_result: CreateResult) => Promise<OnCheckoutCompleteResult>;
+  onCheckoutComplete: (create_result: CreateResult, extra_client_payload: any) => Promise<OnCheckoutCompleteResult>;
 
   /**
    * 

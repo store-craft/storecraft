@@ -240,7 +240,6 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  * 
  */
 export const regular_upsert_me = async (trx, table_name, item) => {
-// export const regular_upsert_me = async (trx, table_name, item_id, item) => {
   await trx.deleteFrom(table_name).where(
     eb => eb.or(
       [

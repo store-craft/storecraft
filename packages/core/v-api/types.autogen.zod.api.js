@@ -1382,7 +1382,7 @@ export const baseCheckoutCreateTypeSchema = z.object({
 });
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
   coupons: z
-    .array(discountTypeSchema.shape.handle)
+    .array(discountTypeSchema)
     .optional()
     .describe("A list of manual coupons handles"),
 });
@@ -1427,10 +1427,6 @@ export const orderDataSchema = baseCheckoutCreateTypeSchema
     payment_gateway: orderPaymentGatewayDataSchema
       .optional()
       .describe("Payment gateway info and status"),
-    coupons: z
-      .array(discountTypeSchema)
-      .optional()
-      .describe("A list of manual coupons snapshots that were used"),
   });
 export const orderDataUpsertSchema =
   orderDataSchema.describe("Order upsert type");

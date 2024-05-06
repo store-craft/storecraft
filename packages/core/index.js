@@ -24,8 +24,10 @@ const parse_int = (s, def) => {
  * @template {any} [H=any]
  * @template {db_driver} [Database=db_driver]
  * @template {storage_driver} [Storage=storage_driver]
- * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] `payments` map type
- * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>] `extensions` map type
+ * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
+ * `payments` map type
+ * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>] 
+ * `extensions` map type
  */
 export class App {
 
@@ -235,6 +237,23 @@ export class App {
    */
   get gateways() { 
     return this.#_payment_gateways; 
+  }
+
+  /** 
+   * 
+   * 
+   * @description Update new payment gateways and rewrite types 
+   * 
+   * @template {Record<string, payment_gateway>} N
+   * 
+   * @param {N} gateways 
+   * 
+   * @returns {App<PlatformNativeRequest, PlatformContext, H, Database, Storage, N, ExtensionsMap>}
+   */
+  withNewPaymentGateways(gateways) { 
+    this.#_payment_gateways = gateways; 
+
+    return this;
   }
 
   /** 

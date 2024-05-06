@@ -31,7 +31,7 @@ import { cors } from "../v-polka/cors.js";
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext, any, any, any, any, any>} app
  */
 export const create_rest_api = (app) => {
   // This is the main / root router

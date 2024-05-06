@@ -13,6 +13,93 @@ import { parse_query } from "./utils.query.js"
  * @typedef {import("../v-payments/types.payments.js").payment_gateway} payment_gateway
  */
 
+
+/**
+ * 
+ * 
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} F
+ * 
+ * 
+ * @param {App<any, any, any, D, E, F>} app
+ */
+export const validate_checkout = app =>
+/**
+ * 
+ * @description fetch latest prices and shipping, soft-test 
+ * for quantities, re-merge latest products data inside 
+ * the line-items
+ * 
+ * 
+ * @template {import("./types.api.js").CheckoutCreateType} T
+ * 
+ * 
+ * @param {T} checkout
+ * 
+ * 
+ * @returns {Promise<T & { validation: OrderData["validation"]}>}
+ */
+async (checkout) => {
+
+  const snap_shipping = await app.db.resources.shipping.get(
+    checkout.shipping_method.id ?? checkout.shipping_method.handle
+  );
+
+  const snaps_products = await app.db.resources.products.getBulk(
+    checkout.line_items.map(li => li.id)
+  );
+
+  /**@type {import("./types.api.js").ValidationEntry[]} */
+  const errors = [];
+
+  /**
+   * 
+   * @param {string} id 
+   * @param {import("./types.api.js").ValidationEntry["message"]} message 
+   */
+  const errorWith = (id, message) => {
+    errors.push({ id, message });
+  }
+
+  // assert shipping is valid
+  if(!snap_shipping)
+    errorWith(snap_shipping?.id, 'shipping-method-not-found')
+  else { // else patch the latest
+    checkout.shipping_method = snap_shipping;
+  }
+
+  // assert stock
+  snaps_products.forEach(
+    (it, ix) => {
+      if(!it) {
+        errorWith(it?.id, 'product-not-exists')
+      } else {
+        const pd = it;
+        const li = checkout.line_items[ix]
+
+        if(pd.qty==0)
+          errorWith(it?.id, 'product-out-of-stock')
+        else if(li.qty>pd.qty)
+          errorWith(it?.id, 'product-not-enough-stock')
+
+        // patch line items inline
+        li.data = pd
+        li.price = pd.price
+        li.stock_reserved = 0
+      }
+    }
+  )
+
+  return {
+    ...checkout, 
+    validation: errors 
+  }
+
+}
+
+
+
 /**
  * @description calculate pricing with `discounts`, `shipping`, `coupons`
  * 
@@ -27,10 +114,13 @@ import { parse_query } from "./utils.query.js"
 export const eval_pricing = (app) => 
 /**
  * 
- * @param {OrderData} order 
+ * @template {import("./types.api.js").CheckoutCreateType} T
  * 
  * 
- * @returns {Promise<OrderData>}
+ * @param {T} order 
+ * 
+ * 
+ * @returns {Promise<T & { pricing: OrderData["pricing"] } >}
  */
 async (order) => {
   const discounts = await app.api.discounts.list(parse_query(`vql=(active:true)`));
@@ -81,14 +171,14 @@ export const create_checkout = app =>
 async (order_checkout, gateway_handle) => {
 
   // fetch correct data from backend. we dont trust client
-  let order = await validate_checkout(app)(order_checkout);
-
+  const order_validated = await validate_checkout(app)(order_checkout);
+  
   // eval pricing with discounts
-  order = await eval_pricing(app)(order);
-
+  const order_priced = await eval_pricing(app)(order_validated);
+  
   /**@type {OrderData} */
-  order = {
-    ...order,
+  const order = {
+    ...order_priced,
     status : {
       // @ts-ignore
       fulfillment: FulfillOptionsEnum.draft,
@@ -186,84 +276,6 @@ async (checkoutId, client_payload) => {
   await app.api.orders.upsert(order);
 
   return order;
-}
-
-
-/**
- * fetch latest prices and shipping, soft-test for quantities,
- * re-merge latest products data inside the line-items
- * 
- * 
- * @template {import("../index.js").db_driver} D
- * @template {import("../index.js").storage_driver} E
- * @template {Record<string, payment_gateway>} F
- * 
- * 
- * @param {App<any, any, any, D, E, F>} app
- */
-export const validate_checkout = app =>
-/**
- * 
- * @param {import("./types.api.js").CheckoutCreateType} checkout
- * 
- * @returns {Promise<OrderData>}
- */
-async (checkout) => {
-
-  const snap_shipping = await app.db.resources.shipping.get(
-    checkout.shipping_method.id ?? checkout.shipping_method.handle
-  );
-
-  const snaps_products = await app.db.resources.products.getBulk(
-    checkout.line_items.map(li => li.id)
-  );
-
-  /**@type {import("./types.api.js").ValidationEntry[]} */
-  const errors = []
-
-  /**
-   * 
-   * @param {string} id 
-   * @param {import("./types.api.js").ValidationEntry["message"]} message 
-   */
-  const errorWith = (id, message) => {
-    errors.push({ id, message });
-  }
-
-  // assert shipping is valid
-  if(!snap_shipping)
-    errorWith(snap_shipping?.id, 'shipping-method-not-found')
-  else { // else patch the latest
-    checkout.shipping_method = snap_shipping;
-  }
-
-  // assert stock
-  snaps_products.forEach(
-    (it, ix) => {
-      if(!it) {
-        errorWith(it?.id, 'product-not-exists')
-      } else {
-        const pd = it;
-        const li = checkout.line_items[ix]
-
-        if(pd.qty==0)
-          errorWith(it?.id, 'product-out-of-stock')
-        else if(li.qty>pd.qty)
-          errorWith(it?.id, 'product-not-enough-stock')
-
-        // patch line items inline
-        li.data = pd
-        li.price = pd.price
-        li.stock_reserved = 0
-      }
-    }
-  )
-
-  return {
-    ...checkout, 
-    validation: errors 
-  }
-
 }
 
 

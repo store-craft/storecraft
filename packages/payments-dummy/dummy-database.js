@@ -22,7 +22,6 @@ export class DummyDatabase {
   #has_loaded=false;
 
   constructor() {
-
   }
 
   async #lazy_load() {
@@ -71,6 +70,8 @@ export class DummyDatabase {
    * @returns {Promise<boolean>}
    */
   async set(key, value) {
+    await this.#lazy_load();
+
     this.#db[key] = value;
 
     try {

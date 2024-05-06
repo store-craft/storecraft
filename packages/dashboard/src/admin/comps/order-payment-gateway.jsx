@@ -4,12 +4,15 @@ import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
+import { format_storecraft_errors } from './error-message.jsx'
 
 /**
- * TODO: I need to rewrite it to account for custom actions
  * 
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/v-api').OrderPaymentGatewayData> & 
+ *   import('@storecraft/core/v-api').OrderPaymentGatewayData,
+ *   import('../pages/order.jsx').Context,
+ *   import('@storecraft/core/v-api').OrderData  
+ *  > & 
  *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } OrderPaymentGatewayParams
  * 
@@ -27,7 +30,6 @@ const OrderPaymentGateway = (
 
   const [status, setStatus] = useState(value?.latest_status ?? { messages: [] })
 
-  /**@type {import('@storecraft/core/v-api').OrderData} */
   const order = context?.data
 
   const fetchStatus = useCallback(
@@ -55,7 +57,7 @@ const OrderPaymentGateway = (
         console.log('stat', stat)
 
       } catch (e) {
-        setError(e?.toString())
+        setError(format_storecraft_errors(e)?.at(0))
       }
     }, [value, order, onChange]
   )

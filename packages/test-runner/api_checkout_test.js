@@ -2,10 +2,11 @@ import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 import { DummyPayments } from '@storecraft/payments-dummy'
+import { assert_async_throws } from './utils.js';
 
 
 /** @type {import('@storecraft/core/v-api').ShippingMethodType} */
@@ -22,28 +23,17 @@ const products = [
     title: 'product checkout 1',
     handle: 'pr-checkout-1',
     active: true,
-    qty: 2
+    qty: 10
   },
   {
     price: 70,
     title: 'product checkout 2',
     handle: 'pr-checkout-2',
     active: true,
-    qty: 2
+    qty: 10
   }
 ]
 
-/** @type {import('@storecraft/core/v-api').CheckoutCreateType} */
-const items_upsert = {
-  contact: {
-    email: 'a1@a.com',
-  },
-  line_items: [
-    { id: products[0].handle, qty: 1 },
-    { id: products[1].handle, qty: 1 },
-  ],
-  shipping_method: shipping
-}
 
 /**
  * 
@@ -51,14 +41,16 @@ const items_upsert = {
  */
 export const create = app => {
 
-  const app2 = app.withNewPaymentGateways({
-    'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
-  });
+  const app2 = app.withNewPaymentGateways(
+    {
+      'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+    }
+  );
 
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: app.api.orders }
+    { }
   );
 
   s.before(
@@ -161,6 +153,99 @@ export const create = app => {
 
   });
 
+  s('create checkout should fail validation when line item is missing', async (ctx) => {
+    const order = await app2.api.checkout.create_checkout(
+      {
+        line_items: [
+          { id: 'do-not-exist', qty: 1 },
+          { id: products[1].handle, qty: 1 },
+        ],
+        shipping_method: shipping,
+        contact: {
+          email: 'a1@a.com'
+        }
+      }, 'dummy_payments'
+    );
+
+    // general
+
+    assert.ok(
+      order?.validation?.length>0,
+      `validation errors were found`
+    );
+
+  });
+
+  s('create checkout should fail validation when shipping method is missing', async (ctx) => {
+    const order = await app2.api.checkout.create_checkout(
+      {
+        line_items: [
+          { id: products[1].handle, qty: 1 },
+        ],
+        shipping_method: {
+          handle: 'shipping does not exist',
+          price: 30,
+          title: 'i dont exist'
+        },
+        contact: {
+          email: 'a1@a.com'
+        }
+      }, 'dummy_payments'
+    );
+
+    // general
+
+    assert.ok(
+      order?.validation?.length>0,
+      `validation errors were found`
+    );
+
+    // console.log(order.validation)
+
+  });
+
+  s('create checkout should fail validation when missing quantities', async (ctx) => {
+    const order = await app2.api.checkout.create_checkout(
+      {
+        line_items: [
+          { id: products[1].handle, qty: 100 },
+        ],
+        shipping_method: shipping,
+        contact: {
+          email: 'a1@a.com'
+        }
+      }, 'dummy_payments'
+    );
+
+    // general
+
+    assert.ok(
+      order?.validation?.length>0,
+      `validation errors were found`
+    );
+
+    // console.log(order.validation)
+
+  });
+
+  s('create checkout should throw when gateway is missing', async (ctx) => {
+    await assert_async_throws(
+      () => {
+        return app2.api.checkout.create_checkout(
+          {
+            line_items: [
+              { id: products[1].handle, qty: 1 },
+            ],
+            shipping_method: shipping,
+            contact: {
+              email: 'a1@a.com'
+            }
+          }, 'i do not exist'
+        );
+      }
+    )
+
+  });  
 
   return s;
 }

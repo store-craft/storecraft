@@ -43,8 +43,9 @@ export const validate_checkout = app =>
  */
 async (checkout) => {
 
+  const shipping_id = checkout.shipping_method.id ?? checkout.shipping_method.handle;
   const snap_shipping = await app.db.resources.shipping.get(
-    checkout.shipping_method.id ?? checkout.shipping_method.handle
+    shipping_id
   );
 
   const snaps_products = await app.db.resources.products.getBulk(
@@ -65,7 +66,7 @@ async (checkout) => {
 
   // assert shipping is valid
   if(!snap_shipping)
-    errorWith(snap_shipping?.id, 'shipping-method-not-found')
+    errorWith(shipping_id, 'shipping-method-not-found')
   else { // else patch the latest
     checkout.shipping_method = snap_shipping;
   }
@@ -73,8 +74,10 @@ async (checkout) => {
   // assert stock
   snaps_products.forEach(
     (it, ix) => {
+      const li = checkout.line_items[ix];
+
       if(!it) {
-        errorWith(it?.id, 'product-not-exists')
+        errorWith(li?.id, 'product-not-exists')
       } else {
         const pd = it;
         const li = checkout.line_items[ix]
@@ -183,6 +186,11 @@ export const create_checkout = app =>
  */
 async (order_checkout, gateway_handle) => {
 
+  // get gateway and verify
+  const gateway = app.gateway(gateway_handle);
+
+  assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
+
   // fetch correct data from backend. we dont trust client
   const order_validated = await validate_checkout(app)(order_checkout);
   
@@ -217,10 +225,6 @@ async (order_checkout, gateway_handle) => {
       )
     }
   }
-
-  const gateway = app.gateway(gateway_handle);
-
-  assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
 
   const on_checkout_create = await gateway.onCheckoutCreate(order);
 
@@ -274,17 +278,21 @@ async (checkoutId, client_payload) => {
 
   assert(gateway, `gateway not found`, 400);
 
-  const status = await gateway.onCheckoutComplete(
+  const order_status = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create, client_payload
   );
 
   order.status = {
     ...order.status,
-    ...status
+    ...order_status
   }
 
+  order.payment_gateway.latest_status = await gateway.status(
+    order.payment_gateway?.on_checkout_create
+  );
+
   if(
-      (status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&
+      (order.status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&
       (app.config.checkout_reserve_stock_on==='checkout_complete')
   ) {
 
@@ -293,10 +301,7 @@ async (checkoutId, client_payload) => {
       order.line_items.map(li => li.qty)
     );
 
-    order.status = {
-      ...order.status,
-      fulfillment: enums.FulfillOptionsEnum.processing
-    }
+    order.status.fulfillment = enums.FulfillOptionsEnum.processing;
   }
   
   await app.api.orders.upsert(order);

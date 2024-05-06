@@ -44,7 +44,9 @@ export const create_routes = (app) => {
     async (req, res) => {
       const checkout_id = req?.params?.checkout_id;
 
-      const r = await app.api.checkout.complete_checkout(checkout_id);
+      const r = await app.api.checkout.complete_checkout(
+        checkout_id, req.parsedBody
+      );
 
       res.sendJson(r);
     }

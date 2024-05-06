@@ -1,10 +1,49 @@
-import { useCallback, useEffect, 
-  useRef, useState } from 'react'
+import { 
+  useCallback, useEffect, 
+  useState } from 'react'
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import { format_storecraft_errors } from './error-message.jsx'
+
+
+/**
+ * 
+ * Action button for payment gateway
+ * 
+ * @typedef {object} ActionButtonParams
+ * @prop {import('@storecraft/core/v-api').PaymentGatewayAction} action
+ * @prop {(action: import('@storecraft/core/v-api').PaymentGatewayAction) => Promise<void>} onClick
+ * 
+ * 
+ * @param {ActionButtonParams} params
+ */
+const ActionButton = (
+  { 
+    action, onClick
+  }
+) => {
+
+  return (
+<PromisableLoadingButton 
+    title={action.description}
+    Icon={undefined} 
+    text={action.name} 
+    show={true} 
+    onClick={() => onClick(action)}
+    keep_text_on_load={true}
+    classNameLoading='text-xs'
+    className='w-fit text-base underline '/>    
+  )
+}
+
+const NoPaymentGatewayBlues = ({}) => {
+  return (
+    <p className='text-base' 
+      children='No Payment Gateway is linked to this order !!!' />
+  )
+}
 
 /**
  * 
@@ -25,12 +64,13 @@ const OrderPaymentGateway = (
 ) => {
 
   const { sdk } = useStorecraft();
-  const ref_name = useRef();
-  const { key, name, comp_params } = field;
+  const { comp_params } = field;
 
-  const [status, setStatus] = useState(value?.latest_status ?? { messages: [] })
-
-  const order = context?.data
+  const [status, setStatus] = useState(
+    value?.latest_status ?? { messages: [], actions: [] }
+  );
+  
+  const order = context?.data;
 
   const fetchStatus = useCallback(
     async () => {
@@ -66,65 +106,33 @@ const OrderPaymentGateway = (
     }, [value, order, onChange]
   );
 
-  const capture = useCallback(
-    async () => {
+  const invokeAction = useCallback(
+    /**
+     * 
+     * @param {import('@storecraft/core/v-api').PaymentGatewayAction} action 
+     */
+    async (action) => {
       try {
-        const stat = await sdk.payment_gateways.capture(
-          value.gateway_id, order.id
-        )
-        onChange({
-          ...value,
-          latest_status: stat
-        })
-        setStatus(stat)
+        const stat = await sdk.payments.invokeAction(
+          action.handle, order.id
+        );
+
+        onChange(
+          {
+            ...value,
+            latest_status: stat
+          }
+        );
+
+        setStatus(stat);
 
         console.log('stat', stat)
 
       } catch (e) {
-        setError(e?.toString())
+        setError(format_storecraft_errors(e)?.at(0));
       }
     }, [value, order, onChange]
-  )
-
-  const void_authorized = useCallback(
-    async () => {
-      try {
-        const stat = await sdk.payment_gateways.void(
-          value.gateway_id, order.id
-        )
-        onChange({
-          ...value,
-          latest_status: stat
-        })
-        setStatus(stat)
-
-        // console.log('stat', stat)
-
-      } catch (e) {
-        setError(e?.toString())
-      }
-    }, [value, order, onChange]
-  )
-
-  const refund = useCallback(
-    async () => {
-      try {
-        const stat = await sdk.payment_gateways.refund(
-          value.gateway_id, order.id
-        )
-        onChange({
-          ...value,
-          latest_status: stat
-        })
-        setStatus(stat)
-
-        console.log('stat', stat)
-
-      } catch (e) {
-        setError(e?.toString())
-      }
-    }, [value, order, onChange, setError]
-  )
+  );
 
   useEffect(
     () => {
@@ -132,9 +140,9 @@ const OrderPaymentGateway = (
     }, []
   );
 
-  if(value?.gateway_handle===undefined)
+  if(!value?.gateway_handle)
     return (
-      <p className='text-base' children='No Payment Gateway is linked to this order !!' />
+      <NoPaymentGatewayBlues />
     )
 
   return (
@@ -166,28 +174,16 @@ const OrderPaymentGateway = (
      className='text-gray-400 mt-5 --bg-pink-50 text-xl font-bold'/>
   <HR className='--my-5'/>
   <div className='w-full flex flex-row gap-3 mt-3 shelf-text-label-color'>
-    <PromisableLoadingButton 
-        Icon={undefined} 
-        text='capture' 
-        show={true} 
-        onClick={capture}
-        keep_text_on_load={true}
-        classNameLoading='text-xs'
-        className='w-fit text-base underline '/>
-    <PromisableLoadingButton 
-        Icon={undefined} 
-        text='void' 
-                    show={true}
-                    onClick={void_authorized}
-                    keep_text_on_load={true}
-                    classNameLoading='text-xs'
-                    className='w-fit text-base underline '/>
-    <PromisableLoadingButton Icon={undefined} text='refund' 
-                    show={true}
-                    onClick={refund}
-                    keep_text_on_load={true}
-                    classNameLoading='text-xs'
-                    className='w-fit text-base underline '/>
+    {
+      status.actions.map(
+        (action) => (
+          <ActionButton 
+            key={action.handle}
+            action={action}
+            onClick={invokeAction} />
+        )
+      )
+    }
   </div>
 
 </div>

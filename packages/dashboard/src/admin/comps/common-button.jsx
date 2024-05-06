@@ -83,7 +83,9 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
  * @property {boolean} [loading]
  * @property {boolean} [show]
  * 
- * @typedef {InternalLoadingButtonParams} LoadingButtonParams
+ * @typedef {InternalLoadingButtonParams & 
+ *  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+ * } LoadingButtonParams
  * 
  * @param {LoadingButtonParams} param0 
  * @returns 
@@ -130,7 +132,7 @@ export const LoadingButton = (
  * @typedef {InternalPromisableLoadingButton & 
 * Omit<LoadingButtonParams, 'onClick'>} PromisableLoadingButton
 * 
-* @param {PromisableLoadingBlingButton} param0 
+* @param {PromisableLoadingButton} params
 */
 export const PromisableLoadingButton = (
   { 
@@ -186,9 +188,11 @@ export const PromisableLoadingBlingButton = (
   const [loading, setLoading] = useState($loading)
   const onClickWrapper = useCallback(
     () => {
-      const stop_loading = () => setLoading(false)
-      setLoading(true)
-      onClick().catch(()=>{}).finally(stop_loading)
+      const stop_loading = () => setLoading(false);
+
+      setLoading(true);
+
+      onClick().catch(()=>{}).finally(stop_loading);
     }, [onClick]
   );
 

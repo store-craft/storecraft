@@ -43,7 +43,8 @@ const LineitemsTable =
       `(${it.stock_reserved} stock reserved, return stock)` :
       `(reduce ${it.qty} stock units)` 
   }
-  console.log('items', items)
+  
+  // console.log('items', items)
   
   return (
 <div className='w-full flex flex-row mt-3'>
@@ -58,60 +59,60 @@ const LineitemsTable =
     </thead>
     <tbody className='w-full text-sm'>
     {
-    items.map(
-      (it, ix) => (
-        <tr key={ix} 
-            className='--text-gray-500 border w-full border-pink-500'>
-          <td className='pl-1  max-w-[100px] sm:max-w-[200px] pr-5' >
-            <div className='overflow-x-auto --text-black whitespace-nowrap 
-                            scrollbar-thin'>
-              <LinkWithState 
-                  to={`/pages/products/${it.id}/edit`} 
-                  current_state={
-                    () => context?.getState && context?.getState()
-                  }
-                  draggable='false'>
-                <span children={it.data?.title} className='underline' />
-              </LinkWithState>
-              <br/>
-              <span 
-                  children={msg(it)} 
-                  className='underline shelf-text-label-color text-sm 
-                            font-medium cursor-pointer text-left'
-                  onClick={_ => onChangeItem(ix, 'stock-change')} />
-            </div>
-          </td>  
+      items.map(
+        (it, ix) => (
+          <tr key={ix} 
+              className='--text-gray-500 border w-full border-pink-500'>
+            <td className='pl-1  max-w-[100px] sm:max-w-[200px] pr-5' >
+              <div className='overflow-x-auto --text-black whitespace-nowrap 
+                              scrollbar-thin'>
+                <LinkWithState 
+                    to={`/pages/products/${it.id}/edit`} 
+                    current_state={
+                      () => context?.getState && context?.getState()
+                    }
+                    draggable='false'>
+                  <span children={it.data?.title} className='underline' />
+                </LinkWithState>
+                <br/>
+                <span 
+                    children={msg(it)} 
+                    className='underline shelf-text-label-color text-sm 
+                              font-medium cursor-pointer text-left'
+                    onClick={_ => onChangeItem(ix, 'stock-change')} />
+              </div>
+            </td>  
 
-          <td children={it.price} 
-              className='py-2 w-14 pr-3'/>
+            <td children={it.price} 
+                className='py-2 w-14 pr-3'/>
 
-          <td className='py-2 w-14 pr-3'>
-            <Bling stroke='border-b-2' className='w-full '>
-              <input 
-                  placeholder='' 
-                  value={it.qty} type='number' 
-                  onWheel={(e) => e.target.blur()}
-                  min={
-                    (it?.stock_reserved > 0) ? it.stock_reserved : 1
-                  } 
-                  max={it?.data?.qty ?? it.qty ?? 0} 
-                  step='1'
-                  onChange={
-                    e => onChangeItem(ix, 'change-qty', e.currentTarget.value)
-                  }
-                  className='h-9 w-full px-1 shelf-input-color' />
-            </Bling>
-          </td>
+            <td className='py-2 w-14 pr-3'>
+              <Bling stroke='border-b-2' className='w-full '>
+                <input 
+                    placeholder='' 
+                    value={it.qty} type='number' 
+                    onWheel={(e) => e.target.blur()}
+                    min={
+                      (it?.stock_reserved > 0) ? it.stock_reserved : 1
+                    } 
+                    max={it?.data?.qty ?? it.qty ?? 0} 
+                    step='1'
+                    onChange={
+                      e => onChangeItem(ix, 'change-qty', e.currentTarget.value)
+                    }
+                    className='h-9 w-full px-1 shelf-input-color' />
+              </Bling>
+            </td>
 
-          <td className='py-2 w-12 text-right items-center'>
-            <IoCloseSharp 
-                onClick={_ => onRemoveItem(ix, it)}
-                className='h-6 w-9 pl-3 border-l shelf-border-color 
-                          cursor-pointer'/>
-          </td>
-        </tr>
+            <td className='py-2 w-12 text-right items-center'>
+              <IoCloseSharp 
+                  onClick={_ => onRemoveItem(ix, it)}
+                  className='h-6 w-9 pl-3 border-l shelf-border-color 
+                            cursor-pointer'/>
+            </td>
+          </tr>
+        )
       )
-    )
     }
     </tbody>
   </table>
@@ -206,7 +207,8 @@ const OrderLineItems = (
         please return the stock before removing :)`)
         return
       }
-      setItems(its => its.filter((it, jx) => ix!==jx ))
+
+      setItems(its => its.filter((it, jx) => ix!==jx ));
     }, []
   );
 
@@ -219,8 +221,9 @@ const OrderLineItems = (
      */
     async (ix, op, val) => {
       if(op==='change-qty') {
-        items[ix].qty = parseInt(val)
-        setItems([...items])
+        items[ix].qty = parseInt(val);
+
+        setItems([...items]);
       }
       else if (op==='stock-change') {
         const line_item = items[ix]

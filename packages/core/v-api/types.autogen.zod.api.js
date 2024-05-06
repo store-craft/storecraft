@@ -56,7 +56,7 @@ export const storecraftConfigSchema = z
       ])
       .optional()
       .describe(
-        "(Optional) automatically reserve stock, if absent will be\ninfered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` environment.",
+        "(Optional) automatically reserve stock, we recommend to use `never`.\nDepending on your needs you can alter this setting.\nif absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON`\nenvironment and then will default to `never`.",
       )
       .default("never"),
     storage_rewrite_urls: z
@@ -494,21 +494,6 @@ export const validationEntrySchema = z
   .describe(
     "Checkouts or draft orders might be validated\nin automatic systems",
   );
-export const orderPaymentGatewayDataSchema = z
-  .object({
-    gateway_handle: z.string().describe("The payment gateway identifier"),
-    on_checkout_create: z
-      .any()
-      .optional()
-      .describe(
-        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
-      ),
-    latest_status: z
-      .any()
-      .optional()
-      .describe("Latest status of payment for caching"),
-  })
-  .describe("How did the order interacted with a payment gateway ?");
 export const fulfillOptionsEnumSchema = z
   .object({
     draft: z.object({
@@ -814,20 +799,6 @@ export const paymentGatewayActionSchema = extensionActionSchema
   .describe(
     "Upon status query, the gateway return a list of possible actions,\nsuch as `void`, `capture`, `refund` etc...",
   );
-export const paymentGatewayStatusSchema = z
-  .object({
-    actions: z
-      .array(paymentGatewayActionSchema)
-      .optional()
-      .describe("List of possible actions to take"),
-    messages: z
-      .array(z.string())
-      .optional()
-      .describe(
-        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
-      ),
-  })
-  .describe("A payment `status`");
 export const paymentGatewayItemGetSchema = z
   .object({
     info: paymentGatewayInfoSchema.describe(
@@ -1087,6 +1058,20 @@ export const orderStatusSchema = z
       .describe("`fulfillment` status"),
   })
   .describe("Status of `checkout`, `fulfillment` and `payment`");
+export const paymentGatewayStatusSchema = z
+  .object({
+    actions: z
+      .array(paymentGatewayActionSchema)
+      .optional()
+      .describe("List of possible actions to take"),
+    messages: z
+      .array(z.string())
+      .optional()
+      .describe(
+        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
+      ),
+  })
+  .describe("A payment `status`");
 export const discountDetailsSchema = z
   .object({
     meta: z
@@ -1129,6 +1114,20 @@ export const notificationTypeSchema = baseNotificationTypeSchema.extend(
   timestampsSchema.shape,
 );
 export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
+export const orderPaymentGatewayDataSchema = z
+  .object({
+    gateway_handle: z.string().describe("The payment gateway identifier"),
+    on_checkout_create: z
+      .any()
+      .optional()
+      .describe(
+        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
+      ),
+    latest_status: paymentGatewayStatusSchema
+      .optional()
+      .describe("Latest status of payment for caching"),
+  })
+  .describe("How did the order interacted with a payment gateway ?");
 export const discountInfoSchema = z
   .object({
     details: discountDetailsSchema.describe(

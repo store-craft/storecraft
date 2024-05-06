@@ -3,6 +3,24 @@ import { AiOutlineClose } from "react-icons/ai/index.js"
 import { Bling } from "./common-ui.jsx"
 
 /**
+ * Easily `format` errors coming from the `storecraft` backend
+ * 
+ * @param {import("@storecraft/core/v-api").error} error 
+ */
+export const format_storecraft_errors = error => {
+  return error?.messages?.map(
+    it => {
+      let msg = '';
+      if(it.path) {
+        msg += it.path.join('.') + ' - '
+      }
+      msg += it.message ?? 'Unknown Error';
+      return msg;
+    }
+  ) ?? ['ouch, unexpected error'];
+}
+
+/**
  * error message view from document pages
  * 
  * @typedef {object} InternalEditMessage
@@ -25,16 +43,7 @@ const ErrorMessage = (
 
   const [visible, setVisible] = useState(false)
   const messages = useMemo(
-    () => error?.messages.map(
-      it => {
-        let msg = '';
-        if(it.path) {
-          msg += it.path.join('.') + ' - '
-        }
-        msg += it.message ?? 'Unknown Error';
-        return msg;
-      }
-    ), 
+    () => format_storecraft_errors(error), 
     [error]
   );
 

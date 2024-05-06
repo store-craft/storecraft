@@ -1,4 +1,5 @@
-import { App, CheckoutStatusEnum, DiscountApplicationEnum, 
+import { 
+  App, CheckoutStatusEnum, DiscountApplicationEnum, 
   FulfillOptionsEnum, PaymentOptionsEnum } from "../index.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
 import { enums } from "./index.js";
@@ -13,9 +14,15 @@ import { parse_query } from "./utils.query.js"
  */
 
 /**
- * calculate pricing with `discounts`, `shipping`, `coupons`
+ * @description calculate pricing with `discounts`, `shipping`, `coupons`
  * 
- * @param {App} app 
+ * 
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
+ * 
+ * 
+ * @param {App<any, any, any, D, E, F>} app 
  */
 export const eval_pricing = (app) => 
 /**
@@ -53,22 +60,28 @@ async (order) => {
 
 
 /**
- * Create a checkout, which is a draft order
  * 
- * @param {App} app 
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
+ * 
+ * @param {App<any, any, any, D, E, F>} app 
  */
 export const create_checkout = app =>
 /**
+ * @description Create a checkout, which is a draft order
  * 
- * @param {OrderData} order
- * @param {string} gateway_handle chosen payment gateway
+ * 
+ * @param {import("./types.api.js").CheckoutCreateType} order_checkout
+ * @param {keyof F} gateway_handle chosen payment gateway
+ * 
  * 
  * @returns {Promise<OrderData>}
  */
-async (order, gateway_handle) => {
+async (order_checkout, gateway_handle) => {
 
   // fetch correct data from backend. we dont trust client
-  order = await validate_checkout(app)(order);
+  let order = await validate_checkout(app)(order_checkout);
 
   // eval pricing with discounts
   order = await eval_pricing(app)(order);
@@ -104,24 +117,26 @@ async (order, gateway_handle) => {
 
   const gateway = app.gateway(gateway_handle);
 
-  assert(gateway, `gateway ${gateway_handle} not found`, 400);
+  assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
 
-  const { onCheckoutCreate } = gateway;
+  const on_checkout_create = await gateway.onCheckoutCreate(order);
 
   // save the creation payload
   order.payment_gateway = {
-    on_checkout_create: await onCheckoutCreate(order),
-    gateway_handle
+    on_checkout_create,
+    gateway_handle: String(gateway_handle),
+    latest_status: await gateway.status(on_checkout_create)
   };
 
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
+  const id = await app.api.orders.upsert(order);
 
-
-  await app.api.orders.upsert(order);
-
-  return order
+  return {
+    ...order,
+    id
+  }
 }
 
 
@@ -148,9 +163,7 @@ async (checkoutId, client_payload) => {
 
   assert(gateway, `gateway not found`, 400);
 
-  const { onCheckoutComplete } = gateway;
-
-  const status = await onCheckoutComplete(
+  const status = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create
   );
 
@@ -181,19 +194,24 @@ async (checkoutId, client_payload) => {
  * re-merge latest products data inside the line-items
  * 
  * 
- * @param {App} app
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} F
+ * 
+ * 
+ * @param {App<any, any, any, D, E, F>} app
  */
 export const validate_checkout = app =>
 /**
  * 
- * @param {OrderData} checkout
+ * @param {import("./types.api.js").CheckoutCreateType} checkout
  * 
  * @returns {Promise<OrderData>}
  */
 async (checkout) => {
 
   const snap_shipping = await app.db.resources.shipping.get(
-    checkout.shipping_method.id
+    checkout.shipping_method.id ?? checkout.shipping_method.handle
   );
 
   const snaps_products = await app.db.resources.products.getBulk(
@@ -214,7 +232,7 @@ async (checkout) => {
 
   // assert shipping is valid
   if(!snap_shipping)
-    errorWith(snap_shipping.id, 'shipping-method-not-found')
+    errorWith(snap_shipping?.id, 'shipping-method-not-found')
   else { // else patch the latest
     checkout.shipping_method = snap_shipping;
   }
@@ -223,15 +241,15 @@ async (checkout) => {
   snaps_products.forEach(
     (it, ix) => {
       if(!it) {
-        errorWith(it.id, 'product-not-exists')
+        errorWith(it?.id, 'product-not-exists')
       } else {
         const pd = it;
         const li = checkout.line_items[ix]
 
         if(pd.qty==0)
-          errorWith(it.id, 'product-out-of-stock')
+          errorWith(it?.id, 'product-out-of-stock')
         else if(li.qty>pd.qty)
-          errorWith(it.id, 'product-not-enough-stock')
+          errorWith(it?.id, 'product-not-enough-stock')
 
         // patch line items inline
         li.data = pd
@@ -251,7 +269,10 @@ async (checkout) => {
 
 /**
  * 
- * @param {App} app 
+ * @template {import("../index.js").db_driver} [D=any]
+ * @template {import("../index.js").storage_driver} [E=any]
+ * @template {Record<string, payment_gateway>} [F=any]
+ * @param {App<any,any,any,D,E,F>} app 
  */
 export const inter = app => {
 

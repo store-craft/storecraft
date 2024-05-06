@@ -103,6 +103,7 @@ export const invoke_payment_action_on_order = async (
   app, order_id, action_handle, extra_action_parameters
 ) => {
 
+  console.log('action_handle ', action_handle)
   const order = await app.api.orders.get(order_id);
 
   assert(order, `Order ${order_id} not found`, 400);

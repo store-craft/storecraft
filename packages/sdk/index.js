@@ -5,12 +5,12 @@ import Products from './src/products.js'
 import Orders from './src/orders.js'
 import Discounts from './src/discounts.js'
 import Collections from './src/collections.js'
-import ShippingMethods from './src/shipping-methods.js'
+import ShippingMethods from './src/shipping.js'
 import StoreFronts from './src/storefronts.js'
 import Statistics from './src/statistics.js'
 import Images from './src/images.js'
 import Posts from './src/posts.js'
-import PaymentGateways from './src/payment_gateways.js'
+import Payments from './src/payments.js'
 import Settings from './src/settings.js'
 import Notifications from './src/notifications.js'
 import Bots from './src/bots.js'
@@ -62,7 +62,7 @@ export class StorecraftSDK {
     this.statistics = new Statistics(this);
     this.images = new Images(this);
     this.posts = new Posts(this);
-    // this.payment_gateways = new PaymentGateways(this)
+    this.payments = new Payments(this);
     this.settings = new Settings(this);
     this.notifications = new Notifications(this);
     this.bots = new Bots(this);

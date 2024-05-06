@@ -163,21 +163,33 @@ export const get_regular = (driver, col) => {
  */
 export const get_bulk = (driver, col) => {
   return async (ids, options) => {
-    const objids = ids.map(to_objid);
+    const objids = ids.map(handle_or_id)
+                      .map(v => ('_id' in v) ? v._id : undefined)
+                      .filter(Boolean);
+
+
 
     const res = await col.find(
       { 
-        _id: { $in: objids } 
+        $or: [
+          {
+            _id: { $in: objids } 
+          },
+          {
+            handle: { $in: ids } 
+          }
+
+        ]
       }
     ).toArray();
 
     // try to expand relations
     expand(res, options?.expand);
     const sanitized = sanitize_array(res);
-
+// console.log('res', sanitized)
     // now let's order them
     return ids.map(
-      id => sanitized.find(s => s.id===id)
+      id => sanitized.find(s => s.id===id || s?.handle===id)
     );
     
   }

@@ -4,7 +4,7 @@ import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
 
 /**
  * @typedef {import('./types.private.js').paypal_order} CreateResult
- * @typedef {import('@storecraft/core/v-payments').PaymentGatewayStatus} PaymentGatewayStatus
+ * @typedef {import('@storecraft/core/v-api').PaymentGatewayStatus} PaymentGatewayStatus
  * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
  * @typedef {import('./types.public.js').Config} Config

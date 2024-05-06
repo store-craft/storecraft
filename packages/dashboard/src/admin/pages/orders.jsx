@@ -10,7 +10,7 @@ import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
 const schema_fields = [
   { 
-    key: 'contact.firstname', name: 'Customer', comp: Span 
+    key: 'contact.email', name: 'Customer', comp: Span 
   },
   { 
     key: 'pricing.total', name: 'Price', comp: Span, 

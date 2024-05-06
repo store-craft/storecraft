@@ -1856,7 +1856,7 @@ export type OrderPaymentGatewayData = {
   /** 
    * @description Latest status of payment for caching 
    */
-  latest_status?: any; 
+  latest_status?: PaymentGatewayStatus; 
 }
 
 

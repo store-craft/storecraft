@@ -114,9 +114,9 @@ export declare interface payment_gateway<
    * available actions.
    * 
    * 
-   * @param order store-craft order, use it to infer pricing
+   * @param checkout_create_result sthe result of `onCheckoutCreate`
    */
-  status: (input: CreateResult) => Promise<PaymentGatewayStatus>;
+  status: (checkout_create_result: CreateResult) => Promise<PaymentGatewayStatus>;
 
   /**
    * 

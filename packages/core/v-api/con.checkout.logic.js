@@ -119,10 +119,13 @@ async (order_checkout, gateway_handle) => {
 
   assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
 
+  const on_checkout_create = await gateway.onCheckoutCreate(order);
+
   // save the creation payload
   order.payment_gateway = {
-    on_checkout_create: await gateway.onCheckoutCreate(order),
-    gateway_handle: String(gateway_handle)
+    on_checkout_create,
+    gateway_handle: String(gateway_handle),
+    latest_status: await gateway.status(on_checkout_create)
   };
 
   // @ts-ignore

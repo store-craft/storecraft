@@ -179,7 +179,7 @@ const right = {
   },
   fields: [
     { 
-      key: 'pricing',  name: 'Pricing', validate: false, 
+      key: 'pricing',  name: '🧾 Pricing', validate: false, 
       desc: 'Decide the total price of the order including shipping \
       and discounts',
       comp: withCard(OrderPrice, { }), 
@@ -235,8 +235,7 @@ const left = {
             },
   fields: [
     { 
-      key: 'payment_gateway', name: 'Payments', type: 'compound', 
-      validate: false, editable: true, 
+      key: 'payment_gateway', name: '💳 Payments', 
       desc: "Let's see what the payment gateway status is", 
       comp: withCard(
         OrderPaymentGateway, 

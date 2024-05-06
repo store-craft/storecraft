@@ -99,14 +99,14 @@ export class DummyPayments {
    * 
    * @type {payment_gateway["invokeAction"]}
    */
-  async invokeAction(action_handle) {
+  invokeAction(action_handle) {
     switch (action_handle) {
       case 'capture':
-        return this.capture;
+        return this.capture.bind(this);
       case 'void':
-        return this.void;
+        return this.void.bind(this);
       case 'refund':
-        return this.refund;
+        return this.refund.bind(this);
     
       default:
         break;
@@ -231,15 +231,18 @@ export class DummyPayments {
   async void(create_result) {
     const order = await this.retrieve_gateway_order(create_result);
 
-    if(order.status==='authorized' || order.status==='created') {
-      await this.db.set(
-        create_result, 
-        {
-          ...order,
-          status: 'voided'
-        }
-      );
-    }
+    assert(
+      order.status==='authorized' || order.status==='created',
+      `Cannot void`
+    );
+
+    await this.db.set(
+      create_result, 
+      {
+        ...order,
+        status: 'voided'
+      }
+    );
     
     return this.status(create_result);
   }  
@@ -251,15 +254,18 @@ export class DummyPayments {
   async capture(create_result) {
     const order = await this.retrieve_gateway_order(create_result);
 
-    if(order.status==='authorized') {
-      await this.db.set(
-        create_result, 
-        {
-          ...order,
-          status: 'captured'
-        }
-      );
-    }
+    assert(
+      order.status==='authorized',
+      `**un-authorized** transaction cannot be **captured**`
+    );
+
+    await this.db.set(
+      create_result, 
+      {
+        ...order,
+        status: 'captured'
+      }
+    );
     
     return this.status(create_result);
   }    
@@ -271,15 +277,18 @@ export class DummyPayments {
   async refund(create_result) {
     const order = await this.retrieve_gateway_order(create_result);
 
-    if(order.status==='captured') {
-      await this.db.set(
-        create_result, 
-        {
-          ...order,
-          status: 'refunded'
-        }
-      );
-    }
+    assert(
+      order.status==='captured',
+      `**un-captured** transaction cannot be **refunded**`
+    );
+
+    await this.db.set(
+      create_result, 
+      {
+        ...order,
+        status: 'refunded'
+      }
+    );
     
     return this.status(create_result);
   }

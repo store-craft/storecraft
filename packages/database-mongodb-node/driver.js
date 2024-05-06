@@ -26,10 +26,12 @@ import { impl as tags } from './src/con.tags.js';
 const connect = async (uri, options) => {
 
   options = options ?? {
+    ignoreUndefined: true,
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
       deprecationErrors: true,
+
     }
   }
   const client = new MongoClient(uri, options);

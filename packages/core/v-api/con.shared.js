@@ -32,7 +32,7 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
    * @param {U} item
    */
   return async (item) => {
-    schema && assert_zod(schema, item);
+    schema && assert_zod(schema.transform(x => x ?? undefined), item);
 
     // Check if exists
     const id = !Boolean(item.id) ? ID(id_prefix) : item.id;

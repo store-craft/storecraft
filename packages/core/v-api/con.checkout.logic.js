@@ -217,13 +217,9 @@ async (order_checkout, gateway_handle) => {
     return order;
   }
 
-  { // reserve stock
-    if(app.config.checkout_reserve_stock_on==='checkout_create') {
-      await app.api.products.changeStockOf(
-        order.line_items.map(li => li.id),
-        order.line_items.map(li => li.qty)
-      )
-    }
+  // reserve stock
+  if(app.config.checkout_reserve_stock_on==='checkout_create') {
+    await reserve_stock_of_order(app, order);
   }
 
   const on_checkout_create = await gateway.onCheckoutCreate(order);
@@ -246,6 +242,32 @@ async (order_checkout, gateway_handle) => {
   }
 }
 
+/**
+ * @template {import("../index.js").db_driver} D
+ * @template {import("../index.js").storage_driver} E
+ * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
+ * 
+ * 
+ * @param {App<any, any, any, D, E, F>} app 
+ * @param {OrderData} order 
+ */
+const reserve_stock_of_order = async (app, order) => {
+  await app.api.products.changeStockOfBy(
+    order.line_items.map(li => li.id),
+    order.line_items.map(li => -li.qty)
+  );
+
+  order.line_items = order.line_items.map(
+    li => (
+      {
+        ...li,
+        stock_reserved: li.qty,
+      }
+    )
+  );
+
+  order.status.fulfillment = enums.FulfillOptionsEnum.processing;
+}
 
 /**
  * Complete a checkout sync
@@ -296,12 +318,7 @@ async (checkoutId, client_payload) => {
       (app.config.checkout_reserve_stock_on==='checkout_complete')
   ) {
 
-    await app.api.products.changeStockOfBy(
-      order.line_items.map(li => li.id),
-      order.line_items.map(li => li.qty)
-    );
-
-    order.status.fulfillment = enums.FulfillOptionsEnum.processing;
+    await reserve_stock_of_order(app, order);
   }
   
   await app.api.orders.upsert(order);

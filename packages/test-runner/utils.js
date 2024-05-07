@@ -55,7 +55,7 @@ export const assert_async_throws = async (fn) => {
   try {
     await fn();
   } catch (e) {
-    console.log('throwing function ', e.message)
+    // console.log('throwing function ', e.message)
     return;
   }
 

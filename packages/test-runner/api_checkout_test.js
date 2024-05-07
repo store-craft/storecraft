@@ -68,11 +68,9 @@ export const create = app => {
     }
   );
 
-  /** @type {import('@storecraft/core/v-api').OrderData} */
-  let draft_order;
 
-  s('create checkout should succeed', async (ctx) => {
-    draft_order = await app2.api.checkout.create_checkout(
+  s('create -> complete checkout should succeed', async (ctx) => {
+    const draft_order = await app2.api.checkout.create_checkout(
       {
         line_items: [
           { id: products[0].handle, qty: 1 },
@@ -85,73 +83,203 @@ export const create = app => {
       }, 'dummy_payments'
     );
 
-    // general
+    { // test the create part
 
-    assert.ok(
-      draft_order?.id,
-      `draft has no id`
-    );
+      assert.ok(
+        draft_order?.id,
+        `draft has no id`
+      );
 
-    assert.not(
-      draft_order?.validation?.length>0,
-      `validation errors were found`
-    );
+      assert.not(
+        draft_order?.validation?.length>0,
+        `validation errors were found`
+      );
 
-    // status
+      // status
 
-    assert.ok(
-      draft_order.status.checkout.id===enums.CheckoutStatusEnum.created.id,
-      `status error`
-    );
+      assert.ok(
+        draft_order.status.checkout.id===enums.CheckoutStatusEnum.created.id,
+        `status error`
+      );
 
-    // payment
-    assert.ok(
-      draft_order?.pricing?.total,
-      'pricing was not set'
-    );
+      // payment
+      assert.ok(
+        draft_order?.pricing?.total,
+        'pricing was not set'
+      );
 
-    assert.ok(
-      (
-        (draft_order?.payment_gateway.gateway_handle==='dummy_payments') &&
-        (draft_order?.payment_gateway.latest_status) &&
-        (draft_order?.payment_gateway.on_checkout_create)
-      ),
-      'payment gateway was not set'
-    );
+      assert.ok(
+        (
+          (draft_order?.payment_gateway.gateway_handle==='dummy_payments') &&
+          (draft_order?.payment_gateway.latest_status) &&
+          (draft_order?.payment_gateway.on_checkout_create)
+        ),
+        'payment gateway was not set'
+      );
+    }
+
+
+    { // test the complete checkout part
+
+      const order = await app2.api.checkout.complete_checkout(
+        draft_order.id
+      );
+  
+      // general
+  
+      assert.ok(
+        order?.id,
+        `order has no id`
+      );
+  
+      // status
+  
+      assert.ok(
+        order.status.checkout.id==enums.CheckoutStatusEnum.complete.id,
+        `checkout status error`
+      );
+  
+      const authorize_on_checkout = app2.gateways.dummy_payments.config.intent_on_checkout==='AUTHORIZE';
+      const expected_payment_status = (
+        authorize_on_checkout ? enums.PaymentOptionsEnum.authorized.id : 
+                  enums.PaymentOptionsEnum.captured.id
+      );
+  
+      assert.ok(
+        order.status.payment.id===expected_payment_status,
+        `payment status error`
+      );
+
+    }
 
   });
 
-  s('complete checkout should succeed', async (ctx) => {
-    const order = await app2.api.checkout.complete_checkout(
-      draft_order.id
-    );
+  s('create checkout with automatic stock', async (ctx) => {
+    const previous_checkout_reserve_stock_on = app2.config.checkout_reserve_stock_on;
 
-    // general
+    app2.config.checkout_reserve_stock_on = 'checkout_create';
+    
+    try {
+      const get_products_1 = await Promise.all(
+        products.map(pr => app2.api.products.get(pr.handle))
+      )
 
-    assert.ok(
-      order?.id,
-      `order has no id`
-    );
+      const draft_order = await app2.api.checkout.create_checkout(
+        {
+          line_items: products.map(
+            pr => (
+              {
+                id: pr.handle,
+                qty: 2
+              }
+            )
+          ),
+          shipping_method: shipping,
+          contact: {
+            email: 'a1@a.com'
+          }
+        }, 'dummy_payments'
+      );
+  
+      { // let's test quantities reduced by 2
+        const expected_quantities = get_products_1.map(
+          (pr, ix) => pr.qty - draft_order.line_items[ix].qty
+        );
+  
+        const actual_quantities = await Promise.all(
+          draft_order.line_items.map(
+            li => app2.api.products.get(li.id).then(pr => pr.qty)
+          )
+        );
+  
+        assert.equal(
+          actual_quantities, expected_quantities,
+          `Stock Quantities did not reduce well`
+        );
+      }
 
-    // status
+      { // assert `stock_reserved was et as well`
+        assert.ok(
+          draft_order.line_items.every(
+            li => li.qty==li.stock_reserved
+          ),
+          `stock_reserved was not set properly to match the quantities`
+        )
+      }
 
-    assert.ok(
-      order.status.checkout.id==enums.CheckoutStatusEnum.complete.id,
-      `checkout status error`
-    );
-
-    const authorize_on_checkout = app2.gateways.dummy_payments.config.intent_on_checkout==='AUTHORIZE';
-    const expected_payment_status = (
-      authorize_on_checkout ? enums.PaymentOptionsEnum.authorized.id : 
-                enums.PaymentOptionsEnum.captured.id
-    );
-
-    assert.ok(
-      order.status.payment.id===expected_payment_status,
-      `payment status error`
-    );
+    } catch (e) {
+      throw e;
+    } finally {
+      app2.config.checkout_reserve_stock_on = previous_checkout_reserve_stock_on;
+    }
 
   });
+
+
+  s('create and complete checkout with automatic stock', async (ctx) => {
+    const previous_checkout_reserve_stock_on = app2.config.checkout_reserve_stock_on;
+
+    app2.config.checkout_reserve_stock_on = 'checkout_complete';
+
+    
+    try {
+      const get_products_1 = await Promise.all(
+        products.map(pr => app2.api.products.get(pr.handle))
+      )
+
+      const draft_order = await app2.api.checkout.create_checkout(
+        {
+          line_items: products.map(
+            pr => (
+              {
+                id: pr.handle,
+                qty: 2
+              }
+            )
+          ),
+          shipping_method: shipping,
+          contact: {
+            email: 'a1@a.com'
+          }
+        }, 'dummy_payments'
+      );
+  
+      const order_complete = await app2.api.checkout.complete_checkout(draft_order.id);
+
+      { // let's test quantities reduced by 2
+        const expected_quantities = get_products_1.map(
+          (pr, ix) => pr.qty - draft_order.line_items[ix].qty
+        );
+  
+        const actual_quantities = await Promise.all(
+          draft_order.line_items.map(
+            li => app2.api.products.get(li.id).then(pr => pr.qty)
+          )
+        );
+  
+        assert.equal(
+          actual_quantities, expected_quantities,
+          `Stock Quantities did not reduce well`
+        );
+      }
+
+      { // assert `stock_reserved was et as well`
+        assert.ok(
+          order_complete.line_items.every(
+            li => li.qty==li.stock_reserved
+          ),
+          `stock_reserved was not set properly to match the quantities`
+        )
+      }
+
+    } catch (e) {
+      throw e;
+    } finally {
+      app2.config.checkout_reserve_stock_on = previous_checkout_reserve_stock_on;
+    }
+
+  });
+
 
   s('create checkout should fail validation when line item is missing', async (ctx) => {
     const order = await app2.api.checkout.create_checkout(

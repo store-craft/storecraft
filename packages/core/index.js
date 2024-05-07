@@ -19,6 +19,7 @@ const parse_int = (s, def) => {
 }
 
 /**
+ * 
  * @template {any} [PlatformNativeRequest=any]
  * @template {any} [PlatformContext=any]
  * @template {any} [H=any]
@@ -28,6 +29,9 @@ const parse_int = (s, def) => {
  * `payments` map type
  * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>] 
  * `extensions` map type
+ * 
+ * @description This is the main `stoecraft` **App**
+ * 
  */
 export class App {
 

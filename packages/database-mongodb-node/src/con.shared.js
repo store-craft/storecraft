@@ -20,7 +20,9 @@ import { add_search_terms_relation_on } from './utils.relations.js'
  */
 export const upsert_regular = (driver, col) => {
   return async (data, search_terms=[]) => {
+
     data = {...data};
+    
     const session = driver.mongo_client.startSession();
 
     try {

@@ -3,6 +3,7 @@ import { MongoDB } from '../driver.js'
 import { count_regular, get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
 import { to_objid } from './utils.funcs.js';
+import { add_search_terms_relation_on } from './utils.relations.js';
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_notifications} db_col
@@ -18,8 +19,14 @@ const col = (d) => d.collection('notifications');
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * @returns {db_col["upsert"]}
  */
-const upsert = (driver) => upsert_regular(driver, col(driver));
+const upsert = (driver) => {
+  return (item, search_terms) => {
+    return upsertBulk(driver)([item], [search_terms]);
+  }
+}
 
 /**
  * @param {MongoDB} driver 
@@ -28,15 +35,19 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
  * @returns {db_col["upsertBulk"]}
  */
 const upsertBulk = (driver) => {
-  return async (data) => {
-    data.forEach(
-      d => {
+  return async (items, search_terms) => {
+    items.forEach(
+      (d, ix) => {
         d._id = to_objid(d.id);
+        
+        add_search_terms_relation_on(d, search_terms[ix]);
       }
     );
 
+    // SEARCH
+
     const res = await col(driver).insertMany(
-      data
+      items
     );
 
     return true;

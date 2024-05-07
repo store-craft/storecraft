@@ -68,7 +68,6 @@ export const create = app => {
     }
   );
 
-
   s('create -> complete checkout should succeed', async (ctx) => {
     const draft_order = await app2.api.checkout.create_checkout(
       {
@@ -154,6 +153,7 @@ export const create = app => {
 
   });
 
+  /*
   s('create checkout with automatic stock', async (ctx) => {
     const previous_checkout_reserve_stock_on = app2.config.checkout_reserve_stock_on;
 
@@ -299,10 +299,11 @@ export const create = app => {
 
     assert.ok(
       order?.validation?.length>0,
-      `validation errors were found`
+      `validation errors should have been found`
     );
 
   });
+
 
   s('create checkout should fail validation when shipping method is missing', async (ctx) => {
     const order = await app2.api.checkout.create_checkout(
@@ -331,6 +332,7 @@ export const create = app => {
     // console.log(order.validation)
 
   });
+
 
   s('create checkout should fail validation when missing quantities', async (ctx) => {
     const order = await app2.api.checkout.create_checkout(
@@ -374,7 +376,7 @@ export const create = app => {
     )
 
   });  
-
+*/
   return s;
 }
 

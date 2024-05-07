@@ -52,6 +52,8 @@ async (checkout) => {
     checkout.line_items.map(li => li.id)
   );
 
+  // console.log('snaps_products', snaps_products)
+
   /**@type {import("./types.api.js").ValidationEntry[]} */
   const errors = [];
 
@@ -234,6 +236,9 @@ async (order_checkout, gateway_handle) => {
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
+  console.log('order', order)
+
+  // return order;
   const id = await app.api.orders.upsert(order);
 
   return {

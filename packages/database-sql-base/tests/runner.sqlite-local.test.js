@@ -28,6 +28,7 @@ export const create_app = async () => {
  
   await app.init();
   await app.db.migrateToLatest();
+  
   return app;
 }
 
@@ -44,12 +45,14 @@ async function test() {
   last_test.run();
 }
 
-test();
+// test();
 
 async function test2() {
   const app = await create_app();
 
-  api_index.api_auth_test.create(app).run();
+  // api_index.api_auth_test.create(app).run();
+
+  api_index.api_checkout_test.create(app).run();
 
   // api_index.api_tags_crud_test.create(app).run();
   // api_index.api_tags_list_test.create(app).run();
@@ -93,4 +96,4 @@ async function test2() {
 
 }
 
-// test2();
+test2();

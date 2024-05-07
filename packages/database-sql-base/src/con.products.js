@@ -225,14 +225,18 @@ const getBulk = (driver) => {
       (eb) => eb.or(
         [
           eb('id', 'in', ids),
-          eb('handle', '=', ids),
+          eb('handle', 'in', ids),
         ]
       )
     )
     // .compile()
     .execute();
 
-    return sanitize(r);
+    const sanitized = sanitize(r);
+
+    return ids.map(
+      id => sanitized.find(s => s.id===id || s?.handle===id)
+    );
   }
 }
 

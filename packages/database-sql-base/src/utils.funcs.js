@@ -21,7 +21,11 @@ export const delete_keys = (...keys) => {
 
 /**
  * Sanitize null/undefined valued keys
+ * 
+ * 
  * @template {Record<string, any>} T
+ * 
+ * 
  * @param {T} o 
  */
 export const sanitize = o => {
@@ -50,8 +54,10 @@ export const sanitize = o => {
 
 
 /**
- * Sanitize the mongo document before sending to client
+ * Sanitize the document before sending to client
+ * 
  * @template T
+ * 
  * @param {T[]} arr 
  */
 export const sanitize_array = arr => {

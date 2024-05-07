@@ -31,14 +31,19 @@ async (items) => {
   /** @type {(ItemTypeUpsert & import('../v-database/types.public.js').idable_concrete)[]} */
   const items_with_id = Array.isArray(items) ? items : [items] ;
   // validate and assign ids
+  /** @type {string[][]} */
   const search_terms = [];
   items_with_id.forEach(
     item => { 
       assert_zod(notificationTypeUpsertSchema, item);
+
       item.id = ID('not');
       item.search = item.search ?? [];
+
       apply_dates(item);
-      isDef(item.author) && item.search.push(`author:${item.author}`)
+      
+      isDef(item.author) && item.search.push(`author:${item.author}`);
+
       search_terms.push(item.search)
     }
   );

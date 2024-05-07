@@ -1485,13 +1485,13 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
   /** 
    * @description A list of manual coupons handles 
    */
-  coupons?: DiscountType["handle"][]; 
+  coupons?: DiscountType[]; 
 }
 
 /**
  * @description Order type
  */
-export interface OrderData extends BaseCheckoutCreateType, BaseType {
+export interface OrderData extends CheckoutCreateType, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -1511,11 +1511,6 @@ export interface OrderData extends BaseCheckoutCreateType, BaseType {
    * @description Payment gateway info and status 
    */
   payment_gateway?: OrderPaymentGatewayData; 
-
-  /** 
-   * @description A list of manual coupons snapshots that were used 
-   */
-  coupons?: DiscountType[]; 
 }
 
 /**
@@ -1835,7 +1830,7 @@ export type ValidationEntry = {
   /**
    * @description message
    */
-  message?: 'out-of-stock' | 'not-enough-stock' | 'some-stock-is-on-hold';
+  message?: 'shipping-method-not-found' | 'product-not-exists' | 'product-out-of-stock' | 'product-not-enough-stock';
 }
 
 /** 

@@ -33,27 +33,6 @@ let app = new App(
 
 await app.init();
 
-// const order = await app.api.checkout.create_checkout(
-//   {
-//     line_items: [
-//       {
-//         id: 'pr-api-collections-products-test-js-1',
-//         qty: 1, 
-//         price: 50
-//       }
-//     ],
-//     shipping_method: {
-//       title: 'title',
-//       handle: 'ship-api-storefronts-all-connections-test-js-2',
-//       price: 50
-//     },
-//     contact: {
-//       email: 'a1@a.com'
-//     }
-//   }, 'dummy_payments'
-// );
-// console.log('order', order)
- 
 const server = http.createServer(app.handler).listen(
   8000,
   () => {

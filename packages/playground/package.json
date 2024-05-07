@@ -5,19 +5,20 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start" : "npm run playground:start",
-    "playground:start" : "node --watch index.js",
-    "playground:server" : "node --watch index.js",
+    "start": "npm run playground:start",
+    "playground:start": "node --watch index.js",
+    "playground:server": "node --watch index.js",
     "playground:test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",
-    "@storecraft/platform-node": "^1.0.0",
     "@storecraft/database-mongodb-node": "^1.0.0",
-    "@storecraft/storage-node-local": "^1.0.0",
-    "@storecraft/storage-s3-compatible": "^1.0.0",
+    "@storecraft/payments-dummy": "^1.0.0",
+    "@storecraft/payments-paypal-standard": "^1.0.0",
+    "@storecraft/platform-node": "^1.0.0",
     "@storecraft/storage-google": "^1.0.0",
-    "@storecraft/payments-paypal-standard": "^1.0.0"
+    "@storecraft/storage-node-local": "^1.0.0",
+    "@storecraft/storage-s3-compatible": "^1.0.0"
   },
   "keywords": [],
   "author": "Tomer Shalev <tomer.shalev@gmail.com>",

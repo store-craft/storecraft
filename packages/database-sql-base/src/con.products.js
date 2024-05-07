@@ -11,7 +11,7 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
   products_with_variants,
   count_regular,
   products_with_related_products} from './con.shared.js'
-import { sanitize_array, sanitize } from './utils.funcs.js'
+import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { report_document_media } from './con.images.js'
@@ -36,6 +36,8 @@ const is_variant = item => {
 
 /**
  * @param {SQL} driver 
+ * 
+ * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -49,11 +51,14 @@ const upsert = (driver) => {
       .selectFrom('discounts')
       .selectAll()
       .where(
-        eb => eb.and([
-          eb('active', '=', 1),
-          eb('_application_id', '=', enums.DiscountApplicationEnum.Auto.id),
-        ])
+        eb => eb.and(
+          [
+            eb('active', '=', 1),
+            eb('_application_id', '=', enums.DiscountApplicationEnum.Auto.id),
+          ]
+        )
       ).execute();
+
       const eligible_discounts = discounts.filter(
         d => driver.app.api.pricing.test_product_filters_against_product(d.info.filters, item)
       );      
@@ -162,7 +167,7 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id_or_handle, options) => {
+  return (id_or_handle, options) => {
 
     const expand = options?.expand ?? ['*'];
     const expand_collections = expand.includes('*') || expand.includes('collections');
@@ -171,7 +176,7 @@ const get = (driver) => {
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
 
-    const r = await driver.client
+    return driver.client
     .selectFrom(table_name)
     .selectAll('products')
     .select(
@@ -187,8 +192,6 @@ const get = (driver) => {
     .where(where_id_or_handle_table(id_or_handle))
     // .compile()
     .executeTakeFirst();
-
-    return sanitize(r);
   }
 }
 
@@ -225,14 +228,16 @@ const getBulk = (driver) => {
       (eb) => eb.or(
         [
           eb('id', 'in', ids),
-          eb('handle', '=', ids),
+          eb('handle', 'in', ids),
         ]
       )
     )
     // .compile()
     .execute();
 
-    return sanitize(r);
+    return ids.map(
+      id => r.find(s => s.id===id || s?.handle===id)
+    );
   }
 }
 

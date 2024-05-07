@@ -1,4 +1,4 @@
-import { ExpressionWrapper, Transaction } from 'kysely'
+import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';
 import { query_to_eb } from './utils.query.js';
@@ -231,16 +231,17 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  * @typedef {import('../index.js').Database} Database
  */
 
+
 /**
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template {keyof Database} T
  * 
  * @param {Transaction<Database>} trx 
- * @param {keyof Database} table_name 
- * @param {T} item values of the entity
+ * @param {T} table_name 
+ * @param {import('kysely').InsertObject<Database, T>} item values of the entity
  * 
  */
 export const regular_upsert_me = async (trx, table_name, item) => {
-// export const regular_upsert_me = async (trx, table_name, item_id, item) => {
+
   await trx.deleteFrom(table_name).where(
     eb => eb.or(
       [
@@ -249,6 +250,7 @@ export const regular_upsert_me = async (trx, table_name, item) => {
       ].filter(Boolean)
     )
   ).execute();
+
   return await trx.insertInto(table_name).values(item).executeTakeFirst()
 }
 

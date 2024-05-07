@@ -109,6 +109,8 @@ export const add_search_terms_relation_on = (data, terms=[]) => {
   data._relations = data._relations ?? {};
   data._relations.search = terms;
 
+  delete data['search'];
+  
   return data;
 }
 

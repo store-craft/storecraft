@@ -56,7 +56,7 @@ export const storecraftConfigSchema = z
       ])
       .optional()
       .describe(
-        "(Optional) automatically reserve stock, if absent will be\ninfered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` environment.",
+        "(Optional) automatically reserve stock, we recommend to use `never`.\nDepending on your needs you can alter this setting.\nif absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON`\nenvironment and then will default to `never`.",
       )
       .default("never"),
     storage_rewrite_urls: z
@@ -484,9 +484,10 @@ export const validationEntrySchema = z
       .describe("title"),
     message: z
       .union([
-        z.literal("out-of-stock"),
-        z.literal("not-enough-stock"),
-        z.literal("some-stock-is-on-hold"),
+        z.literal("shipping-method-not-found"),
+        z.literal("product-not-exists"),
+        z.literal("product-out-of-stock"),
+        z.literal("product-not-enough-stock"),
       ])
       .optional()
       .describe("message"),
@@ -494,21 +495,6 @@ export const validationEntrySchema = z
   .describe(
     "Checkouts or draft orders might be validated\nin automatic systems",
   );
-export const orderPaymentGatewayDataSchema = z
-  .object({
-    gateway_handle: z.string().describe("The payment gateway identifier"),
-    on_checkout_create: z
-      .any()
-      .optional()
-      .describe(
-        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
-      ),
-    latest_status: z
-      .any()
-      .optional()
-      .describe("Latest status of payment for caching"),
-  })
-  .describe("How did the order interacted with a payment gateway ?");
 export const fulfillOptionsEnumSchema = z
   .object({
     draft: z.object({
@@ -814,20 +800,6 @@ export const paymentGatewayActionSchema = extensionActionSchema
   .describe(
     "Upon status query, the gateway return a list of possible actions,\nsuch as `void`, `capture`, `refund` etc...",
   );
-export const paymentGatewayStatusSchema = z
-  .object({
-    actions: z
-      .array(paymentGatewayActionSchema)
-      .optional()
-      .describe("List of possible actions to take"),
-    messages: z
-      .array(z.string())
-      .optional()
-      .describe(
-        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
-      ),
-  })
-  .describe("A payment `status`");
 export const paymentGatewayItemGetSchema = z
   .object({
     info: paymentGatewayInfoSchema.describe(
@@ -1087,6 +1059,20 @@ export const orderStatusSchema = z
       .describe("`fulfillment` status"),
   })
   .describe("Status of `checkout`, `fulfillment` and `payment`");
+export const paymentGatewayStatusSchema = z
+  .object({
+    actions: z
+      .array(paymentGatewayActionSchema)
+      .optional()
+      .describe("List of possible actions to take"),
+    messages: z
+      .array(z.string())
+      .optional()
+      .describe(
+        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
+      ),
+  })
+  .describe("A payment `status`");
 export const discountDetailsSchema = z
   .object({
     meta: z
@@ -1129,6 +1115,20 @@ export const notificationTypeSchema = baseNotificationTypeSchema.extend(
   timestampsSchema.shape,
 );
 export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
+export const orderPaymentGatewayDataSchema = z
+  .object({
+    gateway_handle: z.string().describe("The payment gateway identifier"),
+    on_checkout_create: z
+      .any()
+      .optional()
+      .describe(
+        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
+      ),
+    latest_status: paymentGatewayStatusSchema
+      .optional()
+      .describe("Latest status of payment for caching"),
+  })
+  .describe("How did the order interacted with a payment gateway ?");
 export const discountInfoSchema = z
   .object({
     details: discountDetailsSchema.describe(
@@ -1383,7 +1383,7 @@ export const baseCheckoutCreateTypeSchema = z.object({
 });
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
   coupons: z
-    .array(discountTypeSchema.shape.handle)
+    .array(discountTypeSchema)
     .optional()
     .describe("A list of manual coupons handles"),
 });
@@ -1414,7 +1414,7 @@ export const pricingDataSchema = z
   .describe(
     "Pricing object exaplins how the pricing of an order\nwas calculated given a stack of automatic discounts, coupons,\nline items and shipping method",
   );
-export const orderDataSchema = baseCheckoutCreateTypeSchema
+export const orderDataSchema = checkoutCreateTypeSchema
   .extend(baseTypeSchema.shape)
   .extend({
     status: orderStatusSchema.describe(
@@ -1428,10 +1428,6 @@ export const orderDataSchema = baseCheckoutCreateTypeSchema
     payment_gateway: orderPaymentGatewayDataSchema
       .optional()
       .describe("Payment gateway info and status"),
-    coupons: z
-      .array(discountTypeSchema)
-      .optional()
-      .describe("A list of manual coupons snapshots that were used"),
   });
 export const orderDataUpsertSchema =
   orderDataSchema.describe("Order upsert type");

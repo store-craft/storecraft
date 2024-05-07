@@ -92,7 +92,7 @@ export const create = app => {
 
     const deltas = [-1, -1];
 
-    await app.api.products.changeStockOf(
+    await app.api.products.changeStockOfBy(
       ids,
       deltas
     );

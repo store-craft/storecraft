@@ -1,5 +1,5 @@
 import { SQL } from '../driver.js'
-import { sanitize, sanitize_array } from './utils.funcs.js'
+import { sanitize_array } from './utils.funcs.js'
 import { count_regular, delete_me, insert_search_of, insert_tags_of, regular_upsert_me, 
   where_id_or_handle_table, 
   with_media, 
@@ -52,14 +52,12 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id_or_email, options) => {
-    const r = await driver.client
+  return (id_or_email, options) => {
+    return driver.client
       .selectFrom(table_name)
       .selectAll()
       .where(where_id_or_handle_table(id_or_email))
       .executeTakeFirst();
-
-    return sanitize(r);
   }
 }
 
@@ -69,12 +67,11 @@ const get = (driver) => {
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
-  return async (email) => {
-    const r = await driver.client
+  return (email) => {
+    return driver.client
       .selectFrom('auth_users')
       .selectAll().where('email', '=', email)
       .executeTakeFirst();
-    return sanitize(r);
   }
 }
 
@@ -140,7 +137,7 @@ const list = (driver) => {
 
     if(query.limitToLast) items.reverse();
 
-    return sanitize_array(items);
+    return items;
   }
 }
 

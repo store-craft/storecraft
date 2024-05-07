@@ -12,6 +12,10 @@ import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
+import { SanitizePlugin } from './src/kysely.sanitize.plugin.js';
+
+
+
 
 /**
  * @param {any} b 
@@ -62,7 +66,8 @@ export class SQL {
     this.#_client = new Kysely({
       dialect: this.#_config.dialect, 
       plugins: [
-        new ParseJSONResultsPlugin()
+        new ParseJSONResultsPlugin(),
+        new SanitizePlugin()
       ]
     });
   }
@@ -76,7 +81,9 @@ export class SQL {
 
   async migrateToLatest() {
     this.throwIfNotReady();
+
     const { migrateToLatest } = await import('./migrate.js');
+
     await migrateToLatest(this, false);
   };
 

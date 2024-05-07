@@ -57,14 +57,23 @@ const getByEmail = (driver) => {
  */
 const remove = (driver) => {
   return async (id) => {
-    
-    const res = await col(driver).deleteOne(
-      { 
-        '$or': [
-          { _id: to_objid_safe(id) },
-          { email: String(id) }
-        ]
+
+    let filter;
+
+    {
+      if(to_objid_safe(id)) { 
+        filter = {
+          _id: to_objid_safe(id)
+        }
+      } else {
+        filter = {
+          email: id
+        }
       }
+    }
+
+    const res = await col(driver).deleteOne(
+      filter
     );
 
     return Boolean(res.deletedCount)

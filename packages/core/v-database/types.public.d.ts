@@ -286,7 +286,7 @@ export interface db_driver {
   /**
    * Init to the database
    */
-  init: (app: App<any, any, any, db_driver, any>) => Promise<this>;
+  init: (app: App<any, any, any, db_driver, any, any, any>) => Promise<this>;
 
   /** 
    * Disconnect the database if possible 

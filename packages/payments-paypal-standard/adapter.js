@@ -88,14 +88,14 @@ export class PaypalStandard {
    * 
    * @type {payment_gateway["invokeAction"]}
    */
-  async invokeAction(action_handle) {
+  invokeAction(action_handle) {
     switch (action_handle) {
       case 'capture':
-        return this.capture;
+        return this.capture.bind(this);
       case 'void':
-        return this.void;
+        return this.void.bind(this);
       case 'refund':
-        return this.refund;
+        return this.refund.bind(this);
     
       default:
         break;

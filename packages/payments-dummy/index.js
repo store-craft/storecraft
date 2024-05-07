@@ -176,6 +176,14 @@ export class DummyPayments {
       `payment with ID=${create_result} is not in a good state !!!`
     );
 
+    await this.db.set(
+      payment.id,
+      {
+        ...payment,
+        status: this.config.intent_on_checkout==='AUTHORIZE' ? 'authorized' : 'captured',
+      }
+    );
+
     return {
       payment: this.config.intent_on_checkout==='AUTHORIZE' ? 
             PaymentOptionsEnum.authorized : PaymentOptionsEnum.captured,

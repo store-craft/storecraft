@@ -538,8 +538,8 @@ const register_checkout = (registry) => {
 
   registry.registerPath({
     method: 'post',
-    path: `/pricing`,
-    description: `Get a pricing for an order. order should at least have the line items, shipping and coupons`,
+    path: `/checkout/pricing`,
+    description: 'Get a pricing for an order. order should at least have the `line items`, `shipping` and `coupons`',
     summary: `Get a pricing for an order`,
     tags: ['checkout'],
     request: {
@@ -549,7 +549,22 @@ const register_checkout = (registry) => {
           "application/json": {
             schema: orderDataSchema,
             example: {
-
+              line_items: [
+                {
+                  id: 'pr_....',
+                  qty: 2
+                }
+              ],
+              shipping_method: {
+                id: 'ship_....'
+              },
+              coupons: [
+                'special-100'
+              ],
+              contact: {
+                customer_id: 'au_.... (can also be cus_...)'
+              }
+        
             }
           }
         }
@@ -562,6 +577,116 @@ const register_checkout = (registry) => {
           'application/json': {
             schema: pricingDataSchema,
             example: {
+              "subtotal_discount": 0,
+              "subtotal_undiscounted": 50,
+              "subtotal": 50,
+              "total": 100,
+              "quantity_total": 1,
+              "quantity_discounted": 0,
+              "errors": [],
+              "evo": [
+                {
+                    "quantity_discounted": 0,
+                    "quantity_undiscounted": 1,
+                    "discount": {
+                        "active": true,
+                        "application": {
+                            "id": 0,
+                            "name": "Automatic",
+                            "name2": "automatic"
+                        },
+                        "handle": "10-off-api-products-discounts-test-js-6",
+                        "priority": 0,
+                        "title": "10% OFF (6)",
+                        "info": {
+                            "details": {
+                                "meta": {
+                                    "id": 0,
+                                    "type": "regular",
+                                    "name": "Regular Discount"
+                                },
+                                "extra": {
+                                    "fixed": 0,
+                                    "percent": 10
+                                }
+                            },
+                            "filters": [
+                                {
+                                    "meta": {
+                                        "id": 2,
+                                        "type": "product",
+                                        "op": "p-in-handles",
+                                        "name": "Product has ID"
+                                    },
+                                    "value": [
+                                        "pr-api-products-discounts-test-js-1",
+                                        "pr-api-products-discounts-test-js-2"
+                                    ]
+                                }
+                            ]
+                        },
+                        "id": "dis_66333fb405ea3a380bbc970b",
+                        "created_at": "2024-05-02T07:24:36.038Z",
+                        "updated_at": "2024-05-02T07:24:36.038Z",
+                        "search": [
+                            "handle:10-off-api-products-discounts-test-js-6",
+                            "10-off-api-products-discounts-test-js-6",
+                            "id:dis_66333fb405ea3a380bbc970b",
+                            "dis_66333fb405ea3a380bbc970b",
+                            "66333fb405ea3a380bbc970b",
+                            "active:true",
+                            "10",
+                            "6",
+                            "10% off (6)",
+                            "app:0",
+                            "app:automatic",
+                            "type:0",
+                            "type:regular"
+                        ]
+                    },
+                    "discount_code": "10-off-api-products-discounts-test-js-6",
+                    "total_discount": 0,
+                    "subtotal": 50,
+                    "total": 100,
+                    "line_items": [
+                        {
+                            "id": "pr-api-collections-products-test-js-1",
+                            "qty": 1,
+                            "price": 50,
+                            "data": {
+                                "handle": "pr-api-collections-products-test-js-1",
+                                "active": true,
+                                "price": 50,
+                                "qty": 4,
+                                "title": "product 1",
+                                "id": "pr_66333f4705ea3a380bbc96e5",
+                                "created_at": "2024-05-02T07:22:47.732Z",
+                                "updated_at": "2024-05-05T09:53:37.633Z"
+                            },
+                            "stock_reserved": 0
+                        }
+                    ]
+                }
+              ],
+              "shipping_method": {
+                  "handle": "ship-api-storefronts-all-connections-test-js-2",
+                  "title": "ship 2",
+                  "price": 50,
+                  "id": "ship_66333fec05ea3a380bbc971b",
+                  "created_at": "2024-05-02T07:25:32.505Z",
+                  "updated_at": "2024-05-05T17:45:20.069Z",
+                  "search": [
+                      "handle:ship-api-storefronts-all-connections-test-js-2",
+                      "ship-api-storefronts-all-connections-test-js-2",
+                      "id:ship_66333fec05ea3a380bbc971b",
+                      "ship_66333fec05ea3a380bbc971b",
+                      "66333fec05ea3a380bbc971b",
+                      "ship",
+                      "2",
+                      "ship 2"
+                  ],
+                  "active": true
+              },
             }
           },
         },

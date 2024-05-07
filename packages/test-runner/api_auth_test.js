@@ -4,6 +4,7 @@ import * as assert from 'uvu/assert';
 import { file_name } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
+import { sleep } from './utils.js';
 
 
 export const admin_email = 'admin@sc.com';
@@ -89,7 +90,7 @@ export const create = app => {
 
     }
 
-    {
+    { 
       // now remove
       await app.api.auth.remove_auth_user(apikey_created_decoded_email);
 
@@ -108,6 +109,7 @@ export const create = app => {
 }
 
 
+
 (async function inner_test() {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
@@ -115,7 +117,6 @@ export const create = app => {
     const { create_app } = await import('./play.js');
     const app = await create_app();
     const s = create(app);
-    console.log('operating local')
     s.after(async () => { await app.db.disconnect() });
     s.run();
   } catch (e) {

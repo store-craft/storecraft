@@ -134,7 +134,12 @@ export const eval_pricing = (app) =>
  * @returns {Promise<T & { pricing: OrderData["pricing"] } >}
  */
 async (order) => {
-  const discounts = await app.api.discounts.list(parse_query(`vql=(active:true)`));
+  const discounts = await app.api.discounts.list(
+    {
+      limit: 1000,
+      vql: '(active:true)'
+    }
+  );
 
   const auto_discounts = discounts.filter(
     it => it.application.id===DiscountApplicationEnum.Auto.id
@@ -197,6 +202,13 @@ async (order_checkout, gateway_handle) => {
   // fetch correct data from backend. we dont trust client
   const order_validated = await validate_checkout(app)(order_checkout);
   
+  const has_pending_errors = order_validated.validation.length > 0;
+
+  // we had reserve errors, so publish it with pricing etc..
+  if(has_pending_errors) {
+    return order_validated;
+  }
+
   // eval pricing with discounts
   const order_priced = await eval_pricing(app)(order_validated);
   
@@ -213,12 +225,6 @@ async (order_checkout, gateway_handle) => {
     },
   }
   
-  const has_pending_errors = order.validation.length > 0;
-
-  // we had reserve errors, so publish it with pricing etc..
-  if(has_pending_errors) {
-    return order;
-  }
 
   // reserve stock
   if(app.config.checkout_reserve_stock_on==='checkout_create') {

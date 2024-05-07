@@ -1,5 +1,12 @@
 import * as assert from 'uvu/assert';
 
+export function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+
 const filter_actual_keys_by_expected = (actual, expected) => {
   return Object.keys(expected).reduce(
     (p, c) => {

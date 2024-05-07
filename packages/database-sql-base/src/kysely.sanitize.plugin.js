@@ -1,12 +1,18 @@
 import { sanitize } from './utils.funcs.js';
 
 /**
+ * @description This `kysely` plugin will process query
+ * results and will do the following:
+ * - sanitize `undefined` and `null` values
+ * - `active` keys will be transformed to `boolean`
+ * 
+ * 
  * @typedef {import('kysely').KyselyPlugin} KyselyPlugin
  * 
  * 
  * @implements {KyselyPlugin}
  */
-export class BooleanPlugin {
+export class SanitizePlugin {
 
   /**
    * 

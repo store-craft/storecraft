@@ -12,7 +12,7 @@ import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
-import { BooleanPlugin } from './src/kysely.boolean.plugin.js';
+import { SanitizePlugin } from './src/kysely.boolean.plugin.js';
 
 
 
@@ -67,7 +67,7 @@ export class SQL {
       dialect: this.#_config.dialect, 
       plugins: [
         new ParseJSONResultsPlugin(),
-        new BooleanPlugin()
+        new SanitizePlugin()
       ]
     });
   }

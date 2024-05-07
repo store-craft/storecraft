@@ -145,6 +145,7 @@ async (order) => {
     d => order.coupons.find(c => c.handle===d.handle)!==undefined
   );
 
+
   const pricing = calculate_pricing(
     order.line_items, 
     auto_discounts, 
@@ -236,7 +237,7 @@ async (order_checkout, gateway_handle) => {
   // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
-  console.log('order', order)
+  // console.log('order', order)
 
   // return order;
   const id = await app.api.orders.upsert(order);

@@ -5,7 +5,7 @@ import { count_regular, delete_entity_values_by_value_or_reporter,
   insert_media_of, insert_search_of, insert_tags_of, 
   regular_upsert_me, where_id_or_handle_table, 
   with_media,  with_tags} from './con.shared.js'
-import { sanitize_array, sanitize } from './utils.funcs.js'
+import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -28,7 +28,7 @@ const upsert = (driver) => {
           await insert_tags_of(trx, item.tags, item.id, item.handle, table_name);
           await report_document_media(driver)(item, trx);
           await regular_upsert_me(trx, table_name, {
-            active: item.active ? 1: 0,
+            active: item.active ? 1 : 0,
             attributes: JSON.stringify(item.attributes),
             description: item.description,
             created_at: item.created_at,
@@ -54,18 +54,17 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id_or_handle, options) => {
-    const r = await driver.client
-      .selectFrom(table_name)
-      .selectAll()
-      .select(eb => [
-        with_media(eb, id_or_handle, driver.dialectType),
-        with_tags(eb, id_or_handle, driver.dialectType),
-      ].filter(Boolean))
-      .where(where_id_or_handle_table(id_or_handle))
-      .executeTakeFirst();
-
-    return sanitize(r);
+  return (id_or_handle, options) => {
+    return driver.client
+    .selectFrom(table_name)
+    .selectAll()
+    .select(eb => [
+      with_media(eb, id_or_handle, driver.dialectType),
+      with_tags(eb, id_or_handle, driver.dialectType),
+    ]
+    .filter(Boolean))
+    .where(where_id_or_handle_table(id_or_handle))
+    .executeTakeFirst();
   }
 }
 

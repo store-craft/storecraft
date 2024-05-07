@@ -484,9 +484,10 @@ export const validationEntrySchema = z
       .describe("title"),
     message: z
       .union([
-        z.literal("out-of-stock"),
-        z.literal("not-enough-stock"),
-        z.literal("some-stock-is-on-hold"),
+        z.literal("shipping-method-not-found"),
+        z.literal("product-not-exists"),
+        z.literal("product-out-of-stock"),
+        z.literal("product-not-enough-stock"),
       ])
       .optional()
       .describe("message"),
@@ -1413,7 +1414,7 @@ export const pricingDataSchema = z
   .describe(
     "Pricing object exaplins how the pricing of an order\nwas calculated given a stack of automatic discounts, coupons,\nline items and shipping method",
   );
-export const orderDataSchema = baseCheckoutCreateTypeSchema
+export const orderDataSchema = checkoutCreateTypeSchema
   .extend(baseTypeSchema.shape)
   .extend({
     status: orderStatusSchema.describe(

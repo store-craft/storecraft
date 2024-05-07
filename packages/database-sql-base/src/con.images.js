@@ -3,7 +3,7 @@ import { SQL } from '../driver.js'
 import { count_regular, delete_me, delete_search_of, 
   insert_search_of, regular_upsert_me, where_id_or_handle_table 
 } from './con.shared.js'
-import { sanitize_array, sanitize } from './utils.funcs.js'
+import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { ID } from '@storecraft/core/v-api/utils.func.js'
@@ -53,14 +53,12 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id_or_handle, options) => {
-    const r = await driver.client
-      .selectFrom(table_name)
-      .selectAll()
-      .where(where_id_or_handle_table(id_or_handle))
-      .executeTakeFirst();
-
-    return sanitize(r);
+  return (id_or_handle, options) => {
+    return driver.client
+    .selectFrom(table_name)
+    .selectAll()
+    .where(where_id_or_handle_table(id_or_handle))
+    .executeTakeFirst();
   }
 }
 

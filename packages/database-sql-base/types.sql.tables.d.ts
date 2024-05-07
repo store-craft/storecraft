@@ -30,7 +30,7 @@ export interface Database {
   images: ImagesTable;
   discounts: DiscountsTable;
 
-  storefronts: StorefrontType;
+  storefronts: StorefrontsTable;
   storefronts_to_other: storefronts_to_other;
 
   products: ProductsTable,
@@ -109,7 +109,7 @@ export interface storefronts_to_other extends entity_to_value {}
 export interface Base {
   attributes: JSONColumnType<AttributeType[] | undefined>;
   description: ColumnType<string | undefined>;
-  active: ColumnType<boolean | undefined>;
+  active: ColumnType<number | undefined>;
   created_at: ColumnType<string>;
   updated_at: ColumnType<string>;
   id: string;
@@ -119,7 +119,7 @@ export interface Base {
 export interface AuthUserTypeTable extends Base {
   email: string;
   password: string;
-  confirmed_mail: boolean
+  confirmed_mail: number
   roles: JSONColumnType<Role[]>;
 }
 

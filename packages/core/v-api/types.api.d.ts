@@ -1491,7 +1491,7 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
 /**
  * @description Order type
  */
-export interface OrderData extends BaseCheckoutCreateType, BaseType {
+export interface OrderData extends CheckoutCreateType, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */

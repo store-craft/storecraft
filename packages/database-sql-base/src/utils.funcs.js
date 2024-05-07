@@ -30,25 +30,26 @@ export const delete_keys = (...keys) => {
  */
 export const sanitize = o => {
   for (const key in o) {
-    if(key.startsWith('_') || (!isDef(o[key]) && o.hasOwnProperty(key))) {
+    const value = o[key];
+
+    if(!isDef(value)) {
       delete o[key];
       continue;
     }
     if(key==='active') {
-      o[key] = Boolean(o[key]);
+      o[key] = Boolean(value);
     }
     else if(key==='price') {
-      o[key] = parseFloat(o[key]);
+      o[key] = parseFloat(value);
     }
     else if(key==='compare_at_price') {
-      o[key] = parseFloat(o[key]);
+      o[key] = parseFloat(value);
     }
-
-    if(Array.isArray(o[key])) {
-      sanitize_array(o[key]);
+    else if(typeof value === 'object') {
+      sanitize(o[key])
     }
-
   }
+
   return o;
 }
 

@@ -45,7 +45,7 @@ async function test() {
   last_test.run();
 }
 
-// test();
+test();
 
 async function test2() {
   const app = await create_app();
@@ -96,4 +96,4 @@ async function test2() {
 
 }
 
-test2();
+// test2();

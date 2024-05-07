@@ -12,7 +12,7 @@ export class StorecraftError extends Error {
     this.code = code;
     this.message = message;
 
-    console.log(JSON.stringify(message, null, 2));
+    // console.log(JSON.stringify(message, null, 2));
   }
 }
 

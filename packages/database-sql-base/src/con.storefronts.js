@@ -9,7 +9,7 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
   count_regular} from './con.shared.js'
-import { sanitize_array, sanitize } from './utils.funcs.js'
+import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -70,7 +70,7 @@ const upsert = (driver) => {
 
           // upsert me
           await regular_upsert_me(trx, table_name, {
-            active: item.active ? 1: 0,
+            active: item.active ? 1 : 0,
             attributes: JSON.stringify(item.attributes),
             description: item.description,
             created_at: item.created_at,
@@ -79,7 +79,7 @@ const upsert = (driver) => {
             handle: item.handle,
             published: item.published, 
             title: item.title,
-            video: item.video
+            video: item.video,
           });
         }
       );
@@ -97,7 +97,7 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return async (id_or_handle, options) => {
+  return (id_or_handle, options) => {
     const expand = options?.expand ?? ['*'];
     const expand_all = expand.includes('*');
     const expand_collections = expand_all || expand.includes('collections');
@@ -106,22 +106,21 @@ const get = (driver) => {
     const expand_shipping = expand_all || expand.includes('shipping_methods');
     const expand_posts = expand_all || expand.includes('posts');
 
-    const r = await driver.client
-      .selectFrom(table_name)
-      .selectAll()
-      .select(eb => [
-        with_media(eb, id_or_handle, driver.dialectType),
-        with_tags(eb, id_or_handle, driver.dialectType),
-        expand_collections && storefront_with_collections(eb, id_or_handle, driver.dialectType),
-        expand_products && storefront_with_products(eb, id_or_handle, driver.dialectType),
-        expand_discounts && storefront_with_discounts(eb, id_or_handle, driver.dialectType),
-        expand_shipping && storefront_with_shipping(eb, id_or_handle, driver.dialectType),
-        expand_posts && storefront_with_posts(eb, id_or_handle, driver.dialectType),
-      ].filter(Boolean))
-      .where(where_id_or_handle_table(id_or_handle))
-      .executeTakeFirst();
-
-    return sanitize(r);
+    return driver.client
+    .selectFrom(table_name)
+    .selectAll()
+    .select(eb => [
+      with_media(eb, id_or_handle, driver.dialectType),
+      with_tags(eb, id_or_handle, driver.dialectType),
+      expand_collections && storefront_with_collections(eb, id_or_handle, driver.dialectType),
+      expand_products && storefront_with_products(eb, id_or_handle, driver.dialectType),
+      expand_discounts && storefront_with_discounts(eb, id_or_handle, driver.dialectType),
+      expand_shipping && storefront_with_shipping(eb, id_or_handle, driver.dialectType),
+      expand_posts && storefront_with_posts(eb, id_or_handle, driver.dialectType),
+    ]
+    .filter(Boolean))
+    .where(where_id_or_handle_table(id_or_handle))
+    .executeTakeFirst();
   }
 }
 

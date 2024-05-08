@@ -24,13 +24,14 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'sf', storefrontTypeUpsertSchema, 
+  (before) => {
+    return {
+      ...before,
+      handle: before.handle ?? to_handle(before.title)
+    };
+  },
   (final) => {
-    assert(
-      [final.handle].every(
-        h => to_handle(h)===h
-      ),
-      'Handle or Values are invalid', 400
-    );
+
     return [];
   }
 )(item);

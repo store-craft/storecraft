@@ -53,6 +53,7 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'order', orderDataUpsertSchema, 
+  (before) => before,
   (final) => {
     return create_search_index(final);
   }

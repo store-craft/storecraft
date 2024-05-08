@@ -35,14 +35,13 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'pr', productTypeUpsertSchema.or(variantTypeUpsertSchema), 
+  (before) => {
+    return {
+      ...before,
+      handle: before.handle ?? to_handle(before.title)
+    }
+  },
   (final) => {
-
-    assert(
-      [final.handle].every(
-        h => to_handle(h)===h
-      ),
-      'Handle is invalid', 400
-    );
     return union(
       final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
       final?.collections?.map(c => `col:${c?.id}`),

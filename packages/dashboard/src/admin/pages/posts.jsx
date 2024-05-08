@@ -38,7 +38,7 @@ export default ({}) => {
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden shadow-md 
-                      dark:shadow-slate-900 shelf-border-color'>      
+                      dark:shadow-slate-900 border shelf-border-color'>      
         <TopActions 
             ref={ref_actions} reload={onReload}
             createLink='/pages/posts/create'

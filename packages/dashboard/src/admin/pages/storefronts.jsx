@@ -5,19 +5,12 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
-const test = {
-  title: 'call of duty',
-  handle: 'call-of-duty-wii-perfect',
-  desc : 'blah blah blah',
-  price: 50,
-  qty: 1,
-  updatedAt : 39203023,
-  collections: ['ps2-games', 'favorites'],
-  tags : ['console_ps2', 'genre_action', 'region_ntsc'],
-  search: ['t1', 't2', 't3'],
-  media : ['url1', 'url2']
-}
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').StorefrontType, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 

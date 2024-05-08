@@ -85,14 +85,22 @@ overflow-x-auto inline-block whitespace-nowrap';
  * @prop {string} [className]
  * @prop {string} [extra]
  * @prop {React.ReactNode} [children]
+ */ 
+
+/** 
+ * @template T
  * 
- * @typedef {import('./table-schema-view.jsx').TableSchemaViewComponentParams<string> & 
-*   InternalSpanParams & 
-*   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
-* } SpanParams
-* 
-* @param {SpanParams} param
-*/
+ * @typedef {import('./table-schema-view.jsx').TableSchemaViewComponentParams<string, T> & 
+ *   InternalSpanParams & 
+ *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+ * } SpanParams
+ */
+
+/**
+ * @template T
+ * 
+ * @param {SpanParams<T>} params
+ */
 export const Span = (
   {
     value, children, className, 
@@ -100,6 +108,7 @@ export const Span = (
   }
 ) => {
 
+  
   const readable_span_cls = 'overflow-x-auto inline-block whitespace-nowrap'
   const merged = `${readable_span_cls} ${className} ${extra}`
   return (
@@ -445,9 +454,10 @@ export const withCard = (
 
 /**
  * This component is used in a `TableSchemaView` 
+ * @template T
  * 
- * 
- * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams
+ * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams<
+ *  any, T>
  * } params 
  */
 export const RecordActions = (
@@ -494,9 +504,10 @@ export const RecordActions = (
   { 
   context?.editDocumentUrl && 
   <LinkWithState 
-        to={context.editDocumentUrl(id)} draggable='false' 
-        current_state={() => context?.getState && context?.getState()}
-        >
+      to={context.editDocumentUrl(id)} 
+      draggable='false' 
+      current_state={() => context?.getState && context?.getState()}
+      >
     <BiEditAlt 
       className='ml-3 text-2xl text-pink-500 
                  stroke-0 hover:stroke-1' />

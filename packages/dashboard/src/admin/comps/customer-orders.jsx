@@ -32,7 +32,7 @@ const CustomerOrders = (
         ) 
       },
       { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
-      { key: 'pricing.total', name: 'Price', comp: Span },
+      { key: 'pricing.total', name: 'Price', comp: Span, comp_params: {className: 'font-bold'} },
       { 
         key: 'status.fulfillment.name', name: 'Status', 
         comp: ({value}) => (
@@ -46,7 +46,7 @@ const CustomerOrders = (
 
 
   return (
-<div {...rest}>
+<div {...rest} >
   <ResourceView 
       limit={5}
       resource={`customers/${value?.email}/orders`}

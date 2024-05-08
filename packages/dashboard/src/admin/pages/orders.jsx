@@ -7,10 +7,32 @@ import OrdersQuickSearchActions, { id2ColorFulfill }
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import MDView from '../comps/md-view.jsx'
 
+/**
+ * 
+ * @param {import('@storecraft/core/v-api').OrderData} item 
+ */
+const extract_contact_field = item => {
+  const contact = item?.contact;
+
+  return contact?.firstname ?
+    contact?.firstname + (contact?.lastname ? ' ' + contact?.lastname : '') : 
+    contact?.email ?? 'anonymous'
+}
+
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').OrderData, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
-    key: 'contact.email', name: 'Customer', comp: Span 
+    key: 'contact', name: 'Customer',
+    comp: ({context, value}) => (
+      <MDView value={extract_contact_field(context?.item)} 
+              className='overflow-x-auto max-w-20 flex-shrink' />
+    ),
   },
   { 
     key: 'pricing.total', name: 'Price', comp: Span, 
@@ -70,7 +92,8 @@ export default ({}) => {
             data={page} 
             fields={schema_fields} />
         <BottomActions 
-            prev={prev} next={next} 
+            prev={prev} 
+            next={next} 
             limit={query_api.limit}
             onLimitChange={onLimitChange} />
       </div>    

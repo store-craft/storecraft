@@ -28,7 +28,6 @@ const contact_schema = {
   comp: withCard(Div, {className : ''}), 
   comp_params : { className:'w-full'},
   fields: [
-
     { 
       key: 'email', name: 'Email', type: 'email', 
       validate: true, editable: true, 
@@ -215,17 +214,6 @@ const right = {
   ]
 }
 
-const main_schema = {
-  name:'Main', comp: Div, 
-  comp_params : { 
-    className:`w-full gap-5 --justify-center --bg-red-100 items-center \
-              --lg:max-w-max lg:items-start lg:w-full flex flex-col \
-              lg:flex-row --mx-auto`
-  },
-  fields: [
-    contact_schema, address_schema
-  ]
-}
 
 const left = {
   name:'Main', comp: Div, 
@@ -362,7 +350,7 @@ export default (
           key={key} 
           ref={ref_root} 
           field={root_schema} 
-          value={ doc ?? {} } 
+          value={doc ?? {}} 
           context={context}
           isViewMode={isViewMode} 
           className='mt-8 mx-auto' />      

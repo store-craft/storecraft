@@ -51,6 +51,11 @@ export const SpanWithLogo = (
   )
 }
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').ExtensionItemGet, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
     key: 'info.name', name: 'Name', comp: SpanWithLogo, 

@@ -42,6 +42,19 @@ const create_search_index = (data) => {
   );
 }
 
+
+/**
+ * @type {import('./types.api.js').PricingData}
+ */
+const default_pricing = {
+  quantity_discounted: 0,
+  quantity_total: 0,
+  subtotal: 0,
+  subtotal_discount: 0,
+  subtotal_undiscounted: 0,
+  total: 0
+}
+
 /**
  * 
  * @param {import("../types.public.js").App} app
@@ -53,7 +66,12 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'order', orderDataUpsertSchema, 
-  (before) => before,
+  (before) => {
+    return {
+      ...before,
+      pricing: before.pricing ?? default_pricing
+    }
+  },
   (final) => {
     return create_search_index(final);
   }

@@ -81,7 +81,7 @@ const Table = (
                           ix<fields.length-1 ? 
                           'text-center px-3 overflow-x-clip ' : 
                           'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
-                          --backdrop-blur-sm --border-l-2 shadow-2xl w-0'
+                          backdrop-blur-sm --border-l-2 shadow-2xl w-0'
                 } 
                 // width={'10px'}
                 // style={{width:'0.0%'}}
@@ -108,11 +108,12 @@ const Table = (
       fields.map(
         (field, ix) => 
           <th className={
-            ix==0 ? 'text-left pl-3' : 
-                    ix<fields.length-1 ? 
-                    'text-center' : 'text-center pr-3 sticky right-0 --border-l-2 w-0 \
-                    --backdrop-blur-sm '
-                        }
+              ix==0 ? 'text-left pl-3' : 
+                      ix<fields.length-1 ? 
+                      'text-center' : 
+                      'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
+                      backdrop-blur-sm --border-l-2 shadow-2xl w-0'
+                    }
               key={ix} 
               children={field.name} /> 
       )
@@ -121,7 +122,9 @@ const Table = (
   </thead>
   <tbody>
   {
-    data.map((item, ix) => <Record key={ix} item={item} />)
+    data.map(
+      (item, ix) => <Record key={ix} item={item} />
+    )
   }
   </tbody>
 </table>
@@ -147,11 +150,14 @@ export const TableSchemaView = (
 ) => {
 
   return (
-<div className={`w-full --border-x ${className}`}>
+<div className={`w-full ${className}`}>
   <div className='w-full overflow-auto'>
-    <Table context={context} fields={fields} 
-           data={data} recordClassName={recordClassName}
-           className='w-full table-fixed2 whitespace-nowrap'/>
+    <Table 
+        context={context} 
+        fields={fields} 
+        data={data} 
+        recordClassName={recordClassName}
+        className='w-full table-fixed2 whitespace-nowrap'/>
   </div>
 </div>
   )

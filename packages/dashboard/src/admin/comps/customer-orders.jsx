@@ -36,7 +36,9 @@ const CustomerOrders = (
       { 
         key: 'status.fulfillment.name', name: 'Status', 
         comp: ({value}) => (
-          value && <MDView value={`**\`${value.toString()}\`**`} />
+          value && 
+          <MDView value={`**\`${value.toString()}\`**`} 
+                  className='overflow-x-auto max-w-20 flex-shrink' />
         ) 
       },
     ]

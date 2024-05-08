@@ -24,6 +24,7 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'tag', tagTypeUpsertSchema, 
+  (before) => before,
   (final) => {
     
     assert(

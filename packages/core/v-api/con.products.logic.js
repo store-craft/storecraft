@@ -7,6 +7,7 @@ import {
   regular_remove, regular_upsert 
 } from './con.shared.js'
 import { App } from '../index.js';
+import { assert_zod } from './middle.zod-validate.js';
 
 
 /**
@@ -17,6 +18,20 @@ import { App } from '../index.js';
  * } ItemTypeUpsert
  * 
  */
+
+
+/**
+ * 
+ * @param {ItemTypeUpsert} item 
+ */
+export const isVariant = item => {
+  return (
+    ('parent_handle' in item) &&
+    ('parent_id' in item) &&
+    ('variant_hint' in item)
+  );
+}
+
 
 /**
  * @param {App} app
@@ -34,12 +49,21 @@ export const upsert = (app) =>
  * @param {ItemTypeUpsert} item
  */
 (item) => regular_upsert(
-  app, db(app), 'pr', productTypeUpsertSchema.or(variantTypeUpsertSchema), 
+  app, db(app), 'pr', undefined, 
   (before) => {
-    return {
+    before = {
       ...before,
       handle: before.handle ?? to_handle(before.title)
     }
+
+    const is_variant = isVariant(before);
+
+    assert_zod(
+      is_variant ? variantTypeUpsertSchema : productTypeUpsertSchema, 
+      item
+    );
+
+    return before;
   },
   (final) => {
     return union(

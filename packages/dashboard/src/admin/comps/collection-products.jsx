@@ -13,6 +13,18 @@ import { BrowseProducts } from './resource-browse.jsx'
 import useTrigger from '../hooks/useTrigger.js'
 import { TableSchemaView } from './table-schema-view.jsx'
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').ProductType, any, any
+ * >[]}
+ */
+const schema = [
+  { key: 'title', name: 'Title', comp: Span },
+  { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
+  { key: undefined, name: 'Actions', comp: RecordActions },
+]
+
+
 const CollectionBase = forwardRef(
   /**
    * @typedef {object} ImpInterface
@@ -56,12 +68,6 @@ const CollectionBase = forwardRef(
   );
 
   const trigger = useTrigger();
-
-  const schema = useRef([
-    { key: 'title', name: 'Title', comp: Span },
-    { key: 'updated_at', name: 'Last Updated', comp: TimeStampView },
-    { key: undefined, name: 'Actions', comp: RecordActions },
-  ]);
 
   useEffect(
     () => {
@@ -119,7 +125,7 @@ const CollectionBase = forwardRef(
   <TableSchemaView 
       context={context_collection_view} 
       data={page} 
-      fields={schema.current} />
+      fields={schema} />
   <BottomActions 
       prev={prev} 
       next={next} 

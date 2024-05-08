@@ -22,16 +22,24 @@ import { rewrite_media_from_storage, rewrite_media_to_storage } from './con.stor
  * @param {import("../v-database/types.public.js").db_crud<U, G>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
- * @param {<H extends U>(final: H) => string[]} hook hook into final state, returns extra search terms
+ * @param {<H extends U>(final: H) => H} pre_hook Hook before validation, this is 
+ * your chance to fill gaps in data
+ * @param {<H extends U>(final: H) => string[]} post_hook 
+ * hook into final state, returns extra search terms
  * 
  * 
  */
-export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
+export const regular_upsert = (
+  app, db, id_prefix, schema, 
+  pre_hook=x=>x, post_hook=x=>[]
+) => {
 
   /**
    * @param {U} item
    */
   return async (item) => {
+    item = pre_hook(item);
+    
     schema && assert_zod(schema.transform(x => x ?? undefined), item);
 
     // Check if exists
@@ -39,7 +47,7 @@ export const regular_upsert = (app, db, id_prefix, schema, hook=x=>[]) => {
     const final = apply_dates({ ...item, id })
     const search = [
       ...create_search_index(final), 
-      ...hook(final)
+      ...post_hook(final)
     ];
 
     rewrite_media_to_storage(app)(item);

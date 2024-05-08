@@ -5,6 +5,11 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').ShippingMethodType, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 

@@ -5,6 +5,11 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '@/admin/hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').PostType, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 
@@ -38,7 +43,7 @@ export default ({}) => {
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden shadow-md 
-                      dark:shadow-slate-900 shelf-border-color'>      
+                      dark:shadow-slate-900 border shelf-border-color'>      
         <TopActions 
             ref={ref_actions} reload={onReload}
             createLink='/pages/posts/create'

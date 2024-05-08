@@ -19,6 +19,11 @@ const test = {
   media : ['url1', 'url2']
 }
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').ProductType, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 

@@ -8,14 +8,25 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').DiscountType, any, any
+ * >[]}
+ */
 const schema_fields = [
-  { key: 'handle', name: 'Code', comp: Code },
-  { key: 'info.details.meta', name: 'Type', comp: DiscountType },
+  { 
+    key: 'handle', name: 'Code', comp: Code 
+  },
+  { 
+    key: 'info.details.meta', name: 'Type', comp: DiscountType 
+  },
   { 
     key: 'updated_at', name: 'Last Updated', 
     comp: TimeStampView, comp_params : { className : 'font-semibold' } 
   },
-  { key: undefined, name: 'Actions', comp: RecordActions },
+  { 
+    key: undefined, name: 'Actions', comp: RecordActions 
+  },
 ]
 
 export default ({}) => {

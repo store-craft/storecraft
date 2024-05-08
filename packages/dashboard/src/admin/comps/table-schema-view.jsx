@@ -10,26 +10,39 @@
  * @property {(id: string) => string} viewDocumentUrl
  */
 
+
 /**
+ * infer `params` of `react` functional component
+ * 
+ * @template T
+ * 
+ * @typedef {T extends React.FC<infer P> ? P: never} Params
+ */
+
+/**
+ * @template {any} T The item general type
+ * @template {keyof T} [Key=keyof T]
+ * @template {React.FC} [Comp=React.FC<TableSchemaViewComponentParams<T, Key>>]
  * 
  * @typedef {object} TableSchemaViewField The `field` parameter given to `TableSchemaView`
  * components
  * 
- * @property {string} key Key of field in the data
+ * @property {Key} key Key of field in the data
  * @property {string} name Name of field
- * @property {React.FC<any>} comp Name of field
- * @property {object} [comp_params] component parameters
- * @property {(x: any) => any} [transform] transform data
+ * @property {React.FC<Params<Comp> & TableSchemaViewComponentParams<T[Key], T>>} comp Name of field
+ * @property {Params<Comp>} [comp_params] component parameters
+ * @property {Key extends undefined ? (x: T) => any : (x: T[Key]) => T[Key]} [transform] transform data
  */
 
+
 /**
- * @template {any} [V=any] The field value type
+ * @template {any} V The field value type
  * @template {any} [T=any] The item general type
  * 
  * 
  * @typedef {object} TableSchemaViewComponentParams The `params` of components of
  * `TableSchemaView`
- * @property {TableSchemaViewField} [field] Key of field in the data
+ * @property {TableSchemaViewField<T>} [field] Key of field in the data
  * @property {TableSchemaViewContext<T>} [context] Context
  * @property {V} [value] Value of field
  */
@@ -47,10 +60,11 @@ const getValue = (key, item, transform = x => x) => {
 }
 
 /**
+ * @template T
  * 
  * @param {object} p
  * @param {any} p.context anything to pass to component
- * @param {TableSchemaViewField[]} p.fields the fields schema
+ * @param {TableSchemaViewField<T>[]} p.fields the fields schema
  * @param {import("@storecraft/core/v-api").BaseType[]} p.data the data
  * @param {string} p.recordClassName
  * @param {string} [p.className]
@@ -81,17 +95,18 @@ const Table = (
                           ix<fields.length-1 ? 
                           'text-center px-3 overflow-x-clip ' : 
                           'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
-                          --backdrop-blur-sm --border-l-2 shadow-2xl w-0'
+                          backdrop-blur-sm --border-l-2 shadow-2xl w-0'
                 } 
                 // width={'10px'}
                 // style={{width:'0.0%'}}
                 key={ix} 
                 children={
-                  <field.comp context={{ item, ...context}} 
-                              field={field} 
-                              value={getValue(field.key, item, field.transform)}
-                              {...field.comp_params} />
-                          } /> 
+                  <field.comp 
+                      context={{ item, ...context}} 
+                      field={field} 
+                      value={getValue(String(field.key), item, field.transform)}
+                      {...field.comp_params} />
+                }/> 
             )
           )
         }
@@ -108,11 +123,12 @@ const Table = (
       fields.map(
         (field, ix) => 
           <th className={
-            ix==0 ? 'text-left pl-3' : 
-                    ix<fields.length-1 ? 
-                    'text-center' : 'text-center pr-3 sticky right-0 --border-l-2 w-0 \
-                    --backdrop-blur-sm '
-                        }
+              ix==0 ? 'text-left pl-3' : 
+                      ix<fields.length-1 ? 
+                      'text-center' : 
+                      'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
+                      backdrop-blur-sm --border-l-2 shadow-2xl w-0'
+                    }
               key={ix} 
               children={field.name} /> 
       )
@@ -121,7 +137,9 @@ const Table = (
   </thead>
   <tbody>
   {
-    data.map((item, ix) => <Record key={ix} item={item} />)
+    data.map(
+      (item, ix) => <Record key={ix} item={item} />
+    )
   }
   </tbody>
 </table>
@@ -129,9 +147,11 @@ const Table = (
 }
 
 /**
+ * @template T the original data type
+ * 
  * @param {object} p
  * @param {any} p.context anything
- * @param {TableSchemaViewField[]} p.fields scehma
+ * @param {TableSchemaViewField<T>[]} p.fields scehma
  * @param {object[]} p.data actual data
  * @param {string} [p.recordClassName]
  * @param {string} [p.className]
@@ -147,11 +167,14 @@ export const TableSchemaView = (
 ) => {
 
   return (
-<div className={`w-full --border-x ${className}`}>
+<div className={`w-full ${className}`}>
   <div className='w-full overflow-auto'>
-    <Table context={context} fields={fields} 
-           data={data} recordClassName={recordClassName}
-           className='w-full table-fixed2 whitespace-nowrap'/>
+    <Table 
+        context={context} 
+        fields={fields} 
+        data={data} 
+        recordClassName={recordClassName}
+        className='w-full table-fixed2 whitespace-nowrap'/>
   </div>
 </div>
   )

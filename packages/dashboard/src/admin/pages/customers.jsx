@@ -5,9 +5,15 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
+
+/**
+ * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
+ *  import('@storecraft/core/v-api').CustomerType, any, any
+ * >[]}
+ */
 const schema_fields = [
   { 
-    key: undefined, name: 'Full Name', comp: Span, 
+    key: 'undefined', name: 'Full Name', comp: Span, 
     transform: 
       /** @param {import('@storecraft/core/v-api').CustomerType} item */
       item => `${item.firstname} ${item.lastname}`,

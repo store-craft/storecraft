@@ -1,6 +1,7 @@
 import { shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
+import { to_handle } from './utils.func.js';
 
 /**
  * @typedef {import('./types.api.js').ShippingMethodType} ItemType
@@ -23,6 +24,12 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'ship', shippingMethodTypeUpsertSchema, 
+  (before) => {
+    return {
+      ...before,
+      handle: before.handle ?? to_handle(before.title)
+    }
+  },
   (final) => {
     return [];
   }

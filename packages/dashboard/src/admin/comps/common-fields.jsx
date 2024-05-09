@@ -179,7 +179,8 @@ export const TimeStampView = ({field, value, ...rest}) => {
  * } InternalMInputParams
  * 
  * @typedef {InternalMInputParams & 
- * import('./common-ui.jsx').InputParams } MInputParams
+ *  Omit<import('./common-ui.jsx').InputParams, keyof InternalMInputParams>
+ * } MInputParams
  * 
  * 
  * @param {MInputParams} params
@@ -197,20 +198,24 @@ export const MInput = (
 
   const onChangeInternal = useCallback(
     (e) => {
-      let val = e.currentTarget.value
+      let val = e.currentTarget.value;
+
       if(type==='number')
-        val = parseFloat(val)
+        val = parseFloat(val);
+
       // console.log(val, type)
       onChange(val)
     }, [onChange, type]
-  )
+  );
 
   return (
-<Input type={field.type} 
-      onWheel={(e) => e.target.blur()}
-      className={className} 
-      value={value ?? ''} 
-      onChange={onChangeInternal} {...rest_rest}/>    
+<Input 
+    type={field.type} 
+    onWheel={(e) => e.target.blur()}
+    className={className} 
+    value={value ?? ''} 
+    onChange={onChangeInternal} 
+    {...rest_rest}/>    
   )
 
 }
@@ -265,12 +270,12 @@ export const InputWithClipboard = (
  * } InternalHandleParams
  * 
  * @typedef {InternalHandleParams & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } HandleParams
-* 
-* @param {HandleParams} param
-* 
-*/
+ *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof InternalHandleParams>
+ * } HandleParams
+ * 
+ * @param {HandleParams} param
+ * 
+ */
 export const Handle = (
   { 
     value, field, onChange, context, setError, ...rest
@@ -309,13 +314,21 @@ export const Handle = (
  * } InternalSwitchParams
  * 
  * @typedef {InternalSwitchParams & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } SwitchParams
-* 
-* @param {SwitchParams} param
-* 
-*/
-export const Switch = ({field, value=true, onChange, ...rest}) => {
+ *  Omit<
+ *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 
+ *    keyof InternalSwitchParams
+ *  >
+ * } SwitchParams
+ * 
+ * @param {SwitchParams} param
+ * 
+ */
+export const Switch = (
+  {
+    field, value=true, onChange, ...rest
+  }
+) => {
+
   const { key, name, comp_params } = field
   const merged = { ...comp_params, ...rest}
   const { className } = comp_params
@@ -324,11 +337,13 @@ export const Switch = ({field, value=true, onChange, ...rest}) => {
 
   const onClickInternal = useCallback(
     () => {
-      const new_toggle = !toggle
-      setToggle(new_toggle)      
-      onChange(new_toggle)
+      const new_toggle = !toggle;
+
+      setToggle(new_toggle);
+      onChange(new_toggle);
+
     }, [toggle, onChange]
-  )
+  );
 
   let cls_container = `relative transition-all duration-300 --border
           rounded-3xl cursor-pointer w-16 h-8 flex flex-row`
@@ -339,7 +354,9 @@ export const Switch = ({field, value=true, onChange, ...rest}) => {
   const cls = cls_all + ' ' + cls_toggle + ' ' + cls_anim
 
   return (
-<div className={cls_container} onClick={onClickInternal}>
+<div 
+    className={cls_container} 
+    onClick={onClickInternal}>
   <div className={cls}  />
 </div>    
   )
@@ -394,6 +411,10 @@ export const ClipBoardCopy = (
 }
 
 /**
+ * @template V The `value` type
+ * @template [C={}] the extra `context` type
+ * @template [O={}] the entire original data type
+ * 
  * 
  * @param {React.FC} Comp 
  * @param {any} [comp_params_inner] 
@@ -405,7 +426,7 @@ export const withCard = (
 ) => {
 
   /**
-   * @param {import('./fields-view.jsx').FieldLeafViewParams<any> & 
+   * @param {import('./fields-view.jsx').FieldLeafViewParams<V, C, O> & 
    * { children: React.ReactNode}} params
    */
   return (
@@ -441,7 +462,7 @@ export const withCard = (
       value={value} 
       onChange={onChange} 
       disabled={disabled} 
-      children={children} 
+      // children={children} 
       error={error} 
       setError={setError} 
       context={context} 

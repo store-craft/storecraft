@@ -34,7 +34,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', 
+      key: 'description', name: 'Description', type: 'text', 
       validate: false, editable: true, desc: 'Optional description',
       comp: withCard(MDEditor),  
       comp_params: {className: 'w-full'} 

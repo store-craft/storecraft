@@ -140,7 +140,9 @@ const CollectionBase = forwardRef(
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *  import('@storecraft/core/v-api').CollectionType,
- *  import('../pages/collection.jsx').Context>
+ *  import('@storecraft/core/v-api').CollectionType,
+ *  import('../pages/collection.jsx').Context,
+ * >
  * } param
  */
 const CollectionProducts = ({ value, context }) => {

@@ -9,34 +9,65 @@ const Editor = dynamic(
 )
 
 /**
- * @typedef {object} InternalMDEditorParams
- * @prop {import("./fields-view.jsx").FieldData} [field]
- * @prop {string} [value]
- * @prop {(value: string) => void} [onChange]
+ * @template C the extra `context` type
+ * @template O the entire original data type
  * 
- * @typedef {InternalMDEditorParams & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } MDEditorParams
-* 
-* @param {MDEditorParams} param
-*/
-const MDEditor = ({field, value, onChange, ...rest}) => {
-  const [md, setMd] = useState(value);
-  const { key, name, comp_params } = field
+ * 
+ * @typedef {import("./fields-view.jsx").FieldLeafViewParams<
+ *  string, C, O
+ * >} InternalMDEditorParams
+ */
 
-  function handleEditorChange(text) {
-    onChange(text)
-    setMd(text)
+
+/**
+ * @template C the extra `context` type
+ * @template O the entire original data type
+ * 
+ * @typedef {InternalMDEditorParams<C, O> & 
+ *  Omit<
+ *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 
+ *    keyof InternalMDEditorParams<C, O>
+ *  >
+ * } MDEditorParams
+ * 
+ */
+
+/** 
+ * @template C the extra `context` type
+ * @template O the entire original data type
+ * 
+ * 
+ * @param {MDEditorParams<C, O>} param
+ */
+const MDEditor = (
+  {
+    field, value, onChange, ...rest
+  }
+) => {
+
+  const [md, setMd] = useState(value);
+  const { key, name, comp_params } = field;
+
+  /**
+   * 
+   * @param {string} text 
+   */
+  const handleEditorChange = (text) => {
+    onChange(text);
+    setMd(text);
   }
 
   return (
 <div>
-  <Editor preview='edit'  value={md} 
-    onChange={handleEditorChange} {...comp_params}
-    className="bg-slate-400 "
-    // data-color-mode='dark'
-    style={{
-    }} />
+  <Editor 
+      preview='edit'  
+      value={md} 
+      onChange={handleEditorChange} 
+      {...comp_params}
+      className="bg-slate-400 "
+      // data-color-mode='dark'
+      style={{}} />
+      
   {/* <MDEditor.Markdown source={md} style={{ whiteSpace: 'pre-wrap' }} {...comp_params} /> */}
 </div>
   );

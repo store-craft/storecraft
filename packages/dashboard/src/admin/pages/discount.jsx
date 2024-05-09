@@ -90,7 +90,7 @@ const left = {
       comp: withCard(Media),  comp_params: {className: 'w-full'} 
     },
     {
-      key: 'desc', name: 'Description', type: 'text', validate: false, 
+      key: 'description', name: 'Description', type: 'text', validate: false, 
       desc: 'Optional description',
       comp: withCard(MDEditor),
       comp_params: {className: 'w-full'}

@@ -184,11 +184,12 @@ export const Input = forwardRef(
 
   const cls = overrideClass ? className : `${InputDefaultClass} ${className}`
     return (
-  <input {...rest}
-        ref={ref}
-        onWheel={(e) => e.target.blur()}
-        className={cls} 
-        />    
+  <input 
+      {...rest}
+      ref={ref}
+      onWheel={(e) => e.target.blur()}
+      className={cls} 
+      />    
     )
   }
 )
@@ -311,7 +312,7 @@ export const withBling2 = (Comp) => {
 }
 
 
-export const Div = ({setError, ...rest}) => 
+export const Div = ({setError=undefined, ...rest}) => 
           (<div {...rest} />);
 
 /**

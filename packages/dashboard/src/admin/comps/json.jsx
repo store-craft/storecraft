@@ -52,8 +52,11 @@ const copyContent = async (text) => {
 }
 
 /**
- * @param {import('./fields-view.jsx').FieldLeafViewParams<object> & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<any> & 
+ *  Omit<
+ *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+ *    keyof import('./fields-view.jsx').FieldLeafViewParams<any>
+ *  >
  * } params
  */
 export const JsonViewCard = (

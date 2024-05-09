@@ -1,6 +1,7 @@
-import React, { forwardRef, useCallback, 
-         useImperativeHandle, useRef, 
-         useState } from 'react'
+import React, { 
+  forwardRef, useCallback, 
+  useImperativeHandle, useRef, 
+  useState } from 'react'
 import { useMemo } from 'react'
 import { useEffect } from 'react'
 
@@ -86,18 +87,37 @@ const validateField = (field, value) => {
   return validator ? validator(value) : [true, undefined]
 }
 
+
 /**
+ * @template T
+ * 
+ * @typedef {T extends React.FC<infer P> ? P : {}} Params
+ */
+
+/**
+ * @template {object} T
+ * @template {(keyof T)} Key
+ * 
+ * @typedef {Key extends undefined ? T : T[Key]} Value
+ */
+
+/**
+ * 
+ * @template O the entire original data type
+ * @template {(keyof O) | undefined} [K=(keyof O) | undefined] the entire original data type
+ * 
  * @typedef {object} FieldData
  * @property {string} [type]
- * @property {string} [key]
+ * @property {K} [key]
  * @property {string} [running_key]
- * @property {any} [defaultValue]
+ * @property {O[K]} [defaultValue]
  * @property {string} [name]
  * @property {string} [desc]
- * @property {FieldData[]} [fields] nested fields
- * @property {React.ComponentType} [comp] a react component
- * @property {object} [comp_params] params for comp
+ * @property {FieldData<O | (O[K]), keyof (O | O[K])>[]} [fields] nested fields
+ * @property {React.FC<FieldLeafViewParams<O, Value<O, K>, any>>} [comp] a react component
+ * @property {Params<React.FC<FieldLeafViewParams<O, Value<O, K>, any>>>} [comp_params] params for comp
  */
+
 
 /**
  * @template {object} [D={}] the data type
@@ -118,7 +138,7 @@ const validateField = (field, value) => {
  * 
  * @typedef {object} FieldViewParams
  * @property {string} [running_key] running key for leafs
- * @property {FieldData} field
+ * @property {FieldData<O>} field
  * @property {O} value
  * @property {string} [className]
  * @property {C} [context]
@@ -127,14 +147,14 @@ const validateField = (field, value) => {
  */
 
 /**
- * @template {any} [V=any] value type
+ * @template O the entire original data type
+ * @template V The `value` type
  * @template {{}} [C={}] extra context
- * @template {any} [O={}] the entire original data type
  * 
  * 
  * @typedef {object} FieldNodeViewParams
  * @property {string} [running_key] running key for leafs
- * @property {FieldData} field
+ * @property {FieldData<O>} field
  * @property {V} value
  * @property {string} [className]
  * @property {FieldContextData<O> & C} [context]
@@ -146,12 +166,12 @@ const validateField = (field, value) => {
  * Every view in the `fields-view` schema will be injected with
  * the following parameters
  * 
+ * @template O the entire original data type
  * @template V The `value` type
  * @template [C={}] the extra `context` type
- * @template [O={}] the entire original data type
  * 
  * @typedef {object} FieldLeafViewParams
- * @property {FieldData} [field]
+ * @property {FieldData<O>} [field]
  * @property {V} [value]
  * @property {FieldContextData<O> & C} [context]
  * @property {boolean} [disabled]
@@ -190,11 +210,11 @@ const compute_running_key = (running_key, field_key) => {
 
 const FieldViewInternal = forwardRef(
   /**
-   * @template V
-   * @template C
    * @template O
+   * @template {O[keyof O]} [V=O[keyof O]] 
+   * @template {any} [C=any]
    * 
-   * @param {FieldNodeViewParams<V, C, O>} param0 
+   * @param {FieldNodeViewParams<O, V, C>} params 
    * @param {*} ref 
    * 
    * @returns {React.ReactElement<FieldLeafViewParams<V, C, O>>}
@@ -205,7 +225,7 @@ const FieldViewInternal = forwardRef(
     }, ref
   ) => {
 
-  running_key = compute_running_key(running_key, field.key)
+  running_key = compute_running_key(running_key, String(field.key))
   // console.log('running_key ', running_key)
   const [validationError, setValidationError] = useState(undefined)
   const [v, setV] = useState(value ?? field.defaultValue)
@@ -318,11 +338,11 @@ const Div = ({...rest}) => (<div {...rest}/>)
 
 const FieldsViewInternal = forwardRef(
   /**
-   * @template V current value type
-   * @template C context type
-   * @template O original data type
+   * @template O
+   * @template V 
+   * @template C
    * 
-   * @param {FieldNodeViewParams<V, C, O>} params 
+   * @param {FieldNodeViewParams<O, V, C>} params 
    * 
    * @param {*} ref 
    */
@@ -333,7 +353,7 @@ const FieldsViewInternal = forwardRef(
     ref
   ) => {
     
-  running_key = compute_running_key(running_key, field.key)
+  running_key = compute_running_key(running_key, String(field.key))
     
   const refs = useRef([])
   useImperativeHandle(
@@ -369,7 +389,7 @@ const FieldsViewInternal = forwardRef(
 
   let Render = field.fields.map(
     (f, ix) => {
-      let vv = f.key ? value?.[f.key] : value
+      let vv = f.key ? value?.[String(f.key)] : value
       const CompTarget = f.fields ? FieldsViewInternal : FieldViewInternal
       return (
         <CompTarget 
@@ -415,13 +435,18 @@ const FieldsViewInternal = forwardRef(
 const FieldsView = forwardRef(
   /**
    * 
-   * @template V
+   * @template O
    * @template {{}} [EC={}]
    * 
-   * @param {FieldViewParams<V, EC>} params
+   * @param {FieldViewParams<O, EC>} params
    * @param {*} ref 
    */
-  ({ field, value, className, context, isViewMode=false, ...rest}, ref) => {
+  (
+    { 
+      field, value, className, context, isViewMode=false, ...rest
+    }, 
+    ref
+  ) => {
 
     useEffect(
       () => {
@@ -429,7 +454,7 @@ const FieldsView = forwardRef(
       }, [value]
     )
 
-    /**@type {FieldContextData<V>} */
+    /**@type {FieldContextData<O>} */
     const ctx = useMemo(
       () => {
         return {
@@ -457,22 +482,5 @@ const FieldsView = forwardRef(
     )
   }
 )
-
-// export const collect_validation_errors = (val) => {
-
-//   const drill = val => {
-//     if(Array.isArray(val))
-//     return val
-  
-//     return Object.entries(val).map(([k, v]) => {
-//       return { 
-//         key: k,
-//         val: drill(v)
-//       }
-//     }).filter(it => !it.val[0])
-//   }
-
-//   return drill(val).map(({key, val : [_, desc, name]}) => `${name}, ${desc}`)
-// }
 
 export default FieldsView

@@ -20,6 +20,14 @@ import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
+
+
+// /**
+//  * @type {import('@/admin/comps/fields-view.jsx').FieldData<
+//  *  import('@storecraft/core/v-api').CollectionType, any, typeof Div
+//  * >
+//  * }
+//  */
 const left = {
   name:'Root', comp: Div, 
   comp_params : { className:'w-full flex flex-col gap-5 max-w- lg:w-[35rem]'},
@@ -44,7 +52,7 @@ const left = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', validate: false, 
+      key: 'description', name: 'Description', type: 'text', validate: false, 
       editable: true, 
       desc : 'Describe the collection for your customers',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 

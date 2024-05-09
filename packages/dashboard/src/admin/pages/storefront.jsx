@@ -118,7 +118,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', 
+      key: 'description', name: 'Description', type: 'text', 
       validate: false, editable: true, 
       comp: withCard(MDEditor),  
       comp_params: {className: 'w-full'} 

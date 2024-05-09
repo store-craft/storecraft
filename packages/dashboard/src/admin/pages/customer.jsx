@@ -78,7 +78,7 @@ const left = {
 }
 
 const fields_address = {
-  key: 'address', name: 'Address', 
+  key: 'address', name: '📬 Address', 
   comp: withCard(Div, { className: 'flex flex-col gap-5'}), 
   desc: 'Address information of your user',
   comp_params: {className: 'w-full h-fit '},
@@ -149,7 +149,7 @@ const right = {
   comp_params: {className: 'w-full lg:w-[19rem] h-fit flex flex-col gap-5'},
   fields : [
     {
-      key: 'tags', name: 'Tags', type: 'compund', 
+      key: 'tags', name: '# Tags', type: 'compund', 
       validate: false, editable: true, 
       comp: withCard(TagsEdit), desc: 'Add tags to your users to \
       better categorize them',

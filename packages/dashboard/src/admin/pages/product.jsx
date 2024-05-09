@@ -39,7 +39,7 @@ const root_left_schema = {
   comp_params : { className:'w-full lg:w-[35rem] flex flex-col gap-5'},
   fields: [
     { 
-      key: 'discounts', name: 'Eligible Discounts',
+      key: 'discounts', name: '🎁 Eligible Discounts',
       desc: 'The following discounts may be applied to this product',
       comp: withCard(
         ProductDiscounts, { className:'' }, true, false
@@ -55,7 +55,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'handle',  name: 'Handle',  type: 'text', validate: false, 
+      key: 'handle',  name: '🔗 Handle',  type: 'text', validate: false, 
       editable: true, 
       comp: withCard(Handle, {className:'w-full h-fit'}),
       desc: 'Product handle uniquely identifies the product. \n\
@@ -78,26 +78,26 @@ const root_left_schema = {
       comp_params: { className: 'w-full h-fit' } 
     },
     { 
-      key: 'description', name: 'Description', type: 'text', 
+      key: 'description', name: '📝 Description', type: 'text', 
       validate: false, editable: true, 
       desc: 'Further describe the product you are selling',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
     {
-      key: 'media', name: 'Media', type: 'text',   
+      key: 'media', name: '📀 Media', type: 'text',   
       validate: false, editable: true, 
       desc: 'Manage and edit your media files',
       comp: withCard(Media),  comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'video', name: 'Video', type: 'text', validate: false, 
+      key: 'video', name: '🎥 Video', type: 'text', validate: false, 
       editable: true, 
       comp: withCard(InputWithClipboard),  
       desc : 'Add a video, that demonstrates the product',
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'price', name: 'Price', type: 'number', validate: true, 
+      key: 'price', name: '🏷️ Price', type: 'number', validate: true, 
       editable: true, 
       comp: withCard(
         withBling(MInput), {className:'h-10', type: 'number'}
@@ -116,7 +116,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'qty', name: 'Quantity', type: 'number', validate: true, 
+      key: 'qty', name: '📦 Quantity', type: 'number', validate: true, 
       editable: true, 
       desc: 'How many units you have in stock for that product',
       comp: withCard(
@@ -161,13 +161,13 @@ const root_right_schema = {
       comp: withCard(RelatedProducts) 
     },
     { 
-      key: 'tags', name: 'Tags', type: 'compund',  validate: false, 
+      key: 'tags', name: '# Tags', type: 'compund',  validate: false, 
       editable: true, 
       desc: 'Tags help you attach attributes to products',
       comp: withCard(TagsEdit),
     },
     { 
-      key: 'collections', name: 'Collections', type: 'compund', 
+      key: 'collections', name: '🗂️ Collections', type: 'compund', 
       validate: false, editable: true, 
       desc: 'Which collections does this product belong to ?',
       comp: withCard(

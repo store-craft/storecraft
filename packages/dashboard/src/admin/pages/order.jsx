@@ -24,7 +24,7 @@ import { PaymentOptionsEnum, FulfillOptionsEnum,
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const contact_schema = {
-  name:'Contact Info', key: 'contact', 
+  name:'🙋🏻‍♂️ Contact Info', key: 'contact', 
   comp: withCard(Div, {className : ''}), 
   comp_params : { className:'w-full'},
   fields: [
@@ -56,7 +56,7 @@ const contact_schema = {
 }
 
 const address_schema = {
-  name:'Address Info', key: 'address', 
+  name:'✉︎ Address Info', key: 'address', 
   comp: withCard(Div, {className : 'w-full flex flex-row flex-wrap gap-3'}), 
   comp_params : { className:'w-full --lg:w-1/2 '},
   fields: [
@@ -125,7 +125,7 @@ const address_schema = {
 }
 
 const status_schema = {
-  name:'Status', key: 'status', 
+  name:'☑ Status', key: 'status', 
   comp: withCard(Div, {className : ''}), 
   comp_params : { className:'w-full'},
   fields: [
@@ -185,7 +185,7 @@ const right = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'shipping_method', name: 'Delivery Method', type: 'compound', 
+      key: 'shipping_method', name: '⛟ Delivery Method', type: 'compound', 
       validate: false, editable: true, 
       desc: 'Decide the delivery method',
       comp: withCard(
@@ -195,7 +195,7 @@ const right = {
       comp_params: {className: 'w-full '} 
     },
     { 
-      key: 'coupons', name: 'Coupons', type: 'compound', 
+      key: 'coupons', name: '🎟️ Coupons', type: 'compound', 
       validate: false, editable: true, 
       desc: 'Which coupons will be applied',
       comp: withCard(
@@ -206,7 +206,7 @@ const right = {
     },
     status_schema, 
     { 
-      key: 'tags', name: 'Tags', type: 'compund',  
+      key: 'tags', name: '# Tags', type: 'compund',  
       validate: false, editable: true, 
       desc: 'Tags help you attach small attributes',
       comp: withCard(TagsEdit),
@@ -232,7 +232,7 @@ const left = {
       comp_params: { className: 'w-full text-xs py-auto --font-semibold' } 
     },
     { 
-      key: 'line_items', name: 'Line Items', type: 'compound', 
+      key: 'line_items', name: '🛍️ Line Items', type: 'compound', 
       validate: false, editable: true, 
       desc: 'Which items are included in the order', 
       defaultValue: [],
@@ -251,7 +251,7 @@ const left = {
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'notes', name: 'Notes', type: 'text', 
+      key: 'notes', name: '🗒 Notes', type: 'text', 
       desc: 'Notes help you add extra information about the order',
       validate: false, editable: true, 
       comp: withCard(MDEditor),  

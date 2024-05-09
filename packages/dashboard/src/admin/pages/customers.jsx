@@ -5,6 +5,16 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 
+/**
+ * 
+ * @param {import('@storecraft/core/v-api').CustomerType} item 
+ */
+const extract_contact_field = item => {
+
+  return item?.firstname ?
+  item?.firstname + (item?.lastname ? ' ' + item?.lastname : '') : 
+  item?.email ?? 'anonymous'
+}
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
@@ -16,7 +26,7 @@ const schema_fields = [
     key: 'undefined', name: 'Full Name', comp: Span, 
     transform: 
       /** @param {import('@storecraft/core/v-api').CustomerType} item */
-      item => `${item.firstname} ${item.lastname}`,
+      item => extract_contact_field(item),
     comp_params: { className: 'font-semibold' } 
   },
   { 

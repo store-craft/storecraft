@@ -44,20 +44,20 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'handle',  name: 'Handle',  type: 'text', validate: false, 
+      key: 'handle',  name: '🔗 Handle',  type: 'text', validate: false, 
       editable: true, desc: 'An identifier for your store',
       comp: withCard(Handle, {className:'w-full h-fit'}),
       comp_params: {className: 'w-full h-fit'} 
     },
     {
-      key: 'products', name: 'Products', type: 'text', 
+      key: 'products', name: '🛍️ Products', type: 'text', 
       validate: false, editable: true, 
       desc: 'Decide which specific products are used by the Store Front',
       comp: withCard(StorefrontProducts, { className:'h-10' }),  
       comp_params: {className: 'w-full h-fit'} 
     },
     {
-      key: 'collections', name: 'Collections', type: 'text', 
+      key: 'collections', name: '🗂️ Collections', type: 'text', 
       validate: false, editable: true, 
       desc: 'Decide which collections meta data is used by the Store Front',
       comp: withCard(SelectResourceWithTags, 
@@ -73,7 +73,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     {
-      key: 'discounts', name: 'Discounts', type: 'text', validate: false, 
+      key: 'discounts', name: '🎟️ Discounts', type: 'text', validate: false, 
       editable: true, desc: 'Decide which discounts are used by the Store Front',
       comp: withCard(SelectResourceWithTags, 
         { 
@@ -89,7 +89,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     {
-      key: 'shipping_methods', name: 'Shipping Methods', type: 'text', 
+      key: 'shipping_methods', name: '🚚 Shipping Methods', type: 'text', 
       validate: false, editable: true, 
       desc: 'Decide which Shipping methods are used by the Store Front',
       comp: withCard(SelectResourceWithTags, 
@@ -104,7 +104,7 @@ const root_left_schema = {
       comp_params: { className: 'w-full h-fit' } 
     },
     {
-      key: 'posts', name: 'Posts', type: 'text', validate: false, 
+      key: 'posts', name: '✍🏼 Posts', type: 'text', validate: false, 
       editable: true, desc: 'Decide which Notes / Posts are used by the Store Front',
       comp: withCard(SelectResourceWithTags, 
         { 
@@ -118,18 +118,18 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', 
+      key: 'description', name: '📝 Description', type: 'text', 
       validate: false, editable: true, 
       comp: withCard(MDEditor),  
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'media', name: 'Media', type: 'text', validate: false, 
+      key: 'media', name: '🖼️ Media', type: 'text', validate: false, 
       editable: true, desc: 'Manage and edit your media files',
       comp: withCard(Media), comp_params: {className: 'w-full '} 
     },
     {
-      key: 'video', name: 'Video', type: 'text', validate: false, 
+      key: 'video', name: '🎥 Video', type: 'text', validate: false, 
       editable: true, desc: 'Add a video url to your store front',
       comp: withCard(withBling(MInput), {className:'h-10'}),  
       comp_params: {className: 'w-full h-fit'} 
@@ -155,7 +155,7 @@ const root_right_schema = {
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'tags', name: 'Tags', type: 'compund', validate: false, 
+      key: 'tags', name: '# Tags', type: 'compund', validate: false, 
       editable: true, 
       desc: 'Tags help you attach extra attributes to your store',
       comp: withCard(TagsEdit) 

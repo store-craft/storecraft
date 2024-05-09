@@ -34,13 +34,13 @@ const root_left_schema = {
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', 
+      key: 'description', name: '📝 Description', type: 'text', 
       validate: false, editable: true, desc: 'Optional description',
       comp: withCard(MDEditor),  
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'media', name: 'Media', type: 'text',   
+      key: 'media', name: '🎬 Media', type: 'text',   
       validate: false, editable: true, 
       desc: 'Manage and edit your media files',
       comp: withCard(Media), comp_params: {className: 'w-full'} 
@@ -67,7 +67,7 @@ const root_right_schema = {
       comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'price', name: 'Price', type: 'number',  validate: true, 
+      key: 'price', name: '🏷️ Price', type: 'number',  validate: true, 
       editable: true, desc: 'The price of the shipping method', 
       comp: withCard(
         withBling(MInput), { className:'h-10', min: '0', type: 'number' }
@@ -75,7 +75,7 @@ const root_right_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     {
-      key: 'tags', name: 'Tags', type: 'compund', validate: false, 
+      key: 'tags', name: '# Tags', type: 'compund', validate: false, 
       editable: true, 
       desc: 'Tags help you attach extra attributes to your methods',
       comp: withCard(TagsEdit) 

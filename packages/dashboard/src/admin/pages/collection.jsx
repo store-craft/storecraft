@@ -36,7 +36,7 @@ const left = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'handle',  name: 'Handle',  type: 'text',  
+      key: 'handle',  name: '🔗 Handle',  type: 'text',  
       validate: false, editable: true, 
       desc : 'A handle uniquely identifies the collection.\nWill be computed \
       automatically if not filled by the product title', 
@@ -44,13 +44,13 @@ const left = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', validate: false, 
+      key: 'desc', name: '📝 Description', type: 'text', validate: false, 
       editable: true, 
       desc : 'Describe the collection for your customers',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'media', name: 'Media', validate: false, editable: true, 
+      key: 'media', name: '🎥 Media', validate: false, editable: true, 
       desc: 'Manage and edit your media files',
       comp: withCard(Media),  
       comp_params: {className: 'w-full'} 
@@ -86,7 +86,7 @@ const right = {
       comp_params: {className: 'w-full'} 
     },
     {
-      key: 'tags', name: 'Tags', type: 'compund', validate: false, 
+      key: 'tags', name: '# Tags', type: 'compund', validate: false, 
       editable: true, 
       desc: 'Use tags to attach attributes to the collection',
       comp: withCard(TagsEdit),

@@ -186,7 +186,7 @@ const CollectionProducts = ({ value, context }) => {
 
   return (
 <Card 
-    name={'Products in collection ' + (count>=0 ? count : '') }
+    name={'🎁 Products in collection ' + (count>=0 ? count : '') }
     className='w-full --lg:w-[30rem] h-fit' 
     border={true}
     error={error}>

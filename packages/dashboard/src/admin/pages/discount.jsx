@@ -43,7 +43,7 @@ const info = {
     className:'w-full flex flex-col gap-5'}, validate:false,  
   fields: [
     {
-      key: 'filters', name: 'Filters', validate: true, 
+      key: 'filters', name: '🔎 Filters', validate: true, 
       validator : discount_filters_validator, 
       desc: 'Define which products or orders (by date, amount \
         or cutomers) are legible for discount',
@@ -51,7 +51,7 @@ const info = {
       comp_params: {className: 'w-full'}
     },
     {
-      key: 'details', name: 'Discount Details', validate: true, 
+      key: 'details', name: '⚙️ Discount Details', validate: true, 
       validator : discount_details_validator,
       desc: 'Choose the type of discount and its behaviour',
       comp: withCard(DiscountDetails, { className: 'w-full h-9'}, true),
@@ -74,7 +74,7 @@ const left = {
       comp_params: {className: 'w-full'}
     },
     { 
-      key: 'handle', name: 'Discount Code', type: 'text', validate: true, 
+      key: 'handle', name: '🎟️ Discount Code', type: 'text', validate: true, 
       validator: validator_code, editable: true, 
       desc: 'A short word identifier for the discount' ,
       comp: withCard(Handle, { 
@@ -84,13 +84,13 @@ const left = {
     },
     info,
     { 
-      key: 'media', name: 'Media', type: 'text', 
+      key: 'media', name: '🎥 Media', type: 'text', 
       desc: 'Manage and edit your media files' ,validate: false, 
       editable: true, 
       comp: withCard(Media),  comp_params: {className: 'w-full'} 
     },
     {
-      key: 'desc', name: 'Description', type: 'text', validate: false, 
+      key: 'description', name: '📝 Description', type: 'text', validate: false, 
       desc: 'Optional description',
       comp: withCard(MDEditor),
       comp_params: {className: 'w-full'}
@@ -154,7 +154,7 @@ const right = {
       comp_params: {className: 'w-full text-xs py-auto --font-semibold '} 
     },
     {
-      key: 'tags', name: 'Tags', type: 'compund', validate: 
+      key: 'tags', name: '# Tags', type: 'compund', validate: 
       false, editable: true, 
       desc: 'Use Tags to quickly attach small attributes, \
       that describe things',

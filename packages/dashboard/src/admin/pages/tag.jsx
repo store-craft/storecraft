@@ -35,7 +35,7 @@ const root_schema = {
       comp_params: { className: 'w-full' } 
     },
     { 
-      key: 'desc', name: 'Description', type: 'text', validate: false, 
+      key: 'description', name: '📝 Description', type: 'text', validate: false, 
       editable: true, desc : 'Describe the purpose of this tag',
       comp: withCard(MDEditor),  comp_params: { className: 'w-full' } 
     },

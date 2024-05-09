@@ -26,12 +26,12 @@ const root_left_schema = {
       comp_params: {className: 'w-full '} 
     },
     { 
-      key: 'text', name: 'Post', type: 'text', validate: false, editable: true, 
+      key: 'text', name: '📝 Post', type: 'text', validate: false, editable: true, 
       desc : 'Write your post with Markdown and HTML',
       comp: withCard(MDEditor),  comp_params: {className: 'w-full'} 
     },
     { 
-      key: 'media', name: 'Media', validate: false, editable: true, 
+      key: 'media', name: '🎬 Media', validate: false, editable: true, 
       desc: 'Manage and edit your media files',
       comp: withCard(Media),  comp_params: {className: 'w-full'} 
     },
@@ -49,7 +49,7 @@ const root_right_schema = {
   comp_params : { className:'w-full lg:w-[19rem] flex flex-col gap-5'},
   fields: [
     { 
-      key: 'tags', name: 'Tags', type: 'compund',  validate: false, editable: true, 
+      key: 'tags', name: '# Tags', type: 'compund',  validate: false, editable: true, 
       desc: 'Tags help you attach attributes',
       comp: withCard(TagsEdit) 
     },

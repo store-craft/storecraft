@@ -103,12 +103,12 @@ const Login = ({ }) => {
 
     <div className='flex-shrink-0 order-1 md:order-1
                     scale-[0.8] -translate-y-6 md:translate-y-0 origin-center
-                    w-fit max-w-[22rem] --sm:w-[22rem] h-fit 
+                    w-full max-w-[22rem] --sm:w-[22rem] h-fit 
                     rounded-md md:scale-[0.80] 
                     m-3 --pb-52 md:m-10 md:origin-top-left'
         sstyle={{transformOrigin: 'top center'}}>
       <LoginForm 
-          className='w-fit ' 
+          className='w-full ' 
           onSubmit={onSubmit} 
           credentials={credentials}
           onChange={onChange} 

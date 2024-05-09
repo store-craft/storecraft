@@ -1,5 +1,5 @@
 import { BiErrorCircle } from "react-icons/bi/index.js"
-import { Bling } from "./common-ui.jsx"
+import { Bling, HR } from "./common-ui.jsx"
 
 /**
  * 
@@ -83,7 +83,7 @@ const LoginForm = (
 ) => {
  return (
 <div className={className}>
- <Bling className='shadow-lg shadow-gray-300'
+ <Bling className='shadow-lg shadow-gray-300 w-full'
         stroke='border-4' to='to-kf-400'>
    <form className='w-full p-5 bg-white flex flex-col text-sm 
                      tracking-wider font-medium gap-5 rounded-md'
@@ -98,9 +98,13 @@ const LoginForm = (
          id='password' label='Password' type='password' 
          desc={`Password of admin user. Initial password is 'admin'`} 
          value={credentials} 
-         onChange={onChange}  autoComplete='on' 
+         onChange={onChange}  
+         autoComplete='on' 
          name='password' />
-     <Bling stroke='border-4 w-full' from='from-kf-500' to='to-pink-400'>
+      <HR />
+     <Bling 
+        stroke='border-4 w-full' rounded='rounded-lg' 
+        from='from-kf-500' to='to-pink-400'>
        <input 
            type='submit' value='LOGIN' 
            title='Login' alt='Login'
@@ -111,12 +115,12 @@ const LoginForm = (
      {
        error &&
        (
-         <div className='flex flex-row flex-nowrap items-center text-base 
+         <div className='flex flex-row flex-nowrap items-center text-base w-full
                          text-red-700 bg-red-100 border border-red-400 
-                         rounded-md p-3 mt-0 '>
+                         rounded-md p-3 gap-3 '>
            <BiErrorCircle 
-               className='flex-inline text-xl flex-shrink-0 opacity-70' /> 
-           <div children={error} className='ml-3' />
+               className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 
+           <div children={error} className='flex-1 whitespace-pre-wrap overflow-x-auto' />
          </div>
        )
      }

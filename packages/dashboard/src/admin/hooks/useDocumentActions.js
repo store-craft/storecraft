@@ -162,7 +162,21 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
       return new_doc;
 
-    }, [upsert, nav, doc, reload, slug]
+    }, [upsert, nav, doc, slug]
+  );
+
+  const reloadPromise = useCallback(
+    async (try_cache=false) => {
+
+      if(slug) {
+        nav(
+          `${slug}/${doc.handle ?? doc.id}/edit`, 
+          { replace: true }
+        );
+      } 
+      await reload(try_cache);
+
+    }, [reload, nav, doc, slug]
   );
 
   const deletePromise = useCallback(
@@ -185,7 +199,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
   return {
     actions: {
-      savePromise, deletePromise, duplicate, 
+      reloadPromise, savePromise, deletePromise, duplicate, 
       navWithState, reload, setError
     },
     error, key, ref_head, ref_root, doc, sdk,

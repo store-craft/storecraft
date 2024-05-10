@@ -33,7 +33,7 @@ export const SimpleLink = (
   }
 ) => {
 
-  console.log('context', context)
+  // console.log('context', context)
 
   const readable_span_cls = 'overflow-x-auto inline-block whitespace-nowrap shelf-text-label-color'
   const merged = `${readable_span_cls} ${className} ${extra}`

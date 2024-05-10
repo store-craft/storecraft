@@ -88,10 +88,11 @@ const Modal = forwardRef(
     <Card 
         name={title} 
         cardClass='shelf-card-light' 
-        className='w-96' onClick={e => e.stopPropagation()} >
+        className='max-w-96 w-full' 
+        onClick={e => e.stopPropagation()} >
       <p 
           children={dm.message} 
-          className='text-red-500 text-base break-words' />
+          className='text-red-500 text-lg break-words w-full whitespace-pre-wrap' />
       <div className='flex flex-row justify-between mt-10 text-base'>
         <BlingButton 
             stroke='border-b-2' 

@@ -293,7 +293,7 @@ export const SelectResourceWithTags = (
       onClick={onClick} 
       onRemove={onRemove} 
       name_fn={name_fn}
-      clsCapsule='bg-kf-500' 
+      clsCapsule='bg-kf-500 dark:bg-kf-500/60' 
       className='--mt-3' />
 </div>
   )

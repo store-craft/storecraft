@@ -193,7 +193,8 @@ export default class Auth {
       }
       else if('access_token' in this.currentAuth) {
         const exp = this.currentAuth?.access_token?.claims?.exp;
-        return exp && (exp*1000 > Date.now() - 60*1000);
+        
+        return exp && (Date.now() < (exp - 60)*1000);
       }
     }
 

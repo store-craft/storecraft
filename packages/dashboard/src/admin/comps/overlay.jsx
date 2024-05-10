@@ -100,7 +100,7 @@ export const Overlay = React.forwardRef(
     enterFrom='opacity-0' enterTo='opacity-100' 
     leave='transition-all duration-300' 
     leaveFrom='opacity-100' leaveTo='opacity-0' 
-    className={`z-50 w-screen h-screen 
+    className={`z-[100] w-screen h-screen 
               bg-teal-900/20 dark:bg-teal-900/10 backdrop-blur-sm fixed inset-0 
               flex flex-row justify-center items-center
              `}

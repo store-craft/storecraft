@@ -165,8 +165,11 @@ const TagsEdit = (
     <HR className='my-5' />
   }
   <CapsulesView 
-    tags={tags} onClick={onClick} onRemove={onRemove}
-    clsCapsule='bg-pink-500' className='mt-3' />
+    tags={tags} 
+    onClick={onClick} 
+    onRemove={onRemove}
+    clsCapsule='bg-pink-500 dark:bg-pink-500/80' 
+    className='mt-3' />
  
 </div>
   )

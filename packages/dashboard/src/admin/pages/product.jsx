@@ -63,7 +63,7 @@ const root_left_schema = {
       comp_params: {className: 'w-full h-fit'} 
     },
     { 
-      key: 'isbn', name: 'ISBN', type: 'text', validate: false, 
+      key: 'isbn', name: 'ISBN 𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃', type: 'text', validate: false, 
       editable: true, 
       comp: withCard(InputWithClipboard),  
       desc : 'Set ISBN identifier',

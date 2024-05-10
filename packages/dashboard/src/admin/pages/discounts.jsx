@@ -7,6 +7,7 @@ import Code from '@/admin/comps/discounts-table-code.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
@@ -38,7 +39,8 @@ export default ({}) => {
    */ 
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, queryCount, 
+    error, queryCount, hasLoaded, resource,
+    resource_is_probably_empty,
     actions: {
       onLimitChange, onReload, prev, next
     }
@@ -47,14 +49,19 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Discounts ${queryCount>=0 ? `(${queryCount})` : ''}`} 
-                  className='mb-5' /> 
+    <ResourceTitle 
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
     <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
-      <DiscountsQuickSearchActions />
+      <DiscountsQuickSearchActions className='mt-5' />
         <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color dark:shadow-slate-900 shadow-md mt-5'>      
+                      shelf-border-color dark:shadow-slate-900 
+                      shadow-md mt-5'>      
         <TopActions 
+            isCollectionEmpty={resource_is_probably_empty}
             reload={onReload} 
             ref={ref_actions} 
             createLink='/pages/discounts/create'

@@ -22,6 +22,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  */
 
 
+
 /**
  * `useCollectionsActions` is a hook designed for the collections pages,
  * for performing:
@@ -60,14 +61,15 @@ const useCollectionsActions = (
    *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
    * } 
    **/
-  const ref_actions = useRef()
-  const ref_use_cache = useRef(true)
+  const ref_actions = useRef();
+  const ref_use_cache = useRef(true);
 
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
    */
   const { 
-    pages, page, loading, error, sdk, queryCount, 
+    pages, page, loading, hasLoaded, error, sdk, queryCount, 
+    resource_is_probably_empty,
     actions: {
       removeDocument, query
     }
@@ -77,7 +79,7 @@ const useCollectionsActions = (
     () => {
       ref_actions.current?.setSearch(
         query_api.vql
-        )
+      );
       // console.log('query_api', query_api)
       query(query_api, ref_use_cache.current);
       
@@ -223,12 +225,15 @@ const useCollectionsActions = (
   );
 
   return {
+    resource,
     query_api, 
     ref_actions, 
     context,
     pages, 
     page, 
     loading, 
+    hasLoaded,
+    resource_is_probably_empty,
     error, 
     queryCount,
     actions: {

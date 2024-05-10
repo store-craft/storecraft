@@ -7,42 +7,26 @@ import { App } from '@storecraft/core'
 import { useStorecraft } from './useStorecraft.js'
 import { useDocumentCache, useQueryCache } from './useStorecraftCache.js'
 import { StorecraftSDK } from '@storecraft/sdk'
+import { 
+  remove as sdk_remove 
+} from "@storecraft/sdk/src/utils.api.fetch.js";
 
 
 /**
- * 
- * @param {string} what id
+ * @param {import("@storecraft/core/v-api").ApiQuery} query_api
+ * @param {number} [page_count=0]
+ * @param {boolean} [hasLoaded=false]
+ * @param {boolean} [loading=false]
  */
-const delete_from_collection = what => {
-
-  /**
-   * 
-   * @param {any[][]} list 
-   */
-  return (list) => {
-    let wx = -1
-    let ix = -1
-    let br = false
-    for (wx=0; wx < list.length; wx++) {
-      for (ix = 0; ix < list[wx].length; ix++) {
-        const id = list[wx][ix].id
-        if(id===what) {
-          br=true; break
-        }
-      }
-      if(br) break
-    }
-  
-    if(!br)
-      return list
-      
-    list = [...list];
-    list[wx] = [...list[wx]];
-    list[wx].splice(ix, 1);
-
-    return list
-  }
-  
+export const resource_is_probably_empty = (
+  query_api, hasLoaded, loading, page_count
+) => {
+  return hasLoaded && !loading && page_count!==undefined && 
+      page_count<=0 && query_api && (
+      !query_api.vql &&
+      !query_api.endAt && !query_api.endBefore &&
+      !query_api.startAt && !query_api.startAfter
+    )
 }
 
 
@@ -162,6 +146,7 @@ export const useCollection = (
   const [pages, setPages] = useState([]);
   const [index, setIndex] = useState(-1);
   const [loading, setIsLoading] = useState(autoLoad);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [queryCount, setQueryCount] = useState(-1);
   const trigger = useTrigger();
   
@@ -195,6 +180,8 @@ export const useCollection = (
           setIndex(idx => idx + 1);
           setPages(ws => [...ws, [...result]]);
         }
+
+        setHasLoaded(true);
 
       } catch (err) {
         setError(err?.code);
@@ -246,35 +233,13 @@ export const useCollection = (
     , [paginate]
   );
 
-  const removeDocument = useCallback(
-    /**@param {string} docId */
-    async (docId) => {
-      try {
-        await sdk[resource].remove(docId);
-
-        cache_document_remove(docId);
-
-        setPages(delete_from_collection(docId));
-
-        return docId;
-
-      } catch (err) {
-
-        setError(err);
-        setIsLoading(false);
-
-        throw err;
-      }
-
-    }, [resource]
-  );
 
   const query = useCallback(
     /**
      * @param {import('@storecraft/core/v-api').ApiQuery} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
-    async (q=q_initial, from_cache=true) => {
+    async (q=_q.current, from_cache=true) => {
       let q_modified = {
         ...q_initial,
         ...q
@@ -327,6 +292,28 @@ export const useCollection = (
       return items;
 
     }, [resource, _internal_fetch_next, cache_query_get, cache_query_put]
+  );
+
+  const removeDocument = useCallback(
+    /**@param {string} document */
+    async (document) => {
+      try {
+        cache_document_remove(document);
+
+        await sdk_remove(sdk, resource, document);
+        await query(_q.current, false);
+        
+        return document;
+
+      } catch (err) {
+
+        setError(err);
+        setIsLoading(false);
+
+        throw err;
+      }
+
+    }, [resource, query]
   );
 
   /**
@@ -409,10 +396,14 @@ export const useCollection = (
     }, []
   );
 
+  const page = index>=0 ? pages[index] : [];
+
   return {
     pages, 
-    page: index>=0 ? pages[index] : [], 
+    page, 
     loading, 
+    hasLoaded,
+    resource_is_probably_empty: resource_is_probably_empty(_q.current, hasLoaded, loading, page.length),
     error, 
     sdk,
     queryCount, 

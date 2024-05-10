@@ -46,8 +46,17 @@ const config = {
 				'fadein': 'fadein 0.5s linear',
 				'fadeout': 'fadeout 0.6s linear',
 				'ltr-linear-infinite': 'move-bg 10s linear infinite',
+        'waving-hand': 'wave 2s linear infinite',
+        'wave': 'spin2 2s ease-out infinite',
 			},
 			keyframes: {
+				'spin2': {
+					'0%' : { transform : 'rotate(-10.0deg) scale(2)'},
+					'20%' : { transform : 'rotate(20.0deg) translateY(-10px) scale(2.2)'},
+					'40%' : { transform : 'rotate(0.0deg) translateY(-4px) scale(2)'},
+					'60%' : { transform : 'rotate(-10.0deg) translateY(-5px) scale(1.4)'},
+					'100%' : { transform : 'rotate(0.0deg) translateY(-0px) scale(0.8)'},
+				},
 				'fadein': {
 					'0%' : { opacity : 0},
 					'100%' : { opacity : 1},
@@ -59,7 +68,27 @@ const config = {
 				'move-bg': {
 					'0%': { 'background-position': '0 0' },
 					'100%': { 'background-position': '100px 100px' },
-				  },
+				},
+        wave: {
+          '0%': { transform: 'rotate(0.0deg)' },
+          '10%': { transform: 'rotate(14deg)' },
+          '20%': { transform: 'rotate(-8deg)' },
+          '30%': { transform: 'rotate(14deg)' },
+          '40%': { transform: 'rotate(-4deg)' },
+          '50%': { transform: 'rotate(10.0deg)' },
+          '60%': { transform: 'rotate(0.0deg)' },
+          '100%': { transform: 'rotate(0.0deg)' },
+        },
+        astro: {
+          '0%': { transform: 'rotate(0.0deg)' },
+          '10%': { transform: 'rotate(14deg)' },
+          '20%': { transform: 'rotate(-8deg)' },
+          '30%': { transform: 'rotate(14deg)' },
+          '40%': { transform: 'rotate(-4deg)' },
+          '50%': { transform: 'rotate(10.0deg)' },
+          '60%': { transform: 'rotate(0.0deg)' },
+          '100%': { transform: 'rotate(0.0deg)' },
+        },
 			},
 			colors: {
 				'typo' : colors.gray['800'],

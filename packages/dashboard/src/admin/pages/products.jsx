@@ -3,8 +3,8 @@ import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, SpanArray, 
   TimeStampView } from '@/admin/comps/common-fields.jsx'
-import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import { ResourceTitle, should_onboard } from '../comps/resource-title.jsx'
 
 const test = {
   title: 'call of duty',
@@ -35,7 +35,7 @@ const schema_fields = [
   { 
     key: 'collections', name: 'Collections', comp: SpanArray, 
     comp_params: { 
-      className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-max 
+      className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-[24rem] 
                   overflow-x-auto inline-block whitespace-nowrap`,
       name_fn: 
         /** 
@@ -65,7 +65,8 @@ export default ({}) => {
    */
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, queryCount, 
+    error, queryCount, hasLoaded, resource,
+    resource_is_probably_empty,
     actions: {
       onLimitChange, onReload, prev, next
     }
@@ -76,14 +77,18 @@ export default ({}) => {
   return (
 <div className='w-full h-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Products ${queryCount>=0 ? `(${queryCount})` : ''}`} 
-          className='mb-5' /> 
+    <ResourceTitle 
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md 
+                      shelf-border-color shadow-md mt-5
                       dark:shadow-slate-900 '>      
         <TopActions 
+            isCollectionEmpty={resource_is_probably_empty}
             ref={ref_actions} 
             reload={onReload} 
             createLink='/pages/products/create'

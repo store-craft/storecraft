@@ -8,6 +8,7 @@ import {
 } from '@/admin/comps/common-ui.jsx'
 import { MarkdownViewCard } from '../comps/markdown-card.jsx'
 import { SettingsApiKeys } from '../comps/settings-api-keys.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 
 /**
@@ -95,14 +96,15 @@ export default ({ ...rest }) => {
    * }
    */
   const { 
-    doc, loading, hasLoaded, error,
+    doc, loading, hasLoaded, error, resource,
   } = useDocument('info', 'settings', true, true);
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
-  <DocumentTitle 
-      major={['settings', 'main']} 
-      className='' />  
+  <ResourceTitle 
+      hasLoaded={hasLoaded} 
+      resource={'settings'}/>
+      
   <HR  className='my-5' />
   <ShowIf show={hasLoaded}>
     <div className='w-full max-w-[40rem] lg:w-fit lg:max-w-none mx-auto'>

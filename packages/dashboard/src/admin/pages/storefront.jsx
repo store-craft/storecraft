@@ -238,7 +238,7 @@ export default (
     */
   const {
     actions: {
-      savePromise, deletePromise, reload, duplicate,
+      reloadPromise, savePromise, deletePromise, reload, duplicate,
       setError
     },
     context, key, sdk,
@@ -270,18 +270,18 @@ export default (
       }
     }, [savePromise, reload]
   );
-  
+
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
   <DocumentTitle major={['storefronts', documentId ?? 'create']} className='' />   
   <DocumentDetails doc={doc} className='mt-5' collectionId={'storefronts'}/>                     
   <Actions 
-      id={doc?.handle} className='mt-5'
+      id={doc?.handle ?? doc?.id} className='mt-5'
       onClickSave={isEditMode ? savePromise : undefined}
       onClickCreate={isCreateMode ? savePromise : undefined}
       onClickPublish={!isCreateMode ? publishPromise : undefined}
       onClickDuplicate={!isCreateMode ? duplicate : undefined}
-      onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
+      onClickReload={!isCreateMode ? reloadPromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} />
   <CreateDate 
       changes_made={hasChanged} ref={ref_head}  

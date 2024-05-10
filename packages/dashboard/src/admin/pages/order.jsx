@@ -22,6 +22,7 @@ import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import { PaymentOptionsEnum, FulfillOptionsEnum, 
   CheckoutStatusEnum } from '@storecraft/core/v-api/types.api.enums.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useCallback } from 'react'
 
 const contact_schema = {
   name:'🙋🏻‍♂️ Contact Info', key: 'contact', 
@@ -322,6 +323,25 @@ export default (
     'orders', documentId, '/pages/orders', mode, base
   );
 
+  const duplicate_mod = useCallback(
+    () => {
+      return duplicate(
+        {
+          payment_gateway: undefined,
+          pricing: undefined,
+          line_items: doc.line_items.map(
+            li => (
+              {
+                ...li,
+                stock_reserved: 0
+              }
+            )
+          )
+        }
+      )
+    }, [duplicate, doc]
+  );
+
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
   <DocumentTitle 
@@ -333,7 +353,7 @@ export default (
       onClickSave={isEditMode ? savePromise : undefined}
       onClickCreate={isCreateMode ? savePromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} 
-      onClickDuplicate={!isCreateMode ? duplicate : undefined} 
+      onClickDuplicate={!isCreateMode ? duplicate_mod : undefined} 
       onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
       className='mt-5 '/>
   <CreateDate 

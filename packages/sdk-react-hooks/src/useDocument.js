@@ -102,6 +102,7 @@ export function useDocument(
           cache_document_put(item);
         }
 
+        // console.log('item', item)
         setData(item);
         setHasLoaded(true);
 

@@ -6,7 +6,7 @@
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: Open Sans,Inter var,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+    font-family: Inter var,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
   }
   .md-view {
     // font-family: 'Open Sans';
@@ -119,6 +119,10 @@
     @apply border-gray-300 dark:border-slate-600;
   }
 
+  .shelf-border-color-blend {
+    @apply border-black/10 dark:border-white/10;
+  }
+
   .shelf-border-color-soft {
     @apply border-gray-300 dark:border-slate-600;
   }
@@ -132,7 +136,7 @@
 
   .shelf-card-light {
     @apply border-gray-300 dark:border-slate-500;
-    @apply bg-white dark:bg-slate-700/50;
+    @apply bg-white dark:bg-slate-700/100;
   }
 
   

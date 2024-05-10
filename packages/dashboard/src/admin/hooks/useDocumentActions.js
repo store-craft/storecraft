@@ -70,7 +70,11 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
       try {
         base_o = base ? decode(base) : {}
       } catch (e) {}
-      const doc = { ...base_o, ...doc_original, ...state?.data }
+      const doc = { 
+        ...base_o, 
+        ...doc_original, 
+        ...(state?.hasChanged ? state?.data : {})
+      }
       return doc
     }, [doc_original, base, state]
   );
@@ -104,8 +108,13 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
     ), []
   );
 
+  
   const duplicate = useCallback(
-    async () => {
+    /**
+     * 
+     * @param {Partial<T>} state_next_extra 
+     */
+    async (state_next_extra={}) => {
 
       const state = context.getState();
 
@@ -119,6 +128,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
           created_at: undefined,
           search: undefined,
           _published: undefined,
+          ...state_next_extra
         },
         hasChanged: false
       }
@@ -156,7 +166,21 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
       return new_doc;
 
-    }, [upsert, nav, doc, reload, slug]
+    }, [upsert, nav, doc, slug]
+  );
+
+  const reloadPromise = useCallback(
+    async (try_cache=false) => {
+
+      if(slug) {
+        nav(
+          `${slug}/${doc.handle ?? doc.id}/edit`, 
+          { replace: true }
+        );
+      } 
+      await reload(try_cache);
+
+    }, [reload, nav, doc, slug]
   );
 
   const deletePromise = useCallback(
@@ -179,7 +203,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
   return {
     actions: {
-      savePromise, deletePromise, duplicate, 
+      reloadPromise, savePromise, deletePromise, duplicate, 
       navWithState, reload, setError
     },
     error, key, ref_head, ref_root, doc, sdk,

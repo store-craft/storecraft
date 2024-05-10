@@ -41,16 +41,17 @@ const CapsulesView = (
     (it, ix) => (
     <div 
         key={ix}
-        className={`flex flex-row items-center border-kf-200 
-                    rounded-2xl w-fit max-w-full px-0.5 py-px --m-1 font-medium
-                    ${clsCapsule}`}>
+        className={`flex flex-row items-center border shelf-border-color-blend
+                    rounded-2xl w-fit max-w-full px-0.5 py-0 --m-1 font-medium
+                    ${clsCapsule}`
+                  }>
       <button 
           children={name_fn(it)} 
           onClick={() => onClick(it)} 
           className='mx-1 max-w-full overflow-x-auto py-0
                       hover:scrollbar-thin scrollbar-none
                       whitespace-nowrap --underline --decoration-double 
-                      decoration-white/60
+                      decoration-white/60 
                       --underline-offset-[1px] --border-b --border-dashed  ' />
       <AiFillCloseCircle 
           className='text-lg cursor-pointer flex-shrink-0'

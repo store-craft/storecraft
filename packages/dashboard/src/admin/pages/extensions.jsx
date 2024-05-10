@@ -4,6 +4,7 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useMemo } from 'react'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * 
@@ -86,7 +87,8 @@ export default ({}) => {
    */ 
   const { 
     context, page, loading, 
-    error, queryCount, 
+    error, queryCount, hasLoaded, resource,
+    resource_is_probably_empty
   } = useCollectionsActions('extensions', '/apps/extensions');
   const context_mod = useMemo(
     () => {
@@ -101,13 +103,20 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title 
+    <ResourceTitle 
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
+
+    {/* <Title 
         children={`Extensions ${page?.length>=0 ? `(${page?.length})` : ''}`} 
-        className='mb-5' /> 
+        className='mb-5' />  */}
     <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md dark:shadow-slate-900'>      
+                      shelf-border-color shadow-md  mt-5
+                      dark:shadow-slate-900'>      
         <TableSchemaView 
             context={context_mod} 
             data={page} 

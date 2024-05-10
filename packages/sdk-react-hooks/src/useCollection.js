@@ -7,6 +7,9 @@ import { App } from '@storecraft/core'
 import { useStorecraft } from './useStorecraft.js'
 import { useDocumentCache, useQueryCache } from './useStorecraftCache.js'
 import { StorecraftSDK } from '@storecraft/sdk'
+import { 
+  remove as sdk_remove 
+} from "@storecraft/sdk/src/utils.api.fetch.js";
 
 
 /**
@@ -267,35 +270,13 @@ export const useCollection = (
     , [paginate]
   );
 
-  const removeDocument = useCallback(
-    /**@param {string} docId */
-    async (docId) => {
-      try {
-        await sdk[resource].remove(docId);
-
-        cache_document_remove(docId);
-
-        setPages(delete_from_collection(docId));
-
-        return docId;
-
-      } catch (err) {
-
-        setError(err);
-        setIsLoading(false);
-
-        throw err;
-      }
-
-    }, [resource]
-  );
 
   const query = useCallback(
     /**
      * @param {import('@storecraft/core/v-api').ApiQuery} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
-    async (q=q_initial, from_cache=true) => {
+    async (q=_q.current, from_cache=true) => {
       let q_modified = {
         ...q_initial,
         ...q
@@ -348,6 +329,30 @@ export const useCollection = (
       return items;
 
     }, [resource, _internal_fetch_next, cache_query_get, cache_query_put]
+  );
+
+  const removeDocument = useCallback(
+    /**@param {string} document */
+    async (document) => {
+      try {
+        cache_document_remove(document);
+
+        await sdk_remove(sdk, resource, document);
+        await query(_q.current, false);
+        
+        // setPages(delete_from_collection(document));
+
+        return document;
+
+      } catch (err) {
+
+        setError(err);
+        setIsLoading(false);
+
+        throw err;
+      }
+
+    }, [resource, query]
   );
 
   /**

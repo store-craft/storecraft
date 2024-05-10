@@ -13,43 +13,6 @@ import {
 
 
 /**
- * 
- * @param {string} what id
- */
-const delete_from_collection = what => {
-
-  /**
-   * 
-   * @param {any[][]} list 
-   */
-  return (list) => {
-    let wx = -1
-    let ix = -1
-    let br = false
-    for (wx=0; wx < list.length; wx++) {
-      for (ix = 0; ix < list[wx].length; ix++) {
-        const id = list[wx][ix].id
-        if(id===what) {
-          br=true; break
-        }
-      }
-      if(br) break
-    }
-  
-    if(!br)
-      return list
-      
-    list = [...list];
-    list[wx] = [...list[wx]];
-    list[wx].splice(ix, 1);
-
-    return list
-  }
-  
-}
-
-
-/**
  * @param {import("@storecraft/core/v-api").ApiQuery} query_api
  * @param {number} [page_count=0]
  * @param {boolean} [hasLoaded=false]
@@ -340,8 +303,6 @@ export const useCollection = (
         await sdk_remove(sdk, resource, document);
         await query(_q.current, false);
         
-        // setPages(delete_from_collection(document));
-
         return document;
 
       } catch (err) {

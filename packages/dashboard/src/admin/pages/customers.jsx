@@ -54,6 +54,7 @@ export default ({}) => {
   const { 
     query_api, context, ref_actions, page, loading, 
     error, queryCount, hasLoaded, resource,
+    resource_is_probably_empty,
     actions: {
       onLimitChange, onReload, prev, next
     }
@@ -62,19 +63,18 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <ShowIf show={!error}>
-      <ResourceTitle 
-          count={queryCount} 
-          hasLoaded={hasLoaded} 
-          resource={resource}/>
-    </ShowIf>
+    <ResourceTitle 
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md  mt-5
                       dark:shadow-slate-900'>      
         <TopActions 
-            isCollectionEmpty={queryCount==0}
+            isCollectionEmpty={resource_is_probably_empty}
             ref={ref_actions} 
             reload={onReload}
             createLink='/pages/customers/create'

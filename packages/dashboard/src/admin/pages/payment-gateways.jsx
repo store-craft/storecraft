@@ -87,7 +87,8 @@ export default ({}) => {
    */ 
   const { 
     context, page, loading, 
-    error, queryCount, hasLoaded, resource
+    error, queryCount, hasLoaded, resource,
+    resource_is_probably_empty
   } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
   const context_mod = useMemo(
     () => {
@@ -104,9 +105,10 @@ export default ({}) => {
   <div className='max-w-[56rem] mx-auto'>
     <ShowIf show={!error}>
       <ResourceTitle 
-          count={page?.length ?? 0} 
-          hasLoaded={hasLoaded} 
-          resource={resource}/>
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
     </ShowIf>
     
     <ShowIf show={error} children={error?.toString()}/>

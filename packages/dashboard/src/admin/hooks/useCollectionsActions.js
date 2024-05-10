@@ -22,6 +22,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  */
 
 
+
 /**
  * `useCollectionsActions` is a hook designed for the collections pages,
  * for performing:
@@ -68,6 +69,7 @@ const useCollectionsActions = (
    */
   const { 
     pages, page, loading, hasLoaded, error, sdk, queryCount, 
+    resource_is_probably_empty,
     actions: {
       removeDocument, query
     }
@@ -77,7 +79,7 @@ const useCollectionsActions = (
     () => {
       ref_actions.current?.setSearch(
         query_api.vql
-        )
+      );
       // console.log('query_api', query_api)
       query(query_api, ref_use_cache.current);
       
@@ -231,6 +233,7 @@ const useCollectionsActions = (
     page, 
     loading, 
     hasLoaded,
+    resource_is_probably_empty,
     error, 
     queryCount,
     actions: {

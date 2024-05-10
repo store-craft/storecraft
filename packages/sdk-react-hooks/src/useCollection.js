@@ -47,6 +47,24 @@ const delete_from_collection = what => {
 
 
 /**
+ * @param {import("@storecraft/core/v-api").ApiQuery} query_api
+ * @param {number} [page_count=0]
+ * @param {boolean} [hasLoaded=false]
+ * @param {boolean} [loading=false]
+ */
+export const resource_is_probably_empty = (
+  query_api, hasLoaded, loading, page_count
+) => {
+  return hasLoaded && !loading && page_count!==undefined && 
+      page_count<=0 && query_api && (
+      !query_api.vql &&
+      !query_api.endAt && !query_api.endBefore &&
+      !query_api.startAt && !query_api.startAfter
+    )
+}
+
+
+/**
  * Next Pagination experiment. `Next` is more important the `previous`,
  * because `previous` can be cached and we go through it as we do `next`.
  * 
@@ -412,11 +430,14 @@ export const useCollection = (
     }, []
   );
 
+  const page = index>=0 ? pages[index] : [];
+
   return {
     pages, 
-    page: index>=0 ? pages[index] : [], 
+    page, 
     loading, 
     hasLoaded,
+    resource_is_probably_empty: resource_is_probably_empty(_q.current, hasLoaded, loading, page.length),
     error, 
     sdk,
     queryCount, 

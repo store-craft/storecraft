@@ -101,11 +101,7 @@ export default ({ ...rest }) => {
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
-  {/* <DocumentTitle 
-      major={['settings', 'main']} 
-      className='' />   */}
   <ResourceTitle 
-      count={undefined} 
       hasLoaded={hasLoaded} 
       resource={'settings'}/>
       

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import Gallery from './gallery.jsx'
 import GallerySelect from './gallery-select.jsx';
 import { Title } from '@/admin/comps/common-ui.jsx';
+import { ResourceTitle } from '@/admin/comps/resource-title.jsx';
 
 export default ({}) => {
   
@@ -9,9 +10,10 @@ export default ({}) => {
 
   return (
 <div className='w-full h-full'>
-  <Title 
-      children={`Gallery`} 
-      className='mb-5 text-3xl' /> 
+  <ResourceTitle 
+      count={undefined} 
+      hasLoaded={true} 
+      resource={'Gallery'}/>
   <GallerySelect 
       ref={ref_gallery} 
       onSelect={console.log}  />

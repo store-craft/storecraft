@@ -4,27 +4,27 @@ import { ResourceOnboardSvg } from "./resource-onboard-svg.jsx"
 import ShowIf from "./show-if.jsx"
 
 
+
 /**
  * 
  * @typedef {object} ResourceTitleParams
- * @prop {number} [count=0]
- * @prop {boolean} [hasLoaded=false]
  * @prop {string} resource
+ * @prop {boolean} [should_onboard=false]
+ * @prop {boolean} [hasLoaded=true]
+ * @prop {number} [overallColelctionCount=undefined]
  * 
  * @param {ResourceTitleParams} params
  */
 export const ResourceTitle = (
   {
-    resource, count, hasLoaded
+    resource, should_onboard=false, hasLoaded=true, overallColelctionCount: overallCollectionCount
   }
 ) => {
-
-  const show_onboarding = hasLoaded && count!==undefined && count<=0;
 
   return  (
 <div className=''>
   
-  <ShowIf show={show_onboarding}>
+  <ShowIf show={should_onboard}>
     <div className='flex flex-row items-center justify-between relative'>
       <div className='flex flex-col flex-wrap items-baseline gap-3 --w-3/4'>
         <div className='flex flex-row gap-3 flex-wrap items-baseline'>
@@ -48,7 +48,7 @@ export const ResourceTitle = (
     </div>    
   </ShowIf>
 
-  <ShowIf show={!show_onboarding}>
+  <ShowIf show={!should_onboard}>
     <div className='flex flex-col gap-3'>
     
       <GradientText 
@@ -56,11 +56,10 @@ export const ResourceTitle = (
           className='bg-gradient-to-r from-pink-500 to-kf-500 
           dark:from-kf-600 dark:to-pink-500 text-5xl 
           inline-flex tracking-wide' />
-      {
-        count!==undefined &&
+      { overallCollectionCount!==undefined &&
         <Title 
-          children={`${count} items`} 
-          className={count > 0 ? 'animate-fadein' : 'opacity-0'} /> 
+          children={`${Math.max(overallCollectionCount ?? 0, 0)} items`} 
+          className={hasLoaded ? 'animate-fadein' : 'opacity-0'} /> 
       }      
     </div>
   </ShowIf>

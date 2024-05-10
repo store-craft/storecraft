@@ -87,7 +87,8 @@ export default ({}) => {
    */ 
   const { 
     context, page, loading, 
-    error, queryCount, hasLoaded, resource
+    error, queryCount, hasLoaded, resource,
+    resource_is_probably_empty
   } = useCollectionsActions('extensions', '/apps/extensions');
   const context_mod = useMemo(
     () => {
@@ -102,12 +103,11 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <ShowIf show={!error}>
-      <ResourceTitle 
-          count={page?.length ?? 0} 
-          hasLoaded={hasLoaded} 
-          resource={resource}/>
-    </ShowIf>
+    <ResourceTitle 
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
 
     {/* <Title 
         children={`Extensions ${page?.length>=0 ? `(${page?.length})` : ''}`} 

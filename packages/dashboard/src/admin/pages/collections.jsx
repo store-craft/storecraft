@@ -38,6 +38,7 @@ export default ({}) => {
     query_api, context, ref_actions, page, 
     loading, hasLoaded,
     error, queryCount, resource,
+    resource_is_probably_empty,
     actions: {
       onLimitChange, onReload, prev, next
     }
@@ -50,9 +51,10 @@ export default ({}) => {
   <div className='max-w-[56rem] mx-auto'>
     <ShowIf show={!error}>
       <ResourceTitle 
-          count={queryCount} 
-          hasLoaded={hasLoaded} 
-          resource={resource}/>
+        should_onboard={resource_is_probably_empty}
+        overallColelctionCount={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
     </ShowIf>
     <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error && page}>
@@ -60,7 +62,7 @@ export default ({}) => {
                       shelf-border-color shadow-md mt-5 
                       dark:shadow-slate-900 '>      
         <TopActions 
-            isCollectionEmpty={queryCount==0}
+            isCollectionEmpty={resource_is_probably_empty}
             ref={ref_actions} 
             reload={onReload}  
             createLink='/pages/collections/create'

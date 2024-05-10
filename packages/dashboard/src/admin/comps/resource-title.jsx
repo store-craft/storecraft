@@ -53,7 +53,7 @@ export const ResourceTitle = (
     
       <GradientText 
           children={resource}
-          className='bg-gradient-to-r from-pink-500 to-kf-500 
+          className='bg-gradient-to-r from-kf-600 to-pink-500 
           dark:from-kf-600 dark:to-pink-500 text-5xl 
           inline-flex tracking-wide' />
       { overallCollectionCount!==undefined &&

@@ -35,7 +35,7 @@ const schema_fields = [
   { 
     key: 'collections', name: 'Collections', comp: SpanArray, 
     comp_params: { 
-      className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-max 
+      className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-[24rem] 
                   overflow-x-auto inline-block whitespace-nowrap`,
       name_fn: 
         /** 

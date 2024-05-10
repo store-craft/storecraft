@@ -270,7 +270,6 @@ export default (
       }
     }, [savePromise, reload]
   );
-  console.log(doc)
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>

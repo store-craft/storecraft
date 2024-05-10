@@ -70,7 +70,11 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
       try {
         base_o = base ? decode(base) : {}
       } catch (e) {}
-      const doc = { ...base_o, ...doc_original, ...state?.data }
+      const doc = { 
+        ...base_o, 
+        ...doc_original, 
+        ...(state?.hasChanged ? state?.data : {})
+      }
       return doc
     }, [doc_original, base, state]
   );

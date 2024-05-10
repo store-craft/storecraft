@@ -19,34 +19,6 @@ const OrderDeliveryMethod = (
   const [ v, setV ] = useState(value)
   const { key, comp_params } = field
 
-  const onUpdateName = useCallback(
-    /**
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-    (e) => {
-      const name = String(e.currentTarget.value)
-      const vnew = {
-        ...v, name
-      }     
-      setV(vnew)
-      onChange(vnew)
-    }, [v, onChange]
-  )
-  
-  const onUpdatePrice = useCallback(
-    /**
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-    (e) => {
-      const price = parseFloat(e.currentTarget.value)
-      const vnew = {
-        ...v, price
-      }
-      setV(vnew)
-      onChange(vnew)
-    }, [v, onChange]
-  )
-  
   const onSelect = useCallback(
     /** @param {typeof value} t  */
     (t) => {
@@ -54,7 +26,7 @@ const OrderDeliveryMethod = (
       onChange(t)
     },
     [onChange]
-  )
+  );
 
   return (
 <div {...comp_params}>
@@ -69,12 +41,12 @@ const OrderDeliveryMethod = (
         ship => ship.title
       } />
 
-  <HR className='w-full mt-3' />
+  <HR className='w-full mt-5' />
   <p children='Method' className='mt-2 shelf-text-minor'/>
 
   <BlingInput 
-      className='mt-1'
-      onChange={onUpdateName} 
+      stroke=''
+      className='mt-1 pointer-events-none'
       value={v?.title} 
       placeholder='Shipping Method' 
       type='text' />
@@ -83,9 +55,9 @@ const OrderDeliveryMethod = (
   <div className='flex flex-row items-center h-fit w-full mt-1'>
 
     <BlingInput 
-        className='mt-1 w-full'
+        stroke=''
+        className='mt-1 w-full pointer-events-none'
         onWheel={(e) => e.target.blur()}
-        onChange={onUpdatePrice}
         value={v?.price} 
         placeholder='Price' 
         type='number' min='0' />

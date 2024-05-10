@@ -104,8 +104,13 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
     ), []
   );
 
+  
   const duplicate = useCallback(
-    async () => {
+    /**
+     * 
+     * @param {Partial<T>} state_next_extra 
+     */
+    async (state_next_extra={}) => {
 
       const state = context.getState();
 
@@ -119,6 +124,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
           created_at: undefined,
           search: undefined,
           _published: undefined,
+          ...state_next_extra
         },
         hasChanged: false
       }

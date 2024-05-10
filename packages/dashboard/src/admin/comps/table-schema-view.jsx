@@ -94,18 +94,23 @@ const Table = (
                   ix==0 ? 'text-start pl-3 overflow-x-scroll' : 
                           ix<fields.length-1 ? 
                           'text-center px-3 overflow-x-clip ' : 
-                          'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
-                          backdrop-blur-sm --border-l-2 shadow-2xl w-0'
+                          'text-end pr-3 right-0 bg-white/60 dark:bg-transparent \
+                          sticky z-0  --border-l-2 shadow-2xl w-0'
                 } 
                 // width={'10px'}
                 // style={{width:'0.0%'}}
                 key={ix} 
                 children={
+                  (
+                    <>
+                  {/* <div className={ix==fields.length-1 ? 'w-full h-full backdrop-blur-sm absolute -z-30' : 'hidden'} />   */}
                   <field.comp 
                       context={{ item, ...context}} 
                       field={field} 
                       value={getValue(String(field.key), item, field.transform)}
                       {...field.comp_params} />
+                    </>
+                  )
                 }/> 
             )
           )
@@ -127,7 +132,7 @@ const Table = (
                       ix<fields.length-1 ? 
                       'text-center' : 
                       'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
-                      backdrop-blur-sm --border-l-2 shadow-2xl w-0'
+                      --backdrop-blur-sm --border-l-2 shadow-2xl w-0'
                     }
               key={ix} 
               children={field.name} /> 

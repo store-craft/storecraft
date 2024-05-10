@@ -5,6 +5,7 @@ import { BlingButton } from './common-button.jsx'
 import SelectResource from './select-resource.jsx'
 import { useNavigate } from 'react-router-dom'
 import { HR } from './common-ui.jsx'
+import { enums } from '@storecraft/core/v-api'
 
 /** @param {string} str */
 const isEmpty = (str) => (!str?.trim().length)
@@ -81,22 +82,14 @@ const OrderCouponInfo = (
   
   return (
 <div {...comp_params}>
-  <p children='Coupon Code' className='text-gray-500'/>
-  <div className='flex flex-row items-center mt-1 w-full h-fit'>
-    <BlingInput ref={ref_name} rounded='rounded-md'
-            placeholder='coupon' type='text' 
-            className='mt-1'/>
-    <BlingButton className='mt-1 ml-3 h-10 flex-1' stroke='border-2'
-          children='Add' onClick={onManualAdd} />
-  </div>
-  <HR className='mt-5'/>
   <SelectResource 
-      resource='discounts' layout={1}
+      resource='discounts' 
+      layout={1}
       className='mt-3' 
       transform_fn={
         page => page.filter(
           /** @param {import('@storecraft/core/v-api').DiscountType} it  */
-          it => it.application.id==1 && it.active
+          it => it.application.id==enums.DiscountApplicationEnum.Manual.id && it.active
         )
       }
       onSelect={onSelect}
@@ -104,7 +97,7 @@ const OrderCouponInfo = (
         /** @param {import('@storecraft/core/v-api').DiscountType} d  */
         d => d.handle 
       }
-      header='Add Coupons Codes you defined' 
+      header='Add Coupons you defined' 
       clsHeader='text-gray-500' 
       clsReload='text-pink-500 text-3xl' />
 

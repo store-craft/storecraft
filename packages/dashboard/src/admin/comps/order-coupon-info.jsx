@@ -1,10 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 import CapsulesView from './capsules-view.jsx'
-import { BlingInput } from './common-ui.jsx'
-import { BlingButton } from './common-button.jsx'
 import SelectResource from './select-resource.jsx'
 import { useNavigate } from 'react-router-dom'
-import { HR } from './common-ui.jsx'
 import { enums } from '@storecraft/core/v-api'
 
 /** @param {string} str */

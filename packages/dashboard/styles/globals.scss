@@ -119,6 +119,10 @@
     @apply border-gray-300 dark:border-slate-600;
   }
 
+  .shelf-border-color-blend {
+    @apply border-black/10 dark:border-white/10;
+  }
+
   .shelf-border-color-soft {
     @apply border-gray-300 dark:border-slate-600;
   }

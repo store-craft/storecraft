@@ -30,7 +30,7 @@ export const LabelCapsule = (
 
   return (
 <div className={`font-medium cursor-pointer text-white w-fit 
-               p-1 px-2 rounded-full whitespace-nowrap 
+               py-0 border shelf-border-color-blend px-2 rounded-full whitespace-nowrap 
                hover:scale-105 transition-transform inline-block
                ${className} ${bg_color}`} 
                children={lbl} {...rest} />

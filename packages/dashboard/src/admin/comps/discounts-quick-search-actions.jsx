@@ -21,11 +21,13 @@ const DiscountsQuickSearchActions =
     {
       Object.values(DiscountMetaEnum).map(
         it => (
-          <Link key={it.id} 
-                draggable='false'
-                to={`/pages/discounts/q/vql=type:${it.id}`}>
-            <LabelCapsule value={it.name} 
-                          bgColor={discount_types_to_color(it.type)} />
+          <Link 
+              key={it.id} 
+              draggable='false'
+              to={`/pages/discounts/q/vql=type:${it.id}`}>
+            <LabelCapsule 
+                value={it.name} 
+                bgColor={discount_types_to_color(it.type)} />
           </Link>
         )
       )
@@ -35,11 +37,13 @@ const DiscountsQuickSearchActions =
   {
     Object.values(DiscountApplicationEnum).map(
       it => (
-        <Link key={it.id} 
-              draggable='false'
-              to={`/pages/discounts/q/vql=app:${it.name.toLowerCase()}`}>
-          <LabelCapsule value={it.name} 
-                        bgColor={discount_types_to_color(it.type)} />
+        <Link 
+            key={it.id} 
+            draggable='false'
+            to={`/pages/discounts/q/vql=app:${it.name.toLowerCase()}`}>
+          <LabelCapsule 
+              value={it.name} 
+              bgColor={discount_types_to_color(it.type)} />
         </Link>
       )
     )
@@ -50,8 +54,9 @@ const DiscountsQuickSearchActions =
       <Link key={ix} 
             draggable='false'
             to={`/pages/discounts/q/vql=active:${it.v}`}>
-        <LabelCapsule value={it.name} 
-                      bgColor={discount_types_to_color(undefined)} />
+        <LabelCapsule 
+            value={it.name} 
+            bgColor={discount_types_to_color(undefined)} />
       </Link>
         )
     )

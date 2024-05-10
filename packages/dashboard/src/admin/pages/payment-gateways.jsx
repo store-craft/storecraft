@@ -4,6 +4,7 @@ import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useMemo } from 'react'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * 
@@ -86,7 +87,7 @@ export default ({}) => {
    */ 
   const { 
     context, page, loading, 
-    error, queryCount, 
+    error, queryCount, hasLoaded, resource
   } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
   const context_mod = useMemo(
     () => {
@@ -101,12 +102,18 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Payment Gateways ${page?.length>=0 ? `(${page?.length})` : ''}`} 
-                  className='mb-5' /> 
+    <ShowIf show={!error}>
+      <ResourceTitle 
+          count={page?.length ?? 0} 
+          hasLoaded={hasLoaded} 
+          resource={resource}/>
+    </ShowIf>
+    
     <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md dark:shadow-slate-900'>      
+                      shelf-border-color shadow-md mt-5
+                      dark:shadow-slate-900'>      
         <TableSchemaView 
             context={context_mod} 
             data={page} 

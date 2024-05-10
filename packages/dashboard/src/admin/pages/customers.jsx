@@ -4,6 +4,7 @@ import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * 
@@ -52,7 +53,7 @@ export default ({}) => {
    */ 
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, queryCount, 
+    error, queryCount, hasLoaded, resource,
     actions: {
       onLimitChange, onReload, prev, next
     }
@@ -61,14 +62,21 @@ export default ({}) => {
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Customers ${queryCount>=0 ? `(${queryCount})` : ''}`} 
-           className='mb-5' /> 
+    <ShowIf show={!error}>
+      <ResourceTitle 
+          count={queryCount} 
+          hasLoaded={hasLoaded} 
+          resource={resource}/>
+    </ShowIf>
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md dark:shadow-slate-900'>      
+                      shelf-border-color shadow-md  mt-5
+                      dark:shadow-slate-900'>      
         <TopActions 
-            ref={ref_actions} reload={onReload}
+            isCollectionEmpty={queryCount==0}
+            ref={ref_actions} 
+            reload={onReload}
             createLink='/pages/customers/create'
             searchTitle='Search by name, email, uid...' 
             isLoading={loading} />

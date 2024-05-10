@@ -162,6 +162,7 @@ export const useCollection = (
   const [pages, setPages] = useState([]);
   const [index, setIndex] = useState(-1);
   const [loading, setIsLoading] = useState(autoLoad);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [queryCount, setQueryCount] = useState(-1);
   const trigger = useTrigger();
   
@@ -195,6 +196,8 @@ export const useCollection = (
           setIndex(idx => idx + 1);
           setPages(ws => [...ws, [...result]]);
         }
+
+        setHasLoaded(true);
 
       } catch (err) {
         setError(err?.code);
@@ -413,6 +416,7 @@ export const useCollection = (
     pages, 
     page: index>=0 ? pages[index] : [], 
     loading, 
+    hasLoaded,
     error, 
     sdk,
     queryCount, 

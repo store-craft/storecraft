@@ -1,9 +1,9 @@
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, TimeStampView } from '@/admin/comps/common-fields.jsx'
-import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
@@ -35,24 +35,34 @@ export default ({}) => {
    * }
    */ 
   const { 
-    query_api, context, ref_actions, page, loading, 
-    error, queryCount, 
+    query_api, context, ref_actions, page, 
+    loading, hasLoaded,
+    error, queryCount, resource,
     actions: {
       onLimitChange, onReload, prev, next
     }
   } = useCollectionsActions('collections', '/pages/collections');
 
+  // const page=[];
+
   return (
 <div className='h-full w-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Collections ${queryCount>=0 ? `(${queryCount})` : ''}`} 
-                className='mb-5' /> 
-    <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error}>
+      <ResourceTitle 
+          count={queryCount} 
+          hasLoaded={hasLoaded} 
+          resource={resource}/>
+    </ShowIf>
+    <ShowIf show={error} children={error?.toString()}/>
+    <ShowIf show={!error && page}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md dark:shadow-slate-900 '>      
+                      shelf-border-color shadow-md mt-5 
+                      dark:shadow-slate-900 '>      
         <TopActions 
-            ref={ref_actions} reload={onReload}  
+            isCollectionEmpty={queryCount==0}
+            ref={ref_actions} 
+            reload={onReload}  
             createLink='/pages/collections/create'
             searchTitle='Search by Name or Handle' 
             isLoading={loading} />

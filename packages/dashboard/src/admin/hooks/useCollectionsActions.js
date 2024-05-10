@@ -60,14 +60,14 @@ const useCollectionsActions = (
    *  import('@/admin/comps/collection-actions.jsx').ImperativeInterface>
    * } 
    **/
-  const ref_actions = useRef()
-  const ref_use_cache = useRef(true)
+  const ref_actions = useRef();
+  const ref_use_cache = useRef(true);
 
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
    */
   const { 
-    pages, page, loading, error, sdk, queryCount, 
+    pages, page, loading, hasLoaded, error, sdk, queryCount, 
     actions: {
       removeDocument, query
     }
@@ -223,12 +223,14 @@ const useCollectionsActions = (
   );
 
   return {
+    resource,
     query_api, 
     ref_actions, 
     context,
     pages, 
     page, 
     loading, 
+    hasLoaded,
     error, 
     queryCount,
     actions: {

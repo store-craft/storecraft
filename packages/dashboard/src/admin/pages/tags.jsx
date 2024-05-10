@@ -4,6 +4,7 @@ import { Span, SpanArray, RecordActions } from '@/admin/comps/common-fields.jsx'
 import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
@@ -39,7 +40,7 @@ export default ({}) => {
    */ 
   const { 
     query_api, context, ref_actions, page, loading, 
-    error, queryCount, 
+    error, queryCount, hasLoaded, resource,
     actions: {
       onLimitChange, onReload, prev, next
     }
@@ -48,14 +49,19 @@ export default ({}) => {
   return (
 <div className='w-full h-full'>
   <div className='max-w-[56rem] mx-auto'>
-    <Title children={`Tags ${queryCount>=0 ? `(${queryCount})` : ''}`} 
-            className='mb-5' /> 
+    <ResourceTitle 
+        count={queryCount} 
+        hasLoaded={hasLoaded} 
+        resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
     <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md dark:shadow-slate-900'>      
+                      shelf-border-color shadow-md mt-5
+                      dark:shadow-slate-900'>      
         <TopActions 
-            ref={ref_actions} reload={onReload}
+            isCollectionEmpty={queryCount==0}
+            ref={ref_actions} 
+            reload={onReload}
             createLink='/pages/tags/create'
             searchTitle='Search by name, values...' 
             isLoading={loading} />

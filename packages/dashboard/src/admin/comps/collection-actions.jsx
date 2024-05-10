@@ -19,6 +19,7 @@ import { BlingInput } from './common-ui.jsx'
  * @prop {boolean} isLoading
  * @prop {string} [createLink]
  * @prop {string} [className]
+ * @prop {boolean} [isCollectionEmpty=false]
  */
 
 export const TopActions = forwardRef(
@@ -29,7 +30,8 @@ export const TopActions = forwardRef(
    */
   (
     {
-      reload, searchTitle, isLoading, createLink='', className='' 
+      reload, searchTitle, isLoading, createLink='', className='',
+      isCollectionEmpty=false 
     }, ref
   ) => {
 
@@ -60,15 +62,19 @@ export const TopActions = forwardRef(
   <div className={`--border-x  --bg-kf-50 w-full text-grey-800 
                   flex flex-row justify-between items-center px-0 --border-t`}>
     <Link to={createLink} draggable='false' className="m-2">
-      <BlingButton2
-          className='h-9 w-16 text-base rounded-lg' 
-          stroke='border-2' children='add'
-          icon={
-            <IoCreateOutline 
-                className='inline shelf-text-label-color 
-                           text-xl text-grey-800'/>
-          }
-        />
+      <div className={isCollectionEmpty ? 'animate-[wave_1.5s_ease-in-out_infinite]' : ''}>
+        <BlingButton2
+            className='h-9 w-16 text-base rounded-lg' 
+            stroke='border-2' 
+            children='add'
+            icon={
+              <IoCreateOutline 
+                  className='inline shelf-text-label-color 
+                            text-xl text-grey-800'/>
+            }
+          />
+      </div>
+
     </Link>            
     <BlingInput 
         className='m-1 flex-1 h-fit max-w-[20rem]' 

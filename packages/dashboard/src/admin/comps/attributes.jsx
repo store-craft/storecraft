@@ -20,7 +20,7 @@ import { GradientFillIcon } from './common-button.jsx'
  * } params
  * 
  */
-const Attr = (
+const Attribute = (
   { 
     attribute, onChange, onDelete, className 
   }
@@ -146,7 +146,7 @@ const Attributes = (
     {
     atts?.map(
       (it, ix) => 
-        <Attr 
+        <Attribute 
             key={ix} 
             attribute={it} 
             className='w-full'

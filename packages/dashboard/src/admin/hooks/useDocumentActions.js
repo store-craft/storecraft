@@ -130,7 +130,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
           _published: undefined,
           ...state_next_extra
         },
-        hasChanged: false
+        hasChanged: true
       }
 
       ref_head.current.set(false)

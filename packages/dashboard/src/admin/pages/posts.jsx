@@ -38,8 +38,8 @@ export default ({}) => {
   } = useCollectionsActions('posts', '/pages/posts');
 
   return (
-<div className='w-full h-full'>
-  <div className='max-w-[56rem] mx-auto'>
+<div className='w-full h-full overflow-x-clip'>
+  <div className='max-w-[56rem] mx-auto --overflow-x-clip'>
     <ResourceTitle 
         should_onboard={resource_is_probably_empty}
         overallColelctionCount={queryCount} 

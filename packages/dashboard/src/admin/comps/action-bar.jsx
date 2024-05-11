@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { AiOutlineMenuFold } from 'react-icons/ai/index.js'
 import { MdLogout } from 'react-icons/md/index.js'
 import { useAuth } from '@storecraft/sdk-react-hooks'
@@ -41,7 +41,22 @@ const ActionBar = (
   } = useAuth();
   
   const ref_element = useOnClickOutside(
-    () => setOpenNotifications(false)
+    () => {
+      // setDisableEventListener(false);
+      setOpenNotifications(false);
+    }
+  );
+
+  const onClickNotifications = useCallback(
+    /**
+     * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} e 
+     */
+    e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      setOpenNotifications(o => !o);
+    }, []
   );
 
   const user_name = useMemo(
@@ -49,7 +64,7 @@ const ActionBar = (
     [auth]
   );
 
-  // console.log(notify_open)
+  console.log(openNotifications)
   
   return (
 <nav className={className} {...rest}>
@@ -74,7 +89,7 @@ const ActionBar = (
           className='text-2xl cursor-pointer' />   
       <NotificationButton 
           isOpen={openNotifications}
-          onClick={() => !openNotifications && setOpenNotifications(true)}
+          onClick={onClickNotifications}
           /> 
       <DarkMode />
 

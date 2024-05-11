@@ -57,7 +57,7 @@ const Bubble = (
  */
 const NotificationButton = (
   { 
-    isOpen=false, ...rest 
+    isOpen=false, onClick, ...rest 
   }
 ) => {
 
@@ -96,7 +96,7 @@ const NotificationButton = (
   );
   
   return (
-<div className='relative'>
+<div className='relative' onClick={onClick}>
 
   <GradientFillIcon 
       Icon={IoIosNotifications} 

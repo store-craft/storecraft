@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 /**
  * 
- * @param {(e: React.MouseEvent) => void} handler 
+ * @param {(e: Event) => void} handler 
  * 
  */
 const useOnClickOutside = (handler) => {
@@ -13,9 +13,13 @@ const useOnClickOutside = (handler) => {
   useEffect(
     () => {
       /**
-       * @param {any} event
+       * @param {MouseEvent} event
        */
       const listener = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
         if (
           !ref_element.current || 
           ref_element.current.contains(event.target)
@@ -23,15 +27,33 @@ const useOnClickOutside = (handler) => {
           return;
         }
 
+        // console.log('listener');
+
         handler(event);
       };
 
-      document.addEventListener("mousedown", listener);
-      document.addEventListener("touchstart", listener);
+      /**
+       * @param {KeyboardEvent} event
+       */
+      const listener2 = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        if (event.key !== 'Escape') 
+          return;
+
+        // console.log('listener2');
+
+        handler(event);
+      };
+      
+      document.addEventListener("click", listener);
+      document.addEventListener("keydown", listener2);
 
       return () => {
-        document.removeEventListener("mousedown", listener);
-        document.removeEventListener("touchstart", listener);
+        document.removeEventListener("click", listener);
+        document.removeEventListener("keydown", listener2);
       };
       
     }, [handler]

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Bling, BlingInput } from './common-ui.jsx'
 import { MdClose } from 'react-icons/md/index.js'
 import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
@@ -7,7 +7,7 @@ import { GradientFillIcon } from './common-button.jsx'
 /**
  * 
  * @typedef {object} InnerAttrParams
- * @prop {import('@storecraft/core/v-api').AttributeType} val
+ * @prop {import('@storecraft/core/v-api').AttributeType} attribute
  * @prop {(attribute: import('@storecraft/core/v-api').AttributeType) => void} onChange
  * @prop {() => void} onDelete
  * 
@@ -22,7 +22,7 @@ import { GradientFillIcon } from './common-button.jsx'
  */
 const Attr = (
   { 
-    val, onChange, onDelete, className 
+    attribute, onChange, onDelete, className 
   }
 ) => {
 
@@ -32,17 +32,15 @@ const Attr = (
      * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     (key, e) => {
-      e.preventDefault();
-      e.stopPropagation();
 
-      onChange(
-        { 
-          ...val, 
-          [key]: e.currentTarget.value 
-        }
-      );
+      const newAtt = { 
+        ...attribute, 
+        [key]: e.currentTarget.value 
+      };
 
-    }, [onChange, val]
+      onChange(newAtt);
+
+    }, [onChange, attribute]
   );
 
   return (
@@ -60,7 +58,7 @@ const Attr = (
         className='mt-1' 
         stroke='border-b'
         onChange={e => onChangeInternal('key', e)}
-        value={val.key}
+        value={attribute.key}
         placeholder='attribute key' 
         type='text' />
 
@@ -68,7 +66,7 @@ const Attr = (
     <BlingInput 
         className='mt-1' stroke='border-b'
         onChange={e => onChangeInternal('value', e)}
-        value={val.value}
+        value={attribute.value}
         placeholder='attribute value' 
         type='text' 
         />
@@ -96,11 +94,19 @@ const Attributes = (
   }
 ) => {
   
+  const [atts, setAtts] = useState(value);
+
   const onAdd = useCallback(
     () => {
-      onChange([ { key: '', value: '' }, ...value])
-    }, [value, onChange]
+      const newAtts = [...atts, { key: '', value: '' }];
+
+      setAtts(newAtts);
+      onChange(newAtts);
+      
+    }, [atts, onChange]
   );
+
+  console.log(value)
 
   const onChangeInternal = useCallback(
     /**
@@ -109,16 +115,23 @@ const Attributes = (
      * @param {import('@storecraft/core/v-api').AttributeType} val 
      */
     (idx, val) => {
-      value[idx] = val
-      onChange([ ...value ])
-    }, [value, onChange]
+      const newAtts = [...atts];
+
+      newAtts[idx] = val;
+
+      setAtts(newAtts);
+      onChange(newAtts);
+    }, [atts, onChange]
   );
 
   const onDelete = useCallback(
     /** @param {number} idx */
     (idx) => {
-      onChange(value.filter((it, jx) => idx!==jx))      
-    }, [value, onChange]
+      const newAtts = atts.filter((it, jx) => idx!==jx);
+
+      setAtts(newAtts);
+      onChange(newAtts);
+    }, [atts, onChange]
   );
 
   return (
@@ -131,11 +144,11 @@ const Attributes = (
         className='cursor-pointer text-6xl hover:scale-110 
                   transition-transform' /> 
     {
-    value?.map(
+    atts?.map(
       (it, ix) => 
         <Attr 
-            val={it} 
-            key={`${it.key}_${it.value}_${ix}`} 
+            key={ix} 
+            attribute={it} 
             className='w-full'
             onDelete={() => onDelete(ix)}
             onChange={(val) => onChangeInternal(ix, val)} />

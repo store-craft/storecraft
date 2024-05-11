@@ -123,7 +123,7 @@ const ProductOption = (
     </div>
 
   </fieldset>      
-  <MdClose className='absolute right-0 top-0 cursor-pointer' 
+  <MdClose className='absolute right-0 top-0 cursor-pointer text-xl' 
            onClick={_ => onRemove(o)}/>  
 
 </div>
@@ -520,8 +520,8 @@ const ProductVariants = (
   <div className='flex flex-col gap-5 w-full items-center'>
     <p children='Product Options' className='text-xl w-full font-semibold' />
     <ProductOptions 
-          options={v} 
-          onChange={onChangeOptions} />
+        options={v} 
+        onChange={onChangeOptions} />
 
     <HR className='w-full ' dashed={true} />
     <div className='flex flex-row w-full items-center gap-1'>

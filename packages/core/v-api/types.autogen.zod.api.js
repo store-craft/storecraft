@@ -864,7 +864,10 @@ export const collectionTypeUpsertSchema = collectionTypeSchema.describe(
 );
 export const variantOptionSchema = z
   .object({
-    name: z.string().describe("Variant option name (for example 'Size')"),
+    name: z
+      .string()
+      .min(3, "Name should be longer than 3")
+      .describe("Variant option name (for example 'Size')"),
     id: z.string().describe("Variant option id"),
     values: z
       .array(textEntitySchema)

@@ -24,8 +24,18 @@ export { default as Extensions } from './extensions.jsx'
 export { default as Extension } from './extension.jsx'
 export { default as Settings } from './settings.jsx'
 
+
 /**
- * @template {any} [State=any]
+ * @template {any} [T=any]
+ * 
+ * @typedef {object} BaseDocumentState
+ * @prop {boolean} [hasChanged] 
+ * @prop {T} [data] 
+ */
+
+
+/**
+ * @template {BaseDocumentState} [State=any]
  * 
  * @typedef {object} BaseDocumentContext
  * @prop {() => State} [getState] Get the values of the `fields-view` tree

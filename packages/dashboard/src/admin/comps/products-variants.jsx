@@ -97,7 +97,7 @@ const ProductOption = (
       <BlingInput 
           ref={ref_value} placeholder='Option Name' 
           from='from-kf-400' to='to-pink-400/25'
-          inputClsName=' text-base px-1 shelf-card rounded-md h-10' 
+          inputClsName=' text-base px-1 shelf-input-color --shelf-card rounded-md h-10' 
           overrideClass={true}
           onChange={onOptionNameChange}
           value={o?.name}
@@ -108,6 +108,7 @@ const ProductOption = (
       <CapsulesView 
           tags={o?.values} 
           name_fn={e => e?.value} 
+          onRemove={onClickCapsule}
           onClick={onClickCapsule} />
     </ShowIf>
     <div className='flex flex-row items-center h-fit w-full mt-5 gap-3'>
@@ -293,7 +294,7 @@ const Variant = (
 
   // TODO: requires testing
   /**@type {Object.<string, import('@storecraft/core/v-api').VariantCombination>} */
-  const variants_products = context?.data?.variants.reduce(
+  const variants_products = context?.data?.variants?.reduce(
     (p, it) => {
       p[it.handle] = {
         product: it,
@@ -310,7 +311,7 @@ const Variant = (
       )?.product?.handle
 
     }, [variants_products, combination]
-  )
+  );
 
   const { navWithState } = useNavigateWithState()
 
@@ -340,17 +341,23 @@ const Variant = (
         await context?.preCreateVariant();
         const state = context?.getState();
 
+        const base = {
+          ...context?.data,
+          ...state?.data,
+        }
+
         /**@type {import('../pages/product.jsx').State} */
         const state_next = { 
           data: { 
-            ...state?.data,
+            ...base,
             handle: undefined,
-            parent_handle: state?.data?.handle,
-            parent_id: state?.data?.id,
+            id: undefined, 
+            parent_handle: base.handle,
+            parent_id: base.id,
             variant_hint: combination,
-            title: `${state?.data.title} ${text}`
+            title: `${base.title} ${text}`
           },
-          hasChanged: false
+          hasChanged: true
         }
   
         navWithState(`/pages/products/create`, state, state_next)
@@ -375,27 +382,33 @@ const Variant = (
 
       <div className='flex flex-row gap-3 flex-shrink-0 items-center'>
         <Label>
-          {/* <span children={'remove'} className='cursor-pointer'
-                  onClick={remove} /> */}
-        <PromisableLoadingButton 
-            Icon={undefined} 
-            text='remove' 
-            show={true} 
-            onClick={remove}
-            keep_text_on_load={true}
-            classNameLoading='text-xs'
-            className='w-fit underline '/>                  
+          <PromisableLoadingButton 
+              Icon={undefined} 
+              text='remove' 
+              show={true} 
+              onClick={remove}
+              keep_text_on_load={true}
+              classNameLoading='text-xs'
+              className='w-fit underline '/>                  
         </Label>
         <span children='/' className='font-normal text-xl' />
         <Label>
-          <span children={'view'} className='cursor-pointer'
-                  onClick={view} />
+          <span 
+              children={'view'} 
+              className='cursor-pointer'
+              onClick={view} />
         </Label>
       </div>
 
       <Label>
-          <span children={'create'} className='cursor-pointer'
-                onClick={create} />
+        <PromisableLoadingButton 
+            Icon={undefined} 
+            text='create' 
+            show={true} 
+            onClick={create}
+            keep_text_on_load={true}
+            classNameLoading='text-xs'
+            className='w-fit underline '/>                  
       </Label>
     </ShowBinarySwitch>
 

@@ -254,29 +254,38 @@ export default (
   
   /** @type {Context} */
   const context = useMemo(
-    () => ({
-      ...context_base,
-      removeVariant: async (product_variant_handle) => {
-        await sdk.products.remove(
-          product_variant_handle
-        )
-        // reload, because deleting a variant child has a
-        // side effect on parent
-        await reload()
-      },
-      // TODO: what is this ???
-      preCreateVariant: async () => {
-        const variants_options = ref_root.current.get(false)?.data?.variants_options
-        await sdk.products.update(
-          doc.handle, 
-          /** @type {import('@storecraft/core/v-api').ProductType} */
-          {
-            variants_options
+    () => (
+      {
+        ...context_base,
+        getState: () => {
+          const state = context_base.getState();
+          delete state?.['variants'];
+          return {
+            data: state,
+            hasChanged: false
           }
-        )
-      }
+        },
+        removeVariant: async (product_variant_handle) => {
+          await sdk.products.remove(
+            product_variant_handle
+          );
+          // reload, because deleting a variant child has a
+          // side effect on parent
+          await reload();
+        },
+        // pre create variant hook
+        preCreateVariant: async () => {
+          const variants_options = ref_root.current.get(false)?.data?.variants_options;
+          await sdk.products.upsert(
+            {
+              ...doc,
+              variants_options
+            }
+          )
+        }
 
-    }), [doc, reload, context_base]
+      }
+    ), [doc, reload, context_base]
   );
 
   const isVariant = Boolean(doc?.parent_handle)

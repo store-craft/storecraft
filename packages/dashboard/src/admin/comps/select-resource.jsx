@@ -19,7 +19,7 @@ export const default_name_fn = it => it?.title ?? it?.handle ?? it?.id ?? 'unkno
 /**
  * transform the batch of data
  * 
- * @param {import('@storecraft/core/v-api').BaseType[]} window 
+ * @param {any[]} window 
  * 
  */
 export const default_transform_fn = window => window ?? []
@@ -35,8 +35,11 @@ export const default_transform_fn = window => window ?? []
  * 
  * If you need something with pagination, try `BrowseCollection` instead.
  * 
+ * @template T
+ * @template [TRANSFORM=T]
+ * 
  * @typedef {object} SelectResourceParams
- * @property {(value: any) => any} onSelect callback when selection is made (value) => any 
+ * @property {(value: TRANSFORM) => any} onSelect callback when selection is made (value) => any 
  * @property {string} header
  * @property {boolean} [add_all] add all sentinal
  * @property {0 | 1} layout add all sentinal
@@ -45,11 +48,17 @@ export const default_transform_fn = window => window ?? []
  * @property {string} [className] 
  * @property {string} [clsHeader] 
  * @property {string} [clsReload] 
- * @property {typeof default_transform_fn} [transform_fn] 
- * @property {typeof default_name_fn} [name_fn] 
+ * @property {(value: T[]) => TRANSFORM[]} [transform_fn] 
+ * @property {(value: TRANSFORM) => string} [name_fn] 
+ */
+
+
+/** 
  * 
+ * @template T
+ * @template [TRANSFORM=T]
  * 
- * @param {SelectResourceParams} params
+ * @param {SelectResourceParams<T, TRANSFORM>} params
  * 
  */
 const SelectResource = (
@@ -67,9 +76,7 @@ const SelectResource = (
   const [tag, setTag] = useState(nada);
 
   /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/v-api').BaseType>
-   * }
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
    */
   const { 
     page, loading, error,
@@ -196,7 +203,7 @@ export default SelectResource;
  * 
  * @template T
  * 
- * @typedef {InnerSelectResourceWithTagsParams & SelectResourceParams & 
+ * @typedef {InnerSelectResourceWithTagsParams & SelectResourceParams<T> & 
  *  import('./fields-view.jsx').FieldLeafViewParams<T[], 
  *  import('../pages/index.jsx').BaseDocumentContext
  * >} SelectResourceWithTagsParams

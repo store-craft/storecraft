@@ -259,14 +259,27 @@ export const filterValueOItemsCountInRangeSchema = z
 export const filterValueODateInRangeSchema = z
   .object({
     from: z
-      .number()
+      .string()
       .optional()
-      .describe("`o_date_in_range` filter From date timestamp"),
-    to: z.number().describe("`o_date_in_range` filter To date timestamp"),
+      .describe("`o_date_in_range` filter From date `ISO` format"),
+    to: z.string().describe("`o_date_in_range` filter To date `ISO` format"),
   })
   .describe("Filter for order discount, subtotal in range");
 export const filterValueOHasCustomersSchema = z
-  .array(z.string())
+  .array(
+    z.object({
+      id: z.string().describe("`id` of `customer`"),
+      email: z.string().optional().describe("(optional) `email` of `customer`"),
+      firstname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+      lastname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+    }),
+  )
   .describe("Filter for order discount, order has customer id");
 export const filterMetaEnumSchema = z.object({
   p_in_collections: z.object({
@@ -285,13 +298,13 @@ export const filterMetaEnumSchema = z.object({
     id: z.literal(2),
     type: z.literal("product"),
     op: z.literal("p-in-handles"),
-    name: z.literal("Product has ID").optional(),
+    name: z.literal("Product has handle").optional(),
   }),
   p_not_in_handles: z.object({
     id: z.literal(3),
     type: z.literal("product"),
     op: z.literal("p-not-in-handles"),
-    name: z.literal("Product excludes ID").optional(),
+    name: z.literal("Product excludes handle").optional(),
   }),
   p_in_tags: z.object({
     id: z.literal(4),

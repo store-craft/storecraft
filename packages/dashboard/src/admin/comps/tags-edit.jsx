@@ -60,10 +60,15 @@ const ManualTag = ({onAdd, ...rest}) => {
 /**
  * 
  * @param {Omit<
-*  import('./select-resource.jsx').SelectResourceParams, 
-*  'resource' | 'transform_fn' | 'name_fn'
-* >} param
-*/
+ *  import('./select-resource.jsx').SelectResourceParams<
+ *      import("@storecraft/core/v-api").TagType,
+ *      string
+ *    >, 
+ *    'resource' | 'transform_fn' | 'name_fn'
+ *  >
+ * } params
+ * 
+ */
 export const SelectTags = (
  { 
    onSelect, header, limit=100, layout=0,
@@ -71,16 +76,18 @@ export const SelectTags = (
  }
 ) => {
 
+  /**
+   * @type {import("./select-resource.jsx").SelectResourceParams<
+   *  import("@storecraft/core/v-api").TagType, string
+   * >["transform_fn"]}
+   */
  const transform_fn = useCallback(
-   /**
-    * @param {import('@storecraft/core/v-api').TagType[]} window 
-    */
-   window => {
+   (window) => {
      return window ? window.reduce(
        (p, value) => [...p, ...(value?.values ?? []).map(v => `${value.handle}_${v}`)]
        , []) : []
    }, []
- )
+ );
 
  return(
    <SelectResource 
@@ -93,7 +100,8 @@ export const SelectTags = (
        layout={layout} 
        className={className} 
        clsHeader={clsHeader} 
-       clsReload={clsReload} {...rest} />
+       clsReload={clsReload} 
+       {...rest} />
  )
 }
 

@@ -79,12 +79,15 @@ const upsert = (driver) => {
             { 
               'application.id': enums.DiscountApplicationEnum.Auto.id,
               active: true
+            }, {
+              limit: 1000
             }
           ).toArray();
+
           // now test locally
           const eligible_discounts = discounts.filter(
             d => test_product_filters_against_product(
-              d.info.filters, replacement
+              d.info.filters, data
             )
           );
 

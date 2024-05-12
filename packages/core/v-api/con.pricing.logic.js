@@ -79,7 +79,8 @@ export const test_product_filters_against_product =
 
   filters = filters?.filter(
     f => f?.meta?.type==='product'
-  )
+  );
+  
   return filters.length>0 && 
     filters?.every(
       (filter) => test_product_filter_against_product(

@@ -64,7 +64,7 @@ const upsert = (driver) => {
               `discount:${data.handle}`, `discount:${data.id}`
             ]
           );
-
+          
           // now filter and update for products
           if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
             const conjunctions = discount_to_mongo_conjunctions(data);

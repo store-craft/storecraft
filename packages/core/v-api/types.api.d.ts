@@ -792,20 +792,40 @@ export type FilterValue_o_items_count_in_range = {
  */
 export type FilterValue_o_date_in_range = { 
   /**
-   * @description `o_date_in_range` filter From date timestamp
+   * @description `o_date_in_range` filter From date `ISO` format
    */
-  from?: number, 
+  from?: string, 
 
   /**
-   * @description `o_date_in_range` filter To date timestamp
+   * @description `o_date_in_range` filter To date `ISO` format
    */
-  to: number 
+  to: string 
 };
 
 /**
  * @description Filter for order discount, order has customer id
  */
-export type FilterValue_o_has_customers = string[];
+export type FilterValue_o_has_customers = { 
+  /**
+   * @description `id` of `customer`
+   */
+  id: string, 
+
+  /**
+   * @description (optional) `email` of `customer`
+   */
+  email?: string, 
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  firstname?: string 
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  lastname?: string 
+}[];
 
 /** 
  * @description Discount filter scheme 
@@ -814,12 +834,7 @@ export type Filter = {
   /** 
    * @description Meta data related to identifying the filter 
    */
-  meta: FilterMetaEnum['p_all'] | FilterMetaEnum['p_in_collections'] |
-        FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
-        FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_handles'] |
-        FilterMetaEnum['p_not_in_handles'] | FilterMetaEnum['o_date_in_range'] |
-        FilterMetaEnum['o_has_customer'] | FilterMetaEnum['o_items_count_in_range'] |
-        FilterMetaEnum['o_subtotal_in_range'];
+  meta: FilterMetaEnum[keyof FilterMetaEnum];
 
   /** 
    * @description The filter params 

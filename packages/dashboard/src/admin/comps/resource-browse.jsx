@@ -264,10 +264,10 @@ const ProductComp = ({ data }) => {
 
 /**
  * @typedef {object} BrowseCustomersParams
- * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
+ * @prop {(v: import('@storecraft/core/v-api').CustomerType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
- * @param {BrowseCustomersParams} param0 
+ * @param {BrowseCustomersParams} params 
  */
 export const BrowseCustomers = ({ onSave, onCancel }) => {
 
@@ -288,7 +288,11 @@ export const BrowseCustomers = ({ onSave, onCancel }) => {
  * 
  * @param {BrowseProductsParams} params
  */
-export const BrowseProducts = ({ onSave, onCancel }) => {
+export const BrowseProducts = (
+  { 
+    onSave, onCancel 
+  }
+) => {
 
   return (
 <BrowseCollection 

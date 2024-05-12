@@ -515,20 +515,21 @@ export const RecordActions = (
   }
   { 
     context?.deleteDocument && 
-    <LoadingButton Icon={<AiOutlineDelete className='text-xl text-kf-500 outline-8'/>} 
-                   loading={loadingDelete} 
-                   className='ml-3 px-0 py-0 border-0 ' 
-                   onClick={onClickDelete} />
+    <LoadingButton 
+        Icon={<AiOutlineDelete className='text-xl scale-125 text-kf-500 outline-8'/>} 
+        loading={loadingDelete} 
+        className='ml-3 px-0 py-0 border-0 ' 
+        onClick={onClickDelete} />
   }
-  <Modal ref={ref_modal} 
-         onApprove={onApproveDelete} 
-         title={
-                <p className=' text-xl flex 
-                                flex-row items-center gap-3'>
-                  <AiOutlineWarning className='text-2xl'/> 
-                  Warning
-                </p>
-              }/>
+  <Modal 
+      ref={ref_modal} 
+      onApprove={onApproveDelete} 
+      title={<p className=' text-xl flex 
+                            flex-row items-center gap-3'>
+                <AiOutlineWarning className='text-2xl'/> 
+                Warning
+             </p>
+            }/>
 </div>
   )
 }

@@ -247,10 +247,11 @@ export default (
       return duplicate(
         {
           discounts: undefined,
+          title: doc?.title + ' duplicate'
         }
       )
-    }, [duplicate]
-  )
+    }, [doc, duplicate]
+  );
   
   /** @type {Context} */
   const context = useMemo(

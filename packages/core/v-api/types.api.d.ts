@@ -653,7 +653,7 @@ export interface DiscountType extends BaseType {
   /** 
    * @description Discount application (`automatic` and `manual`) 
    */
-  application: DiscountApplicationEnum['Auto'] | DiscountApplicationEnum['Manual'];
+  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"];
 }
 
 /**
@@ -682,8 +682,8 @@ export type DiscountInfo = {
  * see <a href='#DiscountApplicationEnum'>#DiscountApplicationEnum</a>  
  */
 export type DiscountApplicationEnum = {
-  Auto:   { id: 0, name: 'Automatic', name2: 'automatic'},
-  Manual: { id: 1, name: 'Manual', name2: 'manual'},
+  Auto:   { id: 0, name?: string, name2: 'automatic'},
+  Manual: { id: 1, name?: string, name2: 'manual'},
 }
 
 /**
@@ -828,13 +828,18 @@ export type FilterValue_o_has_customers = {
 }[];
 
 /** 
- * @description Discount filter scheme 
+ * @description Discount filter schema
  */
 export type Filter = {
   /** 
    * @description Meta data related to identifying the filter 
    */
-  meta: FilterMetaEnum[keyof FilterMetaEnum];
+  meta: FilterMetaEnum['p_all'] | FilterMetaEnum['p_in_collections'] |
+        FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
+        FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_handles'] |
+        FilterMetaEnum['p_not_in_handles'] | FilterMetaEnum['o_date_in_range'] |
+        FilterMetaEnum['o_has_customer'] | FilterMetaEnum['o_items_count_in_range'] |
+        FilterMetaEnum['o_subtotal_in_range'];
 
   /** 
    * @description The filter params 
@@ -855,62 +860,62 @@ export interface FilterMetaEnum {
   { 
     id: 0, type:'product', 
     op: 'p-in-collections', 
-    name?: 'Product In Collection'
+    name?: string
   },
   p_not_in_collections: { 
     id: 1, type:'product', 
     op: 'p-not-in-collections', 
-    name?: 'Product not in Collection'
+    name?: string
   },
   p_in_handles: {
     id: 2, type:'product', 
     op: 'p-in-handles', 
-    name?: 'Product has handle'
+    name?: string
   },
   p_not_in_handles: { 
     id: 3, type:'product', 
     op: 'p-not-in-handles', 
-    name?: 'Product excludes handle'
+    name?: string
   },
   p_in_tags: { 
     id: 4, type:'product', 
     op: 'p-in-tags', 
-    name?: 'Product has Tag'
+    name?: string
   },
   p_not_in_tags: {
     id: 5, type:'product', 
     op: 'p-not-in-tags', 
-    name?: 'Product excludes Tag'
+    name?: string
   },    
   p_all: {
     id: 6, type:'product', 
     op: 'p-all', 
-    name?: 'All Products'
+    name?: string
   },    
   p_in_price_range: {
     id: 7, type:'product', 
     op: 'p-in-price-range', 
-    name?: 'Product in Price range'
+    name?: string
   },    
   o_subtotal_in_range: {
     id: 100, type:'order', 
     op: 'o-subtotal-in-range', 
-    name?: 'Order subtotal in range'
+    name?: string
   },    
   o_items_count_in_range: {
     id: 101, type:'order', 
     op: 'o-items-count-in-range', 
-    name?: 'Order items count in range'
+    name?: string
   },    
   o_date_in_range: {
     id: 102, type:'order', 
     op: 'o-date-in-range', 
-    name?: 'Order in dates'
+    name?: string
   },    
   o_has_customer: {
     id: 103, type:'order', 
     op: 'o-has-customer', 
-    name?: 'Order has Customers'
+    name?: string
   },    
 }
 
@@ -923,7 +928,10 @@ export type DiscountDetails = {
   /** 
    * @description metadata to identify the type of discount 
    */
-  meta: DiscountMetaEnum[keyof DiscountMetaEnum];
+  meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
+        DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
+        DiscountMetaEnum['order'];
+
 
   /** 
    * @description Extra parameters of the specific discount type 
@@ -941,23 +949,23 @@ export type DiscountMetaEnum = {
   regular: { 
     id: 0, 
     type: 'regular',          
-    name : 'Regular Discount', 
+    name?: string, 
   },
   bulk: { 
     id: 1, type: 'bulk',          
-    name : 'Bulk Discount', 
+    name?: string, 
   },
   buy_x_get_y: { 
     id: 2, type: 'buy_x_get_y' ,  
-    name : 'Buy X Get Y',
+    name?: string,
   },
   order: { 
     id: 3, type: 'order', 
-    name : 'Order Discount',
+    name?: string,
   },
   bundle: { 
     id: 4, type: 'bundle', 
-    name : 'Bundle Discount',
+    name?: string,
   },
 }
 
@@ -1599,19 +1607,19 @@ export type OrderStatus = {
  */
 export type FulfillOptionsEnum = {
   draft: { 
-    id: 0, name2: 'draft', name: 'Draft'
+    id: 0, name2: 'draft', name?: string
   },
   processing: { 
-    id: 1, name2: 'processing' ,name: 'Processing (Stock Reserved)'
+    id: 1, name2: 'processing' ,name?: string
   },
   shipped: { 
-    id: 2, name2: 'shipped' ,name: 'Shipped'
+    id: 2, name2: 'shipped' ,name?: string
   },
   fulfilled: { 
-    id: 3, name2: 'fulfilled', name: 'Fulfilled' 
+    id: 3, name2: 'fulfilled', name?: string
   },
   cancelled: { 
-    id: 4, name2: 'cancelled', name: 'Cancelled (Stock returned)' 
+    id: 4, name2: 'cancelled', name?: string
   }
 }
 
@@ -1622,31 +1630,31 @@ export type FulfillOptionsEnum = {
  */
 export type PaymentOptionsEnum = {
   unpaid: { 
-    id: 0, name: 'Unpaid', name2: 'unpaid'
+    id: 0, name?: string, name2: 'unpaid'
   },
   authorized: { 
-    id: 1, name: 'Authorized', name2: 'authorized'
+    id: 1, name?: string, name2: 'authorized'
   },
   captured: { 
-    id: 2, name: 'Captured', name2: 'captured'
+    id: 2, name?: string, name2: 'captured'
   },
   requires_auth: { 
-    id: 3, name: 'Requires Authentication', name2: 'requires_auth'
+    id: 3, name?: string, name2: 'requires_auth'
   },
   voided: { 
-    id: 4, name: 'Voided', name2: 'voided'
+    id: 4, name?: string, name2: 'voided'
   },
   failed: { 
-    id: 5, name: 'Failed', name2: 'failed'
+    id: 5, name?: string, name2: 'failed'
   },
   partially_paid: { 
-    id: 6, name: 'Partially paid', name2: 'partially_paid' 
+    id: 6, name?: string, name2: 'partially_paid' 
   },
   refunded: { 
-    id: 7, name: 'Refunded', name2: 'refunded' 
+    id: 7, name?: string, name2: 'refunded' 
   },
   partially_refunded: { 
-    id: 8, name: 'Partially Refunded', name2: 'partially_refunded' 
+    id: 8, name?: string, name2: 'partially_refunded' 
   },
 }
 
@@ -1657,19 +1665,19 @@ export type PaymentOptionsEnum = {
  */
 export type CheckoutStatusEnum = {
   created: { 
-    id: 0, name2: 'created', name: 'Created'
+    id: 0, name2: 'created', name?: string
   },
   requires_action: { 
-    id: 1, name2: 'requires_action', name: 'Requires Action'
+    id: 1, name2: 'requires_action', name?: string
   },
   failed: { 
-    id: 2, name2: 'failed', name: 'Failed'
+    id: 2, name2: 'failed', name?: string
   },
   complete: { 
-    id: 3, name2: 'complete', name: 'Complete'
+    id: 3, name2: 'complete', name?: string
   },
   unknown: { 
-    id: 4, name2: 'unknown', name: 'Unknown'
+    id: 4, name2: 'unknown', name?: string
   },
 }
 

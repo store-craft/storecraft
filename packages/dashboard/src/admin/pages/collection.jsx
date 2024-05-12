@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import FieldsView from '@/admin/comps/fields-view.jsx'
 import { PromisableLoadingBlingButton } from '@/admin/comps/common-button.jsx'
@@ -186,13 +186,14 @@ export default (
       const state_next = { 
         data: { 
           ...state?.data,
+          title: state?.data?.title + ' duplicate',
           updated_at: undefined,
           created_at: undefined,
           search: undefined,
           handle: undefined,
           _published: undefined,
         },
-        hasChanged: false
+        hasChanged: true
       }
       // ref_head.current.set(false)
       navWithState(`/pages/collections/create`, 

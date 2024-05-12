@@ -923,9 +923,7 @@ export type DiscountDetails = {
   /** 
    * @description metadata to identify the type of discount 
    */
-  meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
-        DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
-        DiscountMetaEnum['order'];
+  meta: DiscountMetaEnum[keyof DiscountMetaEnum];
 
   /** 
    * @description Extra parameters of the specific discount type 

@@ -180,6 +180,14 @@ const list_collection_products = (driver) => {
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
     
+    /**
+     * @type {import('mongodb').Filter<
+     *  import('./utils.relations.js').WithRelations<
+     *    import('@storecraft/core/v-api').ProductType | 
+     *    import('@storecraft/core/v-api').VariantType
+     *  >
+     * >}
+     */
     const filter = {
       $and: [
         { '_relations.search': `col:${handle_or_id}` },

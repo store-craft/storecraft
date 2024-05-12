@@ -93,7 +93,7 @@ const removeByEmail = (driver) => {
       { email }
     );
 
-    return
+    return true;
   }
 }
 

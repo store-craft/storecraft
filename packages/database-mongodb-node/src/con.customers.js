@@ -123,6 +123,13 @@ const list_customer_orders = (driver) => {
     console.log('sort', sort)
     console.log('expand', query?.expand)
     
+    /**
+     * @type {import('mongodb').Filter<
+     *  import('./utils.relations.js').WithRelations<
+     *    import('@storecraft/core/v-api').OrderData
+     *  >
+     * >}
+     */
     const filter = {
       $and: [
         {'_relations.search': `customer:${customer_id}` },

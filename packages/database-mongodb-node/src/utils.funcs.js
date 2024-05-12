@@ -89,7 +89,7 @@ export const sanitize_one = o => {
  * 
  */
 export const sanitize_array = o => {
-  return o?.map(it => sanitize_hidden(it));
+  return o?.map(sanitize_hidden);
 }
 
 /**
@@ -114,21 +114,23 @@ export const to_objid_safe = id => {
 }
 
 /**
+ * @template {{handle?: string}} G
+ * 
  * 
  * @param {string} handle_or_id 
  * 
  * 
- * @returns { { _id:ObjectId } | { handle: string }}
+ * @returns {import('mongodb').Filter<G>}
  */
 export const handle_or_id = (handle_or_id) => {
-  let r = {};
-
   try {
-    r._id = to_objid(handle_or_id);
+    return {
+      _id: to_objid(handle_or_id)
+    }
   } catch (e) {
-    r.handle = handle_or_id;
+    return {
+      handle: handle_or_id
+    }
   }
-
-  return r;
 }
 

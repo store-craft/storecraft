@@ -332,7 +332,11 @@ const list_product_variants = (driver) => {
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
 
-    return sanitize_array(item?.variants ?? []);
+    if(item && ('variants' in item)) {
+      return sanitize_array(item?.variants ?? []);
+    }
+
+    return [];
   }
 }
 

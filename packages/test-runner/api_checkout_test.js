@@ -153,6 +153,9 @@ export const create = app => {
 
   });
 
+
+  // return s;
+
   s('create checkout with automatic stock', async (ctx) => {
     const previous_checkout_reserve_stock_on = app2.config.checkout_reserve_stock_on;
 

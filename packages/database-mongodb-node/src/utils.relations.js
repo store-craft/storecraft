@@ -41,9 +41,11 @@ import { MongoDB } from '../driver.js';
  * @returns {Promise<WithRelations<T>>}
  */
 export const create_explicit_relation = async (
-  driver, data, fieldName, belongsToCollection, reload=false) => {
+  driver, data, fieldName, belongsToCollection, reload=false
+) => {
 
   const value = data?.[fieldName];
+  
   if(isUndef(value))
     return data;
    

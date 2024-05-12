@@ -8,7 +8,8 @@ import { add_search_terms_relation_on } from './utils.relations.js'
 
 
 /**
- * @template T, G
+ * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template {import('@storecraft/core/v-api').BaseType} G
  * 
  * 
  * @param {MongoDB} driver 
@@ -37,6 +38,7 @@ export const upsert_regular = (driver, col) => {
           );
 
           const res = await col.replaceOne(
+            // @ts-ignore
             { 
               _id: to_objid(data.id) 
             }, 
@@ -91,7 +93,7 @@ export const get_relations_names = item => {
 export const expand = (items, expand_query=undefined) => {
   
   if(isUndef(expand_query) || !Array.isArray(items))
-    return;
+    return items;
 
   items = items.filter(Boolean)
 
@@ -122,8 +124,6 @@ export const expand = (items, expand_query=undefined) => {
   return items;
 }
 
-import { ObjectId } from 'mongodb';
-
 /**
  * @template T, G
  * 
@@ -138,7 +138,7 @@ export const get_regular = (driver, col) => {
   return async (id_or_handle, options) => {
     const filter = handle_or_id(id_or_handle);
 
-    /** @type {import('./utils.relations.js').WithRelations<G>} */
+    /** @type {import('./utils.relations.js').WithRelations<import('mongodb').WithId<G>>} */
     const res = await col.findOne(filter);
 
     // try to expand relations
@@ -172,6 +172,7 @@ export const get_bulk = (driver, col) => {
 
 
     const res = await col.find(
+      // @ts-ignore
       { 
         $or: [
           {
@@ -180,7 +181,6 @@ export const get_bulk = (driver, col) => {
           {
             handle: { $in: ids } 
           }
-
         ]
       }
     ).toArray();
@@ -251,9 +251,9 @@ export const list_regular = (driver, col) => {
     if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
-    expand(items, query?.expand);
+    const items_expended = expand(items, query?.expand);
 
-    const sanitized = sanitize_array(items);
+    const sanitized = sanitize_array(items_expended);
 
     // console.log('sanitized', sanitized)
 

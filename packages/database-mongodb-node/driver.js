@@ -47,16 +47,28 @@ const connect = async (uri, options) => {
  */
 export class MongoDB {
 
-  /** @type {boolean} */ 
+  /** 
+   * 
+   * @type {boolean} 
+   */ 
   #_is_ready;
 
-  /** @type {App<any, any, any>} */ 
+  /** 
+   * 
+   * @type {App<any, any, any>} 
+   */ 
   #_app;
 
-  /** @type {MongoClient} */ 
+  /** 
+   * 
+   * @type {MongoClient} 
+   */ 
   #_mongo_client;
 
-  /** @type {Config} */ 
+  /** 
+   * 
+   * @type {Config} 
+   */ 
   #_config;
 
   // /** @type {db_driver["resources"]} */

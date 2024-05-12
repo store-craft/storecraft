@@ -68,22 +68,20 @@ const upsert = (driver) => {
           // now filter and update for products
           if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
             const conjunctions = discount_to_mongo_conjunctions(data);
-            if(conjunctions.length) {
-              await driver.resources.products._col.updateMany(
-                { $and: conjunctions },
-                { 
-                  $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
-                  $addToSet: { 
-                    '_relations.discounts.ids': objid,
-                    '_relations.search': { 
-                      $each : [ `discount:${data.handle}`, `discount:${data.id}` ]
-                    } 
-                  },
-                  
+            await driver.resources.products._col.updateMany(
+              conjunctions.length ? { $and: conjunctions } : {},
+              { 
+                $set: { [`_relations.discounts.entries.${objid.toString()}`]: data },
+                $addToSet: { 
+                  '_relations.discounts.ids': objid,
+                  '_relations.search': { 
+                    $each : [ `discount:${data.handle}`, `discount:${data.id}` ]
+                  } 
                 },
-                { session }
-              );
-            }
+                
+              },
+              { session }
+            );
           }
 
           ////

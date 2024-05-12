@@ -138,7 +138,10 @@ export const create = app => {
         }
       );
 
-      assert.ok(products_queried[0].handle===prs[ix].handle);
+      assert.ok(
+        products_queried[0].handle===prs[ix].handle
+      );
+      
     }
 
   });

@@ -261,7 +261,7 @@ export default (
           const state = context_base.getState();
           delete state?.['variants'];
           return {
-            data: state,
+            data: state.data,
             hasChanged: false
           }
         },

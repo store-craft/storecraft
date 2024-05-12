@@ -36,12 +36,13 @@ const useOnClickOutside = (handler) => {
        * @param {KeyboardEvent} event
        */
       const listener2 = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
 
         if (event.key !== 'Escape') 
           return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
 
         // console.log('listener2');
 

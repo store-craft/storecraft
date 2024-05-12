@@ -411,6 +411,7 @@ export type VariantCombination = {
 export type VariantOption = {
   /** 
    * @description Variant option name (for example 'Size') 
+   * @minLength 3 Name should be longer than 3
    */
   name: string;
 

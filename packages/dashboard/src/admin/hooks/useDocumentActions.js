@@ -42,7 +42,9 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
   /** 
    * @type {React.MutableRefObject<
    *  import('@/admin/comps/fields-view.jsx').FieldViewImperativeInterface<
-   *    import('@storecraft/core/v-api').ProductType>>
+   *    T
+   *  >
+   * >
    * } 
    */
   const ref_root = useRef();
@@ -92,11 +94,16 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
   const isCreateMode = mode==='create';
   const isViewMode = !(isEditMode || isCreateMode);
     
-  /** @type {import('../pages/index.jsx').BaseDocumentContext<State>} */
+  /** 
+   * @type {import('../pages/index.jsx').BaseDocumentContext<{
+   *    hasChanged?: boolean,
+   *    data?: T
+   *  }>
+   * } 
+   */
   const context = useMemo(
     () => (
       {
-        /** @returns {State} */
         getState: () => {
           const data = ref_root.current.get(false)?.data
           const hasChanged = Boolean(ref_head.current.get())
@@ -118,7 +125,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
       const state = context.getState();
 
-      /**@type {State} */
+      /**@type {import('../pages/index.jsx').BaseDocumentState<T>} */
       const state_next = { 
         data: { 
           ...state?.data,
@@ -130,7 +137,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
           _published: undefined,
           ...state_next_extra
         },
-        hasChanged: false
+        hasChanged: true
       }
 
       ref_head.current.set(false)

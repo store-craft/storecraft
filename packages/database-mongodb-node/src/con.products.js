@@ -142,8 +142,15 @@ const upsert = (driver) => {
 
             }
 
-          } else {
-            // in the future, support also explicit relation with `create_explicit_relation`
+          } else { // i am a parent
+            // let's fetch existing relations if any
+            const existing =  await await col(driver).findOne(
+              { _id: objid }
+            );
+            if(existing && existing?._relations?.variants) {
+              replacement._relations = replacement._relations ?? {};
+              replacement._relations.variants = existing._relations.variants; 
+            }
           }
 
           ////
@@ -444,7 +451,7 @@ const changeStockOfBy = (driver) => {
     /** 
      * @type {import('mongodb').AnyBulkWriteOperation<
      *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/v-api/con.pricing.logic.js').ProductType | 
+     *    import('@storecraft/core/v-api').ProductType | 
      *    import('@storecraft/core/v-api').VariantType
      *  >
      * >[]} 

@@ -112,8 +112,23 @@ export const create = app => {
 
     // console.log(product_variants)
 
-    assert.ok(product_variants.length>=product_variants.length, 'got less')
+    assert.ok(product_variants.length>=var_upsert.length, 'got less')
   });
+
+  s('resave 1st product -> test variants are still there', async () => {
+    // upsert 1st product straight to the db because we have ID
+    await app.db.resources.products.upsert(pr_upsert);
+
+    // now query the product's discounts to see if discount was applied to 1st product
+    const product_variants = await app.api.products.list_product_variants(
+      pr_upsert.handle
+    );
+
+    // console.log(product_variants)
+
+    assert.ok(product_variants.length>=var_upsert.length, 'got less')
+  });
+
   // return s;
 
   s('remove 2nd variant -> test only one variant for product', async () => {

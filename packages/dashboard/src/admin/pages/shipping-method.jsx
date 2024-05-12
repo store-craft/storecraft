@@ -15,6 +15,7 @@ import Attributes from '@/admin/comps/attributes.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, HR, withBling } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useCallback } from 'react'
 
 const root_left_schema = {
   name:'Root', comp: Div, 
@@ -156,6 +157,16 @@ export default (
     'shipping', documentId, '/pages/shipping-methods', mode, base
   );
 
+  const duplicate_mod = useCallback(
+    () => {
+      return duplicate(
+        {
+          title: doc?.title + ' duplicate',
+        }
+      )
+    }, [doc, duplicate]
+  );
+
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
   <DocumentTitle major={['shipping', documentId ?? 'create']} className='' />   
@@ -164,7 +175,7 @@ export default (
       id={doc?.handle} className='mt-5'
       onClickSave={isEditMode ? savePromise : undefined}
       onClickCreate={isCreateMode ? savePromise : undefined}
-      onClickDuplicate={!isCreateMode ? duplicate : undefined}
+      onClickDuplicate={!isCreateMode ? duplicate_mod : undefined}
       onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} />
   <CreateDate 

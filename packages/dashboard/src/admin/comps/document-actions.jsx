@@ -72,10 +72,12 @@ return (
     <div className='flex flex-row flex-wrap items-center gap-2'>
       <PromisableLoadingBlingButton 
           Icon={<FiSave/>} text='save' 
+          keep_text_on_load={true}
           show={Boolean(onClickSave)}
           onClick={onClickSave}/>
       <PromisableLoadingBlingButton 
           Icon={<BiAddToQueue/>} text='create' 
+          keep_text_on_load={true}
           show={Boolean(onClickCreate)}
           onClick={onClickCreate} />
       <PromisableLoadingBlingButton 
@@ -85,6 +87,7 @@ return (
       <PromisableLoadingBlingButton 
           Icon={<TbReload/>} text='reload' 
           show={Boolean(onClickReload)}
+          keep_text_on_load={true}
           onClick={onClickReload} />
       {
         children
@@ -100,7 +103,9 @@ return (
             rounded-full text-base font-semibold tracking-tight' 
             Icon={<AiOutlineDelete className='--text-red-500 text-base'/>}                        
             loading={loadingDelete} 
-            text='delete' show={Boolean(onClickDelete)}
+            text='delete' 
+            keep_text_on_load={true}
+            show={Boolean(onClickDelete)}
             onClick={onClickDeleteInternal}  />
       </Bling>     
     </ShowIf>

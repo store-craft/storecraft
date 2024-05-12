@@ -11,7 +11,8 @@ import { BrowseCustomers, BrowseProducts } from './resource-browse.jsx'
 import { BlingButton } from './common-button.jsx'
 import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
 import { SelectTags } from './tags-edit.jsx'
-
+import { extract_contact_field } from '../pages/customers.jsx'
+ 
 /**
  * 
  * @param {import('@storecraft/core/v-api').Filter["meta"][]} v 
@@ -26,11 +27,14 @@ export const discount_filters_validator = v => {
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_p_in_collections} param.value
- * @param {(filter_value: 
+ * @typedef {object} Filter_ProductInCollectionsParams
+ * @prop {import('@storecraft/core/v-api').FilterValue_p_in_collections} value
+ * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_collections) => void
- * } param.onChange
+ * } onChange
+ * 
+ * 
+ * @param {Filter_ProductInCollectionsParams} params
  */
 const Filter_ProductInCollections = (
   { 
@@ -38,56 +42,73 @@ const Filter_ProductInCollections = (
   }
 ) => {
 
-  const [tags, setTags] = useState(value)
+  const [tags, setTags] = useState(value);
 
+  /**
+   * @type {import('./select-resource.jsx').SelectResourceParams<
+   *  import('@storecraft/core/v-api').CollectionType
+   * >["onSelect"]
+   * }
+   */
   const onAdd = useCallback(
     (tag) => {
-      tag = tag[0]
       if(tags.indexOf(tag)!=-1)
-        return
+        return;
       
-      const new_tags = [ ...tags, tag]
-      onChange(new_tags)
-      setTags(new_tags)
+      const new_tags = [ ...tags, tag];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
-  )
+  );
   
   const onRemove = useCallback(
     /**
      * @param {{id: string, handle: string}} v handle
      */
     (v) => {
-      const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+      const idx = tags.indexOf(v);
+      if(idx == -1) 
+        return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+      
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
-  )
+  );
 
   return (
 <div className='w-full'>
-  <SelectResource onSelect={onAdd} 
-            resource='collections' 
-            header='Select Collections' 
-            clsReload='text-3xl text-kf-400' 
-            name_fn={
-              /** @param {import('@storecraft/core/v-api').CollectionType} it */
-              it => it.handle
-            }
-            layout={1}/>
-  { tags?.length>0 && <HR className='w-full mt-5' />  }            
-  <CapsulesView onClick={onRemove} tags={tags} 
-                className='mt-5' name_fn={tag => tag.handle} />
+  <SelectResource 
+      onSelect={onAdd} 
+      resource='collections' 
+      header='Select Collections' 
+      clsReload='text-3xl text-kf-400' 
+      name_fn={
+        it => it.title ?? it.handle
+      }
+      layout={1}/>
+  { 
+    tags?.length>0 && 
+    <HR className='w-full mt-5' />  
+  }
+  <CapsulesView 
+      onClick={onRemove} 
+      tags={tags} 
+      className='mt-5' 
+      name_fn={tag => tag?.title ?? tag.handle} />
 </div>
   )
 }
 
 /**
- * @param {Parameters<Filter_ProductInCollections>["0"]} param0 
+ * 
+ * @param {Parameters<Filter_ProductInCollections>["0"]} params
  */
 const Filter_ProductNotInCollections = ( { ...rest } ) => {
   return (
@@ -97,91 +118,144 @@ const Filter_ProductNotInCollections = ( { ...rest } ) => {
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_p_in_tags} param.value
- * @param {(filter_value: 
+ * @typedef {object} Filter_ProductHasTagsParams
+ * @prop {import('@storecraft/core/v-api').FilterValue_p_in_tags} value
+ * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_tags) => void
- * } param.onChange
+ * } onChange
+ * 
+ * 
+ * @param {Filter_ProductHasTagsParams} params
+ * 
  */
-const Filter_ProductHasTags = ( { onChange, value=[] } ) => {
+const Filter_ProductHasTags = (
+  { 
+    onChange, value=[] 
+  } 
+) => {
+
   const [tags, setTags] = useState(value)
 
+  /**
+   * @type {Parameters<SelectTags>["0"]["onSelect"]}
+   */
   const onAdd = useCallback(
     (tag) => {
       if(tags.indexOf(tag)!=-1)
-        return
+        return;
       
-      const new_tags = [ ...tags, tag]
-      onChange(new_tags)
-      setTags(new_tags)
+      const new_tags = [ ...tags, tag];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
   )
   
+  /**
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<string>["onRemove"]}
+   */
   const onRemove = useCallback(
     (v) => {
-      const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+      const idx = tags.indexOf(v);
+
+      if(idx == -1) 
+        return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
-  )
+  );
 
   return (
 <div className='w-full'>
-  <SelectTags onSelect={onAdd} header='Select Tags' 
-              clsReload='text-3xl text-kf-400' 
-              layout={1}/>
-  { tags?.length>0 && <HR className='w-full mt-5' />  }            
-  <CapsulesView onClick={onRemove} 
-                tags={tags} className='mt-5' />
+  <SelectTags 
+      onSelect={onAdd} 
+      header='Select Tags' 
+      clsReload='text-3xl text-kf-400' 
+      layout={1}/>
+  { 
+    tags?.length>0 && 
+    <HR className='w-full mt-5' />  
+  }
+  <CapsulesView 
+      onRemove={onRemove}
+      onClick={onRemove} 
+      tags={tags} 
+      className='mt-5' />
 </div>
   )
 }
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_p_in_handles} param.value
- * @param {(filter_value: 
+ * @typedef {object} Filter_ProductHasHandleParams
+ * @prop {import('@storecraft/core/v-api').FilterValue_p_in_handles} value
+ * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_handles) => void
- * } param.onChange
+ * } onChange
+ * 
+ * 
+ * @param {Filter_ProductHasHandleParams} params
+ * 
  */
-const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
+const Filter_ProductHasHandle = (
+  { 
+    onChange, value=[] 
+  }
+) => {
+   
   /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
   const [tags, setTags] = useState(value)
 
+  /**
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<string>["onRemove"]}
+   */
   const onRemove = useCallback(
     (v) => {
       const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+
+      if(idx == -1) return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
-  )
+  );
 
+  /**
+   * @type {import('./resource-browse.jsx').BrowseProductsParams["onSave"]}
+   */
   const onBrowseAdd = useCallback(
-    (selected_items) => { // array of shape [[id, data], ...]
+    (selected_items) => { 
       // map to handle/id
-      const mapped = selected_items.map(it => it[0])
+      const mapped = selected_items.map(
+        it => it.handle
+      );
+
       // only include unseen handles
       const resolved = [
         ...mapped.filter(m => tags.find(it => it===m)===undefined), 
         ...tags
-      ]
-      onChange(resolved)
-      setTags(resolved)
-      ref_overlay.current.hide()
+      ];
+
+      onChange(resolved);
+      setTags(resolved);
+
+      ref_overlay.current.hide();
     }, [tags, onChange]
-  )
+  );
 
   return (
 <div className='w-full'>
@@ -191,19 +265,30 @@ const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
         children='Browse products' 
         onClick={() => ref_overlay.current.show()} />
   <Overlay ref={ref_overlay} >
-    <BrowseProducts onSave={onBrowseAdd} 
-                    onCancel={() => ref_overlay.current.hide()} />
+    <BrowseProducts 
+        onSave={onBrowseAdd} 
+        onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
-  { tags?.length>0 && <HR className='w-full mt-5' />  }            
-  <CapsulesView onClick={onRemove} tags={tags} className='mt-5' />
+  { 
+    tags?.length>0 && 
+    <HR className='w-full mt-5' />  
+  } 
+  <CapsulesView 
+      onRemove={onRemove} 
+      onClick={onRemove} 
+      tags={tags} 
+      className='mt-5' />
 </div>
   )
 }
 
 /**
- * @param {Parameters<Filter_ProductHasHandle>["0"]} param0 
+ * @param {Parameters<Filter_ProductHasHandle>["0"]} params
  */
-const Filter_ProductNotHasHandle = ( { ...rest } ) => {
+const Filter_ProductNotHasHandle = ( 
+  { ...rest }
+) => {
+
   return (
     <Filter_ProductHasHandle {...rest} />
   )
@@ -211,9 +296,12 @@ const Filter_ProductNotHasHandle = ( { ...rest } ) => {
 
 
 /**
- * @param {Parameters<Filter_ProductHasTags>["0"]} param0 
+ * @param {Parameters<Filter_ProductHasTags>["0"]} params 
  */
-const Filter_ProductNotHasTags = ( { ...rest } ) => {
+const Filter_ProductNotHasTags = ( 
+  { ...rest } 
+) => {
+
   return (
     <Filter_ProductHasTags {...rest} />
   )
@@ -221,11 +309,15 @@ const Filter_ProductNotHasTags = ( { ...rest } ) => {
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_p_in_price_range} param.value
- * @param {(filter_value: 
+ * @typedef {object} Filter_ProductPriceInRangeParams
+ * @prop {import('@storecraft/core/v-api').FilterValue_p_in_price_range} value
+ * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_price_range) => void
- * } param.onChange
+ * } onChange
+ * 
+ * 
+ * @param {Filter_ProductPriceInRangeParams} params
+ * 
  */
 const Filter_ProductPriceInRange = (
   { 
@@ -239,15 +331,22 @@ const Filter_ProductPriceInRange = (
   // useEffect(() => { setV(v) }, [value])
   
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who key
+     * @param {React.ChangeEvent<HTMLInputElement>} e event
+     */
     (who, e) => {
-      const vv = { ...v, [who] : parseFloat(e.currentTarget.value) }
-      setV(vv)
-      onChange(vv)
+      const vv = { 
+        ...v, 
+        [who] : parseFloat(e.currentTarget.value) 
+      };
+
+      setV(vv);
+      onChange(vv);
     },
     [v, onChange]
-  )
+  );
   // console.log('total ', v);
-
 
   const data = [
     { name: 'From', key: 'from' },
@@ -273,24 +372,19 @@ const Filter_ProductPriceInRange = (
 }
 
 
-/**
- * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_p_all} param.value
- * @param {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_p_all) => void
- * } param.onChange
- */
-const Filter_ProductAll = () => (<p children='All products are legable' />)
+const Filter_ProductAll = () => (<p children='All products are eligible' />)
 
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range} param.value
- * @param {(filter_value: 
+ * @typedef {object} Filter_OrderSubTotalParams
+ * @prop {import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range} value
+ * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range) => void
- * } param.onChange
+ * } onChange
+ * 
+ * 
+ * @param {Filter_OrderSubTotalParams} params
  */
 const Filter_OrderSubTotal = ( 
   { 
@@ -299,18 +393,24 @@ const Filter_OrderSubTotal = (
   }
 ) => {
 
-  const [v, setV] = useState(value)
+  const [v, setV] = useState(value);
 
-  // useEffect(() => { setV(v) }, [value])
-  
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who key
+     * @param {React.ChangeEvent<HTMLInputElement>} e event
+     */
     (who, e) => {
-      const vv = { ...v, [who] : parseFloat(e.currentTarget.value) }
-      setV(vv)
-      onChange(vv)
+      const vv = { 
+        ...v, 
+        [who] : parseFloat(e.currentTarget.value) 
+      };
+
+      setV(vv);
+      onChange(vv);
     },
     [v, onChange]
-  )
+  );
   // console.log('total ', v);
 
   const data = [
@@ -325,7 +425,8 @@ const Filter_OrderSubTotal = (
       <div key={ix} className='flex flex-row items-center gap-3'>
         {name}
         <BlingInput 
-            type='number' step='1' min='0' value={v[key]} 
+            type='number' step='1' min='0' 
+            value={v[key]} 
             className='w-20 rounded-md ' 
             onWheel={(e) => e.target.blur()}
             onChange={e => onChangeInternal(key, e)} />
@@ -338,11 +439,15 @@ const Filter_OrderSubTotal = (
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').FilterValue_o_items_count_in_range} param.value
- * @param {(filter_value: 
+ * @typedef {object} Filter_OrderItemCountParams
+ * @prop {import('@storecraft/core/v-api').FilterValue_o_items_count_in_range} [value]
+ * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_o_items_count_in_range) => void
- * } param.onChange
+ * } onChange
+ * 
+ * 
+ * @param {Filter_OrderItemCountParams} params
+ * 
  */
 const Filter_OrderItemCount = ( 
   { 
@@ -353,21 +458,22 @@ const Filter_OrderItemCount = (
   
   const [v, setV] = useState(value)
 
-  // useEffect(() => { setV(v) }, [value])
-  
   const onChangeInternal = useCallback(
     /**
-     * 
-     * @param {string} who 
-     * @param {any} e 
+     * @param {string} who key
+     * @param {React.ChangeEvent<HTMLInputElement>} e event
      */
     (who, e) => {
-      const vv = { ...v, [who] : parseInt(e.currentTarget.value) }
-      setV(vv)
-      onChange(vv)
+      const vv = { 
+        ...v, 
+        [who] : parseInt(e.currentTarget.value) 
+      };
+
+      setV(vv);
+      onChange(vv);
     },
     [v, onChange]
-  )
+  );
   
   const data = [
     { name: 'From', key: 'from' },
@@ -377,93 +483,144 @@ const Filter_OrderItemCount = (
   return (
 <div className='w-full flex flex-row items-center flex-wrap gap-5'>
   {
-    data.map(({ name, key }, ix) => (
-      <div key={ix} className='flex flex-row items-center gap-3'>
-        {name}
-        <BlingInput 
-            type='number' step='1' min='0' value={v[key]} 
-            className='w-20 rounded-md ' 
-            onWheel={(e) => e.target.blur()}
-            onChange={e => onChangeInternal(key, e)} />
-      </div>
-    ))
+    data.map(
+      ({ name, key }, ix) => (
+        <div key={ix} className='flex flex-row items-center gap-3'>
+          {name}
+          <BlingInput 
+              type='number' step='1' min='0' 
+              value={v[key]} 
+              className='w-20 rounded-md ' 
+              onWheel={(e) => e.target.blur()}
+              onChange={e => onChangeInternal(key, e)} />
+        </div>
+      )
+    )
   }
 </div>
   )
 }
 
-const Filter_OrderDate = ( { 
-        onChange, 
-        value={ from : new Date(), to : new Date()}, 
-        onWarning } ) => {
-  const [v, setV] = useState(value)
+/**
+ * 
+ * @typedef {object} Filter_OrderDateParams
+ * @prop {(value: import('@storecraft/core/v-api').FilterValue_o_date_in_range) => void} onChange
+ * @prop {import('@storecraft/core/v-api').FilterValue_o_date_in_range} [value]
+ * 
+ * 
+ * @param {Filter_OrderDateParams} params
+ */
+const Filter_OrderDate = ( 
+  { 
+    onChange, 
+    value={ from: (new Date()).toISOString(), to: (new Date()).toISOString()}
+  } 
+) => {
 
-  // useEffect(() => { setV(v) }, [value])
-
+  const [v, setV] = useState(value);
   const onChangeInternal = useCallback(
+    /**
+     * @param {string} who key
+     * @param {Date} date event
+     */
     (who, date) => {
-      const vv = { ...v, [who] : date.getTime() }
-      setV(vv)
-      onChange(vv)
-    },
-    [v, onChange]
-  )
+      const vv = { 
+        ...v, 
+        [who] : date.toISOString()
+      };
+
+      setV(vv);
+      onChange(vv);
+    }, [v, onChange]
+  );
   
   const data = [
     { name : 'From', key: 'from'},
     { name : 'To', key: 'to'},
-  ]
+  ];
 
   return (
 <div className='w-full flex flex-row gap-5 flex-wrap'>
   {
-    data.map(({ name, key}, ix) => (
-    <div className='flex flex-row --items-center flex-wrap gap-3' key={ix}>
-      <span children={name}/>
-      <DatePicker
-        className='border p-3 shelf-card outline-none'
-        selected={typeof v[key] === 'number' ? v[key] : new Date().getTime()}
-        onChange={(date) => onChangeInternal(key, date)}
-        showTimeSelect
-        timeFormat="HH:mm"
-        timeIntervals={60}
-        timeCaption="time"
-        dateFormat="MMMM d, yyyy h:mm aa" />
-    </div>
-    ))
+    data.map(
+      ({ name, key}, ix) => (
+      <div className='flex flex-row --items-center flex-wrap gap-3' key={ix}>
+        <span children={name}/>
+        <DatePicker  
+          className='border p-3 shelf-card outline-none'
+          selected={new Date(v[key] ?? null)}
+          onChange={(date) => onChangeInternal(key, date)}
+          showTimeSelect
+          timeFormat="HH:mm"
+          timeIntervals={60}
+          timeCaption="time"
+          dateFormat="MMMM d, yyyy h:mm aa" />
+      </div>
+      )
+    )
   }
 </div>
   )
 }
 
-const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
+/**
+ * 
+ * @typedef {object} Filter_OrderHasCustomersParams
+ * @prop {(value: import('@storecraft/core/v-api').CustomerType[]) => void} onChange
+ * @prop {import('@storecraft/core/v-api').CustomerType[]} value
+ * 
+ * 
+ * @param {Filter_OrderHasCustomersParams} params
+ */
+const Filter_OrderHasCustomers = (
+  { 
+    onChange, value=[] 
+  }
+) => {
+
   /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
   const [tags, setTags] = useState(value);
   
+  /**
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<
+   *  import('@storecraft/core/v-api').CustomerType
+   * >["onClick"]}
+   */
   const onRemove = useCallback(
     (v) => {
-      const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+      const idx = tags.indexOf(v);
+
+      if(idx == -1) 
+        return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
   );
 
+  /**
+   * @type {import('./resource-browse.jsx').BrowseCustomersParams["onSave"]}
+   */
   const onBrowseAdd = useCallback(
-    (selected_items) => { // array of shape [[id, data], ...]
-      // map to handle/id
-      const mapped = selected_items.map(it => it[0])
+    (selected_items) => { 
       // only include unseen handles
-      const resolved = [...mapped.filter(m => tags.find(it => it===m)===undefined), ...tags]
-      onChange(resolved)
-      setTags(resolved)
-      ref_overlay.current.hide()
+      const resolved = [
+        ...selected_items.filter(m => tags.find(it => it.id===m.id)===undefined), 
+        ...tags
+      ];
+
+      onChange(resolved);
+      setTags(resolved);
+
+      ref_overlay.current.hide();
     }, [tags, onChange]
-  )
+  );
 
   return (
 <div className='w-full'>
@@ -474,12 +631,20 @@ const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
       onClick={() => ref_overlay.current.show()} />
 
   <Overlay ref={ref_overlay} >
-    <BrowseCustomers onSave={onBrowseAdd} 
-                    onCancel={() => ref_overlay.current.hide()} />
+    <BrowseCustomers 
+        onSave={onBrowseAdd} 
+        onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
 
-  { tags?.length>0 && <HR className='w-full mt-5' />  }            
-  <CapsulesView onClick={onRemove} tags={tags} className='mt-5' />
+  { 
+    tags?.length>0 && 
+    <HR className='w-full mt-5' />  
+  } 
+  <CapsulesView 
+      onClick={onRemove} 
+      name_fn={extract_contact_field}
+      tags={tags} 
+      className='mt-5' />
 </div>
   )
 }
@@ -500,9 +665,11 @@ const Filter_OrderHasCustomers = ( { onChange, value=[] } ) => {
  * @prop {() => void} onRemove
  * @prop {number} ix
  * 
+ * 
  * @param {ProductFilterContainerParams &
- * React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ * 
  */
 const ProductFilterContainer = (
   { 
@@ -513,10 +680,8 @@ const ProductFilterContainer = (
 
   const [warn, setWarn] = useState(undefined)
 
-  const onWarning = useCallback(setWarn, [])
-
   return (
-<div className='shelf-card-light  w-full h-fit p-5 border shadow-lg
+<div className='shelf-card-light w-full h-fit p-5 border shadow-lg
               border-kf-200 text-sm rounded-lg' {...rest}>
 
   <div className='shelf-border-color border-b pb-2 flex 
@@ -526,19 +691,26 @@ const ProductFilterContainer = (
       <span children={`${type} Filter`} 
             className={`p-1 text-white rounded-md bg-gradient-to-r 
                         border whitespace-nowrap  
-                        ${(type==='product' ? 'from-pink-500 to-kf-500 border-kf-300/50' : 
-                    'from-teal-500 to-teal-400  border-teal-500')}`}  />
+                        ${(type==='product' ? 
+                        'from-pink-500 to-kf-500 border-kf-300/50' : 
+                        'from-teal-500 to-teal-400  border-teal-500')}`
+                      } />
 
       <span children={name} className='pr-3' />
     </div>
-    <IoMdClose onClick={onRemove} 
-             className='text-base items-center 
-                        cursor-pointer hover:text-teal-600
-                        flex-shrink-0' />
+    <IoMdClose 
+        onClick={onRemove} 
+        className='text-base items-center 
+                  cursor-pointer hover:text-teal-600
+                  flex-shrink-0' />
   </div>
   {
-    Comp && (<Comp {...CompParams} onChange={onChange}
-                  value={value} onWarning={onWarning} />)
+    Comp && (
+      <Comp 
+          {...CompParams} 
+          onChange={onChange}
+          value={value} />
+    )
   }
   <ShowIf show={warn}>
     <p children={warn} className='text-red-600 py-3' />
@@ -615,21 +787,32 @@ const fake_data = [
  * @param {import('@storecraft/core/v-api').Filter["meta"]["id"]} id Filter id
  */
 const filterId2Comp = id => {
-  const filter = filters_2_comp.find(it => it.id===id)
+  const filter = filters_2_comp.find(it => it.id===id);
+
   return { 
     name: filter?.name, 
     Comp: filter?.Comp, 
-    CompParams : filter?.CompParams }
+    CompParams : filter?.CompParams 
+  }
 }
 
 /**
+ * @typedef {object} AddFilterParams
+ * @prop {string} type
+ * @prop {(filter_id: string | number) => void} onAdd
  * 
- * @param {object} param
- * @param {string} param.type
- * @param {(filter_id: string | number) => void} param.onAdd
+ * 
+ * @param {AddFilterParams} params
  */
-const AddFilter = ({ type, onAdd }) => {
-  const options = filters_2_comp.filter(it => it.type===type)
+const AddFilter = (
+  { 
+    type, onAdd 
+  }
+) => {
+
+  const options = filters_2_comp.filter(
+    it => it.type===type
+  );
 
   return (
 <button className='shelf-bling-fill shelf-border-color
@@ -638,16 +821,21 @@ const AddFilter = ({ type, onAdd }) => {
                    flex-col justify-between h-full text-base' >
   <p children={`${type} Filter`} 
      className='shelf-text-minor-2 overflow-x-hidden whitespace-nowrap' />
-  <select value={'-1'} className='w-full h-9 bg-transparent
-                        outline-none text-gray-500  p-0'
-                        onChange={e => onAdd(e.currentTarget.value)}>
-    <option children={`Add Filter`} 
-            value='-1' key='-1' className='p-0 appearance-none' />
-  {
-  options.map((it, ix) => (
-    <option children={it.name} value={it.id} key={ix} />
-  ))
-  }
+  <select 
+      value={'-1'} 
+      className='w-full h-9 bg-transparent outline-none text-gray-500  p-0'
+      onChange={e => onAdd(e.currentTarget.value)}>
+    <option 
+        children={`Add Filter`} 
+        value='-1' key='-1' 
+        className='p-0 appearance-none' />
+    {
+      options.map(
+        (it, ix) => (
+          <option children={it.name} value={it.id} key={ix} />
+        )
+      )
+    }
   </select> 
 
 </button>
@@ -656,12 +844,16 @@ const AddFilter = ({ type, onAdd }) => {
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').Filter[]} param.value bunch of filters
- * @param {('product' | 'order')[]} param.types bunch of filters
- * @param {(filters: 
+ * @typedef {object} DiscountFiltersParams 
+ * @prop {import('@storecraft/core/v-api').Filter[]} value bunch of filters
+ * @prop {('product' | 'order')[]} types bunch of filters
+ * @prop {(filters: 
  *  import('@storecraft/core/v-api').Filter[]) => void
- * } param.onChange bunch of filters
+ * } onChange bunch of filters
+ * 
+ * 
+ * @param {DiscountFiltersParams} params
+ * 
  */
 const DiscountFilters = (
   { 
@@ -672,11 +864,16 @@ const DiscountFilters = (
   const [filters, setFilters] = useState(value ?? [])
 
   const setAndChange = useCallback(
+    /**
+     * 
+     * @param {import('@storecraft/core/v-api').Filter[]} fs 
+     */
     (fs) => {
       setFilters(fs);
+
       onChange && onChange(fs);
     }, [onChange]
-  )
+  );
 
   const onProductFilterChange = useCallback(
     /**
@@ -685,11 +882,13 @@ const DiscountFilters = (
      * @param {import('@storecraft/core/v-api').Filter["value"]} v Filter value
      */
     (ix, v) => {
-      filters[ix].value = v
-      const vv = [...filters]
-      setAndChange(vv)
+      filters[ix].value = v;
+
+      const vv = [...filters];
+
+      setAndChange(vv);
     }, [filters, setAndChange]
-  )
+  );
 
   const onRemoveProductFilter = useCallback(
     /**
@@ -697,28 +896,33 @@ const DiscountFilters = (
      * @param {number} ix Filter index
      */
     (ix) => {
-      filters.splice(ix, 1)
-      const vv = [...filters]
-      setAndChange(vv)
+      filters.splice(ix, 1);
+
+      setAndChange([...filters]);
     }, [filters, setAndChange]
-  )
+  );
 
   const onAddFilter = useCallback(
     /**
      * @param {number} filter_id 
      */
     (filter_id) => {
-      const fd = filters_2_comp.find(it => it.id==filter_id)
+      const fd = filters_2_comp.find(it => it.id==filter_id);
+
+      /** @type {import('@storecraft/core/v-api').Filter} */
       const f = { 
         meta: {
           id: fd.id, type: fd.type, op: fd.op
         },
         value : undefined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
       }
-      const vv = [...filters, f]
-      setAndChange(vv)
+
+      const vv = [...filters, f];
+
+      setAndChange(vv);
+
     }, [filters, setAndChange, filters_2_comp]
-  )
+  );
 
   // console.log('filters',filters)
   
@@ -728,9 +932,9 @@ const DiscountFilters = (
     {
       types.map(
         (t, ix) => (
-        <Bling className='flex-1' rounded='rounded-lg' key={ix}>
-          <AddFilter type={t} onAdd={onAddFilter} />
-        </Bling>
+          <Bling className='flex-1' rounded='rounded-lg' key={ix}>
+            <AddFilter type={t} onAdd={onAddFilter} />
+          </Bling>
         )
       )
     }
@@ -744,12 +948,13 @@ const DiscountFilters = (
     <div className='w-full flex flex-col gap-5'>
     {
       filters.map((it, ix) => (
-        <ProductFilterContainer {...filterId2Comp(it?.meta?.id)} 
-          onChange={ (v) => onProductFilterChange(ix, v)} 
-          onRemove={ () => onRemoveProductFilter(ix)} 
-          key={ix} ix={ix} value={it.value} 
-          id={String(it.meta?.id)} 
-          type={it.meta?.type} />
+        <ProductFilterContainer 
+            {...filterId2Comp(it?.meta?.id)} 
+            onChange={(v) => onProductFilterChange(ix, v)} 
+            onRemove={() => onRemoveProductFilter(ix)} 
+            key={ix} ix={ix} value={it.value} 
+            id={String(it.meta?.id)} 
+            type={it.meta?.type} />
       ))
     }      
     </div>    

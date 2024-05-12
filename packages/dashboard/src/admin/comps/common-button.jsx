@@ -104,15 +104,16 @@ export const LoadingButton = (
   text = loading && !keep_text_on_load ? '' : text
   const cls_loading = 'animate-spin ' + classNameLoading
   const cls_span = 'whitespace-nowrap '
-  Icon = loading ? <AiOutlineLoading3Quarters className={cls_loading}/> : Icon
+  // Icon = loading ? <AiOutlineLoading3Quarters className={cls_loading}/> : Icon
   // console.log('cls ', className);
   return (
 <button className={`flex flex-row items-center gap-1 ${className}`} {...rest} >
-  { 
-    Icon 
-    // && 
-    // <Icon className={`${classNameLoading} ${cls_loading} `}/>
-  }
+  <div className='h-full w-4 flex flex-row items-center'>
+    {
+      loading ? <AiOutlineLoading3Quarters className={cls_loading}/> :
+      Icon
+    }
+  </div>
   {
     text &&
     <span children={text} className={cls_span}/>
@@ -126,7 +127,7 @@ export const LoadingButton = (
  * A loading button which expects a promise for onClick
  * 
  * @typedef {object} InternalPromisableLoadingButton
- * @prop {() => Promise<Void>} onClick
+ * @prop {() => Promise<any>} onClick
  * @prop {boolean} [loading]
  * 
  * @typedef {InternalPromisableLoadingButton & 

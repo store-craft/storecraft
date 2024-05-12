@@ -180,12 +180,12 @@ export const discountApplicationEnumSchema = z
   .object({
     Auto: z.object({
       id: z.literal(0),
-      name: z.literal("Automatic"),
+      name: z.string().optional(),
       name2: z.literal("automatic"),
     }),
     Manual: z.object({
       id: z.literal(1),
-      name: z.literal("Manual"),
+      name: z.string().optional(),
       name2: z.literal("manual"),
     }),
   })
@@ -259,87 +259,100 @@ export const filterValueOItemsCountInRangeSchema = z
 export const filterValueODateInRangeSchema = z
   .object({
     from: z
-      .number()
+      .string()
       .optional()
-      .describe("`o_date_in_range` filter From date timestamp"),
-    to: z.number().describe("`o_date_in_range` filter To date timestamp"),
+      .describe("`o_date_in_range` filter From date `ISO` format"),
+    to: z.string().describe("`o_date_in_range` filter To date `ISO` format"),
   })
   .describe("Filter for order discount, subtotal in range");
 export const filterValueOHasCustomersSchema = z
-  .array(z.string())
+  .array(
+    z.object({
+      id: z.string().describe("`id` of `customer`"),
+      email: z.string().optional().describe("(optional) `email` of `customer`"),
+      firstname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+      lastname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+    }),
+  )
   .describe("Filter for order discount, order has customer id");
 export const filterMetaEnumSchema = z.object({
   p_in_collections: z.object({
     id: z.literal(0),
     type: z.literal("product"),
     op: z.literal("p-in-collections"),
-    name: z.literal("Product In Collection"),
+    name: z.string().optional(),
   }),
   p_not_in_collections: z.object({
     id: z.literal(1),
     type: z.literal("product"),
     op: z.literal("p-not-in-collections"),
-    name: z.literal("Product not in Collection"),
+    name: z.string().optional(),
   }),
   p_in_handles: z.object({
     id: z.literal(2),
     type: z.literal("product"),
     op: z.literal("p-in-handles"),
-    name: z.literal("Product has ID"),
+    name: z.string().optional(),
   }),
   p_not_in_handles: z.object({
     id: z.literal(3),
     type: z.literal("product"),
     op: z.literal("p-not-in-handles"),
-    name: z.literal("Product excludes ID"),
+    name: z.string().optional(),
   }),
   p_in_tags: z.object({
     id: z.literal(4),
     type: z.literal("product"),
     op: z.literal("p-in-tags"),
-    name: z.literal("Product has Tag"),
+    name: z.string().optional(),
   }),
   p_not_in_tags: z.object({
     id: z.literal(5),
     type: z.literal("product"),
     op: z.literal("p-not-in-tags"),
-    name: z.literal("Product excludes Tag"),
+    name: z.string().optional(),
   }),
   p_all: z.object({
     id: z.literal(6),
     type: z.literal("product"),
     op: z.literal("p-all"),
-    name: z.literal("All Products"),
+    name: z.string().optional(),
   }),
   p_in_price_range: z.object({
     id: z.literal(7),
     type: z.literal("product"),
     op: z.literal("p-in-price-range"),
-    name: z.literal("Product in Price range"),
+    name: z.string().optional(),
   }),
   o_subtotal_in_range: z.object({
     id: z.literal(100),
     type: z.literal("order"),
     op: z.literal("o-subtotal-in-range"),
-    name: z.literal("Order subtotal in range"),
+    name: z.string().optional(),
   }),
   o_items_count_in_range: z.object({
     id: z.literal(101),
     type: z.literal("order"),
     op: z.literal("o-items-count-in-range"),
-    name: z.literal("Order items count in range"),
+    name: z.string().optional(),
   }),
   o_date_in_range: z.object({
     id: z.literal(102),
     type: z.literal("order"),
     op: z.literal("o-date-in-range"),
-    name: z.literal("Order in dates"),
+    name: z.string().optional(),
   }),
   o_has_customer: z.object({
     id: z.literal(103),
     type: z.literal("order"),
     op: z.literal("o-has-customer"),
-    name: z.literal("Order has Customers"),
+    name: z.string().optional(),
   }),
 });
 export const regularDiscountExtraSchema = z
@@ -400,27 +413,27 @@ export const discountMetaEnumSchema = z
     regular: z.object({
       id: z.literal(0),
       type: z.literal("regular"),
-      name: z.literal("Regular Discount"),
+      name: z.string().optional(),
     }),
     bulk: z.object({
       id: z.literal(1),
       type: z.literal("bulk"),
-      name: z.literal("Bulk Discount"),
+      name: z.string().optional(),
     }),
     buy_x_get_y: z.object({
       id: z.literal(2),
       type: z.literal("buy_x_get_y"),
-      name: z.literal("Buy X Get Y"),
+      name: z.string().optional(),
     }),
     order: z.object({
       id: z.literal(3),
       type: z.literal("order"),
-      name: z.literal("Order Discount"),
+      name: z.string().optional(),
     }),
     bundle: z.object({
       id: z.literal(4),
       type: z.literal("bundle"),
-      name: z.literal("Bundle Discount"),
+      name: z.string().optional(),
     }),
   })
   .describe(
@@ -500,27 +513,27 @@ export const fulfillOptionsEnumSchema = z
     draft: z.object({
       id: z.literal(0),
       name2: z.literal("draft"),
-      name: z.literal("Draft"),
+      name: z.string().optional(),
     }),
     processing: z.object({
       id: z.literal(1),
       name2: z.literal("processing"),
-      name: z.literal("Processing (Stock Reserved)"),
+      name: z.string().optional(),
     }),
     shipped: z.object({
       id: z.literal(2),
       name2: z.literal("shipped"),
-      name: z.literal("Shipped"),
+      name: z.string().optional(),
     }),
     fulfilled: z.object({
       id: z.literal(3),
       name2: z.literal("fulfilled"),
-      name: z.literal("Fulfilled"),
+      name: z.string().optional(),
     }),
     cancelled: z.object({
       id: z.literal(4),
       name2: z.literal("cancelled"),
-      name: z.literal("Cancelled (Stock returned)"),
+      name: z.string().optional(),
     }),
   })
   .describe(
@@ -530,47 +543,47 @@ export const paymentOptionsEnumSchema = z
   .object({
     unpaid: z.object({
       id: z.literal(0),
-      name: z.literal("Unpaid"),
+      name: z.string().optional(),
       name2: z.literal("unpaid"),
     }),
     authorized: z.object({
       id: z.literal(1),
-      name: z.literal("Authorized"),
+      name: z.string().optional(),
       name2: z.literal("authorized"),
     }),
     captured: z.object({
       id: z.literal(2),
-      name: z.literal("Captured"),
+      name: z.string().optional(),
       name2: z.literal("captured"),
     }),
     requires_auth: z.object({
       id: z.literal(3),
-      name: z.literal("Requires Authentication"),
+      name: z.string().optional(),
       name2: z.literal("requires_auth"),
     }),
     voided: z.object({
       id: z.literal(4),
-      name: z.literal("Voided"),
+      name: z.string().optional(),
       name2: z.literal("voided"),
     }),
     failed: z.object({
       id: z.literal(5),
-      name: z.literal("Failed"),
+      name: z.string().optional(),
       name2: z.literal("failed"),
     }),
     partially_paid: z.object({
       id: z.literal(6),
-      name: z.literal("Partially paid"),
+      name: z.string().optional(),
       name2: z.literal("partially_paid"),
     }),
     refunded: z.object({
       id: z.literal(7),
-      name: z.literal("Refunded"),
+      name: z.string().optional(),
       name2: z.literal("refunded"),
     }),
     partially_refunded: z.object({
       id: z.literal(8),
-      name: z.literal("Partially Refunded"),
+      name: z.string().optional(),
       name2: z.literal("partially_refunded"),
     }),
   })
@@ -582,27 +595,27 @@ export const checkoutStatusEnumSchema = z
     created: z.object({
       id: z.literal(0),
       name2: z.literal("created"),
-      name: z.literal("Created"),
+      name: z.string().optional(),
     }),
     requires_action: z.object({
       id: z.literal(1),
       name2: z.literal("requires_action"),
-      name: z.literal("Requires Action"),
+      name: z.string().optional(),
     }),
     failed: z.object({
       id: z.literal(2),
       name2: z.literal("failed"),
-      name: z.literal("Failed"),
+      name: z.string().optional(),
     }),
     complete: z.object({
       id: z.literal(3),
       name2: z.literal("complete"),
-      name: z.literal("Complete"),
+      name: z.string().optional(),
     }),
     unknown: z.object({
       id: z.literal(4),
       name2: z.literal("unknown"),
-      name: z.literal("Unknown"),
+      name: z.string().optional(),
     }),
   })
   .describe(
@@ -911,7 +924,7 @@ export const filterSchema = z
       .optional()
       .describe("The filter params"),
   })
-  .describe("Discount filter scheme");
+  .describe("Discount filter schema");
 export const buyXGetYDiscountExtraSchema = z
   .object({
     fixed: z

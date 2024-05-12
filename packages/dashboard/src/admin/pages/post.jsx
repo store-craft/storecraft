@@ -12,6 +12,7 @@ import Media from '@/admin/comps/media.jsx'
 import Attributes from '@/admin/comps/attributes.jsx'
 import { withBling, CreateDate, Div } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useCallback } from 'react'
 
 const root_left_schema = {
   name:'Root', comp: Div, 
@@ -150,6 +151,17 @@ export default (
   } = useDocumentActions(
     'posts', documentId, '/pages/posts', mode, base
   );
+
+  const duplicate_mod = useCallback(
+    () => {
+      return duplicate(
+        {
+          title: doc?.title + ' duplicate'
+        }
+      )
+    }, [doc, duplicate]
+  );
+
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>

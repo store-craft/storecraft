@@ -106,7 +106,7 @@ const Attributes = (
     }, [atts, onChange]
   );
 
-  console.log(value)
+  // console.log(value)
 
   const onChangeInternal = useCallback(
     /**

@@ -27,12 +27,12 @@ export const FilterMetaEnum = {
   p_in_handles: {
     id: 2, type:'product', 
     op: 'p-in-handles', 
-    name: 'Product has ID'
+    name: 'Product has handle'
   },
   p_not_in_handles: { 
     id: 3, type:'product', 
     op: 'p-not-in-handles', 
-    name: 'Product excludes ID'
+    name: 'Product excludes handle'
   },
   p_in_tags: { 
     id: 4, type:'product', 

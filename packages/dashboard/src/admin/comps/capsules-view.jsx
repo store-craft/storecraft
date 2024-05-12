@@ -19,7 +19,9 @@ const default_name_fn = v => v
  */
 
 /** 
- * @param {CapsulesViewParams} params
+ * @template [T=any]
+ * 
+ * @param {CapsulesViewParams<T>} params
  */
 const CapsulesView = (
   { 

@@ -247,10 +247,11 @@ export default (
       return duplicate(
         {
           discounts: undefined,
+          title: doc?.title + ' duplicate'
         }
       )
-    }, [duplicate]
-  )
+    }, [doc, duplicate]
+  );
   
   /** @type {Context} */
   const context = useMemo(
@@ -261,7 +262,7 @@ export default (
           const state = context_base.getState();
           delete state?.['variants'];
           return {
-            data: state,
+            data: state.data,
             hasChanged: false
           }
         },

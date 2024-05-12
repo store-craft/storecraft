@@ -1,7 +1,6 @@
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.jsx'
-import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
@@ -10,7 +9,7 @@ import { ResourceTitle } from '../comps/resource-title.jsx'
  * 
  * @param {import('@storecraft/core/v-api').CustomerType} item 
  */
-const extract_contact_field = item => {
+export const extract_contact_field = item => {
 
   return item?.firstname ?
   item?.firstname + (item?.lastname ? ' ' + item?.lastname : '') : 

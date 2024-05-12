@@ -169,7 +169,7 @@ export default (
   const {
     actions: {
       savePromise, deletePromise, setError, reload,
-      navWithState
+      navWithState, duplicate
     },
     context, key, sdk,
     doc, isCreateMode, isEditMode, isViewMode, 
@@ -179,27 +179,15 @@ export default (
     'collections', documentId, '/pages/collections', mode, base
   );
   
-  const duplicate = useCallback(
-    async () => {
-      const state = context.getState()
-      /**@type {State} */
-      const state_next = { 
-        data: { 
-          ...state?.data,
-          title: state?.data?.title + ' duplicate',
-          updated_at: undefined,
-          created_at: undefined,
-          search: undefined,
-          handle: undefined,
-          _published: undefined,
-        },
-        hasChanged: true
-      }
-      // ref_head.current.set(false)
-      navWithState(`/pages/collections/create`, 
-            state, state_next)
-    }, [navWithState, context]
-  )
+  const duplicate_mod = useCallback(
+    () => {
+      return duplicate(
+        {
+          title: doc?.title + ' duplicate',
+        }
+      )
+    }, [doc, duplicate]
+  );
 
   const publishPromise = useCallback(
     async () => {
@@ -231,7 +219,7 @@ export default (
       onClickCreate={isCreateMode ? savePromise : undefined}
       onClickPublish={!isCreateMode ? publishPromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} 
-      onClickDuplicate={!isCreateMode ? duplicate : undefined}
+      onClickDuplicate={!isCreateMode ? duplicate_mod : undefined}
       onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
       id={documentId}
       className='mt-5'/>

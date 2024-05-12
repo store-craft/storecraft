@@ -249,6 +249,16 @@ export default (
     'storefronts', documentId, '/pages/storefronts', mode, base
   );
 
+  const duplicate_mod = useCallback(
+    () => {
+      return duplicate(
+        {
+          title: doc?.title + ' duplicate'
+        }
+      )
+    }, [doc, duplicate]
+  );
+
   const publishPromise = useCallback(
     async () => {
       await savePromise();
@@ -280,7 +290,7 @@ export default (
       onClickSave={isEditMode ? savePromise : undefined}
       onClickCreate={isCreateMode ? savePromise : undefined}
       onClickPublish={!isCreateMode ? publishPromise : undefined}
-      onClickDuplicate={!isCreateMode ? duplicate : undefined}
+      onClickDuplicate={!isCreateMode ? duplicate_mod : undefined}
       onClickReload={!isCreateMode ? reloadPromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} />
   <CreateDate 

@@ -317,9 +317,10 @@ const Variant = (
 
   const view = useCallback(
     async () => {
-      const state = context?.getState && context?.getState()
-      const url = `/pages/products/${match_handle}/edit`
-      navWithState(url, state)
+      const state = context?.getState && context?.getState();
+      const url = `/pages/products/${match_handle}/edit`;
+
+      navWithState(url, state);
     }, [match_handle, navWithState, context]
   );
 
@@ -359,9 +360,10 @@ const Variant = (
           },
           hasChanged: true
         }
-  
+        
         navWithState(`/pages/products/create`, state, state_next)
       } catch (e) {
+        setError('Unable to save this parent document 😔')
         console.error(e)
       }
     }, [context, navWithState, combination, text]
@@ -456,11 +458,12 @@ const VariantsView = (
 {
   combinations.map(
     c => (
-      <Variant combination={c} 
-               context={context}
-               options={options} 
-               setError={setError}
-               key={c?.map(s=>s.value_id).join('_')} />
+      <Variant 
+          combination={c} 
+          context={context}
+          options={options} 
+          setError={setError}
+          key={c?.map(s=>s.value_id).join('_')} />
     )
   )
 }
@@ -542,7 +545,10 @@ const ProductVariants = (
       <p children='Variants' className='text-xl w-full font-semibold' />
     </div>
     <ShowBinarySwitch toggle={v?.length ?? false} className='w-full'>
-      <VariantsView options={v} context={context} setError={setError} />
+      <VariantsView 
+          options={v} 
+          context={context} 
+          setError={setError} />
       <div className='w-full shelf-text-minor-light text-base' 
           children={TEXT_INSTRUCT}/>
     </ShowBinarySwitch>

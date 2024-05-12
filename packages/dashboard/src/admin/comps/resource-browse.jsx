@@ -14,16 +14,21 @@ import { App } from '@storecraft/core'
  * - query and filtering with `vql` search query
  * - designed to be used inside a popup modal.
  * 
+ * @template {import('@storecraft/core/v-api').BaseType} [T=import('@storecraft/core/v-api').BaseType]
+ * 
  * 
  * @typedef {object} BrowseCollectionParams
  * @prop {keyof App["db"]["resources"]} resource
  * @prop {string} [title]
  * @prop {React.FC<{data: object}>} [Comp]
- * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
+ * @prop {(v: T[]) => void} onSave
  * @prop {() => void} onCancel
+ */
+
+/** 
+ * @template {import('@storecraft/core/v-api').BaseType} [T=import('@storecraft/core/v-api').BaseType]
  * 
- * 
- * @param {BrowseCollectionParams} params
+ * @param {BrowseCollectionParams<T>} params
  */
 const BrowseCollection = (
   { 
@@ -32,9 +37,13 @@ const BrowseCollection = (
 ) => {
 
   const [focus, setFocus] = useState(false)
-  /**@type {ReturnType<typeof useState<import('@storecraft/core/v-api').BaseType[]>>} */
+  /**@type {ReturnType<typeof useState<T[]>>} */
   const [selected, setSelected] = useState([]);
-  const [limit, setLimit] = useState(5)
+  const [limit, setLimit] = useState(5);
+
+  /**
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
+   */
   const { 
     pages, page, loading, error, queryCount, 
     actions: {
@@ -43,7 +52,7 @@ const BrowseCollection = (
   } = useCollection(resource);
 
   const onAdd = useCallback(
-    /** @param {import('@storecraft/core/v-api').BaseType} item */
+    /** @param {T} item */
     (item) => {
       setSelected(
         vs => [item, ...vs.filter(it => it.id!==item.id)]
@@ -53,9 +62,9 @@ const BrowseCollection = (
   );
 
   const onRemove = useCallback(
-    /** @param {import('@storecraft/core/v-api').BaseType} item */
+    /** @param {T} item */
     (item) => {
-      setSelected( vs => vs.filter(it => it.id!==item.id))
+      setSelected(vs => vs.filter(it => it.id!==item.id))
     }, []
   );
   
@@ -274,7 +283,7 @@ export const BrowseCustomers = ({ onSave, onCancel }) => {
 
 /**
  * @typedef {object} BrowseProductsParams
- * @prop {(v: import('@storecraft/core/v-api').BaseType[]) => void} onSave
+ * @prop {(v: import('@storecraft/core/v-api').ProductType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
  * @param {BrowseProductsParams} params

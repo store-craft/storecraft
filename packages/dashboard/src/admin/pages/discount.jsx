@@ -274,7 +274,7 @@ export default (
       onClickCreate={isCreateMode ? savePromise : undefined}
       onClickPublish={!isCreateMode ? publishPromise : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined} 
-      onClickDuplicate={!isCreateMode ? duplicate : undefined}
+      onClickDuplicate={!isCreateMode ? () => duplicate({ title: doc?.title + ' duplicate'}) : undefined}
       onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
       id={doc?.id}
       isExported={Boolean(doc?.published)}

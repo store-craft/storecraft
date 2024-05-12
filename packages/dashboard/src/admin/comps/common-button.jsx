@@ -127,7 +127,7 @@ export const LoadingButton = (
  * A loading button which expects a promise for onClick
  * 
  * @typedef {object} InternalPromisableLoadingButton
- * @prop {() => Promise<Void>} onClick
+ * @prop {() => Promise<any>} onClick
  * @prop {boolean} [loading]
  * 
  * @typedef {InternalPromisableLoadingButton & 

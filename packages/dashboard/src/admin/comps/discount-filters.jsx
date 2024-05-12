@@ -150,38 +150,56 @@ const Filter_ProductHasTags = ( { onChange, value=[] } ) => {
  *  import('@storecraft/core/v-api').FilterValue_p_in_handles) => void
  * } param.onChange
  */
-const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
+const Filter_ProductHasHandle = (
+  { 
+    onChange, value=[] 
+  }
+) => {
+  
   /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
 
   const [tags, setTags] = useState(value)
 
   const onRemove = useCallback(
+    /** @param {string} v */
     (v) => {
       const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+
+      if(idx == -1) return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
-  )
+  );
 
+  /**
+   * @type {import('./resource-browse.jsx').BrowseProductsParams["onSave"]}
+   */
   const onBrowseAdd = useCallback(
-    (selected_items) => { // array of shape [[id, data], ...]
+    (selected_items) => { 
       // map to handle/id
-      const mapped = selected_items.map(it => it[0])
+      const mapped = selected_items.map(
+        it => it.handle
+      );
+
       // only include unseen handles
       const resolved = [
         ...mapped.filter(m => tags.find(it => it===m)===undefined), 
         ...tags
-      ]
-      onChange(resolved)
-      setTags(resolved)
-      ref_overlay.current.hide()
+      ];
+
+      onChange(resolved);
+      setTags(resolved);
+
+      ref_overlay.current.hide();
     }, [tags, onChange]
-  )
+  );
 
   return (
 <div className='w-full'>
@@ -191,11 +209,19 @@ const Filter_ProductHasHandle = ( { onChange, value=[] } ) => {
         children='Browse products' 
         onClick={() => ref_overlay.current.show()} />
   <Overlay ref={ref_overlay} >
-    <BrowseProducts onSave={onBrowseAdd} 
-                    onCancel={() => ref_overlay.current.hide()} />
+    <BrowseProducts 
+        onSave={onBrowseAdd} 
+        onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
-  { tags?.length>0 && <HR className='w-full mt-5' />  }            
-  <CapsulesView onClick={onRemove} tags={tags} className='mt-5' />
+  { 
+    tags?.length>0 && 
+    <HR className='w-full mt-5' />  
+  } 
+  <CapsulesView 
+      onRemove={onRemove} 
+      onClick={onRemove} 
+      tags={tags} 
+      className='mt-5' />
 </div>
   )
 }

@@ -45,10 +45,10 @@ const upsert = (driver) => {
             .expression(eb => 
               eb.selectFrom('products')
                 .select(eb => [
-                  'handle as entity_handle',
-                  'id as entity_id',
-                  eb.val(item.id).as('value'),
-                  eb.val(item.handle).as('reporter')
+                    'handle as entity_handle',
+                    'id as entity_id',
+                    eb.val(item.id).as('value'),
+                    eb.val(item.handle).as('reporter')
                   ]
                 )
                 .where(

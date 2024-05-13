@@ -176,6 +176,12 @@ export const textEntitySchema = z
     value: z.string().describe("The text value of the entity"),
   })
   .describe("Identifiable text entity type");
+export const handleAndIDSchema = z
+  .object({
+    id: z.string().describe("The `id` of the entity"),
+    handle: z.string().describe("The `handle` of the entity"),
+  })
+  .describe("both `id` and `handle` of entity required");
 export const discountApplicationEnumSchema = z
   .object({
     Auto: z.object({
@@ -859,7 +865,7 @@ export const authUserTypeSchema = baseTypeSchema
   )
   .describe("Auth user type");
 export const collectionTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The handle of the entity"),
+  handle: z.string().describe("The `handle` of the entity"),
   title: z
     .string()
     .min(3, "Title should be longer than 3")
@@ -1282,13 +1288,13 @@ export const productTypeUpsertSchema = productTypeSchema
   .and(
     z.object({
       collections: z
-        .array(collectionTypeSchema.pick({ id: true, handle: true }))
+        .array(handleAndIDSchema)
         .optional()
         .describe(
           "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
         ),
       related_products: z
-        .array(baseProductTypeSchema.pick({ id: true, handle: true }))
+        .array(handleAndIDSchema)
         .optional()
         .describe(
           "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
@@ -1328,9 +1334,39 @@ export const storefrontTypeSchema = baseTypeSchema.extend({
     .optional()
     .describe("Posts related to this storefront"),
 });
-export const storefrontTypeUpsertSchema = storefrontTypeSchema.describe(
-  "Storefront upsert type",
-);
+export const storefrontTypeUpsertSchema = storefrontTypeSchema
+  .omit({
+    collections: true,
+    products: true,
+    posts: true,
+    discounts: true,
+    shipping_methods: true,
+  })
+  .and(
+    z.object({
+      collections: z
+        .array(handleAndIDSchema)
+        .optional()
+        .describe("Collections related to this storefront"),
+      products: z
+        .array(handleAndIDSchema)
+        .optional()
+        .describe("Products related to this storefront"),
+      shipping_methods: z
+        .array(handleAndIDSchema)
+        .optional()
+        .describe("Shipping methods related to this storefront"),
+      discounts: z
+        .array(handleAndIDSchema)
+        .optional()
+        .describe("Discounts related to this storefront"),
+      posts: z
+        .array(handleAndIDSchema)
+        .optional()
+        .describe("Posts related to this storefront"),
+    }),
+  )
+  .describe("Storefront upsert type");
 export const lineItemSchema = z
   .object({
     id: z.string().describe("`id` or `handle` of product"),

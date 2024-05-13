@@ -1,144 +1,542 @@
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { enums } from '@storecraft/core/v-api';
-import { 
-  create_handle, file_name, promises_sequence 
-} from './api.utils.crud.js';
+import { file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
-
-const handle_pr = create_handle('pr', file_name(import.meta.url));
-const handle_discount = create_handle('10-off', file_name(import.meta.url));
-
-/**
- * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
- * @typedef {import('@storecraft/core/v-api').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('@storecraft/core/v-api').FilterValue_p_in_handles} FilterValue_p_in_handles
- */
-
-/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
-const pr_upsert = [
-  {
-    handle: handle_pr(),
-    active: true,
-    price: 50,
-    qty: 1,
-    title: 'product 11',
-  },
-  {
-    handle: handle_pr(),
-    active: true,
-    price: 50,
-    qty: 1,
-    title: 'product 21',
-  },
-]
-
-/** @type {DiscountTypeUpsert[]} */
-const discounts_upsert = Array.from({length: 10}).map(
-  (_, ix, arr) => (
-    {
-      active: true, application: enums.DiscountApplicationEnum.Auto, 
-      handle: handle_discount(), priority: 0, title: `10% OFF (${ix+1})`,
-      info: {
-        details: {
-          meta: enums.DiscountMetaEnum.regular,
-          /** @type {RegularDiscountExtra} */
-          extra: {
-            fixed: 0, percent: 10
-          }
-        },
-        filters: [
-          { // discount for a specific product handle
-            meta: enums.FilterMetaEnum.p_in_handles,
-            /** @type {FilterValue_p_in_handles} */
-            value: [ pr_upsert[0].handle, pr_upsert[1].handle ]
-          }
-        ]
-      }
-    }
-  )
-)
+import { 
+  setup_for_discount_filter_product_all, 
+  setup_for_discount_filter_product_in_collections, 
+  setup_for_discount_filter_product_in_handles, 
+  setup_for_discount_filter_product_in_tags, 
+  setup_for_discount_filter_product_NOT_in_collections, 
+  setup_for_discount_filter_product_NOT_in_handles, 
+  setup_for_discount_filter_product_NOT_in_tags 
+} from './api_fixtures_discounts_products_test.js';
 
 /**
  * 
+ * As opposed to `discounts -> products` tests, here we test the
+ * other way `product -> discounts` by:
+ * - First `upsert` the discount
+ * - `upsert` positive products for the discount
+ * - `upsert` negative products for the discount
+ * - Then, query the products and confirm their attached `discounts`
+ * 
  * @param {App} app 
+ * 
  */
 export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
   );
-  
+
+
   s.before(
     async () => { 
       assert.ok(app.ready);
-      try {
-        for(const p of pr_upsert)
-          await app.api.products.remove(p.handle);
-
-        for(const d of discounts_upsert)
-          await app.api.discounts.remove(d.handle);
-      } catch(e) {
-        console.log(e)
-        throw e;
-      }
-
     }
   );
 
-  s('upsert 1st product -> upsert Discount -> test discount was applied', async () => {
-    // upsert 1st product
-    await app.api.products.upsert(pr_upsert[0]);
+  
+  s('test product has handles', async () => {
+    const now = (new Date()).toISOString();
 
-    // upsert all discount
-    const ids = await promises_sequence(
-      discounts_upsert.map(d => () => app.api.discounts.upsert(d))
-    )
+    const {
+      discount, products_negative, products_positive
+    } = setup_for_discount_filter_product_in_handles();
 
-    // now query the product's discounts to see if discount was applied to 1st product
-    const product_discounts = await app.api.products.list_product_discounts(
-      pr_upsert[0].handle
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
     );
 
-    // console.log(product_discounts.length)
+    // remove all products
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.remove(p.handle);
 
-    assert.ok(product_discounts.length>=discounts_upsert.length, 'got less')
-  });
+    await app.api.discounts.remove(discount.handle);
 
-  s('upsert 2nd product -> test discount was applied too', async () => {
+    // upsert discount
+    await app.api.discounts.upsert(discount);
 
-    // now test upsert 2nd product AFTER discount was created, to test
-    // the side-effect, the product should be linked to the discount
-    // because it is qualified
+    // upsert products after discount
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.upsert(p);
 
-    const pr_2 = pr_upsert[1];
-    await app.api.products.upsert(pr_2); 
-
-    // now query the product's discounts to see it was applied
-    const product_discounts = await app.api.products.list_product_discounts(
-      pr_2.handle
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
     );
-    assert.ok(product_discounts.length>=discounts_upsert.length, 'got less')
-  });
 
-  s('remove Discount -> test discount was removed from products too', async () => {
-    const discount = discounts_upsert[0];
-    // remove the discount and then test it does not show in product's discounts
-    await app.api.discounts.remove(discount.handle); 
+    assert.ok(
+      products_queried.length >= (products_positive.length + products_negative.length),
+      'pre-condition has failed'
+    );
 
-    for(const p of pr_upsert) {
-      const product_discounts = await app.api.products.list_product_discounts(
-        p.handle
+    // confirm positive products have this discount
+    for (const p of products_positive) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
       );
-      const no_discount = product_discounts.every(
-        d => d.handle!==discount.handle
-      );
-      assert.ok(no_discount, 'discount was not removed')
     }
-    
+
+    // confirm negative products don't have this discount
+    for (const p of products_negative) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        !product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was mistakenly applied at a negative product with handle=${p.handle}` 
+      );
+
+    }
+  
   });
+
+
+  s('test product has NO handles', async () => {
+    const now = (new Date()).toISOString();
+
+    const {
+      discount, products_negative, products_positive
+    } = setup_for_discount_filter_product_NOT_in_handles();
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
+    // remove all products
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.remove(p.handle);
+
+    await app.api.discounts.remove(discount.handle);
+
+    // upsert discount
+    await app.api.discounts.upsert(discount);
+
+    // upsert products after discount
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.upsert(p);
+
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    assert.ok(
+      products_queried.length >= (products_positive.length + products_negative.length),
+      'pre-condition has failed'
+    );
+
+    // confirm positive products have this discount
+    for (const p of products_positive) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
+      );
+    }
+
+    // confirm negative products don't have this discount
+    for (const p of products_negative) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        !product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was mistakenly applied at a negative product with handle=${p.handle}` 
+      );
+
+    }
+  
+  });
+
+
+  s('test product has tags', async () => {
+    const now = (new Date()).toISOString();
+
+    const {
+      discount, products_negative, products_positive
+    } = setup_for_discount_filter_product_in_tags();
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
+    // remove all products
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.remove(p.handle);
+
+    await app.api.discounts.remove(discount.handle);
+
+    // upsert discount
+    await app.api.discounts.upsert(discount);
+
+    // upsert products after discount
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.upsert(p);
+
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    assert.ok(
+      products_queried.length >= (products_positive.length + products_negative.length),
+      'pre-condition has failed'
+    );
+
+    // confirm positive products have this discount
+    for (const p of products_positive) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
+      );
+    }
+
+    // confirm negative products don't have this discount
+    for (const p of products_negative) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        !product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was mistakenly applied at a negative product with handle=${p.handle}` 
+      );
+
+    }
+  
+  });
+
+
+  s('test product NOT has tags', async () => {
+    const now = (new Date()).toISOString();
+
+    const {
+      discount, products_negative, products_positive
+    } = setup_for_discount_filter_product_NOT_in_tags();
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
+    // remove all products
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.remove(p.handle);
+
+    await app.api.discounts.remove(discount.handle);
+
+    // upsert discount
+    await app.api.discounts.upsert(discount);
+
+    // upsert products after discount
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.upsert(p);
+
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    assert.ok(
+      products_queried.length >= (products_positive.length + products_negative.length),
+      'pre-condition has failed'
+    );
+
+    // confirm positive products have this discount
+    for (const p of products_positive) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
+      );
+    }
+
+    // confirm negative products don't have this discount
+    for (const p of products_negative) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        !product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was mistakenly applied at a negative product with handle=${p.handle}` 
+      );
+
+    }
+
+  });
+
+
+  s('test product in collections', async () => {
+
+    const now = (new Date()).toISOString();
+
+    const {
+      discount, products_negative, products_positive,
+      collections
+    } = setup_for_discount_filter_product_in_collections();
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
+    // remove all collections
+    for(const c of collections)
+      await app.api.collections.remove(c.handle);
+
+    // remove all products
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.remove(p.handle);
+
+    await app.api.discounts.remove(discount.handle);
+
+    // upsert discount
+    await app.api.discounts.upsert(discount);
+
+    for(const c of collections)
+      await app.api.collections.upsert(c);
+
+    // upsert products after discount
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.upsert(p);
+
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    assert.ok(
+      products_queried.length >= (products_positive.length + products_negative.length),
+      'pre-condition has failed'
+    );
+
+    // confirm positive products have this discount
+    for (const p of products_positive) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
+      );
+    }
+
+    // confirm negative products don't have this discount
+    for (const p of products_negative) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        !product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was mistakenly applied at a negative product with handle=${p.handle}` 
+      );
+
+    }
+  
+  });
+
+
+  s('test product NOT in collections', async () => {
+
+    const now = (new Date()).toISOString();
+
+    const {
+      discount, products_negative, products_positive,
+      collections
+    } = setup_for_discount_filter_product_NOT_in_collections();
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
+    // remove all collections
+    for(const c of collections)
+      await app.api.collections.remove(c.handle);
+
+    // remove all products
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.remove(p.handle);
+
+    await app.api.discounts.remove(discount.handle);
+
+    // upsert discount
+    await app.api.discounts.upsert(discount);
+
+    for(const c of collections)
+      await app.api.collections.upsert(c);
+
+    // upsert products after discount
+    for(const p of [...products_negative, ...products_positive])
+      await app.api.products.upsert(p);
+
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    assert.ok(
+      products_queried.length >= (products_positive.length + products_negative.length),
+      'pre-condition has failed'
+    );
+
+    // confirm positive products have this discount
+    for (const p of products_positive) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
+      );
+    }
+
+    // confirm negative products don't have this discount
+    for (const p of products_negative) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        !product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was mistakenly applied at a negative product with handle=${p.handle}` 
+      );
+
+    }
+
+  });
+
+
+  s('test product ALL filter and removal of discount effect', async () => {
+
+    const now = (new Date()).toISOString();
+
+    const {
+      discount, products
+    } = setup_for_discount_filter_product_all();
+
+    assert.ok(
+      products?.length && discount,
+      'pre-condition has failed'
+    );
+
+
+    // remove all products
+    for(const p of products)
+      await app.api.products.remove(p.handle);
+
+    await app.api.discounts.remove(discount.handle);
+
+    // upsert discount
+    await app.api.discounts.upsert(discount);
+
+    // upsert products after discount
+    for(const p of products)
+      await app.api.products.upsert(p);
+
+    // get all recent products
+    const products_queried = await app.api.products.list(
+      {
+        startAt: [['updated_at', now]],
+        sortBy: ['updated_at'],
+        order: 'asc',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    assert.ok(
+      products_queried.length >= (products.length),
+      'pre-condition has failed'
+    );
+
+    // confirm positive products have this discount
+    for (const p of products) {
+      const product_found = products_queried.find(pr => pr.handle===p.handle);
+
+      assert.ok(
+        product_found &&
+        product_found?.discounts?.find(dis => dis.handle===discount.handle),
+        `Discount was not applied at a positive product with handle=${p.handle}` 
+      );
+    }
+
+    { // remove discount
+      await app.api.discounts.remove(discount.handle);
+
+      // fetch products
+      for(const p of products) {
+        const pr_get = await app.api.products.get(p.handle);
+        assert.ok(
+          pr_get.discounts.every(
+            dis => dis.handle!==discount.handle
+          ),
+          'discount was removed but products still show it is attached'
+        )
+      }
+
+    }
+  });
+
 
   return s;
 }

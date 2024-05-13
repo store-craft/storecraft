@@ -115,10 +115,15 @@ export const regular_list = (app, db) =>
   /**
    * @param {import('./types.api.query.js').ApiQuery} q 
    */
-  async (q) => {
+  async (q={}) => {
     // console.log('query', q);
 
-    const items = await db.list(q);
+    const items = await db.list(
+      {
+        ...q,
+        expand: q.expand ?? ['*']
+      }
+    );
 
     rewrite_media_from_storage(app)(items);
 

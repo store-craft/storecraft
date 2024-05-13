@@ -24,13 +24,6 @@ export const create = app => {
     file_name(import.meta.url), 
   );
 
-  /**
-   * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
-   * @typedef {import('@storecraft/core/v-api').RegularDiscountExtra} RegularDiscountExtra
-   * @typedef {import('@storecraft/core/v-api').FilterValue_p_in_handles} FilterValue_p_in_handles
-   */
-
-
 
   s.before(
     async () => { 
@@ -38,7 +31,10 @@ export const create = app => {
     }
   );
 
+
   s('test product has handles', async () => {
+
+    const now = (new Date()).toISOString();
 
     const {
       discount, products_negative, products_positive
@@ -63,14 +59,13 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
-        limit: 100
+        order: 'asc',
+        limit: 1000
       }
     );
 
@@ -97,6 +92,7 @@ export const create = app => {
 
 
   s('test product has NO handles', async () => {
+    const now = (new Date()).toISOString();
 
     const {
       discount, products_negative, products_positive
@@ -121,13 +117,12 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
+        order: 'asc',
         limit: 100
       }
     );
@@ -155,6 +150,7 @@ export const create = app => {
 
 
   s('test product has tags', async () => {
+    const now = (new Date()).toISOString();
 
     const {
       discount, products_negative, products_positive
@@ -179,13 +175,12 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
+        order: 'asc',
         limit: 100
       }
     );
@@ -213,6 +208,7 @@ export const create = app => {
 
 
   s('test product NOT has tags', async () => {
+    const now = (new Date()).toISOString();
 
     const {
       discount, products_negative, products_positive
@@ -237,13 +233,12 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
+        order: 'asc',
         limit: 100
 
       }
@@ -275,6 +270,7 @@ export const create = app => {
 
 
   s('test product in collections', async () => {
+    const now = (new Date()).toISOString();
 
     const {
       discount, products_negative, products_positive,
@@ -307,13 +303,12 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
+        order: 'asc',
         limit: 100
       }
     );
@@ -341,6 +336,7 @@ export const create = app => {
 
 
   s('test product NOT in collections', async () => {
+    const now = (new Date()).toISOString();
 
     const {
       discount, products_negative, products_positive,
@@ -373,13 +369,12 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
+        order: 'asc',
         limit: 100
       }
     );
@@ -407,6 +402,7 @@ export const create = app => {
 
 
   s('test product ALL filter and removal of discount effect', async () => {
+    const now = (new Date()).toISOString();
 
     const {
       discount, products
@@ -430,13 +426,12 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const now = (new Date()).toISOString();
-
     const products_queried = await app.api.discounts.list_discounts_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
         sortBy: ['updated_at'],
+        order: 'asc',
         limit: 100
       }
     );
@@ -474,7 +469,6 @@ export const create = app => {
 
   return s;
 }
-
 
 
 (async function inner_test() {

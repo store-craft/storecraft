@@ -27,10 +27,12 @@ const eb_in = (eb, table, op, value) => {
       .select('id')
       .where(
         eb => eb.and([
-          eb.or([
-            eb(`${table}.entity_id`, '=', eb.ref('products.id')),
-            eb(`${table}.entity_handle`, '=', eb.ref('products.handle')),
-          ]),
+          eb.or(
+            [
+              eb(`${table}.entity_id`, '=', eb.ref('products.id')),
+              eb(`${table}.entity_handle`, '=', eb.ref('products.handle')),
+            ]
+          ),
           eb(`${table}.value`, op, value)
         ])
       )
@@ -45,8 +47,11 @@ const eb_in = (eb, table, op, value) => {
  */
 export const discount_to_conjunctions = (eb, d) => {
   // discount has to be product discount + automatic + active + has filters
-  const is_good = !is_order_discount(d) && is_automatic_discount(d) && 
-                  d.active && d?.info?.filters?.length;
+  const is_good = (
+    !is_order_discount(d) && is_automatic_discount(d) && 
+    d.active && d?.info?.filters?.length
+  );
+
   if(!is_good) return [];
 
   const conjunctions = [];
@@ -61,33 +66,55 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_in_handles.op:
         conjunctions.push(
-          eb('products.handle', 'in', filter.value)
+          eb(
+            'products.handle', 'in', 
+            Array.isArray(filter?.value) ? filter.value : []
+          )
         );
         break;
       case enums.FilterMetaEnum.p_not_in_handles.op:
         conjunctions.push(
-          eb('products.handle', 'not in', filter.value)
+          eb(
+            'products.handle', 'not in', 
+            Array.isArray(filter?.value) ? filter.value : []
+          )
         );
         break;
       case enums.FilterMetaEnum.p_in_tags.op:
-        Array.isArray(filter.value) && conjunctions.push(
-          eb_in(eb, 'entity_to_tags_projections', 'in', filter.value)
+        conjunctions.push(
+          eb_in(
+            eb, 'entity_to_tags_projections', 'in', 
+            Array.isArray(filter?.value) ? filter.value : []
+          )
         );
         break;
       case enums.FilterMetaEnum.p_not_in_tags.op:
-        Array.isArray(filter.value) && conjunctions.push(
-          eb_in(eb, 'entity_to_tags_projections', 'not in', filter.value)
+        conjunctions.push(
+          eb.not(
+            eb_in(
+              eb, 'entity_to_tags_projections', 'in', 
+              Array.isArray(filter?.value) ? filter.value : []
+            )
+          )
         );
         break;
       case enums.FilterMetaEnum.p_in_collections.op:
         // PROBLEM: we only have ids, but use handles in the filters
-        Array.isArray(filter.value) && conjunctions.push(
-          eb_in(eb, 'products_to_collections', 'in', filter.value.map(c => c.id))
+        conjunctions.push(
+          eb_in(
+            eb, 'products_to_collections', 'in', 
+            Array.isArray(filter?.value) ? filter.value.map(c => c.id) : []
+          )
         );
         break;
       case enums.FilterMetaEnum.p_not_in_collections.op:
-        Array.isArray(filter.value) && conjunctions.push(
-          eb_in(eb, 'products_to_collections', 'not in', filter.value.map(c => c.id))
+        conjunctions.push(
+          eb.not(
+            eb_in(
+              eb, 'products_to_collections', 'in', 
+              Array.isArray(filter?.value) ? filter.value.map(c => c.id) : []
+              )
+          )
         );
         break;
       case enums.FilterMetaEnum.p_in_price_range.op:

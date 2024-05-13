@@ -56,6 +56,17 @@ export const create_handle = (...prefixs) => {
 /**
  * @param  {...string} prefixs 
  */
+export const create_title_gen = (...prefixs) => {
+  let index = 0;
+  return () => {
+    return [...prefixs, index+=1].join(' ');
+  }
+}
+
+
+/**
+ * @param  {...string} prefixs 
+ */
 export const image_mock_url_handle_name = (...prefixs) => {
   let index = 0;
   

@@ -360,7 +360,7 @@ export type TagTypeUpsert = TagType;
  */
 export interface CollectionType extends BaseType {
   /** 
-   * @description The handle of the entity
+   * @description The `handle` of the entity
    */
   handle: string;
 
@@ -588,6 +588,21 @@ export interface ProductType extends BaseProductType {
   
 }
 
+/** 
+ * @description both `id` and `handle` of entity required
+ */
+export type HandleAndID = {
+
+  /** 
+   * @description The `id` of the entity
+   */
+  id: string;
+
+  /** 
+   * @description The `handle` of the entity
+   */
+  handle: string;
+}
 
 /**
  * @description Product upsert type
@@ -598,13 +613,13 @@ export type ProductTypeUpsert = Omit<ProductType,
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
-  collections?: Pick<CollectionType, 'id' | 'handle'>[];
+  collections?: HandleAndID[];
 
   /** 
    * @description List of related products to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
-  related_products?: Pick<BaseProductType, 'id' | 'handle'>[];
+  related_products?: HandleAndID[];
 }
 
 
@@ -1151,10 +1166,39 @@ export interface StorefrontType extends BaseType {
   posts?: PostType[];
 }
 
+
 /** 
  * @description Storefront upsert type
  */
-export type StorefrontTypeUpsert = StorefrontType;
+export type StorefrontTypeUpsert = Omit<StorefrontType,
+  'collections' | 'products' | 'posts' | 'discounts' | 'shipping_methods'> & {
+
+  /** 
+   * @description Collections related to this storefront 
+   */
+  collections?: HandleAndID[];
+
+  /** 
+   * @description Products related to this storefront 
+   */
+  products?: HandleAndID[];
+
+  /** 
+   * @description Shipping methods related to this storefront 
+   */
+  shipping_methods?: HandleAndID[];
+
+  /** 
+   * @description Discounts related to this storefront 
+   */
+  discounts?: HandleAndID[];
+
+  /** 
+   * @description Posts related to this storefront 
+   */
+  posts?: HandleAndID[];
+
+}
 
 //
 

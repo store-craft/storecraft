@@ -195,9 +195,9 @@ const Filter_ProductHasTags = (
 /**
  * 
  * @typedef {object} Filter_ProductHasHandleParams
- * @prop {import('@storecraft/core/v-api').FilterValue_p_in_handles} value
+ * @prop {import('@storecraft/core/v-api').FilterValue_p_in_products} value
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_p_in_handles) => void
+ *  import('@storecraft/core/v-api').FilterValue_p_in_products) => void
  * } onChange
  * 
  * 
@@ -216,7 +216,7 @@ const Filter_ProductHasHandle = (
   const [tags, setTags] = useState(value)
 
   /**
-   * @type {import('./capsules-view.jsx').CapsulesViewParams<string>["onRemove"]}
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<typeof value[0]>["onRemove"]}
    */
   const onRemove = useCallback(
     (v) => {
@@ -235,18 +235,44 @@ const Filter_ProductHasHandle = (
   );
 
   /**
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<typeof value[0]>["onClick"]}
+   */
+  const onClick = useCallback(
+    (v) => {
+      const idx = tags.indexOf(v)
+
+      if(idx == -1) return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+
+      onChange(new_tags);
+      setTags(new_tags);
+    },
+    [tags, onChange]
+  );
+
+
+  /**
    * @type {import('./resource-browse.jsx').BrowseProductsParams["onSave"]}
    */
   const onBrowseAdd = useCallback(
     (selected_items) => { 
       // map to handle/id
       const mapped = selected_items.map(
-        it => it.handle
+        it => (
+          {
+            handle: it.handle, 
+            id: it.id,
+            title: it.title
+          }
+        )
       );
 
       // only include unseen handles
       const resolved = [
-        ...mapped.filter(m => tags.find(it => it===m)===undefined), 
+        ...mapped.filter(m => tags.find(it => it.handle===m.handle)===undefined), 
         ...tags
       ];
 
@@ -277,6 +303,7 @@ const Filter_ProductHasHandle = (
       onRemove={onRemove} 
       onClick={onRemove} 
       tags={tags} 
+      name_fn={it => it.title ?? it.handle }
       className='mt-5' />
 </div>
   )
@@ -729,11 +756,11 @@ const filters_2_comp = [
     Comp: Filter_ProductNotInCollections, CompParams: {} 
   },
   { 
-    ...FilterMetaEnum.p_in_handles,
+    ...FilterMetaEnum.p_in_products,
     Comp: Filter_ProductHasHandle, CompParams: {} 
   },
   { 
-    ...FilterMetaEnum.p_not_in_handles,
+    ...FilterMetaEnum.p_not_in_products,
     Comp: Filter_ProductNotHasHandle, CompParams: {} 
   },
   { 

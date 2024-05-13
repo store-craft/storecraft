@@ -1,5 +1,5 @@
 import { enums } from "@storecraft/core/v-api";
-import { to_objid } from "./utils.funcs.js";
+import { to_objid_safe } from "./utils.funcs.js";
 
 /** @param {import("@storecraft/core/v-api").DiscountType} d */
 const is_order_discount = d => {
@@ -38,44 +38,94 @@ export const discount_to_mongo_conjunctions = d => {
       case enums.FilterMetaEnum.p_all.op:
         // do nothing
         break;
-      case enums.FilterMetaEnum.p_in_handles.op:
-        conjunctions.push(
-          { handle: { $in: filter.value } }
-        );
+      case enums.FilterMetaEnum.p_in_products.op:
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_products} */
+          const cast = filter.value ?? [];
+          
+          conjunctions.push(
+            { handle: { $in: cast.map(it => it.handle) } }
+          );
+        }
         break;
-      case enums.FilterMetaEnum.p_not_in_handles.op:
-        conjunctions.push(
-          { handle: { $nin: filter.value } }
-        );
+      case enums.FilterMetaEnum.p_not_in_products.op:
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_products} */
+          const cast = filter.value ?? [];
+          
+          conjunctions.push(
+            { handle: { $nin: cast.map(it => it.handle) } }
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_in_tags.op:
-        conjunctions.push(
-          { tags: { $in: filter.value } }
-        );
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_tags} */
+          const cast = filter.value ?? [];
+          
+          conjunctions.push(
+            { tags: { $in: cast } }
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_not_in_tags.op:
-        conjunctions.push(
-          { tags: { $nin: filter.value } }
-        );
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_tags} */
+          const cast = filter.value ?? [];
+
+          conjunctions.push(
+            { tags: { $nin: cast } }
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_in_collections.op:
-        // PROBLEM: we only have ids, but use handles in the filters
-        conjunctions.push(
-          { '_relations.collections.ids': { $in: filter.value?.map(c => to_objid(c.id)) } }
-        );
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_collections} */
+          const cast = filter.value ?? [];
+
+          conjunctions.push(
+            { 
+              '_relations.collections.ids': { 
+                $in: cast.map(c => to_objid_safe(c.id)).filter(Boolean) 
+              } 
+            }
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_not_in_collections.op:
-        conjunctions.push(
-          { '_relations.collections.ids': { $nin: filter.value?.map(c => to_objid(c.id)) } }
-        );
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_collections} */
+          const cast = filter.value ?? [];
+
+          conjunctions.push(
+            { 
+              '_relations.collections.ids': { 
+                $nin: cast.map(c => to_objid_safe(c.id)).filter(Boolean) 
+              } 
+            }
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_in_price_range.op:
-        const from = extract_abs_number(filter?.value?.from);
-        const to = extract_abs_number(filter?.value?.to);
-        const conj = { price: { $and: [] } };
-        if(from) conj.price.$and.push({ $gte: from });
-        if(to) conj.price.$and.push({ $lt: to });
-        (to || from) && conjunctions.push(conj);
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_price_range} */
+          const cast = {
+            from: 0,
+            to: Number.POSITIVE_INFINITY,
+            ...(filter?.value ?? {})
+          };
+
+          const from = extract_abs_number(cast.from);
+          const to = extract_abs_number(cast.to);
+
+          const conj = { price: { $and: [] } };
+
+          if(from) conj.price.$and.push({ $gte: from });
+          if(to) conj.price.$and.push({ $lt: to });
+
+          (to || from) && conjunctions.push(conj);
+  
+        }
         break;
     
       default:

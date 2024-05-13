@@ -205,27 +205,43 @@ export const filterValuePInCollectionsSchema = z
         .string()
         .optional()
         .describe("`p_in_collections` filter, `id` of collection"),
-      handle: z.string().optional(),
+      title: z
+        .string()
+        .optional()
+        .describe("`p_in_collections` filter, `title` of collection"),
+      handle: z
+        .string()
+        .optional()
+        .describe("`p_in_collections` filter, `handle` of the collection"),
     }),
   )
   .describe("Filter for product in collections");
-export const filterValuePNotInCollectionsSchema = z
+export const filterValuePNotInCollectionsSchema =
+  filterValuePInCollectionsSchema.describe(
+    "Filter for product not in collections",
+  );
+export const filterValuePInProductsSchema = z
   .array(
     z.object({
       id: z
         .string()
         .optional()
-        .describe("`p_not_in_collections` filter, `id` of collection"),
-      handle: z.string().optional(),
+        .describe("`p_in_products` filter, `id` of `product`"),
+      title: z
+        .string()
+        .optional()
+        .describe("`p_in_products` filter, `title` of `product`"),
+      handle: z
+        .string()
+        .optional()
+        .describe("`p_in_products` filter, `handle` of the `product`"),
     }),
   )
-  .describe("Filter for product not in collections");
-export const filterValuePInHandlesSchema = z
-  .array(z.string())
   .describe("Filter for product discount, product in handles");
-export const filterValuePNotInHandlesSchema = z
-  .array(z.string())
-  .describe("Filter for product discount, product not in handles");
+export const filterValuePNotInProductsSchema =
+  filterValuePInProductsSchema.describe(
+    "Filter for product discount, product not in handles",
+  );
 export const filterValuePInTagsSchema = z
   .array(z.string())
   .describe("Filter for product discount, product has tags");
@@ -288,6 +304,12 @@ export const filterValueOHasCustomersSchema = z
   )
   .describe("Filter for order discount, order has customer id");
 export const filterMetaEnumSchema = z.object({
+  any: z.object({
+    id: z.number(),
+    type: z.string(),
+    op: z.string(),
+    name: z.string().optional(),
+  }),
   p_in_collections: z.object({
     id: z.literal(0),
     type: z.literal("product"),
@@ -300,16 +322,16 @@ export const filterMetaEnumSchema = z.object({
     op: z.literal("p-not-in-collections"),
     name: z.string().optional(),
   }),
-  p_in_handles: z.object({
+  p_in_products: z.object({
     id: z.literal(2),
     type: z.literal("product"),
-    op: z.literal("p-in-handles"),
+    op: z.literal("p-in-products"),
     name: z.string().optional(),
   }),
-  p_not_in_handles: z.object({
+  p_not_in_products: z.object({
     id: z.literal(3),
     type: z.literal("product"),
-    op: z.literal("p-not-in-handles"),
+    op: z.literal("p-not-in-products"),
     name: z.string().optional(),
   }),
   p_in_tags: z.object({
@@ -904,20 +926,21 @@ export const filterSchema = z
         filterMetaEnumSchema.shape.p_not_in_collections,
         filterMetaEnumSchema.shape.p_in_tags,
         filterMetaEnumSchema.shape.p_not_in_tags,
-        filterMetaEnumSchema.shape.p_in_handles,
-        filterMetaEnumSchema.shape.p_not_in_handles,
+        filterMetaEnumSchema.shape.p_in_products,
+        filterMetaEnumSchema.shape.p_not_in_products,
         filterMetaEnumSchema.shape.o_date_in_range,
         filterMetaEnumSchema.shape.o_has_customer,
         filterMetaEnumSchema.shape.o_items_count_in_range,
         filterMetaEnumSchema.shape.o_subtotal_in_range,
+        filterMetaEnumSchema.shape.any,
       ])
       .describe("Meta data related to identifying the filter"),
     value: z
       .union([
         filterValuePInCollectionsSchema,
         filterValuePNotInCollectionsSchema,
-        filterValuePInHandlesSchema,
-        filterValuePNotInHandlesSchema,
+        filterValuePInProductsSchema,
+        filterValuePNotInProductsSchema,
         filterValuePInTagsSchema,
         filterValuePNotInTagsSchema,
         filterValuePAllSchema,

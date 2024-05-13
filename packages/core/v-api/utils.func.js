@@ -12,14 +12,25 @@ export class StorecraftError extends Error {
     this.code = code;
     this.message = message;
 
+    try {
+      this.message_string = JSON.stringify(this.message, null, 2);
+    } catch (e) {
+      this.message_string = ':('
+    }
+    
     // console.log(JSON.stringify(message, null, 2));
+  }
+
+  toString() {
+    return this.message_string;
   }
 }
 
 /**
- * Create an ID with prefix
+ * @description Create an ID with prefix
+ * 
  * @param {string} prefix 
- * @returns 
+ * 
  */
 export const ID = (prefix='') => {
   prefix = prefix ? (prefix + '_') : prefix;

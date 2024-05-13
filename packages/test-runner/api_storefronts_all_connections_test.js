@@ -84,7 +84,7 @@ const discounts_upsert = [
       },
       filters: [
         {
-          meta: enums.FilterMetaEnum.p_in_handles,
+          meta: enums.FilterMetaEnum.p_in_products,
           value: ['pr-non-existing-handle']
         }
       ]
@@ -103,7 +103,7 @@ const discounts_upsert = [
       },
       filters: [
         {
-          meta: enums.FilterMetaEnum.p_in_handles,
+          meta: enums.FilterMetaEnum.p_in_products,
           value: ['pr-non-existing-handle']
         }
       ]

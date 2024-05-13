@@ -64,67 +64,110 @@ export const discount_to_conjunctions = (eb, d) => {
       case enums.FilterMetaEnum.p_all.op:
         // do nothing
         break;
-      case enums.FilterMetaEnum.p_in_handles.op:
-        conjunctions.push(
-          eb(
-            'products.handle', 'in', 
-            Array.isArray(filter?.value) ? filter.value : []
-          )
-        );
+      case enums.FilterMetaEnum.p_in_products.op:
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_products} */
+          const cast = Array.isArray(filter?.value) ? filter.value : [];
+
+          conjunctions.push(
+            eb(
+              'products.handle', 'in', 
+              cast.map(item => item.handle).filter(Boolean)
+            )
+          );
+        }
         break;
-      case enums.FilterMetaEnum.p_not_in_handles.op:
-        conjunctions.push(
-          eb(
-            'products.handle', 'not in', 
-            Array.isArray(filter?.value) ? filter.value : []
-          )
-        );
+      case enums.FilterMetaEnum.p_not_in_products.op:
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_products} */
+          const cast = Array.isArray(filter?.value) ? filter.value : [];
+
+          conjunctions.push(
+            eb(
+              'products.handle', 'not in', 
+              cast.map(item => item.handle).filter(Boolean)
+            )
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_in_tags.op:
-        conjunctions.push(
-          eb_in(
-            eb, 'entity_to_tags_projections', 'in', 
-            Array.isArray(filter?.value) ? filter.value : []
-          )
-        );
-        break;
-      case enums.FilterMetaEnum.p_not_in_tags.op:
-        conjunctions.push(
-          eb.not(
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_tags} */
+          const cast = Array.isArray(filter?.value) ? filter.value : [];
+          
+          conjunctions.push(
             eb_in(
               eb, 'entity_to_tags_projections', 'in', 
-              Array.isArray(filter?.value) ? filter.value : []
+              cast
             )
-          )
-        );
+          );
+        }
+        break;
+      case enums.FilterMetaEnum.p_not_in_tags.op:
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_tags} */
+          const cast = Array.isArray(filter?.value) ? filter.value : [];
+
+          conjunctions.push(
+            eb.not(
+              eb_in(
+                eb, 'entity_to_tags_projections', 'in', 
+                cast
+              )
+            )
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_in_collections.op:
-        // PROBLEM: we only have ids, but use handles in the filters
-        conjunctions.push(
-          eb_in(
-            eb, 'products_to_collections', 'in', 
-            Array.isArray(filter?.value) ? filter.value.map(c => c.id) : []
-          )
-        );
-        break;
-      case enums.FilterMetaEnum.p_not_in_collections.op:
-        conjunctions.push(
-          eb.not(
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_collections} */
+          const cast = Array.isArray(filter?.value) ? filter.value : [];
+
+          // PROBLEM: we only have ids, but use handles in the filters
+          conjunctions.push(
             eb_in(
               eb, 'products_to_collections', 'in', 
-              Array.isArray(filter?.value) ? filter.value.map(c => c.id) : []
+              cast.map(c => c.id)
+            )
+          );
+        }
+        break;
+      case enums.FilterMetaEnum.p_not_in_collections.op:
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_collections} */
+          const cast = Array.isArray(filter?.value) ? filter.value : [];
+
+          conjunctions.push(
+            eb.not(
+              eb_in(
+                eb, 'products_to_collections', 'in', 
+                cast.map(c => c.id)
               )
-          )
-        );
+            )
+          );
+        }
         break;
       case enums.FilterMetaEnum.p_in_price_range.op:
-        const from = extract_abs_number(filter?.value?.from);
-        const to = extract_abs_number(filter?.value?.to);
-        const conj = { price: { $and: [] } };
-        if(from) 
-          conjunctions.push(eb('price', '>=', from))
-        if(to) 
-          conjunctions.push(eb('price', '<', to))
+        {
+          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_price_range} */
+          const cast = {
+            from: 0,
+            to: Number.POSITIVE_INFINITY,
+            ...(filter?.value ?? {}),
+          };
+
+          const from = extract_abs_number(cast.from);
+          const to = extract_abs_number(cast.to);
+
+          const conj = { price: { $and: [] } };
+
+          if(from) 
+            conjunctions.push(eb('price', '>=', from));
+
+          if(to) 
+            conjunctions.push(eb('price', '<', to));
+
+        }
         break;
     
       default:

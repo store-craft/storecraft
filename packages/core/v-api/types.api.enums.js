@@ -24,15 +24,15 @@ export const FilterMetaEnum = {
     op: 'p-not-in-collections', 
     name: 'Product not in Collection'
   },
-  p_in_handles: {
+  p_in_products: {
     id: 2, type:'product', 
-    op: 'p-in-handles', 
-    name: 'Product has handle'
+    op: 'p-in-products', 
+    name: 'Product belongs to'
   },
-  p_not_in_handles: { 
+  p_not_in_products: { 
     id: 3, type:'product', 
-    op: 'p-not-in-handles', 
-    name: 'Product excludes handle'
+    op: 'p-not-in-products', 
+    name: 'Product does not belong to'
   },
   p_in_tags: { 
     id: 4, type:'product', 

@@ -270,7 +270,7 @@ const explain_filter = (f) => {
       </ol>
       </> 
       )
-    case FilterMetaEnum.p_in_handles.op:
+    case FilterMetaEnum.p_in_products.op:
       return (
         <>
       a product, that has any of the following <b>handles</b>:

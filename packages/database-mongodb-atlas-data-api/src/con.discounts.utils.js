@@ -36,12 +36,12 @@ export const discount_to_mongo_conjunctions = d => {
       case enums.FilterMetaEnum.p_all.op:
         // do nothing
         break;
-      case enums.FilterMetaEnum.p_in_handles.op:
+      case enums.FilterMetaEnum.p_in_products.op:
         conjunctions.push(
           { handle: { $in: filter.value } }
         );
         break;
-      case enums.FilterMetaEnum.p_not_in_handles.op:
+      case enums.FilterMetaEnum.p_not_in_products.op:
         conjunctions.push(
           { handle: { $nin: filter.value } }
         );

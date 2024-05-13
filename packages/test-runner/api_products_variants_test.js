@@ -10,11 +10,6 @@ import esMain from './utils.esmain.js';
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 const handle_var = create_handle('var', file_name(import.meta.url));
 
-/**
- * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
- * @typedef {import('@storecraft/core/v-api').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('@storecraft/core/v-api').FilterValue_p_in_handles} FilterValue_p_in_handles
- */
 
 /** @type {import('@storecraft/core/v-api').ProductType} */
 const pr_upsert = {

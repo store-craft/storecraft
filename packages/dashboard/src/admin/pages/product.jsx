@@ -278,6 +278,7 @@ export default (
         preCreateVariant: async () => {
           const variants_options = ref_root.current.get(false)?.data?.variants_options;
           await sdk.products.upsert(
+            // @ts-ignore
             {
               ...doc,
               variants_options

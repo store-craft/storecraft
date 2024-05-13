@@ -43,7 +43,7 @@ export const test_product_filter_against_product =
   try {
     switch (filter?.meta?.op) {
       case FilterMetaEnum.p_all.op:
-        return true
+        return true;
 
       case FilterMetaEnum.p_in_price_range.op:
         {
@@ -64,7 +64,7 @@ export const test_product_filter_against_product =
         {
           /** @type {import('./types.api.js').FilterValue_p_in_collections} */
           const cast = filter?.value ?? [];
-                    
+          
           return product?.collections?.some(
             c => cast.map(v => v.id).includes(c.id)
           ) ?? false;
@@ -74,25 +74,26 @@ export const test_product_filter_against_product =
         {
           /** @type {import('./types.api.js').FilterValue_p_not_in_collections} */
           const cast = filter?.value ?? [];
-          
+
           return product?.collections?.every(
               c => !cast.map(v => v.id).includes(c.id)
           ) ?? true;
         }
 
-      case FilterMetaEnum.p_in_handles.op:
+      case FilterMetaEnum.p_in_products.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_handles} */
+          /** @type {import('./types.api.js').FilterValue_p_in_products} */
           const cast = filter?.value ?? [];
 
-          return cast.includes(product.handle);
+          return cast.map(it => it.handle).includes(product.handle);
         }
-      case FilterMetaEnum.p_not_in_handles.op:
+
+      case FilterMetaEnum.p_not_in_products.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_handles} */
+          /** @type {import('./types.api.js').FilterValue_p_not_in_products} */
           const cast = filter?.value ?? [];
 
-          return !cast.includes(product.handle);
+          return !cast.map(it => it.handle).includes(product.handle);
         }
 
       case FilterMetaEnum.p_in_tags.op:
@@ -113,7 +114,6 @@ export const test_product_filter_against_product =
             c => !cast.includes(c)
           ) ?? true;
         }
-
     }
   
   } catch (e) {

@@ -359,6 +359,7 @@ export type TagTypeUpsert = TagType;
  * @description Collection type
  */
 export interface CollectionType extends BaseType {
+
   /** 
    * @description The `handle` of the entity
    */
@@ -711,35 +712,47 @@ export type FilterValue_p_in_collections = {
   id?: string, 
 
   /**
-   * `p_in_collections` filter, `handle` of the collection
+   * @description `p_in_collections` filter, `title` of collection
    */
-  handle?: string 
+  title?: string, 
+
+  /**
+   * @description `p_in_collections` filter, `handle` of the collection
+   */
+  handle?: string,
 }[];
 
 /**
  * @description Filter for product not in collections
  */
-export type FilterValue_p_not_in_collections = { 
-  /**
-   * @description `p_not_in_collections` filter, `id` of collection
-   */
-  id?: string, 
+export type FilterValue_p_not_in_collections = FilterValue_p_in_collections;
 
-  /**
-   * `p_not_in_collections` filter, `handle` of the collection
-   */
-  handle?: string 
-}[];
 
 /**
  * @description Filter for product discount, product in handles
  */
-export type FilterValue_p_in_handles = string[];
+export type FilterValue_p_in_products = { 
+  /**
+   * @description `p_in_products` filter, `id` of `product`
+   */
+  id?: string, 
+
+  /**
+   * @description `p_in_products` filter, `title` of `product`
+   */
+  title?: string, 
+
+  /**
+   * @description `p_in_products` filter, `handle` of the `product`
+   */
+  handle?: string 
+}[];
+
 
 /**
  * @description Filter for product discount, product not in handles
  */
-export type FilterValue_p_not_in_handles = string[];
+export type FilterValue_p_not_in_products = FilterValue_p_in_products;
 
 /**
  * @description Filter for product discount, product has tags
@@ -851,16 +864,16 @@ export type Filter = {
    */
   meta: FilterMetaEnum['p_all'] | FilterMetaEnum['p_in_collections'] |
         FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
-        FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_handles'] |
-        FilterMetaEnum['p_not_in_handles'] | FilterMetaEnum['o_date_in_range'] |
+        FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_products'] |
+        FilterMetaEnum['p_not_in_products'] | FilterMetaEnum['o_date_in_range'] |
         FilterMetaEnum['o_has_customer'] | FilterMetaEnum['o_items_count_in_range'] |
-        FilterMetaEnum['o_subtotal_in_range'];
+        FilterMetaEnum['o_subtotal_in_range'] | FilterMetaEnum["any"];
 
   /** 
    * @description The filter params 
    */
   value?: FilterValue_p_in_collections | FilterValue_p_not_in_collections | 
-          FilterValue_p_in_handles | FilterValue_p_not_in_handles | 
+          FilterValue_p_in_products | FilterValue_p_not_in_products | 
           FilterValue_p_in_tags | FilterValue_p_not_in_tags | 
           FilterValue_p_all | FilterValue_p_in_price_range | 
           FilterValue_o_subtotal_in_range | FilterValue_o_items_count_in_range |
@@ -871,6 +884,11 @@ export type Filter = {
  * @description Built in filters meta info for identification
  */
 export interface FilterMetaEnum { 
+  any: { // This is for future flexibility against zod
+    id: number, type:string, 
+    op: string, 
+    name?: string
+  },
   p_in_collections: 
   { 
     id: 0, type:'product', 
@@ -882,14 +900,14 @@ export interface FilterMetaEnum {
     op: 'p-not-in-collections', 
     name?: string
   },
-  p_in_handles: {
+  p_in_products: {
     id: 2, type:'product', 
-    op: 'p-in-handles', 
+    op: 'p-in-products', 
     name?: string
   },
-  p_not_in_handles: { 
+  p_not_in_products: { 
     id: 3, type:'product', 
-    op: 'p-not-in-handles', 
+    op: 'p-not-in-products', 
     name?: string
   },
   p_in_tags: { 
@@ -945,7 +963,7 @@ export type DiscountDetails = {
    */
   meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
         DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
-        DiscountMetaEnum['order'];
+        DiscountMetaEnum['order'] | DiscountMetaEnum["any"];
 
 
   /** 
@@ -982,6 +1000,11 @@ export type DiscountMetaEnum = {
     id: 4, type: 'bundle', 
     name?: string,
   },
+  any: { 
+    id: number, type: string, 
+    name?: string,
+  },
+
 }
 
 

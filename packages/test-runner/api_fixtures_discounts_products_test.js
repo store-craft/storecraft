@@ -46,18 +46,12 @@ const create_regular_discount_with_filters = (title, filters) => {
 }
 
 /**
- * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
- * @typedef {import('@storecraft/core/v-api').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('@storecraft/core/v-api').FilterValue_p_in_handles} FilterValue_p_in_handles
- */
-
-/**
  * 
  * @description This will return products and a discount that applies to them
  * because their `handles` are in the `discount` filter list 
  */
 export const setup_for_discount_filter_product_in_handles = () => {
-  const name =  enums.FilterMetaEnum.p_in_handles.name;
+  const name =  enums.FilterMetaEnum.p_in_products.name;
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
@@ -95,9 +89,15 @@ export const setup_for_discount_filter_product_in_handles = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
-        meta: enums.FilterMetaEnum.p_in_handles,
-        /** @type {FilterValue_p_in_handles} */
-        value: products_positive.map(pr => pr.handle)
+        meta: enums.FilterMetaEnum.p_in_products,
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */
+        value: products_positive.map(
+          pr => ({
+            handle: pr.handle,
+            id: pr.id,
+            title: pr.title
+          })
+        )
       }
     ]
   )
@@ -115,7 +115,7 @@ export const setup_for_discount_filter_product_in_handles = () => {
  * because their `handles` are **NOT** in the `discount` filter list 
  */
 export const setup_for_discount_filter_product_NOT_in_handles = () => {
-  const name =  enums.FilterMetaEnum.p_not_in_handles.name;
+  const name =  enums.FilterMetaEnum.p_not_in_products.name;
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
@@ -153,9 +153,15 @@ export const setup_for_discount_filter_product_NOT_in_handles = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
-        meta: enums.FilterMetaEnum.p_not_in_handles,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_handles} */
-        value: products_negative.map(pr => pr.handle)
+        meta: enums.FilterMetaEnum.p_not_in_products,
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_products} */
+        value: products_negative.map(
+          pr => ({
+            handle: pr.handle,
+            id: pr.id,
+            title: pr.title
+          })
+        )
       }
     ]
   )

@@ -44,6 +44,12 @@ export const create = app => {
       discount, products_negative, products_positive
     } = setup_for_discount_filter_product_in_handles()
 
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
     // remove all products
     for(const p of [...products_negative, ...products_positive])
       await app.api.products.remove(p.handle);
@@ -95,6 +101,12 @@ export const create = app => {
     const {
       discount, products_negative, products_positive
     } = setup_for_discount_filter_product_NOT_in_handles()
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
 
     // remove all products
     for(const p of [...products_negative, ...products_positive])
@@ -148,6 +160,12 @@ export const create = app => {
       discount, products_negative, products_positive
     } = setup_for_discount_filter_product_in_tags()
 
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
+
     // remove all products
     for(const p of [...products_negative, ...products_positive])
       await app.api.products.remove(p.handle);
@@ -199,6 +217,12 @@ export const create = app => {
     const {
       discount, products_negative, products_positive
     } = setup_for_discount_filter_product_NOT_in_tags()
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount,
+      'pre-condition has failed'
+    );
 
     // remove all products
     for(const p of [...products_negative, ...products_positive])
@@ -256,6 +280,12 @@ export const create = app => {
       discount, products_negative, products_positive,
       collections
     } = setup_for_discount_filter_product_in_collections()
+
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount && collections?.length,
+      'pre-condition has failed'
+    );
 
     // remove all 
     for(const p of [...products_negative, ...products_positive])
@@ -317,6 +347,12 @@ export const create = app => {
       collections
     } = setup_for_discount_filter_product_NOT_in_collections()
 
+    assert.ok(
+      products_negative?.length && products_positive?.length &&
+      discount && collections?.length,
+      'pre-condition has failed'
+    );
+
     // remove all 
     for(const p of [...products_negative, ...products_positive])
       await app.api.products.remove(p.handle);
@@ -370,11 +406,16 @@ export const create = app => {
   });
 
 
-  s('test product ALL', async () => {
+  s('test product ALL filter and removal of discount effect', async () => {
 
     const {
       discount, products
     } = setup_for_discount_filter_product_all()
+
+    assert.ok(
+      products?.length,
+      'pre-condition has failed'
+    );
 
     // remove all 
     for(const p of products)
@@ -412,6 +453,22 @@ export const create = app => {
       'discount was not applied to all positive discounts'
     );
 
+    { // remove discount
+      await app.api.discounts.remove(discount.handle);
+
+      // fetch products
+      for(const p of products) {
+        const pr_get = await app.api.products.get(p.handle);
+        assert.ok(
+          pr_get.discounts.every(
+            dis => dis.handle!==discount.handle
+          ),
+          'discount was removed but products still show it is attached'
+        )
+      }
+  
+
+    }
   });
 
 

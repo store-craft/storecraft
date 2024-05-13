@@ -12,6 +12,7 @@ import { BlingButton } from './common-button.jsx'
 import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
 import { SelectTags } from './tags-edit.jsx'
 import { extract_contact_field } from '../pages/customers.jsx'
+import useNavigateWithState from '../hooks/useNavigateWithState.js'
  
 /**
  * 
@@ -32,13 +33,14 @@ export const discount_filters_validator = v => {
  * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_collections) => void
  * } onChange
+ * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
  * @param {Filter_ProductInCollectionsParams} params
  */
 const Filter_ProductInCollections = (
   { 
-    onChange, value=[] 
+    onChange, value=[], context
   }
 ) => {
 
@@ -82,6 +84,22 @@ const Filter_ProductInCollections = (
     [tags, onChange]
   );
 
+  const { navWithState } = useNavigateWithState();
+
+  /**
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<typeof value[0]>["onClick"]}
+   */
+  const onClick = useCallback(
+    (v) => {
+      const state = context?.getState && context?.getState();
+      const url = `/pages/products/${v.handle}/edit`;
+
+      navWithState(url, state);
+
+    },
+    [tags, context, navWithState]
+  );
+
   return (
 <div className='w-full'>
   <SelectResource 
@@ -98,7 +116,8 @@ const Filter_ProductInCollections = (
     <HR className='w-full mt-5' />  
   }
   <CapsulesView 
-      onClick={onRemove} 
+      onClick={onClick} 
+      onRemove={onRemove}
       tags={tags} 
       className='mt-5' 
       name_fn={tag => tag?.title ?? tag.handle} />
@@ -123,6 +142,7 @@ const Filter_ProductNotInCollections = ( { ...rest } ) => {
  * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_tags) => void
  * } onChange
+ * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
  * @param {Filter_ProductHasTagsParams} params
@@ -130,7 +150,7 @@ const Filter_ProductNotInCollections = ( { ...rest } ) => {
  */
 const Filter_ProductHasTags = (
   { 
-    onChange, value=[] 
+    onChange, value=[], context
   } 
 ) => {
 
@@ -199,14 +219,15 @@ const Filter_ProductHasTags = (
  * @prop {(filter_value: 
  *  import('@storecraft/core/v-api').FilterValue_p_in_products) => void
  * } onChange
+ * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
  * @param {Filter_ProductHasHandleParams} params
  * 
  */
-const Filter_ProductHasHandle = (
+const Filter_ProductInProducts = (
   { 
-    onChange, value=[] 
+    onChange, value=[], context
   }
 ) => {
    
@@ -234,23 +255,20 @@ const Filter_ProductHasHandle = (
     [tags, onChange]
   );
 
+  const { navWithState } = useNavigateWithState();
+
   /**
    * @type {import('./capsules-view.jsx').CapsulesViewParams<typeof value[0]>["onClick"]}
    */
   const onClick = useCallback(
     (v) => {
-      const idx = tags.indexOf(v)
+      const state = context?.getState && context?.getState();
+      const url = `/pages/products/${v.handle}/edit`;
 
-      if(idx == -1) return;
+      navWithState(url, state);
 
-      tags.splice(idx, 1);
-
-      const new_tags = [...tags];
-
-      onChange(new_tags);
-      setTags(new_tags);
     },
-    [tags, onChange]
+    [tags, context, navWithState]
   );
 
 
@@ -301,23 +319,23 @@ const Filter_ProductHasHandle = (
   } 
   <CapsulesView 
       onRemove={onRemove} 
-      onClick={onRemove} 
+      onClick={onClick} 
       tags={tags} 
       name_fn={it => it.title ?? it.handle }
       className='mt-5' />
 </div>
   )
-}
+} 
 
 /**
- * @param {Parameters<Filter_ProductHasHandle>["0"]} params
+ * @param {Parameters<Filter_ProductInProducts>["0"]} params
  */
-const Filter_ProductNotHasHandle = ( 
+const Filter_ProductNotInProducts = ( 
   { ...rest }
 ) => {
 
   return (
-    <Filter_ProductHasHandle {...rest} />
+    <Filter_ProductInProducts {...rest} />
   )
 }
 
@@ -691,6 +709,7 @@ const Filter_OrderHasCustomers = (
  * @prop {(value: import('@storecraft/core/v-api').Filter["value"]) => void} onChange
  * @prop {() => void} onRemove
  * @prop {number} ix
+ * @prop {import('../pages/order.jsx').Context} context
  * 
  * 
  * @param {ProductFilterContainerParams &
@@ -701,7 +720,7 @@ const Filter_OrderHasCustomers = (
 const ProductFilterContainer = (
   { 
     name, value, type, Comp, CompParams, 
-    onChange, onRemove, ix, ...rest 
+    onChange, onRemove, ix, context, ...rest 
   }
 ) => {
 
@@ -735,6 +754,7 @@ const ProductFilterContainer = (
     Comp && (
       <Comp 
           {...CompParams} 
+          context={context}
           onChange={onChange}
           value={value} />
     )
@@ -757,11 +777,11 @@ const filters_2_comp = [
   },
   { 
     ...FilterMetaEnum.p_in_products,
-    Comp: Filter_ProductHasHandle, CompParams: {} 
+    Comp: Filter_ProductInProducts, CompParams: {} 
   },
   { 
     ...FilterMetaEnum.p_not_in_products,
-    Comp: Filter_ProductNotHasHandle, CompParams: {} 
+    Comp: Filter_ProductNotInProducts, CompParams: {} 
   },
   { 
     ...FilterMetaEnum.p_in_tags,
@@ -877,6 +897,7 @@ const AddFilter = (
  * @prop {(filters: 
  *  import('@storecraft/core/v-api').Filter[]) => void
  * } onChange bunch of filters
+ * @prop {import('../pages/order.jsx').Context} context
  * 
  * 
  * @param {DiscountFiltersParams} params
@@ -884,7 +905,8 @@ const AddFilter = (
  */
 const DiscountFilters = (
   { 
-    value, onChange, types=['product', 'order'], ...rest 
+    value, onChange, types=['product', 'order'], 
+    context, ...rest 
   }
 ) => {
 
@@ -977,6 +999,7 @@ const DiscountFilters = (
       filters.map((it, ix) => (
         <ProductFilterContainer 
             {...filterId2Comp(it?.meta?.id)} 
+            context={context}
             onChange={(v) => onProductFilterChange(ix, v)} 
             onRemove={() => onRemoveProductFilter(ix)} 
             key={ix} ix={ix} value={it.value} 

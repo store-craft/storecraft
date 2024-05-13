@@ -359,6 +359,7 @@ export type TagTypeUpsert = TagType;
  * @description Collection type
  */
 export interface CollectionType extends BaseType {
+
   /** 
    * @description The `handle` of the entity
    */

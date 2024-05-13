@@ -463,6 +463,11 @@ export const discountMetaEnumSchema = z
       type: z.literal("bundle"),
       name: z.string().optional(),
     }),
+    any: z.object({
+      id: z.number(),
+      type: z.string(),
+      name: z.string().optional(),
+    }),
   })
   .describe(
     "Discount meta data,\nsee <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
@@ -1127,6 +1132,7 @@ export const discountDetailsSchema = z
         discountMetaEnumSchema.shape.bundle,
         discountMetaEnumSchema.shape.buy_x_get_y,
         discountMetaEnumSchema.shape.order,
+        discountMetaEnumSchema.shape.any,
       ])
       .describe("metadata to identify the type of discount"),
     extra: z

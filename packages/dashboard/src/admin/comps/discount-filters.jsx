@@ -414,7 +414,7 @@ const Filter_ProductPriceInRange = (
   }
 </div>
   )
-}
+} 
 
 
 const Filter_ProductAll = () => (<p children='All products are eligible' />)
@@ -897,7 +897,7 @@ const AddFilter = (
  * @prop {(filters: 
  *  import('@storecraft/core/v-api').Filter[]) => void
  * } onChange bunch of filters
- * @prop {import('../pages/order.jsx').Context} context
+ * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
  * @param {DiscountFiltersParams} params

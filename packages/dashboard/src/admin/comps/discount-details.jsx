@@ -14,41 +14,60 @@ export const discount_details_validator = v => {
 }
 
 export const discount_types = [
-  { id: 0, type: 'regular',          
+  { 
+    id: 0, type: 'regular',          
     name : 'Regular Discount', 
     desc: 'All Filtered products you defined will get the same discount. \
-    For Example: Every shirt will have 10% discount' },
-  { id: 1, type: 'bulk', name : 'Bulk Discount', 
+    For Example: Every shirt will have 10% discount' 
+  },
+  { 
+    id: 1, type: 'bulk', name : 'Bulk Discount', 
     desc: 'Set an exact bulk discount on filtered products. \
-    for Example, 3 for 100$, 5 for 5% off' },
-  { id: 2, type: 'buy_x_get_y', name : 'Buy X Get Y',
+    for Example, 3 for 100$, 5 for 5% off' 
+  },
+  { 
+    id: 2, type: 'buy_x_get_y', name : 'Buy X Get Y',
     desc: 'Buy some from the filtered products and get Y for discount. \
-    For Example: Buy 3 pants, get a Shirt for 50% off' },
-  { id: 3, type: 'order', name : 'Order Discount',
+    For Example: Buy 3 pants, get a Shirt for 50% off' 
+  },
+  { 
+    id: 3, type: 'order', name : 'Order Discount',
     desc: 'Offer a discount on the total order including perks \
-    such as Free Shipping' },
-  { id: 4, type: 'bundle', name : 'Bundle Discount',
+    such as Free Shipping' 
+  },
+  { 
+    id: 4, type: 'bundle', name : 'Bundle Discount',
     desc: 'Offer a discount on a bundle of products. For Example, \
-    buy a Laptop + Headset at discount 💲' },
+    buy a Laptop + Headset at discount 💲' 
+  },
 ]
 
 /**
  * 
- * @param {object} param
- * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} param.selectedType
- * @param {(meta: 
- *  import('@storecraft/core/v-api').DiscountDetails["meta"]) => void
- * } param.onChange
+ * @typedef {object} DiscountTypesParams
+ * @prop {import('@storecraft/core/v-api').DiscountDetails["meta"]} selectedType
+ * @prop {(meta: import('@storecraft/core/v-api').DiscountDetails["meta"]) => void} onChange
+ * 
+ * @param {DiscountTypesParams} params
  */
-const DiscountTypes = ({ selectedType, onChange }) => {
+const DiscountTypes = (
+  { 
+    selectedType, onChange 
+  }
+) => {
 
   const desc = useMemo(
     () => discount_types.find(
       it => it.id === selectedType?.id
-      )?.desc
+    )?.desc
     , [selectedType, discount_types]
-  )
+  );
 
+  /**
+   * 
+   * @param {object} params
+   * @param {DiscountMetaEnum[keyof DiscountMetaEnum]} params.type
+   */
   const Option = ({ type }) => {
     return (
       <div className=''>
@@ -59,6 +78,7 @@ const DiscountTypes = ({ selectedType, onChange }) => {
                checked={type.type===selectedType?.type} 
                onChange={e => onChange(type)} />
         <label htmlFor={type.type} children={type.name} 
+               onClick={e => onChange(type)}
                className='mx-3' />
       </div>      
     )
@@ -68,15 +88,14 @@ const DiscountTypes = ({ selectedType, onChange }) => {
 <div className='flex flex-row flex-wrap gap-5 --items-start'>
   <div className='flex flex-col gap-2 --flex-shrink-0 w-fit'>
   {
-    Object.values(DiscountMetaEnum)
-          .map(
-            (it, ix) => (
-              <Option type={it} key={ix} />
-            )
-          )
+    Object.values(DiscountMetaEnum).map(
+      (it, ix) => (
+        <Option type={it} key={it.type} />
+      )
+    )
   }
   </div>
-  <div className='pl-5 border-l-2 shelf-border-color --ml-5 flex-1 min-w-[13rem]'>
+  <div className='pl-5 border-l-2 shelf-border-color flex-1 min-w-[13rem]'>
     <p children={desc} 
        className='text-gray-500 text-sm tracking-wide'/>
   </div>
@@ -84,14 +103,25 @@ const DiscountTypes = ({ selectedType, onChange }) => {
   )
 }
 
+
+/**
+ * 
+ * @param {string} prefix 
+ * @param {number} percent 
+ * @param {number} fixed 
+ */
 const explain_price = (prefix, percent, fixed) => {
-  percent = Number.isNaN(percent) ? 0 : percent
-  fixed = Number.isNaN(fixed) ? 0 : fixed
-  const factor = (100 - percent)/100
+  percent = Number.isNaN(percent) ? 0 : percent;
+  fixed = Number.isNaN(fixed) ? 0 : fixed;
+
+  const factor = (100 - percent)/100;
   const fixed_str = (Number.isNaN(fixed)) ? '' : 
     Math.abs(fixed)!=0 ? `${fixed < 0 ? ' - ' : ' + '} ${Math.abs(fixed)}`: '';
+
   let ff = (100 - percent)/100;
+
   ff = (typeof factor === 'number' && !Number.isNaN(factor)) ? factor : `(100 - Percents)/100`
+
   if(ff==0) {
     return Number.isNaN(fixed) ? 0 : fixed
   } else if (ff==1) {
@@ -102,12 +132,16 @@ const explain_price = (prefix, percent, fixed) => {
 }
 
 /**
- * @param {object} props
- * @param {'bulk'} props.type
- * @param {import('@storecraft/core/v-api').BulkDiscountExtra} props.value
- * @param {(extra: 
+ * 
+ * @typedef {object} BulkDiscountParams
+ * @prop {'bulk'} type
+ * @prop {import('@storecraft/core/v-api').BulkDiscountExtra} value
+ * @prop {(extra: 
  *  import('@storecraft/core/v-api').BulkDiscountExtra) => void
- * } props.onChange
+ * } onChange
+ * 
+ * 
+ * @param {BulkDiscountParams} params
  */
 const BulkDiscount = ({ type, value, onChange }) => {
 
@@ -229,76 +263,148 @@ const explain_filter = (f) => {
         </>
       );
     case FilterMetaEnum.p_in_collections.op:
-      return (
-      <>
-      a product, that belongs to any of the following <b>collections</b>:
-      <ol className='list-disc list-inside'>
-      { f.value?.map(
-          c => <li 
-            children={c} 
-            className='font-semibold shelf-text-label-color-second' 
-            /> 
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_collections} */
+        const cast = f.value ?? [];
+  
+        return (
+        <>
+          a product, that belongs to any of the following <b>collections</b>:
+          <ol className='list-disc list-inside'>
+          { 
+            cast.map(
+              c => <li 
+                children={c.title} 
+                className='font-semibold shelf-text-label-color-second' 
+                /> 
+            )
+          }
+          </ol>
+        </>
         )
       }
-      </ol>
-      </>
-      )
     case FilterMetaEnum.p_not_in_collections.op:
-      return (
-        <>
-      a product, that <span className='underline'>does not</span> belong to the following <b>collections</b>:
-      <ol className='list-disc list-inside'>
-      { f.value?.map(c => <li children={c} className='font-semibold shelf-text-label-color-second' /> )}
-      </ol>
-      </>
-      )
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_collections} */
+        const cast = f.value ?? [];
+
+        return (
+          <>
+          a product, that <span className='underline'>does not</span> 
+          belong to the following <b>collections</b>:
+          <ol className='list-disc list-inside'>
+          { 
+            cast.map(
+              c => <li children={c.title} 
+                       className='font-semibold shelf-text-label-color-second' /> 
+            )
+          }
+          </ol>
+          </>
+        )
+      }
     case FilterMetaEnum.p_in_tags.op:
-      return (
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        const cast = f.value ?? [];
+
+        return (
         <>
-      a product, that has any of the following <b>tags</b>:
-      <ol className='list-disc list-inside'>
-      { f.value?.map(c => <li children={c} className='font-semibold shelf-text-label-color-second' /> )}
-      </ol>
-      </>
-      )
+          a product, that has any of the following <b>tags</b>:
+          <ol className='list-disc list-inside'>
+          { 
+            cast.map(
+              c => <li children={c} 
+                       className='font-semibold shelf-text-label-color-second' /> 
+            )
+          }
+          </ol>
+        </>
+        )
+      }
     case FilterMetaEnum.p_not_in_tags.op:
-      return (
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_tags} */
+        const cast = f.value ?? [];
+        
+        return (
         <>
-      a product, that has <span className='underline'>does not</span> have any of the following <b>tags</b>:
-      <ol className='list-disc list-inside'>
-      { f.value?.map(c => <li children={c} className='font-semibold shelf-text-label-color-second' /> )}
-      </ol>
-      </> 
-      )
+          a product, that has <span className='underline'>does not</span> 
+          have any of the following <b>tags</b>:
+          <ol className='list-disc list-inside'>
+          { 
+            cast.map(
+              c => <li children={c} 
+                      className='font-semibold shelf-text-label-color-second' /> 
+            )
+          }
+          </ol>
+        </> 
+        )
+      }
     case FilterMetaEnum.p_in_products.op:
-      return (
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */
+        const cast = f.value ?? [];
+
+        return (
         <>
-      a product, that has any of the following <b>handles</b>:
-      <ol className='list-disc list-inside'>
-      { f.value?.map(c => <li children={c} className='font-semibold shelf-text-label-color-second' /> )}
-      </ol>
-      </>
-      )
-    case FilterMetaEnum.p_not_in_tags.op:
-      return (
+          a product, that is any of the <b>following</b>:
+          <ol className='list-disc list-inside'>
+          { 
+            cast.map(
+              c => <li children={c.title} 
+                    className='font-semibold shelf-text-label-color-second' /> 
+            )
+          }
+          </ol>
+        </>
+        )
+      }
+    case FilterMetaEnum.p_not_in_products.op:
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_products} */
+        const cast = f.value ?? [];
+
+        return (
         <>
-      a product, that has <span className='underline'>does not</span> have any of the following <b>handles</b>:
-      <ol className='list-disc list-inside'>
-      { f.value?.map(c => <li children={c} className='font-semibold shelf-text-label-color-second' /> )}
-      </ol>
-      </>   
-      )         
+          a product, that is <span className='underline'>not</span> 
+          any of the following <b>products</b>:
+          <ol className='list-disc list-inside'>
+          { 
+            cast.map(
+              c => <li children={c.title} 
+                  className='font-semibold shelf-text-label-color-second' /> 
+            )
+          }
+          </ol>
+        </>   
+        )         
+      }
     case FilterMetaEnum.p_in_price_range.op:
-      return (
+      {
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_price_range} */
+        const cast = f.value;
+
+        return (
         <>
-      a product, that is <b>priced</b> between <b children={f.value.from ?? 0} className='shelf-text-label-color-second'/> to <b className='shelf-text-label-color-second' children={f.value.to ?? 'Infinity'}/>
-      </>  
-      ) 
+          a product, that is <b>priced</b> between 
+          <b children={cast.from ?? 0} className='shelf-text-label-color-second'/> to 
+          <b className='shelf-text-label-color-second' children={cast.to ?? 'Infinity'}/>
+        </>  
+        ) 
+      }
     default:
       return 'WHAT'         
   }
 }
 
+
+
+/**
+ * 
+ * @param {number} ix 
+ */
 const to_order = (ix) => {
   switch(ix) {
     case 1: return '1st'
@@ -317,17 +423,25 @@ const filter_legal = f => {
 }
 
 /**
- * @param {object} p
- * @param {'bundle'} p.meta
- * @param {import('@storecraft/core/v-api').BundleDiscountExtra} p.value
- * @param {import('./fields-view.jsx').FieldContextData} p.context
- * @param {(extra: 
+ * 
+ * @typedef {object} BundleDiscountParams
+ * @prop {'bundle'} meta
+ * @prop {import('@storecraft/core/v-api').BundleDiscountExtra} value
+ * @prop {import('./fields-view.jsx').FieldContextData} context
+ * @prop {(extra: 
  *  import('@storecraft/core/v-api').BundleDiscountExtra) => void
- * } p.onChange
+ * } onChange
+ * 
+ * 
+ * @param {BundleDiscountParams} params
  */
-const BundleDiscount = ({ meta, value, context, onChange }) => {
+const BundleDiscount = (
+  { 
+    meta, value, context, onChange 
+  }
+) => {
 
-  /**@type {[filters: import('@storecraft/core/v-api').Filter[], any]} */
+  /** @type {import('./media.jsx').useStateInfer<import('@storecraft/core/v-api').Filter[]>} */
   const [filters, setFilters] = useState([]) 
   const [v, setV] = useState(value)
   
@@ -338,26 +452,37 @@ const BundleDiscount = ({ meta, value, context, onChange }) => {
     () => {
       const set_filters = () => {
         /**@type {import('@storecraft/core/v-api').Filter[]} */
-        const fs =  context?.query['info.filters']?.get() ?? []
-        setFilters([...fs].filter(filter_legal))
+        const fs =  context?.query['info.filters']?.get() ?? [];
+
+        setFilters(
+          [...fs].filter(filter_legal)
+        );
       }
-      set_filters()
+
+      set_filters();
+
       return context?.pubsub?.add_sub(
         (event, value) => {
           if(event==='info.filters')
             setFilters(value.filter(filter_legal))
         }
-      )
+      );
     }, [context]
-  )
+  );
 
 
   const onChangeInternal = useCallback(
+    /**
+     * 
+     * @param {keyof import('@storecraft/core/v-api').BundleDiscountExtra} who 
+     * @param {*} val 
+     */
     (who, val) => {
       // console.log('val ', val);
       const vvv = { ...v, [who] : val }
-      setV(vvv)
-      onChange(vvv)
+
+      setV(vvv);
+      onChange(vvv);
     },
     [v, onChange]
   )
@@ -378,7 +503,9 @@ const BundleDiscount = ({ meta, value, context, onChange }) => {
               <Dashed children={to_order(ix+1)} 
                       className='text-lg shelf-text-label-color' /> 
               &nbsp;item in bundle is&nbsp;
-              { explain_filter(f) }
+              { 
+                explain_filter(f) 
+              }
             </div>         
             <HR/> 
           </div>          
@@ -439,29 +566,42 @@ const BundleDiscount = ({ meta, value, context, onChange }) => {
   <p children='Other Options' 
      className='text-lg font-bold mt-6'/>
   <div className='flex flex-row gap-3 items-center mt-5'>
-    <input id='cb_recursive' type='checkbox' 
-           checked={v.recursive===true}
-           onChange={e => onChangeInternal('recursive', !v.recursive)}
-           className='w-4 h-4 accent-pink-500 border-0 rounded-md 
-                      focus:ring-0' />
+    <input 
+        id='cb_recursive' type='checkbox' 
+        checked={v.recursive===true}
+        onChange={e => onChangeInternal('recursive', !v.recursive)}
+        className='w-4 h-4 accent-pink-500 border-0 rounded-md 
+                  focus:ring-0' />
     <label htmlFor='cb_recursive' children='Recursive' />
     <span children='(Apply the discount as much as possible)' 
           className=' text-sm' />
   </div>
        
-  <ExplainPrice prefix='Bundle Price' 
-        percent={v?.percent} fixed={v?.fixed} />
+  <ExplainPrice 
+      prefix='Bundle Price' 
+      percent={v?.percent} 
+      fixed={v?.fixed} />
 </div>    
   )
 }
 
+
 /**
- * @param {object} param0 
- * @param {string} param0.prefix
- * @param {number} param0.percent
- * @param {number} param0.fixed
+ * 
+ * @typedef {object} ExplainPriceParams
+ * @prop {string} prefix
+ * @prop {number} percent
+ * @prop {number} fixed
+ * 
+ * 
+ * @param {ExplainPriceParams} params
  */
-const ExplainPrice = ({ prefix, percent, fixed }) => {
+const ExplainPrice = (
+  { 
+    prefix, percent, fixed 
+  }
+) => {
+
   const explain = explain_price(`(${prefix})`, percent, fixed)
   const percent2 = (Number.isNaN(percent) || percent==0) ? 'Percents' : `${percent}%`
 
@@ -479,15 +619,24 @@ const ExplainPrice = ({ prefix, percent, fixed }) => {
   )
 }
 
+
+
 /**
- * @param {object} props
- * @param {'regular'} props.type
- * @param {import('@storecraft/core/v-api').RegularDiscountExtra} props.value
- * @param {(extra: 
- *  import('@storecraft/core/v-api').RegularDiscountExtra) => void
- * } props.onChange
+ * 
+ * @typedef {object} RegularDiscountParams
+ * @prop {'regular'} type
+ * @prop {import('@storecraft/core/v-api').RegularDiscountExtra} value
+ * @prop {(extra: import('@storecraft/core/v-api').RegularDiscountExtra) => void} onChange
+ * 
+ * 
+ * @param {RegularDiscountParams} props
+ * 
  */
-const RegularDiscount = ( { type, value, onChange } ) => {
+const RegularDiscount = ( 
+  { 
+    type, value, onChange 
+  } 
+) => {
 
   const [v, setV] = useState(value)
 
@@ -496,16 +645,18 @@ const RegularDiscount = ( { type, value, onChange } ) => {
 
   const onChangeInternal = useCallback(
     /**
-     * @param {string} who 
+     * @param {keyof import('@storecraft/core/v-api').RegularDiscountExtra} who 
      * @param {any} val 
      */
     (who, val) => {
       const vvv = { ...v, [who] : parseFloat(val) }
-      setV(vvv)
-      onChange(vvv)
+
+      setV(vvv);
+      onChange(vvv);
     },
     [v, onChange]
-  )
+  );
+
 
   return (
 <div className='shelf-text-title-color'>
@@ -521,15 +672,16 @@ const RegularDiscount = ( { type, value, onChange } ) => {
                   gap-3 items-center '>
     <label children='Percents off' />
     <BlingInput
-          type='number' 
-          onWheel={(e) => e.target.blur()}
-          onChange={
+        type='number' 
+        onWheel={(e) => e.target.blur()}
+        onChange={
           e => onChangeInternal(
             'percent', 
             Math.min(parseFloat(e.currentTarget.value),100)
           )
         }
-        value={v.percent} min='0' max='100' step='1' 
+        value={v.percent} 
+        min='0' max='100' step='1' 
         inputClsName='h-7'
         className='rounded-md w-14' />
 
@@ -561,6 +713,11 @@ const RegularDiscount = ( { type, value, onChange } ) => {
   )
 }
 
+
+/**
+ * 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>} params
+ */
 const Dashed = ({ className='', ...rest }) => {
   return (
 <span className={`font-semibold border-b-2 
@@ -569,15 +726,23 @@ const Dashed = ({ className='', ...rest }) => {
   )
 }
 
+
 /**
- * @param {object} props
- * @param {'buy_x_get_y'} props.type
- * @param {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} props.value
- * @param {(extra: 
- *  import('@storecraft/core/v-api').BuyXGetYDiscountExtra) => void
- * } props.onChange
+ * 
+ * @typedef {object} BuyXGetYDiscountParams
+ * @prop {'buy_x_get_y'} type
+ * @prop {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} value
+ * @prop {(extra: import('@storecraft/core/v-api').BuyXGetYDiscountExtra) => void} onChange
+ * @prop {import('../pages/discount.jsx').Context} context
+ * 
+ * 
+ * @param {BuyXGetYDiscountParams} props
  */
-const BuyXGetYDiscount = ({ type, value, onChange }) => {
+const BuyXGetYDiscount = (
+  { 
+    type, value, onChange, context
+  }
+) => {
 
   const [v, setV] = useState(value)
   
@@ -586,17 +751,18 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
 
   const onChangeInternal = useCallback(
     /**
-     * @param {string} who 
+     * @param {keyof import('@storecraft/core/v-api').BuyXGetYDiscountExtra} who 
      * @param {any} val 
      */
     (who, val) => {
       // console.log('val ', val);
       const vvv = { ...v, [who] : val }
-      setV(vvv)
-      onChange && onChange(vvv)
+
+      setV(vvv);
+      onChange && onChange(vvv);
     },
     [v, onChange]
-  )
+  );
 
   return (
 <div className='shelf-text-title-color'>
@@ -615,8 +781,8 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
           e => onChangeInternal(
             'qty_x', 
             Math.max(parseInt(e.currentTarget.value), 1)
-            )
-          }
+          )
+        }
         inputClsName='h-7'
         stroke='border-b'
         className='rounded-md w-14 inline-block'/>
@@ -642,8 +808,8 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
           e => onChangeInternal(
             'qty_y', 
             Math.max(parseInt(e.currentTarget.value), 1)
-            )
-          }
+          )
+        }
         stroke='border-b'
         rounded='rounded-md'
         className='w-14'/>
@@ -653,8 +819,11 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
 
   </div>
 
-  <DiscountFilters types={['product']} value={v.filters_y}
-          onChange={ fs => onChangeInternal('filters_y', fs)} />
+  <DiscountFilters 
+      types={['product']} 
+      context={context}
+      value={v.filters_y}
+      onChange={fs => onChangeInternal('filters_y', fs)} />
 
   <p children={`How to discount the ${v.qty_y} items` }
      className='text-lg font-bold  mt-6'/>
@@ -707,22 +876,30 @@ const BuyXGetYDiscount = ({ type, value, onChange }) => {
           className=' text-sm' />
   </div>
 
-  <ExplainPrice prefix={`total price of ${Number.isNaN(v?.qty_y) ? 1 : v.qty_y}`}
-        percent={v?.percent} fixed={v?.fixed} />
+  <ExplainPrice 
+      prefix={`total price of ${Number.isNaN(v?.qty_y) ? 1 : v.qty_y}`}
+      percent={v?.percent} 
+      fixed={v?.fixed} />
 
 </div>    
   )
 }
 
 /**
- * @param {object} props
- * @param {'order'} props.type
- * @param {import('@storecraft/core/v-api').OrderDiscountExtra} props.value
- * @param {(extra: 
- *  import('@storecraft/core/v-api').OrderDiscountExtra) => void
- * } props.onChange
+ * 
+ * @typedef {object} OrderDiscountParams
+ * @prop {'order'} type
+ * @prop {import('@storecraft/core/v-api').OrderDiscountExtra} value
+ * @prop {(extra: import('@storecraft/core/v-api').OrderDiscountExtra) => void} onChange
+ * 
+ * 
+ * @param {OrderDiscountParams} props
  */
-const OrderDiscount = ( { type, value, onChange } ) => {
+const OrderDiscount = ( 
+  { 
+    type, value, onChange 
+  } 
+) => {
 
   const [v, setV] = useState(value)
 
@@ -731,16 +908,17 @@ const OrderDiscount = ( { type, value, onChange } ) => {
 
   const onChangeInternal = useCallback(
     /**
-     * @param {string} who 
+     * @param {keyof typeof value} who 
      * @param {any} val 
      */
     (who, val) => {
       const vvv = { ...v, [who] : val }
-      setV(vvv)
-      onChange(vvv)
+
+      setV(vvv);
+      onChange(vvv);
     },
     [v, onChange]
-  )
+  );
 
   return (
 <div className='shelf-text-title-color'>
@@ -759,12 +937,13 @@ const OrderDiscount = ( { type, value, onChange } ) => {
           type='number' 
           onWheel={(e) => e.target.blur()}
           onChange={
-          e => onChangeInternal(
-            'percent', 
-            Math.min(parseFloat(e.currentTarget.value),100)
+            e => onChangeInternal(
+              'percent', 
+              Math.min(parseFloat(e.currentTarget.value),100)
             )
           }
-          value={v.percent} min='0' max='100' step='1' 
+          value={v.percent} 
+          min='0' max='100' step='1' 
           inputClsName='h-7'
           className='rounded-md w-14' />
           
@@ -776,7 +955,7 @@ const OrderDiscount = ( { type, value, onChange } ) => {
           type='number' 
           onWheel={(e) => e.target.blur()}
           onChange={
-          e => onChangeInternal(
+            e => onChangeInternal(
               'fixed', 
               parseFloat(e.currentTarget.value)
             )
@@ -789,15 +968,16 @@ const OrderDiscount = ( { type, value, onChange } ) => {
   <p children='More Options' 
      className='text-lg font-bold mt-5'/>
   <div className='flex flex-row gap-3 items-center mt-5'>
-    <input id='cb' type='checkbox' 
-           checked={v.free_shipping==true}
-           onChange={
-            e => onChangeInternal(
-              'free_shipping', 
-              !v.free_shipping
-            )
-           }
-           className='w-4 h-4 accent-pink-500 border-0 rounded-md 
+    <input 
+        id='cb' type='checkbox' 
+        checked={v.free_shipping==true}
+        onChange={
+          e => onChangeInternal(
+            'free_shipping', 
+            !v.free_shipping
+          )
+        }
+        className='w-4 h-4 accent-pink-500 border-0 rounded-md 
                       focus:ring-0' />
     <label htmlFor='cb' children='Free Shipping' />
   </div>
@@ -805,17 +985,16 @@ const OrderDiscount = ( { type, value, onChange } ) => {
   <p children='* Fixed Price may be negative.' 
      className='text-sm mt-5 tracking-wider'/>
 
-  <ExplainPrice prefix={`Order Total`}
-        percent={v?.percent} fixed={v?.fixed} />
+  <ExplainPrice 
+      prefix={`Order Total`}
+      percent={v?.percent} 
+      fixed={v?.fixed} />
 
 </div>    
   )
 }
 
-/**
- * @typedef {object} CompParams
- * @prop {}
- */
+
 
 const discount_types_comps = [
   { 
@@ -841,27 +1020,43 @@ const discount_types_comps = [
   },
 ]
 
+
+
 /**
- * @param {object} p 
- * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} p.meta
- * @param {import('./fields-view.jsx').FieldContextData} p.context
- * @param {(extra: 
- *  import('@storecraft/core/v-api').DiscountDetails["extra"]) => void
- * } p.onChange
- * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} p.value
+ * 
+ * @typedef {object} Type2CompParams
+ * @prop {import('@storecraft/core/v-api').DiscountDetails["meta"]} meta
+ * @prop {Parameters<DiscountDetailsView>["0"]["context"]} context
+ * @prop {(extra: import('@storecraft/core/v-api').DiscountDetails["extra"]) => void} onChange
+ * @prop {import('@storecraft/core/v-api').DiscountDetails["extra"]} value
+ * 
+ * 
+ * @param {Type2CompParams} params 
+ * 
  */
-const Type2Comp = ({ meta, context, onChange, value, ...rest }) => {
+const Type2Comp = (
+  { 
+    meta, context, onChange, value, ...rest 
+  }
+) => {
+  
   const record = discount_types_comps.find(
     it => it.type===meta?.type
   )
 
   if (!record)
     return (<></>)
-  const { Comp, CompParams } = record
+  const { Comp, CompParams } = record;
+
   return (
-    <Comp {...CompParams} onChange={onChange} 
-        value={value} meta={meta} type={meta.type} 
-        context={context} {...rest} />
+    <Comp 
+        {...CompParams} 
+        onChange={onChange} 
+        value={value} 
+        meta={meta} 
+        type={meta.type} 
+        context={context} 
+        {...rest} />
   );
 }
 
@@ -901,13 +1096,19 @@ const getDefaultExtraByMeta = m => {
 
 /**
  * 
- * @param {object} p
- * @param {import('./fields-view.jsx').FieldViewParams} p.field
- * @param {import('./fields-view.jsx').FieldContextData} p.context
- * @param {import('@storecraft/core/v-api').DiscountDetails} p.value
- * @param {(v: import('@storecraft/core/v-api').DiscountDetails) => void} p.onChange
+ * @param {import('./fields-view.jsx').FieldLeafViewParams<
+ *  import('@storecraft/core/v-api').DiscountDetails,
+ *  import('../pages/discount.jsx').Context,
+ *  import('@storecraft/core/v-api').DiscountType
+ * >
+ * } params
  */
-const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
+const DiscountDetailsView = (
+  { 
+    field, value, context, onChange, ...rest 
+  }
+) => {
+
   const [meta, setType] = useState(value?.meta)
   const [extra, setExtra] = useState(value?.extra)
 
@@ -924,7 +1125,7 @@ const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
         extra : e
       });
     }, [onChange]
-  )
+  );
 
   const onTypeSelected = useCallback(
     /** @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} t */
@@ -932,7 +1133,7 @@ const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
       
       notify(t, getDefaultExtraByMeta(t))
     }, [notify]
-  )
+  );
 
   const onExtraChange = useCallback(
     /**
@@ -941,21 +1142,26 @@ const DiscountDetailsView = ({ field, value, context, onChange, ...rest }) => {
     (e) => {
       notify(meta, e)
     }, [meta, notify]
-  )
+  );
 
   return (
 <div className='w-full'>
-  <DiscountTypes onChange={onTypeSelected} selectedType={meta} />
+  <DiscountTypes 
+      onChange={onTypeSelected} 
+      selectedType={meta} />
   <ShowIf show={meta}>
     <p children='' 
        className='border-b-g mt-5 h-0.5 mb-5 bg-gradient-to-r 
                 from-pink-400 to-kf-300'/>
   </ShowIf>
-  <Type2Comp meta={meta} context={context}
-             onChange={onExtraChange} 
-             value={value?.extra} />
+  <Type2Comp 
+      meta={meta} 
+      context={context}
+      onChange={onExtraChange} 
+      value={value?.extra} />
+
 </div>
   )
 }
 
-export default DiscountDetailsView
+export default DiscountDetailsView;

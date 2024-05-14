@@ -290,7 +290,7 @@ const explain_filter = (f) => {
 
         return (
           <>
-          a product, that <span className='underline'>does not</span> 
+          a product, that <span className='underline'>does not</span>&nbsp; 
           belong to the following <b>collections</b>:
           <ol className='list-disc list-inside'>
           { 
@@ -329,7 +329,7 @@ const explain_filter = (f) => {
         
         return (
         <>
-          a product, that has <span className='underline'>does not</span> 
+          a product, that has <span className='underline'>does not</span>&nbsp; 
           have any of the following <b>tags</b>:
           <ol className='list-disc list-inside'>
           { 
@@ -389,8 +389,8 @@ const explain_filter = (f) => {
         return (
         <>
           a product, that is <b>priced</b> between 
-          <b children={cast.from ?? 0} className='shelf-text-label-color-second'/> to 
-          <b className='shelf-text-label-color-second' children={cast.to ?? 'Infinity'}/>
+          <b children={` ${cast?.from ?? 0}`} className='shelf-text-label-color-second'/> to 
+          <b className='shelf-text-label-color-second' children={` ${cast?.to ?? 'Infinity'}`}/>
         </>  
         ) 
       }
@@ -398,8 +398,6 @@ const explain_filter = (f) => {
       return 'WHAT'         
   }
 }
-
-
 
 /**
  * 
@@ -462,7 +460,8 @@ const BundleDiscount = (
       set_filters();
 
       return context?.pubsub?.add_sub(
-        (event, value) => {
+        (event, value=[]) => {
+
           if(event==='info.filters')
             setFilters(value.filter(filter_legal))
         }

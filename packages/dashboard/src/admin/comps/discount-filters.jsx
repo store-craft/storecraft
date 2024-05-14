@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import ShowIf from './show-if.jsx'
 import SelectResource from './select-resource.jsx'
 import { Bling, BlingInput, HR } from './common-ui.jsx'
@@ -20,10 +20,12 @@ import useNavigateWithState from '../hooks/useNavigateWithState.js'
  * @returns 
  */
 export const discount_filters_validator = v => {
-  const product_filters = v?.filter(it => it.type==='product') ?? []
+  const product_filters = v?.filter(it => it.type==='product') ?? [];
+
   if(product_filters.length==0)
-    return [false, 'You have to apply at least ONE Product Filter']
-  return [true, undefined]
+    return [false, 'You have to apply at least ONE Product Filter'];
+
+  return [true, undefined];
 }
 
 /**
@@ -97,7 +99,7 @@ const Filter_ProductInCollections = (
       navWithState(url, state);
 
     },
-    [tags, context, navWithState]
+    [context, navWithState]
   );
 
   return (
@@ -290,7 +292,9 @@ const Filter_ProductInProducts = (
 
       // only include unseen handles
       const resolved = [
-        ...mapped.filter(m => tags.find(it => it.handle===m.handle)===undefined), 
+        ...mapped.filter(
+          m => tags.find(it => it.handle===m.handle)===undefined
+        ), 
         ...tags
       ];
 
@@ -367,23 +371,28 @@ const Filter_ProductNotHasTags = (
 const Filter_ProductPriceInRange = (
   { 
     onChange, 
-    value={ from : 0.0, to : Infinity}, 
+    value={ from: 0.0, to: Infinity}, 
   }
 ) => {
 
   const [v, setV] = useState(value)
 
-  // useEffect(() => { setV(v) }, [value])
+  useEffect(
+    () => { 
+      onChange(v) 
+    }, 
+    []
+  );
   
   const onChangeInternal = useCallback(
     /**
-     * @param {string} who key
+     * @param {keyof typeof value} who key
      * @param {React.ChangeEvent<HTMLInputElement>} e event
      */
     (who, e) => {
       const vv = { 
         ...v, 
-        [who] : parseFloat(e.currentTarget.value) 
+        [who]: parseFloat(e.currentTarget.value) 
       };
 
       setV(vv);
@@ -393,6 +402,12 @@ const Filter_ProductPriceInRange = (
   );
   // console.log('total ', v);
 
+  /**
+   * @type {{
+   *  name: string,
+   *  key: keyof typeof value
+   * }[]}
+   */
   const data = [
     { name: 'From', key: 'from' },
     { name: 'To', key: 'to' },
@@ -613,13 +628,14 @@ const Filter_OrderDate = (
  * @typedef {object} Filter_OrderHasCustomersParams
  * @prop {(value: import('@storecraft/core/v-api').CustomerType[]) => void} onChange
  * @prop {import('@storecraft/core/v-api').CustomerType[]} value
+ * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
  * @param {Filter_OrderHasCustomersParams} params
  */
 const Filter_OrderHasCustomers = (
   { 
-    onChange, value=[] 
+    onChange, value=[], context 
   }
 ) => {
 
@@ -647,6 +663,21 @@ const Filter_OrderHasCustomers = (
       setTags(new_tags);
     },
     [tags, onChange]
+  );
+
+  const { navWithState } = useNavigateWithState();
+
+  /**
+   * @type {import('./capsules-view.jsx').CapsulesViewParams<typeof value[0]>["onClick"]}
+   */
+  const onClick = useCallback(
+    (v) => {
+      const state = context?.getState && context?.getState();
+      const url = `/pages/customers/${v.id}/edit`;
+
+      navWithState(url, state);
+    },
+    [context, navWithState]
   );
 
   /**
@@ -686,7 +717,8 @@ const Filter_OrderHasCustomers = (
     <HR className='w-full mt-5' />  
   } 
   <CapsulesView 
-      onClick={onRemove} 
+      onRemove={onRemove} 
+      onClick={onClick} 
       name_fn={extract_contact_field}
       tags={tags} 
       className='mt-5' />
@@ -963,7 +995,7 @@ const DiscountFilters = (
         meta: {
           id: fd.id, type: fd.type, op: fd.op
         },
-        value : undefined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+        value: undefined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
       }
 
       const vv = [...filters, f];

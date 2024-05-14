@@ -24,11 +24,11 @@ const extract_abs_number = v => {
  */
 export const discount_to_mongo_conjunctions = d => {
   // discount has to be product discount + automatic + active + has filters
+  const conjunctions = [];
   const is_good = !is_order_discount(d) && is_automatic_discount(d) && 
                   d.active && d?.info?.filters?.length;
-  if(!is_good) return;
+  if(!is_good) conjunctions;
 
-  const conjunctions = [];
   const filters = d.info.filters;
 
   for(const filter of filters) {

@@ -46,7 +46,7 @@ const info = {
       key: 'filters', name: '🔎 Filters', validate: true, 
       validator : discount_filters_validator, 
       desc: 'Define which products or orders (by date, amount \
-        or cutomers) are legible for discount',
+        or customers) are eligible for discount',
       comp: withCard(DiscountFilters, { className: 'w-full h-9'}, true),
       comp_params: {className: 'w-full'}
     },

@@ -2,6 +2,9 @@
 /**
  * @typedef {import('./types.api.js').ProductType} ProductType
  * @typedef {import('./types.api.js').ProductTypeUpsert} ProductTypeUpsert
+ * @typedef {import('./types.api.js').VariantType} VariantType
+ * @typedef {import('./types.api.js').VariantTypeUpsert} VariantTypeUpsert
+ * @typedef {ProductType | ProductTypeUpsert | VariantType | VariantTypeUpsert} ProductLike
  * @typedef {import('./types.api.js').ShippingMethodType} ShippingMethodType
  * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
  * @typedef {import('./types.api.js').Filter} Filter
@@ -25,7 +28,7 @@ import {
 /**
  * 
  * @param {Filter} filter 
- * @param {ProductType | ProductTypeUpsert} product 
+ * @param {ProductLike} product 
  * 
  * @returns {boolean}
  */
@@ -124,8 +127,8 @@ export const test_product_filter_against_product =
 
 /**
  * 
- * @param {ProductType | ProductTypeUpsert} product 
  * @param {Filter[]} filters 
+ * @param {ProductLike} product 
  * 
  * @return {boolean}
  */

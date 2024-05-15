@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react"
 import CapsulesView from "./capsules-view.jsx"
 import { BlingInput } from "./common-ui.jsx"
 import { BlingButton } from "./common-button.jsx"
+import { to_handle } from "@storecraft/core/v-api/utils.func.js"
 
 /**
  * @param {string} text 
@@ -30,7 +31,7 @@ const TagValues = (
   /** @type {Parameters<BlingButton>["0"]["onClick"]} */
   const onAdd = useCallback(
     (e) => {
-      const tokens = text2tokens(ref.current.value.toString());
+      const tokens = text2tokens(ref.current.value.toString()).map(t => to_handle(t));
 
       if(!tokens) return;
 
@@ -70,10 +71,12 @@ const TagValues = (
     <BlingInput 
         placeholder='space separated values' 
         className='flex-grow'
+        rounded='rounded-md'
         ref={ref} type='text'/>
 
     <BlingButton 
-        children='Add' stroke='border-2 h-10' 
+        children='Add' 
+        stroke='border-2 h-10'
         onClick={onAdd}/>
   </div>
   <CapsulesView 

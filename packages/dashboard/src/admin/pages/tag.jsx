@@ -20,6 +20,7 @@ const root_schema = {
   fields: [
     { 
       key: 'handle',  name: 'Name', type: 'text', validate: true, 
+      desc: 'Use simple key names, like `color` for quick attributes creation',
       comp: withCard(
         withBling(MInput), 
         { 
@@ -30,6 +31,7 @@ const root_schema = {
     },
     { 
       key: 'values', name: 'Values', type: 'text', validate: true, 
+      desc: 'Use simple value names, like `red`, `green`, `white` for quick attributes creation',
       validator: values_validator ,
       comp: withCard(TagValues), 
       comp_params: { className: 'w-full' } 

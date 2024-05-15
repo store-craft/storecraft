@@ -10,7 +10,12 @@ import { marked } from 'marked'
  * 
  * @param {MDViewParams} param
  */
-const MDView = ({value, ...rest}) => {
+const MDView = (
+  {
+    value, ...rest
+  }
+) => {
+  
   return (
 <div {...rest}>
   <p className='--mdx md-view' 

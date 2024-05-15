@@ -28,11 +28,15 @@ export const upsert = (app) =>
   (final) => {
     
     assert(
-      [final.handle, ...final.values].every(
-        h => to_handle(h)===h
-      ),
-      'Handle or Values are invalid', 400
+      [final.handle, ...final.values].every(Boolean),
+      'Handle or Values are missing', 400
     );
+
+    final.handle = to_handle(final.handle);
+    final.values = final.values.map(
+      v => to_handle(v)
+    );
+
     return final.values ?? [];
   }
 )(item);

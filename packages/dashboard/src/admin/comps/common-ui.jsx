@@ -362,8 +362,12 @@ export const Card = (
       )
     }
     <ShowIf show={desc}>
-      <p children={desc} className='text-sm shelf-text-minor-light mt-3 
-                tracking-wider whitespace-pre-line'/>
+      <MDView 
+          value={desc} 
+          className='text-sm shelf-text-minor-light mt-3 
+                    tracking-wider --whitespace-pre-line'/>
+      {/* <p children={desc} className='text-sm shelf-text-minor-light mt-3 
+                tracking-wider whitespace-pre-line'/> */}
       <HR className='mt-3 --mb-5'  />
     </ShowIf>
 

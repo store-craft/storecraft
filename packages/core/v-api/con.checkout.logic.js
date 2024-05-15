@@ -79,23 +79,26 @@ async (checkout) => {
       const li = checkout.line_items[ix];
 
       if(!it) {
-        errorWith(li?.id, 'product-not-exists')
+        errorWith(li?.id, 'product-not-exists');
       } else {
         const pd = it;
-        const li = checkout.line_items[ix]
+        const li = checkout.line_items[ix];
 
         if(pd.qty==0)
-          errorWith(it?.id, 'product-out-of-stock')
+          errorWith(it?.id, 'product-out-of-stock');
         else if(li.qty>pd.qty)
-          errorWith(it?.id, 'product-not-enough-stock')
+          errorWith(it?.id, 'product-not-enough-stock');
+        
+        if(!pd.active)
+          errorWith(it?.id, 'product-inactive');
 
         // patch line items inline
-        li.data = pd
-        li.price = pd.price
-        li.stock_reserved = 0
+        li.data = pd;
+        li.price = pd.price;
+        li.stock_reserved = 0;
       }
     }
-  )
+  );
 
   return {
     ...checkout, 

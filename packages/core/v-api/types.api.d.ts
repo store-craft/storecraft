@@ -1922,7 +1922,9 @@ export type ValidationEntry = {
   /**
    * @description message
    */
-  message?: 'shipping-method-not-found' | 'product-not-exists' | 'product-out-of-stock' | 'product-not-enough-stock';
+  message?: 'shipping-method-not-found' | 'product-not-exists' | 
+            'product-out-of-stock' | 'product-not-enough-stock' |
+            'product-inactive';
 }
 
 /** 

@@ -669,8 +669,9 @@ export interface DiscountType extends BaseType {
   /** 
    * @description Discount application (`automatic` and `manual`) 
    */
-  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"];
+  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"] | { id: number, name2: string };
 }
+
 
 /**
  * @description Discount upsert type
@@ -701,6 +702,7 @@ export type DiscountApplicationEnum = {
   Auto:   { id: 0, name?: string, name2: 'automatic'},
   Manual: { id: 1, name?: string, name2: 'manual'},
 }
+
 
 /**
  * @description Filter for product in collections
@@ -797,7 +799,7 @@ export type FilterValue_o_subtotal_in_range = {
   /**
    * @description `o_subtotal_in_range` filter To price
    */
-  to: number 
+  to?: number 
 };
 
 /**
@@ -812,7 +814,7 @@ export type FilterValue_o_items_count_in_range = {
   /**
    * @description `o_items_count_in_range` filter To count
    */
-  to: number 
+  to?: number 
 };
 
 /**
@@ -827,7 +829,7 @@ export type FilterValue_o_date_in_range = {
   /**
    * @description `o_date_in_range` filter To date `ISO` format
    */
-  to: string 
+  to?: string 
 };
 
 /**
@@ -877,7 +879,7 @@ export type Filter = {
           FilterValue_p_in_tags | FilterValue_p_not_in_tags | 
           FilterValue_p_all | FilterValue_p_in_price_range | 
           FilterValue_o_subtotal_in_range | FilterValue_o_items_count_in_range |
-          FilterValue_o_date_in_range | FilterValue_o_has_customers;
+          FilterValue_o_date_in_range | FilterValue_o_has_customers | any;
 }
 
 /**
@@ -885,7 +887,7 @@ export type Filter = {
  */
 export interface FilterMetaEnum { 
   any: { // This is for future flexibility against zod
-    id: number, type:string, 
+    id: number, type: string, 
     op: string, 
     name?: string
   },
@@ -963,7 +965,7 @@ export type DiscountDetails = {
    */
   meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
         DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
-        DiscountMetaEnum['order'] | DiscountMetaEnum["any"];
+        DiscountMetaEnum['order'] | DiscountMetaEnum['any'];
 
 
   /** 
@@ -1649,7 +1651,7 @@ export type OrderStatus = {
    */
   checkout: CheckoutStatusEnum['complete'] | CheckoutStatusEnum['created'] | 
             CheckoutStatusEnum['failed'] | CheckoutStatusEnum['requires_action'] |
-            CheckoutStatusEnum['unknown'];
+            CheckoutStatusEnum['unknown'] | { id: number, name2: string };
 
   /**
    * @description `payment` status
@@ -1658,14 +1660,14 @@ export type OrderStatus = {
            PaymentOptionsEnum['failed'] | PaymentOptionsEnum['partially_paid'] | 
            PaymentOptionsEnum['partially_refunded'] | PaymentOptionsEnum['refunded'] |
            PaymentOptionsEnum['requires_auth'] | PaymentOptionsEnum['unpaid'] | 
-           PaymentOptionsEnum['voided'];
+           PaymentOptionsEnum['voided'] | { id: number, name2: string };
 
   /**
    * @description `fulfillment` status
    */
   fulfillment: FulfillOptionsEnum['cancelled'] | FulfillOptionsEnum['draft'] |
                FulfillOptionsEnum['fulfilled'] | FulfillOptionsEnum['processing'] | 
-               FulfillOptionsEnum['shipped'];
+               FulfillOptionsEnum['shipped'] | { id: number, name2: string };
 }
 
 /** 
@@ -1897,7 +1899,7 @@ export type EvoEntry = {
   /** 
    * @description Available line items after discount 
    */
-  line_items?: LineItem[];
+  line_items_next?: LineItem[];
 }
 
 

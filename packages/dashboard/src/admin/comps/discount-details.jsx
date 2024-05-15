@@ -55,7 +55,8 @@ const DiscountTypes = (
     selectedType, onChange 
   }
 ) => {
-
+  
+  
   const desc = useMemo(
     () => discount_types.find(
       it => it.id === selectedType?.id

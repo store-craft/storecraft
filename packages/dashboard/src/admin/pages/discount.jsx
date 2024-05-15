@@ -139,7 +139,7 @@ const right = {
     {
       key: 'application', name: 'Automatic or Coupon', 
       validate: true, desc : desc_type, editable: true, 
-      defaultValue: DiscountApplicationEnum.Manual,
+      defaultValue: DiscountApplicationEnum.Auto,
       comp: withCard(
         withBling(create_select_view(Object.values(DiscountApplicationEnum))), 
         { className : 'text-gray-600'}, true

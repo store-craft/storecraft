@@ -266,7 +266,7 @@ export const filterValueOSubtotalInRangeSchema = z
       .number()
       .optional()
       .describe("`o_subtotal_in_range` filter From price"),
-    to: z.number().describe("`o_subtotal_in_range` filter To price"),
+    to: z.number().optional().describe("`o_subtotal_in_range` filter To price"),
   })
   .describe("Filter for order discount, subtotal in range");
 export const filterValueOItemsCountInRangeSchema = z
@@ -275,7 +275,10 @@ export const filterValueOItemsCountInRangeSchema = z
       .number()
       .optional()
       .describe("`o_items_count_in_range` filter From count"),
-    to: z.number().describe("`o_items_count_in_range` filter To count"),
+    to: z
+      .number()
+      .optional()
+      .describe("`o_items_count_in_range` filter To count"),
   })
   .describe("Filter for order discount, items count in range");
 export const filterValueODateInRangeSchema = z
@@ -284,7 +287,10 @@ export const filterValueODateInRangeSchema = z
       .string()
       .optional()
       .describe("`o_date_in_range` filter From date `ISO` format"),
-    to: z.string().describe("`o_date_in_range` filter To date `ISO` format"),
+    to: z
+      .string()
+      .optional()
+      .describe("`o_date_in_range` filter To date `ISO` format"),
   })
   .describe("Filter for order discount, subtotal in range");
 export const filterValueOHasCustomersSchema = z
@@ -954,6 +960,7 @@ export const filterSchema = z
         filterValueOItemsCountInRangeSchema,
         filterValueODateInRangeSchema,
         filterValueOHasCustomersSchema,
+        z.any(),
       ])
       .optional()
       .describe("The filter params"),
@@ -1083,6 +1090,10 @@ export const orderStatusSchema = z
         checkoutStatusEnumSchema.shape.failed,
         checkoutStatusEnumSchema.shape.requires_action,
         checkoutStatusEnumSchema.shape.unknown,
+        z.object({
+          id: z.number(),
+          name2: z.string(),
+        }),
       ])
       .describe("`checkout` status"),
     payment: z
@@ -1096,6 +1107,10 @@ export const orderStatusSchema = z
         paymentOptionsEnumSchema.shape.requires_auth,
         paymentOptionsEnumSchema.shape.unpaid,
         paymentOptionsEnumSchema.shape.voided,
+        z.object({
+          id: z.number(),
+          name2: z.string(),
+        }),
       ])
       .describe("`payment` status"),
     fulfillment: z
@@ -1105,6 +1120,10 @@ export const orderStatusSchema = z
         fulfillOptionsEnumSchema.shape.fulfilled,
         fulfillOptionsEnumSchema.shape.processing,
         fulfillOptionsEnumSchema.shape.shipped,
+        z.object({
+          id: z.number(),
+          name2: z.string(),
+        }),
       ])
       .describe("`fulfillment` status"),
   })
@@ -1212,6 +1231,10 @@ export const discountTypeSchema = baseTypeSchema.extend({
     .union([
       discountApplicationEnumSchema.shape.Auto,
       discountApplicationEnumSchema.shape.Manual,
+      z.object({
+        id: z.number(),
+        name2: z.string(),
+      }),
     ])
     .describe("Discount application (`automatic` and `manual`)"),
 });
@@ -1435,7 +1458,7 @@ export const evoEntrySchema = z
       .optional()
       .describe("Running subtotal without shipping"),
     total: z.number().optional().describe("Running total"),
-    line_items: z
+    line_items_next: z
       .array(lineItemSchema)
       .optional()
       .describe("Available line items after discount"),

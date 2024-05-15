@@ -104,17 +104,21 @@ const left = {
   ]
 }
 
-const desc_order = 'Order determines the order in which automatic discounts are applied. \nDiscounts are \
-                    arranged as a stack and the order of application is important. \n\n\
-                    For Example, \
-                    A discount with a 0 order will be applied before a discount with order 10. \
-                    \n\nFree Shipping for orders above say 100$ should be applied last and therefore should \
-                    have a high order number'
+const desc_order = `
+Order determines the order in which automatic discounts are applied. 
+<br/><br/> 
+Discounts are arranged as a stack and the order of application is important.
+<br/><br/> 
+For Example, A discount with a \`0\` order will be applied before a discount with order 10.
+<br/><br/> 
+Free Shipping for orders above say 100$ should be applied last and therefore should 
+have a high order number`
 
-const desc_type = 'Decide whether the discount is: \
-                  \n- Automatically applied, or\
-                  \n- Coupon (applied by user) .\
-                  '
+const desc_type = `
+Decide whether the discount is:
+- **Automatically** applied, or
+- **Coupon** (applied by user)
+`
 
 const right = {
   name:'Main', comp: Div, 

@@ -23,7 +23,7 @@ import { to_handle } from '@storecraft/core/v-api/utils.func.js';
  * @param {string} title 
  * @param {import('@storecraft/core/v-api').Filter[]} filters 
  * 
- * @return {DiscountTypeUpsert}
+ * @return {import('@storecraft/core/v-api').DiscountTypeUpsert}
  */
 const create_regular_discount_with_filters = (title, filters) => {
   return { 
@@ -35,7 +35,7 @@ const create_regular_discount_with_filters = (title, filters) => {
     info: {
       details: {
         meta: enums.DiscountMetaEnum.regular,
-        /** @type {RegularDiscountExtra} */
+        /** @type {import('@storecraft/core/v-api').RegularDiscountExtra} */
         extra: {
           fixed: 0, percent: 10
         }

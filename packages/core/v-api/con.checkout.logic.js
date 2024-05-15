@@ -1,6 +1,7 @@
 import { 
   App, CheckoutStatusEnum, DiscountApplicationEnum, 
-  FulfillOptionsEnum, PaymentOptionsEnum } from "../index.js";
+  FulfillOptionsEnum, PaymentOptionsEnum 
+} from "../index.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
 import { enums } from "./index.js";
 import { assert } from "./utils.func.js";
@@ -104,7 +105,6 @@ async (checkout) => {
 }
 
 
-
 /**
  * @description calculate pricing with `discounts`, `shipping`, `coupons`
  * 
@@ -148,7 +148,6 @@ async (order) => {
   ).filter(
     d => order.coupons.find(c => c.handle===d.handle)!==undefined
   );
-
 
   const pricing = calculate_pricing(
     order.line_items, 
@@ -253,6 +252,7 @@ async (order_checkout, gateway_handle) => {
   }
 }
 
+
 /**
  * @template {import("../index.js").db_driver} D
  * @template {import("../index.js").storage_driver} E
@@ -279,6 +279,7 @@ const reserve_stock_of_order = async (app, order) => {
 
   order.status.fulfillment = enums.FulfillOptionsEnum.processing;
 }
+
 
 /**
  * Complete a checkout sync
@@ -345,7 +346,7 @@ async (checkoutId, client_payload) => {
  * @template {Record<string, payment_gateway>} [F=any]
  * 
  * 
- * @param {App<any,any,any,D,E,F>} app 
+ * @param {App<any, any, any, D, E, F>} app 
  */
 export const inter = app => {
 

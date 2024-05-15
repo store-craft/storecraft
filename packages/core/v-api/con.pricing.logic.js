@@ -2,6 +2,9 @@
 /**
  * @typedef {import('./types.api.js').ProductType} ProductType
  * @typedef {import('./types.api.js').ProductTypeUpsert} ProductTypeUpsert
+ * @typedef {import('./types.api.js').VariantType} VariantType
+ * @typedef {import('./types.api.js').VariantTypeUpsert} VariantTypeUpsert
+ * @typedef {ProductType | ProductTypeUpsert | VariantType | VariantTypeUpsert} ProductLike
  * @typedef {import('./types.api.js').ShippingMethodType} ShippingMethodType
  * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
  * @typedef {import('./types.api.js').Filter} Filter
@@ -18,14 +21,16 @@
  * 
  */
 
+
 import { 
-  DiscountApplicationEnum, DiscountMetaEnum, 
-  FilterMetaEnum } from './types.api.enums.js';
+  DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum 
+} from './types.api.enums.js';
+
 
 /**
  * 
  * @param {Filter} filter 
- * @param {ProductType | ProductTypeUpsert} product 
+ * @param {ProductLike} product 
  * 
  * @returns {boolean}
  */
@@ -122,10 +127,11 @@ export const test_product_filter_against_product =
 
 }
 
+
 /**
  * 
- * @param {ProductType | ProductTypeUpsert} product 
  * @param {Filter[]} filters 
+ * @param {ProductLike} product 
  * 
  * @return {boolean}
  */
@@ -154,6 +160,8 @@ export const test_product_filters_against_product =
 const test_order_filter = 
   (filter, { uid, total, subtotal, quantity_total }) => {
 
+  // console.log('filter', filter)
+
   if(
     !filter && 
     filter?.meta?.type!=='order'
@@ -166,6 +174,7 @@ const test_order_filter =
       case FilterMetaEnum.o_date_in_range.op:
         {
           const now = (new Date()).toISOString();
+
           /** @type {import('./types.api.js').FilterValue_o_date_in_range} */
           const cast = {
             from: (new Date(0)).toISOString(),
@@ -173,6 +182,7 @@ const test_order_filter =
             ...(filter.value ?? {})
           };
 
+          // console.log('cast', cast)
           return Boolean(
             (now >= cast.from) && 
             (now <= cast.to)
@@ -216,6 +226,7 @@ const test_order_filter =
     }
   
   } catch (e) {
+    console.log('e', e)
     return false
   }
 
@@ -447,8 +458,9 @@ export const calculate_line_items_discount_with_bulk_discount =
  * 
  * @returns {ReduceResult}
  */
-const reduce_from_line_items = 
-  (line_items, how_many_to_reduce, pass_mask) => {
+const reduce_from_line_items = (
+  line_items, how_many_to_reduce, pass_mask
+) => {
 
   const line_items_next = line_items.map(
     li => ({ ...li })
@@ -473,7 +485,7 @@ const reduce_from_line_items =
 
       return p;
     }
-    , { 
+    ,{ 
       how_many_left_to_reduce: how_many_to_reduce,
       total: 0,
       line_items_next
@@ -681,11 +693,10 @@ export const calculate_line_items_discount_with_bundle_discount =
     );
 
     const sum_price = locations.reduce(
-      (p, loc) => p + result.line_items_next[loc].price, 0
+      (p, loc) => p + (result.line_items_next[loc].price ?? result.line_items_next[loc].data?.price), 0
     );
 
-
-    result.quantity_discounted = locations.length;
+    result.quantity_discounted += locations.length;
     result.total_discount += apply_discount(
       1, sum_price, $percent, $fixed
     );
@@ -743,7 +754,7 @@ export const calculate_line_items_discount_with_order_discount =
 }
 
 /**
- * route a discount to it's handler
+ * @description route a discount to it's handler
  * given:
  * - a line of products
  * - a discount
@@ -755,6 +766,9 @@ export const calculate_line_items_discount_with_order_discount =
  * @param {LineItem[]} line_items available line items
  * @param {DiscountType} discount 
  * @param {PricingData} context context of discounts
+ * 
+ * 
+ * @return {CalcDiscountResult}
  * 
  */
 export const calculate_line_items_for_discount = 
@@ -794,7 +808,7 @@ export const calculate_line_items_for_discount =
 
 
 /**
- * given:
+ * @description given:
  * - a line of products
  * - a line of discounts
  * - a line of coupons
@@ -803,6 +817,7 @@ export const calculate_line_items_for_discount =
  * Compute the: 
  * - total price
  * - explain how discounts contribute
+ * 
  * 
  * @param {LineItem[]} line_items 
  * @param {DiscountType[]} auto_discounts disabled discounted will be filtered out
@@ -838,7 +853,7 @@ export const calculate_pricing =
   ];
 
   // protections against strings
-  shipping_method.price = parseFloat(String(shipping_method.price))
+  shipping_method.price = parseFloat(String(shipping_method.price));
 
   line_items = line_items.map(
     li => (
@@ -866,7 +881,7 @@ export const calculate_pricing =
       {
         quantity_discounted: 0,
         quantity_undiscounted: quantity_total,
-        line_items,
+        line_items_next: line_items,
         subtotal: subtotal_undiscounted,
         total: subtotal_undiscounted + shipping_method.price
       }
@@ -891,28 +906,24 @@ export const calculate_pricing =
     (ctx, discount, ix) => {
 
       try {
-        const { 
-          line_items_next, total_discount, ...rest 
-        } = calculate_line_items_for_discount(
-          ctx.evo.at(-1).line_items, discount, ctx
+        const evo_entry = calculate_line_items_for_discount(
+          ctx.evo.at(-1).line_items_next, discount, ctx
         );
   
         // update global context
-        ctx.subtotal_discount += total_discount;
-        ctx.subtotal -= total_discount;
-        ctx.total -= total_discount;
-        ctx.quantity_discounted = ctx.quantity_discounted + (rest?.quantity_discounted ?? 0);
+        ctx.subtotal_discount += evo_entry.total_discount;
+        ctx.subtotal -= evo_entry.total_discount;
+        ctx.total -= evo_entry.total_discount;
+        ctx.quantity_discounted = ctx.quantity_discounted + (evo_entry?.quantity_discounted ?? 0);
 
         // push the iteration result for future review
         ctx.evo.push(
           {
-            ...rest,
+            ...evo_entry,
             discount,
             discount_code: discount.handle,
-            total_discount,
             subtotal: ctx.subtotal,
             total: ctx.total,
-            line_items: line_items_next
           }
         );
 

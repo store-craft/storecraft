@@ -16,7 +16,7 @@ const shipping = {
   title: 'shipping checkout test'
 }
 
-/** @type {import('@storecraft/core/v-api').ProductType[]} */
+/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
 const products = [
   {
     price: 30,
@@ -69,6 +69,7 @@ export const create = app => {
   );
 
   s('create -> complete checkout should succeed', async (ctx) => {
+    
     const draft_order = await app2.api.checkout.create_checkout(
       {
         line_items: [

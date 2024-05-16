@@ -27,6 +27,7 @@ const ActionButton = (
 
   return (
 <PromisableLoadingButton 
+    classNameLeft='w-fit'
     title={action.description}
     Icon={undefined} 
     text={action.name} 
@@ -152,7 +153,8 @@ const OrderPaymentGateway = (
     <PromisableLoadingButton 
         Icon={undefined} 
         text='reload' 
-        show={true} keep_text_on_load={true}
+        show={true} 
+        keep_text_on_load={true}
         onClick={fetchStatus}
         classNameLoading='text-xs'
         className='w-fit text-base underline shelf-text-label-color'/>

@@ -80,6 +80,7 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
  * @property {boolean} [keep_text_on_load]
  * @property {string} [className]
  * @property {string} [classNameLoading]
+ * @property {string} [classNameLeft]
  * @property {boolean} [loading]
  * @property {boolean} [show]
  * 
@@ -95,6 +96,7 @@ export const LoadingButton = (
     Icon=null, show=true, text='', 
     keep_text_on_load=false, className=cls_default, 
     classNameLoading='inline text-sm',
+    classNameLeft='w-4',
     loading, ...rest
   }
 ) => {
@@ -108,7 +110,7 @@ export const LoadingButton = (
   // console.log('cls ', className);
   return (
 <button className={`flex flex-row items-center gap-1 ${className}`} {...rest} >
-  <div className='h-full w-4 flex flex-row items-center'>
+  <div className={'h-full flex flex-row items-center ' + classNameLeft}>
     {
       loading ? <AiOutlineLoading3Quarters className={cls_loading}/> :
       Icon

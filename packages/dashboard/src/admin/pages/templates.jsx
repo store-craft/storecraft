@@ -13,16 +13,14 @@ import { ResourceTitle } from '../comps/resource-title.jsx'
  */
 const schema_fields = [
   { 
-    key: 'handle', name: 'Name', 
+    key: 'title', name: 'Title', 
     comp: Span, 
     comp_params: { className: 'font-semibold' } 
   },
   { 
-    key: 'values', name: 'Values', 
-    comp: SpanArray, 
-    comp_params: { 
-      className: 'font-semibold',
-    } 
+    key: 'handle', name: 'Handle', 
+    comp: Span, 
+    comp_params: { className: 'font-semibold' } 
   },
   { 
     key: undefined, name: 'Actions', 

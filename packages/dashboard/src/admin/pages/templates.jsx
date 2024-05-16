@@ -45,7 +45,7 @@ export default ({}) => {
     actions: {
       onLimitChange, onReload, prev, next
     }
-  } = useCollectionsActions('templates', '/pages/templates');
+  } = useCollectionsActions('templates', '/apps/templates');
 
   return (
 <div className='w-full h-full'>
@@ -64,7 +64,7 @@ export default ({}) => {
             isCollectionEmpty={resource_is_probably_empty}
             ref={ref_actions} 
             reload={onReload}
-            createLink='/pages/tags/create'
+            createLink='/apps/templates/create'
             searchTitle='Search by name, values...' 
             isLoading={loading} />
         <TableSchemaView 

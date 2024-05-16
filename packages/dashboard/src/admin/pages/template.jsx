@@ -11,6 +11,10 @@ import MDEditor from '@/admin/comps/md-editor.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { Editor } from "@monaco-editor/react";
+import Handlebars from 'handlebars';
+import { useCallback, useState } from 'react'
+import TemplateTemplate from '../comps/template-template.jsx'
 
 const root_schema = {
   name:'Root', comp: Div, 
@@ -19,8 +23,8 @@ const root_schema = {
   },
   fields: [
     { 
-      key: 'handle',  name: 'Name', type: 'text', validate: true, 
-      desc: 'Use simple key names, like `color` for quick attributes creation',
+      key: 'title',  name: 'Title', type: 'text', validate: true, 
+      // desc: 'Use simple key names, like `color` for quick attributes creation',
       comp: withCard(
         withBling(MInput), 
         { 
@@ -30,10 +34,10 @@ const root_schema = {
       comp_params: {className: 'w-full '} 
     },
     { 
-      key: 'values', name: 'Values', type: 'text', validate: true, 
+      key: 'template', name: 'Template', 
+      defaultValue: '<html></html>',
       desc: 'Use simple value names, like `red`, `green`, `white` for quick attributes creation',
-      validator: values_validator ,
-      comp: withCard(TagValues), 
+      comp: withCard(TemplateTemplate), 
       comp_params: { className: 'w-full' } 
     },
     { 
@@ -44,7 +48,7 @@ const root_schema = {
     {
       name: 'JSON', type: 'compund', validate: false, editable: false, 
       desc: 'Observe the RAW data',
-      comp: JsonViewCard,
+      comp: ({value}) => <JsonViewCard value={{...value, template: '...'}}/>,
       comp_params: { className: 'w-full' }
     },
   ]
@@ -74,24 +78,32 @@ export default (
  }
 ) => {
                    
- const { id : documentId, base } = useParams();
+  const { id : documentId, base } = useParams();
 
- /** 
+  /** 
   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
   *  import('@storecraft/core/v-api').TemplateType>
   * } 
   */
- const {
-   actions: {
-     savePromise, deletePromise, reload,
-   },
-   context, key, 
-   doc, isCreateMode, isEditMode, isViewMode, 
-   loading, hasChanged, hasLoaded, error,
-   ref_head, ref_root, 
- } = useDocumentActions(
-   'templates', documentId, '/pages/templates', mode, base
- );
+  const {
+    actions: {
+      savePromise, deletePromise, reload,
+    },
+    context, key, 
+    doc, isCreateMode, isEditMode, isViewMode, 
+    loading, hasChanged, hasLoaded, error,
+    ref_head, ref_root, 
+  } = useDocumentActions(
+    'templates', documentId, '/apps/templates', mode, base
+  );
+
+  const [template, setTemplate] = useState('');
+
+  const onChange = useCallback(
+    (value) => {
+      setTemplate(value);
+    }, []
+  )
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
@@ -111,10 +123,16 @@ export default (
       changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
     <ErrorMessage error={error} className='w-full max-w-[35rem] mx-auto' />
+
     <FieldsView 
-        key={key} ref={ref_root} field={root_schema} 
-        value={ doc ?? {} } context={context}
-        isViewMode={isViewMode} className='mx-auto' />      
+      key={key} 
+      ref={ref_root} 
+      field={root_schema} 
+      value={doc ?? {}} 
+      context={context}
+      isViewMode={isViewMode} 
+      className='mx-auto' />   
+
   </ShowIf>
 </div>
   )

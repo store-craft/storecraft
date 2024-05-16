@@ -238,6 +238,7 @@ const tables = [
   'notifications',
   'discounts',
   'orders',
+  'templates',
 ]
 
 /**

@@ -12,6 +12,7 @@ import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
+import { impl as templates } from './src/con.templates.js';
 
 
 /**
@@ -121,6 +122,7 @@ export class MongoDB {
       storefronts: storefronts(this),
       tags: tags(this),
       shipping: shipping(this),
+      templates: templates(this),
     }
     
     this.#_is_ready = true; 
@@ -147,28 +149,32 @@ export class MongoDB {
   }
 
   /**
-   * database name
+   * 
+   * @description database name
    */
   get name () {
     return this.config.db_name ?? 'main';
   }
 
   /**
-   * Get the `storecraft` app
+   * 
+   * @description Get the `storecraft` app
    */
   get app() { 
     return this.#_app; 
   }
 
   /**
-   * Get the native `mongodb` client
+   * 
+   * @description Get the native `mongodb` client
    */
   get mongo_client() {
     return this.#_mongo_client;
   }
 
   /**
-   * Get the config object
+   * 
+   * @description Get the config object
    */
   get config() { 
     return this.#_config; 

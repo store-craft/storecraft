@@ -7,7 +7,7 @@ import {
   PostTypeUpsert, 
   ProductType, ProductTypeUpsert, ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
   StorefrontTypeUpsert, 
-  TagType, TagTypeUpsert, VariantType, VariantTypeUpsert, searchable} from "../v-api/types.api.js";
+  TagType, TagTypeUpsert, TemplateType, TemplateTypeUpsert, VariantType, VariantTypeUpsert, searchable} from "../v-api/types.api.js";
 import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.js";
 import type { App } from '../types.public.js'
 
@@ -93,9 +93,7 @@ export declare interface db_crud<U, G=U> {
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
 
-/**
- * auth users crud
- */
+/** @description `AuthUserType` crud */
 export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & idable_concrete>> {
   /**
    * get by email
@@ -110,15 +108,11 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & id
 
 }
 
-/**
- * tags crud
- */
+/** @description `TagType` crud */
 export interface db_tags extends db_crud<TagTypeUpsert, TagType> {
 }
 
-/**
- * collections crud
- */
+/** @description `CollectionType` crud */
 export interface db_collections extends db_crud<CollectionTypeUpsert, CollectionType> {
 
   /**
@@ -130,7 +124,7 @@ export interface db_collections extends db_crud<CollectionTypeUpsert, Collection
 
 }
 
-/** products crud */
+/** @description `ProductType` crud */
 export interface db_products extends db_crud<ProductTypeUpsert | VariantTypeUpsert, ProductType | VariantType> {
 
   /**
@@ -192,9 +186,7 @@ export interface db_products extends db_crud<ProductTypeUpsert | VariantTypeUpse
 
 }
 
-/**
- * customers crud
- */
+/** @description `CustomerType` crud */
 export interface db_customers extends OmitGetByHandle<db_crud<CustomerTypeUpsert, CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
   /**
@@ -205,7 +197,7 @@ export interface db_customers extends OmitGetByHandle<db_crud<CustomerTypeUpsert
   list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
 }
 
-/** StorefrontData crud */
+/** @description `StorefrontType` crud */
 export interface db_storefronts extends db_crud<StorefrontTypeUpsert, StorefrontType> {
   /**
    * list all of the product related to storefront, returns eveything, this is not query based,
@@ -245,7 +237,7 @@ export interface db_storefronts extends db_crud<StorefrontTypeUpsert, Storefront
 
 }
 
-/** ImageType crud */
+/** @description `ImageType` crud */
 export interface db_images extends db_crud<ImageTypeUpsert, ImageType> {
   /**
    * report the media images
@@ -254,19 +246,23 @@ export interface db_images extends db_crud<ImageTypeUpsert, ImageType> {
   report_document_media: (data: BaseType, extra: any) => Promise<void>;
 }
 
-/** PostType crud */
+/** @description `PostType` crud */
 export interface db_posts extends db_crud<PostTypeUpsert, PostType> {
 }
 
-/** ShippingMethodType crud */
+/** @description `TemplateType` crud */
+export interface db_templates extends db_crud<TemplateTypeUpsert, TemplateType> {
+}
+
+/** @description `ShippingMethodType` crud */
 export interface db_shipping extends db_crud<ShippingMethodTypeUpsert, ShippingMethodType> {
 }
 
-/** NotificationType crud */
+/** @description `NotificationType` crud */
 export interface db_notifications extends OmitGetByHandle<db_crud<NotificationTypeUpsert, NotificationType>> {
 }
 
-/** DiscountType crud */
+/** @description `DiscountType` crud */
 export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> {
 
   /**
@@ -277,7 +273,7 @@ export interface db_discounts extends db_crud<DiscountTypeUpsert, DiscountType> 
   list_discount_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<ProductType[]>
 }
 
-/** OrderData crud */
+/** @description `OrderData` crud */
 export interface db_orders extends OmitGetByHandle<db_crud<OrderDataUpsert, OrderData>> {
 
 }
@@ -326,6 +322,7 @@ export interface db_driver {
     storefronts: db_storefronts;
     images: db_images;
     posts: db_posts;
+    templates: db_templates;
     shipping: db_shipping;
     notifications: db_notifications;
     discounts: db_discounts;

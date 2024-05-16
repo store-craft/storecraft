@@ -540,6 +540,7 @@ export const validationEntrySchema = z
         z.literal("product-not-exists"),
         z.literal("product-out-of-stock"),
         z.literal("product-not-enough-stock"),
+        z.literal("product-inactive"),
       ])
       .optional()
       .describe("message"),
@@ -1142,6 +1143,14 @@ export const paymentGatewayStatusSchema = z
       ),
   })
   .describe("A payment `status`");
+export const templateTypeSchema = baseTypeSchema.extend({
+  handle: z.string().optional().describe("`handle`"),
+  title: z.string().describe("`title` of `template`"),
+  template: z.string().describe("The template string"),
+});
+export const templateTypeUpsertSchema = templateTypeSchema.describe(
+  "Upsert type for email template",
+);
 export const discountDetailsSchema = z
   .object({
     meta: z

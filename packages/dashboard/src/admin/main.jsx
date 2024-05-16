@@ -10,8 +10,11 @@ import {
 
   import { 
     Home, 
-    Orders, Order, Customers, Customer, 
-    Tags, Tag, Products, Product, 
+    Orders, Order, 
+    Customers, Customer, 
+    Tags, Tag, 
+    Templates, Template, 
+    Products, Product, 
     Collections, Collection,
     Discounts, Discount,
     ShippingMethods, ShippingMethod,
@@ -37,6 +40,13 @@ export default function Main(props) {
       <Route path='' element={<Gallery />} />
       <Route path='q/:query_params' element={<Gallery />} />
       <Route path='img/:handle' element={<ImagePage />} />
+    </Route>
+    <Route path='templates'>
+      <Route path='' element={<Templates />} />
+      <Route path='q/:query_params' element={<Templates />} />
+      <Route path=':id/edit' element={<Template mode='edit' />} />
+      <Route path=':id/view' element={<Template mode='view' />} />
+      <Route path='create' element={<Template mode='create' /> } />
     </Route>
     <Route path='extensions'>
       <Route path='' element={<Extensions />} />

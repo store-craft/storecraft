@@ -31,7 +31,6 @@ let app = new App(
   }
 );
 
-app.gateways.dummy_payments.
 
 await app.init();
 

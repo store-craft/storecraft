@@ -29,6 +29,7 @@ export interface Database {
   notifications: NotificationsTable;
   images: ImagesTable;
   discounts: DiscountsTable;
+  templates: TemplatesTable;
 
   storefronts: StorefrontsTable;
   storefronts_to_other: storefronts_to_other;
@@ -130,6 +131,11 @@ export interface TagsTable extends Base {
 export interface CollectionsTable extends Base {
   title: string;
   published: string | undefined;
+}
+
+export interface TemplatesTable extends Base {
+  template: string;
+  title: string;
 }
 
 export interface ProductsTable extends Base {

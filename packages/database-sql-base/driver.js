@@ -11,6 +11,7 @@ import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
+import { impl as templates } from './src/con.templates.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { SanitizePlugin } from './src/kysely.sanitize.plugin.js';
 
@@ -111,6 +112,7 @@ export class SQL {
       storefronts: storefronts(this),
       tags: tags(this),
       shipping: shipping(this),
+      templates: templates(this)
     }
     
     this.#_is_ready = true; 

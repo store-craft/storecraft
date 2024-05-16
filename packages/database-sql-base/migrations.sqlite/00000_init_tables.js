@@ -142,6 +142,15 @@ export async function up(db) {
     await create_base_indexes(db, 'tags');
   }
 
+  { // templates
+    let tb = create_safe_table(db, 'templates');
+    tb = add_base_columns(tb);
+    tb = tb.addColumn('title', 'text');
+    tb = tb.addColumn('template', 'text');
+    await tb.execute();
+    await create_base_indexes(db, 'templates');
+  }
+
   { // collections
     let tb = create_safe_table(db, 'collections');
     tb = add_base_columns(tb);

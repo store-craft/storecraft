@@ -1242,6 +1242,7 @@ export const discountTypeSchema = baseTypeSchema.extend({
       discountApplicationEnumSchema.shape.Manual,
       z.object({
         id: z.number(),
+        name: z.string().optional(),
         name2: z.string(),
       }),
     ])

@@ -31,6 +31,8 @@ let app = new App(
   }
 );
 
+app.gateways.dummy_payments.
+
 await app.init();
 
 const server = http.createServer(app.handler).listen(

@@ -30,7 +30,7 @@ const parse_int = (s, def) => {
  * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>] 
  * `extensions` map type
  * 
- * @description This is the main `stoecraft` **App**
+ * @description This is the main `storecraft` **App**
  * 
  */
 export class App {
@@ -255,8 +255,10 @@ export class App {
    * @returns {App<PlatformNativeRequest, PlatformContext, H, Database, Storage, N, ExtensionsMap>}
    */
   withNewPaymentGateways(gateways) { 
+    // @ts-ignore
     this.#_payment_gateways = gateways; 
 
+    // @ts-ignore
     return this;
   }
 

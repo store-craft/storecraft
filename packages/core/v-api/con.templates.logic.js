@@ -11,7 +11,7 @@ import { regular_get, regular_list,
 /**
  * @param {import("../types.public.js").App} app
  */
-export const db = app => app.db.resources.posts;
+export const db = app => app.db.resources.templates;
 
 /**
  * 
@@ -32,10 +32,8 @@ export const upsert = (app) =>
   },
   (final) => {
     assert(
-      [final.handle].every(
-        h => to_handle(h)===h
-      ),
-      'Handle or Values are invalid', 400
+      final.template,
+      'Template is empty', 400
     );
     return [];
   }

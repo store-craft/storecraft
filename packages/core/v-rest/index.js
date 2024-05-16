@@ -2,6 +2,7 @@ import { json } from "../v-polka/body-parse.js";
 import { Polka } from "../v-polka/index.js";
 import { create_routes as create_auth_route } from "./con.auth.routes.js";
 import { create_routes as create_tags_route } from "./con.tags.routes.js";
+import { create_routes as create_templates_route } from "./con.templates.routes.js";
 import { create_routes as create_col_route } from "./con.collections.routes.js";
 import { create_routes as create_cus_route } from "./con.customers.routes.js";
 import { create_routes as create_images_route } from "./con.images.routes.js";
@@ -47,6 +48,7 @@ export const create_rest_api = (app) => {
     constructor() {
       this.#factory['/api/auth'] = create_auth_route;
       this.#factory['/api/tags'] = create_tags_route;
+      this.#factory['/api/templates'] = create_templates_route;
       this.#factory['/api/collections'] = create_col_route;
       this.#factory['/api/customers'] = create_cus_route;
       this.#factory['/api/images'] = create_images_route;

@@ -669,7 +669,7 @@ export interface DiscountType extends BaseType {
   /** 
    * @description Discount application (`automatic` and `manual`) 
    */
-  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"] | { id: number, name2: string };
+  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"] | { id: number, name?: string, name2: string };
 }
 
 

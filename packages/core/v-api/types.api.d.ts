@@ -2246,3 +2246,32 @@ export type PaymentGatewayItemGet = {
    */
   handle: string;
 }
+
+
+// email templates
+
+/**
+ * @description `Email Template` type
+ */
+export interface TemplateType extends BaseType {
+
+  /**
+   * @description `handle`
+   */
+  handle?: string;
+
+  /**
+   * @description `title` of `template`
+   */
+  title: string;
+
+  /**
+   * @description The template string
+   */
+  template: string;
+}
+
+/**
+ * @description Upsert type for email template
+ */
+export type TemplateTypeUpsert = TemplateType;

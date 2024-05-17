@@ -261,7 +261,7 @@ export const border_bling_style = (color_stops=['#efefec', '#973cff']) => {
  */
 export const Bling = ( 
   { 
-    className, rounded='rounded-md', 
+    className, rounded='rounded-lg', 
     children, stroke='border', 
     from='from-pink-500 dark:from-pink-500', 
     to='to-kf-500 dark:to-kf-500', ...rest 

@@ -142,7 +142,7 @@ const OrderPrice = (
   </div>
   <BlingInput 
       className='mt-2 w-full' 
-      rounded='rounded-md'
+      rounded='rounded-lg'
       onChange={onUpdatePrice} 
       onWheel={(e) => e.target.blur()}
       value={pricing?.total ?? 0} 

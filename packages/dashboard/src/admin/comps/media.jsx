@@ -325,8 +325,11 @@ const UrlSource = (
     </div>
     <p children={error ?? ''} className='text-red-600' />
     <BlingInput 
-        className='mt-1 w-full' rounded='rounded-md'
-        placeholder='from URL..' type='text' value={url} 
+        className='mt-1 w-full' 
+        rounded='rounded-lg'
+        placeholder='from URL..' 
+        type='text' 
+        value={url} 
         onChange={e => setUrl(e.currentTarget.value)}
     />
   </div>

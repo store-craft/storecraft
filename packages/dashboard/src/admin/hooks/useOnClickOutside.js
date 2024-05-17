@@ -40,9 +40,9 @@ const useOnClickOutside = (handler) => {
         if (event.key !== 'Escape') 
           return;
 
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
+        // event.preventDefault();
+        // event.stopPropagation();
+        // event.stopImmediatePropagation();
 
         // console.log('listener2');
 

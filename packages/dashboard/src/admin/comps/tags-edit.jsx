@@ -31,27 +31,42 @@ const ManualTag = ({onAdd, ...rest}) => {
     (e) => {
       const tokens = text2tokens(
         ref_value.current.value.toString()
-        );
-      const name = ref_name.current.value
-      if(!tokens) return
-      const tags = tokens.map(v => `${name}_${v}`)      
-      onAdd(tags)
+      );
+      
+      const name = ref_name.current.value;
+
+      if(!tokens) return;
+
+      const tags = tokens.map(v => `${name}_${v}`);
+
+      onAdd(tags);
     },
     [onAdd]
-  )
+  );
 
   return (
 <div {...rest}>
-  <p children='Name' className='text-gray-500 dark:text-gray-400'/>
-  <BlingInput ref={ref_name} placeholder='name of the tag' 
-              type='text' className='mt-1' rounded='rounded-md'  /> 
+  <p 
+      children='Name' 
+      className='text-gray-500 dark:text-gray-400'/>
+  <BlingInput 
+      ref={ref_name} 
+      placeholder='name of the tag' 
+      type='text' className='mt-1' 
+      rounded='rounded-lg'  /> 
   <p children='Tag Values' 
      className='mt-3 text-gray-500 dark:text-gray-400'/>
   <div className='flex flex-row items-center h-fit w-full mt-1 gap-3'>
-    <BlingInput ref={ref_value} placeholder='values of the tag' 
-                type='text' className='mt-1 flex-1' rounded='rounded-md' /> 
-    <BlingButton children='add' className='h-10 ' 
-                 onClick={onClickAdd} />
+    <BlingInput 
+        ref={ref_value} 
+        placeholder='values of the tag' 
+        type='text' 
+        className='mt-1 flex-1' 
+        rounded='rounded-lg' /> 
+    <BlingButton 
+        children='add' 
+        className='h-10 ' 
+        onClick={onClickAdd} />
   </div>
 </div>
   )
@@ -114,49 +129,57 @@ export const SelectTags = (
  */
 const TagsEdit = (
   {
-    field, context, value, onChange, ...rest
+    field, context, value=[], onChange, ...rest
   }
 ) => {
 
-  const [tags, setTags] = useState(value ?? [])
-
-  const { navWithState } = useNavigateWithState()
+  const [tags, setTags] = useState(value);
+  const { navWithState } = useNavigateWithState();
 
   const onAdd = useCallback(
     /** @param {typeof value} new_tags  */
     (new_tags) => {
       let selected_tags = new_tags.filter(
         t => tags.indexOf(t)==-1
-        )
+      );
+
       selected_tags = [ ...tags, ...selected_tags ];
+
       onChange && onChange(selected_tags);
       setTags(selected_tags);
     },
     [tags, onChange]
-  )
+  );
   
   const onRemove = useCallback(
     (v) => {
-      const idx = tags.indexOf(v)
-      if(idx == -1) return
-      tags.splice(idx, 1)
-      const new_tags = [...tags]
-      onChange(new_tags)
-      setTags(new_tags)
+      const idx = tags.indexOf(v);
+
+      if(idx == -1) 
+        return;
+
+      tags.splice(idx, 1);
+
+      const new_tags = [...tags];
+
+      onChange(new_tags);
+      setTags(new_tags);
     },
     [tags, onChange]
-  )
+  );
 
   const onClick = useCallback(
     /** @param {string} v  */
     (v) => {
-      const where = v.split('_')[0]
+      const where = v.split('_')[0];
+
       // const all = context?.query.all.get(false)?.data
-      const state = context?.getState()
-      navWithState(`/pages/tags/${where}/edit`, state)
+      const state = context?.getState();
+
+      navWithState(`/pages/tags/${where}/edit`, state);
     },
     [navWithState, context]
-  )
+  );
 
   return (
 <div {...rest}>

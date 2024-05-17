@@ -4,7 +4,7 @@ import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, SpanArray, 
   TimeStampView } from '@/admin/comps/common-fields.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
-import { ResourceTitle, should_onboard } from '../comps/resource-title.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 const test = {
   title: 'call of duty',

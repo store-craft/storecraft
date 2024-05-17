@@ -4,17 +4,15 @@ import ShowIf from '@/admin/comps/show-if.jsx'
 import { MInput, withCard } from '@/admin/comps/common-fields.jsx'
 import DocumentTitle from '@/admin/comps/document-title.jsx'
 import { RegularDocumentActions } from '@/admin/comps/document-actions.jsx'
-import TagValues, { values_validator } from '@/admin/comps/tag-values.jsx'
 import ErrorMessage from '@/admin/comps/error-message.jsx'
 import DocumentDetails from '@/admin/comps/document-details.jsx'
 import MDEditor from '@/admin/comps/md-editor.jsx'
 import { JsonViewCard } from '@/admin/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
-import { Editor } from "@monaco-editor/react";
-import Handlebars from 'handlebars';
 import { useCallback, useState } from 'react'
 import TemplateTemplate from '../comps/template-template.jsx'
+
 
 const root_schema = {
   name:'Root', comp: Div, 
@@ -26,9 +24,9 @@ const root_schema = {
       key: 'title',  name: 'Title', type: 'text', validate: true, 
       // desc: 'Use simple key names, like `color` for quick attributes creation',
       comp: withCard(
-        withBling(MInput), 
+        withBling(MInput, {}), 
         { 
-          className: 'h-9', placeholder : 'enter the key / name of the tag' 
+          className: 'h-9', placeholder : 'enter the key / name of the tag',
         }
       ), 
       comp_params: {className: 'w-full '} 

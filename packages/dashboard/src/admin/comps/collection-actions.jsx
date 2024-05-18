@@ -78,7 +78,7 @@ export const TopActions = forwardRef(
     </Link>            
     <BlingInput 
         className='m-1 flex-1 h-fit max-w-[20rem]' 
-         rounded='rounded-lg'
+         rounded='rounded-md'
          type='search' placeholder={searchTitle} 
          value={search ?? ''}
          onChange={e => setSearch(e.currentTarget.value)} 

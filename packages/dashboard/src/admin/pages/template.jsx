@@ -34,7 +34,7 @@ const root_schema = {
     { 
       key: 'template', name: 'Template', 
       defaultValue: '<html></html>',
-      desc: 'Use simple value names, like `red`, `green`, `white` for quick attributes creation',
+      desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
       comp: withCard(TemplateTemplate), 
       comp_params: { className: 'w-full' } 
     },
@@ -105,7 +105,7 @@ export default (
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
-  <DocumentTitle major={['tags', documentId ?? 'create']} className='' />
+  <DocumentTitle major={['templates', documentId ?? 'create']} className='' />
   <DocumentDetails doc={doc} className='mt-5' collectionId={'tags'}/>                     
   <RegularDocumentActions
       id={doc.handle}

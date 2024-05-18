@@ -208,7 +208,6 @@ const BulkDiscount = ({ type, value, onChange }) => {
           )
         }
         inputClsName='h-7'
-        rounded='rounded-lg'
         className='rounded-lg w-16'/>
 
     <span children='+' className='text-2xl font-bold' />
@@ -225,7 +224,6 @@ const BulkDiscount = ({ type, value, onChange }) => {
             )
           }
           inputClsName='h-7'
-          rounded='rounded-lg'
           className='rounded-lg w-16'/>
 
     </div>
@@ -540,7 +538,6 @@ const BundleDiscount = (
         }
         inputClsName='h-7'
         // stroke='pb-px'
-        rounded='rounded-lg'
         className='rounded-lg w-16'/>
 
     <span children='+' className='text-2xl font-bold' />
@@ -558,7 +555,6 @@ const BundleDiscount = (
           }
           inputClsName='h-7'
           // stroke='pb-px'
-          rounded='rounded-lg'
           className='rounded-lg w-16'/>
 
     </div>
@@ -687,7 +683,6 @@ const RegularDiscount = (
         value={v.percent} 
         min='0' max='100' step='1' 
         inputClsName='h-7'
-        rounded='rounded-lg'
         className='rounded-lg w-14' />
 
     <span children='+' className='text-2xl font-bold' />
@@ -704,7 +699,6 @@ const RegularDiscount = (
           }
           value={v?.fixed} 
           inputClsName='h-7'
-          rounded='rounded-lg'
           className='rounded-lg w-14' />
 
     </div>
@@ -792,7 +786,6 @@ const BuyXGetYDiscount = (
         }
         inputClsName='h-7'
         stroke='border-b'
-        rounded='rounded-lg'
         className='rounded-lg w-14 inline-block'/>
     <p>
       <Dashed>products</Dashed> specified by the filters <b>ABOVE ⬆️</b> 
@@ -819,7 +812,6 @@ const BuyXGetYDiscount = (
           )
         }
         stroke='border-b'
-        rounded='rounded-lg'
         className='w-14'/>
     <p>
       <Dashed>products</Dashed> specified by the filters <b>BELOW ⬇️</b> 
@@ -847,7 +839,6 @@ const BuyXGetYDiscount = (
           Math.min(parseFloat(e.currentTarget.value),100)
           )
         }
-        rounded='rounded-lg'
         inputClsName='h-7'
         className='rounded-lg w-16'/>
 
@@ -865,7 +856,6 @@ const BuyXGetYDiscount = (
             )
           }
           inputClsName='h-7'
-          rounded='rounded-lg'
           className='rounded-lg w-16'/>
 
     </div>
@@ -955,7 +945,6 @@ const OrderDiscount = (
           value={v.percent} 
           min='0' max='100' step='1' 
           inputClsName='h-7'
-          rounded='rounded-lg'
           className='rounded-lg w-14' />
           
     <span children='+' className='text-2xl font-bold' />
@@ -973,7 +962,6 @@ const OrderDiscount = (
           }
           inputClsName='h-7'
           value={v.fixed} 
-          rounded='rounded-lg'
           className='rounded-lg w-14'/>
     
     </div>

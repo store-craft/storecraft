@@ -52,8 +52,9 @@ const ManualTag = ({onAdd, ...rest}) => {
   <BlingInput 
       ref={ref_name} 
       placeholder='name of the tag' 
-      type='text' className='mt-1' 
-      rounded='rounded-lg'  /> 
+      type='text' 
+      className='mt-1' 
+       /> 
   <p children='Tag Values' 
      className='mt-3 text-gray-500 dark:text-gray-400'/>
   <div className='flex flex-row items-center h-fit w-full mt-1 gap-3'>
@@ -62,7 +63,7 @@ const ManualTag = ({onAdd, ...rest}) => {
         placeholder='values of the tag' 
         type='text' 
         className='mt-1 flex-1' 
-        rounded='rounded-lg' /> 
+        /> 
     <BlingButton 
         children='add' 
         className='h-10 ' 

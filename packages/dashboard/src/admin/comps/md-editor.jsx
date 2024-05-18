@@ -31,12 +31,17 @@ const MDEditor = ({field, value, onChange, ...rest}) => {
 
   return (
 <div>
-  <Editor preview='edit'  value={md} 
-    onChange={handleEditorChange} {...comp_params}
-    className="bg-slate-400 "
+  <Editor 
+      preview='edit'  
+      value={md} 
+      onChange={handleEditorChange} 
+      {...comp_params}
+      className="bg-white dark:bg-slate-800 "
     // data-color-mode='dark'
-    style={{
-    }} />
+      style={{
+        color: 'inherit',
+        // background: '#1e293b40' 
+      }} />
   {/* <MDEditor.Markdown source={md} style={{ whiteSpace: 'pre-wrap' }} {...comp_params} /> */}
 </div>
   );

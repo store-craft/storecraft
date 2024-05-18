@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { BlingInput, HR } from './common-ui.jsx'
-import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import { Editor } from "@monaco-editor/react";
 import Handlebars from 'handlebars';
 import useDarkMode from '../hooks/useDarkMode.js';
-import { BsLayoutSplit } from "react-icons/bs/index.js";
-import { RiLayoutRowLine } from "react-icons/ri/index.js";
 import { VscLayoutSidebarLeftOff } from "react-icons/vsc/index.js";
-import { CgArrowsExpandRight } from "react-icons/cg/index.js";
 import { IoIosExpand } from "react-icons/io/index.js";
 import { FaRegWindowClose } from "react-icons/fa/index.js";
+import { Splitter } from './splitter-view.jsx';
 
 
 /**
@@ -36,15 +32,14 @@ const LayoutSwitch = (
     <div className='flex flex-row gap-3 items-center p-2 
                     rounded-md border w-fit shelf-border-color
                     relative text-base'>
-      {/* <div className='h-full w-1/3 bg-red-100 absolute' />                       */}
       <VscLayoutSidebarLeftOff 
-          className={'--text-xl cursor-pointer z-10 ' + (mode==0 ? 'scale-150' : '')}
+          className={'--text-xl cursor-pointer z-10 transition-transform duration-100 ' + (mode==0 ? 'scale-150' : '')}
           onClick={() => layout_onChange(0)} />
       <VscLayoutSidebarLeftOff 
-          className={'--text-lg cursor-pointer rotate-90 z-10 ' + (mode==1 ? 'scale-150' : '')}
+          className={'--text-lg cursor-pointer rotate-90 z-10 transition-transform duration-100 ' + (mode==1 ? 'scale-150' : '')}
           onClick={() => layout_onChange(1)} />
       <IoIosExpand 
-          className={'cursor-pointer z-10 ' + (mode==2 ? 'scale-150' : '')}
+          className={'cursor-pointer z-10 transition-transform duration-100 ' + (mode==2 ? 'scale-150' : '')}
           onClick={() => layout_onChange(2)} />
     </div>
   )
@@ -121,7 +116,6 @@ export const TemplateTemplate = (
   useEffect(
     () => {
       const listener = (e) => {
-        console.log(e)
         if((mode==2) && (e.key==='Escape')) {
           setMode(0);
         }
@@ -152,7 +146,6 @@ export const TemplateTemplate = (
             onChange={editor_onChange}
             value={template}
             theme={darkMode ? 'vs-dark' : 'light'}
-            // theme='vs-dark'
             defaultLanguage='handlebars'
             // defaultValue="// some comment"
             // onMount={handleEditorDidMount}
@@ -168,12 +161,11 @@ export const TemplateTemplate = (
     }
     {
       mode==2 &&
-      <div className='z-[100] fixed left-0 top-0 
-              flex flex-row gap-0 w-screen h-screen'>
+      <Splitter className='z-[100] fixed left-0 top-0 w-screen h-screen'>
         <Editor
-            width='50%'
+            width='100%'
             height="100%"
-            className='rounded-md border shelf-border-color overflow-clip'
+            className='--overflow-auto'
             onChange={editor_onChange}
             value={template}
             theme={darkMode ? 'vs-dark' : 'light'}
@@ -182,25 +174,27 @@ export const TemplateTemplate = (
             // defaultValue="// some comment"
             // onMount={handleEditorDidMount}
           />
-        <div className='w-1/2 h-full flex flex-col items-center'>  
+        <div className='w-full h-full flex-col items-center'>  
           <div className='flex flex-row items-center text-2xl 
                         shelf-plain-card-soft justify-between w-full p-3'>
             <span children='Preview' />
             <FaRegWindowClose onClick={() => setMode(0)} className='cursor-pointer'/>
           </div>
           <iframe 
+              width='100%'
               srcDoc={html} 
               className={
-                `w-full border resize overflow-auto`
+                ` border`
               }
               height="100%" />
         </div>  
-      </div>
+      </Splitter>
     }
   </div>
 
 </div>
   )
 }
+
 
 export default TemplateTemplate

@@ -20,7 +20,6 @@ const LayoutSwitch = (
   }
 ) => {
 
-
   const layout_onChange = useCallback(
     /** @param {0 | 1 | 2} ix */
     (ix) => {
@@ -128,7 +127,7 @@ export const TemplateTemplate = (
 
   useEffect(
     () => {
-      monaco.editor.defineTheme(
+      monaco && monaco.editor.defineTheme(
         'coblat',
         {
           "base": "vs-dark",

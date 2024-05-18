@@ -414,6 +414,7 @@ export const TemplateTemplate = (
     { mode<2 &&
       <div className='w-full flex flex-col gap-5 relative'>
         <Editor
+            options={{tabSize: 2}}
             width='100%'
             height="500px"
             className='rounded-md border shelf-border-color overflow-clip'
@@ -428,7 +429,7 @@ export const TemplateTemplate = (
             srcDoc={html} 
             className={
               `${mode==0 ? 'absolute translate-x-10 left-full top-0 w-full ' : ''} 
-              rounded-md border resize overflow-auto`
+              rounded-md border shelf-border-color resize overflow-auto bg-white`
             }
             height="500px" />
       </div>
@@ -437,6 +438,7 @@ export const TemplateTemplate = (
       mode==2 &&
       <Splitter className='z-[100] fixed left-0 top-0 w-screen h-screen'>
         <Editor
+            options={{tabSize: 2}}
             width='100%'
             height="100%"
             className='--overflow-auto'
@@ -458,7 +460,7 @@ export const TemplateTemplate = (
               width='100%'
               srcDoc={html} 
               className={
-                ` border`
+                ` border bg-white` 
               }
               height="100%" />
         </div>  

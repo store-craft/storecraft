@@ -450,6 +450,7 @@ export const create = () => {
       }
     )
 
+    console.log(JSON.stringify(discount_regular, null, 2))
     // console.log(pricing)
 
     const ok = (

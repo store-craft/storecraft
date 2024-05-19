@@ -135,6 +135,7 @@ export interface CollectionsTable extends Base {
 
 export interface TemplatesTable extends Base {
   template: string;
+  reference_example_input?: JSONColumnType<object>;
   title: string;
 }
 

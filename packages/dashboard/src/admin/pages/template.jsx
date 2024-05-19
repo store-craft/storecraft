@@ -12,6 +12,7 @@ import { CreateDate, Div, withBling } from '@/admin/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 import { useCallback, useState } from 'react'
 import TemplateTemplate from '../comps/template-template.jsx'
+import TemplateExampleInput from '../comps/template-example-input.jsx'
 
 
 const root_schema = {
@@ -36,6 +37,13 @@ const root_schema = {
       defaultValue: '<html></html>',
       desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
       comp: withCard(TemplateTemplate), 
+      comp_params: { className: 'w-full' } 
+    },
+    { 
+      key: 'reference_example_input', name: 'Example input for template', 
+      defaultValue: {},
+      desc: 'Play with various inputs for your `Handlebars` template',
+      comp: withCard(TemplateExampleInput), 
       comp_params: { className: 'w-full' } 
     },
     { 

@@ -6,84 +6,194 @@ import { VscLayoutSidebarLeftOff } from "react-icons/vsc/index.js";
 import { IoIosExpand } from "react-icons/io/index.js";
 import { FaRegWindowClose } from "react-icons/fa/index.js";
 import { Splitter } from './splitter-view.jsx';
+import CapsulesView from './capsules-view.jsx';
 
 
-/**
- * 
- * @param {object} params
- * @param {(value: 0 | 1 | 2) => void} params.onChange
- * @param {0 | 1 | 2} [params.mode=0]
- */
-const LayoutSwitch = (
-  { 
-    mode=0, onChange 
-  }
-) => {
-
-  const layout_onChange = useCallback(
-    /** @param {0 | 1 | 2} ix */
-    (ix) => {
-      onChange && onChange(ix);
-    }, [onChange]
-  );
-
-  return (
-    <div className='flex flex-row gap-3 items-center p-2 
-                    rounded-md border w-fit shelf-border-color
-                    relative text-base'>
-      <VscLayoutSidebarLeftOff 
-          title='Show Preview to the right'
-          className={
-            'cursor-pointer z-10 transition-transform duration-100 ' + 
-            (mode==0 ? 'scale-150' : '')
-          }
-          onClick={() => layout_onChange(0)} />
-      <VscLayoutSidebarLeftOff 
-          title='Show Preview to the bottom'
-          className={
-            'cursor-pointer rotate-90 z-10 transition-transform duration-100 ' + 
-            (mode==1 ? 'scale-150' : '')
-          }
-          onClick={() => layout_onChange(1)} />
-      <IoIosExpand 
-          title='Enter Fullscreen'
-          className={
-            'cursor-pointer z-10 transition-transform duration-100 ' + 
-            (mode==2 ? 'scale-150' : '')
-          }
-          onClick={() => layout_onChange(2)} />
-    </div>
-  )
-}
-
-
-/**
- * 
- * @typedef {object} DangerousHTMLViewParams
- * @prop {string | TrustedHTML} [value]
- * 
- * 
- * @param {DangerousHTMLViewParams &
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- */
-const DangerousHTMLView = (
+const capsules = [
   {
-    value, ...rest
+    name: 'customer',
+    example: JSON.stringify({
+      "email": "john@dow.com",
+      "firstname": "John",
+      "lastname": "Dow",
+      "id": "cus_65f2ae6e8bf30e6cd0ca95fa",
+      "created_at": "2024-03-14T07:59:42.862Z",
+      "updated_at": "2024-03-14T07:59:42.862Z",
+      "search": [
+        "id:cus_65f2ae6e8bf30e6cd0ca95fa",
+        "cus_65f2ae6e8bf30e6cd0ca95fa",
+        "65f2ae6e8bf30e6cd0ca95fa",
+        "name 1",
+        "last 1",
+        "a1@a.com"
+      ]
+    })
+  },
+  {
+    name: 'order',
+    example: JSON.stringify({
+      "status": {
+        "checkout": {
+          "id": 0,
+          "name2": "created",
+          "name": "Created"
+        },
+        "payment": {
+          "id": 1,
+          "name": "Authorized",
+          "name2": "authorized"
+        },
+        "fulfillment": {
+          "id": 0,
+          "name2": "draft",
+          "name": "Draft"
+        }
+      },
+      "pricing": {
+        evo: [
+          {
+            quantity_discounted: 0,
+            quantity_undiscounted: 11,
+            subtotal: 1100,
+            total: 1150
+          },
+          {
+            quantity_discounted: 2,
+            total_discount: 100,
+            quantity_undiscounted: 9,
+            discount: {
+              "active": true,
+              "handle": "discount-bundle-50-off-robot-arms-and-legs-not-recursive",
+              "title": "50% OFF Bundle: robot arms and legs (not recursive)",
+              "priority": 0,
+              "application": {
+                "id": 0,
+                "name": "Automatic",
+                "name2": "automatic"
+              },
+              "info": {
+                "details": {
+                  "meta": {
+                    "id": 4,
+                    "type": "bundle",
+                    "name": "Bundle Discount"
+                  },
+                  "extra": {
+                    "fixed": 0,
+                    "percent": 50,
+                    "recursive": false
+                  }
+                },
+                "filters": [
+                  {
+                    "meta": {
+                      "id": 4,
+                      "type": "product",
+                      "op": "p-in-tags",
+                      "name": "Product has Tag"
+                    },
+                    "value": [
+                      "robot_arm"
+                    ]
+                  },
+                  {
+                    "meta": {
+                      "id": 4,
+                      "type": "product",
+                      "op": "p-in-tags",
+                      "name": "Product has Tag"
+                    },
+                    "value": [
+                      "robot_leg"
+                    ]
+                  }
+                ]
+              }
+            },
+            discount_code: 'discount-bundle-50-off-robot-arms-and-legs-not-recursive',
+            subtotal: 1000,
+            total: 1050
+          }
+        ],
+        uid: undefined,
+        shipping_method: { title: '', handle: '', price: 50 },
+        subtotal_discount: 100,
+        subtotal_undiscounted: 1100,
+        subtotal: 1000,
+        total: 1050,
+        quantity_total: 11,
+        quantity_discounted: 2,
+        errors: []
+      },
+      "line_items": [
+        {
+          id: 'robot-leg-white', qty: 3, 
+          data: { 
+            tags: ['robot_leg'], 
+            qty: 100, 
+            active: true, title: '', 
+            price: 100 
+          }
+        },
+        {
+          id: 'just-for-disruption', qty: 5, 
+          data: { 
+            tags: ['would-not-be-discounted'], 
+            qty: 100, 
+            active: true, title: '', 
+            price: 100 
+          }
+        },
+        {
+          id: 'robot-arm-red', qty: 2, 
+          data: { 
+            tags: ['robot_arm'], 
+            qty: 100, 
+            active: true, title: '', 
+            price: 100 
+          }
+        },
+        {
+          id: 'robot-arm-green', qty: 1, 
+          data: { 
+            tags: ['robot_arm'], 
+            qty: 100, 
+            active: true, title: '', 
+            price: 100 
+          }
+        },
+      ],
+      "shipping_method": {
+        "handle": "ship-fast",
+        "name": "ship fast",
+        "price": 50
+      },
+      "id": "order_65d774c6445e4581b9e34c11",
+      "search": [
+        "id:order_65d774c6445e4581b9e34c11",
+        "order_65d774c6445e4581b9e34c11",
+        "65d774c6445e4581b9e34c11",
+        "order_65d774c6445e4581b9e34c11",
+        120,
+        "payment:authorized",
+        "payment:1",
+        "fulfill:draft",
+        "fulfill:0",
+        "checkout:created",
+        "checkout:0",
+        "li:pr-1-id",
+        "li:pr-2-id"
+      ],
+      "created_at": "2024-02-22T16:22:30.095Z",
+      "updated_at": "2024-02-22T16:22:30.095Z"
+    })
   }
-) => {
-
-  return (
-    <div {...rest}>
-      <div dangerouslySetInnerHTML={{__html: value}}/>            
-    </div>
-  )
-}
+]
 
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/v-api').TemplateType["template"]> 
+ *   import('@storecraft/core/v-api').TemplateType["reference_example_input"]> 
  * } TemplateTemplateParams
  * 
  * @param {TemplateTemplateParams & 
@@ -92,63 +202,42 @@ const DangerousHTMLView = (
  *    'onChange'
  *  >} params
  */
-export const TemplateTemplate = (
+export const TemplateExampleInput = (
   { 
-    field, context, setError, value, onChange, ...rest 
+    field, context, setError, value={}, onChange, ...rest 
   }
 ) => {
 
   const monaco = useMonaco();
-  /** @type {ReturnType<typeof useState<0 | 1 | 2>>} */
-  const [mode, setMode] = useState(0);
-  const [example, setExample] = useState({});
-  const [template, setTemplate] = useState(value);
+  const [example, setExample] = useState(value);
   const { darkMode } = useDarkMode();
-
   /** @type {Parameters<Editor>["0"]["onChange"]} */
   const editor_onChange = useCallback(
-    (value) => {
-      setTemplate(value);
-      onChange(value);
+    (value, ev) => {
+      setError(undefined);
+
+      try {
+        let value_parsed = JSON.parse(value);
+
+        setExample(value_parsed);
+        onChange(value_parsed);
+      } catch(e) {
+        setError(e?.message ?? 'JSON Error');
+      }
+      
     }, [onChange]
   );
 
-  /** @type {Parameters<LayoutSwitch>["0"]["onChange"]} */
-  const layout_onChange = useCallback(
-    (value) => {
-      setMode(value);
-    }, []
-  );
-
-  const html = useMemo(
+ 
+  const source = useMemo(
     () => {
       try {
-        const handlebarsTemplate = Handlebars.compile(template);
-        const parsedHtml = handlebarsTemplate(example ?? {});
-
-        return parsedHtml;
+        return JSON.stringify(example, null, 2);
       } catch(e) {
         return e
       }
-    }, [template, example]
+    }, [example]
   );
-
-  useEffect(
-    () => {
-      return context.pubsub.add_sub(
-        /**
-         * @param {string} event 
-         * @param {any} value 
-         */
-        (event, value) => {
-          if(event!=='reference_example_input')
-            return;
-
-          setExample(value);
-        }
-      )
-    }, [context]
-  )
 
   useEffect(
     () => {
@@ -411,91 +500,36 @@ export const TemplateTemplate = (
     }, [monaco]
   );
 
-  useEffect(
-    () => {
-      const listener = (e) => {
-        if((mode==2) && (e.key==='Escape')) {
-          setMode(0);
-        }
-      };
 
-      document.addEventListener(
-        'keydown', listener
-      );
-
-      return () => { document.removeEventListener('keydown', listener) }
-    }, [mode]
-  );
 
   return (
 <div {...rest} >
   <div className='flex flex-col w-full gap-5'>
-    <LayoutSwitch 
-        onChange={layout_onChange} 
-        mode={mode}
-         />
-    
-    { mode<2 &&
-      <div className='w-full flex flex-col gap-5 relative'>
-        <Editor
-            options={{tabSize: 2}}
-            width='100%'
-            height="500px"
-            className='rounded-md border shelf-border-color overflow-clip'
-            onChange={editor_onChange}
-            value={template}
-            theme={darkMode ? 'coblat' : 'light'}
-            defaultLanguage='handlebars'
-            // defaultValue="// some comment"
-            // onMount={handleEditorDidMount}
-          />
-        <iframe 
-            srcDoc={html} 
-            className={
-              `${mode==0 ? 'absolute translate-x-10 left-full top-0 w-full ' : ''} 
-              rounded-md border shelf-border-color resize overflow-auto bg-white`
-            }
-            height="500px" />
-      </div>
-    }
-    {
-      mode==2 &&
-      <Splitter className='z-[100] fixed left-0 top-0 w-screen h-screen'>
-        <Editor
-            options={{tabSize: 2}}
-            width='100%'
-            height="100%"
-            className='--overflow-auto'
-            onChange={editor_onChange}
-            value={template}
-            theme={darkMode ? 'coblat' : 'light'}
-            // theme='vs-dark'
-            defaultLanguage='handlebars'
-            // defaultValue="// some comment"
-            // onMount={handleEditorDidMount}
-          />
-        <div className='w-full h-full flex-col items-center'>  
-          <div className='flex flex-row items-center text-2xl 
-                        shelf-plain-card-soft justify-between w-full p-3'>
-            <span children='Preview' />
-            <FaRegWindowClose 
-                onClick={() => setMode(0)} 
-                className='cursor-pointer'/>
-          </div>
-          <iframe 
-              width='100%'
-              srcDoc={html} 
-              className={
-                ` border bg-white` 
-              }
-              height="100%" />
-        </div>  
-      </Splitter>
-    }
-  </div>
 
+    <div className='flex flex-row flex-wrap gap-3'>
+      <CapsulesView 
+          tags={capsules} 
+          name_fn={it => it.name} 
+          onClick={it => { editor_onChange(it.example, null) }} />
+
+    </div>
+  
+    <Editor
+        options={{tabSize: 2}}
+        width='100%'
+        height="200px"
+        className='rounded-md border shelf-border-color overflow-clip'
+        onChange={editor_onChange}
+        value={source}
+        theme={darkMode ? 'coblat' : 'light'}
+        defaultLanguage='json'
+        // defaultValue="// some comment"
+        // onMount={handleEditorDidMount}
+      />
+
+  </div>
 </div>
   )
 }
 
-export default TemplateTemplate
+export default TemplateExampleInput

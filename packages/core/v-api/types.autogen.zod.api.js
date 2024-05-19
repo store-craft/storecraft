@@ -1146,7 +1146,11 @@ export const paymentGatewayStatusSchema = z
 export const templateTypeSchema = baseTypeSchema.extend({
   handle: z.string().optional().describe("`handle`"),
   title: z.string().describe("`title` of `template`"),
-  template: z.string().describe("The template string"),
+  template: z.string().describe("The `template` `handlebars` string"),
+  reference_example_input: z
+    .any()
+    .optional()
+    .describe("A reference example input for the template"),
 });
 export const templateTypeUpsertSchema = templateTypeSchema.describe(
   "Upsert type for email template",

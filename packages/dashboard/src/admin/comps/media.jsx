@@ -187,9 +187,11 @@ const LocalSource = (
     </ShowIf>
   </div>
   <input 
-      id="dropzone-file" type="file" 
+      id="dropzone-file" 
+      type="file" 
       className="hidden" 
-      accept="image/*" multiple 
+      accept="image/*" 
+      multiple 
       onChange={onFileSelect} />
 </label>
   )

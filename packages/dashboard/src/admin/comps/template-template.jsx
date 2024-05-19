@@ -87,8 +87,10 @@ const DangerousHTMLView = (
  * } TemplateTemplateParams
  * 
  * @param {TemplateTemplateParams & 
- *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'
- * >} param
+ *  Omit<
+ *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 
+ *    'onChange'
+ *  >} params
  */
 export const TemplateTemplate = (
   { 
@@ -453,7 +455,9 @@ export const TemplateTemplate = (
           <div className='flex flex-row items-center text-2xl 
                         shelf-plain-card-soft justify-between w-full p-3'>
             <span children='Preview' />
-            <FaRegWindowClose onClick={() => setMode(0)} className='cursor-pointer'/>
+            <FaRegWindowClose 
+                onClick={() => setMode(0)} 
+                className='cursor-pointer'/>
           </div>
           <iframe 
               width='100%'

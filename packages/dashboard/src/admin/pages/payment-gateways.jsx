@@ -111,16 +111,16 @@ export default ({}) => {
     </ShowIf>
     
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error && page?.length}>
-      <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md mt-5
-                      dark:shadow-slate-900'>      
-        <TableSchemaView 
-            context={context_mod} 
-            data={page} 
-            fields={schema_fields} />
-      </div>    
-    </ShowIf>
+    <div className='w-full rounded-md overflow-hidden border 
+                    shelf-border-color shadow-md mt-5
+                    dark:shadow-slate-900'>      
+      <ShowIf show={!error && page?.length}>
+          <TableSchemaView 
+              context={context_mod} 
+              data={page} 
+              fields={schema_fields} />
+      </ShowIf>
+    </div>    
   </div>
 </div>
   )

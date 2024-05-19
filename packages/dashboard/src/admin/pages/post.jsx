@@ -177,7 +177,7 @@ export default (
       key={doc?.updated_at} className='mt-8' 
       changes_made={hasChanged} />
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
-    <ErrorMessage error={error} className='w-full max-w-[35rem] mx-auto' />
+    <ErrorMessage error={error} className='w-full max-w-[55rem] mx-auto' />
     <FieldsView 
         key={doc?.updated_at} ref={ref_root} 
         field={root_schema} 

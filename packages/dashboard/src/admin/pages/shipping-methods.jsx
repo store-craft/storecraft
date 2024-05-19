@@ -60,27 +60,36 @@ export default ({}) => {
         hasLoaded={hasLoaded} 
         resource={resource}/>
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error && page?.length}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md mt-5
                       dark:shadow-slate-900'>      
-        <TopActions 
-            isCollectionEmpty={resource_is_probably_empty}
-            ref={ref_actions} 
-            reload={onReload}  
-            createLink='/pages/shipping-methods/create'
-            searchTitle='Search by Name or Handle' 
-            isLoading={loading} />
-        <TableSchemaView 
-            context={context} 
-            data={page} 
-            fields={schema_fields} />
-        <BottomActions 
-            prev={prev} next={next} 
-            limit={query_api.limit}
-            onLimitChange={onLimitChange} />
+        <ShowIf show={!error && page?.length}>
+          <TopActions 
+              isCollectionEmpty={resource_is_probably_empty}
+              ref={ref_actions} 
+              reload={onReload}  
+              createLink='/pages/shipping-methods/create'
+              searchTitle='Search by Name or Handle' 
+              isLoading={loading} />
+          <TableSchemaView 
+              context={context} 
+              data={page} 
+              fields={schema_fields} />
+          <BottomActions 
+              prev={prev} next={next} 
+              limit={query_api.limit}
+              onLimitChange={onLimitChange} />
+        </ShowIf>
+        <ShowIf show={!error && resource_is_probably_empty}>
+          <TopActions 
+              isCollectionEmpty={resource_is_probably_empty}
+              ref={ref_actions} 
+              reload={onReload}  
+              createLink='/pages/shipping-methods/create'
+              searchTitle='Search by Name or Handle' 
+              isLoading={loading} />
+        </ShowIf>
       </div>    
-    </ShowIf>
   </div>
 </div>
   )

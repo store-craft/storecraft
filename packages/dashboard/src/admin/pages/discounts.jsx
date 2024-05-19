@@ -55,7 +55,7 @@ export default ({}) => {
         hasLoaded={hasLoaded} 
         resource={resource}/>
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error}>
+    <ShowIf show={!error && page?.length}>
       <DiscountsQuickSearchActions className='mt-5' />
         <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color dark:shadow-slate-900 

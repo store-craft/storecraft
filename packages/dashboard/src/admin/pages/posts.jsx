@@ -1,7 +1,6 @@
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { Span, RecordActions, TimeStampView } from '@/admin/comps/common-fields.jsx'
-import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '@/admin/hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
@@ -46,7 +45,7 @@ export default ({}) => {
         hasLoaded={hasLoaded} 
         resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
-    <ShowIf show={!error}>
+    <ShowIf show={!error && page?.length}>
       <div className='w-full rounded-md overflow-hidden shadow-md 
                       dark:shadow-slate-900 border mt-5
                       shelf-border-color'>      

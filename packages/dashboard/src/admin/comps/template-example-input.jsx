@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, useMonaco} from "@monaco-editor/react";
-import Handlebars from 'handlebars';
 import useDarkMode from '../hooks/useDarkMode.js';
-import { VscLayoutSidebarLeftOff } from "react-icons/vsc/index.js";
-import { IoIosExpand } from "react-icons/io/index.js";
-import { FaRegWindowClose } from "react-icons/fa/index.js";
-import { Splitter } from './splitter-view.jsx';
 import CapsulesView from './capsules-view.jsx';
 
 

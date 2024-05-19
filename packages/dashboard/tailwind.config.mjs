@@ -33,7 +33,7 @@ const config = {
 				heb_1: ["sans-serif"],
 				PRESS_START: ["PRESS_START", "sans-serif"],
 				// admin: ['Inter', 'Open Sans', 'sans-serif', 'heb_1'],
-				// open_sans: ['Open Sans', 'sans-serif'],
+				open_sans: ['Open Sans', 'sans-serif'],
 				inter: ['Inter', 'sans-serif']
 			},		
 			transitionProperty: {

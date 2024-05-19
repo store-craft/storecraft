@@ -57,7 +57,7 @@ export default ({}) => {
         resource={resource}/>
     </ShowIf>
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error && page}>
+    <ShowIf show={!error && page?.length}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md mt-5 
                       dark:shadow-slate-900 '>      

@@ -113,7 +113,7 @@ export default ({}) => {
         children={`Extensions ${page?.length>=0 ? `(${page?.length})` : ''}`} 
         className='mb-5' />  */}
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error}>
+    <ShowIf show={!error && page}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md  mt-5
                       dark:shadow-slate-900'>      

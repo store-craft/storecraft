@@ -4,7 +4,6 @@ import { Span, TimeStampView, RecordActions } from '@/admin/comps/common-fields.
 import { LabelCapsule } from '@/admin/comps/capsule.jsx'
 import OrdersQuickSearchActions, { id2ColorFulfill } 
        from '@/admin/comps/orders-quick-search-actions.jsx'
-import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import MDView from '../comps/md-view.jsx'
@@ -82,7 +81,7 @@ export default ({}) => {
         hasLoaded={hasLoaded} 
         resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
-    <ShowIf show={!error}>
+    <ShowIf show={!error && page?.length}>
       <OrdersQuickSearchActions className='mt-5' />
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md 

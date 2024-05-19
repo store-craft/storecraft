@@ -1,6 +1,5 @@
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { RecordActions, Span } from '@/admin/comps/common-fields.jsx'
-import { Title } from '@/admin/comps/common-ui.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useMemo } from 'react'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
@@ -112,7 +111,7 @@ export default ({}) => {
     </ShowIf>
     
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error}>
+    <ShowIf show={!error && page?.length}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md mt-5
                       dark:shadow-slate-900'>      

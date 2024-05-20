@@ -7,7 +7,7 @@ import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
 
-const handle_tag = create_handle('tag', file_name(import.meta.url));
+const handle_tag = create_handle('template', file_name(import.meta.url));
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
@@ -16,20 +16,23 @@ const handle_tag = create_handle('tag', file_name(import.meta.url));
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').TagType & 
+ *  import('@storecraft/core/v-api').TemplateType & 
  *  import('@storecraft/core/v-database').idable_concrete
  * )[]} 
  */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
-    ix = Math.min(ix, arr.length - 3);
+    const jx = Math.min(ix, arr.length - 3);
     return {
       handle: handle_tag(),
-      values: ['a'],
-      id: ID('tag'),
-      created_at: iso(ix + 1),
-      updated_at: iso(ix + 1)
+      title: 'template list test ' + ix,
+      reference_example_input: { key: 'value' },
+      template_html: '<html><body>Hello</body></html>',
+      template_text: 'Hello',  
+      id: ID('template'),
+      created_at: iso(jx + 1),
+      updated_at: iso(jx + 1)
     }
   }
 );
@@ -44,22 +47,20 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.tags,
-      resource: 'tags'
+      items: items, app, ops: app.api.templates,
+      resource: 'templates'
     }
   );
-
-  // console.log('items', items)
 
   s.before(
     async (a) => { 
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await app.api.tags.remove(p.handle);
+          await app.api.templates.remove(p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.resources.tags.upsert(p);
+          await app.db.resources.templates.upsert(p);
         }
       } catch(e) {
         console.log(e)

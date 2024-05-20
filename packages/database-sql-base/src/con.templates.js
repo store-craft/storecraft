@@ -26,6 +26,7 @@ export const upsert = (client) => {
           await regular_upsert_me(trx, table_name, {
             created_at: item.created_at,
             updated_at: item.updated_at,
+            id: item.id,
             title: item.title,
             handle: item.handle,
             template_html: item.template_html,

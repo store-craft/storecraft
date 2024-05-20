@@ -43,3 +43,5 @@ export * as api_storefronts_list_test from './api_storefronts_list_test.js'
 export * as api_tags_crud_test from './api_tags_crud_test.js'
 export * as api_tags_list_test from './api_tags_list_test.js'
 
+export * as api_templates_crud_test from './api_templates_crud_test.js'
+export * as api_templates_list_test from './api_templates_list_test.js'

@@ -172,7 +172,11 @@ export class App {
       general_store_description: c?.general_store_description ?? 
                   env.SC_GENERAL_STORE_DESCRIPTION,
       general_store_support_email: c?.general_store_support_email ?? 
-                  env.SC_GENERAL_STORE_SUPPORT_EMAIL
+                  env.SC_GENERAL_STORE_SUPPORT_EMAIL,
+      general_store_logo_url: c?.general_store_logo_url ?? 
+                  env.SC_GENERAL_STORE_LOGO_URL,
+      general_confirm_email_base_url: c?.general_confirm_email_base_url ?? 
+                  env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
 
     }
 

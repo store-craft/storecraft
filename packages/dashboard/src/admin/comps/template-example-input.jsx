@@ -4,176 +4,192 @@ import useDarkMode from '../hooks/useDarkMode.js';
 import CapsulesView from './capsules-view.jsx';
 
 
+const info_example = {
+  general_store_name: 'Wush Wush Games',
+  general_store_website: 'https://wush.games/',
+  general_store_logo_url: undefined,
+  general_store_description: 'We sell retro video games',
+  general_confirm_email_base_url: 'https://wush.games/confirm-email'
+}
+
+/**
+ * @type {import('@storecraft/core/v-api').OrderData}
+ */
+const example_order = {
+  contact: {
+    email: 'john@doe.com',
+    firstname: 'John',
+    phone_number: '000-000-000',
+    customer_id: 'cus_65f2ae6e8bf30e6cd0ca95fa'
+  },
+  address: {
+
+  },
+  "status": {
+    "checkout": {
+      "id": 0,
+      "name2": "created",
+      "name": "Created"
+    },
+    "payment": {
+      "id": 1,
+      "name": "Authorized",
+      "name2": "authorized"
+    },
+    "fulfillment": {
+      "id": 0,
+      "name2": "draft",
+      "name": "Draft"
+    }
+  },
+  "pricing": {
+    evo: [
+      {
+        quantity_discounted: 0,
+        quantity_undiscounted: 11,
+        subtotal: 1100,
+        total: 1150
+      },
+      {
+        quantity_discounted: 2,
+        total_discount: 100,
+        quantity_undiscounted: 9,
+        discount: {
+          "active": true,
+          "handle": "discount-bundle-50-off-robot-arms-and-legs-not-recursive",
+          "title": "50% OFF Bundle: robot arms and legs (not recursive)",
+          "priority": 0,
+          "application": {
+            "id": 0,
+            "name": "Automatic",
+            "name2": "automatic"
+          },
+          "info": {
+            "details": {
+              "meta": {
+                "id": 4,
+                "type": "bundle",
+                "name": "Bundle Discount"
+              },
+              "extra": {
+                "fixed": 0,
+                "percent": 50,
+                "recursive": false
+              }
+            },
+            "filters": [
+              {
+                "meta": {
+                  "id": 4,
+                  "type": "product",
+                  "op": "p-in-tags",
+                  "name": "Product has Tag"
+                },
+                "value": [
+                  "robot_arm"
+                ]
+              },
+              {
+                "meta": {
+                  "id": 4,
+                  "type": "product",
+                  "op": "p-in-tags",
+                  "name": "Product has Tag"
+                },
+                "value": [
+                  "robot_leg"
+                ]
+              }
+            ]
+          }
+        },
+        discount_code: 'discount-bundle-50-off-robot-arms-and-legs-not-recursive',
+        subtotal: 1000,
+        total: 1050
+      }
+    ],
+    uid: undefined,
+    shipping_method: { title: '', handle: '', price: 50 },
+    subtotal_discount: 100,
+    subtotal_undiscounted: 1100,
+    subtotal: 1000,
+    total: 1050,
+    quantity_total: 11,
+    quantity_discounted: 2,
+    errors: []
+  },
+  "line_items": [
+    {
+      id: 'robot-leg-white', qty: 3, 
+      data: { 
+        tags: ['robot_leg'], 
+        qty: 100, 
+        active: true, title: '', 
+        price: 100 
+      }
+    },
+    {
+      id: 'just-for-disruption', qty: 5, 
+      data: { 
+        tags: ['would-not-be-discounted'], 
+        qty: 100, 
+        active: true, title: '', 
+        price: 100 
+      }
+    },
+    {
+      id: 'robot-arm-red', qty: 2, 
+      data: { 
+        tags: ['robot_arm'], 
+        qty: 100, 
+        active: true, title: '', 
+        price: 100 
+      }
+    },
+    {
+      id: 'robot-arm-green', qty: 1, 
+      data: { 
+        tags: ['robot_arm'], 
+        qty: 100, 
+        active: true, title: '', 
+        price: 100 
+      }
+    },
+  ],
+  "shipping_method": {
+    "handle": "ship-fast",
+    "title": "ship fast",
+    "price": 50
+  },
+  "id": "order_65d774c6445e4581b9e34c11",
+  "created_at": "2024-02-22T16:22:30.095Z",
+  "updated_at": "2024-02-22T16:22:30.095Z"
+}
+
+/**
+ * @type {import('@storecraft/core/v-api').CustomerType}
+ */
+const example_customer = {
+  "email": "john@dow.com",
+  "firstname": "John",
+  "lastname": "Dow",
+  "id": "cus_65f2ae6e8bf30e6cd0ca95fa",
+}
+
+
 const capsules = [
   {
     name: 'customer',
     example: JSON.stringify({
-      "email": "john@dow.com",
-      "firstname": "John",
-      "lastname": "Dow",
-      "id": "cus_65f2ae6e8bf30e6cd0ca95fa",
-      "store_name": "Wush Wush Games",
-      "store_website": "https://wush.games",
-      "confirm_url": "https://wush.games/confirm?user=cus_65f2ae6e8bf30e6cd0ca95fa"
+      customer: example_customer,
+      info: info_example
     })
   },
   {
     name: 'order',
     example: JSON.stringify({
-      "status": {
-        "checkout": {
-          "id": 0,
-          "name2": "created",
-          "name": "Created"
-        },
-        "payment": {
-          "id": 1,
-          "name": "Authorized",
-          "name2": "authorized"
-        },
-        "fulfillment": {
-          "id": 0,
-          "name2": "draft",
-          "name": "Draft"
-        }
-      },
-      "pricing": {
-        evo: [
-          {
-            quantity_discounted: 0,
-            quantity_undiscounted: 11,
-            subtotal: 1100,
-            total: 1150
-          },
-          {
-            quantity_discounted: 2,
-            total_discount: 100,
-            quantity_undiscounted: 9,
-            discount: {
-              "active": true,
-              "handle": "discount-bundle-50-off-robot-arms-and-legs-not-recursive",
-              "title": "50% OFF Bundle: robot arms and legs (not recursive)",
-              "priority": 0,
-              "application": {
-                "id": 0,
-                "name": "Automatic",
-                "name2": "automatic"
-              },
-              "info": {
-                "details": {
-                  "meta": {
-                    "id": 4,
-                    "type": "bundle",
-                    "name": "Bundle Discount"
-                  },
-                  "extra": {
-                    "fixed": 0,
-                    "percent": 50,
-                    "recursive": false
-                  }
-                },
-                "filters": [
-                  {
-                    "meta": {
-                      "id": 4,
-                      "type": "product",
-                      "op": "p-in-tags",
-                      "name": "Product has Tag"
-                    },
-                    "value": [
-                      "robot_arm"
-                    ]
-                  },
-                  {
-                    "meta": {
-                      "id": 4,
-                      "type": "product",
-                      "op": "p-in-tags",
-                      "name": "Product has Tag"
-                    },
-                    "value": [
-                      "robot_leg"
-                    ]
-                  }
-                ]
-              }
-            },
-            discount_code: 'discount-bundle-50-off-robot-arms-and-legs-not-recursive',
-            subtotal: 1000,
-            total: 1050
-          }
-        ],
-        uid: undefined,
-        shipping_method: { title: '', handle: '', price: 50 },
-        subtotal_discount: 100,
-        subtotal_undiscounted: 1100,
-        subtotal: 1000,
-        total: 1050,
-        quantity_total: 11,
-        quantity_discounted: 2,
-        errors: []
-      },
-      "line_items": [
-        {
-          id: 'robot-leg-white', qty: 3, 
-          data: { 
-            tags: ['robot_leg'], 
-            qty: 100, 
-            active: true, title: '', 
-            price: 100 
-          }
-        },
-        {
-          id: 'just-for-disruption', qty: 5, 
-          data: { 
-            tags: ['would-not-be-discounted'], 
-            qty: 100, 
-            active: true, title: '', 
-            price: 100 
-          }
-        },
-        {
-          id: 'robot-arm-red', qty: 2, 
-          data: { 
-            tags: ['robot_arm'], 
-            qty: 100, 
-            active: true, title: '', 
-            price: 100 
-          }
-        },
-        {
-          id: 'robot-arm-green', qty: 1, 
-          data: { 
-            tags: ['robot_arm'], 
-            qty: 100, 
-            active: true, title: '', 
-            price: 100 
-          }
-        },
-      ],
-      "shipping_method": {
-        "handle": "ship-fast",
-        "name": "ship fast",
-        "price": 50
-      },
-      "id": "order_65d774c6445e4581b9e34c11",
-      "search": [
-        "id:order_65d774c6445e4581b9e34c11",
-        "order_65d774c6445e4581b9e34c11",
-        "65d774c6445e4581b9e34c11",
-        "order_65d774c6445e4581b9e34c11",
-        120,
-        "payment:authorized",
-        "payment:1",
-        "fulfill:draft",
-        "fulfill:0",
-        "checkout:created",
-        "checkout:0",
-        "li:pr-1-id",
-        "li:pr-2-id"
-      ],
-      "created_at": "2024-02-22T16:22:30.095Z",
-      "updated_at": "2024-02-22T16:22:30.095Z"
+      order: example_order,
+      info: info_example
     })
   }
 ]

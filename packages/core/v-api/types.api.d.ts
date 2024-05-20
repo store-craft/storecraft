@@ -14,14 +14,23 @@ export type StorecraftConfig = {
 
   /**
    *  
-   * @description The store website
+   * @description The store `website`
    * `platform.env.SC_GENERAL_STORE_WEBSITE` environment
    */
   general_store_website?: string;
 
+
   /**
    *  
-   * @description The store description
+   * @description The store `logo` url
+   * `platform.env.SC_GENERAL_STORE_LOGO_URL` environment
+   */
+  general_store_logo_url?: string;
+
+
+  /**
+   *  
+   * @description The store `description`
    * `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
    */
   general_store_description?: string;
@@ -32,7 +41,15 @@ export type StorecraftConfig = {
    * `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
    */
   general_store_support_email?: string;
+
+  /**
+   *  
+   * @description The store `email-confirm`
+   * `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
+   */
+  general_confirm_email_base_url?: string;
   
+
   /**
    *  
    * @description Seed admin emails, if absent will be infered at init by 

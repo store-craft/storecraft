@@ -492,7 +492,7 @@ export const TemplateTemplate = (
               width='100%'
               srcDoc={preview_compiled} 
               className={
-                ` border bg-white` 
+                ` border shelf-border-color bg-white` 
               }
               height="100%" />
         </div>  

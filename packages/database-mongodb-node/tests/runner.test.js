@@ -7,7 +7,7 @@ export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
     new MongoDB({ db_name: 'test'}),
-    null, null, null, null, {
+    null, null, {
       auth_admins_emails: ['admin@sc.com'],
       auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
@@ -29,7 +29,7 @@ async function test() {
     }
   );
   const last_test = Object.values(api_index).at(-1).create(app);
-  last_test.after(async ()=>app.db.disconnect());
+  last_test.after(async ()=>{app.db.disconnect()});
   last_test.run();
 }
 

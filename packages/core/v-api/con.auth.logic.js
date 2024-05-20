@@ -51,9 +51,9 @@ async (body) => {
   const { email, password } = body;
   
   // Check if the user already exists
-  const existingUser = await app.db.resources.auth_users.getByEmail(email)
+  const existingUser = await app.db.resources.auth_users.getByEmail(email);
 
-  assert(!existingUser, 'auth/already-signed-up', 400)
+  assert(!existingUser, 'auth/already-signed-up', 400);
 
   // Hash the password using pbkdf2
   const hashedPassword = await phash.hash(
@@ -94,7 +94,11 @@ async (body) => {
 
   const refresh_token = await jwt.create(
     app.config.auth_secret_refresh_token, 
-    {...claims, aud: '/refresh'}, jwt.JWT_TIMES.DAY * 7
+    {
+      ...claims, 
+      aud: '/refresh'
+    }, 
+    jwt.JWT_TIMES.DAY * 7
   );
 
   return {
@@ -139,7 +143,7 @@ async (body, fail_if_not_admin=false) => {
     existingUser.password, password
   );
   
-  assert(verified, 'auth/error', 401)
+  assert(verified, 'auth/error', 401);
 
   /** 
    * @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & 

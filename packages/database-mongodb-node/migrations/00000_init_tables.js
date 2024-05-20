@@ -3,14 +3,14 @@ import { Db, MongoClient } from 'mongodb';
 const collections = [
   'auth_users', 'collections', 'customers', 'discounts',
   'images', 'notifications', 'orders', 'posts',
-  'products', 'shipping_methods', 'storefronts', 'tags'
+  'products', 'shipping_methods', 'storefronts', 
+  'tags', 'templates'
 ];
 
 /**
  * 
  * @param {Db} db 
  * @param {MongoClient} client 
- * @param {MongoDB} driver 
  */
 export async function up(db, client) {
 
@@ -18,7 +18,9 @@ export async function up(db, client) {
   try {
     await session.withTransaction(async () => {
       for (const collection_name of collections) {
-        await db.collection(collection_name).dropIndexes();
+
+        await db.collection(collection_name).dropIndexes({ session });
+
         await db.collection(collection_name).createIndexes(
           [
             {
@@ -37,7 +39,9 @@ export async function up(db, client) {
               key: { search: 1 }, name: '(search+)', 
               background: false, sparse: true
             }, 
-          ]
+          ], {
+            session
+          }
         )
       }
 

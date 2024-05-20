@@ -49,6 +49,8 @@ export const create = app => {
     }
   );
 
+  // console.log('items', items)
+
   s.before(
     async (a) => { 
       assert.ok(app.ready) 

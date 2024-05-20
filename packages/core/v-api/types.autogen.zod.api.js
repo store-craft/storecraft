@@ -12,19 +12,31 @@ export const storecraftConfigSchema = z
       .string()
       .optional()
       .describe(
-        "The store website\n`platform.env.SC_GENERAL_STORE_WEBSITE` environment",
+        "The store `website`\n`platform.env.SC_GENERAL_STORE_WEBSITE` environment",
+      ),
+    general_store_logo_url: z
+      .string()
+      .optional()
+      .describe(
+        "The store `logo` url\n`platform.env.SC_GENERAL_STORE_LOGO_URL` environment",
       ),
     general_store_description: z
       .string()
       .optional()
       .describe(
-        "The store description\n`platform.env.SC_GENERAL_STORE_DESCRIPTION` environment",
+        "The store `description`\n`platform.env.SC_GENERAL_STORE_DESCRIPTION` environment",
       ),
     general_store_support_email: z
       .string()
       .optional()
       .describe(
         "The store support email\n`platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment",
+      ),
+    general_confirm_email_base_url: z
+      .string()
+      .optional()
+      .describe(
+        "The store `email-confirm`\n`platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment",
       ),
     auth_admins_emails: z
       .array(z.string())
@@ -540,6 +552,7 @@ export const validationEntrySchema = z
         z.literal("product-not-exists"),
         z.literal("product-out-of-stock"),
         z.literal("product-not-enough-stock"),
+        z.literal("product-inactive"),
       ])
       .optional()
       .describe("message"),
@@ -1142,6 +1155,25 @@ export const paymentGatewayStatusSchema = z
       ),
   })
   .describe("A payment `status`");
+export const templateTypeSchema = baseTypeSchema.extend({
+  handle: z.string().optional().describe("`handle`"),
+  title: z.string().describe("`title` of `template`"),
+  template_html: z
+    .string()
+    .optional()
+    .describe("The **HTML** `template` `handlebars` string"),
+  template_text: z
+    .string()
+    .optional()
+    .describe("The **TEXT** `template` `handlebars` string"),
+  reference_example_input: z
+    .any()
+    .optional()
+    .describe("A reference example input for the template"),
+});
+export const templateTypeUpsertSchema = templateTypeSchema.describe(
+  "Upsert type for email template",
+);
 export const discountDetailsSchema = z
   .object({
     meta: z
@@ -1233,6 +1265,7 @@ export const discountTypeSchema = baseTypeSchema.extend({
       discountApplicationEnumSchema.shape.Manual,
       z.object({
         id: z.number(),
+        name: z.string().optional(),
         name2: z.string(),
       }),
     ])

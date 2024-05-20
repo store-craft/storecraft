@@ -18,6 +18,8 @@ const col = (d) => d.collection('tags');
 
 /**
  * @param {MongoDB} driver 
+ * 
+ * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
 

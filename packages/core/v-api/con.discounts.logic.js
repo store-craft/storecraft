@@ -33,10 +33,10 @@ export const upsert = (app) =>
   },
   (final) => {
     return union(
-      isDef(final.application) && `app:${final.application.id}`,
-      isDef(final.application) && `app:${final.application.name.toLowerCase()}`,
-      isDef(final.info?.details?.meta) && `type:${final.info.details.meta.id}`,
-      isDef(final.info?.details?.meta) && `type:${final.info.details.meta.type}`,
+      isDef(final?.application) && `app:${final.application.id}`,
+      isDef(final?.application?.name) && `app:${final.application.name.toLowerCase()}`,
+      isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.id}`,
+      isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.type}`,
     );
   }
 )(item);

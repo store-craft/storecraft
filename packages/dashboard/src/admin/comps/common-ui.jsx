@@ -205,7 +205,7 @@ export const BlingInput = forwardRef(
    */
   (
     { 
-      from, to, rounded='rounded-lg', stroke, className,
+      from, to, rounded='rounded-md', stroke, className,
       inputClsName='h-10 rounded-md px-3', ...rest 
     }, ref
   ) => {
@@ -269,23 +269,21 @@ export const Bling = (
 ) => {
 
   return (
-<div className={`bg-gradient-to-r ${from} ${to} ${stroke} 
-                ${rounded} ${className}`} {...rest}
-      style={{
-  'background-clip': 'border-box',
-  'border-color': 'transparent',
-  'background-origin': 'border-box'
-      }}>
-{ children }
-</div>    
+<div 
+    className={`bg-gradient-to-r 
+    ${from} ${to} ${stroke} 
+    ${rounded} ${className}`} 
+    {...rest}
+    style={
+      {
+        'background-clip': 'border-box',
+        'border-color': 'transparent',
+        'background-origin': 'border-box'
+      }
+    }
+    children={children}/>
   )
 
-  return (
-<div className={`bg-gradient-to-r ${from} ${to} ${stroke} 
-                ${rounded} ${className}`} {...rest}>
-{ children }
-</div>      
-  )
 }
 
 

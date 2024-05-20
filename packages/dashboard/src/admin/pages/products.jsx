@@ -4,7 +4,7 @@ import { BottomActions, TopActions } from '@/admin/comps/collection-actions.jsx'
 import { RecordActions, Span, SpanArray, 
   TimeStampView } from '@/admin/comps/common-fields.jsx'
 import useCollectionsActions from '../hooks/useCollectionsActions.js'
-import { ResourceTitle, should_onboard } from '../comps/resource-title.jsx'
+import { ResourceTitle } from '../comps/resource-title.jsx'
 
 const test = {
   title: 'call of duty',
@@ -82,31 +82,38 @@ export default ({}) => {
         overallColelctionCount={queryCount} 
         hasLoaded={hasLoaded} 
         resource={resource}/>
-    <ShowIf show={error} children={error?.toString()} />
-    <ShowIf show={!error}>
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md mt-5
                       dark:shadow-slate-900 '>      
-        <TopActions 
-            isCollectionEmpty={resource_is_probably_empty}
-            ref={ref_actions} 
-            reload={onReload} 
-            createLink='/pages/products/create'
-            searchTitle='Search by Name, Handle, Tag values, Collections...' 
-            isLoading={loading} />
-        <TableSchemaView 
-            context={context} 
-            data={page} 
-            fields={schema_fields} />
-        <ShowIf show={page}>
+        <ShowIf show={error} children={error?.toString()} />
+        <ShowIf show={!error && page?.length}>
+          <TopActions 
+              isCollectionEmpty={resource_is_probably_empty}
+              ref={ref_actions} 
+              reload={onReload} 
+              createLink='/pages/products/create'
+              searchTitle='Search by Name, Handle, Tag values, Collections...' 
+              isLoading={loading} />
+          <TableSchemaView 
+              context={context} 
+              data={page} 
+              fields={schema_fields} />
           <BottomActions 
               prev={prev} 
               next={next} 
               limit={query_api.limit}
               onLimitChange={onLimitChange} />
         </ShowIf>
+        <ShowIf show={!error && resource_is_probably_empty}>
+          <TopActions 
+              isCollectionEmpty={resource_is_probably_empty}
+              ref={ref_actions} 
+              reload={onReload} 
+              createLink='/pages/products/create'
+              searchTitle='Search by Name, Handle, Tag values, Collections...' 
+              isLoading={loading} />
+        </ShowIf>
       </div>    
-    </ShowIf>
   </div>
 </div>
   )

@@ -1,6 +1,7 @@
 import Auth from './src/auth.js'
 import Customers from './src/customers.js'
 import Tags from './src/tags.js'
+import Templates from './src/templates.js'
 import Products from './src/products.js'
 import Orders from './src/orders.js'
 import Discounts from './src/discounts.js'
@@ -53,6 +54,7 @@ export class StorecraftSDK {
 
     this.customers = new Customers(this);
     this.tags = new Tags(this);
+    this.templates = new Templates(this);
     this.products = new Products(this);
     this.orders = new Orders(this);
     this.collections = new Collections(this);

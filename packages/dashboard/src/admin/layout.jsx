@@ -13,6 +13,7 @@ import { Bling } from './comps/common-ui.jsx'
 import { Outlet } from 'react-router-dom'
 import useDarkMode from './hooks/useDarkMode.js'
 import { useScrollDelta } from './hooks/useScrollDelta.js'
+import { CgTemplate } from "react-icons/cg/index.js";
 
 /** @type {import('./comps/side-menu.jsx').MenuType} */
 const menu = {
@@ -74,6 +75,10 @@ const menu = {
       { 
         name: 'Gallery', icon: <BiImages className='--scale-125'/>, 
         extra : { active: 'bg-yellow-400', hover: 'hover:bg-teal-200' } 
+      },
+      { 
+        name: 'Templates', icon: <CgTemplate className='--scale-125'/>, 
+        extra : { active: 'bg-red-400', hover: 'hover:bg-teal-200' } 
       },
       { 
         name: 'Extensions', icon: <AiOutlineAppstoreAdd className='--scale-125'/>, 

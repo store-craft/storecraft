@@ -55,9 +55,10 @@ const CapsulesView = (
                       whitespace-nowrap --underline --decoration-double 
                       decoration-white/60 
                       --underline-offset-[1px] --border-b --border-dashed  ' />
-      <AiFillCloseCircle 
+      {onRemove && 
+        <AiFillCloseCircle 
           className='text-lg cursor-pointer flex-shrink-0'
-          onClick={(e) => { e.stopPropagation(); onRemove && onRemove(it)}}/>
+          onClick={(e) => { e.stopPropagation(); onRemove && onRemove(it)}}/>}
     </div>
     )
   )

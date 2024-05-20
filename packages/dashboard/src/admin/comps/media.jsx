@@ -187,9 +187,11 @@ const LocalSource = (
     </ShowIf>
   </div>
   <input 
-      id="dropzone-file" type="file" 
+      id="dropzone-file" 
+      type="file" 
       className="hidden" 
-      accept="image/*" multiple 
+      accept="image/*" 
+      multiple 
       onChange={onFileSelect} />
 </label>
   )
@@ -325,8 +327,10 @@ const UrlSource = (
     </div>
     <p children={error ?? ''} className='text-red-600' />
     <BlingInput 
-        className='mt-1 w-full' rounded='rounded-md'
-        placeholder='from URL..' type='text' value={url} 
+        className='mt-1 w-full' 
+        placeholder='from URL..' 
+        type='text' 
+        value={url} 
         onChange={e => setUrl(e.currentTarget.value)}
     />
   </div>

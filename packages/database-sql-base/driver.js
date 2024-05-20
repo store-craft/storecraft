@@ -11,10 +11,9 @@ import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
+import { impl as templates } from './src/con.templates.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { SanitizePlugin } from './src/kysely.sanitize.plugin.js';
-
-
 
 
 /**
@@ -54,29 +53,38 @@ export class SQL {
 
   /**
    * 
-   * @param {Config} [config] config, if undefined, 
+   * @param {Config} [config] config 
    */
   constructor(config) {
     this.#_is_ready = false;
     this.#_config = config;
 
-    assert(this.#_config.dialect, 'No Dialect found !')
-    assert(this.#_config.dialect_type, 'No Dialect Type specified !')
+    assert(
+      this.#_config.dialect, 
+      'No Dialect found !'
+    );
 
-    this.#_client = new Kysely({
-      dialect: this.#_config.dialect, 
-      plugins: [
-        new ParseJSONResultsPlugin(),
-        new SanitizePlugin()
-      ]
-    });
+    assert(
+      this.#_config.dialect_type, 
+      'No Dialect Type specified !'
+    );
+
+    this.#_client = new Kysely(
+      {
+        dialect: this.#_config.dialect, 
+        plugins: [
+          new ParseJSONResultsPlugin(),
+          new SanitizePlugin()
+        ]
+      }
+    );
   }
 
   throwIfNotReady() {
     assert(
       this.isReady,
       'Database not ready !!! you need to `.init()` it'
-      );
+    );
   }
 
   async migrateToLatest() {
@@ -90,6 +98,8 @@ export class SQL {
   /**
    * 
    * @param {App<any, any, any>} app 
+   * 
+   * 
    * @returns {Promise<this>}
    */
   async init(app) {
@@ -111,6 +121,7 @@ export class SQL {
       storefronts: storefronts(this),
       tags: tags(this),
       shipping: shipping(this),
+      templates: templates(this)
     }
     
     this.#_is_ready = true; 

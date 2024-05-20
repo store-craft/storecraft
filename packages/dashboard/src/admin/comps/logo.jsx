@@ -28,9 +28,9 @@ const Capsule = ({}) => {
                   scale-90 border-kf-600 --shadow-lg opacity-80' /> 
 
   <div className='flex flex-col justify-between h-full p-1'>
-    <p children='shelf//CMS' 
+    <p children='Storecraft' 
       className='w-fit  text-xl 
-                text-transparent font-mono tracking-wide
+                text-transparent font-mono --font-mono tracking-wide
                 bg-clip-text bg-gradient-to-r from-pink-500 to-kf-500 
                 font-normal' />
     <div className='flex flex-row justify-between items-center'>

@@ -1,0 +1,1 @@
+export * from '../migrations.shared/00001_seed_email_templates.js'

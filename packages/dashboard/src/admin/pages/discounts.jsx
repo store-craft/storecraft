@@ -55,11 +55,11 @@ export default ({}) => {
         hasLoaded={hasLoaded} 
         resource={resource}/>
     <ShowIf show={error} children={error?.toString()}/>
-    <ShowIf show={!error}>
-      <DiscountsQuickSearchActions className='mt-5' />
-        <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color dark:shadow-slate-900 
-                      shadow-md mt-5'>      
+    <DiscountsQuickSearchActions className='mt-5' />
+    <div className='w-full rounded-md overflow-hidden border 
+                  shelf-border-color dark:shadow-slate-900 
+                  shadow-md mt-5'>      
+      <ShowIf show={!error && page?.length}>
         <TopActions 
             isCollectionEmpty={resource_is_probably_empty}
             reload={onReload} 
@@ -75,8 +75,17 @@ export default ({}) => {
             prev={prev} next={next} 
             limit={query_api.limit}
             onLimitChange={onLimitChange} />
-      </div>    
-    </ShowIf>
+      </ShowIf>
+      <ShowIf show={!error && resource_is_probably_empty}>
+        <TopActions 
+            isCollectionEmpty={resource_is_probably_empty}
+            reload={onReload} 
+            ref={ref_actions} 
+            createLink='/pages/discounts/create'
+            searchTitle='Search by Code, type...' 
+            isLoading={loading} />
+      </ShowIf>
+    </div>    
   </div>
 </div>
   )

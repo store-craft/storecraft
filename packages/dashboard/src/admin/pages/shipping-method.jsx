@@ -27,24 +27,24 @@ const root_left_schema = {
       comp: withCard(withBling(MInput), {className:'h-10'}),  
       comp_params: {className: 'w-full h-fit'} 
     },
+    { 
+      key: 'description', name: '📝 Description', type: 'text', 
+      validate: false, editable: true, desc: 'Optional description',
+      comp: withCard(MDEditor),  
+      comp_params: {className: 'w-full'} 
+    }, 
+    {
+      key: 'media', name: '🎬 Media', type: 'text',   
+      validate: false, editable: true, 
+      desc: 'Manage and edit your media files',
+      comp: withCard(Media), comp_params: {className: 'w-full'} 
+    },
     {
       key: 'attributes', name: 'Attributes', validate: false, 
       editable: true, 
       desc: 'Attributes can contain richer text values than tags',
       comp: withCard(Attributes),  
       comp_params: {className: 'w-full'} 
-    },
-    { 
-      key: 'description', name: '📝 Description', type: 'text', 
-      validate: false, editable: true, desc: 'Optional description',
-      comp: withCard(MDEditor),  
-      comp_params: {className: 'w-full'} 
-    },
-    {
-      key: 'media', name: '🎬 Media', type: 'text',   
-      validate: false, editable: true, 
-      desc: 'Manage and edit your media files',
-      comp: withCard(Media), comp_params: {className: 'w-full'} 
     },
     {
       name: 'JSON', type: 'compund', validate: false, editable: false, 

@@ -146,7 +146,7 @@ const BrowseCollection = (
     selected.map(
       (it, ix) => (
       <div key={it.id} 
-          className='w-full h-16 sm:h-20 p-1 border-b shelf-border-color-soft 
+          className='w-full h-14 sm:h-14 p-3 border-b shelf-border-color-soft 
                      flex flex-row justify-between items-center 
                      gap-3' >
         <Comp data={it} />
@@ -197,7 +197,7 @@ const BrowseCollection = (
             (it, ix) => (
             <div 
                 key={`sr_${it.id}`} 
-                className='w-full h-16 sm:h-20 p-1 border-b shelf-border-color-soft
+                className='w-full h-14 sm:h-14 p-3 border-b shelf-border-color-soft
                            cursor-pointer'
                 onClick={() => onAdd(it)}>
               <Comp data={it} />

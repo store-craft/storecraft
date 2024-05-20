@@ -9,7 +9,8 @@ const info_example = {
   general_store_website: 'https://wush.games/',
   general_store_logo_url: undefined,
   general_store_description: 'We sell retro video games',
-  general_confirm_email_base_url: 'https://wush.games/confirm-email'
+  general_confirm_email_base_url: 'https://wush.games/confirm-email',
+  general_store_support_email: 'support@wush.games'
 }
 
 /**
@@ -124,16 +125,16 @@ const example_order = {
       data: { 
         tags: ['robot_leg'], 
         qty: 100, 
-        active: true, title: '', 
+        active: true, title: 'Robot Leg White', 
         price: 100 
       }
     },
     {
-      id: 'just-for-disruption', qty: 5, 
+      id: 'battery', qty: 5, 
       data: { 
         tags: ['would-not-be-discounted'], 
         qty: 100, 
-        active: true, title: '', 
+        active: true, title: 'Battery', 
         price: 100 
       }
     },
@@ -142,7 +143,7 @@ const example_order = {
       data: { 
         tags: ['robot_arm'], 
         qty: 100, 
-        active: true, title: '', 
+        active: true, title: 'Robot Arm Red', 
         price: 100 
       }
     },
@@ -151,7 +152,7 @@ const example_order = {
       data: { 
         tags: ['robot_arm'], 
         qty: 100, 
-        active: true, title: '', 
+        active: true, title: 'Robot Arm Green', 
         price: 100 
       }
     },

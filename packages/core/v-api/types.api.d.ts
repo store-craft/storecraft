@@ -2266,9 +2266,14 @@ export interface TemplateType extends BaseType {
   title: string;
 
   /**
-   * @description The `template` `handlebars` string
+   * @description The **HTML** `template` `handlebars` string
    */
-  template: string;
+  template_html: string;
+
+  /**
+   * @description The **TEXT** `template` `handlebars` string
+   */
+  template_text: string;
 
   /**
    * @description A reference example input for the template

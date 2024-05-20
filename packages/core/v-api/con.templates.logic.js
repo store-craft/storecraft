@@ -32,7 +32,7 @@ export const upsert = (app) =>
   },
   (final) => {
     assert(
-      final.template,
+      final.template_html,
       'Template is empty', 400
     );
     return [];

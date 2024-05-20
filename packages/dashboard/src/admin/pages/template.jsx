@@ -33,8 +33,15 @@ const root_schema = {
       comp_params: {className: 'w-full '} 
     },
     { 
-      key: 'template', name: 'Template', 
+      key: 'template_html', name: 'HTML Template', 
       defaultValue: '<html></html>',
+      desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
+      comp: withCard(TemplateTemplate), 
+      comp_params: { className: 'w-full' } 
+    },
+    { 
+      key: 'template_text', name: 'Text Template', 
+      defaultValue: 'Hello',
       desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
       comp: withCard(TemplateTemplate), 
       comp_params: { className: 'w-full' } 

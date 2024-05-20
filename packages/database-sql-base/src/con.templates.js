@@ -28,7 +28,8 @@ const upsert = (driver) => {
             updated_at: item.updated_at,
             title: item.title,
             handle: item.handle,
-            template: item.template,
+            template_html: item.template_html,
+            template_text: item.template_text,
             reference_example_input: JSON.stringify(item.reference_example_input ?? {})
           });
         }

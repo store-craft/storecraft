@@ -132,7 +132,9 @@ export class MongoDB {
 
   async migrateToLatest() {
     this.throwIfNotReady();
+
     const { migrateToLatest } = await import('./migrate.js');
+    
     await migrateToLatest(this);
   }
 

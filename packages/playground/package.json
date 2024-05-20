@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "npm run playground:start",
+    "migrate": "node ./migrate.js",
     "playground:start": "node --watch index.js",
     "playground:server": "node --watch index.js",
     "playground:test": "echo \"Error: no test specified\" && exit 1"

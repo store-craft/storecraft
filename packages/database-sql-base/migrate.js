@@ -29,8 +29,9 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
       fs,
       path,
       migrationFolder: path.join(
-        __dirname, `migrations.${db_driver.dialectType.toLowerCase()}`
-        ),
+        __dirname, 
+        `migrations.${db_driver.dialectType.toLowerCase()}`
+      ),
     }),
   })
 

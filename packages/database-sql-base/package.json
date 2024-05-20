@@ -7,7 +7,6 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "test": "uvu -c",
-    "migrate": "node ./migrate.js",
     "test:sqlite": "node ./tests/runner.sqlite-local.test.js",
     "test:postgres": "node ./tests/runner.postgres-local.test.js",
     "test:mysql": "node ./tests/runner.mysql-local.test.js"

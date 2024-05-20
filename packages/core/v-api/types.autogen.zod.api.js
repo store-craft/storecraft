@@ -12,19 +12,31 @@ export const storecraftConfigSchema = z
       .string()
       .optional()
       .describe(
-        "The store website\n`platform.env.SC_GENERAL_STORE_WEBSITE` environment",
+        "The store `website`\n`platform.env.SC_GENERAL_STORE_WEBSITE` environment",
+      ),
+    general_store_logo_url: z
+      .string()
+      .optional()
+      .describe(
+        "The store `logo` url\n`platform.env.SC_GENERAL_STORE_LOGO_URL` environment",
       ),
     general_store_description: z
       .string()
       .optional()
       .describe(
-        "The store description\n`platform.env.SC_GENERAL_STORE_DESCRIPTION` environment",
+        "The store `description`\n`platform.env.SC_GENERAL_STORE_DESCRIPTION` environment",
       ),
     general_store_support_email: z
       .string()
       .optional()
       .describe(
         "The store support email\n`platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment",
+      ),
+    general_confirm_email_base_url: z
+      .string()
+      .optional()
+      .describe(
+        "The store `email-confirm`\n`platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment",
       ),
     auth_admins_emails: z
       .array(z.string())
@@ -1148,9 +1160,11 @@ export const templateTypeSchema = baseTypeSchema.extend({
   title: z.string().describe("`title` of `template`"),
   template_html: z
     .string()
+    .optional()
     .describe("The **HTML** `template` `handlebars` string"),
   template_text: z
     .string()
+    .optional()
     .describe("The **TEXT** `template` `handlebars` string"),
   reference_example_input: z
     .any()

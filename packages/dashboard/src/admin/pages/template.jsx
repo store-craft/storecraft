@@ -36,14 +36,14 @@ const root_schema = {
       key: 'template_html', name: 'HTML Template', 
       defaultValue: '<html></html>',
       desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
-      comp: withCard(TemplateTemplate), 
+      comp: withCard(TemplateTemplate, { isHtml: true }), 
       comp_params: { className: 'w-full' } 
     },
     { 
       key: 'template_text', name: 'Text Template', 
       defaultValue: 'Hello',
       desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
-      comp: withCard(TemplateTemplate), 
+      comp: withCard(TemplateTemplate, { isHtml: false }), 
       comp_params: { className: 'w-full' } 
     },
     { 
@@ -61,7 +61,7 @@ const root_schema = {
     {
       name: 'JSON', type: 'compund', validate: false, editable: false, 
       desc: 'Observe the RAW data',
-      comp: ({value}) => <JsonViewCard value={{...value, template: '...'}}/>,
+      comp: ({value}) => <JsonViewCard value={{...value, template_html: '...', template_text: '...'}}/>,
       comp_params: { className: 'w-full' }
     },
   ]
@@ -100,7 +100,7 @@ export default (
   */
   const {
     actions: {
-      savePromise, deletePromise, reload,
+      savePromise, deletePromise, reload, duplicate
     },
     context, key, 
     doc, isCreateMode, isEditMode, isViewMode, 
@@ -110,13 +110,15 @@ export default (
     'templates', documentId, '/apps/templates', mode, base
   );
 
-  const [template, setTemplate] = useState('');
-
-  const onChange = useCallback(
-    (value) => {
-      setTemplate(value);
-    }, []
-  )
+  const duplicate_mod = useCallback(
+    () => {
+      return duplicate(
+        {
+          title: doc?.title + ' duplicate'
+        }
+      )
+    }, [doc, duplicate]
+  );
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>
@@ -126,6 +128,7 @@ export default (
       id={doc.handle}
       onClickSave={isEditMode ? savePromise : undefined}
       onClickCreate={isCreateMode ? savePromise : undefined}
+      onClickDuplicate={!isCreateMode ? duplicate_mod : undefined}
       onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
       onClickDelete={!isCreateMode ? deletePromise : undefined}
       className='mt-5'/>

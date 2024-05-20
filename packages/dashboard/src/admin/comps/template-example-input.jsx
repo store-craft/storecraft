@@ -12,16 +12,9 @@ const capsules = [
       "firstname": "John",
       "lastname": "Dow",
       "id": "cus_65f2ae6e8bf30e6cd0ca95fa",
-      "created_at": "2024-03-14T07:59:42.862Z",
-      "updated_at": "2024-03-14T07:59:42.862Z",
-      "search": [
-        "id:cus_65f2ae6e8bf30e6cd0ca95fa",
-        "cus_65f2ae6e8bf30e6cd0ca95fa",
-        "65f2ae6e8bf30e6cd0ca95fa",
-        "name 1",
-        "last 1",
-        "a1@a.com"
-      ]
+      "store_name": "Wush Wush Games",
+      "store_website": "https://wush.games",
+      "confirm_url": "https://wush.games/confirm?user=cus_65f2ae6e8bf30e6cd0ca95fa"
     })
   },
   {

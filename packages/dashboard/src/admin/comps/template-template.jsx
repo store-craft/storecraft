@@ -83,7 +83,7 @@ const DangerousHTMLView = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/v-api').TemplateType["template"]> 
+ *   import('@storecraft/core/v-api').TemplateType["template_html" | "template_text"]> 
  * } TemplateTemplateParams
  * 
  * @param {TemplateTemplateParams & 
@@ -97,7 +97,7 @@ export const TemplateTemplate = (
     field, context, setError, value, onChange, ...rest 
   }
 ) => {
-
+  const { isHtml=true } = field.comp_params;
   const monaco = useMonaco();
   /** @type {ReturnType<typeof useState<0 | 1 | 2>>} */
   const [mode, setMode] = useState(0);
@@ -120,18 +120,24 @@ export const TemplateTemplate = (
     }, []
   );
 
-  const html = useMemo(
+  const preview_compiled = useMemo(
     () => {
       try {
         const handlebarsTemplate = Handlebars.compile(template);
-        const parsedHtml = handlebarsTemplate(example ?? {});
 
-        return parsedHtml;
+        let parsed = handlebarsTemplate(example ?? {});
+
+        if(!isHtml) {
+          parsed = `<pre>${parsed}</pre>`
+        }
+
+        return parsed;
       } catch(e) {
         return e
       }
-    }, [template, example]
+    }, [template, example, isHtml]
   );
+
 
   useEffect(
     () => {
@@ -450,7 +456,7 @@ export const TemplateTemplate = (
             // onMount={handleEditorDidMount}
           />
         <iframe 
-            srcDoc={html} 
+            srcDoc={preview_compiled} 
             className={
               `${mode==0 ? 'absolute translate-x-10 left-full top-0 w-full ' : ''} 
               rounded-md border shelf-border-color resize overflow-auto bg-white`
@@ -484,7 +490,7 @@ export const TemplateTemplate = (
           </div>
           <iframe 
               width='100%'
-              srcDoc={html} 
+              srcDoc={preview_compiled} 
               className={
                 ` border bg-white` 
               }

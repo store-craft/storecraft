@@ -1146,7 +1146,12 @@ export const paymentGatewayStatusSchema = z
 export const templateTypeSchema = baseTypeSchema.extend({
   handle: z.string().optional().describe("`handle`"),
   title: z.string().describe("`title` of `template`"),
-  template: z.string().describe("The `template` `handlebars` string"),
+  template_html: z
+    .string()
+    .describe("The **HTML** `template` `handlebars` string"),
+  template_text: z
+    .string()
+    .describe("The **TEXT** `template` `handlebars` string"),
   reference_example_input: z
     .any()
     .optional()

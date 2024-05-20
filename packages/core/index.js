@@ -65,7 +65,7 @@ export class App {
    * 
    * @description The payment gateways
    * 
-   * @satisfies {PaymentMap} 
+   * @type {PaymentMap} 
    */ 
   #_payment_gateways;
 
@@ -111,22 +111,17 @@ export class App {
    * @param {Platform} platform platform The Platform driver
    * @param {Database} db_driver datatbase The Database driver
    * @param {Storage} [storage] storage The storage driver
-   * @param {PaymentMap} [payment_gateways] The Payment Gateways
    * @param {mailer} [mailer] mailer The Email driver
-   * @param {ExtensionsMap} [extensions] extensions
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
-    platform, db_driver, storage, payment_gateways, mailer, 
-    extensions, config
+    platform, db_driver, storage, mailer, config
   ) {
 
     this.#_platform = platform;
     this.#_db_driver = db_driver;
     this.#_storage = storage;
-    this.#_payment_gateways = payment_gateways;
     this.#_mailer = mailer;
-    this.#_extensions = extensions;
     this.#_config = config;
     this.#_is_ready = false;
   } 
@@ -258,9 +253,28 @@ export class App {
    * 
    * @returns {App<PlatformNativeRequest, PlatformContext, H, Database, Storage, N, ExtensionsMap>}
    */
-  withNewPaymentGateways(gateways) { 
+  withPaymentGateways(gateways) { 
     // @ts-ignore
     this.#_payment_gateways = gateways; 
+
+    // @ts-ignore
+    return this;
+  }
+
+  /** 
+   * 
+   * 
+   * @description Update new payment gateways and rewrite types 
+   * 
+   * @template {Record<string, extension>} E
+   * 
+   * @param {E} extensions 
+   * 
+   * @returns {App<PlatformNativeRequest, PlatformContext, H, Database, Storage, PaymentMap, E>}
+   */
+  withExtensions(extensions) { 
+    // @ts-ignore
+    this.#_extensions = extensions; 
 
     // @ts-ignore
     return this;
@@ -297,12 +311,21 @@ export class App {
   }
 
   /**
-   * @description Get a payment gateway by handle
+   * @description Get a `payment gateway` by `handle`
    * 
    * @param {keyof PaymentMap} handle 
    */
   gateway = (handle) => {
     return this.gateways?.[handle];
+  }
+
+  /**
+   * @description Get an `extension` by `handle`
+   * 
+   * @param {keyof ExtensionsMap} handle 
+   */
+  extension = (handle) => {
+    return this.extensions?.[handle];
   }
 
   /**

@@ -22,7 +22,7 @@ export const create_app = async () => {
       dialect: dialect, 
       dialect_type: 'MYSQL'
     }),
-    null, null, null, null, {
+    null, null, {
       auth_admins_emails: ['admin@sc.com'],
       auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
@@ -32,6 +32,7 @@ export const create_app = async () => {
 
   await app.init();
   await app.db.migrateToLatest();
+  
   return app;
 }
 

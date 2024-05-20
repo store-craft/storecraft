@@ -14,10 +14,11 @@ import { App } from '@storecraft/core';
 export const app = new App(
   new NodePlatform(),
   new MongoDB({ db_name: 'test' }),
-  new NodeLocalStorage(join(homedir(), 'tomer')),
+  new NodeLocalStorage(join(homedir(), 'tomer'))
   // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
   // new GoogleStorage()
-  null, 
+  ,
+  null,
   {
     storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
@@ -28,5 +29,16 @@ export const app = new App(
   {
     'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' }),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+  }
+).withExtensions(
+  {
+    'events': { 
+      config: '',
+      info: {name:'tomer'},
+      actions: [
+        {handle:'t', name:'rr'}
+      ],
+      invokeAction: (handle) => {return null;}
+    }
   }
 );

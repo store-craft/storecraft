@@ -41,7 +41,7 @@ const products = [
  */
 export const create = app => {
 
-  const app2 = app.withNewPaymentGateways(
+  const app2 = app.withPaymentGateways(
     {
       'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
     }

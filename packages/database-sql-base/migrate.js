@@ -41,7 +41,6 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
     }),
   })
 
-  // await migrator.migrateDown()
   const { error, results } = await migrator.migrateToLatest();
 
   results?.forEach((it) => {

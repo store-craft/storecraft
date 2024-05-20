@@ -7,7 +7,7 @@ It will allow you to fetch / mutate all of the resources at the `backend` in a
 convenient manner with `javascript`, such as:
 `products`, `collections`, `authentication`, `customers`, `orders`, `discounts`,
 `storage`, `storefronts`, `shipping`, `statistics`, `tags`, `posts`, `notifications`,
-`plugins` and more :)
+`templates`, `extensions` and more :)
 
 
 ## Authentication

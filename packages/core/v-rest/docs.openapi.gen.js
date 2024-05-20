@@ -172,6 +172,7 @@ const create_all = () => {
   register_payments(registry);
   register_extensions(registry);
   register_tags(registry);
+  register_templates(registry);
   register_collections(registry);
   register_products(registry);
   register_shipping(registry);
@@ -1569,6 +1570,37 @@ const register_tags = registry => {
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
+
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_templates = registry => {
+  const name = 'template'
+  const slug_base = 'templates'
+  const tags = [slug_base];
+  const example_id = 'template_65f2ae568bf30e6cd0ca95ea';
+  const _typeSchema = registry.register(name, tagTypeSchema);
+  const _typeUpsertSchema = registry.register(`${name}Upsert`, tagTypeUpsertSchema);
+  const example = {
+    "title": "Welcome Customer",
+    "template_html": "<html><body>Hello {{name}}</body></html>",
+    "template_text": "Hello {{name}}",
+    "reference_example_input": {
+      "name": "Tomer"
+    },
+    "handle": "welcome-customer",
+    "id": "template_664afed24eba71b9ee185be4",
+    "created_at": "2024-05-20T07:42:10.436Z",
+    "updated_at": "2024-05-20T09:39:46.492Z",
+  }
+  
+  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
+  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
+  register_base_delete(registry, slug_base, name, tags);
+  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 

@@ -10,6 +10,10 @@ import { SQL } from "./index.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const current = {
+  driver: undefined
+}
+
 /**
  * 
  * @param {SQL} db_driver 
@@ -21,7 +25,9 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
 
   console.log('Resolving migrations')
 
-  const db = db_driver.client;
+  let db = db_driver.client;
+
+  current.driver = db_driver;
 
   const migrator = new Migrator({
     db,

@@ -2,7 +2,7 @@ import type { Dialect } from 'kysely'
 
 export * from './index.js'
 
-export type SqlDialectType = 'SQLITE' | 'POSTGRES' | 'MYSQL' | 'MSSQL';
+export type SqlDialectType = 'SQLITE' | 'POSTGRES' | 'MYSQL';
 
 /**
  * The Storecraft SQL config

@@ -1,3 +1,4 @@
+import { Kysely } from 'kysely'
 import { SQL } from '../driver.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, where_id_or_handle_table } from './con.shared.js'
@@ -11,16 +12,15 @@ export const table_name = 'templates'
 
 
 /**
- * @param {SQL} driver 
+ * @param {Kysely<import('../index.js').Database>} client 
  * 
  * 
  * @returns {db_col["upsert"]}
  */
-const upsert = (driver) => {
+export const upsert = (client) => {
   return async (item, search_terms) => {
-    const c = driver.client;
     try {
-      const t = await c.transaction().execute(
+      const t = await client.transaction().execute(
         async (trx) => {
           await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
           await regular_upsert_me(trx, table_name, {
@@ -124,7 +124,7 @@ export const impl = (driver) => {
 
   return {
     get: get(driver),
-    upsert: upsert(driver),
+    upsert: upsert(driver.client),
     remove: remove(driver),
     list: list(driver),
     count: count_regular(driver, table_name),

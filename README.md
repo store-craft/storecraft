@@ -34,6 +34,7 @@ const server = http.createServer(app.handler).listen(
 - `@storecraft/platform-node` - platform support for **node.js**
 - `@storecraft/platform-aws-lambda` - soon
 - `@storecraft/platform-cloudflare-workers` - soon
+- `@storecraft/google-functions` - soon
 
 **Databases**
 - `@storecraft/database-sql-base` - Universal pure javascript support for `SQLite` / `MySQL` / `Postgres` dialects with `Kysely`

@@ -59,14 +59,14 @@ export default ({}) => {
     <div className='w-full rounded-md overflow-hidden border 
                   shelf-border-color dark:shadow-slate-900 
                   shadow-md mt-5'>      
+      <TopActions 
+          isCollectionEmpty={resource_is_probably_empty}
+          reload={onReload} 
+          ref={ref_actions} 
+          createLink='/pages/discounts/create'
+          searchTitle='Search by Code, type...' 
+          isLoading={loading} />
       <ShowIf show={!error && page?.length}>
-        <TopActions 
-            isCollectionEmpty={resource_is_probably_empty}
-            reload={onReload} 
-            ref={ref_actions} 
-            createLink='/pages/discounts/create'
-            searchTitle='Search by Code, type...' 
-            isLoading={loading} />
         <TableSchemaView 
             context={context} 
             data={page} 
@@ -75,15 +75,6 @@ export default ({}) => {
             prev={prev} next={next} 
             limit={query_api.limit}
             onLimitChange={onLimitChange} />
-      </ShowIf>
-      <ShowIf show={!error && resource_is_probably_empty}>
-        <TopActions 
-            isCollectionEmpty={resource_is_probably_empty}
-            reload={onReload} 
-            ref={ref_actions} 
-            createLink='/pages/discounts/create'
-            searchTitle='Search by Code, type...' 
-            isLoading={loading} />
       </ShowIf>
     </div>    
   </div>

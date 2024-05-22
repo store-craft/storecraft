@@ -60,7 +60,6 @@ export default ({}) => {
       <div className='w-full rounded-md overflow-hidden border 
                       shelf-border-color shadow-md mt-5 
                       dark:shadow-slate-900 '>      
-      <ShowIf show={!error && page?.length}>
         <TopActions 
             isCollectionEmpty={false}
             ref={ref_actions} 
@@ -68,6 +67,7 @@ export default ({}) => {
             createLink='/pages/collections/create'
             searchTitle='Search by Name or Handle' 
             isLoading={loading} />
+        <ShowIf show={!error && page?.length}>
           <TableSchemaView 
               context={context} 
               data={page} 
@@ -77,15 +77,6 @@ export default ({}) => {
               next={next} 
               limit={query_api.limit}
               onLimitChange={onLimitChange} />
-        </ShowIf>
-        <ShowIf show={!error && resource_is_probably_empty}>
-          <TopActions 
-              isCollectionEmpty={resource_is_probably_empty}
-              ref={ref_actions} 
-              reload={onReload}  
-              createLink='/pages/collections/create'
-              searchTitle='Search by Name or Handle' 
-              isLoading={loading} />
         </ShowIf>
       </div>    
   </div>

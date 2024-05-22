@@ -86,14 +86,14 @@ export default ({}) => {
                       shelf-border-color shadow-md mt-5
                       dark:shadow-slate-900 '>      
         <ShowIf show={error} children={error?.toString()} />
+        <TopActions 
+            isCollectionEmpty={resource_is_probably_empty}
+            ref={ref_actions} 
+            reload={onReload} 
+            createLink='/pages/products/create'
+            searchTitle='Search by Name, Handle, Tag values, Collections...' 
+            isLoading={loading} />
         <ShowIf show={!error && page?.length}>
-          <TopActions 
-              isCollectionEmpty={resource_is_probably_empty}
-              ref={ref_actions} 
-              reload={onReload} 
-              createLink='/pages/products/create'
-              searchTitle='Search by Name, Handle, Tag values, Collections...' 
-              isLoading={loading} />
           <TableSchemaView 
               context={context} 
               data={page} 
@@ -104,15 +104,7 @@ export default ({}) => {
               limit={query_api.limit}
               onLimitChange={onLimitChange} />
         </ShowIf>
-        <ShowIf show={!error && resource_is_probably_empty}>
-          <TopActions 
-              isCollectionEmpty={resource_is_probably_empty}
-              ref={ref_actions} 
-              reload={onReload} 
-              createLink='/pages/products/create'
-              searchTitle='Search by Name, Handle, Tag values, Collections...' 
-              isLoading={loading} />
-        </ShowIf>
+        
       </div>    
   </div>
 </div>

@@ -48,14 +48,14 @@ export default ({}) => {
       <div className='w-full rounded-md overflow-hidden shadow-md 
                       dark:shadow-slate-900 border mt-5
                       shelf-border-color'>      
+        <TopActions 
+            isCollectionEmpty={resource_is_probably_empty}
+            ref={ref_actions} 
+            reload={onReload}
+            createLink='/pages/posts/create'
+            searchTitle='Search by name, values...' 
+            isLoading={loading} />
         <ShowIf show={!error && page?.length}>
-          <TopActions 
-              isCollectionEmpty={resource_is_probably_empty}
-              ref={ref_actions} 
-              reload={onReload}
-              createLink='/pages/posts/create'
-              searchTitle='Search by name, values...' 
-              isLoading={loading} />
           <TableSchemaView 
               context={context} 
               data={page} 
@@ -66,16 +66,6 @@ export default ({}) => {
               limit={query_api.limit}        
               onLimitChange={onLimitChange} />
         </ShowIf>
-        <ShowIf show={!error && resource_is_probably_empty}>
-          <TopActions 
-              isCollectionEmpty={resource_is_probably_empty}
-              ref={ref_actions} 
-              reload={onReload}
-              createLink='/pages/posts/create'
-              searchTitle='Search by name, values...' 
-              isLoading={loading} />
-        </ShowIf>
-        
       </div>    
   </div>
 </div>

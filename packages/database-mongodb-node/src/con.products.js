@@ -1,7 +1,8 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../driver.js'
 import { 
-  count_regular, expand, get_bulk, get_regular, list_regular 
+  count_regular, expand, get_bulk, get_regular, list_regular, 
+  zeroed_relations
 } from './con.shared.js'
 import { 
   delete_keys, handle_or_id, sanitize_array, sanitize_one, to_objid 
@@ -80,7 +81,8 @@ const upsert = (driver) => {
               'application.id': enums.DiscountApplicationEnum.Auto.id,
               active: true
             }, {
-              limit: 1000
+              limit: 1000,
+              projection: zeroed_relations
             }
           ).toArray();
 

@@ -14,8 +14,7 @@ import { App } from '@storecraft/core';
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').OrderData & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/v-api').OrderData
  * )[]} 
  */
 const items = get_static_ids('order').map(
@@ -41,7 +40,7 @@ const items = get_static_ids('order').map(
         { id: 'pr-2-id', qty: 2 },
       ],
       shipping_method: {
-        handle: 'ship-a', title: 'ship a', price: 30
+        handle: 'ship-a', title: 'ship a', price: 30, id: ''
       }
     }
   }

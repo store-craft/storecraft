@@ -127,6 +127,19 @@ export const expand = (items, expand_query=undefined) => {
   return items;
 }
 
+
+export const zeroed_relations = {
+  '_relations.discounts': 0,
+  '_relations.collections': 0,
+  '_relations.variants': 0,
+  '_relations.related_products': 0,
+  '_relations.search': 0,
+  '_relations.posts': 0,
+  '_relations.products': 0,
+  '_relations.shipping_methods': 0,
+} 
+
+
 /**
  * 
  * @param {import('@storecraft/core/v-database').RegularGetOptions["expand"]} expand 
@@ -135,16 +148,7 @@ export const expand_to_mongo_projection = (expand) => {
   let projection = {}
 
   if(!expand?.includes('*')) {
-    projection = {
-      '_relations.discounts': 0,
-      '_relations.collections': 0,
-      '_relations.variants': 0,
-      '_relations.related_products': 0,
-      '_relations.search': 0,
-      '_relations.posts': 0,
-      '_relations.products': 0,
-      '_relations.shipping_methods': 0,
-    } 
+    projection = zeroed_relations;
 
     expand?.forEach(
       it => {

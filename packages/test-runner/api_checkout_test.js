@@ -9,11 +9,11 @@ import { DummyPayments } from '@storecraft/payments-dummy'
 import { assert_async_throws } from './utils.js';
 
 
-/** @type {import('@storecraft/core/v-api').ShippingMethodType} */
+/** @type {import('@storecraft/core/v-api').ShippingMethodTypeUpsert} */
 const shipping = {
   handle: 'ship-checkout-test',
   price: 50,
-  title: 'shipping checkout test'
+  title: 'shipping checkout test',
 }
 
 /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
@@ -85,6 +85,7 @@ export const create = app => {
 
     { // test the create part
 
+      // console.log(draft_order)
       assert.ok(
         draft_order?.id,
         `draft has no id`
@@ -317,7 +318,8 @@ export const create = app => {
         shipping_method: {
           handle: 'shipping does not exist',
           price: 30,
-          title: 'i dont exist'
+          title: 'i dont exist',
+          id: ''
         },
         contact: {
           email: 'a1@a.com'

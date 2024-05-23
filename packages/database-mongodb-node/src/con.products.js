@@ -134,6 +134,7 @@ const upsert = (driver) => {
           
           if(`parent_handle` in data) { // is variant ?
             // TODO: stronger validation of variant identification
+            
             const isValid = (
               data.parent_handle && data.parent_id && data.variant_hint
             );
@@ -337,6 +338,7 @@ const list_product_variants = (driver) => {
     const item = await get_regular(driver, col(driver))(product, options);
 
     if(item && ('variants' in item)) {
+      
       return sanitize_array(item?.variants ?? []);
     }
 

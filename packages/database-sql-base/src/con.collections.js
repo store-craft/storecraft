@@ -72,8 +72,6 @@ const get = (driver) => {
       .where(where_id_or_handle_table(id_or_handle))
     //  .compile()
       .executeTakeFirst();
-    
-    return sanitize(r);
   }
 }
 

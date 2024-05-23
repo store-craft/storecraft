@@ -4,7 +4,7 @@ import * as assert from 'uvu/assert';
 import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { assert_partial } from './utils.js';
+import { assert_partial, assert_partial_minus_relations } from './utils.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -87,10 +87,12 @@ export const create = app => {
 
     // upsert products with collections relation
     for (const pr of prs) {
-      await app.api.products.upsert({
-        ...pr, 
-        collections: cols
-      });
+      await app.api.products.upsert(
+        {
+          ...pr, 
+          collections: cols
+        }
+      );
     }
 
     // test relation on the first product, we get what we put
@@ -99,14 +101,15 @@ export const create = app => {
       // console.log(JSON.stringify(cols_of_pr,null,2))
       for (const expected of cols) {
         const actual = cols_of_pr.find(c => c.handle===expected.handle);
-        assert_partial(actual, expected);
+        assert_partial_minus_relations()(actual, expected);
       }
     }
 
     // simple get with exapnd collections, should also return the collections
     { 
       const product_with_collections = await app.api.products.get(
-        prs[0].handle, { expand: ['*']}
+        prs[0].handle, 
+        { expand: ['*'] }
       );
       
       // console.log(JSON.stringify(product_with_collections, null, 2))
@@ -114,7 +117,7 @@ export const create = app => {
         const actual = product_with_collections.collections.find(
           c => c.handle===expected.handle
           );
-        assert_partial(actual, expected);
+        assert_partial_minus_relations()(actual, expected);
       }
     }
 
@@ -122,7 +125,7 @@ export const create = app => {
     {
       await app.api.collections.remove(cols[0].id);
       const cols_of_pr = await app.api.products.list_product_collections(prs[0].handle);
-      assert_partial(cols_of_pr, cols.slice(1));
+      assert_partial_minus_relations()(cols_of_pr, cols.slice(1));
     }
 
     // test collection update, collection was updated at product

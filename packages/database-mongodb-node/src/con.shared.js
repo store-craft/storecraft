@@ -105,6 +105,9 @@ export const expand = (items, expand_query=undefined) => {
     for(const e of (expand_query ?? [])) {
       // try to find embedded documents relations
       const rel = item?._relations?.[e];
+      if(rel===undefined || rel===null)
+        continue;
+      
       item[e] = [];
 
       if(Array.isArray(rel)) {
@@ -124,6 +127,39 @@ export const expand = (items, expand_query=undefined) => {
   return items;
 }
 
+
+export const zeroed_relations = {
+  '_relations.discounts': 0,
+  '_relations.collections': 0,
+  '_relations.variants': 0,
+  '_relations.related_products': 0,
+  '_relations.search': 0,
+  '_relations.posts': 0,
+  '_relations.products': 0,
+  '_relations.shipping_methods': 0,
+} 
+
+
+/**
+ * 
+ * @param {import('@storecraft/core/v-database').RegularGetOptions["expand"]} expand 
+ */
+export const expand_to_mongo_projection = (expand) => {
+  let projection = {}
+
+  if(!expand?.includes('*')) {
+    projection = zeroed_relations;
+
+    expand?.forEach(
+      it => {
+        delete projection[`_relations.${it}`];
+      }
+    )
+  }
+
+  return projection;
+}
+
 /**
  * @template T, G
  * 
@@ -139,7 +175,12 @@ export const get_regular = (driver, col) => {
     const filter = handle_or_id(id_or_handle);
 
     /** @type {import('./utils.relations.js').WithRelations<import('mongodb').WithId<G>>} */
-    const res = await col.findOne(filter);
+    const res = await col.findOne(
+      filter,
+      {
+        projection: expand_to_mongo_projection(options?.expand)
+      }
+    );
 
     // try to expand relations
     expand([res], options?.expand);
@@ -244,7 +285,9 @@ export const list_regular = (driver, col) => {
     /** @type {import('mongodb').WithId<G>[]} */
     const items = await col.find(
       filter,  {
-        sort, limit: reverse_sign==-1 ? query.limitToLast : query.limit
+        sort, 
+        limit: reverse_sign==-1 ? query.limitToLast : query.limit,
+        projection: expand_to_mongo_projection(query?.expand)
       }
     ).toArray();
 

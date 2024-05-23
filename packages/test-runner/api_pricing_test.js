@@ -50,7 +50,8 @@ const gen_product = (tag='regular') => {
     active: true, 
     title, 
     handle: to_handle(title),
-    price: 100 
+    price: 100,
+    id: ''
   }
 }
 
@@ -164,7 +165,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_bulk_3_for_100_recursive = { 
-      active: true, 
+      active: true, id: '',
       handle: 'discount-bulk', 
       title: '3 for 100 recursive for Bulk tags',
       priority: 0, 
@@ -201,7 +202,7 @@ export const create = () => {
             tags: ['bulk'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100, id: '', handle: 'pr-1'
           }
         },
         {
@@ -210,7 +211,7 @@ export const create = () => {
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100, handle: 'pr-avoid', id: ''
           }
         },
         {
@@ -219,7 +220,8 @@ export const create = () => {
             tags: ['bulk'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'pr-2', id: ''
           }
         },
         {
@@ -228,7 +230,8 @@ export const create = () => {
             tags: ['bulk'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'pr-3', id: ''
           }
         },
 
@@ -240,7 +243,8 @@ export const create = () => {
       {
         title: '',
         handle: '',
-        price: 50
+        price: 50,
+        id: ''
       }
     )
 
@@ -267,7 +271,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_bulk_3_for_100_recursive = { 
-      active: true, 
+      active: true, id: '',
       handle: 'discount-bulk', 
       title: '3 for 100 recursive for Bulk tags',
       priority: 0, 
@@ -304,7 +308,7 @@ export const create = () => {
             tags: ['bulk'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100, handle:'pr-1', id: '',
           }
         },
         {
@@ -313,7 +317,8 @@ export const create = () => {
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'pr-avoid', id: '',
           }
         },
         {
@@ -322,7 +327,8 @@ export const create = () => {
             tags: ['bulk'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'pr-2', id: '',
           }
         },
         {
@@ -331,7 +337,8 @@ export const create = () => {
             tags: ['bulk'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'pr-3', id: '',
           }
         },
 
@@ -343,7 +350,8 @@ export const create = () => {
       {
         title: '',
         handle: '',
-        price: 50
+        price: 50,
+        id: ''
       }
     )
 
@@ -370,7 +378,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
-      active: true, 
+      active: true, id: '',
       handle: 'discount-bundle-50-off-robot-arms-and-legs-not-recursive', 
       title: '50% OFF Bundle: robot arms and legs (not recursive)',
       priority: 0, 
@@ -407,7 +415,8 @@ export const create = () => {
             tags: ['robot_leg'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'robot-leg-white', id: '', 
           }
         },
         {
@@ -416,7 +425,8 @@ export const create = () => {
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'just-for-disruption', id: '',             
           }
         },
         {
@@ -425,7 +435,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'robot-arm-red', id: '',             
           }
         },
         {
@@ -434,7 +445,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle:'robot-arm-green', id: '',
           }
         },
 
@@ -446,7 +458,8 @@ export const create = () => {
       {
         title: '',
         handle: '',
-        price: 50
+        price: 50,
+        id: ''
       }
     )
 
@@ -474,7 +487,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
-      active: true, 
+      active: true, id: '',
       handle: 'discount-bundle-50-off-robot-arms-and-legs-recursive', 
       title: '50% OFF Bundle: robot arms and legs (recursive as much as possible)',
       priority: 0, 
@@ -511,7 +524,8 @@ export const create = () => {
             tags: ['robot_leg'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-leg-white', id: ''
           }
         },
         {
@@ -520,7 +534,8 @@ export const create = () => {
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'just-for-disruption', id: ''
           }
         },
         {
@@ -529,7 +544,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-arm-red', id: ''
           }
         },
         {
@@ -538,7 +554,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-arm-green', id: ''
           }
         },
 
@@ -550,7 +567,8 @@ export const create = () => {
       {
         title: '',
         handle: '',
-        price: 50
+        price: 50,
+        id: ''
       }
     )
 
@@ -577,7 +595,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
-      active: true, 
+      active: true, id: '',
       handle: '', 
       title: 'buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF (ONCE, NOT Recursive)',
       priority: 0, 
@@ -619,7 +637,8 @@ export const create = () => {
             tags: ['robot_leg'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-leg-white', id: ''
           }
         },
         {
@@ -628,7 +647,8 @@ export const create = () => {
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'just-for-disruption', id: ''
           }
         },
         {
@@ -637,7 +657,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-arm-red', id: ''
           }
         },
       ],
@@ -648,7 +669,8 @@ export const create = () => {
       {
         title: '',
         handle: '',
-        price: 50
+        price: 50,
+        id: ''
       }
     )
 
@@ -675,7 +697,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
-      active: true, 
+      active: true, id: '',
       handle: '', 
       title: 'buy X get Y discount: Buy 1 robot legs -> Get 1 Robot arms for 50% OFF, recursive, applied as much as possible',
       priority: 0, 
@@ -717,7 +739,8 @@ export const create = () => {
             tags: ['robot_leg'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-leg-white', id: ''
           }
         },
         {
@@ -726,7 +749,8 @@ export const create = () => {
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'just-for-disruption', id: ''
           }
         },
         {
@@ -735,7 +759,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-arm-red', id: ''
           }
         },
         {
@@ -744,7 +769,8 @@ export const create = () => {
             tags: ['robot_arm'], 
             qty: 100, 
             active: true, title: '', 
-            price: 100 
+            price: 100,
+            handle: 'robot-arm-green', id: ''
           }
         },
       ],
@@ -755,7 +781,8 @@ export const create = () => {
       {
         title: '',
         handle: '',
-        price: 50
+        price: 50, 
+        id: ''
       }
     )
 
@@ -782,7 +809,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
-      active: true, 
+      active: true, id: '',
       handle: 'discount-10-off-order', 
       title: '10% OFF Order with sub-total >= 300',
       priority: 0, 
@@ -816,7 +843,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-1', id: ''
             }
           },
           {
@@ -825,7 +853,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-2', id: ''
             }
           },
           {
@@ -834,7 +863,8 @@ export const create = () => {
               tags: ['would-not-be-discounted'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-3', id: ''
             }
           }
   
@@ -846,7 +876,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }
       )
   
@@ -872,7 +903,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 10 
+              price: 10,
+              handle: 'pr-1', id: ''
             }
           },
           {
@@ -881,7 +913,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 10
+              price: 10,
+              handle: 'pr-2', id: ''
             }
           },
           {
@@ -890,7 +923,8 @@ export const create = () => {
               tags: ['would-not-be-discounted'], 
               qty: 100, 
               active: true, title: '', 
-              price: 10
+              price: 10,
+              handle: 'pr-3', id: ''
             }
           }
   
@@ -902,7 +936,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }
       )
   
@@ -926,7 +961,7 @@ export const create = () => {
 
     /** @satisfies {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
-      active: true, 
+      active: true, id: '',
       handle: '', 
       title: 'order discount: 10% OFF IF order In the Next 60 seconds',
       priority: 0, 
@@ -960,7 +995,8 @@ export const create = () => {
             data: { 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-1', id: ''
             }
           },
         ],
@@ -971,7 +1007,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id:''
         }
       )
   
@@ -999,7 +1036,8 @@ export const create = () => {
             data: { 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-1', id: ''
             }
           },
         ],
@@ -1010,7 +1048,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }
       )
 
@@ -1033,7 +1072,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
-      active: true, 
+      active: true, id: '',
       handle: '', 
       title: 'order discount: 10% OFF IF Items count >= 10',
       priority: 0, 
@@ -1067,7 +1106,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-1', id: ''
             }
           },
           {
@@ -1076,7 +1116,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-2', id: ''
             }
           },
           {
@@ -1085,7 +1126,8 @@ export const create = () => {
               tags: ['would-not-be-discounted'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-3', id: ''
             }
           }
   
@@ -1097,7 +1139,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }
       )
   
@@ -1121,7 +1164,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 10 
+              price: 10,
+              handle: 'pr-1', id: ''
             }
           },
         ],
@@ -1132,7 +1176,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }
       )
   
@@ -1156,7 +1201,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
-      active: true, 
+      active: true, id: '',
       handle: '', 
       title: 'order discount: 10% OFF For a specific customers',
       priority: 0, 
@@ -1192,7 +1237,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-1', id: ''
             }
           },
         ],
@@ -1203,7 +1249,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }, 
         'cus_ID_i_promised_a_discount_to'
       );
@@ -1228,7 +1275,8 @@ export const create = () => {
               tags: ['regular'], 
               qty: 100, 
               active: true, title: '', 
-              price: 100 
+              price: 100,
+              handle: 'pr-1', id: ''
             }
           },
         ],
@@ -1239,7 +1287,8 @@ export const create = () => {
         {
           title: '',
           handle: '',
-          price: 50
+          price: 50,
+          id: ''
         }, 
         'cus_not_eligible'
       );

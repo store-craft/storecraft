@@ -23,8 +23,7 @@ const handle_gen = create_handle('dis', file_name(import.meta.url));
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').DiscountType & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/v-api').DiscountType
  * )[]} 
  */
 const items = get_static_ids('dis').map(

@@ -157,11 +157,33 @@ export type idable = {
   id?: string;
 }
 
+/**
+ * @description with `id`
+ */
+export type idable_concrete = {
+  /** 
+   * @description ID 
+   */
+  id: string;
+}
+
+export type withOptionalHandleOrID = {
+  /** 
+   * @description Optional `id`
+   */
+  id?: string;
+
+  /** 
+   * @description Optional `handle`
+   */
+  handle?: string;
+}
+
 
 /** 
  * @description Base properties 
  */
-export interface BaseType extends idable, timestamps {
+export interface BaseType extends idable_concrete, timestamps {
   /** 
    * @description List of images urls 
    */
@@ -368,7 +390,7 @@ export interface TagType extends idable, timestamps {
 /**
  * @description Tag upsert type
  */
-export type TagTypeUpsert = TagType;
+export type TagTypeUpsert = Omit<TagType, 'id' | 'handle'> & withOptionalHandleOrID;
   
 // collections
 
@@ -403,7 +425,7 @@ export interface CollectionType extends BaseType {
 /**
  * @description Collection upsert type
  */
-export type CollectionTypeUpsert = CollectionType;
+export type CollectionTypeUpsert = Omit<CollectionType, 'id' | 'handle'> & withOptionalHandleOrID;
 
 
 // products
@@ -512,7 +534,7 @@ export interface BaseProductType extends BaseType {
   /** 
    * @description The readable unique product `handle`
    */
-  handle?: string;
+  handle: string;
 
   /** 
    * @description The International Standard Book Number (`ISBN`)
@@ -568,20 +590,21 @@ export interface BaseProductType extends BaseType {
 /**
  * @description Variant upsert type
  */
-export type VariantTypeUpsert = Omit<VariantType, 
-'collections' | 'published' | 'discounts' | 'related_products'> & {
+export type VariantTypeUpsert = Omit<
+  VariantType, 
+  'collections' | 'published' | 'discounts' | 'related_products' | 'id' | 'handle'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
-  collections?: Pick<CollectionType, 'id' | 'handle'>[];
+  collections?: HandleAndID[];
 
   /** 
    * @description List of related products to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
   related_products?: Pick<BaseProductType, 'id' | 'handle'>[];
-}
+} & withOptionalHandleOrID;
 
 
 /**
@@ -622,11 +645,15 @@ export type HandleAndID = {
   handle: string;
 }
 
+
 /**
  * @description Product upsert type
  */
-export type ProductTypeUpsert = Omit<ProductType, 
-  'collections' | 'published' | 'related_products' | 'discounts' | 'variants'> & {
+export type ProductTypeUpsert = Omit<
+  ProductType, 
+  'collections' | 'published' | 'related_products' | 'discounts' | 'variants' | 'id' | 'handle'
+  > & {
+
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
@@ -638,7 +665,7 @@ export type ProductTypeUpsert = Omit<ProductType,
    * this is an explicit connection, to form a better UX experience 
    */
   related_products?: HandleAndID[];
-}
+} & withOptionalHandleOrID;
 
 
 
@@ -693,7 +720,7 @@ export interface DiscountType extends BaseType {
 /**
  * @description Discount upsert type
  */
-export type DiscountTypeUpsert = DiscountType;
+export type DiscountTypeUpsert = Omit<DiscountType, 'id' | 'handle'> & withOptionalHandleOrID;
 
 /** 
  * @description details and filters of the discount 
@@ -1212,8 +1239,9 @@ export interface StorefrontType extends BaseType {
 /** 
  * @description Storefront upsert type
  */
-export type StorefrontTypeUpsert = Omit<StorefrontType,
-  'collections' | 'products' | 'posts' | 'discounts' | 'shipping_methods'> & {
+export type StorefrontTypeUpsert = Omit<
+  StorefrontType,
+  'collections' | 'products' | 'posts' | 'discounts' | 'shipping_methods' | 'id' | 'handle'> & {
 
   /** 
    * @description Collections related to this storefront 
@@ -1240,7 +1268,7 @@ export type StorefrontTypeUpsert = Omit<StorefrontType,
    */
   posts?: HandleAndID[];
 
-}
+} & withOptionalHandleOrID;
 
 //
 
@@ -1348,7 +1376,7 @@ export interface CustomerType extends BaseType {
 /**
  * @description Customer upsert type
  */
-export type CustomerTypeUpsert = CustomerType;
+export type CustomerTypeUpsert = Omit<CustomerType, 'id' | 'handle'> & withOptionalHandleOrID;
 
 // image
 
@@ -1382,7 +1410,7 @@ export interface ImageType extends BaseType {
 /**
  * @description Image upsert type
  */
-export type ImageTypeUpsert = ImageType;
+export type ImageTypeUpsert = Omit<ImageType, 'id' | 'handle'> & withOptionalHandleOrID;
 
 // shipping
 
@@ -1412,7 +1440,7 @@ export interface ShippingMethodType extends BaseType {
 /**
  * @description Shipping upsert type
  */
-export type ShippingMethodTypeUpsert = ShippingMethodType;
+export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'id' | 'handle'> & withOptionalHandleOrID;
 
 // posts
 
@@ -1440,7 +1468,7 @@ export interface PostType extends BaseType {
 /**
  * @description Post upsert type
  */
-export type PostTypeUpsert = PostType;
+export type PostTypeUpsert = Omit<PostType, 'id' | 'handle'> & withOptionalHandleOrID;
 
 // settings
 
@@ -1584,7 +1612,7 @@ export interface BaseCheckoutCreateType {
   /** 
    * @description Shipping method info 
    */
-  shipping_method: ShippingMethodType; 
+  shipping_method: Partial<HandleAndID>; 
 }
 
 /**
@@ -1625,7 +1653,7 @@ export interface OrderData extends CheckoutCreateType, BaseType {
 /**
  * @description Order upsert type
  */
-export type OrderDataUpsert = OrderData;
+export type OrderDataUpsert = Omit<OrderData, 'id'> & withOptionalHandleOrID;
 
 
 
@@ -2301,4 +2329,4 @@ export interface TemplateType extends BaseType {
 /**
  * @description Upsert type for email template
  */
-export type TemplateTypeUpsert = TemplateType;
+export type TemplateTypeUpsert = Omit<TemplateType, 'id' | 'handle'> & withOptionalHandleOrID;

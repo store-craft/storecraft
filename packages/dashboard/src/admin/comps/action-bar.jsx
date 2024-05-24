@@ -8,6 +8,7 @@ import Notifications from './notifications.jsx'
 import NotificationButton from './notifications-button.jsx'
 import DarkMode from './dark-mode.jsx'
 import useOnClickOutside from '../hooks/useOnClickOutside.js'
+import { QuickSearchButton } from './quick-search-browser.jsx'
 
 
 /**
@@ -64,7 +65,7 @@ const ActionBar = (
     [auth]
   );
 
-  console.log(openNotifications)
+  // console.log(openNotifications)
   
   return (
 <nav className={className} {...rest}>
@@ -83,6 +84,7 @@ const ActionBar = (
             className='font-semibold '/>
     </div>        
     <div className='flex flex-row gap-3 items-center'>
+      <QuickSearchButton />
       <GradientFillIcon 
           Icon={MdLogout} 
           onClick={signout}

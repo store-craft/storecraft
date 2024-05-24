@@ -85,7 +85,7 @@ const paginate_helper = (sdk, query, resource) => {
 }
 
 /**
- * @template T the `document` type
+ * @template {import('@storecraft/core/v-api').BaseType} T The type of the item
  * 
  * @typedef {Omit<ReturnType<typeof useCollection<T>>, 'page' | 'pages'> & 
  *  {

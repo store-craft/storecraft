@@ -36,7 +36,7 @@ const useOnClickOutside = (handler) => {
        * @param {KeyboardEvent} event
        */
       const listener2 = (event) => {
-
+        
         if (event.key !== 'Escape') 
           return;
 

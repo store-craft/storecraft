@@ -83,7 +83,7 @@ export const TopActions = forwardRef(
          value={search ?? ''}
          onChange={e => setSearch(e.currentTarget.value)} 
          onKeyPress={onKeyPress} 
-         inputClsName='h-9' />        
+         inputClsName='h-9 hover:ring-pink-400 hover:ring-2' />        
 
     <IoReloadSharp 
         className={' bg-kf-500 text-3xl mx-3 \

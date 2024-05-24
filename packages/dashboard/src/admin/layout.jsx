@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FaBloggerB, FaOpencart } from 'react-icons/fa/index.js'
 import { AiOutlineUser, AiFillTag, AiOutlineAppstoreAdd } from 'react-icons/ai/index.js'
 import { TbDiscount2 } from 'react-icons/tb/index.js'
@@ -14,6 +14,7 @@ import { Outlet } from 'react-router-dom'
 import useDarkMode from './hooks/useDarkMode.js'
 import { useScrollDelta } from './hooks/useScrollDelta.js'
 import { CgTemplate } from "react-icons/cg/index.js";
+import { createPortal } from './comps/portal-creator.jsx'
 
 /** @type {import('./comps/side-menu.jsx').MenuType} */
 const menu = {
@@ -92,6 +93,9 @@ const menu = {
 }
 
 
+export const MainPortal = createPortal();
+
+
 /**
  * 
  * @typedef {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -127,6 +131,7 @@ const Layout = (
   return (
 <div className={`${darkMode ? 'dark' : ''}`}
       data-color-mode={darkMode ? 'dark' : 'light'}>
+  <MainPortal.Portal />        
   <div className={`relative flex flex-row font-admin 
                   shelf-body-bg
                   w-full sm:h-full ${className}

@@ -9,6 +9,8 @@ import { App } from '@storecraft/core'
 import { CiSearch } from "react-icons/ci/index.js";
 import { MdKeyboardCommandKey } from "react-icons/md/index.js";
 import { createKeyboardMatchHook } from '../hooks/useKeyboardMatch.js'
+import { Overlay } from './overlay.jsx'
+import { MainPortal } from '../layout.jsx'
 
 
 const useKeyboardHook = createKeyboardMatchHook(['Meta', 'K'], ['Meta', 'k']);
@@ -22,26 +24,40 @@ export const QuickSearchButton = (
     onClick, ...rest
   }
 ) => {
+  const [open, setOpen] = useState(false);
 
   useKeyboardHook(
     (match) => {
-      onClick && onClick(undefined)
+      console.log(match)
+      ref_overlay.current.show();
     }
   );
 
+  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
+  const ref_overlay = useRef();
+
   return (
-<div {...rest} >
+<div 
+    onClick={() => {ref_overlay.current.show()}} 
+    {...rest}  >
   <div className='rounded-md flex flex-row gap-2 p-1 items-center 
                   border shelf-card shelf-text-minor text-sm
                   cursor-pointer hover:ring-pink-400 hover:ring-2'>
-    <CiSearch/>
+    <CiSearch/> 
     <span children='Search' />
     <div className='rounded-md border flex flex-row 
                     items-center px-2 shelf-card'>
       <MdKeyboardCommandKey />
       <span children='K' />
     </div>
-  </div>    
+  </div>
+  <MainPortal.PortalChild>        
+    <Overlay ref={ref_overlay}>
+      <BrowseProducts 
+          onSave={undefined} 
+          onCancel={() => ref_overlay.current.hide()} />
+    </Overlay>
+  </MainPortal.PortalChild>        
 </div>    
   )
 }

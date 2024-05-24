@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FaBloggerB, FaOpencart } from 'react-icons/fa/index.js'
 import { AiOutlineUser, AiFillTag, AiOutlineAppstoreAdd } from 'react-icons/ai/index.js'
 import { TbDiscount2 } from 'react-icons/tb/index.js'
@@ -131,13 +131,13 @@ const Layout = (
   return (
 <div className={`${darkMode ? 'dark' : ''}`}
       data-color-mode={darkMode ? 'dark' : 'light'}>
-  <MainPortal.Portal />        
   <div className={`relative flex flex-row font-admin 
                   shelf-body-bg
                   w-full sm:h-full ${className}
                   `} {...rest}
       style={{height: '100dvh'}}>
 
+    <MainPortal.Portal />        
     <div 
         className={`fixed left-0 top-0 w-screen h-full bg-teal-900/10 
                     z-50 transition-all md:hidden
@@ -174,15 +174,17 @@ const Layout = (
                     mx-0 sm:mx-3 md:mx-6 overflow-auto'>
 
       <ActionBar 
-          className={`w-full 
-                      shelf-action-bar
-                      h-12 backdrop-blur-sm
-                      absolute left-0 top-0 z-40 
-                      border-b dark:border-b-slate-700 
-                      --md:border-none 
-                      px-3
-                      transition-transform 
-                      duration-500 ${open_class}`} 
+          className={
+           `w-full 
+            shelf-action-bar
+            h-12 backdrop-blur-sm
+            absolute left-0 top-0 z-40 
+            border-b dark:border-b-slate-700 
+            --md:border-none 
+            px-3
+            transition-transform 
+            duration-500 ${open_class}`
+          } 
           onMenuClick={onMenuClick} 
           menuOpen={menuOpen} />
 
@@ -192,7 +194,7 @@ const Layout = (
         <div className='bg-gradient-to-tl from-kf-50/50 to-slate-50/10
                         dark:from-transparent/0 dark:to-transparent/0   
                           px-3 sm:px-5 lg:px-10 py-3 sm:py-5 lg:py-8 
-                          rounded-3xl text-sm font-medium --text-gray-500 
+                          rounded-3xl text-sm font-medium 
                           border dark:border-slate-700 w-full h-fit 
                           min-h-full overflow-x-auto'>
           <Outlet />

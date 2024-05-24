@@ -14,12 +14,12 @@ import { rewrite_media_from_storage, rewrite_media_to_storage } from './con.stor
  * This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {import('./types.api.js').BaseType} G
- * @template {import('./types.api.js').BaseType} U
+ * @template G
+ * @template U
  * 
  * 
  * @param {import("../types.public.js").App} app app instance
- * @param {import("../v-database/types.public.js").db_crud<U, G>} db db instance
+ * @param {import("../v-database/types.public.js").db_crud<import('../v-database/types.public.js').withConcreteId<U>, import('../v-database/types.public.js').withConcreteId<G>>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
  * @param {<H extends U>(final: H) => H} pre_hook Hook before validation, this is 
@@ -66,7 +66,7 @@ export const regular_upsert = (
  * 
  * 
  * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<U, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<import('../v-database/types.public.js').withConcreteId<U>, import('../v-database/types.public.js').withConcreteId<G>>} db db instance
  * 
 */
 export const regular_get = (app, db) => 
@@ -90,7 +90,7 @@ export const regular_get = (app, db) =>
  * 
  * 
  * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<U, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<import('../v-database/types.public.js').withConcreteId<U>, import('../v-database/types.public.js').withConcreteId<G>>} db db instance
  * 
  */
 export const regular_remove = (app, db) => 
@@ -108,7 +108,7 @@ export const regular_remove = (app, db) =>
  * 
  * 
  * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<U, G>} db
+ * @param {import("../v-database/types.public.js").db_crud<import('../v-database/types.public.js').withConcreteId<U>, import('../v-database/types.public.js').withConcreteId<G>>} db db instance
  * 
  */
 export const regular_list = (app, db) => 

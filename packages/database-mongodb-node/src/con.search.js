@@ -1,50 +1,16 @@
-import { Collection } from 'mongodb'
+import { AggregationCursor } from 'mongodb';
 import { MongoDB } from '../driver.js'
-import { count_regular, expand, expand_to_mongo_projection, get_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
 import { query_to_mongo } from './utils.query.js';
-import { sanitize_array } from './utils.funcs.js';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_tags} db_col
+ * @typedef {import('@storecraft/core/v-database').search} db_col
  */
 
 
-/**
- * @param {MongoDB} d 
- * 
- * 
- * @returns {Collection<db_col["$type_get"]>}
- */
-const col = (d) => d.collection('tags');
 
 /**
- * @param {MongoDB} driver 
- * 
- * @returns {db_col["upsert"]}
+ * @type {(keyof import('@storecraft/core/v-database').db_driver["resources"])[]}
  */
-const upsert = (driver) => upsert_regular(driver, col(driver));
-
-/**
- * @param {MongoDB} driver 
- */
-const get = (driver) => get_regular(driver, col(driver));
-
-/**
- * @param {MongoDB} driver 
- */
-const remove = (driver) => remove_regular(driver, col(driver));
-
-/**
- * @param {MongoDB} driver 
- */
-const list = (driver) => list_regular(driver, col(driver));
-
-/**
- * @param {MongoDB} driver 
- */
-const count = (driver) => count_regular(driver, col(driver));
-
 const tables = [
   'tags',
   'collections',
@@ -57,22 +23,53 @@ const tables = [
   'notifications',
   'discounts',
   'orders',
-  'templates',
+  'templates'
 ]
 
+/**
+ * @type {Record<string, keyof import('@storecraft/core/v-database').db_driver["resources"]>}
+ */
+const prefix_to_resource = {
+  'au': 'auth_users',
+  'col': 'collections',
+  'cus': 'customers',
+  'dis': 'discounts',
+  'img': 'images',
+  'not': 'notifications',
+  'ord': 'orders',
+  'pr': 'products',
+  'ship': 'shipping',
+  'sf': 'storefronts',
+  'tag': 'tags',
+  'template': 'templates',
+  
+}
 
 /**
- * @template {any} T
- * @template {any} G
  * 
+ * @param {string} id 
  * 
- * @param {MongoDB} driver 
- * @param {Collection<G>} col 
- * 
- * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["list"]}
+ * @returns {keyof import('@storecraft/core/v-database').db_driver["resources"]}
  */
-export const search = (driver) => {
+export const id_to_resource = id => {
+  let result = undefined;
+  try {
+    const prefix = id.split('_').at(0);
+    result = prefix_to_resource[prefix];
+  } catch(e) {
+
+  } finally {
+    return result;
+  }
+}
+
+/**
+ * @param {MongoDB} driver 
+ * 
+ * 
+ * @returns {db_col["quicksearch"]}
+ */
+export const quicksearch = (driver) => {
   return async (query) => {
 
     const { filter, sort, reverse_sign } = query_to_mongo(query);
@@ -114,10 +111,14 @@ export const search = (driver) => {
       }
     ];
 
-    const items = await col(driver).aggregate(
+    const db = driver.mongo_client.db();
+    
+     
+    /** @type {import('@storecraft/core/v-database').QuickSearchResource[]} */ 
+    const items = await db.collection(tables[0]).aggregate(
       [
         ...pipeline,
-        ...tables.map(
+        ...tables.slice(1).map(
           t => (
             {
               $unionWith: {
@@ -127,19 +128,35 @@ export const search = (driver) => {
             }
           )
         )
-        // {
-        //   "$unionWith": {
-        //     "coll": "products",
-        //     pipeline: pipeline
-        //   }
-        // }
       ], 
       {
         
       }
     ).toArray();
 
-    return items;
+
+    /** @type {import('@storecraft/core/v-database').QuickSearchResult} */
+    const result = {};
+
+    items.reduce(
+      (p, c) => {
+        const resource = id_to_resource(c.id);
+        const resource_meta = p[resource];
+
+        if(resource_meta) {
+          resource_meta.push(c);
+        } else {
+          p[resource] = [
+            c
+          ]
+        }
+        
+        return p;
+      }, 
+      result
+    );
+
+    return result;
   }
 }
 
@@ -147,12 +164,11 @@ export const search = (driver) => {
  * @param {MongoDB} driver
  * 
  * 
- * @sreturn {db_col & { _col: ReturnType<col>}}
+ * @return {db_col}
  * */
 export const impl = (driver) => {
 
   return {
-    _col: col(driver),
-    search: search(driver)
+    quicksearch: quicksearch(driver)
   }
 }

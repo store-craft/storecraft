@@ -36,7 +36,7 @@ export type Aug = {
 }
 
 type idable = { id: string }
-type withConcreteId<T> = Omit<T, 'id'> & idable;
+export type withConcreteId<T> = Omit<T, 'id'> & idable;
 
 /**
  * Basic collection or table
@@ -310,7 +310,21 @@ export interface db_orders extends OmitGetByHandle<db_crud<
   withConcreteId<OrderDataUpsert>, 
   withConcreteId<OrderData>>
   > {
+}
 
+/**
+ * TODO: add this type types.api.d.ts 
+ */
+export type QuickSearchResource = {
+  id: string;
+  handle?: string;
+  title?: string;
+}
+
+export type QuickSearchResult = Partial<Record<keyof db_driver["resources"], QuickSearchResource[]>>;
+
+export interface search {
+  quicksearch: (query: ApiQuery) => Promise<QuickSearchResult>
 }
 
 export interface db_driver {
@@ -362,6 +376,7 @@ export interface db_driver {
     notifications: db_notifications;
     discounts: db_discounts;
     orders: db_orders;
+    search: search;
   }
 
 }

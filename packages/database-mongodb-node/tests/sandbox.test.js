@@ -39,9 +39,9 @@ async function test() {
 
 
   const doit = async () => {
-    let items = await app.db.resources.search.search(
+    let items = await app.db.resources.search.quicksearch(
       {
-        vql: 'pr', 
+        vql: 'tomer', 
         sortBy: ['updated_at']
       }
     );

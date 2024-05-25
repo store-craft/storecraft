@@ -85,7 +85,7 @@ const paginate_helper = (sdk, query, resource) => {
 }
 
 /**
- * @template {import('@storecraft/core/v-api').BaseType} T The type of the item
+ * @template {Partial<import('@storecraft/core/v-api').BaseType>} T The type of the item
  * 
  * @typedef {Omit<ReturnType<typeof useCollection<T>>, 'page' | 'pages'> & 
  *  {
@@ -105,7 +105,7 @@ export const q_initial = {
 }
 
 /**
- * @template {import('@storecraft/core/v-api').BaseType} T The type of the item
+ * @template {Partial<import('@storecraft/core/v-api').BaseType>} T The type of the item
  * 
  * @param {keyof App["db"]["resources"]} resource the base path of the resource 
  * @param {import('@storecraft/core/v-api').ApiQuery} q query
@@ -323,7 +323,7 @@ export const useCollection = (
     () => {
       async function doit() {
         const max_updated = pages.flat(1).reduce(
-          (p, c) => c > p ? c : p,
+          (p, c) => c.updated_at > p.updated_at ? c : p,
           pages?.at(0)?.at(0)
         );
 

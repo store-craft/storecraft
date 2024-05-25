@@ -169,6 +169,10 @@ export async function remove(sdk, resource, handle_or_id) {
 
 
 /**
+ * @description Invoke `api` endpoint that requires use of `query`
+ * object. I named it `list` because it usually entails list op.
+ * 
+ * 
  * @template {any} G Get type
  * 
  * 

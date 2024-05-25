@@ -1,5 +1,5 @@
 import { Bling } from './common-ui.jsx'
-import { useCollection } from '@storecraft/sdk-react-hooks'
+import { useCollection, useQuickSearch } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/admin/comps/show-if.jsx'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { IoCloseSharp } from "react-icons/io5/index.js"
@@ -11,9 +11,12 @@ import { MdKeyboardCommandKey } from "react-icons/md/index.js";
 import { createKeyboardMatchHook } from '../hooks/useKeyboardMatch.js'
 import { Overlay } from './overlay.jsx'
 import { MainPortal } from '../layout.jsx'
+import { IoIosReturnLeft } from "react-icons/io/index.js";
+import { IoIosArrowRoundUp } from "react-icons/io/index.js";
 
 
-const useKeyboardHook = createKeyboardMatchHook(['Meta', 'K'], ['Meta', 'k']);
+const useKeyboardHook_meta_k = createKeyboardMatchHook(['Meta', 'K'], ['Meta', 'k']);
+const useKeyboardHook_ops = createKeyboardMatchHook(['ArrowUp'], ['ArrowDown'], ['Enter'], ['Escape']);
 
 /**
  * 
@@ -26,7 +29,7 @@ export const QuickSearchButton = (
 ) => {
   const [open, setOpen] = useState(false);
 
-  useKeyboardHook(
+  useKeyboardHook_meta_k(
     (match) => {
       console.log(match)
       ref_overlay.current.show();
@@ -62,6 +65,46 @@ export const QuickSearchButton = (
   )
 }
 
+const Nada = () => {
+
+  return (
+  <div className='text-3xl font-medium text-gray-400 h-full 
+                  flex justify-center items-center'>
+    No search Results <br/>were found <br/> :()
+  </div>
+  )
+}
+
+
+const Footer = () => {
+
+  return (
+<div className='w-full flex flex-row items-center 
+              gap-3 text-sm shelf-text-minor'>
+  <div className='flex flex-row items-center gap-2'>
+    <div className='rounded-md border shelf-border-color px-0.5'>
+      <IoIosReturnLeft className='text-lg ' />
+    </div>
+    <span children='to select' />
+  </div>
+  <div className='flex flex-row items-center gap-2'>
+    <div className='flex flex-row items-center rounded-md 
+              border shelf-border-color'>
+      <IoIosArrowRoundUp className='text-lg' />
+      <IoIosArrowRoundUp className='rotate-180 text-lg' />
+    </div>
+    <span children='to navigate' />
+  </div>
+  <div className='flex flex-row items-center gap-1'>
+    <span children='esc' 
+        className='font-bold font-mono rounded-md 
+                border shelf-border-color px-1' />
+    <span children='to close' />
+  </div>
+</div>    
+  )
+}
+
 
 /**
  * `BrowseCollection` is used to :
@@ -81,6 +124,66 @@ export const QuickSearchButton = (
  * @prop {() => void} onCancel
  */
 
+/**
+ * @typedef {object} ItemWrapper
+ * @prop {import('@storecraft/core/v-database').QuickSearchResource} [payload]
+ * @prop {string} resource
+ */
+
+
+/**
+ * 
+ * @typedef {object} SearchGroupParams
+ * @prop {string} name
+ * @prop {import('@storecraft/core/v-database').QuickSearchResource[]} group
+ * @prop {number} index The group index
+ * @prop {number} selectedItemIndex The item index
+ * @prop {(groupindex: number, itemIndex: number) => any} onHover 
+ * 
+ * @param {SearchGroupParams} params
+ */
+const SearchGroup = (
+  {
+    name, group, index, selectedItemIndex, onHover
+  }
+) => {
+
+  /** @type {React.LegacyRef<HTMLDivElement>} */
+  const ref = useRef();
+  useEffect(
+    () => {
+      if(selectedItemIndex >= 0)
+        ref.current.scrollIntoView();
+    }, [selectedItemIndex]
+  )
+
+  return (
+    <div className='--p-3' ref={ref}>
+      <span children={name} className='font-bold text-kf-400' />
+      <div className='w-full flex flex-col gap-2 mt-3 '>
+        {
+          group.map(
+            (it, ix) => (
+              <div 
+                key={it.id}
+                children={it?.title ?? it?.id ?? it?.handle ?? 'nooop'} 
+                className={
+                  `h-14 w-full rounded-md p-3 
+                  shadow-sm scroll-auto
+                   font-medium flex flex-row items-center
+                   ${selectedItemIndex==ix ? 'bg-kf-400 dark:bg-kf-400 text-white' : 'bg-slate-100 dark:bg-[rgb(41,52,69)]'}
+                  ` 
+                }
+                onMouseOver={() => { onHover(index, ix) }}/>
+            )
+          )
+        }
+
+      </div>
+    </div>
+  )
+}
+
 /** 
  * @template {import('@storecraft/core/v-api').BaseType} [T=import('@storecraft/core/v-api').BaseType]
  * 
@@ -88,47 +191,71 @@ export const QuickSearchButton = (
  */
 const QuickSearchBrowser = (
   { 
-    resource, title='Browse products', Comp, onSave, onCancel 
+    title='Browse products', Comp, onSave, onCancel 
   }
 ) => {
 
   const [focus, setFocus] = useState(false)
-  /**@type {ReturnType<typeof useState<T[]>>} */
-  const [selected, setSelected] = useState([]);
   const [limit, setLimit] = useState(5);
 
-  /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
-   */
   const { 
-    pages, page, loading, error, queryCount, 
+    result, loading, error, 
     actions: {
-      prev, next, query
+      query
     }
-  } = useCollection(resource);
+  } = useQuickSearch();
 
-  const onAdd = useCallback(
-    /** @param {T} item */
-    (item) => {
-      setSelected(
-        vs => [item, ...vs.filter(it => it.id!==item.id)]
-      );
-      setFocus(false)
-    }, []
+  const groups = useMemo(
+    () => Object.entries(result ?? {}).map(
+      it => (
+        {
+          group: it[1],
+          name: it[0]
+        }
+      )
+    )
+    , [result]
   );
 
-  const onRemove = useCallback(
-    /** @param {T} item */
-    (item) => {
-      setSelected(vs => vs.filter(it => it.id!==item.id))
+  const [selected, setSelected] = useState({ groupIndex: 0, itemIndex: 0});
+  useKeyboardHook_ops(
+    (match) => {
+      const next = { ...selected };
+      if(match[0]=='ArrowDown') {
+        if(next.itemIndex + 1 >= groups[next.groupIndex].group.length) {
+          next.itemIndex = 0;
+          next.groupIndex += 1;
+          next.groupIndex %= groups.length;
+        } else {
+          next.itemIndex += 1;
+        }
+        setSelected(next);
+      }
+
+      if(match[0]=='ArrowUp') {
+        if(next.itemIndex - 1 < 0) {
+          next.groupIndex -= 1 - groups.length;
+          next.groupIndex %= groups.length;
+          next.itemIndex = groups[next.groupIndex].group.length - 1;
+        } else {
+          next.itemIndex -= 1;
+        }
+        setSelected(next);
+      }
+
+    }
+  );
+
+  const onHover = useCallback(
+    (groupIndex, itemIndex) => {
+      setSelected(
+        {
+          groupIndex, itemIndex
+        }
+      )
     }, []
   );
   
-  // console.log('pages', pages);
-  const items = useMemo(
-    () => pages.reduce((prev, curr) => [...prev, ...curr], [])
-    , [pages]
-  );
 
   /** @type {React.LegacyRef<HTMLInputElement>} */
   const ref_input = useRef()
@@ -156,21 +283,22 @@ const QuickSearchBrowser = (
      className='w-full m-3 md:w-[35rem] h-3/4 
      shelf-plain-card-soft
                 rounded-xl p-3 sm:p-5 border shadow-lg gap-5 
-                text-base flex flex-col overflow-hidden'>
+                text-base flex flex-col --overflow-hidden'>
 
-  <p children={title} className='pb-3 border-b shelf-border-color-soft' />
+  {/* <p children={title} className='pb-3 border-b shelf-border-color-soft' /> */}
   <form 
-      onSubmit={onSubmit} className='w-full' 
+      onSubmit={onSubmit} 
+      className='w-full' 
       onFocus={() => setFocus(true)} 
       tabIndex={4344}>
         
-    <Bling rounded='rounded-xl' stroke='border-2' >
+    <Bling rounded='rounded-xl' stroke='border' >
       <div className='flex flex-row justify-between items-center'>
         <input 
             ref={ref_input} type='search' 
             placeholder='search' 
             className='w-full h-12 border shelf-input-color 
-                      shelf-border-color-soft px-3 text-base 
+                      shelf-border-color-soft px-3 text-xl font-medium 
                       focus:outline-none rounded-xl'  />
         <BiSearchAlt 
                 className='text-white text-4xl mx-1 sm:mx-5 
@@ -181,96 +309,51 @@ const QuickSearchBrowser = (
   </form>
 
   <div className='relative w-full flex-1 --bg-gray-50 '>
-    <div className={`absolute inset-0 flex flex-col w-full gap-5 h-full
-                    ${!focus ? '' : 'hidden'}` }>
-      <p children='Selected items' 
-          className=' font-semibold text-base --text-gray-500'/>
-      <div className='w-full flex-1 rounded-xl border shelf-border-color-soft 
-                      overflow-y-auto'>
-        <ShowIf show={selected.length==0}>
-          <div className='text-xl sm:text-3xl font-medium text-gray-400 
-                          h-full flex flex-col justify-center 
-                          items-center gap-5'>
-            No Selected items, <br/>Tap the Search box
-            <BiSearchAlt 
-                className='text-inherit text-5xl opacity-50 
-                           mx-5 cursor-pointer' 
-                onClick={onSubmit}/>
-          </div>
-        </ShowIf>
-    {
-    selected.map(
-      (it, ix) => (
-      <div key={it.id} 
-          className='w-full h-14 sm:h-14 p-3 border-b shelf-border-color-soft 
-                     flex flex-row justify-between items-center 
-                     gap-3' >
-        <Comp data={it} />
-        <IoCloseSharp 
-            onClick={() => onRemove(it)} 
-            className='h-6 w-9 pl-3 border-l shelf-border-color-soft
-                        cursor-pointer'/>
-      </div>
-      )
-    )
-    }
-      </div>
-      <div className='self-end flex flex-row gap-5'>
-        <BlingButton 
-            stroke='border-2' 
-            className='opacity-60' 
-            children='cancel' 
-            onClick={onCancel} />
-        <BlingButton 
-            stroke='border-2' 
-            children='save' 
-            onClick={() => onSave(selected)} />
-      </div>
-    </div>   
 
     <div className={`flex flex-col gap-5 absolute inset-0 w-full h-full 
-                   --bg-white ${(focus ? '' : 'hidden')}`}>
-      <div className='flex flex-row justify-between'>
+                   --bg-white ${(focus ? '' : '--hidden')}`}>
+
+      {/* <div className='flex flex-row justify-between'>
         <p children={`Select from search results ` + (queryCount>=0 ? `(${queryCount})` : '')}
                 className='font-semibold text-base '/>
         <IoCloseSharp 
             className='h-6 w-9 pl-3 border-l 
                   shelf-border-color-soft cursor-pointer' 
             onClick={() => setFocus(false)}/>
-      </div>
-      <Bling rounded='rounded-xl'
-             className='flex-1 overflow-y-auto'>
-        <div className='w-full h-full rounded-xl border shelf-plain-card-soft
-                        overflow-y-auto '>
-          <ShowIf show={items.length==0 && !loading}>
-            <div className='text-3xl font-medium text-gray-400 h-full 
-                            flex justify-center items-center'>
-              No search Results <br/>were found <br/> :()
-            </div>
+      </div> */}
+
+      {/* <Bling rounded='rounded-lg'
+             className='flex-1 overflow-y-auto'> */}
+        <div className='w-full h-full overflow-y-auto px-1 flex flex-col gap-5 '>
+
+          <ShowIf show={groups.length==0 && !loading}>
+            <Nada />
           </ShowIf>
+
           {
-          items.map(
+          groups.map(
             (it, ix) => (
-            <div 
-                key={`sr_${it.id}`} 
-                className='w-full h-14 sm:h-14 p-3 border-b shelf-border-color-soft
-                           cursor-pointer'
-                onClick={() => onAdd(it)}>
-              <Comp data={it} />
-            </div>
+              <SearchGroup 
+                  key={it.name} 
+                  name={it.name} 
+                  group={it.group} 
+                  index={ix} 
+                  selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
+                  onHover={onHover} />
             )
           )
           }
-          <PromisableLoadingButton 
+          {/* <PromisableLoadingButton 
               text='Load more' 
               onClick={() => next().catch(e => {}) } 
               keep_text_on_load={true}
               className='w-fit mx-auto h-12 p-3 border-b cursor-pointer
                           shelf-border-color-soft
-                          text-center text-pink-500 font-medium text-base'  />
+                          text-center text-pink-500 font-medium text-base'  /> */}
 
         </div>    
-      </Bling>    
+      {/* </Bling>   */}
+      <Footer />  
     </div>        
   </div>        
 </div>

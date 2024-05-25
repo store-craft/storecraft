@@ -41,9 +41,9 @@ export const createKeyboardMatchHook = (...matches) => {
         /** @param {KeyboardEvent} e */
         const onKeyDown = e => {
           // e.preventDefault();
-          // console.log(magic)
 
           magic[e.key] = true;
+          console.log(e.key)
   
           fireIfMatch();
         }

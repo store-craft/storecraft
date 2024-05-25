@@ -99,7 +99,7 @@ export const quicksearch = (driver) => {
         $sort: sort
       },
       {
-        $limit: 5
+        $limit: query.limit ?? 5
       },
       {
         $project: { 

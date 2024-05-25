@@ -61,7 +61,7 @@ const ProductDiscounts = (
       // const all = context?.query.all.get(false)?.data
       const state = context?.getState();
 
-      navWithState(`/pages/discounts/${discount.handle}/edit`, state);
+      navWithState(`/pages/discounts/${discount.handle}`, state);
     },
     [navWithState, context]
   );

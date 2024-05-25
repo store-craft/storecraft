@@ -95,7 +95,7 @@ const Usage = ({ usage=[], ...rest }) => {
 <div>
   {
   usage.map((it, ix) => (
-    <Link to={`/pages/${it}/edit`} draggable='false' key={ix}>
+    <Link to={`/pages/${it}`} draggable='false' key={ix}>
       <p children={it} className='shelf-text-label-color underline font-semibold' />
     </Link>
   ))

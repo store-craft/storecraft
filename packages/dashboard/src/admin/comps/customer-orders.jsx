@@ -27,7 +27,7 @@ const CustomerOrders = (
         key: 'id', name: 'ID', 
         comp: ({...rest}) => (
           <SimpleLink {...rest} 
-              url_fn={item=>`/pages/orders/${item?.id}/edit`} 
+              url_fn={item=>`/pages/orders/${item?.id}`} 
               get_state={() => context.getState()}/>
         ) 
       },

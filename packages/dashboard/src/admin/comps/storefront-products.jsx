@@ -42,7 +42,7 @@ const StorefrontProducts = ({ field, context, value=[], onChange }) => {
     (v) => {
       const where = v.handle ?? v.id;
       navWithState(
-        `/pages/products/${where}/edit`, 
+        `/pages/products/${where}`, 
         context?.getState()
       );
     },

@@ -270,7 +270,7 @@ export const SelectResourceWithTags = (
       // const where = v.split('_')[0]
       const where = v.handle ?? v.id; 
       navWithState(
-        `${slug}/${where}/edit`, 
+        `${slug}/${where}`, 
         context?.getState()
       );
     },

@@ -219,7 +219,7 @@ const useCollectionsActions = (
   const context = useMemo(
     () => ({
       viewDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/view`,
-      editDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/edit`,
+      editDocumentUrl: /** @param {string} id */ id => `${slug}/${id}`,
       deleteDocument: removeDocument,
     }), [removeDocument, slug]
   );

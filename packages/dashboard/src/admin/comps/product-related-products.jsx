@@ -22,7 +22,7 @@ const Item = ({ context, product, onRemove }) => {
     () => {
       // const all = context?.query.all.get(false)?.data
       const state = context?.getState()
-      navWithState(`/pages/products/${product.handle}/edit`, state)
+      navWithState(`/pages/products/${product.handle}`, state)
     },
     [navWithState, product, context]
   )

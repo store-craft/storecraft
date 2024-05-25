@@ -94,7 +94,7 @@ const Filter_ProductInCollections = (
   const onClick = useCallback(
     (v) => {
       const state = context?.getState && context?.getState();
-      const url = `/pages/products/${v.handle}/edit`;
+      const url = `/pages/products/${v.handle}`;
 
       navWithState(url, state);
 
@@ -265,7 +265,7 @@ const Filter_ProductInProducts = (
   const onClick = useCallback(
     (v) => {
       const state = context?.getState && context?.getState();
-      const url = `/pages/products/${v.handle}/edit`;
+      const url = `/pages/products/${v.handle}`;
 
       navWithState(url, state);
 
@@ -673,7 +673,7 @@ const Filter_OrderHasCustomers = (
   const onClick = useCallback(
     (v) => {
       const state = context?.getState && context?.getState();
-      const url = `/pages/customers/${v.id}/edit`;
+      const url = `/pages/customers/${v.id}`;
 
       navWithState(url, state);
     },

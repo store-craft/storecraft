@@ -44,7 +44,7 @@ export default function Main(props) {
     <Route path='templates'>
       <Route path='' element={<Templates />} />
       <Route path='q/:query_params' element={<Templates />} />
-      <Route path=':id/edit' element={<Template mode='edit' />} />
+      <Route path=':id' element={<Template mode='edit' />} />
       <Route path=':id/view' element={<Template mode='view' />} />
       <Route path='create' element={<Template mode='create' /> } />
     </Route>
@@ -57,63 +57,63 @@ export default function Main(props) {
     <Route path='storefronts'>
       <Route path='' element={<Storefronts />} />
       <Route path='q/:query_params' element={<Storefronts />} />
-      <Route path=':id/edit' element={<Storefront mode='edit' />} />
+      <Route path=':id' element={<Storefront mode='edit' />} />
       <Route path=':id/view' element={<Storefront mode='view' />} />
       <Route path='create/:base?' element={<Storefront mode='create' /> } />
     </Route>
     <Route path='customers'>
       <Route path='' element={<Customers />} />
       <Route path='q/:query_params' element={<Customers />} />
-      <Route path=':id/edit' element={<Customer mode='edit' />} />
+      <Route path=':id' element={<Customer mode='edit' />} />
       <Route path=':id/view' element={<Customer mode='view' />} />
       <Route path='create' element={<Customer mode='create' /> } />
     </Route>
     <Route path='tags'>
       <Route path='' element={<Tags />} />
       <Route path='q/:query_params' element={<Tags />} />
-      <Route path=':id/edit' element={<Tag mode='edit' />} />
+      <Route path=':id' element={<Tag mode='edit' />} />
       <Route path=':id/view' element={<Tag mode='view' />} />
       <Route path='create' element={<Tag mode='create' /> } />
     </Route>
     <Route path='products'>
       <Route path='' element={<Products />} />
       <Route path='q/:query_params' element={<Products />} />
-      <Route path=':id/edit' element={<Product mode='edit' />} />
+      <Route path=':id' element={<Product mode='edit' />} />
       <Route path=':id/view' element={<Product mode='view' />} />
       <Route path='create/:base?' element={<Product mode='create' /> } />
     </Route>
     <Route path='collections'>
       <Route path='' element={<Collections />} />
       <Route path='q/:query_params' element={<Collections />} />
-      <Route path=':id/edit' element={<Collection mode='edit' />} />
+      <Route path=':id' element={<Collection mode='edit' />} />
       <Route path=':id/view' element={<Collection mode='view' />} />
       <Route path='create/:base?' element={<Collection mode='create' /> } />
     </Route>
     <Route path='orders'>
       <Route path='' element={<Orders />} />
       <Route path='q/:query_params' element={<Orders />} />
-      <Route path=':id/edit' element={<Order mode='edit' />} />
+      <Route path=':id' element={<Order mode='edit' />} />
       <Route path=':id/view' element={<Order mode='view' />} />
       <Route path='create/:base?' element={<Order mode='create' /> } />
     </Route>
     <Route path='discounts'>
       <Route path='' element={<Discounts />} />
       <Route path='q/:query_params' element={<Discounts />} />
-      <Route path=':id/edit' element={<Discount mode='edit' />} />
+      <Route path=':id' element={<Discount mode='edit' />} />
       <Route path=':id/view' element={<Discount mode='view' />} />
       <Route path='create/:base?' element={<Discount mode='create' /> } />
     </Route>
     <Route path='shipping-methods'>
       <Route path='' element={<ShippingMethods />} />
       <Route path='q/:query_params' element={<ShippingMethods />} />
-      <Route path=':id/edit' element={<ShippingMethod mode='edit' />} />
+      <Route path=':id' element={<ShippingMethod mode='edit' />} />
       <Route path=':id/view' element={<ShippingMethod mode='view' />} />
       <Route path='create/:base?' element={<ShippingMethod mode='create' /> } />
     </Route>
     <Route path='posts'>
       <Route path='' element={<Posts />} />
       <Route path='q/:query_params' element={<Posts />} />
-      <Route path=':id/edit' element={<Post mode='edit' />} />
+      <Route path=':id' element={<Post mode='edit' />} />
       <Route path=':id/view' element={<Post mode='view' />} />
       <Route path='create' element={<Post mode='create' /> } />
     </Route>

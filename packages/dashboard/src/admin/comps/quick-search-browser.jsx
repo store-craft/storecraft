@@ -11,10 +11,35 @@ import { MainPortal } from '../layout.jsx'
 import { IoIosReturnLeft } from "react-icons/io/index.js";
 import { BsArrowReturnLeft } from "react-icons/bs/index.js";
 import { IoIosArrowRoundUp } from "react-icons/io/index.js";
+import { useNavigate } from 'react-router-dom'
 
 
-const useKeyboardHook_meta_k = createKeyboardMatchHook(['Meta', 'K'], ['Meta', 'k']);
-const useKeyboardHook_ops = createKeyboardMatchHook(['ArrowUp'], ['ArrowDown'], ['Enter'], ['Escape']);
+const useKeyboardHook_meta_k = createKeyboardMatchHook(
+  ['Meta', 'K'], ['Meta', 'k']
+);
+
+const useKeyboardHook_ops = createKeyboardMatchHook(
+  ['ArrowUp'], ['ArrowDown'], ['Enter'], ['Escape']
+);
+
+
+/**
+ * @type {Record<keyof import('@storecraft/core/v-database').db_driver["resources"], string>}
+ */
+const resource_to_base_url = {
+  'collections': '/pages/collections',
+  'customers': '/pages/customers',
+  'discounts': '/pages/discounts',
+  'orders': '/pages/orders',
+  'products': '/pages/products',
+  'shipping': '/pages/shipping-methods',
+  'storefronts': '/pages/storefronts',
+  'tags': '/pages/tags',
+  'posts' : '/pages/posts',
+  'templates': '/app/templates',
+  'images': '/apps/gallery/img',
+}
+
 
 /**
  * 
@@ -26,6 +51,7 @@ export const QuickSearchButton = (
   }
 ) => {
 
+  const nav = useNavigate();
   useKeyboardHook_meta_k(
     (match) => {
       ref_overlay.current.show();
@@ -34,6 +60,14 @@ export const QuickSearchButton = (
 
   /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
   const ref_overlay = useRef();
+
+  /** @type {Parameters<QuickSearchBrowser>["0"]["onSelect"]} */
+  const onSelect = useCallback(
+    (resource_name, result) => {
+      const url = resource_to_base_url[resource_name] + '/' + (result.handle ?? result?.id);
+      nav(url);
+    }, [nav]
+  );
 
   return (
 <div 
@@ -53,7 +87,8 @@ export const QuickSearchButton = (
   <MainPortal.PortalChild>        
     <Overlay ref={ref_overlay}>
       <QuickSearchBrowser 
-          onCancel={() => ref_overlay.current.hide()} />
+          onCancel={() => ref_overlay.current.hide()} 
+          onSelect={onSelect}/>
     </Overlay>
   </MainPortal.PortalChild>        
 </div>    
@@ -107,7 +142,7 @@ const Footer = () => {
  * @type {Record<keyof import('@storecraft/core/v-database').db_driver["resources"], string>}
  */
 const to_title = {
-  'au': 'auth_users',
+  'auth_users': 'auth_users',
   'collections': '🗂️ Collections',
   'customers': '💁🏻‍♀️ Customers',
   'discounts': '🎟️ Discounts',
@@ -118,8 +153,8 @@ const to_title = {
   'shipping': '🚚 Shipping',
   'storefronts': '🏪 Storefronts',
   'tags': '⌗ tags',
-  'template': 'templates',
-  
+  'templates': 'templates',
+  'posts' : '📄 Posts'
 }
 
 
@@ -159,7 +194,9 @@ const SearchGroup = (
 
   return (
     <div className='--p-3' ref={ref}>
-      <span children={to_title[name] ?? name} className='font-bold text-kf-400 text-sm' />
+      <span 
+        children={to_title[name] ?? name} 
+        className='font-bold text-kf-400 text-sm' />
       <div className='w-full flex flex-col gap-2 mt-3 '>
         {
           group.map(
@@ -177,22 +214,24 @@ const SearchGroup = (
                   ` 
                 }
                 onMouseMove={(e) => { e.preventDefault(); onHover(index, ix) }}>
-                  <span children={it?.title ?? it?.id ?? it?.handle ?? 'nooop'}  />
-                  <BsArrowReturnLeft className={'text-xl ' + (selectedItemIndex==ix ? 'inline' : 'hidden')} />
+
+                  <span children={it?.title ?? it?.handle ?? it?.id ?? 'nooop'}  />
+                  <BsArrowReturnLeft 
+                      className={'text-xl ' + (selectedItemIndex==ix ? 'inline' : 'hidden')} />
               </div>
             )
           )
         }
-
       </div>
     </div>
   )
 }
 
+
 /** 
  * @typedef {object} QuickSearchBrowserParams
  * @prop {() => any} [onCancel]
- * @prop {(value: import('@storecraft/core/v-database').QuickSearchResource) => any} [onSelect]
+ * @prop {(name: string, value: import('@storecraft/core/v-database').QuickSearchResource) => any} [onSelect]
  * 
  * @param {QuickSearchBrowserParams} params
  */
@@ -223,6 +262,7 @@ const QuickSearchBrowser = (
 
   const [selected, setSelected] = useState({ groupIndex: 0, itemIndex: 0});
   const [scrollIntoView, setScrollIntoView] = useState(false);
+
   useKeyboardHook_ops(
     (match) => {
       const next = { ...selected };
@@ -258,10 +298,10 @@ const QuickSearchBrowser = (
 
       if(key==='Enter') {
         onSelect && onSelect(
-          groups[selected.groupIndex][selected.itemIndex]
+          groups[selected.groupIndex].name,
+          groups[selected.groupIndex].group[selected.itemIndex]
         );
       }
-
     }
   );
 
@@ -278,7 +318,7 @@ const QuickSearchBrowser = (
   
 
   /** @type {React.LegacyRef<HTMLInputElement>} */
-  const ref_input = useRef()
+  const ref_input = useRef();
 
   /** @type {React.EventHandler<React.SyntheticEvent>} */
   const onSubmit = useCallback(
@@ -290,18 +330,7 @@ const QuickSearchBrowser = (
     }, [query]
   );
 
-  useEffect(
-    () => {
-      setTimeout(
-        () => {
-          console.log('hola')
-          ref_input.current.focus();
-        }, 1000
-      )
-    }, []
-  );
 
-  
   return (
 <div onClick={e => e.stopPropagation()} 
      className='w-full --m-3 md:w-[35rem] h-4/5 
@@ -311,13 +340,13 @@ const QuickSearchBrowser = (
   <div className='w-full h-full flex flex-col px-3 pt-3'>
     <form 
         autoFocus
-        onSubmit={onSubmit} 
         className='w-full' 
         tabIndex={4344}>
           
       <Bling rounded='rounded-xl' stroke='border' >
         <div className='flex flex-row justify-between items-center'>
           <input 
+              onChange={onSubmit} 
               autoFocus
               ref={ref_input} 
               type='search' 

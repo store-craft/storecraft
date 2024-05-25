@@ -318,7 +318,7 @@ const Variant = (
   const view = useCallback(
     async () => {
       const state = context?.getState && context?.getState();
-      const url = `/pages/products/${match_handle}/edit`;
+      const url = `/pages/products/${match_handle}`;
 
       navWithState(url, state);
     }, [match_handle, navWithState, context]
@@ -484,7 +484,7 @@ const IamVariant = ({ context, ...rest }) => {
   return (
 <div className='text-base'>
   <span children='This product is a variant of ' />
-  <LinkWithState to={`/pages/products/${data?.parent_handle}/edit`} 
+  <LinkWithState to={`/pages/products/${data?.parent_handle}`} 
         current_state={context?.getState}>
     <Label children={data?.parent_handle} />
   </LinkWithState>

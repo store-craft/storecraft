@@ -65,6 +65,7 @@ export const QuickSearchButton = (
   const onSelect = useCallback(
     (resource_name, result) => {
       const url = resource_to_base_url[resource_name] + '/' + (result.handle ?? result?.id);
+      ref_overlay.current.hide();
       nav(url);
     }, [nav]
   );
@@ -167,12 +168,14 @@ const to_title = {
  * @prop {number} selectedItemIndex The item index
  * @prop {boolean} [scrollIntoView=true] The item index
  * @prop {(groupindex: number, itemIndex: number) => any} onHover 
+ * @prop {(groupindex: number, itemIndex: number) => any} onClick 
  * 
  * @param {SearchGroupParams} params
  */
 const SearchGroup = (
   {
-    name, group, index, selectedItemIndex, onHover, scrollIntoView=true
+    name, group, index, selectedItemIndex, onHover, onClick,
+    scrollIntoView=true
   }
 ) => {
 
@@ -207,13 +210,14 @@ const SearchGroup = (
                   `h-14 w-full rounded-md p-3 
                   shadow-sm scroll-auto
                    font-medium text-sm flex flex-row items-center
-                   justify-between
+                   justify-between cursor-pointer
                    ${selectedItemIndex==ix ? 
                     'bg-kf-400 dark:bg-kf-400 text-white' : 
                     'bg-slate-100 dark:bg-[rgb(41,52,69)]'}
                   ` 
                 }
-                onMouseMove={(e) => { e.preventDefault(); onHover(index, ix) }}>
+                onClick={_ => {onClick && onClick(index, ix)}}
+                onMouseMove={(e) => { e.preventDefault(); onHover && onHover(index, ix) }}>
 
                   <span children={it?.title ?? it?.handle ?? it?.id ?? 'nooop'}  />
                   <BsArrowReturnLeft 
@@ -263,6 +267,15 @@ const QuickSearchBrowser = (
   const [selected, setSelected] = useState({ groupIndex: 0, itemIndex: 0});
   const [scrollIntoView, setScrollIntoView] = useState(false);
 
+  const notifySelection = useCallback(
+    () => {
+      onSelect && onSelect(
+        groups[selected.groupIndex].name,
+        groups[selected.groupIndex].group[selected.itemIndex]
+      );
+    }, [onSelect, groups, selected]
+  );
+
   useKeyboardHook_ops(
     (match) => {
       const next = { ...selected };
@@ -297,14 +310,12 @@ const QuickSearchBrowser = (
       }
 
       if(key==='Enter') {
-        onSelect && onSelect(
-          groups[selected.groupIndex].name,
-          groups[selected.groupIndex].group[selected.itemIndex]
-        );
+        notifySelection();
       }
     }
   );
 
+  /** @type {Parameters<SearchGroup>[0]["onHover"]} */
   const onHover = useCallback(
     (groupIndex, itemIndex) => {
       setSelected(
@@ -315,7 +326,18 @@ const QuickSearchBrowser = (
       setScrollIntoView(false);
     }, []
   );
-  
+
+  /** @type {Parameters<SearchGroup>[0]["onClick"]} */
+  const onItemClick = useCallback(
+    (groupIndex, itemIndex) => {
+      setSelected(
+        {
+          groupIndex, itemIndex
+        }
+      );
+      notifySelection();
+    }, [notifySelection]
+  );
 
   /** @type {React.LegacyRef<HTMLInputElement>} */
   const ref_input = useRef();
@@ -381,7 +403,8 @@ const QuickSearchBrowser = (
                     index={ix} 
                     scrollIntoView={scrollIntoView}
                     selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
-                    onHover={onHover} />
+                    onHover={onHover} 
+                    onClick={onItemClick} />
               )
             )
           }

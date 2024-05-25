@@ -66,9 +66,10 @@ export const Overlay = React.forwardRef(
 
       /** @type {EventListener} */
       const sub = (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        setVis(false)
+        e.stopPropagation();
+        e.preventDefault();
+
+        setVis(false);
       }
 
       unsub.current = () => {
@@ -80,19 +81,20 @@ export const Overlay = React.forwardRef(
           null, 
           document.title, 
           location.href
-        )
+        );
         window.addEventListener(
           'popstate',
           sub
-        )
+        );
       } 
-      return unsub.current
+
+      return unsub.current;
     }, [vis, window]
   );
   
   return (
 <Transition 
-    unMountOnExit={false} 
+    unMountOnExit={true} 
     show={vis} 
     duration={400} 
     onKeyDown={onKeyDown}

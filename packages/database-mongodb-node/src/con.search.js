@@ -36,7 +36,7 @@ const prefix_to_resource = {
   'dis': 'discounts',
   'img': 'images',
   'not': 'notifications',
-  'ord': 'orders',
+  'order': 'orders',
   'pr': 'products',
   'ship': 'shipping',
   'sf': 'storefronts',

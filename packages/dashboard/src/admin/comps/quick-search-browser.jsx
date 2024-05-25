@@ -9,6 +9,7 @@ import { createKeyboardMatchHook } from '../hooks/useKeyboardMatch.js'
 import { Overlay } from './overlay.jsx'
 import { MainPortal } from '../layout.jsx'
 import { IoIosReturnLeft } from "react-icons/io/index.js";
+import { BsArrowReturnLeft } from "react-icons/bs/index.js";
 import { IoIosArrowRoundUp } from "react-icons/io/index.js";
 
 
@@ -27,7 +28,6 @@ export const QuickSearchButton = (
 
   useKeyboardHook_meta_k(
     (match) => {
-      console.log(match)
       ref_overlay.current.show();
     }
   );
@@ -75,13 +75,12 @@ const Footer = () => {
 
   return (
 <div className='w-full flex flex-row items-center z-[100]
-              gap-3 text-sm shelf-text-minor border-t sha shadow-[0_-2px_5px_0px_rgba(0,0,0,0.16)]
-
-
+              gap-3 text-xs shelf-text-minor border-t 
+              shadow-[0_-2px_5px_0px_rgba(0,0,0,0.16)]
                shelf-border-color p-3'>
   <div className='flex flex-row items-center gap-2'>
-    <div className='rounded-md border shelf-border-color px-0.5'>
-      <IoIosReturnLeft className='text-lg ' />
+    <div className='rounded-md border shelf-border-color px-1 py-px'>
+      <BsArrowReturnLeft className='text-sm ' />
     </div>
     <span children='to select' />
   </div>
@@ -105,19 +104,40 @@ const Footer = () => {
 
 
 /**
+ * @type {Record<keyof import('@storecraft/core/v-database').db_driver["resources"], string>}
+ */
+const to_title = {
+  'au': 'auth_users',
+  'collections': '🗂️ Collections',
+  'customers': '💁🏻‍♀️ Customers',
+  'discounts': '🎟️ Discounts',
+  'images': '🏞️ Images',
+  'notifications': '🔔 Notifications',
+  'orders': '🛒 Orders',
+  'products': '🛍️ Products',
+  'shipping': '🚚 Shipping',
+  'storefronts': '🏪 Storefronts',
+  'tags': '⌗ tags',
+  'template': 'templates',
+  
+}
+
+
+/**
  * 
  * @typedef {object} SearchGroupParams
  * @prop {string} name
  * @prop {import('@storecraft/core/v-database').QuickSearchResource[]} group
  * @prop {number} index The group index
  * @prop {number} selectedItemIndex The item index
+ * @prop {boolean} [scrollIntoView=true] The item index
  * @prop {(groupindex: number, itemIndex: number) => any} onHover 
  * 
  * @param {SearchGroupParams} params
  */
 const SearchGroup = (
   {
-    name, group, index, selectedItemIndex, onHover
+    name, group, index, selectedItemIndex, onHover, scrollIntoView=true
   }
 ) => {
 
@@ -125,31 +145,41 @@ const SearchGroup = (
   const ref = useRef();
   useEffect(
     () => {
-      if(selectedItemIndex >= 0)
-        ref.current.scrollIntoView();
-    }, [selectedItemIndex]
-  )
+      if(scrollIntoView && (selectedItemIndex >= 0)) {
+        ref.current.scrollIntoView(
+          { 
+            behavior: 'instant', 
+            block: 'nearest', 
+            inline: 'start' 
+          }
+        );
+      }
+    }, [selectedItemIndex, scrollIntoView]
+  );
 
   return (
     <div className='--p-3' ref={ref}>
-      <span children={name} className='font-bold text-kf-400' />
+      <span children={to_title[name] ?? name} className='font-bold text-kf-400 text-sm' />
       <div className='w-full flex flex-col gap-2 mt-3 '>
         {
           group.map(
             (it, ix) => (
               <div 
                 key={it.id}
-                children={it?.title ?? it?.id ?? it?.handle ?? 'nooop'} 
                 className={
                   `h-14 w-full rounded-md p-3 
                   shadow-sm scroll-auto
-                   font-medium flex flex-row items-center
+                   font-medium text-sm flex flex-row items-center
+                   justify-between
                    ${selectedItemIndex==ix ? 
                     'bg-kf-400 dark:bg-kf-400 text-white' : 
                     'bg-slate-100 dark:bg-[rgb(41,52,69)]'}
                   ` 
                 }
-                onMouseOver={() => { onHover(index, ix) }}/>
+                onMouseMove={(e) => { e.preventDefault(); onHover(index, ix) }}>
+                  <span children={it?.title ?? it?.id ?? it?.handle ?? 'nooop'}  />
+                  <BsArrowReturnLeft className={'text-xl ' + (selectedItemIndex==ix ? 'inline' : 'hidden')} />
+              </div>
             )
           )
         }
@@ -161,8 +191,8 @@ const SearchGroup = (
 
 /** 
  * @typedef {object} QuickSearchBrowserParams
- * @prop {() => any} onCancel
- * @prop {(value: import('@storecraft/core/v-database').QuickSearchResource) => any} onSelect
+ * @prop {() => any} [onCancel]
+ * @prop {(value: import('@storecraft/core/v-database').QuickSearchResource) => any} [onSelect]
  * 
  * @param {QuickSearchBrowserParams} params
  */
@@ -171,8 +201,6 @@ const QuickSearchBrowser = (
     onCancel, onSelect
   }
 ) => {
-
-  const [focus, setFocus] = useState(false)
 
   const { 
     result, loading, error, 
@@ -194,6 +222,7 @@ const QuickSearchBrowser = (
   );
 
   const [selected, setSelected] = useState({ groupIndex: 0, itemIndex: 0});
+  const [scrollIntoView, setScrollIntoView] = useState(false);
   useKeyboardHook_ops(
     (match) => {
       const next = { ...selected };
@@ -208,6 +237,7 @@ const QuickSearchBrowser = (
           next.itemIndex += 1;
         }
         setSelected(next);
+        setScrollIntoView(true);
       }
 
       if(key=='ArrowUp') {
@@ -219,6 +249,7 @@ const QuickSearchBrowser = (
           next.itemIndex -= 1;
         }
         setSelected(next);
+        setScrollIntoView(true);
       }
 
       if(key==='Escape') {
@@ -240,7 +271,8 @@ const QuickSearchBrowser = (
         {
           groupIndex, itemIndex
         }
-      )
+      );
+      setScrollIntoView(false);
     }, []
   );
   
@@ -258,62 +290,59 @@ const QuickSearchBrowser = (
     }, [query]
   );
 
+  useEffect(
+    () => {
+      setTimeout(
+        () => {
+          console.log('hola')
+          ref_input.current.focus();
+        }, 1000
+      )
+    }, []
+  );
+
   
   return (
 <div onClick={e => e.stopPropagation()} 
      className='w-full --m-3 md:w-[35rem] h-4/5 
-     shelf-plain-card-soft relative
+                shelf-plain-card-soft relative
                 rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
                 text-base flex flex-col --overflow-hidden'>
-
-  {/* <p children={title} className='pb-3 border-b shelf-border-color-soft' /> */}
   <div className='w-full h-full flex flex-col px-3 pt-3'>
-
     <form 
+        autoFocus
         onSubmit={onSubmit} 
         className='w-full' 
-        onFocus={() => setFocus(true)} 
         tabIndex={4344}>
           
       <Bling rounded='rounded-xl' stroke='border' >
         <div className='flex flex-row justify-between items-center'>
           <input 
-              ref={ref_input} type='search' 
+              autoFocus
+              ref={ref_input} 
+              type='search' 
               placeholder='search' 
               className='w-full h-12 border shelf-input-color 
                         shelf-border-color-soft px-3 text-xl font-medium 
                         focus:outline-none rounded-xl'  />
           <BiSearchAlt 
-                  className='text-white text-4xl mx-1 sm:mx-5 
-                            cursor-pointer' 
-                  onClick={onSubmit}/>
+              className='text-white text-4xl mx-1 sm:mx-5 
+                        cursor-pointer' 
+              onClick={onSubmit}/>
         </div>
       </Bling>
     </form>
 
     <div className='relative w-full flex-1 mt-4 --bg-gray-50 '>
 
-      <div className={`flex flex-col gap-5 absolute inset-0 w-full h-full 
-                    --bg-white ${(focus ? '' : '--hidden')}`}>
+      <div className={`flex flex-col gap-5 absolute inset-0 w-full h-full`}>
 
-        {/* <div className='flex flex-row justify-between'>
-          <p children={`Select from search results ` + (queryCount>=0 ? `(${queryCount})` : '')}
-                  className='font-semibold text-base '/>
-          <IoCloseSharp 
-              className='h-6 w-9 pl-3 border-l 
-                    shelf-border-color-soft cursor-pointer' 
-              onClick={() => setFocus(false)}/>
-        </div> */}
+        <div className='w-full h-full overflow-y-auto px-1 flex flex-col gap-5 '>
 
-        {/* <Bling rounded='rounded-lg'
-              className='flex-1 overflow-y-auto'> */}
-          <div className='w-full h-full overflow-y-auto px-1 flex flex-col gap-5 '>
-
-            <ShowIf show={groups.length==0 && !loading}>
-              <Nada />
-            </ShowIf>
-
-            {
+          <ShowIf show={groups.length==0 && !loading}>
+            <Nada />
+          </ShowIf>
+          {
             groups.map(
               (it, ix) => (
                 <SearchGroup 
@@ -321,21 +350,13 @@ const QuickSearchBrowser = (
                     name={it.name} 
                     group={it.group} 
                     index={ix} 
+                    scrollIntoView={scrollIntoView}
                     selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
                     onHover={onHover} />
               )
             )
-            }
-            {/* <PromisableLoadingButton 
-                text='Load more' 
-                onClick={() => next().catch(e => {}) } 
-                keep_text_on_load={true}
-                className='w-fit mx-auto h-12 p-3 border-b cursor-pointer
-                            shelf-border-color-soft
-                            text-center text-pink-500 font-medium text-base'  /> */}
-
-          </div>    
-        {/* </Bling>   */}
+          }
+        </div>    
       </div>        
     </div>
   </div>        

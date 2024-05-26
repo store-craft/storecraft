@@ -122,7 +122,7 @@ export class MongoDB {
       products: products(this),
       storefronts: storefronts(this),
       tags: tags(this),
-      shipping: shipping(this),
+      shipping_methods: shipping(this),
       templates: templates(this),
       search: search(this),
     }

@@ -29,7 +29,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: app.api.shipping }
+    { items: items_upsert, app, ops: app.api.shipping_methods }
   );
 
   s.before(
@@ -37,7 +37,7 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items_upsert)
-          await app.api.shipping.remove(p.handle);
+          await app.api.shipping_methods.remove(p.handle);
       } catch(e) {
         console.log(e)
         throw e;

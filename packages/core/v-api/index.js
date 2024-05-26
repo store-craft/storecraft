@@ -46,7 +46,7 @@ export const create_api = app => {
     orders: orders(app),
     posts: posts(app),
     products: products(app),
-    shipping: shipping(app),
+    shipping_methods: shipping(app),
     storefronts: storefronts(app),
     tags: tags(app),
     auth: auth(app),

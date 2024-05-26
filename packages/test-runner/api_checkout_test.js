@@ -57,8 +57,8 @@ export const create = app => {
     async () => { 
       assert.ok(app.ready);
 
-      await app2.api.shipping.remove(shipping.handle);
-      await app2.api.shipping.upsert(shipping);
+      await app2.api.shipping_methods.remove(shipping.handle);
+      await app2.api.shipping_methods.upsert(shipping);
 
       for (const pr of products) {
         await app2.api.products.remove(pr.handle);

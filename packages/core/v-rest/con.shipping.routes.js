@@ -29,7 +29,7 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await app.api.shipping.upsert(req.parsedBody);
+      const final = await app.api.shipping_methods.upsert(req.parsedBody);
       res.sendJson(final);
     }
   )
@@ -39,7 +39,7 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const item = await app.api.shipping.get(handle_or_id);
+      const item = await app.api.shipping_methods.get(handle_or_id);
 
       assert(item, 'not-found', 404);
 
@@ -53,7 +53,7 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.shipping.remove(handle_or_id);
+      const removed = handle_or_id && await app.api.shipping_methods.remove(handle_or_id);
 
       res.setStatus(removed ? 200 : 404).end();
     }
@@ -64,7 +64,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       const q = parse_query(req.query);
-      const items = await app.api.shipping.list(q);
+      const items = await app.api.shipping_methods.list(q);
 
       res.sendJson(items);
     }

@@ -372,7 +372,7 @@ export interface db_driver {
     images: db_images;
     posts: db_posts;
     templates: db_templates;
-    shipping: db_shipping;
+    shipping_methods: db_shipping;
     notifications: db_notifications;
     discounts: db_discounts;
     orders: db_orders;

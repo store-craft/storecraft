@@ -106,7 +106,7 @@ export const quicksearch = (driver) => {
         $project: { 
           title: 1,
           handle: 1,
-          // '_relations.search': 1,
+          '_relations.search': 1,
           id: 1,
           _id: 0
         }

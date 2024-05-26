@@ -234,7 +234,7 @@ const tables = [
   'storefronts',
   'images',
   'posts',
-  'shipping',
+  'shipping_methods',
   'notifications',
   'discounts',
   'orders',

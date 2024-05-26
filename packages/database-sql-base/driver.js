@@ -12,6 +12,7 @@ import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
+import { impl as search } from './src/con.search.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { SanitizePlugin } from './src/kysely.sanitize.plugin.js';
 
@@ -87,12 +88,16 @@ export class SQL {
     );
   }
 
-  async migrateToLatest() {
+  /**
+   * 
+   * @param {boolean} [destroy_db_upon_completion=false] 
+   */
+  async migrateToLatest(destroy_db_upon_completion=false) {
     this.throwIfNotReady();
 
     const { migrateToLatest } = await import('./migrate.js');
 
-    await migrateToLatest(this, false);
+    await migrateToLatest(this, destroy_db_upon_completion);
   };
 
   /**
@@ -120,8 +125,9 @@ export class SQL {
       products: products(this),
       storefronts: storefronts(this),
       tags: tags(this),
-      shipping: shipping(this),
-      templates: templates(this)
+      shipping_methods: shipping(this),
+      templates: templates(this),
+      search: search(this),
     }
     
     this.#_is_ready = true; 

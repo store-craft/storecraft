@@ -43,7 +43,7 @@ export const createKeyboardMatchHook = (...matches) => {
           // e.preventDefault();
 
           magic[e.key] = true;
-          console.log(e.key)
+          // console.log(e.key)
   
           fireIfMatch();
         }

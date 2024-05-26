@@ -70,7 +70,8 @@ export const upsert = (app) =>
       final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
       final?.collections?.map(c => `col:${c?.id}`),
       item.isbn && `isbn:${item.isbn}`,
-      item.isbn
+      item.isbn,
+      `qty:${item.qty}`
     );
   }
 )(item);

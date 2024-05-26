@@ -168,7 +168,7 @@ export const query_to_mongo = (q) => {
   vql_clause && clauses.push(vql_clause);
 
   // compute sort fields and order
-  const sort = (q.sortBy ?? []).reduce(
+  const sort = (q.sortBy?.length ? q.sortBy : ['updated_at', 'id']).reduce(
     (p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p, 
     {}
   );

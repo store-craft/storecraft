@@ -55,7 +55,7 @@ export const upsert_regular = (driver, col) => {
         }
       );
     } catch(e) {
-      // console.log(e);
+      console.log(e);
 
       return false;
     } finally {

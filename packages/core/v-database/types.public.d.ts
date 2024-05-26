@@ -5,6 +5,7 @@ import {
   ImageTypeUpsert, NotificationType, NotificationTypeUpsert, 
   OrderData, OrderDataUpsert, PostType, PostTypeUpsert, 
   ProductType, ProductTypeUpsert, 
+  QuickSearchResult, 
   ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
   StorefrontTypeUpsert, TagType, TagTypeUpsert, TemplateType, 
   TemplateTypeUpsert, VariantType, VariantTypeUpsert 

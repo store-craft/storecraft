@@ -187,7 +187,7 @@ export const query_to_sort = (q={}) => {
   const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
   // compute sort fields and order
-  const sort = (q.sortBy ?? ['updated_at']).map(
+  const sort = (q.sortBy?.length ? q.sortBy :  ['updated_at', 'id']).map(
     s => `${s} ${SIGN[sort_sign]}`
   )
   

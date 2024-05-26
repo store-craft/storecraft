@@ -2351,4 +2351,4 @@ export type QuickSearchResource = {
 export type tables = keyof db_driver["resources"];
 
 
-export type QuickSearchResult = Partial<Record<tables, QuickSearchResource[]>>;
+export type QuickSearchResult = Record<tables, QuickSearchResource[]>;

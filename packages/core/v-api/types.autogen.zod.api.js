@@ -895,8 +895,8 @@ export const quickSearchResourceSchema = z
     handle: z.string().optional(),
     title: z.string().optional(),
   })
-  .describe("result of quick search");
-export const tablesSchema = z.any();
+  .describe("result of quick search for a specific `resource`");
+export const tablesSchema = z.any().describe("full result of quick search");
 export const quickSearchResultSchema = z.record(
   tablesSchema,
   z.array(quickSearchResourceSchema),

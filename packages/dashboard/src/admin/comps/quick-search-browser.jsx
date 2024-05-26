@@ -111,7 +111,7 @@ const Nada = () => {
 const Footer = () => {
 
   return (
-<div className='w-full flex flex-row items-center z-[100]
+<div className='w-full flex flex-row items-center
               gap-3 text-xs shelf-text-minor border-t 
               shadow-[0_-2px_5px_0px_rgba(0,0,0,0.16)]
                shelf-border-color p-3'>
@@ -359,8 +359,9 @@ const QuickSearchBrowser = (
 <div onClick={e => e.stopPropagation()} 
      className='w-full --m-3 md:w-[35rem] --h-4/5 h-fit
                 shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2
-                rounded-xl --p-3 --sm:p-5 border shadow-lg gap-5 
+                rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
                 text-base flex flex-col --overflow-hidden'>
+
   <div className='w-full h-fit flex flex-col gap-5 px-3 pt-3'>
 
     <form 
@@ -392,7 +393,7 @@ const QuickSearchBrowser = (
       <div className={`flex flex-col gap-5 w-full h-fit`}>
 
         <div className='w-full --h-full max-h-[50svh] overflow-y-auto 
-                        px-1 flex flex-col gap-5 '>
+                        px-1 flex flex-col gap-5 pb-5'>
 
           <ShowIf show={groups.length==0 && !loading}>
             <Nada />

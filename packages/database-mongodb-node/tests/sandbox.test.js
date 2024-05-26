@@ -41,7 +41,7 @@ async function test() {
   const doit = async () => {
     let items = await app.db.resources.search.quicksearch(
       {
-        vql: 'tomer', 
+        vql: '', 
         sortBy: ['updated_at']
       }
     );
@@ -50,8 +50,7 @@ async function test() {
 
   const items = await withTime(doit);
 
-  console.log('len ', items.length)
-  console.log('items ', items)
+  // console.log('items ', items)
 }
 
 test();

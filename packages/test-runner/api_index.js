@@ -1,5 +1,7 @@
 export * as api_auth_test from './api_auth_test.js'
 
+export * as api_quick_search_test from './api_quick_search_test.js'
+
 export * as api_checkout_test from './api_checkout_test.js'
 export * as api_pricing_test from './api_pricing_test.js'
 

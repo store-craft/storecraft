@@ -44,7 +44,7 @@ export const validate_checkout = app =>
 async (checkout) => {
 
   const shipping_id = checkout.shipping_method.id ?? checkout.shipping_method.handle;
-  const snap_shipping = await app.db.resources.shipping.get(
+  const snap_shipping = await app.db.resources.shipping_methods.get(
     shipping_id
   );
 

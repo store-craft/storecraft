@@ -5,6 +5,7 @@ import {
   ImageTypeUpsert, NotificationType, NotificationTypeUpsert, 
   OrderData, OrderDataUpsert, PostType, PostTypeUpsert, 
   ProductType, ProductTypeUpsert, 
+  QuickSearchResult, 
   ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
   StorefrontTypeUpsert, TagType, TagTypeUpsert, TemplateType, 
   TemplateTypeUpsert, VariantType, VariantTypeUpsert 
@@ -36,7 +37,7 @@ export type Aug = {
 }
 
 type idable = { id: string }
-type withConcreteId<T> = Omit<T, 'id'> & idable;
+export type withConcreteId<T> = Omit<T, 'id'> & idable;
 
 /**
  * Basic collection or table
@@ -252,7 +253,10 @@ export interface db_storefronts extends db_crud<
 
 }
 
-/** @description `ImageType` crud */
+/** 
+ * 
+ * @description `ImageType` crud 
+ */
 export interface db_images extends db_crud<
     withConcreteId<ImageTypeUpsert>, 
     withConcreteId<ImageType>
@@ -264,7 +268,10 @@ export interface db_images extends db_crud<
   report_document_media: (data: BaseType, extra: any) => Promise<void>;
 }
 
-/** @description `PostType` crud */
+/** 
+ * 
+ * @description `PostType` crud 
+ */
 export interface db_posts extends db_crud<
     withConcreteId<PostTypeUpsert>, withConcreteId<PostType>
   > {
@@ -310,7 +317,11 @@ export interface db_orders extends OmitGetByHandle<db_crud<
   withConcreteId<OrderDataUpsert>, 
   withConcreteId<OrderData>>
   > {
+}
 
+
+export interface search {
+  quicksearch: (query: ApiQuery) => Promise<QuickSearchResult>
 }
 
 export interface db_driver {
@@ -358,10 +369,11 @@ export interface db_driver {
     images: db_images;
     posts: db_posts;
     templates: db_templates;
-    shipping: db_shipping;
+    shipping_methods: db_shipping;
     notifications: db_notifications;
     discounts: db_discounts;
     orders: db_orders;
+    search: search;
   }
 
 }

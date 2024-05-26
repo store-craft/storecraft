@@ -60,7 +60,7 @@ const OrderCouponInfo = (
      */
     (v) => {
       const where = v.handle
-      nav(`/pages/discounts/${where}/edit`)
+      nav(`/pages/discounts/${where}`)
     },
     [nav]
   )

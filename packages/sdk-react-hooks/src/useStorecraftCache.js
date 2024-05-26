@@ -5,7 +5,6 @@ import {
 } from "@storecraft/core/v-api/utils.query.js";
 
 /**
- * []
  * @template T
  * 
  * @typedef {ReturnType<typeof useDocumentCache<T>>} inferDocumentCache
@@ -18,7 +17,7 @@ import {
  * A `react-hook` for managing cached documents
  * 
  * 
- * @template {import("@storecraft/core/v-api").BaseType} T
+ * @template {Partial<import("@storecraft/core/v-api").BaseType>} T
  * 
  */
 export const useDocumentCache = () => {
@@ -52,10 +51,12 @@ export const useDocumentCache = () => {
     async (item) => {
       try {
         const promises = [];
-        if(item?.handle) {
-          promises.push(_put(item.handle, item));
-        }
-        promises.push(_put(item.id, item));
+        if(item && ('handle' in item))
+          promises.push(_put(String(item.handle), item));
+
+
+        if(item && ('id' in item))
+          promises.push(_put(item.id, item));
   
         await Promise.all(promises);
       } catch (e) {
@@ -133,7 +134,7 @@ export const useMiscCache = () => {
  * A `react-hook` for managing cached queries
  * 
  * 
- * @template {import("@storecraft/core/v-api").BaseType} T
+ * @template {Partial<import("@storecraft/core/v-api").BaseType>} T
  * 
  * 
  */

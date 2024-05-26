@@ -166,7 +166,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
       if(slug) {
         nav(
-          `${slug}/${new_doc.handle ?? new_doc.id}/edit`, 
+          `${slug}/${new_doc.handle ?? new_doc.id}`, 
           { replace: true }
         );
       } 
@@ -181,7 +181,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
       if(slug) {
         nav(
-          `${slug}/${doc.handle ?? doc.id}/edit`, 
+          `${slug}/${doc.handle ?? doc.id}`, 
           { replace: true }
         );
       } 

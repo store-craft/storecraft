@@ -15,7 +15,9 @@ import { isDef } from './utils.index.js';
 export const db = app => app.db.resources.orders;
 
 /**
- * @param {ItemType} data
+ * @param {ItemTypeUpsert} data
+ * 
+ * 
  * @returns {string[]}
  */
 const create_search_index = (data) => {

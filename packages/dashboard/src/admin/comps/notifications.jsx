@@ -85,7 +85,7 @@ const Notification = (
             let casted_params = params;
 
             nav(
-              `/pages/${casted_params.collection}/${casted_params.document}/edit`
+              `/pages/${casted_params.collection}/${casted_params.document}`
             );
             break;
           case 'url':

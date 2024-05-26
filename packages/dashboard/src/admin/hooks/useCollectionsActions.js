@@ -32,9 +32,9 @@ import { useNavigate, useParams } from 'react-router-dom'
  * 
  * This hook wraps `useCollection` hook
  * 
- * @template {any} T
+ * @template {Partial<import('@storecraft/core/v-api').BaseType>} T
  * 
- * @param {(keyof App["db"]["resources"] | 'payments/gateways' | 'extensions')} resource the collection id in backend 
+ * @param {((keyof App["db"]["resources"]) | 'payments/gateways' | 'extensions')} resource the collection id in backend 
  * @param {string} [slug] front end slug
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
@@ -219,7 +219,7 @@ const useCollectionsActions = (
   const context = useMemo(
     () => ({
       viewDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/view`,
-      editDocumentUrl: /** @param {string} id */ id => `${slug}/${id}/edit`,
+      editDocumentUrl: /** @param {string} id */ id => `${slug}/${id}`,
       deleteDocument: removeDocument,
     }), [removeDocument, slug]
   );

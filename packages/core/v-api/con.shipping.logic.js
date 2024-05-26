@@ -11,7 +11,7 @@ import { to_handle } from './utils.func.js';
 /**
  * @param {import("../types.public.d.ts").App} app
  */
-export const db = app => app.db.resources.shipping;
+export const db = app => app.db.resources.shipping_methods;
 
 /**
  * 

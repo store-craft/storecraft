@@ -51,7 +51,7 @@ const SearchBar = forwardRef(
   const onKeyPress = useCallback(
     (e) => {
       var code = (e.keyCode ? e.keyCode : e.which);
-      if (code == 13) {
+      if (e.key === 'Enter') {
           e.preventDefault();
           reload()
       }

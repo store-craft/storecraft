@@ -67,7 +67,7 @@ const LineitemsTable =
               <div className='overflow-x-auto --text-black whitespace-nowrap 
                               scrollbar-thin'>
                 <LinkWithState 
-                    to={`/pages/products/${it.id}/edit`} 
+                    to={`/pages/products/${it.id}`} 
                     current_state={
                       () => context?.getState && context?.getState()
                     }

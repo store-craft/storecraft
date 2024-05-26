@@ -136,7 +136,7 @@ export const create = app => {
       for(const p of discounts_upsert)
         await app.api.discounts.remove(p.handle);
       for(const p of shipping_upsert)
-        await app.api.shipping.remove(p.handle);
+        await app.api.shipping_methods.remove(p.handle);
       for(const p of collections_upsert)
         await app.api.collections.remove(p.handle);
       for(const p of products_upsert)
@@ -168,8 +168,8 @@ export const create = app => {
     const shipping_get = await promises_sequence(
       shipping_upsert.map(
         c => async () => {
-          await app.api.shipping.upsert(c);
-          return app.api.shipping.get(c.handle);
+          await app.api.shipping_methods.upsert(c);
+          return app.api.shipping_methods.get(c.handle);
         }
       )
     );
@@ -288,7 +288,7 @@ export const create = app => {
       await app.api.collections.remove(collection_id_to_remove);
       await app.api.products.remove(product_id_to_remove);
       await app.api.discounts.remove(discount_id_to_remove);
-      await app.api.shipping.remove(shipping_id_to_remove);
+      await app.api.shipping_methods.remove(shipping_id_to_remove);
       await app.api.posts.remove(post_id_to_remove);
 
       {

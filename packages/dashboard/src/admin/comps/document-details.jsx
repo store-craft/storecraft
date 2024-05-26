@@ -84,7 +84,7 @@ const DocumentDetails = (
                        w-fit 
                        rounded-lg px-1 font-light' />
       <ShowIf show={collectionId==='discounts'}>
-        <Link to={`/pages/collections/discount-${doc?.code}/edit`}
+        <Link to={`/pages/collections/discount-${doc?.code}`}
               draggable='false'>
           <Span className='w-full max-w-[30rem] underline' 
                 children={doc?._published ?? ''} />

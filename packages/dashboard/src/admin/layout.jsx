@@ -14,6 +14,7 @@ import { Outlet } from 'react-router-dom'
 import useDarkMode from './hooks/useDarkMode.js'
 import { useScrollDelta } from './hooks/useScrollDelta.js'
 import { CgTemplate } from "react-icons/cg/index.js";
+import { createPortal } from './comps/portal-creator.jsx'
 
 /** @type {import('./comps/side-menu.jsx').MenuType} */
 const menu = {
@@ -92,6 +93,9 @@ const menu = {
 }
 
 
+export const MainPortal = createPortal();
+
+
 /**
  * 
  * @typedef {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -133,6 +137,7 @@ const Layout = (
                   `} {...rest}
       style={{height: '100dvh'}}>
 
+    <MainPortal.Portal />        
     <div 
         className={`fixed left-0 top-0 w-screen h-full bg-teal-900/10 
                     z-50 transition-all md:hidden
@@ -169,15 +174,17 @@ const Layout = (
                     mx-0 sm:mx-3 md:mx-6 overflow-auto'>
 
       <ActionBar 
-          className={`w-full 
-                      shelf-action-bar
-                      h-12 backdrop-blur-sm
-                      absolute left-0 top-0 z-40 
-                      border-b dark:border-b-slate-700 
-                      --md:border-none 
-                      px-3
-                      transition-transform 
-                      duration-500 ${open_class}`} 
+          className={
+           `w-full 
+            shelf-action-bar
+            h-12 backdrop-blur-sm
+            absolute left-0 top-0 z-40 
+            border-b dark:border-b-slate-700 
+            --md:border-none 
+            px-3
+            transition-transform 
+            duration-500 ${open_class}`
+          } 
           onMenuClick={onMenuClick} 
           menuOpen={menuOpen} />
 
@@ -187,7 +194,7 @@ const Layout = (
         <div className='bg-gradient-to-tl from-kf-50/50 to-slate-50/10
                         dark:from-transparent/0 dark:to-transparent/0   
                           px-3 sm:px-5 lg:px-10 py-3 sm:py-5 lg:py-8 
-                          rounded-3xl text-sm font-medium --text-gray-500 
+                          rounded-3xl text-sm font-medium 
                           border dark:border-slate-700 w-full h-fit 
                           min-h-full overflow-x-auto'>
           <Outlet />

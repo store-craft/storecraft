@@ -97,7 +97,7 @@ const CollectionBase = forwardRef(
         /**
          * @param {string} id 
          */
-        editDocumentUrl: id => `/pages/products/${id}/edit`,
+        editDocumentUrl: id => `/pages/products/${id}`,
         /**
          * @param {string} id_or_handle product `id` or `handle`
          */

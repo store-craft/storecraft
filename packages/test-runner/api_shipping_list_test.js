@@ -44,8 +44,8 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.shipping,
-      resource: 'shipping'
+      items: items, app, ops: app.api.shipping_methods,
+      resource: 'shipping_methods'
     }
   );
 
@@ -54,10 +54,10 @@ export const create = app => {
       assert.ok(app.ready) 
       try {
         for(const p of items) {
-          await app.api.shipping.remove(p.handle);
+          await app.api.shipping_methods.remove(p.handle);
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.resources.shipping.upsert(p);
+          await app.db.resources.shipping_methods.upsert(p);
         }
       } catch(e) {
         console.log(e)

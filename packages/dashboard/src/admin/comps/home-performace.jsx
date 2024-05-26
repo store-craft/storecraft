@@ -387,22 +387,22 @@ const Performance = (
             label='products' 
             labelFn={(k, v)=>v.title??k} 
             valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/products/${k}/edit`} />
+            linkFn={(k, v) => `/pages/products/${k}`} />
         <TopSoldCard 
             data={days_reduced?.collections} 
             label='collections' 
             valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/collections/${k}/edit`}/>
+            linkFn={(k, v) => `/pages/collections/${k}`}/>
         <TopSoldCard 
             data={days_reduced?.discounts} 
             label='discounts' 
             valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/discounts/${k}/edit`}/>
+            linkFn={(k, v) => `/pages/discounts/${k}`}/>
         <TopSoldCard 
             data={days_reduced?.tags} 
             label='tags' 
             valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}/edit`}/>
+            linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}`}/>
       </div>  
     </div>        
   </ShowIf>         

@@ -39,6 +39,8 @@ import {
   pricingDataSchema,
   productTypeSchema,
   productTypeUpsertSchema,
+  quickSearchResourceSchema,
+  quickSearchResultSchema,
   shippingMethodTypeSchema,
   shippingMethodTypeUpsertSchema,
   storecraftConfigSchema,
@@ -171,6 +173,7 @@ const create_all = () => {
   register_checkout(registry);
   register_payments(registry);
   register_extensions(registry);
+  register_quick_search(registry);
   register_tags(registry);
   register_templates(registry);
   register_collections(registry);
@@ -1977,6 +1980,313 @@ const register_images = registry => {
   register_base_delete(registry, slug_base, name, tags);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
+
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_quick_search = registry => {
+  const _quickSearchResultSchema = registry.register('quickSearchResultSchema', quickSearchResultSchema);
+  const _quickSearchResourceSchema = registry.register('quickSearchResourceSchema', quickSearchResourceSchema);
+  const example = {
+    "tags": [
+      {
+        "handle": "tokenbbbbbbbb",
+        "id": "tag_66536ca06fa22e106f4e99b9"
+      },
+      {
+        "handle": "tokenaaaaaaaa",
+        "id": "tag_66536c9f6fa22e106f4e99b8"
+      },
+      {
+          "handle": "tokenbbbb",
+          "id": "tag_6653623d397c8a07129e1e92"
+      },
+      {
+          "handle": "tokenaaaa",
+          "id": "tag_6653623d397c8a07129e1e91"
+      },
+      {
+          "handle": "token-bbbb",
+          "id": "tag_665360bbcc581b05cfd79fc3"
+      }
+    ],
+    "collections": [
+        {
+            "handle": "tokenbbbbbbbb",
+            "title": "tokenbbbbbbbb",
+            "id": "col_66536c9f6fa22e106f4e99b7"
+        },
+        {
+            "handle": "tokenaaaaaaaa",
+            "title": "tokenaaaaaaaa",
+            "id": "col_66536c9d6fa22e106f4e99b6"
+        },
+        {
+            "handle": "tokenbbbb",
+            "title": "tokenbbbb",
+            "id": "col_6653623c397c8a07129e1e90"
+        },
+        {
+            "handle": "tokenaaaa",
+            "title": "tokenaaaa",
+            "id": "col_6653623b397c8a07129e1e8f"
+        },
+        {
+            "handle": "token-bbbb",
+            "title": "token-bbbb",
+            "id": "col_665360bacc581b05cfd79fc1"
+        }
+    ],
+    "customers": [
+        {
+            "id": "cus_664f2b647af10730331571c5"
+        },
+        {
+            "id": "cus_664f2b637af10730331571c4"
+        },
+        {
+            "id": "cus_663b247f63cbf825b6f798a9"
+        }
+    ],
+    "products": [
+        {
+            "handle": "tokenbbbbbbbb",
+            "title": "tokenbbbbbbbb",
+            "id": "pr_66536c9b6fa22e106f4e99b5"
+        },
+        {
+            "handle": "tokenaaaaaaaa",
+            "title": "tokenaaaaaaaa",
+            "id": "pr_66536c9a6fa22e106f4e99b4"
+        },
+        {
+            "handle": "tokenbbbb",
+            "title": "tokenbbbb",
+            "id": "pr_66536239397c8a07129e1e8e"
+        },
+        {
+            "handle": "tokenaaaa",
+            "title": "tokenaaaa",
+            "id": "pr_66536238397c8a07129e1e8d"
+        },
+        {
+            "handle": "token-bbbb",
+            "title": "token-bbbb",
+            "id": "pr_665360b7cc581b05cfd79fbf"
+        }
+    ],
+    "storefronts": [
+        {
+            "handle": "tokenbbbbbbbb",
+            "title": "tokenbbbbbbbb",
+            "id": "sf_66536ca36fa22e106f4e99bd"
+        },
+        {
+            "handle": "tokenaaaaaaaa",
+            "title": "tokenaaaaaaaa",
+            "id": "sf_66536ca26fa22e106f4e99bc"
+        },
+        {
+            "handle": "tokenbbbb",
+            "title": "tokenbbbb",
+            "id": "sf_66536240397c8a07129e1e96"
+        },
+        {
+            "handle": "tokenaaaa",
+            "title": "tokenaaaa",
+            "id": "sf_6653623f397c8a07129e1e95"
+        },
+        {
+            "handle": "token-bbbb",
+            "title": "token-bbbb",
+            "id": "sf_665360becc581b05cfd79fc7"
+        }
+    ],
+    "images": [
+        {
+            "handle": "screenshot-2024-04-15-at-16-48-09-1716105936102-w-811-h-258-jpeg",
+            "id": "img_6649b2f412ce1800730447cf"
+        },
+        {
+            "handle": "img2-1712767181737-w-255-h-177-jpeg",
+            "id": "img_6616c0fc33ca8a7087186908"
+        },
+        {
+            "handle": "img1-1712767175888-w-383-h-369-jpeg",
+            "id": "img_6616c0fc33ca8a7087186907"
+        },
+        {
+            "handle": "screenshot-2023-08-30-at-10-14-12-1712767192277-w-399-h-400-jpeg",
+            "id": "img_6616c0fc33ca8a7087186906"
+        }
+    ],
+    "posts": [
+        {
+            "handle": "tokenbbbbbbbb",
+            "title": "tokenbbbbbbbb",
+            "id": "post_66536ca26fa22e106f4e99bb"
+        },
+        {
+            "handle": "tokenaaaaaaaa",
+            "title": "tokenaaaaaaaa",
+            "id": "post_66536ca16fa22e106f4e99ba"
+        },
+        {
+            "handle": "tokenbbbb",
+            "title": "tokenbbbb",
+            "id": "post_6653623f397c8a07129e1e94"
+        },
+        {
+            "handle": "tokenaaaa",
+            "title": "tokenaaaa",
+            "id": "post_6653623e397c8a07129e1e93"
+        },
+        {
+            "handle": "token-bbbb",
+            "title": "token-bbbb",
+            "id": "post_665360bdcc581b05cfd79fc5"
+        }
+    ],
+    "shipping_methods": [
+        {
+            "handle": "ship-api-storefronts-all-connections-test-js-2",
+            "title": "ship 2",
+            "id": "ship_664f2c6d7af107303315722c"
+        },
+        {
+            "handle": "ship-api-shipping-crud-test-js-2",
+            "title": "ship 2",
+            "id": "ship_664f2c587af1073033157226"
+        },
+        {
+            "handle": "ship-api-shipping-crud-test-js-1",
+            "title": "ship 1",
+            "id": "ship_664f2c577af1073033157225"
+        },
+        {
+            "handle": "ship-checkout-test",
+            "title": "shipping checkout test",
+            "id": "ship_664f2b3e7af10730331571b5"
+        },
+        {
+            "title": "ship 2 duplicate",
+            "handle": "ship-2-duplicate",
+            "id": "ship_6640ffdb2e08aad3d6eae6cd"
+        }
+    ],
+    "notifications": [
+        {
+            "id": "not_664f2bcd7af10730331571f4"
+        },
+        {
+            "id": "not_664f2bcd7af10730331571f3"
+        },
+        {
+            "id": "not_664f2bcd7af10730331571f2"
+        },
+        {
+            "id": "not_664f2bcd7af10730331571f1"
+        },
+        {
+            "id": "not_664f2bcd7af10730331571f0"
+        }
+    ],
+    "discounts": [
+        {
+            "handle": "tokenbbbbbbbb",
+            "title": "tokenbbbbbbbb",
+            "id": "dis_66536ca56fa22e106f4e99bf"
+        },
+        {
+            "handle": "tokenaaaaaaaa",
+            "title": "tokenaaaaaaaa",
+            "id": "dis_66536ca46fa22e106f4e99be"
+        },
+        {
+            "handle": "tokenbbbb",
+            "title": "tokenbbbb",
+            "id": "dis_66536242397c8a07129e1e98"
+        },
+        {
+            "handle": "tokenaaaa",
+            "title": "tokenaaaa",
+            "id": "dis_66536240397c8a07129e1e97"
+        },
+        {
+            "handle": "token-bbbb",
+            "title": "token-bbbb",
+            "id": "dis_665360c1cc581b05cfd79fc9"
+        }
+    ],
+    "orders": [
+        {
+            "id": "order_65e5ca42c43e2c41ae5216aa"
+        },
+        {
+            "id": "order_65e5ca42c43e2c41ae5216a9"
+        },
+        {
+            "id": "order_665365616fe75709e1cede5a"
+        },
+        {
+            "id": "order_665365616fe75709e1cede59"
+        },
+        {
+            "id": "order_66536403f33440088e759cce"
+        }
+    ],
+    "templates": [
+        {
+            "handle": "template-api-templates-crud-test-js-2",
+            "title": "template 2",
+            "id": "template_664f2c877af1073033157237"
+        },
+        {
+            "handle": "template-api-templates-crud-test-js-1",
+            "title": "template 1",
+            "id": "template_664f2c877af1073033157236"
+        },
+        {
+            "title": "Checkout Complete",
+            "handle": "checkout-complete",
+            "id": "template_664b15174eba71b9ee185be5"
+        },
+        {
+            "title": "templae 123",
+            "handle": "templae-1",
+            "id": "template_664624bbab446ee2f0e14eee"
+        }
+    ]
+  }
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/search`,
+    summary: `Quickly search across resources`,
+    description: 'List super lite search results with `id`, `handle`, `title`. Primarily used for quick and responsive lookup, this is cheap and cost-effective and works well in the dashboard. \
+    If an `admin` is hitting the endpoint, then he can even get results for `orders`, `customer` and `auth_users`. \
+    You can also use the `expand` in the query to efficiently control which resources are searched at the database',
+    tags: ['search'],
+    request: {
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `Search results`,
+        content: {
+          'application/json': {
+            schema: _quickSearchResultSchema,
+            example: [example]
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 

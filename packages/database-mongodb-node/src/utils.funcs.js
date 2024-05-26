@@ -97,7 +97,9 @@ export const sanitize_array = o => {
  * @param {string} id 
  * 
  */
-export const to_objid = id => new ObjectId(id.split('_').at(-1))
+export const to_objid = id => {
+  return new ObjectId(id.split('_').at(-1))
+}
 
 /**
  * 

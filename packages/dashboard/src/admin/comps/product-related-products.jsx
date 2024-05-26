@@ -22,7 +22,7 @@ const Item = ({ context, product, onRemove }) => {
     () => {
       // const all = context?.query.all.get(false)?.data
       const state = context?.getState()
-      navWithState(`/pages/products/${product.handle}/edit`, state)
+      navWithState(`/pages/products/${product.handle}`, state)
     },
     [navWithState, product, context]
   )
@@ -106,9 +106,10 @@ const RelatedProducts = (
       stroke='border-2'
       className='w-40 h-10 mx-auto'  
       onClick={() => ref_overlay.current.show()} />
-  <Overlay ref={ref_overlay} >
-    <BrowseProducts onSave={onBrowseAdd} 
-                    onCancel={() => ref_overlay.current.hide()} />
+  <Overlay ref={ref_overlay}>
+    <BrowseProducts 
+        onSave={onBrowseAdd} 
+        onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
   {
     products?.length>0 && 
@@ -117,8 +118,13 @@ const RelatedProducts = (
   
   {
     products.map(
-      (it) => <Item key={it.handle} product={it} context={context}
-                    onRemove={() => onRemoveItem(it.handle)} />
+      (it) => (
+        <Item 
+            key={it.handle} 
+            product={it} 
+            context={context}
+            onRemove={() => onRemoveItem(it.handle)} />
+      )
     )
   }
 </div>

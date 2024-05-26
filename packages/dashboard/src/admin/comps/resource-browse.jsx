@@ -129,7 +129,7 @@ const BrowseCollection = (
                     ${!focus ? '' : 'hidden'}` }>
       <p children='Selected items' 
           className=' font-semibold text-base --text-gray-500'/>
-      <div className='w-full flex-1 rounded-xl border shelf-border-color-soft 
+      <div className='w-full flex-1 rounded-md border shelf-border-color-soft 
                       overflow-y-auto'>
         <ShowIf show={selected.length==0}>
           <div className='text-xl sm:text-3xl font-medium text-gray-400 
@@ -182,9 +182,9 @@ const BrowseCollection = (
                   shelf-border-color-soft cursor-pointer' 
             onClick={() => setFocus(false)}/>
       </div>
-      <Bling rounded='rounded-xl'
+      <Bling rounded='rounded-md'
              className='flex-1 overflow-y-auto'>
-        <div className='w-full h-full rounded-xl border shelf-plain-card-soft
+        <div className='w-full h-full rounded-md border shelf-plain-card-soft
                         overflow-y-auto '>
           <ShowIf show={items.length==0 && !loading}>
             <div className='text-3xl font-medium text-gray-400 h-full 

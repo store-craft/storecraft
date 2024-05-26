@@ -13,6 +13,7 @@ import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
+import { impl as search } from './src/con.search.js';
 
 
 /**
@@ -121,8 +122,9 @@ export class MongoDB {
       products: products(this),
       storefronts: storefronts(this),
       tags: tags(this),
-      shipping: shipping(this),
+      shipping_methods: shipping(this),
       templates: templates(this),
+      search: search(this),
     }
     
     this.#_is_ready = true; 

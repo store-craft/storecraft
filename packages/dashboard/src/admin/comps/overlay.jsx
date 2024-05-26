@@ -66,9 +66,10 @@ export const Overlay = React.forwardRef(
 
       /** @type {EventListener} */
       const sub = (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        setVis(false)
+        e.stopPropagation();
+        e.preventDefault();
+
+        setVis(false);
       }
 
       unsub.current = () => {
@@ -80,34 +81,38 @@ export const Overlay = React.forwardRef(
           null, 
           document.title, 
           location.href
-        )
+        );
         window.addEventListener(
           'popstate',
           sub
-        )
+        );
       } 
-      return unsub.current
+
+      return unsub.current;
     }, [vis, window]
   );
   
   return (
 <Transition 
-    unMountOnExit={false} 
+    unMountOnExit={true} 
     show={vis} 
     duration={400} 
     onKeyDown={onKeyDown}
     enter='transition-all duration-300 ease-in-out' 
-    enterFrom='opacity-0' enterTo='opacity-100' 
+    enterFrom='opacity-0' 
+    enterTo='opacity-100' 
     leave='transition-all duration-300' 
-    leaveFrom='opacity-100' leaveTo='opacity-0' 
-    className={`z-[100] w-screen h-screen 
-              bg-teal-900/20 dark:bg-teal-900/10 backdrop-blur-sm fixed inset-0 
-              flex flex-row justify-center items-center
-             `}
+    leaveFrom='opacity-100' 
+    leaveTo='opacity-0' 
+    className={
+      `z-[100] w-screen h-screen 
+      bg-teal-900/20 dark:bg-teal-900/10 backdrop-blur-sm fixed inset-0 
+        flex flex-row justify-center items-center`
+    }
     onClick={onClickOutside}>
-  { 
-    children 
-  }
+    { 
+      children 
+    }
 </Transition>    
     )
 })

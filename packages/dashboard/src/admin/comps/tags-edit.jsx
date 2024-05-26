@@ -177,7 +177,7 @@ const TagsEdit = (
       // const all = context?.query.all.get(false)?.data
       const state = context?.getState();
 
-      navWithState(`/pages/tags/${where}/edit`, state);
+      navWithState(`/pages/tags/${where}`, state);
     },
     [navWithState, context]
   );

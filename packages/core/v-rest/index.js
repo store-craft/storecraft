@@ -19,6 +19,7 @@ import { create_routes as create_payment_gateways_route } from "./con.payment-ga
 import { create_routes as create_extensions_route } from "./con.extensions.routes.js";
 import { create_routes as create_statistics_route } from "./con.statistics.routes.js";
 import { create_routes as create_others_route } from "./con.others.routes.js";
+import { create_routes as create_search_route } from "./con.search.routes.js";
 import { cors } from "../v-polka/cors.js";
 
 
@@ -65,6 +66,7 @@ export const create_rest_api = (app) => {
       this.#factory['/api/info'] = create_others_route;
       this.#factory['/api/statistics'] = create_statistics_route;
       this.#factory['/api/extensions'] = create_extensions_route;
+      this.#factory['/api/search'] = create_search_route;
     }
 
     /** 

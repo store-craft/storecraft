@@ -13,7 +13,7 @@
   "include": [
     "*", 
     "src/*", 
-    "tests/*",
+    "tests/*.js",
     "migrations/*",
   ]
 }

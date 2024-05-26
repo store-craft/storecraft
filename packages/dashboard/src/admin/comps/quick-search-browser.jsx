@@ -12,7 +12,7 @@ import { IoIosReturnLeft } from "react-icons/io/index.js";
 import { BsArrowReturnLeft } from "react-icons/bs/index.js";
 import { IoIosArrowRoundUp } from "react-icons/io/index.js";
 import { useNavigate } from 'react-router-dom'
-
+import { LuSearchX } from "react-icons/lu/index.js";
 
 const useKeyboardHook_meta_k = createKeyboardMatchHook(
   ['Meta', 'K'], ['Meta', 'k']
@@ -99,9 +99,10 @@ export const QuickSearchButton = (
 const Nada = () => {
 
   return (
-  <div className='text-3xl font-medium text-gray-400 h-full 
-                  flex justify-center items-center'>
-    No search Results <br/>were found <br/> :()
+  <div className='text-lg font-normal text-gray-400 h-fit tracking-wider
+                  flex flex-col gap-5 justify-center items-center'>
+    <LuSearchX className='text-5xl' />                    
+    No search Results <br/>were found 😔
   </div>
   )
 }
@@ -354,15 +355,17 @@ const QuickSearchBrowser = (
 
 
   return (
+<div className='w-screen h-screen relative'>
 <div onClick={e => e.stopPropagation()} 
-     className='w-full --m-3 md:w-[35rem] h-4/5 
-                shelf-plain-card-soft relative
-                rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
+     className='w-full --m-3 md:w-[35rem] --h-4/5 h-fit
+                shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2
+                rounded-xl --p-3 --sm:p-5 border shadow-lg gap-5 
                 text-base flex flex-col --overflow-hidden'>
-  <div className='w-full h-full flex flex-col px-3 pt-3'>
+  <div className='w-full h-fit flex flex-col gap-5 px-3 pt-3'>
+
     <form 
         autoFocus
-        className='w-full' 
+        className='w-full h-fit' 
         tabIndex={4344}>
           
       <Bling rounded='rounded-xl' stroke='border' >
@@ -384,11 +387,12 @@ const QuickSearchBrowser = (
       </Bling>
     </form>
 
-    <div className='relative w-full flex-1 mt-4 --bg-gray-50 '>
+    <div className='w-full h-fit '>
 
-      <div className={`flex flex-col gap-5 absolute inset-0 w-full h-full`}>
+      <div className={`flex flex-col gap-5 w-full h-fit`}>
 
-        <div className='w-full h-full overflow-y-auto px-1 flex flex-col gap-5 '>
+        <div className='w-full --h-full max-h-[50svh] overflow-y-auto 
+                        px-1 flex flex-col gap-5 '>
 
           <ShowIf show={groups.length==0 && !loading}>
             <Nada />
@@ -408,11 +412,17 @@ const QuickSearchBrowser = (
               )
             )
           }
-        </div>    
-      </div>        
+        </div>  
+
+      </div>
+             
     </div>
-  </div>        
+
+  </div>       
+
   <Footer />  
+
+</div>
 </div>
   )
 }

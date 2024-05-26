@@ -889,6 +889,18 @@ export const paymentGatewayItemGetSchema = z
     handle: z.string().describe("The `handle` of the `gateway`"),
   })
   .describe("Upon querying the payment gateways");
+export const quickSearchResourceSchema = z
+  .object({
+    id: z.string(),
+    handle: z.string().optional(),
+    title: z.string().optional(),
+  })
+  .describe("result of quick search");
+export const tablesSchema = z.any();
+export const quickSearchResultSchema = z.record(
+  tablesSchema,
+  z.array(quickSearchResourceSchema),
+);
 export const baseTypeSchema = idableConcreteSchema
   .extend(timestampsSchema.shape)
   .extend({

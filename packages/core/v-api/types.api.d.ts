@@ -1,3 +1,4 @@
+import { db_driver } from "../v-database/types.public.js";
 
 /**
  * 
@@ -2330,3 +2331,24 @@ export interface TemplateType extends BaseType {
  * @description Upsert type for email template
  */
 export type TemplateTypeUpsert = Omit<TemplateType, 'id' | 'handle'> & withOptionalHandleOrID;
+
+
+// quick search
+
+/**
+ * @description result of quick search for a specific `resource`
+ */
+export type QuickSearchResource = {
+  id: string;
+  handle?: string;
+  title?: string;
+}
+
+/**
+ * @description full result of quick search
+ * 
+ */
+export type tables = keyof db_driver["resources"];
+
+
+export type QuickSearchResult = Partial<Record<tables, QuickSearchResource[]>>;

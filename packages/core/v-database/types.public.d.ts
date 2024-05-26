@@ -252,7 +252,10 @@ export interface db_storefronts extends db_crud<
 
 }
 
-/** @description `ImageType` crud */
+/** 
+ * 
+ * @description `ImageType` crud 
+ */
 export interface db_images extends db_crud<
     withConcreteId<ImageTypeUpsert>, 
     withConcreteId<ImageType>
@@ -264,7 +267,10 @@ export interface db_images extends db_crud<
   report_document_media: (data: BaseType, extra: any) => Promise<void>;
 }
 
-/** @description `PostType` crud */
+/** 
+ * 
+ * @description `PostType` crud 
+ */
 export interface db_posts extends db_crud<
     withConcreteId<PostTypeUpsert>, withConcreteId<PostType>
   > {
@@ -312,16 +318,6 @@ export interface db_orders extends OmitGetByHandle<db_crud<
   > {
 }
 
-/**
- * TODO: add this type types.api.d.ts 
- */
-export type QuickSearchResource = {
-  id: string;
-  handle?: string;
-  title?: string;
-}
-
-export type QuickSearchResult = Partial<Record<keyof db_driver["resources"], QuickSearchResource[]>>;
 
 export interface search {
   quicksearch: (query: ApiQuery) => Promise<QuickSearchResult>

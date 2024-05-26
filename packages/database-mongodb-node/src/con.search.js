@@ -116,7 +116,7 @@ export const quicksearch = (driver) => {
     const db = driver.mongo_client.db();
     
      
-    /** @type {import('@storecraft/core/v-database').QuickSearchResource[]} */ 
+    /** @type {import('@storecraft/core/v-api').QuickSearchResource[]} */ 
     const items = await db.collection(tables[0]).aggregate(
       [
         ...pipeline,
@@ -137,7 +137,7 @@ export const quicksearch = (driver) => {
     ).toArray();
 
 
-    /** @type {import('@storecraft/core/v-database').QuickSearchResult} */
+    /** @type {import('@storecraft/core/v-api').QuickSearchResult} */
     const result = {};
 
     items.reduce(

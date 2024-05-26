@@ -116,7 +116,7 @@ export const quicksearch = (driver) => {
         )
     )
     
-    /** @type {import('@storecraft/core/v-database').QuickSearchResult} */
+    /** @type {import('@storecraft/core/v-api').QuickSearchResult} */
     const items = await sts.executeTakeFirst();
 
     const sanitized = Object.fromEntries(

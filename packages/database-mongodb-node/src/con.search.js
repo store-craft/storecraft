@@ -1,4 +1,3 @@
-import { AggregationCursor } from 'mongodb';
 import { MongoDB } from '../driver.js'
 import { query_to_mongo } from './utils.query.js';
 
@@ -74,23 +73,11 @@ export const quicksearch = (driver) => {
   return async (query) => {
 
     const { filter, sort, reverse_sign } = query_to_mongo(query);
+    const expand = query.expand ?? ['*']; 
+    const tables_filtered = tables.filter(t => expand.includes('*') || expand.includes(t));
 
-    // console.log('reverse_sign', reverse_sign)
-    // console.log('query', query)
-    // console.log('filter', JSON.stringify(filter, null, 2))
-    // console.log('sort', sort)
-    // console.log('expand', query?.expand)
-
-    // /** @type {import('mongodb').WithId<G>[]} */
-    // const items222 = await col(driver).find(
-    //   filter,  {
-    //     sort, 
-    //     limit: reverse_sign==-1 ? query.limitToLast : query.limit,
-    //     projection: expand_to_mongo_projection(query?.expand)
-    //   }
-    // ).toArray();
-
-    // if(reverse_sign==-1) items.reverse();
+    if(tables_filtered.length==0)
+        return {};
 
     const pipeline = [
       {
@@ -115,12 +102,11 @@ export const quicksearch = (driver) => {
 
     const db = driver.mongo_client.db();
     
-     
     /** @type {import('@storecraft/core/v-api').QuickSearchResource[]} */ 
-    const items = await db.collection(tables[0]).aggregate(
+    const items = await db.collection(tables_filtered[0]).aggregate(
       [
         ...pipeline,
-        ...tables.slice(1).map(
+        ...tables_filtered.slice(1).map(
           t => (
             {
               $unionWith: {

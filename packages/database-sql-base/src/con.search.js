@@ -91,11 +91,14 @@ export const id_to_resource = id => {
 export const quicksearch = (driver) => {
   return async (query) => {
     const db = driver.client;
-    
+    const expand = query.expand ?? ['*']; 
+    const all = expand.includes('*');
+
     const sts = db
     .selectNoFrom(
       eb => Object
         .entries(resource_to_props)
+        .filter(t => all || expand.includes(t[0]))
         .map(
           ([table_name, props]) => {
             // console.log(table_name, props)

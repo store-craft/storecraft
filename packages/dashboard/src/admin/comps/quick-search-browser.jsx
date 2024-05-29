@@ -32,11 +32,11 @@ const resource_to_base_url = {
   'discounts': '/pages/discounts',
   'orders': '/pages/orders',
   'products': '/pages/products',
-  'shipping': '/pages/shipping-methods',
+  'shipping_methods': '/pages/shipping-methods',
   'storefronts': '/pages/storefronts',
   'tags': '/pages/tags',
   'posts' : '/pages/posts',
-  'templates': '/app/templates',
+  'templates': '/apps/templates',
   'images': '/apps/gallery/img',
 }
 
@@ -152,7 +152,7 @@ const to_title = {
   'notifications': '🔔 Notifications',
   'orders': '🛒 Orders',
   'products': '🛍️ Products',
-  'shipping': '🚚 Shipping',
+  'shipping_methods': '🚚 Shipping',
   'storefronts': '🏪 Storefronts',
   'tags': '⌗ tags',
   'templates': 'templates',
@@ -164,7 +164,7 @@ const to_title = {
  * 
  * @typedef {object} SearchGroupParams
  * @prop {string} name
- * @prop {import('@storecraft/core/v-database').QuickSearchResource[]} group
+ * @prop {import('@storecraft/core/v-api').QuickSearchResource[]} group
  * @prop {number} index The group index
  * @prop {number} selectedItemIndex The item index
  * @prop {boolean} [scrollIntoView=true] The item index
@@ -236,7 +236,7 @@ const SearchGroup = (
 /** 
  * @typedef {object} QuickSearchBrowserParams
  * @prop {() => any} [onCancel]
- * @prop {(name: string, value: import('@storecraft/core/v-database').QuickSearchResource) => any} [onSelect]
+ * @prop {(name: string, value: import('@storecraft/core/v-api').QuickSearchResource) => any} [onSelect]
  * 
  * @param {QuickSearchBrowserParams} params
  */
@@ -279,6 +279,9 @@ const QuickSearchBrowser = (
 
   useKeyboardHook_ops(
     (match) => {
+      if(groups.length==0)
+        return;
+      
       const next = { ...selected };
       const key = match[0];
 

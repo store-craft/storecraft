@@ -48,7 +48,7 @@ const menu = {
         },
       { 
         name: 'Orders', icon: <FaOpencart/>, 
-        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
+        extra : { active: 'bg-pink-600 dark:bg-pink-600/90', hover: 'hover:bg-amber-200' } 
       },
       { 
         name: 'Payment Gateways', icon: <MdPayment/>, 
@@ -65,7 +65,7 @@ const menu = {
       { 
         name: 'Blog', slug: 'posts', icon: <FaBloggerB/>, 
         extra : { 
-          active: 'bg-orange-400', hover: 'hover:bg-teal-200',
+          active: 'bg-orange-400 dark:bg-orange-400/70', hover: 'hover:bg-teal-200',
         } 
       },
     ]
@@ -75,15 +75,15 @@ const menu = {
     items : [
       { 
         name: 'Gallery', icon: <BiImages className='--scale-125'/>, 
-        extra : { active: 'bg-yellow-400', hover: 'hover:bg-teal-200' } 
+        extra : { active: 'bg-yellow-400 dark:bg-yellow-400/80', hover: 'hover:bg-teal-200' } 
       },
       { 
         name: 'Templates', icon: <CgTemplate className='--scale-125'/>, 
-        extra : { active: 'bg-red-400', hover: 'hover:bg-teal-200' } 
+        extra : { active: 'bg-red-400 dark:bg-red-400/80', hover: 'hover:bg-teal-200' } 
       },
       { 
         name: 'Extensions', icon: <AiOutlineAppstoreAdd className='--scale-125'/>, 
-        extra : { active: 'bg-teal-400', hover: 'hover:bg-teal-200' } 
+        extra : { active: 'bg-teal-400 dark:bg-teal-400/80', hover: 'hover:bg-teal-200' } 
       },
       // { name: 'Email', icon: <AiOutlineMail/> },
       // { name: 'Reports', icon: <HiOutlineDocumentReport/> },

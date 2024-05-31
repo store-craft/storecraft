@@ -265,7 +265,7 @@ const Filter_ProductInProducts = (
   const onClick = useCallback(
     (v) => {
       const state = context?.getState && context?.getState();
-      const url = `/pages/products/${v.handle}`;
+      const url = `/pages/products/${v.handle ?? v.id}`;
 
       navWithState(url, state);
 
@@ -325,7 +325,7 @@ const Filter_ProductInProducts = (
       onRemove={onRemove} 
       onClick={onClick} 
       tags={tags} 
-      name_fn={it => it.title ?? it.handle }
+      name_fn={it => it.title ?? it.handle ?? it.id }
       className='mt-5' />
 </div>
   )

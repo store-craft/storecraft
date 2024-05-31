@@ -281,7 +281,7 @@ const QuickSearchBrowser = (
     (match) => {
       if(groups.length==0)
         return;
-      
+
       const next = { ...selected };
       const key = match[0];
 
@@ -359,74 +359,74 @@ const QuickSearchBrowser = (
 
   return (
 <div className='w-screen h-screen relative'>
-<div onClick={e => e.stopPropagation()} 
-     className='w-full --m-3 md:w-[35rem] --h-4/5 h-fit
-                shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2
-                rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
-                text-base flex flex-col --overflow-hidden'>
+  <div onClick={e => e.stopPropagation()} 
+      className='w-full --m-3 md:w-[35rem] --h-4/5 h-fit
+                  shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2
+                  rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
+                  text-base flex flex-col --overflow-hidden'>
 
-  <div className='w-full h-fit flex flex-col gap-5 px-3 pt-3'>
+    <div className='w-full h-fit flex flex-col gap-5 px-3 pt-3'>
 
-    <form 
-        autoFocus
-        className='w-full h-fit' 
-        tabIndex={4344}>
-          
-      <Bling rounded='rounded-xl' stroke='border' >
-        <div className='flex flex-row justify-between items-center'>
-          <input 
-              onChange={onSubmit} 
-              autoFocus
-              ref={ref_input} 
-              type='search' 
-              placeholder='search' 
-              className='w-full h-12 border shelf-input-color 
-                        shelf-border-color-soft px-3 text-xl font-medium 
-                        focus:outline-none rounded-xl'  />
-          <BiSearchAlt 
-              className='text-white text-4xl mx-1 sm:mx-5 
-                        cursor-pointer' 
-              onClick={onSubmit}/>
-        </div>
-      </Bling>
-    </form>
+      <form 
+          autoFocus
+          className='w-full h-fit' 
+          tabIndex={4344}>
+            
+        <Bling rounded='rounded-xl' stroke='border' >
+          <div className='flex flex-row justify-between items-center'>
+            <input 
+                onChange={onSubmit} 
+                autoFocus
+                ref={ref_input} 
+                type='search' 
+                placeholder='search' 
+                className='w-full h-12 border shelf-input-color 
+                          shelf-border-color-soft px-3 text-xl font-medium 
+                          focus:outline-none rounded-xl'  />
+            <BiSearchAlt 
+                className='text-white text-4xl mx-1 sm:mx-5 
+                          cursor-pointer' 
+                onClick={onSubmit}/>
+          </div>
+        </Bling>
+      </form>
 
-    <div className='w-full h-fit '>
+      <div className='w-full h-fit '>
 
-      <div className={`flex flex-col gap-5 w-full h-fit`}>
+        <div className={`flex flex-col gap-5 w-full h-fit`}>
 
-        <div className='w-full --h-full max-h-[50svh] overflow-y-auto 
-                        px-1 flex flex-col gap-5 pb-5'>
+          <div className='w-full --h-full max-h-[50svh] overflow-y-auto 
+                          px-1 flex flex-col gap-5 pb-5'>
 
-          <ShowIf show={groups.length==0 && !loading}>
-            <Nada />
-          </ShowIf>
-          {
-            groups.map(
-              (it, ix) => (
-                <SearchGroup 
-                    key={it.name} 
-                    name={it.name} 
-                    group={it.group} 
-                    index={ix} 
-                    scrollIntoView={scrollIntoView}
-                    selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
-                    onHover={onHover} 
-                    onClick={onItemClick} />
+            <ShowIf show={groups.length==0 && !loading}>
+              <Nada />
+            </ShowIf>
+            {
+              groups.map(
+                (it, ix) => (
+                  <SearchGroup 
+                      key={it.name} 
+                      name={it.name} 
+                      group={it.group} 
+                      index={ix} 
+                      scrollIntoView={scrollIntoView}
+                      selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
+                      onHover={onHover} 
+                      onClick={onItemClick} />
+                )
               )
-            )
-          }
-        </div>  
+            }
+          </div>  
 
+        </div>
+              
       </div>
-             
-    </div>
 
-  </div>       
+    </div>       
 
-  <Footer />  
+    <Footer />  
 
-</div>
+  </div>
 </div>
   )
 }

@@ -1,13 +1,15 @@
 {
-  "name": "@storecraft/dashboard",
-  "version": "1.0.0",
+  "name": "@storecraft/dashboard-old",
+  "version": "0.1.0",
   "description": "Storecraft Official Dashboard",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "start": "npm run dashboard:dev",
+    "dashboard:dev": "next dev",
+    "dashboard:build": "next build",
+    "dashboard:start": "next start",
+    "dashboard:lint": "next lint",
+    "dashboard:export": "next build && next export"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
@@ -21,6 +23,9 @@
     "js-base64": "^3.7.5",
     "marked": "^5.0.2",
     "monaco-editor": "^0.48.0",
+    "next": "^14.1.4",
+    "next-mdx-remote": "^4.4.1",
+    "next-remove-imports": "^1.0.10",
     "prism-react-renderer": "^2.0.4",
     "react": "18.2.0",
     "react-datepicker": "^4.10.0",
@@ -32,23 +37,17 @@
     "react-router-dom": "^6.14.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.6",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "vite": "^5.2.0",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-image-crop": "^8.1.6",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.4",
+    "postcss": "^8",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^14.1.0",
     "postcss-preset-env": "^7.7.2",
     "sass": "^1.58.3",
-    "tailwind-scrollbar": "^2.1.0"
+    "tailwind-scrollbar": "^2.1.0",
+    "tailwindcss": "^3.4.1"
   }
 }

@@ -1,5 +1,27 @@
-import Chart from 'chart.js/auto'
 import { useEffect, useRef } from 'react'
+import {
+  Chart,
+  LineController,
+  BarController,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  BarElement,
+  Tooltip, Legend
+} from "chart.js";
+
+Chart.register(
+  LineController,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement, 
+  BarController,
+  BarElement, 
+  Tooltip, Legend
+);
+
 
 /**
  * 

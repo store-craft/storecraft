@@ -8,13 +8,21 @@ export default defineConfig(
   {
     plugins: [
       react(),
-      cssInjectedByJsPlugin()
+      // cssInjectedByJsPlugin()
     ], 
     resolve: {
-      alias: [{ find: "@", replacement: resolve(__dirname, "./src") }]
+      alias: [
+        { 
+          find: "@", 
+          replacement: resolve(__dirname, "./src") 
+        }
+      ]
     },
     build: {
-      assetsInlineLimit: 1048576
+      assetsInlineLimit: 1048576,
+      emptyOutDir: true,
+      outDir: 'dist/main',
+      cssCodeSplit: false,
     }
   }
 );

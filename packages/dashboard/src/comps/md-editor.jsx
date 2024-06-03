@@ -1,6 +1,6 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import Editor from "@uiw/react-md-editor";
+import Editor from "@uiw/react-md-editor/nohighlight";
 import { useState } from "react";
 
 /**

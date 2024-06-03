@@ -1,29 +1,29 @@
 import {
-    HashRouter as Router,
-    Routes,
-    Route,
-    Link,
-    Navigate
-  } from "react-router-dom"
+  HashRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate
+} from "react-router-dom"
 
-  import Layout from './layout.jsx'
+import Layout from './layout.jsx'
 
-  import { 
-    Home, 
-    Orders, Order, 
-    Customers, Customer, 
-    Tags, Tag, 
-    Templates, Template, 
-    Products, Product, 
-    Collections, Collection,
-    Discounts, Discount,
-    ShippingMethods, ShippingMethod,
-    Storefronts, Storefront,
-    PaymentGateways, PaymentGateway,
-    Posts, Post,
-    Extensions, Extension,
-    Settings
-  } from './pages/index.jsx'
+import { 
+  Home, 
+  Orders, Order, 
+  Customers, Customer, 
+  Tags, Tag, 
+  Templates, Template, 
+  Products, Product, 
+  Collections, Collection,
+  Discounts, Discount,
+  ShippingMethods, ShippingMethod,
+  Storefronts, Storefront,
+  PaymentGateways, PaymentGateway,
+  Posts, Post,
+  Extensions, Extension,
+  Settings
+} from './pages/index.jsx'
 
 import {
   Gallery, ImagePage,

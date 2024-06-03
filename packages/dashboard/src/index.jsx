@@ -3,9 +3,35 @@ import { HashRouter as Router } from 'react-router-dom'
 import ShowIf from './comps/show-if.jsx'
 import Login from './login.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.scss'
+
+/**
+ * 
+ * @description mount `storecraft` inside an `HTML` element.
+ * This method returns an invokable `unmount` function.
+ * 
+ * 
+ * @param {HTMLElement} el 
+ * 
+ */
+export const mountStorecraftDashboard = (el) => {
+  const root = ReactDOM.createRoot(el);
+
+  root.render(
+    // <React.StrictMode>
+      <Dashboard/>
+    // </React.StrictMode>,
+  );
+
+  return () => {
+    root.unmount();
+  }
+}
 
 
-const Index = ({}) => {
+export const Dashboard = ({}) => {
   const {
     isAuthenticated, 
     actions: {
@@ -28,5 +54,3 @@ const Index = ({}) => {
 </Router>
   )
 }
-
-export default Index;

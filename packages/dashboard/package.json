@@ -2,10 +2,26 @@
   "name": "@storecraft/dashboard",
   "version": "1.0.0",
   "description": "Storecraft Official Dashboard",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/dashboard"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "react",
+    "storecraft"
+  ],
   "type": "module",
+  "main": "./src/index.jsx",
   "scripts": {
     "dashboard:dev": "vite",
-    "dashboard:build": "vite build",
+    "dashboard:build": "vite build && npm run dashboard:lib:build",
+    "dashboard:lib:build": "vite build -c vite.lib.config.js",
     "dashboard:lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "dashboard:preview": "vite preview",
     "dashboard:publish": "npm publish --access public",
@@ -22,7 +38,6 @@
     "js-base64": "^3.7.5",
     "marked": "^5.0.2",
     "monaco-editor": "^0.48.0",
-    "prism-react-renderer": "^2.0.4",
     "react": "18.2.0",
     "react-datepicker": "^4.10.0",
     "react-dom": "18.2.0",

@@ -1,10 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.scss'
-import Index from './index.jsx'
+import { mountStorecraftDashboard } from './index.jsx'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
-    <Index/>
-  // </React.StrictMode>,
-)
+mountStorecraftDashboard(document.getElementById('root'));

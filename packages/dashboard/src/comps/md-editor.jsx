@@ -1,12 +1,7 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import dynamic from "next/dynamic.js";
+import Editor from "@uiw/react-md-editor";
 import { useState } from "react";
-
-const Editor = dynamic(
-  () => import("@uiw/react-md-editor"),
-  { ssr: false }
-)
 
 /**
  * @typedef {object} InternalMDEditorParams

@@ -1,14 +1,18 @@
 import { defineConfig } from 'vite'
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
-// https://vitejs.dev/config/
+/**
+ * https://vitejs.dev/config/
+ * 
+ * @description This `build` generates a website at `dist/website`
+ * of the `Dashboard`.
+ * 
+ */
 export default defineConfig(
   {
     plugins: [
       react(),
-      // cssInjectedByJsPlugin()
     ], 
     resolve: {
       alias: [

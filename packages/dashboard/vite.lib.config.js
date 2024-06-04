@@ -4,7 +4,15 @@ import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
 
-// https://vitejs.dev/config/
+/**
+ * https://vitejs.dev/config/
+ * 
+ * @description This `build` generates a `umd`, `cjs`, `es` build targets
+ * of the `Dashboard` at `dist/lib`, both as react functional component and
+ * a mounting function, that can be used and wrapped in other 
+ * frameworks such as `pure-html`, `vue`, `svelte` etc..
+ * 
+ */
 export default defineConfig(
   {
     define: {
@@ -13,7 +21,7 @@ export default defineConfig(
     plugins: [
       react(),
       cssInjectedByJsPlugin(),
-      dts({include: ['src']})
+      dts({ include: ['src'] })
     ], 
     resolve: {
       alias: [

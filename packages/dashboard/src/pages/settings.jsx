@@ -97,7 +97,7 @@ export default ({ ...rest }) => {
    */
   const { 
     doc, loading, hasLoaded, error, resource,
-  } = useDocument('info', 'settings', true, true);
+  } = useDocument('reference', 'settings', true, true);
 
   return (
 <div className='w-full lg:min-w-fit mx-auto'>

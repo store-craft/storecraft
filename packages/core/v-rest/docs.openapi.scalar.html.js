@@ -14,7 +14,7 @@ export default
     <!-- data-proxy-url="https://api.scalar.com/request-proxy" -->
     <script
       id="api-reference"
-      data-url="/api/info/openapi.json"
+      data-url="/api/reference/openapi.json"
       ></script>
     <!-- You can also set a full configuration object like this -->
     <!-- easier for nested objects -->

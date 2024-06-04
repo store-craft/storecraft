@@ -4,6 +4,7 @@ import {
 } from '@storecraft/core/v-api/utils.query.js';
 import { assert } from './utils.functional.js';
 
+
 /**
  * 
  * @param {import("../index.js").StorecraftSDKConfig} config 
@@ -12,13 +13,12 @@ import { assert } from './utils.functional.js';
 export const url = (config, path) => {
   let base = config?.endpoint;
 
-  assert(base, 'No Endpoint !');
-
   base = base.endsWith('/') ? base.slice(0, -1) : base;
   path = path.startsWith('/') ? path.slice(1) : path;
 
-  return `${base}/api/${path}`;
+  return base ? `${base}/api/${path}` : `/api/${path}`;
 }
+
 
 /**
  * - Prepends `backend` endpoint. 
@@ -101,6 +101,7 @@ export const fetchApiWithAuth = async (sdk, path, init={}) => {
   return payload;
 }
 
+
 /**
  * @template {any} G Get type
  * 
@@ -121,6 +122,7 @@ export async function get(sdk, resource, handle_or_id) {
     }
   );
 }
+
 
 /**
  * 
@@ -147,6 +149,7 @@ export async function upsert(sdk, resource, item) {
     }
   );
 }
+
 
 /**
  * 
@@ -196,8 +199,11 @@ export async function list(sdk, resource, query={}) {
   );
 }
 
+
 /**
  * A simple resource base `class` with `CRUD` helpers
+ * 
+ * 
  * @template {any} U upsert type
  * @template {any} G get type
  */
@@ -219,6 +225,7 @@ export class collection_base {
     this.#base_name = base_name;
   }
 
+  
   /**
    * 
    * @param {string} handle_or_id `handle` or `id`

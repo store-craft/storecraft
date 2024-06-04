@@ -28,12 +28,17 @@ import { cors } from "../v-polka/cors.js";
  * @typedef {import("../types.public.js").ApiResponse} ApiResponse
  */
 
+
 /**
- * Create the entire virtual API with lazy loading which is great for serverless
+ * @description Create the entire virtual API with lazy 
+ * loading which is great for serverless
+ * 
  * 
  * @template PlatformNativeRequest
  * @template PlatformContext
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext, any, any, any, any, any>} app
+ * @param {import("../types.public.js").App<
+ *  PlatformNativeRequest, PlatformContext, any, any, any, any, any
+ * >} app
  */
 export const create_rest_api = (app) => {
   // This is the main / root router
@@ -63,7 +68,7 @@ export const create_rest_api = (app) => {
       this.#factory['/api/storage'] = create_storage_route;
       this.#factory['/api/checkout'] = create_checkout_route;
       this.#factory['/api/payments'] = create_payment_gateways_route;
-      this.#factory['/api/info'] = create_others_route;
+      this.#factory['/api/reference'] = create_others_route;
       this.#factory['/api/statistics'] = create_statistics_route;
       this.#factory['/api/extensions'] = create_extensions_route;
       this.#factory['/api/search'] = create_search_route;
@@ -71,10 +76,11 @@ export const create_rest_api = (app) => {
 
     /** 
      * 
-     * This method will lazy load and register the `polka`
+     * @description This method will lazy load and register the `polka`
      * endpoints. This is done as optimization and avoiding running
      * all the code that registers the endpoints at once. This is desirable
      * as this code might run on `serverless` platforms.
+     * 
      * 
      * @param {string} path 
      */

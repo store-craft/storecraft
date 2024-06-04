@@ -18,12 +18,18 @@ const createConfig = c => {
  * 
  * @typedef {object} LoginParams
  * @prop {() => void} trigger
+ * @prop {boolean} [is_backend_endpoint_editable=true]
  * 
  * 
  * @param {LoginParams} params
  * 
  */
-const Login = ({ }) => {
+const Login = (
+  { 
+    is_backend_endpoint_editable=true
+  }
+) => {
+
   const {
     config, sdk,
     actions: {
@@ -69,7 +75,8 @@ const Login = ({ }) => {
         // console.log('credentials ', credentials);
         updateConfig(createConfig(credentials));
       } catch (e) {
-        const msg = e ? String(e) : 'check your project ID or API Key'
+        const msg = e ? String(e) : 'check your project ID or API Key';
+
         setError(`Error initializing Shelf, code : ${msg}`)
       }
   
@@ -108,6 +115,7 @@ const Login = ({ }) => {
                     m-3 --pb-52 md:m-10 md:origin-top-left'
         sstyle={{transformOrigin: 'top center'}}>
       <LoginForm 
+          is_backend_endpoint_editable={is_backend_endpoint_editable}
           className='w-full ' 
           onSubmit={onSubmit} 
           credentials={credentials}

@@ -11,7 +11,7 @@ import { assert } from './utils.functional.js';
  * @param {string} path 
  */
 export const url = (config, path) => {
-  let base = config?.endpoint;
+  let base = config?.endpoint?.trim();
 
   base = base.endsWith('/') ? base.slice(0, -1) : base;
   path = path.startsWith('/') ? path.slice(1) : path;

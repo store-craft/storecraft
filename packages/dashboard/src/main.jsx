@@ -1,3 +1,6 @@
 import { mountStorecraftDashboard } from './index.jsx'
 
-mountStorecraftDashboard(document.getElementById('root'));
+mountStorecraftDashboard(
+  document.getElementById('root'),
+  true
+);

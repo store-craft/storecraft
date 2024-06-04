@@ -1,5 +1,6 @@
 import { BiErrorCircle } from "react-icons/bi/index.js"
 import { Bling, HR } from "./common-ui.jsx"
+import ShowIf from "./show-if.jsx"
 
 /**
  * 
@@ -66,7 +67,8 @@ const Field = (
 * @prop {object} error 
 * @prop {string} className 
 * @prop {LoginFormFieldsType} credentials
-* 
+* @prop {boolean} [is_backend_endpoint_editable=true]
+
 * 
 * @param {InnerLoginFormParams & 
 *  Omit<
@@ -78,7 +80,9 @@ const Field = (
 */
 const LoginForm = (
  {
-   onChange, onSubmit, error, className, credentials, ...rest
+   onChange, onSubmit, error, className, 
+   credentials, is_backend_endpoint_editable=true,
+   ...rest
  }
 ) => {
  return (
@@ -125,12 +129,14 @@ const LoginForm = (
        )
      }
 
-     <Field 
-         id='endpoint' label='Backend Endpoint' type='text' 
-         desc={`The Storecraft Backend Endpoint`} 
-         value={credentials} 
-         onChange={onChange} autoComplete='on' 
-         name='endpoint' />
+     <ShowIf show={is_backend_endpoint_editable}>
+      <Field 
+          id='endpoint' label='Backend Endpoint' type='text' 
+          desc={`The Storecraft Backend Endpoint`} 
+          value={credentials} 
+          onChange={onChange} autoComplete='on' 
+          name='endpoint' />
+     </ShowIf>
    </form>
  </Bling>    
 </div>    

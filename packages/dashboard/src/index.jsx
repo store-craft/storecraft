@@ -14,14 +14,15 @@ import './index.scss'
  * 
  * 
  * @param {HTMLElement} el 
+ * @param {boolean} [is_backend_endpoint_editable=true] 
  * 
  */
-export const mountStorecraftDashboard = (el) => {
+export const mountStorecraftDashboard = (el, is_backend_endpoint_editable=true) => {
   const root = ReactDOM.createRoot(el);
 
   root.render(
     // <React.StrictMode>
-      <Dashboard/>
+      <Dashboard is_backend_endpoint_editable={is_backend_endpoint_editable}/>
     // </React.StrictMode>,
   );
 
@@ -31,7 +32,18 @@ export const mountStorecraftDashboard = (el) => {
 }
 
 
-export const Dashboard = ({}) => {
+/**
+ * @typedef {object} DashboardParams
+ * @prop {boolean} [is_backend_endpoint_editable=true]
+ * 
+ * 
+ * @param {DashboardParams} params
+ */
+export const Dashboard = (
+  {
+    is_backend_endpoint_editable=true
+  }
+) => {
   const {
     isAuthenticated, 
     actions: {
@@ -49,7 +61,9 @@ export const Dashboard = ({}) => {
     <Main />
   </ShowIf>    
   <ShowIf show={!isGood}>
-    <Login trigger={trigger} />
+    <Login 
+        trigger={trigger} 
+        is_backend_endpoint_editable={is_backend_endpoint_editable} />
   </ShowIf>    
 </Router>
   )

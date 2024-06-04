@@ -21,11 +21,12 @@
   "exports": {
     ".": {
       "import": "./dist/lib/index.js",
-      "require": "./dist/lib/index.cjs",
+      "require": "./dist/lib/index.umd.cjs",
       "types": "./dist/lib/src/index.d.ts"
     }
   },
   "scripts": {
+    "start": "npm run dashboard:dev",
     "dashboard:dev": "vite",
     "dashboard:build": "vite build && npm run dashboard:lib:build",
     "dashboard:lib:build": "vite build -c vite.lib.config.js",
@@ -36,16 +37,16 @@
     "prepublishOnly": "npm run dashboard:build"
   },
   "dependencies": {
-    "@monaco-editor/react": "^4.6.0",
     "@storecraft/core": "^1.0.0",
     "@storecraft/sdk": "^0.1.0",
     "@storecraft/sdk-react-hooks": "^0.1.0",
     "@uiw/react-md-editor": "^3.18.1",
+    "@monaco-editor/react": "^4.6.0",
+    "monaco-editor": "^0.48.0",
     "chart.js": "^4.2.0",
     "handlebars": "^4.7.8",
     "js-base64": "^3.7.5",
     "marked": "^5.0.2",
-    "monaco-editor": "^0.48.0",
     "react": "18.2.0",
     "react-datepicker": "^4.10.0",
     "react-dom": "18.2.0",

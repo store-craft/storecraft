@@ -2,9 +2,6 @@ import { Polka } from '../v-polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js';
 import openapi_html from './docs.openapi.scalar.html.js'
 import openapi_json from './openapi.json' assert { type: 'json' }
-/**
- * @typedef {import('../v-api/types.api.js').TagType} ItemType
- */
 
 /**
  * 

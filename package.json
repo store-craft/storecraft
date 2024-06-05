@@ -1,5 +1,6 @@
 {
   "name": "store-craft",
+  "private": "false",
   "version": "1.0.0",
   "description": "Store Craft Mono Repo",
   "main": "index.js",

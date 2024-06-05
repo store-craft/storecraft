@@ -13,8 +13,8 @@ import { assert } from './utils.functional.js';
 export const url = (config, path) => {
   let base = config?.endpoint?.trim();
 
-  base = base.endsWith('/') ? base.slice(0, -1) : base;
-  path = path.startsWith('/') ? path.slice(1) : path;
+  base = base?.endsWith('/') ? base.slice(0, -1) : base;
+  path = path?.startsWith('/') ? path.slice(1) : path;
 
   return base ? `${base}/api/${path}` : `/api/${path}`;
 }

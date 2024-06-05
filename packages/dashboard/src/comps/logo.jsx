@@ -1,20 +1,25 @@
 import pkg from '../../package.json'
 import { Bling } from '@/comps/common-ui.jsx'
+import main_png from './main.png'
 
-export const Logo = ({ ...rest }) => {
+export const Logo = (
+  { 
+    ...rest 
+  }
+) => {
 
-const Capsule = ({}) => {
+  const Capsule = ({}) => {
 
-  return (
-  <div className='rounded-lg my-auto b
-                  bg-pink-50 dark:bg-pink-50/10 w-fit text-sm
-                  text-pink-500 -tracking-wideset
-                  py-0 px-1 --border font-semibold'>
-    <div children='docs' className='inline-block -translate-y-px --inline'/>
-    <span children=' 📖' />
-  </div> 
-  )
-}
+    return (
+    <div className='rounded-lg my-auto b
+                    bg-pink-50 dark:bg-pink-50/10 w-fit text-sm
+                    text-pink-500 -tracking-wideset
+                    py-0 px-1 --border font-semibold'>
+      <div children='docs' className='inline-block -translate-y-px --inline'/>
+      <span children=' 📖' />
+    </div> 
+    )
+  }
 
   return (
 <div className='relative w-full h-16 flex flex-row 
@@ -73,7 +78,7 @@ export const LogoV2 = (
                     flex flex-row items-center justify-center --opacity-80
                     --scale-[3.0] -rotate-'>
         <div className='w-full h-full overflow-clip rounded-xl'>
-          <img src='main.png' 
+          <img src={main_png}
                className='w-full h-full object-cover scale-[1.05] 
                         bg-teal-100 --bg-slate-300'/>
         </div>                      

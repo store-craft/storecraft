@@ -24,7 +24,7 @@ export default defineConfig(
     },
     build: {
       assetsInlineLimit: 1048576,
-      emptyOutDir: false,
+      emptyOutDir: true,
       outDir: 'dist/website',
       cssCodeSplit: false,
     }

@@ -34,7 +34,7 @@ export default defineConfig(
     build: {
       copyPublicDir: false,
       assetsInlineLimit: 1048576,
-      emptyOutDir: false,
+      emptyOutDir: true,
       outDir: 'dist/lib',
       // commonjsOptions: {
       //   include: [/node_modules/],

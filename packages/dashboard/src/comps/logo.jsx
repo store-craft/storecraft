@@ -2,6 +2,33 @@ import pkg from '../../package.json'
 import { Bling } from '@/comps/common-ui.jsx'
 import main_png from './main.png'
 
+export const StorecraftText = (
+  {
+    className='text-[27px]', classNameLines='dark:bg-[rgb(24,31,46)]'
+  }
+) => {
+
+  return (
+<div className={className}>
+  <div className='flex flex-row items-center'>
+    <div className='relative'>
+      <span children='STORE' 
+        className='w-fit text-transparent bg-clip-text bg-gradient-to-r 
+                 from-pink-500 to-kf-500 italic -tracking-widest 
+                 font-extrabold ' />   
+      <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 -translate-y-[2px] bg-white '}/>
+      <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 translate-y-[6px] bg-white '}/>
+      <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 translate-y-[2px] bg-white '}/>
+    </div>
+    <span children=' CRAFT' 
+      className='w-fit text-transparent bg-clip-text bg-gradient-to-r 
+               from-pink-500 to-kf-500 -tracking-wider font-extralight' />    
+
+  </div>    
+</div>    
+  )
+}
+
 export const Logo = (
   { 
     ...rest 
@@ -27,20 +54,14 @@ export const Logo = (
                 border-b
                 shelf-logo
                  text-xl font-bold 
-                pr-3 overflow-x-clip shadow-md' {...rest}>
+                --pr-3 overflow-x-clip shadow-md' 
+                {...rest}>
                   
-    {/* <img src='/main3.png' 
-        className='h-full object-contain rounded-xl bg-teal-400 
-                  scale-90 border-kf-600 --shadow-lg opacity-80' />  */}
   <LogoV2 className='h-full object-contain rounded-xl bg-teal-400 
                   scale-90 border-kf-600 --shadow-lg opacity-80' />                  
 
-  <div className='flex flex-col justify-between h-full p-1'>
-    <p children='Storecraft' 
-      className='w-fit  text-xl 
-                text-transparent font-mono --font-mono tracking-wide
-                bg-clip-text bg-gradient-to-r from-pink-500 to-kf-500 
-                font-normal' />
+  <div className='flex flex-col justify-between h-full p-0.5'>
+    <StorecraftText />
     <div className='flex flex-row justify-between items-center'>
       <span children={`v${pkg.version}`} 
         className='tracking-wider text-sm font-light font-mono' />

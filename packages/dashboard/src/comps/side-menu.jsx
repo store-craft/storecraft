@@ -84,7 +84,7 @@ const SideMenu = (
                  ${className}`}>
   <Logo />                  
   <AiOutlineCloseCircle 
-      className='absolute bg-kf-500 text-4xl top-4 right-4 
+      className='absolute bg-kf-500 text-4xl top-4 right-2 
         cursor-pointer transition-all duration-300 rounded-full 
       hover:bg-pink-400 text-white 
         p-1.5 hover:p-1 md:hidden' 

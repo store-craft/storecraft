@@ -2,6 +2,7 @@ import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
 export * from './v-api/types.api.enums.js'
+import pkg from './package.json' assert { type: "json" }
 
 /** 
  * @typedef {Partial<import('./types.public.js').StorecraftConfig>} StorecraftConfig
@@ -174,9 +175,33 @@ export class App {
                   env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
 
     }
-
-    console.log('store-craft config', this.#_config);
+ 
+    console.log(this.banner_create(pkg.version));
+    // console.log('store-craft config', this.#_config);
   } 
+
+  banner_create(version='1.0.0') {
+    const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
+    const c = {
+      red: '\x1b[1;31m',
+      magenta: `\x1b[1;35m`,
+      yellow: `\x1b[33m`,
+      reset: `\x1b[0m`,
+    }
+  
+    let final = c.magenta;
+    final += banner3;
+    final += `${c.red}\nv${version}`
+    final += `\n
+  ${c.red}Dashboard:      ${c.reset}/api/dashboard    
+  ${c.red}API Reference:  ${c.reset}/api/reference    
+  ${c.red}Website:        ${c.reset}https://storecraft.dev
+  ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
+      `
+  
+    return final;
+  }
+  
 
   /**
    * 

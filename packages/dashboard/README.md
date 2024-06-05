@@ -1,12 +1,15 @@
 # **Storecraft** Official Dashboard
-A `storecraft` dashboard, leveraging static rendering / client side rendering,
+A `storecraft` dashboard, leveraging `static rendering` / `client side rendering` / `swr`,
 so it can be deployed into cost effective **CDN**.
 
-Effectively,  two build targets:
-1. A website
+Effectively, two build targets:
+1. A website, with configurable backend endpoint
 2. A `library` with
   - Dashboard as `react` functional component
   - a `mount` function, that you can wrap for any framework of pure DOM.
+
+Build is handled by `Vite`
+
 
 ## Development
 
@@ -36,9 +39,9 @@ Artifacts are in the `dist` folder
 ```txt
 dist
 ├── lib
-│   ├── index.js
-│   ├── index.cjs
-│   └── index.umd.cjs
+│   ├── index.js      // ES module
+│   ├── index.cjs     // common js
+│   └── index.umd.cjs // UMD
 ├── website
 │   ├── index.html
 │   └── assets

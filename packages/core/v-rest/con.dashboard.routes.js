@@ -11,7 +11,7 @@ const html = `
     <script 
     id='_storecraft_script_' 
     type="module">
-    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@1.0.2/dist/lib/index.min.js';
+    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@1.0.3/dist/lib/index.min.js';
     mountStorecraftDashboard(
       document.getElementById('root'), false
     );
@@ -35,7 +35,6 @@ const html = `
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
   polka.get(

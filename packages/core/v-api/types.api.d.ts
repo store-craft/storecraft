@@ -1613,7 +1613,7 @@ export interface BaseCheckoutCreateType {
   /** 
    * @description Shipping method info 
    */
-  shipping_method: Partial<HandleAndID>; 
+  shipping_method: Partial<ShippingMethodType>; 
 }
 
 /**
@@ -1649,6 +1649,7 @@ export interface OrderData extends CheckoutCreateType, BaseType {
    * @description Payment gateway info and status 
    */
   payment_gateway?: OrderPaymentGatewayData; 
+
 }
 
 /**

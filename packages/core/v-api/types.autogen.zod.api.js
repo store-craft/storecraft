@@ -1556,7 +1556,9 @@ export const baseCheckoutCreateTypeSchema = z.object({
     .array(lineItemSchema)
     .describe("Line items is a list of the purchased products"),
   notes: z.string().optional().describe("Notes for the order"),
-  shipping_method: handleAndIDSchema.partial().describe("Shipping method info"),
+  shipping_method: shippingMethodTypeSchema
+    .partial()
+    .describe("Shipping method info"),
 });
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
   coupons: z

@@ -3,6 +3,7 @@ import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
+import { PubSub } from './v-pubsub/public.js';
 
 /** 
  * @typedef {Partial<import('./types.public.js').StorecraftConfig>} StorecraftConfig
@@ -85,6 +86,13 @@ export class App {
    * @type {ExtensionsMap} 
    */ 
   #_extensions;
+
+  /**
+   * @description The app's pubsub system
+   * 
+   * @type {PubSub}
+   */
+  #_pubsub;
 
   /** 
    * @description The Storecraft App Config
@@ -222,6 +230,7 @@ export class App {
     // this.#_api = create_api(this);
     this.api = create_api(this);
     this.#_rest_controller = create_rest_api(this);
+    this.#_pubsub = new PubSub();
     this.#_is_ready = true;
     
     return this;
@@ -320,6 +329,14 @@ export class App {
   get extensions() { 
     return this.#_extensions; 
   }
+
+  /** 
+   * @description Pub-Sub `events` module 
+   */
+  get pubsub() { 
+    return this.#_pubsub; 
+  }
+
 
   /** 
    * @description Config 
@@ -445,6 +462,20 @@ export class App {
     return this.#_platform.handleResponse(
       response_web, context
     );
+  }
+
+
+  /**
+   * @description Quickly attach an `event` subscriber.
+   * 
+   * 
+   * @param {import("./v-pubsub/types.public.js").PubSubEvent} event An event identifier
+   * @param {import("./v-pubsub/types.public.js").PubSubSubscriber} callback a `callback` 
+   * event handler to invoke, can be a `promise`
+   * 
+   */
+  on(event, callback) {
+    this.pubsub.on(event, callback);
   }
 
 }

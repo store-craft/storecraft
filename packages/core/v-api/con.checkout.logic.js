@@ -39,7 +39,11 @@ export const validate_checkout = app =>
  * @param {T} checkout
  * 
  * 
- * @returns {Promise<T & { validation: OrderData["validation"]}>}
+ * @returns {Promise<T & 
+ *  { 
+ *    validation: OrderData["validation"],
+ *  }>
+ * }
  */
 async (checkout) => {
 
@@ -191,7 +195,7 @@ export const create_checkout = app =>
  * @param {keyof F} gateway_handle chosen payment gateway
  * 
  * 
- * @returns {Promise<OrderData>}
+ * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
 
@@ -224,6 +228,7 @@ async (order_checkout, gateway_handle) => {
       // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
+    id: undefined
   }
   
 

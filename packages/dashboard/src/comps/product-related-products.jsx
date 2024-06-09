@@ -14,7 +14,11 @@ import useNavigateWithState from '@/hooks/useNavigateWithState.jsx'
  * @param {import('./fields-view.jsx').FieldContextData} param.context
  * @param {() => void} param.onRemove
  */
-const Item = ({ context, product, onRemove }) => {
+const Item = (
+  { 
+    context, product, onRemove 
+  }
+) => {
 
   const { navWithState } = useNavigateWithState()
 
@@ -55,7 +59,7 @@ const Item = ({ context, product, onRemove }) => {
  */
 const RelatedProducts = (
   { 
-    field, context, value=[], onChange, ...rest 
+    field, context, value=[], onChange, setError, ...rest 
   }
 ) => {
 

@@ -63,6 +63,10 @@
     "./v-extensions": {
       "import": "./v-extensions/public.js",
       "types": "./v-extensions/types.public.d.ts"
+    },
+    "./v-pubsub": {
+      "import": "./v-pubsub/public.js",
+      "types": "./v-pubsub/types.public.d.ts"
     }
   },
   "scripts": {

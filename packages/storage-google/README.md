@@ -7,6 +7,10 @@ Features:
 - Supports streaming `Get` / `Put` / `Delete`
 - Supports `presigned` `Get` / `Put` requests to offload to client
 
+```bash
+npm i @storecraft/storage-google
+```
+
 ## How-to
 1. Create a bucket at `GCP console` or even at `firebase`
 2. Download the `service json file`

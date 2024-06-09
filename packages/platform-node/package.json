@@ -1,16 +1,28 @@
 {
   "name": "@storecraft/platform-node",
   "version": "1.0.0",
-  "description": "requests adapter",
+  "description": "Official NodeJS Platform Adapter for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/platform-node"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "platform-node:test": "echo \"Error: no test specified\" && exit 1",
+    "platform-node:publish": "npm publish --access public"
   },
-  "keywords": [],
-  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
-  "license": "ISC",
   "dependencies": {
     "@storecraft/core": "^1.0.0",
     "dotenv": "^16.3.1"

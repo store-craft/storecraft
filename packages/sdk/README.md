@@ -9,6 +9,9 @@ convenient manner with `javascript`, such as:
 `storage`, `storefronts`, `shipping`, `statistics`, `tags`, `posts`, `notifications`,
 `templates`, `extensions` and more :)
 
+```bash
+npm i @storecraft/sdk
+```
 
 ## Authentication
 

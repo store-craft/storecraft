@@ -2,6 +2,20 @@
   "name": "@storecraft/core",
   "version": "1.0.0",
   "description": "Core Package for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
   "main": "index.js",
   "type": "module",
   "types": "./types.public.d.ts",
@@ -52,14 +66,12 @@
     }
   },
   "scripts": {
-    "test": "uvu -c",
-    "gen:zod": "npx ts-to-zod ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js",
-    "gen:vql": "node ./v-ql/compile.js",
-    "gen:open-api": "node ./v-rest/docs.openapi.gen.js"
+    "core:test": "uvu -c",
+    "core:gen:zod": "npx ts-to-zod ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js",
+    "core:gen:vql": "node ./v-ql/compile.js",
+    "core:gen:open-api": "node ./v-rest/docs.openapi.gen.js",
+    "core:publish": "npm publish --access public"
   },
-  "keywords": [],
-  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
-  "license": "ISC",
   "devDependencies": {
     "@asteasolutions/zod-to-openapi": "^6.4.0",
     "@types/node": "^20.11.0",

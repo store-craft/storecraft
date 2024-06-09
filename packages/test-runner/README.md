@@ -3,6 +3,9 @@ A work in progress package to test:
 - api and databases integrations
 - and more
 
+```bash
+npm i @storecraft/test-runner
+```
 
 ## v-api controller test
 Everything prefixed with `api.` tests files within `v-api` folder

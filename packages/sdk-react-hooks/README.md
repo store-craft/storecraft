@@ -6,6 +6,10 @@ hook for `IndexDB`.
 
 All hooks have typesnand documentation.
 
+```bash
+npm i @storecraft/sdk-react-hooks
+```
+
 Main hooks are:
 
 ## `useStorecraft()`

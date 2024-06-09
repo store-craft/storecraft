@@ -7,6 +7,10 @@ package for you :)
 Basically, it translates native **Node** `http.IncomingMessage` into Web API `Request`,
 and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
+```bash
+npm i @storecraft/platform-node
+```
+
 ## usage
 
 ```js

@@ -1,16 +1,28 @@
 {
   "name": "@storecraft/storage-google",
   "version": "1.0.0",
-  "description": "Google Storage support",
+  "description": "Official Google Storage adapter for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/storage-google"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "scripts": {
+    "storage-google:test": "uvu -c",
+    "storage-google:publish": "npm publish --access public"
+  },
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
-  "scripts": {
-    "test": "uvu -c"
-  },
-  "keywords": [],
-  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
-  "license": "ISC",
   "dependencies": {
     "@storecraft/core": "^1.0.0"
   },

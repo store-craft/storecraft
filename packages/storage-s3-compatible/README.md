@@ -11,6 +11,10 @@ Features:
 - Supports streaming `Get` / `Put` / `Delete`
 - Supports `presigned` `Get` / `Put` requests to offload to client
 
+```bash
+npm i @storecraft/storage-s3-compatible
+```
+
 ## usage
 
 ```js

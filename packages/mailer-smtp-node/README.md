@@ -4,6 +4,10 @@
 - Send emails using a known smtp server
 - uses `nodemailer` under the hood
 
+```bash
+npm i @storecraft/mailer-smtp-node
+```
+
 ## Howto
 
 ```js

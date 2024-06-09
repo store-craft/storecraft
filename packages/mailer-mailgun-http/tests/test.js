@@ -20,7 +20,11 @@ test('send email', async () => {
     html: '<p>html test</p>', // html body
   });
 
-  assert.ok(success, `failed with native_response ${JSON.stringify(native_response, null, 2)}`)  
+  assert.ok(
+    success, 
+    `failed with native_response ${JSON.stringify(native_response, null, 2)}`
+  );
+    
 });
 
 test.run();

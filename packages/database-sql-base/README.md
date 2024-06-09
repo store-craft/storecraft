@@ -2,6 +2,10 @@
 
 Official `SQL` driver for `StoreCraft` with the dialects abstracted with `Kysely` or your own drivers.
 
+```bash
+npm i @storecraft/database-sql-base
+```
+
 ## usage
 
 ```js

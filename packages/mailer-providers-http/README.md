@@ -9,6 +9,10 @@ Supports wellknown http-based `serverless` friendly `email` providers,
 
 > TODO: confirm tests
 
+```bash
+npm i @storecraft/mailer-providers-http
+```
+
 ## Howto
 
 ### Sendgrid

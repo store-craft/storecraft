@@ -2,6 +2,10 @@
 
 Official `mongodb` driver for `StoreCraft` on **Node.js** platforms.
 
+```bash
+npm i @storecraft/database-mongodb-node
+```
+
 ## usage
 
 ```js

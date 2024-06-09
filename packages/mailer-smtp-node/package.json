@@ -1,16 +1,28 @@
 {
   "name": "@storecraft/mailer-smtp-node",
   "version": "1.0.0",
-  "description": "SMTP mail support with node.js",
+  "description": "Official SMTP email provider with node.js for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/mailer-smtp-node"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "test": "uvu -c"
+    "mailer-smtp-node:test": "uvu -c",
+    "mailer-smtp-node:publish": "npm publish --access public"
   },
-  "keywords": [],
-  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
-  "license": "ISC",
   "dependencies": {
     "nodemailer": "^6.9.9"
   },

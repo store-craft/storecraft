@@ -8,6 +8,10 @@
 - Get a readable and explainable `status`
 - Supports both `prod` and `test` endpoints
 
+```bash
+npm i @storecraft/payments-paypal-standard
+```
+
 ## Howto
 
 ```js

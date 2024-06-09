@@ -1,5 +1,5 @@
 # **Storecraft** Official Dashboard
-A `storecraft` dashboard, leveraging `static rendering` / `client side rendering` / `swr`,
+The Official `storecraft` Dashboard, leveraging `static rendering` / `client side rendering` / `swr`,
 so it can be deployed into cost effective **CDN**.
 
 Effectively, two build targets:
@@ -10,6 +10,10 @@ Effectively, two build targets:
 
 Build is handled by `Vite`
 
+
+```bash
+npm i @storecraft/core
+```
 
 ## Development
 

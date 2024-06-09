@@ -1,12 +1,27 @@
 {
   "name": "@storecraft/mailer-providers-http",
   "version": "1.0.0",
-  "description": "Serverless Friendly e-mail adapters for storecraft",
+  "description": "Official Serverless Friendly e-mail adapters for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/mailer-providers-http"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "test": "uvu -c"
+    "mailer-providers-http:test": "uvu -c",
+    "mailer-providers-http:publish": "npm publish --access public"
   },
   "exports": {
     ".": {
@@ -30,9 +45,6 @@
       "types": "./sendgrid/types.public.d.ts"
     }
   },
-  "keywords": [],
-  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
-  "license": "ISC",
   "dependencies": {
     "@storecraft/core": "^1.0.0"
   },

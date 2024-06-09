@@ -1,7 +1,25 @@
 {
   "name": "@storecraft/test-runner",
   "version": "1.0.0",
-  "description": "Official integration test runner for storecraft api",
+  "description": "Official Test Runner for storecraft apps",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/test-runner"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "scripts": {
+    "test-runner:test": "uvu -c",
+    "test-runner:publish": "npm publish --access public"
+  },
   "main": "index.js",
   "type": "module",
   "devdependencies": {
@@ -10,8 +28,5 @@
     "@types/node": "^20.11.0",
     "uvu": "^0.5.6",
     "dotenv": "^16.3.1"
-  },
-  "keywords": [],
-  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
-  "license": "ISC"
+  }
 }

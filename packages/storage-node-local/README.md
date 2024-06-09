@@ -5,6 +5,10 @@ Local filesystem based **Storage** for `node.js`.
 Features:
 - Supports streaming `Get` / `Put` / `Delete`
 
+```bash
+npm i @storecraft/storage-node-local
+```
+
 ## usage
 
 ```js

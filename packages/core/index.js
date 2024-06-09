@@ -216,6 +216,8 @@ export class App {
    * @description Initialize the Application
    */
   async init() {
+    this.#_pubsub = new PubSub();
+    
     try{
       // first let's settle config
       this.#settle_config_after_init();
@@ -230,7 +232,6 @@ export class App {
     // this.#_api = create_api(this);
     this.api = create_api(this);
     this.#_rest_controller = create_rest_api(this);
-    this.#_pubsub = new PubSub();
     this.#_is_ready = true;
     
     return this;

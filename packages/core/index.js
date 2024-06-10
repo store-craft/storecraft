@@ -379,6 +379,7 @@ export class App {
    * @param {PlatformContext} context 
    */
   handler = async (req, context) => {
+    const start_millis = Date.now();
     const request = await this.#_platform.encode(req)
     
     /** @type {import('./types.public.js').ApiResponse} */
@@ -446,10 +447,27 @@ export class App {
 
     }
   
-    console.log(decodeURIComponent(request.url))
+    const c = {
+      red: '\x1b[1;31m',
+      green: '\x1b[1;32m',
+      cyan: '\x1b[36m',
+      magenta: `\x1b[1;35m`,
+      yellow: `\x1b[33m`,
+      reset: `\x1b[0m`,
+    }
+
+    const method_to_color = {
+      'get': `\x1b[1;43;37mGET\x1b[0m`,
+      'GET': `\x1b[1;43;37mGET\x1b[0m`,
+      'post': `\x1b[1;44;37mPOST\x1b[0m`,
+      'POST': `\x1b[1;44;37mPOST\x1b[0m`,
+      'delete': `\x1b[1;41;37mDELETE\x1b[0m`,
+      'DELETE': `\x1b[1;41;37mDELETE\x1b[0m`,
+      'options': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+      'OPTIONS': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+    }
 
     await this.rest_controller.handler(request, polka_response);
-    // await this._polka.handler(request, polka_response);
 
     // console.log('polka_response.body ', polka_response.body);
 
@@ -461,9 +479,25 @@ export class App {
       }
     )
 
-    return this.#_platform.handleResponse(
+    const response = await this.#_platform.handleResponse(
       response_web, context
     );
+
+    {
+      const delta = Date.now() - start_millis;
+      const url = new URL(decodeURIComponent(request.url));
+      const line = method_to_color[request.method] + 
+        ' \x1b[33m' + 
+        url.pathname.slice(0, 250) + 
+        '\x1b[0m' + 
+        ` (${delta}ms)`;
+      const query = url.search
+      console.log(line)
+      if(query)
+        console.log(c.cyan, query)
+    }
+
+    return response;
   }
 
 

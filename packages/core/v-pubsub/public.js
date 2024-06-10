@@ -38,14 +38,18 @@ export class PubSub {
    * @param {P} [payload] extra payload to dispatch
    */
   async dispatch(event, payload) {
-    const subs = this.#subscribers[event] ?? [];
-    for(const sub of subs) {
-      await sub(
-        {
-          event,
-          payload
-        }
-      );
+    try {
+      const subs = this.#subscribers[event] ?? [];
+      for(const sub of subs) {
+        await sub(
+          {
+            event,
+            payload
+          }
+        );
+      }
+    } catch(e) {
+      console.log(e)
     }
   }
 

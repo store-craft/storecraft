@@ -254,10 +254,16 @@ async (order_checkout, gateway_handle) => {
   // return order;
   const id = await app.api.orders.upsert(order);
 
-  return {
-    ...order,
-    id
+  order.id = id;
+
+  { // dispatch event
+    await app.pubsub.dispatch(
+      'checkout/create',
+      order
+    );
   }
+
+  return order;
 }
 
 
@@ -342,6 +348,13 @@ async (checkoutId, client_payload) => {
   }
   
   await app.api.orders.upsert(order);
+
+  { // dispatch event
+    await app.pubsub.dispatch(
+      'checkout/complete',
+      order
+    )
+  }
 
   return order;
 }

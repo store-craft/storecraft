@@ -36,7 +36,8 @@ export const upsert = (app) =>
       'Template is empty', 400
     );
     return [];
-  }
+  },
+  'templates/upsert'
 )(item);
 
 
@@ -47,10 +48,10 @@ export const upsert = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'templates/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'templates/remove'),
+    list: regular_list(app, db(app), 'templates/list'),
   }
 }
 

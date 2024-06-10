@@ -76,24 +76,32 @@ export type events = {
   auth_signin: 'auth/signin', 
   auth_refersh: 'auth/refresh',
   auth_remove: 'auth/remove',
-
 }
+
+
 
 /**
  * @description A list of native `storecraft` events
  */
 export type PubSubEvent = events[keyof events] ;
 
+export type EventPayload<T=any> = {
+  payload?: T;
+  event: PubSubEvent;
+}
+
 /**
  * 
  * @description Subscriber method spec
  * 
  */
-export type PubSubSubscriber<T=any> = ((value: T) => any) | ((value: T) => Promise<any>);
+export type PubSubSubscriber<T=any> = ((value: EventPayload<T>) => any) | ((value: EventPayload<T>) => Promise<any>);
 export type PubSubSubscriberForUpsert<T=any> = PubSubSubscriber<{
   previous: T,
   current: T,
 }>;
+export type PubSubSubscriberForGet<T=any> = PubSubSubscriber<{ current: T }>;
+export type PubSubSubscriberForRemove<T=any> = PubSubSubscriber<{ previous: T, success: boolean }>;
 
 
 

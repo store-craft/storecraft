@@ -26,7 +26,8 @@ export const upsert = (app) =>
    * @param {ItemTypeUpsert} item
    */
   async (item) => {
-      
+    const requires_event_processing = Boolean(event) && app.pubsub.has('customers/upsert');
+
     assert_zod(customerTypeUpsertSchema, item);
 
     // Check if exists
@@ -54,6 +55,16 @@ export const upsert = (app) =>
     const succeed = await db(app).upsert(final, search);
 
     assert(succeed, 'failed', 401);
+
+    if(requires_event_processing) {
+      await app.pubsub.dispatch(
+        'customers/upsert',
+        {
+          previous: item_get,
+          current: final
+        }
+      )
+    }
 
     return id;
   }
@@ -98,11 +109,11 @@ export const list_customer_orders = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'customers/get'),
     getByEmail: getByEmail(app),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'customers/remove'),
+    list: regular_list(app, db(app), 'customers/list'),
     list_customer_orders: list_customer_orders(app)
   }
 }

@@ -38,7 +38,8 @@ export const upsert = (app) =>
       'Handle or Values are invalid', 400
     );
     return [];
-  }
+  },
+  'posts/upsert'
 )(item);
 
 
@@ -49,10 +50,10 @@ export const upsert = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'posts/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'posts/remove'),
+    list: regular_list(app, db(app), 'posts/list'),
   }
 }
 

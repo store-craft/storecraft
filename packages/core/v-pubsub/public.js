@@ -32,12 +32,20 @@ export class PubSub {
    * 
    * @description Dispatch a `storecraft` `event`
    * 
-   * @param {import("./types.public.js").PubSubEvent} event 
+   * @template [P=any]
+   * 
+   * @param {import("./types.public.js").PubSubEvent} event a `storecraft` event type
+   * @param {P} [payload] extra payload to dispatch
    */
-  async dispatch(event) {
+  async dispatch(event, payload) {
     const subs = this.#subscribers[event] ?? [];
     for(const sub of subs) {
-      await sub();
+      await sub(
+        {
+          event,
+          payload
+        }
+      );
     }
   }
 
@@ -104,6 +112,11 @@ const test = () => {
     }
   )
   
-  pub.on('templates/upsert', ({current, previous}) => {current})
+  pub.on(
+    'templates/upsert', 
+    (event) => { 
+        // event.payload.
+    }
+  )
   
 }

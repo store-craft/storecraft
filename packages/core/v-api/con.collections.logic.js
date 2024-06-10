@@ -32,7 +32,7 @@ export const upsert = (app) =>
     },
     (final) => {
       return [];
-    }
+    },'collections/upsert'
   )(item);
 
 
@@ -61,10 +61,10 @@ export const list_collection_products = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'collections/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'collections/remove'),
+    list: regular_list(app, db(app), 'collections/list'),
     list_collection_products: list_collection_products(app)
   }
 }

@@ -16,8 +16,8 @@ import {
  * @description This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template G
- * @template U
+ * @template {Partial<import('./types.api.js').BaseType>} G
+ * @template {Partial<import('./types.api.js').BaseType>} U
  * 
  * 
  * @param {import("../types.public.js").App} app app instance
@@ -31,23 +31,38 @@ import {
  * your chance to fill gaps in data
  * @param {<H extends U>(final: H) => string[]} post_hook 
  * hook into final state, returns extra search terms
- * @param {string} [table_name_for_event] keep `undefined` to avoid event processing
+ * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * `undefined` to avoid event processing
  * 
  * 
  */
 export const regular_upsert = (
   app, db, id_prefix, schema, 
   pre_hook=x=>x, post_hook=x=>[],
-  table_name_for_event
+  event
 ) => {
 
   /**
    * @param {U} item
    */
   return async (item) => {
+    const requires_event_processing = Boolean(event) && app.pubsub.has(event);
+
+    /** @type {import('../v-database/types.public.js').withConcreteId<G>} */
+    let previous_item;
+
     item = pre_hook(item);
     
-    schema && assert_zod(schema.transform(x => x ?? undefined), item);
+    schema && assert_zod(
+      schema.transform(x => x ?? undefined), 
+      item
+    );
+
+    // fetch previous item from the database
+    if(requires_event_processing) {
+      if(item?.id)
+        previous_item = await db.get(item.id)
+    }
 
     // Check if exists
     const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
@@ -63,7 +78,16 @@ export const regular_upsert = (
 
     assert(success, 'upsert-failed', 400);
 
-
+    // dispatch event
+    if(requires_event_processing) {
+      await app.pubsub.dispatch(
+        event,
+        {
+          previous: previous_item, 
+          current: final,
+        }
+      );
+    }
 
     return final.id;
   }
@@ -72,8 +96,8 @@ export const regular_upsert = (
 /**
  * @description a regular document fetch
  * 
- * @template U `upsert` type of table
- * @template G `get` type of table
+ * @template {Partial<import('./types.api.js').BaseType>} G
+ * @template {Partial<import('./types.api.js').BaseType>} U
  * 
  * 
  * @param {import("../types.public.js").App} app
@@ -81,9 +105,11 @@ export const regular_upsert = (
  *  import('../v-database/types.public.js').withConcreteId<U>, 
  *  import('../v-database/types.public.js').withConcreteId<G>
  * >} db db instance
+ * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * `undefined` to avoid event processing
  * 
-*/
-export const regular_get = (app, db) => 
+ */
+export const regular_get = (app, db, event) => 
 /**
   * 
   * @param {string} handle_or_id 
@@ -94,6 +120,15 @@ export const regular_get = (app, db) =>
 
     rewrite_media_from_storage(app)(item);
 
+    if(Boolean(event)) {
+      await app.pubsub.dispatch(
+        event,
+        {
+          current: item,
+        }
+      );
+    }
+
     return item;
   };
 
@@ -101,8 +136,8 @@ export const regular_get = (app, db) =>
 /**
  * @description a regular document removal
  * 
- * @template U `upsert` type of table
- * @template G `get` type of table
+ * @template {Partial<import('./types.api.js').BaseType>} G
+ * @template {Partial<import('./types.api.js').BaseType>} U
  * 
  * 
  * @param {import("../types.public.js").App} app
@@ -110,22 +145,47 @@ export const regular_get = (app, db) =>
  *  import('../v-database/types.public.js').withConcreteId<U>, 
  *  import('../v-database/types.public.js').withConcreteId<G>
  * >} db db instance
+ * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * `undefined` to avoid event processing
  * 
  */
-export const regular_remove = (app, db) => 
+export const regular_remove = (app, db, event) => 
   /**
    * 
    * @param {string} id 
    */
   async (id) => {
-    return db.remove(id);
+    const requires_event_processing = Boolean(event) && app.pubsub.has(event);
+
+    /** @type {import('../v-database/types.public.js').withConcreteId<G>} */
+    let previous;
+
+    // fetch item before removal
+    if(requires_event_processing) {
+      previous = await db.get(id);
+    }
+
+    const success = await db.remove(id);
+
+    if(requires_event_processing) {
+      await app.pubsub.dispatch(
+        event,
+        {
+          previous,
+          success
+        }
+      )
+    }
+
+    return success;
   }
 
 /**
  * @description a regular document list with query operation
  * 
- * @template U `upsert` type of table
- * @template G `get` type of table
+ * 
+ * @template {Partial<import('./types.api.js').BaseType>} G
+ * @template {Partial<import('./types.api.js').BaseType>} U
  * 
  * 
  * @param {import("../types.public.js").App} app
@@ -133,9 +193,11 @@ export const regular_remove = (app, db) =>
  *  import('../v-database/types.public.js').withConcreteId<U>, 
  *  import('../v-database/types.public.js').withConcreteId<G>
  * >} db db instance
+ * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * `undefined` to avoid event processing
  * 
  */
-export const regular_list = (app, db) => 
+export const regular_list = (app, db, event) => 
   /**
    * @param {import('./types.api.query.js').ApiQuery} q 
    */
@@ -150,6 +212,15 @@ export const regular_list = (app, db) =>
     );
 
     rewrite_media_from_storage(app)(items);
+
+    if(Boolean(event)) {
+      await app.pubsub.dispatch(
+        event,
+        {
+          current: items,
+        }
+      );
+    }
 
     return items;
   }

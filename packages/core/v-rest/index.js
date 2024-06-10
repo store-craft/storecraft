@@ -90,9 +90,9 @@ export const create_rest_api = (app) => {
 
       const key = path?.split('/').slice(0, 3).join('/');
 
-      console.log(
-        path.split('/').slice(0,3)
-      );
+      // console.log(
+      //   path.split('/').slice(0,3)
+      // );
 
       const con = this.#controllers[key];
 

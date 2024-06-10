@@ -20,6 +20,7 @@ const parse_int = (s, def) => {
   return parsed ? parsed : def;
 }
 
+
 /**
  * 
  * @template {any} [PlatformNativeRequest=any]
@@ -444,8 +445,8 @@ export class App {
       }
 
     }
-
-    console.log(request.url)
+  
+    console.log(decodeURIComponent(request.url))
 
     await this.rest_controller.handler(request, polka_response);
     // await this._polka.handler(request, polka_response);
@@ -467,18 +468,13 @@ export class App {
 
 
   /**
-   * @description Quickly attach an `event` subscriber.
+   * @description Quickly attach an `event` subscriber. This is just a quick way
+   * to interface into {@link PubSub}
    * 
-   * 
-   * @param {import("./v-pubsub/types.public.js").PubSubEvent} event An event identifier
-   * @param {import("./v-pubsub/types.public.js").PubSubSubscriber} callback a `callback` 
-   * event handler to invoke, can be a `promise`
-   * 
+   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents["on"]}
    */
-  on(event, callback) {
+  on = (event, callback) => {
     this.pubsub.on(event, callback);
   }
 
 }
-
-

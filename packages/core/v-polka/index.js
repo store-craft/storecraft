@@ -136,10 +136,10 @@ export class Polka extends Trouter {
 
     try {
       for (const m of arr) {
-        console.log(`running path: ${req.path}`)
+        // console.log(`running path: ${req.path}`)
         await m(req, res)
-        console.log(`res.finished: ${res.finished}`)
         if (res.finished) {
+          // console.log(`res.finished: ${req.path}`)
           return res;
         }
 

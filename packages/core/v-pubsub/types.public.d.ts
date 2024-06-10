@@ -101,7 +101,9 @@ export type PubSubSubscriberForGet<T=any> = PubSubSubscriber<{ current: T }>;
 export type PubSubSubscriberForRemove<T=any> = PubSubSubscriber<{ previous: T, success: boolean }>;
 
 
-
+/**
+ * @description `events` subscribtion callbacks
+ */
 export interface PubSubOnEvents {
   
   on(event: events['storefronts_upsert'], callback: PubSubSubscriberForUpsert<StorefrontType>) : any;

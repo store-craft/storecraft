@@ -1,14 +1,19 @@
 import { 
-  AuthUserType, BaseProductType, BaseType, CollectionType, 
-  CollectionTypeUpsert, CustomerType, CustomerTypeUpsert, 
-  DiscountType, DiscountTypeUpsert, ImageType, 
-  ImageTypeUpsert, NotificationType, NotificationTypeUpsert, 
-  OrderData, OrderDataUpsert, PostType, PostTypeUpsert, 
+  AuthUserType, BaseProductType, BaseType, 
+  CollectionType, CollectionTypeUpsert, 
+  CustomerType, CustomerTypeUpsert, 
+  DiscountType, DiscountTypeUpsert, 
+  ImageType, ImageTypeUpsert, 
+  NotificationType, NotificationTypeUpsert, 
+  OrderData, OrderDataUpsert, 
+  PostType, PostTypeUpsert, 
   ProductType, ProductTypeUpsert, 
+  VariantType, VariantTypeUpsert,
+  ShippingMethodType, ShippingMethodTypeUpsert, 
+  StorefrontType, StorefrontTypeUpsert, 
+  TagType, TagTypeUpsert, 
+  TemplateType, TemplateTypeUpsert, 
   QuickSearchResult, 
-  ShippingMethodType, ShippingMethodTypeUpsert, StorefrontType, 
-  StorefrontTypeUpsert, TagType, TagTypeUpsert, TemplateType, 
-  TemplateTypeUpsert, VariantType, VariantTypeUpsert 
 } from "../v-api/types.api.js";
 import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.js";
 import type { App } from '../types.public.js'
@@ -40,7 +45,7 @@ type idable = { id: string }
 export type withConcreteId<T> = Omit<T, 'id'> & idable;
 
 /**
- * Basic collection or table
+ * @description Basic collection or table
  */
 export declare interface db_crud<U extends idable, G extends idable=U> {
   /** upsert type */

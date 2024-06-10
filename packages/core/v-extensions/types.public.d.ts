@@ -5,9 +5,12 @@ import type {
   
   
 /**
- * @template PayloadType The type of the input payload
  * @description A backend `action` is a `function` recieving the 
  * **payload** 
+ * 
+ * 
+ * @template PayloadType The type of the input payload
+ * 
  */
 export type ExtensionActionHandler<PayloadType> = 
   /**
@@ -31,27 +34,26 @@ export type ExtensionActionHandler<PayloadType> =
   
     /** 
      * 
-     * @description info of the payment gateway 
+     * @description info of the extension
      */
-    get info(): ExtensionInfo;
+    info: ExtensionInfo;
   
     /** 
      * 
-     * @description config of the gateway 
+     * @description config of the extension 
      */
-    get config(): Config;
+    config: Config;
   
     /**
      * 
      * @description the eligible actions in this interface for remote invocation
      */
-    get actions(): ExtensionAction[];
+    actions?: ExtensionAction[];
   
     /**
      * 
      * @param action_handle the identifier of the `action`
      */
-    invokeAction<P extends any=any>(action_handle: string): 
-        ExtensionActionHandler<P>;
+    invokeAction?<P extends any=any>(action_handle: string): ExtensionActionHandler<P>;
   
   }

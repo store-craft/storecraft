@@ -6,6 +6,9 @@ import {
 
 export * from './public.js';
 
+/**
+ * @description `storecraft` events
+ */
 export type events = {
   storefronts_upsert: 'storefronts/upsert', 
   storefronts_remove: 'storefronts/remove',
@@ -71,7 +74,8 @@ export type events = {
 
   auth_signup: 'auth/signup', 
   auth_signin: 'auth/signin', 
-  auth_refersh: 'auth/refersh',
+  auth_refersh: 'auth/refresh',
+  auth_remove: 'auth/remove',
 
 }
 
@@ -155,6 +159,7 @@ export interface PubSubOnEvents {
   
   on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
   on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
+  on(event: events['auth_refersh'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
   on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
   
   on(event: events['storage_put'], callback: PubSubSubscriber<{key: string}>) : any;

@@ -11,7 +11,7 @@ import { rewrite_media_from_storage, rewrite_media_to_storage } from './con.stor
  */
 
 /**
- * This type of upsert might be uniform and re-occurring, so it is
+ * @description This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
  * @template G

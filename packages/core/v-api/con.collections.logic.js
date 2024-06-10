@@ -1,4 +1,4 @@
-import { assert, to_handle } from './utils.func.js'
+import { to_handle } from './utils.func.js'
 import { collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -37,7 +37,8 @@ export const upsert = (app) =>
 
 
 /**
- * given a collection handle and query, return products of that collection
+ * @description given a collection handle and query, 
+ * return products of that collection
  * 
  * 
  * @param {import("../types.public.js").App} app

@@ -15,8 +15,8 @@ export class PubSub {
 
 
   constructor() {
-
   }
+
 
   /**
    * 
@@ -95,18 +95,15 @@ export class PubSub {
 
 }
 
-
-const pub = new PubSub();
-pub.on('auth/signup', a => {
-})
-pub.on(
-  'a', v=> {
-
-  }
-)
-
-pub.on('templates/upsert', ({current, previous}) => {current})
-
-pub.on('b', v => {})
-
-
+const test = () => {
+  const pub = new PubSub();
+  pub.on('auth/signup', a => {
+  })
+  pub.on(
+    'templates/remove', v=> {
+    }
+  )
+  
+  pub.on('templates/upsert', ({current, previous}) => {current})
+  
+}

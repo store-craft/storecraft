@@ -1,6 +1,6 @@
 import { MongoDB } from '../driver.js'
 import { Collection } from 'mongodb'
-import { sanitize_one, to_objid_safe } from './utils.funcs.js'
+import { objid_or_else_filter, sanitize_one, to_objid_safe } from './utils.funcs.js'
 import { 
   count_regular, get_regular, list_regular, upsert_regular 
 } from './con.shared.js'
@@ -28,7 +28,26 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
  * 
  * @returns {db_col["get"]}
  */
-const get = (driver) => get_regular(driver, col(driver));
+const get2 = (driver) => get_regular(driver, col(driver));
+
+/**
+ * @param {MongoDB} driver 
+ * 
+ * 
+ * @returns {db_col["getByEmail"]}
+ */
+const get = (driver) => {
+  return async (id_or_email) => {
+    const filter = objid_or_else_filter(id_or_email, 'email');
+
+    /** @type {import('@storecraft/core/v-api').AuthUserType} */
+    const res = await col(driver).findOne(
+      filter
+    );
+
+    return sanitize_one(res)
+  }
+}
 
 /**
  * @param {MongoDB} driver 

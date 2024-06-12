@@ -84,8 +84,11 @@ export class PubSub {
 
 
   /**
+   * @description Subscribe to a `storecraft` event
    * 
    * @type {import("./types.public.js").PubSubOnEvents["on"]}
+   * 
+   * @returns {Function} a self invoking `unsubscribe` function for the event
    */
   on = (event, callback) => {
     return this.#on(event, callback);

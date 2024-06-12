@@ -106,66 +106,66 @@ export type PubSubSubscriberForRemove<T=any> = PubSubSubscriber<{ previous: T, s
  */
 export interface PubSubOnEvents {
   
-  on(event: events['storefronts_upsert'], callback: PubSubSubscriberForUpsert<StorefrontType>) : any;
-  on(event: events['storefronts_remove'], callback: PubSubSubscriberForRemove<StorefrontType>) : any;
-  on(event: events['storefronts_get'], callback: PubSubSubscriberForGet<StorefrontType>) : any;
-  on(event: events['storefronts_list'], callback: PubSubSubscriberForGet<StorefrontType[]>) : any;
+  on(event: events['storefronts_upsert'], callback: PubSubSubscriberForUpsert<StorefrontType>) : Function;
+  on(event: events['storefronts_remove'], callback: PubSubSubscriberForRemove<StorefrontType>) : Function;
+  on(event: events['storefronts_get'], callback: PubSubSubscriberForGet<StorefrontType>) : Function;
+  on(event: events['storefronts_list'], callback: PubSubSubscriberForGet<StorefrontType[]>) : Function;
   
-  on(event: events['customers_upsert'], callback: PubSubSubscriberForUpsert<CustomerType>) : any;
-  on(event: events['customers_remove'], callback: PubSubSubscriberForRemove<CustomerType>) : any;
-  on(event: events['customers_get'], callback: PubSubSubscriberForGet<CustomerType>) : any;
-  on(event: events['customers_list'], callback: PubSubSubscriberForGet<CustomerType[]>) : any;
+  on(event: events['customers_upsert'], callback: PubSubSubscriberForUpsert<CustomerType>) : Function;
+  on(event: events['customers_remove'], callback: PubSubSubscriberForRemove<CustomerType>) : Function;
+  on(event: events['customers_get'], callback: PubSubSubscriberForGet<CustomerType>) : Function;
+  on(event: events['customers_list'], callback: PubSubSubscriberForGet<CustomerType[]>) : Function;
   
-  on(event: events['tags_upsert'], callback: PubSubSubscriberForUpsert<TagType>) : any;
-  on(event: events['tags_remove'], callback: PubSubSubscriberForRemove<TagType>) : any;
-  on(event: events['tags_get'], callback: PubSubSubscriberForGet<TagType>) : any;
-  on(event: events['tags_list'], callback: PubSubSubscriberForGet<TagType[]>) : any;
+  on(event: events['tags_upsert'], callback: PubSubSubscriberForUpsert<TagType>) : Function;
+  on(event: events['tags_remove'], callback: PubSubSubscriberForRemove<TagType>) : Function;
+  on(event: events['tags_get'], callback: PubSubSubscriberForGet<TagType>) : Function;
+  on(event: events['tags_list'], callback: PubSubSubscriberForGet<TagType[]>) : Function;
 
-  on(event: events['products_upsert'], callback: PubSubSubscriberForUpsert<ProductType>) : any;
-  on(event: events['products_remove'], callback: PubSubSubscriberForRemove<ProductType>) : any;
-  on(event: events['products_get'], callback: PubSubSubscriberForGet<ProductType>) : any;
-  on(event: events['products_list'], callback: PubSubSubscriberForGet<ProductType[]>) : any;
+  on(event: events['products_upsert'], callback: PubSubSubscriberForUpsert<ProductType>) : Function;
+  on(event: events['products_remove'], callback: PubSubSubscriberForRemove<ProductType>) : Function;
+  on(event: events['products_get'], callback: PubSubSubscriberForGet<ProductType>) : Function;
+  on(event: events['products_list'], callback: PubSubSubscriberForGet<ProductType[]>) : Function;
 
-  on(event: events['collections_upsert'], callback: PubSubSubscriberForUpsert<CollectionType>) : any;
-  on(event: events['collections_remove'], callback: PubSubSubscriberForRemove<CollectionType>) : any;
-  on(event: events['collections_get'], callback: PubSubSubscriberForGet<CollectionType>) : any;
-  on(event: events['collections_list'], callback: PubSubSubscriberForGet<CollectionType[]>) : any;
+  on(event: events['collections_upsert'], callback: PubSubSubscriberForUpsert<CollectionType>) : Function;
+  on(event: events['collections_remove'], callback: PubSubSubscriberForRemove<CollectionType>) : Function;
+  on(event: events['collections_get'], callback: PubSubSubscriberForGet<CollectionType>) : Function;
+  on(event: events['collections_list'], callback: PubSubSubscriberForGet<CollectionType[]>) : Function;
 
-  on(event: events['orders_upsert'], callback: PubSubSubscriberForUpsert<OrderData>) : any;
-  on(event: events['orders_remove'], callback: PubSubSubscriberForRemove<OrderData>) : any;
-  on(event: events['orders_get'], callback: PubSubSubscriberForGet<OrderData>) : any;
-  on(event: events['orders_list'], callback: PubSubSubscriberForGet<OrderData[]>) : any;
+  on(event: events['orders_upsert'], callback: PubSubSubscriberForUpsert<OrderData>) : Function;
+  on(event: events['orders_remove'], callback: PubSubSubscriberForRemove<OrderData>) : Function;
+  on(event: events['orders_get'], callback: PubSubSubscriberForGet<OrderData>) : Function;
+  on(event: events['orders_list'], callback: PubSubSubscriberForGet<OrderData[]>) : Function;
 
-  on(event: events['discounts_upsert'], callback: PubSubSubscriberForUpsert<DiscountType>) : any;
-  on(event: events['discounts_remove'], callback: PubSubSubscriberForRemove<DiscountType>) : any;
-  on(event: events['discounts_get'], callback: PubSubSubscriberForGet<DiscountType>) : any;
-  on(event: events['discounts_list'], callback: PubSubSubscriberForGet<DiscountType[]>) : any;
+  on(event: events['discounts_upsert'], callback: PubSubSubscriberForUpsert<DiscountType>) : Function;
+  on(event: events['discounts_remove'], callback: PubSubSubscriberForRemove<DiscountType>) : Function;
+  on(event: events['discounts_get'], callback: PubSubSubscriberForGet<DiscountType>) : Function;
+  on(event: events['discounts_list'], callback: PubSubSubscriberForGet<DiscountType[]>) : Function;
 
-  on(event: events['shipping_upsert'], callback: PubSubSubscriberForUpsert<ShippingMethodType>) : any;
-  on(event: events['shipping_remove'], callback: PubSubSubscriberForRemove<ShippingMethodType>) : any;
-  on(event: events['shipping_get'], callback: PubSubSubscriberForGet<ShippingMethodType>) : any;
-  on(event: events['shipping_list'], callback: PubSubSubscriberForGet<ShippingMethodType[]>) : any;
+  on(event: events['shipping_upsert'], callback: PubSubSubscriberForUpsert<ShippingMethodType>) : Function;
+  on(event: events['shipping_remove'], callback: PubSubSubscriberForRemove<ShippingMethodType>) : Function;
+  on(event: events['shipping_get'], callback: PubSubSubscriberForGet<ShippingMethodType>) : Function;
+  on(event: events['shipping_list'], callback: PubSubSubscriberForGet<ShippingMethodType[]>) : Function;
 
-  on(event: events['posts_upsert'], callback: PubSubSubscriberForUpsert<PostType>) : any;
-  on(event: events['posts_remove'], callback: PubSubSubscriberForRemove<PostType>) : any;
-  on(event: events['posts_get'], callback: PubSubSubscriberForGet<PostType>) : any;
-  on(event: events['posts_list'], callback: PubSubSubscriberForGet<PostType[]>) : any;
+  on(event: events['posts_upsert'], callback: PubSubSubscriberForUpsert<PostType>) : Function;
+  on(event: events['posts_remove'], callback: PubSubSubscriberForRemove<PostType>) : Function;
+  on(event: events['posts_get'], callback: PubSubSubscriberForGet<PostType>) : Function;
+  on(event: events['posts_list'], callback: PubSubSubscriberForGet<PostType[]>) : Function;
 
-  on(event: events['images_upsert'], callback: PubSubSubscriberForUpsert<ImageType>) : any;
-  on(event: events['images_remove'], callback: PubSubSubscriberForRemove<ImageType>) : any;
-  on(event: events['images_get'], callback: PubSubSubscriberForGet<ImageType>) : any;
-  on(event: events['images_list'], callback: PubSubSubscriberForGet<ImageType[]>) : any;
+  on(event: events['images_upsert'], callback: PubSubSubscriberForUpsert<ImageType>) : Function;
+  on(event: events['images_remove'], callback: PubSubSubscriberForRemove<ImageType>) : Function;
+  on(event: events['images_get'], callback: PubSubSubscriberForGet<ImageType>) : Function;
+  on(event: events['images_list'], callback: PubSubSubscriberForGet<ImageType[]>) : Function;
 
-  on(event: events['templates_upsert'], callback: PubSubSubscriberForUpsert<TemplateType>) : any;
-  on(event: events['templates_remove'], callback: PubSubSubscriberForRemove<TemplateType>) : any;
-  on(event: events['templates_get'], callback: PubSubSubscriberForGet<TemplateType>) : any;
-  on(event: events['templates_list'], callback: PubSubSubscriberForGet<TemplateType[]>) : any;
+  on(event: events['templates_upsert'], callback: PubSubSubscriberForUpsert<TemplateType>) : Function;
+  on(event: events['templates_remove'], callback: PubSubSubscriberForRemove<TemplateType>) : Function;
+  on(event: events['templates_get'], callback: PubSubSubscriberForGet<TemplateType>) : Function;
+  on(event: events['templates_list'], callback: PubSubSubscriberForGet<TemplateType[]>) : Function;
 
-  on(event: events['checkout_create'], callback: PubSubSubscriber<OrderData>) : any;
-  on(event: events['checkout_complete'], callback: PubSubSubscriber<OrderData>) : any;
+  on(event: events['checkout_create'], callback: PubSubSubscriber<OrderData>) : Function;
+  on(event: events['checkout_complete'], callback: PubSubSubscriber<OrderData>) : Function;
   
-  on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
-  on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
-  on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>>) : any;
+  on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>>) : Function;
+  on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>>) : Function;
+  on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>>) : Function;
   
 }

@@ -20,7 +20,8 @@ export const removeByEmail = (app) =>
  * @param {string} email
  */
 (email) => {
-  return app.db.resources.auth_users.removeByEmail(email);
+  return remove_auth_user(app)(email);
+  // return app.db.resources.auth_users.removeByEmail(email);
 }
 
 /**
@@ -466,7 +467,10 @@ async (id_or_email) => {
       const user_to_remove = await app.db.resources.auth_users.get(
         id_or_email
       );
-      delete user_to_remove.password;
+
+      if(user_to_remove)
+        delete user_to_remove.password;
+
       await app.pubsub.dispatch(
         'auth/remove',
         user_to_remove

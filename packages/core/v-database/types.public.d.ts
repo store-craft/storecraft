@@ -139,8 +139,8 @@ export interface db_collections extends db_crud<
 
 /** @description `ProductType` crud */
 export interface db_products extends db_crud<
-  withConcreteId<ProductTypeUpsert> | withConcreteId<VariantTypeUpsert>, 
-  withConcreteId<ProductType> | withConcreteId<VariantType>> {
+  withConcreteId<ProductTypeUpsert | VariantTypeUpsert>, 
+  withConcreteId<ProductType | VariantType>> {
 
   /**
    * increment / decrement stock of multiple products

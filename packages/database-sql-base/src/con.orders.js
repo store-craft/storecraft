@@ -70,7 +70,8 @@ const get = (driver) => {
   return (id_or_handle, options) => {
     return driver.client
     .selectFrom(table_name)
-    .selectAll()
+    // .selectAll()
+    .select(['active', 'address', 'attributes', 'contact', 'coupons', 'created_at', 'updated_at', 'description', 'handle', 'id', 'line_items', 'notes', 'payment_gateway', 'pricing', 'shipping_method', 'status', 'validation'])
     .select(eb => [
       with_media(eb, id_or_handle, driver.dialectType),
       with_tags(eb, id_or_handle, driver.dialectType),
@@ -119,7 +120,8 @@ const list = (driver) => {
 
     const items = await driver.client
       .selectFrom(table_name)
-      .selectAll()
+      // .selectAll()
+      .select(['active', 'address', 'attributes', 'contact', 'coupons', 'created_at', 'updated_at', 'description', 'handle', 'id', 'line_items', 'notes', 'payment_gateway', 'pricing', 'shipping_method', 'status', 'validation'])
       .select(eb => [
         with_media(eb, eb.ref('orders.id'), driver.dialectType),
         with_tags(eb, eb.ref('orders.id'), driver.dialectType),

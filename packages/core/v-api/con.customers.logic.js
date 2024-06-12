@@ -26,7 +26,7 @@ export const upsert = (app) =>
    * @param {ItemTypeUpsert} item
    */
   async (item) => {
-    const requires_event_processing = Boolean(event) && app.pubsub.has('customers/upsert');
+    const requires_event_processing = app.pubsub.has('customers/upsert');
 
     assert_zod(customerTypeUpsertSchema, item);
 

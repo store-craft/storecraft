@@ -24,7 +24,7 @@ export const upsert = (app) =>
  * @param {ItemTypeUpsert} item
  */
 async (item) => {
-  const requires_event_processing = Boolean(event) && app.pubsub.has('images/upsert');
+  const requires_event_processing = app.pubsub.has('images/upsert');
 
   assert_zod(imageTypeUpsertSchema, item);
 

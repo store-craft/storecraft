@@ -14,4 +14,4 @@ export type ApiResponse = VPolkaResponse & {
 
 export type ApiPolka = Polka<ApiRequest, ApiResponse>;
 
-export type { App } from './index.js'
+export { App } from './index.js'

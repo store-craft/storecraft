@@ -235,6 +235,14 @@ export class App {
     this.#_rest_controller = create_rest_api(this);
     this.#_is_ready = true;
     
+    const app = this;
+
+    // settle extensions
+    for(const ext_handle in this.extensions) {
+      const ext = this.extension(ext_handle);
+      ext?.onInit(app);
+    }
+
     return this;
   }
 

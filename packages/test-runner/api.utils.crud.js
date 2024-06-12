@@ -109,20 +109,138 @@ export const pick_random = items => {
 }
 
 /**
+ * @template G
+ * 
+ * @typedef {object} CrudTestContext
+ * @prop {G[]} items
+ * @prop {object} ops
+ * @prop {(item: G) => Promise<string>} [ops.upsert]
+ * @prop {(id: string) => Promise<G>} [ops.get]
+ * @prop {(id: string) => Promise<boolean>} [ops.remove]
+ * @prop {object} events
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.upsert_event
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.get_event
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.remove_event
+ * @prop {App} app
+ * 
+ */
+
+
+/**
  * A simple CRUD sanity
  * @template G
- * @template {{
- *  items: G[],
- *  ops: {
- *    upsert?: (item: G) => Promise<string>,
- *    get?: (id: string) => Promise<G>,
- *  }
- *  app: App
- * }} T
- * @param {import('uvu').uvu.Test<T>} s 
+ * @param {import('uvu').uvu.Test<CrudTestContext<G>>} s 
  */
 export const add_sanity_crud_to_test_suite = s => {
+    
+  s('upsert, get, remove', async (ctx) => {
+    const one = ctx.items[0];
+
+    let id;
+
+    { // test upsert
+      let is_event_ok = false;
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.upsert_event,
+        v => {
+          try {
+            
+            assert_partial(v.payload.current, one);
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
   
+      id = await ctx.ops.upsert(one);
+  
+      assert.ok(id, 'insertion failed (test upsert)');
+      assert.ok(is_event_ok, 'event error (test upsert)');
+
+      unsub();
+    }
+
+    
+    { // test get
+      let is_event_ok = false;
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.get_event,
+        v => {
+          try {
+            assert_partial(v.payload.current, one);
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
+
+      const item_get = await ctx.ops.get(id);
+  
+      assert_partial(item_get, {...one, id});
+      assert.ok(is_event_ok, 'event error (test get)');
+
+      unsub();
+    }
+
+    { // test update
+      let is_event_ok = false;
+
+      // test upsert event shows previous
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.upsert_event,
+        v => {
+          try {
+            // console.log(v)
+            assert_partial(v.payload.current, one);
+            assert_partial(v.payload.previous, one);
+            assert.not(v.payload.previous.updated_at===v.payload.current.updated_at)
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
+  
+      id = await ctx.ops.upsert({...one, id});
+  
+      assert.ok(id, 'insertion failed (test update)');
+      assert.ok(is_event_ok, 'event error (test update)');
+
+      unsub();
+    }
+
+    
+    { // test remove
+
+      let is_event_ok = false;
+
+      // test upsert shows previous
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.remove_event,
+        v => {
+          try {
+            assert_partial(v.payload.previous, one);
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
+
+      const success = await ctx.ops.remove(id);
+      const item_get = await ctx.ops.get(id);
+
+      assert.ok(success, 'item removal was not successful ! (test remove)')
+      assert.not(item_get, 'item was not removed ! (test remove)')
+      assert.ok(is_event_ok, 'event error (test remove)');
+
+      unsub();
+    }
+
+  });
+
+  s('missing fields should throw', async (ctx) => {
+    await assert_async_throws(
+      async () => await ctx.ops.upsert({})
+    );
+  })
+
+  return s;
+    
   s('create', async (ctx) => {
     const one = ctx.items[0];
     const id = await ctx.ops.upsert(one);
@@ -132,7 +250,7 @@ export const add_sanity_crud_to_test_suite = s => {
     const item_get = await ctx.ops.get(id);
     assert_partial(item_get, {...one, id});
   });
-  
+
   s('update', async (ctx) => {
     const one = ctx.items[1];
     const id = await ctx.ops.upsert(one);
@@ -146,13 +264,9 @@ export const add_sanity_crud_to_test_suite = s => {
   
     assert_partial(item_get, {...one, id});
   });
-  
 
-  s('missing fields should throw', async (ctx) => {
-    await assert_async_throws(
-      async () => await ctx.ops.upsert({})
-    );
-  })
+
+
   
   return s;
 }

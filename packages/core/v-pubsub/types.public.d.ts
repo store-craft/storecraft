@@ -167,5 +167,7 @@ export interface PubSubOnEvents {
   on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>>) : Function;
   on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>>) : Function;
   on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>>) : Function;
-  
+
+  // general gateway
+  on<E=any>(event: string, callback: PubSubSubscriber<Partial<E>>) : Function;
 }

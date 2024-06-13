@@ -1,5 +1,5 @@
-import '../styles/globals.scss'
-import ClientOnly from '@/admin/comps/client-only.jsx'
+import '../src/index.scss'
+import ClientOnly from '@/components/client-only.jsx'
 
 function MyApp({ Component, pageProps }) {
 	return (

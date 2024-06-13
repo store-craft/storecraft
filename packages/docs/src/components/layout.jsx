@@ -51,7 +51,7 @@ const Layout = (
   <div className={`${className} ${darkMode ? 'dark' : ''}`}>
     <div className={`relative w-full h-screen flex flex-col 
                       --overflow-clip
-                     transition-colors
+                     transition-colors overflow-clip
                      bg-transparent dark:bg-gray-900
                      text-gray-800 dark:text-gray-300
                      `
@@ -61,17 +61,17 @@ const Layout = (
 
       <Header 
           className='absolute inset-0
-                   bg-white/70 dark:bg-transparent backdrop-blur-sm
+                   bg-white/70 dark:bg-transparent backdrop-blur-sm 
                      shadow-sm  max-w-[1040px] flex-shrink-0 
                      w-full h-[70px] z-50 ' 
           slug={slug} prefix={header_prefix}
           onMenuClick={toggleMenu} 
           github_link={github_link} />
 
-      <main className='flex flex-row justify-center w-full overflow-y-auto --flex-1 
+      <main className='flex flex-row justify-center w-full overflow-auto --flex-1 
                        '>
         <SideBar 
-            className='hidden md:block w-60 h-full overflow-y-auto 
+            className='hidden md:block w-60 h-full overflow-auto 
                        flex-shrink-0 px-3 pt-[100px]'
             selectedSlug={slug}
             groups={groups} 
@@ -97,16 +97,17 @@ const Layout = (
           <Copyright />               
         </div>
       </main>
+
       <SideBar 
           className={`absolute left-0 top-[70px] block md:hidden w-full 
                       h-[calc(100vh-70px)] overflow-y-auto 
                       bg-white dark:bg-gray-900
                       pt-1 px-3 transition-transform duration-300
                       ${menu ? 'translate-x-0' : 'translate-x-full'}`}
-          onClickMenuItem={toggleMenu}
+          onClickMenuItem={_ => toggleMenu()}
           selectedSlug={slug}
           groups={groups} 
-          name={name} />
+          />
 
     </div>
   </div>

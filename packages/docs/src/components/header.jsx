@@ -7,12 +7,13 @@ import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs/index.js'
 
 import Link from 'next/link.js'
 import pkg from '../../package.json'
+import { Logo, LogoV2, StorecraftText } from './logo.jsx'
 
 /**
  * 
  * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params
  */
-export const Logo = (
+export const Logo2 = (
   { 
     ...rest 
   }
@@ -80,8 +81,15 @@ const Header = (
 
 <header className={`flex flex-row justify-between items-center 
                     w-full --max-w-[1100px] mx-auto px-3 ${className}`}>
-  <div className='flex flex-row h-full gap-0'>
-    <Logo />
+  <div className='flex flex-row h-full gap- items-center'>
+    {/* <Logo /> */}
+
+    <div className='w-60 flex flex-row items-center gap-1'>
+      <LogoV2 className='h-10 object-contain rounded-xl bg-teal-400 
+                    scale-90 border-kf-600 --shadow-lg opacity-80' />                  
+      <StorecraftText className='text-[32px] w-[220px]' />
+    </div>
+
 
     <div className='w-fit hidden sm:flex flex-col items-start
                     justify-between pb-1 pt-2

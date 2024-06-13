@@ -109,51 +109,144 @@ export const pick_random = items => {
 }
 
 /**
+ * @typedef {Partial<import('@storecraft/core/v-api').BaseType>} PartialBase
+ */
+
+/**
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
+ * 
+ * @typedef {object} CrudTestContext
+ * @prop {G[]} items
+ * @prop {object} ops
+ * @prop {(item: G) => Promise<string>} [ops.upsert]
+ * @prop {(id: string) => Promise<G>} [ops.get]
+ * @prop {(id: string) => Promise<boolean>} [ops.remove]
+ * @prop {object} events
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.upsert_event
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.get_event
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.remove_event
+ * @prop {App} app
+ * 
+ */
+
+
+/**
  * A simple CRUD sanity
- * @template G
- * @template {{
- *  items: G[],
- *  ops: {
- *    upsert?: (item: G) => Promise<string>,
- *    get?: (id: string) => Promise<G>,
- *  }
- *  app: App
- * }} T
- * @param {import('uvu').uvu.Test<T>} s 
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
+ * 
+ * @param {import('uvu').uvu.Test<CrudTestContext<G, U>>} s 
  */
 export const add_sanity_crud_to_test_suite = s => {
-  
-  s('create', async (ctx) => {
+    
+  s('upsert, get, update, remove', async (ctx) => {
     const one = ctx.items[0];
-    const id = await ctx.ops.upsert(one);
+
+    let id;
+
+    { // test upsert
+      let is_event_ok = false;
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.upsert_event,
+        v => {
+          try {
+            
+            assert_partial(v.payload.current, one);
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
   
-    assert.ok(id, 'insertion failed');
+      id = await ctx.ops.upsert(one);
   
-    const item_get = await ctx.ops.get(id);
-    assert_partial(item_get, {...one, id});
+      assert.ok(id, 'insertion failed (test upsert)');
+      assert.ok(is_event_ok, 'event error (test upsert)');
+
+      unsub();
+    }
+
+    
+    { // test get
+      let is_event_ok = false;
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.get_event,
+        v => {
+          try {
+            assert_partial(v.payload.current, one);
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
+
+      const item_get = await ctx.ops.get(id);
+  
+      assert_partial(item_get, {...one, id});
+      assert.ok(is_event_ok, 'event error (test get)');
+
+      unsub();
+    }
+
+    { // test update
+      let is_event_ok = false;
+
+      // test upsert event shows previous
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.upsert_event,
+        v => {
+          try {
+            assert_partial(v.payload.current, one);
+            if(v.payload.previous) {
+              assert_partial(v.payload.previous, one);
+              assert.not(v.payload.previous.updated_at===v.payload.current.updated_at)
+            }
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
+  
+      id = await ctx.ops.upsert({...one, id});
+  
+      assert.ok(id, 'insertion failed (test update)');
+      assert.ok(is_event_ok, 'event error (test update)');
+
+      unsub();
+    }
+
+    
+    { // test remove
+
+      let is_event_ok = false;
+
+      // test upsert shows previous
+      const unsub = ctx.app.pubsub.on(
+        ctx.events.remove_event,
+        v => {
+          try {
+            assert_partial(v.payload.previous, one);
+            is_event_ok = true;
+          } catch (e) {}
+        }
+      );
+
+      const success = await ctx.ops.remove(id);
+      const item_get = await ctx.ops.get(id);
+
+      assert.ok(success, 'item removal was not successful ! (test remove)')
+      assert.not(item_get, 'item was not removed ! (test remove)')
+      assert.ok(is_event_ok, 'event error (test remove)');
+
+      unsub();
+    }
+
   });
-  
-  s('update', async (ctx) => {
-    const one = ctx.items[1];
-    const id = await ctx.ops.upsert(one);
-  
-    assert.ok(id, 'insertion failed');
-  
-    // now let's update, for that we use the id
-    // one.active = false;  
-    await ctx.ops.upsert({...one, id});
-    const item_get = await ctx.ops.get(id);
-  
-    assert_partial(item_get, {...one, id});
-  });
-  
 
   s('missing fields should throw', async (ctx) => {
     await assert_async_throws(
       async () => await ctx.ops.upsert({})
     );
   })
-  
+
   return s;
 }
 
@@ -178,7 +271,7 @@ const compare_tuples = (vec1, vec2) => {
  * - Test `sortBy` by comapring consecutive items
  * - Test `start` / `end` ranges are respected
  * 
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template {PartialBase} T
  * 
  * @param {T[]} list the result of the query
  * @param {import('@storecraft/core/v-api').ApiQuery} q the query used
@@ -240,9 +333,27 @@ export const assert_query_list_integrity = (list, q) => {
   }
 }
 
+/**
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
+ * 
+ * @typedef {object} ListTestContext
+ * @prop {G[]} items
+ * @prop {keyof App["db"]["resources"]} resource
+ * @prop {object} ops
+ * @prop {(item: G) => Promise<string>} [ops.upsert]
+ * @prop {(id: string) => Promise<G>} [ops.get]
+ * @prop {(id: string) => Promise<boolean>} [ops.remove]
+ * @prop {(q: import('@storecraft/core/v-api').ApiQuery) => Promise<G[]>} [ops.list]
+ * @prop {object} events
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.list_event
+ * @prop {App} app
+ * 
+ */
+
 
 /**
- * A simple CRUD sanity, we use it to test integrity of lists.
+ * @description A simple CRUD sanity, we use it to test integrity of lists.
  * 
  * However, we have some assumptions:
  * 
@@ -251,22 +362,11 @@ export const assert_query_list_integrity = (list, q) => {
  * 3. `updated_at` is an ISO of a timestamp starting from number `1`
  * 
  * 
- * @template {import('@storecraft/core/v-api').BaseType & 
- *  import('@storecraft/core/v-api').timestamps
- * } T
  * 
- * @template {{
- *  resource: (keyof App["db"]["resources"])
- *  items: T[],
- *  ops: {
- *    upsert?: (item: T) => Promise<string>,
- *    get?: (id: string) => Promise<T>,
- *    list?: (q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
- *  }
- *  app: App
- * }} C
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
  * 
- * @param {import('uvu').uvu.Test<C>} s 
+ * @param {import('uvu').uvu.Test<ListTestContext<G, U>>} s 
  */
 export const add_list_integrity_tests = s => {
   s('basic count() test',
@@ -284,18 +384,31 @@ export const add_list_integrity_tests = s => {
 
   s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
     async (ctx) => {
+      let is_event_ok = false || !Boolean(ctx.events?.list_event);
+      const limit = 3;
+
       /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q_asc = {
         startAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
         order: 'asc',
-        limit: 3,
+        limit: limit,
         expand: ['*']
       }
+
       /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
+
+      // sanity test for list events
+      const unsub = ctx.app.pubsub.on(
+        ctx.events?.list_event,
+        v => {
+          assert.ok(v.payload.current.length==limit);
+          is_event_ok=true;
+        }
+      );
 
       const list_asc = await ctx.ops.list(q_asc);
       const list_desc = await ctx.ops.list(q_desc);
@@ -315,6 +428,10 @@ export const add_list_integrity_tests = s => {
           assert_partial(p, original_item);
         }
       }
+
+      assert.ok(is_event_ok, 'event error');
+
+      unsub();
       
     }
   );
@@ -407,6 +524,7 @@ export const add_list_integrity_tests = s => {
       }
 
     }
+
   );
 
   return s;

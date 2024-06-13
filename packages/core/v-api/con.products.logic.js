@@ -73,7 +73,8 @@ export const upsert = (app) =>
       item.isbn,
       `qty:${item.qty}`
     );
-  }
+  },
+  'products/upsert'
 )(item);
 
 
@@ -167,10 +168,10 @@ export const list_product_discounts = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'products/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'products/remove'),
+    list: regular_list(app, db(app), 'products/list'),
     list_product_collections: list_product_collections(app),
     list_product_discounts: list_product_discounts(app),
     list_product_variants: list_product_variants(app),

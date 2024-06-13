@@ -4,7 +4,7 @@ import { App } from '../index.js';
 
 /**
  * 
- * `Get` Extension info
+ * @description `Get` Extension info
  * 
  * @param {App} app 
  * @param {string} extension_handle `handle` of `extension` 
@@ -29,7 +29,7 @@ export const get_extension = (app, extension_handle) => {
 
 /**
  * 
- * `List` extensions info
+ * @description `List` extensions info
  * 
  * @param {App} app 
  * 
@@ -43,7 +43,7 @@ export const list_extensions = (app) => {
         config: ext.config,
         info: ext.info,
         handle: handle,
-        actions: ext.actions
+        actions: ext.actions ?? []
       }
     )
   )
@@ -51,7 +51,7 @@ export const list_extensions = (app) => {
 
 
 /**
- * Invoke an `extension` **Action**.
+ * @description Invoke an `extension` **Action**.
  * 
  * 
  * @template PlatformNativeRequest
@@ -70,7 +70,11 @@ export const invoke_extension_action = async (
 
   const ext = app.extensions?.[extension_handle];
 
-  assert(ext, `extension with handle ${extension_handle} was not found`, 400);
+  assert(
+    ext, 
+    `extension with handle ${extension_handle} was not found`, 
+    400
+  );
 
-  return ext.invokeAction(action_handle)(body);
+  return ext.invokeAction?.(action_handle)?.(body);
 }

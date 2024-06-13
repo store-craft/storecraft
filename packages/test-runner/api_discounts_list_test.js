@@ -4,15 +4,10 @@ import * as assert from 'uvu/assert';
 import { file_name, 
   iso, add_list_integrity_tests,
   get_static_ids,
-  image_mock_url_handle_name,
   create_handle} from './api.utils.crud.js';
 import { enums } from '@storecraft/core/v-api';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
-
-const url_handle_name = image_mock_url_handle_name(
-  'img', file_name(import.meta.url)
-);
 
 const handle_gen = create_handle('dis', file_name(import.meta.url));
 
@@ -63,13 +58,15 @@ const items = get_static_ids('dis').map(
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.discounts,
-      resource: 'discounts'
+      resource: 'discounts', events: { list_event: 'discounts/list' }
     }
   );
+  
 
   s.before(
     async (a) => { 

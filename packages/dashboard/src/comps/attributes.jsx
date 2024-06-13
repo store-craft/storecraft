@@ -90,7 +90,7 @@ const Attribute = (
  */
 const Attributes = (
   {
-    field, value=[], onChange, ...rest
+    field, value=[], onChange, setError, ...rest
   }
 ) => {
   

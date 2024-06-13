@@ -24,6 +24,8 @@ export const upsert = (app) =>
  * @param {ItemTypeUpsert} item
  */
 async (item) => {
+  const requires_event_processing = app.pubsub.has('images/upsert');
+
   assert_zod(imageTypeUpsertSchema, item);
 
   item.handle = to_handle(decodeURIComponent(item.name));
@@ -38,6 +40,15 @@ async (item) => {
   );
 
   await db(app).upsert(final, search);
+
+  if(requires_event_processing) {
+    await app.pubsub.dispatch(
+      'images/upsert',
+      {
+        current: final
+      }
+    )
+  }
 
   return final.id;
 }
@@ -56,14 +67,25 @@ async (id) => {
   // remove from storage
   const img = await regular_get(app, db(app))(id);
 
-  if(!img) return;
+  if(!img) 
+    return;
 
   // remove from storage if it belongs
   if(app.storage && img.url.startsWith('storage://'))
     await app.storage.remove(img.url.substring('storage://'.length));
 
   // db remove image side-effect
-  return app.db.resources.images.remove(img.id);
+  const success = await app.db.resources.images.remove(img.id);
+
+  await app.pubsub.dispatch(
+    'images/remove',
+    {
+      previous: img, 
+      success
+    }
+  );
+
+  return success;
 }
 
 /**
@@ -96,9 +118,9 @@ export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'images/get'),
     upsert: upsert(app),
     remove: remove(app),
-    list: regular_list(app, db(app)),
+    list: regular_list(app, db(app), 'images/list'),
   }
 }

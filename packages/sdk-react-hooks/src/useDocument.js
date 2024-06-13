@@ -66,6 +66,7 @@ export function useDocument(
   const reload = useCallback(
     async (try_cache=true) => {
 
+      console.log('chill')
       if(!(resource && document))
         throw 'no doc id';
 

@@ -70,6 +70,14 @@ export const create = app => {
 
   s('create -> complete checkout should succeed', async (ctx) => {
     
+    let is_event_checkout_create_ok = false;
+    const unsub_checkout_create = app.pubsub.on(
+      'checkout/create',
+      (v) => {
+        is_event_checkout_create_ok = Boolean(v.payload.id);
+      }
+    );
+
     const draft_order = await app2.api.checkout.create_checkout(
       {
         line_items: [
@@ -117,11 +125,22 @@ export const create = app => {
         ),
         'payment gateway was not set'
       );
+
+      assert.ok(is_event_checkout_create_ok, 'checkout create event error');
+
+      unsub_checkout_create();
     }
 
 
     { // test the complete checkout part
-
+      let is_event_checkout_complete_ok = false;
+      const unsub_checkout_complete = app.pubsub.on(
+        'checkout/complete',
+        (v) => {
+          is_event_checkout_complete_ok = Boolean(v.payload.id);
+        }
+      );
+  
       const order = await app2.api.checkout.complete_checkout(
         draft_order.id
       );
@@ -151,12 +170,14 @@ export const create = app => {
         `payment status error`
       );
 
+      assert.ok(is_event_checkout_complete_ok, 'checkout complete event error');
+
+      unsub_checkout_complete();
     }
 
   });
 
 
-  // return s;
 
   s('create checkout with automatic stock', async (ctx) => {
     const previous_checkout_reserve_stock_on = app2.config.checkout_reserve_stock_on;

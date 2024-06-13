@@ -3,6 +3,7 @@ import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
+import { PubSub } from './v-pubsub/public.js';
 
 /** 
  * @typedef {Partial<import('./types.public.js').StorecraftConfig>} StorecraftConfig
@@ -18,6 +19,7 @@ const parse_int = (s, def) => {
   const parsed = parseInt(s); // can be NaN
   return parsed ? parsed : def;
 }
+
 
 /**
  * 
@@ -85,6 +87,13 @@ export class App {
    * @type {ExtensionsMap} 
    */ 
   #_extensions;
+
+  /**
+   * @description The app's pubsub system
+   * 
+   * @type {PubSub}
+   */
+  #_pubsub;
 
   /** 
    * @description The Storecraft App Config
@@ -189,7 +198,7 @@ export class App {
       reset: `\x1b[0m`,
     }
   
-    let final = c.magenta;
+    let final = c.magenta + '\n';
     final += banner3;
     final += `${c.red}\nv${version}`
     final += `\n
@@ -208,6 +217,8 @@ export class App {
    * @description Initialize the Application
    */
   async init() {
+    this.#_pubsub = new PubSub();
+    
     try{
       // first let's settle config
       this.#settle_config_after_init();
@@ -224,6 +235,14 @@ export class App {
     this.#_rest_controller = create_rest_api(this);
     this.#_is_ready = true;
     
+    const app = this;
+
+    // settle extensions
+    for(const ext_handle in this.extensions) {
+      const ext = this.extension(ext_handle);
+      ext?.onInit(app);
+    }
+
     return this;
   }
 
@@ -322,6 +341,14 @@ export class App {
   }
 
   /** 
+   * @description Pub-Sub `events` module 
+   */
+  get pubsub() { 
+    return this.#_pubsub; 
+  }
+
+
+  /** 
    * @description Config 
    */
   get config() { 
@@ -360,6 +387,7 @@ export class App {
    * @param {PlatformContext} context 
    */
   handler = async (req, context) => {
+    const start_millis = Date.now();
     const request = await this.#_platform.encode(req)
     
     /** @type {import('./types.public.js').ApiResponse} */
@@ -426,11 +454,28 @@ export class App {
       }
 
     }
+  
+    const c = {
+      red: '\x1b[1;31m',
+      green: '\x1b[1;32m',
+      cyan: '\x1b[36m',
+      magenta: `\x1b[1;35m`,
+      yellow: `\x1b[33m`,
+      reset: `\x1b[0m`,
+    }
 
-    console.log(request.url)
+    const method_to_color = {
+      'get': `\x1b[1;43;37mGET\x1b[0m`,
+      'GET': `\x1b[1;43;37mGET\x1b[0m`,
+      'post': `\x1b[1;44;37mPOST\x1b[0m`,
+      'POST': `\x1b[1;44;37mPOST\x1b[0m`,
+      'delete': `\x1b[1;41;37mDELETE\x1b[0m`,
+      'DELETE': `\x1b[1;41;37mDELETE\x1b[0m`,
+      'options': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+      'OPTIONS': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+    }
 
     await this.rest_controller.handler(request, polka_response);
-    // await this._polka.handler(request, polka_response);
 
     // console.log('polka_response.body ', polka_response.body);
 
@@ -442,11 +487,36 @@ export class App {
       }
     )
 
-    return this.#_platform.handleResponse(
+    const response = await this.#_platform.handleResponse(
       response_web, context
     );
+
+    {
+      const delta = Date.now() - start_millis;
+      const url = new URL(decodeURIComponent(request.url));
+      const line = method_to_color[request.method] + 
+        ' \x1b[33m' + 
+        url.pathname.slice(0, 250) + 
+        '\x1b[0m' + 
+        ` (${delta}ms)`;
+      const query = url.search
+      console.log(line)
+      if(query)
+        console.log(c.cyan, query)
+    }
+
+    return response;
+  }
+
+
+  /**
+   * @description Quickly attach an `event` subscriber. This is just a quick way
+   * to interface into {@link PubSub}
+   * 
+   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents["on"]}
+   */
+  on = (event, callback) => {
+    this.pubsub.on(event, callback);
   }
 
 }
-
-

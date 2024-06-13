@@ -1,4 +1,4 @@
-import { assert, to_handle } from './utils.func.js'
+import { to_handle } from './utils.func.js'
 import { collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -32,12 +32,13 @@ export const upsert = (app) =>
     },
     (final) => {
       return [];
-    }
+    },'collections/upsert'
   )(item);
 
 
 /**
- * given a collection handle and query, return products of that collection
+ * @description given a collection handle and query, 
+ * return products of that collection
  * 
  * 
  * @param {import("../types.public.js").App} app
@@ -60,10 +61,10 @@ export const list_collection_products = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'collections/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'collections/remove'),
+    list: regular_list(app, db(app), 'collections/list'),
     list_collection_products: list_collection_products(app)
   }
 }

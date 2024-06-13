@@ -41,11 +41,12 @@ const items = Array.from({length: 10}).map(
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.shipping_methods,
-      resource: 'shipping_methods'
+      resource: 'shipping_methods', events: { list_event: 'shipping/list' }
     }
   );
 

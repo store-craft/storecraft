@@ -20,7 +20,12 @@ const text2tokens = (text) => {
  * } param 
  * 
  */
-const ManualTag = ({onAdd, ...rest}) => {
+const ManualTag = (
+  {
+    onAdd, ...rest
+  }
+) => {
+
   /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
   const ref_name = useRef();
   /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
@@ -130,7 +135,7 @@ export const SelectTags = (
  */
 const TagsEdit = (
   {
-    field, context, value=[], onChange, ...rest
+    field, context, value=[], onChange, setError, ...rest
   }
 ) => {
 

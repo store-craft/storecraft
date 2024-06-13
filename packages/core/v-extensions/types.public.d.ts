@@ -1,3 +1,4 @@
+import { App } from "../types.public.js";
 import type { 
     ExtensionAction,
     ExtensionInfo 
@@ -5,9 +6,12 @@ import type {
   
   
 /**
- * @template PayloadType The type of the input payload
  * @description A backend `action` is a `function` recieving the 
  * **payload** 
+ * 
+ * 
+ * @template PayloadType The type of the input payload
+ * 
  */
 export type ExtensionActionHandler<PayloadType> = 
   /**
@@ -16,42 +20,47 @@ export type ExtensionActionHandler<PayloadType> =
   (input: PayloadType) => Promise<any>;
   
   
-  /**
-   * Payment Gateway interface.
-   * pay attention to:
-   * 1. `actions()` getter, which specifies a list eligible 
-   * rpc methods for invocation on this backend (for example 
-   * `void`, `capture`, `refund` or whatever)
+/**
+ * @description Payment Gateway interface. pay attention to:
+ * 1. `actions`, which specifies a list eligible `rpc` methods for 
+ * invocation on this backend (through `rest-api`)
+ * 
+ * 
+ * @template {any} Config The config type
+ * 
+ */
+export declare interface extension<Config extends any=any> {
+
+  /** 
    * 
-   * 
-   * @template {any} Config The config type
-   * 
+   * @description info of the extension
    */
-  export declare interface extension<Config extends any=any> {
-  
-    /** 
-     * 
-     * @description info of the payment gateway 
-     */
-    get info(): ExtensionInfo;
-  
-    /** 
-     * 
-     * @description config of the gateway 
-     */
-    get config(): Config;
-  
-    /**
-     * 
-     * @description the eligible actions in this interface for remote invocation
-     */
-    get actions(): ExtensionAction[];
-  
-    /**
-     * 
-     * @param action_handle the identifier of the `action`
-     */
-    invokeAction<P extends any=any>(action_handle: string): 
-        ExtensionActionHandler<P>;
-  
-  }
+  info: ExtensionInfo;
+
+  /** 
+   * 
+   * @description config of the extension 
+   */
+  config: Config;
+
+  /** 
+   * 
+   * @description `oninit` life cycle of the extension, you get things
+   * like the `app` instance, where you can attach event handlers inside
+   * the `pubsub` module, or use the `api` module to manipulate resources.
+   */
+  onInit: (app: App) => void;
+
+  /**
+   * 
+   * @description the eligible actions in this interface for remote invocation
+   */
+  actions?: ExtensionAction[];
+
+  /**
+   * 
+   * @param action_handle the identifier of the `action`
+   */
+  invokeAction?<P extends any=any>(action_handle: string): ExtensionActionHandler<P>;
+
+}

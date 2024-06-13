@@ -14,7 +14,11 @@ import MDView from './md-view.jsx'
  * 
  * @param {ItemParams} params
  */
-const Item = ({ value, onClick }) => {
+const Item = (
+  { 
+    value, onClick 
+  }
+) => {
 
   return (
 <div className='w-full flex flex-col gap-2
@@ -45,7 +49,7 @@ const Item = ({ value, onClick }) => {
  */
 const ProductDiscounts = (
   { 
-    field, context, value=[], onChange, ...rest 
+    field, context, value=[], onChange, setError, ...rest 
   }
 ) => {
   const has_discounts = value.length>0;

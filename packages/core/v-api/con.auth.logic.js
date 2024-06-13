@@ -20,7 +20,8 @@ export const removeByEmail = (app) =>
  * @param {string} email
  */
 (email) => {
-  return app.db.resources.auth_users.removeByEmail(email);
+  return remove_auth_user(app)(email);
+  // return app.db.resources.auth_users.removeByEmail(email);
 }
 
 /**
@@ -65,20 +66,21 @@ async (body) => {
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
 
   /** @type {import('./types.api.js').AuthUserType} */
-  const au = {
-    id: id,
-    email, 
-    password: hashedPassword,
-    confirmed_mail: false,
-    roles,
-    description: `This user is a created with roles: [admin]`
-  }
-
-  await app.db.resources.auth_users.upsert(
-    apply_dates(au),
-    create_search_terms(au)
+  const au = apply_dates(
+    {
+      id: id,
+      email, 
+      password: hashedPassword,
+      confirmed_mail: false,
+      roles,
+      description: `This user is a created with roles: [admin]`
+    }
   );
 
+  await app.db.resources.auth_users.upsert(
+    au,
+    create_search_terms(au)
+  );
 
   /** @type {Partial<import("../v-crypto/jwt.js").JWTClaims>} */
   const claims = {
@@ -100,6 +102,17 @@ async (body) => {
     }, 
     jwt.JWT_TIMES.DAY * 7
   );
+
+  { // dispatch event
+    if(app.pubsub.has('auth/signup')) {
+      const sanitized = { ...au };
+      delete sanitized.password;
+      await app.pubsub.dispatch(
+        'auth/signup',
+        sanitized
+      );
+    }
+  }
 
   return {
       token_type: 'Bearer',
@@ -163,6 +176,17 @@ async (body, fail_if_not_admin=false) => {
     app.config.auth_secret_refresh_token, 
     {...claims, aud: '/refresh'}, jwt.JWT_TIMES.DAY * 7
   );
+
+  { // dispatch event
+    if(app.pubsub.has('auth/signin')) {
+      const sanitized = { ...existingUser };
+      delete sanitized.password;
+      await app.pubsub.dispatch(
+        'auth/signin',
+        sanitized
+      );
+    }
+  }
 
   return { 
     token_type: 'Bearer',
@@ -438,9 +462,26 @@ export const remove_auth_user = (app) =>
  */
 async (id_or_email) => {
 
+  { // dispatch event
+    if(app.pubsub.has('auth/remove')) {
+      const user_to_remove = await app.db.resources.auth_users.get(
+        id_or_email
+      );
+
+      if(user_to_remove)
+        delete user_to_remove.password;
+
+      await app.pubsub.dispatch(
+        'auth/remove',
+        user_to_remove
+      );
+    }
+  }
+
   await app.db.resources.auth_users.remove(
     id_or_email
   );
+
 }
 
 /**

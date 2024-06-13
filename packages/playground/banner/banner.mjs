@@ -9,7 +9,7 @@ import ansis from 'ansis';
 
 const KBLUE = '\x1b[32m'
 const OKCYAN = '\\033[96m'
-
+// https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 // https://www.freeformatter.com/javascript-escape.html#before-output
 
 const banner = '         __                                  ______ \r\n   _____\/ \/_____  ________  ______________ _\/ __\/ \/_\r\n  \/ ___\/ __\/ __ \\\/ ___\/ _ \\\/ ___\/ ___\/ __ `\/ \/_\/ __\/\r\n (__  ) \/_\/ \/_\/ \/ \/  \/  __\/ \/__\/ \/  \/ \/_\/ \/ __\/ \/_  \r\n\/____\/\\__\/\\____\/_\/   \\___\/\\___\/_\/   \\__,_\/_\/  \\__\/  \r\n                                                    \r\n'

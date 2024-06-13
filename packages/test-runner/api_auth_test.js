@@ -22,26 +22,57 @@ export const create = app => {
   s.before(async () => { assert.ok(app.ready) });
   
   s('remove and signup admin', async () => {
+
     await app.api.auth.removeByEmail(admin_email);
-    const r = await app.api.auth.signup({
-      email: admin_email,
-      password: admin_password
-    });
+
+    let is_event_ok = false;
+    const unsub = app.pubsub.on(
+      'auth/signup',
+      (v) => {
+        is_event_ok=v.payload.email===admin_email;
+      }
+    );
+
+    const r = await app.api.auth.signup(
+      {
+        email: admin_email,
+        password: admin_password
+      }
+    );
   
     const has_admin_role = r.access_token.claims?.roles?.includes('admin')
     const ok = r.access_token && r.refresh_token && r.user_id && has_admin_role; 
+
     assert.ok(ok, 'nope');
+    assert.ok(is_event_ok, 'event error');
+
+    unsub();
   });
   
   s('signin admin', async () => {
-    const r = await app.api.auth.signin({
-      email: admin_email,
-      password: admin_password
-    });
+
+    let is_event_ok = false;
+    const unsub = app.pubsub.on(
+      'auth/signin',
+      (v) => {
+        is_event_ok=v.payload.email===admin_email;
+      }
+    );
+
+    const r = await app.api.auth.signin(
+      {
+        email: admin_email,
+        password: admin_password
+      }
+    );
   
     const has_admin_role = r.access_token.claims?.roles?.includes('admin')
     const ok = r.access_token && r.refresh_token && r.user_id && has_admin_role; 
+    
     assert.ok(ok, 'nope');
+    assert.ok(is_event_ok, 'event error');
+
+    unsub();
   });
   
   s('refresh admin', async () => {
@@ -91,6 +122,14 @@ export const create = app => {
     }
 
     { 
+      let is_event_ok = false;
+      const unsub = app.pubsub.on(
+        'auth/remove',
+        (v) => {
+          is_event_ok=v.payload.email===apikey_created_decoded_email;
+        }
+      );
+  
       // now remove
       await app.api.auth.remove_auth_user(apikey_created_decoded_email);
 
@@ -101,6 +140,10 @@ export const create = app => {
         'apikey could not be removed'
       );
 
+      assert.ok(is_event_ok, 'event error');
+
+      unsub();
+  
     }
 
   });

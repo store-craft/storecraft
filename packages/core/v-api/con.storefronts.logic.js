@@ -32,7 +32,8 @@ export const upsert = (app) =>
   },
   (final) => {
     return [];
-  }
+  },
+  'storefronts/upsert'
 )(item);
 
 
@@ -105,10 +106,10 @@ export const list_storefront_posts = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'storefronts/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'storefronts/remove'),
+    list: regular_list(app, db(app), 'storefronts/list'),
     list_storefront_products: list_storefront_products(app),
     list_storefront_collections: list_storefront_collections(app),
     list_storefront_discounts: list_storefront_discounts(app),

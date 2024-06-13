@@ -24,7 +24,7 @@ export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfil
 
 
 /**
- * Payment Gateway interface.
+ * @description Payment Gateway interface.
  * pay attention to:
  * 1. `actions()` getter, which specifies a list eligible 
  * rpc methods for invocation on this backend (for example 
@@ -62,23 +62,24 @@ export declare interface payment_gateway<
 
   /** 
    * 
-   * info of the payment gateway 
+   * @description info of the payment gateway 
    */
-  get info(): PaymentGatewayInfo;
+  info: PaymentGatewayInfo;
 
   /** 
    * 
-   * config of the gateway 
+   * @description config of the gateway 
    */
-  get config(): Config;
+  config: Config;
 
   /**
    * 
-   * the eligible actions in this interface for remote invocation
+   * @description the eligible actions in this interface for remote invocation
    */
-  get actions(): PaymentGatewayAction[];
+  actions: PaymentGatewayAction[];
 
   /**
+   * @description Invoke a gateway `action`
    * 
    * @param action_handle the identifier of the `action`
    * @param extra extra parameters for the action
@@ -88,8 +89,8 @@ export declare interface payment_gateway<
 
   /**
    * 
-   * Create a checkout in the gateway, return a `CreateResult` object which
-   * will be given to you subsequntially 
+   * @description Create a checkout in the gateway, return a 
+   * `CreateResult` object which will be given to you subsequntially 
    * 
    * @param order store-craft order, use it to infer pricing
    * 
@@ -98,7 +99,7 @@ export declare interface payment_gateway<
 
   /**
    * 
-   * Syncronous payment, customer has approved the payment, 
+   * @description Syncronous payment, customer has approved the payment, 
    * proceed to synchronous completion
    * 
    * 
@@ -107,13 +108,13 @@ export declare interface payment_gateway<
    * @param extra_client_payload `anything` the client might send
    * 
    */
-  onCheckoutComplete: (create_result: CreateResult, extra_client_payload: any) => Promise<OnCheckoutCompleteResult>;
+  onCheckoutComplete: (create_result: CreateResult, extra_client_payload: any) => 
+                  Promise<OnCheckoutCompleteResult>;
 
   /**
    * 
-   * Query for the status of created payment, receive back a status object with
-   * available actions.
-   * 
+   * @description Query for the status of created payment, receive back 
+   * a status object with available actions.
    * 
    * @param checkout_create_result sthe result of `onCheckoutCreate`
    */
@@ -121,7 +122,7 @@ export declare interface payment_gateway<
 
   /**
    * 
-   * Support async notifications and payments through webhooks
+   * @description Support async notifications and payments through webhooks
    * 
    * 
    * @param input input to webhook, usually HTTP request

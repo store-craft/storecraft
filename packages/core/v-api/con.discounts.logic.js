@@ -38,7 +38,8 @@ export const upsert = (app) =>
       isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.id}`,
       isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.type}`,
     );
-  }
+  },
+  'discounts/upsert'
 )(item);
 
 
@@ -66,10 +67,10 @@ export const list_discounts_products = (app) =>
 export const inter = app => {
 
   return {
-    get: regular_get(app, db(app)),
+    get: regular_get(app, db(app), 'discounts/get'),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app)),
-    list: regular_list(app, db(app)),
+    remove: regular_remove(app, db(app), 'discounts/remove'),
+    list: regular_list(app, db(app), 'discounts/list'),
     list_discounts_products: list_discounts_products(app)
   }
 }

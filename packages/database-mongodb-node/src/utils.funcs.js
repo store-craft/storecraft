@@ -125,13 +125,27 @@ export const to_objid_safe = id => {
  * @returns {import('mongodb').Filter<G>}
  */
 export const handle_or_id = (handle_or_id) => {
+  return objid_or_else_filter(handle_or_id);
+}
+
+
+/**
+ * @template {{handle?: string}} G
+ * 
+ * 
+ * @param {string} id_or_else 
+ * 
+ * 
+ * @returns {import('mongodb').Filter<G>}
+ */
+export const objid_or_else_filter = (id_or_else, else_key='handle') => {
   try {
     return {
-      _id: to_objid(handle_or_id)
+      _id: to_objid(id_or_else)
     }
   } catch (e) {
     return {
-      handle: handle_or_id
+      [else_key]: id_or_else
     }
   }
 }

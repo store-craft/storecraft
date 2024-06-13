@@ -109,7 +109,12 @@ export const pick_random = items => {
 }
 
 /**
- * @template G
+ * @typedef {Partial<import('@storecraft/core/v-api').BaseType>} PartialBase
+ */
+
+/**
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
  * 
  * @typedef {object} CrudTestContext
  * @prop {G[]} items
@@ -128,12 +133,14 @@ export const pick_random = items => {
 
 /**
  * A simple CRUD sanity
- * @template G
- * @param {import('uvu').uvu.Test<CrudTestContext<G>>} s 
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
+ * 
+ * @param {import('uvu').uvu.Test<CrudTestContext<G, U>>} s 
  */
 export const add_sanity_crud_to_test_suite = s => {
     
-  s('upsert, get, remove', async (ctx) => {
+  s('upsert, get, update, remove', async (ctx) => {
     const one = ctx.items[0];
 
     let id;
@@ -188,10 +195,11 @@ export const add_sanity_crud_to_test_suite = s => {
         ctx.events.upsert_event,
         v => {
           try {
-            // console.log(v)
             assert_partial(v.payload.current, one);
-            assert_partial(v.payload.previous, one);
-            assert.not(v.payload.previous.updated_at===v.payload.current.updated_at)
+            if(v.payload.previous) {
+              assert_partial(v.payload.previous, one);
+              assert.not(v.payload.previous.updated_at===v.payload.current.updated_at)
+            }
             is_event_ok = true;
           } catch (e) {}
         }
@@ -239,35 +247,6 @@ export const add_sanity_crud_to_test_suite = s => {
     );
   })
 
-  return s;
-    
-  s('create', async (ctx) => {
-    const one = ctx.items[0];
-    const id = await ctx.ops.upsert(one);
-  
-    assert.ok(id, 'insertion failed');
-  
-    const item_get = await ctx.ops.get(id);
-    assert_partial(item_get, {...one, id});
-  });
-
-  s('update', async (ctx) => {
-    const one = ctx.items[1];
-    const id = await ctx.ops.upsert(one);
-  
-    assert.ok(id, 'insertion failed');
-  
-    // now let's update, for that we use the id
-    // one.active = false;  
-    await ctx.ops.upsert({...one, id});
-    const item_get = await ctx.ops.get(id);
-  
-    assert_partial(item_get, {...one, id});
-  });
-
-
-
-  
   return s;
 }
 

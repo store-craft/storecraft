@@ -198,7 +198,7 @@ export class App {
       reset: `\x1b[0m`,
     }
   
-    let final = c.magenta;
+    let final = c.magenta + '\n';
     final += banner3;
     final += `${c.red}\nv${version}`
     final += `\n

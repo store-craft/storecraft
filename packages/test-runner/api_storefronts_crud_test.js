@@ -27,9 +27,17 @@ const items_upsert = [
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').CrudTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: app.api.storefronts }
+    { 
+      items: items_upsert, app, ops: app.api.storefronts,
+      events: {
+        get_event: 'storefronts/get',
+        upsert_event: 'storefronts/upsert',
+        remove_event: 'storefronts/remove',
+      }
+    }
   );
 
   s.before(

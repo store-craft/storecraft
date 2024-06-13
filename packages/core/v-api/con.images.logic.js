@@ -80,7 +80,7 @@ async (id) => {
   await app.pubsub.dispatch(
     'images/remove',
     {
-      previous: undefined, 
+      previous: img, 
       success
     }
   );

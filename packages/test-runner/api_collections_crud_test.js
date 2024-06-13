@@ -38,7 +38,7 @@ export const create = app => {
   ]
 
 
-  /** @type {import('uvu').Test<import('./api.utils.crud.js').CrudTestContext<{}>>} */
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').CrudTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 

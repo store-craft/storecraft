@@ -28,11 +28,20 @@ const items_upsert = [
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').CrudTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
-    { items: items_upsert, app, ops: app.api.posts }
+    { 
+      items: items_upsert, app, ops: app.api.posts,
+      events: {
+        get_event: 'posts/get',
+        upsert_event: 'posts/upsert',
+        remove_event: 'posts/remove',
+      }
+    }
   );
 
+  
   s.before(
     async () => { 
       assert.ok(app.ready) 

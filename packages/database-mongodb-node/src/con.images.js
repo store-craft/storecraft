@@ -57,7 +57,7 @@ const remove = (driver) => {
               driver.resources.discounts._col.updateMany(filter, update, options),
               driver.resources.posts._col.updateMany(filter, update, options),
               driver.resources.products._col.updateMany(filter, update, options),
-              driver.resources.shipping._col.updateMany(filter, update, options),
+              driver.resources.shipping_methods._col.updateMany(filter, update, options),
               driver.resources.storefronts._col.updateMany(filter, update, options),
             ]
           );

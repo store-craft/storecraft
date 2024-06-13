@@ -62,13 +62,15 @@ const collections_upsert = [
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.products,
-      resource: 'products'
+      resource: 'products', events: { list_event: 'products/list' }
     }
   );
+
 
   s.before(
     async (a) => { 

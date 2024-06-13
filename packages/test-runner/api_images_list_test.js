@@ -43,13 +43,15 @@ const items = get_static_ids('img').map(
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.images,
-      resource: 'images'
+      resource: 'images', events: { list_event: 'images/list' }
     }
   );
+  
 
   s.before(
     async (a) => { 

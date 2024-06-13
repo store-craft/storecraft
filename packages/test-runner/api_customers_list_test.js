@@ -7,8 +7,6 @@ import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 import { ID } from '@storecraft/core/v-api/utils.func.js';
 
-const handle = create_handle('cus', file_name(import.meta.url));
-
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
 // we will write straight to the databse, bypassing the
@@ -41,13 +39,15 @@ const items = Array.from({length: 10}).map(
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.customers,
-      resource: 'customers' 
+      resource: 'customers', events: { list_event: 'customers/list' }
     }
   );
+  
 
   s.before(
     async (a) => { 

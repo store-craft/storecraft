@@ -44,13 +44,15 @@ const items = Array.from({length: 10}).map(
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.templates,
-      resource: 'templates'
+      resource: 'templates', events: { list_event: 'templates/list' }
     }
   );
+
 
   s.before(
     async (a) => { 

@@ -53,13 +53,15 @@ const items = get_static_ids('order').map(
  */
 export const create = app => {
 
+  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
       items: items, app, ops: app.api.orders,
-      resource: 'orders'
+      resource: 'orders', events: { list_event: 'orders/list' }
     }
   );
+
 
   s.before(
     async (a) => { 

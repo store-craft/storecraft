@@ -271,7 +271,7 @@ const compare_tuples = (vec1, vec2) => {
  * - Test `sortBy` by comapring consecutive items
  * - Test `start` / `end` ranges are respected
  * 
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template {PartialBase} T
  * 
  * @param {T[]} list the result of the query
  * @param {import('@storecraft/core/v-api').ApiQuery} q the query used
@@ -333,9 +333,27 @@ export const assert_query_list_integrity = (list, q) => {
   }
 }
 
+/**
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
+ * 
+ * @typedef {object} ListTestContext
+ * @prop {G[]} items
+ * @prop {keyof App["db"]["resources"]} resource
+ * @prop {object} ops
+ * @prop {(item: G) => Promise<string>} [ops.upsert]
+ * @prop {(id: string) => Promise<G>} [ops.get]
+ * @prop {(id: string) => Promise<boolean>} [ops.remove]
+ * @prop {(q: import('@storecraft/core/v-api').ApiQuery) => Promise<G[]>} [ops.list]
+ * @prop {object} events
+ * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.list_event
+ * @prop {App} app
+ * 
+ */
+
 
 /**
- * A simple CRUD sanity, we use it to test integrity of lists.
+ * @description A simple CRUD sanity, we use it to test integrity of lists.
  * 
  * However, we have some assumptions:
  * 
@@ -344,22 +362,11 @@ export const assert_query_list_integrity = (list, q) => {
  * 3. `updated_at` is an ISO of a timestamp starting from number `1`
  * 
  * 
- * @template {import('@storecraft/core/v-api').BaseType & 
- *  import('@storecraft/core/v-api').timestamps
- * } T
  * 
- * @template {{
- *  resource: (keyof App["db"]["resources"])
- *  items: T[],
- *  ops: {
- *    upsert?: (item: T) => Promise<string>,
- *    get?: (id: string) => Promise<T>,
- *    list?: (q: import('@storecraft/core/v-api').ApiQuery) => Promise<T[]>,
- *  }
- *  app: App
- * }} C
+ * @template {PartialBase} [G=PartialBase]
+ * @template {PartialBase} [U=PartialBase]
  * 
- * @param {import('uvu').uvu.Test<C>} s 
+ * @param {import('uvu').uvu.Test<ListTestContext<G, U>>} s 
  */
 export const add_list_integrity_tests = s => {
   s('basic count() test',
@@ -377,18 +384,31 @@ export const add_list_integrity_tests = s => {
 
   s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
     async (ctx) => {
+      let is_event_ok = false || !Boolean(ctx.events?.list_event);
+      const limit = 3;
+
       /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q_asc = {
         startAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
         order: 'asc',
-        limit: 3,
+        limit: limit,
         expand: ['*']
       }
+
       /** @type {import('@storecraft/core/v-api').ApiQuery} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
+
+      // sanity test for list events
+      const unsub = ctx.app.pubsub.on(
+        ctx.events?.list_event,
+        v => {
+          assert.ok(v.payload.current.length==limit);
+          is_event_ok=true;
+        }
+      );
 
       const list_asc = await ctx.ops.list(q_asc);
       const list_desc = await ctx.ops.list(q_desc);
@@ -408,6 +428,10 @@ export const add_list_integrity_tests = s => {
           assert_partial(p, original_item);
         }
       }
+
+      assert.ok(is_event_ok, 'event error');
+
+      unsub();
       
     }
   );
@@ -500,6 +524,7 @@ export const add_list_integrity_tests = s => {
       }
 
     }
+
   );
 
   return s;

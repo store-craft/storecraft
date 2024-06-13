@@ -3,7 +3,6 @@ import Layout from '@/components/layout.jsx'
 import { MDXRemote } from 'next-mdx-remote'
 import { _getStaticProps, 
   _getStaticPaths } from '@/utils/next_props.js'
-import ClientOnly from '@/components/client-only.jsx'
 import Head from 'next/head.js';
 
 export default function PostPage( props ) {

@@ -61,14 +61,15 @@ const Header = (
   }
 ) => {
 
-  const {title, items, icon} = group
+  const {title, items, icon} = group;
 
   return (
 <div {...rest}>    
   <div className='flex flex-row items-center gap-2 px-2 cursor-pointer'>
-    <div className='border p-1 text-kf-500 dark:text-pink-500 
-                  border-kf-500/20 dark:border-pink-500/40 
-                  rounded-md'>
+    <div className={`border p-1 dark:text-pink-500 
+                  border-kf-500/20 dark:border-pink-500/40 rounded-md
+                  ${selected ? 'bg-gradient-to-br from-kf-500 to-pink-500/20 text-white' : 'text-kf-400'}`
+                  }>
       <Icon {...icon} />
     </div>                
     <div 
@@ -157,13 +158,13 @@ const SideGroup = (
  * @typedef {object} SideBarParams
  * @prop {Group[]} groups
  * @prop {string} selectedSlug
- * @prop {(item: Item) => any } onClickMenuItem
+ * @prop {(item: Item) => any } [onClickMenuItem]
  * 
  * 
  * @param {SideBarParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
  * } params
- * 
+ *  
  */
 const SideBar = (
   { 

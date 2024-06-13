@@ -1,11 +1,18 @@
 import { useCallback, useEffect } from 'react'
 import useTrigger from './useTrigger.js'
 
-let darkMode = false
-const subs = new Set()
+let darkMode = false;
+const subs = new Set();
 
+/**
+ * 
+ * @param {(v: boolean) => void} cb 
+ * 
+ * @returns {() => void}
+ */
 const subscribe = cb => {
-  subs.add(cb)
+  subs.add(cb);
+
   return () => {
     subs.delete(cb)
   }
@@ -20,21 +27,25 @@ const notify = () => {
 
 
 export default function useDarkMode() {
-  const trigger = useTrigger()
+  const trigger = useTrigger();
 
   const toggle = useCallback(
     () => {
-      darkMode = !darkMode
-      notify()
-    }
-  )
+      darkMode = !darkMode;
+
+      notify();
+    }, [notify, darkMode]
+  );
 
   useEffect(
     () => subscribe(
       trigger
     ),
     []
-  )
+  );
 
-  return { darkMode, toggle }
+  return { 
+    darkMode, 
+    toggle 
+  }
 }

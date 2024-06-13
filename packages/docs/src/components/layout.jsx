@@ -1,6 +1,6 @@
 // import matter from 'gray-matter'
 // import SideBar from './side-bar'
-import SideBar from './side-bar-v2.jsx'
+import SideBar from './side-bar.jsx'
 import Header from './header.jsx'
 import Copyright from './copyright.jsx'
 import useToggle from '../hooks/useToggle.js'
@@ -72,10 +72,10 @@ const Layout = (
                        '>
         <SideBar 
             className='hidden md:block w-60 h-full overflow-y-auto 
-                       flex-shrink-0 px-3 pt-[80px]'
+                       flex-shrink-0 px-3 pt-[100px]'
             selectedSlug={slug}
             groups={groups} 
-            name={name} />
+            />
 
         <div 
             className='relative overflow-y-auto w-full --mx-auto max-w-[800px] 
@@ -90,13 +90,9 @@ const Layout = (
 
           <div 
               className='w-full block px-5 md:px-5 h-fit pb-20 --mdx --bg-green-400
-                         pt-[100px] prose text-lg dark:prose-invert decoration-from-font 
+                         pt-[100px] prose text-base dark:prose-invert decoration-from-font 
                          subpixel-antialiased 
                         text-slate-600 dark:text-slate-400'
-               sstyle={{
-                'font-size': '1rem',
-                'line-height': '1.75rem',
-               }}
                children={content} />
           <Copyright />               
         </div>

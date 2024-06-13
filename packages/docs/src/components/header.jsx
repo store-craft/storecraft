@@ -62,7 +62,7 @@ export const Logo = (
  * @prop {string} prefix
  * @prop {string} github_link
  * @prop {string} className
- * @prop {React.MouseEventHandler<SVGElement>} onMenuClick
+ * @prop {Function} onMenuClick
  * 
  * 
  * @param {HeaderParams} params
@@ -123,7 +123,7 @@ const Header = (
       onMenuClick &&
       <AiOutlineMenu className='inline md:hidden cursor-pointer 
                               '
-                      onClick={onMenuClick} />
+                      onClick={e => onMenuClick()} />
     }
   </div>
 

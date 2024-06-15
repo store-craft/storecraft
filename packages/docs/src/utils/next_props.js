@@ -28,9 +28,8 @@ export async function getHeadings(source) {
 
 /**
  * 
- * @param {string} folder_path 
  */
-const import_folder = function(folder_path) {
+const import_folder = function() {
 
   const paths = doc.groups.map(
     group => group.items
@@ -58,31 +57,26 @@ const import_folder = function(folder_path) {
 
 /**
  * 
- * @param {string} path_of_content_folder 
  * @param {object} params
  * @param {Awaited<ReturnType<_getStaticPaths>>["paths"]["0"]["params"]} params.params
  * @returns 
  */
 export const _getStaticProps = async (
-  path_of_content_folder, 
   { 
     params 
   }
 ) => {
-  // console.log('getStaticProps')
-  const docs = import_folder(
-    path.join(process.cwd(), 
-    path_of_content_folder)
-  )
-  const { slug } = params
+  
+  const docs = import_folder();
+  const { slug } = params;
   const route = slug?.reduce(
     (acc, curr) => path.join(acc, curr)
     , ''
-  ) ?? docs.groups[0].items[0].route
+  ) ?? docs.groups[0].items[0].route;
 
-  const path_of_file = docs.__map[route]
-  const source = fs.readFileSync(path_of_file)
-  const { content, data } = matter(source)
+  const path_of_file = docs.__map[route];
+  const source = fs.readFileSync(path_of_file);
+  const { content, data } = matter(source);
 
   const mdxSource = await serialize(
     content, {
@@ -94,7 +88,8 @@ export const _getStaticProps = async (
       },
       scope: data,
     }
-  ) 
+  );
+
   // console.log(docs)
 
   return {
@@ -111,14 +106,10 @@ export const _getStaticProps = async (
 
 /**
  * 
- * @param {string} path_of_content_folder 
  */
-export const _getStaticPaths = async (path_of_content_folder) => {
+export const _getStaticPaths = async () => {
   // console.log('creating docs pages')
-  const docs = import_folder(
-    path.join(process.cwd(), 
-    path_of_content_folder)
-  );
+  const docs = import_folder();
 
   /**
    * 

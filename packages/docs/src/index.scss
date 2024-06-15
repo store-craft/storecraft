@@ -69,9 +69,7 @@
 
   .shelf-card {
     @apply shelf-border-color;
-    // @apply bg-white dark:bg-slate-700/50 ;
     @apply bg-white dark:bg-[rgb(41,52,69)] ;
-    // dark:bg-[rgb(41,52,69)]
   }
 
   .shelf-card-light {
@@ -123,6 +121,7 @@
     font-feature-settings: "cv11";
     -webkit-text-size-adjust: 100%;
     font-variation-settings: normal;
+    font-size: normal;
     tab-size: 4;
     h1 {
       margin-top: 2rem;
@@ -130,9 +129,7 @@
       line-height: 1.2;
       font-weight: bold;
       font-size: 1.875rem;
-      // font-size: "1.875rem";
       letter-spacing: -.025em;
-      // background-color: theme('colors.black');
     }
     h2 {
       margin-top: 3rem;
@@ -147,7 +144,6 @@
     }
     h3 {
       margin-top: 2rem;
-      // mb: "0.5rem",
       line-height: 1.25;
       font-weight: 600;
       font-size: 1.25rem;
@@ -176,12 +172,6 @@
       margin-bottom: 4rem;
     }
     blockquote {
-      // bg: "orange.100",
-      // borderWidth: "1px",
-      // borderColor: "orange.200",
-      // rounded: "lg",
-      // px: "1.25rem",
-      // py: "1rem",
       margin-top: 1.5rem;
       margin-bottom: 1.5rem;
       p  {
@@ -212,20 +202,9 @@
     }
     code {
       font-weight: 400;
-      // rounded: "sm",
-      // px: "1",
-      // fontSize: "0.8em",
-      // py: "2px",
-      // whiteSpace: "nowrap",
-      // lineHeight: "normal",
     }
-    // font-family: theme('fontFamily.open_sans');
-    font-size: normal
-    // border-radius: theme('borderRadius.lg');
-    // padding: theme('spacing.6');
-    // box-shadow: theme('boxShadow.xl');
   }
-  /* ... */
 }
+
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');

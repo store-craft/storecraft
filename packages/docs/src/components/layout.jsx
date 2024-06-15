@@ -11,10 +11,12 @@ import { GradStroke } from './grad-stroke.jsx'
 
 /**
  * @typedef {object} LayoutParams
- * @prop {string} className
- * @prop {object} data
- * @prop {string} header_prefix
- * @prop {string} github_link
+ * @prop {import('../../pages/[[...slug]].js').PostPageProps["data"] & 
+ *  { content_hydrated: JSX.Element }
+ * } data
+ * @prop {string} [className]
+ * @prop {string} [header_prefix]
+ * @prop {string} [github_link]
  * 
  * @param {LayoutParams} params
  */
@@ -24,7 +26,7 @@ const Layout = (
   }
 ) => {
 
-  let { slug, content, document, frontMatter } = data;
+  let { slug, content_hydrated, document, frontMatter } = data;
   let { name, groups } = document;
   const { title, description } = frontMatter;
   const [menu, toggleMenu] = useToggle(false);
@@ -93,7 +95,7 @@ const Layout = (
                          pt-[100px] prose text-base dark:prose-invert decoration-from-font 
                          subpixel-antialiased z-10
                         text-slate-600 dark:text-slate-400'
-               children={content} />
+               children={content_hydrated} />
           <Copyright />               
         </div>
       </main>
@@ -103,7 +105,8 @@ const Layout = (
                       h-[calc(100vh-70px)] overflow-y-auto 
                       bg-white dark:bg-gray-900
                       pt-1 px-3 transition-transform duration-300
-                      ${menu ? 'translate-x-0' : 'translate-x-full'}`}
+                      ${menu ? 'translate-x-0' : 'translate-x-full'}`
+                    }
           onClickMenuItem={_ => toggleMenu()}
           selectedSlug={slug}
           groups={groups} 

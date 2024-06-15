@@ -1,42 +1,53 @@
 import components from '@/components/mdx-components.jsx'
 import Layout from '@/components/layout.jsx'
 import { MDXRemote } from 'next-mdx-remote'
-import { _getStaticProps, 
-  _getStaticPaths } from '@/utils/next_props.js'
+import { 
+  _getStaticProps, _getStaticPaths 
+} from '@/utils/next_props.js';
 import Head from 'next/head.js';
 
-export default function PostPage( props ) {
+/**
+ * @typedef {Awaited<ReturnType<getStaticProps>>["props"]} PostPageProps
+ */
+
+/**
+ * 
+ * @param {PostPageProps} props 
+ */
+export default function PostPage(props) {
   const { data } = props
   const data_ = { 
     ...data, 
-    content : <MDXRemote {...data.content} components={components} /> 
+    content_hydrated : <MDXRemote {...data.content} components={components} /> 
   }
 
   return (
-    <>
+  <>
     <Head>
       <title>
-        SHELF Commerce CMS Docs
+      Storecraft Official Documentation Website
       </title>
       <meta
         name="description"
-        content="SHELF CMS Official Docs website. SHELF transforms your Firebase project into a Headless store CMS and it's FREE"
+        content="Storecraft Official Documentation Website."
         key="desc"
       />
     </Head>
-    {/* <ClientOnly> */}
-      <Layout data={data_}/>
-    {/* </ClientOnly> */}
-    </>
+    <Layout data={data_}/>
+  </>
   )
 }
 
 export const getStaticProps = async ({ params }) => {
   // console.log('getStaticProps')
-  return _getStaticProps('content/docs/microgl', {params})
+  return _getStaticProps(
+    {
+      params
+    }
+  );
 }
 
 export const getStaticPaths = async () => {
   // console.log('creating docs pages')
-  return _getStaticPaths('content/docs/microgl')
+  return _getStaticPaths();
 }

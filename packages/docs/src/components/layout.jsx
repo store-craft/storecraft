@@ -82,7 +82,7 @@ const Layout = (
                        h-full'
             ref={main_ref}>
           
-          <GradStroke className='w-full h-[550px] absolute right-10 top-0 opacity-30 --z-50' />
+          {/* <GradStroke className='w-full h-[550px] absolute right-10 top-0 opacity-30 z-0' /> */}
           {/* <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 opacity-80'
                       via='via-kf-400' blur='blur-lg' /> */}
           {/* <GradStroke className='w-[450px] h-[150px] absolute right-20 top-0 opacity-80'
@@ -91,7 +91,7 @@ const Layout = (
           <div 
               className='w-full block px-5 md:px-5 h-fit pb-20 --mdx --bg-green-400
                          pt-[100px] prose text-base dark:prose-invert decoration-from-font 
-                         subpixel-antialiased 
+                         subpixel-antialiased z-10
                         text-slate-600 dark:text-slate-400'
                children={content} />
           <Copyright />               

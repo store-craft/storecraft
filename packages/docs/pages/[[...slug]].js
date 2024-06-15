@@ -3,7 +3,7 @@ import Layout from '@/components/layout.jsx'
 import { MDXRemote } from 'next-mdx-remote'
 import { 
   _getStaticProps, _getStaticPaths 
-} from '@/utils/next_props.js';
+} from '@/utils/next-props.js';
 import Head from 'next/head.js';
 
 /**
@@ -20,6 +20,9 @@ export default function PostPage(props) {
     ...data, 
     content_hydrated : <MDXRemote {...data.content} components={components} /> 
   }
+
+
+  console.log(props)
 
   return (
   <>

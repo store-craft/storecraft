@@ -5,15 +5,18 @@ import CodeBlock from './code-block.jsx'
 import BlockQuote from './block-quote.jsx'
 import Table from './table.jsx'
 import Drawer from './drawer.jsx'
-import { JsDocTables } from './js-doc-table.jsx'
+// import { JsDocTables } from './js-doc-table.jsx'
 import { Image } from './image.jsx'
 import { Pink, Lime, Purple } from './labels.jsx'
 
+/**
+ * @type {Record<string, React.FC<{ [x:? string]: any }>>}
+ */
 const components = {
-  h1: (props) => <h1 {...props} />,
-  h2: (props) => <h2  {...props} />,
-  h3: (props) => <h3 {...props} />,
-  h4: (props) => <h4  {...props} />,
+  h1: (props) => <h1 {...props} id={String(props.children)}/>,
+  h2: (props) => <h2  {...props} id={String(props.children)}/>,
+  h3: (props) => <h3 {...props} id={String(props.children)} />,
+  h4: (props) => <h4  {...props} id={String(props.children)}/>,
   hr: (props) => <hr {...props} />,
   strong: (props) => <strong fontWeight="semibold" className='text-kf-500 dark:text-kf-400' {...props} />,
   br: (props) => <span {...props} />,
@@ -32,11 +35,10 @@ const components = {
   blockquote: props => <BlockQuote {...props} />,
   a: CustomLink,
   // TestComponent: dynamic(() => import('./TestComponent')),
-  Head,
   Table,
   Drawer,
   CodeBlock,
-  JsDocTables,
+  // JsDocTables,
   Image,
   Pink, Purple, Lime
 }

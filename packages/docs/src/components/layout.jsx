@@ -8,6 +8,7 @@ import useDarkMode from '../hooks/useDarkMode.js'
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import { GradStroke } from './grad-stroke.jsx'
+import TOC from './toc.jsx'
 
 /**
  * @typedef {object} LayoutParams
@@ -26,13 +27,13 @@ const Layout = (
   }
 ) => {
 
-  let { slug, content_hydrated, document, frontMatter } = data;
+  let { slug, content_hydrated, headings, document, frontMatter } = data;
   let { name, groups } = document;
   const { title, description } = frontMatter;
   const [menu, toggleMenu] = useToggle(false);
   const { darkMode } = useDarkMode();
 
-  console.log(data);
+  // console.log(data);
 
   /** @type {React.LegacyRef<HTMLDivElement>} */
   const main_ref = useRef();
@@ -52,11 +53,9 @@ const Layout = (
   return (
   <div className={`${className} ${darkMode ? 'dark' : ''}`}>
     <div className={`relative w-full h-screen flex flex-col 
-                      --overflow-clip
                      transition-colors overflow-clip
                      bg-transparent dark:bg-gray-900
-                     text-gray-800 dark:text-gray-300
-                     `
+                     text-gray-800 dark:text-gray-300`
                     }>
 
       {/* <GradStroke className='w-1/2 h-[500px] absolute left-0 top-0 opacity-80' /> */}
@@ -64,23 +63,24 @@ const Layout = (
       <Header 
           className='absolute inset-0
                    bg-white/70 dark:bg-transparent backdrop-blur-sm 
-                     shadow-sm  max-w-[1040px] flex-shrink-0 
+                     shadow-sm md:px-10 --max-w-[1040px] flex-shrink-0 
                      w-full h-[70px] z-50 ' 
           slug={slug} prefix={header_prefix}
           onMenuClick={toggleMenu} 
           github_link={github_link} />
 
-      <main className='flex flex-row justify-center w-full overflow-auto --flex-1 
-                       '>
+      <main className='flex flex-row --justify-center w-full overflow-auto'>
         <SideBar 
-            className='hidden md:block w-60 h-full overflow-auto 
-                       flex-shrink-0 px-3 pt-[100px]'
+            className='hidden md:block w-72 h-full overflow-auto 
+                       flex-shrink-0 px-3 pt-[100px] pl-10 bg-green-400'
             selectedSlug={slug}
             groups={groups} 
             />
 
+        <div className='flex flex-row flex-1'>
+
         <div 
-            className='relative overflow-y-auto w-full --mx-auto max-w-[800px] 
+            className='relative overflow-y-auto grow --w-full mx-auto --max-w-[800px] 
                        h-full'
             ref={main_ref}>
           
@@ -97,6 +97,12 @@ const Layout = (
                         text-slate-600 dark:text-slate-400'
                children={content_hydrated} />
           <Copyright />               
+        </div>
+
+        <TOC
+            headings={headings} 
+            className='pt-[100px] h-full w-72 bg-red-300 hidden lg:flex flex-none --absolute top-0 right-0'/>
+        {/* <div className='h-full w-72 bg-red-300 hidden lg:flex flex-none --absolute top-0 right-0' /> */}
         </div>
       </main>
 

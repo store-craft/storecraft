@@ -70,7 +70,9 @@ const import_folder = function() {
   return { ...doc, __map }
 }
 
+
 /**
+ * 
  * 
  * @param {object} params
  * @param {Awaited<ReturnType<_getStaticPaths>>["paths"]["0"]["params"]} params.params

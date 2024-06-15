@@ -8,15 +8,16 @@ import Drawer from './drawer.jsx'
 // import { JsDocTables } from './js-doc-table.jsx'
 import { Image } from './image.jsx'
 import { Pink, Lime, Purple } from './labels.jsx'
+import { to_handle } from '@/utils/func.utils.js'
 
 /**
  * @type {Record<string, React.FC<{ [x:? string]: any }>>}
  */
 const components = {
-  h1: (props) => <h1 {...props} id={String(props.children)}/>,
-  h2: (props) => <h2  {...props} id={String(props.children)}/>,
-  h3: (props) => <h3 {...props} id={String(props.children)} />,
-  h4: (props) => <h4  {...props} id={String(props.children)}/>,
+  h1: (props) => <h1 {...props} id={to_handle(props.children)}/>,
+  h2: (props) => <h2  {...props} id={to_handle(props.children)}/>,
+  h3: (props) => <h3 {...props} id={to_handle(props.children)} />,
+  h4: (props) => <h4  {...props} id={to_handle(props.children)}/>,
   hr: (props) => <hr {...props} />,
   strong: (props) => <strong fontWeight="semibold" className='text-kf-500 dark:text-kf-400' {...props} />,
   br: (props) => <span {...props} />,

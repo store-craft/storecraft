@@ -1,5 +1,4 @@
 import Link from 'next/link.js'
-import { MDXRemote } from 'next-mdx-remote'
 import { GrInstall, GrArticle } from 'react-icons/gr/index.js'
 import { BsNewspaper } from 'react-icons/bs/index.js'
 import { BiLogoFirebase } from 'react-icons/bi/index.js'
@@ -66,9 +65,9 @@ const Header = (
   return (
 <div {...rest}>    
   <div className='flex flex-row items-center gap-2 px-2 cursor-pointer'>
-    <div className={`border p-1 dark:text-pink-500 
-                  border-kf-500/20 dark:border-pink-500/40 rounded-md
-                  ${selected ? 'bg-gradient-to-br from-kf-500 to-pink-500/20 text-white' : 'text-kf-400'}`
+    <div className={` p-1 dark:text-slate-300 
+                   rounded-md border
+                  ${selected ? ' border-white/80 dark:border-white/10 bg-gradient-to-br from-kf-500 to-pink-500/20 dark:to-kf-500/20 dark:from-pink-500 text-white dark:text-white/70' : 'text-kf-400 border-kf-500/20 dark:border-pink-500/40'}`
                   }>
       <Icon {...icon} />
     </div>                
@@ -189,20 +188,23 @@ const SideBar = (
         { 
           groups.map(
             (group, index) => 
-            <Link key={index} href={`${group.items[0].route}`} 
-                  title={group.title}
-                  alt={group.title}>
-              <Header group={group} 
-                      selected={selected_group==index}
-                      onClick={()=>onClickMenuItem && onClickMenuItem(group.items[0])} />  
+            <Link 
+                key={index} href={`${group.items[0].route}`} 
+                title={group.title}
+                alt={group.title}>
+              <Header 
+                  group={group} 
+                  selected={selected_group==index}
+                  onClick={()=>onClickMenuItem && onClickMenuItem(group.items[0])} />  
             </Link>
 
           )
         }
       </div>
-      <SideGroup group={groups[selected_group]} 
-                 onClickMenuItem={onClickMenuItem}
-                 selectedSlug={selectedSlug} />
+      <SideGroup 
+          group={groups[selected_group]} 
+          onClickMenuItem={onClickMenuItem}
+          selectedSlug={selectedSlug} />
 
     </nav>
   )

@@ -59,14 +59,14 @@ const Layout = (
                     }>
 
       {/* <GradStroke className='w-1/2 h-[500px] absolute left-0 top-0 opacity-80' /> */}
-      <GradStroke className='w-full h-[550px] absolute right-10 top-0 
+      {/* <GradStroke className='w-full h-[550px] absolute right-10 top-0 
                   opacity-40 dark:opacity-30 z-0 pointer-events-none' />
       <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
                   opacity-10 md:opacity-10 md:dark:opacity-30  pointer-events-none'
                   via='via-kf-400' blur='blur-lg' />
       <GradStroke className='w-[450px] h-[150px] absolute right-20 top-0 
                   opacity-10 md:opacity-10 md:dark:opacity-20 pointer-events-none'
-                  via='via-pink-400' />
+                  via='via-pink-400' /> */}
 
 
       <Header 
@@ -87,18 +87,20 @@ const Layout = (
             groups={groups} 
             />
 
-        <div className='flex flex-row mx-auto flex-1 items-stretch h-full --w-[calc(100%-19rem)] overflow-y-auto'>
+        <div className='--flex flex-row mx-auto flex-1 items-stretch h-full lg:pr-[19rem] overflow-y-auto'>
+          <GradStroke className='w-full h-[550px] absolute right-10 top-0 
+                    opacity-40 dark:opacity-30 z-0 pointer-events-none' />
+          <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
+                      opacity-10 md:opacity-10 md:dark:opacity-30  pointer-events-none'
+                      via='via-kf-400' blur='blur-lg' />
+          <GradStroke className='w-[450px] h-[150px] absolute right-20 top-0 
+                      opacity-10 md:opacity-10 md:dark:opacity-20 pointer-events-none'
+                      via='via-pink-400' />
 
           <div 
-              className='relative overflow-y-auto grow h-full'
+              className='relative grow h-full'
               ref={main_ref}>
             
-            {/* <GradStroke className='w-full h-[550px] absolute right-10 top-0 opacity-30 z-0' />
-            <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 opacity-80'
-                        via='via-kf-400' blur='blur-lg' />
-            <GradStroke className='w-[450px] h-[150px] absolute right-20 top-0 opacity-80'
-                        via='via-pink-400' />
- */}
             <div 
                 className='w-full block px-5 md:px-5 h-fit pb-20 --mdx --bg-green-400
                           pt-[100px] prose prose-slate text-base dark:prose-invert decoration-from-font 
@@ -108,11 +110,13 @@ const Layout = (
             <Copyright />               
           </div>
 
+          {/* <div className='pt-[100px] h-full w-[19rem]  bg-red-300 
+                      hidden lg:flex  ' /> */}
+
           <TOC
               headings={headings} 
               className='pt-[100px] h-full w-[19rem]  --bg-red-300 
-                      hidden lg:flex flex-none top-0 right-0 --fixed '/>
-          {/* <div className='h-full w-72 bg-red-300 hidden lg:flex flex-none --absolute top-0 right-0' /> */}
+                      hidden lg:flex flex-none top-0 right-0 fixed '/>
 
         </div>
 

@@ -8,6 +8,7 @@ import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs/index.js'
 import Link from 'next/link.js'
 import pkg from '../../package.json'
 import { Logo, LogoV2, StorecraftText } from './logo.jsx'
+import { Connect } from './connect.jsx'
 
 /**
  * 
@@ -55,6 +56,37 @@ export const Logo2 = (
   )
 }
 
+/**
+ * @typedef {object} SlugParams
+ * @prop {string} slug
+ * 
+ * 
+ * @param {SlugParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ * 
+ */
+const Slug = (
+  {
+    slug, ...rest
+  }
+) => {
+
+  return (
+<div {...rest} >
+  <div className='w-fit flex flex-row flex-wrap items-center 
+                  text-base font-extrabold italic'
+                  >
+    <span children={slug.split('/').at(0) + '/'} 
+          className='text-base text-gray-700 dark:text-gray-300 tracking-widest' 
+          style={{lineHeight:'14px'}}/>
+    <span children={slug.split('/').at(1)} 
+          className='text-base text-gray-700/50 tracking-widest dark:text-gray-300/50 ' 
+          style={{lineHeight:'14px'}}/>
+  </div>
+</div>    
+  )
+}
 
 /**
  * 
@@ -79,66 +111,63 @@ const Header = (
 
   return (
 
-<header className={`flex flex-row justify-between items-center 
-                    w-full --max-w-[1100px] mx-auto px-3 ${className}`}>
-  <div className='flex flex-row h-full gap- items-center'>
-    {/* <Logo /> */}
 
-    <div className='w-60 flex flex-row items-center gap-1 relative'>
-      <LogoV2 className='h-10 object-contain rounded-xl bg-teal-400 
-                    scale-90 border-kf-600 --shadow-lg opacity-80' />                  
-      <StorecraftText className='text-[32px] w-[220px]' />
-      <span children={'Docs'} 
-            className='absolute right-5 -bottom-1 text-xs text-gray-400 
-                     dark:text-gray-300 italic -tracking-widest font-extrabold ' />
+<div className={`flex flex-col h-fit  w-full gap-2 border-b border-gray-400/20  ${className}`}>
+  <div className={`flex flex-row justify-between items-center p-2  w-full`}>
 
+    <div className='flex flex-row w-fit h-full items-center'>
+      <div className='w-60 flex flex-row items-center gap-1 relative'>
+        <LogoV2 className='h-10 object-contain rounded-xl bg-teal-400 
+                      scale-90 border-kf-600 --shadow-lg opacity-80' />                  
+        <StorecraftText className='text-[32px] w-[220px]' />
+        <span children={'Docs'} 
+              className='absolute right-5 -bottom-1 text-xs 
+                      text-gray-600 dark:text-gray-300 
+                        italic -tracking-widest font-extrabold ' />
+      </div>
+
+      <Slug 
+          slug={slug}
+          className='w-fit pb-1 pt-2 px-3
+                     border-l border-gray-400/40
+                     text-base font-extrabold italic
+                     hidden md:block'
+      />
+    </div>                          
+
+    <div className='h-fit w-fit flex flex-row items-center gap-3 text-2xl'>
+
+      <button className='p-0' onClick={toggle}>
+        <HiOutlineLightBulb className='text-2xl -translate-y-0.5 translate-x-1' />
+      </button>
+
+      <Connect className='hidden md:flex flex-row gap-3'/>
     </div>
 
-
-    <div className='w-fit flex flex-row  flex-wrap items-center pb-1 pt-2
-                    border-l dark:border-gray-400/40 h-full px-3
-                     text-base font-extrabold italic'>
-      <span children={slug.split('/').at(0) + '/'} 
-            className='text-base text-gray-700 dark:text-gray-300 tracking-widest' />
-      <span children={slug.split('/').at(1)} 
-            className='text-base text-gray-700/50 tracking-widest dark:text-gray-300/50 ' />
-    </div>
-  </div>                          
-
-  <div className='h-fit w-fit flex flex-row items-center gap-3
-                  text-2xl'>
-
-    <button className='p-0' onClick={toggle}>
-      <HiOutlineLightBulb className='text-2xl -translate-y-0.5 translate-x-1' />
-    </button>
-
-    <a href='https://discord.gg/zd2dvpFr' 
-       title='Join our Discord'
-       alt='Join our Discord'
-        target='_blank' rel='noopener noreferrer'>
-      <BsDiscord className='text-2xl --animate-pulse'/>
-    </a>
-    <a href='https://github.com/shelf-cms' 
-       title='Fork us on Github'
-       alt='Fork us on Github'
-       target='_blank' rel='noopener noreferrer'>
-      <BsGithub className='text-xl'/>
-    </a>
-    <a href='https://linkedin.com/company/shelf-cms/'
-       title='Catch us at Linkedin'
-       alt='Catch us at Linkedin'
-       target='_blank' rel='noopener noreferrer'>
-      <BsLinkedin className='text-xl'/>
-    </a>
-    {
-      onMenuClick &&
-      <AiOutlineMenu className='inline md:hidden cursor-pointer 
-                              '
-                      onClick={e => onMenuClick()} />
-    }
   </div>
 
-</header>
+  {/* Lower part of the header for small screens */}
+  <div className='w-full flex md:hidden flex-row justify-between 
+                p-2 border-t dark:border-gray-400/20'>
+    <div className='flex flex-row gap-2 items-center'>
+      {
+        onMenuClick &&
+        <AiOutlineMenu 
+            className='inline md:hidden text-xl cursor-pointer'
+            onClick={e => onMenuClick()} />
+      }
+      <Slug 
+        slug={slug}
+        className='w-fit h-fit px-2
+                   border-l border-gray-400/40
+                   text-base font-extrabold italic'
+      />
+
+    </div>
+    <Connect className='flex flex-row gap-3' />
+  </div>
+
+</div>
   )
 }
 

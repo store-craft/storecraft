@@ -59,49 +59,49 @@ const Layout = (
                     }>
 
       <Header 
-          className='absolute inset-0
+          className='absolute inset-0 px-4
                    bg-white/10 dark:bg-transparent backdrop-blur-sm 
-                     shadow-sm md:px-10 --max-w-[1040px] flex-shrink-0 
-                     w-full h-[70px] z-40 ' 
+                     shadow-sm md:px-10 flex-shrink-0 
+                     w-full z-40 ' 
           slug={slug} 
           prefix={header_prefix}
           onMenuClick={toggleMenu} 
           github_link={github_link} />
 
-      <main className='flex flex-row --justify-center w-full h-full'>
+      <main className='flex flex-row w-full h-full'>
 
         <SideBar 
             className='hidden md:block w-72 h-full overflow-auto text-xs
-                       flex-shrink-0 px-3 pt-[100px] pl-10 --bg-green-400'
+                       flex-shrink-0 px-3 pt-[100px] pl-10'
             selectedSlug={slug}
             groups={groups} 
             />
 
-        <div className='--flex flex-row mx-auto flex-1 items-stretch h-full lg:pr-[19rem] overflow-y-auto'>
+        <div className='flex-1 w-full items-stretch h-full 
+                      lg:pr-[19rem] overflow-y-auto'>
           <GradStroke className='w-full h-[550px] absolute right-10 top-0 
-                    opacity-40 dark:opacity-30 z-0 pointer-events-none' />
-          <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
-                      opacity-10 md:opacity-10 md:dark:opacity-30  pointer-events-none'
+                    opacity-20 dark:opacity-30 z-0 pointer-events-none' />
+          {/* <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
+                      opacity-10 md:opacity-10 md:dark:opacity-0  pointer-events-none'
                       via='via-kf-400' blur='blur-lg' />
           <GradStroke className='w-[650px] h-[150px] absolute right-20 top-0 
-                      opacity-10 md:opacity-10 md:dark:opacity-20 pointer-events-none'
-                      via='via-pink-400' />
+                      opacity-10 md:opacity-10 md:dark:opacity-0 pointer-events-none'
+                      via='via-pink-400' /> */}
 
           <div 
-              className='relative grow h-full'
+              className='relative w-full --grow h-full'
               ref={main_ref}>
             
             <div 
-                className='w-full block px-5 md:px-5 h-fit pb-20 --mdx --bg-green-400
-                          pt-[100px] prose prose-slate text-base dark:prose-invert decoration-from-font 
+                className='--w-full block px-5 md:px-5 h-fit pb-20
+                          pt-[130px] md:pt-[90px] prose prose-slate 
+                          text-base max-w-none
+                          dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
                           text-slate-600 dark:text-slate-400'
                 children={content_hydrated} />
             <Copyright />               
           </div>
-
-          {/* <div className='pt-[100px] h-full w-[19rem]  bg-red-300 
-                      hidden lg:flex  ' /> */}
 
           <TOC
               headings={headings} 
@@ -122,7 +122,8 @@ const Layout = (
           onClickMenuItem={_ => toggleMenu()}
           selectedSlug={slug}
           groups={groups} 
-          />
+      />
+
       <div 
         onClick={_ => toggleMenu()}
         className={

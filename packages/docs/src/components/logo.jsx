@@ -97,7 +97,7 @@ export const LogoV2 = (
       <div className='w-full h-full  rounded-lg shadow-xl
                     flex flex-row items-center justify-center --opacity-80
                     --scale-[3.0] -rotate-'>
-        <div className='w-full h-full overflow-clip rounded-xl'>
+        <div className='w-full h-full overflow-clip rounded-sm'>
           <img src={'/main.png'}
                className='w-full h-full object-cover scale-[1.05] 
                         bg-teal-100 --bg-slate-300'/>

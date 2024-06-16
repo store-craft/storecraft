@@ -89,23 +89,19 @@ const Header = (
                     scale-90 border-kf-600 --shadow-lg opacity-80' />                  
       <StorecraftText className='text-[32px] w-[220px]' />
       <span children={'Docs'} 
-            className='absolute right-5 -bottom-1 text-xs text-gray-400 dark:text-gray-300 italic -tracking-widest 
-                 font-extrabold ' />
+            className='absolute right-5 -bottom-1 text-xs text-gray-400 
+                     dark:text-gray-300 italic -tracking-widest font-extrabold ' />
 
     </div>
 
 
-    <div className='w-fit flex flex-row items-center pb-1 pt-2
+    <div className='w-fit flex flex-row  flex-wrap items-center pb-1 pt-2
                     border-l dark:border-gray-400/40 h-full px-3
                      text-base font-extrabold italic'>
-      {/* <span children={slug.split('/').at(0)} 
-            className='text-xl text-gray-500 dark:text-gray-300 font-semibold' />
-      <span children={slug.split('/').at(1)} 
-            className='text-base text-gray-400 tracking-widest font-semibold whitespace-nowrap' /> */}
       <span children={slug.split('/').at(0) + '/'} 
-            className='text-base text-gray-700 dark:text-gray-300 tracking-widest --whitespace-nowrap' />
+            className='text-base text-gray-700 dark:text-gray-300 tracking-widest' />
       <span children={slug.split('/').at(1)} 
-            className='text-base text-gray-700/50 tracking-widest dark:text-gray-300/50 --whitespace-nowrap' />
+            className='text-base text-gray-700/50 tracking-widest dark:text-gray-300/50 ' />
     </div>
   </div>                          
 

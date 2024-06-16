@@ -1,8 +1,14 @@
 import { to_handle } from '@/utils/func.utils.js'
 import Link from 'next/link.js';
-import { usePathname } from 'next/navigation.js'
 import { useRouter } from 'next/router.js';
 import { useEffect, useMemo, useState } from 'react'
+
+const lvl2pl = [
+  'pl-0',
+  'pl-4',
+  'pl-8',
+  'pl-16',
+]
 
 /**
  * @typedef {object} TOCParams
@@ -45,15 +51,20 @@ export const TOC = (
   return (
   <div {...rest}>
     <div className='px-4 flex flex-col font-medium gap-1.5 text-sm w-full   '>
-      <p children='On this page' className='text-kf-600 dark:text-white font-bold text-base mb-2'/>        
+      <p 
+          children='On this page' 
+          className='text-kf-600 dark:text-white font-bold text-base mb-2'/>        
+
       {
         headings_with_handles.map(
           (h, ix) => (
             <Link 
                 key={ix}
                 href={'#' + h.handle} 
-                children={h.text} 
-                className={'hover:text-kf-400 ' + (h.handle===hash ? 'text-pink-500' : '')} />
+                children={(h.level>1 ? '' : '') + h.text} 
+                className={
+                  `hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500' : '')
+                } />
           )
         )
       }

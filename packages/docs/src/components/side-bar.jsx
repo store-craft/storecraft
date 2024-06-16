@@ -62,18 +62,32 @@ const Header = (
 
   const {title, items, icon} = group;
 
+  const clsSelected = ` border-white/80 dark:border-white/10 
+                       bg-gradient-to-br 
+                       from-kf-500 to-pink-500/20 
+                       dark:to-kf-500/20 dark:from-pink-500 
+                       text-white dark:text-white/70 `;
+  const clsHover = ` group-hover:border-white/80 group-hover:dark:border-white/10 
+                       group-hover:bg-gradient-to-br 
+                       group-hover:from-kf-500 group-hover:to-pink-500/20 
+                       group-hover:dark:to-kf-500/20 group-hover:dark:from-pink-500 
+                       group-hover:text-white group-hover:dark:text-white/70 `;
+  const clsUnSelected = 'text-kf-400 border-kf-500/20 group-hover:dark:border-pink-500/40';
+
   return (
 <div {...rest}>    
-  <div className='flex flex-row items-center gap-2 px-2 cursor-pointer'>
+  <div className={'group flex flex-row items-center gap-2 px-2 cursor-pointer ' }>
     <div className={` p-1 dark:text-slate-300 
-                   rounded-md border
-                  ${selected ? ' border-white/80 dark:border-white/10 bg-gradient-to-br from-kf-500 to-pink-500/20 dark:to-kf-500/20 dark:from-pink-500 text-white dark:text-white/70' : 'text-kf-400 border-kf-500/20 dark:border-pink-500/40'}`
+                   rounded-md border group-hover:text-green-500
+                  ${selected ? clsSelected : clsUnSelected}
+                  ${clsHover}
+                  `
                   }>
       <Icon {...icon} />
     </div>                
     <div 
-      className={`text-xs font-old2 opacity-95 font-semibold 
-              w-full tracking-wide ${selected ? 'text-kf-700 dark:text-pink-400' : ''}`}
+      className={`text-xs opacity-95 font-semibold 
+              w-full tracking-wide ${selected ? 'text-kf-700 dark:text-pink-500' : ''}`}
       children={title.toUpperCase()} />
 
   </div>    

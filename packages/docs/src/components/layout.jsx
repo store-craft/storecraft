@@ -58,23 +58,13 @@ const Layout = (
                      text-gray-800 dark:text-gray-300`
                     }>
 
-      {/* <GradStroke className='w-1/2 h-[500px] absolute left-0 top-0 opacity-80' /> */}
-      {/* <GradStroke className='w-full h-[550px] absolute right-10 top-0 
-                  opacity-40 dark:opacity-30 z-0 pointer-events-none' />
-      <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
-                  opacity-10 md:opacity-10 md:dark:opacity-30  pointer-events-none'
-                  via='via-kf-400' blur='blur-lg' />
-      <GradStroke className='w-[450px] h-[150px] absolute right-20 top-0 
-                  opacity-10 md:opacity-10 md:dark:opacity-20 pointer-events-none'
-                  via='via-pink-400' /> */}
-
-
       <Header 
           className='absolute inset-0
                    bg-white/10 dark:bg-transparent backdrop-blur-sm 
                      shadow-sm md:px-10 --max-w-[1040px] flex-shrink-0 
-                     w-full h-[70px] z-50 ' 
-          slug={slug} prefix={header_prefix}
+                     w-full h-[70px] z-40 ' 
+          slug={slug} 
+          prefix={header_prefix}
           onMenuClick={toggleMenu} 
           github_link={github_link} />
 
@@ -93,7 +83,7 @@ const Layout = (
           <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
                       opacity-10 md:opacity-10 md:dark:opacity-30  pointer-events-none'
                       via='via-kf-400' blur='blur-lg' />
-          <GradStroke className='w-[450px] h-[150px] absolute right-20 top-0 
+          <GradStroke className='w-[650px] h-[150px] absolute right-20 top-0 
                       opacity-10 md:opacity-10 md:dark:opacity-20 pointer-events-none'
                       via='via-pink-400' />
 
@@ -123,16 +113,24 @@ const Layout = (
       </main>
 
       <SideBar 
-          className={`absolute left-0 top-[70px] block md:hidden w-full 
-                      h-[calc(100vh-70px)] overflow-y-auto 
+          className={`absolute left-0 p-6 --top-[70px] block md:hidden w-[300px] 
+                      h-full overflow-y-auto z-50
                       bg-white dark:bg-gray-900
-                      pt-1 px-3 transition-transform duration-300
-                      ${menu ? 'translate-x-0' : 'translate-x-full'}`
+                      --px-3 transition-transform duration-300
+                      ${menu ? 'translate-x-0' : '-translate-x-[300px]'}`
                     }
           onClickMenuItem={_ => toggleMenu()}
           selectedSlug={slug}
           groups={groups} 
           />
+      <div 
+        onClick={_ => toggleMenu()}
+        className={
+          `
+          absolute w-full h-full top-0 left-0 z-40 cursor-pointer
+          ${menu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
+          `
+        }/>
 
     </div>
   </div>

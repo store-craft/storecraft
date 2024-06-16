@@ -77,7 +77,7 @@ const Header = (
   return (
 <div {...rest}>    
   <div className={'group flex flex-row items-center gap-2 px-2 cursor-pointer ' }>
-    <div className={` p-1 dark:text-slate-300 
+    <div className={`text-base p-1 dark:text-slate-300 
                    rounded-md border group-hover:text-green-500
                   ${selected ? clsSelected : clsUnSelected}
                   ${clsHover}
@@ -86,7 +86,7 @@ const Header = (
       <Icon {...icon} />
     </div>                
     <div 
-      className={`text-xs opacity-95 font-semibold 
+      className={`--text-xs opacity-95 font-semibold 
               w-full tracking-wide ${selected ? 'text-kf-700 dark:text-pink-500' : ''}`}
       children={title.toUpperCase()} />
 
@@ -194,7 +194,7 @@ const SideBar = (
         )!==undefined
       }
     ), [selectedSlug, groups]
-  )
+  );
 
   return (
     <nav {...rest} className={className} >

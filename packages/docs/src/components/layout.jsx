@@ -71,7 +71,7 @@ const Layout = (
       <main className='flex flex-row --justify-center w-full h-full'>
 
         <SideBar 
-            className='hidden md:block w-72 h-full overflow-auto 
+            className='hidden md:block w-72 h-full overflow-auto text-xs
                        flex-shrink-0 px-3 pt-[100px] pl-10 --bg-green-400'
             selectedSlug={slug}
             groups={groups} 
@@ -113,10 +113,10 @@ const Layout = (
       </main>
 
       <SideBar 
-          className={`absolute left-0 p-6 --top-[70px] block md:hidden w-[300px] 
-                      h-full overflow-y-auto z-50
+          className={`absolute left-0 p-6 block md:hidden w-[300px] 
+                      h-full overflow-y-auto z-50 text-sm
                       bg-white dark:bg-gray-900
-                      --px-3 transition-transform duration-300
+                      transition-transform duration-300
                       ${menu ? 'translate-x-0' : '-translate-x-[300px]'}`
                     }
           onClickMenuItem={_ => toggleMenu()}

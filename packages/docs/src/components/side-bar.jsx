@@ -1,14 +1,11 @@
 import Link from 'next/link.js'
-import { GrInstall, GrArticle } from 'react-icons/gr/index.js'
 import { BsNewspaper } from 'react-icons/bs/index.js'
-import { BiLogoFirebase } from 'react-icons/bi/index.js'
-import { TbBrandFirebase } from 'react-icons/tb/index.js'
-import { MdOutlineSchema } from 'react-icons/md/index.js'
 import { AiOutlineDatabase } from 'react-icons/ai/index.js'
 import { MdAdminPanelSettings } from 'react-icons/md/index.js'
 import { DiStackoverflow } from 'react-icons/di/index.js'
 import { FaServer } from 'react-icons/fa/index.js'
 import { useMemo } from 'react'
+import { IoMdClose } from "react-icons/io/index.js";
 
 /**
  * @typedef {object} Item
@@ -223,5 +220,63 @@ const SideBar = (
     </nav>
   )
 }
+
+
+/**
+ * 
+ * @typedef {object} SideBarSmallParams
+ * @prop {boolean} [showMenu=false]
+ * @prop {Group[]} groups
+ * @prop {string} selectedSlug
+ * @prop {(item: Item) => any } [onClickMenuItem]
+ * 
+ * @param {SideBarSmallParams & 
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } params
+*/
+export const SideBarSmall = (
+ {
+   showMenu=false, selectedSlug, groups, onClickMenuItem, ...rest
+ }
+) => {
+
+ return (
+   <>
+     <div 
+         className={`z-[50] block md:hidden w-[300px] h-full absolute 
+                     transition-transform duration-300
+                     ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
+                   }>
+       <SideBar 
+           className={`absolute left-0 p-6 w-full 
+                       h-full overflow-y-auto  text-sm
+                       bg-white dark:bg-gray-900
+                       `
+                     }
+           onClickMenuItem={onClickMenuItem}
+           selectedSlug={selectedSlug}
+           groups={groups} 
+       />
+
+       {
+         showMenu && 
+         <IoMdClose 
+             className='absolute right-5 top-5 z-[55] text-xl' 
+             onClick={_ => onClickMenuItem(undefined)} />
+       }
+     </div>
+
+     <div 
+       onClick={_ => onClickMenuItem(undefined)}
+       className={
+         `
+         absolute w-full h-full top-0 left-0 z-40 cursor-pointer block md:hidden
+         ${showMenu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
+         `
+       }/>    
+   </>
+ )
+}
+
 
 export default SideBar

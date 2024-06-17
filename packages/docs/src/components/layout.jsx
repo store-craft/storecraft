@@ -1,6 +1,4 @@
-// import matter from 'gray-matter'
-// import SideBar from './side-bar'
-import SideBar from './side-bar.jsx'
+import SideBar, { SideBarSmall } from './side-bar.jsx'
 import Header from './header.jsx'
 import Copyright from './copyright.jsx'
 import useToggle from '../hooks/useToggle.js'
@@ -112,30 +110,17 @@ const Layout = (
 
       </main>
 
-      <SideBar 
-          className={`absolute left-0 p-6 block md:hidden w-[300px] 
-                      h-full overflow-y-auto z-50 text-sm
-                      bg-white dark:bg-gray-900
-                      transition-transform duration-300
-                      ${menu ? 'translate-x-0' : '-translate-x-[300px]'}`
-                    }
-          onClickMenuItem={_ => toggleMenu()}
-          selectedSlug={slug}
-          groups={groups} 
-      />
-
-      <div 
-        onClick={_ => toggleMenu()}
-        className={
-          `
-          absolute w-full h-full top-0 left-0 z-40 cursor-pointer
-          ${menu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
-          `
-        }/>
+      <SideBarSmall 
+        groups={groups}
+        selectedSlug={slug}
+        onClickMenuItem={() => toggleMenu()}
+        showMenu={menu}/>
 
     </div>
   </div>
   )
 }
+
+
 
 export default Layout

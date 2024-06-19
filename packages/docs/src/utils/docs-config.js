@@ -2,13 +2,14 @@
 export default {
   name: 'docs',
   groups: [
+
     {
       title: "Start Here",
       icon: {
         name: 'BiLogoStackOverflow',
         params: { classNames: 'stroke-kf-600'}
       }, 
-      items: [
+      groups: [
         {
           title: "What Is This ?",
           route: `start-here/what`,
@@ -27,7 +28,7 @@ export default {
         name: 'BsNewspaper',
         params: { classNames: 'stroke-kf-600'}
       }, 
-      items: [
+      groups: [
         {
           title: "Firebase Project",
           route: `setup/project`,
@@ -57,7 +58,7 @@ export default {
         name: 'MdAdminPanelSettings',
         params: {}
       },
-      items: [
+      groups: [
         {
           title: 'Products Collections',
           route: 'admin/collections',
@@ -96,17 +97,30 @@ export default {
 
       ]
     },
+
     {
       title: 'Backend',
       icon: {
         name: 'FaServer',
         params: {}
       },
-      items: [
+      groups: [
         {
           title: 'Overview',
           route: 'backend/overview',
-          path: 'content/docs/main/backend-overview.mdx'
+          // path: 'content/docs/main/backend-overview.mdx',
+          groups: [
+            {
+              title: 'a',
+              route: 'backend/overview/a',
+              path: 'content/docs/main/backend-payments.mdx'
+            },
+            {
+              title: 'b',
+              route: 'backend/overview/b',
+              path: 'content/docs/main/backend-payments.mdx'
+            },
+          ]
         },
         {
           title: 'Payments',

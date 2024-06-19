@@ -7,7 +7,7 @@
 export default function Copyright(props) {
   return (
 <p 
-    className='w-full my-10 text-sm font-semibold text-center dark:text-white' 
+    className='w-full my-10 text-sm font-semibold text-center' 
     {...props} >
   { `All Rights Reserved, storecraft, (${new Date().getFullYear()})` }
 </p>

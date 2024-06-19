@@ -22,7 +22,7 @@ export default function PostPage(props) {
   }
 
 
-  console.log(props)
+  // console.log(props)
 
   return (
   <>

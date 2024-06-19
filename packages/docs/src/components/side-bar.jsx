@@ -4,21 +4,20 @@ import { AiOutlineDatabase } from 'react-icons/ai/index.js'
 import { MdAdminPanelSettings } from 'react-icons/md/index.js'
 import { DiStackoverflow } from 'react-icons/di/index.js'
 import { FaServer } from 'react-icons/fa/index.js'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io/index.js";
+import Drawer from './drawer.jsx'
 
 /**
- * @typedef {object} Item
- * @property {string} title
- * @property {string} route
- * @property {string} path
  * 
  * @typedef {object} Group
+ * @property {string} [route]
+ * @property {string} [path]
  * @property {string} title
  * @property {object} icon
  * @property {string} icon.name
  * @property {object} icon.params
- * @property {Item[]} items
+ * @property {Group[]} [groups]
  */
 
 
@@ -57,7 +56,7 @@ const Header = (
   }
 ) => {
 
-  const {title, items, icon} = group;
+  const {title, groups, icon} = group;
 
   const clsSelected = ` border-white/80 dark:border-white/10 
                        bg-gradient-to-br 
@@ -95,6 +94,8 @@ const Header = (
 /**
  * @typedef {object} Link2Params
  * @prop {string} title
+ * @prop {boolean} next
+ * @prop {string} [itemClass]
  * @prop {boolean} [selected=false]
  * 
  * @param {Link2Params & 
@@ -103,29 +104,34 @@ const Header = (
  */
 const Link2 = (
   { 
-    title, selected=false, ...rest 
+    title, selected=false, next=false, itemClass, ...rest 
   }
 ) => {
 
   return (
-<p {...rest}
-    className={`text-sm  font-medium px-2 
-                py-1 rounded-md
-                ${selected ? 
-                  `bg-kf-50 dark:bg-kf-500 
-                    text-kf-700 
-                  dark:text-gray-100` : 
-                  'bg-transparent'
-                }`}
-    children={title} />
+<div {...rest}>
+<div className={
+  'flex flex-row items-center gap-0 w-full ' + 
+  itemClass + 
+  ' text-sm font-medium px-2 py-1 rounded-md ' +
+   (selected ? ' bg-kf-50 dark:bg-kf-500 text-kf-700 dark:text-gray-100' : 
+      ' dark:hover:bg-kf-500/20 hover:bg-kf-50')
+    }>
+  <p children={title} />
+  { next && <MdNavigateNext /> }
+</div>    
+</div>    
   )
 }
 
+import { MdNavigateNext } from "react-icons/md/index.js";
+
 /**
- * @typedef {object} SideGroupParams
+ * @typedef {object} SideGroupsParams
  * @prop {Group} group
  * @prop {string} selectedSlug
- * @prop {(item: Item) => any } onClickMenuItem
+ * @prop {string} [itemClass]
+ * @prop {(item: Group) => any } onClickMenuItem
  * 
  * 
  * @param {SideGroupParams &
@@ -133,28 +139,28 @@ const Link2 = (
  * } params
  * 
  */
-const SideGroup = (
+const SideGroups = (
   { 
-    onClickMenuItem, selectedSlug, group, ...rest 
+    onClickMenuItem, selectedSlug, group, itemClass, ...rest 
   }
 ) => {
 
-  const {title, items, icon} = group;
+  const {title, groups, icon} = group;
 
   return (
     <div {...rest}>
-
-      <div className='flex flex-col w-full gap-2 mt-10'>
+      <div className='flex flex-col w-full gap-2'>
         { 
-          items.map(
-            (item, index) => 
-              <Link key={index} href={`${item.route}`} 
-                    alt={item.title}
-                    title={item.title}>
-                <Link2 onClick={e => { onClickMenuItem && onClickMenuItem(item)}} 
-                       selected={item.route===selectedSlug}
-                       title={item.title} />
-              </Link>
+          groups.map(
+            (item, ix) => (
+              <SideGroup
+                key={ix}
+                onClickMenuItem={onClickMenuItem}
+                group={item}
+                itemClass={itemClass}
+                selectedSlug={selectedSlug}
+                />
+            )
           )
         }
       </div>
@@ -163,12 +169,74 @@ const SideGroup = (
   )
 }
 
+/**
+ * @typedef {object} SideGroupParams
+ * @prop {Group} group
+ * @prop {string} selectedSlug
+ * @prop {string} [itemClass]
+ * @prop {(item: Group) => any } onClickMenuItem
+ * 
+ * 
+ * @param {SideGroupParams &
+*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+* } params
+* 
+*/
+const SideGroup = (
+ { 
+   onClickMenuItem, selectedSlug, group, itemClass, ...rest 
+ }
+) => {
+
+
+const isLeaf = !group.groups?.length;
+const [open, setopen] = useState(
+  selectedSlug.startsWith(group.route)
+);
+
+console.log(selectedSlug)
+console.log(group.route)
+console.log(selectedSlug.startsWith(group.route))
+
+const _onClick = useCallback(
+  (_) => {
+    setopen(v=>!v);
+
+    onClickMenuItem && onClickMenuItem(group);
+  }, [onClickMenuItem, group]
+);
+
+  return (
+    <Link 
+        href={`${group.route ?? group?.groups[0].route}`} 
+        alt={group.title}
+        title={group.title}>
+      <Link2 
+          itemClass={itemClass}
+          onClick={_onClick} 
+          selected={isLeaf && group.route===selectedSlug}
+          title={group.title} 
+          next={!isLeaf}/>
+      {
+        !isLeaf &&
+        <Drawer button={null} isOpen={open} >
+          <SideGroups 
+              itemClass='pl-5'
+              group={group} 
+              onClickMenuItem={onClickMenuItem} 
+              selectedSlug={selectedSlug} />
+        </Drawer>
+      }
+    </Link>
+  )
+}
+
 
 /**
  * @typedef {object} SideBarParams
  * @prop {Group[]} groups
  * @prop {string} selectedSlug
- * @prop {(item: Item) => any } [onClickMenuItem]
+ * @prop {(item: Group) => any } [onClickMenuItem]
  * 
  * 
  * @param {SideBarParams & 
@@ -186,11 +254,15 @@ const SideBar = (
   const selected_group = useMemo(
     () => groups.findIndex(
       g => {
-        return g.items.find(
-          it => it.route===selectedSlug
+        return g.groups.find(
+          it => selectedSlug.startsWith(it.route ?? it.groups[0].route)
         )!==undefined
       }
     ), [selectedSlug, groups]
+  );
+
+  console.log(
+    'selected_group', selected_group
   );
 
   return (
@@ -200,19 +272,21 @@ const SideBar = (
           groups.map(
             (group, index) => 
             <Link 
-                key={index} href={`${group.items[0].route}`} 
+                key={index} 
+                href={`${group.groups[0].route ?? group.groups[0].groups[0].route}`} 
                 title={group.title}
                 alt={group.title}>
               <Header 
                   group={group} 
                   selected={selected_group==index}
-                  onClick={()=>onClickMenuItem && onClickMenuItem(group.items[0])} />  
+                  onClick={()=>onClickMenuItem && onClickMenuItem(group.groups[0])} />  
             </Link>
 
           )
         }
       </div>
-      <SideGroup 
+      <SideGroups 
+          className='mt-10'
           group={groups[selected_group]} 
           onClickMenuItem={onClickMenuItem}
           selectedSlug={selectedSlug} />
@@ -228,7 +302,7 @@ const SideBar = (
  * @prop {boolean} [showMenu=false]
  * @prop {Group[]} groups
  * @prop {string} selectedSlug
- * @prop {(item: Item) => any } [onClickMenuItem]
+ * @prop {(item: Group) => any } [onClickMenuItem]
  * 
  * @param {SideBarSmallParams & 
 *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>

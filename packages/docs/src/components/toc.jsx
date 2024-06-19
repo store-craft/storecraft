@@ -71,7 +71,7 @@ export const TOC = (
       
   return (
   <div {...rest} >
-    <div className='px-4 flex flex-col font-medium gap-1.5 text-sm w-full   '>
+    <div className='px-4 flex flex-col font-medium gap-1.5 text-sm w-full h-fit border-l border-gray-400/40 '>
       <div 
           children='On this page' 
           className='text-kf-600 dark:text-white 
@@ -83,11 +83,8 @@ export const TOC = (
             <Link 
                 key={ix}
                 href={'#' + h.handle} 
-                cchildren={(h.level>1 ? '' : '') + h.text} 
-                ddangerouslySetInnerHTML={ {__html: (h.level>1 ? '' : '') + h.text}} 
-                
                 className={
-                  `hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500' : '')
+                  `hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500 ' : '')
                 }>
                 <MDView value={(h.level>1 ? '' : '') + h.text} />
               </Link>

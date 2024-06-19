@@ -40,13 +40,42 @@ export function parseHeadings(source) {
 
 }
 
+const compute_map = () => {
+  const map = {};
+
+  /**
+   * 
+   * @param {typeof doc["groups"]["0"]["groups"]["0"]} g 
+   */
+  const recurse_g = (g) => {
+
+    if(g.route) {
+      map[g.route] = g.path ?? g.groups[0].path;
+    }
+
+    for(const g_child of g?.groups ?? []) {
+      recurse_g(g_child)
+    }
+  }
+
+  for(const g of doc.groups) {
+    recurse_g(g)
+  }
+
+  return map;
+}
+
+const doc_map = compute_map();
+
+console.log(doc_map);
+
 /**
  * 
  */
 const import_folder = function() {
 
   const paths = doc.groups.map(
-    group => group.items
+    group => group.groups
   ).flat();
 
   let __map = {};
@@ -83,17 +112,19 @@ export const _getStaticProps = async (
   }
 ) => {
   
-  const docs = import_folder();
+  // const docs = import_folder();
   const { slug } = params;
   const route = slug?.reduce(
     (acc, curr) => path.join(acc, curr)
     , ''
-  ) ?? docs.groups[0].items[0].route;
+  ) ?? doc.groups[0].groups[0].route;
 
-  const path_of_file = docs.__map[route];
+  const path_of_file = doc_map[route];
   const source = fs.readFileSync(path_of_file);
   const { content, data } = matter(source);
   const headings = parseHeadings(source.toString());
+
+
 
   const mdxSource = await serialize(
     content, {
@@ -116,18 +147,20 @@ export const _getStaticProps = async (
         content: mdxSource,
         headings,
         frontMatter: data,
-        document: docs  
+        document: {
+          ...doc, 
+          __map: doc_map
+        }  
       }
     },
   }
 }
 
+
 /**
  * 
  */
 export const _getStaticPaths = async () => {
-  // console.log('creating docs pages')
-  const docs = import_folder();
 
   /**
    * 
@@ -136,7 +169,7 @@ export const _getStaticPaths = async () => {
   const to_optional = (path) => path.replace(/\.mdx?$/, '').split('/');
 
   const paths = Object
-    .keys(docs.__map)
+    .keys(doc_map)
     .map(
       item => (
         { 
@@ -146,6 +179,8 @@ export const _getStaticPaths = async () => {
         }
       )
     );
+  
+  // console.log(JSON.stringify(paths, null, 2))
 
   paths.push(
     { 

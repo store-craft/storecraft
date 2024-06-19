@@ -21,7 +21,7 @@ export const Image = (
   return (
 <div {...rest}>
   <div className='w-full h-full flex flex-col rounded-lg 
-                  overflow-clip border-2 border-black'>
+                  overflow-clip border-2 border-gray-400/40'>
     {
       label &&
       <div 

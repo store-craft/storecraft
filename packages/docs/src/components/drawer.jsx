@@ -22,14 +22,17 @@ const Drawer = (
 
   return (
 <div {...rest}>
-  <div 
-      className='h-fit w-full cursor-pointer'
-      onClick={() => setopen(v => !v)}
-      children={button}/>
+  {
+    button && 
+    <div 
+        className='h-fit w-full cursor-pointer'
+        onClick={() => setopen(v => !v)}
+        children={button}/>
+  }
   <div 
       children={children} 
-      className={`--bg-red-200 transition-max-height duration-500
-                  ${open ? 'max-h-[40rem]' : 'max-h-0'}
+      className={`--bg-red-200 transition-max-height duration-200
+                  ${isOpen ? 'max-h-[40rem]' : 'max-h-0'}
                   overflow-hidden
                   `
                 }/>

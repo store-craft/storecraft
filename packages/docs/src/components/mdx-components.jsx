@@ -11,13 +11,53 @@ import { Pink, Lime, Purple } from './labels.jsx'
 import { to_handle } from '@/utils/func.utils.js'
 
 /**
+ * 
+ * @param {React.ReactNode} node 
+ * 
+ * @returns {string}
+ */
+const getNodeText = node => {
+  if (node == null) return '';
+
+  switch (typeof node) {
+    case 'string':
+    case 'number':
+      return node.toString()
+
+    case 'boolean':
+      return ''
+
+    case 'object': {
+      if (node instanceof Array)
+        return node.map(getNodeText).join(' ')
+
+      if ('props' in node)
+        return getNodeText(node.props.children)
+    } // eslint-ignore-line no-fallthrough
+
+    default: 
+      console.warn('Unresolved `node` of type:', typeof node, node)
+      return ''
+  }
+}
+
+/**
+ * 
+ * @param {React.ReactNode} node 
+ * 
+ * @returns {string}
+ */
+export const sanitize_and_handle = node => {
+  return to_handle(getNodeText(node));
+}
+/**
  * @type {Record<string, React.FC<{ [x:? string]: any }>>}
  */
 const components = {
-  h1: (props) => <h1 {...props} id={to_handle(props.children)}/>,
-  h2: (props) => <h2  {...props} id={to_handle(props.children)}/>,
-  h3: (props) => <h3 {...props} id={to_handle(props.children)} />,
-  h4: (props) => <h4  {...props} id={to_handle(props.children)}/>,
+  h1: (props) => <h1 {...props} id={sanitize_and_handle(props.children)}/>,
+  h2: (props) => <h2 {...props} id={sanitize_and_handle(props.children)}/>,
+  h3: (props) => <h3 {...props} id={sanitize_and_handle(props.children)} />,
+  h4: (props) => <h4 {...props} id={sanitize_and_handle(props.children)}/>,
   hr: (props) => <hr {...props} />,
   strong: (props) => <strong fontWeight="semibold" className='text-kf-500 dark:text-kf-400' {...props} />,
   br: (props) => <span {...props} />,

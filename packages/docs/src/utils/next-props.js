@@ -6,8 +6,6 @@ import components from '../components/mdx-components.jsx'
 import doc from './docs-config.js'
 
 
-
-
 /**
  * getHeadings credit: Josh W. Comeau
  * 
@@ -27,6 +25,7 @@ export function parseHeadings(source) {
   return headingLines.map(
     (raw) => {
       const text = raw.replace(/^#+\s/, "");
+      // const text = marked.parse(strip_tags(raw));
 
 
       const level = raw.indexOf(' ');

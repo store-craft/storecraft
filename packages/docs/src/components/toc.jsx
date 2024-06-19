@@ -2,6 +2,27 @@ import { to_handle } from '@/utils/func.utils.js'
 import Link from 'next/link.js';
 import { useRouter } from 'next/router.js';
 import { useEffect, useMemo, useState } from 'react'
+import { MDView } from './md-view.jsx';
+
+/**
+ * 
+ * @param {string} s 
+ */
+const strip_tags = s => {
+  let refined = s;
+
+  while(true) {
+    const a = refined.indexOf('<');
+    const b = refined.indexOf('>');
+
+    if(a==-1 || b==-1) 
+      return refined;
+
+    refined = refined.slice(0, a) + ' ' + refined.slice(b + 1);
+  }
+
+  return refined;
+}
 
 const lvl2pl = [
   'pl-0',
@@ -40,7 +61,7 @@ export const TOC = (
       it => (
         { 
           ...it, 
-          handle: to_handle(it.text)
+          handle: to_handle(strip_tags(it.text))
         }
       )
     )
@@ -49,11 +70,12 @@ export const TOC = (
 
       
   return (
-  <div {...rest}>
+  <div {...rest} >
     <div className='px-4 flex flex-col font-medium gap-1.5 text-sm w-full   '>
-      <p 
+      <div 
           children='On this page' 
-          className='text-kf-600 dark:text-white font-bold text-base mb-2'/>        
+          className='text-kf-600 dark:text-white 
+                prose prose-slate font-bold text-base mb-2'/>        
 
       {
         headings_with_handles.map(
@@ -61,10 +83,14 @@ export const TOC = (
             <Link 
                 key={ix}
                 href={'#' + h.handle} 
-                children={(h.level>1 ? '' : '') + h.text} 
+                cchildren={(h.level>1 ? '' : '') + h.text} 
+                ddangerouslySetInnerHTML={ {__html: (h.level>1 ? '' : '') + h.text}} 
+                
                 className={
                   `hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500' : '')
-                } />
+                }>
+                <MDView value={(h.level>1 ? '' : '') + h.text} />
+              </Link>
           )
         )
       }

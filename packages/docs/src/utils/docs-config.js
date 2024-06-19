@@ -52,27 +52,7 @@ export default {
       ]
     },
     {
-      title: "Schema",
-      icon: {
-        name: 'BiLogoFirebase',
-        params: {}
-      },
-      items: [
-        {
-          title: 'Defintions',
-          route: 'schema/definitions',
-          path: 'content/docs/main/schema-defintions.mdx'
-        },
-        {
-          title: 'Collections',
-          route: 'schema/collections',
-          path: 'content/docs/main/schema-collections.mdx'
-        },
-
-      ]
-    },
-    {
-      title: 'Shelf Admin',
+      title: 'Dashboard',
       icon: {
         name: 'MdAdminPanelSettings',
         params: {}
@@ -117,7 +97,7 @@ export default {
       ]
     },
     {
-      title: 'Shelf Backend',
+      title: 'Backend',
       icon: {
         name: 'FaServer',
         params: {}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import useTrigger from './useTrigger.js'
 
-let darkMode = false;
+let darkMode = true;
 const subs = new Set();
 
 /**

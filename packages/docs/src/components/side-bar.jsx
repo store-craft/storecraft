@@ -13,6 +13,7 @@ import Drawer from './drawer.jsx'
  * @typedef {object} Group
  * @property {string} [route]
  * @property {string} [path]
+ * @property {string} [empty=false]
  * @property {string} title
  * @property {object} icon
  * @property {string} icon.name
@@ -208,7 +209,7 @@ const _onClick = useCallback(
 
   return (
     <Link 
-        href={`${group.route ?? group?.groups[0].route}`} 
+        href={`${group.empty ? group?.groups[0].route : group.route }`} 
         alt={group.title}
         title={group.title}>
       <Link2 

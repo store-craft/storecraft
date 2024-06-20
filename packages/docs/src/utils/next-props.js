@@ -49,8 +49,8 @@ const compute_map = () => {
    */
   const recurse_g = (g) => {
 
-    if(g.route) {
-      map[g.route] = g.path ?? g.groups[0].path;
+    if(g.route && g.path) {
+      map[g.route] = g.path;// ?? g.groups[0].path;
     }
 
     for(const g_child of g?.groups ?? []) {

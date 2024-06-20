@@ -108,6 +108,7 @@ export default {
         {
           title: 'Overview',
           route: 'backend/overview',
+          empty: true,
           // path: 'content/docs/main/backend-overview.mdx',
           groups: [
             {

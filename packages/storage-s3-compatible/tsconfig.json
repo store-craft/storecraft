@@ -10,5 +10,9 @@
     "module": "NodeNext",
     "composite": true,
   },
-  "include": ["*", "src/*"]
+  "include": [
+    "*", 
+    "src/*",
+    "tests/*.js"
+  ]
 }

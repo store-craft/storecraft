@@ -274,7 +274,7 @@ const SideBar = (
             (group, index) => 
             <Link 
                 key={index} 
-                href={`${group.groups[0].route ?? group.groups[0].groups[0].route}`} 
+                href={`${group.groups[0].empty ? group?.groups[0].groups[0].route : group.groups[0].route}`} 
                 title={group.title}
                 alt={group.title}>
               <Header 

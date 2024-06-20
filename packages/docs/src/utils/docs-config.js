@@ -106,23 +106,44 @@ export default {
       },
       groups: [
         {
-          title: 'Overview',
-          route: 'backend/overview',
+          title: 'Databases',
+          route: 'backend/databases',
           empty: true,
-          // path: 'content/docs/main/backend-overview.mdx',
           groups: [
             {
-              title: 'a',
-              route: 'backend/overview/a',
-              path: 'content/docs/main/backend-payments.mdx'
+              title: 'SQL',
+              route: 'backend/databases/sql',
+              path: 'content/docs/main/backend-databases-sql.mdx'
             },
             {
-              title: 'b',
-              route: 'backend/overview/b',
-              path: 'content/docs/main/backend-payments.mdx'
+              title: 'Mongo DB',
+              route: 'backend/databases/mongo',
+              path: 'content/docs/main/backend-databases-mongodb.mdx'
             },
           ]
         },
+        {
+          title: 'Storage',
+          route: 'backend/storage',
+          empty: true,
+          groups: [
+            {
+              title: 'S3 Compatible',
+              route: 'backend/storage/s3',
+              path: 'content/docs/main/backend-storage-s3.mdx'
+            },
+            {
+              title: 'Google Storage',
+              route: 'backend/storage/google',
+              path: 'content/docs/main/backend-storage-google.mdx'
+            },
+            {
+              title: 'Node Local Storage',
+              route: 'backend/storage/node-local',
+              path: 'content/docs/main/backend-storage-node-local.mdx'
+            },
+          ]
+        },        
         {
           title: 'Payments',
           route: 'backend/payments',

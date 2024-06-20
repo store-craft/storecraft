@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { R2 } from '../adapter.js'
+import { S3 } from '../adapter.js'
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os'
 import * as path from 'node:path';
@@ -12,9 +12,12 @@ const areBlobsEqual = async (blob1, blob2) => {
   );
 };
 
-const storage = new R2(
-  process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, 
-  process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY
+const FORCE_PATH_STYLE = true;
+
+const storage = new S3(
+  process.env.S3_BUCKET, process.env.S3_REGION, 
+  process.env.S3_ACCESS_KEY_ID, 
+  process.env.S3_SECRET_KEY, FORCE_PATH_STYLE
 );
 
 test.before(async () => { await storage.init(null) })

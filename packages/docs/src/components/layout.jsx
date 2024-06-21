@@ -92,8 +92,9 @@ const Layout = (
             
             <div 
                 className='--w-full block px-5 md:px-5 h-fit pb-20
-                          pt-[130px] md:pt-[90px] prose prose-slate 
-                          text-base max-w-none
+                          pt-[130px] md:pt-[90px] prose prose-base
+                          prose-slate text-[17px]
+                          --text-base max-w-none
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
                           text-slate-600 dark:text-slate-400'

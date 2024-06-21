@@ -162,6 +162,38 @@ export default {
           ]
         },            
         {
+          title: 'Platforms',
+          route: 'backend/platforms',
+          path: 'content/docs/main/backend-platforms.mdx',
+          groups: [
+            {
+              title: 'Node.js',
+              route: 'backend/platforms/node-js',
+              path: 'content/docs/main/backend-platforms-node-js.mdx'
+            },
+            {
+              title: 'AWS API Gateway',
+              route: 'backend/platforms/aws-api-gateway',
+              path: 'content/docs/main/backend-platforms-aws-api-gateway.mdx'
+            },
+            {
+              title: 'Cloudflare Workers',
+              route: 'backend/platforms/cloudflare-workers',
+              path: 'content/docs/main/backend-platforms-cloudflare-workers.mdx'
+            },
+            {
+              title: 'Google Functions',
+              route: 'backend/platforms/google-functions',
+              path: 'content/docs/main/backend-platforms-google-functions.mdx'
+            },
+            {
+              title: 'Roll Your Own',
+              route: 'backend/platforms/roll-your-own',
+              path: 'content/docs/main/backend-platforms-roll-your-own.mdx'
+            },
+          ]
+        },            
+        {
           title: 'Payments',
           route: 'backend/payments',
           path: 'content/docs/main/backend-payments.mdx'

@@ -1,3 +1,71 @@
+# Roll Your Own
+
+Since `storecraft` abstracts the platform on which it runs, You
+can roll your own platform integration and implementation
+
+## How It Works
+
+Under the hood, each platform module needs to implement the 
+`import("@storecraft/core/v-platform").PlatformAdapter` interface.
+
+This interface implementation 
+- Translate native `http` requests into Web [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+- Translate Web [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) into native `http` response.
+- Expose the underlying platform **Environment Variables**
+
+
+```js
+/**
+ * 
+ * @template PlatformNativeRequest The `native` `http` request in the platform
+ * @template PlatformContext Additional `context`
+ * @template H Additional `handleResponse` result
+ */
+export declare interface PlatformAdapter<
+    PlatformNativeRequest, PlatformContext, H
+> {
+    
+  /**
+   * @description convert a platform native request into web api request.
+   * 
+   * @param from something
+   * 
+   * @returns {Promise<Request>}
+   */
+  encode: (from: PlatformNativeRequest)=> Promise<Request>;
+
+  /**
+   * @description Handle the computed web response with 
+   * context in case it is needed, In node.js for example, 
+   * we have to stream it into the native server-response.
+   * 
+   * @param web_response web standard `response` object
+   * @param context additional `context`
+   * 
+   * 
+   * @returns {Promise<H>} 
+   */
+  handleResponse: (web_response: Response, context: PlatformContext) => Promise<H>;
+
+  /**
+   * 
+   * @description Get the environment variables of a platform
+   */
+  get env(): Record<string, string>;
+}
+
+```
+
+## Example
+
+For example, in `Node.js`
+- `http.IncomingMessage` is translated into Web [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+- Web [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) is translated into `http.ServerResponse`
+
+Here is the official implementation for **Node.js** platform
+
+
+```js
 import 'dotenv/config'
 import { Readable } from 'node:stream'
 
@@ -91,3 +159,5 @@ export class NodePlatform {
     }
   }  
 } 
+
+```

@@ -1,0 +1,69 @@
+# Platforms
+
+`storecraft` abstracts the platform on which it runs. This is achieved
+by custom platform modules, that currently translate the networking requests.
+
+## How It Works
+
+### The Network Flow
+Under the hood, each platform plugin can adapt `http` requests and
+translate them into modern Web `Request` and `Response` objects.
+
+
+For example, in `Node.js`
+- `http.IncomingMessage` is translated into Web [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+- `storecraft` computes a Web [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) from the previous Web [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+- The previous Web [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) is translated into native `http.ServerResponse`.
+
+### The `handler` method
+
+Then, a `handler` method in the `storecraft` **App** class receives **native**
+request and response and adapts it with the platform module.
+
+For example, in **Node.js**
+```js
+import 'dotenv/config';
+import http from "node:http";
+import { join } from "node:path";
+import { homedir } from "node:os";
+
+import { App } from '@storecraft/core'
+import { NodePlatform } from '@storecraft/platform-node'
+import { MongoDB } from '@storecraft/database-mongodb-node'
+import { NodeLocalStorage } from '@storecraft/storage-node-local'
+
+let app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new NodeLocalStorage(join(homedir(), 'tomer'))
+);
+
+await app.init();
+
+```
+
+Then, a server is started. Pay attention `app.handler`
+
+```js
+// app.handler receives 
+// (http.IncomingMessage, http.ServerResponse) native
+// object
+const server = http.createServer(app.handler).listen(
+  8000,
+  () => {
+    console.log(`Server is running on http://localhost:8000`);
+  }
+);
+```
+
+With this common technique, the underlying `platform` is abstracted away
+from `storecraft`
+
+## Officialy Supported Platforms
+
+Currently,
+
+- `Node.js >= 18` platform through `@storecraft/platform-node`
+- `AWS Api Gateway` (coming soon)
+- `Google Functions` (coming soon, but should be covered by the `@storecraft/platform-node`)
+- `Cloudflare Workers` (coming soon)

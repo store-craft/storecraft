@@ -143,7 +143,24 @@ export default {
               path: 'content/docs/main/backend-storage-node-local.mdx'
             },
           ]
-        },        
+        },    
+        {
+          title: 'Email',
+          route: 'backend/email',
+          empty: true,
+          groups: [
+            {
+              title: 'Serverless Email Providers',
+              route: 'backend/email/http',
+              path: 'content/docs/main/backend-email-http.mdx'
+            },
+            {
+              title: 'SMTP for Node',
+              route: 'backend/email/smtp-node',
+              path: 'content/docs/main/backend-email-smtp-node.mdx'
+            },
+          ]
+        },            
         {
           title: 'Payments',
           route: 'backend/payments',

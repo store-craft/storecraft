@@ -220,9 +220,9 @@ const _onClick = useCallback(
           next={!isLeaf}/>
       {
         !isLeaf &&
-        <Drawer button={null} isOpen={open} >
+        <Drawer button={null} isOpen={open} className={open ? 'mt-2' : ''}>
           <SideGroups 
-              itemClass='pl-5'
+              itemClass={'pl-5'}
               group={group} 
               onClickMenuItem={onClickMenuItem} 
               selectedSlug={selectedSlug} />

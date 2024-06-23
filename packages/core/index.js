@@ -217,7 +217,7 @@ export class App {
    * @description Initialize the Application
    */
   async init() {
-    this.#_pubsub = new PubSub();
+    this.#_pubsub = new PubSub(this);
     
     try{
       // first let's settle config
@@ -513,10 +513,12 @@ export class App {
    * @description Quickly attach an `event` subscriber. This is just a quick way
    * to interface into {@link PubSub}
    * 
-   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents["on"]}
+   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents<this, this>["on"]}
    */
   on = (event, callback) => {
-    return this.pubsub.on(event, callback);
+    this.pubsub.on(event, callback);
+
+    return this;
   }
 
 }

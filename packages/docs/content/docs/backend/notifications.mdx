@@ -1,20 +1,45 @@
-# Resources
+# Notifications
 
-`storecraft` **API** manages the following simple resources 
-through the `App` class.
+`storecraft` **API** lets you manage a `notifications` resource. this is
+key in the **Dashboard** app, where you can view latest notifications.
 
-- **products** - For managing products, including `variants`
-- **collections** - Every product belongs to a collection, for 
-example, **Woman Shorts** collection.
-- **storefronts** - Each storefront highlight which products, collections 
-and more are featured and available.
-- **discounts** - manage 5 types of discounts.
-- **customers** - manages customers data.
-- **tags** - manage quick key value properties, that you can apply and tag
-your resources.
-- **posts** - manages textual entities such as a blog.
-- **shipping_methods** - manage shipping methods.
-- **images** - manage images references from urls and storage.
-- **notifications** - manage notifications, usually read at the dashboard.
-- **templates** - manage marketing email templates
+Notifications enable you to
+- Create the notifications in the style you like.
+- Create the notifications with the content you want.
+- Define actions to react to notifications in the Dashboard.
 
+## How It Works
+
+```ts
+import { App } = '@storecraft/core'
+import type { CollectionType, AuthUserType } = '@storecraft/core/v-api'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).on(
+  'collections/upsert',
+  async (event) => {
+    const previous: CollectionType = event.payload.previous;
+    const current: CollectionType = event.payload.current;
+  }
+).on(
+  'auth/signup',
+  async (event) => {
+    const user: Partial<AuthUserType> = event.payload;
+
+    // Here you can send an onboarding email for example
+
+    console.log(user.email);
+  }
+).on(
+  'checkout/complete',
+  async (event) => {
+    const order_data: OrderData = event.payload;
+
+    // Here send an email with order details to customer
+  }
+);
+
+```

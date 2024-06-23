@@ -108,3 +108,33 @@ const discount_regular = {
     ]
   }
 }    
+
+
+///
+
+
+export const apps = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).on(
+  'auth/signup',
+  async (event) => {
+    const user: Partial<AuthUserType> = event.payload;
+
+    await event.app.api.notifications.addBulk(
+      [
+        {
+          message: `
+💰 **Checkout update**\n 
+* \`${o?.address?.firstname ?? ''}\` has completed checkout. 
+* 💳 Order total is \`${o?.pricing?.total ?? '-'}\`.
+* 📧 Email was sent to ${o?.contact?.email ?? 'no-email'}
+`
+        }
+      ]
+    )
+
+    console.log(user.email);
+  }
+)

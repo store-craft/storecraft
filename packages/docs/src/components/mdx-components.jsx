@@ -9,6 +9,7 @@ import Drawer from './drawer.jsx'
 import { Image } from './image.jsx'
 import { Pink, Lime, Purple } from './labels.jsx'
 import { to_handle } from '@/utils/func.utils.js'
+import {EventsTable} from './event-table.jsx'
 
 /**
  * 
@@ -81,7 +82,8 @@ const components = {
   CodeBlock,
   // JsDocTables,
   Image,
-  Pink, Purple, Lime
+  Pink, Purple, Lime,
+  EventsTable
 }
 
 export default components

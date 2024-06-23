@@ -4,6 +4,8 @@
  * 
  * @description `pubsub` controller for `storecraft` events
  * 
+ * 
+ * @template AppType
  */
 export class PubSub {
 
@@ -12,9 +14,18 @@ export class PubSub {
    * @type {Record<string, import("./types.public.js").PubSubSubscriber[]>}
    */
   #subscribers = {};
+  /**
+   * 
+   * @type {AppType}
+   */
+  #app;
 
-
-  constructor() {
+  /**
+   * 
+   * @param {AppType} app 
+   */
+  constructor(app) {
+    this.#app = app;
   }
 
 
@@ -44,7 +55,8 @@ export class PubSub {
         await sub(
           {
             event,
-            payload
+            payload,
+            app: this.#app
           }
         );
       }

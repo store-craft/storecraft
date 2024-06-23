@@ -62,6 +62,9 @@ const id = await app.api.products.upsert(
   }
 )
 
+/**
+ * @typedef {import('@storecraft/core/v-api').ApiQuery} dd
+ */
 //
 //&order=desc&sortBy=(updated_at,id)&expand=(*)&limit=5
 const products = await app.api.products.list(

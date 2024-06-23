@@ -233,29 +233,32 @@ export default {
           ]
         },                    
         {
-          title: 'Payments',
-          route: 'backend/payments',
-          path: 'content/docs/main/backend-payments.mdx'
-        },
-        {
-          title: 'Checkouts',
-          route: 'backend/checkouts',
-          path: 'content/docs/main/backend-checkouts.mdx'
+          title: 'Checkout & Payments',
+          route: 'backend/checkout-and-payments',
+          empty: true,
+          groups: [
+            {
+              title: 'Checkouts',
+              route: 'backend/checkout-and-payments',
+              path: 'content/docs/backend/checkout-and-payments/checkouts.mdx'
+            },
+    
+          ]
         },
         {
           title: 'Events',
           route: 'backend/events',
-          path: 'content/docs/main/backend-events.mdx'
+          path: 'content/docs/backend/events.mdx'
         },
         {
           title: 'Notifications',
           route: 'backend/notifications',
-          path: 'content/docs/main/backend-notifications.mdx'
+          path: 'content/docs/backend/notifications.mdx'
         },
         {
-          title: 'Security',
-          route: 'backend/security',
-          path: 'content/docs/main/backend-security.mdx'
+          title: 'Auth',
+          route: 'backend/auth',
+          path: 'content/docs/backend/auth/overview.mdx'
         },
 
       ]

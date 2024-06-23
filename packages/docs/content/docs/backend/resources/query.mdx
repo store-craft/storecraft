@@ -1,23 +1,141 @@
-# Resources
+# Query Guide
 
-`storecraft` **API** manages the following simple resources 
-through the `App` class.
+`storecraft` **API** boasts a versatile query capabilities.
 
-- `products` - For managing products, including `variants`
-- `collections` - Every product belongs to a collection, for 
-example, **Woman Shorts** collection.
-- `storefronts` - Each storefront highlight which products, collections 
-and more are featured and available.
-- `discounts` - manage 5 types of discounts.
-- `customers` - manages customers data.
-- `tags` - manage quick key value properties, that you can apply and tag
-your resources.
-- `posts` - manages textual entities such as a blog.
-- `shipping_methods` - manage shipping methods.
-- `images` - manage images references from urls and storage.
-- `notifications` - manage notifications, usually read at the dashboard.
-- `templates` - manage marketing email templates
+All resources have a query functionality.
 
+# API Query Object
 
-## Products
+The main query object is `ApiQuery`
 
+```ts
+import type { ApiQuery } from '@storecraft/core/v-api'
+
+```
+
+Which, approximately have the following shape
+
+```ts
+// Query types
+import type { VQL } from '../v-ql/types.js';
+export type ApiQuerySortOrder = 'asc' | 'desc';
+export type Tuple<T extends string> = [key: string, value: T];
+export type Cursor = Tuple<string>[];
+export type SortCursor = string[];
+export type SortOrder = 'asc' | 'desc';
+
+/** 
+ * @description Expend several relations 
+ */
+export type ExpandQuery = string[];
+
+/**
+ * @description Query base type for most collections
+ * 
+ */
+export type ApiQuery = {
+  /**
+   * @description Expand connections of items returned from Query
+   * @example ['products', 'tags']
+   * @default ['*']
+   */
+  expand?: ExpandQuery;
+
+  /**
+   * @description boolean `DSL` for querying using terms
+   * @example 
+   * `(whatever-indexed tag:a -(tag:b | tag:c | "couple of words") handle:product*)`
+   */
+  vql?: string;
+  /**
+   * @description internal usage Abstract Syntx Tree (AST)
+   */
+  vqlParsed?: VQL.AST;
+
+  /**
+   * @description Sort by cursor, should correlate with `startAt` / `endAt` cursors
+   * @example 
+   * ['updated_at']
+   * ['updated_at', 'id']
+   */
+  sortBy?: SortCursor;
+
+  /**
+   * @description `asc` | `desc`
+   */
+  order?: SortOrder;
+
+  /**
+   * @description Limit of items returned
+   */
+  limit?: number;
+  /**
+   * @description Limit to last items returned from the tail of the query
+   */
+  limitToLast?: number;
+
+  /**
+   * @description Lower Bound Filter Cursors on the properties of the items
+   * @example 
+   * [['updated_at', '2012-09']]
+   * [['updated_at', '2012-09'], ['id', 'id_wiwq09j2023j']]
+   */
+  startAt?: Cursor;
+  startAfter?: Cursor;
+
+  /**
+   * @description Upper Bound Filter Cursors on the properties of the items
+   * @example 
+   * [['updated_at', '2015-09']]
+   * [['updated_at', '2015-09'], ['id', 'id_wiwq09j2023j']]
+   */
+  endAt?: Cursor;
+  endBefore?: Cursor;
+}
+
+```
+
+## VQL
+
+### Introduction
+Storecraft's VQL is a boolean search language,
+
+All of the resources of `storecraft` index selected search terms, which you can query with 
+storecraft's **VQL** lingo in your queries.
+
+**VQL** supports essential features:
+- **OR (|)** -> `term1 | term2`
+- **AND (&)** -> `term1 & term2`, also equivalent to `term1 term2`
+- **NOT (-)** -> `term1 -term2`
+- **Aggregation** of multiple words -> `term1 & -"term with multiple words"`
+- **Nesting** -> `(term1 & term2) | (term3 & -term4)` 
+
+> You can always watch the search terms for each resource at the Dashboard
+
+### What is indexed
+> TODO, will add json examples
+
+# Examples
+
+In the following example, we query `products`
+- fetch next batch of 5 items after a specific point
+- use `vql` to filter in only products, that do **NOT** belong to `col:collection-a`
+
+```ts
+const products = await app.api.products.list(
+  {
+    startAfter: [
+      ['updated_at', '2024-06-13T08:51:52.202Z'],
+      ['id', 'pr_uiwe9j2i3i239iij23']
+    ],
+    order: 'desc',
+    sortBy: [
+      'updated_at',
+      'id'
+    ],
+    vql: '-col:collection-a',
+    limit: 5
+  }
+);
+
+```

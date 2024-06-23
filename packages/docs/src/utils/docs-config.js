@@ -13,15 +13,16 @@ export default {
         {
           title: "What Is This ?",
           route: `start-here/what`,
-          path: `content/docs/main/start-here-what.mdx`
+          path: `content/docs/start-here/what.mdx`
         },
         {
           title: "Why use it ?",
           route: `start-here/why`,
-          path: `content/docs/main/start-here-why.mdx`
+          path: `content/docs/start-here/why.mdx`
         },
       ]
     },
+
     {
       title: "Setup",
       icon: {
@@ -32,26 +33,27 @@ export default {
         {
           title: "Firebase Project",
           route: `setup/project`,
-          path: `content/docs/main/setup-firebase-project.mdx`
+          path: `content/docs/setup/firebase-project.mdx`
         },
         {
           title: "Authentication",
           route: `setup/authentication`,
-          path: `content/docs/main/setup-firebase-authentication.mdx`
+          path: `content/docs/setup/firebase-authentication.mdx`
         },
         {
           title: "Storage",
           route: `setup/storage`,
-          path: `content/docs/main/setup-firebase-storage.mdx`
+          path: `content/docs/setup/firebase-storage.mdx`
         },
         {
           title: "Firestore Database",
           route: `setup/firestore`,
-          path: `content/docs/main/setup-firebase-firestore.mdx`
+          path: `content/docs/setup/firebase-firestore.mdx`
         },
 
       ]
     },
+
     {
       title: 'Dashboard',
       icon: {
@@ -61,38 +63,38 @@ export default {
       groups: [
         {
           title: 'Products Collections',
-          route: 'admin/collections',
-          path: 'content/docs/main/admin-collections.mdx'
+          route: 'dashboard/collections',
+          path: 'content/docs/dashboard/collections.mdx'
         },
         {
           title: 'Products Variants',
-          route: 'admin/variants',
-          path: 'content/docs/main/admin-variants.mdx'
+          route: 'dashboard/variants',
+          path: 'content/docs/dashboard/variants.mdx'
         },
         {
           title: 'Creating Storefronts',
-          route: 'admin/storefronts',
-          path: 'content/docs/main/admin-storefronts.mdx'
+          route: 'dashboard/storefronts',
+          path: 'content/docs/dashboard/storefronts.mdx'
         },
         {
           title: 'Creating Discounts',
-          route: 'admin/discounts',
-          path: 'content/docs/main/admin-discounts.mdx'
+          route: 'dashboard/discounts',
+          path: 'content/docs/dashboard/discounts.mdx'
         },
         {
           title: 'Creating Orders',
-          route: 'admin/orders',
-          path: 'content/docs/main/admin-orders.mdx'
+          route: 'dashboard/orders',
+          path: 'content/docs/dashboard/orders.mdx'
         },
         {
           title: 'Tags and Attributes',
-          route: 'admin/tags',
-          path: 'content/docs/main/admin-tags.mdx'
+          route: 'dashboard/tags',
+          path: 'content/docs/dashboard/tags.mdx'
         },
         {
           title: 'Media Management',
-          route: 'admin/media',
-          path: 'content/docs/main/admin-media.mdx'
+          route: 'dashboard/media',
+          path: 'content/docs/dashboard/media.mdx'
         },
 
       ]
@@ -113,12 +115,12 @@ export default {
             {
               title: 'SQL',
               route: 'backend/databases/sql',
-              path: 'content/docs/main/backend-databases-sql.mdx'
+              path: 'content/docs/backend/databases/sql.mdx'
             },
             {
               title: 'Mongo DB',
               route: 'backend/databases/mongo',
-              path: 'content/docs/main/backend-databases-mongodb.mdx'
+              path: 'content/docs/backend/databases/mongo.mdx'
             },
           ]
         },
@@ -130,17 +132,17 @@ export default {
             {
               title: 'S3 Compatible',
               route: 'backend/storage/s3',
-              path: 'content/docs/main/backend-storage-s3.mdx'
+              path: 'content/docs/backend/storage/s3.mdx'
             },
             {
               title: 'Google Storage',
               route: 'backend/storage/google',
-              path: 'content/docs/main/backend-storage-google.mdx'
+              path: 'content/docs/backend/storage/google.mdx'
             },
             {
               title: 'Node Local Storage',
               route: 'backend/storage/node-local',
-              path: 'content/docs/main/backend-storage-node-local.mdx'
+              path: 'content/docs/backend/storage/node-local.mdx'
             },
           ]
         },    
@@ -152,44 +154,44 @@ export default {
             {
               title: 'Serverless Email Providers',
               route: 'backend/email/http',
-              path: 'content/docs/main/backend-email-http.mdx'
+              path: 'content/docs/backend/email/http.mdx'
             },
             {
               title: 'SMTP for Node',
               route: 'backend/email/smtp-node',
-              path: 'content/docs/main/backend-email-smtp-node.mdx'
+              path: 'content/docs/backend/email/smtp-node.mdx'
             },
           ]
         },            
         {
           title: 'Platforms',
           route: 'backend/platforms',
-          path: 'content/docs/main/backend-platforms.mdx',
+          path: 'content/docs/backend/platforms/overview.mdx',
           groups: [
             {
               title: 'Node.js',
               route: 'backend/platforms/node-js',
-              path: 'content/docs/main/backend-platforms-node-js.mdx'
+              path: 'content/docs/backend/platforms/node-js.mdx'
             },
             {
               title: 'AWS API Gateway',
               route: 'backend/platforms/aws-api-gateway',
-              path: 'content/docs/main/backend-platforms-aws-api-gateway.mdx'
+              path: 'content/docs/backend/platforms/aws-api-gateway.mdx'
             },
             {
               title: 'Cloudflare Workers',
               route: 'backend/platforms/cloudflare-workers',
-              path: 'content/docs/main/backend-platforms-cloudflare-workers.mdx'
+              path: 'content/docs/backend/platforms/cloudflare-workers.mdx'
             },
             {
               title: 'Google Functions',
               route: 'backend/platforms/google-functions',
-              path: 'content/docs/main/backend-platforms-google-functions.mdx'
+              path: 'content/docs/backend/platforms/google-functions.mdx'
             },
             {
               title: 'Roll Your Own',
               route: 'backend/platforms/roll-your-own',
-              path: 'content/docs/main/backend-platforms-roll-your-own.mdx'
+              path: 'content/docs/backend/platforms/roll-your-own.mdx'
             },
           ]
         }, 
@@ -206,7 +208,7 @@ export default {
             {
               title: 'Query Guide',
               route: 'backend/resources/query',
-              path: 'content/docs/main/backend-resources-query.mdx'
+              path: 'content/docs/backend/resources/query.mdx'
             },
             {
               title: 'Products',

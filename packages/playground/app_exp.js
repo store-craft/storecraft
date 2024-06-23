@@ -34,6 +34,7 @@ export const app = new App(
   {
     'events': { 
       config: '',
+      onInit: undefined,
       info: {name:'tomer'},
       actions: [
         {handle:'t', name:'rr'}
@@ -42,3 +43,41 @@ export const app = new App(
     }
   }
 );
+
+const id = await app.api.products.upsert(
+  {
+    active: true, 
+    title: 'A White Shirt',
+    price: 50,
+    qty: 10,
+    handle: 'a-white-shirt',
+    collections: [
+      {
+        handle: 'a', id:'a'
+      }
+    ],
+    variant_hint,
+    parent_handle
+  }
+)
+
+//
+//&order=desc&sortBy=(updated_at,id)&expand=(*)&limit=5
+const products = await app.api.products.list(
+  {
+    startAfter: [
+      ['updated_at', '2024-06-13T08:51:52.202Z']
+    ],
+    order: 'desc',
+    sortBy: [
+      'updated_at'
+    ],
+    limit: 5
+  }
+)
+
+const id = await app.api.collections.list_collection_products(
+  '',{
+    
+  }
+)

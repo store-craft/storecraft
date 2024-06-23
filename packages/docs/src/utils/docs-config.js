@@ -192,7 +192,34 @@ export default {
               path: 'content/docs/main/backend-platforms-roll-your-own.mdx'
             },
           ]
-        },            
+        }, 
+        {
+          title: 'Resources',
+          route: 'backend/resources',
+          empty: true,
+          groups: [
+            {
+              title: 'Overview',
+              route: 'backend/resources/overview',
+              path: 'content/docs/backend/resources/overview.mdx'
+            },
+            {
+              title: 'Query Guide',
+              route: 'backend/resources/query',
+              path: 'content/docs/main/backend-resources-query.mdx'
+            },
+            {
+              title: 'Products',
+              route: 'backend/resources/products',
+              path: 'content/docs/backend/resources/products.mdx'
+            },
+            {
+              title: 'Collections',
+              route: 'backend/resources/collections',
+              path: 'content/docs/backend/resources/collections.mdx'
+            },
+          ]
+        },                    
         {
           title: 'Payments',
           route: 'backend/payments',

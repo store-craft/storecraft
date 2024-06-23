@@ -1,9 +1,9 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
+import { PubSub } from './v-pubsub/public.js';
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
-import { PubSub } from './v-pubsub/public.js';
 
 /** 
  * @typedef {Partial<import('./types.public.js').StorecraftConfig>} StorecraftConfig
@@ -516,7 +516,7 @@ export class App {
    * @type {import('./v-pubsub/types.public.js').PubSubOnEvents["on"]}
    */
   on = (event, callback) => {
-    this.pubsub.on(event, callback);
+    return this.pubsub.on(event, callback);
   }
 
 }

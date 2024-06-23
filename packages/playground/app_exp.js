@@ -10,6 +10,7 @@ import { GoogleStorage } from '@storecraft/storage-google'
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
+import { enums } from '@storecraft/core/v-api';
  
 export const app = new App(
   new NodePlatform(),
@@ -76,8 +77,31 @@ const products = await app.api.products.list(
   }
 )
 
-const id = await app.api.collections.list_collection_products(
-  '',{
-    
+const id = await app.api.discounts.list_discounts_products();
+
+
+/** @type {import('@storecraft/core/v-api').DiscountType} */
+const discount_regular = { 
+  id: '',
+  active: true, 
+  handle: 'discount-10-off-regular', 
+  title: '10% OFF Regular tags',
+  priority: 0, 
+  application: enums.DiscountApplicationEnum.Auto, 
+  info: {
+    details: {
+      meta: enums.DiscountMetaEnum.regular,
+      /** @type {import('@storecraft/core/v-api').RegularDiscountExtra} */
+      extra: {
+        fixed: 0, percent: 10
+      }
+    },
+    filters: [
+      { // discount for a specific product handle
+        meta: enums.FilterMetaEnum.p_in_tags,
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        value: ['regular']
+      }
+    ]
   }
-)
+}    

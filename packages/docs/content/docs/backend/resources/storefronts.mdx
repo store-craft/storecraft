@@ -1,0 +1,152 @@
+# Storefronts
+
+Storefronts let you assemble the perfect store with a single data
+aggregation with connections to
+- **Products**, you want to feature
+- **Collections** meta data, you want to feature
+- **Automatic Discounts** you want publish
+- **Shipping Methods** you support
+- **Posts** you want publish
+
+First, make sure you have a running app.
+
+```js
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+import { R2 } from '@storecraft/storage-s3-compatible'
+
+let app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new R2(), 
+);
+  
+await app.init();
+
+```
+
+## Upsert
+
+```js
+const id = await app.api.storefronts.upsert(
+  {
+    active: true, 
+    title: 'The Black Friday Storefront',
+    handle: 'the-black-friday-storefront',
+    collections: [
+      { handle: 'collection-a', id: 'col_65e5ca42c43e2c41ae5216a9'  },
+      { handle: 'collection-b', id: 'col_65e5ca42c43e2c41ae5216bd'  },
+    ], 
+    shipping_methods: [
+      { handle: 'ship-fast', id: 'ship_65e5ca42c43e2c41ae5216a9'  },
+      { handle: 'ship-slow', id: 'ship_65e5ca42c43e2c41ae5216bd'  },
+    ], 
+    products: [
+      { handle: 'white-shirt', id: 'pr_65e5ca42c43e2c41ae5216a9'  },
+      { handle: 'black-shirt', id: 'pr_65e5ca42c43e2c41ae5216bd'  },
+    ],
+    posts: [
+      { handle: 'how-to-pick-yoga-pants', id: 'post_65e5ca42c43e2c41ae5216a9'  },
+
+    ]
+  }
+);
+
+
+console.log(id)
+//
+// Will print ID such as `sf_65e5ca42c43e2c41ae5216a9`
+//
+
+```
+
+> `handle` is optional for new inserts
+
+## Get a storefront
+
+To fetch, you can use it's `handle` or `ID`
+
+```js
+const by_id = await app.api.products.get('sf_65e5ca42c43e2c41ae5216a9');
+const by_handle = await app.api.products.get('my-black-friday-store');
+
+```
+
+Or, you can fetch and expand only the featured products
+
+```js
+const store = await app.api.storefronts.get(
+  'my-black-friday-store', {
+    expand: 'products'
+  }
+)
+```
+
+
+## Query Storefronts
+
+You can query the `storefronts` resource with
+
+```js
+const items = await app.api.storefronts.list(
+  {
+    startAfter: [
+      ['updated_at', '2024-06-13T08:51:52.202Z']
+    ],
+    order: 'desc',
+    sortBy: [
+      'updated_at'
+    ],
+    limit: 5
+  }
+);
+
+```
+
+
+## List all Featured Products of storefront
+
+```js
+const featured = await app.api.storefronts.list_storefront_products(
+  'my-black-friday-store', 
+);
+
+```
+
+## List all Featured Collections of storefront
+
+```js
+const featured = await app.api.storefronts.list_storefront_collections(
+  'my-black-friday-store', 
+);
+
+```
+
+## List all Featured Discounts of storefront
+
+```js
+const featured = await app.api.storefronts.list_storefront_discounts(
+  'my-black-friday-store', 
+);
+
+```
+
+## List all Featured Posts of storefront
+
+```js
+const featured = await app.api.storefronts.list_storefront_posts(
+  'my-black-friday-store', 
+);
+
+```
+
+
+## List all Featured Shipping methods of storefront
+
+```js
+const featured = await app.api.storefronts.list_storefront_shipping_methods(
+  'my-black-friday-store', 
+);
+
+```

@@ -815,7 +815,7 @@ export type FilterValue_p_not_in_tags = string[];
  * @description Filter for product discount, 
  * that chooses all products
  */
-export type FilterValue_p_all = any;
+export type FilterValue_p_all = {};
 
 /**
  * @description Filter for product discount, product in price range
@@ -912,9 +912,10 @@ export type Filter = {
   meta: FilterMetaEnum['p_all'] | FilterMetaEnum['p_in_collections'] |
         FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
         FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_products'] |
-        FilterMetaEnum['p_not_in_products'] | FilterMetaEnum['o_date_in_range'] |
-        FilterMetaEnum['o_has_customer'] | FilterMetaEnum['o_items_count_in_range'] |
-        FilterMetaEnum['o_subtotal_in_range'] | FilterMetaEnum["any"];
+        FilterMetaEnum['p_not_in_products'] | FilterMetaEnum["p_in_price_range"] | 
+        FilterMetaEnum['o_date_in_range'] | FilterMetaEnum['o_has_customer'] | 
+        FilterMetaEnum['o_items_count_in_range'] | FilterMetaEnum['o_subtotal_in_range'] | 
+        FilterMetaEnum["any"];
 
   /** 
    * @description The filter params 
@@ -922,9 +923,9 @@ export type Filter = {
   value?: FilterValue_p_in_collections | FilterValue_p_not_in_collections | 
           FilterValue_p_in_products | FilterValue_p_not_in_products | 
           FilterValue_p_in_tags | FilterValue_p_not_in_tags | 
-          FilterValue_p_all | FilterValue_p_in_price_range | 
+          FilterValue_p_in_price_range | 
           FilterValue_o_subtotal_in_range | FilterValue_o_items_count_in_range |
-          FilterValue_o_date_in_range | FilterValue_o_has_customers | any;
+          FilterValue_o_date_in_range | FilterValue_o_has_customers;
 }
 
 /**
@@ -936,8 +937,7 @@ export interface FilterMetaEnum {
     op: string, 
     name?: string
   },
-  p_in_collections: 
-  { 
+  p_in_collections: { 
     id: 0, type:'product', 
     op: 'p-in-collections', 
     name?: string

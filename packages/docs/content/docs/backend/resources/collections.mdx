@@ -63,8 +63,8 @@ const id = await app.api.collections.upsert(
 You can use it's `handle` or `ID`
 
 ```js
-const product_by_id = await app.api.collections.get('col_65e5ca42c43e2c41ae5216a9');
-const product_by_handle = await app.api.collections.get('nintendo-games');
+const by_id = await app.api.collections.get('col_65e5ca42c43e2c41ae5216a9');
+const by_handle = await app.api.collections.get('nintendo-games');
 ```
 
 ## Query Collections
@@ -72,7 +72,7 @@ const product_by_handle = await app.api.collections.get('nintendo-games');
 You can query the `collections` resource with
 
 ```js
-const products = await app.api.collections.list(
+const items = await app.api.collections.list(
   {
     startAfter: [
       ['updated_at', '2024-06-13T08:51:52.202Z']
@@ -87,7 +87,7 @@ const products = await app.api.collections.list(
 
 ```
 
-## List Products of Collection
+## Query Products of Collection
 
 ```js
 const id = await app.api.collections.list_collection_products(

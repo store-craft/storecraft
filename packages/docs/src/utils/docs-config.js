@@ -218,6 +218,16 @@ export default {
               route: 'backend/resources/collections',
               path: 'content/docs/backend/resources/collections.mdx'
             },
+            {
+              title: 'Storefronts',
+              route: 'backend/resources/storefronts',
+              path: 'content/docs/backend/resources/storefronts.mdx'
+            },
+            {
+              title: 'Discounts',
+              route: 'backend/resources/discounts',
+              path: 'content/docs/backend/resources/discounts.mdx'
+            },
           ]
         },                    
         {

@@ -77,6 +77,7 @@ export const create = () => {
 
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
+      id: '',
       active: true, 
       handle: 'discount-10-off-regular', 
       title: '10% OFF Regular tags',
@@ -105,6 +106,7 @@ export const create = () => {
         {
           id: 'pr-1', qty: 3, 
           data: { 
+            handle: '', id: '',
             tags: ['regular'], 
             qty: 100, 
             active: true, title: '', 
@@ -114,6 +116,7 @@ export const create = () => {
         {
           id: 'pr-2', qty: 2, 
           data: { 
+            handle: '', id: '',
             tags: ['regular'], 
             qty: 100, 
             active: true, title: '', 
@@ -123,6 +126,7 @@ export const create = () => {
         {
           id: 'pr-3', qty: 5, 
           data: { 
+            handle: '', id: '',
             tags: ['would-not-be-discounted'], 
             qty: 100, 
             active: true, title: '', 
@@ -136,8 +140,8 @@ export const create = () => {
       ],
       [],
       {
+        handle: '', id: '',
         title: '',
-        handle: '',
         price: 50
       }
     )

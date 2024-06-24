@@ -11,10 +11,10 @@ Notifications enable you to
 ## Quick Example
 
 ```ts
-import { App } = '@storecraft/core'
-import type { CollectionType, CustomerType } = '@storecraft/core/v-api'
+import { App } from '@storecraft/core'
+import type { CustomerType } from '@storecraft/core/v-api'
 
-export const apps = new App(
+const app = new App(
   new NodePlatform(),
   new MongoDB(),
   new GoogleStorage(),

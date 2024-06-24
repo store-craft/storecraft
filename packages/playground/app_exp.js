@@ -113,7 +113,7 @@ const discount_regular = {
 ///
 
 
-export const apps = new App(
+export const app = new App(
   new NodePlatform(),
   new MongoDB(),
   new GoogleStorage(),
@@ -151,4 +151,20 @@ export const apps = new App(
 
     console.log(customer.email);
   }
+)
+
+
+//
+
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+);
+
+await app.init();
+
+app.api.checkout.complete_checkout(
+
 )

@@ -88,7 +88,6 @@ export const parse_basic_auth_or_apikey = (app) => {
     
     try {
       const auth_user = await verify_api_key(app)({ apikey });
-
       if(auth_user) {
         req.user = {
           sub: auth_user.id,

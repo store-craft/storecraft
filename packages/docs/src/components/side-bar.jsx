@@ -195,9 +195,9 @@ const [open, setopen] = useState(
   selectedSlug.startsWith(group.route)
 );
 
-console.log(selectedSlug)
-console.log(group.route)
-console.log(selectedSlug.startsWith(group.route))
+// console.log(selectedSlug)
+// console.log(group.route)
+// console.log(selectedSlug.startsWith(group.route))
 
 const _onClick = useCallback(
   (_) => {
@@ -262,9 +262,9 @@ const SideBar = (
     ), [selectedSlug, groups]
   );
 
-  console.log(
-    'selected_group', selected_group
-  );
+  // console.log(
+  //   'selected_group', selected_group
+  // );
 
   return (
     <nav {...rest} className={className} >

@@ -52,7 +52,7 @@ const Layout = (
   <div className={`${className} ${darkMode ? 'dark' : ''}`}>
     <div className={`relative w-full h-screen flex flex-col 
                      transition-colors overflow-clip
-                     bg-transparent dark:bg-gray-900
+                     bg-white dark:bg-gray-900
                      text-gray-800 dark:text-gray-300`
                     }>
 
@@ -87,7 +87,7 @@ const Layout = (
                       via='via-pink-400' /> */}
 
           <div 
-              className='relative w-full --grow h-full'
+              className='relative w-full h-full'
               ref={main_ref}>
             
             <div 

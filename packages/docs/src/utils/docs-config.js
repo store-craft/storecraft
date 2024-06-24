@@ -239,8 +239,23 @@ export default {
           groups: [
             {
               title: 'Checkouts',
-              route: 'backend/checkout-and-payments',
+              route: 'backend/checkout-and-payments/checkouts',
               path: 'content/docs/backend/checkout-and-payments/checkouts.mdx'
+            },
+            {
+              title: 'Paypal Standard Payments',
+              route: 'backend/checkout-and-payments/paypal-standard-payments',
+              path: 'content/docs/backend/checkout-and-payments/checkouts.mdx'
+            },
+            {
+              title: 'Stripe',
+              route: 'backend/checkout-and-payments/stripe',
+              path: 'content/docs/backend/checkout-and-payments/stripe.mdx'
+            },
+            {
+              title: 'Roll Your Own',
+              route: 'backend/checkout-and-payments/roll-your-own',
+              path: 'content/docs/backend/checkout-and-payments/roll-your-own.mdx'
             },
     
           ]

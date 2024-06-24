@@ -26,7 +26,7 @@ export const onError = async (error, req, res) => {
 
   if(error instanceof StorecraftError) {
     code = error?.code ?? extract_code(error) ?? code;
-    console.log('error?.cause', error?.cause)
+
     messages = error?.message ?? 'unknown-error';
     if(!Array.isArray(messages)) {
       messages = [{message: messages}];
@@ -147,7 +147,11 @@ export class Polka extends Trouter {
 
     } catch (e) {
       await this.onError(e, req, res);
-      console.log(e?.stack)
+
+      e?.stack && console.log(e?.stack)
+      console.log(JSON.stringify(e, null, 2))
+      // console.log('e?.stack')
+      // console.log(e?.stack)
       // throw e
     }
 

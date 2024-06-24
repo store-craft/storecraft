@@ -118,23 +118,37 @@ export const apps = new App(
   new MongoDB(),
   new GoogleStorage(),
 ).on(
-  'auth/signup',
+  'customers/upsert',
   async (event) => {
-    const user: Partial<AuthUserType> = event.payload;
+    const isNew = !Boolean(event.payload.previous);
+    const customer = event.payload.current;//: Partial<AuthUserType> = event.payload;
+
+    if(!isNew)  
+      return;
 
     await event.app.api.notifications.addBulk(
       [
         {
           message: `
-💰 **Checkout update**\n 
-* \`${o?.address?.firstname ?? ''}\` has completed checkout. 
-* 💳 Order total is \`${o?.pricing?.total ?? '-'}\`.
-* 📧 Email was sent to ${o?.contact?.email ?? 'no-email'}
-`
-        }
+            🚀 **${customer.firstname ?? 'New user'}** Just signed up\n 
+            > Email is \`${customer.email}\`.
+          `,
+          search: ['signup', 'new-user'],
+          author: 'backend-bot 🤖',
+          actions: [
+            {
+              name: 'goto',
+              type: 'route',
+              params: {
+                collection: 'customers',
+                document: customer.id,
+              }
+            }
+          ]
+        },
       ]
     )
 
-    console.log(user.email);
+    console.log(customer.email);
   }
 )

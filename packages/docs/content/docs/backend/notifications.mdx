@@ -8,38 +8,62 @@ Notifications enable you to
 - Create the notifications with the content you want.
 - Define actions to react to notifications in the Dashboard.
 
-## How It Works
+## Quick Example
 
 ```ts
 import { App } = '@storecraft/core'
-import type { CollectionType, AuthUserType } = '@storecraft/core/v-api'
+import type { CollectionType, CustomerType } = '@storecraft/core/v-api'
 
-const app = new App(
+export const apps = new App(
   new NodePlatform(),
   new MongoDB(),
   new GoogleStorage(),
 ).on(
-  'collections/upsert',
+  'customers/upsert',
   async (event) => {
-    const previous: CollectionType = event.payload.previous;
-    const current: CollectionType = event.payload.current;
-  }
-).on(
-  'auth/signup',
-  async (event) => {
-    const user: Partial<AuthUserType> = event.payload;
+    const isNew = !Boolean(event.payload.previous);
+    const customer: Partial<CustomerType> = event.payload;
 
-    // Here you can send an onboarding email for example
+    if(!isNew)  
+      return;
 
-    console.log(user.email);
-  }
-).on(
-  'checkout/complete',
-  async (event) => {
-    const order_data: OrderData = event.payload;
+    // here, you can send an onboarding personal template
 
-    // Here send an email with order details to customer
+    await event.app.api.notifications.addBulk(
+      [
+        {
+          message: `
+            🚀 **${customer.firstname ?? 'New user'}** Just signed up\n 
+            > Email is \`${customer.email}\`.
+          `,
+          search: ['signup', 'new-user'],
+          author: 'backend-bot 🤖',
+          actions: [
+            {
+              name: 'goto',
+              type: 'route',
+              params: {
+                collection: 'customers',
+                document: customer.id,
+              }
+            }
+          ]
+        },
+      ]
+    );
+
   }
-);
+)
 
 ```
+
+## How It Works
+
+Each notification is made up of
+- `message` content can be in **Markdown** Format.
+- Search terms for future search.
+- `author` indicating who wrote the notification.
+- `actions`, which is an array of **actions**, currently supports
+  - internal `routing` for **Dashboard**
+  - Follow a **URL**
+  - (coming in the future) invoke an **HTTP** request.

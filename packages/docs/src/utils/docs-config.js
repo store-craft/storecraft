@@ -230,6 +230,11 @@ export default {
               route: 'backend/resources/discounts',
               path: 'content/docs/backend/resources/discounts.mdx'
             },
+            {
+              title: 'Orders',
+              route: 'backend/resources/orders',
+              path: 'content/docs/backend/resources/orders.mdx'
+            },
           ]
         },                    
         {
@@ -245,7 +250,7 @@ export default {
             {
               title: 'Paypal Standard Payments',
               route: 'backend/checkout-and-payments/paypal-standard-payments',
-              path: 'content/docs/backend/checkout-and-payments/checkouts.mdx'
+              path: 'content/docs/backend/checkout-and-payments/paypal-standard-payments.mdx'
             },
             {
               title: 'Stripe',
@@ -253,7 +258,7 @@ export default {
               path: 'content/docs/backend/checkout-and-payments/stripe.mdx'
             },
             {
-              title: 'Roll Your Own',
+              title: 'Roll Your Own Payment Gateway',
               route: 'backend/checkout-and-payments/roll-your-own',
               path: 'content/docs/backend/checkout-and-payments/roll-your-own.mdx'
             },

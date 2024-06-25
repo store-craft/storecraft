@@ -1,21 +1,58 @@
-# Resources
-# Resources
+# Paypal Standard payment Gateway for **StoreCraft**
 
-`storecraft` **API** manages the following simple resources 
-through the `App` class.
+[Paypal Standard Payments](https://developer.paypal.com/docs/checkout/standard/) Integration
 
-- **products** - For managing products, including `variants`
-- **collections** - Every product belongs to a collection, for 
-example, **Woman Shorts** collection.
-- **storefronts** - Each storefront highlight which products, collections 
-and more are featured and available.
-- **discounts** - manage 5 types of discounts.
-- **customers** - manages customers data.
-- **tags** - manage quick key value properties, that you can apply and tag
-your resources.
-- **posts** - manages textual entities such as a blog.
-- **shipping_methods** - manage shipping methods.
-- **images** - manage images references from urls and storage.
-- **notifications** - manage notifications, usually read at the dashboard.
-- **templates** - manage marketing email templates
+## Features
+- Create checkouts with `AUTHORIZE` or `CAPTURE` intents
+- `capture`, `void`, `refund` actions
+- Get a readable and explainable `status`
+- Supports both `prod` and `test` endpoints
 
+```bash
+npm i @storecraft/payments-paypal-standard
+```
+
+## Standalone
+
+```js
+const config = {
+  env: 'prod',
+  client_id: '<get-from-your-paypal-dashboard>',
+  secret: '<get-from-your-paypal-dashboard>',
+  currency_code: 'USD',
+  intent_on_checkout: 'AUTHORIZE'
+}
+
+const paypal = new PaypalStandard(config);
+
+const create_result = await paypal.onCheckoutCreate(order);
+await paypal.onCheckoutComplete(create_result);
+await paypal.capture(create_result);
+
+```
+
+## In Storecraft App
+
+```ts
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(), 
+).withPaymentGateways(
+  {
+    'paypal_standard_prod': new PaypalStandard(
+      { client_id: '', secret: '', env: 'prod' }
+    ),
+  }
+);
+
+  
+await app.init();
+
+```

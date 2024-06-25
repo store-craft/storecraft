@@ -161,7 +161,11 @@ const app = new App(
   new NodePlatform(),
   new MongoDB(),
   new GoogleStorage(),
-);
+).withPaymentGateways(
+  {
+    'paypal'
+  }
+)
 
 await app.init();
 

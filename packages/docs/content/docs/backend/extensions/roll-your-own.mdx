@@ -1,10 +1,13 @@
-import { App } from "../types.public.js";
-import type { 
-    ExtensionAction,
-    ExtensionInfo 
-} from "../v-api/types.api.js";
-  
-  
+# Roll Your Own **Extension**
+
+If you followed the previous [Overview](backend/extensions/overview), you have
+seen a quick example and how easy it is to extend **Storecraft** with extensions.
+
+Here, we review the interface
+
+## Interface
+
+```ts
 /**
  * @description A backend `action` is a `function` recieving the 
  * **payload** 
@@ -64,3 +67,4 @@ export declare interface extension<Config extends any=any> {
   invokeAction?<P extends any=any>(action_handle: string): ExtensionActionHandler<P>;
 
 }
+```

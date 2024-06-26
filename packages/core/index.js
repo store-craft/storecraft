@@ -185,11 +185,11 @@ export class App {
 
     }
  
-    console.log(this.banner_create(pkg.version));
+    console.log(this.#banner_create(pkg.version));
     // console.log('store-craft config', this.#_config);
   } 
 
-  banner_create(version='1.0.0') {
+  #banner_create(version='1.0.0') {
     const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
     const c = {
       red: '\x1b[1;31m',

@@ -70,7 +70,7 @@ const Layout = (
 
         <SideBar 
             className='hidden md:block w-72 h-full overflow-auto text-xs
-                       flex-shrink-0 px-3 pt-[100px] pl-10'
+                       flex-shrink-0 px-3 pt-[100px] pb-10 pl-10'
             selectedSlug={slug}
             groups={groups} 
             />
@@ -94,7 +94,7 @@ const Layout = (
                 className='--w-full block px-5 md:px-5 h-fit pb-20
                           pt-[130px] md:pt-[90px] prose prose-base
                           prose-slate text-[17px]
-                          --text-base max-w-none
+                        text-base max-w-none
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
                           text-slate-600 dark:text-slate-400'

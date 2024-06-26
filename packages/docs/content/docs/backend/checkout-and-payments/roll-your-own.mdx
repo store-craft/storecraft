@@ -45,7 +45,7 @@ At every moment, the gateway should be able to send back,
 
 ### Actions
 
-Each gateway can publish a list of **Actions** it supports
+Each gateway can publish a list of public **Actions** it supports
 
 For example, a credit card processor, may publish
 - `capture`
@@ -54,6 +54,26 @@ For example, a credit card processor, may publish
 
 Also, the gateway provides an interface called `invokeAction` so users can
 invoke actions directly based on the supported and published actions list.
+
+The HTTP REST Api creates `payment` endpoints, that you can use to invoke
+these actions in the context of a `storecraft` **order id**.
+
+Which, in turn, 
+- will fetch the Order by it's `ID`
+- Fetch The gateway's `CheckoutCreateResult`
+- Hand this value to the action along with POST data (extra data)
+- You Action implementation will use `CheckoutCreateResult` to identify
+a payment in a native system (such as paypa / stripe / etc..)
+- You Action will complete or throw an error.
+
+All of this is accessible in the official **Dasboard**
+
+```txt
+POST
+/api/payments/{action_handle}/{order_id}
+```
+
+> Consult the REST API Documentation
 
 ## Code
 
@@ -354,5 +374,31 @@ export class DummyPayments implements payment_gateway<Config, string> {
 
 }
 
+
+```
+
+### In Storecraft
+
+Then, connect your gateway as one of the payment providers,
+
+```ts
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(), 
+).withPaymentGateways(
+  {
+    'my_dummy_payment': new DummyPayments(),
+  }
+);
+
+  
+await app.init();
 
 ```

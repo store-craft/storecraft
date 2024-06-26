@@ -10,7 +10,8 @@ import { GoogleStorage } from '@storecraft/storage-google'
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
-import { enums } from '@storecraft/core/v-api';
+import { enums, ExtensionInfo } from '@storecraft/core/v-api';
+import { extension } from '@storecraft/core/v-extensions';
  
 export const app = new App(
   new NodePlatform(),
@@ -156,7 +157,27 @@ export const app = new App(
 
 //
 
-class SendSlackMessageExtension imple{
+class SendSlackMessageExtension implements extension {
+  get info() {
+    return {
+      name: 'My Extension'
+    }
+  }
+
+  onInit = (app: App) => {
+    app.pubsub.on(
+      'checkout/complete',
+      async (event) => {
+        const total = event.payload.pricing.total;
+
+        if(total > 100) {
+          await slackApi.send(
+            `💸 New Order, total is ${total}, ID is ${event.payload.id}`
+          )
+        }
+      }
+    )
+  };
 
 }
 
@@ -167,14 +188,7 @@ const app = new App(
   new GoogleStorage(),
 ).withExtensions(
   {
-    'my-tax-extension': {
-      info: {
-        name: 'My Extension',
-      },
-      onInit: async (app) => {
-        app.ex
-      }
-    }
+    'my-slack-extension': new SendSlackMessageExtension()
   }
 )
 

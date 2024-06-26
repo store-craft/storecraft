@@ -108,7 +108,7 @@ export default {
       },
       groups: [
         {
-          title: 'Databases',
+          title: '💾 Databases',
           route: 'backend/databases',
           empty: true,
           groups: [
@@ -125,7 +125,7 @@ export default {
           ]
         },
         {
-          title: 'Storage',
+          title: '📦 Storage',
           route: 'backend/storage',
           empty: true,
           groups: [
@@ -147,7 +147,7 @@ export default {
           ]
         },    
         {
-          title: 'Email',
+          title: '📧 Email',
           route: 'backend/email',
           empty: true,
           groups: [
@@ -164,7 +164,7 @@ export default {
           ]
         },            
         {
-          title: 'Platforms',
+          title: '🌐 Platforms',
           route: 'backend/platforms',
           path: 'content/docs/backend/platforms/overview.mdx',
           groups: [
@@ -196,7 +196,7 @@ export default {
           ]
         }, 
         {
-          title: 'Resources',
+          title: '📚 Resources',
           route: 'backend/resources',
           empty: true,
           groups: [
@@ -238,7 +238,7 @@ export default {
           ]
         },                    
         {
-          title: 'Checkout & Payments',
+          title: '💳 Checkout & Payments',
           route: 'backend/checkout-and-payments',
           empty: true,
           groups: [
@@ -266,21 +266,37 @@ export default {
           ]
         },
         {
-          title: 'Events',
+          title: '📅 Events',
           route: 'backend/events',
           path: 'content/docs/backend/events.mdx'
         },
         {
-          title: 'Notifications',
+          title: '🔔 Notifications',
           route: 'backend/notifications',
           path: 'content/docs/backend/notifications.mdx'
         },
         {
-          title: 'Auth',
+          title: '🔑 Auth',
           route: 'backend/auth',
           path: 'content/docs/backend/auth/overview.mdx'
         },
-
+        {
+          title: '🧪 Extensions',
+          route: 'backend/extensions',
+          empty: true,
+          groups: [
+            {
+              title: 'Overview',
+              route: 'backend/extensions/overview',
+              path: 'content/docs/backend/extensions/overview.mdx'
+            },
+            {
+              title: 'Roll Your Own',
+              route: 'backend/extensions/roll-your-own',
+              path: 'content/docs/backend/extensions/roll-your-own.mdx'
+            },
+          ]
+        },
       ]
     }
   ]

@@ -8,12 +8,12 @@ import type {
  * **original** payment creation result and optional extra parameters
  * 
  */
-export type PaymentGatewayActionHandler<CreateResult, Extra> = 
+export type PaymentGatewayActionHandler<CheckoutCreateResult, Extra> = 
   /**
    * @param input The original result of checkout creation in the payment gateway.
    * @param extra (Optional) extra parameters
    */
-  (input: CreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
+  (input: CheckoutCreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
 
 
 /**
@@ -53,11 +53,11 @@ export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfil
  * a webhook for this and return `OnCheckoutCompleteResult`.
  * 
  * @template {any} Config The config type
- * @template {any} CreateResult The result of checkout creation type
+ * @template {any} CheckoutCreateResult The result of checkout creation type
  * 
  */
 export declare interface payment_gateway<
-  Config extends any, CreateResult extends any
+  Config extends any, CheckoutCreateResult extends any
 > {
 
   /** 
@@ -85,7 +85,7 @@ export declare interface payment_gateway<
    * @param extra extra parameters for the action
    */
   invokeAction<E extends any=any>(action_handle: string): 
-      PaymentGatewayActionHandler<CreateResult, E>;
+      PaymentGatewayActionHandler<CheckoutCreateResult, E>;
 
   /**
    * 
@@ -95,7 +95,7 @@ export declare interface payment_gateway<
    * @param order store-craft order, use it to infer pricing
    * 
    */
-  onCheckoutCreate: (order: OrderData) => Promise<CreateResult>;
+  onCheckoutCreate: (order: OrderData) => Promise<CheckoutCreateResult>;
 
   /**
    * 
@@ -108,7 +108,7 @@ export declare interface payment_gateway<
    * @param extra_client_payload `anything` the client might send
    * 
    */
-  onCheckoutComplete: (create_result: CreateResult, extra_client_payload: any) => 
+  onCheckoutComplete: (create_result: CheckoutCreateResult, extra_client_payload: any) => 
                   Promise<OnCheckoutCompleteResult>;
 
   /**
@@ -118,7 +118,7 @@ export declare interface payment_gateway<
    * 
    * @param checkout_create_result sthe result of `onCheckoutCreate`
    */
-  status: (checkout_create_result: CreateResult) => Promise<PaymentGatewayStatus>;
+  status: (checkout_create_result: CheckoutCreateResult) => Promise<PaymentGatewayStatus>;
 
   /**
    * 

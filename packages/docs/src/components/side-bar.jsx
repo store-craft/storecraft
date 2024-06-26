@@ -14,10 +14,10 @@ import Drawer from './drawer.jsx'
  * @property {string} [route]
  * @property {string} [path]
  * @property {string} [empty=false]
- * @property {string} title
- * @property {object} icon
- * @property {string} icon.name
- * @property {object} icon.params
+ * @property {string} [title]
+ * @property {object} [icon]
+ * @property {string} [icon.name]
+ * @property {object} [icon.params]
  * @property {Group[]} [groups]
  */
 

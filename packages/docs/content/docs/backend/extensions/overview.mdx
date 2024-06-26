@@ -1,0 +1,60 @@
+# Extensions
+
+Extensions are simple custom modules, that you can plugin into **Storecraft**, to
+- Encapsulate **Event** based logic
+- Optionally expose **Actions**, that are invoked by http requests
+
+## Quick Example
+
+Here is a simple extension for sending Slack notifications,
+
+```ts
+class SendSlackMessageExtension implements extension {
+  get info() {
+    return {
+      name: 'My Extension'
+    }
+  }
+
+  onInit = (app: App) => {
+    app.pubsub.on(
+      'checkout/complete',
+      async (event) => {
+        const total = event.payload.pricing.total;
+
+        if(total > 100) {
+          await slackApi.send(
+            `💸 New Order, total is ${total}, ID is ${event.payload.id}`
+          )
+        }
+      }
+    )
+  };
+
+}
+```
+
+Then, plug it in **Storecraft**
+```ts
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).withExtensions(
+  {
+    'my-slack-extension': new SendSlackMessageExtension()
+  }
+)
+
+await app.init();
+```
+
+## Invoke Action with HTTP REST API
+
+```txt
+POST
+/api/extensions/{extension-handle}/{action-handle}
+```
+
+> Consult The REST API Docs

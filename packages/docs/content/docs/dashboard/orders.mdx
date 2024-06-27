@@ -1,33 +1,40 @@
 # Creating Orders
-Creating manual (or automatically at backend) is very easy with `shelf`.
 
-But before all that that jazz, let's dive in to understand the parts of an <Pink c='order'/> 
+Creating a manual Order (or automatically at backend upon checkout) is very easy with `storecraft`.
+
+But before all that that jazz, let's dive into understanding the parts of an <Pink c='order'/> 
 
 ## Line Items
-Perhaps the first thing to come in mind ar the <Purple c='line items' />.
-But what are they exactly ? merely a list of the goods the customer put in
-the cart for buying.
+
+Perhaps the first thing to come in mind are the <Purple c='line items' />.
+
+But what exactly are they ? merely a list of the goods the customer puts in the cart for buying.
 
 Each [LineItem](schema/definitions#LineItem) is made up of 
 1. The `product` identifier (or `variant` in some systems)
 2. The `quantity` of this product
 
-And that's about it. Now, imagine a list of these. This list is simply called `line items`.
-With `shelf` you can easily add line items
+And that's about it. 
+
+Now, imagine a list of these items. This list is simply called `line items`.
+
+With `storecraft` you can easily add line items.
+
 <Image src='/docs/main/admin-orders-1.webp' className='w-3/4 sm:w-[500px] mx-auto  mt-5' />
 
 When managing line items, you can control various aspects including 
 > Reducing the stock quantity in favor for the order
 
 ## Pricing
-Given that we have
-1. Line items
-2. Automatic discounts
-3. Manual discounts (Coupons)
-4. A user contact (may be anonymous)
-4. Selected shipping method
 
-Now, we can compute pricing of the order.
+Given that we have,
+1. **Line items**
+2. **Automatic Discounts**
+3. Optional **Manual Discounts** (Coupons)
+4. A Customer **Contact information** (may be anonymous)
+4. Selected **Shipping Method**
+
+Now, we can compute the **pricing** of the order.
 
 But, how is it done exactly ?
 
@@ -44,37 +51,10 @@ The total is then calculated:
 
 
 ## Payments
-Payment gateways are customizable in `shelf`. Each `order` page has a <Lime c='payment'/> card.
-`shelf` send a `POST` request to your backend function with the `gateway_id` and `order_id`
-to perform the following:
 
-* Fetch <Lime c='status' /> update about the current payment linked to the order
-* Perform <Pink c='void' /> payment (cancelling an authorized payment)
-* Perform <Pink c='capture' /> payment (billing of an authroized payment)
-* Perform <Pink c='refund' /> on a `captured` payment
+Payment Gateways are customizable in `storecraft`. Each `order` page has a <Lime c='payment'/> card.
 
-<Purple c='GET'/> request for <Lime c='status'/>
-```
-<BACKEND-HOST>/payments-gateways/<GATEWAY-ID>/status/<ORDER-ID>?apiKey=<API-KEY>
-```
+Uou can learn about payment gateways API [here](/backend/checkout-and-payments/checkouts)
 
-<Purple c='POST'/> request for <Lime c='void'/>
-```
-<BACKEND-HOST>/payments-gateways/<GATEWAY-ID>/void/<ORDER-ID>?apiKey=<API-KEY>
-```
-
-<Purple c='POST'/> request for <Lime c='capture'/>
-```
-<BACKEND-HOST>/payments-gateways/<GATEWAY-ID>/capture/<ORDER-ID>?apiKey=<API-KEY>
-```
-
-<Purple c='POST'/> request for <Lime c='refund'/>
-```
-<BACKEND-HOST>/payments-gateways/<GATEWAY-ID>/refund/<ORDER-ID>?apiKey=<API-KEY>
-```
-
-> Visit the `backend` section to see full details
-
-Here is an example
-<Image src='/docs/main/admin-orders-2.webp' className='w-3/4 sm:w-[500px] mx-auto  mt-5' />
-
+`storecraft` officialy supports and maintains some well known payment gateways, but, you
+are encouraged to write your own optimal payment integration solutions.

@@ -1,21 +1,25 @@
 # Creating Discounts
 
-`shelf` supports
+`storecraft` supports
 -
-- [`Regular`](#regular) Discounts
-- [`Bulk`](#bulk) Discounts
-- [`Order`](#order) Discounts
-- [`Buy X Get Y`](#buy_x_get_y) Discounts
-- [`Bundle`](#bundle) Discounts
+- [`Regular`](#regular-discount) Discounts
+- [`Bulk`](#bulk-discount) Discounts
+- [`Order`](#order-discount) Discounts
+- [`Buy X Get Y`](#buy-x-get-y-discount) Discounts
+- [`Bundle`](#bundle-discount) Discounts
 
-Let's first discuss some concepts related to discounts
+First, let's discuss some concepts related to discounts
 
 ## Discount Application type
+
 There are two categories of discounts
 
 ### Automatic
-Automatic discounts are a type of discounts, that are applied automatically at checkout time. 
+
+Automatic discounts are a type of discounts, that are applied automatically at checkout time.
+
 Most discounts are automatic and must hold the property of being publicly available.
+
 For example, when you enter a store, it might have a notice declaring the following
 - Spend more than 300 and get a 10% discount on your order
 - Buy <Pink children='3 for 100'/>
@@ -23,16 +27,17 @@ For example, when you enter a store, it might have a notice declaring the follow
 - All products from the shirts collection are <Lime children='5% off'/>
 
 ### Manual 
+
 Manual discounts are coupons. Coupons are not applied automatically, you have to be given
-the coupon code in order to use it.
+the coupon code in order to apply it at checkout.
 
+### Discounts Stack
 
-### Discounts stack
-
-So, usually a store will ofer more than one automatic discount. In this case, a bunch
+So, usually a store will offer more than one automatic discount. In this case, a bunch
 of discounts is called a <Lime children='discount stack' />.
 
-Each discount in a stack has a priority or order at which it is applied.
+> Each discount in a stack has a priority or order at which it is applied.
+
 For Example, suppose you offer two `bulk` discounts:
 1. <Lime c='1 hat for 70' />
 2. <Purple c='2 hats for 120' />
@@ -45,20 +50,21 @@ you apply the stack of discounts? in which order ? The common sense will lead yo
 
 This sensible ordering we defined, creates an order as a stack of `discounts`.
 
-At `shelf`, every [DiscountData](schema/definitions#DiscountData) has an `order` property,
-an integer number used to define it's priority, the lower number - the higher priority.
+At `storecraft`, every [DiscountData](schema/definitions#DiscountData) has a `priority` property,
+an integer number used to define it's priority, the **lower** the number - the **higher** priority.
 
 # Discount Details
 
 Details of a discount specifies:
-- The behaviour of the discounts, it's type
+- The behaviour of the discount
 - The filters used to qualify products and orders for a discount
 
-currently `shelf` supports 3 versatile discount types
+currently `storecraft` supports **5** versatile discount types
 
-## <a href='#regular' name='regular'>#</a> Regular Discount
+## Regular Discount
 
-`Regular` discounts are your regular <Pink c='5% OFF shirts' /> kind of discounts.
+**Regular** discounts are your regular <Pink c='5% OFF shirts' /> kind of discounts.
+
 They apply to each product that is qualified, i.e, the discount is calculated each time
 for each qualified product.
 
@@ -69,7 +75,7 @@ as an ambient. For example, setting <Lime c='100%'/> percents off with <Purple c
 price is fixed for each qualified product
 
 ### Filters usage
-Regular discounts use the `product` filters. Filters act as logical `AND` to qualify
+Regular discounts use the `product` filters. Each filter acts as a logical `AND` to qualify
 a product
 
 <Image src='/docs/main/admin-discounts-3.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
@@ -81,8 +87,8 @@ For example, the following filters qualify products that:
 
 <Image src='/docs/main/admin-discounts-5.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
 
-## <a href='#bulk' name='bulk'>#</a> Bulk Discount
-`bulk` discount on the other hand is calculated per multiple products. This means, their
+## Bulk Discount
+**Bulk** discount on the other hand is calculated per multiple products. This means, their
 sum of prices is gathered and only then the discount is calculated on the group of products.
 Classic examples of `bulk` discount are 
 
@@ -92,73 +98,83 @@ Classic examples of `bulk` discount are
 In the following example, we create <Purple c='3 FOR 100'/> bulk discount
 <Image src='/docs/main/admin-discounts-2.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
 
-One can also enable the `recursive` flag. When this flag is enabled,  then the discount
+One can also enable the `recursive` flag. When this flag is enabled, then the discount
 will be applied as much as it can as opposed to just once.
 
-`bulk` discounts use the same `product` <Lime c='filters' /> as [regular discounts](#regular). 
+`bulk` discounts use the same `product` <Lime c='filters' /> as [regular discounts](#regular-discount). 
 
-## <a href='#order' name='order'>#</a> Order Discount
-`order` discount is a discount, that is applied based on the properties of the order
+## Order Discount
+**Order** discount is a discount, that is applied based on the properties of the order
 and not the product types.
 
-Example,  <Pink c='Orders Above 200 give 30$ OFF' />
+Example, <Pink c='Orders Above 200$ give 30$ OFF' />
 <Image src='/docs/main/admin-discounts-order-1.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
 
 > Notice how we set `percents-off` to `0` and `fixed-price` to `-30`
 
 ### Filters usage
-`order` discounts use the `order` <Pink c='filters' />
+**Order** discounts use the `order` <Pink c='filters' />
 
 In the following example, an order is qualified to a discount only if:
 - The `sub total` value is greater or equals `300`
 - `AND`
 - A specific customer was matched
 
-This is classic for coupon
+This is classic for personal coupon
 <Image src='/docs/main/admin-discounts-order-2.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
 
-## <a href='#buy_x_get_y' name='buy_x_get_y'>#</a> Buy X Get Y Discount
+## Buy X Get Y Discount
 
-`Buy X Get Y` discounts are your familiar <Pink c='Buy 3 Shirts, Get 5% OFF pants' /> kind of discounts.
-They apply to each product that is qualified as `Y` given, that qualified `X` products were bought.
+**Buy X Get Y** discounts are your familiar <Pink c='Buy 3 Shirts, Get 5% OFF pants' /> kind of discounts.
+
+They apply to each product that is qualified as `Y`, given, that qualified `X` products were bought.
 
 To define this discount, let's look at an example of <Lime c='Buy Nintendo console -> Get a video game for 10% OFF'/>
-discount
+discount.
 
-#### Buy X
+### Buy X
 Start with **Filters** card to define the `X` products.
+
 In the following example, we want the customer to buy a retro `Nintendo` video game console
+
 <Image src='/docs/main/admin-discounts-buyxgety-1.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
 
-#### Get Y
+### Get Y
 Scroll to the next **Discount Details** card to define the `Y` products.
+
 In the following example, we give the customer a `10%` discount for a video game he chooses if he bought `X` 
 (The `Nintendo` console).
+
 <Image src='/docs/main/admin-discounts-buyxgety-2.webp' className='w-full sm:w-3/4 mx-auto  mt-5'  />
 
 > You can also define quantities for `X` and `Y`
 
+## Bundle Discount
 
-## <a href='#bundle' name='bundle'>#</a> Bundle Discount
+**Bundle** discounts are your familiar <Pink c='Buy a Laptop + Headset at Discount' /> kind of discounts.
 
-`Bundle` discounts are your familiar <Pink c='Buy a Laptop + Headset at Discount' /> kind of discounts.
 They apply to a **bundle** of products as a whole package and give a `discount` to all the products
 participating in the bundle at once.
 
 To define this discount, let's look at an example of <Lime c='Buy a bundle Nintendo console + 2 video games at 10% OFF'/>
 discount.
 
-#### Define the Bundle products
+### Define the Bundle products
+
 Start with **Filters** card to define the `X` products.
+
 In the following example, we want the customer to buy:
-- a retro `Nintendo` video game console 
-- `2` games
+- A retro `Nintendo` video game console 
+- **2** games
+
 <Image src='/docs/main/admin-discounts-bundle-1.webp' className='w-full sm:w-3/4 mx-auto mt-5'  />
 
 > **Each** `Filter` defines a product in the bundle
 
-#### Define how to discount the bundle
+### Define how to discount the bundle
+
 Scroll to the next **Discount Details** card to define the discount.
+
 You can see the `bundle` breakdown and explanation of the pricing.
 
 <Image src='/docs/main/admin-discounts-bundle-2.webp' className='w-full sm:w-3/4 mx-auto mt-5'  />

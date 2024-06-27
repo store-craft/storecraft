@@ -55,52 +55,6 @@ export default {
     },
 
     {
-      title: 'Dashboard',
-      icon: {
-        name: 'MdAdminPanelSettings',
-        params: {}
-      },
-      groups: [
-        {
-          title: 'Products Collections',
-          route: 'dashboard/collections',
-          path: 'content/docs/dashboard/collections.mdx'
-        },
-        {
-          title: 'Products Variants',
-          route: 'dashboard/variants',
-          path: 'content/docs/dashboard/variants.mdx'
-        },
-        {
-          title: 'Creating Storefronts',
-          route: 'dashboard/storefronts',
-          path: 'content/docs/dashboard/storefronts.mdx'
-        },
-        {
-          title: 'Creating Discounts',
-          route: 'dashboard/discounts',
-          path: 'content/docs/dashboard/discounts.mdx'
-        },
-        {
-          title: 'Creating Orders',
-          route: 'dashboard/orders',
-          path: 'content/docs/dashboard/orders.mdx'
-        },
-        {
-          title: 'Tags and Attributes',
-          route: 'dashboard/tags',
-          path: 'content/docs/dashboard/tags.mdx'
-        },
-        {
-          title: 'Media Management',
-          route: 'dashboard/media',
-          path: 'content/docs/dashboard/media.mdx'
-        },
-
-      ]
-    },
-
-    {
       title: 'Backend',
       icon: {
         name: 'FaServer',
@@ -298,6 +252,54 @@ export default {
           ]
         },
       ]
-    }
+    },
+
+    {
+      title: 'Dashboard',
+      icon: {
+        name: 'MdAdminPanelSettings',
+        params: {}
+      },
+      groups: [
+        {
+          title: 'Products Collections',
+          route: 'dashboard/collections',
+          path: 'content/docs/dashboard/collections.mdx'
+        },
+        {
+          title: 'Products Variants',
+          route: 'dashboard/variants',
+          path: 'content/docs/dashboard/variants.mdx'
+        },
+        {
+          title: 'Creating Storefronts',
+          route: 'dashboard/storefronts',
+          path: 'content/docs/dashboard/storefronts.mdx'
+        },
+        {
+          title: 'Creating Discounts',
+          route: 'dashboard/discounts',
+          path: 'content/docs/dashboard/discounts.mdx'
+        },
+        {
+          title: 'Creating Orders',
+          route: 'dashboard/orders',
+          path: 'content/docs/dashboard/orders.mdx'
+        },
+        {
+          title: 'Tags and Attributes',
+          route: 'dashboard/tags',
+          path: 'content/docs/dashboard/tags.mdx'
+        },
+        {
+          title: 'Media Management',
+          route: 'dashboard/media',
+          path: 'content/docs/dashboard/media.mdx'
+        },
+
+      ]
+    },
+
+
   ]
 }

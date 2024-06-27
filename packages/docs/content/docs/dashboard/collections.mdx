@@ -10,10 +10,10 @@ For example:
 You get the idea, this is how we are used to shop. Similar products are grouped
 together so they can be easily found.
 
-Fortunately, `shelf` support a concept called `collections`. 
+Fortunately, `storecraft` support a concept called `collections`. 
 
-Collections are containers that of products. Given a product in `shelf`,
-you can tell `shelf`, that the product belongs to a collection.
+Collections are containers of products. Given a product in `storecraft`,
+you can tell `storecraft`, that the product belongs to a collection.
 
 Each product can belong to **multiple** collections. So, as an example,
 A Honda car can belong to `cars` collection, but also to a `honda` collection.
@@ -29,36 +29,9 @@ You probably want to know how does the connection between a product and a collec
 happens. Well, it is quite simple:
 - Every `product` has a `collections` property, which is just a list of collections handles, that
 the product belong to.
-- In addition, upon product update at shelf, every product's [search](schema/definitions#ProductData) property is augmented
+- In addition, upon product update at storecraft, every product's [search](schema/definitions#ProductData) property is augmented
 with `col:<COLLECTION-HANDLE>`
 - Both of this help with retrival, indexing and querying of products in collections.
-
-## Exporting Collections
-But, it might be costly to query products of a collection every time in **Firestore**,
-therefore, the recommended way is to export a collection (`publish` operation in `shelf`).
-
-Every time you add products to a collection, you can feel free to publish again.
-
-When a collection is published at `shelf`
-- The database is queried to find all of the products, that belong to this collection.
-- The products list is merged into a collection object.
-- The object is serialized into `JSON`, then compressed with `gzip`
-- The compressed file is uploaded into your firebase storage
-- the collection's `_published` property links to the url of the file
-
-retrieving a file from object storage has many benefits:
-1. It is cheaper than querying the **firestore** database
-2. The file itself is compressed and is very small even for **1k** products and more
-3. It is cached on the client for 60 minutes, which makes a nice balance between cache hit and miss
-4. Given that you download all the products in the collection, then you can easily create the fastest
-client side product filtering. As opposed to backend side filtering
-
-Using this method can yield great results. It is fast, cost-effective and many times is
-the right thing to do.
-
-> tip, click the `publish` button
-
-<Image src='/docs/main/admin-collections-0.webp' className='w-3/4 sm:w-[300px] mx-auto mt-5' />
 
 ## How Do I add products to collections ?
 There are three ways to do so
@@ -70,3 +43,30 @@ Inside each product page, there is a `collections` card
 ### From a collection page
 Inside each collection page, there is a `Products in collection` card
 <Image src='/docs/main/admin-collections-2.webp' className='w-3/4 sm:w-[300px] mx-auto  mt-5' />
+
+## Exporting Collections (coming soon 🧪)
+But, it might be costly to query products of a collection every time from the database,
+therefore, the recommended way is to export a collection (`publish` operation in `storecraft`).
+
+Every time you add products to a collection, you can feel free to publish again.
+
+When a collection is published at `storecraft`
+- The database is queried to find all of the products, that belong to this collection.
+- The products list is merged into a collection object.
+- The object is serialized into `JSON`
+- The file is uploaded to your `storecraft` [Storage](backend/storage)
+- the collection's `_published` property links to the url of the file
+
+retrieving a file from object storage has many benefits:
+1. It is cheaper than querying the database
+2. If it is a small collection, the file is small.
+3. It can be cached on the client, which makes a nice balance between cache hit and miss
+4. Given that you download all the products in the collection, then you can easily create the fastest
+client side product filtering. As opposed to backend side filtering.
+
+Using this method can yield great results. It is fast, cost-effective and many times is
+the right thing to do.
+
+> tip, click the `publish` button
+
+<Image src='/docs/main/admin-collections-0.webp' className='w-3/4 sm:w-[300px] mx-auto mt-5' />

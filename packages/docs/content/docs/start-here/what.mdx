@@ -1,63 +1,58 @@
-# Introduction
+# Well**come**
 
-`shelf` turns your firebase resources into a `headless commerce platform`.
-shelf is a **CMS** (Content Management System) essentially. Out of the box, it does
-this while utilizing the following resources, that are available to you
+**Storecraft** is a next generation Commerce As Code Backend Platform.
 
-## Firestore Database
-Firestore is the leading no-SQL database offering by Google. Some of it's benefits
-- Very generous free tier
-- pay as you go pricing above the free tier
-- Infinitely scalable as opposed to other common databases
+You code your perfect commerce solution behaviour
 
-`shelf` manages your firestore to create the a fully functional commerce platform.
-It does so by managing the following collections:
+Like this,
 
-* `/products` collection to store product information
-* `/collections` collection to store collections information
-* `/storefronts` collection to manage storefront data
-* `/tags` collection to manage laconic key value tags (helpful for filtering)
-* `/users` collection to manage users
-* `/discounts` collection to manage automatic and manual(coupons) discounts
-* `/orders` collection to manage orders with states and line items
-* `/shipping_methods` collection to manage shipping methods
-* `/images` collection to manage images
-* `/payment_gateways` collection to manage configurations of payment gateways
-* `/posts` collection to manage rich media
-* `/notifications` collection to manage admin notifications
-* `/settings` collection to manage admin notifications
+```ts
+show example
+```
 
-Once, `shelf` manages these collections for your project, you can use them in your app
-however you want at client side and backend side. But, we made things simpler for you,
-we developed an optional client side **SDK** and a sample backend to enable payments and
-checkouts from a website as well as emails.
+## **Storecraft** is built to run on any Platform
+- Serverless
+- Serverfull
+- Node.js
+- AWS API Gateway <Pink c='(coming soon)'/>
+- Cloudflare Workers <Pink c='(coming soon)'/>
+- Google Functions <Pink c='(coming soon)'/>
+- More will follow
 
-## Storage
-Object Storage is a classic serverless object storage, where you can store images, files, jsons
-and any type of blob you can think of. `shelf` leverages storage services
-1. To store images you upload and edit in the products page
-2. Save compressed exported collections with embedded products
-3. Save compressed exported storefronts
+## **Storecraft** can work with any Database 
+- SQLite, MySQL, Postgres (anywhere)
+- MongoDB (on node.js)
+- `Cloudflare D1` Cloud database <Pink c='(coming soon)'/>
+- `Turso` Cloud database <Pink c='(coming soon)'/>
+- `Neon` Cloud database <Pink c='(coming soon)'/>
+- You can roll your own integration.
 
-We support the following object storage services
-### Cloudflare R2 storage
-yes, we support it
-### Amazon S3
-yes, we support it
-### Any S3 compatible service
-such as minIO
-### Firebase Google Storage
-Of course, we also support Google storage
+## **Storecraft** can work with any Storage 
+- AWS S3
+- Cloudflare R2 
+- DigitalOcean Spaces
+- MinIO
+- Google Storage
+- Node.js Local FileSystem
 
-## Firebase Authentication (identity)
-`shelf` uses firebase authorization to distinguish you as part of the admin users, that's it.
+## **Storecraft** can work with any Email provider,
+- Http friendly
+  - SendGrid
+  - Resend
+  - MailChimp
+  - MailGun
+- SMTP on Node.js
 
-## Firebase Functions
-firebase functions is Google's leading serverless functions offering. `shelf` does not
-require functions, but we recommend using them for the following use cases:
 
-* Integrating payment **API** such as `PayPal standard checkout` or `stripe` at your website
-* Sending Emails for events when a user onboards or when an order was confirmed or shipped.
+## Commerce As **Code**
 
-Luckily, we have open sourced our very small and effective backend, that you can deploy in few
-clicks, and the best part, you can customize it to your own needs.
+<span className='font-bold italic'>Commerce As</span> **Code** means, that you can code the perfect commerce behaviours
+for your commerce application.
+
+<span className='font-bold italic'>Commerce As</span> **Code** means, that you can use any tech you want.
+
+<span className='font-bold italic'>Commerce As</span> **Code** means, that you own every aspect of your commerce backend.
+
+<span className='font-bold italic'>Commerce As</span> **Code** means, that you can be creative and are not
+constrained by anything.
+

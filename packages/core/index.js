@@ -204,7 +204,7 @@ export class App {
     final += `\n
   ${c.red}Dashboard:      ${c.reset}/api/dashboard    
   ${c.red}API Reference:  ${c.reset}/api/reference    
-  ${c.red}Website:        ${c.reset}https://storecraft.dev
+  ${c.red}Website:        ${c.reset}https://storecraft.app
   ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
       `
   

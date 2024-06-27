@@ -31,26 +31,20 @@ export default {
       }, 
       groups: [
         {
-          title: "Firebase Project",
-          route: `setup/project`,
-          path: `content/docs/setup/firebase-project.mdx`
+          title: "Installation",
+          route: `setup/installation`,
+          path: `content/docs/setup/installation.mdx`
         },
         {
-          title: "Authentication",
-          route: `setup/authentication`,
-          path: `content/docs/setup/firebase-authentication.mdx`
+          title: "Local Nodejs & MongoDB",
+          route: `setup/local-node-mongodb`,
+          path: `content/docs/setup/local-node-mongodb.mdx`
         },
         {
-          title: "Storage",
-          route: `setup/storage`,
-          path: `content/docs/setup/firebase-storage.mdx`
+          title: "Local Nodejs & SQLite",
+          route: `setup/local-sqlite`,
+          path: `content/docs/setup/local-node-sqlite.mdx`
         },
-        {
-          title: "Firestore Database",
-          route: `setup/firestore`,
-          path: `content/docs/setup/firebase-firestore.mdx`
-        },
-
       ]
     },
 
@@ -261,6 +255,11 @@ export default {
         params: {}
       },
       groups: [
+        {
+          title: 'Overview',
+          route: 'dashboard/overview',
+          path: 'content/docs/dashboard/overview.mdx'
+        },
         {
           title: 'Products Collections',
           route: 'dashboard/collections',

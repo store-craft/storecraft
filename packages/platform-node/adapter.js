@@ -41,7 +41,7 @@ export class NodePlatform {
       // @ts-ignore
       headers: from.headers,
       duplex: 'half',
-      body: from.method==='HEAD' || from.method==='GET' ? undefined : Readable.toWeb(from),
+      body: (from.method==='HEAD' || from.method==='GET') ? undefined : Readable.toWeb(from),
     }
 
     /** @type {Request} */

@@ -222,7 +222,7 @@ const _onClick = useCallback(
 
   return (
     <Link 
-        href={!open ? find_next_route(group) : window.location.pathname} 
+        href={(isLeaf) ? find_next_route(group) : window.location.pathname} 
         alt={group.title}
         title={group.title}>
       <Link2 

@@ -22,6 +22,19 @@ import Drawer from './drawer.jsx'
  */
 
 
+/**
+ * 
+ * @param {Group} group 
+ */
+export const find_next_route = group => {
+
+  if(!Boolean(group?.empty))
+    return group.route;
+
+  return find_next_route(group?.groups?.[0])
+}
+
+
 const Icon = (
   { 
     name, ...rest 
@@ -209,7 +222,7 @@ const _onClick = useCallback(
 
   return (
     <Link 
-        href={`${group.empty ? group?.groups[0].route : group.route }`} 
+        href={!open ? find_next_route(group) : window.location.pathname} 
         alt={group.title}
         title={group.title}>
       <Link2 
@@ -274,7 +287,7 @@ const SideBar = (
             (group, index) => 
             <Link 
                 key={index} 
-                href={`${group.groups[0].empty ? group?.groups[0].groups[0].route : group.groups[0].route}`} 
+                href={find_next_route(group.groups[0])} 
                 title={group.title}
                 alt={group.title}>
               <Header 

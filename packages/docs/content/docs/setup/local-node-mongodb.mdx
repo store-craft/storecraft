@@ -72,11 +72,12 @@ const app = new App(
       apikey: process.env.SEND_GRID_SECRET
     }
   ),
-  {
-    storage_rewrite_urls: undefined,
+  { // config
+    auth_admins_emails: ['admin@sc.com'],
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games'
+    storage_rewrite_urls: undefined,
   }
 ).withPaymentGateways(
   {

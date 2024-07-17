@@ -9,6 +9,7 @@ import Link from 'next/link.js'
 import pkg from '../../package.json'
 import { Logo, LogoV2, StorecraftText } from './logo.jsx'
 import { Connect } from './connect.jsx'
+import { LogoGradient, LogoText } from './logo-text.jsx'
 
 /**
  * 
@@ -115,13 +116,14 @@ const Header = (
 <div className={`flex flex-col h-fit  w-full gap-2 border-b border-gray-400/20  ${className}`}>
   <div className={`flex flex-row justify-between items-center p-2  w-full`}>
 
-    <div className='flex flex-row w-fit h-full items-center'>
-      <div className='w-60 flex flex-row items-center gap-1 relative'>
-        <LogoV2 className='h-10 object-contain rounded-xl bg-teal-400 
+    <div className='flex flex-row w-fit h-fit items-center gap-3'>
+      <div className='w- flex flex-row items-center gap-1 relative'>
+        <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
                       scale-90 border-kf-600 --shadow-lg opacity-80' />                  
-        <StorecraftText className='text-[32px] w-[220px]' />
+        {/* <StorecraftText className='text-[32px] w-[220px]' /> */}
+        <LogoGradient className='h-8' />
         <span children={'Docs'} 
-              className='absolute right-5 -bottom-1 text-xs 
+              className='absolute right-1 -bottom-2 text-xs 
                       text-gray-600 dark:text-gray-300 
                         italic -tracking-widest font-extrabold ' />
       </div>

@@ -124,16 +124,16 @@ const Link2 = (
 
   return (
 <div {...rest}>
-<div className={
-  'flex flex-row items-center gap-0 w-full ' + 
-  itemClass + 
-  ' text-sm font-medium px-2 py-1 rounded-md ' +
-   (selected ? ' bg-kf-50 dark:bg-kf-500 text-kf-700 dark:text-gray-100' : 
-      ' dark:hover:bg-kf-500/20 hover:bg-kf-50')
-    }>
-  <p children={title} />
-  { next && <MdNavigateNext /> }
-</div>    
+  <div className={
+    'flex flex-row items-center gap-0 w-full ' + 
+    itemClass + 
+    ' text-sm font-medium px-2 py-1 rounded-md ' +
+    (selected ? ' bg-kf-50 dark:bg-kf-500 text-kf-700 dark:text-gray-50' : 
+        ' dark:hover:bg-kf-500/20 hover:bg-kf-50')
+      }>
+    <p children={title} />
+    { next && <MdNavigateNext /> }
+  </div>
 </div>    
   )
 }
@@ -235,7 +235,7 @@ const _onClick = useCallback(
         !isLeaf &&
         <Drawer button={null} isOpen={open} className={open ? 'mt-2' : ''}>
           <SideGroups 
-              itemClass={'pl-5'}
+              itemClass={'pl-5 text-gray-500 dark:text-gray-400'}
               group={group} 
               onClickMenuItem={onClickMenuItem} 
               selectedSlug={selectedSlug} />

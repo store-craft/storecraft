@@ -9,15 +9,16 @@ export const StorecraftText = (
 
   return (
 <div className={className}>
-  <div className='flex flex-row items-center'>
+  <div className='flex flex-row items-center '>
     <div className='relative'>
       <span children='STORE' 
         className='w-fit text-transparent bg-clip-text bg-gradient-to-r 
                  from-pink-500 to-kf-500 italic -tracking-widest 
-                 font-extrabold ' />   
-      <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 -translate-y-[2px] bg-white '}/>
-      <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 translate-y-[6px] bg-white '}/>
-      <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 translate-y-[2px] bg-white '}/>
+                 font-extrabold font-in ' />   
+      <div className={classNameLines + ' absolute w-full h-px dark:h-0.5 left-0 top-1/2 -translate-y-[2px] bg-white '}/>
+      {/* <div className={classNameLines + ' absolute w-full h-px dark:h-px left-0 top-1/2 -translate-y-[2px] bg-white '}/> */}
+      <div className={classNameLines + ' absolute w-full h-px dark:h-0.5 left-0 top-1/2 translate-y-[6px] bg-white '}/>
+      <div className={classNameLines + ' absolute w-full h-px dark:h-0.5 left-0 top-1/2 translate-y-[2px] bg-white '}/>
     </div>
     <span children=' CRAFT' 
       className='w-fit text-transparent bg-clip-text bg-gradient-to-r 

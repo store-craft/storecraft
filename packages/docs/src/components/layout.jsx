@@ -51,7 +51,7 @@ const Layout = (
   return (
   <div className={`${className} ${darkMode ? 'dark' : ''}`}>
     <div className={`relative w-full h-screen flex flex-col 
-                     transition-colors overflow-clip
+                     transition-colors overflow-clip font-inter
                      bg-white dark:bg-gray-900
                      text-gray-800 dark:text-gray-300`
                     }>

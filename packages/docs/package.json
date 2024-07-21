@@ -14,16 +14,17 @@
   "dependencies": {
     "@storecraft/core": "^1.0.0",
     "gray-matter": "^4.0.3",
+    "marked": "^5.0.2",
     "next": "^14.1.4",
     "next-mdx-remote": "^4.4.1",
     "next-remove-imports": "^1.0.10",
     "prism-react-renderer": "^2.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.9.0",
-    "marked": "^5.0.2"
+    "react-icons": "^5.2.1"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.13",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
@@ -33,7 +34,6 @@
     "postcss-preset-env": "^7.7.2",
     "sass": "^1.58.3",
     "tailwind-scrollbar": "^2.1.0",
-    "tailwindcss": "^3.4.1",
-    "@tailwindcss/typography": "^0.5.13"
+    "tailwindcss": "^3.4.1"
   }
 }

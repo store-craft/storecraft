@@ -93,7 +93,7 @@ const CodeBlock = (
 
   const { darkMode } = useDarkMode();
 
-  console.log(themes.shadesOfPurple)
+  // console.log(themes.shadesOfPurple)
 	// if (!children || children.type !== 'code') return null
 
 	// const {

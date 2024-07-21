@@ -1,9 +1,9 @@
 import { 
   AiFillGithub, AiOutlineMenu 
-} from 'react-icons/ai/index.js'
-import { HiOutlineLightBulb } from 'react-icons/hi/index.js'
+} from 'react-icons/ai'
+import { HiOutlineLightBulb } from 'react-icons/hi'
 import useDarkMode from '../hooks/useDarkMode.js'
-import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs/index.js'
+import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs'
 
 import Link from 'next/link.js'
 import pkg from '../../package.json'

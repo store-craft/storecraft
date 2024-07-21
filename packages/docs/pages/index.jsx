@@ -8,27 +8,10 @@ import { useEffect } from 'react'
 import docs from '@/utils/docs-config.js'
 import { SideBarSmall } from '@/components/side-bar.jsx';
 import useToggle from '@/hooks/useToggle.js';
+import { Card } from '@/components/landing-card.jsx';
+import { Hero } from '@/components/landing-hero.jsx';
+import { LandingCards } from '@/components/landing-cards.jsx';
 
-const Hero = () => {
-
-  return (
-  <div className='w-full h-[300px] overflow-clip relative border-b border-pink-500/50'>
-    <div className='graph absolute w-full h-full -top-1/4 z-50 ' />
-
-    <div className='--backdrop-blur-sm  w-fit rounded-2xl px-4'>
-      <LogoGradient className='w-[300px] sm:w-[500px] md:w-[600px] ' />
-      <div children={`Next Generation 
-      Commerce As Code 
-      `}
-        className='text-4xl sm:text-5xl font-normal 
-        whitespace-pre-line left-4 bottom-4 absolute -hidden --z-50
-        ' />
-
-    </div>
-  </div>
-
-  )
-}
 
 export default () => {
   const { darkMode, toggle } = useDarkMode()
@@ -37,7 +20,7 @@ export default () => {
   return (
     <div className={'w-screen h-screen relative ' + (darkMode ? 'dark' : '')}>
       <div className='w-full h-full transition-colors overflow-y-auto
-                      bg-white dark:bg-gray-900 relative
+                      bg-slate-200 dark:bg-gray-900 relative
                       text-gray-800 dark:text-gray-300'>
 
         <Header 
@@ -60,7 +43,8 @@ export default () => {
                       text-slate-600 dark:text-slate-300'>
           <div className='flex flex-col gap-0 overflow-y-auto'>
             <Hero />
-          </div>
+            <LandingCards />
+          </div> 
           <GradStroke className='w-full h-[550px] absolute right-10 top-0 
                         opacity-20 dark:opacity-30 z-0 pointer-events-none' />
 

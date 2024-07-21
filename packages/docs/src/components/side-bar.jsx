@@ -1,11 +1,12 @@
 import Link from 'next/link.js'
-import { BsNewspaper } from 'react-icons/bs/index.js'
-import { AiOutlineDatabase } from 'react-icons/ai/index.js'
-import { MdAdminPanelSettings } from 'react-icons/md/index.js'
-import { DiStackoverflow } from 'react-icons/di/index.js'
-import { FaServer } from 'react-icons/fa/index.js'
+import { BsNewspaper } from 'react-icons/bs'
+import { AiOutlineDatabase } from 'react-icons/ai'
+import { MdAdminPanelSettings } from 'react-icons/md'
+import { DiStackoverflow } from 'react-icons/di'
+import { FaServer } from 'react-icons/fa'
 import { useCallback, useMemo, useState } from 'react'
-import { IoMdClose } from "react-icons/io/index.js";
+import { IoMdClose } from "react-icons/io";
+import { MdNavigateNext } from "react-icons/md";
 import Drawer from './drawer.jsx'
 
 /**
@@ -138,7 +139,6 @@ const Link2 = (
   )
 }
 
-import { MdNavigateNext } from "react-icons/md/index.js";
 
 /**
  * @typedef {object} SideGroupsParams
@@ -308,7 +308,7 @@ const SideBar = (
         }
       </div>
       {
-        selected_group>0 && 
+        selected_group>=0 && 
         <SideGroups 
           link_prefix={link_prefix}
           className='mt-10'

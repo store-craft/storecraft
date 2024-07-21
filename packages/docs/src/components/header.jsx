@@ -73,15 +73,18 @@ const Slug = (
   }
 ) => {
 
+  if(!slug)
+    return null;
+
   return (
 <div {...rest} >
   <div className='w-fit flex flex-row flex-wrap items-center 
                   text-base font-extrabold italic'
                   >
-    <span children={slug.split('/').at(0) + '/'} 
+    <span children={slug?.split('/').at(0) + '/'} 
           className='text-base text-gray-700 dark:text-gray-300 tracking-widest' 
           style={{lineHeight:'14px'}}/>
-    <span children={slug.split('/').at(1)} 
+    <span children={slug?.split('/').at(1)} 
           className='text-base text-gray-700/50 tracking-widest dark:text-gray-300/50 ' 
           style={{lineHeight:'14px'}}/>
   </div>
@@ -93,9 +96,8 @@ const Slug = (
  * 
  * @typedef {object} HeaderParams
  * @prop {string} slug
- * @prop {string} prefix
- * @prop {string} github_link
  * @prop {string} className
+ * @prop {boolean} [show_docs_decoration=true]
  * @prop {Function} onMenuClick
  * 
  * 
@@ -104,7 +106,7 @@ const Slug = (
  */
 const Header = (
   { 
-    slug, prefix, github_link, onMenuClick, className, ...rest
+    slug, onMenuClick, show_docs_decoration=true, className, ...rest
   }
 ) => {
 
@@ -117,16 +119,21 @@ const Header = (
   <div className={`flex flex-row justify-between items-center p-2  w-full`}>
 
     <div className='flex flex-row w-fit h-fit items-center gap-3'>
-      <div className='w- flex flex-row items-center gap-1 relative'>
-        <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
-                      scale-90 border-kf-600 --shadow-lg opacity-80' />                  
-        {/* <StorecraftText className='text-[32px] w-[220px]' /> */}
-        <LogoGradient className='h-8' />
-        <span children={'Docs'} 
-              className='absolute right-1 -bottom-2 text-xs 
-                      text-gray-600 dark:text-gray-300 
-                        italic -tracking-widest font-extrabold ' />
-      </div>
+      <Link href='/'>
+        <div className='w- flex flex-row items-center gap-1 relative'>
+          <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
+                        scale-90 border-kf-600 --shadow-lg opacity-80' />                  
+          {/* <StorecraftText className='text-[32px] w-[220px]' /> */}
+          <LogoGradient className='h-6' />
+          {
+            show_docs_decoration &&
+            <span children={'Docs'} 
+                  className='absolute right-1 -bottom-2 text-xs 
+                          text-gray-600 dark:text-gray-300 
+                            italic -tracking-widest font-extrabold ' />
+          }
+        </div>
+      </Link>
 
       <Slug 
           slug={slug}

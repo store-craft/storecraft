@@ -144,6 +144,7 @@ import { MdNavigateNext } from "react-icons/md/index.js";
  * @typedef {object} SideGroupsParams
  * @prop {Group} group
  * @prop {string} selectedSlug
+ * @prop {string} link_prefix
  * @prop {string} [itemClass]
  * @prop {(item: Group) => any } onClickMenuItem
  * 
@@ -155,7 +156,7 @@ import { MdNavigateNext } from "react-icons/md/index.js";
  */
 const SideGroups = (
   { 
-    onClickMenuItem, selectedSlug, group, itemClass, ...rest 
+    onClickMenuItem, selectedSlug, link_prefix, group, itemClass, ...rest 
   }
 ) => {
 
@@ -171,6 +172,7 @@ const SideGroups = (
                 key={ix}
                 onClickMenuItem={onClickMenuItem}
                 group={item}
+                link_prefix={link_prefix}
                 itemClass={itemClass}
                 selectedSlug={selectedSlug}
                 />
@@ -187,6 +189,7 @@ const SideGroups = (
  * @typedef {object} SideGroupParams
  * @prop {Group} group
  * @prop {string} selectedSlug
+ * @prop {string} link_prefix
  * @prop {string} [itemClass]
  * @prop {(item: Group) => any } onClickMenuItem
  * 
@@ -198,31 +201,33 @@ const SideGroups = (
 */
 const SideGroup = (
  { 
-   onClickMenuItem, selectedSlug, group, itemClass, ...rest 
+   onClickMenuItem, selectedSlug, link_prefix, group, itemClass, ...rest 
  }
 ) => {
 
 
-const isLeaf = !group.groups?.length;
-const [open, setopen] = useState(
-  selectedSlug.startsWith(group.route)
-);
+  const isLeaf = !group.groups?.length;
+  const [open, setopen] = useState(
+    selectedSlug.startsWith(group.route)
+  );
 
-// console.log(selectedSlug)
-// console.log(group.route)
-// console.log(selectedSlug.startsWith(group.route))
+  // console.log(selectedSlug)
+  // console.log(group.route)
+  // console.log(selectedSlug.startsWith(group.route))
 
-const _onClick = useCallback(
-  (_) => {
-    setopen(v=>!v);
+  const _onClick = useCallback(
+    (_) => {
+      setopen(v=>!v);
 
-    onClickMenuItem && onClickMenuItem(group);
-  }, [onClickMenuItem, group]
-);
+      isLeaf && onClickMenuItem && onClickMenuItem(group);
+    }, [onClickMenuItem, group, isLeaf]
+  );
+
+  const href = (isLeaf) ? find_next_route(group) : window.location.pathname;
 
   return (
     <Link 
-        href={(isLeaf) ? find_next_route(group) : window.location.pathname} 
+        href={(link_prefix ? (link_prefix + '/') : '') + href} 
         alt={group.title}
         title={group.title}>
       <Link2 
@@ -236,6 +241,7 @@ const _onClick = useCallback(
         <Drawer button={null} isOpen={open} className={open ? 'mt-2' : ''}>
           <SideGroups 
               itemClass={'pl-5 text-gray-500 dark:text-gray-400'}
+              link_prefix={link_prefix}
               group={group} 
               onClickMenuItem={onClickMenuItem} 
               selectedSlug={selectedSlug} />
@@ -249,6 +255,7 @@ const _onClick = useCallback(
 /**
  * @typedef {object} SideBarParams
  * @prop {Group[]} groups
+ * @prop {string} link_prefix
  * @prop {string} selectedSlug
  * @prop {(item: Group) => any } [onClickMenuItem]
  * 
@@ -260,16 +267,17 @@ const _onClick = useCallback(
  */
 const SideBar = (
   { 
-    className, onClickMenuItem, selectedSlug, groups=[], 
+    className, onClickMenuItem, link_prefix, selectedSlug, groups=[], 
     ...rest 
   }
 ) => {
 
+  // console.log('group', groups)
   const selected_group = useMemo(
     () => groups.findIndex(
       g => {
         return g.groups.find(
-          it => selectedSlug.startsWith(it.route ?? it.groups[0].route)
+          it => selectedSlug?.startsWith(it.route ?? it.groups[0].route)
         )!==undefined
       }
     ), [selectedSlug, groups]
@@ -287,7 +295,7 @@ const SideBar = (
             (group, index) => 
             <Link 
                 key={index} 
-                href={find_next_route(group.groups[0])} 
+                href={(link_prefix ? link_prefix + '/' : '') + find_next_route(group.groups[0])} 
                 title={group.title}
                 alt={group.title}>
               <Header 
@@ -299,11 +307,15 @@ const SideBar = (
           )
         }
       </div>
-      <SideGroups 
+      {
+        selected_group>0 && 
+        <SideGroups 
+          link_prefix={link_prefix}
           className='mt-10'
           group={groups[selected_group]} 
           onClickMenuItem={onClickMenuItem}
           selectedSlug={selectedSlug} />
+      }
 
     </nav>
   )
@@ -316,6 +328,7 @@ const SideBar = (
  * @prop {boolean} [showMenu=false]
  * @prop {Group[]} groups
  * @prop {string} selectedSlug
+ * @prop {string} link_prefix
  * @prop {(item: Group) => any } [onClickMenuItem]
  * 
  * @param {SideBarSmallParams & 
@@ -324,14 +337,14 @@ const SideBar = (
 */
 export const SideBarSmall = (
  {
-   showMenu=false, selectedSlug, groups, onClickMenuItem, ...rest
+   showMenu=false, selectedSlug, link_prefix, groups, onClickMenuItem, ...rest
  }
 ) => {
 
  return (
-   <>
+   <div className=''>
      <div 
-         className={`z-[50] block md:hidden w-[300px] h-full absolute 
+         className={`z-[50] block md:hidden w-[300px] h-full absolute inset-0
                      transition-transform duration-300
                      ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
                    }>
@@ -341,9 +354,10 @@ export const SideBarSmall = (
                        bg-white dark:bg-gray-900
                        `
                      }
-           onClickMenuItem={onClickMenuItem}
-           selectedSlug={selectedSlug}
-           groups={groups} 
+          link_prefix={link_prefix}
+          onClickMenuItem={onClickMenuItem}
+          selectedSlug={selectedSlug}
+          groups={groups} 
        />
 
        {
@@ -362,7 +376,7 @@ export const SideBarSmall = (
          ${showMenu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
          `
        }/>    
-   </>
+   </div>
  )
 }
 

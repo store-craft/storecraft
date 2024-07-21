@@ -10,7 +10,7 @@ import TOC from './toc.jsx'
 
 /**
  * @typedef {object} LayoutParams
- * @prop {import('../../pages/[[...slug]].js').PostPageProps["data"] & 
+ * @prop {import('../../pages/docs/[[...slug]].js').PostPageProps["data"] & 
  *  { content_hydrated: JSX.Element }
  * } data
  * @prop {string} [className]

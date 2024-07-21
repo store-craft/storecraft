@@ -11,6 +11,39 @@
 }
 
 @layer components {
+
+  .graph {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0px, rgb(210, 51, 225) 0%, rgba(54, 226, 248, 0.5) 3px, rgba(0, 0, 0, 0) 0px), linear-gradient(90deg, rgba(0, 0, 0, 0) 0px, rgba(248, 54, 219, 0.5) 0%, rgba(248, 54, 216, 0.5) 3px, rgba(0, 0, 0, 0) 0px); 
+    background-size: 5% 5%;
+    /* background-size: 70px 20px; */
+    /* clip-path: circle(40%); */
+    clip-path: xywh(0 45% 100% 75% round 15% 0);
+    width: 100%;
+    height: 100%;
+    opacity: 0.69;
+    /* perspective: 1000px; */
+    /* transform: perspective(400px) rotateX(65deg) scale(2); */
+    /* transform: perspective(200px) rotateX(65deg) scale(2); */
+    animation-name: MOVE-BG;
+    animation-duration: 35s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes MOVE-BG {
+  0% {
+    transform: perspective(200px) rotateX(65deg) scale(2);
+    background-position-y: 0%;
+  }
+  50% { 
+    /* transform: perspective(400px) rotateX(65deg) scale(2); */
+  }
+  100% { 
+    background-position-y: 100%;
+    transform: perspective(200px) rotateX(65deg) scale(2);
+  }
+}
+
   .shelf-media-source {
     @apply bg-slate-50 dark:bg-slate-50/10 
     hover:bg-slate-100 dark:hover:bg-slate-100/0;

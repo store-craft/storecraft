@@ -1,13 +1,14 @@
 import pkg from '../../package.json'
 import { Bling } from '@/comps/common-ui.jsx'
 import main_png from './main.png'
+import { LogoGradient, LogoText } from './logo-text.jsx'
 
 export const StorecraftText = (
   {
     className='text-[27px]', classNameLines='dark:bg-[rgb(24,31,46)]'
   }
 ) => {
-
+ 
   return (
 <div className={className}>
   <div className='flex flex-row items-center'>
@@ -61,7 +62,9 @@ export const Logo = (
                   scale-90 border-kf-600 --shadow-lg opacity-80' />                  
 
   <div className='flex flex-col justify-between h-full p-0.5'>
-    <StorecraftText />
+    {/* <LogoText /> */}
+    <LogoGradient className='h-[27px]' />
+    {/* <StorecraftText /> */}
     <div className='flex flex-row justify-between items-center'>
       <span children={`v${pkg.version}`} 
         className='tracking-wider text-sm font-light font-mono' />

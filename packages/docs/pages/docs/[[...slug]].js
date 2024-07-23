@@ -1,3 +1,4 @@
+"use client";
 import components from '@/components/mdx-components.jsx'
 import Layout from '@/components/layout.jsx'
 import { MDXRemote } from 'next-mdx-remote'

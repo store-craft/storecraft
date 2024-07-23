@@ -8,8 +8,7 @@
     "docs:dev": "next dev",
     "docs:build": "next build",
     "docs:start": "next start",
-    "docs:lint": "next lint",
-    "docs:export": "next build && next export"
+    "docs:lint": "next lint"
   },
   "dependencies": {
     "@scalar/api-reference-react": "^0.3.50",

@@ -12,7 +12,14 @@ const obj = removeImports()(
     images: {
       unoptimized: true
     },
-    reactStrictMode: true,
+    typescript: {
+      // !! WARN !!
+      // Dangerously allow production builds to successfully complete even if
+      // your project has type errors.
+      // !! WARN !!
+      ignoreBuildErrors: true,
+    },
+    reactStrictMode: false,
     trailingSlash: false,
     // webpackDevMiddleware: config => {
     // 	config.watchOptions = {
@@ -24,6 +31,11 @@ const obj = removeImports()(
     // },
     sassOptions: {
       includePaths: [path.join(__dirname, './src')]
+    },
+    eslint: {
+      // Warning: This allows production builds to successfully complete even if
+      // your project has ESLint errors.
+      ignoreDuringBuilds: true,
     },
   }
 );

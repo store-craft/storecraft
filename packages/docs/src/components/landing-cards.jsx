@@ -1,9 +1,20 @@
 import { Card } from "./landing-card.jsx"
-import { SiMongodb } from "react-icons/si";
 import { SiSqlite } from "react-icons/si";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { SiMysql } from "react-icons/si";
-import { SiGooglecloudstorage } from "react-icons/si";
+
+const LearnMoreFooter = (
+  {
+    href
+  }
+) => {
+
+  return (
+<div className='flex justify-end text-gray-500 '>
+  <a className='border-b w-fit border-dashed font-bold text-xs border-gray-500' 
+      href={href}
+      children='learn more'/>
+</div>
+  )
+}
 
 export const LandingCards = () => {
 
@@ -29,7 +40,6 @@ export const LandingCards = () => {
           </div>
           )
       }
-      // content='Choose between MongoDB, SQLite, Postgres, MySql' 
       className='max-w-96 h-52'/>
 
 <Card header='Storage' 
@@ -92,14 +102,17 @@ export const LandingCards = () => {
 
 <Card header='Event Based' 
       main_content='Respond to any event and craft your own logic' 
+      footer={<LearnMoreFooter href='docs/backend/events' /> }
       className='max-w-96 h-52'/>
 
 <Card header='Extensible' 
       main_content='Create your own extensions, payment gateways and more' 
+      footer={<LearnMoreFooter href='docs/backend/extensions/overview' /> }
       className='max-w-96 h-52'/>
       
 <Card header='Dashboard' 
       main_content='Use our official Dashboard and more' 
+      footer={<LearnMoreFooter href='docs/dashboard/overview' /> }
       className='max-w-96 h-52'/>
 </div>
   )

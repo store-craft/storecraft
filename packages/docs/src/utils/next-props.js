@@ -58,7 +58,7 @@ const compute_map = () => {
     }
   }
 
-  for(const g of doc.groups) {
+  for(const g of (doc?.groups ?? [])) {
     recurse_g(g)
   }
 

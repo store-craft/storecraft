@@ -299,6 +299,15 @@ export default {
       ]
     },
 
+    {
+      title: "REST API",
+      icon: {
+        name: 'BiLogoStackOverflow',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      external: '/rest-api-reference'
+    },
+
 
   ]
 }

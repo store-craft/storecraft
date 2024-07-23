@@ -12,6 +12,7 @@ import Drawer from './drawer.jsx'
 /**
  * 
  * @typedef {object} Group
+ * @property {string} [external] external url
  * @property {string} [route]
  * @property {string} [path]
  * @property {string} [empty=false]
@@ -276,7 +277,7 @@ const SideBar = (
   const selected_group = useMemo(
     () => groups.findIndex(
       g => {
-        return g.groups.find(
+        return g?.groups?.find(
           it => selectedSlug?.startsWith(it.route ?? it.groups[0].route)
         )!==undefined
       }
@@ -295,13 +296,14 @@ const SideBar = (
             (group, index) => 
             <Link 
                 key={index} 
-                href={(link_prefix ? link_prefix + '/' : '') + find_next_route(group.groups[0])} 
+                href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group.groups[0]))} 
                 title={group.title}
+                target={group.external ? '_blank' : ''}
                 alt={group.title}>
               <Header 
                   group={group} 
                   selected={selected_group==index}
-                  onClick={()=>onClickMenuItem && onClickMenuItem(group.groups[0])} />  
+                  onClick={()=>onClickMenuItem && onClickMenuItem(group.external ?? group.groups[0])} />  
             </Link>
 
           )

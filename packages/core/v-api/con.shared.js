@@ -61,7 +61,7 @@ export const regular_upsert = (
     // fetch previous item from the database
     if(requires_event_processing) {
       if(item?.id)
-        previous_item = await db.get(item.id)
+        previous_item = await db.get(item.id);
     }
 
     // Check if exists
@@ -74,10 +74,6 @@ export const regular_upsert = (
 
     rewrite_media_to_storage(app)(item);
 
-    const success = await db.upsert(final, search);
-
-    assert(success, 'upsert-failed', 400);
-
     // dispatch event
     if(requires_event_processing) {
       await app.pubsub.dispatch(
@@ -88,6 +84,10 @@ export const regular_upsert = (
         }
       );
     }
+
+    const success = await db.upsert(final, search);
+
+    assert(success, 'upsert-failed', 400);
 
     return final.id;
   }

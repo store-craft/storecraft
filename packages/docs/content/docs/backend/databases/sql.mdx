@@ -1,0 +1,163 @@
+# SQL
+
+**Storecraft** supports all dialects of **SQL**:
+- SQLite
+- Postgres
+- MySQL
+
+through the `@storecraft/database-sql-base` package.
+
+We are working on adding integrations on top of that library to support
+SQL cloud databases providers such as:
+- `turso`
+- `Cloudflare D1`
+- `Neon`
+- `Vercel Postgres`
+
+The package is built on top of the fantastic `Kysely` query builder
+library. Which means you can create your own adapter for your favourite
+cloud provider or service to create a serverless or serverful friendly
+integration.
+
+> All of the transactions are non-interactive, which will help to integrate well
+with cloud databases
+
+## SQLITE
+Here is a sample of local `sqlite` integration
+
+
+```text
+npm i @storecraft/core @storecraft/database-sql-base better-sqlite3
+```
+
+```js
+import { App } from '@storecraft/core';
+import { SQL } from '@storecraft/database-sql-base';
+import { NodePlatform } from '@storecraft/platform-node';
+import SQLite from 'better-sqlite3'
+import { SqliteDialect } from 'kysely';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+
+export const sqlite_dialect = new SqliteDialect(
+  {
+    database: async () => new SQLite(join(homedir(), 'db.sqlite')),
+  }
+);
+
+let app = new App(
+  new NodePlatform(),
+  new SQL(
+    {
+      dialect: sqlite_dialect, 
+      dialect_type: 'SQLITE'
+    }
+  ),
+  null, null, {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_password_hash_rounds: 100,
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+);
+
+await app.init();
+await app.db.migrateToLatest();
+
+
+```
+
+## POSTGRES
+Here is a sample of local `postgres` integration
+
+
+```text
+npm i @storecraft/core @storecraft/database-sql-base pg
+```
+
+```js
+import { App } from '@storecraft/core';
+import { SQL } from '@storecraft/database-sql-base';
+import { NodePlatform } from '@storecraft/platform-node';
+import { PostgresDialect } from 'kysely';
+import pg from 'pg'
+
+const pg_dialect = new PostgresDialect(
+  {
+    pool: new pg.Pool(
+      {
+        host: process.env.POSTGRES_HOST,
+        port: parseInt(process.env.POSTGRES_PORT),
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+      }
+    )
+  }
+);
+
+let app = new App(
+  new NodePlatform(),
+  new SQL(
+    {
+      dialect: pg_dialect, 
+      dialect_type: 'POSTGRES'
+    }
+  ),
+  null, null, {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_password_hash_rounds: 100,
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+);
+
+await app.init();
+await app.db.migrateToLatest();
+
+```
+
+## MYSQL
+Here is a sample of local `mysql` integration
+
+
+```text
+npm i @storecraft/core @storecraft/database-sql-base mysql2
+```
+
+```js
+import { App } from '@storecraft/core';
+import { SQL } from '@storecraft/database-sql-base';
+import { NodePlatform } from '@storecraft/platform-node';
+import { MysqlDialect } from 'kysely';
+import { createPool } from 'mysql2'
+
+export const dialect = new MysqlDialect({
+  pool: createPool({
+    database: process.env.MYSQL_DB_NAME,
+    host: process.env.MYSQL_HOST,
+    port: parseInt(process.env.MYSQL_PORT),
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+  })
+});
+
+let app = new App(
+  new NodePlatform(),
+  new SQL(
+    {
+      dialect: dialect, 
+      dialect_type: 'MYSQL'
+    }
+  ),
+  null, null, {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_password_hash_rounds: 100,
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+);
+
+await app.init();
+await app.db.migrateToLatest();
+
+```

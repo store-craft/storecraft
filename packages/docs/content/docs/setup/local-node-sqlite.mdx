@@ -1,0 +1,95 @@
+# Quick Local Nodejs **SQLite** Example
+
+We ❤️ **SQLite**
+
+## Install Packages
+
+First install the following packages
+
+```bash
+npm i @storecraft/core 
+npm i @storecraft/platform-node 
+npm i @storecraft/storage-node-local
+npm i @storecraft/payments-dummy
+npm i @storecraft/payments-dummy
+npm i @storecraft/database-sql-base 
+npm i better-sqlite3
+```
+
+## Code
+
+A very simple code
+
+Now, create a new file `index.js`
+
+```ts
+
+import 'dotenv/config';
+import http from "node:http";
+import { NodePlatform } from '@storecraft/platform-node'
+import { MongoDB } from '@storecraft/database-mongodb-node'
+import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { DummyPayments } from '@storecraft/payments-dummy'
+import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+import { App } from '@storecraft/core';
+import { SQL } from '@storecraft/database-sql-base';
+import SQLite from 'better-sqlite3'
+import { SqliteDialect } from 'kysely';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+
+export const sqlite_dialect = new SqliteDialect(
+  {
+    database: async () => new SQLite(join(homedir(), 'db.sqlite')),
+  }
+);
+
+const app = new App(
+  new NodePlatform(),
+  new SQL(
+    {
+      dialect: sqlite_dialect, 
+      dialect_type: 'SQLITE'
+    }
+  ),
+  new NodeLocalStorage(join(homedir(), 'storage')),
+  new MailerSendGrid(
+    {
+      apikey: process.env.SEND_GRID_SECRET
+    }
+  ),
+  { // config
+    auth_admins_emails: ['admin@sc.com'],
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games'
+  }
+).withPaymentGateways(
+  {
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+  }
+);
+
+await app.init();
+await app.db.migrateToLatest(false);
+
+http.createServer(app.handler).listen(
+  8000,
+  () => {
+    console.log(`Server is running on http://localhost:8000`);
+  }
+); 
+
+```
+
+Now, run it with
+
+```bash
+npm start
+```
+
+Viola, You should see the following,
+
+<Image src={`/docs/main/storecraft-terminal.png`} className='w-full' 
+       label={undefined}/>

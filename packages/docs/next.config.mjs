@@ -23,7 +23,7 @@ const obj = removeImports()(
     // 	return config
     // },
     sassOptions: {
-      includePaths: [path.join(__dirname, './src/styles')]
+      includePaths: [path.join(__dirname, './src')]
     },
   }
 );

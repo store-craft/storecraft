@@ -1,0 +1,109 @@
+# Quick Local Nodejs **MongoDB Example**
+
+## Install Packages
+
+
+First install the **core** package,
+
+```bash
+npm i @storecraft/core
+```
+
+Next install the nodejs platform module,
+
+```bash
+npm i @storecraft/platform-node
+```
+
+Next, install the local storage engine for node.js filesystem
+
+```bash
+npm i @storecraft/storage-node-local
+```
+
+Next, install the mongodb driver for storecraft
+
+```bash
+npm i @storecraft/database-mongodb-node
+```
+
+Next, install the dummy payments for storecraft
+
+```bash
+npm i @storecraft/payments-dummy
+```
+
+Next, install an email provider
+
+```bash
+npm i @storecraft/mailer-providers-http
+```
+
+
+## First Code
+
+A very simple code
+
+Now, create a new file `index.js`
+
+```ts
+
+import 'dotenv/config';
+import http from "node:http";
+import { NodePlatform } from '@storecraft/platform-node'
+import { MongoDB } from '@storecraft/database-mongodb-node'
+import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { DummyPayments } from '@storecraft/payments-dummy'
+import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+import { App } from '@storecraft/core';
+ 
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(
+    { 
+      db_name: 'test', 
+      url: 'mongodb+srv://admin:admin@your-db.b12btx2.mongodb.net/?retryWrites=true&w=majority',
+      options: {}
+    }
+  ),
+  new NodeLocalStorage(join(homedir(), 'storage')),
+  new MailerSendGrid(
+    {
+      apikey: process.env.SEND_GRID_SECRET
+    }
+  ),
+  { // config
+    auth_admins_emails: ['admin@sc.com'],
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games'
+    storage_rewrite_urls: undefined,
+  }
+).withPaymentGateways(
+  {
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+  }
+);
+
+await app.init();
+await app.db.migrateToLatest(false);
+
+http.createServer(app.handler).listen(
+  8000,
+  () => {
+    console.log(`Server is running on http://localhost:8000`);
+  }
+); 
+
+```
+
+Now, run it with
+
+```bash
+npm start
+```
+
+Viola, You should see the following,
+
+<Image src={`/docs/main/storecraft-terminal.png`} className='w-full' 
+       label={undefined}/>

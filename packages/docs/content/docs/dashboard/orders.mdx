@@ -1,0 +1,60 @@
+# Creating Orders
+
+Creating a manual Order (or automatically at backend upon checkout) is very easy with `storecraft`.
+
+But before all that that jazz, let's dive into understanding the parts of an <Pink c='order'/> 
+
+## Line Items
+
+Perhaps the first thing to come in mind are the <Purple c='line items' />.
+
+But what exactly are they ? merely a list of the goods the customer puts in the cart for buying.
+
+Each [LineItem](schema/definitions#LineItem) is made up of 
+1. The `product` identifier (or `variant` in some systems)
+2. The `quantity` of this product
+
+And that's about it. 
+
+Now, imagine a list of these items. This list is simply called `line items`.
+
+With `storecraft` you can easily add line items.
+
+<Image src='/docs/main/admin-orders-1.webp' className='w-3/4 sm:w-[500px] mx-auto  mt-5' />
+
+When managing line items, you can control various aspects including 
+> Reducing the stock quantity in favor for the order
+
+## Pricing
+
+Given that we have,
+1. **Line items**
+2. **Automatic Discounts**
+3. Optional **Manual Discounts** (Coupons)
+4. A Customer **Contact information** (may be anonymous)
+4. Selected **Shipping Method**
+
+Now, we can compute the **pricing** of the order.
+
+But, how is it done exactly ?
+
+First, Automatic Discounts are stacked according to their order (priority),
+on top of them we stack the manual discounts (coupons).
+
+Then, we run the pricing engine, which tries to invoke each discount leading
+to a list of [Pricing Evolution](schema/definitions#EvoEntry) object, which explains at
+each stage, how a discount transformed the <Lime c='line items' />.
+
+The total is then calculated:
+
+**Total** = (`sub-total undiscounted`) - (`sub-total discounted`) + (`shipping`)
+
+
+## Payments
+
+Payment Gateways are customizable in `storecraft`. Each `order` page has a <Lime c='payment'/> card.
+
+Uou can learn about payment gateways API [here](/backend/checkout-and-payments/checkouts)
+
+`storecraft` officialy supports and maintains some well known payment gateways, but, you
+are encouraged to write your own optimal payment integration solutions.

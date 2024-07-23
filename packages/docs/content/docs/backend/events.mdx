@@ -1,0 +1,46 @@
+# Events
+
+**Storecraft** boasts an event system called **pub-sub**. You can subscribe to
+events and dispatch events.
+
+Each **Storecraft** **App** call, dispatches events, that you can listen to.
+
+## Quick Example
+
+```ts
+import { App } from '@storecraft/core'
+import type { CollectionType, AuthUserType } from '@storecraft/core/v-api'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).on(
+  'collections/upsert',
+  async (event) => {
+    const previous: CollectionType = event.payload.previous;
+    const current: CollectionType = event.payload.current;
+  }
+).on(
+  'auth/signup',
+  async (event) => {
+    const user: Partial<AuthUserType> = event.payload;
+
+    // Here you can send an onboarding email for example
+
+    console.log(user.email);
+  }
+).on(
+  'checkout/complete',
+  async (event) => {
+    const order_data: OrderData = event.payload;
+
+    // Here send an email with order details to customer
+  }
+);
+
+```
+
+## Events Rundown
+
+<EventsTable />

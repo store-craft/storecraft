@@ -1,0 +1,63 @@
+# Media Management
+
+**Storecraft** sports a builtin **Media** management tools for images.
+
+Almost all of the pages and data containers include a media manager.
+
+which includes:
+- Image Editor
+- Image Uploader
+
+And various sources for images:
+
+- 🔗 URL source
+- 📁 Local images
+- 📷 Camera
+- 🖼️ Gallery
+
+Let's first discuss some concepts related to discounts
+
+## Image Manager
+
+Always look for the <Lime c='Media' /> card.
+
+<Image src='/docs/main/admin-media-1.webp' className='w-full sm:w-3/4 mx-auto mt-5'  />
+
+> On Mobile devices, you also get the 📷 `Camera` option
+
+Once an image is imported, You will see thumbnails at the bottom of the card.
+
+<Purple c='tip' /> Drag and Drop thumbnails to change the order of images.
+
+<Image src='/docs/main/admin-media-2.webp' className='w-full sm:w-3/4 mx-auto mt-5'  />
+
+> A `local` source image will open the Image Editor
+
+Uploaded images will be saved on your `storage` service
+
+## Image Editor
+
+The Image Editor is a very convenient tool to perform image editing before uploading it to storage.
+
+<Purple c='tip' /> Click on an image icon to open the Image Editor. <br/>
+
+Image Editor Supports
+- Image `Cropping`
+- Image `Rotations` (90 degrees)
+- Image `Scaling` (*/2)
+- Image `Translations` (movements)
+- Image `Format` (jpeg / png / webp)
+- Image `Quality` (for jpeg / webp)
+- Image Maximal `Height`
+
+<Image src='/docs/main/admin-media-3.webp' className='w-full sm:w-3/4 mx-auto mt-5'  />
+
+By clicking on the left-most `settings` icon in the image-editor.
+
+<Image src='/docs/main/admin-media-4.webp' className='w-full sm:w-3/4 mx-auto mt-5'  />
+
+When you feel you are done with your editing, simply hit the right-most ✔️ button,
+This will initiate upload.
+
+> <Purple c='tip' /> Image file name **postfix** will contain `file_name_w_320_h_512.jpeg`, You
+can use this info to quickly infer about the **size** of the image before download.

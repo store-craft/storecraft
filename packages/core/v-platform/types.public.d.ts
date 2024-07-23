@@ -1,5 +1,6 @@
 
 /**
+ * 
  * @template PlatformNativeRequest The `native` `http` request in the platform
  * @template PlatformContext Additional `context`
  * @template H Additional `handleResponse` result

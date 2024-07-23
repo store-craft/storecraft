@@ -1,0 +1,60 @@
+# NodeJS Local FileSystem Storage
+
+**Storecraft** supports NodeJS FileSystem as a storage service provider.
+this is desired, if you want a backend on a single service (as opposed
+to serverless).
+
+
+## Features
+Supports streaming `Get` / `Put` / `Delete`
+
+## Usage
+
+```bash
+npm i @storecraft/storage-node-local
+```
+
+```js
+import { NodeLocalStorage } from '@storecraft/storage-node-local';
+
+const storage = new Storage(path.join(homedir(), 'tomer'));
+
+// write
+const key = 'folder1/tomer.txt';
+await storage.putBlob(
+  key,
+  new Blob(['this is some text from tomer :)'])
+);
+
+// read
+const { value } = await storage.getBlob(key);
+```
+
+
+
+## In Storecraft App
+
+```js
+import { NodePlatform } from '@storecraft/platform-node'
+import { MongoDB } from '@storecraft/database-mongodb-node'
+import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { App } from '@storecraft/core';
+ 
+const app = new App(
+  new NodePlatform(),
+  new MongoDB({ db_name: 'test' }),
+  new NodeLocalStorage(join(homedir(), 'tomer')),
+  null, 
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games'
+  }
+);
+
+await app.init();
+await app.db.migrateToLatest(false);
+
+
+```

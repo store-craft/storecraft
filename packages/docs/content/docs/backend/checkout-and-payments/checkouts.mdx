@@ -1,0 +1,103 @@
+# Checkouts
+
+`Checkouts` represent a flow, where a customer tries to buy and hopefully succeeds.
+
+First, le's assume an app,
+
+```ts
+import { App } from '@storecraft/core'
+import type { CollectionType, AuthUserType } from '@storecraft/core/v-api'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+)
+
+await app.init();
+
+```
+
+> Don't forget to consult the REST API Checkout Documentation
+
+They have two phases,
+
+## Checkout Creation
+
+- User at your store fills a Cart (**line-items**).
+- He navigates to checkout page
+- Customer selects **shipping method**
+- Customer optionally specifies **Coupons** (Manual Discounts)
+- Customer fills his **contact** info
+- Customer optionally fills his **authentication id**
+- A request is sent to the backend with all this data
+- A `checkout` is created at backend:
+  * `Draft` order is created
+  * `Validation` of order against available stock
+  * `Pricing` is calculated with discounts, coupons and shipping
+  * `Payment Gateway` creates a payment **intent**
+  * All of this is recorded in [#OrderData](schema/defintions#OrderData) object
+- A checkout object (`OrderData`) is returned to the client
+- The result is displayed to the user, such as discounts and total pricing
+
+In Code of `storecraft`,  this will look like
+
+```ts
+
+const draft_order = await app.api.checkout.create_checkout(
+  {
+    line_items: [
+      { id: products[0].handle, qty: 1 },
+      { id: products[1].handle, qty: 1 },
+    ],
+    shipping_method: shipping,
+    contact: {
+      email: 'a1@a.com'
+    }
+  }, 'dummy_payments_processor_handle'
+);
+
+
+```
+
+> Usually, you will just use the REST API for that
+
+## Checkout completion
+- Customer sees the payment details. 
+- Fills his **payment method** and `CONFIRMS` payment. 
+
+Payment can initiate two behaviours
+
+### Synchronous Completion (at your backend)
+
+Where you try to confirm the `authorization` / `capture` with possibly some payload
+from the frontend. This is eager mode. It has pros and cons.
+
+In code, 
+
+```ts
+
+await app.api.checkout.complete_checkout(order.id);
+
+```
+
+This will initiate,
+- Payment Confirmation with the Payment Gateway's [`onCheckoutComplete`](/) hook
+- Returns the complete and approved [OrderData]()
+
+Synchronous payments and checkouts completion are prefered in many use cases.
+
+### Asynchronous Completion (via webhook)
+
+In this mode, 
+
+- payments are confirmed at `PayPal` or `Stripe` servers, they also
+usually handle **3DS** security automatically at frontend.
+- You are notified via `webhooks` about the status of the payment.
+- Then you need to confirm the webhook is valid and was sent from a trusted source.
+- If this is the case, you can proceed to change the checkout and payment status of
+[#OrderData](schema/defintions#OrderData).
+
+> Our backend, currently emphesizes **synchronous** payments, but you can modify this easily
+
+# Rest API

@@ -41,7 +41,7 @@ export declare interface extension<Config extends any=any> {
    * 
    * @description config of the extension 
    */
-  config: Config;
+  config?: Config;
 
   /** 
    * 
@@ -53,12 +53,12 @@ export declare interface extension<Config extends any=any> {
 
   /**
    * 
-   * @description the eligible actions in this interface for remote invocation
+   * @description the eligible actions in this interface for remote invocation like http
    */
   actions?: ExtensionAction[];
 
   /**
-   * 
+   * @description Invoke a public action 
    * @param action_handle the identifier of the `action`
    */
   invokeAction?<P extends any=any>(action_handle: string): ExtensionActionHandler<P>;

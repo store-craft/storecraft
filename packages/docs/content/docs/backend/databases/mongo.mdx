@@ -1,0 +1,42 @@
+# Mongo DB
+
+**Storecraft** supports the `node.js` package of `mongodb`
+
+through the `@storecraft/database-mongodb-node` package.
+
+> You can use your own or managed service such as **Mongo Atlas** service
+
+## Example
+Here is a sample of `mongodb` integration
+
+```text
+npm i @storecraft/core @storecraft/database-mongodb-node
+```
+
+```js
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+
+let app = new App(
+  new NodePlatform(),
+  new MongoDB(
+    { 
+      db_name: 'test', 
+      url: 'mongodb+srv://admin:admin@your-db.b12btx2.mongodb.net/?retryWrites=true&w=majority',
+      options: {}
+    }
+  ),
+  null, null, {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_password_hash_rounds: 100,
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+);
+  
+await app.init();
+await app.db.migrateToLatest(false);
+
+
+```

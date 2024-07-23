@@ -1,9 +1,9 @@
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
+import { PubSub } from './v-pubsub/public.js';
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
-import { PubSub } from './v-pubsub/public.js';
 
 /** 
  * @typedef {Partial<import('./types.public.js').StorecraftConfig>} StorecraftConfig
@@ -185,11 +185,11 @@ export class App {
 
     }
  
-    console.log(this.banner_create(pkg.version));
+    console.log(this.#banner_create(pkg.version));
     // console.log('store-craft config', this.#_config);
   } 
 
-  banner_create(version='1.0.0') {
+  #banner_create(version='1.0.0') {
     const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
     const c = {
       red: '\x1b[1;31m',
@@ -204,7 +204,7 @@ export class App {
     final += `\n
   ${c.red}Dashboard:      ${c.reset}/api/dashboard    
   ${c.red}API Reference:  ${c.reset}/api/reference    
-  ${c.red}Website:        ${c.reset}https://storecraft.dev
+  ${c.red}Website:        ${c.reset}https://storecraft.app
   ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
       `
   
@@ -217,7 +217,7 @@ export class App {
    * @description Initialize the Application
    */
   async init() {
-    this.#_pubsub = new PubSub();
+    this.#_pubsub = new PubSub(this);
     
     try{
       // first let's settle config
@@ -513,10 +513,12 @@ export class App {
    * @description Quickly attach an `event` subscriber. This is just a quick way
    * to interface into {@link PubSub}
    * 
-   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents["on"]}
+   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents<this, this>["on"]}
    */
   on = (event, callback) => {
     this.pubsub.on(event, callback);
+
+    return this;
   }
 
 }

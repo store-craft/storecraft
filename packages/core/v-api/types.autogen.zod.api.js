@@ -273,7 +273,7 @@ export const filterValuePNotInTagsSchema = z
   .array(z.string())
   .describe("Filter for product discount, NOT has tags");
 export const filterValuePAllSchema = z
-  .any()
+  .object({})
   .describe("Filter for product discount,\nthat chooses all products");
 export const filterValuePInPriceRangeSchema = z
   .object({
@@ -992,13 +992,11 @@ export const filterSchema = z
         filterValuePNotInProductsSchema,
         filterValuePInTagsSchema,
         filterValuePNotInTagsSchema,
-        filterValuePAllSchema,
         filterValuePInPriceRangeSchema,
         filterValueOSubtotalInRangeSchema,
         filterValueOItemsCountInRangeSchema,
         filterValueODateInRangeSchema,
         filterValueOHasCustomersSchema,
-        z.any(),
       ])
       .optional()
       .describe("The filter params"),

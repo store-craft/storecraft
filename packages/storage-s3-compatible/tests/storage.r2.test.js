@@ -15,9 +15,9 @@ const areBlobsEqual = async (blob1, blob2) => {
 const storage = new R2(
   process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, 
   process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY
-  );
+);
 
-test.before(async () => await storage.init())
+test.before(async () => { await storage.init(null) })
 
 test('blob put/get/delete', async () => {
   const data = [

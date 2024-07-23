@@ -1,0 +1,101 @@
+# Collections
+
+Manage collections through the API.
+
+First, make sure you have a running app.
+
+```js
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+import { R2 } from '@storecraft/storage-s3-compatible'
+
+let app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new R2(), 
+);
+  
+await app.init();
+
+```
+
+## Upsert a new collection
+
+```js
+const id = await app.api.collctions.upsert(
+  {
+    active: true, 
+    title: 'Nintendo Games',
+    description: 'A wide selection of Nintendo Games ...',
+    handle: 'nintendo-games',
+  }
+);
+
+console.log(id)
+//
+// Will print ID such as `col_65e5ca42c43e2c41ae5216a9`
+//
+
+```
+
+> `handle` is optional for new inserts
+
+## Upsert an existing collection
+
+Make sure you have at least one of `id` or `handle` in the data as they
+are uniquely identify the product.
+
+```js
+const id = await app.api.collections.upsert(
+  {
+    active: true, 
+    title: 'Nintendo Games',
+    description: 'A wide selection of Nintendo Games ...',
+    handle: 'nintendo-games',
+  }
+);
+
+```
+
+## Get a collection
+
+You can use it's `handle` or `ID`
+
+```js
+const by_id = await app.api.collections.get('col_65e5ca42c43e2c41ae5216a9');
+const by_handle = await app.api.collections.get('nintendo-games');
+```
+
+## Query Collections
+
+You can query the `collections` resource with
+
+```js
+const items = await app.api.collections.list(
+  {
+    startAfter: [
+      ['updated_at', '2024-06-13T08:51:52.202Z']
+    ],
+    order: 'desc',
+    sortBy: [
+      'updated_at'
+    ],
+    limit: 5
+  }
+);
+
+```
+
+## Query Products of Collection
+
+```js
+const id = await app.api.collections.list_collection_products(
+  'nintendo-games', 
+  {
+    limit: 5,
+    vql: 'pikmin'
+  }
+);
+
+```

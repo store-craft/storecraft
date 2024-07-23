@@ -39,7 +39,7 @@ await storage.putBlob(
 
 // read
 const { value } = await storage.getBlob('folder1/tomer.txt');
-const url = await storage.getSigned('folder1/tomer.txt');
+const { url } = await storage.getSigned('folder1/tomer.txt');
 console.log('presign GET url ', url);
 
 ```

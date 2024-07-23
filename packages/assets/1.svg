@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <style bx:fonts="Inter">@import url(https://fonts.googleapis.com/css2?family=Inter%3Aital%2Cwght%400%2C100..900&amp;display=swap);</style>
+  </defs>
+  <text style="fill: rgb(51, 51, 51); font-family: Inter; font-size: 50px; font-weight: 200; letter-spacing: -5.9px; text-transform: capitalize; word-spacing: 24.1px; white-space: pre;" x="153.864" y="44.41">CRAFT</text>
+  <text style="fill: rgb(51, 51, 51); font-family: Inter; font-size: 50px; font-style: italic; font-weight: 800; letter-spacing: -4.1px; white-space: pre;" x="1" y="44.41">STORE</text>
+  <rect x="0.497" y="21.994" width="154.433" height="1.961" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);"/>
+  <rect x="-0.351" y="29" width="154.433" height="1.961" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);"/>
+  <rect x="-0.137" y="36" width="154.433" height="1.961" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);"/>
+</svg>

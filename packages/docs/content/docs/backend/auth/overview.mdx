@@ -1,0 +1,142 @@
+# Authentication
+
+**Storecraft** **API** supports secured endpoints, via
+- **JWT**, Json Web Tokens, given to users.
+- **API Keys**, given to third party servers.
+- **Basic Auth**
+
+> Authentication is usually used via the **REST API**, be sure to check the relevant docs
+
+First,
+
+```ts
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+);
+
+await app.init();
+
+```
+
+## JWT
+
+JWT is issued upon
+- User Signup
+- User Signin
+- User Refresh Token
+
+### Example Signup / Signin
+
+```ts
+import type { ApiAuthResult } = '@storecraft/core/v-api'
+
+const authResult: ApiAuthResult = await app.api.auth.signup(
+  {
+    email: 'jonh@doe.com',
+    password: 'password'
+  }
+)
+
+```
+
+Will produce
+
+```json
+{
+  "token_type": "Bearer",
+  "user_id": "au_663a48545a4aa016d5ab4f23",
+  "access_token": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhNDg1NDVhNGFhMDE2ZDVhYjRmMjMiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTkyMTgxOTAsImV4cCI6MTcxOTIyMTc5MH0.rWG1___wuq2liHfVhE5_RLlPy-vv9roU8YmwU9iSoGE",
+    "claims": {
+      "sub": "au_663a48545a4aa016d5ab4f23",
+      "roles": [
+        "admin"
+      ],
+      "iat": 1719218190,
+      "exp": 1719221790
+    }
+  },
+  "refresh_token": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhNDg1NDVhNGFhMDE2ZDVhYjRmMjMiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTkyMTgxOTAsImV4cCI6MTcxOTgyMjk5MCwiYXVkIjoiL3JlZnJlc2gifQ.Li-c8IXT4POSV_a2fVlf33fxZUqIqs6ar2w4YrRUk6Q",
+    "claims": {
+      "sub": "au_663a48545a4aa016d5ab4f23",
+      "roles": [
+        "admin"
+      ],
+      "iat": 1719218190,
+      "exp": 1719822990,
+      "aud": "/refresh"
+    }
+  }
+}
+```
+
+> REST API calls can use these tokens
+
+Then, in http headers
+
+```txt
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhNDg1NDVhNGFhMDE2ZDVhYjRmMjMiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTkyMTgxOTAsImV4cCI6MTcxOTgyMjk5MCwiYXVkIjoiL3JlZnJlc2gifQ.Li-c8IXT4POSV_a2fVlf33fxZUqIqs6ar2w4YrRUk6Q
+```
+
+### Example Refresh Token
+
+```ts
+import type { ApiAuthResult } = '@storecraft/core/v-api';
+
+const authUser: ApiAuthResult = await app.api.auth.refresh(
+  {
+    refresh_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhNDg1NDVhNGFhMDE2ZDVhYjRmMjMiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTkyMTgxOTAsImV4cCI6MTcxOTgyMjk5MCwiYXVkIjoiL3JlZnJlc2gifQ.Li-c8IXT4POSV_a2fVlf33fxZUqIqs6ar2w4YrRUk6Q"
+  }
+)
+
+```
+
+
+## API Keys
+
+**API** keys are typically issued for a 3rd party server or integration, that you trust.
+Each API key will create a new Authenticated User with credentials (username and password),
+embedded in the api key.
+
+> In the future, we will add roles for API Keys
+
+> A conveniant way to manage API Keys is in the Dashboard Settings Page
+
+### Example Create APIKey
+
+```ts
+import type { ApiKeyResult } = '@storecraft/core/v-api';
+
+const apikeyResult: ApiKeyResult = await app.api.auth.create_api_key();
+
+apikeyResult.apikey
+```
+
+Will produce,
+
+```json
+{
+  apikey: "YXVfNjY3OTRhNjBhN2NhMmQzZDdlNTZiZjRmQGFwaWtleS5zdG9yZWNyYWZ0LmFwaTpoUnNsMHFLcW1oQm0yQ0tKa0I1VTVnTnhnZElXcl95aWs3akI4amF6V0I3ckJ1YllyeEZRQ290QTh0QTRScEdWQkFLTzh5Um5HUHo3d0UtTDJGSTRQQQ"
+}
+```
+
+If you `base64` decode the `apikey` and split by `:` character, you will get
+
+```json
+// {user ID}@{Email}
+au_66794a60a7ca2d3d7e56bf4f@apikey.storecraft.api
+
+// password
+hRsl0qKqmhBm2CKJkB5U5gNxgdIWr_yik7jB8jazWB7rBubYrxFQCotA8tA4RpGVBAKO8yRnGPz7wE-L2FI4PA
+```
+
+> 3rd party services use this key with
+
+Then, in http headers
+
+```txt
+Authorization: Basic YXVfNjY3OTRhNjBhN2NhMmQzZDdlNTZiZjRmQGFwaWtleS5zdG9yZWNyYWZ0LmFwaTpoUnNsMHFLcW1oQm0yQ0tKa0I1VTVnTnhnZElXcl95aWs3akI4amF6V0I3ckJ1YllyeEZRQ290QTh0QTRScEdWQkFLTzh5Um5HUHo3d0UtTDJGSTRQQQ
+```

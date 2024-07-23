@@ -1,0 +1,64 @@
+# SMTP Driver for Node.js
+
+If your **Storecraft** runs with `node.js`, you can also use the official
+**SMTP** driver,
+
+Through the `@storecraft/mailer-smtp-node` package.
+
+## Features
+- Send emails using a known smtp server
+- uses `nodemailer` under the hood
+
+```bash
+npm i @storecraft/mailer-smtp-node
+```
+
+## Howto
+
+```js
+import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
+
+const mailer = new MailerSmtpNode(
+  {
+    host: "smtp.sendgrid.net",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: 'apikey', // generated ethereal user
+      pass: process.env.SEND_GRID_SECRET, // generated ethereal password
+    },  
+  }
+);
+
+let { success, native_response } = await mailer.email(
+  {
+    from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, 
+    to: [ { address: process.env.TO_EMAIL } ], 
+    subject: 'subject test', 
+    text: 'plain text test', 
+    html: '<p>html test</p>', 
+  }
+);
+
+```
+
+## In Storecraft App
+
+```js
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
+
+let app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(), 
+  new MailerSmtpNode()
+);
+  
+await app.init();
+await app.db.migrateToLatest(false);
+
+```

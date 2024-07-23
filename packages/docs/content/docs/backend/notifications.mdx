@@ -1,0 +1,69 @@
+# Notifications
+
+**Storecraft** **API** lets you manage a `notifications` resource. this is
+key in the **Dashboard** app, where you can view latest notifications.
+
+Notifications enable you to
+- Create the notifications in the style you like.
+- Create the notifications with the content you want.
+- Define actions to react to notifications in the Dashboard.
+
+## Quick Example
+
+```ts
+import { App } from '@storecraft/core'
+import type { CustomerType } from '@storecraft/core/v-api'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).on(
+  'customers/upsert',
+  async (event) => {
+    const isNew = !Boolean(event.payload.previous);
+    const customer: Partial<CustomerType> = event.payload;
+
+    if(!isNew)  
+      return;
+
+    // here, you can send an onboarding personal template
+
+    await event.app.api.notifications.addBulk(
+      [
+        {
+          message: `
+            🚀 **${customer.firstname ?? 'New user'}** Just signed up\n 
+            > Email is \`${customer.email}\`.
+          `,
+          search: ['signup', 'new-user'],
+          author: 'backend-bot 🤖',
+          actions: [
+            {
+              name: 'goto',
+              type: 'route',
+              params: {
+                collection: 'customers',
+                document: customer.id,
+              }
+            }
+          ]
+        },
+      ]
+    );
+
+  }
+)
+
+```
+
+## How It Works
+
+Each notification is made up of
+- `message` content can be in **Markdown** Format.
+- Search terms for future search.
+- `author` indicating who wrote the notification.
+- `actions`, which is an array of **actions**, currently supports
+  - internal `routing` for **Dashboard**
+  - Follow a **URL**
+  - (coming in the future) invoke an **HTTP** request.

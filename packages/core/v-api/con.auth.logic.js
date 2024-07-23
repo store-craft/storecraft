@@ -372,7 +372,7 @@ async (body) => {
   const verified = await phash.verify(
     apikey_user.password, password
   );
- 
+
   assert(
     verified, 'auth/error'
   )

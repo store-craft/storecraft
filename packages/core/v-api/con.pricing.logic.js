@@ -822,7 +822,7 @@ export const calculate_line_items_for_discount =
  * @param {LineItem[]} line_items 
  * @param {DiscountType[]} auto_discounts disabled discounted will be filtered out
  * @param {DiscountType[]} coupons disabled coupons will be filtered out
- * @param {ShippingMethodType} shipping_method 
+ * @param {Partial<ShippingMethodType>} shipping_method 
  * @param {string} [uid] 
  * 
  * 
@@ -853,7 +853,7 @@ export const calculate_pricing =
   ];
 
   // protections against strings
-  shipping_method.price = parseFloat(String(shipping_method.price));
+  shipping_method.price = parseFloat(String(shipping_method?.price ?? 0));
 
   line_items = line_items.map(
     li => (

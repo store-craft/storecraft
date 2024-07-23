@@ -10,6 +10,7 @@ import { GoogleStorage } from '@storecraft/storage-google'
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
+import { enums } from '@storecraft/core/v-api';
  
 export const app = new App(
   new NodePlatform(),
@@ -34,6 +35,7 @@ export const app = new App(
   {
     'events': { 
       config: '',
+      onInit: undefined,
       info: {name:'tomer'},
       actions: [
         {handle:'t', name:'rr'}
@@ -42,3 +44,142 @@ export const app = new App(
     }
   }
 );
+
+const id = await app.api.products.upsert(
+  {
+    active: true, 
+    title: 'A White Shirt',
+    price: 50,
+    qty: 10,
+    handle: 'a-white-shirt',
+    collections: [
+      {
+        handle: 'a', id:'a'
+      }
+    ],
+    variant_hint,
+    parent_handle
+  }
+)
+
+/**
+ * @typedef {import('@storecraft/core/v-api').ApiQuery} dd
+ */
+//
+//&order=desc&sortBy=(updated_at,id)&expand=(*)&limit=5
+const products = await app.api.products.list(
+  {
+    startAfter: [
+      ['updated_at', '2024-06-13T08:51:52.202Z']
+    ],
+    order: 'desc',
+    sortBy: [
+      'updated_at'
+    ],
+    limit: 5
+  }
+)
+
+const id = await app.api.discounts.list_discounts_products();
+
+
+/** @type {import('@storecraft/core/v-api').DiscountType} */
+const discount_regular = { 
+  id: '',
+  active: true, 
+  handle: 'discount-10-off-regular', 
+  title: '10% OFF Regular tags',
+  priority: 0, 
+  application: enums.DiscountApplicationEnum.Auto, 
+  info: {
+    details: {
+      meta: enums.DiscountMetaEnum.regular,
+      /** @type {import('@storecraft/core/v-api').RegularDiscountExtra} */
+      extra: {
+        fixed: 0, percent: 10
+      }
+    },
+    filters: [
+      { // discount for a specific product handle
+        meta: enums.FilterMetaEnum.p_in_tags,
+        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        value: ['regular']
+      }
+    ]
+  }
+}    
+
+
+///
+
+
+export const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).on(
+  'customers/upsert',
+  async (event) => {
+    const isNew = !Boolean(event.payload.previous);
+    const customer = event.payload.current;//: Partial<AuthUserType> = event.payload;
+
+    if(!isNew)  
+      return;
+
+    await event.app.api.notifications.addBulk(
+      [
+        {
+          message: `
+            🚀 **${customer.firstname ?? 'New user'}** Just signed up\n 
+            > Email is \`${customer.email}\`.
+          `,
+          search: ['signup', 'new-user'],
+          author: 'backend-bot 🤖',
+          actions: [
+            {
+              name: 'goto',
+              type: 'route',
+              params: {
+                collection: 'customers',
+                document: customer.id,
+              }
+            }
+          ]
+        },
+      ]
+    )
+
+    console.log(customer.email);
+  }
+)
+
+
+//
+
+class SendSlackMessageExtension imple{
+
+}
+
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(),
+).withExtensions(
+  {
+    'my-tax-extension': {
+      info: {
+        name: 'My Extension',
+      },
+      onInit: async (app) => {
+        app.ex
+      }
+    }
+  }
+)
+
+await app.init();
+
+app.api.checkout.complete_checkout(
+
+)

@@ -1,0 +1,404 @@
+# Roll Your Own **Payment Gateway**
+
+You can and encouraged to write your own favourite Payment Gateway Integration.
+
+It is Easy !!!
+
+This article will teach you,
+- The concepts of implemeting a payment integration
+- The code required
+
+> You are advised to pick the code of `@storecraft/payments-dummy` and `@storecraft/payments-paypal-standard`
+
+## Concepts
+
+### onCheckoutCreate Hook
+
+The most important **hook**, that a payment gateway implements is the `onCheckoutCreate` hook.
+This hook roughly is an async function, that recieves [OrderData]() and creates a payment
+intent in the payment gateway servers (stripe, paypal etc..).
+
+The method has to return a value, that will help it to identify the payment in future interactions.
+`storecraft` will save this value and present it to the gateway everytime it talks with it.
+
+### onCheckoutComplete Hook (synchronous payment)
+
+`onCheckoutComplete` purpose is to confirm a verified payment method and intent.
+This happens in synchronous payments scenarios.
+
+The client is presented with credit card (payment method) form and confirms,
+this triggers a confirmation at the backend.
+
+`onCheckoutComplete` should return the new [OrderData]() Status (checkout and payment status),
+which is then reflected at the order data.
+
+### webhook (asynchronous payment)
+
+> Work In Progress
+
+### status method
+
+At every moment, the gateway should be able to send back,
+- A formatted text readable text about the status of the payment
+- A list of eligible actions, that a client can invoke with regards to an order.
+
+
+### Actions
+
+Each gateway can publish a list of public **Actions** it supports
+
+For example, a credit card processor, may publish
+- `capture`
+- `void`
+- `refund`
+
+Also, the gateway provides an interface called `invokeAction` so users can
+invoke actions directly based on the supported and published actions list.
+
+The HTTP REST Api creates `payment` endpoints, that you can use to invoke
+these actions in the context of a `storecraft` **order id**.
+
+Which, in turn, 
+- will fetch the Order by it's `ID`
+- Fetch The gateway's `CheckoutCreateResult`
+- Hand this value to the action along with POST data (extra data)
+- You Action implementation will use `CheckoutCreateResult` to identify
+a payment in a native system (such as paypa / stripe / etc..)
+- You Action will complete or throw an error.
+
+All of this is accessible in the official **Dasboard**
+
+```txt
+POST
+/api/payments/{action_handle}/{order_id}
+```
+
+> Consult the REST API Documentation
+
+## Code
+
+In this section, we will explore the interface and implement a dummy payment integration
+
+### The Interface
+
+Every Gateway should implement the following interface found at
+
+```
+import('@storecraft/core/v-payments').payment_gateway<>
+```
+
+Which is
+
+```ts
+import type { 
+  OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
+} from "../v-api/types.api.js";
+
+export type PaymentGatewayActionHandler<CreateResult, Extra> = (input: CreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
+
+
+export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfillment">>;
+
+
+/**
+ * @template {any} Config The config type
+ * @template {any} CreateResult The result of checkout creation type
+ */
+export declare interface payment_gateway<Config, CreateResult> {
+
+  info: PaymentGatewayInfo;
+
+  config: Config;
+
+  actions: PaymentGatewayAction[];
+
+  invokeAction<E extends any=any>(action_handle: string): PaymentGatewayActionHandler<CreateResult, E>;
+
+  onCheckoutCreate: (order: OrderData) => Promise<CreateResult>;
+
+  onCheckoutComplete: (create_result: CreateResult, extra_client_payload: any) => Promise<OnCheckoutCompleteResult>;
+
+  status: (checkout_create_result: CreateResult) => Promise<PaymentGatewayStatus>;
+
+  webhook?: (input: Request) => Promise<void>;
+}
+```
+
+### Dummy Payments Example
+
+This is based on the official
+
+```bash
+npm i @storecraft/payments-dummy
+```
+
+Which yields,
+
+```ts
+import { assert, ID } from '@storecraft/core/v-api/utils.func.js';
+import type { payment_gateway } from '@storecraft/core/v-payments';
+import { OrderData, PaymentGatewayStatus } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/v-api';
+  
+type Config = {
+  default_currency_code?: string;
+  intent_on_checkout?: 'AUTHORIZE' | 'CAPTURE';
+}
+
+type DummyPaymentData = {
+  status: 'created' | 'authorized' | 'captured' | 'voided' | 'refunded' | 'unknown';
+  id: string;
+  created_at: string;
+  currency?: string;
+  price: number;
+}
+
+type CheckoutCreateResult = string;
+
+
+export class DummyPayments implements payment_gateway<Config, string> {
+  
+  #_config: Config;
+  #_db: Map<string, DummyPaymentData>;
+
+  constructor(config: Config) {
+    this.#_config = this.#validate_and_resolve_config(config);
+    this.#_db = new Map();
+  }
+
+  #validate_and_resolve_config(config: Config) {
+    config = {
+      default_currency_code: 'USD',
+      intent_on_checkout: 'AUTHORIZE',
+      ...config
+    }
+
+    return config;
+  }
+
+  get info() {
+    return {
+      name: 'Dummy payments',
+      description: 'This is a `dummy` payment processor for playgorund purposes',
+      url: 'https://storecraft.dev',
+      logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
+    }
+  }
+  
+  get config() { 
+    return this.#_config; 
+  }
+
+  get actions() {
+    return [
+      {
+        handle: 'capture',
+        name: 'Capture',
+        description: 'Capture an authorized payment'
+      },
+      {
+        handle: 'void',
+        name: 'Void',
+        description: 'Cancel an authorized payment'
+      },
+      {
+        handle: 'refund',
+        name: 'Refund',
+        description: 'Refund a captured payment'
+      },
+    ]
+  }
+
+  invokeAction(action_handle: string) {
+    switch (action_handle) {
+      case 'capture':
+        return this.capture.bind(this);
+      case 'void':
+        return this.void.bind(this);
+      case 'refund':
+        return this.refund.bind(this);
+    
+      default:
+        break;
+    }
+  }
+
+  get db() {
+    return this.#_db;
+  }
+
+  async onCheckoutCreate(order: OrderData) { 
+    const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
+    const id = ID('dummypay');
+
+    this.db.set(
+      id,
+      {
+        status: 'created',
+        id,
+        created_at: (new Date()).toISOString(),
+        price: order.pricing.total,
+        currency: currency_code
+      }
+    );
+
+    return id;
+  }
+
+  async retrieve_gateway_order(id) {
+    const result = this.db.get(id);
+
+    assert(
+      result,
+      `transaction \`${id}\` was not found !!!`
+    );
+
+    return result;
+  }
+
+  async onCheckoutComplete(create_result: CheckoutCreateResult) {
+    const payment = await this.retrieve_gateway_order(create_result);
+
+    if(!payment)
+      throw new Error(`payment with ID=${create_result} was not found !!!`);
+
+    if(payment.status!=='created')
+      throw new Error(`payment with ID=${create_result} is not in a good state !!!`);
+
+    this.db.set(
+      payment.id,
+      {
+        ...payment,
+        status: this.config.intent_on_checkout==='AUTHORIZE' ? 'authorized' : 'captured',
+      }
+    );
+
+    return {
+      payment: this.config.intent_on_checkout==='AUTHORIZE' ? 
+          enums.PaymentOptionsEnum.authorized : enums.PaymentOptionsEnum.captured,
+
+      checkout: enums.CheckoutStatusEnum.complete
+    }
+  }
+
+  
+  async status(create_result: CheckoutCreateResult) {
+    const order = await this.retrieve_gateway_order(create_result);
+    
+    if(!order)
+      throw new Error(`payment with ID=${create_result} not found !!!`)
+
+    const stat: PaymentGatewayStatus = {
+      messages: [],
+      actions: this.actions
+    }
+
+    stat.messages = [
+      `**${order.price}${order.currency}** transaction was initiated at \`${new Date(order.created_at).toLocaleDateString()}\``,
+      order.status==='authorized' && `Order was \`authorized\``,
+      order.status==='captured' && `Order was \`captured\``,
+      order.status==='refunded' && `Order was \`Refunded\``,
+      order.status==='voided' && `Order was \`Voided\``,
+    ].filter(Boolean).map(String)
+    
+    return stat;
+  }
+
+  // actions
+
+  async void(create_result: CheckoutCreateResult) {
+    const order = await this.retrieve_gateway_order(create_result);
+
+    if(!order)
+      throw new Error();
+
+    assert(
+      order.status==='authorized' || order.status==='created',
+      `Cannot void`
+    );
+
+    this.db.set(
+      create_result, 
+      {
+        ...order,
+        status: 'voided'
+      }
+    );
+    
+    return this.status(create_result);
+  }  
+
+  async capture(create_result: CheckoutCreateResult) {
+    const order = await this.retrieve_gateway_order(create_result);
+
+    if(!order)
+      throw new Error();
+
+    assert(
+      order.status==='authorized',
+      `**un-authorized** transaction cannot be **captured**`
+    );
+
+    this.db.set(
+      create_result, 
+      {
+        ...order,
+        status: 'captured'
+      }
+    );
+    
+    return this.status(create_result);
+  }    
+
+  async refund(create_result: CheckoutCreateResult) {
+    const order = await this.retrieve_gateway_order(create_result);
+
+    if(!order)
+      throw new Error();
+
+    assert(
+      order.status==='captured',
+      `**un-captured** transaction cannot be **refunded**`
+    );
+
+    this.db.set(
+      create_result, 
+      {
+        ...order,
+        status: 'refunded'
+      }
+    );
+    
+    return this.status(create_result);
+  }
+
+}
+
+
+```
+
+### In Storecraft
+
+Then, connect your gateway as one of the payment providers,
+
+```ts
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platform-node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+
+const app = new App(
+  new NodePlatform(),
+  new MongoDB(),
+  new GoogleStorage(), 
+).withPaymentGateways(
+  {
+    'my_dummy_payment': new DummyPayments(),
+  }
+);
+
+  
+await app.init();
+
+```

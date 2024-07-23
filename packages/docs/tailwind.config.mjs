@@ -5,16 +5,14 @@ import scrollbar from 'tailwind-scrollbar'
 
 import resolveConfig from "tailwindcss/resolveConfig.js"
 import screens from './screens.js'
-console.log('tomererererer')
+
 const config = {
 	darkMode: 'class',
 	content: [
 		"./pages/**/*.{js,ts,jsx,tsx}",
 		"./content/**/*.mdx",
-		"./src/comps/**/*.{js,ts,jsx,tsx}",
-		"./src/admin/**/*.{js,ts,jsx,tsx}",
-		"./src/docs/**/*.{js,ts,jsx,tsx}",
-		"./styles/*.scss",
+		"./src/**/*.{js,ts,jsx,tsx}",
+		"./src/*.scss",
 	  ],
 	theme: {
 		screens: screens,
@@ -124,7 +122,8 @@ const config = {
 	plugins: [
 		tailwindcss,
 		autoprefixer,
-		scrollbar
+		scrollbar,
+    require('@tailwindcss/typography'),
 		// require( 'precss' ),
 		// require('@tailwindcss/line-clamp'),
 		// require('tailwind-scrollbar'),

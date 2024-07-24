@@ -8,6 +8,10 @@ export const Hero = () => {
 
     <div className='w-fit rounded-2xl px-2 xs:px-4'>
       <LogoGradient className='w-[300px] sm:w-[500px] md:w-[600px] ' />
+      {/* <div children={`Next Generation Commerce As Code `}
+        className='text-4xl sm:text-5xl font-normal w-fit
+        whitespace-pre-line right-4 bottom-[120px] absolute -hidden --z-50
+        ' /> */}
       <div children={`Next Generation 
       Commerce As Code 
       `}

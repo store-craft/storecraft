@@ -75,8 +75,8 @@ const Layout = (
             groups={groups} 
             />
 
-        <div className='flex-1 w-full items-stretch h-full 
-                      lg:pr-[19rem] overflow-y-auto'>
+        <div className={`flex-1 w-full items-stretch h-full 
+                       overflow-y-auto ` + (headings?.length ? 'lg:pr-[19rem]' : '')}>
           <GradStroke className='w-full h-[550px] absolute right-10 top-0 
                     opacity-20 dark:opacity-30 z-0 pointer-events-none' />
           {/* <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
@@ -91,10 +91,10 @@ const Layout = (
               ref={main_ref}>
             
             <div 
-                className='--w-full block px-5 md:px-5 h-fit pb-20
+                className='--w-full block px-5 md:px-5 --h-fit pb-20
                           pt-[130px] md:pt-[90px] prose prose-base
                           prose-slate text-[17px]
-                        --text-base max-w-none
+                        --text-base max-w-none h-full
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
                           text-slate-600 dark:text-slate-400'
@@ -102,10 +102,14 @@ const Layout = (
             <Copyright />               
           </div>
 
-          <TOC
-              headings={headings} 
-              className='pt-[100px] h-full w-[19rem]  --bg-red-300 
-                      hidden lg:flex flex-none top-0 right-0 fixed '/>
+          {
+            headings?.length && 
+            <TOC
+                headings={headings} 
+                className='pt-[100px] h-full w-[19rem]  --bg-red-300 
+                        hidden lg:flex flex-none top-0 right-0 fixed '/>
+            
+          }
 
         </div>
 

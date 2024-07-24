@@ -296,7 +296,7 @@ const SideBar = (
             (group, index) => 
             <Link 
                 key={index} 
-                href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group.groups[0]))} 
+                href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group))} 
                 title={group.title}
                 target={group.external ? '_blank' : ''}
                 alt={group.title}>

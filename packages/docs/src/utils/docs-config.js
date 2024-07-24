@@ -9,6 +9,7 @@ export default {
         name: 'BiLogoStackOverflow',
         params: { classNames: 'stroke-kf-600'}
       }, 
+      empty: true,
       groups: [
         {
           title: "What Is This ?",
@@ -29,6 +30,7 @@ export default {
         name: 'BsNewspaper',
         params: { classNames: 'stroke-kf-600'}
       }, 
+      empty: true,
       groups: [
         {
           title: "Installation",
@@ -54,6 +56,7 @@ export default {
         name: 'FaServer',
         params: {}
       },
+      empty: true,
       groups: [
         {
           title: '💾 Databases',
@@ -254,6 +257,7 @@ export default {
         name: 'MdAdminPanelSettings',
         params: {}
       },
+      empty: true,
       groups: [
         {
           title: 'Overview',
@@ -305,7 +309,9 @@ export default {
         name: 'BiLogoStackOverflow',
         params: { classNames: 'stroke-kf-600'}
       }, 
-      external: '/rest-api-reference'
+      route: 'rest-api/api',
+      path: 'content/docs/rest-api/api.mdx'
+  // external: '/rest-api-reference'
     },
 
 

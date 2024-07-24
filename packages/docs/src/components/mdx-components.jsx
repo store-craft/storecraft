@@ -10,6 +10,8 @@ import { Image } from './image.jsx'
 import { Pink, Lime, Purple } from './labels.jsx'
 import { to_handle } from '@/utils/func.utils.js'
 import {EventsTable} from './event-table.jsx'
+import RestApiReference from './rest-api-reference.jsx'
+import { useEffect } from 'react'
 
 /**
  * 
@@ -41,6 +43,7 @@ const getNodeText = node => {
       return ''
   }
 }
+
 
 /**
  * 
@@ -83,7 +86,8 @@ const components = {
   // JsDocTables,
   Image,
   Pink, Purple, Lime,
-  EventsTable
+  EventsTable,
+  RestApiReference,
 }
 
 export default components

@@ -303,7 +303,7 @@ const SideBar = (
               <Header 
                   group={group} 
                   selected={selected_group==index}
-                  onClick={()=>onClickMenuItem && onClickMenuItem(group.external ?? group.groups[0])} />  
+                  onClick={()=>onClickMenuItem && onClickMenuItem(null)} />  
             </Link>
 
           )

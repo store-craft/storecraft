@@ -24,7 +24,7 @@ const nextjsThemeCss = `
   --scalar-color-3: rgba(255, 255, 255, 0.44);
   --scalar-color-accent: #3070ec;
 
-  --scalar-background-1: #00000000;
+  --scalar-background-1: rgba(17, 24, 39, 0.7);
   --scalar-background-2: #1a1a1a;
   --scalar-background-3: #2a2828;
   --scalar-background-accent: transparent;

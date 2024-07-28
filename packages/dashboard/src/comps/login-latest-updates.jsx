@@ -87,7 +87,10 @@ const LoginLatestUpdates = (
       get_commits()
 
     }, []
-  )
+  );
+
+  if(!Boolean(commits?.length))
+      return null;
 
   return (
  <div {...rest}>

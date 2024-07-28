@@ -13,19 +13,22 @@ const LoginMarquee = (
 <div {...rest} >
   <div className='w-full h-full px-3
             flex flex-row items-center
-            bg-gradient-to-r from-pink-500/0 to-kf-500
+            bg-gradient-to-r from-transparent to-kf-500
             justify-between text-sm sm:text-base whitespace-nowrap'>
-    <LogoGradient className='h-[27px]' />
+    <a href='https://storecraft.app'>
+      <LogoGradient className='h-[27px] pl-6' />
+    </a>
 
     <Link to='https://storecraft.app/docs' 
           className='animate-pulse'
-          title='Read The Docs'
-          alt='Read The Docs'>
+          title='Read The Docs'>
       <Capsule />
     </Link>
   </div>
-  <div className='w-full bg-gradient-to-r from-pink-500 to-kf-500 h-1 
-                  shadow-[0px_0px_10px] shadow-pink-500/80' />
+  <div className='w-full bg-gradient-to-r 
+                from-kf-500 to-pink-500 
+                dark:from-pink-500 dark:to-kf-500 h-1 
+                  dark:shadow-[0px_0px_10px] dark:shadow-pink-500/80' />
 </div>    
   )
 }

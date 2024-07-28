@@ -20,13 +20,13 @@ const LoginConnect = ({...rest}) => {
        target='_blank' rel='noopener noreferrer'>
       <BsDiscord className='text-2xl --animate-pulse'/>
     </a>
-    <a href='https://github.com/shelf-cms' 
+    <a href='https://github.com/store-craft/storecraft' 
        title='Fork us on Github'
        alt='Fork us on Github'
        target='_blank' rel='noopener noreferrer'>
       <BsGithub className='text-xl'/>
     </a>
-    <a href='https://linkedin.com/company/shelf-cms/'
+    <a href='https://linkedin.com/company/store-craft/'
        title='Catch us at Linkedin'
        alt='Catch us at Linkedin'
        target='_blank' rel='noopener noreferrer'>

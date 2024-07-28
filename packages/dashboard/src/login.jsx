@@ -6,6 +6,7 @@ import LoginForm from './comps/login-form.jsx'
 import LoginCopyright from './comps/login-copyright.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import useDarkMode from './hooks/useDarkMode.js'
+import LoginLatestUpdates from './comps/login-latest-updates.jsx'
 
 const createConfig = c => {
   
@@ -97,25 +98,26 @@ const Login = (
   );
 
   return (
-<div className='relative w-full h-full dark'>
-  <div className='relative w-full h-full overflow-auto shelf-body-bg --bg-slate-100'>
+<div className={`relative w-full h-screen ` + (darkMode ? 'dark' : '')}>
+  <div className='relative w-full h-full overflow-auto shelf-body-bg'>
 
-    <LoginMarquee className='w-full h-12' />
-    <LoginConnect className='absolute w-full left-0 top-12 h-fit 
+    <LoginMarquee className='w-full h-12 --bg-green-400' />
+    <LoginConnect className='absolute w-full --bg-green-300 left-0 top-12 h-fit 
             z-30  --bg-green-300/30 ' />
-    <div className='w-full h-fit md:h-screen 
-                    flex flex-col 
-                    md:overflow-auto
+    <div className='w-full h-fit md:h-[calc(100%-3rem)] 
+                    flex flex-col p-10
+                    --md:overflow-auto
                     items-center justify-start 
-                    md:justify-center md:items-start 
-                    md:flex md:flex-row 
+                    md:justify-start md:items-start 
+                     md:flex-row 
                     --bg-green-500'>
 
-      <div className='flex-shrink-0 order-1 md:order-1
-                      scale-[0.8] -translate-y-6 md:translate-y-0 origin-center
-                      w-full max-w-[22rem] --sm:w-[22rem] h-fit 
-                      rounded-md md:scale-[0.80] 
-                      m-3 --pb-52 md:m-10 md:origin-top-left'
+      <div className='flex-shrink-0 order-first md:order-first
+                      scale-[0.8] origin-top
+                      md:scale-[0.8] md:origin-top-left 
+                      w-full max-w-[22rem] h-fit 
+                      rounded-md 
+                      '
           sstyle={{transformOrigin: 'top center'}}>
         <LoginForm 
             is_backend_endpoint_editable={is_backend_endpoint_editable}
@@ -126,7 +128,7 @@ const Login = (
             error={error} />
       </div>
 
-      <LoginContent />
+      <LoginLatestUpdates className='flex-1 h-fit md:h-full ' />
     </div>
     <LoginCopyright 
       className='relative md:fixed md:left-10 md:bottom-0'  />

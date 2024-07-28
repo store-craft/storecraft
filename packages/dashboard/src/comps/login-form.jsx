@@ -86,10 +86,10 @@ const LoginForm = (
 ) => {
  return (
 <div className={className}>
- <Bling className='shadow-xl --shadow-gray-300/10 w-full'
+ <Bling className='shadow-xl --shadow-gray-300/10 w-full font-mono'
         stroke='border-4' 
         to='to-kf-400 dark:to-kf-500 '>
-   <form className='w-full p-5 shelf-body-bg flex flex-col text-sm 
+   <form className='w-full p-5 bg-white dark:shelf-body-bg flex flex-col text-sm 
                      tracking-wider font-medium gap-5 rounded-md'
          onSubmit={onSubmit}>
      <Field 
@@ -120,7 +120,11 @@ const LoginForm = (
        error &&
        (
          <div className='flex flex-row flex-nowrap items-center text-base w-full
-                         text-red-700 bg-red-100 border border-red-400 
+                         text-red-600 border-red-600 
+                         dark:text-red-500 
+                         dark:bg-red-400/10 
+                         bg-red-400/20 
+                         border
                          rounded-md p-3 gap-3 '>
            <BiErrorCircle 
                className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 

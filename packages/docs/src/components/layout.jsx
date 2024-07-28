@@ -75,7 +75,8 @@ const Layout = (
             groups={groups} 
             />
 
-        <div className={`flex-1 w-full items-stretch h-full 
+        <div ref={main_ref} 
+             className={`flex-1 w-full items-stretch h-full 
                        overflow-y-auto ` + (headings?.length ? 'lg:pr-[19rem]' : '')}>
           <GradStroke className='w-full h-[550px] absolute right-10 top-0 
                     opacity-20 dark:opacity-30 z-0 pointer-events-none' />
@@ -86,14 +87,11 @@ const Layout = (
                       opacity-10 md:opacity-10 md:dark:opacity-0 pointer-events-none'
                       via='via-pink-400' /> */}
 
-          <div 
-              className='relative w-full h-full'
-              ref={main_ref}>
-            
+          <div className='relative w-full h-fit flex flex-col'>
             <div 
                 className='--w-full block px-5 md:px-5 --h-fit pb-20
                           pt-[130px] md:pt-[90px] prose prose-base
-                          prose-slate text-[17px]
+                          prose-slate text-[17px] 
                         --text-base max-w-none h-full
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 

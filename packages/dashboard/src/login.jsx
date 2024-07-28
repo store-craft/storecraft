@@ -5,6 +5,7 @@ import LoginMarquee from './comps/login-marquee.jsx'
 import LoginForm from './comps/login-form.jsx'
 import LoginCopyright from './comps/login-copyright.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
+import useDarkMode from './hooks/useDarkMode.js'
 
 const createConfig = c => {
   
@@ -39,6 +40,7 @@ const Login = (
 
   const [credentials, setCredentials] = useState(config ?? {});
   const [error, setError] = useState(undefined);
+  const { darkMode, toggle } = useDarkMode();
 
   // console.log('credentials ', credentials)
 
@@ -95,39 +97,41 @@ const Login = (
   );
 
   return (
-<div className='relative w-full h-full overflow-auto bg-slate-100'>
+<div className='relative w-full h-full dark'>
+  <div className='relative w-full h-full overflow-auto shelf-body-bg --bg-slate-100'>
 
-  <LoginMarquee className='w-full h-12' />
-  <LoginConnect className='absolute w-full left-0 top-12 h-fit 
-          z-30  --bg-green-300/30 ' />
-  <div className='w-full h-fit md:h-screen 
-                  flex flex-col 
-                  md:overflow-auto
-                  items-center justify-start 
-                  md:justify-center md:items-start 
-                  md:flex md:flex-row 
-                  --bg-green-500'>
+    <LoginMarquee className='w-full h-12' />
+    <LoginConnect className='absolute w-full left-0 top-12 h-fit 
+            z-30  --bg-green-300/30 ' />
+    <div className='w-full h-fit md:h-screen 
+                    flex flex-col 
+                    md:overflow-auto
+                    items-center justify-start 
+                    md:justify-center md:items-start 
+                    md:flex md:flex-row 
+                    --bg-green-500'>
 
-    <div className='flex-shrink-0 order-1 md:order-1
-                    scale-[0.8] -translate-y-6 md:translate-y-0 origin-center
-                    w-full max-w-[22rem] --sm:w-[22rem] h-fit 
-                    rounded-md md:scale-[0.80] 
-                    m-3 --pb-52 md:m-10 md:origin-top-left'
-        sstyle={{transformOrigin: 'top center'}}>
-      <LoginForm 
-          is_backend_endpoint_editable={is_backend_endpoint_editable}
-          className='w-full ' 
-          onSubmit={onSubmit} 
-          credentials={credentials}
-          onChange={onChange} 
-          error={error} />
+      <div className='flex-shrink-0 order-1 md:order-1
+                      scale-[0.8] -translate-y-6 md:translate-y-0 origin-center
+                      w-full max-w-[22rem] --sm:w-[22rem] h-fit 
+                      rounded-md md:scale-[0.80] 
+                      m-3 --pb-52 md:m-10 md:origin-top-left'
+          sstyle={{transformOrigin: 'top center'}}>
+        <LoginForm 
+            is_backend_endpoint_editable={is_backend_endpoint_editable}
+            className='w-full ' 
+            onSubmit={onSubmit} 
+            credentials={credentials}
+            onChange={onChange} 
+            error={error} />
+      </div>
+
+      <LoginContent />
     </div>
-
-    <LoginContent />
+    <LoginCopyright 
+      className='relative md:fixed md:left-10 md:bottom-0'  />
   </div>
-  <LoginCopyright 
-    className='relative md:fixed md:left-10 md:bottom-0'  />
-</div>
+</div>    
   )
 }
 

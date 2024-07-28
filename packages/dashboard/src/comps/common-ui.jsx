@@ -263,7 +263,7 @@ export const Bling = (
   { 
     className, rounded='rounded-md', 
     children, stroke='border', 
-    from='from-pink-500 dark:from-pink-500', 
+    from='from-pink-500 dark:from-pink-600', 
     to='to-kf-500 dark:to-kf-500', ...rest 
   }
 ) => {

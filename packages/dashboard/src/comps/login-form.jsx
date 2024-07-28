@@ -36,19 +36,18 @@ const Field = (
 ) => {
 
  return (
-<div className='text-pink-600 font-semibold'>
- <p children={label} className='tracking-widest' />
+<div className='--text-pink-600 font-semibold'>
+ <p children={label} className='tracking-widest text-pink-500' />
  { desc && 
    <p children={desc} 
       className='tracking-normal font-inter my-3 
-                 font-normal text-gray-500' />
+                 font-normal --text-gray-500' />
  }
  <Bling className='mt-2'>
    <input 
        className={`rounded-md h-10 px-3
-                   w-full block text-base text-gray-800
-                 placeholder-gray-400 bg-slate-100 rounded-xs
-                 focus:outline-kf-300 
+                   w-full block text-base 
+                   shelf-input-color
                    font-normal transition-none `} 
        value={value[id] ?? ''} 
        onChange={e => onChange(id, e.currentTarget.value)} 
@@ -87,9 +86,10 @@ const LoginForm = (
 ) => {
  return (
 <div className={className}>
- <Bling className='shadow-lg shadow-gray-300 w-full'
-        stroke='border-4' to='to-kf-400'>
-   <form className='w-full p-5 bg-white flex flex-col text-sm 
+ <Bling className='shadow-xl --shadow-gray-300/10 w-full font-mono'
+        stroke='border-4' 
+        to='to-kf-400 dark:to-kf-500 '>
+   <form className='w-full p-5 bg-white dark:shelf-body-bg flex flex-col text-sm 
                      tracking-wider font-medium gap-5 rounded-md'
          onSubmit={onSubmit}>
      <Field 
@@ -108,19 +108,23 @@ const LoginForm = (
       <HR />
      <Bling 
         stroke='border-4 w-full' rounded='rounded-lg' 
-        from='from-kf-500' to='to-pink-400'>
+        from='from-kf-500' to='to-pink-500'>
        <input 
            type='submit' value='LOGIN' 
            title='Login' alt='Login'
            className='h-10 rounded-md bg-white tracking-widest 
-                       w-full text-gray-500 text-base 
+                       w-full shelf-input-color text-base 
                        cursor-pointer'/>
      </Bling>
      {
        error &&
        (
          <div className='flex flex-row flex-nowrap items-center text-base w-full
-                         text-red-700 bg-red-100 border border-red-400 
+                         text-red-600 border-red-600 
+                         dark:text-red-500 
+                         dark:bg-red-400/10 
+                         bg-red-400/20 
+                         border
                          rounded-md p-3 gap-3 '>
            <BiErrorCircle 
                className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 

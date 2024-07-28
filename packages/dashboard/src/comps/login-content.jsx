@@ -14,7 +14,7 @@ const LoginContent = (
                 md:-ml-20
                 flex flex-row items-start
                 md:py-0
-                --bg-gradient-to-t md:bg-gradient-to-r 
+                --bg-gradient-to-t --md:bg-gradient-to-r 
                 from-slate-100 to-teal-50 --bg-green-400'>
 
   <div className='pt-10 md:pt-0 mx-auto w-fit h-auto '>

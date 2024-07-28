@@ -1,50 +1,34 @@
-import { IoLogoFirebase } from "react-icons/io5/index.js";
 import { Link } from 'react-router-dom'
 import { Bling } from "./common-ui.jsx";
+import { LogoGradient } from "./logo-text.jsx";
 
 
-const LoginMarquee = ({ ...rest }) => {
+const LoginMarquee = (
+  { 
+    ...rest 
+  }
+) => {
 
   return (
 <div {...rest} >
   <div className='w-full h-full px-3
             flex flex-row items-center
-            bg-gradient-to-r from-pink-500 to-kf-500
+            bg-gradient-to-r from-transparent to-kf-500
             justify-between text-sm sm:text-base whitespace-nowrap'>
-    <div className='flex flex-row items-center text-white flex-wrap'>
-      <div className='hidden md:flex flex-row items-center text-white
-                      '>
-        <span children='🥳 SHELF' className='tracking-widest font-bold'/>
-        &nbsp;
-        <span children={`is HERE`} className=''/>
-        &nbsp;
-        <span children='>' className='font-extrabold text-white'/>
-        &nbsp;
-        <span children='Turn your' className=''/>
-        &nbsp;
-      </div>
-      <IoLogoFirebase className='text-amber-400 scale-125' />
-      &nbsp;
-      <Link 
-          href='https://firebase.google.com/' 
-          target='_blank' 
-          className='border-b border-dashed 
-                border-yellow-300 px-0 border-'>
-        <span 
-            children='FIREBASE' 
-            className='tracking-widest text-yellow-300 font-bold'/>
-      </Link>
-      &nbsp;
-      <span children='project into a' className=''/>
-      &nbsp;
-      <span children='HEADLESS CMS' className='tracking-widest font-bold'/>
-    </div>
-    <Link href='docs' className='animate-pulse'
-          title='Read The Docs'
-          alt='Read The Docs'>
+    <a href='https://storecraft.app'>
+      <LogoGradient className='h-[27px] pl-6' />
+    </a>
+
+    <Link to='https://storecraft.app/docs' 
+          className='animate-pulse'
+          title='Read The Docs'>
       <Capsule />
     </Link>
   </div>
+  <div className='w-full bg-gradient-to-r 
+                from-kf-500 to-pink-500 
+                dark:from-pink-500 dark:to-kf-500 h-1 
+                  dark:shadow-[0px_0px_10px] dark:shadow-pink-500/80' />
 </div>    
   )
 }

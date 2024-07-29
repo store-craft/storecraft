@@ -37,7 +37,10 @@ export class NodePlatform {
    * @param {NodePlatformConfig} config 
    */
   constructor(config) {
-    this.#config = config;
+    this.#config = {
+      ...config,
+      scrypt_keylen: config?.scrypt_keylen ?? 64
+    };
   }
 
   get env() {
@@ -58,9 +61,9 @@ export class NodePlatform {
             scrypt(
               password, salt, c.scrypt_keylen, c.scrypt_options,
               (err, derivedKey) => {
-                  if (err) reject(err);
-                  // derivedKey is of type Buffer
-                  resolve(`${salt}.${derivedKey.toString("hex")}`);
+                if (err) reject(err);
+                // derivedKey is of type Buffer
+                resolve(`${salt}.${derivedKey.toString("hex")}`);
               }
             );
           }
@@ -70,16 +73,20 @@ export class NodePlatform {
       verify: (hash, password) => {
         return new Promise(
           (resolve, reject) => {
-            const [salt, hashKey] = hash.split(".");
+            const [salt, hashKey] = hash?.split(".");
+
+            if(!salt || !hashKey)
+              reject(false);
+
             // we need to pass buffer values to timingSafeEqual
             const hashKeyBuff = Buffer.from(hashKey, "hex");
             scrypt(
               password, salt, c.scrypt_keylen, c.scrypt_options, 
               (err, derivedKey) => {
-                  if (err) reject(err);
-                  // compare the new supplied password with the 
-                  // hashed password using timeSafeEqual
-                  resolve(timingSafeEqual(hashKeyBuff, derivedKey));
+                if (err) reject(err);
+                // compare the new supplied password with the 
+                // hashed password using timeSafeEqual
+                resolve(timingSafeEqual(hashKeyBuff, derivedKey));
               }
             );
           }

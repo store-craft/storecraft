@@ -61,13 +61,6 @@ export type StorecraftConfig = {
 
   /** 
    * 
-   * @description password hash rounds, if absent will be infered at init by 
-   * `platform.env.SC_AUTH_PASS_HASH_ROUNDS` environment  
-   */
-  auth_password_hash_rounds?: number;
-
-  /** 
-   * 
    * @description access token signing secret, if absent will be infered 
    * at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  
    */

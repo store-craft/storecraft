@@ -32,6 +32,27 @@ export declare interface PlatformAdapter<
   handleResponse: (web_response: Response, context: PlatformContext) => Promise<H>;
 
   /**
+   * @description (Optional) crypto implementation for hashing and verifying passwords
+   * and hashed passwords
+   */
+  crypto?: {
+    /**
+     * @description Given a password, hash it
+     * @param password The password to hash
+     * @returns a Hash
+     */
+    hash: (password: string) => Promise<string>,
+
+    /**
+     * @description Given a hashed password and a password, verify the hash corresponds to the password.
+     * @param hash The hashed password
+     * @param password The password to verify
+     * @returns a boolean `true` / `false`
+     */
+    verify: (hash: string, password: string) => Promise<boolean>,
+  }
+
+  /**
    * 
    * @description Get the environment variables of a platform
    */

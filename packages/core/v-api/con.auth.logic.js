@@ -1,4 +1,3 @@
-import * as phash from '../v-crypto/crypto-pbkdf2.js'
 import * as jwt from '../v-crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
@@ -57,8 +56,8 @@ async (body) => {
   assert(!existingUser, 'auth/already-signed-up', 400);
 
   // Hash the password using pbkdf2
-  const hashedPassword = await phash.hash(
-    password, app.config.auth_password_hash_rounds
+  const hashedPassword = await app.platform.crypto.hash(
+    password
   );
 
   // Create a new user in the database
@@ -142,7 +141,7 @@ async (body) => {
   assert(existingUser, 'auth/error', 401)
 
   { // verify the current password
-    const verified = await phash.verify(
+    const verified = await app.platform.crypto.verify(
       existingUser.password, body.current_password
     );
     
@@ -163,8 +162,8 @@ async (body) => {
   );
 
     // Hash the password using pbkdf2
-  const hashedPassword = await phash.hash(
-    body.new_password, app.config.auth_password_hash_rounds
+  const hashedPassword = await app.platform.crypto.hash(
+    body.new_password
   );
 
   // Upsert new hashed password
@@ -247,7 +246,7 @@ async (body, fail_if_not_admin=false) => {
   assert(existingUser, 'auth/error', 401)
 
   // verify the password
-  const verified = await phash.verify(
+  const verified = await app.platform.crypto.verify(
     existingUser.password, password
   );
   
@@ -384,8 +383,8 @@ async () => {
   const password = fromUint8Array(ui8a, true);
 
   // Hash the password using pbkdf2
-  const hashedPassword = await phash.hash(
-    password, app.config.auth_password_hash_rounds
+  const hashedPassword = await app.platform.crypto.hash(
+    password
   );
 
   // Create a new user in the database
@@ -464,7 +463,7 @@ async (body) => {
   );
 
   // verify the password
-  const verified = await phash.verify(
+  const verified = await app.platform.crypto.verify(
     apikey_user.password, password
   );
 

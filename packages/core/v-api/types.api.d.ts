@@ -272,9 +272,9 @@ export type ApiAuthSignupType = AuthBaseType;
 export type ApiAuthChangePasswordType = {
 
   /**
-   * @description User Email
+   * @description User `ID` or `Email`
    */
-  email: string;
+  user_id_or_email: string;
 
   /**
    * @description Current password

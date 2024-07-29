@@ -148,7 +148,7 @@ export const apiAuthSignupTypeSchema =
   authBaseTypeSchema.describe("Sign up type");
 export const apiAuthChangePasswordTypeSchema = z
   .object({
-    email: z.string().describe("User Email"),
+    user_id_or_email: z.string().describe("User `ID` or `Email`"),
     current_password: z.string().describe("Current password"),
     new_password: z.string().describe("New password"),
     confirm_new_password: z

@@ -238,7 +238,24 @@ export default class Auth {
       }
     );
     
-    assert(res.ok, 'auth/error');
+    if(!res.ok) {
+      /** @type {import('@storecraft/core/v-api').error} */
+      let error_payload = {
+        messages: [
+          {
+            message: 'auth/error'
+          }
+        ]
+      };
+
+      try {
+        error_payload = await res.json();
+      } catch (e) {
+      }
+
+      throw error_payload;
+    }    
+    // assert(res.ok, 'auth/error2');
 
     /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
     const payload = await res.json();
@@ -306,7 +323,23 @@ export default class Auth {
       }
     );
     
-    assert(res.ok, 'auth/error');
+    if(!res.ok) {
+      /** @type {import('@storecraft/core/v-api').error} */
+      let error_payload = {
+        messages: [
+          {
+            message: 'auth/error'
+          }
+        ]
+      };
+
+      try {
+        error_payload = await res.json();
+      } catch (e) {
+      }
+
+      throw error_payload;
+    }
 
     /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
     const payload = await res.json();

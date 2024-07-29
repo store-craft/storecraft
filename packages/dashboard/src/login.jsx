@@ -90,8 +90,8 @@ const Login = (
         );
 
       } catch (e) {
-        const code = e ? String(e) : 'Auth error'
-        setError(`Error signing, code : ${code}`)
+        // const code = e ? String(e) : 'Auth error'
+        setError(e)
       }
     },
     [sdk, updateConfig, credentials],

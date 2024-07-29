@@ -1,4 +1,5 @@
 import { db_driver } from "../v-database/types.public.js";
+import { CORSOptions } from "../v-polka/cors.js";
 
 /**
  * 
@@ -107,6 +108,12 @@ export type StorecraftConfig = {
    */
   storage_rewrite_urls?: string;
 
+  /**
+   * @description (Optional) Your chance to override the default `CORS` config
+   * for HTTP requests
+   * 
+   */
+  cors?: CORSOptions;
 }
 
 

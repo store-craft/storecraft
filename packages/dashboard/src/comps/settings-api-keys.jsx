@@ -6,7 +6,7 @@ import {
 } from "./common-button.jsx";
 import { CopyableView } from "./copyable-view.jsx";
 import ShowIf from "./show-if.jsx";
-
+import { CiBookmarkRemove } from "react-icons/ci/index.js";
 
 /**
  * 
@@ -37,6 +37,7 @@ const ApikeyUser = (
 
   <PromisableLoadingBlingButton 
       text="revoke"
+      Icon={<CiBookmarkRemove/>}
       className='h-6'
       rounded='rounded-md'
       keep_text_on_load={true}

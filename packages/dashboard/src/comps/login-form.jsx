@@ -58,6 +58,20 @@ const Field = (
  )
 }
 
+
+/**
+ * 
+ * @param {any} e 
+ */
+const format_error = e => {
+  if(typeof e === 'string')
+    return e;
+
+  let payload = e?.messages?.[0]?.message ?? 'unknown error';
+
+  return payload;
+}
+
 /**
 * 
 * @typedef {object} InnerLoginFormParams
@@ -84,6 +98,7 @@ const LoginForm = (
    ...rest
  }
 ) => {
+
  return (
 <div className={className}>
  <Bling className='shadow-xl --shadow-gray-300/10 w-full font-mono'
@@ -128,7 +143,7 @@ const LoginForm = (
                          rounded-md p-3 gap-3 '>
            <BiErrorCircle 
                className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 
-           <div children={error} className='flex-1 whitespace-pre-wrap overflow-x-auto' />
+           <div children={format_error(error)} className='flex-1 whitespace-pre-wrap overflow-x-auto' />
          </div>
        )
      }

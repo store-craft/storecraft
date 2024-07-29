@@ -6,6 +6,7 @@ import {
 } from '@asteasolutions/zod-to-openapi';
 import { stringify as YAMLStringify } from 'yaml'
 import {
+  apiAuthChangePasswordTypeSchema,
   apiAuthRefreshTypeSchema,
   apiAuthResultSchema,
   apiAuthSigninTypeSchema,
@@ -748,6 +749,7 @@ const register_auth = registry => {
   const _signupTypeSchema = registry.register('AuthSignup', apiAuthSignupTypeSchema);
   const _signinTypeSchema = registry.register('AuthSignin', apiAuthSigninTypeSchema);
   const _refreshTypeSchema = registry.register(`AuthRefresh`, apiAuthRefreshTypeSchema);
+  const _apiAuthChangePasswordTypeSchema = registry.register(`AuthChangePassword`, apiAuthChangePasswordTypeSchema);
   const _apiAuthResultSchema = registry.register(`ApiAuthResult`, apiAuthResultSchema);
   const _apiKeyResultSchema = registry.register(`ApiKey`, apiKeyResultSchema);
   const _authUserTypeSchema = registry.register(`AuthUserType`, authUserTypeSchema);
@@ -783,6 +785,7 @@ const register_auth = registry => {
     { slug: '/auth/signup', schema_request: _signupTypeSchema, desc: 'Signup a user', extra: {} },
     { slug: '/auth/signin', schema_request: _signinTypeSchema, desc: 'Signin a user', extra: {} },
     { slug: '/auth/refresh', schema_request: _refreshTypeSchema, desc: 'Refresh a token', extra: {} },
+    { slug: '/auth/change-password', schema_request: _apiAuthChangePasswordTypeSchema, desc: 'Change Password', extra: {} },
   ].forEach(
     it => {
       registry.registerPath({

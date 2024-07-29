@@ -26,7 +26,7 @@ export const create_routes = (app) => {
     }
   )
   
-  // login
+  // signin
   polka.post(
     '/signin',
     async (req, res) => {
@@ -34,7 +34,16 @@ export const create_routes = (app) => {
       res.sendJson(result);
     }
   )
-   
+
+  // change password
+  polka.post(
+    '/change-password',
+    async (req, res) => {
+      const result = await app.api.auth.change_password(req.parsedBody);
+      res.sendJson(result);
+    }
+  )
+  
   // refresh 
   polka.post(
     '/refresh',

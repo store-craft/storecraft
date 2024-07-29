@@ -9,6 +9,7 @@ import {
 import { MarkdownViewCard } from '../comps/markdown-card.jsx'
 import { SettingsApiKeys } from '../comps/settings-api-keys.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
+import { SettingsChangePassword } from '@/comps/settings-change-password.jsx'
 
 
 /**
@@ -116,6 +117,7 @@ export default ({ ...rest }) => {
                     lg:w-fit flex flex-col lg:flex-row gap-5 mx-auto'>
         <div className='w-full lg:w-[35rem] flex flex-col gap-5'>
           <SettingsApiKeys />
+          <SettingsChangePassword />
           <MarkdownViewCard 
               value={info_general(doc)} 
               title='🛍️ Your General Store information'/>  

@@ -2,7 +2,7 @@ import * as phash from '../v-crypto/crypto-pbkdf2.js'
 import * as jwt from '../v-crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
-import { apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema, 
+import { apiAuthChangePasswordTypeSchema, apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema, 
   apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../v-crypto/base64.js'
@@ -120,6 +120,101 @@ async (body) => {
       access_token, refresh_token
   }
 }
+
+
+/**
+ * 
+ * @param {App} app 
+ */  
+export const change_password = (app) => 
+/**
+ * 
+ * @param {import('./types.api.js').ApiAuthChangePasswordType} body 
+ * 
+ * @returns {Promise<import('./types.api.js').ApiAuthResult>}
+ */
+async (body) => {
+  assert_zod(apiAuthChangePasswordTypeSchema, body);
+
+  // Check if the user already exists
+  let existingUser = await app.db.resources.auth_users.get(body.user_id_or_email);
+
+  assert(existingUser, 'auth/error', 401)
+
+  { // verify the current password
+    const verified = await phash.verify(
+      existingUser.password, body.current_password
+    );
+    
+    assert(verified, 'auth/error', 401);
+  }
+  
+
+  // verify the new password matches the confirmed one
+
+  assert(
+    (body?.new_password?.length ?? 0) > 3, 
+    'new password should be longer than 3 characters', 401
+  );
+
+  assert(
+    body.new_password===body.confirm_new_password, 
+    'new password does not match the confirmed password', 401
+  );
+
+    // Hash the password using pbkdf2
+  const hashedPassword = await phash.hash(
+    body.new_password, app.config.auth_password_hash_rounds
+  );
+
+  // Upsert new hashed password
+  await app.db.resources.auth_users.upsert(
+    apply_dates(
+      {
+        ...existingUser,
+        password: hashedPassword
+      }
+    ),
+    create_search_terms(existingUser)
+  );
+
+  /** 
+   * @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & 
+   * Pick<import('./types.api.js').AuthUserType, 'roles'>> } 
+   */
+  const claims = {
+    sub: existingUser.id,
+    roles: existingUser.roles
+  }
+
+  const access_token = await jwt.create(
+    app.config.auth_secret_access_token, 
+    claims, jwt.JWT_TIMES.HOUR
+  );
+
+  const refresh_token = await jwt.create(
+    app.config.auth_secret_refresh_token, 
+    {...claims, aud: '/refresh'}, jwt.JWT_TIMES.DAY * 7
+  );
+
+  { // dispatch event
+    if(app.pubsub.has('auth/change-password')) {
+      const sanitized = { ...existingUser };
+      delete sanitized.password;
+      await app.pubsub.dispatch(
+        'auth/change-password',
+        sanitized
+      );
+    }
+  }
+
+  return { 
+    token_type: 'Bearer',
+    user_id: existingUser.id,
+    access_token, refresh_token
+  }
+}
+
 
 /**
  * 
@@ -493,6 +588,7 @@ export const inter = app => {
   return {
     signin: signin(app),
     signup: signup(app),
+    change_password: change_password(app),
     refresh: refresh(app),
     create_api_key: create_api_key(app),
     list_all_api_keys_info: list_all_api_keys_info(app),

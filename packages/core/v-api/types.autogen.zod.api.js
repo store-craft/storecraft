@@ -146,6 +146,16 @@ export const apiAuthSigninTypeSchema =
   authBaseTypeSchema.describe("Sign in type");
 export const apiAuthSignupTypeSchema =
   authBaseTypeSchema.describe("Sign up type");
+export const apiAuthChangePasswordTypeSchema = z
+  .object({
+    user_id_or_email: z.string().describe("User `ID` or `Email`"),
+    current_password: z.string().describe("Current password"),
+    new_password: z.string().describe("New password"),
+    confirm_new_password: z
+      .string()
+      .describe("Again New password for confirmation"),
+  })
+  .describe("Change Password Type");
 export const apiAuthRefreshTypeSchema = z
   .object({
     refresh_token: z.string().describe("A refresh token"),
@@ -977,6 +987,7 @@ export const filterSchema = z
         filterMetaEnumSchema.shape.p_not_in_tags,
         filterMetaEnumSchema.shape.p_in_products,
         filterMetaEnumSchema.shape.p_not_in_products,
+        filterMetaEnumSchema.shape.p_in_price_range,
         filterMetaEnumSchema.shape.o_date_in_range,
         filterMetaEnumSchema.shape.o_has_customer,
         filterMetaEnumSchema.shape.o_items_count_in_range,

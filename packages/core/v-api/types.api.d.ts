@@ -267,6 +267,32 @@ export type ApiAuthSigninType = AuthBaseType;
 export type ApiAuthSignupType = AuthBaseType;
 
 /**
+ * @description Change Password Type
+ */
+export type ApiAuthChangePasswordType = {
+
+  /**
+   * @description User `ID` or `Email`
+   */
+  user_id_or_email: string;
+
+  /**
+   * @description Current password
+   */
+  current_password: string;
+
+  /**
+   * @description New password
+   */
+  new_password: string;
+
+  /**
+   * @description Again New password for confirmation
+   */
+  confirm_new_password: string;
+};
+
+/**
  * @description Refresh token input type
  */
 export type ApiAuthRefreshType = {

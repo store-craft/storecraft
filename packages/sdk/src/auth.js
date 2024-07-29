@@ -238,7 +238,24 @@ export default class Auth {
       }
     );
     
-    assert(res.ok, 'auth/error');
+    if(!res.ok) {
+      /** @type {import('@storecraft/core/v-api').error} */
+      let error_payload = {
+        messages: [
+          {
+            message: 'auth/error'
+          }
+        ]
+      };
+
+      try {
+        error_payload = await res.json();
+      } catch (e) {
+      }
+
+      throw error_payload;
+    }    
+    // assert(res.ok, 'auth/error2');
 
     /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
     const payload = await res.json();
@@ -286,6 +303,54 @@ export default class Auth {
 
     return payload;
   }
+
+
+  /**
+   * 
+   * @param {import('@storecraft/core/v-api').ApiAuthChangePasswordType} params 
+   */
+  
+  changePassword = async (params) => {
+
+    const res = await fetch(
+      url(this.#sdk.config, `/auth/change-password`),
+      { 
+        method: 'post',
+        body: JSON.stringify(params),
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      }
+    );
+    
+    if(!res.ok) {
+      /** @type {import('@storecraft/core/v-api').error} */
+      let error_payload = {
+        messages: [
+          {
+            message: 'auth/error'
+          }
+        ]
+      };
+
+      try {
+        error_payload = await res.json();
+      } catch (e) {
+      }
+
+      throw error_payload;
+    }
+
+    /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
+    const payload = await res.json();
+
+    this.#_update_and_notify_subscribers(
+      payload
+    );
+
+    return payload;
+  }
+
 
 
   signout = async () => {

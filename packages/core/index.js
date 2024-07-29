@@ -105,7 +105,7 @@ export class App {
   /** 
    * @description The REST API controller
    * 
-   * @type {ReturnType<create_rest_api>} 
+   * @type {ReturnType<typeof create_rest_api>} 
    */ 
   #_rest_controller;
 

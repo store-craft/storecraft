@@ -27,7 +27,7 @@ export const CORSDefault = {
 export const cors = (options) => {
   const opts = {
     ...CORSDefault,
-    ...options,
+    ...(options ?? {}),
   }
 
   const findAllowOrigin = ((optsOrigin) => {
@@ -44,8 +44,8 @@ export const cors = (options) => {
   })(opts.origin);
 
   /**
-   * @param {import("./index.js").ApiRequest} req
-   * @param {import("./index.js").ApiResponse} res
+   * @param {import("../types.public.js").ApiRequest} req
+   * @param {import("../types.public.js").ApiResponse} res
    */
   return async function cors(req, res) {
 

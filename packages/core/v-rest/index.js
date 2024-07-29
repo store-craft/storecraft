@@ -31,6 +31,14 @@ import { cors } from "../v-polka/cors.js";
 
 
 /**
+ * 
+ * @typedef {object} RestApiConfig
+ * @prop {import("../v-polka/cors.js").CORSOptions} cors
+ * 
+ */
+
+
+/**
  * @description Create the entire virtual API with lazy 
  * loading which is great for serverless
  * 
@@ -40,12 +48,13 @@ import { cors } from "../v-polka/cors.js";
  * @param {import("../types.public.js").App<
  *  PlatformNativeRequest, PlatformContext, any, any, any, any, any
  * >} app
+ * @param {RestApiConfig} config
  */
-export const create_rest_api = (app) => {
+export const create_rest_api = (app, config) => {
   // This is the main / root router
   const polka = new Polka();
 
-  polka.use(cors());
+  polka.use(cors(config?.cors));
   polka.use(json());
 
   const lazy_creator = new class {

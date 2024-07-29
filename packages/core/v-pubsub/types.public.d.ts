@@ -72,6 +72,7 @@ export type events = {
   auth_signin: 'auth/signin', 
   auth_refersh: 'auth/refresh',
   auth_remove: 'auth/remove',
+  auth_change_password: 'auth/change-password',
 }
 
 
@@ -171,6 +172,7 @@ export interface PubSubOnEvents<R=Function, AppType=any> {
   on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_change_password'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
 
   // general gateway
   on<E=any>(event: string, callback: PubSubSubscriber<Partial<E>, AppType>) : R;

@@ -288,6 +288,38 @@ export default class Auth {
   }
 
 
+  /**
+   * 
+   * @param {import('@storecraft/core/v-api').ApiAuthChangePasswordType} params 
+   */
+  
+  changePassword = async (params) => {
+
+    const res = await fetch(
+      url(this.#sdk.config, `/auth/change-password`),
+      { 
+        method: 'post',
+        body: JSON.stringify(params),
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      }
+    );
+    
+    assert(res.ok, 'auth/error');
+
+    /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
+    const payload = await res.json();
+
+    this.#_update_and_notify_subscribers(
+      payload
+    );
+
+    return payload;
+  }
+
+
+
   signout = async () => {
     console.log('signout');
 

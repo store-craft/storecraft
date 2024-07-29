@@ -137,7 +137,7 @@ async (body) => {
   assert_zod(apiAuthChangePasswordTypeSchema, body);
 
   // Check if the user already exists
-  let existingUser = await app.db.resources.auth_users.getByEmail(body.user_id_or_email);
+  let existingUser = await app.db.resources.auth_users.get(body.user_id_or_email);
 
   assert(existingUser, 'auth/error', 401)
 

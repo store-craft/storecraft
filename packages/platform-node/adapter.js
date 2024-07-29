@@ -1,5 +1,13 @@
 import 'dotenv/config'
 import { Readable } from 'node:stream'
+import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
+
+/**
+ * @typedef {object} NodePlatformConfig Core config for `node` platform
+ * @prop {number} scrypt_keylen crypto hasher length
+ * @prop {import('node:crypto').ScryptOptions} scrypt_options crypto hasher options
+ */
+
 
 /**
  * 
@@ -21,11 +29,63 @@ import { Readable } from 'node:stream'
  */
 export class NodePlatform {
 
-  constructor() {
+  /** @type {NodePlatformConfig} */
+  #config;
+
+  /**
+   * 
+   * @param {NodePlatformConfig} config 
+   */
+  constructor(config) {
+    this.#config = config;
   }
 
   get env() {
     return process.env;
+  }
+
+  /** @type {PlatformAdapter["crypto"]} */
+  get crypto() {
+    const c = this.#config;
+
+    return {
+      hash: (password) => {
+        return new Promise(
+          (resolve, reject) => {
+            // generate random 16 bytes long salt - recommended by NodeJS Docs
+            const salt = randomBytes(16).toString("hex");
+    
+            scrypt(
+              password, salt, c.scrypt_keylen, c.scrypt_options,
+              (err, derivedKey) => {
+                  if (err) reject(err);
+                  // derivedKey is of type Buffer
+                  resolve(`${salt}.${derivedKey.toString("hex")}`);
+              }
+            );
+          }
+        );
+      },
+
+      verify: (hash, password) => {
+        return new Promise(
+          (resolve, reject) => {
+            const [salt, hashKey] = hash.split(".");
+            // we need to pass buffer values to timingSafeEqual
+            const hashKeyBuff = Buffer.from(hashKey, "hex");
+            scrypt(
+              password, salt, c.scrypt_keylen, c.scrypt_options, 
+              (err, derivedKey) => {
+                  if (err) reject(err);
+                  // compare the new supplied password with the 
+                  // hashed password using timeSafeEqual
+                  resolve(timingSafeEqual(hashKeyBuff, derivedKey));
+              }
+            );
+          }
+        );
+      }
+    }
   }
 
   /**

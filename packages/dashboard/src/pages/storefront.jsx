@@ -198,7 +198,9 @@ const Actions = (
       onClickReload={onClickReload}
       onClickSave={onClickSave}>
     <PromisableLoadingBlingButton 
-        Icon={<MdPublish/>} text='publish' 
+        Icon={<MdPublish/>} 
+        text='publish' 
+        keep_text_on_load={true}
         show={Boolean(onClickPublish)}
         onClick={onClickPublish} className='' />
   </RegularDocumentActions>  
@@ -262,23 +264,22 @@ export default (
   const publishPromise = useCallback(
     async () => {
       await savePromise();
-      const sf = await reload();
       setError(undefined)
       try {
-        await sdk.storefronts.publish(sf);
+        await sdk.storefronts.publish(documentId);
         await reload();
       } catch (e) {
-        setError({ 
-          error: {
+        setError(
+          { 
             messages: [
               {
                 message: e.toString()
               }
             ]
           }
-        })
+        )
       }
-    }, [savePromise, reload]
+    }, [savePromise, reload, documentId]
   );
 
   return (

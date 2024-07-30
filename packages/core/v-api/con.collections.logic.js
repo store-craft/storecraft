@@ -62,14 +62,14 @@ export const list_collection_products = (app) =>
  * 
  * @param {import("../types.public.js").App} app
  */
-export const export_collection = (app) => 
+export const export_collection = (app) => {
   /**
    * 
    * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
    * 
    * @return {Promise<string>}
    */
-  async (handle_or_id) => {
+  return async (handle_or_id) => {
     const collection = await inter(app).get(handle_or_id);
 
     assert(
@@ -107,7 +107,7 @@ export const export_collection = (app) =>
 
     return publish_path;
   }
-  
+}  
 
 /**
  * 

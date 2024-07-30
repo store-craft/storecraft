@@ -21,6 +21,9 @@ export default class Collections extends collection_base {
   }
 
   /**
+   * @description Export a collection of `products` into the `storage`. This is
+   * beneficial for `collections`, that hardly change and therefore can be 
+   * efficiently stored in a cost-effective `storage` and **CDN** network.
    * 
    * @param {string} collection_handle 
    * @param {number} limit 

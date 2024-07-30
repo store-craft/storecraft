@@ -205,7 +205,7 @@ const CollectionProducts = ({ value, context }) => {
                         shadow-gray-800/25 shadow-lg hover:scale-110 
                         transition-transform cursor-pointer' 
             stroke='border-2' rounded='rounded-full'
-            from='from-pink-500' to='to-kf-400'
+            from='from-pink-500' to='to-kf-500'
             onClick={() => !loading && ref_overlay.current.show()}>
           <IoMdAdd className={'text-4xl text-white ' + 
                         (loading ? 'animate-spin' : '')} />

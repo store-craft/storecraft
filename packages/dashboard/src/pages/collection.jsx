@@ -128,6 +128,7 @@ const Actions = (
     <PromisableLoadingBlingButton 
         Icon={<MdPublish />} 
         text='publish' 
+        keep_text_on_load={true}
         show={Boolean(onClickPublish)}
         onClick={onClickPublish} 
         className='' />
@@ -197,15 +198,15 @@ export default (
         await sdk.collections.publish(documentId, 400);
         await reload();
       } catch (e) {
-        setError({ 
-          error: {
+        setError(
+          { 
             messages: [
               {
                 message: e.toString()
               }
             ]
           }
-        })
+        )
       }
     }, [documentId, savePromise, reload]
   );

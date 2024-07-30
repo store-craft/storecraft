@@ -121,6 +121,18 @@ export const create_routes = (app) => {
     }
   );
 
+  // Export a collection into storage
+  polka.post(
+    '/:handle_or_id/export',
+    middle_authorize_admin,
+    async (req, res) => {
+      const { handle_or_id } = req.params;
+      const result = await app.api.storefronts.export_storefront(handle_or_id);
+
+      res.sendJson(result);
+    }
+  );
+
   return polka;
 }
 

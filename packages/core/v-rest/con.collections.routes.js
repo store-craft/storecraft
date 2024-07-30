@@ -75,6 +75,18 @@ export const create_routes = (app) => {
       
       res.sendJson(items);
     }
+  ); 
+
+  // Export a collection into storage
+  polka.post(
+    '/:collection/export',
+    middle_authorize_admin,
+    async (req, res) => {
+      const { collection } = req.params;
+      const result = await app.api.collections.export_collection(collection);
+
+      res.sendJson(result);
+    }
   );
 
   return polka;

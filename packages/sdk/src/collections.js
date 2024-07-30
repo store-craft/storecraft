@@ -1,5 +1,5 @@
 import { StorecraftSDK } from '../index.js'
-import { collection_base } from './utils.api.fetch.js';
+import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 import { filter_fields, filter_unused } from './utils.functional.js';
 
 /**
@@ -21,11 +21,25 @@ export default class Collections extends collection_base {
   }
 
   /**
+   * @description Export a collection of `products` into the `storage`. This is
+   * beneficial for `collections`, that hardly change and therefore can be 
+   * efficiently stored in a cost-effective `storage` and **CDN** network.
    * 
    * @param {string} collection_handle 
    * @param {number} limit 
    */
   publish = async (collection_handle, limit=1000) => {
+
+    const result = await fetchApiWithAuth(
+      this.sdk,
+      `collections/${collection_handle}/export`,
+      {
+        method: 'post'
+      }
+    );
+
+    return result
+
     throw new Error('Implement me !!!')
     // extra filtering for validation
 

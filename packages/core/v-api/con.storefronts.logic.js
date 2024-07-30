@@ -100,6 +100,56 @@ export const list_storefront_posts = (app) =>
 
 
 /**
+ * @description Export a storefront into the `storage`. This is
+ * beneficial for things`, that hardly change and therefore can be 
+ * efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.
+ * 
+ * 
+ * @param {import("../types.public.js").App} app
+ */
+export const export_storefront = (app) => {
+  /**
+   * 
+   * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
+   * 
+   * @return {Promise<string>}
+   */
+  return async (handle_or_id) => {
+    const sf = await inter(app).get(handle_or_id);
+
+    assert(
+      sf,
+      'export failed'
+    );
+
+    const encoder = new TextEncoder();
+    const array = encoder.encode(JSON.stringify(sf));
+
+    const key = `storefronts/${sf.handle}.json`;
+    const publish_path = `storage://${key}`;
+    const success = await app.storage.putArraybuffer(
+      key,
+      array
+    );
+
+    assert(
+      success,
+      'export failed'
+    );
+
+    await upsert(app)(
+      {
+        ...sf,
+        published: publish_path
+      }
+    );
+
+    return publish_path;
+  }
+}  
+
+
+/**
  * 
  * @param {import("../types.public.js").App} app
  */  
@@ -115,5 +165,6 @@ export const inter = app => {
     list_storefront_discounts: list_storefront_discounts(app),
     list_storefront_posts: list_storefront_posts(app),
     list_storefront_shipping_methods: list_storefront_shipping_methods(app),
+    export_storefront: export_storefront(app),
   }
 }

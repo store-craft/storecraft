@@ -6,7 +6,8 @@ import { BiImages, BiGame } from 'react-icons/bi/index.js'
 import { 
   MdPayment, MdOutlineCollectionsBookmark, 
   MdOutlineGamepad, MdOutlineLocalShipping, 
-  MdStorefront } from 'react-icons/md/index.js'
+  MdStorefront 
+} from 'react-icons/md/index.js'
 import SideMenu from './comps/side-menu.jsx'
 import ActionBar from './comps/action-bar.jsx'
 import { Bling } from './comps/common-ui.jsx'

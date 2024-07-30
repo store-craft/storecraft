@@ -162,7 +162,7 @@ const validateField = (field, value) => {
  */
 
 /**
- * @template {import('@storecraft/core/v-api').BaseType} [T={}]
+ * @template  T
  * @typedef {object} FieldViewImperativeInterface
  * @prop {(validate?: boolean) => { 
  *  data: T,

@@ -11,6 +11,16 @@ import {
   remove as sdk_remove 
 } from "@storecraft/sdk/src/utils.api.fetch.js";
 
+/**
+ * 
+ * @param {string} resource 
+ * @returns {keyof App["db"]["resources"]} 
+ */
+export const rest_resource_to_db_resource_table = resource => {
+  if(resource==='shipping')
+    return 'shipping_methods'
+  return resource;
+}
 
 /**
  * @param {import("@storecraft/core/v-api").ApiQuery} query_api
@@ -284,8 +294,10 @@ export const useCollection = (
           ...q_minus_filters
         } = q_modified;
 
+
         sdk.statistics.countOf(
-          resource, q_minus_filters
+          rest_resource_to_db_resource_table(resource), 
+          q_minus_filters
         ).then(setQueryCount).catch(console.log);
       }
 
@@ -368,7 +380,7 @@ export const useCollection = (
         return true;
 
       const count = await sdk.statistics.countOf(
-        resource, 
+        rest_resource_to_db_resource_table(resource), 
         {
           startAfter: [
             ['updated_at', max_updated_seen_item.updated_at],

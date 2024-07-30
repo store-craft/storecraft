@@ -181,7 +181,7 @@ const root_schema = {
 }
 
 const Actions = (
-  { 
+  {  
     onClickSave=undefined, onClickCreate=undefined, 
     onClickDelete=undefined, onClickPublish=undefined,
     onClickDuplicate=undefined, onClickReload,

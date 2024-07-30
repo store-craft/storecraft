@@ -49,7 +49,7 @@ export const list_collection_products = (app) =>
    * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
    * @param {import('./types.api.query.js').ApiQuery} [q] 
    */
-  (handle_or_id, q) => {
+  (handle_or_id, q={}) => {
     return db(app).list_collection_products(handle_or_id, q);
   }
 
@@ -77,11 +77,16 @@ export const export_collection = (app) =>
       'export failed'
     );
 
-    const items = await list_collection_products(app)(handle_or_id);
+    const items = await list_collection_products(app)(
+      handle_or_id,
+      {
+        limit: 400
+      }
+    );
     const encoder = new TextEncoder();
     const array = encoder.encode(JSON.stringify(items));
 
-    const key = `collections/${collection.handle}`;
+    const key = `collections/${collection.handle}.json`;
     const publish_path = `storage://${key}`;
     const success = await app.storage.putArraybuffer(
       key,

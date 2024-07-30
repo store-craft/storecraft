@@ -77,13 +77,13 @@ export const create_routes = (app) => {
     }
   );
 
-  // list a specific collection's products
-  polka.get(
+  // Export a collection into storage
+  polka.post(
     '/:collection/export',
     async (req, res) => {
       const { collection } = req.params;
       const result = await app.api.collections.export_collection(collection);
-      
+
       res.sendJson(result);
     }
   );

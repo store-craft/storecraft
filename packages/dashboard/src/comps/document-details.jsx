@@ -5,6 +5,7 @@ import { RxCopy } from 'react-icons/rx/index.js'
 import { useCallback } from 'react'
 import { write_clipboard } from '../utils/index.js'
 import { useState } from 'react'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**
  * @param {object} p
@@ -61,19 +62,48 @@ const DocumentDetails = (
   }
 ) => {
 
+  const { sdk } = useStorecraft();
+
+  const onClickPublish = useCallback(
+    async () => {
+      const blob = await sdk.storage.getBlob(
+        doc?.published?.split('storage://')?.at(-1)
+      );
+      const winUrl = URL.createObjectURL(
+        new Blob(
+          [blob], 
+          { 
+            type: 'application/json' 
+          }
+        )
+      );
+    
+      const win = window.open(
+          winUrl,
+          "_blank",
+      );
+    }, [doc, sdk]
+  );
+  
+
   if (!doc?.updated_at || !collectionId)
     return null
 
+  console.log('doc ', doc)
   const date_ = new Date(doc.updated_at);
-  const has_publish = doc._published;
+  const has_publish = doc.published;
   let dateString = date_.toLocaleDateString() + '\n (last updated)'
   let title = 'exported @ '
+
   if(collectionId==='discounts')
     title = 'collection @ '
+
   if(!has_publish) 
     title = ''
 
-    return (
+
+
+  return (
 <ShowIf show={doc}>
   <div className={`w-full flex flex-row justify-between text-sm 
                  text-gray-500 dark:text-gray-400 ${className}`} {...rest}>
@@ -84,21 +114,21 @@ const DocumentDetails = (
                        w-fit 
                        rounded-lg px-1 font-light' />
       <ShowIf show={collectionId==='discounts'}>
-        <Link to={`/pages/collections/discount-${doc?.code}`}
+        <Link to={`/pages/collections/discount-${doc?.handle}`}
               draggable='false'>
           <Span className='w-full max-w-[30rem] underline' 
-                children={doc?._published ?? ''} />
+                children={doc?.published ?? ''} />
         </Link>    
       </ShowIf>            
-      <ShowIf show={collectionId!=='discounts' && doc?._published}>
-        <div className='flex flex-row items-center gap-2'>
-          <a href={doc?._published} target='_blank' 
+      <ShowIf show={collectionId!=='discounts' && doc?.published}>
+        <div className='flex flex-row items-center gap-2 cursor-pointer'>
+          <div onClick={onClickPublish}
             draggable='false'
             rel='noopener noreferrer'>
             <Span className='w-full max-w-[30rem] underline' 
-                  children={doc?._published ?? ''} />
-          </a>
-          <ClipBoardCopy value={doc?._published ?? ''} />
+                  children={doc?.published ?? ''} />
+          </div>
+          <ClipBoardCopy value={doc?.published ?? ''} />
         </div>
       </ShowIf>            
     </div>

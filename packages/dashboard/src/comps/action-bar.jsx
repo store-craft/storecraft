@@ -72,10 +72,11 @@ const ActionBar = (
   <div className='relative w-full flex flex-row h-full justify-between items-center '>
     <AiOutlineMenuFold 
         className={
-          `text-kf-400 text-4xl top-4 right-4
+          `text-kf-500 dark:text-kf-400/70 text-4xl top-4 right-4
             cursor-pointer --md:hidden hover-text-pink-600 
             rounded-full transition-all duration-300 
-            hover:bg-pink-400 hover:text-white 
+            hover:bg-pink-400 
+            hover:text-white dark:hover:text-white 
             p-1.5 hover:p-1 
             ${menuOpen ? 'rotate-0' : 'rotate-180'}`
         }

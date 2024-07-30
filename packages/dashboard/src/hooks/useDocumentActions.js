@@ -27,7 +27,7 @@ import { App } from '@storecraft/core';
  * - Context
  * 
  * 
- * @template {{}} T The type of `document`
+ * @template T The type of `document`
  * 
  * 
  * @param {(keyof App["db"]["resources"] | 'payments/gateways' | 'extensions')} resource 
@@ -39,6 +39,7 @@ import { App } from '@storecraft/core';
  * 
  */
 export const useDocumentActions = (resource, document, slug, mode='edit', base) => {
+  
   /** 
    * @type {React.MutableRefObject<
    *  import('@/comps/fields-view.jsx').FieldViewImperativeInterface<

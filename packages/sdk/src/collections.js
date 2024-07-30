@@ -1,5 +1,5 @@
 import { StorecraftSDK } from '../index.js'
-import { collection_base } from './utils.api.fetch.js';
+import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 import { filter_fields, filter_unused } from './utils.functional.js';
 
 /**
@@ -26,6 +26,17 @@ export default class Collections extends collection_base {
    * @param {number} limit 
    */
   publish = async (collection_handle, limit=1000) => {
+
+    const result = await fetchApiWithAuth(
+      this.sdk,
+      `collections/${collection_handle}/export`,
+      {
+        method: 'post'
+      }
+    );
+
+    return result
+
     throw new Error('Implement me !!!')
     // extra filtering for validation
 

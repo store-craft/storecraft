@@ -139,10 +139,11 @@ export default ({}) => {
     <Header
         label='Performance' 
         Icon={IoStatsChart} 
+        iconClassName='text-2xl text-kf-500'
         className='--mt-10 items-baseline' />
     <Performance className='relative w-full h-fit'/>
     <Header 
-        label='Stats' 
+        label='Statistics' 
         Icon={AiFillPieChart} 
         className='mt-20 items-center' />
     <div className='flex flex-row flex-wrap gap-5 justify-left mt-8'>

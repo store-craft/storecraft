@@ -36,7 +36,9 @@ export const ResourceTitle = (
             children={resource} 
             className='bg-gradient-to-r from-kf-500 to-pink-500 
                       dark:from-kf-600 dark:to-pink-500 
-                        text-6xl font-inter inline-flex' />
+                      uppercase font-extrabold italic tracking-tighter
+                      -translate-x-2
+                      text-5xl font-inter inline-flex' />
         <Title 
             children={`let's create something `}
             className='animate-fadein'  />
@@ -51,12 +53,24 @@ export const ResourceTitle = (
   <ShowIf show={!should_onboard}>
     <div className='flex flex-col gap-3'>
     
-      <GradientText 
-          children={resource}
-          className='bg-gradient-to-r from-kf-600 to-pink-500 
-          dark:from-kf-600 dark:to-pink-500 text-5xl 
-          inline-flex tracking-wide' />
-      { overallCollectionCount!==undefined &&
+      <div className='flex flex-row items-baseline text-3xl/none'>
+        <GradientText 
+            children={resource.slice(0,3)}
+            className='bg-gradient-to-r from-kf-600 to-pink-500 
+            dark:from-kf-600 dark:to-pink-500 --text-5xl 
+            uppercase font-medium italic tracking-tighter
+            inline-flex --tracking-wide' />
+        <GradientText 
+            children={resource.slice(3)}
+            className='bg-gradient-to-r from-pink-600 to-pink-500 
+            dark:from-pink-600 dark:to-pink-500 --text-5xl 
+            uppercase font-extralight italic tracking-tighter --hidden --text-[34px]
+            -translate-x-[3px]
+            inline-flex --tracking-wide' />
+
+      </div>
+      { 
+        overallCollectionCount!==undefined &&
         <Title 
           children={`${Math.max(overallCollectionCount ?? 0, 0)} items`} 
           className={hasLoaded ? 'animate-fadein' : 'opacity-0'} /> 

@@ -68,7 +68,7 @@ export const Logo = (
     <div className='flex flex-row justify-between items-center'>
       <span children={`v${pkg.version}`} 
         className='tracking-wider text-sm font-light font-mono' />
-      <a href='docs' >
+      <a href='https://storecraft.app/docs' target='_blank' >
         <Capsule />
       </a>
   

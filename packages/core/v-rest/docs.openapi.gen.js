@@ -13,6 +13,7 @@ import {
   apiAuthSignupTypeSchema,
   apiKeyResultSchema,
   authUserTypeSchema,
+  checkoutCreateTypeSchema,
   checkoutStatusEnumSchema,
   collectionTypeSchema,
   collectionTypeUpsertSchema,
@@ -400,33 +401,9 @@ const register_base_list = (
  */
 const register_checkout = (registry) => {
   registry.register('pricingData', pricingDataSchema);
+  const _checkoutCreateTypeSchema = registry.register('checkoutCreateType', checkoutCreateTypeSchema);
 
-  const example_draft_order = {
-    "status": {
-      "checkout": {
-        "id": 0,
-        "name2": "created",
-        "name": "Created"
-      },
-      "payment": {
-        "id": 1,
-        "name": "Authorized",
-        "name2": "authorized"
-      },
-      "fulfillment": {
-        "id": 0,
-        "name2": "draft",
-        "name": "Draft"
-      }
-    },
-    "pricing": {
-      "quantity_discounted": 3,
-      "quantity_total": 5,
-      "subtotal": 100,
-      "subtotal_discount": 30,
-      "subtotal_undiscounted": 70,
-      "total": 120
-    },
+  const example_checkout = {
     "line_items": [
       {
         "id": "pr-1-id",
@@ -442,6 +419,10 @@ const register_checkout = (registry) => {
       "name": "ship a",
       "price": 30
     },
+  }
+
+  const example_draft_order = {
+    ...example_checkout,
     "id": "order_65d774c6445e4581b9e34c11",
     "search": [
       "id:order_65d774c6445e4581b9e34c11",
@@ -485,8 +466,8 @@ const register_checkout = (registry) => {
         description: 'draft `order` data',
         content: {
           "application/json": {
-            schema: orderDataSchema,
-            example: example_draft_order
+            schema: _checkoutCreateTypeSchema,
+            example: example_checkout
           }
         }
       }

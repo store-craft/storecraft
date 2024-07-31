@@ -107,7 +107,7 @@ export type StorecraftConfig = {
 }
 
 export type CORSOptions = {
-  origin: string | string[];
+  origin: string | string[] | ((origin: string) => string | undefined | null);
   allowMethods?: string[];
   allowHeaders?: string[];
   exposeHeaders?: string[];
@@ -1654,7 +1654,6 @@ export interface BaseCheckoutCreateType {
   shipping_method: Partial<ShippingMethodType>; 
 }
 
-
 /**
  * @description Checkout Create type
  */
@@ -1665,12 +1664,10 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
   coupons?: DiscountType[]; 
 }
 
-type CheckoutCreateTypeWithoutID = Omit<CheckoutCreateType, 'id'>;
-
 /**
  * @description Order type
  */
-export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
+export interface OrderData extends Omit<CheckoutCreateType, 'id'>, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -2395,4 +2392,5 @@ export type tables = 'auth_users' | 'tags' | 'collections' |
     'templates' | 'shipping_methods' | 'notifications' |
     'discounts' | 'orders' | 'search';
 
-export type QuickSearchResult = Record<tables | string, QuickSearchResource[]>;
+
+export type QuickSearchResult = Record<tables, QuickSearchResource[]>;

@@ -33,7 +33,7 @@ import { cors } from "../v-polka/cors.js";
 /**
  * 
  * @typedef {object} RestApiConfig
- * @prop {import("../v-polka/cors.js").CORSOptions} cors
+ * @prop {import("../v-polka/cors.js").CORSOptions} [cors]
  * 
  */
 

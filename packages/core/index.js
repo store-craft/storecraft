@@ -161,8 +161,6 @@ export class App {
                   env.SC_AUTH_SECRET_ACCESS_TOKEN,
       auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
                   env.SC_AUTH_SECRET_REFRESH_TOKEN,
-      auth_password_hash_rounds: c?.auth_password_hash_rounds ?? 
-                  parse_int(env.SC_AUTH_PASS_HASH_ROUNDS, 1000),
       auth_admins_emails: c?.auth_admins_emails ??  
                   env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
                     s => s.trim()).filter(Boolean) ?? [],
@@ -232,7 +230,7 @@ export class App {
 
     // this.#_api = create_api(this);
     this.api = create_api(this);
-    this.#_rest_controller = create_rest_api(this);
+    this.#_rest_controller = create_rest_api(this, this.config);
     this.#_is_ready = true;
     
     const app = this;

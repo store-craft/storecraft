@@ -229,7 +229,7 @@ const create_all = () => {
  * @param {string[]} tags 
  * @param {string} example_id 
  * @param {ZodSchema} zod_schema 
- * @param {z.infer<typeof zod_schema>} example 
+ * @param {z.infer<ZodSchema>} example 
  * @param {string} [aug_description] 
  * @param {any} [extra] 
  */
@@ -287,7 +287,7 @@ const register_base_get = (
  * @param {string[]} tags 
  * @param {string} example_id 
  * @param {ZodSchema} zod_schema 
- * @param {z.infer<typeof zod_schema>} example 
+ * @param {z.infer<ZodSchema>} example 
  * @param {string} [description] 
  * @param {string} [summary] 
  */
@@ -362,7 +362,7 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
  * @param {string} name 
  * @param {string[]} tags 
  * @param {ZodSchema} zod_schema 
- * @param {z.infer<typeof zod_schema>} example 
+ * @param {z.infer<ZodSchema>} example 
  * @param {any} [extra] 
  * @param {string} [aug_description] 
  */
@@ -453,10 +453,10 @@ const register_checkout = (registry) => {
     request: {
       query: z.object(
         {
-          gateway: z.number().openapi(
+          gateway: z.string().openapi(
             { 
               example: 'paypal_standard', 
-              description: 'The payment gateway to use' 
+              description: 'The payment gateway handle to use' 
             }
           ),
       
@@ -1972,6 +1972,7 @@ const register_images = registry => {
 const register_quick_search = registry => {
   const _quickSearchResultSchema = registry.register('quickSearchResultSchema', quickSearchResultSchema);
   const _quickSearchResourceSchema = registry.register('quickSearchResourceSchema', quickSearchResourceSchema);
+
   const example = {
     "tags": [
       {

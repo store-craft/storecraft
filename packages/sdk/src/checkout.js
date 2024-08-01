@@ -25,12 +25,16 @@ export default class Checkout {
    */
   create = async (input, gateway_handle) => {
 
+    console.log('input', input)
     const result = await fetchApiWithAuth(
       this.sdk,
       `checkout/create?gateway=${gateway_handle}`,
       {
         method: 'post',
-        body: JSON.stringify(input)
+        body: JSON.stringify(input),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     );
 
@@ -71,7 +75,10 @@ export default class Checkout {
       `checkout/pricing`,
       {
         method: 'post',
-        body: JSON.stringify(order)
+        body: JSON.stringify(order),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     );
 

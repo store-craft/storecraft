@@ -1,5 +1,6 @@
 import { 
   useCallback, useEffect, 
+  useRef, 
   useState } from 'react'
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
@@ -46,9 +47,17 @@ const NoPaymentGatewayBlues = ({}) => {
   )
 }
 
+/**
+ * 
+ * @typedef {object} ChoosePaymentGatewayParams
+ * @prop {import('../pages/order.jsx').Context} context
+ * 
+ * 
+ * @param {ChoosePaymentGatewayParams} params 
+ */
 const ChoosePaymentGateway = (
   {
-
+    context
   }
 ) => {
   // /**
@@ -62,7 +71,6 @@ const ChoosePaymentGateway = (
   //   resource_is_probably_empty
   // } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
   
-
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
    *  import('@storecraft/core/v-api').PaymentGatewayItemGet>
@@ -70,12 +78,47 @@ const ChoosePaymentGateway = (
    */
   const { 
     page, error, hasLoaded
-  } = useCollection('collections');
-  
+  } = useCollection('payments/gateways');
+  /** @type {React.LegacyRef<HTMLSelectElement>} */
+  const ref_select = useRef();
+  const create_promise = useCallback(
+    async () => {
+      const pg_handle = ref_select.current.value;
+      console.log('pg_handle', pg_handle)
+      await context.create_checkout(pg_handle);
+    }, [context]
+  );
+
   return (
-    <div>
+    <div className='w-full h-fit flex flex-col gap-2'>
       <p className='text-base' 
         children='Choose Payment Gateway' />
+      <div className='w-full flex flex-row flex-wrap justify-between items-center'>
+        <select 
+            ref={ref_select}
+            name='pg' 
+            className='h-8 px-1 rounded-md text-sm 
+                      bg-slate-50 dark:bg-slate-800 
+                      border shelf-border-color focus:outline-none'>
+          {
+            page?.map(
+              (pg) => (
+                <option value={pg.handle} children={pg.info.name} />
+              )
+            )
+          }
+        </select>
+
+        <PromisableLoadingButton  
+          Icon={undefined} 
+          text='create checkout' 
+          show={true} 
+          onClick={create_promise}
+          keep_text_on_load={true}
+          classNameLoading='text-xs'
+          className='w-fit text-base shelf-text-label-color underline self-end '/>
+        
+      </div>  
 
     </div>
   )
@@ -182,11 +225,11 @@ const OrderPaymentGateway = (
   );
 
   if(!value?.gateway_handle) {
-    if(!context.data.id)
-      return <PleaseSave/>
+    // if(!context.data.id)
+    //   return <PleaseSave/>
 
     return (
-      <ChoosePaymentGateway />
+      <ChoosePaymentGateway context={context} />
     )
 
   }

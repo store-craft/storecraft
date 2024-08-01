@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import useTrigger from "./useTrigger.js"
 import { useStorecraft } from "./useStorecraft.js";
 import { useDocumentCache } from "./useStorecraftCache.js";
@@ -63,12 +63,83 @@ export function useDocument(
     , [trigger]
   );
 
+  console.log('resource', resource)
+  console.log('document', document)
+
+  const location = useRef([resource, document])
+  useEffect(
+    () => {
+      location.current = [resource, document];
+    },  [resource, document]
+  );
+
+  const reload_hard = useRef(
+    async (try_cache=true) => {
+      const resource = location.current[0];
+      const document = location.current[1];
+
+      if(!(resource && document)) {
+        throw 'no doc id';
+      }
+
+      setLoading(true);
+      setError(undefined);
+      setOp('load');
+
+      try {
+
+        /** @type {T} */
+        let item;
+
+        if(try_cache) {
+          item = await cache_document_get(document);
+          
+          // found in cache
+          if(item) {
+            // background fetch from server
+            sdk_get(sdk, resource, document)
+            .then(
+              /** @param {T} item_server  */
+              item_server => {
+                cache_document_put(item_server);
+                setData(item_server);
+              }
+            );
+          }
+
+        }
+
+        if(!item) {
+          item = await sdk_get(sdk, resource, document);
+
+          cache_document_put(item);
+        }
+
+        // console.log('item', item)
+        setData(item);
+        setHasLoaded(true);
+
+        return item;
+      } catch (e) {
+        console.log(e);
+
+        setError(e);
+        throw e;
+      } finally {
+        setLoading(false);
+      }
+
+    }
+  );
+
   const reload = useCallback(
     async (try_cache=true) => {
 
-      console.log('chill')
-      if(!(resource && document))
+      if(!(resource && document)) {
+        console.log('resource', resource)
+        console.log('document', document)
         throw 'no doc id';
+      }
 
       setLoading(true);
       setError(undefined);
@@ -197,7 +268,7 @@ export function useDocument(
       if (autoLoad) 
         reload(try_cache_on_autoload);
       
-    }, [autoLoad, reload]
+    }, [autoLoad, reload, resource, document]
   );
 
   return {
@@ -210,7 +281,7 @@ export function useDocument(
     resource,
     document,
     actions: { 
-      reload, upsert, 
+      reload, reload_hard, upsert, 
       remove, 
       setError,
     }

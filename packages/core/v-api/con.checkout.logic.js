@@ -4,6 +4,8 @@ import {
 } from "../index.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
 import { enums } from "./index.js";
+import { assert_zod } from "./middle.zod-validate.js";
+import { checkoutCreateTypeSchema } from "./types.autogen.zod.api.js";
 import { assert } from "./utils.func.js";
 
 
@@ -198,6 +200,11 @@ export const create_checkout = app =>
  * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
+
+  assert_zod(
+    checkoutCreateTypeSchema.transform(x => x ?? undefined), 
+    order_checkout
+  );
 
   // get gateway and verify
   const gateway = app.gateway(gateway_handle);

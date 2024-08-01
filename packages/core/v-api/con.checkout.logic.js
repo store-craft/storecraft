@@ -217,7 +217,7 @@ async (order_checkout, gateway_handle) => {
   // eval pricing with discounts
   const order_priced = await eval_pricing(app)(order_validated);
   
-  /**@type {OrderData} */
+  /**@type {import("./types.api.js").OrderDataUpsert} */
   const order = {
     ...order_priced,
     status : {
@@ -228,7 +228,7 @@ async (order_checkout, gateway_handle) => {
       // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
-    id: undefined
+    // id: undefined
   }
   
 
@@ -274,7 +274,7 @@ async (order_checkout, gateway_handle) => {
  * 
  * 
  * @param {App<any, any, any, D, E, F>} app 
- * @param {OrderData} order 
+ * @param {import("./types.api.js").OrderDataUpsert} order 
  */
 const reserve_stock_of_order = async (app, order) => {
   await app.api.products.changeStockOfBy(

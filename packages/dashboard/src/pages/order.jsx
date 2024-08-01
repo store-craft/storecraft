@@ -318,10 +318,17 @@ export default (
     context, key, 
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
-    ref_head, ref_root, 
+    ref_head, ref_root, sdk
   } = useDocumentActions(
     'orders', documentId, '/pages/orders', mode, base
   );
+
+  const create_checkout = useCallback(
+    async () => {
+      sdk.collections
+    }, []
+  );
+
 
   const duplicate_mod = useCallback(
     () => {

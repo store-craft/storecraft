@@ -32,7 +32,7 @@ import { useNavigate, useParams } from 'react-router-dom'
  * 
  * This hook wraps `useCollection` hook
  * 
- * @template {Partial<import('@storecraft/core/v-api').BaseType>} T
+ * @template {Partial<import('@storecraft/core/v-api').BaseType> | any} [T=any]
  * 
  * @param {((keyof App["db"]["resources"]) | 'payments/gateways' | 'extensions')} resource the collection id in backend 
  * @param {string} [slug] front end slug

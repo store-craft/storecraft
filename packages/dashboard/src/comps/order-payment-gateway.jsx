@@ -4,7 +4,7 @@ import {
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'
-import { useStorecraft } from '@storecraft/sdk-react-hooks'
+import { useCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
 import { format_storecraft_errors } from './error-message.jsx'
 
 
@@ -43,6 +43,48 @@ const NoPaymentGatewayBlues = ({}) => {
   return (
     <p className='text-base' 
       children='No Payment Gateway is linked to this order !!!' />
+  )
+}
+
+const ChoosePaymentGateway = (
+  {
+
+  }
+) => {
+  // /**
+  //  * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
+  //  *  import('@storecraft/core/v-api').PaymentGatewayItemGet>
+  //  * }
+  //  */ 
+  // const { 
+  //   context, page, loading, 
+  //   error, queryCount, hasLoaded, resource,
+  //   resource_is_probably_empty
+  // } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
+  
+
+  /**
+   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
+   *  import('@storecraft/core/v-api').PaymentGatewayItemGet>
+   * }
+   */
+  const { 
+    page, error, hasLoaded
+  } = useCollection('collections');
+  
+  return (
+    <div>
+      <p className='text-base' 
+        children='Choose Payment Gateway' />
+
+    </div>
+  )
+}
+
+const PleaseSave = ({}) => {
+  return (
+    <p className='text-base' 
+      children='To create a payment checkout, first save the order' />
   )
 }
 
@@ -127,8 +169,6 @@ const OrderPaymentGateway = (
 
         setStatus(stat);
 
-        console.log('stat', stat)
-
       } catch (e) {
         setError(format_storecraft_errors(e)?.at(0));
       }
@@ -141,10 +181,15 @@ const OrderPaymentGateway = (
     }, []
   );
 
-  if(!value?.gateway_handle)
+  if(!value?.gateway_handle) {
+    if(!context.data.id)
+      return <PleaseSave/>
+
     return (
-      <NoPaymentGatewayBlues />
+      <ChoosePaymentGateway />
     )
+
+  }
 
   return (
 <div {...comp_params}>

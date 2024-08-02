@@ -1,7 +1,7 @@
 import { 
   useCallback, useEffect, 
-  useRef, 
-  useState } from 'react'
+  useRef, useState 
+} from 'react'
 import { PromisableLoadingButton } from './common-button.jsx'
 import MDView from './md-view.jsx'
 import { HR } from './common-ui.jsx'
@@ -84,7 +84,6 @@ const ChoosePaymentGateway = (
   const create_promise = useCallback(
     async () => {
       const pg_handle = ref_select.current.value;
-      console.log('pg_handle', pg_handle)
       await context.create_checkout(pg_handle);
     }, [context]
   );

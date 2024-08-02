@@ -20,7 +20,10 @@ export type PaymentGatewayActionHandler<CheckoutCreateResult, Extra> =
  * @description checkout complete result, I am still unsure about it, but currently
  * it holds new `payment` and `checkout` status
  */
-export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfillment">>;
+export type OnCheckoutCompleteResult = {
+  status: Partial<Omit<OrderData["status"], "fulfillment">>,
+  onCheckoutComplete: any
+};
 
 
 /**
@@ -103,13 +106,26 @@ export declare interface payment_gateway<
    * proceed to synchronous completion
    * 
    * 
-   * @param create_result the result of checkout creation, 
+   * @param checkout_create_result the result of checkout creation, 
    * use it to know the gateays order id etc..
    * @param extra_client_payload `anything` the client might send
    * 
    */
-  onCheckoutComplete: (create_result: CheckoutCreateResult, extra_client_payload: any) => 
+  onCheckoutComplete: (checkout_create_result: CheckoutCreateResult, extra_client_payload: any) => 
                   Promise<OnCheckoutCompleteResult>;
+
+
+  /**
+   * 
+   * @description (Optional) After a `checkout` is created, you can send a buy link with
+   * HTML UI to a customer to complete a `checkout`.
+   * 
+   * @param order `storecraft` order. use the `order.payment_gateway.onCheckoutCreate`
+   * to identify the gateway transaction.
+   * 
+   * @returns {Promise<string>} returns `html` string
+   */
+  onBuyLinkHtml?: (order: Partial<OrderData>) => Promise<string>
 
   /**
    * 

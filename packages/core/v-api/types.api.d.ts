@@ -2031,6 +2031,12 @@ export type OrderPaymentGatewayData = {
   on_checkout_create?: any;
 
   /** 
+   * @description Result of gateway at checkout completion, this will be used
+   * for debugging purposes and observability.
+   */
+  on_checkout_complete?: any;
+
+  /** 
    * @description Latest status of payment for caching 
    */
   latest_status?: PaymentGatewayStatus; 

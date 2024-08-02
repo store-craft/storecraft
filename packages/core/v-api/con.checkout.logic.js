@@ -333,18 +333,20 @@ async (checkoutId, client_payload) => {
 
   assert(gateway, `gateway not found`, 400);
 
-  const order_status = await gateway.onCheckoutComplete(
+  const on_checkout_complete = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create, client_payload
   );
 
   order.status = {
     ...order.status,
-    ...order_status
+    ...on_checkout_complete.status
   }
 
   order.payment_gateway.latest_status = await gateway.status(
     order.payment_gateway?.on_checkout_create
   );
+
+  order.payment_gateway.on_checkout_complete = on_checkout_complete;
 
   if(
       (order.status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&

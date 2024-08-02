@@ -364,8 +364,6 @@ export const Card = (
           value={desc} 
           className='text-sm shelf-text-minor-light mt-3 
                     tracking-wider --whitespace-pre-line'/>
-      {/* <p children={desc} className='text-sm shelf-text-minor-light mt-3 
-                tracking-wider whitespace-pre-line'/> */}
       <HR className='mt-3 --mb-5'  />
     </ShowIf>
 
@@ -377,7 +375,7 @@ export const Card = (
                   text-red-700 dark:text-red-400
                   bg-red-400/25 border border-red-400 rounded-md p-3 mt-5 '>
         <BiErrorCircle className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 
-        <MDView value={error} className='mx-3' />
+        <MDView value={error} className='mx-3 overflow-auto' />
         {/* <div children={error} className='mx-3' /> */}
         <IoClose 
             className='flex-inline absolute top-1 right-1 

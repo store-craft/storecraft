@@ -4,8 +4,8 @@ import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 
 /**
  * @typedef {object} NodePlatformConfig Core config for `node` platform
- * @prop {number} scrypt_keylen crypto hasher length
- * @prop {import('node:crypto').ScryptOptions} scrypt_options crypto hasher options
+ * @prop {number} [scrypt_keylen] crypto hasher length
+ * @prop {import('node:crypto').ScryptOptions} [scrypt_options] crypto hasher options
  */
 
 
@@ -34,9 +34,9 @@ export class NodePlatform {
 
   /**
    * 
-   * @param {NodePlatformConfig} config 
+   * @param {NodePlatformConfig} [config={}] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#config = {
       ...config,
       scrypt_keylen: config?.scrypt_keylen ?? 64

@@ -63,9 +63,6 @@ export function useDocument(
     , [trigger]
   );
 
-  console.log('resource', resource)
-  console.log('document', document)
-
   const location = useRef([resource, document])
   useEffect(
     () => {

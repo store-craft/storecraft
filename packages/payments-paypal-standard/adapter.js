@@ -1,6 +1,7 @@
 import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js';
 import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
 import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
+import html_buy_ui from './adapter.html.js';
 
 /**
  * @typedef {import('./types.private.js').paypal_order} CreateResult
@@ -37,7 +38,7 @@ export class PaypalStandard {
       default_currency_code: 'USD',
       env: 'prod',
       intent_on_checkout: 'AUTHORIZE',
-      ...config
+      ...config,
     }
 
     const is_valid = config.client_id && config.secret;
@@ -105,6 +106,20 @@ export class PaypalStandard {
   }
 
   /**
+   * @description (Optional) buy link ui
+   * 
+   * @param {Partial<OrderData>} order 
+   * 
+   * @return {Promise<string>} html 
+   */
+  async onBuyLinkHtml(order) {
+
+    return html_buy_ui(
+      this.config.client_id, order
+    )
+  }
+
+  /**
    * @description TODO: the user prefers to capture intent instead
    * 
    * @param {OrderData} order 
@@ -131,11 +146,12 @@ export class PaypalStandard {
 
     const response = await fetch_with_auth(
       this.config, 'v2/checkout/orders', {
-        method: 'post', body: JSON.stringify(body),
+        method: 'post', 
+        body: JSON.stringify(body),
       }
     );
 
-    throw_bad_response(response);
+    await throw_bad_response(response);
 
     /** @type {CreateResult} */
     const json = await response.json();
@@ -147,7 +163,7 @@ export class PaypalStandard {
    * 
    * @param {CreateResult} create_result 
    * 
-   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>} create_result 
+   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>}  
    */
   async onCheckoutComplete(create_result) {
     // the url based on authorize or capture intent
@@ -159,25 +175,31 @@ export class PaypalStandard {
       { method: 'post' }
     );
 
-    throw_bad_response(response);
+    await throw_bad_response(response);
     
-    /** @type {import('./types.private.js').paypal_order_authorize_response} */
+    /** @type {import('./types.private.js').paypal_order} */
     const payload = await response.json();
     
+    let status;
     switch(payload.status) {
       case 'COMPLETED':
-        return {
+        status = {
           payment: PaymentOptionsEnum.authorized,
           checkout: CheckoutStatusEnum.complete
         }
       case 'PAYER_ACTION_REQUIRED':
-        return {
+        status = {
           checkout: CheckoutStatusEnum.requires_action
         }
       default:
-        return {
+        status = {
           checkout: CheckoutStatusEnum.failed
         }
+    }
+
+    return {
+      status,
+      onCheckoutComplete: payload
     }
   }
 
@@ -278,7 +300,7 @@ export class PaypalStandard {
       { method: 'get' }
     );
 
-    throw_bad_response(response);
+    await throw_bad_response(response);
 
     /** @type {import('./types.private.js').paypal_order} */
     const jsonData = await response.json();
@@ -302,7 +324,7 @@ export class PaypalStandard {
       { method: 'post' }
     );
 
-    throw_bad_response(response);
+    await throw_bad_response(response);
     
     return this.status(create_result);
   }  
@@ -322,7 +344,7 @@ export class PaypalStandard {
       { method: 'post' }
     );
 
-    throw_bad_response(response);
+    await throw_bad_response(response);
     
     return this.status(create_result);
   }    
@@ -342,7 +364,7 @@ export class PaypalStandard {
       { method: 'post' }
     );
 
-    throw_bad_response(response);
+    await throw_bad_response(response);
     
     return this.status(create_result);
   }

@@ -44,8 +44,8 @@ export const getAccessToken = async (config) => {
       },
     }
   );
-
-  throw_bad_response(response);
+ 
+  await throw_bad_response(response);
 
   const jsonData = await response.json()
   // current_auth.latest_auth_response = jsonData

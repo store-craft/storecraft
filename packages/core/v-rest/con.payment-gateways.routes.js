@@ -2,7 +2,7 @@ import { Polka } from '../v-polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
 import { 
   get_payment_gateway, invoke_payment_action_on_order, 
-  list_payment_gateways, payment_status_of_order 
+  list_payment_gateways, payment_buy_ui, payment_status_of_order 
 } from '../v-payments/con.payment-gateways.logic.js'
 
 
@@ -70,6 +70,18 @@ export const create_routes = (app) => {
       );
       
       res.sendJson(r);
+    }
+  );
+
+  polka.get(
+    '/buy_ui/:order_id',
+    async (req, res) => {
+      const { order_id } = req.params;
+      const r = await payment_buy_ui(
+        app, order_id
+      );
+      
+      res.sendHtml(r);
     }
   );
 

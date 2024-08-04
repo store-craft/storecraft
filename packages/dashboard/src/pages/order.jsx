@@ -22,7 +22,7 @@ import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
 import { PaymentOptionsEnum, FulfillOptionsEnum, 
   CheckoutStatusEnum } from '@storecraft/core/v-api/types.api.enums.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 const contact_schema = {
   name:'🙋🏻‍♂️ Contact Info', key: 'contact', 
@@ -282,14 +282,12 @@ const root_schema = {
 
 /**
  * 
- * @typedef {object} State Intrinsic state of `tag`
+ * @typedef {object} Context Intrinsic state of `tag`
  * @property {import('@storecraft/core/v-api').OrderData} data
  * @property {boolean} hasChanged
+ * @property {(gateay: string) => Promise<any>} create_checkout
  * 
  *
- * @typedef { import('./index.jsx').BaseDocumentContext<State>
- * } Context Public `tag` context
- * 
  */
 
 /**
@@ -302,7 +300,7 @@ export default (
    mode, ...rest
  }
 ) => {
-                   
+
   const { id : documentId, base } = useParams();
 
   /** 
@@ -313,14 +311,61 @@ export default (
   const {
     actions: {
       savePromise, deletePromise, reload, setError,
-      duplicate
+      duplicate, reload_hard
     },
-    context, key, 
+    context: context_, key, 
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
-    ref_head, ref_root, 
+    ref_head, ref_root, sdk
   } = useDocumentActions(
     'orders', documentId, '/pages/orders', mode, base
+  );
+
+  console.log('documentId', documentId)
+  console.log('doc', doc)
+  const create_checkout = useCallback(
+    /**
+     * @param {string} gateway_handle 
+     */
+    async (gateway_handle) => {
+      const doc_after_save = await savePromise();
+      try {
+        const response = await sdk.checkout.create(
+          doc_after_save, 
+          gateway_handle
+        );
+
+        const valid_errors = response?.validation;
+        console.log('valid_errors', valid_errors)
+        if(Boolean(valid_errors?.length)) {
+          setError({messages: valid_errors});
+          return;
+        }
+
+      } catch (e) {
+        console.log('e', e)
+        setError(e);
+        return;
+      }
+      console.log('reload');
+      try {
+        await reload_hard.current(false);
+        // const order = await reload(false);
+        // console.log('order', order)
+
+      } catch(e) {
+        console.log('ee', e)
+      }
+    }, [savePromise, setError, sdk]
+  );
+
+  const context = useMemo(
+    () => {
+      return {
+        ...context_,
+        create_checkout
+      }
+    }, [context_, create_checkout]
   );
 
   const duplicate_mod = useCallback(

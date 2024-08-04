@@ -26,6 +26,13 @@ const config = {
 new PaypalStandard(config);
 ```
 
+## Developer info and test
+
+Integration examples
+- https://developer.paypal.com/studio/checkout/standard/integrate
+
+Credit Card Generator
+- https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator
 
 ## todo:
 - Add tests

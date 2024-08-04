@@ -176,18 +176,24 @@ export class DummyPayments {
       `payment with ID=${create_result} is not in a good state !!!`
     );
 
+    /** @type {DummyPaymentData} */
+    const updated_entry = {
+      ...payment,
+      status: this.config.intent_on_checkout==='AUTHORIZE' ? 'authorized' : 'captured',
+    }
+    
     await this.db.set(
       payment.id,
-      {
-        ...payment,
-        status: this.config.intent_on_checkout==='AUTHORIZE' ? 'authorized' : 'captured',
-      }
+      updated_entry
     );
 
     return {
-      payment: this.config.intent_on_checkout==='AUTHORIZE' ? 
-            PaymentOptionsEnum.authorized : PaymentOptionsEnum.captured,
-      checkout: CheckoutStatusEnum.complete
+      status: {
+        payment: this.config.intent_on_checkout==='AUTHORIZE' ? 
+              PaymentOptionsEnum.authorized : PaymentOptionsEnum.captured,
+        checkout: CheckoutStatusEnum.complete
+      },
+      onCheckoutComplete: updated_entry
     }
   }
 

@@ -1,6 +1,3 @@
-import { db_driver } from "../v-database/types.public.js";
-import { CORSOptions } from "../v-polka/cors.js";
-
 /**
  * 
  * @description Basic config for `storecraft`
@@ -107,6 +104,15 @@ export type StorecraftConfig = {
    * 
    */
   cors?: CORSOptions;
+}
+
+export type CORSOptions = {
+  origin: string | string[];
+  allowMethods?: string[];
+  allowHeaders?: string[];
+  exposeHeaders?: string[];
+  maxAge?: number;
+  credentials?: boolean;
 }
 
 
@@ -1616,6 +1622,12 @@ export type NotificationActionUrlParams = {
  * @description Base Checkout type
  */
 export interface BaseCheckoutCreateType {
+
+  /** 
+   * @description `ID` in case we are converting a draft order to a checkout 
+   */
+  id?: string;
+
   /** 
    * @description Buyer info 
    */
@@ -1642,6 +1654,7 @@ export interface BaseCheckoutCreateType {
   shipping_method: Partial<ShippingMethodType>; 
 }
 
+
 /**
  * @description Checkout Create type
  */
@@ -1652,10 +1665,12 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
   coupons?: DiscountType[]; 
 }
 
+type CheckoutCreateTypeWithoutID = Omit<CheckoutCreateType, 'id'>;
+
 /**
  * @description Order type
  */
-export interface OrderData extends CheckoutCreateType, BaseType {
+export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -2016,6 +2031,12 @@ export type OrderPaymentGatewayData = {
   on_checkout_create?: any;
 
   /** 
+   * @description Result of gateway at checkout completion, this will be used
+   * for debugging purposes and observability.
+   */
+  on_checkout_complete?: any;
+
+  /** 
    * @description Latest status of payment for caching 
    */
   latest_status?: PaymentGatewayStatus; 
@@ -2351,7 +2372,7 @@ export interface TemplateType extends BaseType {
   /**
    * @description A reference example input for the template
    */
-  reference_example_input?: object;
+  reference_example_input?: any;
 }
 
 /**
@@ -2375,7 +2396,9 @@ export type QuickSearchResource = {
  * @description full result of quick search
  * 
  */
-export type tables = keyof db_driver["resources"];
+export type tables = 'auth_users' | 'tags' | 'collections' | 
+    'customers' | 'products' | 'storefronts' | 'images' | 'posts' |
+    'templates' | 'shipping_methods' | 'notifications' |
+    'discounts' | 'orders' | 'search';
 
-
-export type QuickSearchResult = Record<tables, QuickSearchResource[]>;
+export type QuickSearchResult = Record<tables | string, QuickSearchResource[]>;

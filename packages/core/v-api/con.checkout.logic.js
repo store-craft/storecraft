@@ -4,6 +4,8 @@ import {
 } from "../index.js";
 import { calculate_pricing } from "./con.pricing.logic.js";
 import { enums } from "./index.js";
+import { assert_zod } from "./middle.zod-validate.js";
+import { checkoutCreateTypeSchema } from "./types.autogen.zod.api.js";
 import { assert } from "./utils.func.js";
 
 
@@ -199,6 +201,11 @@ export const create_checkout = app =>
  */
 async (order_checkout, gateway_handle) => {
 
+  assert_zod(
+    checkoutCreateTypeSchema.transform(x => x ?? undefined), 
+    order_checkout
+  );
+
   // get gateway and verify
   const gateway = app.gateway(gateway_handle);
 
@@ -217,7 +224,7 @@ async (order_checkout, gateway_handle) => {
   // eval pricing with discounts
   const order_priced = await eval_pricing(app)(order_validated);
   
-  /**@type {OrderData} */
+  /**@type {import("./types.api.js").OrderDataUpsert} */
   const order = {
     ...order_priced,
     status : {
@@ -228,7 +235,7 @@ async (order_checkout, gateway_handle) => {
       // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
-    id: undefined
+    // id: undefined
   }
   
 
@@ -274,7 +281,7 @@ async (order_checkout, gateway_handle) => {
  * 
  * 
  * @param {App<any, any, any, D, E, F>} app 
- * @param {OrderData} order 
+ * @param {import("./types.api.js").OrderDataUpsert} order 
  */
 const reserve_stock_of_order = async (app, order) => {
   await app.api.products.changeStockOfBy(
@@ -326,18 +333,20 @@ async (checkoutId, client_payload) => {
 
   assert(gateway, `gateway not found`, 400);
 
-  const order_status = await gateway.onCheckoutComplete(
+  const on_checkout_complete = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create, client_payload
   );
 
   order.status = {
     ...order.status,
-    ...order_status
+    ...on_checkout_complete.status
   }
 
   order.payment_gateway.latest_status = await gateway.status(
     order.payment_gateway?.on_checkout_create
   );
+
+  order.payment_gateway.on_checkout_complete = on_checkout_complete.onCheckoutComplete;
 
   if(
       (order.status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&

@@ -56,7 +56,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
   const { 
     doc: doc_original, loading, hasLoaded, error, op, sdk,
     actions: { 
-      reload, upsert, setError, remove,
+      reload, reload_hard,  upsert, setError, remove,
     }
   } = useDocument(resource, document);
 
@@ -211,7 +211,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
 
   return {
     actions: {
-      reloadPromise, savePromise, deletePromise, duplicate, 
+      reloadPromise, reload_hard, savePromise, deletePromise, duplicate, 
       navWithState, reload, setError
     },
     error, key, ref_head, ref_root, doc, sdk,

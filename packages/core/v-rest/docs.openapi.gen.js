@@ -13,6 +13,7 @@ import {
   apiAuthSignupTypeSchema,
   apiKeyResultSchema,
   authUserTypeSchema,
+  checkoutCreateTypeSchema,
   checkoutStatusEnumSchema,
   collectionTypeSchema,
   collectionTypeUpsertSchema,
@@ -228,7 +229,7 @@ const create_all = () => {
  * @param {string[]} tags 
  * @param {string} example_id 
  * @param {ZodSchema} zod_schema 
- * @param {z.infer<typeof zod_schema>} example 
+ * @param {z.infer<ZodSchema>} example 
  * @param {string} [aug_description] 
  * @param {any} [extra] 
  */
@@ -286,7 +287,7 @@ const register_base_get = (
  * @param {string[]} tags 
  * @param {string} example_id 
  * @param {ZodSchema} zod_schema 
- * @param {z.infer<typeof zod_schema>} example 
+ * @param {z.infer<ZodSchema>} example 
  * @param {string} [description] 
  * @param {string} [summary] 
  */
@@ -361,7 +362,7 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
  * @param {string} name 
  * @param {string[]} tags 
  * @param {ZodSchema} zod_schema 
- * @param {z.infer<typeof zod_schema>} example 
+ * @param {z.infer<ZodSchema>} example 
  * @param {any} [extra] 
  * @param {string} [aug_description] 
  */
@@ -400,33 +401,9 @@ const register_base_list = (
  */
 const register_checkout = (registry) => {
   registry.register('pricingData', pricingDataSchema);
+  const _checkoutCreateTypeSchema = registry.register('checkoutCreateType', checkoutCreateTypeSchema);
 
-  const example_draft_order = {
-    "status": {
-      "checkout": {
-        "id": 0,
-        "name2": "created",
-        "name": "Created"
-      },
-      "payment": {
-        "id": 1,
-        "name": "Authorized",
-        "name2": "authorized"
-      },
-      "fulfillment": {
-        "id": 0,
-        "name2": "draft",
-        "name": "Draft"
-      }
-    },
-    "pricing": {
-      "quantity_discounted": 3,
-      "quantity_total": 5,
-      "subtotal": 100,
-      "subtotal_discount": 30,
-      "subtotal_undiscounted": 70,
-      "total": 120
-    },
+  const example_checkout = {
     "line_items": [
       {
         "id": "pr-1-id",
@@ -442,6 +419,10 @@ const register_checkout = (registry) => {
       "name": "ship a",
       "price": 30
     },
+  }
+
+  const example_draft_order = {
+    ...example_checkout,
     "id": "order_65d774c6445e4581b9e34c11",
     "search": [
       "id:order_65d774c6445e4581b9e34c11",
@@ -472,10 +453,10 @@ const register_checkout = (registry) => {
     request: {
       query: z.object(
         {
-          gateway: z.number().openapi(
+          gateway: z.string().openapi(
             { 
               example: 'paypal_standard', 
-              description: 'The payment gateway to use' 
+              description: 'The payment gateway handle to use' 
             }
           ),
       
@@ -485,8 +466,8 @@ const register_checkout = (registry) => {
         description: 'draft `order` data',
         content: {
           "application/json": {
-            schema: orderDataSchema,
-            example: example_draft_order
+            schema: _checkoutCreateTypeSchema,
+            example: example_checkout
           }
         }
       }
@@ -1991,6 +1972,7 @@ const register_images = registry => {
 const register_quick_search = registry => {
   const _quickSearchResultSchema = registry.register('quickSearchResultSchema', quickSearchResultSchema);
   const _quickSearchResourceSchema = registry.register('quickSearchResourceSchema', quickSearchResourceSchema);
+
   const example = {
     "tags": [
       {
@@ -3107,6 +3089,29 @@ const register_payments = registry => {
     ...apply_security()
   });  
  
+  registry.registerPath({
+    method: 'get',
+    path: `/payments/buy_ui/{order_id}`,
+    summary: `Get a Pay UI`,
+    description: `First, make sure, that checkout creation took place. either through the rest-api or through the dashboard`,
+    tags,
+    request: {
+      params: z.object({
+        order_id: z.string().openapi(
+          { 
+            description: `The \`id\` of the order`
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `HTML you can use to complete a checkout`,
+      },
+      ...error() 
+    },
+  });  
+   
   
   registry.registerPath({
     method: 'post',

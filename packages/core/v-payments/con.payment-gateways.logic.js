@@ -56,7 +56,7 @@ export const list_payment_gateways = (app) => {
 
 
 /**
- * return the `status` of payment of an order
+ * @description return the `status` of payment of an order
  * 
  * 
  * @template PlatformNativeRequest
@@ -80,6 +80,41 @@ export const payment_status_of_order = async (app, order_id) => {
   const r = await gateway.status(
     order?.payment_gateway?.on_checkout_create
   );
+  return r;
+}
+
+/**
+ * @description return the `html` ui of payment of an order after
+ * a `checkout` was created
+ * 
+ * 
+ * @template PlatformNativeRequest
+ * @template PlatformContext
+ * 
+ * 
+ * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {string} order_id the ID of the order
+ * 
+ */
+export const payment_buy_ui = async (app, order_id) => {
+  const order = await app.api.orders.get(order_id);
+
+  assert(order, `Order ${order_id} not found`, 400);
+
+  const gateway_handle = order.payment_gateway?.gateway_handle;
+  const gateway = app.gateway(gateway_handle);
+
+  assert(gateway, `gateway ${gateway_handle} not found`, 400);
+  assert(
+    'onBuyLinkHtml' in gateway, 
+    `gateway ${gateway_handle} does not support buy UI`, 
+    400
+  );
+
+  const r = await gateway.onBuyLinkHtml(
+    order
+  );
+
   return r;
 }
 

@@ -22,11 +22,18 @@ export const app = new App(
     storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games'
+    general_store_website: 'https://wush.games',
   }
 ).withPaymentGateways(
   {
-    'paypal_standard': new PaypalStandard({ client_id: 'blah', secret: 'blah 2', env: 'prod' }),
+    'paypal_standard': new PaypalStandard(
+      { 
+        client_id: process.env.PAYPAL_CLIENT_ID, 
+        secret: process.env.PAYPAL_SECRET, 
+        intent_on_checkout: 'AUTHORIZE',
+        env: 'test' 
+      }
+    ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
   }
 );

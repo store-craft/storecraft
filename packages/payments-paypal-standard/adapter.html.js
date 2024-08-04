@@ -33,6 +33,7 @@ export default function html_buy_ui(config, order_data) {
     const resultMessage = (msg) => {
       document.getElementById('result-message').innerHTML = msg
       console.log(msg);
+      
     }
 
     window.paypal

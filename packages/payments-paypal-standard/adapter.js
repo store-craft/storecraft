@@ -115,7 +115,7 @@ export class PaypalStandard {
   async onBuyLinkHtml(order) {
 
     return html_buy_ui(
-      this.config.client_id, order
+      this.config, order
     )
   }
 
@@ -187,14 +187,17 @@ export class PaypalStandard {
           payment: PaymentOptionsEnum.authorized,
           checkout: CheckoutStatusEnum.complete
         }
+        break;
       case 'PAYER_ACTION_REQUIRED':
         status = {
           checkout: CheckoutStatusEnum.requires_action
         }
+        break;
       default:
         status = {
           checkout: CheckoutStatusEnum.failed
         }
+        break;
     }
 
     return {

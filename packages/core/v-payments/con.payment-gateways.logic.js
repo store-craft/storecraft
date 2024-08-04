@@ -105,7 +105,11 @@ export const payment_buy_ui = async (app, order_id) => {
   const gateway = app.gateway(gateway_handle);
 
   assert(gateway, `gateway ${gateway_handle} not found`, 400);
-  assert('onBuyLinkHtml' in gateway, `gateway ${gateway_handle} does not support buy UI`, 400);
+  assert(
+    'onBuyLinkHtml' in gateway, 
+    `gateway ${gateway_handle} does not support buy UI`, 
+    400
+  );
 
   const r = await gateway.onBuyLinkHtml(
     order

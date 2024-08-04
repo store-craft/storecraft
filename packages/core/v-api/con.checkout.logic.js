@@ -346,7 +346,7 @@ async (checkoutId, client_payload) => {
     order.payment_gateway?.on_checkout_create
   );
 
-  order.payment_gateway.on_checkout_complete = on_checkout_complete;
+  order.payment_gateway.on_checkout_complete = on_checkout_complete.onCheckoutComplete;
 
   if(
       (order.status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&

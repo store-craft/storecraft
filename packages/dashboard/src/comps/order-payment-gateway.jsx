@@ -154,7 +154,7 @@ const OrderPaymentGateway = (
   const [status, setStatus] = useState(
     value?.latest_status ?? { messages: [], actions: [] }
   );
-  
+
   const order = context?.data;
 
   const fetchStatus = useCallback(
@@ -230,8 +230,12 @@ const OrderPaymentGateway = (
     return (
       <ChoosePaymentGateway context={context} />
     )
-
   }
+
+  const buy_link = new URL(
+    `/api/payments/buy_ui/${context.data.id}`, 
+    sdk.config.endpoint ?? window.location.origin
+  );
 
   return (
 <div {...comp_params}>
@@ -262,17 +266,26 @@ const OrderPaymentGateway = (
   <p children='Actions' 
      className='text-gray-400 mt-5 --bg-pink-50 text-xl font-bold'/>
   <HR className='--my-5'/>
-  <div className='w-full flex flex-row gap-3 mt-3 shelf-text-label-color'>
-    {
-      status.actions.map(
-        (action) => (
-          <ActionButton 
-            key={action.handle}
-            action={action}
-            onClick={invokeAction} />
+  <div className='flex flex-row items-center justify-between shelf-text-label-color mt-3'>
+    <div className='w-fit flex flex-row gap-3 shelf-text-label-color'>
+      {
+        status.actions.map(
+          (action) => (
+            <ActionButton 
+              key={action.handle}
+              action={action}
+              onClick={invokeAction} />
+          )
         )
-      )
-    }
+      }
+    </div>
+
+    <a
+      className='underline w-fit text-base'
+      children='buy link' 
+      target='_blank'
+      href={buy_link.toString()} />
+
   </div>
 
 </div>

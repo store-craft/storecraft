@@ -22,11 +22,12 @@ export const create_routes = (app) => {
   const polka = new Polka();
 
   // admin only
-  polka.use(authorize_admin(app));
+  // polka.use(authorize_admin(app));
 
   // get payment gateway
   polka.get(
     '/gateways/:gateway_handle',
+    authorize_admin(app),
     async (req, res) => {
       const { gateway_handle } = req.params;
       const r = get_payment_gateway(
@@ -39,6 +40,7 @@ export const create_routes = (app) => {
   // list payment gateways
   polka.get(
     '/gateways',
+    authorize_admin(app),
     async (req, res) => {
       const r = list_payment_gateways(
         app
@@ -51,6 +53,7 @@ export const create_routes = (app) => {
   // get payment status of an order
   polka.get(
     '/status/:order_id',
+    authorize_admin(app),
     async (req, res) => {
       const { order_id } = req.params;
       const r = await payment_status_of_order(
@@ -63,6 +66,7 @@ export const create_routes = (app) => {
   // invoke action api on gateway
   polka.post(
     '/:action_handle/:order_id',
+    authorize_admin(app),
     async (req, res) => {
       const { action_handle, order_id } = req.params;
       const r = await invoke_payment_action_on_order(

@@ -16,6 +16,7 @@
     "@storecraft/database-mongodb-node": "^1.0.0",
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal-standard": "^1.0.0",
+    "@storecraft/payments-stripe": "^1.0.0",
     "@storecraft/platform-node": "^1.0.0",
     "@storecraft/storage-google": "^1.0.0",
     "@storecraft/storage-node-local": "^1.0.0",

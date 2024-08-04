@@ -9,6 +9,7 @@ import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 import { DummyPayments } from '@storecraft/payments-dummy'
+import { Stripe } from '@storecraft/payments-stripe'
 import { App } from '@storecraft/core';
  
 export const app = new App(
@@ -34,6 +35,14 @@ export const app = new App(
         env: 'test' 
       }
     ),
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+    'stripe': new Stripe(
+      { 
+        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
+        secret: process.env.STRIPE_SECRET, 
+        intent_on_checkout: 'AUTHORIZE',
+        env: 'test' 
+      }
+    ),
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
   }
 );

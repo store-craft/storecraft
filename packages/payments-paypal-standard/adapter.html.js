@@ -1,6 +1,8 @@
 /**
  * 
- * @description Test with dummy data with this generator 
+ * @description Official PayPal UI integration with `storecraft`.
+ * 
+ * Test with dummy data with this generator 
  * https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator.
  * 
  * Or use the following dummy details:
@@ -33,7 +35,7 @@ export default function html_buy_ui(config, order_data) {
     const resultMessage = (msg) => {
       document.getElementById('result-message').innerHTML = msg
       console.log(msg);
-      
+
     }
 
     window.paypal

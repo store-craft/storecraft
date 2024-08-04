@@ -3089,6 +3089,29 @@ const register_payments = registry => {
     ...apply_security()
   });  
  
+  registry.registerPath({
+    method: 'get',
+    path: `/payments/buy_ui/{order_id}`,
+    summary: `Get a Pay UI`,
+    description: `First, make sure, that checkout creation took place. either through the rest-api or through the dashboard`,
+    tags,
+    request: {
+      params: z.object({
+        order_id: z.string().openapi(
+          { 
+            description: `The \`id\` of the order`
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `HTML you can use to complete a checkout`,
+      },
+      ...error() 
+    },
+  });  
+   
   
   registry.registerPath({
     method: 'post',

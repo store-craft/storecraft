@@ -14,7 +14,7 @@ export type Config = {
   /**
    * @description `stripe` private secret
    */
-  secret: string;
+  secret_key: string;
   
   /**
    * @description config options for `stripe`

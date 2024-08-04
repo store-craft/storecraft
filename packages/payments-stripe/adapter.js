@@ -28,7 +28,7 @@ export class Stripe {
   constructor(config) {
     this.#_config = this.#validate_and_resolve_config(config);
     this.stripe = new StripeCls(
-      this.#_config.publishable_key, this.#_config.stripe_config ?? {}
+      this.#_config.secret_key, this.#_config.stripe_config ?? {}
     );
   }
 
@@ -46,7 +46,6 @@ export class Stripe {
         automatic_payment_methods: {
           enabled: true,
         },
-        confirmation_method: 'manual',
         payment_method_options: {
           card: {
             capture_method: 'manual',
@@ -56,7 +55,7 @@ export class Stripe {
       ...config,
     }
 
-    const is_valid = config.publishable_key && config.secret;
+    const is_valid = config.publishable_key && config.secret_key;
 
     if(!is_valid) {
       throw new StorecraftError(
@@ -89,9 +88,9 @@ export class Stripe {
         description: 'Capture an authorized payment'
       },
       {
-        handle: 'void',
-        name: 'Void',
-        description: 'Cancel an authorized payment'
+        handle: 'cancel',
+        name: 'Cancel',
+        description: 'Cancel an a payment'
       },
       {
         handle: 'refund',
@@ -141,12 +140,11 @@ export class Stripe {
    * @return {Promise<CheckoutCreateResult>}
    */
   async onCheckoutCreate(order) {
-    const { stripe_intent_create_params } = this.config; 
 
     const paymentIntent = await this.stripe.paymentIntents.create(
       {
         amount: Math.floor(order.pricing.total * 100),
-        ...this.config.stripe_intent_create_params
+        ...this.config.stripe_intent_create_params,
       }
     );
 
@@ -163,10 +161,8 @@ export class Stripe {
   async onCheckoutComplete(create_result) {
 
     const intent = await this.stripe.paymentIntents.confirm(
-      create_result.id,
+      create_result.id
     );
-
-    intent.status
 
     let status;
     switch(intent.status) {
@@ -212,8 +208,9 @@ export class Stripe {
    */
   async status(create_result) {
     const o = await this.retrieve_order(create_result);
-    
     const lc = /** @type {StripeCls.Charge} */ (o.latest_charge);
+    /** @param {number} a */
+    const fmt = a => (a/100).toFixed(2);
 
     /** @type {PaymentGatewayStatus} */
     const stat = {
@@ -221,32 +218,32 @@ export class Stripe {
       actions: this.actions
     }
 
-    if(lc) { // just an intent
-      const date = new Date(lc.created).toUTCString();
+    if(o) { // just an intent
+      const date = new Date(o.created).toUTCString();
       stat.messages = [
-        `A payment intent of **${lc.amount}${lc.currency}** was initiated at ${date}`,
+        `A payment intent of **${fmt(o.amount)}${o.currency}** was initiated at ${date}`,
         `The status is \`${o.status}\` and the ID is \`${o.id}\``
       ];
     }
 
-    if(lc.captured) {
+    if(lc?.captured) {
       stat.messages.concat(
         [
-          `**${lc.amount_captured}${lc.currency}** was \`CAPTURED\``,
+          `**${fmt(lc.amount_captured)}${lc.currency}** was \`CAPTURED\``,
         ].filter(Boolean)
       );
     }
 
-    if(lc.refunded) {
-      const date = new Date(lc.refunds.data[0].created).toUTCString();
+    if(lc?.refunded) {
+      const date = lc?.refunds?.data?.[0]?.created ? (new Date(lc?.refunds?.data?.[0]?.created).toUTCString()) : 'unknown';
       stat.messages.concat(
         [
-          `**${lc.amount_refunded}${lc.currency}** was \`REFUNDED\` at \`${date}\``,
+          `**${fmt(lc.amount_refunded)}${lc.currency}** was \`REFUNDED\` at \`${date}\``,
         ].filter(Boolean)
       );
     }
     
-    if(o.canceled_at) {
+    if(o?.canceled_at) {
       const date = new Date(o.canceled_at).toUTCString();
       stat.messages.concat(
         [
@@ -277,7 +274,6 @@ export class Stripe {
     return this.stripe.paymentIntents.retrieve(
       create_result.id, 
       { 
-        client_secret: create_result.client_secret,
         expand: ['latest_charge']
       }
     )

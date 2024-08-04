@@ -38,9 +38,7 @@ export const app = new App(
     'stripe': new Stripe(
       { 
         publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret: process.env.STRIPE_SECRET, 
-        intent_on_checkout: 'AUTHORIZE',
-        env: 'test' 
+        secret_key: process.env.STRIPE_SECRET_KEY, 
       }
     ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),

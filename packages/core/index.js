@@ -446,6 +446,7 @@ export class App {
       },
 
       setStatus(code=200, text) {
+        console.log('code = ', code)
         this.status = code;
         this.statusText = text ?? STATUS_CODES[code.toString()];
         return this

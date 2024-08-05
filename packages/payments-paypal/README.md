@@ -1,6 +1,6 @@
-# Paypal Standard payment gateway for **StoreCraft**
+# Paypal payment gateway for **StoreCraft**
 
-[paypal standard](https://developer.paypal.com/docs/checkout/standard/) integration
+[paypal](https://developer.paypal.com/docs/checkout/) integration
 
 ## Features
 - Create checkouts with `AUTHORIZE` or `CAPTURE` intents
@@ -9,7 +9,7 @@
 - Supports both `prod` and `test` endpoints
 
 ```bash
-npm i @storecraft/payments-paypal-standard
+npm i @storecraft/payments-paypal
 ```
 
 ## Howto
@@ -29,7 +29,7 @@ new PaypalStandard(config);
 ## Developer info and test
 
 Integration examples
-- https://developer.paypal.com/studio/checkout/standard/integrate
+- https://developer.paypal.com/studio/checkout/
 
 Credit Card Generator
 - https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator

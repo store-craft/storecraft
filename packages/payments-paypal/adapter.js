@@ -15,9 +15,9 @@ import html_buy_ui from './adapter.html.js';
 /**
  * @implements {payment_gateway}
  * 
- * @description **Paypal Standard Payment** gateway (https://developer.paypal.com/docs/checkout/standard/)
+ * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
  */
-export class PaypalStandard {
+export class Paypal {
   
   /** @type {Config} */ #_config;
 
@@ -55,10 +55,10 @@ export class PaypalStandard {
 
   get info() {
     return {
-      name: 'Paypal standard payments',
-      description: `Set up standard payments to present payment buttons to your payers so they can pay with PayPal, debit and credit cards, Pay Later options, Venmo, and alternative payment methods.
+      name: 'Paypal payments',
+      description: `Set up standard and advanced payments to present payment buttons to your payers so they can pay with PayPal, debit and credit cards, Pay Later options, Venmo, and alternative payment methods.
       You can get started quickly with this 15-minute copy-and-paste integration. If you have an older Checkout integration, you can upgrade your Checkout integration.`,
-      url: 'https://developer.paypal.com/docs/checkout/standard/',
+      url: 'https://developer.paypal.com/docs/checkout/',
       logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
     }
   }

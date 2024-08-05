@@ -7,7 +7,7 @@ import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
-import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { Stripe } from '@storecraft/payments-stripe'
 import { App } from '@storecraft/core';
@@ -27,7 +27,7 @@ export const app = new App(
   }
 ).withPaymentGateways(
   {
-    'paypal_standard': new PaypalStandard(
+    'paypal': new Paypal(
       { 
         client_id: process.env.PAYPAL_CLIENT_ID, 
         secret: process.env.PAYPAL_SECRET, 

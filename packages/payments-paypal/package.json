@@ -1,14 +1,14 @@
 {
-  "name": "@storecraft/payments-paypal-standard",
+  "name": "@storecraft/payments-paypal",
   "version": "1.0.0",
-  "description": "paypal standard support",
+  "description": "Official Paypal integration with Storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
-    "directory": "packages/payments-paypal-standard"
+    "directory": "packages/payments-paypal"
   },
   "keywords": [
     "commerce",
@@ -20,8 +20,8 @@
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "payments-paypal-standard:test": "uvu -c",
-    "payments-paypal-standard:publish": "npm publish --access public"
+    "payments-paypal:test": "uvu -c",
+    "payments-paypal:publish": "npm publish --access public"
   },
   "dependencies": {
   },

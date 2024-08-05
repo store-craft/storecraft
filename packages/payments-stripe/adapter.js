@@ -276,11 +276,9 @@ export class Stripe {
 
     let event;
   
-    const body = await request.json();
-
     try {
-      event = this.stripe.webhooks.constructEvent(
-        body, sig, this.config.endpointSecret, undefined,
+      event = await this.stripe.webhooks.constructEventAsync(
+        request.rawBody, sig, this.config.webhook_endpoint_secret, undefined,
         StripeCls.createSubtleCryptoProvider()
       );
     }
@@ -319,16 +317,20 @@ export class Stripe {
           payment_status = PaymentOptionsEnum.captured;
         
         break;
-      case 'refund.created':
-      case 'refund.updated':
+      case 'charge.refunded':
+      case 'charge.refund.updated':
         payment_status = PaymentOptionsEnum.refunded;
 
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
   
+    console.log('CCCC')
+
     // Return a response to acknowledge receipt of the event
     response.sendJson({received: true});    
+
+    console.log('DDDD')
 
     return {
       order_id,

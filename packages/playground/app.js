@@ -39,6 +39,7 @@ export const app = new App(
       { 
         publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
         secret_key: process.env.STRIPE_SECRET_KEY, 
+        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
       }
     ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),

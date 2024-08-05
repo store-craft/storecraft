@@ -19,16 +19,20 @@ const is_type = (req, match_type) => {
 }
 
 /**
+ * @param {boolean} [keep_raw=true]
  */
-export const json = () => {
+export const json = (keep_raw=true) => {
   /**
    * @param {VPolkaRequest} req
    * @param {VPolkaResponse} res
    */
   return async (req, res) => {
     try {
-      if(is_type(req, CONTENT_TYPE_JSON))
-        req.parsedBody = await req.json();
+      if(is_type(req, CONTENT_TYPE_JSON)) {
+        req.rawBody = await req.text();
+        req.parsedBody = JSON.parse(req.rawBody);
+      }
+
     } catch (e) {}
   }
 }
@@ -41,8 +45,10 @@ export const text = () => {
    * @param {VPolkaResponse} res
    */
   return async (req, res) => {
-    if(is_type(req, CONTENT_TYPE_TEXT))
-      req.parsedBody = await req.text();
+    if(is_type(req, CONTENT_TYPE_TEXT)) {
+      req.rawBody = await req.text();
+      req.parsedBody = req.rawBody;
+    }
   }
 }
 

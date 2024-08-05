@@ -13,6 +13,8 @@ export type VPolkaRequest = Request & {
   parsedUrl?: PartialURL,
   // Parsed body
   parsedBody?: string | Blob | FormData | any;
+  // Optional raw body
+  rawBody?: string;
   [k: string]: any
 }
 

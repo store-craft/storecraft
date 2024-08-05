@@ -15,6 +15,13 @@ export type Config = {
    * @description `stripe` private secret
    */
   secret_key: string;
+
+  /**
+   * @description (Optional) `webhook` Endpoint private secret in case
+   * you are configuring webhook for async payments 
+   * [https://docs.stripe.com/webhooks?verify=check-signatures-library](https://docs.stripe.com/webhooks?verify=check-signatures-library)
+   */
+  endpointSecret?: string;
   
   /**
    * @description config options for `stripe`

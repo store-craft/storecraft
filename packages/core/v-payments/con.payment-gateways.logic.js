@@ -9,7 +9,7 @@ const is_function = o => {
 
 /**
  * 
- * `Get` payment gateway `info` and `config` by it's `handle`
+ * @description `Get` payment gateway `info` and `config` by it's `handle`
  * 
  * @param {App} app 
  * @param {string} gateway_handle 
@@ -52,6 +52,51 @@ export const list_payment_gateways = (app) => {
       }
     )
   )
+}
+
+/**
+ * 
+ * @description `Get` payment gateway `info` and `config` by it's `handle`
+ * 
+ * @param {App} app 
+ * @param {string} gateway_handle 
+ * @param {Request} request
+ * @param {import('../types.public.js').ApiRequest} request
+ * @param {import('../types.public.js').ApiResponse} response
+ * 
+ */
+export const webhook = async (app, gateway_handle, request, response) => {
+  const pg = app.gateway(gateway_handle);
+
+  assert(
+    pg,
+    `Payment Gateway with handle=${gateway_handle} not found`
+  );
+
+  assert(
+    pg.webhook,
+    `Payment Gateway with handle=${gateway_handle} does not have a webhook handler`
+  );
+
+  const { status, order_id } = await pg.webhook(request, response);
+
+  { // set the side-effects lazily, so the webhook response will be sent quick
+    
+    if(order_id && status) {
+      app.api.orders.get(order_id).then(
+        (order) => {
+          if(status.checkout) 
+            order.status.checkout = status.checkout;
+          if(status.payment) 
+            order.status.payment = status.payment;
+          app.api.orders.upsert(order).catch(console.log)
+        }
+      ).catch(console.log);
+
+    }
+
+  }
+
 }
 
 

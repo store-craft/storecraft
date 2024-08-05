@@ -2,8 +2,10 @@ import { Polka } from '../v-polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
 import { 
   get_payment_gateway, invoke_payment_action_on_order, 
-  list_payment_gateways, payment_buy_ui, payment_status_of_order 
+  list_payment_gateways, payment_buy_ui, payment_status_of_order, 
+  webhook
 } from '../v-payments/con.payment-gateways.logic.js'
+import { assert } from '../v-api/utils.func.js';
 
 
 /**
@@ -21,9 +23,6 @@ export const create_routes = (app) => {
   /** @type {import('../types.public.js').ApiPolka} */
   const polka = new Polka();
 
-  // admin only
-  // polka.use(authorize_admin(app));
-
   // get payment gateway
   polka.get(
     '/gateways/:gateway_handle',
@@ -34,6 +33,24 @@ export const create_routes = (app) => {
         app, gateway_handle
       );
       res.sendJson(r);
+    }
+  );
+
+  polka.post(
+    '/gateways/:gateway_handle/webhook',
+    async (req, res) => {
+      const { gateway_handle } = req.params;
+      const r = await webhook(
+        app, gateway_handle, req, res
+      );
+
+      // We expect the webhook handler in the gateway to finish the
+      // response, but in case it didn't, we will error it.
+      assert(
+        res.finished,
+        `webhook for gateway ${gateway_handle} did not send a response`
+      );
+
     }
   );
 
@@ -76,7 +93,7 @@ export const create_routes = (app) => {
       res.sendJson(r);
     }
   );
-
+  
   polka.get(
     '/buy_ui/:order_id',
     async (req, res) => {

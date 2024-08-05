@@ -282,6 +282,7 @@ export class PaypalStandard {
   }
 
   /**
+   * @description [https://developer.paypal.com/api/rest/webhooks/rest/](https://developer.paypal.com/api/rest/webhooks/rest/)
    * 
    * @param {Request} request 
    */

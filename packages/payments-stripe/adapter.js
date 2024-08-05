@@ -13,6 +13,12 @@ import { Stripe as StripeCls } from 'stripe'
  */
 
 /**
+ * @description in a {@link StripeCls.PaymentIntent}, is a `metadata` key-value
+ * storage where we store the `order_id` of the `storecraft` order.
+ */
+export const metadata_storecraft_order_id = 'storecraft_order_id'
+
+/**
  * @implements {payment_gateway}
  * 
  * @description **Stripe** gateway (https://docs.stripe.com/payments/place-a-hold-on-a-payment-method)
@@ -133,7 +139,7 @@ export class Stripe {
   }
 
   /**
-   * @description TODO: the user prefers to capture intent instead
+   * @description on checkout create `hook`
    * 
    * @param {OrderData} order 
    * 
@@ -145,6 +151,9 @@ export class Stripe {
       {
         amount: Math.floor(order.pricing.total * 100),
         ...this.config.stripe_intent_create_params,
+        metadata: {
+          [metadata_storecraft_order_id]: order.id
+        }
       }
     );
 
@@ -152,7 +161,11 @@ export class Stripe {
   }
 
   /**
-   * @description todo: logic for if user wanted capture at approval
+   * @description On checkout complete hook. With stripe, this corresponds
+   * to synchronous payments flows, which is discouraged by `stripe`.
+   * They advocate async flows where confirmation happens async from
+   * client side into their servers, and then you are notified via a
+   * webhook.
    * 
    * @param {CheckoutCreateResult} create_result 
    * 
@@ -252,11 +265,78 @@ export class Stripe {
   }
 
   /**
+   * @description [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
+   * @param {import('@storecraft/core').ApiRequest} request 
+   * @param {import('@storecraft/core').ApiResponse} response 
    * 
-   * @param {Request} request 
+   * @type {payment_gateway["webhook"]}
    */
-  async webhook(request) {
-    return null;
+  async webhook(request, response) {
+    const sig = request.headers.get('Stripe-Signature');
+
+    let event;
+  
+    const body = await request.json();
+
+    try {
+      event = this.stripe.webhooks.constructEvent(
+        body, sig, this.config.endpointSecret, undefined,
+        StripeCls.createSubtleCryptoProvider()
+      );
+    }
+    catch (err) {
+      response.status = 400;
+      response.end();
+      console.log(err.message);
+      return;
+    }
+  
+    let order_id;
+    /** @type {StripeCls.PaymentIntent} */
+    let payment_intent;
+
+    let payment_status = PaymentOptionsEnum.unpaid;
+    
+    // Handle the event
+    switch (event?.type) {
+      case 'payment_intent.succeeded':
+      case 'payment_intent.payment_failed':
+      case 'payment_intent.requires_action':
+      case 'payment_intent.amount_capturable_updated':
+      case 'payment_intent.canceled':
+        payment_intent = event.data.object;
+        order_id = payment_intent.metadata[metadata_storecraft_order_id];
+
+        if(payment_intent.status==='requires_capture')
+          payment_status = PaymentOptionsEnum.authorized;
+        else if(payment_intent.status==='canceled')
+          payment_status = PaymentOptionsEnum.unpaid;
+        else if(payment_intent.status==='processing')
+          payment_status = PaymentOptionsEnum.unpaid;
+        else if(payment_intent.status==='requires_action')
+          payment_status = PaymentOptionsEnum.unpaid;
+        else if(payment_intent.status==='succeeded')
+          payment_status = PaymentOptionsEnum.captured;
+        
+        break;
+      case 'refund.created':
+      case 'refund.updated':
+        payment_status = PaymentOptionsEnum.refunded;
+
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+  
+    // Return a response to acknowledge receipt of the event
+    response.sendJson({received: true});    
+
+    return {
+      order_id,
+      status: {
+        payment: payment_status,
+        checkout: CheckoutStatusEnum.complete
+      }
+    }
   }
 
   /**

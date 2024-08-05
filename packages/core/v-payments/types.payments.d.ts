@@ -1,3 +1,4 @@
+import { ApiRequest, ApiResponse } from "../types.public.js";
 import type { 
   OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
 } from "../v-api/types.api.js";
@@ -23,6 +24,21 @@ export type PaymentGatewayActionHandler<CheckoutCreateResult, Extra> =
 export type OnCheckoutCompleteResult = {
   status: Partial<Omit<OrderData["status"], "fulfillment">>,
   onCheckoutComplete: any
+};
+
+/**
+ * @description Webhook result
+ */
+export type OnWebHookResult = {
+  /**
+   * @description The new order `status`
+   */
+  status: Partial<Omit<OrderData["status"], "fulfillment">>,
+
+  /**
+   * @description The `ID` of the order, that relates to the webhook event
+   */
+  order_id: string
 };
 
 
@@ -138,11 +154,15 @@ export declare interface payment_gateway<
 
   /**
    * 
-   * @description Support async notifications and payments through webhooks
+   * @description Support async notifications and payments through webhooks.
+   * The `webhook` is responsible for
+   * - Verifying the integrity of the message
+   * - Send a response to the webhook origin (success / error)
+   * - Return the new `status` for the `order` so `storecraft` can save it
    * 
-   * 
-   * @param input input to webhook, usually HTTP request
+   * @param request HTTP `Request` object
+   * @param response HTTP `Response` object
    * 
    */
-  webhook?: (input: Request) => Promise<void>;
+  webhook: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult>;
 }

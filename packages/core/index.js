@@ -446,6 +446,8 @@ export class App {
       },
 
       setStatus(code=200, text) {
+        if(typeof code === 'string')
+          code = 400;
         this.status = code;
         this.statusText = text ?? STATUS_CODES[code.toString()];
         return this

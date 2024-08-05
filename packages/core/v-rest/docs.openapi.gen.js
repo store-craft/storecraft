@@ -2934,7 +2934,6 @@ const register_storefronts = registry => {
  */
 const register_payments = registry => {
   const name = 'storefront'
-  const slug_base = 'payments/gateways'
   const tags = ['payments gateways'];
   const example_id = 'sf_65dc619ac40344c9a1dd6755';
   const paymentGatewayItemGet = registry.register(
@@ -3010,7 +3009,7 @@ const register_payments = registry => {
 
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}/{gateway_handle}`,
+    path: `/payments/gateways/{gateway_handle}`,
     description: `Get a Payment Gateway data by its \`handle\``,
     summary: `Get a payment gateway`,
     tags,
@@ -3040,7 +3039,7 @@ const register_payments = registry => {
 
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}`,
+    path: `/payments/gateways`,
     description: `List payment gateways`,
     summary: `List payment gateways`,
     tags,
@@ -3059,6 +3058,26 @@ const register_payments = registry => {
     ...apply_security()
   });
   
+  registry.registerPath({
+    method: 'post',
+    path: `/payments/gateways/{gateway_handle}/webhook`,
+    summary: `Webhook for payment`,
+    description: `Webhook endpoint for a payment gateway`,
+    tags,
+    request: {
+      params: z.object({
+        gateway_handle: z.string().openapi(
+          { 
+            description: `The \`handle\` of the payment gateway`
+          }
+        ),
+      }),
+    },
+    responses: {
+    },
+  });  
+
+
   registry.registerPath({
     method: 'get',
     path: `/payments/status/{order_id}`,
@@ -3111,7 +3130,7 @@ const register_payments = registry => {
       ...error() 
     },
   });  
-   
+
   
   registry.registerPath({
     method: 'post',

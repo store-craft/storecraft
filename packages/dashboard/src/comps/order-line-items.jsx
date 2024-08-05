@@ -32,9 +32,12 @@ import { useStorecraft } from '@storecraft/sdk-react-hooks'
  * 
  * @param {LineitemsTableParams} param
  */
-const LineitemsTable = 
-  ({ items, context, onChangeItem, onRemoveItem }) => {
-
+const LineitemsTable = (
+  { 
+    items, context, onChangeItem, onRemoveItem 
+  }
+) => {
+  
   /**
    * @param {import('@storecraft/core/v-api').LineItem} it 
    */

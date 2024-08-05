@@ -282,13 +282,17 @@ const root_schema = {
 
 /**
  * 
- * @typedef {object} Context Intrinsic state of `tag`
+ * @typedef {object} State Intrinsic state of `order`
  * @property {import('@storecraft/core/v-api').OrderData} data
  * @property {boolean} hasChanged
  * @property {(gateay: string) => Promise<any>} create_checkout
  * 
  *
+ * @typedef { import('./index.jsx').BaseDocumentContext<State>
+ * } Context Public `order` context
+ * 
  */
+
 
 /**
  * @param {{ 
@@ -323,6 +327,7 @@ export default (
 
   console.log('documentId', documentId)
   console.log('doc', doc)
+
   const create_checkout = useCallback(
     /**
      * @param {string} gateway_handle 

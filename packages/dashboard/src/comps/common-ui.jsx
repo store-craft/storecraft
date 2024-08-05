@@ -155,6 +155,7 @@ export const Label = ({ ...rest }) => {
 
 const InputDefaultClass = `rounded-md pl-3 
                             w-full block text-base 
+                            hover:ring-pink-400 hover:ring-2
                             shelf-input-color
                             focus:outline-none  
                             font-normal transition-none`

@@ -210,7 +210,7 @@ export class Stripe {
     const o = await this.retrieve_order(create_result);
     const lc = /** @type {StripeCls.Charge} */ (o.latest_charge);
     /** @param {number} a */
-    const fmt = a => (a/100).toFixed(2);
+    const fmt = a => (a/100).toFixed(2) + o.currency.toUpperCase();
 
     /** @type {PaymentGatewayStatus} */
     const stat = {
@@ -221,32 +221,27 @@ export class Stripe {
     if(o) { // just an intent
       const date = new Date(o.created).toUTCString();
       stat.messages = [
-        `A payment intent of **${fmt(o.amount)}${o.currency}** was initiated at ${date}`,
+        `A payment intent of **${fmt(o.amount)}** was initiated at ${date}`,
         `The status is \`${o.status}\` and the ID is \`${o.id}\``
       ];
     }
 
     if(lc?.captured) {
-      stat.messages.concat(
-        [
-          `**${fmt(lc.amount_captured)}${lc.currency}** was \`CAPTURED\``,
-        ].filter(Boolean)
+      stat.messages.push(
+        `**${fmt(lc.amount_captured)}** was \`CAPTURED\``,
+      );
+    }
+    if(lc?.refunded) {
+      const date = lc?.refunds?.data?.[0]?.created ? (new Date(lc?.refunds?.data?.[0]?.created).toUTCString()) : 'unknown time';
+      stat.messages.push(
+        `**${fmt(lc.amount_refunded)}** was \`REFUNDED\` at \`${date}\``,
       );
     }
 
-    if(lc?.refunded) {
-      const date = lc?.refunds?.data?.[0]?.created ? (new Date(lc?.refunds?.data?.[0]?.created).toUTCString()) : 'unknown';
-      stat.messages.concat(
-        [
-          `**${fmt(lc.amount_refunded)}${lc.currency}** was \`REFUNDED\` at \`${date}\``,
-        ].filter(Boolean)
-      );
-    }
-    
     if(o?.canceled_at) {
       const date = new Date(o.canceled_at).toUTCString();
-      stat.messages.concat(
-        [
+      stat.messages.push(
+        ...[
           `Intent was \`CANCELLED\` at \`${date}\`.`,
           o.cancellation_reason && `Cancellation reason is ${o.cancellation_reason}`
         ].filter(Boolean)

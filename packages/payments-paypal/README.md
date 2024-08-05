@@ -29,14 +29,14 @@ new PaypalStandard(config);
 ## Developer info and test
 
 Integration examples
-- https://developer.paypal.com/studio/checkout/
+- https://developer.paypal.com/
 
 Credit Card Generator
 - https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator
 
 ## todo:
 - Add tests
-- Think about adding more dynamic config 
+- Add webhook support
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

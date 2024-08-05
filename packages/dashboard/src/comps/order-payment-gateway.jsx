@@ -258,7 +258,8 @@ const OrderPaymentGateway = (
     {
       status.messages.map(
         (s, ix) => (
-          <MDView value={s} key={ix} />
+          <MDView value={s} key={ix} 
+              className='border-b-2 py-2 stroke-2 dash shelf-border-color border-dashed w-full' />
         )
       )
     }

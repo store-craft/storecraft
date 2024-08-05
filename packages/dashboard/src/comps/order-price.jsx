@@ -1,28 +1,47 @@
 import { useCallback, useState } from 'react'
 import { BlingInput, HR } from './common-ui.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
+import { LinkWithState } from '@/hooks/useNavigateWithState.jsx'
 
 
 /**
  * 
  * @typedef {object} EntryParams
  * @prop {string} title
+ * @prop {string} [link=undefined]
  * @prop {number} value
+ * @prop {import('@/pages/order.jsx').Context} [context]
  * 
  * 
  * @param {EntryParams} params
  */
 const Entry = (
   {
-    title, value
+    title, value, link, context
   }
 ) => {
 
   return (
     <div className='flex flex-row justify-between items-center w-full'>
-      <span 
-          children={title}
-          className='text-sm font-medium '/>
+      {
+        link &&
+        <LinkWithState 
+            to={link} 
+            current_state={
+              () => context?.getState && context?.getState()
+            }
+            draggable='false'>
+          <span 
+              children={title}
+              className='text-sm font-medium underline'/>
+        </LinkWithState>
+      }
+      {
+        !link &&
+        <span 
+            children={title}
+            className='text-sm font-medium '/>
+      }
       <span 
           children={value} 
           className='text-xs'/>            
@@ -33,7 +52,10 @@ const Entry = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').PricingData> & 
+ *  import('@storecraft/core/v-api').PricingData,
+ *  import('@/pages/order.jsx').Context,
+ *  import('@storecraft/core/v-api').OrderData
+ * > & 
  *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } OrderPriceParams
  * 
@@ -44,7 +66,7 @@ const OrderPrice = (
     field, context, setError, value, onChange, ...rest 
   }
 ) => {
-
+  
   const { sdk } = useStorecraft();
   const [ pricing, setPricing ] = useState(
     value
@@ -124,7 +146,9 @@ const OrderPrice = (
           <Entry 
               key={e.discount_code}
               title={`${e.discount_code} (discount)`} 
-              value={-e.total_discount} />
+              value={-e.total_discount} 
+              link={`/pages/discounts/${e.discount_code}`}
+              context={context}/>
         )
       )
     }

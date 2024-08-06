@@ -1,5 +1,10 @@
 # Storecraft MongoDB driver for Node.js
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 Official `mongodb` driver for `StoreCraft` on **Node.js** platforms.
 
 ```bash

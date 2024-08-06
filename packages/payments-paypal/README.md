@@ -1,5 +1,10 @@
 # Paypal payment gateway for **StoreCraft**
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 [paypal](https://developer.paypal.com/docs/checkout/) integration
 
 ## Features

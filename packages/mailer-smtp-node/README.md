@@ -1,5 +1,10 @@
 # SMTP proxy client for Node.js
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 ## Features
 - Send emails using a known smtp server
 - uses `nodemailer` under the hood

@@ -1,4 +1,7 @@
-# storecraft
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
 
 The `StoreCraft` mono-repo
 

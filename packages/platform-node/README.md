@@ -1,5 +1,10 @@
 # Storecraft Node.js Platform support
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 So, if you wanted to run `StoreCraft` on `node.js`, this is the `platform`
 package for you :)
 

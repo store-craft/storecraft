@@ -1,5 +1,10 @@
 # Dummy payment gateway for **StoreCraft**
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 This is a dummy payment gateway with in-memory database (meaning, will be destroyed
 upon restarts).
 

@@ -1,5 +1,10 @@
 # **Storecraft** Official Dashboard
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 The Official `storecraft` Dashboard 🏆,
 - Leveraging `static rendering` / `client side rendering` / `swr`
 - Can be deployed into cost effective **CDN**

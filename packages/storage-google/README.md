@@ -1,5 +1,10 @@
 # Storecraft Google Cloud Storage
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 `fetch` ready support for an `GCP` **Storage**
 
 Features:

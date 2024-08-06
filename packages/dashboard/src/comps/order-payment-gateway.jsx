@@ -50,26 +50,17 @@ const NoPaymentGatewayBlues = ({}) => {
 /**
  * 
  * @typedef {object} ChoosePaymentGatewayParams
- * @prop {import('../pages/order.jsx').Context} context
+ * @prop {import('@storecraft/core/v-api').OrderData} [full_order]
+ * @prop {(pg_handle: string) => Promise<any>} onCreate
  * 
  * 
  * @param {ChoosePaymentGatewayParams} params 
  */
 const ChoosePaymentGateway = (
   {
-    context
+    full_order, onCreate
   }
 ) => {
-  // /**
-  //  * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-  //  *  import('@storecraft/core/v-api').PaymentGatewayItemGet>
-  //  * }
-  //  */ 
-  // const { 
-  //   context, page, loading, 
-  //   error, queryCount, hasLoaded, resource,
-  //   resource_is_probably_empty
-  // } = useCollectionsActions('payments/gateways', '/pages/payment-gateways');
   
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
@@ -81,12 +72,9 @@ const ChoosePaymentGateway = (
   } = useCollection('payments/gateways');
   /** @type {React.LegacyRef<HTMLSelectElement>} */
   const ref_select = useRef();
-  const create_promise = useCallback(
-    async () => {
-      const pg_handle = ref_select.current.value;
-      await context.create_checkout(pg_handle);
-    }, [context]
-  );
+
+  if(!full_order?.id)
+    return <PleaseSave/>
 
   return (
     <div className='w-full h-fit flex flex-col gap-2'>
@@ -102,7 +90,7 @@ const ChoosePaymentGateway = (
           {
             page?.map(
               (pg) => (
-                <option value={pg.handle} children={pg.info.name} />
+                <option key={pg.handle} value={pg.handle} children={pg.info.name} />
               )
             )
           }
@@ -112,7 +100,7 @@ const ChoosePaymentGateway = (
           Icon={undefined} 
           text='create checkout' 
           show={true} 
-          onClick={create_promise}
+          onClick={() => { return onCreate(ref_select.current.value)} }
           keep_text_on_load={true}
           classNameLoading='text-xs'
           className='w-fit text-base shelf-text-label-color underline self-end '/>
@@ -137,7 +125,7 @@ const PleaseSave = ({}) => {
  *   import('../pages/order.jsx').Context,
  *   import('@storecraft/core/v-api').OrderData  
  *  > & 
- *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ *   Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'>
  * } OrderPaymentGatewayParams
  * 
  * @param {OrderPaymentGatewayParams} param
@@ -217,6 +205,19 @@ const OrderPaymentGateway = (
     }, [value, order, onChange]
   );
 
+  const onCreate = useCallback(
+    /** @param {string} pg_handle  */
+    async (pg_handle) => {
+      // onChange(
+      //   {
+      //     gateway_handle: pg_handle
+      //   }
+      // );
+      await context.create_checkout(pg_handle);
+    }, [context]
+  );
+
+
   useEffect(
     () => {
       fetchStatus();
@@ -224,11 +225,9 @@ const OrderPaymentGateway = (
   );
 
   if(!value?.gateway_handle) {
-    // if(!context.data.id)
-    //   return <PleaseSave/>
 
     return (
-      <ChoosePaymentGateway context={context} />
+      <ChoosePaymentGateway full_order={order} onCreate={onCreate} />
     )
   }
 

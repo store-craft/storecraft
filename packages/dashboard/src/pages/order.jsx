@@ -285,10 +285,13 @@ const root_schema = {
  * @typedef {object} State Intrinsic state of `order`
  * @property {import('@storecraft/core/v-api').OrderData} data
  * @property {boolean} hasChanged
+ * 
+ * @typedef {object} InnerContext Inner `order` context
  * @property {(gateay: string) => Promise<any>} create_checkout
  * 
  *
- * @typedef { import('./index.jsx').BaseDocumentContext<State>
+ * @typedef {import('./index.jsx').BaseDocumentContext<State> &
+ *  InnerContext
  * } Context Public `order` context
  * 
  */
@@ -320,20 +323,18 @@ export default (
     context: context_, key, 
     doc, isCreateMode, isEditMode, isViewMode, 
     loading, hasChanged, hasLoaded, error,
-    ref_head, ref_root, sdk
+    ref_head, ref_root, sdk, op
   } = useDocumentActions(
     'orders', documentId, '/pages/orders', mode, base
   );
-
-  console.log('documentId', documentId)
-  console.log('doc', doc)
 
   const create_checkout = useCallback(
     /**
      * @param {string} gateway_handle 
      */
     async (gateway_handle) => {
-      const doc_after_save = await savePromise();
+      const doc_after_save = doc;// await savePromise();
+      console.log('doc', doc)
       try {
         const response = await sdk.checkout.create(
           doc_after_save, 
@@ -352,7 +353,7 @@ export default (
         setError(e);
         return;
       }
-      console.log('reload');
+
       try {
         await reload(false);
         // await reload_hard.current(false);
@@ -360,9 +361,9 @@ export default (
         // console.log('order', order)
 
       } catch(e) {
-        console.log('ee', e)
+        console.log('e', e)
       }
-    }, [savePromise, setError, sdk, reload]
+    }, [savePromise, setError, sdk, reload, doc]
   );
 
   const context = useMemo(

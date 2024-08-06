@@ -46,6 +46,7 @@ const OrderDeliveryMethod = (
 
   <BlingInput 
       stroke=''
+      readOnly={true}
       className='mt-1 pointer-events-none'
       value={v?.title} 
       placeholder='Shipping Method' 
@@ -56,6 +57,7 @@ const OrderDeliveryMethod = (
 
     <BlingInput 
         stroke=''
+        readOnly={true}
         className='mt-1 w-full pointer-events-none'
         onWheel={(e) => e.target.blur()}
         value={v?.price} 

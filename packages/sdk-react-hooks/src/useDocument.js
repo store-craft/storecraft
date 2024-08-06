@@ -164,7 +164,6 @@ export function useDocument(
               }
             );
           }
-
         }
 
         if(!item) {

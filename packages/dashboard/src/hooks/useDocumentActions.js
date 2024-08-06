@@ -215,7 +215,7 @@ export const useDocumentActions = (resource, document, slug, mode='edit', base) 
       navWithState, reload, setError
     },
     error, key, ref_head, ref_root, doc, sdk,
-    isEditMode, isCreateMode, isViewMode,
+    isEditMode, isCreateMode, isViewMode, op,
     loading, hasChanged, hasLoaded, context
   }
 }

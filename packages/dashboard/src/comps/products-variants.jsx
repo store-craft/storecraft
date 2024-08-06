@@ -97,12 +97,12 @@ const ProductOption = (
       <BlingInput 
           ref={ref_value} placeholder='Option Name' 
           from='from-kf-400' to='to-pink-400/25'
-          inputClsName=' text-base px-1 shelf-input-color --shelf-card rounded-md h-10' 
+          inputClsName=' text-base px-1 shelf-input-color hover:ring-pink-400 hover:ring-2 rounded-md h-10' 
           overrideClass={true}
           onChange={onOptionNameChange}
           value={o?.name}
           type='text' 
-          rounded='rounded-md' sstroke='pb-px' /> 
+          rounded='rounded-md' /> 
     </legend>
     <ShowIf show={(o?.values?.length??0) > 0}>
       <CapsulesView 
@@ -113,8 +113,9 @@ const ProductOption = (
     </ShowIf>
     <div className='flex flex-row items-center h-fit w-full mt-5 gap-3'>
       <BlingInput 
-          ref={ref_value} placeholder='Add new option' 
-          inputClsName='text-base px-1 shelf-card w-full rounded-md h-10' 
+          ref={ref_value} 
+          placeholder='Add new option' 
+          inputClsName='text-base px-1 shelf-card w-full rounded-md h-10 hover:ring-pink-400 hover:ring-2' 
           overrideClass={true}
           type='text' className='mt-1 flex-1' 
           rounded='rounded-md' stroke='border-b' /> 

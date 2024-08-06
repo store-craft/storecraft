@@ -131,6 +131,8 @@ export function useDocument(
 
   const reload = useCallback(
     async (try_cache=true) => {
+      const resource = location.current[0];
+      const document = location.current[1];
 
       if(!(resource && document)) {
         console.log('resource', resource)
@@ -185,7 +187,7 @@ export function useDocument(
         setLoading(false);
       }
 
-    }, [resource, document]
+    }, []
   );
 
   const upsert = useCallback(

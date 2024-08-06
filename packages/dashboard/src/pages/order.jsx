@@ -354,14 +354,15 @@ export default (
       }
       console.log('reload');
       try {
-        await reload_hard.current(false);
+        await reload(false);
+        // await reload_hard.current(false);
         // const order = await reload(false);
         // console.log('order', order)
 
       } catch(e) {
         console.log('ee', e)
       }
-    }, [savePromise, setError, sdk]
+    }, [savePromise, setError, sdk, reload]
   );
 
   const context = useMemo(

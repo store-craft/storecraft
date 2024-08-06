@@ -260,10 +260,11 @@ export default (
         ...context_base,
         getState: () => {
           const state = context_base.getState();
+          console.log('state', state)
           delete state?.['variants'];
           return {
             data: state.data,
-            hasChanged: false
+            hasChanged: state.hasChanged
           }
         },
         removeVariant: async (product_variant_handle) => {

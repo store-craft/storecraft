@@ -63,6 +63,220 @@ const __dirname = path.dirname(__filename);
 extendZodWithOpenApi(z);
 
 
+const example_collection = {
+  "active": true,
+  "handle": "t-shirts-men",
+  "title": "T Shirts for men",
+  "tags": [
+    "tag-summer",
+    "tag-hello"
+  ],
+  "id": "col_65f2ae5a8bf30e6cd0ca95f4",
+  "created_at": "2024-03-14T07:59:22.013Z",
+  "updated_at": "2024-03-14T07:59:22.013Z",
+  "search": [
+    "tag:tag-summer",
+    "tag:tag-hello",
+    "handle:t-shirts-men",
+    "t-shirts-men",
+    "id:col_65f2ae5a8bf30e6cd0ca95f4",
+    "col_65f2ae5a8bf30e6cd0ca95f4",
+    "65f2ae5a8bf30e6cd0ca95f4",
+    "active:true",
+    "summer",
+    "hello"
+  ]
+}
+
+const example_discount = {
+  "active": true,
+  "handle": "10-off-for-product-1",
+  "title": "10% OFF for product 1",
+  "priority": 0,
+  "application": {
+    "id": 0,
+    "name": "Automatic",
+    "name2": "automatic"
+  },
+  "info": {
+    "details": {
+      "meta": {
+        "id": 0,
+        "type": "regular",
+        "name": "Regular Discount"
+      },
+      "extra": {
+        "fixed": 0,
+        "percent": 10
+      }
+    },
+    "filters": [
+      {
+        "meta": {
+          "id": 2,
+          "type": "product",
+          "op": "p-in-handles",
+          "name": "Product has ID"
+        },
+        "value": [
+          "pr-api-discounts-products-test-js-1"
+        ]
+      }
+    ]
+  },
+  "id": "dis_65f2ae888bf30e6cd0ca9600",
+  "created_at": "2024-03-14T08:00:08.138Z",
+  "updated_at": "2024-03-14T08:00:08.138Z",
+  "search": [
+    "handle:10-off-for-product-1",
+    "10-off-for-product-1",
+    "id:dis_65f2ae888bf30e6cd0ca9600",
+    "dis_65f2ae888bf30e6cd0ca9600",
+    "65f2ae888bf30e6cd0ca9600",
+    "active:true",
+    "10",
+    "product",
+    "1",
+    "10% off for product 1",
+    "app:0",
+    "app:automatic",
+    "type:0",
+    "type:regular"
+  ]
+}
+
+const example_post = {
+  "handle": "post-1",
+  "title": "post 1",
+  "text": "text of post 1",
+  "id": "post_65f2aea48bf30e6cd0ca9610",
+  "created_at": "2024-03-14T08:00:36.999Z",
+  "updated_at": "2024-03-14T08:00:36.999Z",
+  "search": [
+    "handle:post-1",
+    "post-1",
+    "id:post_65f2aea48bf30e6cd0ca9610",
+    "post_65f2aea48bf30e6cd0ca9610",
+    "65f2aea48bf30e6cd0ca9610",
+    "post",
+    "1",
+    "post 1"
+  ]
+}
+
+const example_shipping = {
+  "handle": "shipping-express",
+  "name": "Express Shipping 2-3 days",
+  "price": 50,
+  "id": "ship_65dc6198c40344c9a1dd674f",
+  "search": [
+    "handle:shipping-express",
+    "shipping-express",
+    "id:ship_65dc6198c40344c9a1dd674f",
+    "ship_65dc6198c40344c9a1dd674f",
+    "65dc6198c40344c9a1dd674f",
+    "Express",
+    "Shipping",
+  ],
+  "created_at": "2024-02-26T10:02:00.139Z",
+  "updated_at": "2024-02-26T10:02:00.139Z"
+}
+
+const example_product = {
+  "handle": "tshirt-red-color",
+  "active": true,
+  "price": 50,
+  "qty": 1,
+  "title": "tshirt variant 1 - red color",
+  "parent_handle": "pr-api-products-variants-test-js-1",
+  "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
+  "variant_hint": [
+    {
+      "option_id": "id-option-1",
+      "value_id": "id-val-1"
+    }
+  ],
+  "id": "pr_65fab4471d764999c957cb05",
+  "created_at": "2024-03-20T10:02:47.411Z",
+  "updated_at": "2024-03-20T10:02:47.411Z",
+  "search": [
+    "handle:tshirt-red-color",
+    "tshirt-red-color",
+    "id:pr_65fab4471d764999c957cb05",
+    "pr_65fab4471d764999c957cb05",
+    "65fab4471d764999c957cb05",
+    "active:true",
+    "tshirt",
+    "variant",
+    "1",
+    "red",
+    "color",
+    "tshirt variant 1 - red color",
+    "discount:3-for-100",
+  ]
+}
+
+const example_order = {
+  "status": {
+    "checkout": {
+      "id": 0,
+      "name2": "created",
+      "name": "Created"
+    },
+    "payment": {
+      "id": 1,
+      "name": "Authorized",
+      "name2": "authorized"
+    },
+    "fulfillment": {
+      "id": 0,
+      "name2": "draft",
+      "name": "Draft"
+    }
+  },
+  "pricing": {
+    "quantity_discounted": 3,
+    "quantity_total": 5,
+    "subtotal": 100,
+    "subtotal_discount": 30,
+    "subtotal_undiscounted": 70,
+    "total": 120
+  },
+  "line_items": [
+    {
+      "id": "pr-1-id",
+      "qty": 3
+    },
+    {
+      "id": "pr-2-id",
+      "qty": 2
+    }
+  ],
+  "shipping_method": {
+    "handle": "ship-a",
+    "name": "ship a",
+    "price": 30
+  },
+  "id": "order_65d774c6445e4581b9e34c11",
+  "search": [
+    "id:order_65d774c6445e4581b9e34c11",
+    "order_65d774c6445e4581b9e34c11",
+    "65d774c6445e4581b9e34c11",
+    "order_65d774c6445e4581b9e34c11",
+    120,
+    "payment:authorized",
+    "payment:1",
+    "fulfill:draft",
+    "fulfill:0",
+    "checkout:created",
+    "checkout:0",
+    "li:pr-1-id",
+    "li:pr-2-id"
+  ],
+  "created_at": "2024-02-22T16:22:30.095Z",
+  "updated_at": "2024-02-22T16:22:30.095Z"
+}
+
 // Register definitions here
 const create_query = () => {
   const cursor = z.string().optional().openapi(
@@ -94,8 +308,8 @@ const create_query = () => {
     endBefore: cursor,
     sortBy: z.string().optional().openapi(
       { 
-        examples: ['(updated_at, id)'],
-        description: 'A cursor of Keys in CSV format, example: `(updated_at, id)`',
+        examples: ['(updated_at,id)'],
+        description: 'A cursor of Keys in CSV format, example: `(updated_at,id)`',
         default: '`(updated_at, id)`'
       }
     ),
@@ -240,7 +454,7 @@ const register_base_get = (
 
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}/{id_or_handle}?expand={expand}`,
+    path: `/${slug_base}/{id_or_handle}`,
     description: `Get ${name} data by its \`id\` or \`handle\` \n${aug_description}`,
     summary: `Get a single ${name}`,
     tags,
@@ -248,15 +462,15 @@ const register_base_get = (
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: `The \`id\` or \`handle\` of ${name}`
           }
         ),
       }),
       query: z.object({
-        expand: z.string().openapi(
+        expand: z.string().optional().openapi(
           { 
-            examples: [`(collections, search)`, `*`],
+            examples: ['(collections,search)', '*'],
             description: `Expand connections of item, 
             a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
             default: '`*`'
@@ -334,9 +548,10 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
  * @param {string} slug_base 
  * @param {string} name 
  * @param {string[]} tags 
+ * @param {string} example_id 
  * @param {string} [description] 
  */
-const register_base_delete = (registry, slug_base, name, tags, description) => {
+const register_base_delete = (registry, slug_base, name, tags, example_id, description) => {
   
   registry.registerPath({
     method: 'delete',
@@ -345,6 +560,14 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
     summary: `Delete a single ${name}`,
     tags,
     request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: example_id,
+            description: `The \`id\` or \`handle\` of ${name}`
+          }
+        ),
+      }),
     },
     responses: {
       200: {
@@ -371,12 +594,23 @@ const register_base_list = (
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
+    path: `/${slug_base}`,
     summary: `List and filter ${name} items`,
     description: `List and filter items \n ${aug_description}`,
     tags,
     request: {
-      query: create_query()
+      query: create_query(),
+      aquery: z.object({
+        expand: z.string().openapi(
+          { 
+            examples: ['(collections,search)', '*'],
+            description: `Expand connections of item, 
+            a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
+            default: '`*`'
+          }
+        ),
+      }),
+
     },
     responses: {
       200: {
@@ -703,7 +937,7 @@ const register_settings = (registry) => {
             schema: storecraftConfigSchema,
             example: {
               general_store_name: 'Wush Wush Games',
-              general_store_website: 'https://wish.games',
+              general_store_website: 'https://wush.games',
               general_store_description: 'We sell retro video games',
               general_store_support_email: 'support@wush.games',
               auth_admins_emails: ['admin@wush.games'],
@@ -801,6 +1035,32 @@ const register_auth = registry => {
   );
 
   // remove a auth user
+
+  const example_auth_user = {
+    "id": "au_662f70821937f16320a8debb",
+    "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
+    "confirmed_mail": false,
+    "roles": [
+        "admin"
+    ],
+    "tags": [
+        "apikey"
+    ],
+    "active": true,
+    "description": "This user is a created apikey with roles: [admin]",
+    "created_at": "2024-04-29T10:03:46.835Z",
+    "updated_at": "2024-04-29T10:03:46.835Z",
+    "search": [
+        "email:true",
+        "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
+        "au_662f70821937f16320a8debb@apikey.storecraft.api",
+        "confirmed_mail:false",
+        "tag:apikey",
+        "au_662f70821937f16320a8debb",
+        "role:admin"
+    ]
+  }
+
   registry.registerPath(
     {
       method: 'get',
@@ -812,7 +1072,7 @@ const register_auth = registry => {
         params: z.object({
           email_or_id: z.string().openapi(
             { 
-              example: `\`au_65f98390d6a34550cdc651a1\` or email like \`a@a.com\``,
+              example: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
               description: `The \`id\` or \`email\` of auth user`
             }
           ),
@@ -824,30 +1084,7 @@ const register_auth = registry => {
           content: {
             "application/json": {
               schema: authUserTypeSchema,
-              example: {
-                "id": "au_662f70821937f16320a8debb",
-                "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
-                "confirmed_mail": false,
-                "roles": [
-                    "admin"
-                ],
-                "tags": [
-                    "apikey"
-                ],
-                "active": true,
-                "description": "This user is a created apikey with roles: [admin]",
-                "created_at": "2024-04-29T10:03:46.835Z",
-                "updated_at": "2024-04-29T10:03:46.835Z",
-                "search": [
-                    "email:true",
-                    "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
-                    "au_662f70821937f16320a8debb@apikey.storecraft.api",
-                    "confirmed_mail:false",
-                    "tag:apikey",
-                    "au_662f70821937f16320a8debb",
-                    "role:admin"
-                ]
-              }
+              example: example_auth_user
             }
           }
         },
@@ -869,7 +1106,7 @@ const register_auth = registry => {
         params: z.object({
           email_or_id: z.string().openapi(
             { 
-              example: `\`au_65f98390d6a34550cdc651a1\` or email like \`a@a.com\``,
+              example: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
               description: `The \`id\` or \`email\` of auth user`
             }
           ),
@@ -933,102 +1170,7 @@ const register_auth = registry => {
             "application/json": {
               schema: z.array(authUserTypeSchema),
               example: [
-                {
-                    "id": "au_662f70821937f16320a8debb",
-                    "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:03:46.835Z",
-                    "updated_at": "2024-04-29T10:03:46.835Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
-                        "au_662f70821937f16320a8debb@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f70821937f16320a8debb",
-                        "role:admin"
-                    ]
-                },
-                {
-                    "id": "au_662f708f631a446324fd9b56",
-                    "email": "au_662f708f631a446324fd9b56@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:03:59.970Z",
-                    "updated_at": "2024-04-29T10:03:59.970Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f708f631a446324fd9b56@apikey.storecraft.api",
-                        "au_662f708f631a446324fd9b56@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f708f631a446324fd9b56",
-                        "role:admin"
-                    ]
-                },
-                {
-                    "id": "au_662f70d5097c01634d3f9b41",
-                    "email": "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:05:09.001Z",
-                    "updated_at": "2024-04-29T10:05:09.001Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
-                        "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f70d5097c01634d3f9b41",
-                        "role:admin"
-                    ]
-                },
-                {
-                    "id": "au_662f75221cd845663fa3de0b",
-                    "email": "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:23:30.399Z",
-                    "updated_at": "2024-04-29T10:23:30.399Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f75221cd845663fa3de0b@apikey.storecraft.api",
-                        "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f75221cd845663fa3de0b",
-                        "role:admin"
-                    ]
-                },
+                example_auth_user, example_auth_user
               ]
             },
           },
@@ -1042,7 +1184,7 @@ const register_auth = registry => {
   registry.registerPath(
     {
       method: 'get',
-      path: `/auth/users?limit={limit}&limitToLast={limitToLast}&startAt={startAt}&endAt={endAt}&startAfter={startAfter}&endBefore={endBefore}&sortBy={sortBy}&order={order}&vql={vql}&expand={expand}`,
+      path: `/auth/users`,
       description: 'Query and Filter Authenticated users',
       summary: 'Query / Filter auth users',
       tags,
@@ -1055,104 +1197,7 @@ const register_auth = registry => {
           content: {
             "application/json": {
               schema: z.array(authUserTypeSchema),
-              example: [
-                {
-                    "id": "au_662f70821937f16320a8debb",
-                    "email": "au_662f70821937f16320a8debb@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:03:46.835Z",
-                    "updated_at": "2024-04-29T10:03:46.835Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f70821937f16320a8debb@apikey.storecraft.api",
-                        "au_662f70821937f16320a8debb@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f70821937f16320a8debb",
-                        "role:admin"
-                    ]
-                },
-                {
-                    "id": "au_662f708f631a446324fd9b56",
-                    "email": "au_662f708f631a446324fd9b56@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:03:59.970Z",
-                    "updated_at": "2024-04-29T10:03:59.970Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f708f631a446324fd9b56@apikey.storecraft.api",
-                        "au_662f708f631a446324fd9b56@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f708f631a446324fd9b56",
-                        "role:admin"
-                    ]
-                },
-                {
-                    "id": "au_662f70d5097c01634d3f9b41",
-                    "email": "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:05:09.001Z",
-                    "updated_at": "2024-04-29T10:05:09.001Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
-                        "au_662f70d5097c01634d3f9b41@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f70d5097c01634d3f9b41",
-                        "role:admin"
-                    ]
-                },
-                {
-                    "id": "au_662f75221cd845663fa3de0b",
-                    "email": "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
-                    "confirmed_mail": false,
-                    "roles": [
-                        "admin"
-                    ],
-                    "tags": [
-                        "apikey"
-                    ],
-                    "active": true,
-                    "description": "This user is a created apikey with roles: [admin]",
-                    "created_at": "2024-04-29T10:23:30.399Z",
-                    "updated_at": "2024-04-29T10:23:30.399Z",
-                    "search": [
-                        "email:true",
-                        "email:au_662f75221cd845663fa3de0b@apikey.storecraft.api",
-                        "au_662f75221cd845663fa3de0b@apikey.storecraft.api",
-                        "confirmed_mail:false",
-                        "tag:apikey",
-                        "au_662f75221cd845663fa3de0b",
-                        "role:admin"
-                    ]
-                },
-              ]
+              example: [example_auth_user, example_auth_user]
             },
           },
         },
@@ -1223,7 +1268,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`
+            example: 'images/test.png'
           }
         ),
       }),
@@ -1255,7 +1300,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`
+            example: 'images/test.png'
           }
         ),
       }),
@@ -1290,7 +1335,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`,
+            example: 'images/test.png',
             description: 'The file key'
           }
         ),
@@ -1324,7 +1369,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`,
+            example: 'images/test.png',
             description: 'The file key'
           }
         ),
@@ -1364,7 +1409,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`,
+            example: 'images/test.png',
             description: 'The file key'
           }
         ),
@@ -1425,43 +1470,19 @@ const register_collections = registry => {
   const _typeUpsertSchema = registry.register(
     `${name}Upsert`, collectionTypeUpsertSchema
     );
-  const example = {
-    "active": true,
-    "handle": "t-shirts-men",
-    "title": "T Shirts for men",
-    "tags": [
-      "tag-summer",
-      "tag-hello"
-    ],
-    "id": "col_65f2ae5a8bf30e6cd0ca95f4",
-    "created_at": "2024-03-14T07:59:22.013Z",
-    "updated_at": "2024-03-14T07:59:22.013Z",
-    "search": [
-      "tag:tag-summer",
-      "tag:tag-hello",
-      "handle:t-shirts-men",
-      "t-shirts-men",
-      "id:col_65f2ae5a8bf30e6cd0ca95f4",
-      "col_65f2ae5a8bf30e6cd0ca95f4",
-      "65f2ae5a8bf30e6cd0ca95f4",
-      "active:true",
-      "summer",
-      "hello",
-    ]
-  }
 
   register_base_get(
     registry, slug_base, name, tags, example_id, 
-    _typeSchema, example
+    _typeSchema, example_collection
     );
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
-    _typeUpsertSchema, example
+    _typeUpsertSchema, example_collection
     );
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, 
-    example
+    example_collection
     );
 
   // list and filter collection products
@@ -1475,7 +1496,7 @@ const register_collections = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -1489,39 +1510,7 @@ const register_collections = registry => {
           'application/json': {
             schema: z.array(variantTypeSchema),
             example: [
-              {
-                "handle": "tshirt-red-color",
-                "active": true,
-                "price": 50,
-                "qty": 1,
-                "title": "tshirt variant 1 - red color",
-                "parent_handle": "pr-api-products-variants-test-js-1",
-                "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
-                "variant_hint": [
-                  {
-                    "option_id": "id-option-1",
-                    "value_id": "id-val-1"
-                  }
-                ],
-                "id": "pr_65fab4471d764999c957cb05",
-                "created_at": "2024-03-20T10:02:47.411Z",
-                "updated_at": "2024-03-20T10:02:47.411Z",
-                "search": [
-                  "handle:tshirt-red-color",
-                  "tshirt-red-color",
-                  "id:pr_65fab4471d764999c957cb05",
-                  "pr_65fab4471d764999c957cb05",
-                  "65fab4471d764999c957cb05",
-                  "active:true",
-                  "tshirt",
-                  "variant",
-                  "1",
-                  "red",
-                  "color",
-                  "tshirt variant 1 - red color",
-                  "discount:3-for-100",
-                ]
-              }
+              example_product, example_product
             ]
           },
         },
@@ -1554,7 +1543,7 @@ const register_tags = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
 
@@ -1584,7 +1573,7 @@ const register_templates = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
 
@@ -1599,28 +1588,11 @@ const register_shipping = registry => {
   const example_id = 'ship_65dc6198c40344c9a1dd674f';
   const _typeSchema = registry.register(name, shippingMethodTypeSchema);
   const _typeUpsertSchema = registry.register(`${name}Upsert`, shippingMethodTypeUpsertSchema);
-  const example = {
-    "handle": "shipping-express",
-    "name": "Express Shipping 2-3 days",
-    "price": 50,
-    "id": "ship_65dc6198c40344c9a1dd674f",
-    "search": [
-      "handle:shipping-express",
-      "shipping-express",
-      "id:ship_65dc6198c40344c9a1dd674f",
-      "ship_65dc6198c40344c9a1dd674f",
-      "65dc6198c40344c9a1dd674f",
-      "Express",
-      "Shipping",
-    ],
-    "created_at": "2024-02-26T10:02:00.139Z",
-    "updated_at": "2024-02-26T10:02:00.139Z"
-  }
   
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example_shipping);
+  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example_shipping);
+  register_base_delete(registry, slug_base, name, tags, example_id);
+  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_shipping);
 }
 
 /**
@@ -1668,7 +1640,7 @@ const register_customers = registry => {
   - Referenced \`auth_user\` will be removed as well \n 
   `
 
-  register_base_delete(registry, slug_base, name, tags, desc_delete);
+  register_base_delete(registry, slug_base, name, tags, example_id, desc_delete);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example, apply_security()
@@ -1686,7 +1658,7 @@ const register_customers = registry => {
       params: z.object({
         id_or_email: z.string().openapi(
           { 
-            example: `\`a@a.com\``,
+            example: 'a@a.com',
             description: '`id` or `email`'
           }
         ),
@@ -1700,70 +1672,7 @@ const register_customers = registry => {
           'application/json': {
             schema: z.array(variantTypeSchema),
             example: [
-              {
-                "contact": {
-                  "email": "a@a.com",
-                  "customer_id": "cus_....."
-                },
-                "status": {
-                  "checkout": {
-                    "id": 0,
-                    "name2": "created",
-                    "name": "Created"
-                  },
-                  "payment": {
-                    "id": 1,
-                    "name": "Authorized",
-                    "name2": "authorized"
-                  },
-                  "fulfillment": {
-                    "id": 0,
-                    "name2": "draft",
-                    "name": "Draft"
-                  }
-                },
-                "pricing": {
-                  "quantity_discounted": 3,
-                  "quantity_total": 5,
-                  "subtotal": 100,
-                  "subtotal_discount": 30,
-                  "subtotal_undiscounted": 70,
-                  "total": 120
-                },
-                "line_items": [
-                  {
-                    "id": "pr-1-id",
-                    "qty": 3
-                  },
-                  {
-                    "id": "pr-2-id",
-                    "qty": 2
-                  }
-                ],
-                "shipping_method": {
-                  "handle": "ship-a",
-                  "name": "ship a",
-                  "price": 30
-                },
-                "id": "order_65d774c6445e4581b9e34c11",
-                "search": [
-                  "id:order_65d774c6445e4581b9e34c11",
-                  "order_65d774c6445e4581b9e34c11",
-                  "65d774c6445e4581b9e34c11",
-                  "order_65d774c6445e4581b9e34c11",
-                  120,
-                  "payment:authorized",
-                  "payment:1",
-                  "fulfill:draft",
-                  "fulfill:0",
-                  "checkout:created",
-                  "checkout:0",
-                  "li:pr-1-id",
-                  "li:pr-2-id"
-                ],
-                "created_at": "2024-02-22T16:22:30.095Z",
-                "updated_at": "2024-02-22T16:22:30.095Z"
-              }
+              example_order, example_order
             ]
           },
         },
@@ -1787,66 +1696,10 @@ const register_discounts = registry => {
   const _typeUpsertSchema = registry.register(
     `${name}Upsert`, discountTypeUpsertSchema
     );
-  const example = {
-    "active": true,
-    "handle": "10-off-for-product-1",
-    "title": "10% OFF for product 1",
-    "priority": 0,
-    "application": {
-      "id": 0,
-      "name": "Automatic",
-      "name2": "automatic"
-    },
-    "info": {
-      "details": {
-        "meta": {
-          "id": 0,
-          "type": "regular",
-          "name": "Regular Discount"
-        },
-        "extra": {
-          "fixed": 0,
-          "percent": 10
-        }
-      },
-      "filters": [
-        {
-          "meta": {
-            "id": 2,
-            "type": "product",
-            "op": "p-in-handles",
-            "name": "Product has ID"
-          },
-          "value": [
-            "pr-api-discounts-products-test-js-1"
-          ]
-        }
-      ]
-    },
-    "id": "dis_65f2ae888bf30e6cd0ca9600",
-    "created_at": "2024-03-14T08:00:08.138Z",
-    "updated_at": "2024-03-14T08:00:08.138Z",
-    "search": [
-      "handle:10-off-for-product-1",
-      "10-off-for-product-1",
-      "id:dis_65f2ae888bf30e6cd0ca9600",
-      "dis_65f2ae888bf30e6cd0ca9600",
-      "65f2ae888bf30e6cd0ca9600",
-      "active:true",
-      "10",
-      "product",
-      "1",
-      "10% off for product 1",
-      "app:0",
-      "app:automatic",
-      "type:0",
-      "type:regular"
-    ]
-  }
   
   register_base_get(
     registry, slug_base, name, tags, example_id, 
-    _typeSchema, example
+    _typeSchema, example_discount
     );
 
   const desc_upsert = `When upserting a \`discount\`, 
@@ -1856,10 +1709,10 @@ const register_discounts = registry => {
   `
 
   register_base_upsert(registry, slug_base, name, tags, 
-    example_id, _typeUpsertSchema, example, desc_upsert);
-  register_base_delete(registry, slug_base, name, tags);
+    example_id, _typeUpsertSchema, example_discount, desc_upsert);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, 
-    _typeUpsertSchema, example);
+    _typeUpsertSchema, example_discount);
 
   // list and filter discount's products
   registry.registerPath({
@@ -1873,7 +1726,7 @@ const register_discounts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -1886,41 +1739,7 @@ const register_discounts = registry => {
         content: {
           'application/json': {
             schema: z.array(variantTypeSchema),
-            example: [
-              {
-                "handle": "tshirt-red-color",
-                "active": true,
-                "price": 50,
-                "qty": 1,
-                "title": "tshirt variant 1 - red color",
-                "parent_handle": "pr-api-products-variants-test-js-1",
-                "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
-                "variant_hint": [
-                  {
-                    "option_id": "id-option-1",
-                    "value_id": "id-val-1"
-                  }
-                ],
-                "id": "pr_65fab4471d764999c957cb05",
-                "created_at": "2024-03-20T10:02:47.411Z",
-                "updated_at": "2024-03-20T10:02:47.411Z",
-                "search": [
-                  "handle:tshirt-red-color",
-                  "tshirt-red-color",
-                  "id:pr_65fab4471d764999c957cb05",
-                  "pr_65fab4471d764999c957cb05",
-                  "65fab4471d764999c957cb05",
-                  "active:true",
-                  "tshirt",
-                  "variant",
-                  "1",
-                  "red",
-                  "color",
-                  "tshirt variant 1 - red color",
-                  "discount:3-for-100",
-                ]
-              }
-            ]
+            example: [example_product]
           },
         },
       },
@@ -1961,7 +1780,7 @@ const register_images = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
 
@@ -2315,7 +2134,7 @@ const register_notifications = registry => {
     registry, slug_base, name, tags, example_id, 
     z.array(_typeUpsertSchema), example, 
     'Upsert Bulk `notifications`', 'Upsert Bulk notifications');
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example, apply_security()
@@ -2334,77 +2153,18 @@ const register_orders = registry => {
   const _typeUpsertSchema = registry.register(
     `${name}Upsert`, orderDataUpsertSchema
     );
-  const example = {
-    "status": {
-      "checkout": {
-        "id": 0,
-        "name2": "created",
-        "name": "Created"
-      },
-      "payment": {
-        "id": 1,
-        "name": "Authorized",
-        "name2": "authorized"
-      },
-      "fulfillment": {
-        "id": 0,
-        "name2": "draft",
-        "name": "Draft"
-      }
-    },
-    "pricing": {
-      "quantity_discounted": 3,
-      "quantity_total": 5,
-      "subtotal": 100,
-      "subtotal_discount": 30,
-      "subtotal_undiscounted": 70,
-      "total": 120
-    },
-    "line_items": [
-      {
-        "id": "pr-1-id",
-        "qty": 3
-      },
-      {
-        "id": "pr-2-id",
-        "qty": 2
-      }
-    ],
-    "shipping_method": {
-      "handle": "ship-a",
-      "name": "ship a",
-      "price": 30
-    },
-    "id": "order_65d774c6445e4581b9e34c11",
-    "search": [
-      "id:order_65d774c6445e4581b9e34c11",
-      "order_65d774c6445e4581b9e34c11",
-      "65d774c6445e4581b9e34c11",
-      "order_65d774c6445e4581b9e34c11",
-      120,
-      "payment:authorized",
-      "payment:1",
-      "fulfill:draft",
-      "fulfill:0",
-      "checkout:created",
-      "checkout:0",
-      "li:pr-1-id",
-      "li:pr-2-id"
-    ],
-    "created_at": "2024-02-22T16:22:30.095Z",
-    "updated_at": "2024-02-22T16:22:30.095Z"
-  }
+
   register_base_get(
     registry, slug_base, name, tags, example_id, 
-    _typeSchema, example);
+    _typeSchema, example_order);
   register_base_upsert(
     registry, slug_base, name, tags, example_id, 
-    _typeUpsertSchema, example
+    _typeUpsertSchema, example_order
     );
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example, apply_security(),
+    _typeUpsertSchema, example_order, apply_security(),
     'List operates differently in the following cases: \n \
     - If user is `admin`, orders of all customers will be returned \n \
     - If user is not `admin`, then only his own orders will be returned '
@@ -2421,29 +2181,11 @@ const register_posts = registry => {
   const example_id = 'post_65f2ae998bf30e6cd0ca9605';
   const _typeSchema = registry.register(name, postTypeSchema);
   const _typeUpsertSchema = registry.register(`${name}Upsert`, postTypeUpsertSchema);
-  const example = {
-    "handle": "post-1",
-    "title": "post 1",
-    "text": "text of post 1",
-    "id": "post_65f2aea48bf30e6cd0ca9610",
-    "created_at": "2024-03-14T08:00:36.999Z",
-    "updated_at": "2024-03-14T08:00:36.999Z",
-    "search": [
-      "handle:post-1",
-      "post-1",
-      "id:post_65f2aea48bf30e6cd0ca9610",
-      "post_65f2aea48bf30e6cd0ca9610",
-      "65f2aea48bf30e6cd0ca9610",
-      "post",
-      "1",
-      "post 1"
-    ]
-  }
 
-  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
-  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
-  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
+  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example_post);
+  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example_post);
+  register_base_delete(registry, slug_base, name, tags, example_id);
+  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_post);
 }
 
 /**
@@ -2622,7 +2364,7 @@ const register_storefronts = registry => {
   register_base_upsert(registry, slug_base, name, tags, 
     example_id, _typeUpsertSchema, example, desc_upsert
     );
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, example
     );
@@ -2638,7 +2380,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2650,33 +2392,7 @@ const register_storefronts = registry => {
         content: {
           'application/json': {
             schema: z.array(productTypeSchema.or(variantTypeSchema)),
-            example: [
-              {
-                "handle": "pr-api-discounts-products-test-js-1",
-                "active": true,
-                "price": 50,
-                "qty": 1,
-                "title": "product 1",
-                "id": "pr_65f2ae878bf30e6cd0ca95ff",
-                "created_at": "2024-03-14T08:00:07.297Z",
-                "updated_at": "2024-03-14T08:00:07.297Z",
-                "search": [
-                  "handle:pr-api-discounts-products-test-js-1",
-                  "pr-api-discounts-products-test-js-1",
-                  "id:pr_65f2ae878bf30e6cd0ca95ff",
-                  "pr_65f2ae878bf30e6cd0ca95ff",
-                  "65f2ae878bf30e6cd0ca95ff",
-                  "active:true",
-                  "product",
-                  "1",
-                  "product 1",
-                  "discount:10-off-for-specific",
-                  "discount:3-for-100",
-                  "discount:dis_65e75bbb3e40cc70cb17d131",
-                  "discount:dis_65f2ae768bf30e6cd0ca95fc",
-                ]
-              }
-            ]
+            example: [example_product, example_product]
           },
         },
       },
@@ -2695,7 +2411,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2707,64 +2423,7 @@ const register_storefronts = registry => {
         content: {
           'application/json': {
             schema: z.array(discountTypeSchema),
-            example: [
-              {
-                "active": true,
-                "handle": "10-off-for-product-1",
-                "title": "10% OFF for product 1",
-                "priority": 0,
-                "application": {
-                  "id": 0,
-                  "name": "Automatic",
-                  "name2": "automatic"
-                },
-                "info": {
-                  "details": {
-                    "meta": {
-                      "id": 0,
-                      "type": "regular",
-                      "name": "Regular Discount"
-                    },
-                    "extra": {
-                      "fixed": 0,
-                      "percent": 10
-                    }
-                  },
-                  "filters": [
-                    {
-                      "meta": {
-                        "id": 2,
-                        "type": "product",
-                        "op": "p-in-handles",
-                        "name": "Product has ID"
-                      },
-                      "value": [
-                        "pr-api-discounts-products-test-js-1"
-                      ]
-                    }
-                  ]
-                },
-                "id": "dis_65f2ae888bf30e6cd0ca9600",
-                "created_at": "2024-03-14T08:00:08.138Z",
-                "updated_at": "2024-03-14T08:00:08.138Z",
-                "search": [
-                  "handle:10-off-for-product-1",
-                  "10-off-for-product-1",
-                  "id:dis_65f2ae888bf30e6cd0ca9600",
-                  "dis_65f2ae888bf30e6cd0ca9600",
-                  "65f2ae888bf30e6cd0ca9600",
-                  "active:true",
-                  "10",
-                  "product",
-                  "1",
-                  "10% off for product 1",
-                  "app:0",
-                  "app:automatic",
-                  "type:0",
-                  "type:regular"
-                ]
-              }
-            ]
+            example: [example_discount]
           },
         },
       },
@@ -2783,7 +2442,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2795,25 +2454,7 @@ const register_storefronts = registry => {
         content: {
           'application/json': {
             schema: z.array(shippingMethodTypeSchema),
-            example: [
-              {
-                "handle": "shipping-express",
-                "name": "Express Shipping 2-3 days",
-                "price": 50,
-                "id": "ship_65dc6198c40344c9a1dd674f",
-                "search": [
-                  "handle:shipping-express",
-                  "shipping-express",
-                  "id:ship_65dc6198c40344c9a1dd674f",
-                  "ship_65dc6198c40344c9a1dd674f",
-                  "65dc6198c40344c9a1dd674f",
-                  "Express",
-                  "Shipping",
-                ],
-                "created_at": "2024-02-26T10:02:00.139Z",
-                "updated_at": "2024-02-26T10:02:00.139Z"
-              }
-            ]
+            example: [example_shipping]
           },
         },
       },
@@ -2832,7 +2473,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2844,32 +2485,7 @@ const register_storefronts = registry => {
         content: {
           'application/json': {
             schema: z.array(collectionTypeSchema),
-            example: [
-              {
-                "active": true,
-                "handle": "t-shirts-men",
-                "title": "T Shirts for men",
-                "tags": [
-                  "tag-summer",
-                  "tag-hello"
-                ],
-                "id": "col_65f2ae5a8bf30e6cd0ca95f4",
-                "created_at": "2024-03-14T07:59:22.013Z",
-                "updated_at": "2024-03-14T07:59:22.013Z",
-                "search": [
-                  "tag:tag-summer",
-                  "tag:tag-hello",
-                  "handle:t-shirts-men",
-                  "t-shirts-men",
-                  "id:col_65f2ae5a8bf30e6cd0ca95f4",
-                  "col_65f2ae5a8bf30e6cd0ca95f4",
-                  "65f2ae5a8bf30e6cd0ca95f4",
-                  "active:true",
-                  "summer",
-                  "hello",
-                ]
-              }
-            ]
+            example: [example_collection]
           },
         },
       },
@@ -2888,7 +2504,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2900,26 +2516,7 @@ const register_storefronts = registry => {
         content: {
           'application/json': {
             schema: z.array(postTypeSchema),
-            example: [
-              {
-                "handle": "post-1",
-                "title": "post 1",
-                "text": "text of post 1",
-                "id": "post_65f2aea48bf30e6cd0ca9610",
-                "created_at": "2024-03-14T08:00:36.999Z",
-                "updated_at": "2024-03-14T08:00:36.999Z",
-                "search": [
-                  "handle:post-1",
-                  "post-1",
-                  "id:post_65f2aea48bf30e6cd0ca9610",
-                  "post_65f2aea48bf30e6cd0ca9610",
-                  "65f2aea48bf30e6cd0ca9610",
-                  "post",
-                  "1",
-                  "post 1"
-                ]
-              }
-            ]
+            example: [example_post]
           },
         },
       },
@@ -2928,6 +2525,7 @@ const register_storefronts = registry => {
   });
 
 }
+
 
 /**
  * @param {OpenAPIRegistry} registry 
@@ -2946,59 +2544,59 @@ const register_payments = registry => {
 
   const example_get = {
     "config": {
-        "default_currency_code": "USD",
-        "env": "prod",
-        "intent_on_checkout": "AUTHORIZE",
-        "client_id": "client_id",
-        "secret": "secret"
+      "default_currency_code": "USD",
+      "env": "prod",
+      "intent_on_checkout": "AUTHORIZE",
+      "client_id": "client_id",
+      "secret": "secret"
     },
     "info": {
-        "name": "Paypal standard payments",
-        "description": "Set up standard payments to present payment buttons \
-        to your payers so they can pay with PayPal, debit and credit cards, \
-        Pay Later options, Venmo, and alternative payment methods.\n      \
-        You can get started quickly with this 15-minute copy-and-paste integration. \
-        If you have an older Checkout integration, you can upgrade your Checkout integration.",
-        "url": "https://developer.paypal.com/docs/checkout/standard/",
-        "logo_url": "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg"
+      "name": "Paypal standard payments",
+      "description": "Set up standard payments to present payment buttons \
+      to your payers so they can pay with PayPal, debit and credit cards, \
+      Pay Later options, Venmo, and alternative payment methods.\n      \
+      You can get started quickly with this 15-minute copy-and-paste integration. \
+      If you have an older Checkout integration, you can upgrade your Checkout integration.",
+      "url": "https://developer.paypal.com/docs/checkout/standard/",
+      "logo_url": "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg"
     },
     "handle": "paypal_standard",
     "actions": [
-        {
-            "handle": "capture",
-            "name": "Capture",
-            "description": "Capture an authorized payment"
-        },
-        {
-            "handle": "void",
-            "name": "Void",
-            "description": "Cancel an authorized payment"
-        },
-        {
-            "handle": "refund",
-            "name": "Refund",
-            "description": "Refund a captured payment"
-        }
+      {
+        "handle": "capture",
+        "name": "Capture",
+        "description": "Capture an authorized payment"
+      },
+      {
+        "handle": "void",
+        "name": "Void",
+        "description": "Cancel an authorized payment"
+      },
+      {
+        "handle": "refund",
+        "name": "Refund",
+        "description": "Refund a captured payment"
+      }
     ]
   }
 
   const example_status = {
     "actions": [
-        {
-            "handle": "capture",
-            "name": "Capture",
-            "description": "Capture an authorized payment"
-        },
-        {
-            "handle": "void",
-            "name": "Void",
-            "description": "Cancel an authorized payment"
-        },
-        {
-            "handle": "refund",
-            "name": "Refund",
-            "description": "Refund a captured payment"
-        }
+      {
+        "handle": "capture",
+        "name": "Capture",
+        "description": "Capture an authorized payment"
+      },
+      {
+        "handle": "void",
+        "name": "Void",
+        "description": "Cancel an authorized payment"
+      },
+      {
+        "handle": "refund",
+        "name": "Refund",
+        "description": "Refund a captured payment"
+      }
     ],
     "messages": [
       "200USD were tried to be Captured",
@@ -3184,11 +2782,11 @@ const register_extensions = registry => {
 
   const example_get = {
     "config": {
-        "default_currency_code": "USD",
-        "env": "prod",
-        "intent_on_checkout": "AUTHORIZE",
-        "client_id": "client_id",
-        "secret": "secret"
+      "default_currency_code": "USD",
+      "env": "prod",
+      "intent_on_checkout": "AUTHORIZE",
+      "client_id": "client_id",
+      "secret": "secret"
     },
     "info": {
         "name": "Paypal standard payments",
@@ -3585,7 +3183,7 @@ const register_products = registry => {
     },
   });
 
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example
@@ -3602,7 +3200,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3614,32 +3212,7 @@ const register_products = registry => {
         content: {
           'application/json': {
             schema: z.array(collectionTypeSchema),
-            example: [
-              {
-                "active": true,
-                "handle": "t-shirts-men",
-                "title": "T Shirts for men",
-                "tags": [
-                  "tag-summer",
-                  "tag-hello"
-                ],
-                "id": "col_65f2ae5a8bf30e6cd0ca95f4",
-                "created_at": "2024-03-14T07:59:22.013Z",
-                "updated_at": "2024-03-14T07:59:22.013Z",
-                "search": [
-                  "tag:tag-summer",
-                  "tag:tag-hello",
-                  "handle:t-shirts-men",
-                  "t-shirts-men",
-                  "id:col_65f2ae5a8bf30e6cd0ca95f4",
-                  "col_65f2ae5a8bf30e6cd0ca95f4",
-                  "65f2ae5a8bf30e6cd0ca95f4",
-                  "active:true",
-                  "summer",
-                  "hello",
-                ]
-              }
-            ]
+            example: [example_collection]
           },
         },
       },
@@ -3658,7 +3231,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3723,7 +3296,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3735,64 +3308,7 @@ const register_products = registry => {
         content: {
           'application/json': {
             schema: z.array(discountTypeSchema),
-            example: [
-              {
-                "active": true,
-                "handle": "10-off-for-product-1",
-                "title": "10% OFF for product 1",
-                "priority": 0,
-                "application": {
-                  "id": 0,
-                  "name": "Automatic",
-                  "name2": "automatic"
-                },
-                "info": {
-                  "details": {
-                    "meta": {
-                      "id": 0,
-                      "type": "regular",
-                      "name": "Regular Discount"
-                    },
-                    "extra": {
-                      "fixed": 0,
-                      "percent": 10
-                    }
-                  },
-                  "filters": [
-                    {
-                      "meta": {
-                        "id": 2,
-                        "type": "product",
-                        "op": "p-in-handles",
-                        "name": "Product has ID"
-                      },
-                      "value": [
-                        "pr-api-discounts-products-test-js-1"
-                      ]
-                    }
-                  ]
-                },
-                "id": "dis_65f2ae888bf30e6cd0ca9600",
-                "created_at": "2024-03-14T08:00:08.138Z",
-                "updated_at": "2024-03-14T08:00:08.138Z",
-                "search": [
-                  "handle:10-off-for-product-1",
-                  "10-off-for-product-1",
-                  "id:dis_65f2ae888bf30e6cd0ca9600",
-                  "dis_65f2ae888bf30e6cd0ca9600",
-                  "65f2ae888bf30e6cd0ca9600",
-                  "active:true",
-                  "10",
-                  "product",
-                  "1",
-                  "10% off for product 1",
-                  "app:0",
-                  "app:automatic",
-                  "type:0",
-                  "type:regular"
-                ]
-              }
-            ]
+            example: [example_discount]
           },
         },
       },
@@ -3811,7 +3327,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3823,64 +3339,7 @@ const register_products = registry => {
         content: {
           'application/json': {
             schema: z.array(discountTypeSchema),
-            example: [
-              {
-                "active": true,
-                "handle": "10-off-for-product-1",
-                "title": "10% OFF for product 1",
-                "priority": 0,
-                "application": {
-                  "id": 0,
-                  "name": "Automatic",
-                  "name2": "automatic"
-                },
-                "info": {
-                  "details": {
-                    "meta": {
-                      "id": 0,
-                      "type": "regular",
-                      "name": "Regular Discount"
-                    },
-                    "extra": {
-                      "fixed": 0,
-                      "percent": 10
-                    }
-                  },
-                  "filters": [
-                    {
-                      "meta": {
-                        "id": 2,
-                        "type": "product",
-                        "op": "p-in-handles",
-                        "name": "Product has ID"
-                      },
-                      "value": [
-                        "pr-api-discounts-products-test-js-1"
-                      ]
-                    }
-                  ]
-                },
-                "id": "dis_65f2ae888bf30e6cd0ca9600",
-                "created_at": "2024-03-14T08:00:08.138Z",
-                "updated_at": "2024-03-14T08:00:08.138Z",
-                "search": [
-                  "handle:10-off-for-product-1",
-                  "10-off-for-product-1",
-                  "id:dis_65f2ae888bf30e6cd0ca9600",
-                  "dis_65f2ae888bf30e6cd0ca9600",
-                  "65f2ae888bf30e6cd0ca9600",
-                  "active:true",
-                  "10",
-                  "product",
-                  "1",
-                  "10% off for product 1",
-                  "app:0",
-                  "app:automatic",
-                  "type:0",
-                  "type:regular"
-                ]
-              }
-            ]
+            example: [example_product]
           },
         },
       },

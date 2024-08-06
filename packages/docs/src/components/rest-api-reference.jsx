@@ -147,7 +147,7 @@ export default function RestApiReference() {
       configuration={{
         spec: {
           // url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
-          url: 'https://cdn.jsdelivr.net/npm/@storecraft/core/v-rest/openapi.json',
+          url: 'https://cdn.jsdelivr.net/npm/@storecraft/core@latest/v-rest/openapi.json',
           
         },
         theme: 'kepler',

@@ -308,8 +308,8 @@ const create_query = () => {
     endBefore: cursor,
     sortBy: z.string().optional().openapi(
       { 
-        examples: ['(updated_at, id)'],
-        description: 'A cursor of Keys in CSV format, example: `(updated_at, id)`',
+        examples: ['(updated_at,id)'],
+        description: 'A cursor of Keys in CSV format, example: `(updated_at,id)`',
         default: '`(updated_at, id)`'
       }
     ),
@@ -462,15 +462,15 @@ const register_base_get = (
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: `The \`id\` or \`handle\` of ${name}`
           }
         ),
       }),
       query: z.object({
-        expand: z.string().openapi(
+        expand: z.string().optional().openapi(
           { 
-            examples: [`(collections, search)`, `*`],
+            examples: ['(collections,search)', '*'],
             description: `Expand connections of item, 
             a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
             default: '`*`'
@@ -548,9 +548,10 @@ const register_base_upsert = (registry, slug_base, name, tags, example_id,
  * @param {string} slug_base 
  * @param {string} name 
  * @param {string[]} tags 
+ * @param {string} example_id 
  * @param {string} [description] 
  */
-const register_base_delete = (registry, slug_base, name, tags, description) => {
+const register_base_delete = (registry, slug_base, name, tags, example_id, description) => {
   
   registry.registerPath({
     method: 'delete',
@@ -559,6 +560,14 @@ const register_base_delete = (registry, slug_base, name, tags, description) => {
     summary: `Delete a single ${name}`,
     tags,
     request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: example_id,
+            description: `The \`id\` or \`handle\` of ${name}`
+          }
+        ),
+      }),
     },
     responses: {
       200: {
@@ -590,7 +599,18 @@ const register_base_list = (
     description: `List and filter items \n ${aug_description}`,
     tags,
     request: {
-      query: create_query()
+      query: create_query(),
+      aquery: z.object({
+        expand: z.string().openapi(
+          { 
+            examples: ['(collections,search)', '*'],
+            description: `Expand connections of item, 
+            a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
+            default: '`*`'
+          }
+        ),
+      }),
+
     },
     responses: {
       200: {
@@ -1052,7 +1072,7 @@ const register_auth = registry => {
         params: z.object({
           email_or_id: z.string().openapi(
             { 
-              example: `\`au_65f98390d6a34550cdc651a1\` or email like \`a@a.com\``,
+              example: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
               description: `The \`id\` or \`email\` of auth user`
             }
           ),
@@ -1086,7 +1106,7 @@ const register_auth = registry => {
         params: z.object({
           email_or_id: z.string().openapi(
             { 
-              example: `\`au_65f98390d6a34550cdc651a1\` or email like \`a@a.com\``,
+              example: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
               description: `The \`id\` or \`email\` of auth user`
             }
           ),
@@ -1248,7 +1268,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`
+            example: 'images/test.png'
           }
         ),
       }),
@@ -1280,7 +1300,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`
+            example: 'images/test.png'
           }
         ),
       }),
@@ -1315,7 +1335,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`,
+            example: 'images/test.png',
             description: 'The file key'
           }
         ),
@@ -1349,7 +1369,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`,
+            example: 'images/test.png',
             description: 'The file key'
           }
         ),
@@ -1389,7 +1409,7 @@ const register_storage = registry => {
       params: z.object({
         file_key: z.string().openapi(
           { 
-            example: `images/test.png`,
+            example: 'images/test.png',
             description: 'The file key'
           }
         ),
@@ -1459,7 +1479,7 @@ const register_collections = registry => {
     registry, slug_base, name, tags, example_id, 
     _typeUpsertSchema, example_collection
     );
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, 
     example_collection
@@ -1476,7 +1496,7 @@ const register_collections = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -1523,7 +1543,7 @@ const register_tags = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
 
@@ -1553,7 +1573,7 @@ const register_templates = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
 
@@ -1571,7 +1591,7 @@ const register_shipping = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example_shipping);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example_shipping);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_shipping);
 }
 
@@ -1620,7 +1640,7 @@ const register_customers = registry => {
   - Referenced \`auth_user\` will be removed as well \n 
   `
 
-  register_base_delete(registry, slug_base, name, tags, desc_delete);
+  register_base_delete(registry, slug_base, name, tags, example_id, desc_delete);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example, apply_security()
@@ -1638,7 +1658,7 @@ const register_customers = registry => {
       params: z.object({
         id_or_email: z.string().openapi(
           { 
-            example: `\`a@a.com\``,
+            example: 'a@a.com',
             description: '`id` or `email`'
           }
         ),
@@ -1690,7 +1710,7 @@ const register_discounts = registry => {
 
   register_base_upsert(registry, slug_base, name, tags, 
     example_id, _typeUpsertSchema, example_discount, desc_upsert);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, 
     _typeUpsertSchema, example_discount);
 
@@ -1706,7 +1726,7 @@ const register_discounts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -1760,7 +1780,7 @@ const register_images = registry => {
   
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example);
 }
 
@@ -2114,7 +2134,7 @@ const register_notifications = registry => {
     registry, slug_base, name, tags, example_id, 
     z.array(_typeUpsertSchema), example, 
     'Upsert Bulk `notifications`', 'Upsert Bulk notifications');
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example, apply_security()
@@ -2141,7 +2161,7 @@ const register_orders = registry => {
     registry, slug_base, name, tags, example_id, 
     _typeUpsertSchema, example_order
     );
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example_order, apply_security(),
@@ -2164,7 +2184,7 @@ const register_posts = registry => {
 
   register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example_post);
   register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example_post);
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_post);
 }
 
@@ -2344,7 +2364,7 @@ const register_storefronts = registry => {
   register_base_upsert(registry, slug_base, name, tags, 
     example_id, _typeUpsertSchema, example, desc_upsert
     );
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, example
     );
@@ -2360,7 +2380,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2391,7 +2411,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2422,7 +2442,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2453,7 +2473,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -2484,7 +2504,7 @@ const register_storefronts = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle` of the storefront'
           }
         ),
@@ -3163,7 +3183,7 @@ const register_products = registry => {
     },
   });
 
-  register_base_delete(registry, slug_base, name, tags);
+  register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
     _typeUpsertSchema, example
@@ -3180,7 +3200,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3211,7 +3231,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3276,7 +3296,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),
@@ -3307,7 +3327,7 @@ const register_products = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: `\`${example_id}\` or a \`handle\``,
+            example: example_id,
             description: '`id` or `handle`'
           }
         ),

@@ -1,5 +1,10 @@
 # **Storecraft** Official React Hooks
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 Official **React** hooks for storecraft's javascript `SDK`.
 Many hooks manage the state into the browser `LocalStorage` and even a cache
 hook for `IndexDB`.

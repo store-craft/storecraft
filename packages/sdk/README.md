@@ -1,5 +1,10 @@
 # **Storecraft** Official Universal `Javascript` **SDK**
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 This is the official `storecraft` universal javascript `SDK` which is `fetch` based,
 which means you can you it both at browser and at backend runtimes such (`node` / `bun` / `deno`)
 

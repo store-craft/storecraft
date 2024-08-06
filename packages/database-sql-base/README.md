@@ -1,5 +1,10 @@
 # Storecraft `SQL` driver
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 Official `SQL` driver for `StoreCraft` with the dialects abstracted with `Kysely` or your own drivers.
 
 ```bash

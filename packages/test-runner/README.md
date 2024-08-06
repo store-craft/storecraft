@@ -1,4 +1,10 @@
 # Offical **Test Runner** for `storecraft` app
+
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 A work in progress package to test:
 - api and databases integrations
 - and more

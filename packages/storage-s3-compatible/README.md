@@ -1,5 +1,10 @@
 # Storecraft S3 compatible storage
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 `fetch` ready support for an `S3` like storage:
 - `Amazon S3`
 - `Cloudflare R2`

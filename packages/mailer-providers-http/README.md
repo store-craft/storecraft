@@ -1,5 +1,10 @@
 # `storecraft` Official serverless http email providers
 
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       height='150px' />
+</div><hr/><br/>
+
 Supports wellknown http-based `serverless` friendly `email` providers,
 
 - [Sendgrid](https://docs.sendgrid.com/api-reference/mail-send/mail-send)

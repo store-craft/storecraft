@@ -147,8 +147,8 @@ export class SQL {
     return this.#_resources;
   }
   
-  get name () { 
-    return 'main'; 
+  get name() { 
+    return this?.config?.db_name ?? 'main'; 
   }
 
   get app() { 
@@ -181,10 +181,6 @@ export class SQL {
 
   get isMysql() { 
     return this.dialectType==='MYSQL'; 
-  }
-
-  get isMssql() { 
-    return this.dialectType==='MSSQL'; 
   }
 
 }

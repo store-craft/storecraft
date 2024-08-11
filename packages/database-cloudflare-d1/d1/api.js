@@ -10,12 +10,13 @@ export class Client {
   /**
    * 
    * @param {string} account_id 
+   * @param {string} database_id 
    * @param {string} auth_token 
    */
   constructor(account_id, database_id, auth_token) {
     this.account_id = account_id;
-    this.auth_token = auth_token;
     this.database_id = database_id;
+    this.auth_token = auth_token;
   }
 
   /**
@@ -29,7 +30,7 @@ export class Client {
   
   /**
    * 
-   * @returns {Promise<import("./api.js").ListDatabasesResponse>}
+   * @returns {Promise<import("./api.types.js").ListDatabasesResponse>}
    */
   list = async () => {
 
@@ -50,7 +51,7 @@ export class Client {
 
   /**
    * 
-   * @returns {Promise<import("./api.js").GetDatabaseResponse>}
+   * @returns {Promise<import("./api.types.js").GetDatabaseResponse>}
    */
   get = async () => {
 
@@ -70,9 +71,9 @@ export class Client {
 
   /**
    * 
-   * @param {import("./api.js").QueryDatabaseParams} params
+   * @param {import("./api.types.js").QueryDatabaseParams} params
    * 
-   * @returns {Promise<import("./api.js").QueryDatabaseResponse>}
+   * @returns {Promise<import("./api.types.js").QueryDatabaseResponse>}
    */
   query = async (params) => {
 
@@ -93,9 +94,9 @@ export class Client {
 
   /**
    * 
-   * @param {import("./api.js").RawDatabaseParams} params
+   * @param {import("./api.types.js").RawDatabaseParams} params
    * 
-   * @returns {Promise<import("./api.js").RawDatabaseResponse>}
+   * @returns {Promise<import("./api.types.js").RawDatabaseResponse>}
    */
   raw = async (params) => {
 
@@ -113,6 +114,5 @@ export class Client {
 
     return response.json();
   }
-
 
 }

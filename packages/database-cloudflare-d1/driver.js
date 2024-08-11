@@ -1,5 +1,6 @@
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
+import { D1Dialect } from './kysely.d1.dialect.js';
 
 /**
  * @param {any} b 
@@ -23,7 +24,8 @@ export class D1 extends SQL {
     super(
       {
         dialect_type: 'SQLITE',
-        dialect: undefined
+        dialect: new D1Dialect(config),
+        db_name: config.db_name ?? 'unknown'
       }
     );
 

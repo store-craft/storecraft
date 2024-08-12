@@ -157,6 +157,13 @@ export class LibsqlConnection {
     console.log('stmts', JSON.stringify(stmts, null, 2))
     console.log('result', JSON.stringify(results, null, 2))
 
+    // if (!results?.success) {
+    //   const is_auth_declined_error = params?.at(0)==='_cf_KV';
+    //   console.log('is_auth_declined_error', is_auth_declined_error)
+    //   if(!is_auth_declined_error)
+    //     throw new Error(results?.errors?.join(', '));
+    // }
+
     const last_result = results?.at(-1);
 
     return {
@@ -190,6 +197,25 @@ export class LibsqlConnection {
     } else {
       return this.#internal_executeQuery([compiledQuery]);
     }
+  }
+    
+  /**
+   * @template R result type
+   * @param {kysely.CompiledQuery} compiledQuery 
+   * @returns {Promise<kysely.QueryResult<R>>}
+   */
+  async executeQueryOLD(compiledQuery) {
+    const target = this.#transaction ?? this.client;
+    const result = await target.execute({
+      sql: compiledQuery.sql,
+      args: compiledQuery.parameters// as Array<libsql.InValue>,
+    });
+    
+    return {
+      insertId: result.lastInsertRowid,
+      numAffectedRows: BigInt(result.rowsAffected),
+      rows: result.rows// as Array<R>,
+    };
   }
 
   async beginTransaction() {
@@ -235,6 +261,7 @@ export class LibsqlConnection {
     await this.#transaction.rollback();
     this.#transaction = undefined;
   }
+  
   /**
    * @template R result type
    * 

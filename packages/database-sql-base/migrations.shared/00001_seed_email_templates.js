@@ -11,7 +11,7 @@ import { upsert } from '../src/con.templates.js'
  */
 export async function up(db) {
   
-  for (const template of templates.slice(0, 1)) {
+  for (const template of templates.slice(0)) {
     const result = await upsert(db)(template);
     if(!result)
       throw new Error('Failed to write a template object')

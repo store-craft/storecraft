@@ -1,17 +1,11 @@
-# Storecraft Cloudflare D1 Database support
-
-WIP: 
-Work is on hold until
-
-- CF supports batch queries with parameters (to fight sql injections)
-- I will adapt it to a cloudflare worker, where batch queries with params are possible
+# Storecraft Turso (libsql) Database support
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
        height='150px' />
 </div><hr/><br/>
 
-Official `Cloudflare D1` driver for `StoreCraft` on any platforms.
+Official `Turso` / `libSql` driver for `StoreCraft` on any platforms.
 
 ```bash
 npm i @storecraft/database-cloudflare-d1
@@ -19,9 +13,9 @@ npm i @storecraft/database-cloudflare-d1
 
 ## Setup
 
-- First, login to your cloudflare account.
-- Create a `D1` database.
-- Create an API Key at [here](https://dash.cloudflare.com/profile/api-tokens)
+- First, login to your turso account.
+- Create a database.
+- Create an API Key.
 
 
 ## usage
@@ -34,12 +28,12 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platform-node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { Turso } from '@storecraft/database-turso'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 
 let app = new App(
   new NodePlatform(),
-  new MongoDB({ db_name: 'prod', url: '<MONGO-URL>'}),
+  new Turso({ url, database_id, api_token}),
   new NodeLocalStorage(join(homedir(), 'tomer'))
 );
 

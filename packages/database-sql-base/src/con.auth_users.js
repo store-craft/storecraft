@@ -17,6 +17,7 @@ export const table_name = 'auth_users';
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
+
   return async (item, search_terms=[]) => {
     const c = driver.client;
     try {

@@ -6,7 +6,7 @@ const test = async () => {
 
   const client = new Client(
     process.env.CLOUDFLARE_ACCOUNT_ID, 
-    process.env.CLOUDFLARE_D1_DATABASE_ID, 
+    "6040a5d5-82a5-4c6e-b505-ca45d2f17de9" ,//process.env.CLOUDFLARE_D1_DATABASE_ID, 
     process.env.CLOUDFLARE_D1_API_TOKEN
   );
   
@@ -14,17 +14,17 @@ const test = async () => {
   //   .then(json => console.log(json))
   //   .catch(err => console.error('error:' + err));  
 
-  const result = await client.query(
-    // {
-    //   sql: 'select * from TTT WHERE name = "11"',
-    //   // params: ['1', '2']
-    // }
+  const result = await client.raw(
     {
-      "sql": "select \"name\", \"type\", \"notnull\", \"dflt_value\" from pragma_table_info(?) as \"table_info\" order by \"cid\"",
-      "params": [
-        "_cf_KV"
-      ]
-    }
+      sql: 'select * from TTT WHERE name = ?; select * from TTT WHERE name = ?',
+      params: ['11', '11']
+    },
+    // {
+    //   "sql": "select \"name\", \"type\", \"notnull\", \"dflt_value\" from pragma_table_info(?) as \"table_info\" order by \"cid\"",
+    //   "params": [
+    //     "_cf_KV"
+    //   ]
+    // }
   )
 
   // const result2 = await client.list()

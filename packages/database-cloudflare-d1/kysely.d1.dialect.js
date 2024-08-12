@@ -191,11 +191,13 @@ class D1Connection {
       }
     );
 
-    console.log(JSON.stringify({sql, params}, null, 2))
-    console.log(JSON.stringify(results, null, 2))
-    if (!results.success) {
-      if(params[0]!=='_cf_KV')
-        throw new Error(results.errors.join(', '));
+    // console.log('q', JSON.stringify({sql, params}, null, 2))
+    console.log('result', JSON.stringify(results, null, 2))
+    if (!results?.success) {
+      const is_auth_declined_error = params?.at(0)==='_cf_KV';
+      console.log('is_auth_declined_error', is_auth_declined_error)
+      if(!is_auth_declined_error)
+        throw new Error(results?.errors?.join(', '));
     }
 
     const first_result = results?.result?.at(0);
@@ -228,6 +230,11 @@ class D1Connection {
     console.log('this.isBatch', this.isBatch)
     if(this.isBatch) {
       this.batch.push(compiledQuery);
+      return Promise.resolve(
+        {
+          rows: []
+        }
+      )
     } else {
       return this._internal_execute([compiledQuery]);
     }

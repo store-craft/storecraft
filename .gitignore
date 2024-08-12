@@ -4,3 +4,4 @@ node_modules
 tasks.md
 .vscode
 /packages/dashboard-old
+database-sql-base.temp

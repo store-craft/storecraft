@@ -10,11 +10,11 @@ import { Kysely } from 'kysely'
  */
 export async function up(db) {
   
-    await db.schema
-        .createTable('test_1')
-        .addColumn('id', 'integer', col => col.primaryKey().autoIncrement())
-        .addColumn('owner_id', 'integer')
-        .execute()
+  await db.schema
+      .createTable('test_1')
+      .addColumn('id', 'integer', col => col.primaryKey().autoIncrement())
+      .addColumn('owner_id', 'integer')
+      .execute()
 }
 
 /**

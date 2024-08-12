@@ -20,7 +20,7 @@ export const prepare_and_bind = (stmt='', params=[]) => {
           Number(match_string.slice(1)) : 
           index_run;
   
-    result += '\"' + params_object[index_access] + '\"';
+    result += "'" + params_object[index_access] + "'";
   
     current = m.index + m[0].length;
     index_run+=1;

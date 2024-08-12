@@ -201,7 +201,9 @@ export const add_sanity_crud_to_test_suite = s => {
               assert.not(v.payload.previous.updated_at===v.payload.current.updated_at)
             }
             is_event_ok = true;
-          } catch (e) {}
+          } catch (e) {
+            console.log(e)
+          }
         }
       );
   

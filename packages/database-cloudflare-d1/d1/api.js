@@ -76,9 +76,9 @@ export class Client {
    * @returns {Promise<import("./api.types.js").QueryDatabaseResponse>}
    */
   query = async (params) => {
-
+    const url = this.to_url(`/${this.database_id}/query`);
     const response = await fetch(
-      this.to_url(`/${this.database_id}/query`), 
+      url, 
       {
         method: 'POST',
         headers: {
@@ -89,7 +89,26 @@ export class Client {
       }
     );
 
-    return response.json();
+    const ctype = response.headers.get('Content-Type');
+    if(!response.ok) {
+      // console.log('error: query');
+      // console.log('error: response', response);
+      // console.log('error: headers', response.headers.get('Content-Type'));
+      // console.log('error: url ', url);
+      // // console.log('error: body ', params);
+      console.log(response.statusText)
+      console.log('error: headers', response.headers.get('Content-Type'));
+      if(ctype.includes('text/plain')) {
+        console.log('error: response text ', await response.text());
+      
+        return undefined;
+      }
+    }
+
+    if(ctype.includes('json'))
+      return await response.json();
+
+    return undefined;
   }
 
   /**

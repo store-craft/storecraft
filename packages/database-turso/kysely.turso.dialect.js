@@ -140,19 +140,21 @@ export class LibsqlConnection {
     // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
     const target = this.#transaction ?? this.client;
 
-    const results = await target.batch(
-      compiledQueries.map(
-        cq => (
-          {
-            sql: cq.sql,
-            args: (/** @type {import("@libsql/client").InArgs} */ (cq.parameters)),
-          }
-        )
+    const stmts = compiledQueries.map(
+      cq => (
+        {
+          sql: cq.sql,
+          args: (/** @type {import("@libsql/client").InArgs} */ (cq.parameters)),
+        }
       )
-    )
+    );
+
+    const results = await target.batch(
+      stmts  
+    );
 
     // console.log('q', JSON.stringify({sql, params}, null, 2))
-    console.log('queries', JSON.stringify(compiledQueries, null, 2))
+    console.log('stmts', JSON.stringify(stmts, null, 2))
     console.log('result', JSON.stringify(results, null, 2))
 
     // if (!results?.success) {

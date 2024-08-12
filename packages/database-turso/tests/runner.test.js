@@ -1,12 +1,20 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
+import { Turso } from '../index.js';
 
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
-    new MongoDB({ db_name: 'test'}),
+    new Turso(
+      { 
+        prefers_batch_over_transactions: true,
+        libsqlConfig: {
+          url: process.env.TURSO_URL,
+          authToken: process.env.TURSO_API_TOKEN,
+        }
+      }
+    ),
     null, null, {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',

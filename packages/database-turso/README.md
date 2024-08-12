@@ -13,7 +13,7 @@ npm i @storecraft/database-cloudflare-d1
 
 ## Setup
 
-- First, login to your turso account.
+- First, login to your [turso](https://turso.tech) account.
 - Create a database.
 - Create an API Key.
 
@@ -33,7 +33,15 @@ import { NodeLocalStorage } from '@storecraft/storage-node-local'
 
 let app = new App(
   new NodePlatform(),
-  new Turso({ url, database_id, api_token}),
+  new Turso(
+    { 
+      prefers_batch_over_transactions: true,
+      libsqlConfig: {
+        url: process.env.TURSO_URL,
+        authToken: process.env.TURSO_API_TOKEN,
+      }
+    }
+  ),
   new NodeLocalStorage(join(homedir(), 'tomer'))
 );
 

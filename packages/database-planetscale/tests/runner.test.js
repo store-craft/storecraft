@@ -1,14 +1,15 @@
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
-import { NeonHttp } from '@storecraft/database-neon';
+import { PlanetScale } from '@storecraft/database-planetscale';
 
 export const create_app = async () => {
   let app = new App(
     new NodePlatform(),
-    new NeonHttp(
+    new PlanetScale(
       { 
-        connectionString: process.env.NEON_CONNECTION_URL
+        url: process.env.PLANETSCALE_CONNECTION_URL,
+        useSharedConnection: true
       }
     ),
     null, null, {

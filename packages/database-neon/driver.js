@@ -1,6 +1,6 @@
-import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
-import { LibsqlDialect } from './kysely.turso.dialect.js';
+import { NeonServerlessDialect } from './kysely.neon.dialect.js';
+import { NeonHTTPDialect } from './kysely.neon-http.dialect.js';
 
 /**
  * @param {any} b 
@@ -12,19 +12,50 @@ const assert = (b, msg) => {
 
 
 /**
+ * @description serverless neon, supports interactive transactions over websockets.
+ * You can also try the `http` variant which supports batches here {@link NeonHttp}
+ * 
  * @extends {SQL}
  */
-export class Neon extends SQL {
+export class NeonServerless extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').Config} [config] config 
+   * @param {import('./types.public.js').NeonServerlessConfig} [config] config 
    */
   constructor(config) {
     super(
       {
         dialect_type: 'POSTGRES',
-        dialect: new LibsqlDialect(config),
+        dialect: new NeonServerlessDialect(config),
+      }
+    );
+
+  }
+
+}
+
+
+/**
+ * @description serverless http only neon, supports NON-interactive 
+ * transactions / batches over HTTP.
+ * You can also try the interactive transaction variant which requires 
+ * `web-sockets` here {@link NeonServerless}
+ * 
+ * 
+ * @extends {SQL}
+ */
+export class NeonHttp extends SQL {
+
+  /**
+   * 
+   * @param {import('./types.public.js').NeonHttpConfig} [config] config 
+   */
+  constructor(config) {
+    super(
+      {
+        dialect_type: 'POSTGRES',
+        dialect: new NeonHTTPDialect(config),
       }
     );
 

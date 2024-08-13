@@ -10,7 +10,7 @@ import {
 } from "@neondatabase/serverless"
 
 /**
- * @typedef {import("@neondatabase/serverless").ClientConfig & Partial<import("@neondatabase/serverless").NeonConfig>} NeonDialectConfig
+ * @typedef {import("./types.public.js").NeonServerlessConfig} NeonServerlessConfig
  * @typedef {import("kysely").Dialect} Dialect
  * @typedef {import("kysely").Driver} Driver
  * @typedef {import("kysely").DatabaseConnection} DatabaseConnection
@@ -20,11 +20,11 @@ import {
 /**
  * @implements {Dialect}
  */
-export class NeonDialect {
+export class NeonServerlessDialect {
 
   /**
    * 
-   * @param {NeonDialectConfig} config 
+   * @param {NeonServerlessConfig} config 
    */
   constructor(config) {
     this.config = config
@@ -41,21 +41,21 @@ export class NeonDialect {
  * @implements {Driver}
  */
 class NeonDriver {
-  /** @type {WeakMap<import("@neondatabase/serverless").PoolClient, import("./kysely.turso.dialect.js").DatabaseConnection>} */
+  /** @type {WeakMap<import("@neondatabase/serverless").PoolClient, NeonConnection>} */
   #connections = new WeakMap()
   /** @type {Pool} */
   #pool;
 
   /**
-   * @param {NeonDialectConfig} config
+   * @param {NeonServerlessConfig} config
    */
   constructor(config) {
     this.config = config
   }
 
   async init() {
-    Object.assign(neonConfig, this.config)
-    this.#pool = new Pool(this.config)
+    Object.assign(neonConfig, this.config.neonConfig);
+    this.#pool = new Pool(this.config.poolConfig);
   }
 
   async acquireConnection() {

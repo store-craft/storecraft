@@ -1,18 +1,14 @@
 import {
   CompiledQuery,
-  PostgresAdapter,
   PostgresIntrospector,
   PostgresQueryCompiler,
 } from "kysely"
 import { neon } from "@neondatabase/serverless"
+import { NeonHttpAdapter } from "./kysely.neon-http.adapter.js";
+
 
 /**
- * @typedef {object} NeonHTTPDialectConfig
- * @prop {string} connectionString
- */
-
-/**
- * @typedef {import("@neondatabase/serverless").ClientConfig & Partial<import("@neondatabase/serverless").NeonConfig>} NeonDialectConfig
+ * @typedef {import("./types.public.js").NeonHttpConfig} NeonHttpConfig
  * @typedef {import("kysely").Dialect} Dialect
  * @typedef {import("kysely").Driver} Driver
  * @typedef {import("kysely").DatabaseConnection} DatabaseConnection
@@ -23,18 +19,18 @@ import { neon } from "@neondatabase/serverless"
  * @implements {Dialect}
  */
 export class NeonHTTPDialect {
-  /** @type {NeonHTTPDialectConfig} */
+  /** @type {NeonHttpConfig} */
   config;
 
   /**
    * 
-   * @param {NeonHTTPDialectConfig} config 
+   * @param {NeonHttpConfig} config 
    */
   constructor(config) {
     this.config = config
   }
 
-  createAdapter() { return new PostgresAdapter() }
+  createAdapter() { return new NeonHttpAdapter() }
   createDriver() { return new NeonHTTPDriver(this.config) }
   createQueryCompiler() { return new PostgresQueryCompiler() }
   createIntrospector(db) { return new PostgresIntrospector(db) }
@@ -48,7 +44,7 @@ class NeonHTTPDriver {
 
   /**
    * 
-   * @param {NeonHTTPDialectConfig} config 
+   * @param {NeonHttpConfig} config 
    */
   constructor(config) {
     this.config = config
@@ -60,27 +56,38 @@ class NeonHTTPDriver {
     return new NeonHttpConnection(this.neon, this.config);
   }
 
-  async beginTransaction(
-    _: DatabaseConnection,
-    __: TransactionSettings
-  ): Promise<void> {
-    throw new Error("Transactions are not supported with Neon HTTP connections")
+  /**
+   * 
+   * @param {NeonHttpConnection} connection 
+   * @param {import("kysely").TransactionSettings} settings 
+   */
+  async beginTransaction(connection, settings) {
+    await connection.beginTransaction();
   }
 
-  async commitTransaction(_: DatabaseConnection): Promise<void> {
-    throw new Error("Transactions are not supported with Neon HTTP connections")
+  /**
+   * 
+   * @param {NeonHttpConnection} connection 
+   */
+  async commitTransaction(connection) {
+    await connection.commitTransaction();
   }
 
-  async rollbackTransaction(_: DatabaseConnection): Promise<void> {
-    throw new Error("Transactions are not supported with Neon HTTP connections")
+  /**
+   * 
+   * @param {NeonHttpConnection} connection 
+   */
+  async rollbackTransaction(connection) {
+    await connection.rollbackTransaction();
   }
 
-  async releaseConnection(_: DatabaseConnection): Promise<void> {
-    // noop
-  }
+  /**
+   * 
+   * @param {NeonHttpConnection} _conn 
+   */
+  async releaseConnection(_conn) {}
 
   async destroy() {
-    // noop
   }
 }
 
@@ -96,7 +103,7 @@ export class NeonHttpConnection {
   /**
    * 
    * @param {import("@neondatabase/serverless").NeonQueryFunction} client 
-   * @param {NeonHTTPDialectConfig} config 
+   * @param {NeonHttpConfig} config 
    */
   constructor(client, config) {
     this.client = client;
@@ -104,16 +111,12 @@ export class NeonHttpConnection {
   }
 
   /**
-   * @template R result type
    * 
    * @param {CompiledQuery[]} compiledQueries 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<import('kysely').QueryResult<Record<string, any>>>}
    */
   async #internal_executeQuery(compiledQueries) {
-    // Transactions are not supported yet.
-    // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
-
     const stmts = compiledQueries.map(
       cq => this.client(
         cq.sql,
@@ -157,11 +160,10 @@ export class NeonHttpConnection {
   } 
 
   /**
-   * @template R result type
    * 
    * @param {CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<import('kysely').QueryResult>}
    */
   async executeQuery(compiledQuery) {
     console.log('this.isBatch', this.isBatch)

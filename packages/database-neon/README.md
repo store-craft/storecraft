@@ -1,21 +1,21 @@
-# Storecraft Turso (libsql) Database support
+# Storecraft Neon (cloud postgres) Database support
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
        height='150px' />
 </div><hr/><br/>
 
-Official `Turso` / `libSql` driver for `StoreCraft` on any platforms.
+Official `Neon` driver for `StoreCraft` on any platforms.
 
 ```bash
-npm i @storecraft/database-cloudflare-d1
+npm i @storecraft/database-neon
 ```
 
 ## Setup
 
-- First, login to your [turso](https://turso.tech) account.
+- First, login to your [neon account](https://neon.tech) account.
 - Create a database.
-- Create an API Key.
+- Copy the `connection string`.
 
 
 ## usage
@@ -28,18 +28,14 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platform-node'
-import { Turso } from '@storecraft/database-turso'
+import { Neon } from '@storecraft/database-neon'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 
 let app = new App(
   new NodePlatform(),
-  new Turso(
+  new NeonHttp(
     { 
-      prefers_batch_over_transactions: true,
-      libsqlConfig: {
-        url: process.env.TURSO_URL,
-        authToken: process.env.TURSO_API_TOKEN,
-      }
+      connectionString: process.env.NEON_CONNECTION_URL
     }
   ),
   new NodeLocalStorage(join(homedir(), 'tomer'))

@@ -1,12 +1,25 @@
-import type { Config as LibSqlConfig } from '@libsql/client'
+import { NeonConfig, PoolConfig } from '@neondatabase/serverless';
 export * from './index.js'
 
-export type Config = {
+/**
+ * @description The main serverless with `websockets` support for interactive
+ * transacrions config dialect
+ */
+export type NeonServerlessConfig = {
+
+  neonConfig: NeonConfig;
+  poolConfig: PoolConfig
+}
+
+
+
+/**
+ * @description The `http` only config
+ */
+export type NeonHttpConfig = {
 
   /**
-   * @description Official `libsql` config
+   * @description `neon` connection string
    */
-  libsqlConfig: LibSqlConfig
-
-  prefers_batch_over_transactions?: boolean;
+  connectionString: string
 }

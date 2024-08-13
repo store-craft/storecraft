@@ -1,18 +1,14 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { Turso } from '@storecraft/database-turso';
+import { NeonHttp } from '@storecraft/database-neon';
 import { NodePlatform } from '@storecraft/platform-node';
 
 export const test = async () => {
   let app = new App(
     new NodePlatform(),
-    new Turso(
+    new NeonHttp(
       { 
-        prefers_batch_over_transactions: true,
-        libsqlConfig: {
-          url: process.env.TURSO_URL,
-          authToken: process.env.TURSO_API_TOKEN,
-        }
+        connectionString: process.env.NEON_CONNECTION_URL
       }
     ),
     null, null, {

@@ -62,8 +62,7 @@ let app = new App(
 );
 
 await app.init();
-await app.db.migrateToLatest();
-
+await migrateToLatest(app.db, false);
 
 ```
 
@@ -112,7 +111,7 @@ let app = new App(
 );
 
 await app.init();
-await app.db.migrateToLatest();
+await migrateToLatest(app.db, false);
 
 ```
 
@@ -158,6 +157,6 @@ let app = new App(
 );
 
 await app.init();
-await app.db.migrateToLatest();
+await migrateToLatest(app.db, false);
 
 ```

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { Turso } from '@storecraft/database-turso';
+import { migrateToLatest, Turso } from '@storecraft/database-turso';
 import { NodePlatform } from '@storecraft/platform-node';
 
 export const test = async () => {
@@ -23,7 +23,7 @@ export const test = async () => {
   );
   
   await app.init();
-  await app.db.migrateToLatest(false);
+  await migrateToLatest(app.db, false);
 
 }
 

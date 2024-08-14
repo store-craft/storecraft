@@ -13,6 +13,7 @@ const __dirname = path.dirname(__filename);
  */
 export async function migrateToLatest(driver, destroy_db_upon_completion=true) {
   console.log('Starting Migrations');
+  
   const config_migrate = {
     migrationsDir: path.join(__dirname, 'migrations'),
     changelogCollectionName: "migrations",

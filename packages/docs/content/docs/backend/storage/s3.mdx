@@ -107,7 +107,6 @@ let app = new App(
 );
   
 await app.init();
-await app.db.migrateToLatest(false);
-
+await migrateToLatest(app.db, false);
 
 ```

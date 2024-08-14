@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 
@@ -9,7 +9,6 @@ export const create_app = async () => {
     new MongoDB({ db_name: 'test'}),
     null, null, {
       auth_admins_emails: ['admin@sc.com'],
-      auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
@@ -21,7 +20,7 @@ export const create_app = async () => {
 async function test() {
   const app = await create_app();
 
-  await app.db.migrateToLatest(false);
+  await migrateToLatest(app.db, false);
 
   Object.entries(api_index).slice(0, -1).forEach(
     ([name, runner]) => {

@@ -90,18 +90,6 @@ export class SQL {
 
   /**
    * 
-   * @param {boolean} [destroy_db_upon_completion=false] 
-   */
-  async migrateToLatest(destroy_db_upon_completion=false) {
-    this.throwIfNotReady();
-
-    const { migrateToLatest } = await import('./migrate.js');
-
-    await migrateToLatest(this, destroy_db_upon_completion);
-  };
-
-  /**
-   * 
    * @param {App<any, any, any>} app 
    * 
    * 

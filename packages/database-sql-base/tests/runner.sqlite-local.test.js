@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { SQL } from '@storecraft/database-sql-base';
+import { migrateToLatest, SQL } from '@storecraft/database-sql-base';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 import SQLite from 'better-sqlite3'
@@ -26,7 +26,7 @@ export const create_app = async () => {
   );
  
   await app.init();
-  await app.db.migrateToLatest();
+  await migrateToLatest(app.db, false);
   
   return app;
 }
@@ -34,14 +34,14 @@ export const create_app = async () => {
 async function test() {
   const app = await create_app();
 
-  // Object.entries(api_index).slice(0, -1).forEach(
-  //   ([name, runner]) => {
-  //     runner.create(app).run();
-  //   }
-  // );
-  // const last_test = Object.values(api_index).at(-1).create(app);
-  // last_test.after(async () => { await app.db.disconnect() });
-  // last_test.run();
+  Object.entries(api_index).slice(0, -1).forEach(
+    ([name, runner]) => {
+      runner.create(app).run();
+    }
+  );
+  const last_test = Object.values(api_index).at(-1).create(app);
+  last_test.after(async () => { await app.db.disconnect() });
+  last_test.run();
 }
 
 test();

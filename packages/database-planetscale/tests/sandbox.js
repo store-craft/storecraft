@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/platform-node';
-import { PlanetScale } from '../index.js';
+import { migrateToLatest, PlanetScale } from '../index.js';
 
 export const test = async () => {
   let app = new App(
@@ -20,7 +20,7 @@ export const test = async () => {
   );
   
   await app.init();
-  await app.db.migrateToLatest(false);
+  await migrateToLatest(app.db, false);
 
 }
 

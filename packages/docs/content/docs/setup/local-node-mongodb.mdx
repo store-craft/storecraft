@@ -51,7 +51,7 @@ Now, create a new file `index.js`
 import 'dotenv/config';
 import http from "node:http";
 import { NodePlatform } from '@storecraft/platform-node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB, migrateToLast } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
@@ -86,7 +86,7 @@ const app = new App(
 );
 
 await app.init();
-await app.db.migrateToLatest(false);
+await migrateToLatest(app.db, false);
 
 http.createServer(app.handler).listen(
   8000,

@@ -341,12 +341,6 @@ export interface db_driver {
   disconnect: () => Promise<boolean>;
 
   /**
-   * 
-   * Migrate database to latest state
-   */
-  migrateToLatest: () => Promise<void>
-
-  /**
    * Is the driver ready ?
    */
   isReady: boolean;

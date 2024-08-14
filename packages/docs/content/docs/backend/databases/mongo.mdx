@@ -15,7 +15,7 @@ npm i @storecraft/core @storecraft/database-mongodb-node
 
 ```js
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
 import { NodePlatform } from '@storecraft/platform-node';
 
 let app = new App(
@@ -36,7 +36,7 @@ let app = new App(
 );
   
 await app.init();
-await app.db.migrateToLatest(false);
+await migrateToLatest(app.db, false);
 
 
 ```

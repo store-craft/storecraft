@@ -382,7 +382,7 @@ export class App {
    * @description Process a request with context in the native platform
    * 
    * @param {PlatformNativeRequest} req
-   * @param {PlatformContext} context 
+   * @param {PlatformContext} [context] 
    */
   handler = async (req, context) => {
     const start_millis = Date.now();

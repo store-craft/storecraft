@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { NeonHttp } from '@storecraft/database-neon';
+import { NeonHttp, migrateToLatest } from '@storecraft/database-neon';
 import { NodePlatform } from '@storecraft/platform-node';
 
 export const test = async () => {
@@ -19,7 +19,7 @@ export const test = async () => {
   );
   
   await app.init();
-  await app.db.migrateToLatest(false);
+  await migrateToLatest(app.db, false);
 
 }
 

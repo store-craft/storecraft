@@ -28,10 +28,10 @@
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",
-    "@storecraft/database-sql-base": "^1.0.0",
-    "better-sqlite3": "^11.1.2"
+    "@storecraft/database-sql-base": "^1.0.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240806.0",
     "@storecraft/test-runner": "^1.0.0",
     "@types/node": "^20.11.0",
     "dotenv": "^16.3.1",

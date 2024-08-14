@@ -5,7 +5,7 @@ import {
   SqliteIntrospector,
   SqliteQueryCompiler,
 } from 'kysely';
-import { Client } from './d1/api.js';
+import { Client } from './d1-http-api/api.js';
 import { prepare_and_bind } from './kysely.d1.utils.js';
 
 
@@ -13,15 +13,15 @@ import { prepare_and_bind } from './kysely.d1.utils.js';
  * @typedef {import('kysely').Driver} Driver
  * @typedef {import('kysely').Dialect} Dialect
  * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.public.js').D1ConfigHTTP} Config
  */
 
 /**
- * @description Official Storecraft <-> Cloudflare D1 adapter
+ * @description Official Storecraft <-> Cloudflare D1 HTTP adapter
  * 
  * @implements {Dialect}
  */
-export class D1Dialect {
+export class D1_HTTP_Dialect {
 
   /** @type {Config} */
   #config;
@@ -200,8 +200,8 @@ class D1Connection {
         throw new Error(results?.errors?.join(', '));
     }
 
-    const first_result = results?.result?.at(0);
-    const meta = first_result?.meta;
+    const last_result = results?.result?.at(-1);
+    const meta = last_result?.meta;
     const numAffectedRows = meta?.changes > 0 ? BigInt(meta?.changes) : undefined;
 
     return {
@@ -209,7 +209,7 @@ class D1Connection {
         meta?.last_row_id === undefined || meta?.last_row_id === null
           ? undefined
           : BigInt(meta?.last_row_id),
-      rows: (first_result?.results) || [],
+      rows: (last_result?.results) || [],
       numAffectedRows,
       // @ts-ignore deprecated in kysely >= 0.23, keep for backward compatibility.
       numUpdatedOrDeletedRows: numAffectedRows,

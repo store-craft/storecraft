@@ -158,9 +158,9 @@ export class App {
     this.#_config = {
       ...c,
       auth_secret_access_token: c?.auth_secret_access_token ?? 
-                  env.SC_AUTH_SECRET_ACCESS_TOKEN,
+                  env.SC_AUTH_SECRET_ACCESS_TOKEN ?? 'AUTH_SECRET_ACCESS_TOKEN',
       auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
-                  env.SC_AUTH_SECRET_REFRESH_TOKEN,
+                  env.SC_AUTH_SECRET_REFRESH_TOKEN ?? 'SC_AUTH_SECRET_REFRESH_TOKEN',
       auth_admins_emails: c?.auth_admins_emails ??  
                   env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
                     s => s.trim()).filter(Boolean) ?? [],

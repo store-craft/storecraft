@@ -1,4 +1,4 @@
-export type * from './index.js'
+export * from './index.js'
 
 
 /**

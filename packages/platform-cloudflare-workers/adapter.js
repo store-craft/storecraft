@@ -13,21 +13,29 @@ export class CloudflareWorkersPlatform {
   /** @type {import('./types.public').Config} */
   #config;
 
+  /** @type {Record<string, any>} */
+  #env;
+
   /**
    * 
    * @param {import('./types.public').Config} [config={}] 
    */
   constructor(config={}) {
+    this.#env = config.env ?? {};
     this.#config = {
       ...config,
       hash_iterations: config?.hash_iterations ?? 1000,
-      env: config.env ?? {}
     };
   }
 
   get env() {
-    return this.#config.env;
+    return this.#env;
   }
+
+  set env($env) {
+    this.#env = $env;
+  }
+
 
   /** @type {PlatformAdapter["crypto"]} */
   get crypto() {

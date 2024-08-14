@@ -1,6 +1,6 @@
 
 /**
- * 
+ * @description Just for education and debugging, do not use !!!
  * @param {string} stmt 
  * @param {any[] | Record<string, any>} params 
  */

@@ -1,6 +1,11 @@
+import { D1Database } from '@cloudflare/workers-types';
+
 export * from './index.js'
 
-export type Config = {
+/**
+ * @description config for D1 over http
+ */
+export type D1ConfigHTTP = {
   /**
    * @description Cloudflare account id
    * 
@@ -23,4 +28,11 @@ export type Config = {
    * @description Your `D1` database name
    */
   db_name?: string;
+}
+
+/**
+ * @description config for D1 over worker runtime
+ */
+export type D1ConfigWorker = {
+  db: D1Database;
 }

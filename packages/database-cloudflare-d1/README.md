@@ -1,10 +1,8 @@
 # Storecraft Cloudflare D1 Database support
 
-WIP: 
-Work is on hold until
-
-- CF supports batch queries with parameters (to fight sql injections)
-- I will adapt it to a cloudflare worker, where batch queries with params are possible
+Two variants,
+1. D1 over http (used for migrations)
+2. D1 over cloudflare-worker runtime (used for backend)
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 

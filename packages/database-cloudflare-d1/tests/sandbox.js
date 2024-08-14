@@ -1,13 +1,13 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { D1 } from '@storecraft/database-cloudflare-d1';
+import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 
 export const test = async () => {
   let app = new App(
     new NodePlatform(),
-    new D1(
+    new D1_HTTP(
       { 
         account_id: process.env.CLOUDFLARE_ACCOUNT_ID, 
         database_id: process.env.CLOUDFLARE_D1_DATABASE_ID, 

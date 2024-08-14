@@ -126,39 +126,6 @@ class D1Connection {
     this.#client = client;
   }
 
-  // /**
-  //  * @template R result type
-  //  * 
-  //  * @param {CompiledQuery} compiledQuery 
-  //  * 
-  //  * @returns {Promise<import('kysely').QueryResult<R>>}
-  //  */
-  // async executeQuery2(compiledQuery) {
-  //   // Transactions are not supported yet.
-  //   // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
-
-  //   const results = await this.#config.database
-  //     .prepare(compiledQuery.sql)
-  //     .bind(...compiledQuery.parameters)
-  //     .all();
-  //   if (results.error) {
-  //     throw new Error(results.error);
-  //   }
-
-  //   const numAffectedRows = results.meta.changes > 0 ? BigInt(results.meta.changes) : undefined;
-
-  //   return {
-  //     insertId:
-  //       results.meta.last_row_id === undefined || results.meta.last_row_id === null
-  //         ? undefined
-  //         : BigInt(results.meta.last_row_id),
-  //     rows: (results?.results as O[]) || [],
-  //     numAffectedRows,
-  //     // @ts-ignore deprecated in kysely >= 0.23, keep for backward compatibility.
-  //     numUpdatedOrDeletedRows: numAffectedRows,
-  //   };
-  // }
-
   /**
    * @template R result type
    * 
@@ -182,7 +149,7 @@ class D1Connection {
       params = undefined;
     } else {
       sql = compiledQueries?.at(0)?.sql;
-      params = compiledQueries?.at(0)?.parameters;
+      params = ( /** @type {string[]} */(compiledQueries?.at(0)?.parameters));
     }
 
     const results = await this.#client.query(
@@ -225,8 +192,6 @@ class D1Connection {
    * @returns {Promise<import('kysely').QueryResult<R>>}
    */
   async executeQuery(compiledQuery) {
-    // Transactions are not supported yet.
-    // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
     console.log('this.isBatch', this.isBatch)
     if(this.isBatch) {
       this.batch.push(compiledQuery);
@@ -260,12 +225,7 @@ class D1Connection {
 
 
   /**
-   * @template R result type
-   * 
-   * @param {CompiledQuery} compiledQuery 
-   * @param {number} chunkSize 
-   * 
-   * @returns {AsyncIterableIterator<import('kysely').QueryResult<R>>}
+   * @type {DatabaseConnection["streamQuery"]}
    */
   async *streamQuery(compiledQuery, chunkSize) {
     throw new Error('D1 Driver does not support streaming');

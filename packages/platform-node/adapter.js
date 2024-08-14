@@ -2,12 +2,6 @@ import 'dotenv/config'
 import { Readable } from 'node:stream'
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 
-/**
- * @typedef {object} NodePlatformConfig Core config for `node` platform
- * @prop {number} [scrypt_keylen] crypto hasher length
- * @prop {import('node:crypto').ScryptOptions} [scrypt_options] crypto hasher options
- */
-
 
 /**
  * 
@@ -29,12 +23,12 @@ import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
  */
 export class NodePlatform {
 
-  /** @type {NodePlatformConfig} */
+  /** @type {import('./types.public').NodePlatformConfig} */
   #config;
 
   /**
    * 
-   * @param {NodePlatformConfig} [config={}] 
+   * @param {import('./types.public').NodePlatformConfig} [config={}] 
    */
   constructor(config={}) {
     this.#config = {

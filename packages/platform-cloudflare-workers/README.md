@@ -1,22 +1,20 @@
-# Storecraft Neon (cloud postgres) Database support
+# Storecraft cloudflare workers Platform support
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
        height='150px' />
 </div><hr/><br/>
 
-Official `Neon` driver for `StoreCraft` on any platforms.
+So, if you wanted to run `StoreCraft` on `node.js`, this is the `platform`
+package for you :)
+
+## What does it do exactly ?
+Basically, it translates native **Node** `http.IncomingMessage` into Web API `Request`,
+and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
 ```bash
-npm i @storecraft/database-neon
+npm i @storecraft/platform-node
 ```
-
-## Setup
-
-- First, login to your [neon account](https://neon.tech) account.
-- Create a database.
-- Copy the `connection string`.
-
 
 ## usage
 
@@ -28,16 +26,12 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platform-node'
-import { NeonHttp } from '@storecraft/database-neon'
+import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 
 let app = new App(
   new NodePlatform(),
-  new NeonHttp(
-    { 
-      connectionString: process.env.NEON_CONNECTION_URL
-    }
-  ),
+  new MongoDB(),
   new NodeLocalStorage(join(homedir(), 'tomer'))
 );
 
@@ -53,5 +47,5 @@ const server = http.createServer(app.handler).listen(
 ```
 
 ```text
-Author: Tomer Shalev <tomer.shalev@gmail.com>
+Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

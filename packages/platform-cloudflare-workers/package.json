@@ -1,0 +1,33 @@
+{
+  "name": "@storecraft/platform-cloudflare-workers",
+  "version": "1.0.0",
+  "description": "Official Cloudflare Workers Platform Adapter for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/platform-cloudflare-workers"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "platform-cloudflare-workers:test": "echo \"Error: no test specified\" && exit 1",
+    "platform-cloudflare-workers:publish": "npm publish --access public"
+  },
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0"
+  }
+}

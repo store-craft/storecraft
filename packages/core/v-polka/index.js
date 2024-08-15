@@ -39,6 +39,10 @@ export const onError = async (error, req, res) => {
     messages = [{ message: error.message ?? 'unknown-error'}];
   }
 
+  // probably a bad app/lib specific code and not rest-api aligned
+  if((code < 200) || (code > 599) )
+    code = 500;
+
   res.setStatus(code, STATUS_CODES[code.toString()])
   res.sendJson({ messages });
 }

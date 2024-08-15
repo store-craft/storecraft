@@ -14,6 +14,7 @@ import { atob, btoa, decode, encode, encodeURI } from "./base64.js";
  *   const key = await pbkdf2('pāşšŵōřđ'); // eg 'djAxBRKXWNWPyXgpKWHld8SWJA9CQFmLyMbNet7Rle5RLKJAkBCllLfM6tPFa7bAis0lSTiB'
  */
 export async function hash(password, iterations=1e6) {
+  iterations = Math.min(iterations, 100000);
   const pwUtf8 = new TextEncoder().encode(password);                                           // encode pw as UTF-8
   const pwKey = await crypto.subtle.importKey('raw', pwUtf8, 'PBKDF2', false, ['deriveBits']); // create pw key
   const saltUint8 = crypto.getRandomValues(new Uint8Array(16));                                // get random salt

@@ -16,8 +16,6 @@ export const app = new App(
   new NodePlatform(),
   new MongoDB({ db_name: 'test' }),
   new NodeLocalStorage(join(homedir(), 'tomer')),
-  // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
-  // new GoogleStorage()
   null, 
   {
     storage_rewrite_urls: undefined,
@@ -43,5 +41,10 @@ export const app = new App(
       }
     ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+  }
+).on(
+  'auth/signup',
+  async evt => {
+    evt.payload.email
   }
 );

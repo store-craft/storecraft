@@ -193,7 +193,7 @@ export const add_sanity_crud_to_test_suite = s => {
       // test upsert event shows previous
       const unsub = ctx.app.pubsub.on(
         ctx.events.upsert_event,
-        v => {
+        async v => {
           try {
             assert_partial(v.payload.current, one);
             if(v.payload.previous) {

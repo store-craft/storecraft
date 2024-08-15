@@ -1,5 +1,6 @@
 import { App } from '@storecraft/core';
-import { migrateToLatest, SQL } from '@storecraft/database-sql-base';
+import { SQL } from '@storecraft/database-sql-base';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
 import { NodePlatform } from '@storecraft/platform-node';
 import  { api_index } from '@storecraft/test-runner'
 import SQLite from 'better-sqlite3'

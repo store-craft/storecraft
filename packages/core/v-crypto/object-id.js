@@ -7,16 +7,20 @@
  * that would mean an asyc call to gethostname, so we don't bother.
  * @ignore
  */
-const MACHINE_ID = new Uint8Array(3);
-let inc = ~~(Math.random() * 0xffffff);
+// const MACHINE_ID = new Uint8Array(3);
+// let inc = ~~(Math.random() * 0xffffff);
 
-crypto.getRandomValues(MACHINE_ID);
+// crypto.getRandomValues(MACHINE_ID);
 
+class Machine {
+  static MACHINE_ID = new Uint8Array(3);
+  static inc = ~~(Math.random() * 0xffffff);
+}
 /**
  * Generate a compatible Mongo ObjectID as 12 bytes array
  * @returns 
  */
-export const id_as_array = () => {
+export function id_as_array() {
   const time = ~~(Date.now() / 1000);
   const pid =
       (typeof process === 'undefined' || process.pid === 1
@@ -30,19 +34,19 @@ export const id_as_array = () => {
   buffer[1] = (time >> 16) & 0xff;
   buffer[0] = (time >> 24) & 0xff;
   // Encode machine
-  buffer[6] = MACHINE_ID[0];
-  buffer[5] = MACHINE_ID[1];
-  buffer[4] = MACHINE_ID[2];
+  buffer[6] = Machine.MACHINE_ID[0];
+  buffer[5] = Machine.MACHINE_ID[1];
+  buffer[4] = Machine.MACHINE_ID[2];
   // Encode pid
   buffer[8] = pid & 0xff;
   buffer[7] = (pid >> 8) & 0xff;
   // Encode index
-  buffer[11] = inc & 0xff;
-  buffer[10] = (inc >> 8) & 0xff;
-  buffer[9] = (inc >> 16) & 0xff;
+  buffer[11] = Machine.inc & 0xff;
+  buffer[10] = (Machine.inc >> 8) & 0xff;
+  buffer[9] = (Machine.inc >> 16) & 0xff;
 
   // increment
-  inc += 1;
+  Machine.inc += 1;
 
   return buffer;
 }

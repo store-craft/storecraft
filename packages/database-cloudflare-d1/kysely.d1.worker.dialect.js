@@ -107,9 +107,14 @@ class D1Connection {
   async _internal_execute(compiledQueries) {
 
     const db = this.config.db;
+    console.log(JSON.stringify(
+      {
+        sql: compiledQueries.at(0).sql,
+        params: compiledQueries.at(0).parameters,
+      }, null, 2))
     const results = await db.batch(
       compiledQueries.map(
-        cq => db.prepare(cq.sql).bind(cq.parameters)
+        cq => db.prepare(cq.sql).bind(...cq.parameters)
       )
     );
 

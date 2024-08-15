@@ -54,3 +54,5 @@ export class D1_WORKER extends SQL {
   }
 
 }
+
+export class D {}

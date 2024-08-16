@@ -1,8 +1,8 @@
-import 'dotenv/config';
 import { join } from "node:path";
 import { homedir } from "node:os";
 
-import { NodePlatform } from '@storecraft/platform-node'
+// import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
@@ -41,10 +41,5 @@ export const app = new App(
       }
     ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
-  }
-).on(
-  'auth/signup',
-  async evt => {
-    evt.payload.email
   }
 );

@@ -134,6 +134,8 @@ export class App {
     this.#_mailer = mailer;
     this.#_config = config;
     this.#_is_ready = false;
+
+    this.#_pubsub = new PubSub(this);
   } 
 
   /**
@@ -180,9 +182,8 @@ export class App {
                   env.SC_GENERAL_STORE_LOGO_URL,
       general_confirm_email_base_url: c?.general_confirm_email_base_url ?? 
                   env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
-
     }
- 
+
     console.log(this.#banner_create(pkg.version));
     // console.log('store-craft config', this.#_config);
   } 
@@ -215,7 +216,6 @@ export class App {
    * @description Initialize the Application
    */
   async init() {
-    this.#_pubsub = new PubSub(this);
     
     try{
       // first let's settle config
@@ -226,6 +226,7 @@ export class App {
       this.storage && await this.storage.init(this)
     } catch (e) {
       console.log(e)
+      throw e;
     }
 
     // this.#_api = create_api(this);

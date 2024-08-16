@@ -24,10 +24,10 @@
     "platform-node:publish": "npm publish --access public"
   },
   "dependencies": {
-    "@storecraft/core": "^1.0.0",
-    "dotenv": "^16.3.1"
+    "@storecraft/core": "^1.0.0"
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "@types/node": "^20.11.0"
   }
 }

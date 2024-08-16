@@ -31,6 +31,9 @@ export async function migrateToLatest(driver, destroy_db_upon_completion=true) {
 
   console.log('results: \n', results)
 
-  if(destroy_db_upon_completion)
-    driver.disconnect();
+  if(destroy_db_upon_completion) {
+    console.log('disconnecting from mongo');
+    const success = await driver.disconnect();
+    console.log(`- success: ${success}`);
+  }
 }

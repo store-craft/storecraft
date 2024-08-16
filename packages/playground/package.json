@@ -5,11 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npm run playground:start",
-    "migrate": "node ./migrate.js",
-    "playground:start": "node --watch index.js",
-    "playground:server": "node --watch index.js",
-    "playground:test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run playground-node:start",
+    "playground-node:start": "node --watch ./node/index.js",
+    "playground-node:migrate": "node ./node/migrate.js",
+    "playground-bun:start": "bun run --watch ./bun/index.js",
+    "playground-bun:migrate": "bun run ./bun/migrate.js",
+    "playground-deno:start": "deno run --env --watch -A ./deno/index.js",
+    "playground-deno:migrate": "deno run --env -A ./deno/migrate.js"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",
@@ -17,7 +19,7 @@
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",
     "@storecraft/payments-stripe": "^1.0.0",
-    "@storecraft/platform-node": "^1.0.0",
+    "@storecraft/platforms": "^1.0.0",
     "@storecraft/storage-google": "^1.0.0",
     "@storecraft/storage-node-local": "^1.0.0",
     "@storecraft/storage-s3-compatible": "^1.0.0",

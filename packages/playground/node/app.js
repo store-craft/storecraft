@@ -3,8 +3,8 @@ import { homedir } from "node:os";
 
 // import { NodePlatform } from '@storecraft/platform-node'
 import { NodePlatform } from '@storecraft/platforms/node'
+import { NodeLocalStorage } from "@storecraft/storage-local/node";
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'

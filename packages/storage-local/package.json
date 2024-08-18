@@ -1,14 +1,14 @@
 {
-  "name": "@storecraft/platforms",
+  "name": "@storecraft/storage-local",
   "version": "1.0.0",
-  "description": "Official platforms adapters for storecraft",
+  "description": "Official local storagte adapters for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
-    "directory": "packages/platforms"
+    "directory": "packages/storage-local"
   },
   "keywords": [
     "commerce",
@@ -39,8 +39,10 @@
     }
   },
   "scripts": {
-    "platforms:test": "echo \"Error: no test specified\" && exit 1",
-    "platforms:publish": "npm publish --access public"
+    "storage-local:node:test": "echo \"Error: no test specified\" && exit 1",
+    "storage-local:deno:test": "echo \"Error: no test specified\" && exit 1",
+    "storage-local:bun:test": "echo \"Error: no test specified\" && exit 1",
+    "storage-local:publish": "npm publish --access public"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0"

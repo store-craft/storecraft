@@ -1,0 +1,1 @@
+export { NodeLocalStorage as BunLocalStorage } from '../node/index.js' 

@@ -5,18 +5,18 @@ import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
 /**
- * @typedef {import('./types.api.js').ImageType} ItemType
- * @typedef {import('./types.api.js').ImageTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').ImageType} ItemType
+ * @typedef {import('./types.api.d.ts').ImageTypeUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.images;
  
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
 /**
@@ -56,7 +56,7 @@ async (item) => {
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const remove = (app) => 
 /**
@@ -103,8 +103,8 @@ export const image_url_to_handle = url => to_handle(image_url_to_name(url));
 
 /**
  * report media usages
- * @param {import("../types.public.js").App} app
- * @param {import('./types.api.js').BaseType} data data being reported
+ * @param {import("../types.public.d.ts").App} app
+ * @param {import('./types.api.d.ts').BaseType} data data being reported
  */
 export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
   await db(app).report_document_media(data)
@@ -113,7 +113,7 @@ export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

@@ -1,0 +1,1 @@
+export { NodeLocalStorage as DenoLocalStorage } from '../node/index.js' 

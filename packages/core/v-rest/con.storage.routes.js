@@ -7,16 +7,11 @@ export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.js").App<
- *  PlatformNativeRequest, PlatformContext>
- * } app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
   const features = app.storage.features() ?? { supports_signed_urls: false };
   const supports_signed = features.supports_signed_urls;

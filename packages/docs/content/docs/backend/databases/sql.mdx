@@ -33,7 +33,8 @@ npm i @storecraft/core @storecraft/database-sql-base better-sqlite3
 ```js
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
-import { NodePlatform } from '@storecraft/platform-node';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import SQLite from 'better-sqlite3'
 import { SqliteDialect } from 'kysely';
 import { homedir } from 'node:os';
@@ -45,25 +46,24 @@ export const sqlite_dialect = new SqliteDialect(
   }
 );
 
-let app = new App(
-  new NodePlatform(),
-  new SQL(
-    {
-      dialect: sqlite_dialect, 
-      dialect_type: 'SQLITE'
-    }
-  ),
-  null, null, {
+const app = new App(
+  {
     auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: sqlite_dialect, 
+    dialect_type: 'SQLITE'
+  })
 );
 
-await app.init();
-await app.db.migrateToLatest();
 
+await app.init();
+await migrateToLatest(app.db, false);
 
 ```
 
@@ -78,7 +78,8 @@ npm i @storecraft/core @storecraft/database-sql-base pg
 ```js
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
-import { NodePlatform } from '@storecraft/platform-node';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { PostgresDialect } from 'kysely';
 import pg from 'pg'
 
@@ -95,24 +96,23 @@ const pg_dialect = new PostgresDialect(
   }
 );
 
-let app = new App(
-  new NodePlatform(),
-  new SQL(
-    {
-      dialect: pg_dialect, 
-      dialect_type: 'POSTGRES'
-    }
-  ),
-  null, null, {
+const app = new App(
+  {
     auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: pg_dialect, 
+    dialect_type: 'POSTGRES'
+  })
 );
 
 await app.init();
-await app.db.migrateToLatest();
+await migrateToLatest(app.db, false);
 
 ```
 
@@ -127,7 +127,8 @@ npm i @storecraft/core @storecraft/database-sql-base mysql2
 ```js
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
-import { NodePlatform } from '@storecraft/platform-node';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { MysqlDialect } from 'kysely';
 import { createPool } from 'mysql2'
 
@@ -141,23 +142,22 @@ export const dialect = new MysqlDialect({
   })
 });
 
-let app = new App(
-  new NodePlatform(),
-  new SQL(
-    {
-      dialect: dialect, 
-      dialect_type: 'MYSQL'
-    }
-  ),
-  null, null, {
+const app = new App(
+  {
     auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
-);
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: dialect, 
+    dialect_type: 'MYSQL'
+  })
+)
 
 await app.init();
-await app.db.migrateToLatest();
+await migrateToLatest(app.db, false);
 
 ```

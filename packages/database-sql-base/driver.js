@@ -26,8 +26,8 @@ const assert = (b, msg) => {
 }
 
 /**
- * @typedef {import('./types.public.js').Config} Config
- * @typedef {import('./types.sql.tables.js').Database} Database
+ * @typedef {import('./types.public.d.ts').Config} Config
+ * @typedef {import('./types.sql.tables.d.ts').Database} Database
  * @typedef {import('kysely').Dialect} Dialect
  * @typedef {import('@storecraft/core/v-database').db_driver} db_driver
 */
@@ -90,18 +90,6 @@ export class SQL {
 
   /**
    * 
-   * @param {boolean} [destroy_db_upon_completion=false] 
-   */
-  async migrateToLatest(destroy_db_upon_completion=false) {
-    this.throwIfNotReady();
-
-    const { migrateToLatest } = await import('./migrate.js');
-
-    await migrateToLatest(this, destroy_db_upon_completion);
-  };
-
-  /**
-   * 
    * @param {App<any, any, any>} app 
    * 
    * 
@@ -147,8 +135,8 @@ export class SQL {
     return this.#_resources;
   }
   
-  get name () { 
-    return 'main'; 
+  get name() { 
+    return this?.config?.db_name ?? 'main'; 
   }
 
   get app() { 
@@ -181,10 +169,6 @@ export class SQL {
 
   get isMysql() { 
     return this.dialectType==='MYSQL'; 
-  }
-
-  get isMssql() { 
-    return this.dialectType==='MSSQL'; 
   }
 
 }

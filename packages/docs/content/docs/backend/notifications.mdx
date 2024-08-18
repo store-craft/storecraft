@@ -14,11 +14,11 @@ Notifications enable you to
 import { App } from '@storecraft/core'
 import type { CustomerType } from '@storecraft/core/v-api'
 
-const app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new GoogleStorage(),
-).on(
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.on(
   'customers/upsert',
   async (event) => {
     const isNew = !Boolean(event.payload.previous);

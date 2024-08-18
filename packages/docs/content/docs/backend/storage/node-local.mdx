@@ -11,11 +11,11 @@ Supports streaming `Get` / `Put` / `Delete`
 ## Usage
 
 ```bash
-npm i @storecraft/storage-node-local
+npm i @storecraft/storage-local
 ```
 
 ```js
-import { NodeLocalStorage } from '@storecraft/storage-node-local';
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 const storage = new Storage(path.join(homedir(), 'tomer'));
 
@@ -35,26 +35,27 @@ const { value } = await storage.getBlob(key);
 ## In Storecraft App
 
 ```js
-import { NodePlatform } from '@storecraft/platform-node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodePlatform } from '@storecraft/platforms/node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { App } from '@storecraft/core';
  
 const app = new App(
-  new NodePlatform(),
-  new MongoDB({ db_name: 'test' }),
-  new NodeLocalStorage(join(homedir(), 'tomer')),
-  null, 
   {
     storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games'
+    general_store_website: 'https://wush.games',
+    auth_secret_access_token: process.env.auth_secret_access_token,
+    auth_secret_refresh_token: process.env.auth_secret_refresh_token
+    auth_admins_emails: ['jonny@begood.com']
   }
-);
+)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
 
 await app.init();
-await app.db.migrateToLatest(false);
-
+await migrateToLatest(app.db, false);
 
 ```

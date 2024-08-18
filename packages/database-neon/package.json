@@ -1,0 +1,40 @@
+{
+  "name": "@storecraft/database-neon",
+  "version": "1.0.0",
+  "description": "`Storecraft` database driver for `Neon` over http",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/database-neon"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "types": "./types.public.d.ts",
+  "scripts": {
+    "database-neon-http:test": "node ./tests/runner.test.js",
+    "database-neon-http:publish": "npm publish --access public"
+  },
+  "peerDependencies": {
+    "kysely": "*"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.4",
+    "@storecraft/core": "^1.0.0",
+    "@storecraft/database-sql-base": "^1.0.0"
+  },
+  "devDependencies": {
+    "@storecraft/test-runner": "^1.0.0",
+    "@types/node": "^20.11.0",
+    "dotenv": "^16.3.1",
+    "uvu": "^0.5.6"
+  }
+}

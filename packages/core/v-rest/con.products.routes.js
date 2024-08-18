@@ -5,21 +5,16 @@ import { parse_expand, parse_query } from '../v-api/utils.query.js'
 
 
 /**
- * @typedef {import('../v-api/types.api.js').ProductType} ItemType
+ * @typedef {import('../v-api/types.api.d.ts').ProductType} ItemType
  */
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.js").App<
- *  PlatformNativeRequest, PlatformContext
- * >} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])
@@ -60,7 +55,7 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      /** @type {import('../v-database/types.public.js').RegularGetOptions} */
+      /** @type {import('../v-database/types.public.d.ts').RegularGetOptions} */
       const options = {
         expand: parse_expand(req.query)
       };

@@ -2,8 +2,8 @@ import { assert_generic_auth, has_role } from './con.auth.middle.js'
 import { isDef } from '../v-api/utils.index.js'
 
 /**
- * @param {import('../types.public.js').ApiRequest} req 
- * @param {import('../types.public.js').ApiResponse} res 
+ * @param {import('./types.public.d.ts').ApiRequest} req 
+ * @param {import('./types.public.d.ts').ApiResponse} res 
  */
 export const owner_or_admin_guard = async (req, res) => {
   assert_generic_auth(req.user);

@@ -17,7 +17,7 @@ import { impl as search } from './src/con.search.js';
 
 
 /**
- * @typedef {Partial<import('./types.public.js').Config>} Config
+ * @typedef {Partial<import('./types.public.d.ts').Config>} Config
  */
 
 /**
@@ -130,17 +130,6 @@ export class MongoDB {
     this.#_is_ready = true; 
 
     return this;
-  }
-
-  /**
-   * @param {boolean} [destroy_db_upon_completion=true] 
-   */
-  async migrateToLatest(destroy_db_upon_completion=true) {
-    this.throwIfNotReady();
-
-    const { migrateToLatest } = await import('./migrate.js');
-    
-    await migrateToLatest(this, destroy_db_upon_completion);
   }
 
   async disconnect() {

@@ -14,7 +14,7 @@ const is_function = o => {
  * @param {App} app 
  * @param {string} gateway_handle 
  * 
- * @returns {import('../v-api/types.api.js').PaymentGatewayItemGet}
+ * @returns {import('../v-api/types.api.d.ts').PaymentGatewayItemGet}
  */
 export const get_payment_gateway = (app, gateway_handle) => {
   const pg = app.gateway(gateway_handle);
@@ -39,7 +39,7 @@ export const get_payment_gateway = (app, gateway_handle) => {
  * @param {App} app 
  * 
  * 
- * @returns {import('../v-api/types.api.js').PaymentGatewayItemGet[]}
+ * @returns {import('../v-api/types.api.d.ts').PaymentGatewayItemGet[]}
  */
 export const list_payment_gateways = (app) => {
   return Object.entries(app.gateways ?? {}).map(
@@ -61,8 +61,8 @@ export const list_payment_gateways = (app) => {
  * @param {App} app 
  * @param {string} gateway_handle 
  * @param {Request} request
- * @param {import('../types.public.js').ApiRequest} request
- * @param {import('../types.public.js').ApiResponse} response
+ * @param {import('../v-rest/types.public.d.ts').ApiRequest} request
+ * @param {import('../v-rest/types.public.d.ts').ApiResponse} response
  * 
  */
 export const webhook = async (app, gateway_handle, request, response) => {
@@ -103,12 +103,7 @@ export const webhook = async (app, gateway_handle, request, response) => {
 /**
  * @description return the `status` of payment of an order
  * 
- * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.d.ts").App} app
  * @param {string} order_id the ID of the order
  * 
  */
@@ -133,11 +128,7 @@ export const payment_status_of_order = async (app, order_id) => {
  * a `checkout` was created
  * 
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.d.ts").App} app
  * @param {string} order_id the ID of the order
  * 
  */
@@ -167,12 +158,7 @@ export const payment_buy_ui = async (app, order_id) => {
  * Invoke a payment action (`capture`/`void`/`refund`/`whatever`) on 
  * the payment gateway of the order.
  * 
- * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {App<PlatformNativeRequest, PlatformContext>} app `storecraft` app
+ * @param {App} app `storecraft` app
  * @param {string} order_id the `id` of the order
  * @param {string} action_handle the payment action of the 
  * gateway (o.e `capture`/`void`/`refund`/`whatever`)

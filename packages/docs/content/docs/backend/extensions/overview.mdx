@@ -37,11 +37,11 @@ class SendSlackMessageExtension implements extension {
 Then, plug it in **Storecraft**
 ```ts
 
-const app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new GoogleStorage(),
-).withExtensions(
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withExtensions(
   {
     'my-slack-extension': new SendSlackMessageExtension()
   }

@@ -1,0 +1,15 @@
+{
+  "name": "calm-term-c64e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --remote",
+    "start": "wrangler dev",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2",
+    "wrangler": "^3.60.3"
+  }
+}

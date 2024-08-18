@@ -20,17 +20,29 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platform-node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodePlatform } from '@storecraft/platforms/node';
+import { SQL } from '@storecraft/database-sql-base'
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB({ db_name: 'prod', url: '<MONGO-URL>'}),
-  new NodeLocalStorage(join(homedir(), 'tomer'))
-);
+const app = new App(
+  {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: sqlite_dialect, 
+    dialect_type: 'SQLITE'
+  })
+)
+.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
 
 await app.init();
+await migrateToLatest(app.db, false);
  
 const server = http.createServer(app.handler).listen(
   8000,

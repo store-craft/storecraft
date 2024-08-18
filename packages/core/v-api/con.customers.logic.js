@@ -7,18 +7,18 @@ import { create_search_index, isDef } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 
 /**
- * @typedef {import('./types.api.js').CustomerType} ItemType
- * @typedef {import('./types.api.js').CustomerTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').CustomerType} ItemType
+ * @typedef {import('./types.api.d.ts').CustomerTypeUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.customers;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
   /**
@@ -72,13 +72,13 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const getByEmail = (app) => 
 /**
  * 
  * @param {string} email
- * @param {import('../v-database/types.public.js').RegularGetOptions} [options]
+ * @param {import('../v-database/types.public.d.ts').RegularGetOptions} [options]
  */
 (email, options) => {
   return db(app).getByEmail(email);
@@ -90,13 +90,13 @@ export const getByEmail = (app) =>
  * given a discount handle and query, return products of that discount
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_customer_orders = (app) => 
 /**
  * 
- * @param {import('../v-database/types.public.js').ID} customer_id 
- * @param {import('./types.api.query.js').ApiQuery} q 
+ * @param {import('../v-database/types.public.d.ts').ID} customer_id 
+ * @param {import('./types.api.query.d.ts').ApiQuery} q 
  */
 (customer_id, q) => {
   return db(app).list_customer_orders(customer_id, q);
@@ -104,7 +104,7 @@ export const list_customer_orders = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

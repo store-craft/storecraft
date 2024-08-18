@@ -25,8 +25,8 @@ import { cors } from "../v-polka/cors.js";
 
 
 /**
- * @typedef {import("../types.public.js").ApiRequest} ApiRequest
- * @typedef {import("../types.public.js").ApiResponse} ApiResponse
+ * @typedef {import("./types.public.d.ts").ApiRequest} ApiRequest
+ * @typedef {import("./types.public.d.ts").ApiResponse} ApiResponse
  */
 
 
@@ -42,12 +42,7 @@ import { cors } from "../v-polka/cors.js";
  * @description Create the entire virtual API with lazy 
  * loading which is great for serverless
  * 
- * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * @param {import("../types.public.js").App<
- *  PlatformNativeRequest, PlatformContext, any, any, any, any, any
- * >} app
+ * @param {import("../types.public.d.ts").App} app
  * @param {RestApiConfig} config
  */
 export const create_rest_api = (app, config) => {

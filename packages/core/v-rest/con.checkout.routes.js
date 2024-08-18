@@ -4,16 +4,11 @@ import { parse_auth_user, is_admin } from './con.auth.middle.js'
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.js").App<
- *  PlatformNativeRequest, PlatformContext
- * >} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   polka.use(parse_auth_user(app));

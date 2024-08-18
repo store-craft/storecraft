@@ -4,18 +4,18 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('./types.api.js').StorefrontType} ItemType
- * @typedef {import('./types.api.js').StorefrontTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').StorefrontType} ItemType
+ * @typedef {import('./types.api.d.ts').StorefrontTypeUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.storefronts;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
 /**
@@ -39,7 +39,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_storefront_products = (app) => 
 /**
@@ -51,7 +51,7 @@ export const list_storefront_products = (app) =>
 }
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_storefront_collections = (app) => 
 /**
@@ -63,7 +63,7 @@ export const list_storefront_collections = (app) =>
 }
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_storefront_discounts = (app) => 
 /**
@@ -75,7 +75,7 @@ export const list_storefront_discounts = (app) =>
 }
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_storefront_shipping_methods = (app) => 
 /**
@@ -87,7 +87,7 @@ export const list_storefront_shipping_methods = (app) =>
 }
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_storefront_posts = (app) => 
 /**
@@ -105,12 +105,12 @@ export const list_storefront_posts = (app) =>
  * efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const export_storefront = (app) => {
   /**
    * 
-   * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
+   * @param {import('../v-database/types.public.d.ts').HandleOrId} handle_or_id 
    * 
    * @return {Promise<string>}
    */
@@ -151,7 +151,7 @@ export const export_storefront = (app) => {
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

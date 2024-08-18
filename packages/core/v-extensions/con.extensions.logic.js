@@ -9,7 +9,7 @@ import { App } from '../index.js';
  * @param {App} app 
  * @param {string} extension_handle `handle` of `extension` 
  * 
- * @returns {import('../v-api/types.api.js').ExtensionItemGet}
+ * @returns {import('../v-api/types.api.d.ts').ExtensionItemGet}
  */
 export const get_extension = (app, extension_handle) => {
   const ext = app.extensions?.[extension_handle];
@@ -34,7 +34,7 @@ export const get_extension = (app, extension_handle) => {
  * @param {App} app 
  * 
  * 
- * @returns {import('../v-api/types.api.js').ExtensionItemGet[]}
+ * @returns {import('../v-api/types.api.d.ts').ExtensionItemGet[]}
  */
 export const list_extensions = (app) => {
   return Object.entries(app.extensions ?? {}).map(
@@ -54,11 +54,7 @@ export const list_extensions = (app) => {
  * @description Invoke an `extension` **Action**.
  * 
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {App<PlatformNativeRequest, PlatformContext>} app `storecraft` app
+ * @param {App} app `storecraft` app
  * @param {string} extension_handle `extension` handle for identification
  * @param {string} action_handle `action` handle of extension
  * @param {any} [body] `action` input

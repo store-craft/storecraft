@@ -28,15 +28,14 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node';
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new NodeLocalStorage(join(homedir(), 'tomer'))
-);
+const app = new App(config)
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB())
+  .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
 
 await app.init();
 
@@ -63,7 +62,7 @@ from `storecraft`
 
 Currently,
 
-- `Node.js >= 18` platform through `@storecraft/platform-node`
+- `Node.js >= 18` platform through `@storecraft/platforms`
 - `AWS Api Gateway` (coming soon)
-- `Google Functions` (coming soon, but should be covered by the `@storecraft/platform-node`)
+- `Google Functions` (coming soon, but should be covered by the `@storecraft/platforms`)
 - `Cloudflare Workers` (coming soon)

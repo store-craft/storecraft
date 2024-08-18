@@ -108,30 +108,24 @@ let { success, native_response } = await mailer.email(
 
 ```js
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
-import { NodePlatform } from '@storecraft/platform-node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new GoogleStorage(), 
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(
   new MailerSendGrid(
     {
       apikey: process.env.SEND_GRID_SECRET
     }
-  ), 
-  {
-    auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
-  }
-);
-  
-await app.init();
-await app.db.migrateToLatest(false);
+  )
+)
 
+await app.init();
+await migrateToLatest(app.db, false);
 
 ```

@@ -1,8 +1,8 @@
-import { 
+import type { 
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
   StorefrontType, TagType, TemplateType 
-} from '../v-api/types.api.js';
+} from '../v-api/types.api.d.ts';
 
 export * from './public.js';
 

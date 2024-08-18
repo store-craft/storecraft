@@ -7,23 +7,23 @@ import {
 } from './con.storage.logic.js'
 
 /**
- * @typedef {import('./types.api.js').searchable} searchable
- * @typedef {import('./types.api.js').BaseType} ItemType
- * @typedef {import('../v-database/types.public.js').RegularGetOptions} RegularGetOptions
+ * @typedef {import('./types.api.d.ts').searchable} searchable
+ * @typedef {import('./types.api.d.ts').BaseType} ItemType
+ * @typedef {import('../v-database/types.public.d.ts').RegularGetOptions} RegularGetOptions
  */
 
 /**
  * @description This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {Partial<import('./types.api.js').BaseType>} G
- * @template {Partial<import('./types.api.js').BaseType>} U
+ * @template {Partial<import('./types.api.d.ts').BaseType>} G
+ * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.js").App} app app instance
- * @param {import("../v-database/types.public.js").db_crud<
- *  import('../v-database/types.public.js').withConcreteId<U>, 
- *  import('../v-database/types.public.js').withConcreteId<G>
+ * @param {import("../types.public.d.ts").App} app app instance
+ * @param {import("../v-database/types.public.d.ts").db_crud<
+ *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
+ *  import('../v-database/types.public.d.ts').withConcreteId<G>
  * >} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
@@ -31,7 +31,7 @@ import {
  * your chance to fill gaps in data
  * @param {<H extends U>(final: H) => string[]} post_hook 
  * hook into final state, returns extra search terms
- * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * @param {import('../v-pubsub/types.public.d.ts').PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  * 
@@ -48,7 +48,7 @@ export const regular_upsert = (
   return async (item) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
-    /** @type {import('../v-database/types.public.js').withConcreteId<G>} */
+    /** @type {import('../v-database/types.public.d.ts').withConcreteId<G>} */
     let previous_item;
 
     item = pre_hook(item);
@@ -96,16 +96,16 @@ export const regular_upsert = (
 /**
  * @description a regular document fetch
  * 
- * @template {Partial<import('./types.api.js').BaseType>} G
- * @template {Partial<import('./types.api.js').BaseType>} U
+ * @template {Partial<import('./types.api.d.ts').BaseType>} G
+ * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<
- *  import('../v-database/types.public.js').withConcreteId<U>, 
- *  import('../v-database/types.public.js').withConcreteId<G>
+ * @param {import("../types.public.d.ts").App} app
+ * @param {import("../v-database/types.public.d.ts").db_crud<
+ *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
+ *  import('../v-database/types.public.d.ts').withConcreteId<G>
  * >} db db instance
- * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * @param {import('../v-pubsub/types.public.d.ts').PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  */
@@ -136,16 +136,16 @@ export const regular_get = (app, db, event) =>
 /**
  * @description a regular document removal
  * 
- * @template {Partial<import('./types.api.js').BaseType>} G
- * @template {Partial<import('./types.api.js').BaseType>} U
+ * @template {Partial<import('./types.api.d.ts').BaseType>} G
+ * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<
- *  import('../v-database/types.public.js').withConcreteId<U>, 
- *  import('../v-database/types.public.js').withConcreteId<G>
+ * @param {import("../types.public.d.ts").App} app
+ * @param {import("../v-database/types.public.d.ts").db_crud<
+ *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
+ *  import('../v-database/types.public.d.ts').withConcreteId<G>
  * >} db db instance
- * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * @param {import('../v-pubsub/types.public.d.ts').PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  */
@@ -157,7 +157,7 @@ export const regular_remove = (app, db, event) =>
   async (id) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
-    /** @type {import('../v-database/types.public.js').withConcreteId<G>} */
+    /** @type {import('../v-database/types.public.d.ts').withConcreteId<G>} */
     let previous;
 
     // fetch item before removal
@@ -184,22 +184,22 @@ export const regular_remove = (app, db, event) =>
  * @description a regular document list with query operation
  * 
  * 
- * @template {Partial<import('./types.api.js').BaseType>} G
- * @template {Partial<import('./types.api.js').BaseType>} U
+ * @template {Partial<import('./types.api.d.ts').BaseType>} G
+ * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.js").App} app
- * @param {import("../v-database/types.public.js").db_crud<
- *  import('../v-database/types.public.js').withConcreteId<U>, 
- *  import('../v-database/types.public.js').withConcreteId<G>
+ * @param {import("../types.public.d.ts").App} app
+ * @param {import("../v-database/types.public.d.ts").db_crud<
+ *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
+ *  import('../v-database/types.public.d.ts').withConcreteId<G>
  * >} db db instance
- * @param {import('../v-pubsub/types.public.js').PubSubEvent} [event] keep 
+ * @param {import('../v-pubsub/types.public.d.ts').PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  */
 export const regular_list = (app, db, event) => 
   /**
-   * @param {import('./types.api.query.js').ApiQuery} q 
+   * @param {import('./types.api.query.d.ts').ApiQuery} q 
    */
   async (q={}) => {
     // console.log('query', q);

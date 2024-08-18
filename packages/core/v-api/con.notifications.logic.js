@@ -7,28 +7,28 @@ import { assert_zod } from './middle.zod-validate.js';
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('./types.api.js').NotificationType} ItemType
- * @typedef {import('./types.api.js').NotificationTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').NotificationType} ItemType
+ * @typedef {import('./types.api.d.ts').NotificationTypeUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.notifications;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const addBulk = (app) => 
 /**
  * 
  * @param {ItemTypeUpsert[]} items
- * @return {Promise<import('../v-database/types.public.js').ID[]>}
+ * @return {Promise<import('../v-database/types.public.d.ts').ID[]>}
  */
 async (items) => {
   
-  /** @type {(ItemTypeUpsert & import('../v-database/types.public.js').idable_concrete)[]} */
+  /** @type {(ItemTypeUpsert & import('../v-database/types.public.d.ts').idable_concrete)[]} */
   const items_with_id = Array.isArray(items) ? items : [items] ;
   // validate and assign ids
   /** @type {string[][]} */
@@ -56,7 +56,7 @@ async (items) => {
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

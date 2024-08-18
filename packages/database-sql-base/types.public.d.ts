@@ -9,11 +9,19 @@ export type SqlDialectType = 'SQLITE' | 'POSTGRES' | 'MYSQL';
  */
 export type Config = {
   /**
-   * The Kysely dialect
+   * @description Database name
+   * 
+   * @default main
+   */
+  db_name?: string,
+
+  /**
+   * @description The `Kysely` dialect
    */
   dialect: Dialect,
+
   /**
-   * The type of the sql dialect `SQLITE`, `POSTGRES`, `MYSQL`, `MSSQL`
+   * @description The type of the sql dialect `SQLITE`, `POSTGRES`, `MYSQL`
    */
   dialect_type: SqlDialectType;
 }

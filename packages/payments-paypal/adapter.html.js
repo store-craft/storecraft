@@ -10,7 +10,7 @@
  * - Expiry date: 12/2027
  * - CVC code: 897
  * 
- * @param {import("./types.public.js").Config} config 
+ * @param {import("./types.public.d.ts").Config} config 
  * @param {Partial<import("@storecraft/core/v-api").OrderData>} order_data 
  */
 export default function html_buy_ui(config, order_data) {

@@ -12,8 +12,8 @@ import { assert_zod } from './middle.zod-validate.js';
 
 /**
  * 
- * @typedef {import('./types.api.js').ProductType} ItemType
- * @typedef {import('./types.api.js').ProductTypeUpsert |
+ * @typedef {import('./types.api.d.ts').ProductType} ItemType
+ * @typedef {import('./types.api.d.ts').ProductTypeUpsert |
  *  import('./types.api.d.ts').VariantTypeUpsert
  * } ItemTypeUpsert
  * 
@@ -80,7 +80,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const add_product_to_collection = (app) => 
 /**
@@ -94,7 +94,7 @@ export const add_product_to_collection = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const remove_product_from_collection = (app) => 
 /**
@@ -108,7 +108,7 @@ export const remove_product_from_collection = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_product_collections = (app) => 
 /**
@@ -121,7 +121,7 @@ export const list_product_collections = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_product_variants = (app) => 
 /**
@@ -135,7 +135,7 @@ export const list_product_variants = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_related_products = (app) => 
 /**
@@ -149,7 +149,7 @@ export const list_related_products = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_product_discounts = (app) => 
 /**
@@ -163,7 +163,7 @@ export const list_product_discounts = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

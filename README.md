@@ -7,19 +7,40 @@ The `StoreCraft` mono-repo
 
 ```js
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB({db_name: 'test'}),
-  // new NodeLocalStorage(join(homedir(), 'tomer'))
-  // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
-  new GoogleStorage()
-);
+const app = new App(
+  {
+    auth_admins_emails: ['john@doe.com']
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB({ db_name: 'test' }))
+.withStorage(new GoogleStorage())
+.withPaymentGateways(
+  {
+    'paypal': new Paypal(
+      { 
+        client_id: process.env.PAYPAL_CLIENT_ID, 
+        secret: process.env.PAYPAL_SECRET, 
+        intent_on_checkout: 'AUTHORIZE',
+        env: 'test' 
+      }
+    ),
+    'stripe': new Stripe(
+      { 
+        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
+        secret_key: process.env.STRIPE_SECRET_KEY, 
+        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
+      }
+    ),
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+  }
+)
 
 await app.init();
  
@@ -34,7 +55,7 @@ const server = http.createServer(app.handler).listen(
 
 ## packages
 **platforms**
-- `@storecraft/platform-node` - platform support for **node.js**
+- `@storecraft/platforms/node` - platform support 
 - `@storecraft/platform-aws-lambda` - soon
 - `@storecraft/platform-cloudflare-workers` - soon
 - `@storecraft/google-functions` - soon
@@ -51,7 +72,7 @@ const server = http.createServer(app.handler).listen(
 - `@storecraft/database-planetscale` - (soon) Planetscale MySQL database support (http)
 
 **storage**
-- `@storecraft/storage-node-local` - local filesystem storage support on node
+- `@storecraft/storage-local` - local filesystem storage support 
 - `@storecraft/storage-google` - google storage support (http)
 - `@storecraft/storage-s3-compatible` - **aws s3** / **cloudflare r2** / **digitalocean spaces** / **minio** support (http)
 

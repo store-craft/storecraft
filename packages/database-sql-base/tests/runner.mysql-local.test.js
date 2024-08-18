@@ -1,6 +1,7 @@
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
-import { NodePlatform } from '@storecraft/platform-node';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
 import { MysqlDialect } from 'kysely';
 import { createPool } from 'mysql2'
@@ -16,22 +17,23 @@ export const dialect = new MysqlDialect({
 });
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new SQL({
-      dialect: dialect, 
-      dialect_type: 'MYSQL'
-    }),
-    null, null, {
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
-      auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
-  );
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
+    new SQL({
+      dialect: dialect, 
+      dialect_type: 'MYSQL'
+    })
+  )
 
   await app.init();
-  await app.db.migrateToLatest();
+  await migrateToLatest(app.db, false);
   
   return app;
 }

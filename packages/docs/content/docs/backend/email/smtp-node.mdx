@@ -46,19 +46,19 @@ let { success, native_response } = await mailer.email(
 
 ```js
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
-import { NodePlatform } from '@storecraft/platform-node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new GoogleStorage(), 
-  new MailerSmtpNode()
-);
-  
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(new MailerSmtpNode())
+
+
 await app.init();
-await app.db.migrateToLatest(false);
+await migrateToLatest(app.db, false);
 
 ```

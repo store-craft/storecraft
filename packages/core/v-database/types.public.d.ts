@@ -1,4 +1,4 @@
-import { 
+import type { 
   AuthUserType, BaseProductType, BaseType, 
   CollectionType, CollectionTypeUpsert, 
   CustomerType, CustomerTypeUpsert, 
@@ -14,9 +14,9 @@ import {
   TagType, TagTypeUpsert, 
   TemplateType, TemplateTypeUpsert, 
   QuickSearchResult, 
-} from "../v-api/types.api.js";
-import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.js";
-import type { App } from '../types.public.js'
+} from "../v-api/types.api.d.ts";
+import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.d.ts";
+import type { App } from '../types.public.d.ts'
 
 export type ID = string;
 export type Handle = string;
@@ -333,18 +333,12 @@ export interface db_driver {
   /**
    * Init to the database
    */
-  init: (app: App<any, any, any, db_driver, any, any, any>) => Promise<this>;
+  init: (app: App) => Promise<this>;
 
   /** 
    * Disconnect the database if possible 
    */
   disconnect: () => Promise<boolean>;
-
-  /**
-   * 
-   * Migrate database to latest state
-   */
-  migrateToLatest: () => Promise<void>
 
   /**
    * Is the driver ready ?
@@ -359,7 +353,7 @@ export interface db_driver {
   /**
    * Get the underlying StoreCraft App
    */
-  app: App<any, any, any> | undefined;
+  app: App | undefined;
 
   /**
    * The main `resources` and `tables`

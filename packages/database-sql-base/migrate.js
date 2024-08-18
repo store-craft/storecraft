@@ -29,31 +29,37 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
 
   current.driver = db_driver;
 
-  const migrator = new Migrator({
-    db,
-    provider: new FileMigrationProvider({
-      fs,
-      path,
-      migrationFolder: path.join(
-        __dirname, 
-        `migrations.${db_driver.dialectType.toLowerCase()}`
+  const migrator = new Migrator(
+    {
+      db,
+      provider: new FileMigrationProvider(
+        {
+          fs,
+          path,
+          migrationFolder: path.join(
+            __dirname, 
+            `migrations.${db_driver.dialectType.toLowerCase()}`
+          ),
+        }
       ),
-    }),
-  })
+    }
+  );
 
   const { error, results } = await migrator.migrateToLatest();
 
-  results?.forEach((it) => {
-    if (it.status === 'Success') {
-      console.log(
-        `migration "${it.migrationName}" was executed successfully`
+  results?.forEach(
+    (it) => {
+      if (it.status === 'Success') {
+        console.log(
+          `migration "${it.migrationName}" was executed successfully`
         );
-    } else if (it.status === 'Error') {
-      console.error(
-        `failed to execute migration "${it.migrationName}"`
+      } else if (it.status === 'Error') {
+        console.error(
+          `failed to execute migration "${it.migrationName}"`
         );
+      }
     }
-  })
+  );
 
   if (error) {
     console.error('failed to migrate')
@@ -62,5 +68,5 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
   }
 
   if(destroy_db_upon_completion)
-    await db.destroy()
+    await db.destroy();
 }

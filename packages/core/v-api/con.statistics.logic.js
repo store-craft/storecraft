@@ -44,7 +44,7 @@ const DAY = 86400000
 /**
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const compute_statistics = app => 
 /**
@@ -53,7 +53,7 @@ export const compute_statistics = app =>
  * @param {string} [from_day] `ISO` / `UTC` / `timestamp` date
  * @param {string} [to_day] `ISO` / `UTC` / `timestamp` date
  * 
- * @returns {Promise<import('./types.api.js').OrdersStatisticsType>}
+ * @returns {Promise<import('./types.api.d.ts').OrdersStatisticsType>}
  */
 async (from_day, to_day) => {
 
@@ -81,7 +81,7 @@ async (from_day, to_day) => {
 
   // process days stats
 
-  /** @type {import('./types.api.js').OrdersStatisticsType} */
+  /** @type {import('./types.api.d.ts').OrdersStatisticsType} */
   const stat = {
     from_day: date_from_day.toISOString(),
     to_day: date_to_day.toISOString(),
@@ -115,7 +115,7 @@ async (from_day, to_day) => {
 
       /**
        * 
-       * @param {keyof import('./types.api.js').OrdersStatisticsDay["metrics"]} key 
+       * @param {keyof import('./types.api.d.ts').OrdersStatisticsDay["metrics"]} key 
        */
       const metric_adjust = key => {
         day_d.metrics[key] = day_d.metrics[key] ?? {
@@ -245,13 +245,13 @@ const tables = [
  * 
  * Compute the count `statistics` of a table with `query`
  *  
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const compute_count_of_query = app => 
 /**
  * 
  * @param {keyof App["db"]["resources"]} [table] which `table` to get count of query
- * @param {import('./types.api.query.js').ApiQuery} [query] The `query` used for counting
+ * @param {import('./types.api.query.d.ts').ApiQuery} [query] The `query` used for counting
  * 
  * @returns {Promise<number>}
  */

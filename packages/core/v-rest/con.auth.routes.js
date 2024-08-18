@@ -4,17 +4,12 @@ import { parse_query } from '../v-api/utils.query.js';
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.js").App<
- *  PlatformNativeRequest, PlatformContext
- * >} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const create_routes = (app) => {
   const middle_authorize_admin = authorize_admin(app);
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   // signup 

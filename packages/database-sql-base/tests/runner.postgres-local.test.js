@@ -1,6 +1,7 @@
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
-import { NodePlatform } from '@storecraft/platform-node';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
 import { PostgresDialect } from 'kysely';
 import pg from 'pg'
@@ -15,22 +16,25 @@ const pg_dialect = new PostgresDialect({
 });
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new SQL({
-      dialect: pg_dialect, 
-      dialect_type: 'POSTGRES'
-    }),
-    null, null, {
+
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
-      auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
+    new SQL({
+      dialect: pg_dialect, 
+      dialect_type: 'POSTGRES'
+    })
   );
   
   await app.init();
-  await app.db.migrateToLatest();
+  await migrateToLatest(app.db, false);
+
   return app;
 }
 

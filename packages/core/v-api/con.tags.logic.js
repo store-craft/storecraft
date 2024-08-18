@@ -4,18 +4,18 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('./types.api.js').TagType} ItemType
- * @typedef {import('./types.api.js').TagTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').TagType} ItemType
+ * @typedef {import('./types.api.d.ts').TagTypeUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.tags;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
 /**
@@ -45,7 +45,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

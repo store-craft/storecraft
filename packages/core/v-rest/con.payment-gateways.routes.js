@@ -10,17 +10,12 @@ import { assert } from '../v-api/utils.func.js';
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.js").App<
- *  PlatformNativeRequest, PlatformContext
- * >} app
+ * @param {import("../types.public.d.ts").App} app
  * 
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   // get payment gateway

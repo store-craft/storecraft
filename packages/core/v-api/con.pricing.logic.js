@@ -1,23 +1,23 @@
 
 /**
- * @typedef {import('./types.api.js').ProductType} ProductType
- * @typedef {import('./types.api.js').ProductTypeUpsert} ProductTypeUpsert
- * @typedef {import('./types.api.js').VariantType} VariantType
- * @typedef {import('./types.api.js').VariantTypeUpsert} VariantTypeUpsert
+ * @typedef {import('./types.api.d.ts').ProductType} ProductType
+ * @typedef {import('./types.api.d.ts').ProductTypeUpsert} ProductTypeUpsert
+ * @typedef {import('./types.api.d.ts').VariantType} VariantType
+ * @typedef {import('./types.api.d.ts').VariantTypeUpsert} VariantTypeUpsert
  * @typedef {ProductType | ProductTypeUpsert | VariantType | VariantTypeUpsert} ProductLike
- * @typedef {import('./types.api.js').ShippingMethodType} ShippingMethodType
- * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
- * @typedef {import('./types.api.js').Filter} Filter
- * @typedef {import('./types.api.js').DiscountType} DiscountType
- * @typedef {import('./types.api.js').DiscountDetails} DiscountDetails
- * @typedef {import('./types.api.js').DiscountMetaEnum} DiscountMeta
- * @typedef {import('./types.api.js').BulkDiscountExtra} BulkDiscountExtra
- * @typedef {import('./types.api.js').OrderDiscountExtra} OrderDiscountExtra
- * @typedef {import('./types.api.js').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('./types.api.js').BuyXGetYDiscountExtra} BuyXGetYDiscountExtra
- * @typedef {import('./types.api.js').BundleDiscountExtra} BundleDiscountExtra
- * @typedef {import('./types.api.js').LineItem} LineItem
- * @typedef {import('./types.api.js').PricingData} PricingData
+ * @typedef {import('./types.api.d.ts').ShippingMethodType} ShippingMethodType
+ * @typedef {import('./types.api.d.ts').FilterMetaEnum} FilterMeta
+ * @typedef {import('./types.api.d.ts').Filter} Filter
+ * @typedef {import('./types.api.d.ts').DiscountType} DiscountType
+ * @typedef {import('./types.api.d.ts').DiscountDetails} DiscountDetails
+ * @typedef {import('./types.api.d.ts').DiscountMetaEnum} DiscountMeta
+ * @typedef {import('./types.api.d.ts').BulkDiscountExtra} BulkDiscountExtra
+ * @typedef {import('./types.api.d.ts').OrderDiscountExtra} OrderDiscountExtra
+ * @typedef {import('./types.api.d.ts').RegularDiscountExtra} RegularDiscountExtra
+ * @typedef {import('./types.api.d.ts').BuyXGetYDiscountExtra} BuyXGetYDiscountExtra
+ * @typedef {import('./types.api.d.ts').BundleDiscountExtra} BundleDiscountExtra
+ * @typedef {import('./types.api.d.ts').LineItem} LineItem
+ * @typedef {import('./types.api.d.ts').PricingData} PricingData
  * 
  */
 
@@ -37,6 +37,7 @@ import {
 export const test_product_filter_against_product = 
   (filter, product) => {
 
+    
   // confirm `product` filter
   if(
     !filter && 
@@ -52,7 +53,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_price_range.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_price_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_price_range} */
           const cast = { 
             from: 0, 
             to: Number.POSITIVE_INFINITY,
@@ -67,7 +68,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_collections.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_collections} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_collections} */
           const cast = filter?.value ?? [];
           
           return product?.collections?.some(
@@ -77,7 +78,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_not_in_collections.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_collections} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_not_in_collections} */
           const cast = filter?.value ?? [];
 
           return product?.collections?.every(
@@ -87,7 +88,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_products.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_products} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_products} */
           const cast = filter?.value ?? [];
 
           return cast.map(it => it.handle).includes(product.handle);
@@ -95,7 +96,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_not_in_products.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_products} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_not_in_products} */
           const cast = filter?.value ?? [];
 
           return !cast.map(it => it.handle).includes(product.handle);
@@ -103,7 +104,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_tags.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_tags} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_tags} */
           const cast = filter?.value ?? [];
 
           return product?.tags?.some(
@@ -112,7 +113,7 @@ export const test_product_filter_against_product =
         }
       case FilterMetaEnum.p_not_in_tags.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_tags} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_not_in_tags} */
           const cast = filter?.value ?? [];
 
           return product?.tags?.every(
@@ -175,7 +176,7 @@ const test_order_filter =
         {
           const now = (new Date()).toISOString();
 
-          /** @type {import('./types.api.js').FilterValue_o_date_in_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_date_in_range} */
           const cast = {
             from: (new Date(0)).toISOString(),
             to: now,
@@ -191,7 +192,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_has_customer.op: 
         {
-          /** @type {import('./types.api.js').FilterValue_o_has_customers} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_has_customers} */
           const cast = filter?.value ?? [];
           
           return Boolean(
@@ -201,7 +202,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_items_count_in_range.op:
         {
-          /** @type {import('./types.api.js').FilterValue_o_items_count_in_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_items_count_in_range} */
           const cast = { 
             from: 0,
             ...(filter?.value ?? {})
@@ -212,7 +213,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_subtotal_in_range.op:
         {
-          /** @type {import('./types.api.js').FilterValue_o_subtotal_in_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_subtotal_in_range} */
           const cast = { 
             from: 0,
             ...(filter?.value ?? {})

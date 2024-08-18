@@ -25,7 +25,7 @@ const infer_content_type = (name) => {
 
 
 /**
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.public.d.ts').Config} Config
  */
 
 /**

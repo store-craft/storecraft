@@ -8,8 +8,8 @@ First install the following packages
 
 ```bash
 npm i @storecraft/core 
-npm i @storecraft/platform-node 
-npm i @storecraft/storage-node-local
+npm i @storecraft/platforms 
+npm i @storecraft/storage-local
 npm i @storecraft/payments-dummy
 npm i @storecraft/payments-dummy
 npm i @storecraft/database-sql-base 
@@ -26,13 +26,13 @@ Now, create a new file `index.js`
 
 import 'dotenv/config';
 import http from "node:http";
-import { NodePlatform } from '@storecraft/platform-node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodePlatform } from '@storecraft/platforms/node';
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
 import SQLite from 'better-sqlite3'
 import { SqliteDialect } from 'kysely';
 import { homedir } from 'node:os';
@@ -45,34 +45,43 @@ export const sqlite_dialect = new SqliteDialect(
 );
 
 const app = new App(
-  new NodePlatform(),
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games',
+    auth_secret_access_token: process.env.auth_secret_access_token,
+    auth_secret_refresh_token: process.env.auth_secret_refresh_token
+    auth_admins_emails: ['jonny@begood.com']
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
   new SQL(
     {
       dialect: sqlite_dialect, 
       dialect_type: 'SQLITE'
     }
   ),
-  new NodeLocalStorage(join(homedir(), 'storage')),
+)
+.withStorage(
+  new NodeLocalStorage(join(homedir(), 'tomer'))
+)
+.withMailer(
   new MailerSendGrid(
     {
       apikey: process.env.SEND_GRID_SECRET
     }
-  ),
-  { // config
-    auth_admins_emails: ['admin@sc.com'],
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games'
-  }
-).withPaymentGateways(
+  )
+)
+.withPaymentGateways(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
   }
 );
 
 await app.init();
-await app.db.migrateToLatest(false);
+await migrateToLatest(app.db, false);
 
 http.createServer(app.handler).listen(
   8000,

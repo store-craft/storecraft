@@ -1,4 +1,4 @@
-import { App } from "../index.js";
+import type { App } from "../index.js";
 
 export type StorageFeatures = {
   
@@ -59,7 +59,7 @@ export declare interface storage_driver {
    * 
    * @description Init the storage
    */
-  init: (app: App<any, any, any, any, storage_driver, any, any>) => Promise<storage_driver>;
+  init: (app: App) => Promise<storage_driver>;
 
   /**
    * 

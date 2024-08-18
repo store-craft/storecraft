@@ -1,33 +1,35 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
-import { NodePlatform } from '@storecraft/platform-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { SqliteDialect } from 'kysely';
 import { homedir } from 'os';
 import { join } from 'path';
 import SQLite from 'better-sqlite3'
 import { SQL } from '../index.js';
+import { migrateToLatest } from '../migrate.js';
 
 export const sqlite_dialect = new SqliteDialect({
   database: async () => new SQLite(join(homedir(), 'db.sqlite')),
 });
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new SQL({
-      dialect: sqlite_dialect, 
-      dialect_type: 'SQLITE'
-    }),
-    null, null, {
+
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
-      auth_password_hash_rounds: 100,
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
-  );
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
+    new SQL({
+      dialect: sqlite_dialect, 
+      dialect_type: 'SQLITE'
+    })
+  )
  
   await app.init();
-  await app.db.migrateToLatest();
+  await migrateToLatest(app.db, false);
   
   return app;
 }
@@ -49,7 +51,7 @@ const withTime = async (fn) => {
 async function test() {
   const app = await withTime(create_app);
 
-  await app.db.migrateToLatest(false);
+  await migrateToLatest(app.db, false);
 
 
   const doit = async () => {

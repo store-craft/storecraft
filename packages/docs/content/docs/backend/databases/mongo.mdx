@@ -16,27 +16,31 @@ npm i @storecraft/core @storecraft/database-mongodb-node
 ```js
 import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb-node';
-import { NodePlatform } from '@storecraft/platform-node';
+import { migrateToLatest } from '@storecraft/database-mongodb-node/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 
-let app = new App(
-  new NodePlatform(),
+const app = new App(
+  {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_password_hash_rounds: 100,
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
   new MongoDB(
     { 
       db_name: 'test', 
       url: 'mongodb+srv://admin:admin@your-db.b12btx2.mongodb.net/?retryWrites=true&w=majority',
       options: {}
     }
-  ),
-  null, null, {
-    auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
-  }
-);
-  
+  )
+)
+.withStorage(new GoogleStorage())
+
 await app.init();
-await app.db.migrateToLatest(false);
+await migrateToLatest(app.db, false);
 
 
 ```

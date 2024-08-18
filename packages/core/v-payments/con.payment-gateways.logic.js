@@ -103,12 +103,7 @@ export const webhook = async (app, gateway_handle, request, response) => {
 /**
  * @description return the `status` of payment of an order
  * 
- * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {import("../types.public.d.ts").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.d.ts").App} app
  * @param {string} order_id the ID of the order
  * 
  */
@@ -133,11 +128,7 @@ export const payment_status_of_order = async (app, order_id) => {
  * a `checkout` was created
  * 
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {import("../types.public.d.ts").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.d.ts").App} app
  * @param {string} order_id the ID of the order
  * 
  */
@@ -167,12 +158,7 @@ export const payment_buy_ui = async (app, order_id) => {
  * Invoke a payment action (`capture`/`void`/`refund`/`whatever`) on 
  * the payment gateway of the order.
  * 
- * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {App<PlatformNativeRequest, PlatformContext>} app `storecraft` app
+ * @param {App} app `storecraft` app
  * @param {string} order_id the `id` of the order
  * @param {string} action_handle the payment action of the 
  * gateway (o.e `capture`/`void`/`refund`/`whatever`)

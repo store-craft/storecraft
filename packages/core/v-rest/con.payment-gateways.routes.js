@@ -10,12 +10,7 @@ import { assert } from '../v-api/utils.func.js';
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.d.ts").App<
- *  PlatformNativeRequest, PlatformContext
- * >} app
+ * @param {import("../types.public.d.ts").App} app
  * 
  */
 export const create_routes = (app) => {

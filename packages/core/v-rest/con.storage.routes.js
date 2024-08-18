@@ -7,12 +7,7 @@ export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * @param {import("../types.public.d.ts").App<
- *  PlatformNativeRequest, PlatformContext>
- * } app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const create_routes = (app) => {
 

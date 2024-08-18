@@ -54,11 +54,7 @@ export const list_extensions = (app) => {
  * @description Invoke an `extension` **Action**.
  * 
  * 
- * @template PlatformNativeRequest
- * @template PlatformContext
- * 
- * 
- * @param {App<PlatformNativeRequest, PlatformContext>} app `storecraft` app
+ * @param {App} app `storecraft` app
  * @param {string} extension_handle `extension` handle for identification
  * @param {string} action_handle `action` handle of extension
  * @param {any} [body] `action` input

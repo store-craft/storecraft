@@ -5,7 +5,7 @@ import { parse_query } from '../v-api/utils.query.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
 
 /**
- * @typedef {import('../v-api/types.api.js').CustomerType} ItemType
+ * @typedef {import('../v-api/types.api.d.ts').CustomerType} ItemType
  */
 
 /**
@@ -13,7 +13,7 @@ import { owner_or_admin_guard } from './con.customers.middle.js'
  * @template PlatformNativeRequest
  * @template PlatformContext
  * 
- * @param {import("../types.public.js").App<
+ * @param {import("../types.public.d.ts").App<
  *  PlatformNativeRequest, PlatformContext
  * >} app
  */

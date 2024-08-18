@@ -13,7 +13,7 @@ import { prepare_and_bind } from './kysely.d1.utils.js';
  * @typedef {import('kysely').Driver} Driver
  * @typedef {import('kysely').Dialect} Dialect
  * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.js').D1ConfigHTTP} Config
+ * @typedef {import('./types.public.d.ts').D1ConfigHTTP} Config
  */
 
 /**

@@ -4,7 +4,7 @@ import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
 
 /**
- * @typedef {import('../v-api/types.api.js').TagType} ItemType
+ * @typedef {import('../v-api/types.api.d.ts').TagType} ItemType
  */
 
 /**
@@ -12,7 +12,7 @@ import { parse_query } from '../v-api/utils.query.js'
  * @template PlatformNativeRequest
  * @template PlatformContext
  * 
- * @param {import("../types.public.js").App<
+ * @param {import("../types.public.d.ts").App<
  *  PlatformNativeRequest, PlatformContext
  * >} app
  */

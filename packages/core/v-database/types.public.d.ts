@@ -1,4 +1,4 @@
-import { 
+import type { 
   AuthUserType, BaseProductType, BaseType, 
   CollectionType, CollectionTypeUpsert, 
   CustomerType, CustomerTypeUpsert, 
@@ -14,9 +14,9 @@ import {
   TagType, TagTypeUpsert, 
   TemplateType, TemplateTypeUpsert, 
   QuickSearchResult, 
-} from "../v-api/types.api.js";
-import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.js";
-import type { App } from '../types.public.js'
+} from "../v-api/types.api.d.ts";
+import type { ExpandQuery, ApiQuery } from "../v-api/types.api.query.d.ts";
+import type { App } from '../types.public.d.ts'
 
 export type ID = string;
 export type Handle = string;

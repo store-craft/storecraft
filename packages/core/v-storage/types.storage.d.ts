@@ -1,4 +1,4 @@
-import { App } from "../index.js";
+import type { App } from "../index.js";
 
 export type StorageFeatures = {
   

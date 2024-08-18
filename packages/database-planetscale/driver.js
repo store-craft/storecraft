@@ -19,7 +19,7 @@ export class PlanetScale extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').PlanetScaleDialectConfig} [config] config 
+   * @param {import('./types.public.d.ts').PlanetScaleDialectConfig} [config] config 
    */
   constructor(config) {
     super(

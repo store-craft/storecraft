@@ -8,7 +8,7 @@ import html_buy_ui from './adapter.html.js';
  * @typedef {import('@storecraft/core/v-api').PaymentGatewayStatus} PaymentGatewayStatus
  * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.public.d.ts').Config} Config
  * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
  */
 

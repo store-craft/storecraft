@@ -4,18 +4,18 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('./types.api.js').PostType} ItemType
- * @typedef {import('./types.api.js').PostTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').PostType} ItemType
+ * @typedef {import('./types.api.d.ts').PostTypeUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.posts;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
 /**

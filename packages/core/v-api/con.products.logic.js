@@ -12,8 +12,8 @@ import { assert_zod } from './middle.zod-validate.js';
 
 /**
  * 
- * @typedef {import('./types.api.js').ProductType} ItemType
- * @typedef {import('./types.api.js').ProductTypeUpsert |
+ * @typedef {import('./types.api.d.ts').ProductType} ItemType
+ * @typedef {import('./types.api.d.ts').ProductTypeUpsert |
  *  import('./types.api.d.ts').VariantTypeUpsert
  * } ItemTypeUpsert
  * 

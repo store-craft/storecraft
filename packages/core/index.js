@@ -6,12 +6,12 @@ export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
 
 /** 
- * @typedef {Partial<import('./types.public.js').StorecraftConfig>} StorecraftConfig
- * @typedef {import('./v-storage/types.storage.js').storage_driver} storage_driver
- * @typedef {import('./v-database/types.public.js').db_driver} db_driver
- * @typedef {import('./v-payments/types.payments.js').payment_gateway} payment_gateway
- * @typedef {import('./v-extensions/types.public.js').extension} extension
- * @typedef {import('./v-mailer/types.mailer.js').mailer} mailer
+ * @typedef {Partial<import('./types.public.d.ts').StorecraftConfig>} StorecraftConfig
+ * @typedef {import('./v-storage/types.storage.d.ts').storage_driver} storage_driver
+ * @typedef {import('./v-database/types.public.d.ts').db_driver} db_driver
+ * @typedef {import('./v-payments/types.payments.d.ts').payment_gateway} payment_gateway
+ * @typedef {import('./v-extensions/types.public.d.ts').extension} extension
+ * @typedef {import('./v-mailer/types.mailer.d.ts').mailer} mailer
  */
 
 /** @param {string} s @param {number} def */
@@ -40,7 +40,7 @@ export class App {
 
   /** 
    * 
-   * @typedef {import('./v-platform/types.public.js').PlatformAdapter<
+   * @typedef {import('./v-platform/types.public.d.ts').PlatformAdapter<
    *  PlatformNativeRequest, PlatformContext, H>
    * } Platform
    * 
@@ -389,7 +389,7 @@ export class App {
     const start_millis = Date.now();
     const request = await this.#_platform.encode(req)
     
-    /** @type {import('./types.public.js').ApiResponse} */
+    /** @type {import('./v-rest/types.public.d.ts').ApiResponse} */
     const polka_response = {
       headers: new Headers(),
       finished: false,
@@ -518,7 +518,7 @@ export class App {
    * @description Quickly attach an `event` subscriber. This is just a quick way
    * to interface into {@link PubSub}
    * 
-   * @type {import('./v-pubsub/types.public.js').PubSubOnEvents<this, this>["on"]}
+   * @type {import('./v-pubsub/types.public.d.ts').PubSubOnEvents<this, this>["on"]}
    */
   on = (event, callback) => {
     this.pubsub.on(event, callback);

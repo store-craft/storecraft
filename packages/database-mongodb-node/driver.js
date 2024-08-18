@@ -17,7 +17,7 @@ import { impl as search } from './src/con.search.js';
 
 
 /**
- * @typedef {Partial<import('./types.public.js').Config>} Config
+ * @typedef {Partial<import('./types.public.d.ts').Config>} Config
  */
 
 /**

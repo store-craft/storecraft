@@ -5,7 +5,7 @@ import * as kysely from "kysely";
  * @typedef {import('kysely').Driver} Driver
  * @typedef {import('kysely').Dialect} Dialect
  * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.public.d.ts').Config} Config
  */
 
 /**

@@ -5,8 +5,8 @@ import { regular_get, regular_list,
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('./types.api.js').DiscountType} ItemType
- * @typedef {import('./types.api.js').DiscountTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').DiscountType} ItemType
+ * @typedef {import('./types.api.d.ts').DiscountTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -52,8 +52,8 @@ export const upsert = (app) =>
 export const list_discounts_products = (app) => 
 /**
  * 
- * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
- * @param {import('./types.api.query.js').ApiQuery} [q] 
+ * @param {import('../v-database/types.public.d.ts').HandleOrId} handle_or_id 
+ * @param {import('./types.api.query.d.ts').ApiQuery} [q] 
  */
 (handle_or_id, q) => {
   return db(app).list_discount_products(handle_or_id, q);

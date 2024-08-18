@@ -19,7 +19,7 @@ import { DummyDatabase } from './dummy-database.js';
  * @typedef {string} CreateResult
  * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
- * @typedef {import('./types.public.js').Config} Config
+ * @typedef {import('./types.public.d.ts').Config} Config
  * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
  */
 

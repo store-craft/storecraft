@@ -18,7 +18,7 @@ export class Turso extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').Config} [config] config 
+   * @param {import('./types.public.d.ts').Config} [config] config 
    */
   constructor(config) {
     super(

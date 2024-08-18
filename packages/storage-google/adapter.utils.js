@@ -2,7 +2,7 @@ import { base64, jwt } from '@storecraft/core/v-crypto';
 
 /**
  * 
- * @param {import('./types.public.js').ServiceFile} sf Google service account json
+ * @param {import('./types.public.d.ts').ServiceFile} sf Google service account json
  * @param {string} [aud]
  * @returns 
  */

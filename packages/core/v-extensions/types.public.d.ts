@@ -1,8 +1,8 @@
-import { App } from "../types.public.js";
+import type { App } from "../types.public.d.ts";
 import type { 
-    ExtensionAction,
-    ExtensionInfo 
-} from "../v-api/types.api.js";
+  ExtensionAction,
+  ExtensionInfo 
+} from "../v-api/types.api.d.ts";
   
   
 /**

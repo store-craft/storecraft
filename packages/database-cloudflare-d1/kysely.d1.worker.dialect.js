@@ -10,7 +10,7 @@ import {
  * @typedef {import('kysely').Driver} Driver
  * @typedef {import('kysely').Dialect} Dialect
  * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.js').D1ConfigWorker} Config
+ * @typedef {import('./types.public.d.ts').D1ConfigWorker} Config
  */
 
 /**

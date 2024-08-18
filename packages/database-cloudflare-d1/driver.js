@@ -18,7 +18,7 @@ export class D1_HTTP extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').D1ConfigHTTP} [config] config 
+   * @param {import('./types.public.d.ts').D1ConfigHTTP} [config] config 
    */
   constructor(config) {
     super(
@@ -40,7 +40,7 @@ export class D1_WORKER extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').D1ConfigWorker} [config] config 
+   * @param {import('./types.public.d.ts').D1ConfigWorker} [config] config 
    */
   constructor(config) {
     super(

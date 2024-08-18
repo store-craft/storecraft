@@ -12,7 +12,7 @@ import {
  * @typedef {import('kysely').Driver} Driver
  * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
  * @typedef {import('kysely').DatabaseIntrospector} DatabaseIntrospector
- * @typedef {import('./types.public.js').PlanetScaleDialectConfig} PlanetScaleDialectConfig
+ * @typedef {import('./types.public.d.ts').PlanetScaleDialectConfig} PlanetScaleDialectConfig
  */
 
 /**

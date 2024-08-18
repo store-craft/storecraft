@@ -4,8 +4,8 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('./types.api.js').StorefrontType} ItemType
- * @typedef {import('./types.api.js').StorefrontTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').StorefrontType} ItemType
+ * @typedef {import('./types.api.d.ts').StorefrontTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -110,7 +110,7 @@ export const list_storefront_posts = (app) =>
 export const export_storefront = (app) => {
   /**
    * 
-   * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
+   * @param {import('../v-database/types.public.d.ts').HandleOrId} handle_or_id 
    * 
    * @return {Promise<string>}
    */

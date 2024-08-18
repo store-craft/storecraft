@@ -21,7 +21,7 @@ export class NeonServerless extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').NeonServerlessConfig} [config] config 
+   * @param {import('./types.public.d.ts').NeonServerlessConfig} [config] config 
    */
   constructor(config) {
     super(
@@ -49,7 +49,7 @@ export class NeonHttp extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.js').NeonHttpConfig} [config] config 
+   * @param {import('./types.public.d.ts').NeonHttpConfig} [config] config 
    */
   constructor(config) {
     super(

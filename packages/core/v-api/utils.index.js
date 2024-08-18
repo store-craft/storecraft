@@ -16,7 +16,7 @@ export const isUnd = v => !isDef(v);
 
 /**
  * Reasonable search index for terms for most types
- * @param {Partial<import('./types.api.js').BaseType>} data 
+ * @param {Partial<import('./types.api.d.ts').BaseType>} data 
  * @returns {string[]}
  */
 export const create_search_index = (data) => {

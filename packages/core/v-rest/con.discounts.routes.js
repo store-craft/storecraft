@@ -4,7 +4,7 @@ import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
 
 /**
- * @typedef {import('../v-api/types.api.js').DiscountType} ItemType
+ * @typedef {import('../v-api/types.api.d.ts').DiscountType} ItemType
  */
 
 /**

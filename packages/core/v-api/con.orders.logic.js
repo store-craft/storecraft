@@ -5,12 +5,12 @@ import { union } from './utils.func.js';
 import { isDef } from './utils.index.js';
 
 /**
- * @typedef {import('./types.api.js').OrderData} ItemType
- * @typedef {import('./types.api.js').OrderDataUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').OrderData} ItemType
+ * @typedef {import('./types.api.d.ts').OrderDataUpsert} ItemTypeUpsert
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.orders;
 
@@ -46,7 +46,7 @@ const create_search_index = (data) => {
 
 
 /**
- * @type {import('./types.api.js').PricingData}
+ * @type {import('./types.api.d.ts').PricingData}
  */
 const default_pricing = {
   quantity_discounted: 0,

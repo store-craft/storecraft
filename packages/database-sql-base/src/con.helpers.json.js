@@ -129,7 +129,7 @@ export const extract_first_selection = (expr, table) => {
  * 
  * @template O
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @param {import('../types.public.js').SqlDialectType} sql_type 
+ * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
 export function jsonArrayFrom(expr, sql_type) {
@@ -170,7 +170,7 @@ export function jsonArrayFrom(expr, sql_type) {
  * ```
  * @template O
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @param {import('../types.public.js').SqlDialectType} sql_type 
+ * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
 export function stringArrayFrom(expr, sql_type) {
@@ -212,7 +212,7 @@ export function stringArrayFrom(expr, sql_type) {
  *   
  * @template O
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @param {import('../types.public.js').SqlDialectType} sql_type 
+ * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
  * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O> | null>}
  */
 export function jsonObjectFrom(expr, sql_type) {

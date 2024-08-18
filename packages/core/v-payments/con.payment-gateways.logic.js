@@ -14,7 +14,7 @@ const is_function = o => {
  * @param {App} app 
  * @param {string} gateway_handle 
  * 
- * @returns {import('../v-api/types.api.js').PaymentGatewayItemGet}
+ * @returns {import('../v-api/types.api.d.ts').PaymentGatewayItemGet}
  */
 export const get_payment_gateway = (app, gateway_handle) => {
   const pg = app.gateway(gateway_handle);
@@ -39,7 +39,7 @@ export const get_payment_gateway = (app, gateway_handle) => {
  * @param {App} app 
  * 
  * 
- * @returns {import('../v-api/types.api.js').PaymentGatewayItemGet[]}
+ * @returns {import('../v-api/types.api.d.ts').PaymentGatewayItemGet[]}
  */
 export const list_payment_gateways = (app) => {
   return Object.entries(app.gateways ?? {}).map(
@@ -61,8 +61,8 @@ export const list_payment_gateways = (app) => {
  * @param {App} app 
  * @param {string} gateway_handle 
  * @param {Request} request
- * @param {import('../types.public.js').ApiRequest} request
- * @param {import('../types.public.js').ApiResponse} response
+ * @param {import('../v-rest/types.public.d.ts').ApiRequest} request
+ * @param {import('../v-rest/types.public.d.ts').ApiResponse} response
  * 
  */
 export const webhook = async (app, gateway_handle, request, response) => {

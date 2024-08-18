@@ -4,8 +4,8 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 
 /**
- * @typedef {import('./types.api.js').CollectionType} ItemType
- * @typedef {import('./types.api.js').CollectionTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').CollectionType} ItemType
+ * @typedef {import('./types.api.d.ts').CollectionTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -46,8 +46,8 @@ export const upsert = (app) =>
 export const list_collection_products = (app) => 
   /**
    * 
-   * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
-   * @param {import('./types.api.query.js').ApiQuery} [q] 
+   * @param {import('../v-database/types.public.d.ts').HandleOrId} handle_or_id 
+   * @param {import('./types.api.query.d.ts').ApiQuery} [q] 
    */
   (handle_or_id, q={}) => {
     return db(app).list_collection_products(handle_or_id, q);
@@ -65,7 +65,7 @@ export const list_collection_products = (app) =>
 export const export_collection = (app) => {
   /**
    * 
-   * @param {import('../v-database/types.public.js').HandleOrId} handle_or_id 
+   * @param {import('../v-database/types.public.d.ts').HandleOrId} handle_or_id 
    * 
    * @return {Promise<string>}
    */

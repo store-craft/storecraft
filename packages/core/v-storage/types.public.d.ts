@@ -1,2 +1,2 @@
-export type * from './types.storage.js';
+export type * from './types.storage.d.ts';
 export * from './public.js';

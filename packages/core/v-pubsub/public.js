@@ -122,20 +122,3 @@ export class PubSub {
 
 }
 
-const test = () => {
-  const pub = new PubSub();
-  pub.on('auth/signup', a => {
-  })
-  pub.on(
-    'templates/remove', v=> {
-    }
-  )
-  
-  pub.on(
-    'templates/upsert', 
-    (event) => { 
-        // event.payload.
-    }
-  )
-  
-}

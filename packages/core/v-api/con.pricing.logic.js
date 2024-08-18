@@ -68,7 +68,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_collections.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_collections} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_collections} */
           const cast = filter?.value ?? [];
           
           return product?.collections?.some(
@@ -78,7 +78,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_not_in_collections.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_collections} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_not_in_collections} */
           const cast = filter?.value ?? [];
 
           return product?.collections?.every(
@@ -88,7 +88,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_products.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_products} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_products} */
           const cast = filter?.value ?? [];
 
           return cast.map(it => it.handle).includes(product.handle);
@@ -96,7 +96,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_not_in_products.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_products} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_not_in_products} */
           const cast = filter?.value ?? [];
 
           return !cast.map(it => it.handle).includes(product.handle);
@@ -104,7 +104,7 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_tags.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_in_tags} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_in_tags} */
           const cast = filter?.value ?? [];
 
           return product?.tags?.some(
@@ -113,7 +113,7 @@ export const test_product_filter_against_product =
         }
       case FilterMetaEnum.p_not_in_tags.op:
         {
-          /** @type {import('./types.api.js').FilterValue_p_not_in_tags} */
+          /** @type {import('./types.api.d.ts').FilterValue_p_not_in_tags} */
           const cast = filter?.value ?? [];
 
           return product?.tags?.every(
@@ -176,7 +176,7 @@ const test_order_filter =
         {
           const now = (new Date()).toISOString();
 
-          /** @type {import('./types.api.js').FilterValue_o_date_in_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_date_in_range} */
           const cast = {
             from: (new Date(0)).toISOString(),
             to: now,
@@ -192,7 +192,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_has_customer.op: 
         {
-          /** @type {import('./types.api.js').FilterValue_o_has_customers} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_has_customers} */
           const cast = filter?.value ?? [];
           
           return Boolean(
@@ -202,7 +202,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_items_count_in_range.op:
         {
-          /** @type {import('./types.api.js').FilterValue_o_items_count_in_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_items_count_in_range} */
           const cast = { 
             from: 0,
             ...(filter?.value ?? {})
@@ -213,7 +213,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_subtotal_in_range.op:
         {
-          /** @type {import('./types.api.js').FilterValue_o_subtotal_in_range} */
+          /** @type {import('./types.api.d.ts').FilterValue_o_subtotal_in_range} */
           const cast = { 
             from: 0,
             ...(filter?.value ?? {})

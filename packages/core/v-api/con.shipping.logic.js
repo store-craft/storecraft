@@ -4,8 +4,8 @@ import { regular_get, regular_list,
 import { to_handle } from './utils.func.js';
 
 /**
- * @typedef {import('./types.api.js').ShippingMethodType} ItemType
- * @typedef {import('./types.api.js').ShippingMethodTypeUpsert} ItemTypeUpsert
+ * @typedef {import('./types.api.d.ts').ShippingMethodType} ItemType
+ * @typedef {import('./types.api.d.ts').ShippingMethodTypeUpsert} ItemTypeUpsert
  */
 
 /**
@@ -15,7 +15,7 @@ export const db = app => app.db.resources.shipping_methods;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
 /**

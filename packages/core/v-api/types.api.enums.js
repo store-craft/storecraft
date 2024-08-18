@@ -103,7 +103,7 @@ export const DiscountMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api.js').CheckoutStatusEnum} 
+ * @enum {import('./types.api.d.ts').CheckoutStatusEnum} 
  */
 export const CheckoutStatusEnum = {
   created: { 
@@ -124,7 +124,7 @@ export const CheckoutStatusEnum = {
 }
 
 /** 
- * @enum {import('./types.api.js').FulfillOptionsEnum} 
+ * @enum {import('./types.api.d.ts').FulfillOptionsEnum} 
  */
 export const FulfillOptionsEnum = {
   draft: { 
@@ -145,7 +145,7 @@ export const FulfillOptionsEnum = {
 }
 
 /** 
- * @enum {import('./types.api.js').PaymentOptionsEnum} 
+ * @enum {import('./types.api.d.ts').PaymentOptionsEnum} 
  */
 export const PaymentOptionsEnum = {
   unpaid: { 

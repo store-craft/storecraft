@@ -3,9 +3,9 @@ import { STATUS_CODES } from './codes.js';
 import { Trouter } from './trouter/index.js';
 
 /**
- * @typedef {import('./public.js').VPolkaRequest} VPolkaRequest 
- * @typedef {import('./public.js').VPolkaResponse} VPolkaResponse 
- * @typedef {import('./public.js').IPolka} IPolka3
+ * @typedef {import('./public.d.ts').VPolkaRequest} VPolkaRequest 
+ * @typedef {import('./public.d.ts').VPolkaResponse} VPolkaResponse 
+ * @typedef {import('./public.d.ts').IPolka} IPolka3
  * 
  */
 
@@ -50,15 +50,15 @@ export const onError = async (error, req, res) => {
 /**
  * @template {VPolkaRequest} Req
  * @template {VPolkaResponse} Res
- * @param {import('./public.js').Middleware<Req, Res>} fn 
- * @returns {import('./public.js').Middleware<Req, Res>}
+ * @param {import('./public.d.ts').Middleware<Req, Res>} fn 
+ * @returns {import('./public.d.ts').Middleware<Req, Res>}
  */
 const mount = fn => fn instanceof Polka ? fn.attach : fn;
 
 /**
  * @template {VPolkaRequest} Req
  * @template {VPolkaResponse} Res
- * @typedef {import('./public.js').IPolka<Req, Res>} IPolka
+ * @typedef {import('./public.d.ts').IPolka<Req, Res>} IPolka
  * 
  */
 
@@ -66,14 +66,14 @@ const mount = fn => fn instanceof Polka ? fn.attach : fn;
  * 
  * @template {VPolkaRequest} Req
  * @template {VPolkaResponse} Res
- * @extends {Trouter<import('./public.js').Middleware<Req, Res>>}
+ * @extends {Trouter<import('./public.d.ts').Middleware<Req, Res>>}
  * @implements {IPolka<Req, Res>}
  */
 export class Polka extends Trouter {
 
   /**
    * 
-   * @param {import('./public.js').PolkaOptions<Req, Res>} opts 
+   * @param {import('./public.d.ts').PolkaOptions<Req, Res>} opts 
    */
   constructor(opts = {}) {
     super();
@@ -87,9 +87,9 @@ export class Polka extends Trouter {
   }
 
   /**
-   * @typedef {(RegExp | string | IPolka<Req, Res> | import('./public.js').Middleware<Req, Res>)} Every
+   * @typedef {(RegExp | string | IPolka<Req, Res> | import('./public.d.ts').Middleware<Req, Res>)} Every
    * @param {Every} base 
-   * @param  {...(Polka | import('./public.js').Middleware<Req, Res>)} fns 
+   * @param  {...(Polka | import('./public.d.ts').Middleware<Req, Res>)} fns 
    * @returns 
    */
   use(base, ...fns) {

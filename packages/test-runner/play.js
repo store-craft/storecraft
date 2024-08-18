@@ -6,13 +6,13 @@ export const admin_email = 'admin@sc.com';
 export const admin_password = 'password';
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new MongoDB({ db_name: 'test'}),
-    null, null, {
-      auth_admins_emails: [admin_email],
+  const app = new App(
+    {
+      auth_admins_emails: [admin_email]
     }
-  );
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB())
   
   return app.init();
 }

@@ -64,9 +64,20 @@ import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB(),
+const app = new App(
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games',
+    auth_secret_access_token: process.env.auth_secret_access_token,
+    auth_secret_refresh_token: process.env.auth_secret_refresh_token
+    auth_admins_emails: ['jonny@begood.com']
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(
   new GoogleStorage(
     {
       bucket: process.env.GS_BUCKET, 
@@ -74,13 +85,7 @@ let app = new App(
       private_key: process.env.GS_PRIVATE_KEY, 
       private_key_id: process.env.GS_PRIVATE_KEY_ID
     }
-  ), 
-  null, {
-    auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
-  }
+  )
 );
   
 await app.init();

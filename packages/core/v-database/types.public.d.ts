@@ -333,7 +333,7 @@ export interface db_driver {
   /**
    * Init to the database
    */
-  init: (app: App<any, any, any, db_driver, any, any, any>) => Promise<this>;
+  init: (app: App) => Promise<this>;
 
   /** 
    * Disconnect the database if possible 
@@ -353,7 +353,7 @@ export interface db_driver {
   /**
    * Get the underlying StoreCraft App
    */
-  app: App<any, any, any> | undefined;
+  app: App | undefined;
 
   /**
    * The main `resources` and `tables`

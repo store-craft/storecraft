@@ -1,4 +1,4 @@
-import type { ApiRequest, ApiResponse } from "../v-rest/types.public.js";
+import type { ApiRequest, ApiResponse } from "../v-rest/types.public.d.ts";
 import type { 
   OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
 } from "../v-api/types.api.d.ts";

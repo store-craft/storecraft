@@ -185,7 +185,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage["getArraybuffer"]}
    */
   async getArraybuffer(key) {
 
@@ -202,7 +202,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage["getBlob"]}
    */
   async getBlob(key) {
 
@@ -223,7 +223,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage["getStream"]}
    */
   async getStream(key) {
     try { 

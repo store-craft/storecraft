@@ -10,13 +10,13 @@ import { isDef } from './utils.index.js';
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.discounts;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
 /**
@@ -47,7 +47,7 @@ export const upsert = (app) =>
  * given a discount handle and query, return products of that discount
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_discounts_products = (app) => 
 /**
@@ -62,7 +62,7 @@ export const list_discounts_products = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

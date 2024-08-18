@@ -11,7 +11,7 @@ export class PubSub {
 
   /**
    * 
-   * @type {Record<string, import("./types.public.js").PubSubSubscriber[]>}
+   * @type {Record<string, import("./types.public.d.ts").PubSubSubscriber[]>}
    */
   #subscribers = {};
   /**
@@ -33,7 +33,7 @@ export class PubSub {
    * 
    * @description Does a `storecraft` `event` has handlers ?
    * 
-   * @param {import("./types.public.js").PubSubEvent} event 
+   * @param {import("./types.public.d.ts").PubSubEvent} event 
    */
   has(event) {
     return this.#subscribersOf(event).length > 0;
@@ -45,7 +45,7 @@ export class PubSub {
    * 
    * @template [P=any]
    * 
-   * @param {import("./types.public.js").PubSubEvent} event a `storecraft` event type
+   * @param {import("./types.public.d.ts").PubSubEvent} event a `storecraft` event type
    * @param {P} [payload] extra payload to dispatch
    */
   async dispatch(event, payload) {
@@ -78,8 +78,8 @@ export class PubSub {
    * 
    * @description Subscribe to a `storecraft` event
    * 
-   * @param {import("./types.public.js").PubSubEvent} event An event identifier
-   * @param {import("./types.public.js").PubSubSubscriber} callback a `callback` 
+   * @param {import("./types.public.d.ts").PubSubEvent} event An event identifier
+   * @param {import("./types.public.d.ts").PubSubSubscriber} callback a `callback` 
    * event handler to invoke, can be a `promise`
    * 
    * 
@@ -98,7 +98,7 @@ export class PubSub {
   /**
    * @description Subscribe to a `storecraft` event
    * 
-   * @type {import("./types.public.js").PubSubOnEvents["on"]}
+   * @type {import("./types.public.d.ts").PubSubOnEvents["on"]}
    * 
    * @returns {Function} a self invoking `unsubscribe` function for the event
    */
@@ -110,8 +110,8 @@ export class PubSub {
   /**
    * @description unsubscribe to a `storecraft` event
    * 
-   * @param {import("./types.public.js").PubSubEvent} event An event identifier
-   * @param {import("./types.public.js").PubSubSubscriber} callback a `callback` 
+   * @param {import("./types.public.d.ts").PubSubEvent} event An event identifier
+   * @param {import("./types.public.d.ts").PubSubSubscriber} callback a `callback` 
    * event handler to remove
    */
   remove(event, callback) {

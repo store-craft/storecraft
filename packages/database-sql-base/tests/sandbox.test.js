@@ -12,18 +12,21 @@ export const sqlite_dialect = new SqliteDialect({
 });
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new SQL({
-      dialect: sqlite_dialect, 
-      dialect_type: 'SQLITE'
-    }),
-    null, null, {
+
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
-  );
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
+    new SQL({
+      dialect: sqlite_dialect, 
+      dialect_type: 'SQLITE'
+    })
+  )
  
   await app.init();
   await migrateToLatest(app.db, false);

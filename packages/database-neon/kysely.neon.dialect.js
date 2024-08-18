@@ -10,7 +10,7 @@ import {
 } from "@neondatabase/serverless"
 
 /**
- * @typedef {import("./types.public.js").NeonServerlessConfig} NeonServerlessConfig
+ * @typedef {import("./types.public.d.ts").NeonServerlessConfig} NeonServerlessConfig
  * @typedef {import("kysely").Dialect} Dialect
  * @typedef {import("kysely").Driver} Driver
  * @typedef {import("kysely").DatabaseConnection} DatabaseConnection

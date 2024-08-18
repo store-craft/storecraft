@@ -5,20 +5,23 @@ import { PlanetScale } from '@storecraft/database-planetscale';
 import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js';
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
+  
+  const app = new App(
+    {
+      auth_admins_emails: ['admin@sc.com'],
+      auth_secret_access_token: 'auth_secret_access_token',
+      auth_secret_refresh_token: 'auth_secret_refresh_token'
+    }
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
     new PlanetScale(
       { 
         url: process.env.PLANETSCALE_CONNECTION_URL,
         useSharedConnection: true
       }
-    ),
-    null, null, {
-      auth_admins_emails: ['admin@sc.com'],
-      auth_secret_access_token: 'auth_secret_access_token',
-      auth_secret_refresh_token: 'auth_secret_refresh_token'
-    }
-  );
+    )
+  )
   
   return app.init();
 }

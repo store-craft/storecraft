@@ -12,17 +12,17 @@ import { Stripe } from '@storecraft/payments-stripe'
 import { App } from '@storecraft/core';
  
 export const app = new App(
-  new BunPlatform(),
-  new MongoDB({ db_name: 'test' }),
-  new BunLocalStorage(join(homedir(), 'tomer')),
-  null, 
   {
     storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games',
   }
-).withPaymentGateways(
+)
+.withPlatform(new BunPlatform())
+.withDatabase(new MongoDB({ db_name: 'test' }))
+.withStorage(new BunLocalStorage(join(homedir(), 'tomer')))
+.withPaymentGateways(
   {
     'paypal': new Paypal(
       { 
@@ -41,4 +41,4 @@ export const app = new App(
     ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
   }
-);
+)

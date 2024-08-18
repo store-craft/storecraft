@@ -10,7 +10,7 @@ export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
  * @template PlatformNativeRequest
  * @template PlatformContext
  * 
- * @param {import("../types.public.js").App<
+ * @param {import("../types.public.d.ts").App<
  *  PlatformNativeRequest, PlatformContext>
  * } app
  */

@@ -45,7 +45,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

@@ -3,15 +3,15 @@ import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
 import { NodePlatform } from '@storecraft/platforms/node';
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new MongoDB({ db_name: 'test'}),
-    null, null, {
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
-  );
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB({ db_name: 'test'}))
   
   return app.init();
 }

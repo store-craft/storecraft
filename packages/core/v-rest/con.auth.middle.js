@@ -124,7 +124,7 @@ export const is_admin = (user) => {
 
 /**
  * 
- * @param {import("../v-api/types.public.js").Role[]} roles 
+ * @param {import("../v-api/types.public.d.ts").Role[]} roles 
  */
 export const roles_guard = (roles=[]) => {
   /**
@@ -143,7 +143,7 @@ export const roles_guard = (roles=[]) => {
 /**
  * combine parse auth user with roles
  * @param {App} app 
- * @param {import("../v-api/types.public.js").Role[]} roles 
+ * @param {import("../v-api/types.public.d.ts").Role[]} roles 
  */
 export const authorize_by_roles = (app, roles=[]) => {
 

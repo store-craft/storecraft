@@ -13,13 +13,34 @@ import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB({db_name: 'test'}),
-  // new NodeLocalStorage(join(homedir(), 'tomer'))
-  // new R2(process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY )
-  new GoogleStorage()
-);
+const app = new App(
+  {
+    auth_admins_emails: ['john@doe.com']
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB({ db_name: 'test' }))
+.withStorage(new GoogleStorage())
+.withPaymentGateways(
+  {
+    'paypal': new Paypal(
+      { 
+        client_id: process.env.PAYPAL_CLIENT_ID, 
+        secret: process.env.PAYPAL_SECRET, 
+        intent_on_checkout: 'AUTHORIZE',
+        env: 'test' 
+      }
+    ),
+    'stripe': new Stripe(
+      { 
+        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
+        secret_key: process.env.STRIPE_SECRET_KEY, 
+        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
+      }
+    ),
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+  }
+)
 
 await app.init();
  

@@ -1,7 +1,7 @@
 import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js";
 
 /**
- * @typedef {import("./types.public.js").Config} Config
+ * @typedef {import("./types.public.d.ts").Config} Config
  * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 

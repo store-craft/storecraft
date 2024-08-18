@@ -8,7 +8,7 @@ import { NeonHttpAdapter } from "./kysely.neon-http.adapter.js";
 
 
 /**
- * @typedef {import("./types.public.js").NeonHttpConfig} NeonHttpConfig
+ * @typedef {import("./types.public.d.ts").NeonHttpConfig} NeonHttpConfig
  * @typedef {import("kysely").Dialect} Dialect
  * @typedef {import("kysely").Driver} Driver
  * @typedef {import("kysely").DatabaseConnection} DatabaseConnection

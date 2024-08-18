@@ -1,7 +1,9 @@
 import { assert, to_handle } from './utils.func.js'
 import { collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
-import { regular_get, regular_list, 
-  regular_remove, regular_upsert } from './con.shared.js'
+import { 
+  regular_get, regular_list, 
+  regular_remove, regular_upsert 
+} from './con.shared.js'
 
 /**
  * @typedef {import('./types.api.d.ts').CollectionType} ItemType
@@ -9,13 +11,13 @@ import { regular_get, regular_list,
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.collections;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
   /**
@@ -41,7 +43,7 @@ export const upsert = (app) =>
  * return products of that collection
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_collection_products = (app) => 
   /**
@@ -60,9 +62,10 @@ export const list_collection_products = (app) =>
  * efficiently stored in a cost-effective `storage` and **CDN** network.
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const export_collection = (app) => {
+  
   /**
    * 
    * @param {import('../v-database/types.public.d.ts').HandleOrId} handle_or_id 
@@ -111,7 +114,7 @@ export const export_collection = (app) => {
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

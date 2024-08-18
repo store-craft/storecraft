@@ -11,7 +11,7 @@ import {
  * @template PlatformContext
  * 
  * 
- * @param {import("../types.public.js").App<
+ * @param {import("../types.public.d.ts").App<
  *  PlatformNativeRequest, PlatformContext
  * >} app
  * 

@@ -46,21 +46,21 @@ export const sqlite_dialect = new SqliteDialect(
   }
 );
 
-let app = new App(
-  new NodePlatform(),
-  new SQL(
-    {
-      dialect: sqlite_dialect, 
-      dialect_type: 'SQLITE'
-    }
-  ),
-  null, null, {
+const app = new App(
+  {
     auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: sqlite_dialect, 
+    dialect_type: 'SQLITE'
+  })
 );
+
 
 await app.init();
 await migrateToLatest(app.db, false);
@@ -96,20 +96,19 @@ const pg_dialect = new PostgresDialect(
   }
 );
 
-let app = new App(
-  new NodePlatform(),
-  new SQL(
-    {
-      dialect: pg_dialect, 
-      dialect_type: 'POSTGRES'
-    }
-  ),
-  null, null, {
+const app = new App(
+  {
     auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: pg_dialect, 
+    dialect_type: 'POSTGRES'
+  })
 );
 
 await app.init();
@@ -143,21 +142,20 @@ export const dialect = new MysqlDialect({
   })
 });
 
-let app = new App(
-  new NodePlatform(),
-  new SQL(
-    {
-      dialect: dialect, 
-      dialect_type: 'MYSQL'
-    }
-  ),
-  null, null, {
+const app = new App(
+  {
     auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
-);
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new SQL({
+    dialect: dialect, 
+    dialect_type: 'MYSQL'
+  })
+)
 
 await app.init();
 await migrateToLatest(app.db, false);

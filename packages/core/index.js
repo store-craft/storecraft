@@ -11,6 +11,7 @@ import pkg from './package.json' assert { type: "json" }
  * @typedef {import('./v-database/types.public.d.ts').db_driver} db_driver
  * @typedef {import('./v-payments/types.payments.d.ts').payment_gateway} payment_gateway
  * @typedef {import('./v-extensions/types.public.d.ts').extension} extension
+ * @typedef {import('./v-platform/types.public.d.ts').PlatformAdapter} PlatformAdapter
  * @typedef {import('./v-mailer/types.mailer.d.ts').mailer} mailer
  */
 
@@ -23,14 +24,13 @@ const parse_int = (s, def) => {
 
 /**
  * 
- * @template {any} [PlatformNativeRequest=any]
- * @template {any} [PlatformContext=any]
- * @template {any} [H=any]
+ * @template {PlatformAdapter} [Platform=PlatformAdapter]
  * @template {db_driver} [Database=db_driver]
  * @template {storage_driver} [Storage=storage_driver]
+ * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>] 
+ * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>]
  * `extensions` map type
  * 
  * @description This is the main `storecraft` **App**
@@ -39,11 +39,6 @@ const parse_int = (s, def) => {
 export class App {
 
   /** 
-   * 
-   * @typedef {import('./v-platform/types.public.d.ts').PlatformAdapter<
-   *  PlatformNativeRequest, PlatformContext, H>
-   * } Platform
-   * 
    * @type {Platform} 
    */
   #_platform;
@@ -66,19 +61,19 @@ export class App {
 
   /** 
    * 
+   * @description The mailer driver
+   * 
+   * @type {Mailer} 
+   */ 
+  #_mailer;
+
+  /** 
+   * 
    * @description The payment gateways
    * 
    * @type {PaymentMap} 
    */ 
   #_payment_gateways;
-
-  /** 
-   * 
-   * @description The mailer driver
-   * 
-   * @type {mailer} 
-   */ 
-  #_mailer;
 
   /** 
    * 
@@ -118,25 +113,16 @@ export class App {
 
   /**
    * 
-   * @param {Platform} platform platform The Platform driver
-   * @param {Database} db_driver datatbase The Database driver
-   * @param {Storage} [storage] storage The storage driver
-   * @param {mailer} [mailer] mailer The Email driver
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
-    platform, db_driver, storage, mailer, config
+    config
   ) {
-
-    this.#_platform = platform;
-    this.#_db_driver = db_driver;
-    this.#_storage = storage;
-    this.#_mailer = mailer;
     this.#_config = config;
     this.#_is_ready = false;
-
     this.#_pubsub = new PubSub(this);
   } 
+
 
   /**
    * @return {PaymentMap}
@@ -166,6 +152,7 @@ export class App {
       auth_admins_emails: c?.auth_admins_emails ??  
                   env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
                     s => s.trim()).filter(Boolean) ?? [],
+      // @ts-ignore
       checkout_reserve_stock_on: c?.checkout_reserve_stock_on ?? 
                   env.SC_CHECKOUT_RESERVE_STOCK_ON ?? 'never',
       storage_rewrite_urls: c?.storage_rewrite_urls ?? 
@@ -229,11 +216,10 @@ export class App {
       throw e;
     }
 
-    // this.#_api = create_api(this);
     this.api = create_api(this);
     this.#_rest_controller = create_rest_api(this, this.config);
     this.#_is_ready = true;
-    
+
     const app = this;
 
     // settle extensions
@@ -286,15 +272,82 @@ export class App {
   }
 
   /** 
+   * @description Update new payment gateways and rewrite types 
    * 
+   * @template {PlatformAdapter} P
    * 
+   * @param {P} platform 
+   * 
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap>}
+   * 
+   */
+  withPlatform(platform) {
+    // @ts-ignore
+    this.#_platform = platform;
+
+    // @ts-ignore
+    return this;
+  } 
+
+  /** 
+   * @description Update new payment gateways and rewrite types 
+   * 
+   * @template {db_driver} D
+   * 
+   * @param {D} database 
+   * 
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap>}
+   */
+  withDatabase(database) {
+    // @ts-ignore
+    this.#_db_driver = database;
+
+    // @ts-ignore
+    return this;
+  }   
+
+  /** 
+   * @description Update new payment gateways and rewrite types 
+   * 
+   * @template {storage_driver} S
+   * 
+   * @param {S} storage 
+   * 
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap>}
+   */
+  withStorage(storage) {
+    // @ts-ignore
+    this.#_storage = storage;
+
+    // @ts-ignore
+    return this;
+  }   
+
+  /** 
+   * @description Update new payment gateways and rewrite types 
+   * 
+   * @template {mailer} M
+   * 
+   * @param {M} mailer 
+   * 
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap>}
+   */
+  withMailer(mailer) {
+    // @ts-ignore
+    this.#_mailer = mailer;
+
+    // @ts-ignore
+    return this;
+  }   
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {Record<string, payment_gateway>} N
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<PlatformNativeRequest, PlatformContext, H, Database, Storage, N, ExtensionsMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -305,15 +358,13 @@ export class App {
   }
 
   /** 
-   * 
-   * 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {Record<string, extension>} E
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<PlatformNativeRequest, PlatformContext, H, Database, Storage, PaymentMap, E>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E>}
    */
   withExtensions(extensions) { 
     // @ts-ignore
@@ -382,8 +433,8 @@ export class App {
   /**
    * @description Process a request with context in the native platform
    * 
-   * @param {PlatformNativeRequest} req
-   * @param {PlatformContext} [context] 
+   * @param {Platform["$from"]} req
+   * @param {Platform["$context"]} [context] 
    */
   handler = async (req, context) => {
     const start_millis = Date.now();

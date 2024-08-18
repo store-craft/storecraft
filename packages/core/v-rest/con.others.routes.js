@@ -8,7 +8,7 @@ import openapi_json from './openapi.json' assert { type: 'json' }
  * @template PlatformNativeRequest
  * @template PlatformContext
  * 
- * @param {import("../types.public.js").App<
+ * @param {import("../types.public.d.ts").App<
  *  PlatformNativeRequest, PlatformContext
  * >} app
  */

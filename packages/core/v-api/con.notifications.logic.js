@@ -12,13 +12,13 @@ import { isDef } from './utils.index.js';
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.notifications;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const addBulk = (app) => 
 /**
@@ -56,7 +56,7 @@ async (items) => {
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */  
 export const inter = app => {
 

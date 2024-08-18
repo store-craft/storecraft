@@ -16,21 +16,25 @@ const pg_dialect = new PostgresDialect({
 });
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new SQL({
-      dialect: pg_dialect, 
-      dialect_type: 'POSTGRES'
-    }),
-    null, null, {
+
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
+    new SQL({
+      dialect: pg_dialect, 
+      dialect_type: 'POSTGRES'
+    })
   );
   
   await app.init();
   await migrateToLatest(app.db, false);
+
   return app;
 }
 

@@ -25,21 +25,27 @@ npm i @storecraft/database-cloudflare-d1
 ## usage
 
 ```js
-import 'dotenv/config';
-import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
+import { CloudflareWorkersPlatform } from "@storecraft/platforms/cloudflare-workers"
 
 let app = new App(
-  new NodePlatform(),
-  new MongoDB({ db_name: 'prod', url: '<MONGO-URL>'}),
-  new NodeLocalStorage(join(homedir(), 'tomer'))
-);
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games',
+    auth_admins_emails: ['tomer.shalev@gmail.com']
+  }
+)
+.withPlatform(new CloudflareWorkersPlatform())
+.withDatabase(
+  new D1_WORKER(
+    {
+      db: env.D1
+    } 
+  )
+)
 
 await app.init();
  

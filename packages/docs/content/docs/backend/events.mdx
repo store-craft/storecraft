@@ -11,11 +11,11 @@ Each **Storecraft** **App** call, dispatches events, that you can listen to.
 import { App } from '@storecraft/core'
 import type { CollectionType, AuthUserType } from '@storecraft/core/v-api'
 
-const app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new GoogleStorage(),
-).on(
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.on(
   'collections/upsert',
   async (event) => {
     const previous: CollectionType = event.payload.previous;

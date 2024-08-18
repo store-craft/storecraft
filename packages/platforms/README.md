@@ -39,11 +39,12 @@ import { NodePlatform } from '@storecraft/platforms/node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new NodeLocalStorage(join(homedir(), 'tomer'))
-);
+const app = new App(
+    config
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB())
+  .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
 
 await app.init();
  

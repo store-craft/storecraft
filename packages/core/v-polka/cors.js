@@ -44,8 +44,8 @@ export const cors = (options) => {
   })(opts.origin);
 
   /**
-   * @param {import("../types.public.js").ApiRequest} req
-   * @param {import("../types.public.js").ApiResponse} res
+   * @param {import("../types.public.d.ts").ApiRequest} req
+   * @param {import("../types.public.d.ts").ApiResponse} res
    */
   return async function cors(req, res) {
 

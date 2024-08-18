@@ -108,7 +108,7 @@ export const webhook = async (app, gateway_handle, request, response) => {
  * @template PlatformContext
  * 
  * 
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.d.ts").App<PlatformNativeRequest, PlatformContext>} app
  * @param {string} order_id the ID of the order
  * 
  */
@@ -137,7 +137,7 @@ export const payment_status_of_order = async (app, order_id) => {
  * @template PlatformContext
  * 
  * 
- * @param {import("../types.public.js").App<PlatformNativeRequest, PlatformContext>} app
+ * @param {import("../types.public.d.ts").App<PlatformNativeRequest, PlatformContext>} app
  * @param {string} order_id the ID of the order
  * 
  */

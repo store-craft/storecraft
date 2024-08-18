@@ -245,13 +245,13 @@ const tables = [
  * 
  * Compute the count `statistics` of a table with `query`
  *  
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const compute_count_of_query = app => 
 /**
  * 
  * @param {keyof App["db"]["resources"]} [table] which `table` to get count of query
- * @param {import('./types.api.query.js').ApiQuery} [query] The `query` used for counting
+ * @param {import('./types.api.query.d.ts').ApiQuery} [query] The `query` used for counting
  * 
  * @returns {Promise<number>}
  */

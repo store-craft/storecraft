@@ -12,13 +12,13 @@ import { assert_zod } from './middle.zod-validate.js';
  */
 
 /**
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const db = app => app.db.resources.customers;
 
 /**
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const upsert = (app) => 
   /**
@@ -90,7 +90,7 @@ export const getByEmail = (app) =>
  * given a discount handle and query, return products of that discount
  * 
  * 
- * @param {import("../types.public.js").App} app
+ * @param {import("../types.public.d.ts").App} app
  */
 export const list_customer_orders = (app) => 
 /**

@@ -7,7 +7,7 @@ import { parse_query } from '../v-api/utils.query.js';
  * @template PlatformNativeRequest
  * @template PlatformContext
  * 
- * @param {import("../types.public.js").App<
+ * @param {import("../types.public.d.ts").App<
  *  PlatformNativeRequest, PlatformContext
  * >} app
  */

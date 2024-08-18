@@ -10,12 +10,11 @@ import { MongoDB } from '@storecraft/database-mongodb-node';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { R2 } from '@storecraft/storage-s3-compatible'
 
-let app = new App(
-  new NodePlatform(),
-  new MongoDB(),
-  new R2(), 
-);
-  
+const app = new App(config)
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB())
+  .withStorage(new R2);
+
 await app.init();
 
 ```

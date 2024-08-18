@@ -58,28 +58,37 @@ import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 import { App } from '@storecraft/core';
  
 const app = new App(
-  new NodePlatform(),
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games',
+    auth_secret_access_token: process.env.auth_secret_access_token,
+    auth_secret_refresh_token: process.env.auth_secret_refresh_token
+    auth_admins_emails: ['jonny@begood.com']
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
   new MongoDB(
     { 
       db_name: 'test', 
       url: 'mongodb+srv://admin:admin@your-db.b12btx2.mongodb.net/?retryWrites=true&w=majority',
       options: {}
     }
-  ),
-  new NodeLocalStorage(join(homedir(), 'storage')),
+  )
+)
+.withStorage(
+  new NodeLocalStorage(join(homedir(), 'tomer'))
+)
+.withMailer(
   new MailerSendGrid(
     {
       apikey: process.env.SEND_GRID_SECRET
     }
-  ),
-  { // config
-    auth_admins_emails: ['admin@sc.com'],
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games'
-    storage_rewrite_urls: undefined,
-  }
-).withPaymentGateways(
+  )
+)
+.withPaymentGateways(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
   }

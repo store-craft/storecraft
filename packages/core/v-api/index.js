@@ -24,15 +24,19 @@ import { App } from '../index.js';
 
 
 /**
- * @template {any} [A=any]
- * @template {any} [B=any]
- * @template {any} [C=any]
- * @template {import('../index.js').db_driver} [D=any]
- * @template {import('../index.js').storage_driver} [E=any]
- * @template {Record<string, import('../index.js').payment_gateway>} [F=any]
- * @template {Record<string, import('../index.js').extension>} [G=any]
+ * @template {import('../index.js').PlatformAdapter} [A=any]
+ * @template {import('../index.js').db_driver} [B=any]
+ * @template {import('../index.js').storage_driver} [C=any]
+ * @template {import('../index.js').mailer} [D=any]
+ * @template {Record<string, import('../index.js').payment_gateway>} [E=any]
+ * @template {Record<string, import('../index.js').extension>} [F=any]
  * 
- * @param {App<A, B, C, D, E, F, G>} app
+ * @param {App<A, B, C, D, E, F>} app
+ */
+
+/**
+ * 
+ * @param {App} app 
  */
 export const create_api = app => {
   

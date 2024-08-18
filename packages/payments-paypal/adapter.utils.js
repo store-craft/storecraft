@@ -5,7 +5,7 @@ export const endpoints = {
 }
 
 /**
- * @typedef {import("./types.public.js").Config} Config
+ * @typedef {import("./types.public.d.ts").Config} Config
  */
 
 /**

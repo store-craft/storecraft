@@ -17,18 +17,20 @@ export const dialect = new MysqlDialect({
 });
 
 export const create_app = async () => {
-  let app = new App(
-    new NodePlatform(),
-    new SQL({
-      dialect: dialect, 
-      dialect_type: 'MYSQL'
-    }),
-    null, null, {
+  const app = new App(
+    {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }
-  );
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(
+    new SQL({
+      dialect: dialect, 
+      dialect_type: 'MYSQL'
+    })
+  )
 
   await app.init();
   await migrateToLatest(app.db, false);

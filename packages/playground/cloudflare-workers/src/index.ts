@@ -1,6 +1,6 @@
 import { App } from "@storecraft/core"
 import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
-import { CloudflareWorkersPlatform } from "@storecraft/platform-cloudflare-workers"
+import { CloudflareWorkersPlatform } from "@storecraft/platforms/cloudflare-workers"
 
 
 export default {
@@ -14,18 +14,22 @@ export default {
 	 */
 	async fetch(request, env, ctx): Promise<Response> {
     let app = new App(
-      new CloudflareWorkersPlatform(), 
+      {
+        storage_rewrite_urls: undefined,
+        general_store_name: 'Wush Wush Games',
+        general_store_description: 'We sell cool retro video games',
+        general_store_website: 'https://wush.games',
+        auth_admins_emails: ['tomer.shalev@gmail.com']
+      }
+    )
+    .withPlatform(new CloudflareWorkersPlatform())
+    .withDatabase(
       new D1_WORKER(
         {
           db: env.D1
         } 
-      ),
-      undefined,
-      undefined,
-      {
-        auth_admins_emails: ['tomer.shalev@gmail.com']
-      }
-    );
+      )
+    )
 
     app = await app.init();
     

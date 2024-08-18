@@ -29,10 +29,6 @@
       "import": "./deno/index.js",
       "types": "./deno/types.public.d.ts"
     },
-    "./cloudflare-workers": {
-      "import": "./cloudflare-workers/index.js",
-      "types": "./cloudflare-workers/types.public.d.ts"
-    },
     "./bun": {
       "import": "./bun/index.js",
       "types": "./bun/types.public.d.ts"

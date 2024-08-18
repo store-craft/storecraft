@@ -13,7 +13,7 @@ Basically, it translates native **Node** `http.IncomingMessage` into Web API `Re
 and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
 ```bash
-npm i @storecraft/platform-node
+npm i @storecraft/platforms
 ```
 
 ## usage
@@ -25,9 +25,9 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node';
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 let app = new App(
   new NodePlatform(),

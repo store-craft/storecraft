@@ -2,8 +2,8 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { BunPlatform } from '@storecraft/platforms/bun'
+import { BunLocalStorage } from '@storecraft/storage-local/bun'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
@@ -14,7 +14,7 @@ import { App } from '@storecraft/core';
 export const app = new App(
   new BunPlatform(),
   new MongoDB({ db_name: 'test' }),
-  new NodeLocalStorage(join(homedir(), 'tomer')),
+  new BunLocalStorage(join(homedir(), 'tomer')),
   null, 
   {
     storage_rewrite_urls: undefined,

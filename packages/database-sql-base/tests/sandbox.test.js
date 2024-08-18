@@ -1,10 +1,11 @@
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platform-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { SqliteDialect } from 'kysely';
 import { homedir } from 'os';
 import { join } from 'path';
 import SQLite from 'better-sqlite3'
-import { migrateToLatest, SQL } from '../index.js';
+import { SQL } from '../index.js';
+import { migrateToLatest } from '../migrate.js';
 
 export const sqlite_dialect = new SqliteDialect({
   database: async () => new SQLite(join(homedir(), 'db.sqlite')),

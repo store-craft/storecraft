@@ -23,7 +23,7 @@ Basically,
 - Adds helpers
 
 ```bash
-npm i @storecraft/platform-node
+npm i @storecraft/platforms
 ```
 
 ## usage
@@ -37,7 +37,7 @@ import { homedir } from "node:os";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 let app = new App(
   new NodePlatform(),

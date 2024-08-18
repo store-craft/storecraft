@@ -1,6 +1,7 @@
 import { App } from '@storecraft/core';
-import { migrateToLatest, SQL } from '@storecraft/database-sql-base';
-import { NodePlatform } from '@storecraft/platform-node';
+import { SQL } from '@storecraft/database-sql-base';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
 import { MysqlDialect } from 'kysely';
 import { createPool } from 'mysql2'

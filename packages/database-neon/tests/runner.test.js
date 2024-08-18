@@ -1,7 +1,8 @@
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platform-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
-import { NeonHttp, migrateToLatest } from '@storecraft/database-neon';
+import { NeonHttp } from '@storecraft/database-neon';
+import { migrateToLatest } from '@storecraft/database-neon/migrate.js';
 
 export const create_app = async () => {
   let app = new App(

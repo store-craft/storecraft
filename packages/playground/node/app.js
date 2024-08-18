@@ -1,7 +1,6 @@
 import { join } from "node:path";
 import { homedir } from "node:os";
 
-// import { NodePlatform } from '@storecraft/platform-node'
 import { NodePlatform } from '@storecraft/platforms/node'
 import { NodeLocalStorage } from "@storecraft/storage-local/node";
 import { MongoDB } from '@storecraft/database-mongodb-node'

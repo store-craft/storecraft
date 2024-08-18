@@ -4,7 +4,7 @@ import { homedir } from "node:os";
 
 import { CloudflareWorkersPlatform } from '@storecraft/platform-cloudflare-workers'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { App } from '@storecraft/core';
  
 export const app = new App(

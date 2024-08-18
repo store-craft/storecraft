@@ -85,8 +85,8 @@ console.log('presign GET url ', url);
 
 ```js
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
-import { NodePlatform } from '@storecraft/platform-node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import { R2 } from '@storecraft/storage-s3-compatible'
 
 let app = new App(

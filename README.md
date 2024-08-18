@@ -7,9 +7,9 @@ The `StoreCraft` mono-repo
 
 ```js
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 
@@ -34,7 +34,7 @@ const server = http.createServer(app.handler).listen(
 
 ## packages
 **platforms**
-- `@storecraft/platform-node` - platform support for **node.js**
+- `@storecraft/platforms/node` - platform support 
 - `@storecraft/platform-aws-lambda` - soon
 - `@storecraft/platform-cloudflare-workers` - soon
 - `@storecraft/google-functions` - soon
@@ -51,7 +51,7 @@ const server = http.createServer(app.handler).listen(
 - `@storecraft/database-planetscale` - (soon) Planetscale MySQL database support (http)
 
 **storage**
-- `@storecraft/storage-node-local` - local filesystem storage support on node
+- `@storecraft/storage-local` - local filesystem storage support 
 - `@storecraft/storage-google` - google storage support (http)
 - `@storecraft/storage-s3-compatible` - **aws s3** / **cloudflare r2** / **digitalocean spaces** / **minio** support (http)
 

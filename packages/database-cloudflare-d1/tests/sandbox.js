@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { D1_HTTP, migrateToLatest } from '@storecraft/database-cloudflare-d1';
-import { NodePlatform } from '@storecraft/platform-node';
+import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
+import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
 
 export const test = async () => {

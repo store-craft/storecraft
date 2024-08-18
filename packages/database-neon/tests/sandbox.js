@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { NeonHttp, migrateToLatest } from '@storecraft/database-neon';
-import { NodePlatform } from '@storecraft/platform-node';
+import { NeonHttp } from '@storecraft/database-neon'
+import { migrateToLatest } from '@storecraft/database-neon/migrate.js';
+import { NodePlatform } from '@storecraft/platforms/node';
 
 export const test = async () => {
   let app = new App(

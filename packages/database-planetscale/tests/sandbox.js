@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platform-node';
-import { migrateToLatest, PlanetScale } from '../index.js';
+import { NodePlatform } from '@storecraft/platforms/node';
+import { PlanetScale } from '../index.js';
+import { migrateToLatest } from '../migrate.js';
 
 export const test = async () => {
   let app = new App(

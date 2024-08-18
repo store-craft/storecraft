@@ -132,17 +132,6 @@ export class MongoDB {
     return this;
   }
 
-  // /**
-  //  * @param {boolean} [destroy_db_upon_completion=true] 
-  //  */
-  // async migrateToLatest(destroy_db_upon_completion=true) {
-  //   this.throwIfNotReady();
-
-  //   const { migrateToLatest } = await import('./migrate.js');
-    
-  //   await migrateToLatest(this, destroy_db_upon_completion);
-  // }
-
   async disconnect() {
     await this.mongo_client.close(true);
     return true;

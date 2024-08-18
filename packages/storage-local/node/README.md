@@ -11,13 +11,13 @@ Features:
 - Supports streaming `Get` / `Put` / `Delete`
 
 ```bash
-npm i @storecraft/storage-node-local
+npm i @storecraft/storage-local
 ```
 
 ## usage
 
 ```js
-import { NodeLocalStorage } from '@storecraft/storage-node-local';
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 const storage = new Storage(path.join(homedir(), 'tomer'));
 

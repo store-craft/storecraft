@@ -8,8 +8,8 @@ First install the following packages
 
 ```bash
 npm i @storecraft/core 
-npm i @storecraft/platform-node 
-npm i @storecraft/storage-node-local
+npm i @storecraft/platforms 
+npm i @storecraft/storage-local
 npm i @storecraft/payments-dummy
 npm i @storecraft/payments-dummy
 npm i @storecraft/database-sql-base 
@@ -26,9 +26,9 @@ Now, create a new file `index.js`
 
 import 'dotenv/config';
 import http from "node:http";
-import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 import { App } from '@storecraft/core';

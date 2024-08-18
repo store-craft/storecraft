@@ -27,9 +27,9 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platform-node'
+import { NodePlatform } from '@storecraft/platforms/node';
 import { PlanetScale } from '@storecraft/database-planetscale'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 let app = new App(
   new NodePlatform(),

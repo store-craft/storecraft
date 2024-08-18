@@ -11,7 +11,7 @@ Features:
 - Supports streaming `Get` / `Put` / `Delete`
 
 ```bash
-npm i @storecraft/storage-node-local
+npm i @storecraft/storage-local
 ```
 
 ## usage

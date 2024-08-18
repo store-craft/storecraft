@@ -2,8 +2,8 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { DenoPlatform } from '@storecraft/platforms/deno'
+import { DenoLocalStorage } from '@storecraft/storage-local/deno'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-node-local'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
@@ -14,7 +14,7 @@ import { App } from '@storecraft/core';
 export const app = new App(
   new DenoPlatform(),
   new MongoDB({ db_name: 'test' }),
-  new NodeLocalStorage(join(homedir(), 'tomer')),
+  new DenoLocalStorage(join(homedir(), 'tomer')),
   null, 
   {
     storage_rewrite_urls: undefined,

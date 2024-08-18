@@ -5,3 +5,4 @@ tasks.md
 .vscode
 /packages/dashboard-old
 database-sql-base.temp
+deno.lock

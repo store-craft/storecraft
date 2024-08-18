@@ -16,7 +16,7 @@ npm i @storecraft/core @storecraft/database-mongodb-node
 ```js
 import { App } from '@storecraft/core';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
-import { NodePlatform } from '@storecraft/platform-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 
 let app = new App(
   new NodePlatform(),

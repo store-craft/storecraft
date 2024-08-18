@@ -1,7 +1,8 @@
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platform-node';
+import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
-import { migrateToLatest, PlanetScale } from '@storecraft/database-planetscale';
+import { PlanetScale } from '@storecraft/database-planetscale';
+import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js';
 
 export const create_app = async () => {
   let app = new App(

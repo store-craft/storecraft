@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       height='150px' />
+       width='90%'' />
 </div><hr/><br/>
 
 This is a dummy payment gateway with in-memory database (meaning, will be destroyed

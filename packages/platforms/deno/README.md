@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       height='150px' />
+       width='90%'' />
 </div><hr/><br/>
 
 So, if you wanted to run `StoreCraft` on `deno`, this is the `platform`

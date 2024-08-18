@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       height='150px' />
+       width='90%'' />
 </div><hr/><br/>
 
 [Stripe](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method) integration

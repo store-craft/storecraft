@@ -6,7 +6,7 @@ Two variants,
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       height='150px' />
+       width='90%'' />
 </div><hr/><br/>
 
 Official `Cloudflare D1` driver for `StoreCraft` on any platforms.

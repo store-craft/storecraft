@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       height='150px' />
+       width='90%'' />
 </div><hr/><br/>
 
 Local filesystem based **Storage** for `node.js`.
@@ -20,6 +20,8 @@ Example Node.js
 
 ```js
 import { NodeLocalStorage } from '@storecraft/storage-local/node';
+import { BunLocalStorage } from '@storecraft/storage-local/bun';
+import { DenoLocalStorage } from '@storecraft/storage-local/deno';
 
 const storage = new Storage(path.join(homedir(), 'tomer'));
 

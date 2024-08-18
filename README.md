@@ -1,17 +1,39 @@
 <div style="text-align:center">
-  <img src='https://storecraft.app/storecraft-color.svg' 
-       height='150px' />
+  <div width="90%">
+    <img src='https://storecraft.app/storecraft-color.svg' 
+        width='100%' />
+  </div>
+  Commerce as Code
 </div><hr/><br/>
 
-The `StoreCraft` mono-repo
+
+# The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
+
+Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
+
+⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node-js) (deno, bun, node, workers, aws, azure)
+
+⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sql) (mongo, sqlite, postgres, mysql, neon, turso, planetscale)
+
+⭐ use [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible and more)
+
+⭐ It is [extensible and modular](https://storecraft.app/docs/backend/extensions/overview)
+
+⭐ It is [event based](https://storecraft.app/docs/backend/events)
+
+⭐ Boasts an official [Dashboard](https://storecraft.app/docs/dashboard/overview)
+
+⭐ Well documented [REST-API](https://storecraft.app/docs/rest-api/api) (can also be found in your `/api/reference` endpoint)
+
+⭐ Visit the [website](https://storecraft.app/docs)
+
+<hr/><br/>
 
 ```js
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node'
 import { R2 } from '@storecraft/storage-s3-compatible'
-import { GoogleStorage } from '@storecraft/storage-google'
 
 const app = new App(
   {
@@ -20,29 +42,33 @@ const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
-.withStorage(new GoogleStorage())
+.withStorage(new R2())
 .withPaymentGateways(
   {
-    'paypal': new Paypal(
-      { 
-        client_id: process.env.PAYPAL_CLIENT_ID, 
-        secret: process.env.PAYPAL_SECRET, 
-        intent_on_checkout: 'AUTHORIZE',
-        env: 'test' 
-      }
-    ),
     'stripe': new Stripe(
       { 
         publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
         secret_key: process.env.STRIPE_SECRET_KEY, 
         webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
       }
-    ),
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+    )
   }
-)
+).on(
+  'auth/signup',
+  async (event) => {
+    const user: Partial<AuthUserType> = event.payload;
+    // Here you can send an onboarding email for example
+  }
+).on(
+  'checkout/complete',
+  async (event) => {
+    const order_data: OrderData = event.payload;
+    // Here send an email with order details to customer
+  }
+);
 
 await app.init();
+await migrateToLatest(app.db, false);
  
 const server = http.createServer(app.handler).listen(
   8000,
@@ -54,41 +80,108 @@ const server = http.createServer(app.handler).listen(
 ```
 
 ## packages
-**platforms**
-- `@storecraft/platforms/node` - platform support 
-- `@storecraft/platform-aws-lambda` - soon
-- `@storecraft/platform-cloudflare-workers` - soon
-- `@storecraft/google-functions` - soon
 
-**Databases**
-- `@storecraft/database-sql-base` - Universal pure javascript support for `SQLite` / `MySQL` / `Postgres` dialects with `Kysely`
-- `@storecraft/database-mongodb-node` - Mongodb support on node
-- `@storecraft/database-mongodb-atlas-data-api` - Mongodb support for fetch (without transactions) (http)
-- `@storecraft/database-firestore` - (maybe soon) Google firestore support (http)
-- `@storecraft/database-turso` - (soon) Turso database support (http)
-- `@storecraft/database-cloudflare-d1` - (soon) Cloudflare D1 database support (http)
-- `@storecraft/database-neon` - (soon) Neon Postgres database support (http)
-- `@storecraft/database-vercel-postgres` - (soon) Neon Postgres database support (http)
-- `@storecraft/database-planetscale` - (soon) Planetscale MySQL database support (http)
+This is a mono repo, where each folder in the `packages` folder is a package, that is published `@npm`.
 
-**storage**
-- `@storecraft/storage-local` - local filesystem storage support 
-- `@storecraft/storage-google` - google storage support (http)
-- `@storecraft/storage-s3-compatible` - **aws s3** / **cloudflare r2** / **digitalocean spaces** / **minio** support (http)
+It leverages the workspace feature of `npm`
 
-**email**
-- `@storecraft/mailer-smtp-node` - node smtp support
-- `@storecraft/mailer-mailchimp-http` - mailchimp support (on http)
-- `@storecraft/mailer-mailgun-http` - mailgun support (on http)
-- `@storecraft/mailer-resend-http` - resend support (on http)
-- `@storecraft/mailer-sendgrid-http` - sendgrid support (on http)
+To start developing a feature first
 
-**payments**
-- `@storecraft/payments-paypal-standard` - paypal standard payments (on http)
-- `@storecraft/payments-stripe` - (soon) Stripe payments (on http)
+```bash
+npm install
+```
 
-**tools**
-- `@storecraft/test-runner` - integration tests for new databases and plugins
+The following is the layout of the packages
+
+### Core ([@storecraft/core](packages/core/))
+
+The core engine of storecraft
+- core types
+- core API
+- core database types
+- core crypto types
+- core storage types
+- core mailer types
+- core payments types
+- core platform types
+- core VQL types and logic
+- core REST API controller
+
+### 🌐 Platforms [@storecraft/platforms](packages/platforms/)
+
+Support for 
+- Node
+- Deno
+- Bun
+- Cloudflare workers
+- AWS Lambda
+- Azure Functions
+- Google Functions
+
+### 💾 Databases
+
+Support for 
+- MongoDB ([@storecraft/database-mongo-node](packages/database-mongodb-node/))
+- SQL Base ([@storecraft/database-sql-base](packages/database-sql-base/))
+  - Sqlite
+  - Postgres
+  - Mysql
+- Neon (Cloud Postgres, [@storecraft/database-neon](packages/database-neon/))
+- PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](packages/database-planetscale/))
+- Turso (Cloud Sqlite, [@storecraft/database-turso](packages/database-turso/))
+- D1 (Cloud Sqlite, [@storecraft/database-cloudflare-d1](packages/database-cloudflare-d1/))
+
+### 📦 Storage
+Support for,
+- Local storage (Node, Bun, Deno), [@storecraft/storage-local](packages/storage-local/)
+- S3 Compatible ([@storecraft/storage-s3-compatible](packages/storage-s3-compatible/))
+  - Cloudflare R2
+  - AWS S3
+  - DigitalOcean Spaces
+  - MinIO
+- Google Storage ([@storecraft/storage-google](packages/storage-google/))
+
+### 📧 Email Providers
+- node smtp support [@storecraft/mailer-smtp-node](packages/mailer-smtp-node/)
+- Http Mail services [@storecraft/mailer-providers-http](packages/mailer-providers-http/) 
+  - mailchimp support
+  - mailgun support
+  - resend support
+  - sendgrid support
+
+### 💳 Payments 
+
+- Stripe [@storecraft/payments-stripe](packages/payments-stripe/)
+- Paypal [@storecraft/payments-paypal](packages/payments-paypal/)
+- You can roll your own (guide [here](https://storecraft.app/docs/backend/checkout-and-payments/roll-your-own))
+
+### Dashboard
+
+The official dashboard
+- Learn how to use [here](https://storecraft.app/docs/dashboard/overview)
+- The [code](packages/dashboard/), 
+  - mount is as a component
+  - consume from cdn
+
+### sdks
+
+- Universal (front/back) Javascript SDK, [@storecraft/sdk](packages/sdk/)
+- React Hooks SDK, [@storecraft/sdk-react-hooks](packages/sdk-react-hooks/)
+
+### Test Runner
+
+Test your api with
+
+[@storecraft/test-runner](packages/test-runner/) 
+
+### docs
+
+Docs website [code](packages/docs/)
+
+### Examples Playground
+
+[Here](packages/playground/) 
+
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -13,7 +13,7 @@ import { parse_auth_user, is_admin } from './con.auth.middle.js'
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   polka.use(parse_auth_user(app));

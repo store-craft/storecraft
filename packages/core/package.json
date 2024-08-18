@@ -67,6 +67,10 @@
     "./v-pubsub": {
       "import": "./v-pubsub/public.js",
       "types": "./v-pubsub/types.public.d.ts"
+    },
+    "./v-rest": {
+      "import": "./v-rest/index.js",
+      "types": "./v-rest/types.public.d.ts"
     }
   },
   "scripts": {

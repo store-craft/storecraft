@@ -19,7 +19,7 @@ import { owner_or_admin_guard } from './con.customers.middle.js'
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   const middle_authorize_admin = roles_guard(['admin'])

@@ -14,7 +14,7 @@ import openapi_json from './openapi.json' assert { type: 'json' }
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   polka.get(

@@ -14,7 +14,7 @@ import { parse_query } from '../v-api/utils.query.js';
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])

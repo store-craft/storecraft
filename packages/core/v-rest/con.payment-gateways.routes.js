@@ -20,7 +20,7 @@ import { assert } from '../v-api/utils.func.js';
  */
 export const create_routes = (app) => {
 
-  /** @type {import('../types.public.js').ApiPolka} */
+  /** @type {import('./types.public.d.ts').ApiPolka} */
   const polka = new Polka();
 
   // get payment gateway

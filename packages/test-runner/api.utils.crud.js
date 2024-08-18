@@ -198,7 +198,11 @@ export const add_sanity_crud_to_test_suite = s => {
             assert_partial(v.payload.current, one);
             if(v.payload.previous) {
               assert_partial(v.payload.previous, one);
-              assert.not(v.payload.previous.updated_at===v.payload.current.updated_at)
+              const is_same_time = v.payload.previous.updated_at===v.payload.current.updated_at;
+              if(is_same_time) {
+                console.log('is_same_time=true, it should not', JSON.stringify(v, null, 2));
+              }
+              assert.not(is_same_time);
             }
             is_event_ok = true;
           } catch (e) {

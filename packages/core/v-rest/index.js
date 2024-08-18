@@ -25,8 +25,8 @@ import { cors } from "../v-polka/cors.js";
 
 
 /**
- * @typedef {import("../types.public.js").ApiRequest} ApiRequest
- * @typedef {import("../types.public.js").ApiResponse} ApiResponse
+ * @typedef {import("./types.public.d.ts").ApiRequest} ApiRequest
+ * @typedef {import("./types.public.d.ts").ApiResponse} ApiResponse
  */
 
 

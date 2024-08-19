@@ -11,7 +11,7 @@
 
 Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
 
-⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node-js) (deno, bun, node, workers, aws, azure)
+⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node-js) (deno, bun, node, workers, aws, azure), serverless / serverful
 
 ⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sql) (mongo, sqlite, postgres, mysql, neon, turso, planetscale)
 
@@ -78,6 +78,14 @@ const server = http.createServer(app.handler).listen(
 );
 
 ```
+
+Will produce
+
+<div style="text-align:center">
+  <img src='https://storecraft.app/docs/main/storecraft-terminal.png' 
+      width='80%' />
+</div><hr/><br/>
+
 
 ## packages
 

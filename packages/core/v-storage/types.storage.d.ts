@@ -45,8 +45,8 @@ export type Get<T extends (Blob | ArrayBuffer | ReadableStream)> = {
 
 
 export type MetaData = {
-  contentType?: string;
-  [x: string]: string;
+  contentType?: string | undefined;
+  [x: string]: string | undefined;
 };
 
 /**

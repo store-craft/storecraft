@@ -1,4 +1,4 @@
-import { decode, encode } from '@storecraft/core/v-crypto/base64.js'
+import { base64 } from '@storecraft/core/v-crypto'
 
 /**
  * @description Implementation is taken from `hono` project and adapted to jsdocs
@@ -89,7 +89,7 @@ class EventProcessor {
     }
 
     if (event.body) {
-      requestInit.body = event.isBase64Encoded ? decode(event.body) : event.body
+      requestInit.body = event.isBase64Encoded ? base64.decode(event.body) : event.body
     }
 
     return new Request(url, requestInit)
@@ -110,16 +110,20 @@ class EventProcessor {
       isBase64Encoded = isContentEncodingBinary(contentEncoding)
     }
 
-    const body = isBase64Encoded ? encode(await res.arrayBuffer()) : await res.text()
+    let body = isBase64Encoded ? base64.encode(await res.arrayBuffer()) : await res.text();
 
     /** @type {import('./types.private.d.ts').APIGatewayProxyResult} */
     const result = {
-      body: body,
+      body: undefined,
       headers: {},
       multiValueHeaders: event.multiValueHeaders ? {} : undefined,
       statusCode: res.status,
       isBase64Encoded,
     }
+
+    if(Boolean(body))
+      result.body = body;
+
 
     this.setCookies(event, res, result)
     res.headers.forEach(

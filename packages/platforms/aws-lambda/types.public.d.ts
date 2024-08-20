@@ -1,5 +1,5 @@
 import type { ScryptOptions } from 'crypto';
-export type { LambdaEvent, LambdaContext } from './types.private.d.ts';
+export type { LambdaEvent, LambdaContext, APIGatewayProxyResult } from './types.private.d.ts';
 export { AWSLambdaPlatform } from './index.js';
 
 /**

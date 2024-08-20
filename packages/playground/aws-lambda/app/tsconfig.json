@@ -26,6 +26,7 @@
     ]
   },
   "exclude": [
+    "jest.config.js",
     "node_modules",
     "cdk.out"
   ]

@@ -1,6 +1,6 @@
 import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'
 import { MongoDB } from '@storecraft/database-mongodb-node'
-import { DummyPayments } from '@storecraft/payments-dummy'
+// import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
 
 export const app = new App(
@@ -14,8 +14,8 @@ export const app = new App(
 )
 .withPlatform(new AWSLambdaPlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
-.withPaymentGateways(
-  {
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
-  }
-)
+// .withPaymentGateways(
+//   {
+//     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+//   }
+// )

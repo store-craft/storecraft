@@ -1,6 +1,6 @@
 import { MongoClientOptions } from 'mongodb';
 
-export { MongoDB, migrateToLatest } from './index.js';
+export { MongoDB } from './index.js';
 
 export type Config = {
   /** mongo connection url, if absent, will be infered at init

@@ -1,4 +1,4 @@
-export * from './index.js';
+export { Paypal } from './index.js';
 
 /**
  * @description gateway config

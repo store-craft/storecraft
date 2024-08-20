@@ -1,4 +1,4 @@
-export * from './index.js';
+export { DigitalOceanSpaces, R2, S3, S3CompatibleStorage } from './index.js';
 
 export type Config = {
   endpoint: string;

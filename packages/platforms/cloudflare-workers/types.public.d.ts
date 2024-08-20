@@ -1,4 +1,4 @@
-export * from './index.js'
+export { CloudflareWorkersPlatform } from './index.js';
 
 
 /**

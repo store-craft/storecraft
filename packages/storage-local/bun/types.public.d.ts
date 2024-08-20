@@ -1,1 +1,1 @@
-export * from './index.js'
+export { BunLocalStorage } from './index.js'

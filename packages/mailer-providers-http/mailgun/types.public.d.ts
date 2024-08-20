@@ -1,4 +1,4 @@
-export * from './index.js';
+export { MailerMailgun } from './index.js';
 
 /**
  * config

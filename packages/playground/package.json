@@ -8,6 +8,8 @@
     "start": "npm run playground-node:start",
     "playground-node:start": "node --watch ./node/index.js",
     "playground-node:migrate": "node ./node/migrate.js",
+    "cf-workers:start": "node --watch ./cloudflare-workers/index.js",
+    "cf-workers:migrate": "node ./cloudflare-workers/migrate.js",
     "playground-bun:start": "bun run --watch ./bun/index.js",
     "playground-bun:migrate": "bun run ./bun/migrate.js",
     "playground-deno:start": "deno run --env --watch -A ./deno/index.js",

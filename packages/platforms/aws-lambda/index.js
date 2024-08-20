@@ -1,32 +1,32 @@
-import { Readable } from 'node:stream'
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
+import { getProcessor } from './aws.utils.js';
 
 
 /**
+ * @typedef {{
+ *  _sc_event?: import('./types.private.d.ts').LambdaEvent,
+ * } & import('./types.private.d.ts').LambdaContext} PlatformContext
  * 
- * @typedef {import('node:http').IncomingMessage} IncomingMessage
- * @typedef {import('node:http').ServerResponse} ServerResponse
- */
-
-
-/**
  * @typedef {import('@storecraft/core/v-platform').PlatformAdapter<
- *  IncomingMessage, ServerResponse, ServerResponse
+ *  import('./types.private.js').LambdaEvent, 
+ *  PlatformContext, 
+ *  import('./types.private.js').APIGatewayProxyResult
  * >} PlatformAdapter
  * 
  * 
  * @implements {PlatformAdapter}
  */
-export class NodePlatform {
+export class AWSLambdaPlatform {
 
-  /** @type {import('./types.public.d.ts').NodePlatformConfig} */
+  /** @type {import('./types.public.d.ts').AWSLambdaConfig} */
   #config;
 
   /**
    * 
-   * @param {import('./types.public.d.ts').NodePlatformConfig} [config={}] 
+   * @param {import('./types.public.d.ts').AWSLambdaConfig} [config={}] 
    */
   constructor(config={}) {
+
     this.#config = {
       ...config,
       scrypt_keylen: config?.scrypt_keylen ?? 64
@@ -34,7 +34,6 @@ export class NodePlatform {
   }
 
   get env() {
-    // console.log(Deno.env.toObject())
     return process?.env;
   }
 
@@ -87,65 +86,23 @@ export class NodePlatform {
   }
 
   /**
-   * @param {IncomingMessage} from
-   * 
-   * @returns {Promise<Request>}
+   * @type {PlatformAdapter["encode"]}
    */
-  async encode(from) {
+  async encode(from, ctx) {
+    const event = ctx._sc_event = from;
+    const processor = getProcessor(event);
+    const req = processor.createRequest(event);
 
-    /** @type {RequestInit} */
-    const init = {
-      method: from.method,
-      // @ts-ignore
-      headers: from.headers,
-      duplex: 'half',
-      body: (from.method==='HEAD' || from.method==='GET') ? undefined : Readable.toWeb(from),
-    }
-
-    /** @type {Request} */
-    const web_req = new Request(
-      `http://localhost${from.url}`,
-      init
-    )
-  
-    return web_req
+    return req;
   }
 
   /**
    * 
-   * @param {Response} web_response 
-   * @param {ServerResponse} context 
+   * @type {PlatformAdapter["handleResponse"]}
    */
-  async handleResponse(web_response, context) {
-    try {
-      const headers = Object.fromEntries(
-        web_response?.headers?.entries() ?? []
-      );
-      context.writeHead(
-        web_response.status, web_response.statusText, headers
-      );
+  async handleResponse(web_response, ctx) {
+    const processor = getProcessor(ctx._sc_event);
 
-      if(web_response.body) {
-        // this is buggy and not finishing, stalls infinitely
-        // await finished(Readable.fromWeb(web_response.body).pipe(context))
-
-        // I found this to be better
-        const reader = web_response.body.getReader();
-        const read_more = async () => {
-          const { done, value } = await reader.read();
-          if (!done) {
-            context.write(value);
-            await read_more();
-          }
-        }
-
-        await read_more(); 
-      } 
-    } catch (e) {
-      console.log(e);
-    } finally {
-      context.end();
-      return context;
-    }
+    return processor.createResult(ctx._sc_event, web_response);
   }  
 } 

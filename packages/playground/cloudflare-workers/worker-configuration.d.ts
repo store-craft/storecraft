@@ -2,6 +2,5 @@
 // by running `wrangler types`
 
 interface Env {
-	MY_VARIABLE: "production_value";
 	D1: D1Database;
 }

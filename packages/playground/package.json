@@ -1,7 +1,7 @@
 {
-  "name": "playground",
+  "name": "@storecraft/playground",
   "version": "1.0.0",
-  "description": "",
+  "description": "Examples of storectraft apps",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -30,7 +30,8 @@
     "gradient-string": "^2.0.2"
   },
   "devDependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "@types/node": "^20.11.0"
   },
   "keywords": [],
   "author": "Tomer Shalev <tomer.shalev@gmail.com>",

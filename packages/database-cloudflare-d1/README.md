@@ -48,6 +48,13 @@ const migrate = async () => {
 migrate();
 ```
 
+create a `.env` file with (find the values from cloudflare dashboard)
+```zsh
+CLOUDFLARE_ACCOUNT_ID=".."
+CLOUDFLARE_D1_API_TOKEN=".."
+CLOUDFLARE_D1_DATABASE_ID=".."
+```
+
 simply run it,
 
 ```zsh
@@ -67,7 +74,7 @@ of cloudflare, which allows for parameterized sql statements (the http driver do
 reason, which we hope they will solve and then we can run d1 with parameterized statements
 at any cloud environment safely without fearing SQL Injection)
 
-So, Create a `worker` with `npx wrangler`
+So, Create a `worker` with `npx wrangler init`
 
 Populate `wrangler.toml` with 
 

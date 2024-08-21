@@ -1,9 +1,14 @@
 {
-  "name": "@storecraft/playground",
+  "name": "example-node",
   "version": "1.0.0",
   "description": "Examples of storectraft apps",
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "start": "npm run playground-deno:start",
+    "playground-deno:start": "deno run --env --watch -A ./deno/index.js",
+    "playground-deno:migrate": "deno run --env -A ./deno/migrate.js"
+  },
   "dependencies": {
     "@storecraft/core": "^1.0.0",
     "@storecraft/database-mongodb-node": "^1.0.0",

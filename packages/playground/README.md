@@ -11,3 +11,4 @@ This folder contains some examples for various platforms
 - bun
 - cloudflare workers
 - aws-lambda
+- google functions

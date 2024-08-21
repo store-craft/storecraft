@@ -24,7 +24,7 @@ npm i @storecraft/platforms
 
 ## usage
 
-```js
+```ts
 import { App } from '@storecraft/core'
 import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda';
 import { MongoDB } from '@storecraft/database-mongodb-node'

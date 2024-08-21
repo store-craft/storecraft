@@ -40,6 +40,10 @@
     "./bun": {
       "import": "./bun/index.js",
       "types": "./bun/types.public.d.ts"
+    },
+    "./google-functions": {
+      "import": "./google-functions/index.js",
+      "types": "./google-functions/types.public.d.ts"
     }
   },
   "scripts": {

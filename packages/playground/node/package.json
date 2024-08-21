@@ -1,9 +1,14 @@
 {
-  "name": "@storecraft/playground",
+  "name": "example-node",
   "version": "1.0.0",
   "description": "Examples of storectraft apps",
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "start": "npm run playground-node:start",
+    "playground-node:start": "node --watch ./node/index.js",
+    "playground-node:migrate": "node ./node/migrate.js"
+  },
   "dependencies": {
     "@storecraft/core": "^1.0.0",
     "@storecraft/database-mongodb-node": "^1.0.0",

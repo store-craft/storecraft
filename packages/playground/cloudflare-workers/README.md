@@ -13,7 +13,9 @@ This example demonstrates
 
 ### First, 
 
-Create a database with `cloudflare wrangler` tool
+Use this worker in the folder or create a new one with `npx wrangler init`,
+
+Create a database with `cloudflare wrangler` tool,
 
 ```zsh
 npx wrangler d1 create my-db
@@ -45,7 +47,6 @@ Simply run,
 ```zsh
 npx wrangler dev --remote
 ```
-
 
 Now, open 
 - `http://localhost:8787/api/dashboard`

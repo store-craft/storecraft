@@ -259,18 +259,16 @@ export class S3CompatibleStorage {
 export class R2 extends S3CompatibleStorage {
 
   /**
-   * 
-   * @param {string} bucket 
-   * @param {string} account_id 
-   * @param {string} access_key_id 
-   * @param {string} secret_access_key 
+   * @param {import('./types.public.d.ts').R2Config} config
    */
-  constructor(bucket, account_id, access_key_id, secret_access_key) {
-    super({
-      endpoint: `https://${account_id}.r2.cloudflarestorage.com`,
-      accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
-      bucket, forcePathStyle: true, region: 'auto'
-    })
+  constructor({bucket, account_id, accessKeyId, secretAccessKey}) {
+    super(
+      {
+        endpoint: `https://${account_id}.r2.cloudflarestorage.com`,
+        accessKeyId, secretAccessKey, bucket, 
+        forcePathStyle: true, region: 'auto'
+      }
+    )
   }
 
 }
@@ -281,19 +279,16 @@ export class R2 extends S3CompatibleStorage {
 export class S3 extends S3CompatibleStorage {
 
   /**
-   * 
-   * @param {string} bucket 
-   * @param {string} region 
-   * @param {string} access_key_id 
-   * @param {string} secret_access_key 
-   * @param {boolean} forcePathStyle 
+   * @param {import('./types.public.d.ts').AwsS3Config} config
    */
-  constructor(bucket, region, access_key_id, secret_access_key, forcePathStyle=false) {
-    super({
-      endpoint: `https://s3${region ? ('.'+region) : ''}.amazonaws.com`,
-      accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
-      bucket, forcePathStyle, region
-    })
+  constructor({bucket, region, accessKeyId, secretAccessKey, forcePathStyle=false}) {
+    super(
+      {
+        endpoint: `https://s3${region ? ('.'+region) : ''}.amazonaws.com`,
+        accessKeyId, secretAccessKey, 
+        bucket, forcePathStyle, region
+      }
+    )
   }
 
 }
@@ -304,18 +299,16 @@ export class S3 extends S3CompatibleStorage {
 export class DigitalOceanSpaces extends S3CompatibleStorage {
 
   /**
-   * 
-   * @param {string} bucket 
-   * @param {string} region 'nyc3' for example
-   * @param {string} access_key_id 
-   * @param {string} secret_access_key 
+   * @param {Omit<import('./types.public.d.ts').Config, 'endpoint' | 'forcePathStyle'>} config
    */
-  constructor(bucket, region, access_key_id, secret_access_key) {
-    super({
-      endpoint: `https://${region}.digitaloceanspaces.com`,
-      accessKeyId: access_key_id, secretAccessKey: secret_access_key, 
-      bucket, forcePathStyle: false, region: 'auto'
-    })
+  constructor({bucket, region, accessKeyId, secretAccessKey}) {
+    super(
+      {
+        endpoint: `https://${region}.digitaloceanspaces.com`,
+        accessKeyId, secretAccessKey, 
+        bucket, forcePathStyle: false, region: 'auto'
+      }
+    )
   }
 
 }

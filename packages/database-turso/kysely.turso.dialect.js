@@ -34,7 +34,10 @@ export class LibsqlDialect {
       );
     }
 
-    return new LibsqlDriver(libsql.createClient(this.#config.libsqlConfig), this.#config);
+    return new LibsqlDriver(
+      libsql.createClient(this.#config.libsqlConfig), 
+      this.#config
+    );
   }
 
   /** @type {Dialect["createIntrospector"]} */
@@ -129,15 +132,11 @@ export class LibsqlConnection {
   }
 
   /**
-   * @template [R=import("@libsql/client").Row] result type
-   * 
    * @param {kysely.CompiledQuery[]} compiledQueries 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<import('kysely').QueryResult<import("@libsql/client").Row>>}
    */
   async #internal_executeQuery(compiledQueries) {
-    // Transactions are not supported yet.
-    // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
     const target = this.#transaction ?? this.client;
 
     const stmts = compiledQueries.map(
@@ -170,15 +169,12 @@ export class LibsqlConnection {
   } 
 
   /**
-   * @template [R=import("@libsql/client").Row] result type
    * 
    * @param {kysely.CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<import('kysely').QueryResult>}
    */
   async executeQuery(compiledQuery) {
-    // Transactions are not supported yet.
-    // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
     console.log('this.isBatch', this.isBatch)
     if(this.isBatch) {
       this.batch.push(compiledQuery);

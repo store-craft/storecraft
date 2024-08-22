@@ -12,10 +12,12 @@ const areBlobsEqual = async (blob1, blob2) => {
   );
 };
 
-const storage = new R2(
-  process.env.R2_BUCKET, process.env.R2_ACCOUNT_ID, 
-  process.env.R2_ACCESS_KEY_ID, process.env.R2_SECRET_ACCESS_KEY
-);
+const storage = new R2({
+  accessKeyId: process.env.R2_ACCESS_KEY_ID,
+  account_id: process.env.R2_ACCOUNT_ID,
+  bucket: process.env.R2_BUCKET,
+  secretAccessKey: process.env.R2_SECRET_ACCESS_KEY
+});
 
 test.before(async () => { await storage.init(null) })
 

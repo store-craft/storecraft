@@ -214,7 +214,7 @@ export class NeonHttpConnection {
    * @returns {AsyncIterableIterator<import('kysely').QueryResult<R>>}
    */
   async *streamQuery(compiledQuery, chunkSize) {
-    throw new Error("Libsql Driver does not support streaming yet");
+    throw new Error("Driver does not support streaming yet");
   }
 
 }

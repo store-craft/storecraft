@@ -9,3 +9,13 @@ export type Config = {
   forcePathStyle: boolean;
 }
 
+export type R2Config = Omit<Config, 'region' | 'forcePathStyle' | 'endpoint'> & {
+  /**
+   * @description cloudflare account id
+   */
+  account_id: string;
+};
+
+
+export type AwsS3Config = Omit<Config, 'endpoint'>;
+

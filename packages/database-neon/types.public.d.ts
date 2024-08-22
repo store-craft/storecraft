@@ -3,7 +3,7 @@ export { NeonHttp, NeonServerless } from './index.js';
 
 /**
  * @description The main serverless with `websockets` support for interactive
- * transacrions config dialect
+ * transactions config dialect
  */
 export type NeonServerlessConfig = {
 

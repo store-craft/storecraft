@@ -14,11 +14,13 @@ const areBlobsEqual = async (blob1, blob2) => {
 
 const FORCE_PATH_STYLE = true;
 
-const storage = new S3(
-  process.env.S3_BUCKET, process.env.S3_REGION, 
-  process.env.S3_ACCESS_KEY_ID, 
-  process.env.S3_SECRET_KEY, FORCE_PATH_STYLE
-);
+const storage = new S3({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  bucket: process.env.S3_BUCKET,
+  forcePathStyle: FORCE_PATH_STYLE,
+  region: process.env.S3_REGION,
+  secretAccessKey: process.env.S3_SECRET_KEY
+});
 
 test.before(async () => { await storage.init(null) })
 

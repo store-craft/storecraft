@@ -1,9 +1,13 @@
 export { MailerMailChimp } from './index.js';
 
 /**
- * config
+ * @description `Mailchimp` config
  */
 export type Config = {
+
+  /**
+   * @description Your API Key
+   */
   apikey: string,
 
 };

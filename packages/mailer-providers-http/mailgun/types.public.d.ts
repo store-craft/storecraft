@@ -1,12 +1,17 @@
 export { MailerMailgun } from './index.js';
 
 /**
- * config
+ * @description `mailgun` config
  */
 export type Config = {
-  /** your mailgun api key */
+  /** 
+   * @description your mailgun api key 
+   */
   apikey: string,
-  /** your registered domain name at mailgun */
+
+  /** 
+   * @description your registered domain name at `mailgun` 
+   */
   domain_name: string;
 };
 

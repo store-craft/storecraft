@@ -1,9 +1,13 @@
 export { MailerSendGrid } from './index.js';
 
 /**
- * config
+ * @description `sendgrid` config
  */
 export type Config = {
+
+  /**
+   * @description Your API Key
+   */
   apikey: string,
 
 };

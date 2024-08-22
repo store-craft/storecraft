@@ -1,0 +1,33 @@
+{
+  "name": "example-node",
+  "version": "1.0.0",
+  "description": "Examples of storectraft apps",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npm run playground-bun:start",
+    "playground-bun:start": "bun run --watch ./bun/index.js",
+    "playground-bun:migrate": "bun run ./bun/migrate.js"
+  },
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "@storecraft/database-mongodb-node": "^1.0.0",
+    "@storecraft/payments-dummy": "^1.0.0",
+    "@storecraft/payments-paypal": "^1.0.0",
+    "@storecraft/payments-stripe": "^1.0.0",
+    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/storage-google": "^1.0.0",
+    "@storecraft/storage-local": "^1.0.0",
+    "@storecraft/storage-s3-compatible": "^1.0.0",
+    "ansis": "^3.2.0",
+    "chalk": "^5.3.0",
+    "gradient-string": "^2.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "@types/node": "^20.11.0"
+  },
+  "keywords": [],
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
+  "license": "ISC"
+}

@@ -1,6 +1,6 @@
 import type { ScryptOptions } from 'crypto';
 
-export * from './index.js'
+export { NodePlatform } from './index.js';
 
 /**
  * @description Core config for `node` platform

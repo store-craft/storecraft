@@ -1,0 +1,145 @@
+# storecraft aws-lambda playground
+
+We followed these guides
+- [Official Guide](https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html#hello_world_prerequisites)
+- [Example](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-cdk-getting-started.html)
+
+First, install the `aws-cli`, [instruction](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+Next, install [SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) for local testing.
+
+Next, make sure you have `docker` and docker deamon is running.
+
+Next, install `cdk`
+
+```zsh
+npm install -g aws-cdk
+```
+
+Now, init
+
+```zsh
+mkdir app
+cd app
+cdk init app -l typescript
+```
+
+Now, install `storecraft`
+```zsh
+npm i @storecraft/core
+npm i @storecraft/database-mongodb-node
+npm i @storecraft/platforms
+npm i -D dotenv
+```
+
+Add this to your `tsconfig.json`
+```json
+{
+  "allowJs": true,
+}
+```
+
+Add `.env` file with
+```zsh
+MONGODB_URL="mongodb+srv://...."
+```
+
+Add `lib/app-stack.ts`
+
+```ts
+#!/usr/bin/env node
+import 'dotenv/config';
+import * as cdk from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as apigw from 'aws-cdk-lib/aws-apigateway'
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
+
+export class AppStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props)
+
+    const fn = new NodejsFunction(
+      this, 'lambda', 
+      {
+        entry: 'lib/lambda/index.ts',
+        handler: 'handler',
+        runtime: lambda.Runtime.NODEJS_20_X,
+        functionName: 'storecraft',
+        environment: process.env as lambda.FunctionOptions["environment"],
+        timeout: cdk.Duration.seconds(15)
+      }
+    );
+
+    fn.addFunctionUrl(
+      {
+        authType: lambda.FunctionUrlAuthType.NONE,
+      }
+    );
+
+    new apigw.LambdaRestApi(
+      this, 'api', 
+      {
+        handler: fn,
+      }
+    );
+  }
+}
+
+```
+
+Add `lib/lambda/index.ts`
+
+```ts
+import type { 
+  LambdaEvent, LambdaContext, APIGatewayProxyResult 
+} from "@storecraft/platforms/aws-lambda";
+import { app } from './app';
+import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'
+import { MongoDB } from '@storecraft/database-mongodb-node'
+import { DummyPayments } from '@storecraft/payments-dummy'
+import { App } from '@storecraft/core';
+
+export const app = new App(
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games',
+    auth_admins_emails: ['john@doe.com']
+  }
+)
+.withPlatform(new AWSLambdaPlatform())
+.withDatabase(new MongoDB({ db_name: 'test' }))
+.withPaymentGateways(
+  {
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+  }
+);
+
+
+export const handler = async (event: LambdaEvent, context: LambdaContext): Promise<APIGatewayProxyResult> => {
+  // will only init once
+  await app.init();
+
+  // // handler
+  const response = await app.handler(event, context);
+  return response;
+}
+```
+
+Now, Deploy locally
+
+```zsh
+npm run build
+cdk synth --no-staging
+
+# deploy locally
+sam local start-api --debug --warm-containers EAGER -t ./cdk.out/AppStack.template.json
+```
+
+Now, you can connect to the dashboard and api with
+```zsh
+http://127.0.0.1:{PORT}/api/dashboard
+http://127.0.0.1:{PORT}/api/reference
+```

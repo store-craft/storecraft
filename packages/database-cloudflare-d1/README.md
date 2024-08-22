@@ -1,5 +1,9 @@
 # Storecraft Cloudflare D1 Database support
 
+Two issues awaiting:
+1. make `seed_templates` migration work
+2. On CF side, they relaxed the FUNC_ARGS_LENGTH, so now json sql should work for me.
+
 Two variants,
 1. D1 over http (used for migrations)
 2. D1 over cloudflare-worker runtime (used for backend)
@@ -22,41 +26,125 @@ npm i @storecraft/database-cloudflare-d1
 - Create an API Key at [here](https://dash.cloudflare.com/profile/api-tokens)
 
 
-## usage
+## Apply migrations with local driver
 
-```js
-import { App } from '@storecraft/core'
+Migrations use a different `D1_HTTP` driver,
+
+create a `migrate.js` file with
+
+```ts
+import 'dotenv/config';
+import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
+import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
+ 
+const migrate = async () => {
+  const d1_over_http = new D1_HTTP(
+    {
+      account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
+      api_token: process.env.CLOUDFLARE_D1_API_TOKEN,
+      database_id: process.env.CLOUDFLARE_D1_DATABASE_ID
+    }
+  )
+  
+  await migrateToLatest(d1_over_http, true);
+}
+
+migrate();
+```
+
+create a `.env` file with (find the values from cloudflare dashboard)
+```zsh
+CLOUDFLARE_ACCOUNT_ID=".."
+CLOUDFLARE_D1_API_TOKEN=".."
+CLOUDFLARE_D1_DATABASE_ID=".."
+```
+
+simply run it,
+
+```zsh
+node run migrate.js
+```
+
+NOTE: 
+- seeding of templates migration might fail because http driver does not allow for sql parameters
+- we are working on a solution for that
+- no big deal, you can still use it
+
+
+## D1 over Cloudflare Workers
+
+To use the driver in cloudflare workers environment, we use the native driver
+of cloudflare, which allows for parameterized sql statements (the http driver does not for some
+reason, which we hope they will solve and then we can run d1 with parameterized statements
+at any cloud environment safely without fearing SQL Injection)
+
+So, Create a `worker` with `npx wrangler init`
+
+Populate `wrangler.toml` with 
+
+```txt
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "<YOUR-DATABASE-NAME>"
+database_id = "<YOUR-DATABASE-ID>"
+```
+
+Create a `src/index.ts` file with
+
+```ts
+import { App } from "@storecraft/core"
 import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
 import { CloudflareWorkersPlatform } from "@storecraft/platforms/cloudflare-workers"
 
-let app = new App(
-  {
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    auth_admins_emails: ['tomer.shalev@gmail.com']
-  }
-)
-.withPlatform(new CloudflareWorkersPlatform())
-.withDatabase(
-  new D1_WORKER(
-    {
-      db: env.D1
-    } 
-  )
-)
 
-await app.init();
- 
-const server = http.createServer(app.handler).listen(
-  8000,
-  () => {
-    console.log(`Server is running on http://localhost:8000`);
-  }
-); 
+export default {
+	/**
+	 * This is the standard fetch handler for a Cloudflare Worker
+	 *
+	 * @param request - The request submitted to the Worker from the client
+	 * @param env - The interface to reference bindings declared in wrangler.toml
+	 * @param ctx - The execution context of the Worker
+	 * @returns The response to be sent back to the client
+	 */
+	async fetch(request, env, ctx): Promise<Response> {
+    let app = new App(
+      {
+        storage_rewrite_urls: undefined,
+        general_store_name: 'Wush Wush Games',
+        general_store_description: 'We sell cool retro video games',
+        general_store_website: 'https://wush.games',
+        auth_admins_emails: ['tomer.shalev@gmail.com']
+      }
+    )
+    .withPlatform(new CloudflareWorkersPlatform())
+    .withDatabase(
+      new D1_WORKER(
+        {
+          db: env.D1
+        } 
+      )
+    );
+
+    app = await app.init();
+    
+    const response = await app.handler(request);
+
+    return response;
+
+	},
+} satisfies ExportedHandler<Env>;
 
 ```
+
+run locally with remote database
+
+```zsh
+npx wrangler dev --remote
+```
+
+Now, you are good to go, visit
+- `http://localhost:8787/api/dashboard`
+- `http://localhost:8787/api/reference`
 
 ```text
 Author: Tomer Shalev <tomer.shalev@gmail.com>

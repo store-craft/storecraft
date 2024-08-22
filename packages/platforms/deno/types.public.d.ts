@@ -1,6 +1,6 @@
 import type { ScryptOptions } from 'node:crypto';
 
-export * from './index.js'
+export { DenoPlatform } from './index.js';
 
 /**
  * @description Core config for `node` platform

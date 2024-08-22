@@ -1,4 +1,4 @@
-export * from './index.js';
+export { MailerSendGrid } from './index.js';
 
 /**
  * config

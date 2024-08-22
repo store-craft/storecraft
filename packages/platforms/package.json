@@ -33,9 +33,17 @@
       "import": "./cloudflare-workers/index.js",
       "types": "./cloudflare-workers/types.public.d.ts"
     },
+    "./aws-lambda": {
+      "import": "./aws-lambda/index.js",
+      "types": "./aws-lambda/types.public.d.ts"
+    },
     "./bun": {
       "import": "./bun/index.js",
       "types": "./bun/types.public.d.ts"
+    },
+    "./google-functions": {
+      "import": "./google-functions/index.js",
+      "types": "./google-functions/types.public.d.ts"
     }
   },
   "scripts": {

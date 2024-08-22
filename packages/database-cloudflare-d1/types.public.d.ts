@@ -1,6 +1,6 @@
 import { D1Database } from '@cloudflare/workers-types';
 
-export * from './index.js'
+export { D1_HTTP, D1_WORKER } from './index.js';
 
 /**
  * @description config for D1 over http

@@ -1,4 +1,5 @@
-export * from './index.js';
+export { DummyPayments } from './index.js';
+export type { DummyPaymentData } from './index.js';
 
 /**
  * gateway config

@@ -164,5 +164,5 @@ export declare interface payment_gateway<
    * @param response HTTP `Response` object
    * 
    */
-  webhook: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult>;
+  webhook?: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult>;
 }

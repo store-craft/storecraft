@@ -358,7 +358,7 @@ export interface db_driver {
   /**
    * The main `resources` and `tables`
    */
-  resources: {
+  resources?: {
     auth_users: db_auth_users;
     tags: db_tags;
     collections: db_collections;

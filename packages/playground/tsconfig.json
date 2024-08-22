@@ -4,11 +4,14 @@
     "noEmit": true,
     "allowJs": true,
     "checkJs": true,
-    "target": "ESNext",
     "resolveJsonModule": true,
+    "target": "ESNext",
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "composite": true,
+    "typeRoots": [
+      "../core/"
+    ]
   },
   "include": ["*", "*/*"]
 }

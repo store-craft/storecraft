@@ -1,4 +1,4 @@
-export * from './index.js';
+export { GoogleStorage } from './index.js';
 
 export type ServiceFile = {
   type?: string;

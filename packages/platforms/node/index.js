@@ -6,9 +6,6 @@ import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
  * 
  * @typedef {import('node:http').IncomingMessage} IncomingMessage
  * @typedef {import('node:http').ServerResponse} ServerResponse
- * @typedef {import("@storecraft/core/v-platform").PlatformAdapter<
- *  IncomingMessage, ServerResponse
- * >} RequestEncoderType
  */
 
 

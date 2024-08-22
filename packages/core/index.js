@@ -7,12 +7,12 @@ import pkg from './package.json' assert { type: "json" }
 
 /** 
  * @typedef {Partial<import('./types.public.d.ts').StorecraftConfig>} StorecraftConfig
- * @typedef {import('./v-storage/types.storage.d.ts').storage_driver} storage_driver
+ * @typedef {import('./v-storage/types.public.d.ts').storage_driver} storage_driver
  * @typedef {import('./v-database/types.public.d.ts').db_driver} db_driver
- * @typedef {import('./v-payments/types.payments.d.ts').payment_gateway} payment_gateway
+ * @typedef {import('./v-payments/types.public.d.ts').payment_gateway} payment_gateway
  * @typedef {import('./v-extensions/types.public.d.ts').extension} extension
  * @typedef {import('./v-platform/types.public.d.ts').PlatformAdapter} PlatformAdapter
- * @typedef {import('./v-mailer/types.mailer.d.ts').mailer} mailer
+ * @typedef {import('./v-mailer/types.public.d.ts').mailer} mailer
  */
 
 /** @param {string} s @param {number} def */
@@ -203,24 +203,27 @@ export class App {
    * @description Initialize the Application
    */
   async init() {
+    if(this.ready) 
+      return Promise.resolve(this);
     
+    /** @type {App} */
+    const app = (/** @type {never} */ (this));
+
     try{
       // first let's settle config
       this.#settle_config_after_init();
 
-      await this.db.init(this);
+      await this.db.init(app);
 
-      this.storage && await this.storage.init(this)
+      this.storage && await this.storage.init(app)
     } catch (e) {
       console.log(e)
       throw e;
     }
 
-    this.api = create_api(this);
-    this.#_rest_controller = create_rest_api(this, this.config);
+    this.api = create_api(app);
+    this.#_rest_controller = create_rest_api(app, this.config);
     this.#_is_ready = true;
-
-    const app = this;
 
     // settle extensions
     for(const ext_handle in this.extensions) {
@@ -433,12 +436,15 @@ export class App {
   /**
    * @description Process a request with context in the native platform
    * 
-   * @param {Platform["$from"]} req
-   * @param {Platform["$context"]} [context] 
+   * @param {import('./v-platform/types.public.d.ts').InferPlatformNativeRequest<Platform>} req
+   * @param {import('./v-platform/types.public.d.ts').InferPlatformContext<Platform>} [context] 
+   * 
+   * @returns {Promise<import('./v-platform/types.public.d.ts').InferPlatformNativeResponse<Platform>>}
    */
   handler = async (req, context) => {
+    context = context ?? {};
     const start_millis = Date.now();
-    const request = await this.#_platform.encode(req)
+    const request = await this.#_platform.encode(req, context)
     
     /** @type {import('./v-rest/types.public.d.ts').ApiResponse} */
     const polka_response = {

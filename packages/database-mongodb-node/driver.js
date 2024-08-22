@@ -88,7 +88,7 @@ export class MongoDB {
 
   /**
    * 
-   * @param {App<any, any, any>} app 
+   * @param {App} app 
    * 
    * 
    * @returns {Promise<this>}

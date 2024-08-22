@@ -1,5 +1,5 @@
 import type { Config as LibSqlConfig } from '@libsql/client'
-export * from './index.js'
+export { Turso } from './index.js';
 
 export type Config = {
 

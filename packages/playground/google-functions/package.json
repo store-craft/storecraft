@@ -1,0 +1,27 @@
+{
+  "name": "example-google-functions",
+  "version": "1.0.0",
+  "description": "Examples of storectraft apps",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "functions-framework --target=storecraft"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.2",
+    "@storecraft/core": "^1.0.0",
+    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/database-mongodb-node": "^1.0.0",
+    "@storecraft/payments-dummy": "^1.0.0",
+    "@storecraft/payments-paypal": "^1.0.0",
+    "@storecraft/payments-stripe": "^1.0.0",
+    "@storecraft/storage-google": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "dotenv": "^16.3.1"
+  },
+  "keywords": [],
+  "author": "Tomer Shalev <tomer.shalev@gmail.com>",
+  "license": "ISC"
+}

@@ -29,7 +29,7 @@ export default {
           db: env.D1
         } 
       )
-    )
+    );
 
     app = await app.init();
     
@@ -37,25 +37,5 @@ export default {
 
     return response;
 
-    return new Response('hi');
-
-    
-
-    // app = await app.init();
-    
-    // const response = await app.handler(request);
-
-    // return response;
-
-    // const r = await env.D1.batch(
-    //   [ 
-    //     env.D1.prepare('select * from test_1') 
-    //   ]
-    // );
-
-    // console.log('r', JSON.stringify(r))
-
-    
-		// return new Response(JSON.stringify(r), {headers: {"Content-Type": 'application/json'}});
 	},
 } satisfies ExportedHandler<Env>;

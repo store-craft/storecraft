@@ -226,15 +226,6 @@ export class DummyPayments {
     return stat;
   }
 
-  /**
-   * 
-   * @param {Request} request 
-   */
-  async webhook(request) {
-    return null;
-  }
-
-  
   // actions
 
   /**

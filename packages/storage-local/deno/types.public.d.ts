@@ -1,1 +1,1 @@
-export * from './index.js'
+export { DenoLocalStorage } from './index.js'

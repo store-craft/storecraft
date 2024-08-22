@@ -1,5 +1,5 @@
-export * from './index.js';
-import type { Stripe } from 'stripe'
+export { Stripe } from './index.js';
+import type { Stripe as StripeCls } from 'stripe'
 
 /**
  * @description gateway config
@@ -26,12 +26,12 @@ export type Config = {
   /**
    * @description config options for `stripe`
    */
-  stripe_config?: Stripe.StripeConfig;
+  stripe_config?: StripeCls.StripeConfig;
 
   /**
    * @description configure `intent` creation
    */
-  stripe_intent_create_params?: Omit<Stripe.PaymentIntentCreateParams, 'amount'>;
+  stripe_intent_create_params?: Omit<StripeCls.PaymentIntentCreateParams, 'amount'>;
 }
 
 

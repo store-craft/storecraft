@@ -1,7 +1,7 @@
 import { readFile, mkdir, open, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
-import { Blob } from 'node:buffer';
+// import { Blob } from 'node:buffer';
 import { createReadStream } from 'node:fs';
 import { Readable } from 'node:stream';
 import { App } from '@storecraft/core'
@@ -69,7 +69,8 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {App<any, any>} app 
+   * @param {App} app 
+   * 
    */
   async init(app) {
     await mkdir(this.#path, { recursive: true });
@@ -189,6 +190,7 @@ export class NodeLocalStorage {
    */
   async getArraybuffer(key) {
 
+    /** @type {ArrayBuffer} */
     const buffer = await readFile(
       this.to_file_path(key),
     );

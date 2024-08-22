@@ -1,6 +1,6 @@
-import type { Dialect } from 'kysely'
+import type { Dialect } from 'kysely';
 
-export * from './index.js'
+export { SQL } from './index.js';
 
 export type SqlDialectType = 'SQLITE' | 'POSTGRES' | 'MYSQL';
 

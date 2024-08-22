@@ -1,5 +1,5 @@
 import type { ScryptOptions } from 'node:crypto';
-export * from './index.js'
+export { BunPlatform } from './index.js';
 
 /**
  * @description Core config for platform

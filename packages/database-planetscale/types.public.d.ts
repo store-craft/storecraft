@@ -1,6 +1,6 @@
 import type { Config } from '@planetscale/database'
 
-export * from './index.js'
+export { PlanetScale } from './index.js'
 
 /**
  * @description Config for the PlanetScale dialect. It extends {@link Config} from `@planetscale/database`,

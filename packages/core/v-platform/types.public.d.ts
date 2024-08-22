@@ -1,12 +1,16 @@
 
+export type InferPlatformNativeRequest<P> = P extends PlatformAdapter<infer A, infer B, infer C> ? A : any;
+export type InferPlatformContext<P> = P extends PlatformAdapter<infer A, infer B, infer C> ? B : any;
+export type InferPlatformNativeResponse<P> = P extends PlatformAdapter<infer A, infer B, infer C> ? C : any;
+
 /**
  * 
  * @template PlatformNativeRequest The `native` `http` request in the platform
  * @template PlatformContext Additional `context`
- * @template H Additional `handleResponse` result
+ * @template PlatformNativeResponse Additional `handleResponse` result
  */
 export declare interface PlatformAdapter<
-    PlatformNativeRequest, PlatformContext, H
+    PlatformNativeRequest, PlatformContext={}, PlatformNativeResponse={}
   > {
     
   /**
@@ -16,7 +20,7 @@ export declare interface PlatformAdapter<
    * 
    * @returns {Promise<Request>}
    */
-  encode: (from: PlatformNativeRequest)=> Promise<Request>;
+  encode: (from: PlatformNativeRequest, context: PlatformContext)=> Promise<Request>;
 
   /**
    * @description Handle the computed web response with 
@@ -27,9 +31,9 @@ export declare interface PlatformAdapter<
    * @param context additional `context`
    * 
    * 
-   * @returns {Promise<H>} 
+   * @returns {Promise<PlatformNativeResponse>} 
    */
-  handleResponse: (web_response: Response, context: PlatformContext) => Promise<H>;
+  handleResponse: (web_response: Response, context: PlatformContext) => Promise<PlatformNativeResponse>;
 
   /**
    * @description (Optional) crypto implementation for hashing and verifying passwords
@@ -56,10 +60,11 @@ export declare interface PlatformAdapter<
    * 
    * @description Get the environment variables of a platform
    */
-  get env(): Record<string, string>;
+  get env(): Record<string, string | undefined>;
 
   $from?: PlatformNativeRequest;
+  $response?: PlatformNativeResponse;
   $context?: PlatformContext;
 }
 
-export * from './public.js'
+// export {} from './public.js'

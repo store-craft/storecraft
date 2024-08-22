@@ -1,1 +1,1 @@
-export * from './index.js'
+export { NodeLocalStorage } from './index.js'

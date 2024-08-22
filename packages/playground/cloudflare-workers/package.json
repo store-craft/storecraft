@@ -3,13 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev --remote",
-    "start": "wrangler dev",
-    "cf-typegen": "wrangler types"
+    "deploy": "npx wrangler deploy",
+    "dev": "npx wrangler dev --remote",
+    "start": "npx wrangler dev",
+    "cf-typegen": "npx wrangler types"
   },
   "devDependencies": {
     "typescript": "^5.5.2",
-    "wrangler": "^3.60.3"
+    "wrangler": "^3.60.3",
+    "@types/node": "^20.11.0"
+  }, 
+  "dependencies": {
+    "@storecraft/core": "*",
+    "@storecraft/database-cloudflare-d1": "*",
+    "@storecraft/platforms": "*"
   }
 }

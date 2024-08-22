@@ -32,12 +32,12 @@ export const options = /** @type {const} */ ({
 });
 
 
-export const collect_database = async () => {
+export const collect_storage = async () => {
 
   const id = await select(
     {
       message: '📦 Select Storage (for images and assets)',
-      choices: Object.entries(dbs).map(it => it[1]),
+      choices: Object.entries(options).map(it => it[1]),
       loop: true,
     }
   );
@@ -64,7 +64,7 @@ const collect_general_config = async (
       /** @type {import('@storecraft/storage-local/node').Config} */
       const config = await input(
         { 
-          message: 'Enter local folder path',
+          message: 'Local folder path',
           required: true,
         }
       );
@@ -73,17 +73,151 @@ const collect_general_config = async (
     }
 
     case 'cloudflare_r2': {
-      /** @type {ConstructorParameters<import('@storecraft/storage-s3-compatible').R2>} */
-      const config = await input(
-        { 
-          message: 'Enter local folder path',
-          required: true,
-        }
-      );
+      /** @type {import('@storecraft/storage-s3-compatible').R2Config} */
+      const config = {
+        account_id: await input(
+          { 
+            message: 'Cloudflare Account ID',
+            required: true,
+          }
+        ),
+        bucket: await input(
+          { 
+            message: 'Bucket ID',
+            required: true,
+          }
+        ),
+        accessKeyId: await input(
+          { 
+            message: 'Access Key ID',
+            required: true,
+          }
+        ),
+        secretAccessKey: await input(
+          { 
+            message: 'Secret Access Key',
+            required: true,
+          }
+        ),
+      }
 
       return config;
     }
 
+    case 'aws_s3': {
+      /** @type {import('@storecraft/storage-s3-compatible').AwsS3Config} */
+      const config = {
+        region: await input(
+          { 
+            message: 'Region',
+            required: true,
+          }
+        ),
+        bucket: await input(
+          { 
+            message: 'Bucket ID',
+            required: true,
+          }
+        ),
+        forcePathStyle: await confirm(
+          { 
+            message: 'Force Path Style',
+            default: true,
+          }
+        ),
+        accessKeyId: await input(
+          { 
+            message: 'Access Key ID',
+            required: true,
+          }
+        ),
+        secretAccessKey: await input(
+          { 
+            message: 'Secret Access Key',
+            required: true,
+          }
+        ),
+      }
+
+      return config;
+    }
+
+    case 's3_compatible': {
+      /** @type {import('@storecraft/storage-s3-compatible').Config} */
+      const config = {
+        endpoint: await input(
+          { 
+            message: 'Endpoint',
+            required: true,
+          }
+        ),
+        region: await input(
+          { 
+            message: 'Region',
+            required: true,
+            default: 'auto'
+          }
+        ),
+        bucket: await input(
+          { 
+            message: 'Bucket ID',
+            required: true,
+          }
+        ),
+        forcePathStyle: await confirm(
+          { 
+            message: 'Force Path Style',
+            default: true,
+          }
+        ),
+        accessKeyId: await input(
+          { 
+            message: 'Access Key ID',
+            required: true,
+          }
+        ),
+        secretAccessKey: await input(
+          { 
+            message: 'Secret Access Key',
+            required: true,
+          }
+        ),
+      }
+
+      return config;
+    }
+
+    case 'google_storage': {
+      /** @type {import('@storecraft/storage-google').Config} */
+      const config = {
+        bucket: await input(
+          { 
+            message: 'Bucket ID',
+            required: true,
+          }
+        ),
+        client_email: await input(
+          { 
+            message: 'Client Email',
+            required: true,
+          }
+        ),
+        private_key_id: await input(
+          { 
+            message: 'Private Key ID',
+            required: true,
+          }
+        ),
+        private_key: await input(
+          { 
+            message: 'Private Key',
+            required: true,
+          }
+        ),
+      }
+
+      return config;
+    }
       
   }
 

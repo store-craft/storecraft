@@ -1,35 +1,36 @@
 import { select, input, confirm } from "@inquirer/prompts";
 
-export const options = /** @type {const} */ ({
-  node: {
+/** @satisfies {import("../utils.js").Choice[]} */
+export const choices = /** @type {const} */ ([
+  {
     name: 'Node Local Storage',
     value: 'node',
   },
-  deno: {
+  {
     name: 'Deno Local Storage',
     value: 'deno',
   },
-  bun: {
+  {
     name: 'Bun Local Storage',
     value: 'bun',
   },
-  cloudflare_r2: {
+  {
     name: 'Cloudflare R2 (cloud)',
     value: 'cloudflare_r2',
   },
-  aws_s3: {
+  {
     name: 'AWS S3 (cloud)',
     value: 'aws_s3',
   },
-  s3_compatible: {
+  {
     name: 'S3 compatible (cloud)',
     value: 's3_compatible',
   },
-  google_storage: {
+  {
     name: 'Google Storage (cloud)',
     value: 'google_storage',
   },
-});
+]);
 
 
 export const collect_storage = async () => {
@@ -37,7 +38,7 @@ export const collect_storage = async () => {
   const id = await select(
     {
       message: '📦 Select Storage (for images and assets)',
-      choices: Object.entries(options).map(it => it[1]),
+      choices,
       loop: true,
     }
   );
@@ -51,7 +52,7 @@ export const collect_storage = async () => {
 
 /**
  * 
- * @param {options[keyof typeof options]["value"]} id 
+ * @param {choices[number]["value"]} id 
  * @returns 
  */
 const collect_general_config = async (

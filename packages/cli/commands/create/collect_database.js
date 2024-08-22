@@ -1,48 +1,49 @@
 import { select, input, confirm } from "@inquirer/prompts";
 
-export const dbs = /** @type {const} */ ({
-  sqlite: {
+/** @satisfies {import("../utils.js").Choice[]} */
+export const choices = /** @type {const} */ ([
+  {
     name: 'sqlite',
     value: 'sqlite',
   },
-  postgres: {
+  {
     name: 'postgres',
     value: 'postgres',
   },
-  mysql: {
+  {
     name: 'mysql',
     value: 'mysql',
   },
-  mongo_db: {
+  {
     name: 'mongo',
     value: 'mongo_db',
   },
-  turso: {
+  {
     name: 'Turso',
     value: 'turso',
     description: 'Cloud SQLite database'
   },
-  d1: {
+  {
     name: 'Cloudflare D1',
     value: 'd1',
     description: 'Cloud SQLite database'
   },
-  neon_http: {
+  {
     name: 'Neon (http)',
     value: 'neon_http',
     description: 'Cloud Postgres, http driver'
   },
-  neon_ws: {
+  {
     name: 'Neon (web sockets and pool)',
     value: 'neon_ws',
     description: 'Cloud Postgres, Websocket driver'
   },
-  planetscale: {
+  {
     name: 'PlanetScale',
     value: 'planetscale',
     description: 'Cloud MySql'
   },
-});
+]);
 
 
 export const collect_database = async () => {
@@ -50,7 +51,7 @@ export const collect_database = async () => {
   const id = await select(
     {
       message: '💾 Select a database',
-      choices: Object.entries(dbs).map(it => it[1]),
+      choices,
       loop: true,
     }
   );
@@ -64,7 +65,7 @@ export const collect_database = async () => {
 
 /**
  * 
- * @param {dbs[keyof dbs]["value"]} id 
+ * @param {choices[number]["value"]} id 
  * @returns 
  */
 const collect_general_config = async (

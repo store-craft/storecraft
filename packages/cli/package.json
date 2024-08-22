@@ -43,7 +43,10 @@
     "@storecraft/database-mongodb-node": "*",
     "@storecraft/database-cloudflare-d1": "*",
     "@storecraft/database-neon": "*",
-    "@storecraft/database-planetscale": "*"
+    "@storecraft/database-planetscale": "*",
+    "@storecraft/mailer-providers-http": "*",
+    "@storecraft/payments-paypal": "*",
+    "@storecraft/payments-stripe": "*"
 
   }
 }

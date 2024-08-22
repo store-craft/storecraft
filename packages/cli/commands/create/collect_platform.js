@@ -1,6 +1,7 @@
 import { select } from "@inquirer/prompts";
 
-export const platforms = [
+/** @satisfies {import("../utils.js").Choice[]} */
+export const choices = /** @type {const} */ ([
   {
     name: 'node',
     value: 'node',
@@ -25,19 +26,17 @@ export const platforms = [
     name: 'Google Functions',
     value: 'google-functions',
   },
-]
+]);
 
 export const collect_platform = async () => {
 
   const id = await select(
     {
       message: '🌐 Select a platform to run the store',
-      choices: platforms,
+      choices,
       loop: true,
     }
   );
-
-  console.log('platform ', id)
 
   return {
     type: 'platform',

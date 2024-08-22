@@ -7,12 +7,12 @@ import pkg from './package.json' assert { type: "json" }
 
 /** 
  * @typedef {Partial<import('./types.public.d.ts').StorecraftConfig>} StorecraftConfig
- * @typedef {import('./v-storage/types.storage.d.ts').storage_driver} storage_driver
+ * @typedef {import('./v-storage/types.public.d.ts').storage_driver} storage_driver
  * @typedef {import('./v-database/types.public.d.ts').db_driver} db_driver
- * @typedef {import('./v-payments/types.payments.d.ts').payment_gateway} payment_gateway
+ * @typedef {import('./v-payments/types.public.d.ts').payment_gateway} payment_gateway
  * @typedef {import('./v-extensions/types.public.d.ts').extension} extension
  * @typedef {import('./v-platform/types.public.d.ts').PlatformAdapter} PlatformAdapter
- * @typedef {import('./v-mailer/types.mailer.d.ts').mailer} mailer
+ * @typedef {import('./v-mailer/types.public.d.ts').mailer} mailer
  */
 
 /** @param {string} s @param {number} def */

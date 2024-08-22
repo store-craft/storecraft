@@ -1,5 +1,9 @@
 # Storecraft Cloudflare D1 Database support
 
+Two issues awaiting:
+1. make `seed_templates` migration work
+2. On CF side, they relaxed the FUNC_ARGS_LENGTH, so now json sql should work for me.
+
 Two variants,
 1. D1 over http (used for migrations)
 2. D1 over cloudflare-worker runtime (used for backend)

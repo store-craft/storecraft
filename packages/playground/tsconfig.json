@@ -9,6 +9,9 @@
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "composite": true,
+    "typeRoots": [
+      "../core/"
+    ]
   },
   "include": ["*", "*/*"]
 }

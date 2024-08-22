@@ -33,7 +33,7 @@ export type MailResponse<T=any> = {
  * mailer interface.
  * 
  */
-export declare interface mailer<Config extends any, T=any> {
+export interface mailer<Config extends any, T=any> {
 
   /** config of the mailer */
   get config(): Config;

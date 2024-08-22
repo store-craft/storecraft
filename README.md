@@ -11,11 +11,11 @@
 
 Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
 
-⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node-js) (deno, bun, node, workers, aws, azure), serverless / serverful
+⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node-js) (deno, bun, node, workers, aws-lambda, google-functions), serverless / serverful
 
-⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sql) (mongo, sqlite, postgres, mysql, neon, turso, planetscale)
+⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sql) (mongo, sqlite, postgres, mysql, neon, turso, d1, planetscale)
 
-⭐ use [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible and more)
+⭐ use [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
 
 ⭐ It is [extensible and modular](https://storecraft.app/docs/backend/extensions/overview)
 

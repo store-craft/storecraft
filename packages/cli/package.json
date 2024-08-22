@@ -1,0 +1,47 @@
+{
+  "name": "storecraft",
+  "version": "0.1.0",
+  "description": "Official storecraft CLI",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/cli"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "bin": {
+    "storecraft": "./bin/index.js"
+  },
+  "scripts": {
+    "cli:test": "echo \"Error: no test specified\" && exit 1",
+    "cli:publish": "npm publish --access public"
+  },
+  "type": "module",
+  "types": "./types.d.ts",
+  "main": "./index.js",
+  "dependencies": {
+    "@inquirer/prompts": "^5.3.8",
+    "@storecraft/core": "^1.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "enquirer": "^2.4.1"
+  },
+  "devDependencies": {
+    "@storecraft/platforms": "*",
+    "@storecraft/storage-local": "*",
+    "@storecraft/database-sql-base": "*",
+    "@storecraft/database-turso": "*",
+    "@storecraft/database-mongodb-node": "*",
+    "@storecraft/database-cloudflare-d1": "*",
+    "@storecraft/database-neon": "*",
+    "@storecraft/database-planetscale": "*"
+
+  }
+}

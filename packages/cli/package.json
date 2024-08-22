@@ -36,6 +36,8 @@
   "devDependencies": {
     "@storecraft/platforms": "*",
     "@storecraft/storage-local": "*",
+    "@storecraft/storage-google": "*",
+    "@storecraft/storage-s3-compatible": "*",
     "@storecraft/database-sql-base": "*",
     "@storecraft/database-turso": "*",
     "@storecraft/database-mongodb-node": "*",

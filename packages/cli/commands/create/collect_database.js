@@ -1,8 +1,5 @@
 import { select, input, confirm } from "@inquirer/prompts";
-import { Turso } from '@storecraft/database-turso'
-/**
- * @constant
- */
+
 export const dbs = /** @type {const} */ ({
   sqlite: {
     name: 'sqlite',
@@ -58,8 +55,6 @@ export const collect_database = async () => {
     }
   );
 
-  ;
-  
   return {
     type: 'database',
     id: id,
@@ -158,6 +153,7 @@ const collect_general_config = async (
     case "neon_ws": {
       /** @type {import('@storecraft/database-neon').NeonServerlessConfig} */
       let config = {
+        // @ts-ignore
         neonConfig: {
         },
         poolConfig: {

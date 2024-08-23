@@ -23,7 +23,7 @@ npm i @storecraft/storage-s3-compatible
 ## usage
 
 ```js
-import { R2 } from '@storecraft/storage-s3-compatible'
+import { R2, S3, DigitalOceanSpaces, S3CompatibleStorage } from '@storecraft/storage-s3-compatible'
 
 const storage = new R2({
   accessKeyId: process.env.R2_ACCESS_KEY_ID,

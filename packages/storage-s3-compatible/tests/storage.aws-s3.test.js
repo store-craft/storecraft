@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { S3 } from '../adapter.js'
+import { S3 } from '@storecraft/storage-s3-compatible'
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os'
 import * as path from 'node:path';

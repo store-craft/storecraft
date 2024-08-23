@@ -20,6 +20,8 @@ npm i @storecraft/payments-paypal
 ## Howto
 
 ```js
+import { PayPal } from '@storecraft/payments-paypal';
+
 const config = {
   env: 'prod',
   client_id: '<get-from-your-paypal-dashboard>',
@@ -28,7 +30,7 @@ const config = {
   intent_on_checkout: 'AUTHORIZE'
 }
 
-new PaypalStandard(config);
+new Paypal(config);
 ```
 
 ## Developer info and test

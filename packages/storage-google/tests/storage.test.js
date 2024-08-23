@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { GoogleStorage } from '../adapter.js'
+import { GoogleStorage } from '@storecraft/storage-google'
 import { readFile } from 'node:fs/promises';
 
 const areBlobsEqual = async (blob1, blob2) => {

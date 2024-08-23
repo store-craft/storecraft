@@ -1,8 +1,10 @@
+#!/usr/bin/env node
+
 import 'dotenv/config';
 import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
 import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
  
-const migrate = async () => {
+export const migrate = async () => {
   const d1_over_http = new D1_HTTP(
     {
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID,

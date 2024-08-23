@@ -8,22 +8,8 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "skipLibCheck": true,
-    "strict": false,
-    "incremental": true,
-    "isolatedModules": true
+    "esModuleInterop": true
   },
-  "include": [
-    "*",
-    "**/*"
-  ],
-  "exclude": [
-    "**/*.json"
-  ]
+  "include": ["*", "**/*"],
+  "exclude": ["*.json"]
 }

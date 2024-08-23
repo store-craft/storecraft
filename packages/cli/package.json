@@ -31,22 +31,24 @@
     "@storecraft/core": "^1.0.0",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
-    "enquirer": "^2.4.1"
+    "enquirer": "^2.4.1",
+    "gradient-string": "^2.0.2",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@storecraft/platforms": "*",
-    "@storecraft/storage-local": "*",
-    "@storecraft/storage-google": "*",
-    "@storecraft/storage-s3-compatible": "*",
-    "@storecraft/database-sql-base": "*",
-    "@storecraft/database-turso": "*",
-    "@storecraft/database-mongodb-node": "*",
     "@storecraft/database-cloudflare-d1": "*",
+    "@storecraft/database-mongodb-node": "*",
     "@storecraft/database-neon": "*",
     "@storecraft/database-planetscale": "*",
+    "@storecraft/database-sql-base": "*",
+    "@storecraft/database-turso": "*",
     "@storecraft/mailer-providers-http": "*",
     "@storecraft/payments-paypal": "*",
-    "@storecraft/payments-stripe": "*"
-
+    "@storecraft/payments-stripe": "*",
+    "@storecraft/platforms": "*",
+    "@storecraft/storage-google": "*",
+    "@storecraft/storage-local": "*",
+    "@storecraft/storage-s3-compatible": "*",
+    "@types/yargs": "^17.0.33"
   }
 }

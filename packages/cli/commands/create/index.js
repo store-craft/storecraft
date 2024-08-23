@@ -1,4 +1,3 @@
-import { input, select } from '@inquirer/prompts';
 import { collect_config } from "./collect.config.js";
 import { collect_platform } from "./collect.platform.js";
 import { collect_database } from "./collect.database.js";
@@ -6,7 +5,6 @@ import { collect_storage } from "./collect.storage.js";
 import { collect_mailer } from "./collect.mailer.js";
 import { collect_payments } from "./collect.payments.js";
 import { logo_gradient } from '../logo.js';
-
 
 /**
  * @type {import("yargs").CommandModule}

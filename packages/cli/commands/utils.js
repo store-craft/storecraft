@@ -23,3 +23,10 @@ export const tokens = (v) => {
  * @prop {boolean | string} [disabled]
  * @prop {never} [type]
  */
+
+
+export const o2s = o => {
+  const json = JSON.stringify(0, null, 2)
+  const unquoted = json.replace(/"([^"]+)":/g, '$1:');
+  return unquoted;
+}

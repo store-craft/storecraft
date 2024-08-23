@@ -1,5 +1,6 @@
 import { input } from "@inquirer/prompts";
-import { tokens, validateEmail } from "../utils.js";
+import { o2s, tokens, validateEmail } from "../utils.js";
+
 
 export const collect_config = async () => {
   /** @type {import("@storecraft/core").StorecraftConfig} */
@@ -22,5 +23,9 @@ export const collect_config = async () => {
     )
   );
 
-  return config;
+  return {
+    type: 'config',
+    snippet: o2s(config),
+    config
+  }
 }

@@ -17,5 +17,5 @@ npx storecraft create
 ### migrate a store database with
 
 ```zsh
-npx storecraft create
+npx storecraft migrate
 ```

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true,
+  },
+  "include": [
+    "*", 
+    "src/*", 
+    "migrations.sqlite/*", 
+    "migrations.postgres/*", 
+    "migrations.mysql/*", 
+    "tests/*.js"
+  ]
+}

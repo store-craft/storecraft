@@ -1,4 +1,4 @@
-export { GoogleStorage } from './index.js';
+export { GoogleStorage } from './adapter.js';
 
 export type ServiceFile = {
   type?: string;

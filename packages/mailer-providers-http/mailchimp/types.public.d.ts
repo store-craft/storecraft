@@ -1,4 +1,4 @@
-export { MailerMailChimp } from './index.js';
+export { MailerMailChimp } from './adapter.js';
 
 /**
  * @description `Mailchimp` config

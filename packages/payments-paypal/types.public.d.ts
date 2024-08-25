@@ -1,4 +1,4 @@
-export { Paypal } from './index.js';
+export { Paypal } from './adapter.js';
 
 /**
  * @description gateway config

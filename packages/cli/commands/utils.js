@@ -25,8 +25,11 @@ export const tokens = (v) => {
  */
 
 
-export const o2s = o => {
-  const json = JSON.stringify(0, null, 2)
+export const o2s = (o, space=0) => {
+  // console.log('got', o)
+  let json = JSON.stringify(o, null, 0);
+  // if(json.length > 80)
+  //   json = json = JSON.stringify(o, null, 2);
   const unquoted = json.replace(/"([^"]+)":/g, '$1:');
   return unquoted;
 }

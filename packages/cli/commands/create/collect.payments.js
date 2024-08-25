@@ -1,4 +1,4 @@
-import { select, input } from "@inquirer/prompts";
+import { select, input, confirm } from "@inquirer/prompts";
 
 /** @satisfies {import("../utils.js").Choice[]} */
 export const choices = /** @type {const} */ ([
@@ -14,20 +14,35 @@ export const choices = /** @type {const} */ ([
 
 
 export const collect_payments = async () => {
+  let configs = [];
+  let more = true;
 
-  const id = await select(
-    {
-      message: '💳 Select Payment Provider',
-      choices: choices,
-      loop: true,
-    }
-  );
+  while(more) {
+    const id = await select(
+      {
+        message: '💳 Select Payment Provider',
+        choices: choices,
+        loop: true,
+      }
+    );
 
-  return {
-    type: 'payments',
-    id: id,
-    config: await collect_general_config(id)
-  };
+    configs.push(
+      {
+        type: 'payments',
+        id: id,
+        config: await collect_general_config(id)
+      }
+    )
+
+    more = await confirm(
+      {
+        message: 'Add another payment gateway or config ?',
+        default: false
+      }
+    )
+  }  
+
+  return configs;
 }
 
 /**

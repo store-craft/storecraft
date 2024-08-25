@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "maxNodeModuleJsDepth": 10,
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true,
+  },
+  "include": ["*", "*/*", "src/*"]
+}

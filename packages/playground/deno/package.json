@@ -6,16 +6,16 @@
   "type": "module",
   "scripts": {
     "start": "npm run playground-deno:start",
-    "playground-deno:start": "deno run --env --watch -A ./deno/index.js",
-    "playground-deno:migrate": "deno run --env -A ./deno/migrate.js"
+    "playground-deno:start": "deno run --env --watch -A ./index.ts",
+    "playground-deno:migrate": "deno run --env -A ./migrate.ts"
   },
   "dependencies": {
-    "@storecraft/core": "^1.0.0",
-    "@storecraft/database-mongodb-node": "^1.0.0",
+    "@storecraft/core": "^1.0.4",
+    "@storecraft/database-mongodb-node": "^1.0.1",
     "@storecraft/payments-dummy": "^1.0.0",
-    "@storecraft/payments-paypal": "^1.0.0",
-    "@storecraft/payments-stripe": "^1.0.0",
-    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/payments-paypal": "^1.0.1",
+    "@storecraft/payments-stripe": "^1.0.1",
+    "@storecraft/platforms": "^1.0.1",
     "@storecraft/storage-google": "^1.0.0",
     "@storecraft/storage-local": "^1.0.0",
     "@storecraft/storage-s3-compatible": "^1.0.0",

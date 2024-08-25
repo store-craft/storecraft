@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true,
+  },
+  "include": ["*", "*/*", "src/*"]
+}

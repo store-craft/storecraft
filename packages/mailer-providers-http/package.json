@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/mailer-providers-http",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official Serverless Friendly e-mail adapters for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -29,19 +29,19 @@
     },
     "./package.json": "./package.json",
     "./mailchimp": {
-      "import": "./mailchimp/index.js",
+      "import": "./mailchimp/adapter.js",
       "types": "./mailchimp/types.public.d.ts"
     },
     "./mailgun": {
-      "import": "./mailgun/index.js",
+      "import": "./mailgun/adapter.js",
       "types": "./mailgun/types.public.d.ts"
     },
     "./resend": {
-      "import": "./resend/index.js",
+      "import": "./resend/adapter.js",
       "types": "./resend/types.public.d.ts"
     },
     "./sendgrid": {
-      "import": "./sendgrid/index.js",
+      "import": "./sendgrid/adapter.js",
       "types": "./sendgrid/types.public.d.ts"
     }
   },

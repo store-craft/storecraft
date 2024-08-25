@@ -1,4 +1,4 @@
-export { Stripe } from './index.js';
+export { Stripe } from './adapter.js';
 import type { Stripe as StripeCls } from 'stripe'
 
 /**

@@ -31,6 +31,7 @@ export const command_create = {
     }
 
     console.log('args: ', args)      
+    console.log('meta: ', meta)      
     // console.log(payments)      
   },
   builder: yarg => {

@@ -1,4 +1,4 @@
-export { MailerMailgun } from './index.js';
+export { MailerMailgun } from './adapter.js';
 
 /**
  * @description `mailgun` config

@@ -10,6 +10,7 @@ export const collect_config = async () => {
   config.general_store_name = await input(
     { 
       message: 'What is your store name',
+      default: 'my-storecraft-app'
     }
   );
 

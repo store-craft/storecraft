@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "npm run playground-node:start",
-    "playground-node:start": "node --watch ./node/index.js",
-    "playground-node:migrate": "node ./node/migrate.js"
+    "playground-node:start": "node --watch ./index.js",
+    "playground-node:migrate": "node ./migrate.js"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

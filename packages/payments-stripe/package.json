@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/payments-stripe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official Storecraft <-> Stripe integration",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -17,8 +17,8 @@
     "storecraft"
   ],
   "type": "module",
-  "main": "index.js",
-  "types": "./types.public.d.ts",
+  "main": "adapter.js",
+  "types": "types.public.d.ts",
   "scripts": {
     "payments-stripe:test": "uvu -c",
     "payments-stripe:publish": "npm publish --access public"

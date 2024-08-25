@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/storage-local",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official local storagte adapters for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -18,7 +18,7 @@
   ],
   "type": "module",
   "main": "index.js",
-  "types": "./types.public.d.ts",
+  "types": "types.public.d.ts",
   "exports": {
     "./package.json": "./package.json",
     "./node": {

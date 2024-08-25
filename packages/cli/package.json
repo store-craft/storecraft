@@ -7,7 +7,7 @@
   "homepage": "https://github.com/store-craft/storecraft",
   "repository": {
     "type": "git",
-    "url": "https://github.com/store-craft/storecraft.git",
+    "url": "git+https://github.com/store-craft/storecraft.git",
     "directory": "packages/cli"
   },
   "keywords": [
@@ -17,7 +17,7 @@
     "storecraft"
   ],
   "bin": {
-    "storecraft": "./bin/index.js"
+    "storecraft": "bin/index.js"
   },
   "scripts": {
     "cli:test": "echo \"Error: no test specified\" && exit 1",
@@ -31,11 +31,12 @@
     "chalk": "^5.3.0",
     "enquirer": "^2.4.1",
     "gradient-string": "^2.0.2",
+    "prettier": "^3.3.3",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@storecraft/database-cloudflare-d1": "*",
     "@storecraft/core": "*",
+    "@storecraft/database-cloudflare-d1": "*",
     "@storecraft/database-mongodb-node": "*",
     "@storecraft/database-neon": "*",
     "@storecraft/database-planetscale": "*",
@@ -49,5 +50,8 @@
     "@storecraft/storage-local": "*",
     "@storecraft/storage-s3-compatible": "*",
     "@types/yargs": "^17.0.33"
+  },
+  "bugs": {
+    "url": "https://github.com/store-craft/storecraft/issues"
   }
 }

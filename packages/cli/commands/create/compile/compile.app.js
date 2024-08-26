@@ -20,7 +20,7 @@ import { collect_storage } from '../collect.storage.js'
 /**
  * @param {Awaited<ReturnType<collect_platform>>} platform 
  */
-const infer_platform = platform => {
+export const infer_platform = platform => {
   switch (platform.id) {
     case 'node':
       return {
@@ -93,7 +93,7 @@ const infer_platform = platform => {
 /**
  * @param {Awaited<ReturnType<collect_database>>} info 
  */
-const infer_database = info => {
+export const infer_database = info => {
   switch (info.id) {
     case 'd1':
       return {
@@ -169,7 +169,7 @@ const infer_database = info => {
 /**
  * @param {Awaited<ReturnType<collect_storage>>} info 
  */
-const infer_storage = info => {
+export const infer_storage = info => {
   switch (info.id) {
     case 'aws_s3':
       return {
@@ -248,7 +248,7 @@ const infer_storage = info => {
 /**
  * @param {Awaited<ReturnType<collect_mailer>>} info 
  */
-const infer_mailer = info => {
+export const infer_mailer = info => {
   switch (info.id) {
     case 'sendgrid':
       return {
@@ -297,7 +297,7 @@ const infer_mailer = info => {
 /**
  * @param {Awaited<ReturnType<collect_payments>>} info 
  */
-const infer_payments = info => {
+export const infer_payments = info => {
   return info.map(
     (info, idx) => {
       switch (info.id) {

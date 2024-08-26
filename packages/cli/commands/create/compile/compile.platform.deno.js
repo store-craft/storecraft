@@ -23,40 +23,40 @@ export const compile = async (meta) => {
       ...package_json, 
       "type": "module",
       "scripts": {
-        "start": "node --watch ./index.js",
-        "migrate": "node ./migrate.js"
+        "start": "deno run --env --watch -A ./index.ts",
+        "migrate": "deno run --env -A ./migrate.ts"
       }
     }
   );
   await pkgr.write_tsconfig_json();
   await pkgr.write_file(
-    'app.js',
+    'app.ts',
     await combine_and_pretty(
       ...compiled_app.imports, '\r\n',
       'export const app = ' + compiled_app.code
     )
   );
   await pkgr.write_file(
-    'index.js', index_js
+    'index.ts', index_js
   );
   await pkgr.write_file(
-    'migrate.js', compile_migrate(meta)
+    'migrate.ts', compile_migrate(meta)
   );
 
 }
 
 
 const index_js = `
-import 'dotenv/config';
-import http from "node:http";
-import { app } from './app.js';
+import { app } from './app.ts';
  
 await app.init();
 
-const server = http.createServer(app.handler).listen(
-  8000,
-  () => {
-    console.log('Storecraft is running on http://localhost:8000');
+const server = Deno.serve(
+  {
+    port: 8000,
+    fetch: app.handler
   }
-); 
+);
+
+console.log('Listening on http://localhost:' + server.port);
 `;

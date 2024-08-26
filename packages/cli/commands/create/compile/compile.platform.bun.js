@@ -23,8 +23,8 @@ export const compile = async (meta) => {
       ...package_json, 
       "type": "module",
       "scripts": {
-        "start": "node --watch ./index.js",
-        "migrate": "node ./migrate.js"
+        "start": "bun run --watch ./index.ts",
+        "migrate": "bun run ./migrate.ts"
       }
     }
   );
@@ -48,15 +48,17 @@ export const compile = async (meta) => {
 
 const index_js = `
 import 'dotenv/config';
-import http from "node:http";
 import { app } from './app.js';
  
 await app.init();
 
-const server = http.createServer(app.handler).listen(
-  8000,
-  () => {
-    console.log('Storecraft is running on http://localhost:8000');
+const server = Bun.serve(
+  {
+    port: 8000,
+    fetch: app.handler
   }
-); 
+);
+
+console.log('Listening on http://localhost:' + server.port);
 `;
+

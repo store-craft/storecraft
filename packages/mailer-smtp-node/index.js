@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
-import { attachment_convert } from "./adapter.utils.js";
+import { attachment_convert } from "./index.utils.js";
 
 /**
  * @typedef {nodemailer.Transporter<SMTPTransport.SentMessageInfo>} NodemailerClient

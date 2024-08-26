@@ -3,6 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "allowJs": true,
+    "maxNodeModuleJsDepth": 10,
     "checkJs": true,
     "target": "ESNext",
     "resolveJsonModule": true,

@@ -52,8 +52,6 @@ export const combine_and_pretty = async (...sources) => {
 
 
 export class Packager {
-  /** @type {string[]} */
-  #deps;
 
   #hasInit = false;
 
@@ -63,13 +61,20 @@ export class Packager {
    */
   constructor(folder) {
     this.folder = to_handle(folder);
-    this.#deps = [];
+  }
+
+  /**
+   * 
+   * @param {import('node:fs').PathLike} path 
+   */
+  create_folder = (path) => {
+    return mkdir(path, {recursive: true});
   }
 
   async init() {
     const current_cwd = process.cwd();
 
-    await mkdir(`${this.folder}/node_modules`, {recursive: true});
+    await this.create_folder(`${this.folder}/node_modules`);
 
     process.chdir(this.folder);
 
@@ -87,13 +92,22 @@ export class Packager {
     }
   }
 
-  async installDeps() {
+  /**
+   * 
+   * @param  {string[]} deps 
+   * @param  {Record<string, string>} [options] 
+   */
+  async installDeps(deps, options = {}) {
     if(!this.#hasInit)
       throw new Error('please init first !!!');
 
+    const options_string = Object.entries(options).reduce(
+      (p, c) => `${p} + ${c[0] ?? ''} ${c[1] ?? ''}` , ''
+    );
+
     const {
       stderr, stdout
-    } = await run_cmd(`npm i ${this.#deps.join(' ')}`);
+    } = await run_cmd(`npm i ${options_string} ${deps.join(' ')}`);
   
     return {
       stderr, stdout
@@ -102,22 +116,18 @@ export class Packager {
 
   /**
    * 
-   * @param  {...string} deps 
+   * @param  {string[]} deps 
    */
-  addDeps(...deps) {
-    this.#deps.push(...deps);
-
-    return this;
+  installDevDeps(deps) {
+    return this.installDeps(deps, { '-D': '' });
   }
 
-  get deps() {
-    return this.#deps;
-  }
 
   async package_json() {
     const file = await readFile('package.json', {
       encoding: 'utf-8'
     });
+    
     return JSON.parse(file);
   }
 
@@ -136,6 +146,24 @@ export class Packager {
     return writeFile(path, obj);
   }
 
+  write_tsconfig_json() {
+    const content = `
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 10,
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true
+  },
+  "include": ["*", "**/*"],
+  "exclude": ["*.json"]
+}
+`
+    return this.write_file('tsconfig.json', content);
+  }
 
 }
 

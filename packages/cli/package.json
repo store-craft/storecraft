@@ -37,7 +37,7 @@
   "devDependencies": {
     "@storecraft/core": "*",
     "@storecraft/database-cloudflare-d1": "*",
-    "@storecraft/database-mongodb-node": "*",
+    "@storecraft/database-mongodb": "*",
     "@storecraft/database-neon": "*",
     "@storecraft/database-planetscale": "*",
     "@storecraft/database-sql-base": "*",

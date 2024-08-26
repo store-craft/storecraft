@@ -27,7 +27,7 @@ npm i @storecraft/platforms
 ```ts
 import { App } from '@storecraft/core'
 import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda';
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 import { S3 } from '@storecraft/storage-s3-compatible'
 
 const app = new App(

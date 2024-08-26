@@ -109,10 +109,10 @@ const infer_database = info => {
       return {
         cls: `MongoDB`,
         imports: [
-          `import { MongoDB } from '@storecraft/database-mongodb-node';`
+          `import { MongoDB } from '@storecraft/database-mongodb';`
         ],
         deps: [
-          '@storecraft/database-mongodb-node'
+          '@storecraft/database-mongodb'
         ]
       }
     case 'neon_http':

@@ -79,7 +79,7 @@ const collect_general_config = async (
     case "mysql":
       break;
     case "mongo_db": {
-      /** @type {import('@storecraft/database-mongodb-node').Config} */
+      /** @type {import('@storecraft/database-mongodb').Config} */
       const config = {
         url: await input(
           { 

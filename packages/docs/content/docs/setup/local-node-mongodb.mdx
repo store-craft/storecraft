@@ -24,7 +24,7 @@ npm i @storecraft/storage-local
 Next, install the mongodb driver for storecraft
 
 ```bash
-npm i @storecraft/database-mongodb-node
+npm i @storecraft/database-mongodb
 ```
 
 Next, install the dummy payments for storecraft
@@ -51,7 +51,7 @@ Now, create a new file `index.js`
 import 'dotenv/config';
 import http from "node:http";
 import { NodePlatform } from '@storecraft/platforms/node';
-import { MongoDB, migrateToLast } from '@storecraft/database-mongodb-node'
+import { MongoDB, migrateToLast } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';

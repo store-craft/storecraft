@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 import  { api_index } from '@storecraft/test-runner'
 

@@ -1,14 +1,14 @@
 {
-  "name": "@storecraft/database-mongodb-node",
+  "name": "@storecraft/database-mongodb",
   "version": "1.0.1",
-  "description": "`Storecraft` database driver for `mongodb` on `nodejs` platform",
+  "description": "`Storecraft` database driver for `mongodb` on `node / bun / deno` platform",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
-    "directory": "packages/database-mongodb-node"
+    "directory": "packages/database-mongodb"
   },
   "keywords": [
     "commerce",
@@ -20,8 +20,8 @@
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "database-mongodb-node:test": "node ./tests/runner.test.js",
-    "database-mongodb-node:publish": "npm publish --access public"
+    "database-mongodb:test": "node ./tests/runner.test.js",
+    "database-mongodb:publish": "npm publish --access public"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

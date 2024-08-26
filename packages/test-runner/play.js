@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
+import { MongoDB } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 
 export const admin_email = 'admin@sc.com';

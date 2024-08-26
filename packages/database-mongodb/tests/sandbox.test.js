@@ -1,6 +1,6 @@
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
-import { migrateToLatest } from '@storecraft/database-mongodb-node/migrate.js';
+import { MongoDB } from '@storecraft/database-mongodb';
+import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
 import { NodePlatform } from '@storecraft/platforms/node';
 
 export const create_app = async () => {

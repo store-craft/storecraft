@@ -63,7 +63,7 @@ const server = http.createServer(app.handler).listen(
 const migrate_js = `
 import 'dotenv/config';
 import { app } from './app.js';
-import { migrateToLatest } from '@storecraft/database-mongodb-node/migrate.js';
+import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
  
 await app.init();
 await migrateToLatest(app.db, true);

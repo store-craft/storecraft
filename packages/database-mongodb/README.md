@@ -8,7 +8,7 @@
 Official `mongodb` driver for `StoreCraft` on **Node.js** platforms.
 
 ```bash
-npm i @storecraft/database-mongodb-node
+npm i @storecraft/database-mongodb
 ```
 
 ## usage
@@ -21,7 +21,7 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 const app = new App(

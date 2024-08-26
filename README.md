@@ -32,7 +32,7 @@ Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
 ```js
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node'
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node'
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 
 const app = new App(
@@ -129,7 +129,7 @@ Support for
 ### 💾 Databases
 
 Support for 
-- MongoDB ([@storecraft/database-mongo-node](packages/database-mongodb-node/))
+- MongoDB ([@storecraft/database-mongo-node](packages/database-mongodb/))
 - SQL Base ([@storecraft/database-sql-base](packages/database-sql-base/))
   - Sqlite
   - Postgres

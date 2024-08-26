@@ -2,7 +2,7 @@
 
 **Storecraft** supports the `node.js` package of `mongodb`
 
-through the `@storecraft/database-mongodb-node` package.
+through the `@storecraft/database-mongodb` package.
 
 > You can use your own or managed service such as **Mongo Atlas** service
 
@@ -10,13 +10,13 @@ through the `@storecraft/database-mongodb-node` package.
 Here is a sample of `mongodb` integration
 
 ```text
-npm i @storecraft/core @storecraft/database-mongodb-node
+npm i @storecraft/core @storecraft/database-mongodb
 ```
 
 ```js
 import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb-node';
-import { migrateToLatest } from '@storecraft/database-mongodb-node/migrate.js';
+import { MongoDB } from '@storecraft/database-mongodb';
+import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
 import { NodePlatform } from '@storecraft/platforms/node';
 
 const app = new App(

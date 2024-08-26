@@ -42,6 +42,9 @@ export const compile = async (meta) => {
   await pkgr.write_file(
     'migrate.ts', compile_migrate(meta)
   );
+  await pkgr.write_file(
+    'README.md', readme_md()
+  );
 
 }
 
@@ -60,3 +63,33 @@ const server = Deno.serve(
 
 console.log('Listening on http://localhost:' + server.port);
 `;
+
+
+const readme_md = () => {
+  return `
+# Storecraft Example
+<div style="text-align:center">
+  <img src='https://storecraft.app/storecraft-color.svg' 
+       width='90%' />
+</div><hr/><br/>
+
+Now, migrate database with
+\`\`\`zsh
+deno run --env -A ./migrate.ts
+\`\`\`
+
+Now, run the app
+\`\`\`zsh
+deno run --env --watch -A ./index.ts
+\`\`\`
+
+Now, open 
+- \`http://localhost:8080/api/dashboard\`
+- \`http://localhost:8080/api/reference\`
+
+
+\`\`\`text
+Author: Tomer Shalev (tomer.shalev@gmail.com)
+\`\`\`
+`
+}

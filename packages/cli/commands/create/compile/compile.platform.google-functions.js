@@ -15,7 +15,7 @@ export const compile = async (meta) => {
   const pkgr = new Packager(meta.config.config.general_store_name);
 
   await pkgr.init();
-  await pkgr.installDeps(compiled_app.deps);
+  await pkgr.installDeps([...compiled_app.deps, "@google-cloud/functions-framework"]);
   await pkgr.installDevDeps([ "dotenv", "@types/node"]);
   const package_json = await pkgr.package_json();
   await pkgr.write_package_json(
@@ -23,8 +23,8 @@ export const compile = async (meta) => {
       ...package_json, 
       "type": "module",
       "scripts": {
-        "start": `bun run --watch ./index.${post}`,
-        "migrate": `bun run ./migrate.${post}`
+        "start": "npx functions-framework --target=storecraft",
+        "migrate": `node ./migrate.${post}`
       }
     }
   );
@@ -48,24 +48,28 @@ export const compile = async (meta) => {
 
 }
 
-
 /**
+ * 
  * @param {string} post 
  */
-const index_js = post => `
+const index_js = (post) => `
 import 'dotenv/config';
+import * as functions from '@google-cloud/functions-framework';
 import { app } from './app.${post}';
- 
-await app.init();
 
-const server = Bun.serve(
-  {
-    port: 8000,
-    fetch: app.handler
+// console.log('env ', process.env)
+
+functions.http(
+  'storecraft',
+  async (req, res) => {
+    // runs once
+    await app.init();
+
+    // handler
+    return app.handler(req, res);
   }
 );
 
-console.log('Listening on http://localhost:' + server.port);
 `;
 
 
@@ -78,23 +82,19 @@ const readme_md = () => {
 </div><hr/><br/>
 
 \`\`\`zsh
-bun install
-# or
 npm install
 \`\`\`
 
 Now, migrate database with
 \`\`\`zsh
-bun run migrate
-# or
 npm run migrate
 \`\`\`
 
 Now, run the app
 \`\`\`zsh
-bun run --watch ./index.js
-#or
 npm start
+# or
+npx functions-framework --target=storecraft
 \`\`\`
 
 Now, open 

@@ -1,6 +1,7 @@
 import { exec } from 'node:child_process'
 import util from 'node:util';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { prettify } from './compile.utils.js';
 const exec_promise = util.promisify(exec);
 
@@ -65,7 +66,7 @@ export class Packager {
 
   /**
    * 
-   * @param {import('node:fs').PathLike} path 
+   * @param {string} path 
    */
   create_folder = (path) => {
     return mkdir(path, {recursive: true});
@@ -139,11 +140,12 @@ export class Packager {
   }
 
   /**
-   * @param {import('node:fs').PathLike} path 
+   * @param {string} path 
    * @param {any} obj 
    */
-  write_file(path, obj) {
-    return writeFile(path, obj);
+  async write_file(path, obj) {
+    await this.create_folder(dirname(path));
+    await writeFile(path, obj);
   }
 
   write_tsconfig_json() {

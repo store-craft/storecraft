@@ -1,4 +1,4 @@
-import { MongoDB } from '../driver.js'
+import { MongoDB } from '../index.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**

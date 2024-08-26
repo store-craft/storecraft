@@ -1,5 +1,5 @@
 import { func } from '@storecraft/core/v-api'
-import { SQL } from '../driver.js'
+import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, 
   insert_search_of, regular_upsert_me, where_id_or_handle_table 
 } from './con.shared.js'

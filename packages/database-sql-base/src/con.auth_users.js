@@ -1,4 +1,4 @@
-import { SQL } from '../driver.js'
+import { SQL } from '../index.js'
 import { sanitize_array } from './utils.funcs.js'
 import { count_regular, delete_me, insert_search_of, insert_tags_of, regular_upsert_me, 
   where_id_or_handle_table, 

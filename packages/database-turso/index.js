@@ -1,15 +1,5 @@
-import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { LibsqlDialect } from './kysely.turso.dialect.js';
-
-/**
- * @param {any} b 
- * @param {string} msg 
- */
-const assert = (b, msg) => {
-  if(!Boolean(b)) throw new Error(msg);
-}
-
 
 /**
  * @extends {SQL}

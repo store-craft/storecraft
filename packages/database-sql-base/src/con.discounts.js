@@ -1,5 +1,5 @@
 import { enums } from '@storecraft/core/v-api'
-import { SQL } from '../driver.js'
+import { SQL } from '../index.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { delete_entity_values_by_value_or_reporter, 
   delete_me, delete_media_of, delete_search_of, 

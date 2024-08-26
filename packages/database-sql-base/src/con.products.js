@@ -1,5 +1,5 @@
 import { enums } from '@storecraft/core/v-api'
-import { SQL } from '../driver.js'
+import { SQL } from '../index.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
   insert_entity_values_of, insert_media_of, insert_search_of, 

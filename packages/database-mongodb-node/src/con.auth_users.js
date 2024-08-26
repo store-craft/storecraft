@@ -1,4 +1,4 @@
-import { MongoDB } from '../driver.js'
+import { MongoDB } from '../index.js'
 import { Collection } from 'mongodb'
 import { objid_or_else_filter, sanitize_one, to_objid_safe } from './utils.funcs.js'
 import { 

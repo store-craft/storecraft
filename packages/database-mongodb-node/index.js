@@ -14,7 +14,7 @@ import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
 import { impl as search } from './src/con.search.js';
-
+export { migrateToLatest } from './migrate.js';
 
 /**
  * @typedef {Partial<import('./types.public.d.ts').Config>} Config

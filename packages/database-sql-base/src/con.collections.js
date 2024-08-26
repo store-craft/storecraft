@@ -1,4 +1,4 @@
-import { SQL } from '../driver.js'
+import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
 import { delete_entity_values_by_value_or_reporter, delete_me, 
   delete_media_of, delete_search_of, delete_tags_of, 

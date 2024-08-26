@@ -1,4 +1,4 @@
-import { SQL } from '../driver.js'
+import { SQL } from '../index.js'
 import { jsonArrayFrom } from './con.helpers.json.js';
 import { query_to_eb, query_to_sort } from './utils.query.js';
 

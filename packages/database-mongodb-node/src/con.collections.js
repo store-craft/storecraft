@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { MongoDB } from '../driver.js'
+import { MongoDB } from '../index.js'
 import { count_regular, expand, get_regular, list_regular } from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'

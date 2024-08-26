@@ -1,5 +1,5 @@
 import { Db, MongoClient } from 'mongodb';
-import { MongoDB } from '../driver.js'
+import { MongoDB } from '../index.js'
 
 /**
  * 

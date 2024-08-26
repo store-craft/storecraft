@@ -1,6 +1,6 @@
 import { ClientSession, ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
-import { MongoDB } from '../driver.js';
+import { MongoDB } from '../index.js';
 import { zeroed_relations } from './con.shared.js';
 
 /**

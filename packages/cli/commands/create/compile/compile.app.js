@@ -1,10 +1,10 @@
 import { o2s } from '../../utils.js'
-import { collect_config } from '../collect.config.js'
-import { collect_database } from '../collect.database.js'
-import { collect_mailer } from '../collect.mailer.js'
-import { collect_payments } from '../collect.payments.js'
-import { collect_platform } from '../collect.platform.js'
-import { collect_storage } from '../collect.storage.js'
+import { collect_config } from '../collect/collect.config.js'
+import { collect_database } from '../collect/collect.database.js'
+import { collect_mailer } from '../collect/collect.mailer.js'
+import { collect_payments } from '../collect/collect.payments.js'
+import { collect_platform } from '../collect/collect.platform.js'
+import { collect_storage } from '../collect/collect.storage.js'
 
 
 /**

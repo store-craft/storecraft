@@ -1,6 +1,6 @@
 import { select } from "@inquirer/prompts";
 
-/** @satisfies {import("../utils.js").Choice[]} */
+/** @satisfies {import("../../utils.js").Choice[]} */
 export const choices = /** @type {const} */ ([
   {
     name: 'node',

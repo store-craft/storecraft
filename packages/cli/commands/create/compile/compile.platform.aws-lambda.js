@@ -10,7 +10,7 @@ import { prettify } from './compile.utils.js';
  * 
  * @param {import("./compile.app.js").Meta} meta 
  */
-export const compile = async (meta) => {
+export const compile_aws = async (meta) => {
   const compiled_app = compile_app(meta);
   const post = meta.config.is_typescript ? 'ts' : 'js';
   const pkgr = new Packager(meta.config.config.general_store_name);

@@ -9,7 +9,7 @@ import {
  * 
  * @param {import("./compile.app.js").Meta} meta 
  */
-export const compile = async (meta) => {
+export const compile_deno = async (meta) => {
   const compiled_app = compile_app(meta);
 
   const pkgr = new Packager(meta.config.config.general_store_name);

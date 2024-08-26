@@ -1,4 +1,4 @@
-import { compile } from "./compile.platform.node.js"
+import { compile_all } from "./index.js"
 
 /** @type {import("./compile.app.js").Meta} */
 const meta_test = {
@@ -38,6 +38,6 @@ const meta_test = {
 }
 
 // const app = await prettify(compile_app(meta_test).code)
-const p = await compile(meta_test)
+const p = await compile_all(meta_test)
 
 // console.log(app)

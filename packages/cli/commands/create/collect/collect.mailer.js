@@ -1,6 +1,6 @@
 import { select, input } from "@inquirer/prompts";
 
-/** @satisfies {import("../utils.js").Choice[]} */
+/** @satisfies {import("../../utils.js").Choice[]} */
 export const choices = /** @type {const} */ ([
   {
     name: 'SendGrid',

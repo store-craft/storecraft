@@ -1,17 +1,17 @@
 import { confirm, input } from "@inquirer/prompts";
-import { o2s, tokens, validateEmail } from "../utils.js";
-
+import { o2s, tokens, validateEmail } from "../../utils.js";
 
 export const collect_config = async () => {
+
   /** @type {import("@storecraft/core").StorecraftConfig} */
   const config = {
-          
   }
+
   config.general_store_name = await input(
     { 
       message: 'What is your store name',
-      default: 'my-storecraft-app'
-    }
+      default: 'my-storecraft-app',
+    },
   );
 
   const is_typescript = await confirm(

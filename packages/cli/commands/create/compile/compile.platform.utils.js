@@ -148,7 +148,11 @@ export class Packager {
     await writeFile(path, obj);
   }
 
-  write_tsconfig_json() {
+  /**
+   * 
+   * @param {string} [override_content] 
+   */
+  write_tsconfig_json(override_content) {
     const content = `
 {
   "compilerOptions": {
@@ -164,7 +168,7 @@ export class Packager {
   "exclude": ["*.json"]
 }
 `
-    return this.write_file('tsconfig.json', content);
+    return this.write_file('tsconfig.json', override_content ?? content);
   }
 
 }

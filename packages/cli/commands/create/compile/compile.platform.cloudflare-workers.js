@@ -11,7 +11,6 @@ import {
  */
 export const compile_workers = async (meta) => {
   const compiled_app = compile_app(meta);
-  const post = meta.config.is_typescript ? 'ts' : 'js';
   const pkgr = new Packager(meta.config.config.general_store_name);
 
   await pkgr.init();
@@ -27,7 +26,7 @@ export const compile_workers = async (meta) => {
         "dev": "npx wrangler dev --remote",
         "start": "npx wrangler dev --remote",
         "cf-typegen": "npx wrangler types",
-        "migrate": `node ./migrate.${post}`
+        "migrate": `node ./migrate.js`
       }
     }
   );
@@ -40,7 +39,7 @@ export const compile_workers = async (meta) => {
     )
   );
   await pkgr.write_file(
-    `migrate.${post}`, compile_migrate(meta)
+    `migrate.js`, compile_migrate(meta)
   );
   await pkgr.write_file(
     'wrangler.toml', wrangler_toml(meta)

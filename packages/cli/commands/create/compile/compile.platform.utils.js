@@ -1,9 +1,10 @@
-import { exec } from 'node:child_process'
+import { exec, spawn } from 'node:child_process'
 import util from 'node:util';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { prettify } from './compile.utils.js';
 const exec_promise = util.promisify(exec);
+const spawn_promise = util.promisify(spawn);
 
 /**
  * URL friendly handle
@@ -46,8 +47,6 @@ export const run_cmd = async (...cmds) => {
 export const combine_and_pretty = async (...sources) => {
   const all = sources.map(s => s).filter(Boolean).join('\n');
 
-  console.log(all)
-
   return await prettify(all);
 }
 
@@ -83,9 +82,6 @@ export class Packager {
       stderr, stdout
     } = await run_cmd('npm init -y');
   
-    console.log(
-      stderr, stdout
-    )
     this.#hasInit = true;
 
     return {
@@ -103,7 +99,7 @@ export class Packager {
       throw new Error('please init first !!!');
 
     const options_string = Object.entries(options).reduce(
-      (p, c) => `${p} + ${c[0] ?? ''} ${c[1] ?? ''}` , ''
+      (p, c) => `${p} ${c[0] ?? ''} ${c[1] ?? ''}` , ''
     );
 
     const {

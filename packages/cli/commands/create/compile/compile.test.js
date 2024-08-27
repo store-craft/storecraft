@@ -1,3 +1,4 @@
+import { spinner } from "../spinner.js";
 import { compile_all } from "./index.js"
 
 /** @type {import("./compile.app.js").Meta} */
@@ -38,6 +39,6 @@ const meta_test = {
 }
 
 // const app = await prettify(compile_app(meta_test).code)
-const p = await compile_all(meta_test)
+await spinner(compile_all(meta_test), 'Setting Up, hold on')();
 
 // console.log(app)

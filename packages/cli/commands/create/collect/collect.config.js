@@ -14,13 +14,6 @@ export const collect_config = async () => {
     },
   );
 
-  const is_typescript = await confirm(
-    { 
-      message: 'Use Typescript',
-      default: true
-    }
-  )
-
   config.auth_admins_emails = tokens(
     await input(
       { 
@@ -33,8 +26,6 @@ export const collect_config = async () => {
 
   return {
     type: 'config',
-    snippet: o2s(config),
-    is_typescript,
     config
   }
 }

@@ -7,7 +7,7 @@ import { collect_payments } from "./collect/collect.payments.js";
 import { logo_gradient } from '../logo.js';
 import { compile_all } from "./compile/index.js";
 import chalk from 'chalk';
-import * as spinners from 'cli-spinners'
+import { spinner } from "./spinner.js";
 
 /**
  * @type {import("yargs").CommandModule}
@@ -34,9 +34,7 @@ export const command_create = {
       payments      
     }
 
-    
-    
-    await compile_all(meta);
+    await spinner(compile_all(meta), 'Setting Up, hold on')();
 
     console.log(chalk.greenBright.bold('Done !'));
 

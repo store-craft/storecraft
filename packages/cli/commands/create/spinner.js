@@ -12,7 +12,7 @@ export const spinner = (
   promise, text='loading...', spinner=spinners.circleHalves
 ) => createPrompt(
   (config, done) => {
-    const theme = makeTheme({...config.theme, spinner });
+    const theme = makeTheme({...config?.theme, spinner });
 
     const prefix = usePrefix({ isLoading: true, theme });
 
@@ -39,6 +39,6 @@ export const interval = (millis=5000) => {
 
 }
 
-// await spinner_promise(
+// await spinner(
 //   interval()
 // )({})

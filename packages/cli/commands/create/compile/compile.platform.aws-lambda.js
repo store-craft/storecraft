@@ -12,7 +12,6 @@ import { prettify } from './compile.utils.js';
  */
 export const compile_aws = async (meta) => {
   const compiled_app = compile_app(meta);
-  const post = meta.config.is_typescript ? 'ts' : 'js';
   const pkgr = new Packager(meta.config.config.general_store_name);
 
   await pkgr.init();
@@ -43,13 +42,13 @@ export const compile_aws = async (meta) => {
         "test": "npx jest",
         "cdk": "cdk",
         "all": "npm run build && npx cdk synth --no-staging && sam local start-api --debug --warm-containers EAGER -t ./cdk.out/AppStack.template.json",
-        "migrate": `node ./migrate.${post}`
+        "migrate": `node ./migrate.js`
       }
     }
   );
   await pkgr.write_tsconfig_json(tsconfig_json());
   await pkgr.write_file(
-    `bin/app.${post}`,
+    `bin/app.js`,
     await prettify(bin_app_ts())
   );
   await pkgr.write_file(
@@ -68,7 +67,7 @@ export const compile_aws = async (meta) => {
     )
   );
   await pkgr.write_file(
-    `migrate.${post}`, compile_migrate(meta)
+    `migrate.js`, compile_migrate(meta)
   );
   await pkgr.write_file(
     'cdk.json', cdk_json()

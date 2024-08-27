@@ -3,13 +3,12 @@ import { infer_database } from './compile.app.js'
 /**
  * 
  * @param {string} db_dep 
- * @param {boolean} [is_typescript=false] 
  */
-const regular_migrate = (db_dep, is_typescript=false) => {
+const regular_migrate = (db_dep) => {
 
   return `
 import 'dotenv/config';
-import { app } from './app.${is_typescript ? 'ts' : 'js' }';
+import { app } from './app.js';
 import { migrateToLatest } from '${db_dep}/migrate.js';
  
 await app.init();
@@ -60,7 +59,7 @@ export const compile_migrate = (meta) => {
     case 'neon_http':
     case 'neon_ws':
     case 'planetscale': {
-      return regular_migrate(database.deps[0], meta.config.is_typescript)
+      return regular_migrate(database.deps[0]);
     }
   }
 

@@ -11,7 +11,6 @@ import {
  */
 export const compile_node = async (meta) => {
   const compiled_app = compile_app(meta);
-  const post = meta.config.is_typescript ? 'ts' : 'js';
   const pkgr = new Packager(meta.config.config.general_store_name);
 
   await pkgr.init();
@@ -23,24 +22,24 @@ export const compile_node = async (meta) => {
       ...package_json, 
       "type": "module",
       "scripts": {
-        "start": `node --watch ./index.${post}`,
-        "migrate": `node ./migrate.${post}`
+        "start": `node --watch ./index.js`,
+        "migrate": `node ./migrate.js`
       }
     }
   );
   await pkgr.write_tsconfig_json();
   await pkgr.write_file(
-    `app.${post}`,
+    `app.js`,
     await combine_and_pretty(
       ...compiled_app.imports, '\r\n',
       'export const app = ' + compiled_app.code
     )
   );
   await pkgr.write_file(
-    `index.${post}`, index_js(post)
+    `index.js`, index_js()
   );
   await pkgr.write_file(
-    `migrate.${post}`, compile_migrate(meta)
+    `migrate.js`, compile_migrate(meta)
   );
   await pkgr.write_file(
     'README.md', readme_md()
@@ -49,10 +48,10 @@ export const compile_node = async (meta) => {
 }
 
 
-const index_js = post => `
+const index_js = () => `
 import 'dotenv/config';
 import http from "node:http";
-import { app } from './app.${post}';
+import { app } from './app.js';
  
 await app.init();
 

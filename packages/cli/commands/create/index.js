@@ -6,14 +6,15 @@ import { collect_mailer } from "./collect/collect.mailer.js";
 import { collect_payments } from "./collect/collect.payments.js";
 import { logo_gradient } from '../logo.js';
 import { compile_all } from "./compile/index.js";
-import chalk from 'chalk';
 import { spinner } from "./spinner.js";
+import chalk from 'chalk';
+
 
 /**
  * @type {import("yargs").CommandModule}
  */
 export const command_create = {
-  command: 'create [name]',
+  command: 'create',
   describe: '🛍️  Create A Store',
   handler: async (args) => {
     console.log(logo_gradient);
@@ -42,11 +43,6 @@ export const command_create = {
     // console.log('meta: ', meta)      
     // console.log(payments)      
   },
-  builder: yarg => {
-    return yarg.positional(
-      'name', {type: 'string', default: 'my-storecraft-app'}
-    ).epilog('hello')
-  }
 }
 
   

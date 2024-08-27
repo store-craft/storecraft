@@ -20,8 +20,8 @@
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "database-neon-http:test": "node ./tests/runner.test.js",
-    "database-neon-http:publish": "npm publish --access public"
+    "database-neon:test": "node ./tests/runner.test.js",
+    "database-neon:publish": "npm publish --access public"
   },
   "peerDependencies": {
     "kysely": "*"

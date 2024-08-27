@@ -6,3 +6,5 @@ tasks.md
 /packages/dashboard-old
 database-sql-base.temp
 deno.lock
+wush
+my-storecraft-app

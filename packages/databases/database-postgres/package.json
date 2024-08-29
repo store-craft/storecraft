@@ -1,14 +1,14 @@
 {
-  "name": "@storecraft/payments-stripe",
+  "name": "@storecraft/database-postgres",
   "version": "1.0.1",
-  "description": "Official Storecraft <-> Stripe integration",
+  "description": "Official Postgres Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
-    "directory": "packages/payments/payments-stripe"
+    "directory": "packages/databases/database-postgres"
   },
   "keywords": [
     "commerce",
@@ -17,17 +17,21 @@
     "storecraft"
   ],
   "type": "module",
-  "main": "adapter.js",
+  "main": "index.js",
   "types": "types.public.d.ts",
   "scripts": {
-    "payments-stripe:test": "uvu -c",
-    "payments-stripe:publish": "npm publish --access public"
+    "database-postgres:test": "node ./tests/runner.test.js",
+    "database-postgres:publish": "npm publish --access public"
   },
   "dependencies": {
-    "stripe": "^16.6.0"
+    "@storecraft/core": "^1.0.0",
+    "@storecraft/database-sql-base": "^1.0.0",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
-    "@storecraft/core": "^1.0.0",
+    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/test-runner": "^1.0.0",
+    "@types/pg": "^8.11.2",
     "@types/node": "^20.11.0",
     "dotenv": "^16.3.1",
     "uvu": "^0.5.6"

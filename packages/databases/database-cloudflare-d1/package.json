@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
-    "directory": "packages/database-cloudflare-d1"
+    "directory": "packages/databases/database-cloudflare-d1"
   },
   "keywords": [
     "commerce",

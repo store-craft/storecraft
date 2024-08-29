@@ -1,4 +1,4 @@
-import { ExpressionWrapper, InsertQueryBuilder, Transaction } from 'kysely'
+import { ExpressionWrapper, InsertQueryBuilder, Kysely } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';
 import { query_to_eb } from './utils.query.js';
@@ -78,7 +78,7 @@ export const where_id_or_handle_table = (id_or_handle) => {
 export const delete_entity_values_by_value_or_reporter = (entity_table_name) => {
   /**
    * 
-   * @param {Transaction<Database>} trx 
+   * @param {Kysely<Database>} trx 
    * @param {string} value delete by entity value
    * @param {string} [reporter] delete by reporter
    */
@@ -104,7 +104,7 @@ export const delete_entity_values_of_by_entity_id_or_handle =
 (entity_table_name) => {
   /**
    * 
-   * @param {Transaction<import('../index.js').Database>} trx 
+   * @param {Kysely<import('../index.js').Database>} trx 
    * @param {string} entity_id delete by id
    * @param {string} [entity_handle=entity_id] delete by handle
    */
@@ -127,7 +127,7 @@ export const delete_entity_values_of_by_entity_id_or_handle =
 export const insert_entity_array_values_of = (entity_table_name) => {
   /**
    * 
-   * @param {Transaction<Database>} trx 
+   * @param {Kysely<Database>} trx 
    * @param {string[]} values values of the entity
    * @param {string} item_id whom the tags belong to
    * @param {string} [item_handle] whom the tags belong to
@@ -175,7 +175,7 @@ export const insert_entity_array_values_of = (entity_table_name) => {
 export const insert_entity_values_of = (entity_table_name) => {
   /**
    * 
-   * @param {Transaction<Database>} trx 
+   * @param {Kysely<Database>} trx 
    * @param {{value: string, reporter: string}[]} values values of the entity
    * @param {string} item_id whom the tags belong to
    * @param {string} [item_handle] whom the tags belong to
@@ -206,7 +206,7 @@ export const insert_entity_values_of = (entity_table_name) => {
  */
 export const insert_entity_array_values_with_delete_of = (entity_table) => {
 /**
- * @param {Transaction<Database>} trx 
+ * @param {Kysely<Database>} trx 
  * @param {string[]} values values of the entity
  * @param {string} item_id entity id
  * @param {string} [item_handle] entity handle
@@ -235,7 +235,7 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
 /**
  * @template {keyof Database} T
  * 
- * @param {Transaction<Database>} trx 
+ * @param {Kysely<Database>} trx 
  * @param {T} table_name 
  * @param {import('kysely').InsertObject<Database, T>} item values of the entity
  * 
@@ -258,7 +258,7 @@ export const regular_upsert_me = async (trx, table_name, item) => {
 
 /**
  * 
- * @param {Transaction<Database>} trx 
+ * @param {Kysely<Database>} trx 
  * @param {keyof Database} table_name 
  * @param {string} id_or_handle 
  */

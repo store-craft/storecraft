@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely, Transaction } from 'kysely'
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, where_id_or_handle_table } from './con.shared.js'
@@ -10,6 +10,31 @@ import { query_to_eb, query_to_sort } from './utils.query.js'
  */
 export const table_name = 'templates'
 
+/**
+ * @template {Kysely | Transaction} [K=(Kysely | Transaction)]
+ * @param {K} k 
+ */
+const safe_trx = (k) => {
+  if(k.isTransaction) {
+    return {
+      /**
+       * 
+       * @param {(k: K) => Promise<any>} cb 
+       */
+      execute: (cb) => {
+        return cb(k);
+      }
+    }
+  }
+
+  return {
+    /**
+     * 
+     * @param {(k: K) => Promise<any>} cb 
+     */
+    execute: (cb) => k.transaction().execute(cb)
+  }
+}
 
 /**
  * @param {Kysely<import('../index.js').Database>} client 
@@ -20,7 +45,7 @@ export const table_name = 'templates'
 export const upsert = (client) => {
   return async (item, search_terms) => {
     try {
-      const t = await client.transaction().execute(
+      const t2 = await safe_trx(client).execute(
         async (trx) => {
           await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
           await regular_upsert_me(trx, table_name, {
@@ -34,7 +59,23 @@ export const upsert = (client) => {
             reference_example_input: JSON.stringify(item.reference_example_input ?? {})
           });
         }
-      );
+      )
+      
+      // const t = await client.transaction().execute(
+      //   async (trx) => {
+      //     await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
+      //     await regular_upsert_me(trx, table_name, {
+      //       created_at: item.created_at,
+      //       updated_at: item.updated_at,
+      //       id: item.id,
+      //       title: item.title,
+      //       handle: item.handle,
+      //       template_html: item.template_html,
+      //       template_text: item.template_text,
+      //       reference_example_input: JSON.stringify(item.reference_example_input ?? {})
+      //     });
+      //   }
+      // );
     } catch(e) {
       console.log(e);
       return false;

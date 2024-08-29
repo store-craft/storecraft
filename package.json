@@ -5,7 +5,11 @@
   "description": "Store Craft Mono Repo",
   "main": "index.js",
   "workspaces": [
-    "./packages/*"
+    "./packages/*",
+    "./packages/databases/*",
+    "./packages/storage/*",
+    "./packages/mailers/*",
+    "./packages/payments/*"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

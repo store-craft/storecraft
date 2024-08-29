@@ -150,7 +150,7 @@ Support for,
 - Google Storage ([@storecraft/storage-google](packages/storage-google/))
 
 ### 📧 Email Providers
-- node smtp support [@storecraft/mailer-smtp-node](packages/mailer-smtp-node/)
+- node smtp support [@storecraft/mailer-smtp](packages/mailer-smtp/)
 - Http Mail services [@storecraft/mailer-providers-http](packages/mailer-providers-http/) 
   - mailchimp support
   - mailgun support

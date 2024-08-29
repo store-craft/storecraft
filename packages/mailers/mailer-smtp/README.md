@@ -10,13 +10,13 @@
 - uses `nodemailer` under the hood
 
 ```bash
-npm i @storecraft/mailer-smtp-node
+npm i @storecraft/mailer-smtp
 ```
 
 ## Howto
 
 ```js
-import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
+import { MailerSmtpNode } from '@storecraft/mailer-smtp';
 
 const mailer = new MailerSmtpNode(
   {

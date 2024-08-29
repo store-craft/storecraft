@@ -1,22 +1,22 @@
 # SMTP Driver for Node.js
 
-If your **Storecraft** runs with `node.js`, you can also use the official
+If your **Storecraft** runs with `node`, `deno` or `bun`, you can also use the official
 **SMTP** driver,
 
-Through the `@storecraft/mailer-smtp-node` package.
+Through the `@storecraft/mailer-smtp` package.
 
 ## Features
 - Send emails using a known smtp server
 - uses `nodemailer` under the hood
 
 ```bash
-npm i @storecraft/mailer-smtp-node
+npm i @storecraft/mailer-smtp
 ```
 
 ## Howto
 
 ```js
-import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
+import { MailerSmtpNode } from '@storecraft/mailer-smtp';
 
 const mailer = new MailerSmtpNode(
   {
@@ -49,7 +49,7 @@ import { App } from '@storecraft/core';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
-import { MailerSmtpNode } from '@storecraft/mailer-smtp-node';
+import { MailerSmtpNode } from '@storecraft/mailer-smtp';
 
 const app = new App(config)
 .withPlatform(new NodePlatform())

@@ -1,14 +1,14 @@
 {
-  "name": "@storecraft/mailer-smtp-node",
+  "name": "@storecraft/mailer-smtp",
   "version": "1.0.0",
-  "description": "Official SMTP email provider with node.js for storecraft",
+  "description": "Official SMTP email provider for node, deno and bun for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
-    "directory": "packages/mailer-smtp-node"
+    "directory": "packages/mailer-smtp"
   },
   "keywords": [
     "commerce",
@@ -20,8 +20,8 @@
   "main": "index.js",
   "types": "./types.public.d.ts",
   "scripts": {
-    "mailer-smtp-node:test": "uvu -c",
-    "mailer-smtp-node:publish": "npm publish --access public"
+    "mailer-smtp:test": "uvu -c",
+    "mailer-smtp:publish": "npm publish --access public"
   },
   "dependencies": {
     "nodemailer": "^6.9.9"

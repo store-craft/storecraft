@@ -72,12 +72,102 @@ const collect_general_config = async (
   id
 ) => {
   switch(id) {
-    case 'sqlite':
-      break;
-    case "postgres":
-      break;
-    case "mysql":
-      break;
+    case 'sqlite': {
+      /** @type {import('@storecraft/database-sqlite').Config} */
+      const config = {
+        options: {},
+        filename: await input(
+          { 
+            message: 'Enter the local file name',
+            required: true,
+          }
+        )
+      }
+      return config;
+    }
+    case "postgres": {
+      /** @type {import('@storecraft/database-postgres').Config} */
+      const config = {
+        pool_config: {
+          host: await input(
+            { 
+              message: 'Enter the host',
+              required: true,
+              default: 'localhost'
+            }
+          ),
+          port: parseInt(
+            await input(
+              { 
+                message: 'Enter the port',
+                required: true,
+                default: '6432'
+              }
+            )
+          ),
+          user: await input(
+            { 
+              message: 'Enter the user',
+              required: true,
+              default: 'admin'
+            }
+          ),
+          password: await input(
+            { 
+              message: 'Enter the password',
+              required: true,
+              default: 'admin'
+            }
+          ),
+        }
+      }
+      return config;
+    }
+    case "mysql": {
+      /** @type {import('@storecraft/database-mysql').Config} */
+      const config = {
+        pool_options: {
+          database: await input(
+            { 
+              message: 'database name',
+              required: true,
+              default: 'main'
+            }
+          ),
+          host: await input(
+            { 
+              message: 'database host',
+              required: true,
+              default: 'localhost'
+            }
+          ),
+          port: parseInt(
+            await input(
+              { 
+                message: 'database port',
+                required: true,
+                default: '8080'
+              }
+            )
+          ),
+          user: await input(
+            { 
+              message: 'user name',
+              required: true,
+              default: 'admin'
+            }
+          ),
+          password: await input(
+            { 
+              message: 'user password',
+              required: true,
+              default: 'admin'
+            }
+          ),
+        }
+      }
+      return config;
+    }
     case "mongo_db": {
       /** @type {import('@storecraft/database-mongodb').Config} */
       const config = {

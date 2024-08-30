@@ -95,6 +95,36 @@ export const infer_platform = platform => {
  */
 export const infer_database = info => {
   switch (info.id) {
+    case 'sqlite':
+      return {
+        cls: `SQLite`,
+        imports: [
+          `import { SQLite } from '@storecraft/database-sqlite'`
+        ],
+        deps: [
+          '@storecraft/database-sqlite'
+        ]
+      }
+    case 'postgres':
+      return {
+        cls: `Postgres`,
+        imports: [
+          `import { Postgres } from '@storecraft/database-postgres'`
+        ],
+        deps: [
+          '@storecraft/database-postgres'
+        ]
+      }
+    case 'mysql':
+      return {
+        cls: `MySQL`,
+        imports: [
+          `import { MySQL } from '@storecraft/database-mysql'`
+        ],
+        deps: [
+          '@storecraft/database-mysql'
+        ]
+      }
     case 'd1':
       return {
         cls: `D1_WORKER`,

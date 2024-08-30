@@ -1,7 +1,41 @@
-import { ExpressionWrapper, InsertQueryBuilder, Kysely } from 'kysely'
+import { ExpressionWrapper, InsertQueryBuilder, Kysely, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';
 import { query_to_eb } from './utils.query.js';
+
+/**
+ * @template K
+ * @typedef {K extends Kysely<infer D> ? D : unknown} KDB
+ * 
+ */
+
+/**
+ * @description Use the current kysely connection as transaction if
+ * it already a transaction, otherwise eecute a new transaction.
+ * 
+ * @param {Kysely<Database>} k 
+ * 
+ */
+export const safe_trx = (k) => {
+  if(k.isTransaction) {
+    return {
+      /**
+       * 
+       * @param {(k: Kysely<Database>) => Promise<any>} cb 
+       */
+      execute: (cb) => {
+        return cb(k);
+      }
+    }
+  }
+
+  return {
+    /**
+     * @param {(k: Transaction<Database>) => Promise<any>} cb 
+     */
+    execute: (cb) => k.transaction().execute(cb)
+  }
+}
 
 
 /**

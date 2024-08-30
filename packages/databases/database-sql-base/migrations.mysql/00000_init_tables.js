@@ -67,22 +67,22 @@ const drop_safe_table = (db, table_name) => {
  */
 const create_base_indexes = async (db, table_name, include_id=true, include_handle=true) => {
   if(include_id) {
-    await db.schema.createIndex(`index_${table_name}_id_updated_at_asc`).ifNotExists()
+    await db.schema.createIndex(`index_${table_name}_id_updated_at_asc`)
             .on(table_name)
             .columns(['id', 'updated_at asc'])
             .execute();
-    await db.schema.createIndex(`index_${table_name}_id_updated_at_desc`).ifNotExists()
+    await db.schema.createIndex(`index_${table_name}_id_updated_at_desc`)
             .on(table_name)
             .columns(['id', 'updated_at desc'])
             .execute();
   }
 
   if(include_handle) {
-    await db.schema.createIndex(`index_${table_name}_handle_updated_at_asc`).ifNotExists()
+    await db.schema.createIndex(`index_${table_name}_handle_updated_at_asc`)
             .on(table_name)
             .columns(['handle', 'updated_at asc'])
             .execute();
-    await db.schema.createIndex(`index_${table_name}_handle_updated_at_desc`).ifNotExists()
+    await db.schema.createIndex(`index_${table_name}_handle_updated_at_desc`)
             .on(table_name)
             .columns(['handle', 'updated_at desc'])
             .execute();
@@ -97,23 +97,23 @@ const create_base_indexes = async (db, table_name, include_id=true, include_hand
  * 'products_to_variants' | 'storefronts_to_other' | 'products_to_related_products'>} table_name 
  */
 const create_entity_table_indexes = async (db, table_name) => {
-  await db.schema.createIndex(`index_${table_name}_entity_id`).ifNotExists()
+  await db.schema.createIndex(`index_${table_name}_entity_id`)
            .on(table_name)
            .column('entity_id')
            .execute();
-  await db.schema.createIndex(`index_${table_name}_entity_handle`).ifNotExists()
+  await db.schema.createIndex(`index_${table_name}_entity_handle`)
            .on(table_name)
            .column('entity_handle')
            .execute();
-  await db.schema.createIndex(`index_${table_name}_value`).ifNotExists()
+  await db.schema.createIndex(`index_${table_name}_value`)
            .on(table_name)
            .column('value')
            .execute();
-  await db.schema.createIndex(`index_${table_name}_reporter`).ifNotExists()
+  await db.schema.createIndex(`index_${table_name}_reporter`)
            .on(table_name)
            .column('reporter')
            .execute();
-  await db.schema.createIndex(`index_${table_name}_context`).ifNotExists()
+  await db.schema.createIndex(`index_${table_name}_context`)
            .on(table_name)
            .column('context')
            .execute();

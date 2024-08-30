@@ -98,7 +98,7 @@ const Login = (
   );
 
   return (
-<div className={`relative w-full h-screen ` + (darkMode ? 'dark' : '')}>
+<div className={`relative w-full h-full ` + (darkMode ? 'dark' : '')}>
   <div className='relative w-full h-full overflow-auto shelf-body-bg'>
 
     <LoginMarquee className='w-full h-12 --bg-green-400' />

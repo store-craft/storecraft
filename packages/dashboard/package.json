@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "npm run dashboard:dev",
-    "dashboard:dev": "vite",
+    "dashboard:dev": "vite --host",
     "dashboard:build": "vite build && npm run dashboard:lib:build",
     "dashboard:lib:build": "vite build -c vite.lib.config.js",
     "dashboard:lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",

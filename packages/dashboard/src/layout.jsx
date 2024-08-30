@@ -130,17 +130,17 @@ const Layout = (
   const open_class = open ? 'translate-y-0' : '-translate-y-full';
 
   return (
-<div className={`${darkMode ? 'dark' : ''}`}
+<div className={`w-full h-full ${darkMode ? 'dark' : ''}`}
       data-color-mode={darkMode ? 'dark' : 'light'}>
   <div className={`relative flex flex-row --font-inter 
                   shelf-body-bg
-                  w-full sm:h-full ${className}
+                  w-full h-full sm:h-full ${className}
                   `} {...rest}
-      style={{height: '100dvh'}}>
+      ssstyle={{height: '100dvh'}}>
 
     <MainPortal.Portal />        
     <div 
-        className={`fixed left-0 top-0 w-screen h-full bg-teal-900/10 
+        className={`fixed left-0 top-0 w-full h-full bg-teal-900/10 
                     z-50 transition-all md:hidden
                   ${menuOpen ? 'block backdrop-blur-sm' : 'hidden backdrop-blur-0'}`} 
         onClick={onCloseClick}/>

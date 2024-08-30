@@ -466,7 +466,7 @@ export const TemplateTemplate = (
     }
     {
       mode==2 &&
-      <Splitter className='z-[100] fixed left-0 top-0 w-screen h-screen'>
+      <Splitter className='z-[100] fixed left-0 top-0 w-full h-full'>
         <Editor
             options={{tabSize: 2}}
             width='100%'

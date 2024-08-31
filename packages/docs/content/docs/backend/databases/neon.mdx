@@ -1,19 +1,14 @@
-# Storecraft Planetscale (cloud mysql) Database support
+# **Storecraft** Neon (cloud postgres) Database
 
-<div style="text-align:center">
-  <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%' />
-</div><hr/><br/>
-
-Official `Planetscale` (cloud MySql) driver for `StoreCraft` on any platforms.
+Official `Neon` driver for `StoreCraft` on any platforms.
 
 ```bash
-npm i @storecraft/database-planetscale
+npm i @storecraft/database-neon
 ```
 
 ## Setup
 
-- First, login to your [planetscale](https://planetscale.com/) account.
+- First, login to your [neon account](https://neon.tech) account.
 - Create a database.
 - Copy the `connection string`.
 
@@ -28,10 +23,9 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
-import { PlanetScale } from '@storecraft/database-planetscale'
-import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js'
+import { NeonHttp } from '@storecraft/database-neon'
+import { migrateToLatest } from '@storecraft/database-neon/migrate.js'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
-
 
 const app = new App(
   {
@@ -42,17 +36,16 @@ const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(
-  new PlanetScale(
+  new NeonHttp(
     { 
-      url: process.env.PLANETSCALE_CONNECTION_URL,
-      useSharedConnection: true
+      connectionString: process.env.NEON_CONNECTION_URL
     }
   )
 )
 .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
 
 await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.db, false)
  
 const server = http.createServer(app.handler).listen(
   8000,
@@ -61,8 +54,4 @@ const server = http.createServer(app.handler).listen(
   }
 ); 
 
-```
-
-```text
-Author: Tomer Shalev <tomer.shalev@gmail.com>
 ```

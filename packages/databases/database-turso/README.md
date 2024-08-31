@@ -8,7 +8,7 @@
 Official `Turso` / `libSql` driver for `StoreCraft` on any platforms.
 
 ```bash
-npm i @storecraft/database-cloudflare-d1
+npm i @storecraft/database-turso
 ```
 
 ## Setup

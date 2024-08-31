@@ -64,7 +64,22 @@ export default {
           empty: true,
           groups: [
             {
-              title: 'SQL',
+              title: 'SQLite',
+              route: 'backend/databases/sqlite',
+              path: 'content/docs/backend/databases/sqlite.mdx'
+            },
+            {
+              title: 'Postgres',
+              route: 'backend/databases/postgres',
+              path: 'content/docs/backend/databases/postgres.mdx'
+            },
+            {
+              title: 'MySQL',
+              route: 'backend/databases/mysql',
+              path: 'content/docs/backend/databases/mysql.mdx'
+            },
+            {
+              title: 'SQL Base',
               route: 'backend/databases/sql',
               path: 'content/docs/backend/databases/sql.mdx'
             },
@@ -72,6 +87,26 @@ export default {
               title: 'Mongo DB',
               route: 'backend/databases/mongo',
               path: 'content/docs/backend/databases/mongo.mdx'
+            },
+            {
+              title: 'Turso (cloud sqlite)',
+              route: 'backend/databases/turso',
+              path: 'content/docs/backend/databases/turso.mdx'
+            },
+            {
+              title: 'Cloudflare D1 (cloud sqlite)',
+              route: 'backend/databases/d1',
+              path: 'content/docs/backend/databases/d1.mdx'
+            },
+            {
+              title: 'Neon (cloud postgres)',
+              route: 'backend/databases/neon',
+              path: 'content/docs/backend/databases/neon.mdx'
+            },
+            {
+              title: 'Planetscale (cloud mysql)',
+              route: 'backend/databases/planetscale',
+              path: 'content/docs/backend/databases/planetscale.mdx'
             },
           ]
         },

@@ -1,22 +1,10 @@
-# Storecraft Planetscale (cloud mysql) Database support
+# SQL**ite**
 
-<div style="text-align:center">
-  <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%' />
-</div><hr/><br/>
-
-Official `Planetscale` (cloud MySql) driver for `StoreCraft` on any platforms.
+Official `SQLite` driver for `StoreCraft` using `better-sqlite` package.
 
 ```bash
-npm i @storecraft/database-planetscale
+npm i @storecraft/database-sqlite
 ```
-
-## Setup
-
-- First, login to your [planetscale](https://planetscale.com/) account.
-- Create a database.
-- Copy the `connection string`.
-
 
 ## usage
 
@@ -28,10 +16,9 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
-import { PlanetScale } from '@storecraft/database-planetscale'
-import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js'
+import { SQLite } from '@storecraft/database-sqlite'
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
-
 
 const app = new App(
   {
@@ -42,10 +29,9 @@ const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(
-  new PlanetScale(
+  new SQLite(
     { 
-      url: process.env.PLANETSCALE_CONNECTION_URL,
-      useSharedConnection: true
+      filename: join(homedir(), 'db.sqlite') 
     }
   )
 )
@@ -61,8 +47,4 @@ const server = http.createServer(app.handler).listen(
   }
 ); 
 
-```
-
-```text
-Author: Tomer Shalev <tomer.shalev@gmail.com>
 ```

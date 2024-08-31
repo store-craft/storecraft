@@ -23,14 +23,11 @@ npm i @storecraft/database-planetscale
 ```js
 import 'dotenv/config';
 import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { PlanetScale } from '@storecraft/database-planetscale'
 import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 
 const app = new App(
@@ -49,7 +46,7 @@ const app = new App(
     }
   )
 )
-.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+.withStorage(new NodeLocalStorage('storage'))
 
 await app.init();
 await migrateToLatest(app.db, false);

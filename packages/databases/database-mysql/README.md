@@ -16,12 +16,11 @@ npm i @storecraft/database-mysql
 ```js
 import 'dotenv/config';
 import http from "node:http";
-
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { MySQL } from '@storecraft/database-mysql';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 const app = new App(
   {
@@ -44,7 +43,7 @@ const app = new App(
     }
   )
 )
-.withStorage(new NodeLocalStorage(join(homedir(), 'storage')))
+.withStorage(new NodeLocalStorage('storage'))
 
 await app.init();
 await migrateToLatest(app.db, false);

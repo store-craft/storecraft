@@ -23,14 +23,11 @@ npm i @storecraft/database-neon
 ```js
 import 'dotenv/config';
 import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
 import { NeonHttp } from '@storecraft/database-neon'
-import { migrateToLatest } from '@storecraft/database-neon/migrate.js'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { migrateToLatest } from '@storecraft/database-neon/migrate.js'
 
 const app = new App(
   {
@@ -47,7 +44,7 @@ const app = new App(
     }
   )
 )
-.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+.withStorage(new NodeLocalStorage('storage'))
 
 await app.init();
 await migrateToLatest(app.db, false)

@@ -16,9 +16,6 @@ npm i @storecraft/database-sql-base
 ```js
 import 'dotenv/config';
 import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
 import { SQL } from '@storecraft/database-sql-base'
@@ -39,7 +36,7 @@ const app = new App(
     dialect_type: 'SQLITE'
   })
 )
-.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+.withStorage(new NodeLocalStorage('storage'))
 
 await app.init();
 await migrateToLatest(app.db, false);

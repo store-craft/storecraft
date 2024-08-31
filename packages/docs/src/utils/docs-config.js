@@ -133,23 +133,6 @@ export default {
           ]
         },    
         {
-          title: '📧 Email',
-          route: 'backend/email',
-          empty: true,
-          groups: [
-            {
-              title: 'Serverless Email Providers',
-              route: 'backend/email/http',
-              path: 'content/docs/backend/email/http.mdx'
-            },
-            {
-              title: 'SMTP for Node',
-              route: 'backend/email/smtp-node',
-              path: 'content/docs/backend/email/smtp-node.mdx'
-            },
-          ]
-        },            
-        {
           title: '🌐 Platforms',
           route: 'backend/platforms',
           path: 'content/docs/backend/platforms/overview.mdx',
@@ -233,6 +216,23 @@ export default {
             },
           ]
         },                    
+        {
+          title: '📧 Email',
+          route: 'backend/email',
+          empty: true,
+          groups: [
+            {
+              title: 'Serverless Email Providers',
+              route: 'backend/email/http',
+              path: 'content/docs/backend/email/http.mdx'
+            },
+            {
+              title: 'SMTP for Node',
+              route: 'backend/email/smtp-node',
+              path: 'content/docs/backend/email/smtp-node.mdx'
+            },
+          ]
+        },            
         {
           title: '💳 Checkout & Payments',
           route: 'backend/checkout-and-payments',

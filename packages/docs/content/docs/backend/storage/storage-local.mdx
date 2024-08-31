@@ -1,23 +1,22 @@
-# NodeJS Local FileSystem Storage
+# **Storecraft** Local FileSystem Storage for node, deno and bun
 
-**Storecraft** supports NodeJS FileSystem as a storage service provider.
-this is desired, if you want a backend on a single service (as opposed
-to serverless).
+Local filesystem based **Storage** for `node.js` / `Deno` / `Bun`.
 
-
-## Features
-Supports streaming `Get` / `Put` / `Delete`
-
-## Usage
+Features:
+- Supports streaming `Get` / `Put` / `Delete`
 
 ```bash
 npm i @storecraft/storage-local
 ```
 
-```js
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+## usage
 
-const storage = new Storage(path.join(homedir(), 'tomer'));
+Example Node.js 
+
+```js
+import { NodeLocalStorage } from '@storecraft/storage-local/node';
+
+const storage = new NodeLocalStorage('storage');
 
 // write
 const key = 'folder1/tomer.txt';
@@ -25,12 +24,43 @@ await storage.putBlob(
   key,
   new Blob(['this is some text from tomer :)'])
 );
-
 // read
 const { value } = await storage.getBlob(key);
 ```
 
+Example Deno 
 
+```ts
+import { DenoLocalStorage } from '@storecraft/storage-local/deno';
+
+const storage = new DenoLocalStorage('storage');
+
+// write
+const key = 'folder1/tomer.txt';
+await storage.putBlob(
+  key,
+  new Blob(['this is some text from tomer :)'])
+);
+// read
+const { value } = await storage.getBlob(key);
+```
+
+Example Bun
+
+```js
+import { BunLocalStorage } from '@storecraft/storage-local/bun';
+
+const storage = new BunLocalStorage('storage');
+
+// write
+const key = 'folder1/tomer.txt';
+await storage.putBlob(
+  key,
+  new Blob(['this is some text from tomer :)'])
+);
+// read
+const { value } = await storage.getBlob(key);
+```
 
 ## In Storecraft App
 
@@ -53,7 +83,7 @@ const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
-.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+.withStorage(new NodeLocalStorage(join(homedir(), 'storage')))
 
 await app.init();
 await migrateToLatest(app.db, false);

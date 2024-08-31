@@ -116,6 +116,11 @@ export default {
           empty: true,
           groups: [
             {
+              title: 'Node / Deno / Bun Local Storage',
+              route: 'backend/storage/storage-local',
+              path: 'content/docs/backend/storage/storage-local.mdx'
+            },
+            {
               title: 'S3 Compatible',
               route: 'backend/storage/s3',
               path: 'content/docs/backend/storage/s3.mdx'
@@ -124,11 +129,6 @@ export default {
               title: 'Google Storage',
               route: 'backend/storage/google',
               path: 'content/docs/backend/storage/google.mdx'
-            },
-            {
-              title: 'Node Local Storage',
-              route: 'backend/storage/node-local',
-              path: 'content/docs/backend/storage/node-local.mdx'
             },
           ]
         },    

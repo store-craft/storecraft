@@ -45,6 +45,41 @@ console.log('presign GET url ', url);
 
 ```
 
+## In Storecraft App
+
+```js
+import { App } from '@storecraft/core';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
+import { NodePlatform } from '@storecraft/platforms/node';
+import { R2 } from '@storecraft/storage-s3-compatible'
+
+const app = new App(
+  {
+    storage_rewrite_urls: undefined,
+    general_store_name: 'Wush Wush Games',
+    general_store_description: 'We sell cool retro video games',
+    general_store_website: 'https://wush.games',
+    auth_secret_access_token: process.env.auth_secret_access_token,
+    auth_secret_refresh_token: process.env.auth_secret_refresh_token
+    auth_admins_emails: ['jonny@begood.com']
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(
+  new R2(
+    process.env.R2_BUCKET, 
+    process.env.R2_ACCOUNT_ID, 
+    process.env.R2_ACCESS_KEY_ID, 
+    process.env.R2_SECRET_ACCESS_KEY
+  )
+);
+
+await app.init();
+await migrateToLatest(app.db, false);
+
+```
+
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

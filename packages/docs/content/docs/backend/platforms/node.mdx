@@ -1,10 +1,9 @@
-# Node.JS Platform
+# **Storecraft** Node.js Platform support
 
-So, if you wanted to run **Storecraft** on `node.js`, this is the `platform`
+So, if you wanted to run `StoreCraft` on `node.js`, this is the `platform`
 package for you :)
 
 ## What does it do exactly ?
-
 Basically, it translates native **Node** `http.IncomingMessage` into Web API `Request`,
 and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
@@ -17,21 +16,19 @@ npm i @storecraft/platforms
 ```js
 import 'dotenv/config';
 import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node';
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { MongoDB } from '@storecraft/database-mongodb'
 
-const app = new App(config)
+const app = new App(
+    config
+  )
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
-  .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+  .withStorage(new NodeLocalStorage('storage'))
 
 await app.init();
-await migrateToLatest(app.db, false);
  
 const server = http.createServer(app.handler).listen(
   8000,

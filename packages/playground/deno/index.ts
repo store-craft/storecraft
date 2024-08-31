@@ -1,6 +1,5 @@
 import { app } from './app.ts';
 
- 
 await app.init();
 
 const server = Deno.serve(

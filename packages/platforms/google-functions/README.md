@@ -9,7 +9,7 @@
 npm i @storecraft/platforms
 ```
 
-You can visit the [google functions playground example]()
+You can visit the [google functions playground example](https://github.com/store-craft/storecraft/tree/main/packages/playground/google-functions)
 
 
 ## usage with google-cloud functions

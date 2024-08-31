@@ -1,11 +1,11 @@
-# Storecraft deno Platform support
+# Storecraft Bun Platform support
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
-So, if you wanted to run `StoreCraft` on `deno`, this is the `platform`
+So, if you wanted to run `StoreCraft` on `bun`, this is the `platform`
 package for you :)
 
 ```bash
@@ -17,8 +17,8 @@ npm i @storecraft/platforms
 ```js
 import 'dotenv/config';
 import { App } from '@storecraft/core'
-import { DenoPlatform } from '@storecraft/platforms/deno';
-import { DenoLocalStorage } from '@storecraft/storage-local/deno'
+import { BunPlatform } from '@storecraft/platforms/bun';
+import { BunLocalStorage } from '@storecraft/storage-local/bun'
 import { MongoDB } from '@storecraft/database-mongodb'
 
 const app = new App(
@@ -26,11 +26,11 @@ const app = new App(
   )
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
-  .withStorage(new DenoLocalStorage('storage'))
+  .withStorage(new BunLocalStorage('storage'))
 
 await app.init();
  
-const server = Deno.serve(
+const server = Bun.serve(
   {
     port: 8000,
     fetch: app.handler

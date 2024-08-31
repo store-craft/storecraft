@@ -156,8 +156,18 @@ export default {
           groups: [
             {
               title: 'Node.js',
-              route: 'backend/platforms/node-js',
-              path: 'content/docs/backend/platforms/node-js.mdx'
+              route: 'backend/platforms/node',
+              path: 'content/docs/backend/platforms/node.mdx'
+            },
+            {
+              title: 'Bun',
+              route: 'backend/platforms/bun',
+              path: 'content/docs/backend/platforms/bun.mdx'
+            },
+            {
+              title: 'Deno',
+              route: 'backend/platforms/deno',
+              path: 'content/docs/backend/platforms/deno.mdx'
             },
             {
               title: 'AWS API Gateway',

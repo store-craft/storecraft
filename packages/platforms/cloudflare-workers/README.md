@@ -1,16 +1,12 @@
-# Storecraft Node.js Platform support
+# **Storecraft** Cloudflare D1 Platform
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
-So, if you wanted to run `StoreCraft` on `node.js`, this is the `platform`
+So, if you wanted to run `StoreCraft` on `cloudflare workers`, this is the `platform`
 package for you :)
-
-## What does it do exactly ?
-Basically, it translates native **Node** `http.IncomingMessage` into Web API `Request`,
-and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
 ```bash
 npm i @storecraft/platforms
@@ -20,33 +16,142 @@ npm i @storecraft/platforms
 
 ```js
 import 'dotenv/config';
-import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node';
-import { MongoDB } from '@storecraft/database-mongodb'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { CloudflareWorkersPlatform } from '@storecraft/platforms/cloudflare-workers';
+import { D1 } from '@storecraft/database-cloudflare-d1';
+import { R2 } from '@storecraft/storage-s3-compatible';
 
 const app = new App(
     config
   )
-  .withPlatform(new NodePlatform())
-  .withDatabase(new MongoDB())
-  .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+  .withPlatform(new CloudflareWorkersPlatform())
+  .withDatabase(new D1())
+  .withStorage(new R2())
 
 await app.init();
  
-const server = http.createServer(app.handler).listen(
-  8000,
-  () => {
-    console.log(`Server is running on http://localhost:8000`);
-  }
-); 
+```
+
+## instructions
+
+- We have a working example at [packages/playground/cloudlfare-workers](https://github.com/store-craft/storecraft/tree/main/packages/playground/cloudflare-workers) folder.
+- You can also use the cli `npx storecraft create`
+
+Cloudflare Workers are a `js` runtime.
+
+This example demonstrates
+- Cloudflare `D1` edge database
+- Cloudflare Workers compute
+
+### First, 
+
+Use this worker in the folder or create a new one with `npx wrangler init`,
+
+Create a database with `cloudflare wrangler` tool,
+
+```zsh
+npx wrangler d1 create my-db
+```
+
+This will produce the following text
+
+```txt
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "my-db"
+database_id = "0e91d39d-667a-4c95-9ac7-2386fead5d4d"
+```
+
+Copy this into `wrangler.toml` file.
+
+
+### Migrate the database
+
+create a `migrate.js` file
+
+```js
+#!/usr/bin/env node
+
+import 'dotenv/config';
+import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
+import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
+ 
+export const migrate = async () => {
+  const d1_over_http = new D1_HTTP(
+    {
+      account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
+      api_token: process.env.CLOUDFLARE_D1_API_TOKEN,
+      database_id: process.env.CLOUDFLARE_D1_DATABASE_ID
+    }
+  )
+  
+  await migrateToLatest(d1_over_http, true);
+}
+
+migrate();
+```
+
+- Migration happens locally over the `HTTP` variant of the driver.
+- You will need to set environment variables for that
+- run `node ./migrate.js`
+
+### Add the worker code
+
+create a `src/index.ts` file
+
+```ts
+import { App } from "@storecraft/core"
+import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
+import { CloudflareWorkersPlatform } from "@storecraft/platforms/cloudflare-workers"
+
+
+export default {
+	/**
+	 * This is the standard fetch handler for a Cloudflare Worker
+	 *
+	 * @param request - The request submitted to the Worker from the client
+	 * @param env - The interface to reference bindings declared in wrangler.toml
+	 * @param ctx - The execution context of the Worker
+	 * @returns The response to be sent back to the client
+	 */
+	async fetch(request, env, ctx): Promise<Response> {
+    let app = new App(
+      {
+        storage_rewrite_urls: undefined,
+        general_store_name: 'Wush Wush Games',
+        general_store_description: 'We sell cool retro video games',
+        general_store_website: 'https://wush.games',
+        auth_admins_emails: ['admin@whatever.com']
+      }
+    )
+    .withPlatform(new CloudflareWorkersPlatform())
+    .withDatabase(
+      new D1_WORKER(
+        {
+          db: env.D1
+        } 
+      )
+    );
+
+    app = await app.init();
+    
+    const response = await app.handler(request);
+
+    return response;
+
+	},
+} satisfies ExportedHandler<Env>;
 
 ```
 
-```text
-Author: Tomer Shalev (tomer.shalev@gmail.com)
+### Running locally with remote db
+
+Simply run, 
+
+```zsh
+npx wrangler dev --remote
 ```
+
+Now, open 
+- `http://localhost:8787/api/dashboard`
+- `http://localhost:8787/api/reference`

@@ -40,7 +40,7 @@ import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
-import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+import { Paypal } from '@storecraft/payments-paypal'
 
 const app = new App(config)
 .withPlatform(new NodePlatform())
@@ -48,7 +48,7 @@ const app = new App(config)
 .withStorage(new GoogleStorage())
 .withPaymentGateways(
   {
-    'paypal_standard_prod': new PaypalStandard(
+    'paypal_standard_prod': new Paypal(
       { 
         client_id: process.env.PAYPAL_CLIENT_ID, 
         secret: process.env.PAYPAL_SECRET, 

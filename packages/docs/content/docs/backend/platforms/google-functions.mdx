@@ -36,7 +36,7 @@ const app = new App(
     auth_admins_emails: ['john@doe.com']
   }
 )
-.withPlatform(new NodePlatform())
+.withPlatform(new GoogleFunctionsPlatform())
 .withDatabase(new MongoDB());
 
 functions.http(

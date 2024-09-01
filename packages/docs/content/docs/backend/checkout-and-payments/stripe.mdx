@@ -53,7 +53,7 @@ import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
-import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+import { Stripe } from '@storecraft/payments-stripe'
 
 const app = new App(config)
 .withPlatform(new NodePlatform())

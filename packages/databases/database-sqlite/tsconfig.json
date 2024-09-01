@@ -13,6 +13,6 @@
     "migrations.sqlite/*", 
     "migrations.postgres/*", 
     "migrations.mysql/*", 
-    "test/*.js"
+    "test/*.*.js"
   ]
 }

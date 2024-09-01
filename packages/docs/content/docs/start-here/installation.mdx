@@ -1,0 +1,95 @@
+# Installation
+
+Let's setup **Storecraft**, there are two methods
+
+## via **CLI**
+
+We recommend using the CLI tool,
+
+```bash
+npx storecraft create
+```
+
+Follow the instructions to bootstrap a storecraft application.
+
+Don't forget to migrate the database later with
+
+```bash
+npm run migrate
+```
+
+and then run,
+
+```bash
+npm start
+```
+
+## via **Manual**
+
+First, create a new package app
+
+```bash
+npm init my-storecraft-app
+cd my-storecraft-app
+```
+
+Then, let's install storecraft
+
+```bash
+npm i @storecraft/core 
+npm i @storecraft/platforms 
+npm i @storecraft/storage-local 
+npm i @storecraft/sqlite 
+npm i @storecraft/mailer-providers-http
+npm i -D dotenv
+```
+
+Create `index.js`
+
+```ts
+
+import 'dotenv/config';
+import http from "node:http";
+import { DummyPayments } from '@storecraft/payments-dummy'
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { NodePlatform } from "@storecraft/platforms/node"
+import { SQLite } from "@storecraft/database-sqlite"
+import { NodeLocalStorage } from "@storecraft/storage-local/node"
+import { MailerSendGrid } from "@storecraft/mailer-providers-http/sendgrid"
+import { App } from "@storecraft/core"
+
+export const app = new App({
+  general_store_name: "my-storecraft-app",
+  auth_admins_emails: ["a@a.com"],
+  auth_secret_access_token: process.env.auth_secret_access_token,
+  auth_secret_refresh_token: process.env.auth_secret_refresh_token
+})
+.withPlatform(new NodePlatform({}))
+.withDatabase(new SQLite())
+.withStorage(new NodeLocalStorage())
+.withMailer(new MailerSendGrid({ apikey: process.env.SENDGRID_APIKEY }))
+.withPaymentGateways(
+  {
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+  }
+);
+
+await app.init();
+await migrateToLatest(app.db, false);
+
+http.createServer(app.handler).listen(
+  8000,
+  () => {
+    console.log(`Server is running on http://localhost:8000`);
+  }
+); 
+
+```
+
+Now, run
+
+```bash
+node ./index.js
+```
+
+Bravo, 👏, dive into the [next section](setup/local-node-mongodb) to see cool examples.

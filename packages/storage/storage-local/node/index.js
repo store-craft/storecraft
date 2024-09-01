@@ -52,9 +52,9 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {import('node:fs').PathLike} path 
+   * @param {import('node:fs').PathLike} [path='storage'] 
    */
-  constructor(path) {
+  constructor(path='storage') {
     this.#path = path;
   }
 

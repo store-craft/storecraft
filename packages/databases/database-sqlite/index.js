@@ -13,13 +13,13 @@ export class SQLite extends SQL {
    * 
    * @param {import('./types.public.d.ts').Config} [config] config 
    */
-  constructor(config) {
+  constructor(config={ filepath: 'database.db' }) {
     super(
       {
         dialect_type: 'SQLITE',
         dialect: new SqliteDialect(
           {
-            database: async () => new BetterSQLite(config.filename, config.options)
+            database: async () => new BetterSQLite(config.filepath, config.options)
           }
         ),
       }

@@ -16,40 +16,34 @@ export default {
           route: `start-here/what`,
           path: `content/docs/start-here/what.mdx`
         },
-        {
-          title: "Why use it ?",
-          route: `start-here/why`,
-          path: `content/docs/start-here/why.mdx`
-        },
-      ]
-    },
-
-    {
-      title: "Setup",
-      icon: {
-        name: 'BsNewspaper',
-        params: { classNames: 'stroke-kf-600'}
-      }, 
-      empty: true,
-      groups: [
+        // {
+        //   title: "Why use it ?",
+        //   route: `start-here/why`,
+        //   path: `content/docs/start-here/why.mdx`
+        // },
         {
           title: "Installation",
           route: `setup/installation`,
-          path: `content/docs/setup/installation.mdx`
+          path: `content/docs/start-here/installation.mdx`
         },
         {
-          title: "Local Nodejs & MongoDB",
-          route: `setup/local-node-mongodb`,
-          path: `content/docs/setup/local-node-mongodb.mdx`
-        },
-        {
-          title: "Local Nodejs & SQLite",
+          title: "Example Nodejs & SQLite",
           route: `setup/local-sqlite`,
-          path: `content/docs/setup/local-node-sqlite.mdx`
+          path: `content/docs/start-here/local-node-sqlite.mdx`
         },
+        {
+          title: "Example Nodejs & MongoDB",
+          route: `setup/local-node-mongodb`,
+          path: `content/docs/start-here/local-node-mongodb.mdx`
+        },
+        {
+          title: "Example Google Functions & MongoDB",
+          route: `setup/google-functions-mongo`,
+          path: `content/docs/start-here/google-functions-mongo.mdx`
+        },
+
       ]
     },
-
     {
       title: 'Backend',
       icon: {
@@ -356,6 +350,16 @@ export default {
       }, 
       route: 'rest-api/api',
       path: 'content/docs/rest-api/api.mdx'
+  // external: '/rest-api-reference'
+    },
+    {
+      title: "CLI",
+      icon: {
+        name: 'BiLogoStackOverflow',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      route: 'rest-api/api',
+      path: 'content/docs/cli/cli.mdx'
   // external: '/rest-api-reference'
     },
 

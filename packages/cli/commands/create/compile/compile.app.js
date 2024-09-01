@@ -68,8 +68,7 @@ export const infer_platform = platform => {
       return {
         cls: `AWSLambdaPlatform`,
         imports: [
-          `import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'
-`
+          `import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'`
         ],
         deps: [
           '@storecraft/platforms'
@@ -80,8 +79,7 @@ export const infer_platform = platform => {
       return {
         cls: `GoogleFunctionsPlatform`,
         imports: [
-          `import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions''
-`
+          `import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions'`
         ],
         deps: [
           '@storecraft/platforms'
@@ -333,9 +331,9 @@ export const infer_payments = info => {
       switch (info.id) {
         case 'paypal':
           return {
-            cls: `PayPal`,
+            cls: `Paypal`,
             imports: [
-              `import { PayPal } from '@storecraft/payments-paypal';`
+              `import { Paypal } from '@storecraft/payments-paypal';`
             ],
             deps: [
               '@storecraft/payments-paypal'

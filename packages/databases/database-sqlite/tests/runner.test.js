@@ -16,7 +16,7 @@ export const create_app = async () => {
   )
   .withPlatform(new NodePlatform())
   .withDatabase(
-    new SQLite({ filename: join(homedir(), 'db.sqlite') })
+    new SQLite({ filepath: join(homedir(), 'db.sqlite') })
   );
  
   await app.init();

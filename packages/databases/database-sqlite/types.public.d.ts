@@ -7,10 +7,11 @@ export { SQLite } from './index.js';
  */
 export type Config = {
   /**
-   * @description Database filename, can be ':memory' for in memory session
+   * @description Database filepath, can be ':memory' for in memory session
    * 
+   * @default 'database.db'
    */
-  filename: string,
+  filepath?: string,
 
   /**
    * @description `better-sqlite` options

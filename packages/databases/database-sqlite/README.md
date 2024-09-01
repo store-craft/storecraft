@@ -33,11 +33,11 @@ const app = new App(
 .withDatabase(
   new SQLite(
     { 
-      filename: join(homedir(), 'db.sqlite') 
+      filepath: join(homedir(), 'db.sqlite') 
     }
   )
 )
-.withStorage(new NodeLocalStorage('storage'))
+.withStorage(new NodeLocalStorage())
 
 await app.init();
 await migrateToLatest(app.db, false);

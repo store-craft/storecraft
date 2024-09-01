@@ -8,6 +8,7 @@ import { logo_gradient } from '../logo.js';
 import { compile_all } from "./compile/index.js";
 import { spinner } from "./spinner.js";
 import chalk from 'chalk';
+import { error, good } from "./label.js";
 
 
 /**
@@ -15,33 +16,42 @@ import chalk from 'chalk';
  */
 export const command_create = {
   command: 'create',
-  describe: '🛍️  Create A Store',
+  describe: '           🛍️  Create A Store',
   handler: async (args) => {
-    console.log(logo_gradient);
+    try {
+      console.log(logo_gradient);
+  
+      const config = await collect_config();
+      const platform = await collect_platform();
+      const database = await collect_database();
+      const storage = await collect_storage();
+      const mailer = await collect_mailer();
+      const payments = await collect_payments();
+  
+      const meta = {
+        config, 
+        platform,
+        database, 
+        storage,
+        mailer,
+        payments      
+      }
+  
+      await spinner(compile_all(meta), 'Setting Up, hold on')();
+  
+      console.log(
+        good(
+          config.config.general_store_name,
+          [
+            `▸ Don't forget to migrate the database with ${chalk.magentaBright('npm run migrate')}`,
+            `▸ Then run ${chalk.magentaBright('npm start')}`,
+          ].join('\n'),
+        )
+      );
 
-    const config = await collect_config();
-    const platform = await collect_platform();
-    const database = await collect_database();
-    const storage = await collect_storage();
-    const mailer = await collect_mailer();
-    const payments = await collect_payments();
-
-    const meta = {
-      config, 
-      platform,
-      database, 
-      storage,
-      mailer,
-      payments      
+    } catch (e) {
+      console.log(error(String(e)));
     }
-
-    await spinner(compile_all(meta), 'Setting Up, hold on')();
-
-    console.log(chalk.greenBright.bold('Done !'));
-
-    // console.log('args: ', args)      
-    // console.log('meta: ', meta)      
-    // console.log(payments)      
   },
 }
 

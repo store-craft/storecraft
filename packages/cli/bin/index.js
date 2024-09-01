@@ -3,7 +3,7 @@ import { command_create } from "../commands/create/index.js";
 import chalk from 'chalk'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { logo_gradient, version } from "../commands/logo.js";
+import { logo_gradient } from "../commands/logo.js";
 
 const y = yargs(hideBin(process.argv));
 
@@ -29,6 +29,15 @@ y.command(
   .usage(
     logo_gradient
   )
+  .showHelpOnFail(true)
   .wrap(null)
+  // .fail(
+  //   (msg, error, yargs) => {
+  //     return yargs;
+  //     // console.log('msg', msg)
+  //     // console.log('error', error)
+  //     // console.log('eeeee')
+  //   }
+  // )
   .parse()
  

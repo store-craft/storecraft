@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
 [Stripe](https://docs.stripe.com/payments/place-a-hold-on-a-payment-method) integration
@@ -50,6 +50,36 @@ const config = {
 
 new Stripe(config);
 ```
+
+## In Storecraft App
+
+```ts
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb';
+import { NodePlatform } from '@storecraft/platforms/node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withPaymentGateways(
+  {
+    'stripe': new Stripe(
+      { 
+        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
+        secret_key: process.env.STRIPE_SECRET_KEY, 
+        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
+      }
+    ),
+  }
+);
+
+await app.init();
+
+```
+
 
 ## Developer info and test
 

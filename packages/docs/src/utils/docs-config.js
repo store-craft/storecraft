@@ -244,7 +244,7 @@ export default {
               path: 'content/docs/backend/checkout-and-payments/checkouts.mdx'
             },
             {
-              title: 'Paypal Standard Payments',
+              title: 'Paypal',
               route: 'backend/checkout-and-payments/paypal-standard-payments',
               path: 'content/docs/backend/checkout-and-payments/paypal-standard-payments.mdx'
             },

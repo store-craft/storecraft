@@ -34,7 +34,22 @@ which is then reflected at the order data.
 
 ### webhook (asynchronous payment)
 
-> Work In Progress
+Each gateway implementation has an optional webhook function, that recieves `Request` and `Response`
+object.
+
+The flow should be like:
+- payments are confirmed at `PayPal` or `Stripe` or other provider servers, they also
+usually handle **3DS** security automatically at frontend.
+- You are notified via `webhooks` about the status of the payment at `/api/gateways/{gateway_handle}/webhook`
+- Then you need to confirm the webhook is valid and was sent from a trusted source.
+- If this is the case:
+  - You write a response back in the `Response` object for the originating gateway server, that sent the notification.
+  - You also return for storecraft purposes the following values:
+    - The storecraft intrinsic order id
+    - The storecraft order's Payment Status
+    - The storecraft order's Checkout Status
+  - Storecraft will save these values
+
 
 ### status method
 
@@ -75,6 +90,17 @@ POST
 
 > Consult the REST API Documentation
 
+### Buy Link HTML (Optional)
+
+You can also return an html buy ui, this method (and also the rest endpoint)
+receive storecraft `order_id` and then loads the order from the database and give
+it to the method to generate a buy UI with HTML. Very handy.
+
+```txt
+GET
+/payments/buy_ui/{order_id}
+```
+
 ## Code
 
 In this section, we will explore the interface and implement a dummy payment integration
@@ -83,44 +109,47 @@ In this section, we will explore the interface and implement a dummy payment int
 
 Every Gateway should implement the following interface found at
 
-```
-import('@storecraft/core/v-payments').payment_gateway<>
+```ts
+import type { payment_gateway } '@storecraft/core/v-payments';
 ```
 
-Which is
+Which is,
 
 ```ts
+import type { ApiRequest, ApiResponse } from "../v-rest/types.public.d.ts";
 import type { 
   OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
-} from "../v-api/types.api.js";
+} from "../v-api/types.api.d.ts";
 
-export type PaymentGatewayActionHandler<CreateResult, Extra> = (input: CreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
+export type PaymentGatewayActionHandler<CheckoutCreateResult, Extra> = (input: CheckoutCreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
+export type OnCheckoutCompleteResult = {
+  status: Partial<Omit<OrderData["status"], "fulfillment">>,
+  onCheckoutComplete: any
+};
 
+export type OnWebHookResult = {
+  status: Partial<Omit<OrderData["status"], "fulfillment">>,
+  order_id: string
+};
 
-export type OnCheckoutCompleteResult = Partial<Omit<OrderData["status"], "fulfillment">>;
-
-
-/**
- * @template {any} Config The config type
- * @template {any} CreateResult The result of checkout creation type
- */
-export declare interface payment_gateway<Config, CreateResult> {
-
+export declare interface payment_gateway<Config extends any, CheckoutCreateResult extends any> {
   info: PaymentGatewayInfo;
 
   config: Config;
 
   actions: PaymentGatewayAction[];
 
-  invokeAction<E extends any=any>(action_handle: string): PaymentGatewayActionHandler<CreateResult, E>;
+  invokeAction<E extends any=any>(action_handle: string): PaymentGatewayActionHandler<CheckoutCreateResult, E>;
 
-  onCheckoutCreate: (order: OrderData) => Promise<CreateResult>;
+  onCheckoutCreate: (order: OrderData) => Promise<CheckoutCreateResult>;
 
-  onCheckoutComplete: (create_result: CreateResult, extra_client_payload: any) => Promise<OnCheckoutCompleteResult>;
+  onCheckoutComplete: (checkout_create_result: CheckoutCreateResult, extra_client_payload: any) => Promise<OnCheckoutCompleteResult>;
 
-  status: (checkout_create_result: CreateResult) => Promise<PaymentGatewayStatus>;
+  onBuyLinkHtml?: (order: Partial<OrderData>) => Promise<string>;
 
-  webhook?: (input: Request) => Promise<void>;
+  status: (checkout_create_result: CheckoutCreateResult) => Promise<PaymentGatewayStatus>;
+
+  webhook?: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult>;
 }
 ```
 

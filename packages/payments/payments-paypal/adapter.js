@@ -1,10 +1,12 @@
-import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js';
+import { 
+  CheckoutStatusEnum, PaymentOptionsEnum 
+} from '@storecraft/core/v-api/types.api.enums.js';
 import { fetch_with_auth, throw_bad_response } from './adapter.utils.js';
 import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
 import html_buy_ui from './adapter.html.js';
 
 /**
- * @typedef {import('./types.private.js').paypal_order} CreateResult
+ * @typedef {import('./types.private.d.ts').paypal_order} CreateResult
  * @typedef {import('@storecraft/core/v-api').PaymentGatewayStatus} PaymentGatewayStatus
  * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
  * @typedef {import('@storecraft/core/v-api').OrderData} OrderData

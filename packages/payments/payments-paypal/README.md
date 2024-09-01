@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
 [paypal](https://developer.paypal.com/docs/checkout/) integration
@@ -33,13 +33,42 @@ const config = {
 new Paypal(config);
 ```
 
+## In Storecraft App
+
+```ts
+import { App } from '@storecraft/core';
+import { MongoDB } from '@storecraft/database-mongodb';
+import { NodePlatform } from '@storecraft/platforms/node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { PaypalStandard } from '@storecraft/payments-paypal-standard'
+
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withPaymentGateways(
+  {
+    'paypal_standard_prod': new PaypalStandard(
+      { 
+        client_id: process.env.PAYPAL_CLIENT_ID, 
+        secret: process.env.PAYPAL_SECRET, 
+        env: 'prod' 
+      }
+    ),
+  }
+);
+
+await app.init();
+
+```
+
 ## Developer info and test
 
 Integration examples
-- https://developer.paypal.com/
+- [https://developer.paypal.com/](https://developer.paypal.com/)
 
 Credit Card Generator
-- https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator
+- [https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator](https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator)
 
 ## todo:
 - Add tests

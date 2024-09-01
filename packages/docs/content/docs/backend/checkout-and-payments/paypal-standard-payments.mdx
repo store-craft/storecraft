@@ -1,6 +1,6 @@
-# Paypal Standard payment Gateway for **StoreCraft**
+# Paypal payment gateway for **StoreCraft**
 
-[Paypal Standard Payments](https://developer.paypal.com/docs/checkout/standard/) Integration
+[paypal](https://developer.paypal.com/docs/checkout/) integration
 
 ## Features
 - Create checkouts with `AUTHORIZE` or `CAPTURE` intents
@@ -9,12 +9,14 @@
 - Supports both `prod` and `test` endpoints
 
 ```bash
-npm i @storecraft/payments-paypal-standard
+npm i @storecraft/payments-paypal
 ```
 
-## Standalone
+## Howto
 
 ```js
+import { PayPal } from '@storecraft/payments-paypal';
+
 const config = {
   env: 'prod',
   client_id: '<get-from-your-paypal-dashboard>',
@@ -23,12 +25,7 @@ const config = {
   intent_on_checkout: 'AUTHORIZE'
 }
 
-const paypal = new PaypalStandard(config);
-
-const create_result = await paypal.onCheckoutCreate(order);
-await paypal.onCheckoutComplete(create_result);
-await paypal.capture(create_result);
-
+new Paypal(config);
 ```
 
 ## In Storecraft App
@@ -48,8 +45,8 @@ const app = new App(config)
   {
     'paypal_standard_prod': new PaypalStandard(
       { 
-        client_id: '', 
-        secret: '', 
+        client_id: process.env.PAYPAL_CLIENT_ID, 
+        secret: process.env.PAYPAL_SECRET, 
         env: 'prod' 
       }
     ),
@@ -59,3 +56,11 @@ const app = new App(config)
 await app.init();
 
 ```
+
+## Developer info and test
+
+Integration examples
+- [https://developer.paypal.com/](https://developer.paypal.com/)
+
+Credit Card Generator
+- [https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator](https://developer.paypal.com/tools/sandbox/card-testing/#link-creditcardgenerator)

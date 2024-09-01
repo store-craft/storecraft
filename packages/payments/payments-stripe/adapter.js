@@ -1,4 +1,6 @@
-import { CheckoutStatusEnum, PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js';
+import { 
+  CheckoutStatusEnum, PaymentOptionsEnum 
+} from '@storecraft/core/v-api/types.api.enums.js';
 import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
 import html_buy_ui from './adapter.html.js';
 import { Stripe as StripeCls } from 'stripe'
@@ -266,8 +268,8 @@ export class Stripe {
 
   /**
    * @description [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
-   * @param {import('@storecraft/core').ApiRequest} request 
-   * @param {import('@storecraft/core').ApiResponse} response 
+   * @param {import('@storecraft/core/v-rest').ApiRequest} request 
+   * @param {import('@storecraft/core/v-rest').ApiResponse} response 
    * 
    * @type {payment_gateway["webhook"]}
    */
@@ -325,12 +327,8 @@ export class Stripe {
         console.log(`Unhandled event type ${event.type}`);
     }
   
-    console.log('CCCC')
-
     // Return a response to acknowledge receipt of the event
     response.sendJson({received: true});    
-
-    console.log('DDDD')
 
     return {
       order_id,

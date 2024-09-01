@@ -76,10 +76,11 @@ const collect_general_config = async (
       /** @type {import('@storecraft/database-sqlite').Config} */
       const config = {
         options: {},
-        filename: await input(
+        filepath: await input(
           { 
             message: 'Enter the local file name',
             required: true,
+            default: 'data.db'
           }
         )
       }
@@ -196,6 +197,7 @@ const collect_general_config = async (
             { 
               message: 'Enter the auth token',
               required: true,
+              default: '*****'
             }
           )
         }
@@ -210,6 +212,7 @@ const collect_general_config = async (
           { 
             message: 'Cloudflare Account ID',
             required: true,
+            default: '*****'
           }
         ),
         database_id: await input(
@@ -222,6 +225,7 @@ const collect_general_config = async (
           { 
             message: 'Cloudflare Access API Token with D1 Read/Write roles',
             required: true,
+            default: '*****'
           }
         ),
       }

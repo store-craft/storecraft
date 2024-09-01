@@ -54,7 +54,7 @@ const index_js = () => `
 import 'dotenv/config';
 import { app } from './app.js';
  
-await app.init();
+await app.init(false);
 
 const server = Bun.serve(
   {
@@ -63,7 +63,7 @@ const server = Bun.serve(
   }
 );
 
-console.log('Listening on http://localhost:' + server.port);
+app.print_banner(\`http://localhost:8000\`);
 `;
 
 

@@ -170,12 +170,9 @@ export class App {
       general_confirm_email_base_url: c?.general_confirm_email_base_url ?? 
                   env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
     }
-
-    console.log(this.#banner_create(pkg.version));
-    // console.log('store-craft config', this.#_config);
   } 
 
-  #banner_create(version='1.0.0') {
+  print_banner(host='', version=pkg.version) {
     const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
     const c = {
       red: '\x1b[1;31m',
@@ -188,21 +185,20 @@ export class App {
     final += banner3;
     final += `${c.red}\nv${version}`
     final += `\n
-  ${c.red}Dashboard:      ${c.reset}/api/dashboard    
-  ${c.red}API Reference:  ${c.reset}/api/reference    
+  ${c.red}Dashboard:      ${c.reset + host}/api/dashboard    
+  ${c.red}API Reference:  ${c.reset + host}/api/reference    
   ${c.red}Website:        ${c.reset}https://storecraft.app
   ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
       `
   
-    return final;
+    console.log(final);
   }
-  
 
   /**
-   * 
+   * @param {boolean} [print_banner=true] 
    * @description Initialize the Application
    */
-  async init() {
+  async init(print_banner=true) {
     if(this.ready) 
       return Promise.resolve(this);
     
@@ -212,23 +208,26 @@ export class App {
     try{
       // first let's settle config
       this.#settle_config_after_init();
-
       await this.db.init(app);
-
-      this.storage && await this.storage.init(app)
+      this.storage && await this.storage.init(app);
+      this.api = create_api(app);
+      this.#_rest_controller = create_rest_api(app, this.config);
+      this.#_is_ready = true;
+  
+      // settle extensions
+      for(const ext_handle in this.extensions) {
+        const ext = this.extension(ext_handle);
+        ext?.onInit(app);
+      }
+  
     } catch (e) {
-      console.log(e)
+      this.#_is_ready = false;
+
+      console.log(e);
+      
       throw e;
-    }
-
-    this.api = create_api(app);
-    this.#_rest_controller = create_rest_api(app, this.config);
-    this.#_is_ready = true;
-
-    // settle extensions
-    for(const ext_handle in this.extensions) {
-      const ext = this.extension(ext_handle);
-      ext?.onInit(app);
+    } finally {
+      print_banner && this.print_banner();
     }
 
     return this;

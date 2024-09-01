@@ -67,6 +67,7 @@ const collect_general_config = async (
         { 
           message: 'Local folder path',
           required: true,
+          default: 'storage'
         }
       );
 
@@ -80,6 +81,7 @@ const collect_general_config = async (
           { 
             message: 'Cloudflare Account ID',
             required: true,
+            default: '*****'
           }
         ),
         bucket: await input(
@@ -92,12 +94,14 @@ const collect_general_config = async (
           { 
             message: 'Access Key ID',
             required: true,
+            default: '*****'
           }
         ),
         secretAccessKey: await input(
           { 
             message: 'Secret Access Key',
             required: true,
+            default: '*****'
           }
         ),
       }
@@ -112,6 +116,7 @@ const collect_general_config = async (
           { 
             message: 'Region',
             required: true,
+            default: 'auto'
           }
         ),
         bucket: await input(
@@ -130,12 +135,14 @@ const collect_general_config = async (
           { 
             message: 'Access Key ID',
             required: true,
+            default: '*****'
           }
         ),
         secretAccessKey: await input(
           { 
             message: 'Secret Access Key',
             required: true,
+            default: '*****'
           }
         ),
       }
@@ -175,12 +182,14 @@ const collect_general_config = async (
           { 
             message: 'Access Key ID',
             required: true,
+            default: '*****'
           }
         ),
         secretAccessKey: await input(
           { 
             message: 'Secret Access Key',
             required: true,
+            default: '*****'
           }
         ),
       }
@@ -207,12 +216,14 @@ const collect_general_config = async (
           { 
             message: 'Private Key ID',
             required: true,
+            default: '*****'
           }
         ),
         private_key: await input(
           { 
             message: 'Private Key',
             required: true,
+            default: '*****'
           }
         ),
       }

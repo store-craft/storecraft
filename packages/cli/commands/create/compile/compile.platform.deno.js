@@ -51,17 +51,17 @@ export const compile_deno = async (meta) => {
 
 const index_js = `
 import { app } from './app.ts';
- 
-await app.init();
+
+await app.init(false);
 
 const server = Deno.serve(
   {
-    port: 8000,
-    fetch: app.handler
-  }
+    onListen(d) {
+      app.print_banner(\`http://\${d.hostname}:\${d.port}\`);
+    }
+  },
+  app.handler
 );
-
-console.log('Listening on http://localhost:' + server.port);
 `;
 
 

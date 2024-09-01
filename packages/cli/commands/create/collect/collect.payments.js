@@ -90,12 +90,14 @@ const collect_general_config = async (
           { 
             message: 'Client ID',
             required: true,
+            default: '*****'
           }
         ),
         secret: await input(
           { 
             message: 'Secret',
             required: true,
+            default: '*****'
           }
         )
       }
@@ -119,12 +121,14 @@ const collect_general_config = async (
           { 
             message: 'Publishable Key',
             required: true,
+            default: '*****'
           }
         ),
         secret_key: await input(
           { 
             message: 'Secret Key',
             required: true,
+            default: '*****'
           }
         ),
         stripe_config: {

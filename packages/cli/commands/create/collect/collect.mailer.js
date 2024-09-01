@@ -54,6 +54,7 @@ const collect_general_config = async (
           { 
             message: 'API Key',
             required: true,
+            default: '*****'
           }
         )
       }
@@ -68,6 +69,7 @@ const collect_general_config = async (
           { 
             message: 'API Key',
             required: true,
+            default: '*****'
           }
         ),
         domain_name: await input(
@@ -88,6 +90,7 @@ const collect_general_config = async (
           { 
             message: 'API Key',
             required: true,
+            default: '*****'
           }
         ),
       }
@@ -102,6 +105,7 @@ const collect_general_config = async (
           { 
             message: 'API Key',
             required: true,
+            default: '*****'
           }
         ),
       }

@@ -130,10 +130,10 @@ Support for
 
 Support for 
 - MongoDB ([@storecraft/database-mongo-node](packages/databases/database-mongodb/))
+- SQLite ([@storecraft/database-sqlite](packages/databases/database-sqlite/))
+- Postgres ([@storecraft/database-postgres](packages/databases/database-postgres/))
+- MySQL ([@storecraft/database-mysql](packages/databases/database-mysql/))
 - SQL Base ([@storecraft/database-sql-base](packages/databases/database-sql-base/))
-  - Sqlite
-  - Postgres
-  - Mysql
 - Neon (Cloud Postgres, [@storecraft/database-neon](packages/databases/database-neon/))
 - PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](packages/databases/database-planetscale/))
 - Turso (Cloud Sqlite, [@storecraft/database-turso](packages/databases/database-turso/))
@@ -185,6 +185,15 @@ Test your api with
 ### docs
 
 Docs website [code](packages/docs/)
+
+### CLI
+
+```bash
+npx storecraft create
+```
+
+CLI [code](packages/cli/)
+
 
 ### Examples Playground
 

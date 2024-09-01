@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
 Official `SQL` driver for `StoreCraft` with the dialects abstracted with `Kysely` or your own drivers.

@@ -2,7 +2,7 @@
   "name": "store-craft",
   "private": "false",
   "version": "1.0.0",
-  "description": "Store Craft Mono Repo",
+  "description": "Storecraft Mono Repo",
   "main": "index.js",
   "workspaces": [
     "./packages/*",

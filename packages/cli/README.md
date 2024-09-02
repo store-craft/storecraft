@@ -7,6 +7,10 @@
 
 This CLI will help you bootstrap a repo and code to start a storecraft app.
 
+<div style="text-align:center">
+  <img src='cli.gif' 
+       width='90%' />
+</div><hr/><br/>
 
 ### create a store with
 

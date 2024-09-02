@@ -10,6 +10,8 @@ We recommend using the CLI tool,
 npx storecraft create
 ```
 
+<Image src='/cli.gif' className='w-full ssm:w-[300px] mx-auto mt-5'  />
+
 Follow the instructions to bootstrap a storecraft application.
 
 Don't forget to migrate the database later with
@@ -47,7 +49,6 @@ npm i -D dotenv
 Create `index.js`
 
 ```ts
-
 import 'dotenv/config';
 import http from "node:http";
 import { DummyPayments } from '@storecraft/payments-dummy'

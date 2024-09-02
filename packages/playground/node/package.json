@@ -9,7 +9,7 @@
     "migrate": "node --no-warnings ./migrate.js"
   },
   "dependencies": {
-    "@storecraft/core": "^1.0.0",
+    "@storecraft/core": "^1.0.5",
     "@storecraft/database-mongodb": "^1.0.0",
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",

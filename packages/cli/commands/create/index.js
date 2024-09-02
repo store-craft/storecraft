@@ -10,7 +10,6 @@ import { spinner } from "./spinner.js";
 import chalk from 'chalk';
 import { error, good } from "./label.js";
 
-
 /**
  * @type {import("yargs").CommandModule}
  */

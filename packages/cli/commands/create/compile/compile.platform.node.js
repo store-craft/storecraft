@@ -55,7 +55,7 @@ import { app } from './app.js';
  
 await app.init(false);
 
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => { app.print_banner('http://localhost:8000') }
 ); 

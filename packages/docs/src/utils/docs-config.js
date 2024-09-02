@@ -358,7 +358,7 @@ export default {
         name: 'BiLogoStackOverflow',
         params: { classNames: 'stroke-kf-600'}
       }, 
-      route: 'rest-api/api',
+      route: 'cli',
       path: 'content/docs/cli/cli.mdx'
   // external: '/rest-api-reference'
     },

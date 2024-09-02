@@ -16,9 +16,10 @@ export const Card = (
 
   return (
 <div {...rest}>
-  <div className='rounded-xl w-full h-full dark:bg-gray-800/50 
-                bg-gray-100/50 border border-pink-700/10 relative 
-                  overflow-clip flex flex-col justify-between p-5
+  <div className='rounded-xl w-full h-full 
+                dark:bg-gray-800/50 bg-gray-100/50 border border-pink-700/10 
+                  relative 
+                  overflow-clip flex flex-col justify-between p-5 pb-2
                 
                 '
       sstyle={{'box-shadow': '0 0 5px #999'}}>

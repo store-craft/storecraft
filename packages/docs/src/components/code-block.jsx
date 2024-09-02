@@ -72,51 +72,74 @@ const parse = v => {
 const theme_dark = themes.oneDark;
 const theme_light = themes.oneLight;
 
-delete theme_dark.plain.backgroundColor;
-delete theme_light.plain.backgroundColor;
+theme_dark.plain.backgroundColor = 'transparent';
+theme_light.plain.backgroundColor = 'transparent';
+// delete theme_light.plain.backgroundColor;
 
 /**
  * 
  * @typedef {object} CodeBlockParams
- * @prop {string} className
+ * @prop {string} [className]
+ * @prop {string} [outerClassName]
  * @prop {string} [children='']
+ * @prop {boolean} [showLinesNumbers=true]
  * 
  * 
  * @param {CodeBlockParams} params 
  * 
  */
-const CodeBlock = (
+export const CodeBlock = (
   { 
-    className, children='' 
+    className, outerClassName='w-full', children='', showLinesNumbers=true
+  }
+) => {
+
+  return (
+    <div className={`
+            rounded-lg border
+            font-light overflow-auto text-[13px] 
+            dark:border-kf-600/30 border-kf-600/10 
+            dark:bg-kf-600/20 bg-slate-50 p-3 ${outerClassName}`}>
+      <CodeBlockCore children={children} className={className} showLinesNumbers={showLinesNumbers} />
+		</div>
+	)
+}
+
+/**
+ * 
+ * @typedef {object} CodeBlockCoreParams
+ * @prop {import('prism-react-renderer').PrismTheme} [lightTheme]
+ * @prop {import('prism-react-renderer').PrismTheme} [darkTheme]
+ * @prop {string} [className]
+ * @prop {string} [className]
+ * @prop {string} [children='']
+ * @prop {boolean} [showLinesNumbers=true]
+ * 
+ * 
+ * @param {CodeBlockCoreParams} params 
+ * 
+ */
+export const CodeBlockCore = (
+  { 
+    className, children='', showLinesNumbers=true,
+    lightTheme=theme_light, darkTheme=theme_dark
   }
 ) => {
 
   const { darkMode } = useDarkMode();
-
-  // console.log(themes.shadesOfPurple)
-	// if (!children || children.type !== 'code') return null
-
-	// const {
-	// 	props: { className, children: code = '' },
-	// } = children
-
-  const { lang, showLinesNumbers=true, lines } = parse(className);
+  const { lang, lines } = parse(className);
 
   return (
 		<Highlight
-			theme={darkMode? theme_dark : theme_light}
+			theme={darkMode ? darkTheme : lightTheme}
 			// theme={vsLight}
 			code={children.trim()}
 			language={lang}
 		>
 			{
-        ({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={`
-            rounded-lg border dark:border-kf-600/30 border-kf-600/10 
-            font-light overflow-auto text-[13px] 
-            dark:bg-kf-600/20 bg-slate-50 ${className}`
-            } 
-              style={{ ...style, padding: '10px' }}>
+        ({ className: cls, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={cls} 
+              style={{ ...style, padding: '0px', margin: '0px' }}>
             {
               tokens.map(
                 (line, i) => {
@@ -154,4 +177,3 @@ const CodeBlock = (
 	)
 }
 
-export default CodeBlock

@@ -5,13 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npm run playground-node:start",
-    "playground-node:start": "node --watch ./node/index.js",
-    "playground-node:migrate": "node ./node/migrate.js"
+    "start": "node --watch --no-warnings ./index.js",
+    "migrate": "node --no-warnings ./migrate.js"
   },
   "dependencies": {
-    "@storecraft/core": "^1.0.0",
-    "@storecraft/database-mongodb-node": "^1.0.0",
+    "@storecraft/core": "^1.0.5",
+    "@storecraft/database-mongodb": "^1.0.0",
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",
     "@storecraft/payments-stripe": "^1.0.0",

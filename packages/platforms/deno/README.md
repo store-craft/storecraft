@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
 So, if you wanted to run `StoreCraft` on `deno`, this is the `platform`
@@ -16,30 +16,28 @@ npm i @storecraft/platforms
 
 ```js
 import 'dotenv/config';
-import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node';
-import { MongoDB } from '@storecraft/database-mongodb-node'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { DenoPlatform } from '@storecraft/platforms/deno';
+import { DenoLocalStorage } from '@storecraft/storage-local/deno'
+import { MongoDB } from '@storecraft/database-mongodb'
 
 const app = new App(
     config
   )
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
-  .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+  .withStorage(new DenoLocalStorage('storage'))
 
 await app.init();
  
-const server = http.createServer(app.handler).listen(
-  8000,
-  () => {
-    console.log(`Server is running on http://localhost:8000`);
+const server = Deno.serve(
+  {
+    port: 8000,
+    fetch: app.handler
   }
-); 
+);
+
+console.log(`Listening on http://localhost:${server.port} ...`);
 
 ```
 

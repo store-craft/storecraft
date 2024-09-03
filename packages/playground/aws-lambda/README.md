@@ -27,7 +27,7 @@ cdk init app -l typescript
 Now, install `storecraft`
 ```zsh
 npm i @storecraft/core
-npm i @storecraft/database-mongodb-node
+npm i @storecraft/database-mongodb
 npm i @storecraft/platforms
 npm i -D dotenv
 ```
@@ -96,7 +96,7 @@ import type {
 } from "@storecraft/platforms/aws-lambda";
 import { app } from './app';
 import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
 

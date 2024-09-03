@@ -52,6 +52,28 @@ export declare interface PlatformAdapter<
    * @description Get the environment variables of a platform
    */
   get env(): Record<string, string>;
+
+  /**
+   * @description (Optional) crypto implementation for hashing and verifying passwords
+   * and hashed passwords
+   */
+  crypto?: {
+    /**
+     * @description Given a password, hash it
+     * @param password The password to hash
+     * @returns a Hash
+     */
+    hash: (password: string) => Promise<string>,
+
+    /**
+     * @description Given a hashed password and a password, verify the hash corresponds to the password.
+     * @param hash The hashed password
+     * @param password The password to verify
+     * @returns a boolean `true` / `false`
+     */
+    verify: (hash: string, password: string) => Promise<boolean>,
+  }
+
 }
 
 ```

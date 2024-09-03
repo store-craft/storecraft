@@ -32,7 +32,7 @@ Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
 ```js
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node'
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb-node'
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 
 const app = new App(
@@ -129,29 +129,29 @@ Support for
 ### 💾 Databases
 
 Support for 
-- MongoDB ([@storecraft/database-mongo-node](packages/database-mongodb-node/))
-- SQL Base ([@storecraft/database-sql-base](packages/database-sql-base/))
-  - Sqlite
-  - Postgres
-  - Mysql
-- Neon (Cloud Postgres, [@storecraft/database-neon](packages/database-neon/))
-- PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](packages/database-planetscale/))
-- Turso (Cloud Sqlite, [@storecraft/database-turso](packages/database-turso/))
-- D1 (Cloud Sqlite, [@storecraft/database-cloudflare-d1](packages/database-cloudflare-d1/))
+- MongoDB ([@storecraft/database-mongo-node](packages/databases/database-mongodb/))
+- SQLite ([@storecraft/database-sqlite](packages/databases/database-sqlite/))
+- Postgres ([@storecraft/database-postgres](packages/databases/database-postgres/))
+- MySQL ([@storecraft/database-mysql](packages/databases/database-mysql/))
+- SQL Base ([@storecraft/database-sql-base](packages/databases/database-sql-base/))
+- Neon (Cloud Postgres, [@storecraft/database-neon](packages/databases/database-neon/))
+- PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](packages/databases/database-planetscale/))
+- Turso (Cloud Sqlite, [@storecraft/database-turso](packages/databases/database-turso/))
+- D1 (Cloud Sqlite, [@storecraft/database-cloudflare-d1](packages/databases/database-cloudflare-d1/))
 
 ### 📦 Storage
 Support for,
-- Local storage (Node, Bun, Deno), [@storecraft/storage-local](packages/storage-local/)
-- S3 Compatible ([@storecraft/storage-s3-compatible](packages/storage-s3-compatible/))
+- Local storage (Node, Bun, Deno), [@storecraft/storage-local](packages/storage/storage-local/)
+- S3 Compatible ([@storecraft/storage-s3-compatible](packages/storage/storage-s3-compatible/))
   - Cloudflare R2
   - AWS S3
   - DigitalOcean Spaces
   - MinIO
-- Google Storage ([@storecraft/storage-google](packages/storage-google/))
+- Google Storage ([@storecraft/storage-google](packages/storage/storage-google/))
 
 ### 📧 Email Providers
-- node smtp support [@storecraft/mailer-smtp-node](packages/mailer-smtp-node/)
-- Http Mail services [@storecraft/mailer-providers-http](packages/mailer-providers-http/) 
+- node smtp support [@storecraft/mailer-smtp](packages/mailers/mailer-smtp/)
+- Http Mail services [@storecraft/mailer-providers-http](packages/mailers/mailer-providers-http/) 
   - mailchimp support
   - mailgun support
   - resend support
@@ -159,8 +159,8 @@ Support for,
 
 ### 💳 Payments 
 
-- Stripe [@storecraft/payments-stripe](packages/payments-stripe/)
-- Paypal [@storecraft/payments-paypal](packages/payments-paypal/)
+- Stripe [@storecraft/payments-stripe](packages/payments/payments-stripe/)
+- Paypal [@storecraft/payments-paypal](packages/payments/payments-paypal/)
 - You can roll your own (guide [here](https://storecraft.app/docs/backend/checkout-and-payments/roll-your-own))
 
 ### Dashboard
@@ -185,6 +185,15 @@ Test your api with
 ### docs
 
 Docs website [code](packages/docs/)
+
+### CLI
+
+```bash
+npx storecraft create
+```
+
+CLI [code](packages/cli/)
+
 
 ### Examples Playground
 

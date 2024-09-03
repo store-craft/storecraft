@@ -11,6 +11,13 @@ import useToggle from '@/hooks/useToggle.js';
 import { Card } from '@/components/landing-card.jsx';
 import { Hero } from '@/components/landing-hero.jsx';
 import { LandingCards } from '@/components/landing-cards.jsx';
+import {CodeBlock} from '@/components/code-block.jsx';
+import { code, code_payment, MainCard, NPX } from '@/components/landing-more.jsx';
+import { Segment, SegmentHeader } from '@/components/landing-segment.jsx';
+import { Bling } from '@/components/common.jsx';
+import { GradientText } from '@/components/gradient-text.jsx';
+import { IoTerminal } from "react-icons/io5";
+
 
 
 export default () => {
@@ -19,35 +26,77 @@ export default () => {
 
   return (
     <div className={'w-screen h-screen relative ' + (darkMode ? 'dark' : '')}>
+      <GradStroke className='w-full h-[550px] absolute right-10 top-0 
+                    opacity-20 dark:opacity-30 z-50 pointer-events-none' />
+
       <div className='w-full h-full transition-colors overflow-y-auto
                       bg-slate-200 dark:bg-gray-900 relative
                       text-gray-800 dark:text-gray-300'>
 
         <Header 
-            className=' px-4
+            className='px-3 sm:px-10
                     bg-white/10 dark:bg-transparent backdrop-blur-sm 
-                      shadow-sm md:px-4 flex-shrink-0 
+                      shadow-sm  flex-shrink-0 
                       w-full z-40 ' 
             slug={undefined} 
             show_docs_decoration={false}
             onMenuClick={toggleMenu} 
             />
 
-        <div 
-            className='--w-full block  h-fit 
-                      pt-[30px] 
-                      --prose-slate text-[17px]
-                    --text-base max-w-none
-                      --dark:prose-invert decoration-from-font 
+        <div className='--w-full block  h-fit 
+                     relative text-[17px] max-w-none
+                      decoration-from-font 
                       subpixel-antialiased z-10 
                       text-slate-600 dark:text-slate-300'>
-          <div className='flex flex-col gap-0 overflow-y-auto'>
-            <Hero />
+          <div className='w-full relative flex flex-col gap-5 md:gap-10 
+                  overflow-y-auto p-3 sm:p-10'>
+            <div className='h-fit relative'>
+              <Hero />
+              <Bling rounded='rounded-lg' 
+                  className='absolute bottom-0 lg:top-4 right-0 
+                          z-50 text-xs sm:text-base w-fit h-fit' >
+                <NPX />
+              </Bling>
+              {/* <MainCard className='absolute top-4 right-4 z-50 w-1/4 h-fit' >
+                <p children='Storecraft is an ecommerce application as code technology, that can use any compute, database and storage engine so you can craft the perfect ecommerce store'/>
+              </MainCard> */}
+            </div>
             <LandingCards />
-          </div> 
-          <GradStroke className='w-full h-[550px] absolute right-10 top-0 
-                        opacity-20 dark:opacity-30 z-0 pointer-events-none' />
+            <Segment className='w-full'>
+              <GradientText 
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] text-center md:text-left ' 
+                  children='Craft the perfect commerce as code application' />
+              <CodeBlock children={code} showLinesNumbers={false} 
+                      outerClassName='w-full md:w-fit flex-shrink md:flex-shrink-0' />
+            </Segment>
+            <Segment className='w-full' reverse={true}>
+              <GradientText 
+                className='text-5xl sm:text-7xl w-fit text-center md:text-right max-w-[705px]' 
+                children='Use your favorite Payment Gateways'/>
+              <CodeBlock children={code_payment} showLinesNumbers={false} 
+                    outerClassName='w-full md:w-fit --flex-shrink-0' />
+            </Segment>
+            
+            <Segment className='w-full'>
+              <div className='flex flex-col'>
+                <div className='flex flex-row flex-wrap items-center gap-3'>
+                  <IoTerminal className='text-5xl'/> 
+                  <span children='npx' className='text-5xl w-fit font-mono' />
+                </div>
+                <GradientText 
+                      className='text-5xl w-fit font-mono max-w-[705px] text-center md:text-left ' 
+                      children='storecraft create' />
+              </div>
+              <Bling stroke='border-[16px]' 
+                    className='w-fit mx-auto'
+                    from='from-pink-500 dark:from-pink-500/90'
+                    to='to-kf-500 dark:to-kf-500/90'>
+                <img src='/cli.gif' 
+                    className='border border-gray-600 object-contain  mx-auto rounded-md' />
+              </Bling>
+            </Segment>
 
+          </div> 
 
         </div>
 

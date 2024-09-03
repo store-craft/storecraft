@@ -2,11 +2,11 @@ import 'dotenv/config';
 import http from "node:http";
 import { app } from './app.js';
  
-await app.init();
+await app.init(false);
 
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    console.log(app.print_banner('http://localhost:8000'));
   }
 ); 

@@ -55,16 +55,30 @@ export const Dashboard = (
 
   // return 'hello';
   
+//   return (
+// <div style={{zoom:0.5}}>
+//   <div className='w-full h-full bg-red-400'>
+//     hello
+//   </div>    
+// </div>    
+//   )
+
   return (
-<Router>
-  <ShowIf show={isGood}>
-    <Main />
-  </ShowIf>    
-  <ShowIf show={!isGood}>
-    <Login 
-        trigger={trigger} 
-        is_backend_endpoint_editable={is_backend_endpoint_editable} />
-  </ShowIf>    
-</Router>
+<div className='--bg-red-300 w-screen ' style={{height: '100dvh'}} >
+  <div className='w-full h-full' style={{zoom: 0.9}} >
+
+  <Router>
+    <ShowIf show={isGood}>
+      <Main />
+    </ShowIf>    
+    <ShowIf show={!isGood}>
+      <Login 
+          trigger={trigger} 
+          is_backend_endpoint_editable={is_backend_endpoint_editable} />
+    </ShowIf>    
+  </Router>
+
+  </div>
+</div>
   )
 }

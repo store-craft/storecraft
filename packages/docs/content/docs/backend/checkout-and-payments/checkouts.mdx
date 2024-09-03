@@ -90,13 +90,15 @@ Synchronous payments and checkouts completion are prefered in many use cases.
 
 In this mode, 
 
-- payments are confirmed at `PayPal` or `Stripe` servers, they also
+- payments are confirmed at `PayPal` or `Stripe` or other provider servers, they also
 usually handle **3DS** security automatically at frontend.
-- You are notified via `webhooks` about the status of the payment.
+- You are notified via `webhooks` about the status of the payment at `/api/gateways/{gateway_handle}/webhook`
 - Then you need to confirm the webhook is valid and was sent from a trusted source.
-- If this is the case, you can proceed to change the checkout and payment status of
-[#OrderData](schema/defintions#OrderData).
-
-> Our backend, currently emphesizes **synchronous** payments, but you can modify this easily
+- If this is the case, the endpoint notifies:
+  - The storecraft intrinsic order id
+  - The storecraft order's Payment Status
+  - The storecraft order's Checkout Status
 
 # Rest API
+
+Please consult the rest-api docs

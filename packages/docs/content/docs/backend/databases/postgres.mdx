@@ -1,0 +1,73 @@
+# Post**gres**
+
+Official `Postgres` driver for `StoreCraft` using `pg` package.
+
+```bash
+npm i @storecraft/database-postgres
+```
+
+## usage
+
+```js
+import 'dotenv/config';
+import http from "node:http";
+import { App } from '@storecraft/core'
+import { NodePlatform } from '@storecraft/platforms/node';
+import { Postgres } from '@storecraft/database-postgres';
+import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
+import { NodeLocalStorage } from '@storecraft/storage-local/node'
+
+const app = new App(
+  {
+    auth_admins_emails: ['admin@sc.com'],
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token'
+  }
+)
+.withPlatform(new NodePlatform())
+.withDatabase(
+  new Postgres({
+    pool_config: {
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+    }
+  })
+)
+.withStorage(new NodeLocalStorage('storage'))
+
+await app.init();
+await migrateToLatest(app.db, false);
+ 
+const server = http.createServer(app.handler).listen(
+  8000,
+  () => {
+    console.log(`Server is running on http://localhost:8000`);
+  }
+); 
+
+```
+
+## Testing Locally
+
+1. First setup a `postgres` server
+
+```zsh
+docker pull postgres
+docker run --name some-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin \
+          -e PGDATA=/var/lib/postgresql/data/pgdata \
+	        -v $(pwd):/var/lib/postgresql/data \
+          -p 5432:5432 -d postgres
+```
+
+2. create Environment
+
+create `.env` file with
+
+```bash
+POSTGRES_USER='user'
+POSTGRES_PASSWORD='password'
+POSTGRES_PORT=5432
+POSTGRES_HOST='localhost'
+```

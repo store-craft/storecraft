@@ -1,0 +1,39 @@
+{
+  "name": "@storecraft/database-mysql",
+  "version": "1.0.1",
+  "description": "Official MySQL Database driver for storecraft",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/databases/database-mysql"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "types": "types.public.d.ts",
+  "scripts": {
+    "database-mysql:test": "node ./tests/runner.test.js",
+    "database-mysql:publish": "npm publish --access public"
+  },
+  "dependencies": {
+    "@storecraft/core": "^1.0.0",
+    "@storecraft/database-sql-base": "^1.0.0",
+    "mysql2": "^3.9.2"
+  },
+  "devDependencies": {
+    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/test-runner": "^1.0.0",
+    "@types/pg": "^8.11.2",
+    "@types/node": "^20.11.0",
+    "dotenv": "^16.3.1",
+    "uvu": "^0.5.6"
+  }
+}

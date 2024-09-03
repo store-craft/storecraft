@@ -1,5 +1,5 @@
 import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 // import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';
 

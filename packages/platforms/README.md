@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
 So, if you wanted to run `StoreCraft` on the following platforms,
@@ -36,7 +36,7 @@ import { homedir } from "node:os";
 
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/platforms/node'
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 
 const app = new App(

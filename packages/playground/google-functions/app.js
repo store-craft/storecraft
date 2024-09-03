@@ -1,5 +1,5 @@
 import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions'
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
 import { App } from '@storecraft/core';

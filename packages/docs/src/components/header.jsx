@@ -116,7 +116,7 @@ const Header = (
 
 
 <div className={`flex flex-col h-fit  w-full gap-2 border-b border-gray-400/20  ${className}`}>
-  <div className={`flex flex-row justify-between items-center p-2  w-full`}>
+  <div className={`flex flex-row justify-between items-center py-2  w-full`}>
 
     <div className='flex flex-row w-fit h-fit items-center gap-3'>
       <Link href='/'>

@@ -9,7 +9,7 @@
 npm i @storecraft/platforms
 ```
 
-You can visit the [google functions playground example]()
+You can visit the [google functions playground example](https://github.com/store-craft/storecraft/tree/main/packages/playground/google-functions)
 
 
 ## usage with google-cloud functions
@@ -32,7 +32,7 @@ import 'dotenv/config';
 import * as functions from '@google-cloud/functions-framework';
 import { App } from '@storecraft/core'
 import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions';
-import { MongoDB } from '@storecraft/database-mongodb-node'
+import { MongoDB } from '@storecraft/database-mongodb'
 
 // console.log('env ', process.env)
 

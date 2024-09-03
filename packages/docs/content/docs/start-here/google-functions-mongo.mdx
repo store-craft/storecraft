@@ -1,0 +1,115 @@
+# Quick Google Functions example
+
+> We recommend using the CLI `npx storecraft create`
+
+## Install Packages
+
+First install the following packages
+
+```bash
+npm i @storecraft/core 
+npm i @storecraft/platforms 
+npm i @storecraft/storage-google
+npm i @storecraft/payments-dummy
+npm i @storecraft/database-sqlite
+npm i @google-cloud/functions-framework
+npm i -D dotenv
+```
+
+## Code
+
+A very simple code
+
+Now, create a new file `app.js`
+
+```ts
+import { GoogleFunctionsPlatform } from "@storecraft/platforms/google-functions"
+import { MongoDB } from "@storecraft/database-mongodb"
+import { GoogleStorage } from "@storecraft/storage-google"
+import { MailerSendGrid } from "@storecraft/mailer-providers-http/sendgrid"
+import { Paypal } from "@storecraft/payments-paypal"
+import { App } from "@storecraft/core"
+
+const app = new App({
+  auth_secret_access_token: process.env.auth_secret_access_token,
+  auth_secret_refresh_token: process.env.auth_secret_refresh_token,
+  general_store_name: "my-storecraft-app",
+  auth_admins_emails: ["a@a.com"],
+})
+.withPlatform(new GoogleFunctionsPlatform({}))
+.withDatabase(new MongoDB({ url: process.env.mongo_url }))
+.withStorage(
+  new GoogleStorage({
+    bucket: "my-bucket",
+    client_email: process.env.client_email,
+    private_key_id: process.env.private_key_id,
+    private_key: process.env.private_key,
+  }),
+)
+.withMailer(new MailerSendGrid({ apikey: process.env.sendgrid_api_key }))
+.withPaymentGateways({
+  paypal: new Paypal({
+    default_currency_code: "USD",
+    env: "prod",
+    intent_on_checkout: "AUTHORIZE",
+    client_id: process.env.paypal_client_id,
+    secret: process.env.paypal_secret,
+  }),
+})
+
+```
+
+Create `migrate.js`
+
+```ts
+
+import 'dotenv/config';
+import { app } from './app.js';
+import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
+ 
+await app.init();
+await migrateToLatest(app.db, true);
+
+```
+
+At last `index.js`
+
+```ts
+
+import 'dotenv/config';
+import * as functions from '@google-cloud/functions-framework';
+import { app } from './app.js';
+
+// console.log('env ', process.env)
+
+functions.http(
+  'storecraft',
+  async (req, res) => {
+    // runs once
+    await app.init();
+
+    // handler
+    return app.handler(req, res);
+  }
+);
+
+```
+
+
+Now, migrate the database
+
+```bash
+node ./migrate.js
+npx functions-framework --target=storecraft
+```
+
+Then , run locally with google emulator
+```bash
+npx functions-framework --target=storecraft
+```
+
+
+Viola, You should see the following,
+
+<Image src={`/docs/main/storecraft-terminal.png`} className='w-full' 
+       label={undefined}/>

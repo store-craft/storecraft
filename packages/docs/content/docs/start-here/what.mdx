@@ -7,33 +7,54 @@ You code your perfect commerce solution behaviour
 Like this,
 
 ```ts
-show example
+export const app = new App({
+  general_store_name: "my-storecraft-app",
+  auth_admins_emails: ["a@a.com"],
+  auth_secret_access_token: process.env.auth_secret_access_token,
+  auth_secret_refresh_token: process.env.auth_secret_refresh_token
+})
+.withPlatform(new NodePlatform())
+.withDatabase(new SQLite())
+.withStorage(new NodeLocalStorage())
+.withMailer(new MailerSendGrid({ apikey: process.env.SENDGRID_APIKEY }))
+.withPaymentGateways(
+  {
+    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+  }
+)
+.on(
+  'checkout/create',
+  async (evt) => {
+
+  }
+)
 ```
 
 ## **Storecraft** is built to run on any Platform
 - Serverless
 - Serverfull
-- Node.js
-- AWS API Gateway <Pink c='(coming soon)'/>
-- Cloudflare Workers <Pink c='(coming soon)'/>
-- Google Functions <Pink c='(coming soon)'/>
+- Node.js, Deno, Bun
+- AWS API Gateway
+- Cloudflare Workers 
+- Google Functions
 - More will follow
 
 ## **Storecraft** can work with any Database 
-- SQLite, MySQL, Postgres (anywhere)
-- MongoDB (on node.js)
-- `Cloudflare D1` Cloud database <Pink c='(coming soon)'/>
-- `Turso` Cloud database <Pink c='(coming soon)'/>
-- `Neon` Cloud database <Pink c='(coming soon)'/>
+- SQLite, MySQL, Postgres 
+- MongoDB
+- `Turso` Cloud sqlite database
+- `Cloudflare D1` Cloud sqlite database
+- `Neon` Cloud postgres database
+- `Planetscale` Cloud mysql database
 - You can roll your own integration.
 
 ## **Storecraft** can work with any Storage 
+- Local FileSystem
 - AWS S3
 - Cloudflare R2 
 - DigitalOcean Spaces
 - MinIO
 - Google Storage
-- Node.js Local FileSystem
 
 ## **Storecraft** can work with any Email provider,
 - Http friendly
@@ -41,18 +62,18 @@ show example
   - Resend
   - MailChimp
   - MailGun
-- SMTP on Node.js
+- SMTP on Node.js / Bun / Deno
 
 
 ## Commerce As **Code**
 
-<span className='font-bold italic'>Commerce As</span> **Code** means, that you can code the perfect commerce behaviours
+✅ <span className='font-bold italic'>Commerce As</span> **Code** means, that you can code the perfect commerce behaviours
 for your commerce application.
 
-<span className='font-bold italic'>Commerce As</span> **Code** means, that you can use any tech you want.
+✅ <span className='font-bold italic'>Commerce As</span> **Code** means, that you can use any tech you want.
 
-<span className='font-bold italic'>Commerce As</span> **Code** means, that you own every aspect of your commerce backend.
+✅ <span className='font-bold italic'>Commerce As</span> **Code** means, that you own every aspect of your commerce backend.
 
-<span className='font-bold italic'>Commerce As</span> **Code** means, that you can be creative and are not
+✅ <span className='font-bold italic'>Commerce As</span> **Code** means, that you can be creative and are not
 constrained by anything.
 

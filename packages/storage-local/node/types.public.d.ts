@@ -1,1 +1,0 @@
-export { NodeLocalStorage } from './index.js'

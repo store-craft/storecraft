@@ -1,0 +1,36 @@
+# **Storecraft** deno Platform support
+
+So, if you wanted to run `StoreCraft` on `deno`, this is the `platform`
+package for you :)
+
+```bash
+npm i @storecraft/platforms
+```
+
+## usage
+
+```js
+import 'dotenv/config';
+import { App } from '@storecraft/core'
+import { DenoPlatform } from '@storecraft/platforms/deno';
+import { DenoLocalStorage } from '@storecraft/storage-local/deno'
+import { MongoDB } from '@storecraft/database-mongodb'
+
+const app = new App(
+    config
+  )
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB())
+  .withStorage(new DenoLocalStorage('storage'))
+
+await app.init();
+ 
+const server = Deno.serve(
+  {
+    port: 8000,
+    fetch: app.handler
+  }
+);
+
+console.log(`Listening on http://localhost:${server.port} ...`);
+```

@@ -33,9 +33,9 @@ export default function Main(props) {
   return (
 <Routes>
   <Route path='*' element={<Navigate to='home' />} />
-  <Route path='home' element={<Layout className='w-screen h-full' children={<Home/>} />} />
-  <Route path='settings' element={<Layout className='w-screen h-full' children={<Settings/>} />} />
-  <Route path='apps' element={<Layout className='w-screen h-full' />}>
+  <Route path='home' element={<Layout className='' children={<Home/>} />} />
+  <Route path='settings' element={<Layout className='' children={<Settings/>} />} />
+  <Route path='apps' element={<Layout className='' />}>
     <Route path='gallery'>
       <Route path='' element={<Gallery />} />
       <Route path='q/:query_params' element={<Gallery />} />
@@ -53,7 +53,7 @@ export default function Main(props) {
       <Route path=':id/view' element={<Extension />} />
     </Route>
   </Route>    
-  <Route path='pages' element={<Layout className='w-screen h-full' />}>
+  <Route path='pages' element={<Layout className='' />}>
     <Route path='storefronts'>
       <Route path='' element={<Storefronts />} />
       <Route path='q/:query_params' element={<Storefronts />} />

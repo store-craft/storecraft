@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/test-runner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official Test Runner for storecraft apps",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

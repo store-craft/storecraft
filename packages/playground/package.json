@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "@storecraft/core": "^1.0.0",
-    "@storecraft/database-mongodb-node": "^1.0.0",
+    "@storecraft/database-mongodb": "^1.0.0",
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",
     "@storecraft/payments-stripe": "^1.0.0",

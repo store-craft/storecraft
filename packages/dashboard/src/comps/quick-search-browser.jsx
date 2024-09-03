@@ -339,8 +339,11 @@ const QuickSearchBrowser = (
           groupIndex, itemIndex
         }
       );
-      notifySelection();
-    }, [notifySelection]
+      onSelect && onSelect(
+        groups[groupIndex].name,
+        groups[groupIndex].group[itemIndex]
+      );
+    }, [onSelect, groups]
   );
 
   /** @type {React.LegacyRef<HTMLInputElement>} */
@@ -358,7 +361,7 @@ const QuickSearchBrowser = (
 
 
   return (
-<div className='w-screen h-screen relative'>
+<div className='w-full h-full relative'>
   <div onClick={e => e.stopPropagation()} 
       className='w-full --m-3 md:w-[35rem] --h-4/5 h-fit
                   shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2

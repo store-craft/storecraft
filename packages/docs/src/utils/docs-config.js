@@ -16,40 +16,34 @@ export default {
           route: `start-here/what`,
           path: `content/docs/start-here/what.mdx`
         },
-        {
-          title: "Why use it ?",
-          route: `start-here/why`,
-          path: `content/docs/start-here/why.mdx`
-        },
-      ]
-    },
-
-    {
-      title: "Setup",
-      icon: {
-        name: 'BsNewspaper',
-        params: { classNames: 'stroke-kf-600'}
-      }, 
-      empty: true,
-      groups: [
+        // {
+        //   title: "Why use it ?",
+        //   route: `start-here/why`,
+        //   path: `content/docs/start-here/why.mdx`
+        // },
         {
           title: "Installation",
           route: `setup/installation`,
-          path: `content/docs/setup/installation.mdx`
+          path: `content/docs/start-here/installation.mdx`
         },
         {
-          title: "Local Nodejs & MongoDB",
-          route: `setup/local-node-mongodb`,
-          path: `content/docs/setup/local-node-mongodb.mdx`
-        },
-        {
-          title: "Local Nodejs & SQLite",
+          title: "Example Nodejs & SQLite",
           route: `setup/local-sqlite`,
-          path: `content/docs/setup/local-node-sqlite.mdx`
+          path: `content/docs/start-here/local-node-sqlite.mdx`
         },
+        {
+          title: "Example Nodejs & MongoDB",
+          route: `setup/local-node-mongodb`,
+          path: `content/docs/start-here/local-node-mongodb.mdx`
+        },
+        {
+          title: "Example Google Functions & MongoDB",
+          route: `setup/google-functions-mongo`,
+          path: `content/docs/start-here/google-functions-mongo.mdx`
+        },
+
       ]
     },
-
     {
       title: 'Backend',
       icon: {
@@ -64,7 +58,22 @@ export default {
           empty: true,
           groups: [
             {
-              title: 'SQL',
+              title: 'SQLite',
+              route: 'backend/databases/sqlite',
+              path: 'content/docs/backend/databases/sqlite.mdx'
+            },
+            {
+              title: 'Postgres',
+              route: 'backend/databases/postgres',
+              path: 'content/docs/backend/databases/postgres.mdx'
+            },
+            {
+              title: 'MySQL',
+              route: 'backend/databases/mysql',
+              path: 'content/docs/backend/databases/mysql.mdx'
+            },
+            {
+              title: 'SQL Base',
               route: 'backend/databases/sql',
               path: 'content/docs/backend/databases/sql.mdx'
             },
@@ -73,6 +82,26 @@ export default {
               route: 'backend/databases/mongo',
               path: 'content/docs/backend/databases/mongo.mdx'
             },
+            {
+              title: 'Turso (cloud sqlite)',
+              route: 'backend/databases/turso',
+              path: 'content/docs/backend/databases/turso.mdx'
+            },
+            {
+              title: 'Cloudflare D1 (cloud sqlite)',
+              route: 'backend/databases/d1',
+              path: 'content/docs/backend/databases/d1.mdx'
+            },
+            {
+              title: 'Neon (cloud postgres)',
+              route: 'backend/databases/neon',
+              path: 'content/docs/backend/databases/neon.mdx'
+            },
+            {
+              title: 'Planetscale (cloud mysql)',
+              route: 'backend/databases/planetscale',
+              path: 'content/docs/backend/databases/planetscale.mdx'
+            },
           ]
         },
         {
@@ -80,6 +109,11 @@ export default {
           route: 'backend/storage',
           empty: true,
           groups: [
+            {
+              title: 'Node / Deno / Bun Local Storage',
+              route: 'backend/storage/storage-local',
+              path: 'content/docs/backend/storage/storage-local.mdx'
+            },
             {
               title: 'S3 Compatible',
               route: 'backend/storage/s3',
@@ -90,30 +124,8 @@ export default {
               route: 'backend/storage/google',
               path: 'content/docs/backend/storage/google.mdx'
             },
-            {
-              title: 'Node Local Storage',
-              route: 'backend/storage/node-local',
-              path: 'content/docs/backend/storage/node-local.mdx'
-            },
           ]
         },    
-        {
-          title: '📧 Email',
-          route: 'backend/email',
-          empty: true,
-          groups: [
-            {
-              title: 'Serverless Email Providers',
-              route: 'backend/email/http',
-              path: 'content/docs/backend/email/http.mdx'
-            },
-            {
-              title: 'SMTP for Node',
-              route: 'backend/email/smtp-node',
-              path: 'content/docs/backend/email/smtp-node.mdx'
-            },
-          ]
-        },            
         {
           title: '🌐 Platforms',
           route: 'backend/platforms',
@@ -121,8 +133,18 @@ export default {
           groups: [
             {
               title: 'Node.js',
-              route: 'backend/platforms/node-js',
-              path: 'content/docs/backend/platforms/node-js.mdx'
+              route: 'backend/platforms/node',
+              path: 'content/docs/backend/platforms/node.mdx'
+            },
+            {
+              title: 'Bun',
+              route: 'backend/platforms/bun',
+              path: 'content/docs/backend/platforms/bun.mdx'
+            },
+            {
+              title: 'Deno',
+              route: 'backend/platforms/deno',
+              path: 'content/docs/backend/platforms/deno.mdx'
             },
             {
               title: 'AWS API Gateway',
@@ -189,6 +211,23 @@ export default {
           ]
         },                    
         {
+          title: '📧 Email',
+          route: 'backend/email',
+          empty: true,
+          groups: [
+            {
+              title: 'Serverless Email Providers',
+              route: 'backend/email/http',
+              path: 'content/docs/backend/email/http.mdx'
+            },
+            {
+              title: 'SMTP for Node',
+              route: 'backend/email/smtp-node',
+              path: 'content/docs/backend/email/smtp-node.mdx'
+            },
+          ]
+        },            
+        {
           title: '💳 Checkout & Payments',
           route: 'backend/checkout-and-payments',
           empty: true,
@@ -199,7 +238,7 @@ export default {
               path: 'content/docs/backend/checkout-and-payments/checkouts.mdx'
             },
             {
-              title: 'Paypal Standard Payments',
+              title: 'Paypal',
               route: 'backend/checkout-and-payments/paypal-standard-payments',
               path: 'content/docs/backend/checkout-and-payments/paypal-standard-payments.mdx'
             },
@@ -311,6 +350,16 @@ export default {
       }, 
       route: 'rest-api/api',
       path: 'content/docs/rest-api/api.mdx'
+  // external: '/rest-api-reference'
+    },
+    {
+      title: "CLI",
+      icon: {
+        name: 'BiLogoStackOverflow',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      route: 'cli',
+      path: 'content/docs/cli/cli.mdx'
   // external: '/rest-api-reference'
     },
 

@@ -12,8 +12,8 @@ const app = new App({
 .withMailer(new MailerSendGrid())
 .on(
   'checkout/create',
-  async (evt) => {
-    const order: orderData = evt.event.payload;
+  async (event) => {
+    const order: orderData = event.payload;
     // send email here
   }
 )
@@ -42,6 +42,10 @@ const app = new App(config)
 )
 `;
 
+/**
+ * 
+ * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params
+ */
 export const NPX = (
   {
     ...rest
@@ -54,9 +58,9 @@ export const NPX = (
     value='npx storecraft create' process_before_copy={undefined} 
     className={`
       text-gray-200
-      shadow-[0px_0px_1px] shadow-pink-500/90
+      shadow-[0px_0px_6px] shadow-pink-500/90
       from-black/60 bg-gradient-to-br to-black 
-      border-2 border-kf-500 
+
         rounded-lg flex flex-row justify-between items-center w-fit font-mono`
     }/>
 </div>    

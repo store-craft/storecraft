@@ -1,13 +1,21 @@
 
+/**
+ * @typedef {object} SegmentParams
+ * @prop {boolean} [reverse=false]
+ * 
+ * @param {SegmentParams & 
+ *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * } params
+ */
 export const Segment = (
   {
-    children, ...rest
+    reverse=false, children, ...rest
   }
 ) => {
 
   return (
 <div {...rest}>
-  <div className='flex flex-col md:flex-row w-full md:w-fit gap-10 items-center --mx-auto justify-between'>
+  <div className={'flex w-full gap-10 items-center justify-between ' + (reverse ? 'flex-col md:flex-row-reverse ' : 'flex-col md:flex-row')}>
     {
       children
     }

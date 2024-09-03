@@ -90,7 +90,7 @@ return (
         className='flex flex-row items-center justify-between px-3 gap-3 w-full'>
       <div
           className=' overflow-x-scroll
-          min-h-8 align-middle
+          p-1 align-middle
              flex flex-row items-center' 
           children={value} />
       <ClipBoardCopy 

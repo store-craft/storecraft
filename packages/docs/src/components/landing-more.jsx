@@ -64,8 +64,7 @@ export const NPX = (
       text-gray-200
       shadow-[0px_0px_6px] shadow-pink-500/90
       from-black/60 bg-gradient-to-br to-black 
-
-        rounded-lg flex flex-row justify-between items-center w-fit font-mono`
+      rounded-lg flex flex-row justify-between items-center w-fit font-mono`
     }/>
 </div>    
   );

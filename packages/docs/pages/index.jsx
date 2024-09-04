@@ -50,6 +50,7 @@ export default () => {
                       text-slate-600 dark:text-slate-300'>
           <div className='w-full relative flex flex-col gap-5 md:gap-10 
                   overflow-y-auto p-3 sm:p-10'>
+
             <div className='h-fit relative'>
               <Hero />
               <Bling rounded='rounded-lg' 
@@ -57,11 +58,10 @@ export default () => {
                           z-50 text-xs sm:text-base w-fit h-fit' >
                 <NPX />
               </Bling>
-              {/* <MainCard className='absolute top-4 right-4 z-50 w-1/4 h-fit' >
-                <p children='Storecraft is an ecommerce application as code technology, that can use any compute, database and storage engine so you can craft the perfect ecommerce store'/>
-              </MainCard> */}
             </div>
+
             <LandingCards />
+
             <Segment className='w-full'>
               <GradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] text-center md:text-left ' 
@@ -77,6 +77,22 @@ export default () => {
                     outerClassName='w-full md:w-fit --flex-shrink-0' />
             </Segment>
             
+            <div className='flex flex-col w-full gap-10 items-center justify-between '>
+              <GradientText 
+                        className='text-5xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
+                        children='Official Dashboard' />
+              <Bling stroke='border-[6px]' 
+                    className='w-fit mx-auto       shadow-[0px_0px_6px] shadow-pink-500/90
+'
+                    rounded='rounded-2xl'
+                    from='from-pink-500 dark:from-pink-500/90'
+                    to='to-kf-500 dark:to-kf-500/90'>
+                <img src='/landing/main.webp' 
+                      className='border border-gray-600 object-contain 
+                              mx-auto rounded-2xl' />
+              </Bling>
+            </div>
+
             <Segment className='w-full'>
               <div className='flex flex-col'>
                 <div className='flex flex-row flex-wrap items-center gap-3'>

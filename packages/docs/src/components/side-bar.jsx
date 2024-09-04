@@ -6,6 +6,7 @@ import { DiStackoverflow } from 'react-icons/di'
 import { FaServer } from 'react-icons/fa'
 import { useCallback, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
+import { FaTerminal } from "react-icons/fa6";
 import { MdNavigateNext } from "react-icons/md";
 import Drawer from './drawer.jsx'
 
@@ -54,7 +55,9 @@ const Icon = (
       return <MdAdminPanelSettings {...rest} />
     case 'FaServer':
       return <FaServer {...rest} />
-  }
+    case 'FaTerminal':
+      return <FaTerminal {...rest} />
+    }
 }
 
 /**

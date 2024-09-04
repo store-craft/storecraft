@@ -355,7 +355,7 @@ export default {
     {
       title: "CLI",
       icon: {
-        name: 'BiLogoStackOverflow',
+        name: 'FaTerminal',
         params: { classNames: 'stroke-kf-600'}
       }, 
       route: 'cli',

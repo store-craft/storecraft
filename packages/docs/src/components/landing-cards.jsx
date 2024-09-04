@@ -19,7 +19,7 @@ const LearnMoreFooter = (
 export const LandingCards = () => {
   const { darkMode } = useDarkMode();
   return (
-<div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 --max-w-[1100px] mx-auto  gap-5'>
+<div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 w-full --max-w-[1100px] mx-auto gap-5'>
     <Card header='Databases' 
       main_content={
         (
@@ -109,7 +109,7 @@ export const LandingCards = () => {
 
     <Card header='Extensible' 
       main_content='Create your own extensions, payment gateways and more' 
-      footer={<LearnMoreFooter href='docs/backend /extensions/overview' /> }
+      footer={<LearnMoreFooter href='docs/backend/extensions/overview' /> }
       className='--max-w-96 h-fit xs:h-40 md:h-40'
       />
       

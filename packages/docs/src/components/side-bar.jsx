@@ -9,6 +9,7 @@ import { IoMdClose } from "react-icons/io";
 import { FaTerminal } from "react-icons/fa6";
 import { MdNavigateNext } from "react-icons/md";
 import Drawer from './drawer.jsx'
+import pkg from '@/../package.json';
 
 /**
  * 
@@ -364,6 +365,11 @@ export const SideBarSmall = (
           selectedSlug={selectedSlug}
           groups={groups} 
        />
+
+        <div children={`(v${pkg.version})`} 
+              className='absolute bottom-0 font-mono right-0 text-sm
+                 text-gray-500/70' />
+
 
        {
          showMenu && 

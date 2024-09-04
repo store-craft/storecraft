@@ -10,6 +10,9 @@ import pkg from '../../package.json'
 import { Logo, LogoV2, StorecraftText } from './logo.jsx'
 import { Connect } from './connect.jsx'
 import { LogoGradient, LogoText } from './logo-text.jsx'
+import { FaTerminal } from 'react-icons/fa'
+import { GradientText } from './gradient-text.jsx'
+import ShowIf from './show-if.jsx'
 
 /**
  * 
@@ -98,6 +101,7 @@ const Slug = (
  * @prop {string} slug
  * @prop {string} className
  * @prop {boolean} [show_docs_decoration=true]
+ * @prop {boolean} [show_start_here=false]
  * @prop {Function} onMenuClick
  * 
  * 
@@ -106,11 +110,10 @@ const Slug = (
  */
 const Header = (
   { 
-    slug, onMenuClick, show_docs_decoration=true, className, ...rest
+    slug, onMenuClick, show_docs_decoration=true, show_start_here=false, className, ...rest
   }
 ) => {
 
-  const { darkMode, toggle } = useDarkMode()
 
   return (
 
@@ -123,7 +126,6 @@ const Header = (
         <div className='w- flex flex-row items-center gap-1 relative'>
           <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
                         scale-90 border-kf-600 --shadow-lg opacity-80' />                  
-          {/* <StorecraftText className='text-[32px] w-[220px]' /> */}
           <LogoGradient className='h-6' />
           {
             show_docs_decoration &&
@@ -146,9 +148,18 @@ const Header = (
 
     <div className='h-fit w-fit flex flex-row items-center gap-3 text-2xl'>
 
-      <button className='p-0' onClick={toggle}>
-        <HiOutlineLightBulb className='text-2xl -translate-y-0.5 translate-x-1' />
-      </button>
+      <ShowIf show={show_start_here}>
+        <Link href='/docs/start-here/what/'>
+          <div className='flex flex-row items-center gap-0 text-base 
+                sm:text-xl font-bold h-fit'>
+            <FaTerminal />
+            <GradientText 
+                className='bg-gradient-to-r from-black dark:from-white  
+                    to-pink-500 dark:to-pink-500' 
+                children='start_here_' />
+          </div>
+        </Link>
+      </ShowIf>
 
       <Connect className='hidden md:flex flex-row gap-3'/>
     </div>

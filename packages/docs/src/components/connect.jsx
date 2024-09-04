@@ -1,4 +1,6 @@
+import useDarkMode from '@/hooks/useDarkMode.js'
 import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs'
+import { HiOutlineLightBulb } from 'react-icons/hi'
 
 /**
  * 
@@ -10,8 +12,13 @@ export const Connect = (
   }
 ) => {
 
+  const { darkMode, toggle } = useDarkMode();
+
   return (
     <div {...rest}>
+      <button className='p-0' onClick={toggle}>
+        <HiOutlineLightBulb className='text-2xl -translate-y-0.5 translate-x-1' />
+      </button>      
       <a href='https://discord.gg/zd2dvpFr' 
           title='Join our Discord'
           alt='Join our Discord'

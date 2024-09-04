@@ -1,4 +1,6 @@
+import { IoTerminal } from "react-icons/io5";
 import { CopyableView } from "./copyable-view.jsx";
+import { FaTerminal } from "react-icons/fa6";
 
 
 export const code = `
@@ -33,9 +35,9 @@ const app = new App(config)
   {
     'stripe': new Stripe(
       { 
-        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret_key: process.env.STRIPE_SECRET_KEY, 
-        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
+        publishable_key: '****', 
+        secret_key: '****', 
+        webhook_endpoint_secret: '****'
       }
     ),
   }
@@ -55,13 +57,18 @@ export const NPX = (
   return (
 <div {...rest}>
 <CopyableView 
-    value='npx storecraft create' process_before_copy={undefined} 
+    value={
+      <div className='flex flex-row gap-1 items-center'>
+        <FaTerminal className='text-base inline'/>npx storecraft create
+      </div>
+    } 
+    copyValue='npx storecraft create'
+    process_before_copy={undefined} 
     className={`
       text-gray-200
       shadow-[0px_0px_6px] shadow-pink-500/90
       from-black/60 bg-gradient-to-br to-black 
-
-        rounded-lg flex flex-row justify-between items-center w-fit font-mono`
+      rounded-lg flex flex-row justify-between items-center w-fit font-mono`
     }/>
 </div>    
   );

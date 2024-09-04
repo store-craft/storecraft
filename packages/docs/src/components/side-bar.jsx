@@ -6,8 +6,10 @@ import { DiStackoverflow } from 'react-icons/di'
 import { FaServer } from 'react-icons/fa'
 import { useCallback, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
+import { FaTerminal } from "react-icons/fa6";
 import { MdNavigateNext } from "react-icons/md";
 import Drawer from './drawer.jsx'
+import pkg from '@/../package.json';
 
 /**
  * 
@@ -54,7 +56,9 @@ const Icon = (
       return <MdAdminPanelSettings {...rest} />
     case 'FaServer':
       return <FaServer {...rest} />
-  }
+    case 'FaTerminal':
+      return <FaTerminal {...rest} />
+    }
 }
 
 /**
@@ -361,6 +365,11 @@ export const SideBarSmall = (
           selectedSlug={selectedSlug}
           groups={groups} 
        />
+
+        <div children={`(v${pkg.version})`} 
+              className='absolute bottom-0 font-mono right-0 text-sm
+                 text-gray-500/70' />
+
 
        {
          showMenu && 

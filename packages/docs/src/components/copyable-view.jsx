@@ -68,7 +68,8 @@ export const ClipBoardCopy = (
  * 
  * 
  * @typedef {object} CopyableViewParams
- * @prop {string} value markdown text
+ * @prop {import("react").ReactNode} value markdown text
+ * @prop {string} copyValue markdown text
  * @prop {(value: string) => string} process_before_copy process the value
  * before copying
  * 
@@ -80,7 +81,7 @@ export const ClipBoardCopy = (
  */
 export const CopyableView = (
   { 
-    value, process_before_copy, ...rest
+    value, copyValue, process_before_copy, ...rest
   }
 ) => {
 
@@ -94,7 +95,7 @@ return (
              flex flex-row items-center' 
           children={value} />
       <ClipBoardCopy 
-          value={value} 
+          value={copyValue ?? String(value)} 
           process_before_copy={process_before_copy} />
     </div>
   </div>

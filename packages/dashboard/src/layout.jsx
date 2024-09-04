@@ -132,7 +132,7 @@ const Layout = (
   return (
 <div className={`w-full h-full ${darkMode ? 'dark' : ''}`}
       data-color-mode={darkMode ? 'dark' : 'light'}>
-  <div className={`relative flex flex-row --font-inter 
+  <div className={`relative flex flex-row font-inter 
                   shelf-body-bg
                   w-full h-full sm:h-full ${className}
                   `} {...rest}

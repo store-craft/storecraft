@@ -29,7 +29,7 @@ const Item = (
         <span children={value?.title} />                  
       </a>
     </Label>
-    <MDView value={`**\`${value.info.details.meta.name}\`**`} />
+    <MDView value={`**\`${value.info.details.meta.name}\`**`} className='text-right' />
   </div>
 
   <MDView value={value?.description ?? 'Discount does not have `description`'} />

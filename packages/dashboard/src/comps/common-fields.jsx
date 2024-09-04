@@ -76,7 +76,7 @@ export const TextArea = ({field, value, onChange, ...rest}) => {
 }
 
 const readable_span_cls = 'pr-3 py-2 max-w-[18rem] \
-overflow-x-auto inline-block whitespace-nowrap';
+overflow-clip hover:overflow-x-auto inline-block whitespace-nowrap';
 
 /**
  * This is used in `TableSchemaView`
@@ -109,7 +109,7 @@ export const Span = (
 ) => {
 
   
-  const readable_span_cls = 'overflow-x-auto inline-block whitespace-nowrap'
+  const readable_span_cls = 'overflow-clip hover:overflow-x-auto inline-block whitespace-nowrap'
   const merged = `${readable_span_cls} ${className} ${extra}`
   return (
     <div className={merged} {...rest} >
@@ -483,6 +483,7 @@ export const RecordActions = (
   );
 
   const onApproveDelete = useCallback(
+    /** @param {string} data_id  */
     (data_id) => {
       console.log('data_id', data_id)
       // return
@@ -493,8 +494,8 @@ export const RecordActions = (
   );
 
   return (
-<div className='flex flex-row items-center text-center 
-                 justify-end text-xl overflow-x-auto w-fit mx-auto '>
+<div className='flex flex-row items-center text-center flex-shrink-0
+                 justify-end text-base overflow-clip w-fit mx-auto '>
   { 
   !context?.editDocumentUrl && context?.viewDocumentUrl &&
   <Link to={context.viewDocumentUrl(id)}>

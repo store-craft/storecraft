@@ -230,7 +230,7 @@ const UserComp = ({ data }) => {
   return (
 <div className='w-full h-full flex flex-row justify-between 
                 items-center text-sm gap-3'>
-  <span className='text-base overflow-x-auto 
+  <span className='text-base overflow-hidden hover:overflow-auto
                    whitespace-nowrap h-full 
                    flex flex-row items-center pr-3 flex-1' 
         children={`${data.firstname} ${data.lastname}`} />
@@ -251,14 +251,15 @@ const UserComp = ({ data }) => {
 const ProductComp = ({ data }) => {
   return (
 <div className='w-full h-full flex flex-row justify-between 
-                items-center text-sm '>
-  <span className='text-base max-w-xs overflow-x-auto 
-                   whitespace-normal overflow-y-auto h-full 
-                   flex flex-row items-center pr-1' 
-        children={data.title} />
-  <span className='text-gray-500 whitespace-nowrap' 
+                items-center gap-3 text-sm '>
+      <span className='overflow-hidden hover:overflow-auto 
+                      text-sm whitespace-nowrap  h-full 
+                      flex flex-row items-center
+                      pr-1' 
+            children={data.title} />
+  <span className='text-gray-500 whitespace-nowrap flex-shrink-0' 
         children={`(${data.qty} In stock)`} />
-</div>    
+</div>
   )
 }
 

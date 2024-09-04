@@ -16,7 +16,7 @@ const Code = (
 
   const cls_color = context.item.active ? 'bg-teal-500' : 'bg-red-500';
   const cls = 'whitespace-nowrap pr-2 font-semibold text-base \
-        max-w-[150px] sm:max-w-max overflow-x-auto'; // + cls_color
+        max-w-[150px] sm:max-w-max overflow-clip hover:overflow-x-auto'; // + cls_color
   const isCoupon = context.item.application.id===DiscountApplicationEnum.Manual.id
 
   return (

@@ -27,7 +27,7 @@ const test = {
 const schema_fields = [
   { 
     key: 'title', name: 'Title', comp: Span, 
-    comp_params: { className: 'font-semibold max-w-[8rem] overflow-x-auto' } 
+    comp_params: { className: 'font-semibold max-w-[8rem] ' } 
   },
   { 
     key: 'price', name: 'Price', comp: Span 
@@ -36,7 +36,7 @@ const schema_fields = [
     key: 'collections', name: 'Collections', comp: SpanArray, 
     comp_params: { 
       className: `p-3 font-bold max-w-[8rem] sm:max-w-[12rem] xl:max-w-[24rem] 
-                  overflow-x-auto inline-block whitespace-nowrap`,
+                  inline-block whitespace-nowrap`,
       name_fn: 
         /** 
          * @param {import('@storecraft/core/v-api').CollectionType} c 

@@ -348,46 +348,46 @@ export const SideBarSmall = (
 ) => {
 
  return (
-   <div className=''>
-     <div 
-         className={`z-[50] block md:hidden w-[300px] h-full absolute inset-0
-                     transition-transform duration-300
-                     ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
-                   }>
-       <SideBar 
-           className={`absolute left-0 p-6 w-full 
-                       h-full overflow-y-auto  text-sm
-                       bg-white dark:bg-gray-900
-                       `
-                     }
-          link_prefix={link_prefix}
-          onClickMenuItem={onClickMenuItem}
-          selectedSlug={selectedSlug}
-          groups={groups} 
-       />
+<div className=''>
+  <div 
+      className={`z-[50] block md:hidden w-[300px] h-full fixed inset-0
+                  transition-transform duration-300
+                  ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
+                }>
+    <SideBar 
+        className={`absolute left-0 p-6 w-full 
+                    h-full overflow-y-auto  text-sm
+                    bg-white dark:bg-gray-900
+                    `
+                  }
+      link_prefix={link_prefix}
+      onClickMenuItem={onClickMenuItem}
+      selectedSlug={selectedSlug}
+      groups={groups} 
+    />
 
-        <div children={`(v${pkg.version})`} 
-              className='absolute bottom-0 font-mono right-0 text-sm
-                 text-gray-500/70' />
+    <div children={`(v${pkg.version})`} 
+          className='absolute bottom-0 font-mono right-0 text-sm
+              text-gray-500/70' />
 
 
-       {
-         showMenu && 
-         <IoMdClose 
-             className='absolute right-5 top-5 z-[55] text-xl' 
-             onClick={_ => onClickMenuItem(undefined)} />
-       }
-     </div>
+    {
+      showMenu && 
+      <IoMdClose 
+          className='absolute right-5 top-5 z-[55] text-xl' 
+          onClick={_ => onClickMenuItem(undefined)} />
+    }
+  </div>
+  <div 
+    onClick={_ => onClickMenuItem(undefined)}
+    className={
+      `
+      fixed w-full h-screen top-0 left-0 z-40 cursor-pointer block md:hidden
+      ${showMenu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
+      `
+    }/>    
 
-     <div 
-       onClick={_ => onClickMenuItem(undefined)}
-       className={
-         `
-         absolute w-full h-full top-0 left-0 z-40 cursor-pointer block md:hidden
-         ${showMenu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
-         `
-       }/>    
-   </div>
+</div>
  )
 }
 

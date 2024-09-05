@@ -147,14 +147,17 @@ export default () => {
           </div> 
 
         </div>
-
+        
+        {/* <div className='bg-red-400 z-50 fixed w-10 h-10 inset-0' /> */}
         <SideBarSmall 
           groups={docs.groups}
           link_prefix='docs'
           selectedSlug={undefined}
           onClickMenuItem={() => toggleMenu()}
           showMenu={menu}/>
+
       </div>
+
     </div>
   )
 };

@@ -1,23 +1,17 @@
 import { GradStroke } from '@/components/grad-stroke.jsx';
 import Header from '@/components/header.jsx';
-import { LogoGradient } from '@/components/logo-text.jsx';
-import { StorecraftText } from '@/components/logo.jsx';
 import useDarkMode from '@/hooks/useDarkMode.js';
-import { useRouter } from 'next/navigation.js'
-import { useEffect } from 'react'
 import docs from '@/utils/docs-config.js'
 import { SideBarSmall } from '@/components/side-bar.jsx';
 import useToggle from '@/hooks/useToggle.js';
-import { Card } from '@/components/landing-card.jsx';
 import { Hero } from '@/components/landing-hero.jsx';
 import { LandingCards } from '@/components/landing-cards.jsx';
 import {CodeBlock} from '@/components/code-block.jsx';
-import { code, code_payment, MainCard, NPX } from '@/components/landing-more.jsx';
-import { Segment, SegmentHeader } from '@/components/landing-segment.jsx';
+import { code, code_payment, NPX } from '@/components/landing-more.jsx';
+import { Segment } from '@/components/landing-segment.jsx';
 import { Bling } from '@/components/common.jsx';
 import { CommonGradientText } from '@/components/gradient-text.jsx';
 import { IoTerminal } from "react-icons/io5";
-
 
 
 export default () => {
@@ -46,7 +40,7 @@ export default () => {
             />
 
         <div className='--w-full block  h-fit 
-                     relative text-[17px] max-w-none
+                     relative text-[17px] max-w-[1300px] mx-auto
                       decoration-from-font 
                       subpixel-antialiased z-10 pb-40
                       text-slate-600 dark:text-slate-300'>
@@ -72,7 +66,7 @@ export default () => {
             <Segment className='w-full'>
               <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] text-center md:text-left ' 
-                  children='Craft the perfect commerce as code application' />
+                  children={<div>Craft the <u className='underline'>perfect</u> commerce as code application'</div>} />
               <CodeBlock children={code} showLinesNumbers={false} 
                       outerClassName='w-full md:w-fit flex-shrink md:flex-shrink-0' />
             </Segment>
@@ -101,7 +95,7 @@ export default () => {
                     to='to-kf-500 dark:to-kf-500/90'>
                 <img src='/landing/main.webp' 
                       className='border border-gray-600 object-contain 
-                              mx-auto rounded-2xl w-full max-w-[1200px]' />
+                              mx-auto rounded-2xl w-full max-w-[1000px]' />
               </Bling>
             </div>
 
@@ -117,7 +111,7 @@ export default () => {
                       className='text-5xl w-fit font-mono max-w-[705px] text-center md:text-left ' 
                       children='storecraft create' />
               </div>
-              <Bling stroke='border-[16px]' 
+              <Bling stroke='border-[6px]' 
                     className='w-fit mx-auto'
                     from='from-pink-500 dark:from-pink-500/90'
                     to='to-kf-500 dark:to-kf-500/90'>
@@ -139,15 +133,17 @@ export default () => {
                     from='from-pink-500 dark:from-pink-500/90'
                     to='to-kf-500 dark:to-kf-500/90'>
                 <img src='/landing/reference_api.webp' 
-                      className='border border-gray-600 w-full max-w-[1200px] object-contain 
+                      className='border border-gray-600 w-full max-w-[1000px] object-contain 
                               mx-auto rounded-2xl' />
               </Bling>
             </div>
-
           </div> 
 
         </div>
         
+        <span children={`All rights reserved to storecraft.app (${new Date().getFullYear()})`}
+              className='w-full h-fit p-10 flex flex-row justify-center' />
+
         {/* <div className='bg-red-400 z-50 fixed w-10 h-10 inset-0' /> */}
         <SideBarSmall 
           groups={docs.groups}

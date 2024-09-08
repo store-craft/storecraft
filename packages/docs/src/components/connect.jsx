@@ -19,19 +19,26 @@ export const Connect = (
       <button className='p-0' onClick={toggle}>
         <HiOutlineLightBulb className='text-2xl -translate-y-0.5 translate-x-1' />
       </button>      
-      <a href='https://discord.gg/zd2dvpFr' 
+      <a href='' 
           title='Join our Discord'
           alt='Join our Discord'
+          className='relative'
             target='_blank' rel='noopener noreferrer'>
           <BsDiscord className='text-2xl --animate-pulse'/>
+          <span children='soon' 
+              className='rounded-md px-1 bg-gradient-to-br border 
+                  border-pink-500/50 from-white to-white
+                  dark:border-pink-500/50 dark:from-pink-500/50 dark:to-black 
+                  w-fit h-fit scale-75 --rotate-45 origin-top-left font-semibold
+                  text-xs absolute font-mono left-0 top-full' />
       </a>
-      <a href='https://github.com/shelf-cms' 
+      <a href='https://github.com/store-craft/storecraft' 
         title='Fork us on Github'
         alt='Fork us on Github'
         target='_blank' rel='noopener noreferrer'>
         <BsGithub className='text-xl'/>
       </a>
-      <a href='https://linkedin.com/company/shelf-cms/'
+      <a href='https://linkedin.com/company/store-craft/'
         title='Catch us at Linkedin'
         alt='Catch us at Linkedin'
         target='_blank' rel='noopener noreferrer'>

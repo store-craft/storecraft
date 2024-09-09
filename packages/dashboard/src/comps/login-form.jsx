@@ -46,8 +46,9 @@ const Field = (
  <Bling className='mt-2'>
    <input 
        className={`rounded-md h-10 px-3
-                   w-full block text-base 
+                   w-full block 
                    shelf-input-color
+                   hover:ring-pink-400 hover:ring-2
                    font-normal transition-none `} 
        value={value[id] ?? ''} 
        onChange={e => onChange(id, e.currentTarget.value)} 
@@ -128,13 +129,13 @@ const LoginForm = (
            type='submit' value='LOGIN' 
            title='Login' alt='Login'
            className='h-10 rounded-md bg-white tracking-widest 
-                       w-full shelf-input-color text-base 
+                       w-full shelf-input-color text-sm hover:ring-pink-400 hover:ring-2 
                        cursor-pointer'/>
      </Bling>
      {
        error &&
        (
-         <div className='flex flex-row flex-nowrap items-center text-base w-full
+         <div className='flex flex-row flex-nowrap items-center text-sm w-full
                          text-red-600 border-red-600 
                          dark:text-red-500 
                          dark:bg-red-400/10 

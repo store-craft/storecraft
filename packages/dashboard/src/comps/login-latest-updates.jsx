@@ -42,7 +42,8 @@ const CommitView = (
 <div className='w-full flex flex-row gap-3 items-center'>
   <a href={commit?.html_url} target='blank'>
     <div className='text-[10px] font-bold w-11 text-center border rounded-md 
-                  bg-pink-500/15 border-pink-500/20 px-1 --shadow-md 
+                    bg-gradient-to-r
+                  from-pink-500/30 border-pink-500/20 px-1 --shadow-md 
                   text-pink-500/90 font-mono tracking-wider
                   shadow-pink-500 shadow-[0px_0px_2px]' 
         children={commit?.sha?.slice(-5)}

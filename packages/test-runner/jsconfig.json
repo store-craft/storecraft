@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "checkJs": true,
     "resolveJsonModule": true,
+    "maxNodeModuleJsDepth": 100,
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "composite": true,

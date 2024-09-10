@@ -21,7 +21,7 @@ export default class Orders extends collection_base {
   }
 
   /**
-   * calculate pricing of line items
+   * @description calculate pricing of line items
    * 
    * @param {import('@storecraft/core/v-api').LineItem[]} line_items 
    * @param {import('@storecraft/core/v-api').DiscountType[]} coupons 
@@ -39,7 +39,7 @@ export default class Orders extends collection_base {
       }
     );
 
-    return calculate_pricing(
+    return await calculate_pricing(
       line_items, auto_discounts, coupons, shipping_method, uid
     );
   }

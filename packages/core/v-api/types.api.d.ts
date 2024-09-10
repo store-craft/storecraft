@@ -1896,6 +1896,11 @@ export type PricingData = {
   subtotal: number; 
 
   /** 
+   * @description `subtotal` + `shipping`
+   */
+  total_without_taxes: number; 
+
+  /** 
    * @description `subtotal` + `shipping` + `taxes`
    */
   total: number; 

@@ -33,12 +33,8 @@ export class UniformTaxes {
   /**
    * @type {tax_provider["compute"]}
    */
-  async compute (order) {
-    const line_items = order?.line_items ?? [];
-    const sum = line_items.reduce(
-      (a, c) => a + (c?.price ?? c?.data?.price ?? 0) , 0
-    );
-    const value = parseFloat(((sum * this.#percents) / 100.0).toFixed(2));
+  async compute (pricing) {
+    const value = (pricing.total_without_taxes * this.#percents) / 100.0;
 
     return [
       {

@@ -146,18 +146,17 @@ async (order) => {
     d => order.coupons.find(c => c.handle===d.handle)!==undefined
   );
 
-  const taxes =  (await app.taxes.compute(order)) ?? [];
-  const pricing = calculate_pricing(
+  const pricing = await calculate_pricing(
     order.line_items, 
     auto_discounts, 
     manual_discounts, 
     order.shipping_method, 
     order?.contact?.customer_id,
-    taxes
+    app.taxes
   );
 
   // console.log(pricing)
-  
+
   return {
     ...order,
     pricing

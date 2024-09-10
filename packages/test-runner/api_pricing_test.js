@@ -100,7 +100,7 @@ export const create = () => {
       }
     }    
 
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'pr-1', qty: 3, 
@@ -199,7 +199,7 @@ export const create = () => {
     /**
      * This test interleaves bulk items to be applied recursively
      */
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'pr-1', qty: 3, 
@@ -306,7 +306,7 @@ export const create = () => {
     /**
      * This test interleaves bulk items to be applied recursively
      */
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'pr-1', qty: 3, 
@@ -413,14 +413,14 @@ export const create = () => {
       }
     }    
 
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         
         {
           id: 'robot-arm-red', qty: 1, 
           data: { 
             tags: ['robot_arm'], 
-            active: true, title: '', 
+            active: true, title: '', qty: 1,
             price: 100,
             handle:'robot-arm-red', 
             id: '',             
@@ -493,7 +493,7 @@ export const create = () => {
       }
     }    
 
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'robot-leg-white', qty: 3, 
@@ -603,7 +603,7 @@ export const create = () => {
       }
     }    
 
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'robot-leg-white', qty: 3, 
@@ -717,7 +717,7 @@ export const create = () => {
       }
     }    
 
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'robot-leg-white', qty: 3, 
@@ -820,7 +820,7 @@ export const create = () => {
       }
     }    
 
-    const pricing = calculate_pricing(
+    const pricing = await calculate_pricing(
       [
         {
           id: 'robot-leg-white', qty: 3, 
@@ -924,7 +924,7 @@ export const create = () => {
     }    
 
     { // above >= 300
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -984,7 +984,7 @@ export const create = () => {
 
 
     { // < 300
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -1078,7 +1078,7 @@ export const create = () => {
     }    
 
     { // order in date range
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -1119,7 +1119,7 @@ export const create = () => {
         to: (new Date(0)).toISOString()
       }
 
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -1189,7 +1189,7 @@ export const create = () => {
     }    
 
     { // items count >= 10
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -1247,7 +1247,7 @@ export const create = () => {
 
 
     { // items count < 10
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -1321,7 +1321,7 @@ export const create = () => {
     }    
 
     { // eligible customer
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 
@@ -1359,7 +1359,7 @@ export const create = () => {
 
 
     { // NON eligible customer
-      const pricing = calculate_pricing(
+      const pricing = await calculate_pricing(
         [
           {
             id: 'pr-1', qty: 3, 

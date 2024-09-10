@@ -888,13 +888,13 @@ export const calculate_line_items_for_discount =
  * @param {DiscountType[]} coupons disabled coupons will be filtered out
  * @param {Partial<ShippingMethodType>} shipping_method 
  * @param {string} [uid=undefined] 
- * @param {import('./types.api.d.ts').TaxRecord[]} [taxes=[]] 
+ * @param {import('../v-tax/types.public.d.ts').tax_provider} [tax_provider=undefined] 
  * 
- * @returns {PricingData}
+ * @returns {Promise<PricingData>}
  */
-export const calculate_pricing = (
+export const calculate_pricing = async (
   line_items, auto_discounts=[], coupons=[], shipping_method, uid=undefined,
-  taxes=[]
+  tax_provider=undefined
 ) => {
 
   auto_discounts = auto_discounts.filter(
@@ -937,15 +937,11 @@ export const calculate_pricing = (
     (p, li) => p + li.qty * (li.price ?? li.data?.price), 0
   );
 
-  const sum_taxes = taxes.reduce(
-    (p, r) => p + r.value, 0
-  );
-
   const quantity_total = line_items.reduce(
     (p, li) => p + li.qty , 0
   );
 
-  const initial_total = subtotal_undiscounted + shipping_method.price + sum_taxes;
+  const initial_total = subtotal_undiscounted + shipping_method.price;
 
   /**@type {PricingData} */
   const context = {
@@ -968,11 +964,10 @@ export const calculate_pricing = (
     subtotal: subtotal_undiscounted - 0,
 
     total: initial_total,
+    total_without_taxes: initial_total,
 
     quantity_total,
     quantity_discounted: 0,
-
-    taxes,
 
     errors: []
   }
@@ -989,6 +984,7 @@ export const calculate_pricing = (
         ctx.subtotal_discount += evo_entry.total_discount;
         ctx.subtotal -= evo_entry.total_discount;
         ctx.total -= evo_entry.total_discount;
+        ctx.total_without_taxes = ctx.total;
         ctx.quantity_discounted = ctx.quantity_discounted + (evo_entry?.quantity_discounted ?? 0);
 
         // push the iteration result for future review
@@ -1002,7 +998,9 @@ export const calculate_pricing = (
         );
 
       } catch (e) {
+
         console.log(e);
+
         ctx.errors.push(
           {
             discount_code: discount.handle,
@@ -1010,13 +1008,24 @@ export const calculate_pricing = (
           }
         );
       } finally {
-        ctx.total = parseFloat(ctx.total.toFixed(2));
-
         return ctx
       }
 
     }, context
   );
+
+  // taxes
+
+  {
+    if(tax_provider) {
+      report.taxes = await tax_provider.compute({...report});
+      report.total += report.taxes.reduce((p, c) => p + c.value ?? 0, 0);
+    }
+  }
+
+  report.total = parseFloat(report.total.toFixed(2));
+  report.total_without_taxes = parseFloat(report.total_without_taxes.toFixed(2));
+
 
   // now, let's clean all of the line items data field as it's not needed and redundant
   report.evo?.forEach(
@@ -1034,7 +1043,6 @@ export const calculate_pricing = (
           delete li.data;
         }
       );
-
     }
   );
 

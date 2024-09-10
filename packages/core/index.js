@@ -2,6 +2,7 @@ import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
 import { PubSub } from './v-pubsub/public.js';
+import { UniformTaxes } from './v-tax/public.js';
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
 
@@ -15,12 +16,6 @@ import pkg from './package.json' assert { type: "json" }
  * @typedef {import('./v-mailer/types.public.d.ts').mailer} mailer
  */
 
-/** @param {string} s @param {number} def */
-const parse_int = (s, def) => {
-  const parsed = parseInt(s); // can be NaN
-  return parsed ? parsed : def;
-}
-
 
 /**
  * 
@@ -32,6 +27,7 @@ const parse_int = (s, def) => {
  * `payments` map type
  * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>]
  * `extensions` map type
+ * @template {import('./v-tax/types.public.d.ts').tax_provider} [Taxes=UniformTaxes]
  * 
  * @description This is the main `storecraft` **App**
  * 
@@ -55,6 +51,7 @@ export class App {
   /** 
    * 
    * @description The private storage driver
+   * 
    * @type {Storage} 
    */ 
   #_storage;
@@ -66,6 +63,14 @@ export class App {
    * @type {Mailer} 
    */ 
   #_mailer;
+
+  /** 
+   * 
+   * @description The taxes driver
+   * 
+   * @type {Taxes} 
+   */ 
+  #_taxes;
 
   /** 
    * 
@@ -121,6 +126,7 @@ export class App {
     this.#_config = config;
     this.#_is_ready = false;
     this.#_pubsub = new PubSub(this);
+    this.#_taxes = new UniformTaxes(10);
   } 
 
 
@@ -274,13 +280,22 @@ export class App {
   }
 
   /** 
+   * 
+   * @description Get the taxes provider
+   */
+  get taxes() { 
+    return this.#_taxes; 
+  }
+  
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {PlatformAdapter} P
    * 
    * @param {P} platform 
    * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap>}
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes>}
    * 
    */
   withPlatform(platform) {
@@ -298,7 +313,7 @@ export class App {
    * 
    * @param {D} database 
    * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap>}
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes>}
    */
   withDatabase(database) {
     // @ts-ignore
@@ -315,7 +330,7 @@ export class App {
    * 
    * @param {S} storage 
    * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap>}
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes>}
    */
   withStorage(storage) {
     // @ts-ignore
@@ -332,7 +347,7 @@ export class App {
    * 
    * @param {M} mailer 
    * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap>}
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes>}
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -343,13 +358,31 @@ export class App {
   }   
 
   /** 
+   * @description Update new tax provider
+   * 
+   * @template {tax_provider} T
+   * 
+   * @param {T} taxes 
+   * 
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T>}
+   */
+  withTaxes(taxes) {
+    // @ts-ignore
+    this.#_taxes = taxes;
+
+    // @ts-ignore
+    return this;
+  }
+
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {Record<string, payment_gateway>} N
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -366,7 +399,7 @@ export class App {
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E, Taxes>}
    */
   withExtensions(extensions) { 
     // @ts-ignore

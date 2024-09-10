@@ -1,0 +1,50 @@
+
+
+/**
+ * 
+ * @typedef {import("./types.public.d.ts").tax_provider} tax_provider
+ */
+
+
+/** 
+ * @description super simple uniform tax calculator, this is useless if you
+ * are selling to various states. 
+ * 
+ * @implements {tax_provider}
+ */
+export class UniformTaxes {
+
+  #percents = 0;
+  #name = 'vat';
+
+  constructor(percents = 0.0, name = 'vat') {
+    this.#percents = percents;
+    this.#name = name;
+  }
+
+  get name() {
+    return this.#name;
+  }
+
+  get percents() {
+    return this.#percents;
+  }
+
+  /**
+   * @type {tax_provider["compute"]}
+   */
+  async compute (order) {
+    const line_items = order?.line_items ?? [];
+    const sum = line_items.reduce(
+      (a, c) => a + (c?.price ?? c?.data?.price ?? 0) , 0
+    );
+    const value = parseFloat(((sum * this.#percents) / 100.0).toFixed(2));
+
+    return [
+      {
+        value,
+        name: this.name
+      }
+    ]
+  }
+}

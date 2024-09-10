@@ -4,7 +4,6 @@ import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/v-api';
 import { create_title_gen, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
-import { App } from '@storecraft/core';
 import { calculate_pricing } from '@storecraft/core/v-api/con.pricing.logic.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
 
@@ -56,8 +55,6 @@ const gen_product = (tag='regular') => {
 }
 
 
-
-
 export const create = () => {
 
   const s = suite(
@@ -75,12 +72,14 @@ export const create = () => {
 
   s('regular discount: 10% OFF only', async (ctx) => {
 
+    const title = 'regular discount: 10% OFF only';
+
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
       id: '',
       active: true, 
-      handle: 'discount-10-off-regular', 
-      title: '10% OFF Regular tags',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -167,11 +166,13 @@ export const create = () => {
 
   s('bulk discount: 3 for 100 recursive ', async (ctx) => {
 
+    const title = 'bulk discount: 3 for 100 recursive';
+
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_bulk_3_for_100_recursive = { 
       active: true, id: '',
-      handle: 'discount-bulk', 
-      title: '3 for 100 recursive for Bulk tags',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -273,11 +274,12 @@ export const create = () => {
 
   s('bulk discount: 3 for 100 NON recursive ', async (ctx) => {
 
+    const title = 'bulk discount: 3 for 100 NON recursive';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_bulk_3_for_100_recursive = { 
       active: true, id: '',
-      handle: 'discount-bulk', 
-      title: '3 for 100 recursive for Bulk tags',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -377,14 +379,94 @@ export const create = () => {
 
   });  
 
+  s('bundle discount: 50% OFF Bundle: Should NOT discount', async (ctx) => {
 
-  s('bundle discount: 50% OFF Bundle: robot arms and legs (not recursive)', async (ctx) => {
-
+    const title = 'bundle discount: 50% OFF Bundle: Should NOT discount'
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
-      handle: 'discount-bundle-50-off-robot-arms-and-legs-not-recursive', 
-      title: '50% OFF Bundle: robot arms and legs (not recursive)',
+      handle: to_handle(title), 
+      title,
+      priority: 0, 
+      application: enums.DiscountApplicationEnum.Auto, 
+      info: {
+        details: {
+          meta: enums.DiscountMetaEnum.bundle,
+          /** @type {import('@storecraft/core/v-api').BundleDiscountExtra} */
+          extra: {
+            fixed: 0, percent: 50, recursive: false
+          }
+        },
+        filters: [ // in bundle, each filter is part of the bundle
+          { 
+            meta: enums.FilterMetaEnum.p_in_tags,
+            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            value: ['robot_arm']
+          },
+          { 
+            meta: enums.FilterMetaEnum.p_in_tags,
+            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            value: ['robot_arm']
+          }
+
+        ]
+      }
+    }    
+
+    const pricing = calculate_pricing(
+      [
+        
+        {
+          id: 'robot-arm-red', qty: 1, 
+          data: { 
+            tags: ['robot_arm'], 
+            active: true, title: '', 
+            price: 100,
+            handle:'robot-arm-red', 
+            id: '',             
+          }
+        },
+      ],
+      [
+        discount_regular
+      ],
+      [],
+      {
+        title: '',
+        handle: '',
+        price: 0,
+        id: ''
+      }
+    )
+
+    // console.log(JSON.stringify(discount_regular, null, 2))
+    // console.log(pricing)
+
+    const ok = (
+      pricing.subtotal_discount==0 &&
+      pricing.subtotal_undiscounted==100 &&
+      pricing.subtotal==100 &&
+      pricing.total==100 &&
+      pricing.quantity_total==1 &&
+      pricing.quantity_discounted==0
+    );
+
+    assert.ok(
+      ok,
+      'discount validation has not passed'
+    )
+
+  });
+
+
+  s('bundle discount: 50% OFF Bundle: robot arms and legs (not recursive)', async (ctx) => {
+
+    const title = 'bundle discount: 50% OFF Bundle: robot arms and legs (not recursive)'
+    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    const discount_regular = { 
+      active: true, id: '',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -489,11 +571,12 @@ export const create = () => {
   
   s('bundle discount: 50% OFF Bundle: robot arms and legs (recursive as much as possible)', async (ctx) => {
 
+    const title = 'bundle discount: 50% OFF Bundle: robot arms and legs (recursive as much as possible)';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
-      handle: 'discount-bundle-50-off-robot-arms-and-legs-recursive', 
-      title: '50% OFF Bundle: robot arms and legs (recursive as much as possible)',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -597,11 +680,12 @@ export const create = () => {
 
   s('buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF, only once not recursive', async (ctx) => {
 
+    const title = 'buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF, only once not recursive';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
-      handle: '', 
-      title: 'buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF (ONCE, NOT Recursive)',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -699,11 +783,12 @@ export const create = () => {
 
   s('buy X get Y discount: Buy 1 robot legs -> Get 1 Robot arms for 50% OFF, recursive, applied as much as possible', async (ctx) => {
 
+    const title = 'buy X get Y discount: Buy 1 robot legs -> Get 1 Robot arms for 50% OFF, recursive, applied as much as possible';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
-      handle: '', 
-      title: 'buy X get Y discount: Buy 1 robot legs -> Get 1 Robot arms for 50% OFF, recursive, applied as much as possible',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -790,7 +875,7 @@ export const create = () => {
       }
     )
 
-    // console.log(pricing)
+    // console.log(JSON.stringify(pricing, null, 2))
 
     const ok = (
       pricing.subtotal_discount==150 &&
@@ -810,12 +895,12 @@ export const create = () => {
 
 
   s('order discount: 10% OFF IF order subtotal >= 300', async (ctx) => {
-
+    const title = '10% OFF Order with sub-total >= 300';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
       active: true, id: '',
-      handle: 'discount-10-off-order', 
-      title: '10% OFF Order with sub-total >= 300',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -963,11 +1048,12 @@ export const create = () => {
 
   s('order discount: 10% OFF IF order In the Next 60 seconds', async (ctx) => {
 
+    const title = 'order discount: 10% OFF IF order In the Next 60 seconds';
     /** @satisfies {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
       active: true, id: '',
-      handle: '', 
-      title: 'order discount: 10% OFF IF order In the Next 60 seconds',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -1074,11 +1160,12 @@ export const create = () => {
 
   s('order discount: 10% OFF IF Items count >= 10', async (ctx) => {
 
+    const title = 'order discount: 10% OFF IF Items count >= 10';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
       active: true, id: '',
-      handle: '', 
-      title: 'order discount: 10% OFF IF Items count >= 10',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
@@ -1203,11 +1290,12 @@ export const create = () => {
 
   s('order discount: 10% OFF For a specific customers', async (ctx) => {
 
+    const title = 'order discount: 10% OFF For a specific customers';
     /** @type {import('@storecraft/core/v-api').DiscountType} */
     const discount = { 
       active: true, id: '',
-      handle: '', 
-      title: 'order discount: 10% OFF For a specific customers',
+      handle: to_handle(title), 
+      title,
       priority: 0, 
       application: enums.DiscountApplicationEnum.Auto, 
       info: {

@@ -4,7 +4,7 @@ import { parse_query } from '../utils.query.js'
 
 const data = [
   {
-    q: new URLSearchParams('?startAt=(updated_at:2012, id:0)&sortBy=(updated_at, id)&order=asc'),
+    q: new URLSearchParams('?startAt=(updated_at:2012, id:0)&sortBy=(updated_at, id)&order=asc&limit=10'),
     expected: {
       "limit": 10,
       "startAt": [
@@ -18,7 +18,6 @@ const data = [
     description: 'range cursor dictates sort and overrides it',
     q: new URLSearchParams('?startAt=(updated_at:2012, id:0)&sort=(created_at)'),
     expected: {
-      "limit": 10,
       "startAt": [
         [ "updated_at", "2012" ],
         [ "id", "0" ]
@@ -30,7 +29,6 @@ const data = [
     description: 'range cursor dictates missing sort',
     q: new URLSearchParams('?startAt=(updated_at:2012, id:0)'),
     expected: {
-      "limit": 10,
       "startAt": [
         [ "updated_at", "2012" ],
         [ "id", "0" ]
@@ -43,7 +41,6 @@ const data = [
     description: 'just sort',
     q: new URLSearchParams('?sortBy=(price, id)&order=asc'),
     expected: {
-      "limit": 10,
       "startAt": undefined,
       "sortBy": [ "price", "id" ],
       "order": "asc"
@@ -71,7 +68,7 @@ test('parse queries', async () => {
         // console.log(d.expected);
         // console.log(JSON.stringify(parsed, function(k, v) { return v; }, 2));
       } catch(e) {
-        console.log(e)
+        // console.log(e)
       } finally {
 
         // If should fail

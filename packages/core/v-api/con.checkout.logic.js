@@ -146,14 +146,18 @@ async (order) => {
     d => order.coupons.find(c => c.handle===d.handle)!==undefined
   );
 
+  const taxes =  (await app.taxes.compute(order)) ?? [];
   const pricing = calculate_pricing(
     order.line_items, 
     auto_discounts, 
     manual_discounts, 
     order.shipping_method, 
-    order?.contact?.customer_id
+    order?.contact?.customer_id,
+    taxes
   );
 
+  // console.log(pricing)
+  
   return {
     ...order,
     pricing
@@ -207,7 +211,7 @@ async (order_checkout, gateway_handle) => {
 
   // eval pricing with discounts
   const order_priced = await eval_pricing(app)(order_validated);
-  
+
   /**@type {import("./types.api.d.ts").OrderDataUpsert} */
   const order = {
     ...order_priced,

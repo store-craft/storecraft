@@ -10,21 +10,15 @@ import { assert } from "./utils.func.js";
 
 
 /**
- * @typedef {import("./types.api.js").OrderData} OrderData
- * @typedef {import("./types.api.js").DiscountType} DiscountType
- * @typedef {import("../v-payments/types.payments.js").payment_gateway} payment_gateway
+ * @typedef {import("./types.api.d.ts").OrderData} OrderData
+ * @typedef {import("./types.api.d.ts").DiscountType} DiscountType
+ * @typedef {import("../v-payments/types.payments.d.ts").payment_gateway} payment_gateway
  */
 
 
 /**
  * 
- * 
- * @template {import("../index.js").db_driver} D
- * @template {import("../index.js").storage_driver} E
- * @template {Record<string, payment_gateway>} F
- * 
- * 
- * @param {App<any, any, any, D, E, F>} app
+ * @param {App} app
  */
 export const validate_checkout = app =>
 /**
@@ -35,7 +29,7 @@ export const validate_checkout = app =>
  * 3. re-merge latest `products` data inside the `line-items`
  * 
  * 
- * @template {import("./types.api.js").CheckoutCreateType} T
+ * @template {import("./types.api.d.ts").CheckoutCreateType} T
  * 
  * 
  * @param {T} checkout
@@ -60,13 +54,13 @@ async (checkout) => {
 
   // console.log('snaps_products', snaps_products)
 
-  /**@type {import("./types.api.js").ValidationEntry[]} */
+  /**@type {import("./types.api.d.ts").ValidationEntry[]} */
   const errors = [];
 
   /**
    * 
    * @param {string} id 
-   * @param {import("./types.api.js").ValidationEntry["message"]} message 
+   * @param {import("./types.api.d.ts").ValidationEntry["message"]} message 
    */
   const errorWith = (id, message) => {
     errors.push({ id, message });
@@ -117,13 +111,7 @@ async (checkout) => {
 /**
  * @description calculate pricing with `discounts`, `shipping`, `coupons`
  * 
- * 
- * @template {import("../index.js").db_driver} D
- * @template {import("../index.js").storage_driver} E
- * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
- * 
- * 
- * @param {App<any, any, any, D, E, F>} app 
+ * @param {App} app 
  */
 export const eval_pricing = (app) => 
 /**
@@ -133,7 +121,7 @@ export const eval_pricing = (app) =>
  * 3. calculate `pricing`
  * 4. return the `order` with `pricing` information
  * 
- * @template {import("./types.api.js").CheckoutCreateType} T
+ * @template {import("./types.api.d.ts").CheckoutCreateType} T
  * 
  * 
  * @param {T} order 
@@ -175,11 +163,7 @@ async (order) => {
 
 /**
  * 
- * @template {import("../index.js").db_driver} D
- * @template {import("../index.js").storage_driver} E
- * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
- * 
- * @param {App<any, any, any, D, E, F>} app 
+ * @param {App} app 
  */
 export const create_checkout = app =>
 /**
@@ -193,8 +177,8 @@ export const create_checkout = app =>
  * 5. `upsert` the draft `order` into the database.
  * 
  * 
- * @param {import("./types.api.js").CheckoutCreateType} order_checkout
- * @param {keyof F} gateway_handle chosen payment gateway
+ * @param {import("./types.api.d.ts").CheckoutCreateType} order_checkout
+ * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
  * 
  * 
  * @returns {Promise<Partial<OrderData>>}
@@ -224,7 +208,7 @@ async (order_checkout, gateway_handle) => {
   // eval pricing with discounts
   const order_priced = await eval_pricing(app)(order_validated);
   
-  /**@type {import("./types.api.js").OrderDataUpsert} */
+  /**@type {import("./types.api.d.ts").OrderDataUpsert} */
   const order = {
     ...order_priced,
     status : {
@@ -235,7 +219,6 @@ async (order_checkout, gateway_handle) => {
       // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
-    // id: undefined
   }
   
 
@@ -275,13 +258,9 @@ async (order_checkout, gateway_handle) => {
 
 
 /**
- * @template {import("../index.js").db_driver} D
- * @template {import("../index.js").storage_driver} E
- * @template {Record<string, payment_gateway>} [F=Record<string, payment_gateway>]
  * 
- * 
- * @param {App<any, any, any, D, E, F>} app 
- * @param {import("./types.api.js").OrderDataUpsert} order 
+ * @param {App} app 
+ * @param {import("./types.api.d.ts").OrderDataUpsert} order 
  */
 const reserve_stock_of_order = async (app, order) => {
   await app.api.products.changeStockOfBy(
@@ -371,12 +350,7 @@ async (checkoutId, client_payload) => {
 
 /**
  * 
- * @template {import("../index.js").db_driver} [D=any]
- * @template {import("../index.js").storage_driver} [E=any]
- * @template {Record<string, payment_gateway>} [F=any]
- * 
- * 
- * @param {App<any, any, any, D, E, F>} app 
+ * @param {App} app 
  */
 export const inter = app => {
 

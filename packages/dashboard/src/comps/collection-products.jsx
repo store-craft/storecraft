@@ -32,7 +32,7 @@ const CollectionBase = forwardRef(
    * 
    * @typedef {object} CollectionBaseParams
    * @prop {string} collection_handle_or_id `handle` or `id`
-   * @prop {number} limit `limit` of query
+   * @prop {number} [limit=5] `limit` of query
    * @prop {(count: number) => void} onLoaded when loaded reports query count
    * @prop {import('./fields-view.jsx').FieldContextData<
    *  import('@storecraft/core/v-api').CollectionType> & 
@@ -140,10 +140,15 @@ const CollectionBase = forwardRef(
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *  import('@storecraft/core/v-api').CollectionType,
- *  import('../pages/collection.jsx').Context>
- * } param
+ *  import('../pages/collection.jsx').Context,
+ *  import('@storecraft/core/v-api').CollectionType
+ * >} param
  */
-const CollectionProducts = ({ value, context }) => {
+const CollectionProducts = (
+  { 
+    value, context 
+  }
+) => {
 
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false)
@@ -196,7 +201,7 @@ const CollectionProducts = ({ value, context }) => {
         collection_handle_or_id={value?.handle} 
         context={context}
         onLoaded={setCount}
-        className='text-sm h-fit' />          
+        />          
     <div className='flex flex-row justify-end'>
       <div className='flex flex-row items-center w-fit gap-3 mt-7'>
         <span children='Add Product' className='text-gray-500' />

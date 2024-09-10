@@ -443,7 +443,7 @@ export class App {
   handler = async (req, context) => {
     context = context ?? {};
     const start_millis = Date.now();
-    const request = await this.#_platform.encode(req, context)
+    const request = await this.#_platform.encode(req, context);
     
     /** @type {import('./v-rest/types.public.d.ts').ApiResponse} */
     const polka_response = {

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "checkJs": true,
     "resolveJsonModule": true,
+    "maxNodeModuleJsDepth": 100,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true

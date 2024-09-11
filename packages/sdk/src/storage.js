@@ -4,7 +4,7 @@ import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
 
 /**
  * 
- * `Storecraft` storage service.
+ * @description `Storecraft` storage service.
  * 
  * Supports:
  * - direct `downloads` / `uploads`
@@ -32,7 +32,7 @@ export default class Storage {
 
   /**
    * 
-   * Retrieve the `features` of `storage`, which informs:
+   * @description Retrieve the `features` of `storage`, which informs:
    * - Does `storage` supports `pre-signed` urls for `download` / `upload`
    * 
    * 
@@ -71,7 +71,7 @@ export default class Storage {
   }
   
   /**
-   * Get a blob from `storage` driver with `presigned` urls
+   * @description Get a blob from `storage` driver with `presigned` urls
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -116,7 +116,7 @@ export default class Storage {
   }
 
   /**
-   * Get a blob from `storage` driver, straight download. (Not recommended)
+   * @description Get a blob from `storage` driver, straight download. (Not recommended)
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -145,7 +145,7 @@ export default class Storage {
   }  
 
   /**
-   * Get a blob from `storage` driver.
+   * @description Get a blob from `storage` driver.
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -177,7 +177,7 @@ export default class Storage {
       this.getBlob(path).then(blob => URL.createObjectURL(blob));
 
   /**
-   * get file source by inspecting the url:
+   * @description get file source by inspecting the url:
    * 
    * - If it starts with `storage://`, then use `backend` 
    * storage service, to download and convert it to encoded 
@@ -214,7 +214,7 @@ export default class Storage {
 
 
   /**
-   * Put a blob into `storage` driver with `presigned` urls
+   * @description Put a blob into `storage` driver with `presigned` urls
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -256,7 +256,7 @@ export default class Storage {
   }
 
   /**
-   * Put a blob into `storage` driver with direct `upload` (Not Recommended)
+   * @description Put a blob into `storage` driver with direct `upload` (Not Recommended)
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -286,7 +286,7 @@ export default class Storage {
   }
 
   /**
-   * Put bytes into `storage` driver.
+   * @description Put bytes into `storage` driver.
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
@@ -307,7 +307,7 @@ export default class Storage {
   }
 
   /**
-   * Delete a `file` by key
+   * @description Delete a `file` by key
    * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`

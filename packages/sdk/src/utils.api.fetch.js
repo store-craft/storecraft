@@ -21,6 +21,7 @@ export const url = (config, path) => {
 
 
 /**
+ * @description 
  * - Prepends `backend` endpoint. 
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
@@ -61,6 +62,7 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
 
 
 /**
+ * @description 
  * - Prepends `backend` endpoint. 
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
@@ -201,8 +203,7 @@ export async function list(sdk, resource, query={}) {
 
 
 /**
- * A simple resource base `class` with `CRUD` helpers
- * 
+ * @description A simple resource base `class` with `CRUD` helpers
  * 
  * @template {any} U upsert type
  * @template {any} G get type

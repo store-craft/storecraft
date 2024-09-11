@@ -151,6 +151,7 @@ async (order) => {
     auto_discounts, 
     manual_discounts, 
     order.shipping_method, 
+    order.address,
     order?.contact?.customer_id,
     app.taxes
   );

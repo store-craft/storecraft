@@ -64,9 +64,13 @@ const parse = v => {
     }
    )
 
-   r.lines = parseRange(r.lines ?? '');
-
-   return r;
+   console.log(r)
+   const lines = parseRange(r.lines ?? '');
+   console.log(r)
+   return {
+    ...r,
+    lines
+   };
 }
 
 const theme_dark = themes.oneDark;
@@ -144,9 +148,9 @@ export const CodeBlockCore = (
               tokens.map(
                 (line, i) => {
                   const lineProps = getLineProps({ line, key: i });
-                  const isLineHighlighted = lines.includes(String(i+1))
+                  const isLineHighlighted = lines.includes(String(i+1)) || lines.includes(i+1);
                   lineProps.className = `
-                    ${lineProps.className} table-row ${isLineHighlighted ? 'bg-gray-600' : 'bg-transparent'}
+                    ${lineProps.className} table-row ${isLineHighlighted ? 'bg-black/20 dark:bg-white/20' : 'bg-transparent'}
                   `;
 
                   // console.log('lineProps ', lineProps)

@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
- * Base `customers` **CRUD**
+ * @description Base `customers` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').CustomerTypeUpsert, 

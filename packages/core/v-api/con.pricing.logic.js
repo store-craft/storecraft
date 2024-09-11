@@ -886,14 +886,16 @@ export const calculate_line_items_for_discount =
  * @param {LineItem[]} line_items 
  * @param {DiscountType[]} auto_discounts disabled discounted will be filtered out
  * @param {DiscountType[]} coupons disabled coupons will be filtered out
- * @param {Partial<ShippingMethodType>} shipping_method 
+ * @param {Partial<ShippingMethodType>} [shipping_method] 
+ * @param {Partial<import('./types.api.d.ts').AddressType>} [shipping_address]
  * @param {string} [uid=undefined] 
  * @param {import('../v-tax/types.public.d.ts').tax_provider} [tax_provider=undefined] 
+ * @param {import('./types.api.d.ts').OrderData} [tax_provider=undefined] 
  * 
  * @returns {Promise<PricingData>}
  */
 export const calculate_pricing = async (
-  line_items, auto_discounts=[], coupons=[], shipping_method, uid=undefined,
+  line_items, auto_discounts=[], coupons=[], shipping_method, shipping_address, uid=undefined,
   tax_provider=undefined
 ) => {
 
@@ -1018,7 +1020,7 @@ export const calculate_pricing = async (
 
   {
     if(tax_provider) {
-      report.taxes = await tax_provider.compute({...report});
+      report.taxes = await tax_provider.compute(shipping_address, {...report});
       report.total += report.taxes.reduce((p, c) => p + c.value ?? 0, 0);
     }
   }

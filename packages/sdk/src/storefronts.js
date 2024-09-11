@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 
 /**
- * Base `storefronts` **CRUD**
+ * @description Base `storefronts` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').StorefrontTypeUpsert, 

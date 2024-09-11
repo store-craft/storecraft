@@ -33,13 +33,14 @@ export class UniformTaxes {
   /**
    * @type {tax_provider["compute"]}
    */
-  async compute (pricing) {
+  async compute (shipping_address, pricing) {
     const value = (pricing.total_without_taxes * this.#percents) / 100.0;
 
     return [
       {
         value,
-        name: this.name
+        name: this.name,
+        description: `${this.percents}% VAT Taxes`
       }
     ]
   }

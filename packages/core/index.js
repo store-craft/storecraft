@@ -126,7 +126,7 @@ export class App {
     this.#_config = config;
     this.#_is_ready = false;
     this.#_pubsub = new PubSub(this);
-    this.#_taxes = new UniformTaxes(10);
+    this.#_taxes = new UniformTaxes(0);
   } 
 
 

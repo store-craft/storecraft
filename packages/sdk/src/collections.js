@@ -3,7 +3,7 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 import { filter_fields, filter_unused } from './utils.functional.js';
 
 /**
- * Base `collections` **CRUD**
+ * @description Base `collections` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').CollectionTypeUpsert, 

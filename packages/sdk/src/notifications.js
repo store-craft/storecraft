@@ -4,7 +4,7 @@ import {
 } from './utils.api.fetch.js';
 
 /**
- * Base `notifications` **CRUD**
+ * @description Base `notifications` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').NotificationTypeUpsert, 

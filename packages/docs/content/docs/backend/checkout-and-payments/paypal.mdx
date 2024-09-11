@@ -32,6 +32,7 @@ new Paypal(config);
 
 ```ts
 import { App } from '@storecraft/core';
+import { UniformTaxes } from '@storecraft/core/v-taxes';
 import { MongoDB } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
@@ -41,6 +42,7 @@ const app = new App(config)
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
+.withTaxes(new UniformTaxes(18))
 .withPaymentGateways(
   {
     'paypal_standard_prod': new Paypal(

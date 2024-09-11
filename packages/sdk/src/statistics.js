@@ -3,6 +3,9 @@ import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
 import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
 
+/**
+ * @description statistics endpoint
+ */
 export default class Statistics  {
   /** @type {StorecraftSDK} */
   #sdk;
@@ -54,7 +57,7 @@ export default class Statistics  {
 
 
   /**
-   * Load **Orders** `statistics`
+   * @description Load **Orders** `statistics`
    * 
    * @param {string | number | Date} [from_day] `ISO` string | `UTC` | `timestamp` | `Date`
    * @param {string | number | Date} [to_day] `ISO` string | `UTC` | `timestamp` | `Date`
@@ -76,7 +79,7 @@ export default class Statistics  {
   }
 
   /**
-   * Load **count** `statistics`
+   * @description Load **count** `statistics`
    * 
    * @param {keyof App["db"]["resources"]} table 
    * @param {import('@storecraft/core/v-api').ApiQuery} [query]

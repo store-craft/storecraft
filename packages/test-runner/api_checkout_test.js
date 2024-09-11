@@ -7,6 +7,7 @@ import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { assert_async_throws } from './utils.js';
+import { UniformTaxes } from '@storecraft/core/v-tax';
 
 
 /** @type {import('@storecraft/core/v-api').ShippingMethodTypeUpsert} */
@@ -45,7 +46,7 @@ export const create = app => {
     {
       'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
     }
-  );
+  ).withTaxes(new UniformTaxes(10));
 
 
   const s = suite(
@@ -115,6 +116,13 @@ export const create = app => {
       assert.ok(
         draft_order?.pricing?.total,
         'pricing was not set'
+      );
+
+      // payment
+      assert.ok(
+        draft_order?.pricing?.taxes.length &&
+        draft_order?.pricing?.total!=draft_order?.pricing?.total_without_taxes,
+        'taxes was not set'
       );
 
       assert.ok(

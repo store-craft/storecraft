@@ -6,6 +6,7 @@ import { create_title_gen, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { calculate_pricing } from '@storecraft/core/v-api/con.pricing.logic.js';
 import { to_handle } from '@storecraft/core/v-api/utils.func.js';
+import { UniformTaxes } from '@storecraft/core/v-tax';
 
 
 /**
@@ -1344,6 +1345,7 @@ export const create = () => {
           price: 50,
           id: ''
         }, 
+        undefined,
         'cus_ID_i_promised_a_discount_to'
       );
   
@@ -1382,6 +1384,7 @@ export const create = () => {
           price: 50,
           id: ''
         }, 
+        undefined,
         'cus_not_eligible'
       );
   
@@ -1398,6 +1401,82 @@ export const create = () => {
 
   });
 
+
+  s('order discount with 10% taxes: 10% OFF For a specific customers', async (ctx) => {
+
+    const title = 'order discount with 10% taxes: 10% OFF For a specific customers';
+    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    const discount = { 
+      active: true, id: '',
+      handle: to_handle(title), 
+      title,
+      priority: 0, 
+      application: enums.DiscountApplicationEnum.Auto, 
+      info: {
+        details: {
+          meta: enums.DiscountMetaEnum.order,
+          /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+          extra: {
+            fixed: 0, percent: 10
+          }
+        },
+        filters: [
+          { // discount for a specific product handle
+            meta: enums.FilterMetaEnum.o_has_customer,
+            /** @type {import('@storecraft/core/v-api').FilterValue_o_has_customers} */
+            value: [
+              {
+                id: 'cus_ID_i_promised_a_discount_to'
+              },
+            ]
+          }
+        ]
+      }
+    }    
+
+    { // eligible customer
+      const pricing = await calculate_pricing(
+        [
+          {
+            id: 'pr-1', qty: 3, 
+            data: { 
+              tags: ['regular'], 
+              qty: 100, 
+              active: true, title: '', 
+              price: 100,
+              handle: 'pr-1', id: ''
+            }
+          },
+        ],
+        [
+          discount
+        ],
+        [],
+        {
+          title: '',
+          handle: '',
+          price: 50,
+          id: ''
+        }, 
+        undefined,
+        'cus_ID_i_promised_a_discount_to',
+        new UniformTaxes(10)
+      );
+  
+      const ok = (
+        pricing.subtotal_discount==30 &&
+        pricing.total_without_taxes==(50+300-30) &&
+        pricing.total==((50+300-30)*(110)/100.0) &&
+        pricing.taxes.length>0
+      );
+  
+      assert.ok(
+        ok,
+        'discount validation has not passed'
+      )
+    }
+
+  });
 
   return s;
 }

@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
- * Base `settings` **CRUD**
+ * @description Base `settings` **CRUD**
  * 
  * @extends {collection_base<any, any>}
  */

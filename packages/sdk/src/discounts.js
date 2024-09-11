@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
- * Base `discounts` **CRUD**
+ * @description Base `discounts` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').DiscountTypeUpsert, 

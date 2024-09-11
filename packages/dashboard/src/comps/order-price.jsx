@@ -8,6 +8,7 @@ import { LinkWithState } from '@/hooks/useNavigateWithState.jsx'
  * 
  * @typedef {object} EntryParams
  * @prop {string} title
+ * @prop {string} [description]
  * @prop {string} [link=undefined]
  * @prop {number} value
  * @prop {import('@/pages/order.jsx').Context} [context]
@@ -17,12 +18,12 @@ import { LinkWithState } from '@/hooks/useNavigateWithState.jsx'
  */
 const Entry = (
   {
-    title, value, link, context
+    title, value, description='', link, context
   }
 ) => {
 
   return (
-    <div className='flex flex-row justify-between items-center w-full'>
+    <div className='flex flex-row justify-between items-center w-full' title={description ?? title}>
       {
         link &&
         <LinkWithState 
@@ -96,30 +97,11 @@ const OrderPrice = (
     async (_) => {
       const { pubsub, query } = context;
 
-      // console.log('query', query)
-
-      /**@type {import('@storecraft/core/v-api').LineItem[]} */
-      const line_items = query['line_items'].get() ?? []
-      /**@type {import('@storecraft/core/v-api').DiscountType[]} */
-      const coupons = query['coupons'].get() ?? []
-      /**@type {import('@storecraft/core/v-api').OrderData["contact"]["customer_id"]} */
-      const uid = query['contact.customer_id']?.get();
-      /**@type {import('@storecraft/core/v-api').ShippingMethodType} */
-      const delivery = query['shipping_method'].get() ?? { price: 0 }
-
-      if(!delivery.price)
-        delivery.price = 0;
-
-      console.log('line_items ', line_items)
-      console.log('coupons ', coupons)
-      console.log('delivery ', delivery)
-      console.log('uid ', uid)
-
       try {
         setError(undefined);
 
-        const pricing_new = await sdk.orders.calculatePricing(
-          line_items, coupons, delivery, uid
+        const pricing_new = await sdk.checkout.pricing(
+          context.getState().data
         );
 
         setPricing(pricing_new);
@@ -140,7 +122,7 @@ const OrderPrice = (
   <div className='flex flex-col gap-3 w-full --shelf-text-minor'>
     <Entry title='SubTotal' value={pricing?.subtotal_undiscounted ?? 0} />
     <Entry title='Shipping' value={pricing?.shipping_method?.price ?? 0} />
-    {
+    { // discounts
       pricing?.evo?.slice(1).filter(e => e.total_discount>0).map(
         e => (
           <Entry 
@@ -148,6 +130,18 @@ const OrderPrice = (
               title={`${e.discount_code} (discount)`} 
               value={-e.total_discount} 
               link={`/pages/discounts/${e.discount_code}`}
+              context={context}/>
+        )
+      )
+    }
+    { // taxes
+      pricing?.taxes.map(
+        (tax) => (
+          <Entry 
+              key={tax.name}
+              title={`${tax.name} (tax)`} 
+              value={tax.value} 
+              description={tax.description}
               context={context}/>
         )
       )

@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
- * Base `shipping` **CRUD**
+ * @description Base `shipping` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').ShippingMethodTypeUpsert, 

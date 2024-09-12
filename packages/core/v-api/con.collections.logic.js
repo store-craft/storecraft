@@ -3,7 +3,8 @@ import { collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
   regular_remove, regular_upsert 
-} from './con.shared.js'
+} from './con.shared.js';
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.d.ts').CollectionType} ItemType
@@ -11,13 +12,13 @@ import {
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.collections;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
   /**
@@ -114,7 +115,7 @@ export const export_collection = (app) => {
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

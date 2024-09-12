@@ -1,3 +1,4 @@
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 
 const html = `
@@ -26,7 +27,7 @@ const html = `
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
 

@@ -1,3 +1,5 @@
+/** @import { ApiPolka } from './types.public.js' */
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js';
 import openapi_html from './docs.openapi.scalar.html.js'
@@ -5,11 +7,11 @@ import openapi_json from './openapi.json' assert { type: 'json' }
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('./types.public.d.ts').ApiPolka} */
+  /** @type {ApiPolka} */
   const polka = new Polka();
 
   polka.get(

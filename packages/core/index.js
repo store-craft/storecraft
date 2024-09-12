@@ -1,3 +1,16 @@
+/** 
+ * @import { StorecraftConfig } from "./types.public.js";
+ * @import { storage_driver } from "./v-storage/types.public.js";
+ * @import { db_driver } from "./v-database/types.public.js";
+ * @import { payment_gateway } from "./v-payments/types.public.js";
+ * @import { extension } from "./v-extensions/types.public.js";
+ * @import { InferPlatformContext, InferPlatformNativeRequest, InferPlatformNativeResponse, PlatformAdapter } from "./v-platform/types.public.js";
+ * @import { mailer } from "./v-mailer/types.public.js";
+ * @import { tax_provider } from "./v-tax/types.public.js";
+ * @import { PubSubOnEvents } from "./v-pubsub/types.public.js";
+ * @import { ApiResponse } from "./v-rest/types.public.js";
+ * 
+ */
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
 import { create_api } from './v-api/index.js'
@@ -5,16 +18,6 @@ import { PubSub } from './v-pubsub/public.js';
 import { UniformTaxes } from './v-tax/public.js';
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
-
-/** 
- * @typedef {Partial<import('./types.public.d.ts').StorecraftConfig>} StorecraftConfig
- * @typedef {import('./v-storage/types.public.d.ts').storage_driver} storage_driver
- * @typedef {import('./v-database/types.public.d.ts').db_driver} db_driver
- * @typedef {import('./v-payments/types.public.d.ts').payment_gateway} payment_gateway
- * @typedef {import('./v-extensions/types.public.d.ts').extension} extension
- * @typedef {import('./v-platform/types.public.d.ts').PlatformAdapter} PlatformAdapter
- * @typedef {import('./v-mailer/types.public.d.ts').mailer} mailer
- */
 
 
 /**
@@ -27,7 +30,7 @@ import pkg from './package.json' assert { type: "json" }
  * `payments` map type
  * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>]
  * `extensions` map type
- * @template {import('./v-tax/types.public.d.ts').tax_provider} [Taxes=UniformTaxes]
+ * @template {tax_provider} [Taxes=UniformTaxes]
  * 
  * @description This is the main `storecraft` **App**
  * 
@@ -468,17 +471,17 @@ export class App {
   /**
    * @description Process a request with context in the native platform
    * 
-   * @param {import('./v-platform/types.public.d.ts').InferPlatformNativeRequest<Platform>} req
-   * @param {import('./v-platform/types.public.d.ts').InferPlatformContext<Platform>} [context] 
+   * @param {InferPlatformNativeRequest<Platform>} req
+   * @param {InferPlatformContext<Platform>} [context] 
    * 
-   * @returns {Promise<import('./v-platform/types.public.d.ts').InferPlatformNativeResponse<Platform>>}
+   * @returns {Promise<InferPlatformNativeResponse<Platform>>}
    */
   handler = async (req, context) => {
     context = context ?? {};
     const start_millis = Date.now();
     const request = await this.#_platform.encode(req, context);
     
-    /** @type {import('./v-rest/types.public.d.ts').ApiResponse} */
+    /** @type {ApiResponse} */
     const polka_response = {
       headers: new Headers(),
       finished: false,
@@ -607,7 +610,7 @@ export class App {
    * @description Quickly attach an `event` subscriber. This is just a quick way
    * to interface into {@link PubSub}
    * 
-   * @type {import('./v-pubsub/types.public.d.ts').PubSubOnEvents<this, this>["on"]}
+   * @type {PubSubOnEvents<this, this>["on"]}
    */
   on = (event, callback) => {
     this.pubsub.on(event, callback);

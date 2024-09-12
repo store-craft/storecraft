@@ -44,7 +44,7 @@ const DAY = 86400000
 /**
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const compute_statistics = app => 
 /**
@@ -243,14 +243,14 @@ const tables = [
 
 /**
  * 
- * Compute the count `statistics` of a table with `query`
+ * @description Compute the count `statistics` of a table with `query`
  *  
  * @param {import("../types.public.d.ts").App} app
  */
 export const compute_count_of_query = app => 
 /**
  * 
- * @param {keyof App["db"]["resources"]} [table] which `table` to get count of query
+ * @param {Exclude<keyof App["db"]["resources"], 'search'>} [table] which `table` to get count of query
  * @param {import('./types.api.query.d.ts').ApiQuery} [query] The `query` used for counting
  * 
  * @returns {Promise<number>}

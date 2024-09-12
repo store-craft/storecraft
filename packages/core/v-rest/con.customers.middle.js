@@ -1,5 +1,5 @@
-import { assert_generic_auth, has_role } from './con.auth.middle.js'
-import { isDef } from '../v-api/utils.index.js'
+import { assert_generic_auth, has_role } from './con.auth.middle.js';
+import { isDef } from '../v-api/utils.index.js';
 
 /**
  * @param {import('./types.public.d.ts').ApiRequest} req 

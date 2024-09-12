@@ -5,6 +5,7 @@ import {
   regular_remove } from './con.shared.js'
 import { create_search_index, isDef } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.d.ts').CustomerType} ItemType
@@ -12,13 +13,13 @@ import { assert_zod } from './middle.zod-validate.js';
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.customers;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
   /**
@@ -72,7 +73,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const getByEmail = (app) => 
 /**
@@ -90,7 +91,7 @@ export const getByEmail = (app) =>
  * given a discount handle and query, return products of that discount
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_customer_orders = (app) => 
 /**
@@ -104,7 +105,7 @@ export const list_customer_orders = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

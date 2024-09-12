@@ -5,6 +5,7 @@ import { ZodSchema } from 'zod'
 import { 
   rewrite_media_from_storage, rewrite_media_to_storage 
 } from './con.storage.logic.js'
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.d.ts').searchable} searchable
@@ -20,7 +21,7 @@ import {
  * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.d.ts").App} app app instance
+ * @param {App} app app instance
  * @param {import("../v-database/types.public.d.ts").db_crud<
  *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
  *  import('../v-database/types.public.d.ts').withConcreteId<G>
@@ -100,7 +101,7 @@ export const regular_upsert = (
  * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  * @param {import("../v-database/types.public.d.ts").db_crud<
  *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
  *  import('../v-database/types.public.d.ts').withConcreteId<G>
@@ -140,7 +141,7 @@ export const regular_get = (app, db, event) =>
  * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  * @param {import("../v-database/types.public.d.ts").db_crud<
  *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
  *  import('../v-database/types.public.d.ts').withConcreteId<G>
@@ -188,7 +189,7 @@ export const regular_remove = (app, db, event) =>
  * @template {Partial<import('./types.api.d.ts').BaseType>} U
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  * @param {import("../v-database/types.public.d.ts").db_crud<
  *  import('../v-database/types.public.d.ts').withConcreteId<U>, 
  *  import('../v-database/types.public.d.ts').withConcreteId<G>

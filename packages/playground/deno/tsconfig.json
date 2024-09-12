@@ -1,0 +1,17 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 10,
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true,
+    "typeRoots": [
+      "../core/"
+    ]
+  },
+  "include": ["*", "*/*"]
+}

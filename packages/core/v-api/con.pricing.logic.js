@@ -1,23 +1,23 @@
 
 /**
- * @typedef {import('./types.api.d.ts').ProductType} ProductType
- * @typedef {import('./types.api.d.ts').ProductTypeUpsert} ProductTypeUpsert
- * @typedef {import('./types.api.d.ts').VariantType} VariantType
- * @typedef {import('./types.api.d.ts').VariantTypeUpsert} VariantTypeUpsert
+ * @import {ProductType} from './types.api.js';
+ * @import {ProductTypeUpsert} from './types.api.js';
+ * @import {VariantType} from './types.api.js';
+ * @import {VariantTypeUpsert} from './types.api.js';
  * @typedef {ProductType | ProductTypeUpsert | VariantType | VariantTypeUpsert} ProductLike
- * @typedef {import('./types.api.d.ts').ShippingMethodType} ShippingMethodType
- * @typedef {import('./types.api.d.ts').FilterMetaEnum} FilterMeta
- * @typedef {import('./types.api.d.ts').Filter} Filter
- * @typedef {import('./types.api.d.ts').DiscountType} DiscountType
- * @typedef {import('./types.api.d.ts').DiscountDetails} DiscountDetails
- * @typedef {import('./types.api.d.ts').DiscountMetaEnum} DiscountMeta
- * @typedef {import('./types.api.d.ts').BulkDiscountExtra} BulkDiscountExtra
- * @typedef {import('./types.api.d.ts').OrderDiscountExtra} OrderDiscountExtra
- * @typedef {import('./types.api.d.ts').RegularDiscountExtra} RegularDiscountExtra
- * @typedef {import('./types.api.d.ts').BuyXGetYDiscountExtra} BuyXGetYDiscountExtra
- * @typedef {import('./types.api.d.ts').BundleDiscountExtra} BundleDiscountExtra
- * @typedef {import('./types.api.d.ts').LineItem} LineItem
- * @typedef {import('./types.api.d.ts').PricingData} PricingData
+ * @import {ShippingMethodType} from './types.api.js';
+ * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
+ * @import {Filter} from './types.api.js';
+ * @import {DiscountType} from './types.api.js';
+ * @import {DiscountDetails} from './types.api.js';
+ * @typedef {import('./types.api.js').DiscountMetaEnum} DiscountMeta
+ * @import {BulkDiscountExtra} from './types.api.js';
+ * @import {OrderDiscountExtra} from './types.api.js';
+ * @import {RegularDiscountExtra} from './types.api.js';
+ * @import {BuyXGetYDiscountExtra} from './types.api.js';
+ * @import {BundleDiscountExtra} from './types.api.js';
+ * @import {LineItem} from './types.api.js';
+ * @import {PricingData} from './types.api.js';
  * 
  */
 
@@ -994,6 +994,7 @@ export const calculate_pricing = async (
           {
             ...evo_entry,
             discount_code: discount.handle,
+            discount,
             subtotal: ctx.subtotal,
             total: ctx.total,
           }

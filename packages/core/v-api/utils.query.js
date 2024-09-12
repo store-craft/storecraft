@@ -1,11 +1,10 @@
+/**
+ * @import {
+ *  ApiQuery, Cursor, SortCursor, ExpandQuery, SortOrder, Tuple
+ * } from './types.api.query.js';
+ */
 import { parse } from "../v-ql/index.js";
 import { assert } from "./utils.func.js";
-
-/**
- * @typedef {import("./types.api.query.js").ApiQuery} ParsedApiQuery
- * @typedef {import("./types.api.query.js").Cursor} Cursor
- * @typedef {import("./types.api.query.js").SortCursor} SortCursor
- */
 
 
 const SORT_BY = 'sortBy';
@@ -21,10 +20,10 @@ const END_BEFORE = 'endBefore';
 const EXPAND = 'expand';
 
 /**
- * Parse string tuples of the form (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
+ * @description Parse string tuples of the form (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
  * @template {string} T
  * @param {string} str 
- * @returns {import("./types.api.query.js").Tuple<T>[] | undefined}
+ * @returns {Tuple<T>[] | undefined}
  */
 export const parse_tuples = (str="") => {
   if(!str) return undefined;
@@ -49,14 +48,14 @@ export const parse_tuples = (str="") => {
                   parts.slice(1).join(':').trim()
                 ]
               }
-            )
+            );
 }
 
 /**
  * 
  * @param {URLSearchParams} s 
- * @param {import("./types.api.query.js").ExpandQuery} [def=['*']] default value 
- * @return {import("./types.api.query.js").ExpandQuery}
+ * @param {ExpandQuery} [def=['*']] default value 
+ * @return {ExpandQuery}
  */
 export const parse_expand = (s, def = ['*']) => {
   return (
@@ -68,7 +67,7 @@ export const parse_expand = (s, def = ['*']) => {
 /**
  * 
  * @param {string} s 
- * @returns {import("./types.api.query.js").SortCursor}
+ * @returns {SortCursor}
  */
 export const parse_sortby = (s) => {
   return (s ?? '(updated_at, id)').replace(/[()]/g, '').split(',').map(
@@ -78,25 +77,26 @@ export const parse_sortby = (s) => {
 /**
  * 
  * @param {string} s 
- * @returns {import("./types.api.query.js").SortOrder}
+ * @returns {SortOrder}
  */
 export const parse_sort_order = (s='desc') => {
   return (s==='asc') ? 'asc' : 'desc';
 }
 
 /**
- * Parse a queries such as:
+ * @description Parse a queries such as:
  * 1. `vql="tag:a (tag:b)"&limit=10&startAt=(updated:2012,id:tomer)&order=asc`
  * 2. `startAt=(updated:2012,id:tomer)&sort=(updated:+, id:+)`
  * 
  * INTO a {`ParsedApiQuery`}
  * 
  * @param {URLSearchParams | string} s 
- * @returns {ParsedApiQuery | undefined}
+ * 
+ * @returns {ApiQuery | undefined}
  */
 export const parse_query = (s) => {
   s = s instanceof URLSearchParams ? s : new URLSearchParams(s)
-  /** @type {ParsedApiQuery} */
+  /** @type {ApiQuery} */
   const q = {};
 
   q.expand = parse_expand(s);
@@ -194,7 +194,7 @@ const cursor_to_string = c => {
 
 /**
  * 
- * @param {import("./types.api.query.js").ApiQuery} q 
+ * @param {ApiQuery} q 
  */
 export const api_query_to_searchparams = q => {
   const sp = new URLSearchParams();

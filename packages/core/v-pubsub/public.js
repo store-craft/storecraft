@@ -1,4 +1,4 @@
-
+/** @import { EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber } from "./types.public.d.ts" */
 
 /**
  * 
@@ -11,7 +11,7 @@ export class PubSub {
 
   /**
    * 
-   * @type {Record<string, import("./types.public.d.ts").PubSubSubscriber[]>}
+   * @type {Record<string, PubSubSubscriber[]>}
    */
   #subscribers = {};
   /**
@@ -33,7 +33,7 @@ export class PubSub {
    * 
    * @description Does a `storecraft` `event` has handlers ?
    * 
-   * @param {import("./types.public.d.ts").PubSubEvent} event 
+   * @param {PubSubEvent} event 
    */
   has(event) {
     return this.#subscribersOf(event).length > 0;
@@ -41,24 +41,38 @@ export class PubSub {
 
   /**
    * 
-   * @description Dispatch a `storecraft` `event`
+   * @description Dispatch a `storecraft` `event` {@link PubSubEvent}.
+   * Events are dispatched searially with **LIFO**, meaning
+   * - The last subscriber, has the highest priority and gets notified first.
+   * - Also, you can use `stopPropagation()` method to stop the event from propagating
+   * to other subscribers.
    * 
    * @template [P=any]
    * 
-   * @param {import("./types.public.d.ts").PubSubEvent} event a `storecraft` event type
+   * @param {PubSubEvent} event a `storecraft` event type
    * @param {P} [payload] extra payload to dispatch
+   * 
+   * @see {@link PubSubEvent}
    */
   async dispatch(event, payload) {
     try {
+      let is_event_stopped = false;
+      /** @type {EventPayload} */
+      const event_payload = {
+        event,
+        payload,
+        app: this.#app,
+        stopPropagation: () => {
+          is_event_stopped = true;
+        }
+      }
+
       const subs = this.#subscribers[event] ?? [];
-      for(const sub of subs) {
-        await sub(
-          {
-            event,
-            payload,
-            app: this.#app
-          }
-        );
+      for(let ix=subs.length-1; ix>=0; --ix) {
+        if(is_event_stopped)
+          break;
+        
+        await subs.at(ix)(event_payload);
       }
     } catch(e) {
       console.log(e)
@@ -78,8 +92,8 @@ export class PubSub {
    * 
    * @description Subscribe to a `storecraft` event
    * 
-   * @param {import("./types.public.d.ts").PubSubEvent} event An event identifier
-   * @param {import("./types.public.d.ts").PubSubSubscriber} callback a `callback` 
+   * @param {PubSubEvent} event An event identifier
+   * @param {PubSubSubscriber} callback a `callback` 
    * event handler to invoke, can be a `promise`
    * 
    * 
@@ -98,7 +112,7 @@ export class PubSub {
   /**
    * @description Subscribe to a `storecraft` event
    * 
-   * @type {import("./types.public.d.ts").PubSubOnEvents["on"]}
+   * @type {PubSubOnEvents["on"]}
    * 
    * @returns {Function} a self invoking `unsubscribe` function for the event
    */
@@ -110,8 +124,8 @@ export class PubSub {
   /**
    * @description unsubscribe to a `storecraft` event
    * 
-   * @param {import("./types.public.d.ts").PubSubEvent} event An event identifier
-   * @param {import("./types.public.d.ts").PubSubSubscriber} callback a `callback` 
+   * @param {PubSubEvent} event An event identifier
+   * @param {PubSubSubscriber} callback a `callback` 
    * event handler to remove
    */
   remove(event, callback) {

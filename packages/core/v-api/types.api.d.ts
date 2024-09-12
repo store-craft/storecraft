@@ -1986,6 +1986,11 @@ export type EvoEntry = {
   discount_code?: string;
 
   /** 
+   * @description The `discount`
+   */
+  discount?: DiscountType;
+  
+  /** 
    * @description The amount of money that was discounted 
    * by this discount at the current stage.
    */

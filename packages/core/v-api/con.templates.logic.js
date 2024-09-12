@@ -3,6 +3,7 @@ import { templateTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 import { decode } from '../v-crypto/base64.js';
+import { App } from "../index.js";
 
 /**
  * @typedef {import('./types.api.d.ts').TemplateType} ItemType
@@ -10,7 +11,7 @@ import { decode } from '../v-crypto/base64.js';
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.templates;
 
@@ -29,7 +30,7 @@ const decode_if_base64 = val => {
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
 /**
@@ -59,7 +60,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

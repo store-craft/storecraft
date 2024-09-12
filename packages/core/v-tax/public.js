@@ -1,8 +1,5 @@
-
-
 /**
- * 
- * @typedef {import("./types.public.d.ts").tax_provider} tax_provider
+ * @import { tax_provider } from "./types.public.d.ts"
  */
 
 

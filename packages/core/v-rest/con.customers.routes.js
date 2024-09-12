@@ -1,8 +1,13 @@
+/** 
+ * @import { ApiRequest, ApiResponse, ApiPolka } from './types.public.js' 
+ * @import { Role } from "../v-api/types.api.js"; 
+ */
 import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { parse_auth_user, roles_guard } from './con.auth.middle.js'
 import { parse_query } from '../v-api/utils.query.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
+import { App } from '../index.js'
 
 /**
  * @typedef {import('../v-api/types.api.d.ts').CustomerType} ItemType
@@ -10,11 +15,11 @@ import { owner_or_admin_guard } from './con.customers.middle.js'
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('./types.public.d.ts').ApiPolka} */
+  /** @type {ApiPolka} */
   const polka = new Polka();
 
   const middle_authorize_admin = roles_guard(['admin'])

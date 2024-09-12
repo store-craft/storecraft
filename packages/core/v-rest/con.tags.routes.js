@@ -1,3 +1,5 @@
+/** @import { ApiPolka } from './types.public.js' */
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 import { assert } from '../v-api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
@@ -9,11 +11,11 @@ import { parse_query } from '../v-api/utils.query.js'
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('./types.public.d.ts').ApiPolka} */
+  /** @type {ApiPolka} */
   const polka = new Polka();
 
   const middle_authorize_admin = authorize_by_roles(app, ['admin'])

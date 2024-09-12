@@ -1,3 +1,10 @@
+/**
+ * @import { 
+ *  OrderData, DiscountType, CheckoutCreateType, 
+ *  OrderDataUpsert, ValidationEntry
+ * } from './types.api.js';
+ * @import { payment_gateway } from '../v-payments/types.payments.d.ts';
+ */
 import { 
   App, CheckoutStatusEnum, DiscountApplicationEnum, 
   FulfillOptionsEnum, PaymentOptionsEnum 
@@ -9,11 +16,6 @@ import { checkoutCreateTypeSchema } from "./types.autogen.zod.api.js";
 import { assert } from "./utils.func.js";
 
 
-/**
- * @typedef {import("./types.api.d.ts").OrderData} OrderData
- * @typedef {import("./types.api.d.ts").DiscountType} DiscountType
- * @typedef {import("../v-payments/types.payments.d.ts").payment_gateway} payment_gateway
- */
 
 
 /**
@@ -29,7 +31,7 @@ export const validate_checkout = app =>
  * 3. re-merge latest `products` data inside the `line-items`
  * 
  * 
- * @template {import("./types.api.d.ts").CheckoutCreateType} T
+ * @template {CheckoutCreateType} T
  * 
  * 
  * @param {T} checkout
@@ -54,13 +56,13 @@ async (checkout) => {
 
   // console.log('snaps_products', snaps_products)
 
-  /**@type {import("./types.api.d.ts").ValidationEntry[]} */
+  /**@type {ValidationEntry[]} */
   const errors = [];
 
   /**
    * 
    * @param {string} id 
-   * @param {import("./types.api.d.ts").ValidationEntry["message"]} message 
+   * @param {ValidationEntry["message"]} message 
    */
   const errorWith = (id, message) => {
     errors.push({ id, message });
@@ -121,7 +123,7 @@ export const eval_pricing = (app) =>
  * 3. calculate `pricing`
  * 4. return the `order` with `pricing` information
  * 
- * @template {import("./types.api.d.ts").CheckoutCreateType} T
+ * @template {CheckoutCreateType} T
  * 
  * 
  * @param {T} order 
@@ -181,7 +183,7 @@ export const create_checkout = app =>
  * 5. `upsert` the draft `order` into the database.
  * 
  * 
- * @param {import("./types.api.d.ts").CheckoutCreateType} order_checkout
+ * @param {CheckoutCreateType} order_checkout
  * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
  * 
  * 
@@ -212,7 +214,7 @@ async (order_checkout, gateway_handle) => {
   // eval pricing with discounts
   const order_priced = await eval_pricing(app)(order_validated);
 
-  /**@type {import("./types.api.d.ts").OrderDataUpsert} */
+  /**@type {OrderDataUpsert} */
   const order = {
     ...order_priced,
     status : {
@@ -264,7 +266,7 @@ async (order_checkout, gateway_handle) => {
 /**
  * 
  * @param {App} app 
- * @param {import("./types.api.d.ts").OrderDataUpsert} order 
+ * @param {OrderDataUpsert} order 
  */
 const reserve_stock_of_order = async (app, order) => {
   await app.api.products.changeStockOfBy(

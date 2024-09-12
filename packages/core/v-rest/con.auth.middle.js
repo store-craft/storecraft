@@ -1,3 +1,7 @@
+/** 
+ * @import { ApiRequest, ApiResponse } from './types.public.js' 
+ * @import { Role } from "../v-api/types.api.js"; 
+ */
 import { App } from "../index.js";
 import { verify } from "../v-crypto/jwt.js";
 import { assert } from "../v-api/utils.func.js";
@@ -12,11 +16,6 @@ const API_KEY_HEADER = 'X-API-KEY'
 export const assert_generic_auth = (o) => {
   assert(o, 'auth/error', 401);
 }
-
-/**
- * @typedef {import("./types.public.d.ts").ApiRequest} ApiRequest 
- * @typedef {import("./types.public.d.ts").ApiResponse} ApiResponse 
- */
 
 /**
  * 
@@ -105,7 +104,7 @@ export const parse_basic_auth_or_apikey = (app) => {
 
 /**
  * 
- * @param {import("../v-api/types.api.js").Role[]} roles 
+ * @param {Role[]} roles 
  * @param {ApiRequest["user"]} user 
  */
 export const has_role = (roles=[], user) => {
@@ -124,7 +123,7 @@ export const is_admin = (user) => {
 
 /**
  * 
- * @param {import("../v-api/types.public.d.ts").Role[]} roles 
+ * @param {Role[]} roles 
  */
 export const roles_guard = (roles=[]) => {
   /**
@@ -143,7 +142,7 @@ export const roles_guard = (roles=[]) => {
 /**
  * combine parse auth user with roles
  * @param {App} app 
- * @param {import("../v-api/types.public.d.ts").Role[]} roles 
+ * @param {Role[]} roles 
  */
 export const authorize_by_roles = (app, roles=[]) => {
 

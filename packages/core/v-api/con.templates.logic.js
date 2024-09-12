@@ -39,7 +39,6 @@ export const upsert = (app) =>
 (item) => regular_upsert(
   app, db(app), 'template', templateTypeUpsertSchema, 
   (before) => {
-    console.log(before)
     return {
       ...before,
       handle: before.handle ?? to_handle(before.title),

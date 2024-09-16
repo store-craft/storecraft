@@ -64,7 +64,7 @@ export const Dashboard = (
 //   )
 
   return (
-<div className='--bg-red-300 w-screen ' style={{height: '100dvh'}} >
+<div className='bg-gray-800 w-screen ' style={{height: '100dvh'}} >
   <div className='w-full h-full' style={{zoom: 0.9}} >
 
   <Router>

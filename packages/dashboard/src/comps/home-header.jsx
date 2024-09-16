@@ -22,7 +22,7 @@ const Header = (
 ) => {
 
   return (
-<p className={`text-3xl mb-5 shelf-text-title-color 
+<div className={`text-3xl mb-5 shelf-text-title-color 
               shelf-border-color w-full overflow-auto 
               border-b pb-2 flex flex-row gap-2 text-kf-500 
               ${className}`}
@@ -46,7 +46,7 @@ const Header = (
 
   </div>
 
-</p>
+</div>
   )
 }
 

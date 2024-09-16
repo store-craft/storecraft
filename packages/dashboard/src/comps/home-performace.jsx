@@ -137,19 +137,20 @@ const InfoCapsule = (
 
   return (
 <div className={`p-1 pl-2 px-1 rounded-full border shelf-border-color
-               cursor-pointer max-w-full
+               cursor-pointer 
                bg-kf-400 text-white 
                dark:bg-kf-800/20 
-               w-fit h-fit 
+               w-fit max-w-full h-fit 
                flex flex-row justify-between gap-3 text-sm shadow-lg
-               hover:scale-105 transition-transform`} {...rest}>
+               hover:scale-[1.04] duration-75 transition-transform`} {...rest}>
   <span 
       children={label} 
-      className='whitespace-nowrap max-w-max 
-                --max-w-[5rem] overflow-x-auto' />        
+      className='whitespace-nowrap flex-0 max-w-[80%] 
+      overflow-clip hover:overflow-x-auto 
+                --max-w-[5rem] ' />        
   <div 
       children={value} 
-      className='rounded-full bg-white 
+      className='rounded-full bg-white flex-shrink-0
               text-pink-500 px-2 font-semibold'/>
 </div>        
   )
@@ -217,7 +218,7 @@ const TopSoldCard = (
     </div> 
     <ShowIf show={data.length}>
       <div className='w-full rounded-lg flex flex-row flex-wrap gap-1 py-3
-                      flex-1 overflow-y-auto content-start'>
+                      flex-1 overflow-clip hover:overflow-y-auto overflow-x-hidden content-start'>
       {
         data.map(
           ([k, v], ix) => (

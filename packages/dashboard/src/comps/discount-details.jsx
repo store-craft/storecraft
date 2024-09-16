@@ -265,8 +265,7 @@ const explain_filter = (f) => {
       );
     case FilterMetaEnum.p_in_collections.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_collections} */
-        const cast = f.value ?? [];
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_collections} */(f.value ?? []));
   
         return (
         <>
@@ -274,7 +273,8 @@ const explain_filter = (f) => {
           <ol className='list-disc list-inside'>
           { 
             cast.map(
-              c => <li 
+              (c, ix) => <li 
+                key={ix}
                 children={c.title} 
                 className='font-semibold shelf-text-label-color-second' 
                 /> 
@@ -286,8 +286,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_not_in_collections.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_collections} */
-        const cast = f.value ?? [];
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_collections} */(f.value ?? []));
 
         return (
           <>
@@ -296,7 +295,7 @@ const explain_filter = (f) => {
           <ol className='list-disc list-inside'>
           { 
             cast.map(
-              c => <li children={c.title} 
+              (c, ix) => <li children={c.title} key={ix}
                        className='font-semibold shelf-text-label-color-second' /> 
             )
           }
@@ -306,8 +305,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_in_tags.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
-        const cast = f.value ?? [];
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */(f.value ?? []));
 
         return (
         <>
@@ -315,7 +313,7 @@ const explain_filter = (f) => {
           <ol className='list-disc list-inside'>
           { 
             cast.map(
-              c => <li children={c} 
+              (c, ix) => <li children={c} key={ix}
                        className='font-semibold shelf-text-label-color-second' /> 
             )
           }
@@ -325,8 +323,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_not_in_tags.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_tags} */
-        const cast = f.value ?? [];
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_tags} */(f.value ?? []));
         
         return (
         <>
@@ -335,7 +332,7 @@ const explain_filter = (f) => {
           <ol className='list-disc list-inside'>
           { 
             cast.map(
-              c => <li children={c} 
+              (c, ix) => <li children={c} key={ix}
                       className='font-semibold shelf-text-label-color-second' /> 
             )
           }
@@ -345,8 +342,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_in_products.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */
-        const cast = f.value ?? [];
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */ (f.value ?? []));
 
         return (
         <>
@@ -354,7 +350,7 @@ const explain_filter = (f) => {
           <ol className='list-disc list-inside'>
           { 
             cast.map(
-              c => <li children={c.title} 
+              (c, ix) => <li children={c.title} key={ix}
                     className='font-semibold shelf-text-label-color-second' /> 
             )
           }
@@ -364,8 +360,8 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_not_in_products.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_products} */
-        const cast = f.value ?? [];
+        
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_products} */ (f.value ?? []));
 
         return (
         <>
@@ -374,7 +370,7 @@ const explain_filter = (f) => {
           <ol className='list-disc list-inside'>
           { 
             cast.map(
-              c => <li children={c.title} 
+              (c, ix) => <li children={c.title} key={ix}
                   className='font-semibold shelf-text-label-color-second' /> 
             )
           }
@@ -384,8 +380,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_in_price_range.op:
       {
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_price_range} */
-        const cast = f.value;
+        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_price_range} */(f.value));
 
         return (
         <>

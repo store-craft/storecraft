@@ -10,6 +10,7 @@ import { to_handle } from '@storecraft/sdk/src/utils.functional.js'
 import { Bling, Card, Input } from './common-ui.jsx'
 import { LinkWithState } from '../hooks/useNavigateWithState.jsx'
 import { Link } from 'react-router-dom'
+import { MainPortal } from '@/layout.jsx'
 
 /**
  * 
@@ -522,15 +523,16 @@ export const RecordActions = (
         className='ml-3 px-0 py-0 border-0 ' 
         onClick={onClickDelete} />
   }
-  <Modal 
+    <MainPortal.PortalChild>        
+    <Modal 
       ref={ref_modal} 
       onApprove={onApproveDelete} 
-      title={<p className=' text-xl flex 
-                            flex-row items-center gap-3'>
+      title={<p className='text-xl flex flex-row items-center gap-3'>
                 <AiOutlineWarning className='text-2xl'/> 
                 Warning
              </p>
             }/>
-</div>
+    </MainPortal.PortalChild>        
+    </div>
   )
 }

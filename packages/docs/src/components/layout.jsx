@@ -57,7 +57,7 @@ const Layout = (
                     }>
 
       <Header 
-          className='absolute inset-0 px-4
+          className='absolute inset-0 px-3
                    bg-white/10 dark:bg-transparent backdrop-blur-sm 
                      shadow-sm md:px-10 flex-shrink-0 
                      w-full z-40 ' 

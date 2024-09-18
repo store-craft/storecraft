@@ -1,3 +1,5 @@
+/** @import { ApiPolka } from './types.public.js' */
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
 import { 
@@ -7,12 +9,12 @@ import {
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  * 
  */
 export const create_routes = (app) => {
 
-  /** @type {import('./types.public.d.ts').ApiPolka} */
+  /** @type {ApiPolka} */
   const polka = new Polka();
 
   // admin only

@@ -1,12 +1,13 @@
+import { App } from '../index.js';
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.search;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const quicksearch = (app) => 
 /**
@@ -25,7 +26,7 @@ export const quicksearch = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

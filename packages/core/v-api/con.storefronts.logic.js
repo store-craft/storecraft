@@ -1,3 +1,4 @@
+import { App } from "../index.js";
 import { assert, to_handle } from './utils.func.js'
 import { storefrontTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
@@ -9,13 +10,13 @@ import { regular_get, regular_list,
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.storefronts;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
 /**
@@ -39,7 +40,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_storefront_products = (app) => 
 /**
@@ -51,7 +52,7 @@ export const list_storefront_products = (app) =>
 }
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_storefront_collections = (app) => 
 /**
@@ -63,7 +64,7 @@ export const list_storefront_collections = (app) =>
 }
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_storefront_discounts = (app) => 
 /**
@@ -75,7 +76,7 @@ export const list_storefront_discounts = (app) =>
 }
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_storefront_shipping_methods = (app) => 
 /**
@@ -87,7 +88,7 @@ export const list_storefront_shipping_methods = (app) =>
 }
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_storefront_posts = (app) => 
 /**
@@ -105,7 +106,7 @@ export const list_storefront_posts = (app) =>
  * efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const export_storefront = (app) => {
   /**
@@ -151,7 +152,7 @@ export const export_storefront = (app) => {
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

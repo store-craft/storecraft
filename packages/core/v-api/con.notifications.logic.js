@@ -5,6 +5,7 @@ import {
   regular_remove } from './con.shared.js'
 import { assert_zod } from './middle.zod-validate.js';
 import { isDef } from './utils.index.js';
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.d.ts').NotificationType} ItemType
@@ -12,13 +13,13 @@ import { isDef } from './utils.index.js';
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.notifications;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const addBulk = (app) => 
 /**
@@ -56,7 +57,7 @@ async (items) => {
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

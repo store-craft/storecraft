@@ -1,3 +1,4 @@
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 
 const html = `
@@ -5,7 +6,7 @@ const html = `
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="data:image/vnd.microsoft.icon;base64,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" />
+    <link rel="icon" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Storecraft - Next Gen Commerce-As-Code</title>
     <script 
@@ -24,9 +25,73 @@ const html = `
 </html>
 `
 
+const favicon = `
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="gradient-0-0" gradientUnits="userSpaceOnUse" x1="128" y1="0" x2="128" y2="256" xlink:href="#gradient-0"/>
+    <linearGradient id="gradient-0" bx:pinned="true">
+      <stop offset="0" style="stop-color: rgb(6, 2, 8);"/>
+      <stop offset="1" style="stop-color: rgb(203, 60, 178);"/>
+    </linearGradient>
+    <filter id="drop-shadow-filter-1" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 0 0 9 0.32 #d302dd">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="9"/>
+      <feOffset dx="0" dy="0"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="0.64"/>
+      </feComponentTransfer>
+      <feFlood flood-color="#d302dd"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect style="stroke: rgb(0, 0, 0); fill: url('#gradient-0-0'); stroke-width: 0px; transform-origin: 128px 128px;" x="0" y="0" width="256" height="256" rx="40" ry="40"/>
+  <g style="filter: url('#drop-shadow-filter-1'); isolation: isolate;" transform="matrix(1.0046420097351074, 0, 0, 1.0286140441894531, 0, -2.5584280490875244)">
+    <g style="filter: none;" transform="matrix(1, 0, 0, 1.192275, 0, -38.412273)">
+      <g>
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 64)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers; fill: rgba(245, 0, 255, 0.984);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, -64)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, -96)"/>
+      <g transform="matrix(1, 0, 0, 1, 0, -32)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.984);"/>
+      </g>
+    </g>
+    <g style="">
+      <g transform="matrix(0, 1, -1, 0, -228.235992, 16.342003)" style="transform-origin: 356.236px 111.658px;">
+        <rect y="107.769" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.984);" x="228.236"/>
+        <rect y="111.547" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.984);" x="228.236"/>
+      </g>
+      <g transform="matrix(0.184501, 1.046358, -0.984807, 0.173648, -136.347, 16.342016)" style="transform-origin: 356.236px 111.658px;">
+        <rect y="107.769" width="234.402" height="3.663" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.984);" x="228.236"/>
+        <rect y="111.547" width="237.149" height="3.706" style="stroke: rgb(0, 0, 0); paint-order: stroke; stroke-opacity: 0; fill: rgba(245, 0, 255, 0.984);" x="228.236" rx="2" ry="2"/>
+      </g>
+      <g transform="matrix(-0.184502, 1.046358, -0.984807, -0.173648, -321.502838, 17.971649)" style="transform-origin: 356.236px 111.658px;">
+        <rect y="107.769" width="234.402" height="3.663" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.984);" x="228.236"/>
+        <rect y="111.547" width="231.655" height="3.62" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.984);" x="228.236"/>
+      </g>
+    </g>
+  </g>
+  <path d="M 167.124 91.72 C 168.117 85.455 166.814 80.572 163.217 77.07 C 159.621 73.568 153.693 71.817 145.437 71.817 C 139.971 71.817 135.237 72.528 131.238 73.952 C 127.238 75.376 124.018 77.326 121.578 79.803 C 119.138 82.281 117.493 85.113 116.641 88.302 C 115.873 90.922 115.826 93.227 116.496 95.221 C 117.166 97.215 118.438 98.965 120.311 100.475 C 122.184 101.983 124.573 103.307 127.478 104.447 C 130.383 105.585 133.723 106.581 137.496 107.435 L 151.677 110.852 C 159.864 112.732 166.884 115.237 172.737 118.37 C 178.589 121.501 183.241 125.231 186.689 129.56 C 190.137 133.886 192.326 138.868 193.254 144.506 C 194.184 150.143 193.804 156.465 192.114 163.468 C 189.302 174.516 184.148 183.997 176.652 191.913 C 169.154 199.828 159.713 205.893 148.327 210.106 C 136.941 214.321 123.959 216.428 109.381 216.428 C 94.746 216.428 82.538 214.236 72.755 209.851 C 62.971 205.466 56.176 198.803 52.368 189.863 C 48.561 180.923 48.276 169.618 51.513 155.952 L 92.001 155.952 C 90.937 161.59 91.275 166.288 93.013 170.046 C 94.753 173.805 97.731 176.651 101.946 178.587 C 106.161 180.523 111.372 181.491 117.578 181.491 C 123.273 181.491 128.319 180.723 132.718 179.186 C 137.116 177.648 140.737 175.513 143.583 172.78 C 146.427 170.046 148.319 166.913 149.256 163.383 C 150.022 160.081 149.704 157.247 148.299 154.885 C 146.897 152.521 144.347 150.471 140.651 148.735 C 136.956 146.998 132.104 145.388 126.096 143.908 L 108.881 139.638 C 94.6 136.163 84.072 130.541 77.297 122.767 C 70.523 114.995 68.818 104.475 72.183 91.207 C 74.823 80.387 80.092 70.905 87.987 62.762 C 95.883 54.62 105.581 48.27 117.081 43.715 C 128.581 39.158 140.964 36.881 154.232 36.881 C 167.784 36.881 178.987 39.172 187.837 43.757 C 196.689 48.341 202.847 54.762 206.312 63.02 C 209.777 71.276 210.209 80.842 207.612 91.72 L 167.124 91.72 Z" style="fill: rgb(255, 255, 255);"/>
+</svg>
+`;
+
+
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
 
@@ -36,6 +101,13 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.sendHtml(html);
+    }
+  );
+
+  polka.get(
+    '/favicon.svg',
+    async (req, res) => {
+      res.sendHtml(favicon);
     }
   );
 

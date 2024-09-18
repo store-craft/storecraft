@@ -1,4 +1,5 @@
-import { assert, to_handle } from './utils.func.js'
+import { App } from "../index.js";
+import { assert, to_handle } from './utils.func.js';
 import { tagTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -9,13 +10,13 @@ import { regular_get, regular_list,
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.tags;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
 /**
@@ -45,7 +46,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

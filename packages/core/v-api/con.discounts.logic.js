@@ -3,6 +3,7 @@ import { discountTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 import { isDef } from './utils.index.js';
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.d.ts').DiscountType} ItemType
@@ -10,13 +11,13 @@ import { isDef } from './utils.index.js';
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.discounts;
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
 /**
@@ -47,7 +48,7 @@ export const upsert = (app) =>
  * given a discount handle and query, return products of that discount
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_discounts_products = (app) => 
 /**
@@ -62,7 +63,7 @@ export const list_discounts_products = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

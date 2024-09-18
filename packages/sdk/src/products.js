@@ -4,7 +4,7 @@ import {
 } from './utils.api.fetch.js';
 
 /**
- * Base `products` **CRUD**
+ * @description Base `products` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').ProductTypeUpsert, 

@@ -1,5 +1,6 @@
 import useDarkMode from "@/hooks/useDarkMode.js";
 import { Card } from "./landing-card.jsx"
+import Link from "next/link.js";
 
 const LearnMoreFooter = (
   {
@@ -9,7 +10,7 @@ const LearnMoreFooter = (
 
   return (
 <div className='flex justify-end text-gray-500 '>
-  <a className='border-b w-fit border-dashed font-bold text-xs border-gray-500' 
+  <Link className='border-b w-fit border-dashed font-bold text-xs border-gray-500' 
       href={href}
       children='learn more'/>
 </div>

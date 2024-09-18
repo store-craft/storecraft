@@ -116,6 +116,21 @@ export const apiAuthResultSchema = z
     refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
   })
   .describe("Result of `auth` request for `signin` / `signup` / `refresh`");
+export const baseTypeSchema = idableConcreteSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    media: z.array(z.string()).optional().describe("List of images urls"),
+    attributes: z
+      .array(attributeTypeSchema)
+      .optional()
+      .describe("List of attributes"),
+    tags: z
+      .array(z.string())
+      .optional()
+      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
+    description: z.string().optional().describe("Rich description"),
+    active: z.boolean().optional().describe("Is the entity active ?"),
+  });
 export const tagTypeSchema = idableSchema
   .extend(timestampsSchema.shape)
   .extend({
@@ -126,6 +141,24 @@ export const tagTypeUpsertSchema = tagTypeSchema
   .omit({ id: true, handle: true })
   .and(withOptionalHandleOrIDSchema)
   .describe("Tag upsert type");
+export const collectionTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("The `handle` of the entity"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Title of collection"),
+  active: z.boolean().describe("Is the entity active ?"),
+  published: z
+    .string()
+    .optional()
+    .describe(
+      "Collections can be exported into\njson with products, this is the url",
+    ),
+});
+export const collectionTypeUpsertSchema = collectionTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Collection upsert type");
 export const variantOptionSelectionSchema = z
   .object({
     option_id: z.string().describe("Variant option id"),
@@ -144,6 +177,20 @@ export const handleAndIDSchema = z
     handle: z.string().describe("The `handle` of the entity"),
   })
   .describe("both `id` and `handle` of entity required");
+export const variantOptionSchema = z
+  .object({
+    name: z
+      .string()
+      .min(3, "Name should be longer than 3")
+      .describe("Variant option name (for example 'Size')"),
+    id: z.string().describe("Variant option id"),
+    values: z
+      .array(textEntitySchema)
+      .describe(
+        "Variant option values\n(for example `Small` / `Medium` / `Large` ..)",
+      ),
+  })
+  .describe("The data of a variant option");
 export const discountApplicationEnumSchema = z
   .object({
     Auto: z.object({
@@ -351,6 +398,42 @@ export const filterMetaEnumSchema = z.object({
     name: z.string().optional(),
   }),
 });
+export const discountMetaEnumSchema = z
+  .object({
+    regular: z.object({
+      id: z.literal(0),
+      type: z.literal("regular"),
+      name: z.string().optional(),
+    }),
+    bulk: z.object({
+      id: z.literal(1),
+      type: z.literal("bulk"),
+      name: z.string().optional(),
+    }),
+    buy_x_get_y: z.object({
+      id: z.literal(2),
+      type: z.literal("buy_x_get_y"),
+      name: z.string().optional(),
+    }),
+    order: z.object({
+      id: z.literal(3),
+      type: z.literal("order"),
+      name: z.string().optional(),
+    }),
+    bundle: z.object({
+      id: z.literal(4),
+      type: z.literal("bundle"),
+      name: z.string().optional(),
+    }),
+    any: z.object({
+      id: z.number(),
+      type: z.string(),
+      name: z.string().optional(),
+    }),
+  })
+  .describe(
+    "Discount meta data,\nsee <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
+  );
 export const regularDiscountExtraSchema = z
   .object({
     fixed: z
@@ -404,42 +487,62 @@ export const bundleDiscountExtraSchema = z
       ),
   })
   .describe("Parameters of bulk discount");
-export const discountMetaEnumSchema = z
+export const filterSchema = z
   .object({
-    regular: z.object({
-      id: z.literal(0),
-      type: z.literal("regular"),
-      name: z.string().optional(),
-    }),
-    bulk: z.object({
-      id: z.literal(1),
-      type: z.literal("bulk"),
-      name: z.string().optional(),
-    }),
-    buy_x_get_y: z.object({
-      id: z.literal(2),
-      type: z.literal("buy_x_get_y"),
-      name: z.string().optional(),
-    }),
-    order: z.object({
-      id: z.literal(3),
-      type: z.literal("order"),
-      name: z.string().optional(),
-    }),
-    bundle: z.object({
-      id: z.literal(4),
-      type: z.literal("bundle"),
-      name: z.string().optional(),
-    }),
-    any: z.object({
-      id: z.number(),
-      type: z.string(),
-      name: z.string().optional(),
-    }),
+    meta: z
+      .union([
+        filterMetaEnumSchema.shape.p_all,
+        filterMetaEnumSchema.shape.p_in_collections,
+        filterMetaEnumSchema.shape.p_not_in_collections,
+        filterMetaEnumSchema.shape.p_in_tags,
+        filterMetaEnumSchema.shape.p_not_in_tags,
+        filterMetaEnumSchema.shape.p_in_products,
+        filterMetaEnumSchema.shape.p_not_in_products,
+        filterMetaEnumSchema.shape.p_in_price_range,
+        filterMetaEnumSchema.shape.o_date_in_range,
+        filterMetaEnumSchema.shape.o_has_customer,
+        filterMetaEnumSchema.shape.o_items_count_in_range,
+        filterMetaEnumSchema.shape.o_subtotal_in_range,
+        filterMetaEnumSchema.shape.any,
+      ])
+      .describe("Meta data related to identifying the filter"),
+    value: z
+      .union([
+        filterValuePInCollectionsSchema,
+        filterValuePNotInCollectionsSchema,
+        filterValuePInProductsSchema,
+        filterValuePNotInProductsSchema,
+        filterValuePInTagsSchema,
+        filterValuePNotInTagsSchema,
+        filterValuePInPriceRangeSchema,
+        filterValueOSubtotalInRangeSchema,
+        filterValueOItemsCountInRangeSchema,
+        filterValueODateInRangeSchema,
+        filterValueOHasCustomersSchema,
+      ])
+      .optional()
+      .describe("The filter params"),
   })
-  .describe(
-    "Discount meta data,\nsee <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
-  );
+  .describe("Discount filter schema");
+export const shippingMethodTypeSchema = baseTypeSchema.extend({
+  price: z
+    .number()
+    .min(0, "Please set a price >= 0")
+    .describe("Shipping method price"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Name of shipping method"),
+  handle: z.string().describe("Readable `handle` of shipping"),
+});
+export const postTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("Unique `handle`"),
+  title: z
+    .string()
+    .min(3, "Title should be longer than 3")
+    .describe("Title of post"),
+  text: z.string().describe("Rich text of post"),
+});
 export const addressTypeSchema = z
   .object({
     firstname: z.string().optional().describe("First name of recipient"),
@@ -462,6 +565,61 @@ export const addressTypeSchema = z
     postal_code: z.string().optional().describe("Postal code"),
   })
   .describe("Address type");
+export const customerTypeSchema = baseTypeSchema.extend({
+  auth_id: z
+    .string()
+    .optional()
+    .describe(
+      "The `auth id` of the customer. it is the same as\ncustomer `id` with `au` prefix instead",
+    ),
+  firstname: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("Firstname"),
+  lastname: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("Lastname"),
+  email: z.string().email().describe("Email of customer"),
+  phone_number: z
+    .string()
+    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
+    .optional()
+    .describe("The phone number"),
+  address: addressTypeSchema.optional().describe("Address info of customer"),
+});
+export const customerTypeUpsertSchema = customerTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Customer upsert type");
+export const imageTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("Unique handle"),
+  name: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("Name"),
+  url: z
+    .string()
+    .min(1, "Should be longer than 1 characters")
+    .describe("It's published public url"),
+  usage: z
+    .array(z.string())
+    .optional()
+    .describe("List of assets using this image"),
+});
+export const imageTypeUpsertSchema = imageTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Image upsert type");
+export const shippingMethodTypeUpsertSchema = shippingMethodTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Shipping upsert type");
+export const postTypeUpsertSchema = postTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Post upsert type");
+export const settingsTypeSchema = baseTypeSchema;
 export const notificationActionTypeSchema = z
   .union([z.literal("route"), z.literal("url")])
   .describe(
@@ -510,36 +668,36 @@ export const validationEntrySchema = z
   .describe(
     "Checkouts or draft orders might be validated\nin automatic systems",
   );
-export const fulfillOptionsEnumSchema = z
+export const checkoutStatusEnumSchema = z
   .object({
-    draft: z.object({
+    created: z.object({
       id: z.literal(0),
-      name2: z.literal("draft"),
+      name2: z.literal("created"),
       name: z.string().optional(),
     }),
-    processing: z.object({
+    requires_action: z.object({
       id: z.literal(1),
-      name2: z.literal("processing"),
+      name2: z.literal("requires_action"),
       name: z.string().optional(),
     }),
-    shipped: z.object({
+    failed: z.object({
       id: z.literal(2),
-      name2: z.literal("shipped"),
+      name2: z.literal("failed"),
       name: z.string().optional(),
     }),
-    fulfilled: z.object({
+    complete: z.object({
       id: z.literal(3),
-      name2: z.literal("fulfilled"),
+      name2: z.literal("complete"),
       name: z.string().optional(),
     }),
-    cancelled: z.object({
+    unknown: z.object({
       id: z.literal(4),
-      name2: z.literal("cancelled"),
+      name2: z.literal("unknown"),
       name: z.string().optional(),
     }),
   })
   .describe(
-    "Fulfillment options encapsulate the current state,\nsee <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>",
+    "Checkout status encapsulate the current state,\nsee <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>",
   );
 export const paymentOptionsEnumSchema = z
   .object({
@@ -592,37 +750,47 @@ export const paymentOptionsEnumSchema = z
   .describe(
     "Payment options encapsulate the current state,\nsee <a href='#PaymentOptionsEnum'>#PaymentOptionsEnum</a>",
   );
-export const checkoutStatusEnumSchema = z
+export const fulfillOptionsEnumSchema = z
   .object({
-    created: z.object({
+    draft: z.object({
       id: z.literal(0),
-      name2: z.literal("created"),
+      name2: z.literal("draft"),
       name: z.string().optional(),
     }),
-    requires_action: z.object({
+    processing: z.object({
       id: z.literal(1),
-      name2: z.literal("requires_action"),
+      name2: z.literal("processing"),
       name: z.string().optional(),
     }),
-    failed: z.object({
+    shipped: z.object({
       id: z.literal(2),
-      name2: z.literal("failed"),
+      name2: z.literal("shipped"),
       name: z.string().optional(),
     }),
-    complete: z.object({
+    fulfilled: z.object({
       id: z.literal(3),
-      name2: z.literal("complete"),
+      name2: z.literal("fulfilled"),
       name: z.string().optional(),
     }),
-    unknown: z.object({
+    cancelled: z.object({
       id: z.literal(4),
-      name2: z.literal("unknown"),
+      name2: z.literal("cancelled"),
       name: z.string().optional(),
     }),
   })
   .describe(
-    "Checkout status encapsulate the current state,\nsee <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>",
+    "Fulfillment options encapsulate the current state,\nsee <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>",
   );
+export const taxRecordSchema = z
+  .object({
+    name: z.string().optional().describe("the name of the tax deduction"),
+    description: z
+      .string()
+      .optional()
+      .describe("the description of the tax deduction"),
+    value: z.number().describe("The absolute value of tax to deduct"),
+  })
+  .describe("tax record");
 export const discountErrorSchema = z
   .object({
     discount_code: z.string().describe("`handle` of the discount"),
@@ -815,6 +983,20 @@ export const paymentGatewayActionSchema = extensionActionSchema
   .describe(
     "Upon status query, the gateway return a list of possible actions,\nsuch as `void`, `capture`, `refund` etc...",
   );
+export const paymentGatewayStatusSchema = z
+  .object({
+    actions: z
+      .array(paymentGatewayActionSchema)
+      .optional()
+      .describe("List of possible actions to take"),
+    messages: z
+      .array(z.string())
+      .optional()
+      .describe(
+        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
+      ),
+  })
+  .describe("A payment `status`");
 export const paymentGatewayItemGetSchema = z
   .object({
     info: paymentGatewayInfoSchema.describe(
@@ -827,6 +1009,26 @@ export const paymentGatewayItemGetSchema = z
     handle: z.string().describe("The `handle` of the `gateway`"),
   })
   .describe("Upon querying the payment gateways");
+export const templateTypeSchema = baseTypeSchema.extend({
+  handle: z.string().optional().describe("`handle`"),
+  title: z.string().describe("`title` of `template`"),
+  template_html: z
+    .string()
+    .optional()
+    .describe("The **HTML** `template` `handlebars` string"),
+  template_text: z
+    .string()
+    .optional()
+    .describe("The **TEXT** `template` `handlebars` string"),
+  reference_example_input: z
+    .any()
+    .optional()
+    .describe("A reference example input for the template"),
+});
+export const templateTypeUpsertSchema = templateTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Upsert type for email template");
 export const quickSearchResourceSchema = z
   .object({
     id: z.string(),
@@ -935,21 +1137,6 @@ export const storecraftConfigSchema = z
       ),
   })
   .describe("Basic config for `storecraft`");
-export const baseTypeSchema = idableConcreteSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    media: z.array(z.string()).optional().describe("List of images urls"),
-    attributes: z
-      .array(attributeTypeSchema)
-      .optional()
-      .describe("List of attributes"),
-    tags: z
-      .array(z.string())
-      .optional()
-      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
-    description: z.string().optional().describe("Rich description"),
-    active: z.boolean().optional().describe("Is the entity active ?"),
-  });
 export const authUserTypeSchema = baseTypeSchema
   .omit({ id: true })
   .and(authBaseTypeSchema)
@@ -968,75 +1155,6 @@ export const authUserTypeSchema = baseTypeSchema
     }),
   )
   .describe("Auth user type");
-export const collectionTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The `handle` of the entity"),
-  title: z
-    .string()
-    .min(3, "Title should be longer than 3")
-    .describe("Title of collection"),
-  active: z.boolean().describe("Is the entity active ?"),
-  published: z
-    .string()
-    .optional()
-    .describe(
-      "Collections can be exported into\njson with products, this is the url",
-    ),
-});
-export const collectionTypeUpsertSchema = collectionTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Collection upsert type");
-export const variantOptionSchema = z
-  .object({
-    name: z
-      .string()
-      .min(3, "Name should be longer than 3")
-      .describe("Variant option name (for example 'Size')"),
-    id: z.string().describe("Variant option id"),
-    values: z
-      .array(textEntitySchema)
-      .describe(
-        "Variant option values\n(for example `Small` / `Medium` / `Large` ..)",
-      ),
-  })
-  .describe("The data of a variant option");
-export const filterSchema = z
-  .object({
-    meta: z
-      .union([
-        filterMetaEnumSchema.shape.p_all,
-        filterMetaEnumSchema.shape.p_in_collections,
-        filterMetaEnumSchema.shape.p_not_in_collections,
-        filterMetaEnumSchema.shape.p_in_tags,
-        filterMetaEnumSchema.shape.p_not_in_tags,
-        filterMetaEnumSchema.shape.p_in_products,
-        filterMetaEnumSchema.shape.p_not_in_products,
-        filterMetaEnumSchema.shape.p_in_price_range,
-        filterMetaEnumSchema.shape.o_date_in_range,
-        filterMetaEnumSchema.shape.o_has_customer,
-        filterMetaEnumSchema.shape.o_items_count_in_range,
-        filterMetaEnumSchema.shape.o_subtotal_in_range,
-        filterMetaEnumSchema.shape.any,
-      ])
-      .describe("Meta data related to identifying the filter"),
-    value: z
-      .union([
-        filterValuePInCollectionsSchema,
-        filterValuePNotInCollectionsSchema,
-        filterValuePInProductsSchema,
-        filterValuePNotInProductsSchema,
-        filterValuePInTagsSchema,
-        filterValuePNotInTagsSchema,
-        filterValuePInPriceRangeSchema,
-        filterValueOSubtotalInRangeSchema,
-        filterValueOItemsCountInRangeSchema,
-        filterValueODateInRangeSchema,
-        filterValueOHasCustomersSchema,
-      ])
-      .optional()
-      .describe("The filter params"),
-  })
-  .describe("Discount filter schema");
 export const buyXGetYDiscountExtraSchema = z
   .object({
     fixed: z
@@ -1068,80 +1186,6 @@ export const buyXGetYDiscountExtraSchema = z
       ),
   })
   .describe("Parameters of bulk discount");
-export const shippingMethodTypeSchema = baseTypeSchema.extend({
-  price: z
-    .number()
-    .min(0, "Please set a price >= 0")
-    .describe("Shipping method price"),
-  title: z
-    .string()
-    .min(3, "Title should be longer than 3")
-    .describe("Name of shipping method"),
-  handle: z.string().describe("Readable `handle` of shipping"),
-});
-export const postTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("Unique `handle`"),
-  title: z
-    .string()
-    .min(3, "Title should be longer than 3")
-    .describe("Title of post"),
-  text: z.string().describe("Rich text of post"),
-});
-export const customerTypeSchema = baseTypeSchema.extend({
-  auth_id: z
-    .string()
-    .optional()
-    .describe(
-      "The `auth id` of the customer. it is the same as\ncustomer `id` with `au` prefix instead",
-    ),
-  firstname: z
-    .string()
-    .min(1, "Should be longer than 1 characters")
-    .describe("Firstname"),
-  lastname: z
-    .string()
-    .min(1, "Should be longer than 1 characters")
-    .describe("Lastname"),
-  email: z.string().email().describe("Email of customer"),
-  phone_number: z
-    .string()
-    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$/)
-    .optional()
-    .describe("The phone number"),
-  address: addressTypeSchema.optional().describe("Address info of customer"),
-});
-export const customerTypeUpsertSchema = customerTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Customer upsert type");
-export const imageTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("Unique handle"),
-  name: z
-    .string()
-    .min(1, "Should be longer than 1 characters")
-    .describe("Name"),
-  url: z
-    .string()
-    .min(1, "Should be longer than 1 characters")
-    .describe("It's published public url"),
-  usage: z
-    .array(z.string())
-    .optional()
-    .describe("List of assets using this image"),
-});
-export const imageTypeUpsertSchema = imageTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Image upsert type");
-export const shippingMethodTypeUpsertSchema = shippingMethodTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Shipping upsert type");
-export const postTypeUpsertSchema = postTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Post upsert type");
-export const settingsTypeSchema = baseTypeSchema;
 export const notificationActionSchema = z
   .object({
     name: z.string().optional().describe("Name of the action"),
@@ -1159,6 +1203,21 @@ export const notificationActionSchema = z
   .describe(
     "Each notification may have an actionable item\nassociated with it. For example, clicking an order notification\nwill route to the order page",
   );
+const baseNotificationTypeSchema = z.object({
+  message: z
+    .string()
+    .describe(
+      "Message of notification, can be markdown,\nmarkup or plain text",
+    ),
+  author: z.string().optional().describe("Author of the notification"),
+  actions: z
+    .array(notificationActionSchema)
+    .optional()
+    .describe("List of actions"),
+  search: z.array(z.string()).optional().describe("search terms"),
+  id: z.string().optional().describe("`id` of notification"),
+});
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
 export const orderStatusSchema = z
   .object({
     checkout: z
@@ -1206,40 +1265,26 @@ export const orderStatusSchema = z
       .describe("`fulfillment` status"),
   })
   .describe("Status of `checkout`, `fulfillment` and `payment`");
-export const paymentGatewayStatusSchema = z
+export const orderPaymentGatewayDataSchema = z
   .object({
-    actions: z
-      .array(paymentGatewayActionSchema)
-      .optional()
-      .describe("List of possible actions to take"),
-    messages: z
-      .array(z.string())
+    gateway_handle: z.string().describe("The payment gateway identifier"),
+    on_checkout_create: z
+      .any()
       .optional()
       .describe(
-        "A list of messages of the current payment status,\nfor example `150$ were authorized...`",
+        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
       ),
+    on_checkout_complete: z
+      .any()
+      .optional()
+      .describe(
+        "Result of gateway at checkout completion, this will be used\nfor debugging purposes and observability.",
+      ),
+    latest_status: paymentGatewayStatusSchema
+      .optional()
+      .describe("Latest status of payment for caching"),
   })
-  .describe("A payment `status`");
-export const templateTypeSchema = baseTypeSchema.extend({
-  handle: z.string().optional().describe("`handle`"),
-  title: z.string().describe("`title` of `template`"),
-  template_html: z
-    .string()
-    .optional()
-    .describe("The **HTML** `template` `handlebars` string"),
-  template_text: z
-    .string()
-    .optional()
-    .describe("The **TEXT** `template` `handlebars` string"),
-  reference_example_input: z
-    .any()
-    .optional()
-    .describe("A reference example input for the template"),
-});
-export const templateTypeUpsertSchema = templateTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Upsert type for email template");
+  .describe("How did the order interacted with a payment gateway ?");
 export const discountDetailsSchema = z
   .object({
     meta: z
@@ -1265,44 +1310,9 @@ export const discountDetailsSchema = z
   .describe(
     "The details of how to apply a discount.\nThe type of discount and it's params",
   );
-const baseNotificationTypeSchema = z.object({
-  message: z
-    .string()
-    .describe(
-      "Message of notification, can be markdown,\nmarkup or plain text",
-    ),
-  author: z.string().optional().describe("Author of the notification"),
-  actions: z
-    .array(notificationActionSchema)
-    .optional()
-    .describe("List of actions"),
-  search: z.array(z.string()).optional().describe("search terms"),
-  id: z.string().optional().describe("`id` of notification"),
-});
 export const notificationTypeSchema = baseNotificationTypeSchema.extend(
   timestampsSchema.shape,
 );
-export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
-export const orderPaymentGatewayDataSchema = z
-  .object({
-    gateway_handle: z.string().describe("The payment gateway identifier"),
-    on_checkout_create: z
-      .any()
-      .optional()
-      .describe(
-        "Result of gateway at checkout creation, this will later be given\nto the `payment gateway` on any interaction, which will use it to identify the payment.",
-      ),
-    on_checkout_complete: z
-      .any()
-      .optional()
-      .describe(
-        "Result of gateway at checkout completion, this will be used\nfor debugging purposes and observability.",
-      ),
-    latest_status: paymentGatewayStatusSchema
-      .optional()
-      .describe("Latest status of payment for caching"),
-  })
-  .describe("How did the order interacted with a payment gateway ?");
 export const discountInfoSchema = z
   .object({
     details: discountDetailsSchema.describe(
@@ -1343,10 +1353,6 @@ export const discountTypeSchema = baseTypeSchema.extend({
     ])
     .describe("Discount application (`automatic` and `manual`)"),
 });
-export const discountTypeUpsertSchema = discountTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Discount upsert type");
 export const baseProductTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("The readable unique product `handle`"),
   isbn: z
@@ -1392,33 +1398,6 @@ export const variantTypeSchema = baseProductTypeSchema.extend({
       "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
     ),
 });
-export const variantTypeUpsertSchema = variantTypeSchema
-  .omit({
-    collections: true,
-    published: true,
-    discounts: true,
-    related_products: true,
-    id: true,
-    handle: true,
-  })
-  .and(
-    z.object({
-      collections: z
-        .array(handleAndIDSchema)
-        .optional()
-        .describe(
-          "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
-        ),
-      related_products: z
-        .array(baseProductTypeSchema.pick({ id: true, handle: true }))
-        .optional()
-        .describe(
-          "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
-        ),
-    }),
-  )
-  .and(withOptionalHandleOrIDSchema)
-  .describe("Variant upsert type");
 export const productTypeSchema = baseProductTypeSchema.extend({
   variants: z
     .array(variantTypeSchema)
@@ -1463,6 +1442,10 @@ export const productTypeUpsertSchema = productTypeSchema
   )
   .and(withOptionalHandleOrIDSchema)
   .describe("Product upsert type");
+export const discountTypeUpsertSchema = discountTypeSchema
+  .omit({ id: true, handle: true })
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Discount upsert type");
 export const storefrontTypeSchema = baseTypeSchema.extend({
   active: z.boolean().describe("Is the entity active ?"),
   handle: z.string().describe("Readable `handle`"),
@@ -1534,7 +1517,10 @@ export const storefrontTypeUpsertSchema = storefrontTypeSchema
 export const lineItemSchema = z
   .object({
     id: z.string().describe("`id` or `handle` of product"),
-    price: z.number().optional().describe("Product price snapshot"),
+    price: z
+      .number()
+      .optional()
+      .describe("Product unit price snapshot, if absent, try `data.price`"),
     qty: z
       .number()
       .describe("Integer quantity of how many such products\nwere bought"),
@@ -1549,45 +1535,6 @@ export const lineItemSchema = z
       .describe("(optional) the product data snapshot for\nfuture integrity"),
   })
   .describe("A line item is a product, that appeared in an order");
-export const evoEntrySchema = z
-  .object({
-    discount: discountTypeSchema.optional().describe("Discount at this step"),
-    discount_code: z.string().optional().describe("The discount code `handle`"),
-    total_discount: z
-      .number()
-      .optional()
-      .describe("The amount of money that was discounted\nby this discount"),
-    quantity_undiscounted: z
-      .number()
-      .optional()
-      .describe("How many items are left to discount"),
-    quantity_discounted: z
-      .number()
-      .optional()
-      .describe("How many items were discounted now"),
-    subtotal: z
-      .number()
-      .optional()
-      .describe("Running subtotal without shipping"),
-    total: z.number().optional().describe("Running total"),
-    line_items_next: z
-      .array(lineItemSchema)
-      .optional()
-      .describe("Available line items after discount"),
-  })
-  .describe(
-    "Explains how a specific discount was used\nto discount line items",
-  );
-export const variantCombinationSchema = z
-  .object({
-    selection: z
-      .array(variantOptionSelectionSchema)
-      .describe("A list of selection of option and value"),
-    product: productTypeSchema.describe(
-      "The product data associated with this variant",
-    ),
-  })
-  .describe("A tuple of option id and selected value id");
 export const baseCheckoutCreateTypeSchema = z.object({
   id: z
     .string()
@@ -1612,6 +1559,84 @@ export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
 const checkoutCreateTypeWithoutIDSchema = checkoutCreateTypeSchema.omit({
   id: true,
 });
+export const evoEntrySchema = z
+  .object({
+    discount_code: z.string().optional().describe("The discount code `handle`"),
+    total_discount: z
+      .number()
+      .optional()
+      .describe(
+        "The amount of money that was discounted\nby this discount at the current stage.",
+      ),
+    quantity_undiscounted: z
+      .number()
+      .optional()
+      .describe("How many items are left to discount"),
+    quantity_discounted: z
+      .number()
+      .optional()
+      .describe("How many items were discounted now"),
+    subtotal: z
+      .number()
+      .optional()
+      .describe(
+        "Running subtotal (from the beginning of all time) without shipping",
+      ),
+    total: z
+      .number()
+      .optional()
+      .describe("Running total (from the beginning of all time)"),
+    line_items_next: z
+      .array(lineItemSchema)
+      .optional()
+      .describe(
+        "Available line items, that were not eligible for this discount",
+      ),
+    line_items_discounted: z
+      .array(lineItemSchema)
+      .optional()
+      .describe("The line items, that were discounted"),
+  })
+  .describe(
+    "Explains how a specific discount was used\nto discount line items",
+  );
+export const variantCombinationSchema = z
+  .object({
+    selection: z
+      .array(variantOptionSelectionSchema)
+      .describe("A list of selection of option and value"),
+    product: productTypeSchema.describe(
+      "The product data associated with this variant",
+    ),
+  })
+  .describe("A tuple of option id and selected value id");
+export const variantTypeUpsertSchema = variantTypeSchema
+  .omit({
+    collections: true,
+    published: true,
+    discounts: true,
+    related_products: true,
+    id: true,
+    handle: true,
+  })
+  .and(
+    z.object({
+      collections: z
+        .array(handleAndIDSchema)
+        .optional()
+        .describe(
+          "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
+        ),
+      related_products: z
+        .array(baseProductTypeSchema.pick({ id: true, handle: true }))
+        .optional()
+        .describe(
+          "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",
+        ),
+    }),
+  )
+  .and(withOptionalHandleOrIDSchema)
+  .describe("Variant upsert type");
 export const pricingDataSchema = z
   .object({
     evo: z
@@ -1619,8 +1644,13 @@ export const pricingDataSchema = z
       .optional()
       .describe("Explanation of how discounts stack and change pricing"),
     shipping_method: shippingMethodTypeSchema
+      .partial()
       .optional()
       .describe("Selected shipping method"),
+    taxes: z
+      .array(taxRecordSchema)
+      .optional()
+      .describe("The taxes collected from the sale"),
     subtotal_undiscounted: z
       .number()
       .describe("Subtotal of items price before discounts"),
@@ -1630,7 +1660,7 @@ export const pricingDataSchema = z
     subtotal: z
       .number()
       .describe("`subtotal_undiscounted` - `subtotal_discount`"),
-    total: z.number().describe("`subtotal` + `shipping`"),
+    total: z.number().describe("`subtotal` + `shipping` + `taxes`"),
     quantity_total: z.number().describe("How many items are eligible"),
     quantity_discounted: z.number().describe("How many items were discounted"),
     uid: z.string().optional().describe("Authentication user id"),

@@ -4,12 +4,25 @@ import { count_regular, delete_me, delete_search_of, insert_search_of,
   regular_upsert_me, safe_trx, where_id_or_handle_table } from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
+import { base64 } from '@storecraft/core/v-crypto';
 
 /**
  * @typedef {import('@storecraft/core/v-database').db_templates} db_col
  */
 export const table_name = 'templates'
 
+/**
+ * @description if `base64_` prefixed then decode the postfix and return it,
+ * otherwise, just return the original value.
+ * @param {string} val 
+ */
+const decode_if_base64 = val => {
+  if(!val.startsWith('base64_'))
+    return val;
+
+  const b64 = val.split('base64_').at(1) ?? '';
+  return base64.decode(b64);
+}
 
 /**
  * @param {Kysely<import('../index.js').Database>} client 
@@ -30,8 +43,8 @@ export const upsert = (client) => {
             id: item.id,
             title: item.title,
             handle: item.handle,
-            template_html: item.template_html,
-            template_text: item.template_text,
+            template_html: decode_if_base64(item.template_html),
+            template_text: decode_if_base64(item.template_text),
             reference_example_input: JSON.stringify(item.reference_example_input ?? {})
           });
         }

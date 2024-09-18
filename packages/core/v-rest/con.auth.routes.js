@@ -1,15 +1,17 @@
+/** @import { ApiPolka } from './types.public.js' */
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 import { authorize_admin } from './con.auth.middle.js';
 import { parse_query } from '../v-api/utils.query.js';
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
   const middle_authorize_admin = authorize_admin(app);
 
-  /** @type {import('./types.public.d.ts').ApiPolka} */
+  /** @type {ApiPolka} */
   const polka = new Polka();
 
   // signup 

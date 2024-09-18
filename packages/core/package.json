@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -48,6 +48,10 @@
       "import": "./v-payments/public.js",
       "types": "./v-payments/types.public.d.ts"
     },
+    "./v-tax": {
+      "import": "./v-tax/public.js",
+      "types": "./v-tax/types.public.d.ts"
+    },
     "./v-mailer": {
       "import": "./v-mailer/public.js",
       "types": "./v-mailer/types.public.d.ts"
@@ -75,16 +79,15 @@
   },
   "scripts": {
     "core:test": "uvu -c",
-    "core:gen:zod": "npx ts-to-zod ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js",
+    "core:gen:zod": "npx ts-to-zod@latest ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js --skipValidation",
     "core:gen:vql": "node ./v-ql/compile.js",
     "core:gen:open-api": "node ./v-rest/docs.openapi.gen.js",
-    "core:publish": "npm publish --access public"
+    "core:publish": "npm run core:test && npm run core:gen:zod && npm run core:gen:open-api && npm publish --access public"
   },
   "devDependencies": {
     "@asteasolutions/zod-to-openapi": "^6.4.0",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",
-    "ts-to-zod": "^3.6.1",
     "uvu": "^0.5.6"
   },
   "dependencies": {

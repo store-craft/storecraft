@@ -1,3 +1,14 @@
+/**
+ * @import { 
+ ApiAuthSignupType,
+ ApiAuthResult,
+ AuthUserType,
+ ApiAuthChangePasswordType,
+ ApiAuthSigninType,
+ ApiAuthRefreshType,
+ ApiKeyResult
+ * } from './types.api.js';
+ */
 import * as jwt from '../v-crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
@@ -20,7 +31,6 @@ export const removeByEmail = (app) =>
  */
 (email) => {
   return remove_auth_user(app)(email);
-  // return app.db.resources.auth_users.removeByEmail(email);
 }
 
 /**
@@ -40,9 +50,9 @@ const isAdminEmail = (app, email) => {
 export const signup = (app) => 
 /**
  * 
- * @param {import('./types.api.d.ts').ApiAuthSignupType} body 
+ * @param {ApiAuthSignupType} body 
  * 
- * @returns {Promise<import('./types.api.d.ts').ApiAuthResult>}
+ * @returns {Promise<ApiAuthResult>}
  */
 async (body) => {
 
@@ -64,7 +74,7 @@ async (body) => {
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
 
-  /** @type {import('./types.api.d.ts').AuthUserType} */
+  /** @type {AuthUserType} */
   const au = apply_dates(
     {
       id: id,
@@ -128,9 +138,9 @@ async (body) => {
 export const change_password = (app) => 
 /**
  * 
- * @param {import('./types.api.d.ts').ApiAuthChangePasswordType} body 
+ * @param {ApiAuthChangePasswordType} body 
  * 
- * @returns {Promise<import('./types.api.d.ts').ApiAuthResult>}
+ * @returns {Promise<ApiAuthResult>}
  */
 async (body) => {
   assert_zod(apiAuthChangePasswordTypeSchema, body);
@@ -179,7 +189,7 @@ async (body) => {
 
   /** 
    * @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & 
-   * Pick<import('./types.api.d.ts').AuthUserType, 'roles'>> } 
+   * Pick<AuthUserType, 'roles'>> } 
    */
   const claims = {
     sub: existingUser.id,
@@ -222,11 +232,11 @@ async (body) => {
 export const signin = (app) => 
 /**
  * 
- * @param {import('./types.api.d.ts').ApiAuthSigninType} body 
+ * @param {ApiAuthSigninType} body 
  * @param {boolean} [fail_if_not_admin=false] 
  * 
  * 
- * @returns {Promise<import('./types.api.d.ts').ApiAuthResult>}
+ * @returns {Promise<ApiAuthResult>}
  */
 async (body, fail_if_not_admin=false) => {
   assert_zod(apiAuthSigninTypeSchema, body);
@@ -254,7 +264,7 @@ async (body, fail_if_not_admin=false) => {
 
   /** 
    * @type {Partial<Partial<import('../v-crypto/jwt.js').JWTClaims> & 
-   * Pick<import('./types.api.d.ts').AuthUserType, 'roles'>> } 
+   * Pick<AuthUserType, 'roles'>> } 
    */
   const claims = {
     sub: existingUser.id,
@@ -296,9 +306,9 @@ async (body, fail_if_not_admin=false) => {
 export const refresh = (app) => 
 /**
  * 
- * @param {import('./types.api.d.ts').ApiAuthRefreshType} body 
+ * @param {ApiAuthRefreshType} body 
  * 
- * @returns {Promise<import('./types.api.d.ts').ApiAuthResult>}
+ * @returns {Promise<ApiAuthResult>}
  */
 async (body) => {
   assert_zod(apiAuthRefreshTypeSchema, body);
@@ -342,7 +352,7 @@ async (body) => {
  * 
  * Compute the search terms of an `auth_user`
  * 
- * @param {import('./types.api.d.ts').AuthUserType} item 
+ * @param {AuthUserType} item 
  */
 export const create_search_terms = item => {
   return union(
@@ -363,7 +373,7 @@ export const create_search_terms = item => {
 export const create_api_key = (app) => 
 /**
  * 
- * @returns {Promise<import('./types.api.d.ts').ApiKeyResult>}
+ * @returns {Promise<ApiKeyResult>}
  */
 async () => {
 
@@ -419,7 +429,7 @@ async () => {
 
 /**
  * 
- * @param {import('./types.api.d.ts').ApiKeyResult} body 
+ * @param {ApiKeyResult} body 
  */
 export const parse_api_key = (body) => {
   const a = decode(body.apikey);
@@ -444,9 +454,9 @@ export const parse_api_key = (body) => {
 export const verify_api_key = (app) => 
 /**
  * 
- * @param {import('./types.api.d.ts').ApiKeyResult} body 
+ * @param {ApiKeyResult} body 
  * 
- * @returns {Promise<import('./types.api.d.ts').AuthUserType>}
+ * @returns {Promise<AuthUserType>}
  */
 async (body) => {
 

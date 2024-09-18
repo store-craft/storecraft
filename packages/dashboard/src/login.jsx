@@ -109,12 +109,12 @@ const Login = (
                     --md:overflow-auto
                     items-center justify-start 
                     md:justify-start md:items-start 
-                     md:flex-row 
+                     md:flex-row gap-10
                     --bg-green-500'>
 
       <div className='flex-shrink-0 order-first md:order-first
-                      scale-[0.8] origin-top
-                      md:scale-[0.8] md:origin-top-left 
+                      --scale-[0.8] origin-top
+                      --md:scale-[0.8] md:origin-top-left 
                       w-full max-w-[22rem] h-fit 
                       rounded-md 
                       '

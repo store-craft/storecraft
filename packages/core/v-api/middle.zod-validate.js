@@ -41,8 +41,8 @@ export const assert_zod = (zod_schema, item) => {
  */
 export const zod_validate_body = (zod_schema) => {
   /**
-   * @param {import("../types.public.d.ts").ApiRequest} req
-   * @param {import("../types.public.d.ts").ApiResponse} res
+   * @param {import("../v-rest/types.public.d.ts").ApiRequest} req
+   * @param {import("../v-rest/types.public.d.ts").ApiResponse} res
    */
   return async (req, res) => {
     assert_zod(zod_schema, req.parsedBody);

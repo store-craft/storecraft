@@ -1838,6 +1838,27 @@ export type CheckoutStatusEnum = {
   },
 }
 
+/**
+ * @description tax record
+ */
+
+export type TaxRecord = {
+  /**
+   * @description the name of the tax deduction
+   */
+  name?: string;
+
+  /**
+   * @description the description of the tax deduction
+   */
+  description?: string;
+
+  /**
+   * @description The absolute value of tax to deduct
+   */
+  value: number;
+}
+
 /** 
  * @description Pricing object exaplins how the pricing of an order 
  * was calculated given a stack of automatic discounts, coupons, 
@@ -1852,7 +1873,12 @@ export type PricingData = {
   /** 
    * @description Selected shipping method 
    */
-  shipping_method?: ShippingMethodType;
+  shipping_method?: Partial<ShippingMethodType>;
+
+  /**
+   * @description The taxes collected from the sale
+   */
+  taxes?: TaxRecord[];
 
   /** 
    * @description Subtotal of items price before discounts 
@@ -1865,11 +1891,17 @@ export type PricingData = {
   subtotal_discount: number; 
 
   /** 
-   * @description `subtotal_undiscounted` - `subtotal_discount` */
+   * @description `subtotal_undiscounted` - `subtotal_discount` 
+   */
   subtotal: number; 
 
   /** 
-   * @description `subtotal` + `shipping` 
+   * @description `subtotal` + `shipping`
+   */
+  total_without_taxes: number; 
+
+  /** 
+   * @description `subtotal` + `shipping` + `taxes`
    */
   total: number; 
 
@@ -1905,7 +1937,7 @@ export type LineItem = {
   id: string;
 
   /** 
-   * @description Product price snapshot
+   * @description Product unit price snapshot, if absent, try `data.price`
    */
   price?: number; 
 
@@ -1948,19 +1980,19 @@ export type DiscountError = {
  * to discount line items 
  */
 export type EvoEntry = {
-  /**
-   * @description Discount at this step
-   */
-  discount?: DiscountType;
-
   /** 
    * @description The discount code `handle`
    */
   discount_code?: string;
 
   /** 
+   * @description The `discount`
+   */
+  discount?: DiscountType;
+  
+  /** 
    * @description The amount of money that was discounted 
-   * by this discount 
+   * by this discount at the current stage.
    */
   total_discount?: number;
 
@@ -1975,19 +2007,24 @@ export type EvoEntry = {
   quantity_discounted?: number;
 
   /** 
-   * @description Running subtotal without shipping 
+   * @description Running subtotal (from the beginning of all time) without shipping 
    */
   subtotal?: number;
 
   /** 
-   * @description Running total 
+   * @description Running total (from the beginning of all time)
    */
   total?: number;
 
   /** 
-   * @description Available line items after discount 
+   * @description Available line items, that were not eligible for this discount 
    */
   line_items_next?: LineItem[];
+
+  /** 
+   * @description The line items, that were discounted
+   */
+  line_items_discounted?: LineItem[];
 }
 
 
@@ -2402,3 +2439,5 @@ export type tables = 'auth_users' | 'tags' | 'collections' |
     'discounts' | 'orders' | 'search';
 
 export type QuickSearchResult = Record<tables | string, QuickSearchResource[]>;
+
+

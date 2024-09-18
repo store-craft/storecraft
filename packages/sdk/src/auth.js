@@ -21,7 +21,7 @@ import { assert } from './utils.functional.js';
   
   
 /**
- * `Storecraft` authentication module:
+ * @description `Storecraft` authentication module:
  * - Supports `subscribtion` to `auth` events
  * 
  */

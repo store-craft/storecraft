@@ -1,3 +1,6 @@
+/**
+ * @import { ExtensionItemGet } from '../v-api/types.api.js';
+ */
 import { assert } from '../v-api/utils.func.js'
 import { App } from '../index.js';
 
@@ -9,7 +12,7 @@ import { App } from '../index.js';
  * @param {App} app 
  * @param {string} extension_handle `handle` of `extension` 
  * 
- * @returns {import('../v-api/types.api.d.ts').ExtensionItemGet}
+ * @returns {ExtensionItemGet}
  */
 export const get_extension = (app, extension_handle) => {
   const ext = app.extensions?.[extension_handle];
@@ -34,7 +37,7 @@ export const get_extension = (app, extension_handle) => {
  * @param {App} app 
  * 
  * 
- * @returns {import('../v-api/types.api.d.ts').ExtensionItemGet[]}
+ * @returns {ExtensionItemGet[]}
  */
 export const list_extensions = (app) => {
   return Object.entries(app.extensions ?? {}).map(

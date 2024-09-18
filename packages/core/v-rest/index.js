@@ -1,3 +1,5 @@
+/** @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' */
+import { App } from '../index.js';
 import { json } from "../v-polka/body-parse.js";
 import { Polka } from "../v-polka/index.js";
 import { create_routes as create_auth_route } from "./con.auth.routes.js";
@@ -25,12 +27,6 @@ import { cors } from "../v-polka/cors.js";
 
 
 /**
- * @typedef {import("./types.public.d.ts").ApiRequest} ApiRequest
- * @typedef {import("./types.public.d.ts").ApiResponse} ApiResponse
- */
-
-
-/**
  * 
  * @typedef {object} RestApiConfig
  * @prop {import("../v-polka/cors.js").CORSOptions} [cors]
@@ -42,7 +38,7 @@ import { cors } from "../v-polka/cors.js";
  * @description Create the entire virtual API with lazy 
  * loading which is great for serverless
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  * @param {RestApiConfig} config
  */
 export const create_rest_api = (app, config) => {

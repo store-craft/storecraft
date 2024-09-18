@@ -24,7 +24,7 @@ const Capsule = (
   const text = selected ? 'text-white' : 'text-gray-500 dark:text-gray-400';
   
   return (
-<div className={`p-1 px-2 rounded-xl
+<div className={`py-1 px-2 rounded-xl --shelf-border-color border dark:border-white/10 border-black/10
                cursor-pointer ${bg} ${text} `}
       children={label} {...rest} />
   )

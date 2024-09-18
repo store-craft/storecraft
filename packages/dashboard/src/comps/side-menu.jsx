@@ -90,7 +90,7 @@ const SideMenu = (
         p-1.5 hover:p-1 md:hidden' 
       onClick={onCloseClick} />
 
-  <div className='w-full flex-1 overflow-y-auto max-h-full'>
+  <div className='w-full flex-1 overflow-clip hover:overflow-y-auto max-h-full'>
     <div className='mt-3 pl-5 pr-1 w-full h-fit'>
       <Button 
           icon={<RiDashboardFill 

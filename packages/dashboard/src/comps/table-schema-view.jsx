@@ -95,7 +95,7 @@ const Table = (
                           ix<fields.length-1 ? 
                           'text-center px-3 overflow-x-clip ' : 
                           'text-end pr-3 right-0 bg-white/60 dark:bg-transparent \
-                          sticky z-0  --border-l-2 overflow-clip shelf-body-bg opacity-80'
+                          sticky z-10 w-0  --border-l-2 overflow-clip shelf-body-bg opacity-80'
                 } 
                 // width={'10px'}
                 // style={{width:'0.0%'}}
@@ -132,7 +132,7 @@ const Table = (
                       ix<fields.length-1 ? 
                       'text-center' : 
                       'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
-                      --border-l-2 shelf-body-bg '
+                      --border-l-2 --shelf-body-bg '
                     }
               key={ix} 
               children={field.name} /> 

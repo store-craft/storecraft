@@ -83,9 +83,25 @@ export type events = {
 export type PubSubEvent = events[keyof events] ;
 
 export type EventPayload<T=any, App=any> = {
+  /**
+   * @description payload
+   */
   payload?: T;
+
+  /**
+   * @description event type
+   */
   event: PubSubEvent;
-  app: App
+
+  /**
+   * @description `storecraft` app instance
+   */
+  app: App;
+
+  /**
+   * @description Stop the event propagation
+   */
+  stopPropagation: () => any;
 }
 
 /**

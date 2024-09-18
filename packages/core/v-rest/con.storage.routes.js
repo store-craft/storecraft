@@ -1,3 +1,5 @@
+/** @import { ApiPolka } from './types.public.js' */
+import { App } from '../index.js';
 import { Polka } from '../v-polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { does_prefer_signed } from '../v-api/con.storage.logic.js';
@@ -7,11 +9,11 @@ export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const create_routes = (app) => {
 
-  /** @type {import('./types.public.d.ts').ApiPolka} */
+  /** @type {ApiPolka} */
   const polka = new Polka();
   const features = app.storage.features() ?? { supports_signed_urls: false };
   const supports_signed = features.supports_signed_urls;

@@ -130,7 +130,7 @@ const Layout = (
   const open_class = open ? 'translate-y-0' : '-translate-y-full';
 
   return (
-<div className={`w-full h-full ${darkMode ? 'dark' : ''}`}
+<div className={`w-full h-full  ${darkMode ? 'dark' : ''}`}
       data-color-mode={darkMode ? 'dark' : 'light'}>
   <div className={`relative flex flex-row font-inter 
                   shelf-body-bg

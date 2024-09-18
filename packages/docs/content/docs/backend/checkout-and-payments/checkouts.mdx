@@ -7,11 +7,13 @@ First, le's assume an app,
 ```ts
 import { App } from '@storecraft/core'
 import type { CollectionType, AuthUserType } from '@storecraft/core/v-api'
+import { UniformTaxes } from '@storecraft/core/v-taxes';
 
 const app = new App(config)
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
+.withTaxes(new UniformTaxes(18))
 
 await app.init();
 

@@ -36,7 +36,7 @@ import Storage from './src/storage.js'
  */
 
 /**
- * The official `storecraft` admin **SDK** for `javascript`
+ * @description The official `storecraft` universal **SDK** for `javascript`
  */
 export class StorecraftSDK {
 

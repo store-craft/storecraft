@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
 
 /**
- * Base `checkout` **api**
+ * @description Base `checkout` **api**
  * 
  */
 export default class Checkout {

@@ -3,6 +3,7 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 import { union } from './utils.func.js';
 import { isDef } from './utils.index.js';
+import { App } from '../index.js';
 
 /**
  * @typedef {import('./types.api.d.ts').OrderData} ItemType
@@ -10,7 +11,7 @@ import { isDef } from './utils.index.js';
  */
 
 /**
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const db = app => app.db.resources.orders;
 
@@ -54,12 +55,13 @@ const default_pricing = {
   subtotal: 0,
   subtotal_discount: 0,
   subtotal_undiscounted: 0,
-  total: 0
+  total: 0,
+  total_without_taxes: 0
 }
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const upsert = (app) => 
 /**
@@ -83,7 +85,7 @@ export const upsert = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */  
 export const inter = app => {
 

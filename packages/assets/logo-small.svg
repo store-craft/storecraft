@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="gradient-0-0" gradientUnits="userSpaceOnUse" x1="128" y1="0" x2="128" y2="256" xlink:href="#gradient-0"/>
+    <linearGradient id="gradient-0" bx:pinned="true">
+      <stop offset="0.382" style="stop-color: rgb(53, 51, 72);"/>
+      <stop offset="1" style="stop-color: rgb(93, 52, 138);"/>
+    </linearGradient>
+    <filter id="drop-shadow-filter-1" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 0 0 9 0.32 #d302dd">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="9"/>
+      <feOffset dx="0" dy="0"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="0.64"/>
+      </feComponentTransfer>
+      <feFlood flood-color="#d302dd"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="256" height="256" style="stroke: rgb(0, 0, 0); fill: url('#gradient-0-0');"/>
+  <g style="filter: url(&quot;#drop-shadow-filter-1&quot;); isolation: isolate;" transform="matrix(1.0046420097351074, 0, 0, 1.0286140441894531, 0, -2.5584280490875244)">
+    <g style="filter: none;" transform="matrix(1, 0, 0, 1.192275, 0, -38.412273)">
+      <g>
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 64)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers; fill: rgba(245, 0, 255, 0.796);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, -64)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, -96)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, -32)">
+        <rect y="128" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+        <rect y="131.778" width="256" height="4" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); paint-order: markers stroke; fill: rgba(245, 0, 255, 0.796);"/>
+      </g>
+    </g>
+    <g style="">
+      <g transform="matrix(0, 1, -1, 0, -228.235992, 16.342003)" style="transform-origin: 356.236px 111.658px;">
+        <rect y="107.769" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.796);" x="228.236"/>
+        <rect y="111.547" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.796);" x="228.236"/>
+      </g>
+      <g transform="matrix(0.184501, 1.046358, -0.984807, 0.173648, -136.347, 16.342016)" style="transform-origin: 356.236px 111.658px;">
+        <rect y="107.769" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.796);" x="228.236"/>
+        <rect y="111.547" width="256" height="4" style="stroke: rgb(0, 0, 0); paint-order: stroke; stroke-opacity: 0; fill: rgba(245, 0, 255, 0.796);" x="228.236"/>
+      </g>
+      <g transform="matrix(-0.184502, 1.046358, -0.984807, -0.173648, -321.502838, 17.971649)" style="transform-origin: 356.236px 111.658px;">
+        <rect y="107.769" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.796);" x="228.236"/>
+        <rect y="111.547" width="256" height="4" style="stroke: rgb(0, 0, 0); stroke-opacity: 0; fill: rgba(245, 0, 255, 0.796);" x="228.236"/>
+      </g>
+    </g>
+  </g>
+  <path d="M 171.308 85.875 C 172.476 78.496 170.94 72.744 166.706 68.618 C 162.468 64.492 155.484 62.428 145.76 62.428 C 139.316 62.428 133.738 63.266 129.027 64.944 C 124.317 66.622 120.521 68.918 117.647 71.836 C 114.773 74.756 112.835 78.094 111.831 81.85 C 110.931 84.94 110.875 87.655 111.661 90.001 C 112.449 92.353 113.951 94.417 116.157 96.191 C 118.361 97.971 121.177 99.529 124.601 100.873 C 126.687 101.689 128.965 102.447 131.431 103.139 L 57.611 103.139 C 57.185 97.749 57.797 91.793 59.453 85.274 C 62.563 72.528 68.775 61.356 78.075 51.762 C 87.377 42.166 98.803 34.69 112.347 29.324 C 125.899 23.956 140.488 21.27 156.12 21.27 C 172.086 21.27 185.284 23.974 195.714 29.374 C 206.136 34.776 213.39 42.336 217.476 52.062 C 221.558 61.794 222.068 73.06 219.008 85.875 L 171.308 85.875 Z M 177.922 117.275 C 184.82 120.963 190.296 125.361 194.358 130.457 C 197.322 134.175 199.494 138.307 200.882 142.847 L 104.771 142.847 L 102.691 142.331 C 85.863 138.239 73.463 131.613 65.483 122.461 C 63.307 119.967 61.577 117.229 60.285 114.253 L 171.58 114.253 C 173.808 115.201 175.922 116.203 177.922 117.275 Z M 200.752 170.407 C 199.674 174.641 198.304 178.677 196.642 182.519 L 142.308 182.519 C 142.744 182.151 143.164 181.765 143.572 181.375 C 146.922 178.155 149.154 174.465 150.26 170.305 C 151.16 166.419 150.786 163.079 149.132 160.297 C 147.714 157.917 145.312 155.803 141.928 153.961 L 202.656 153.961 C 202.804 159.033 202.168 164.513 200.752 170.407 Z M 182.53 203.922 C 173.7 213.244 162.58 220.392 149.166 225.356 C 135.75 230.322 120.453 232.804 103.279 232.804 C 86.039 232.804 71.655 230.22 60.127 225.05 C 48.605 219.888 40.597 212.038 36.113 201.508 C 35.059 199.036 34.237 196.412 33.641 193.633 L 190.674 193.633 C 188.284 197.284 185.574 200.714 182.53 203.922 Z M 35.105 161.555 L 82.803 161.555 C 81.551 168.191 81.947 173.729 83.999 178.155 C 84.735 179.749 85.659 181.205 86.775 182.519 L 32.481 182.519 C 32.429 176.155 33.301 169.167 35.105 161.555 Z" style="fill: rgb(176, 114, 248); transform-origin: 126.727px 127.037px;"/>
+</svg>

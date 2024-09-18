@@ -86,7 +86,7 @@ export const QuickSearchButton = (
     </div>
   </div>
   <MainPortal.PortalChild>        
-    <Overlay ref={ref_overlay}>
+    <Overlay ref={ref_overlay} key='tomer'>
       <QuickSearchBrowser 
           onCancel={() => ref_overlay.current.hide()} 
           onSelect={onSelect}/>

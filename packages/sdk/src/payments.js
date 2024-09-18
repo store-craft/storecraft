@@ -4,7 +4,7 @@ import {
 } from './utils.api.fetch.js';
 
 /**
- * 
+ * @description payment gateways
  */
 export default class Payments {
 

@@ -2,7 +2,7 @@ import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
- * Base `templates` **CRUD**
+ * @description Base `templates` **CRUD**
  * 
  * @extends {collection_base<
  *  import('@storecraft/core/v-api').TemplateTypeUpsert, 

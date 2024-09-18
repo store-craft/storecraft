@@ -239,13 +239,18 @@ export default {
             },
             {
               title: 'Paypal',
-              route: 'backend/checkout-and-payments/paypal-standard-payments',
-              path: 'content/docs/backend/checkout-and-payments/paypal-standard-payments.mdx'
+              route: 'backend/checkout-and-payments/paypal',
+              path: 'content/docs/backend/checkout-and-payments/paypal.mdx'
             },
             {
               title: 'Stripe',
               route: 'backend/checkout-and-payments/stripe',
               path: 'content/docs/backend/checkout-and-payments/stripe.mdx'
+            },
+            {
+              title: 'Taxes',
+              route: 'backend/checkout-and-payments/taxes',
+              path: 'content/docs/backend/checkout-and-payments/taxes.mdx'
             },
             {
               title: 'Roll Your Own Payment Gateway',

@@ -32,7 +32,7 @@ export const app = new App(
         client_id: process.env.PAYPAL_CLIENT_ID, 
         secret: process.env.PAYPAL_SECRET, 
         intent_on_checkout: 'AUTHORIZE',
-        env: 'test' 
+        env: 'test'  
       }
     ),
     'stripe': new Stripe(

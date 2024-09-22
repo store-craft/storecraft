@@ -18,7 +18,13 @@ import { PubSub } from './v-pubsub/public.js';
 import { UniformTaxes } from './v-tax/public.js';
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
+import { NotificationsExtension } from './v-extensions/extension-notifications.js';
 
+/**
+ * @typedef {{
+ *  'notifications': NotificationsExtension
+ * }} BaseExtensions
+ */
 
 /**
  * 
@@ -28,7 +34,7 @@ import pkg from './package.json' assert { type: "json" }
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>]
+ * @template {Record<string, extension>} [ExtensionsMap=BaseExtensions]
  * `extensions` map type
  * @template {tax_provider} [Taxes=UniformTaxes]
  * 
@@ -130,6 +136,9 @@ export class App {
     this.#_is_ready = false;
     this.#_pubsub = new PubSub(this);
     this.#_taxes = new UniformTaxes(0);
+    this.#_extensions = {
+      'notifications': new NotificationsExtension()
+    }
   } 
 
 
@@ -155,7 +164,7 @@ export class App {
     this.#_config = {
       ...c,
       auth_secret_access_token: c?.auth_secret_access_token ?? 
-                  env.SC_AUTH_SECRET_ACCESS_TOKEN ?? 'AUTH_SECRET_ACCESS_TOKEN',
+                  env.SC_AUTH_SECRET_ACCESS_TOKEN ?? 'SC_AUTH_SECRET_ACCESS_TOKEN',
       auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
                   env.SC_AUTH_SECRET_REFRESH_TOKEN ?? 'SC_AUTH_SECRET_REFRESH_TOKEN',
       auth_admins_emails: c?.auth_admins_emails ??  
@@ -402,11 +411,14 @@ export class App {
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E, Taxes>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes>}
    */
   withExtensions(extensions) { 
     // @ts-ignore
-    this.#_extensions = extensions; 
+    this.#_extensions = {
+      ...this.#_extensions,
+      ...extensions
+    }; 
 
     // @ts-ignore
     return this;

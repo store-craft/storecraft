@@ -965,8 +965,8 @@ export type Filter = {
  */
 export interface FilterMetaEnum { 
   any: { // This is for future flexibility against zod
-    id: number, type: string, 
-    op: string, 
+    id?: number, type?: string, 
+    op?: string, 
     name?: string
   },
   p_in_collections: { 
@@ -1080,7 +1080,7 @@ export type DiscountMetaEnum = {
     name?: string,
   },
   any: { 
-    id: number, type: string, 
+    id?: number, type?: string, 
     name?: string,
   },
 
@@ -1556,7 +1556,7 @@ export interface NotificationType extends BaseNotificationType, timestamps {
 /**
  * @description Notification upsert type
  */
-export interface NotificationTypeUpsert extends BaseNotificationType {
+export interface NotificationTypeUpsert extends Omit<BaseNotificationType, 'id'> {
 }
 
 /** 
@@ -1898,7 +1898,7 @@ export type PricingData = {
   /** 
    * @description `subtotal` + `shipping`
    */
-  total_without_taxes: number; 
+  total_without_taxes?: number; 
 
   /** 
    * @description `subtotal` + `shipping` + `taxes`

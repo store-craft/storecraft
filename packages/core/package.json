@@ -82,7 +82,7 @@
     "core:gen:zod": "npx ts-to-zod@latest ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js --skipValidation",
     "core:gen:vql": "node ./v-ql/compile.js",
     "core:gen:open-api": "node ./v-rest/docs.openapi.gen.js",
-    "core:publish": "npm run core:test && npm run core:gen:zod && npm run core:gen:open-api && npm publish --access public"
+    "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm publish --access public"
   },
   "devDependencies": {
     "@asteasolutions/zod-to-openapi": "^6.4.0",

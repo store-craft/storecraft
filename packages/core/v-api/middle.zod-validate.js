@@ -27,8 +27,8 @@ export const assert_zod = (zod_schema, item) => {
   const result = zod_schema.safeParse(item);
   
   if(!result.success) {
-    /** @type {import("zod").SafeParseError<any>} */
-    const casted = result;
+    
+    const casted = (/** @type {import("zod").SafeParseError<any>} */ result);
 
     // console.log(JSON.stringify(casted.error?.issues, null, 2))
 

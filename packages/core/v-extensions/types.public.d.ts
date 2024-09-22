@@ -53,7 +53,7 @@ export declare interface extension<Config extends any=any> {
 
   /**
    * 
-   * @description the eligible actions in this interface for remote invocation like http
+   * @description the eligible actions in this interface for remote invocation like http `POST` commands
    */
   actions?: ExtensionAction[];
 

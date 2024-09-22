@@ -1,8 +1,5 @@
-// @ts-nocheck
-
-
 /** 
- * @enum {import('./types.api.d.ts').DiscountApplicationEnum} 
+ * @satisfies {import('./types.api.d.ts').DiscountApplicationEnum} 
  */
 export const DiscountApplicationEnum = {
   Auto:   { id: 0, name: 'Automatic', name2: 'automatic'},
@@ -10,9 +7,11 @@ export const DiscountApplicationEnum = {
 }
 
 /**
- * @enum {import('./types.api.d.ts').FilterMetaEnum} 
+ * @satisfies {import('./types.api.d.ts').FilterMetaEnum} 
  */
 export const FilterMetaEnum = { 
+  any: {
+  },
   p_in_collections: 
   { 
     id: 0, type:'product', 
@@ -76,9 +75,12 @@ export const FilterMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').DiscountMetaEnum} 
+ * @satisfies {import('./types.api.d.ts').DiscountMetaEnum} 
  */
 export const DiscountMetaEnum = {
+  any: {
+
+  },
   regular: { 
     id: 0, 
     type: 'regular',          
@@ -103,7 +105,7 @@ export const DiscountMetaEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').CheckoutStatusEnum} 
+ * @satisfies {import('./types.api.d.ts').CheckoutStatusEnum} 
  */
 export const CheckoutStatusEnum = {
   created: { 
@@ -124,7 +126,7 @@ export const CheckoutStatusEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').FulfillOptionsEnum} 
+ * @satisfies {import('./types.api.d.ts').FulfillOptionsEnum} 
  */
 export const FulfillOptionsEnum = {
   draft: { 
@@ -145,7 +147,7 @@ export const FulfillOptionsEnum = {
 }
 
 /** 
- * @enum {import('./types.api.d.ts').PaymentOptionsEnum} 
+ * @satisfies {import('./types.api.d.ts').PaymentOptionsEnum} 
  */
 export const PaymentOptionsEnum = {
   unpaid: { 

@@ -4,7 +4,6 @@ import {
   regular_get, regular_list, 
   regular_remove } from './con.shared.js'
 import { assert_zod } from './middle.zod-validate.js';
-import { isDef } from './utils.index.js';
 import { App } from '../index.js';
 
 /**
@@ -24,28 +23,32 @@ export const db = app => app.db.resources.notifications;
 export const addBulk = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert[]} items
+ * @param {ItemTypeUpsert | ItemTypeUpsert[]} items
  * @return {Promise<import('../v-database/types.public.d.ts').ID[]>}
  */
 async (items) => {
   
-  /** @type {(ItemTypeUpsert & import('../v-database/types.public.d.ts').idable_concrete)[]} */
-  const items_with_id = Array.isArray(items) ? items : [items] ;
-  // validate and assign ids
   /** @type {string[][]} */
   const search_terms = [];
-  items_with_id.forEach(
-    item => { 
+  const items_with_id = (Array.isArray(items) ? items : [items]).map
+  (
+    (item) => { 
       assert_zod(notificationTypeUpsertSchema, item);
 
-      item.id = ID('not');
-      item.search = item.search ?? [];
+      const item_with_id = apply_dates(
+        {
+          ...item,
+          id: ID('not'),
+          author: item.author ? String(item.author) : 'unknown',
+          search: item.search ?? []
+        }
+      );
 
-      apply_dates(item);
-      
-      isDef(item.author) && item.search.push(`author:${item.author}`);
+      item_with_id.search.push(`author:${item_with_id.author}`);
 
-      search_terms.push(item.search)
+      search_terms.push(item_with_id.search);
+
+      return item_with_id;
     }
   );
 

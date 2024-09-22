@@ -91,6 +91,20 @@ async (body) => {
     create_search_terms(au)
   );
 
+  // optional, but we set up a customer record directly into database
+  // to avoid confusions
+  await app.db.resources.customers.upsert(
+    apply_dates(
+      {
+        email: au.email,
+        auth_id: au.id,
+        id: 'cus_' + au.id.split('_').at(-1),
+        firstname: undefined,
+        lastname: undefined
+      }
+    )
+  );
+
   /** @type {Partial<import("../v-crypto/jwt.js").JWTClaims>} */
   const claims = {
     sub: id, 

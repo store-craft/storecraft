@@ -45,4 +45,5 @@ export const app = new App(
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
   }
 )
-//.api.discounts.upsert({})
+
+// .api.discounts.upsert({})

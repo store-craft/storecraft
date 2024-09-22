@@ -10,7 +10,7 @@ export class StorecraftError extends Error {
     super(JSON.stringify(message, null, 2));
 
     this.code = code;
-    this.message = message;
+    // this.message = message;
 
     try {
       this.message_string = JSON.stringify(this.message, null, 2);

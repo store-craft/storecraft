@@ -320,9 +320,9 @@ export const filterValueOHasCustomersSchema = z
   .describe("Filter for order discount, order has customer id");
 export const filterMetaEnumSchema = z.object({
   any: z.object({
-    id: z.number(),
-    type: z.string(),
-    op: z.string(),
+    id: z.number().optional(),
+    type: z.string().optional(),
+    op: z.string().optional(),
     name: z.string().optional(),
   }),
   p_in_collections: z.object({
@@ -426,8 +426,8 @@ export const discountMetaEnumSchema = z
       name: z.string().optional(),
     }),
     any: z.object({
-      id: z.number(),
-      type: z.string(),
+      id: z.number().optional(),
+      type: z.string().optional(),
       name: z.string().optional(),
     }),
   })
@@ -1217,7 +1217,9 @@ const baseNotificationTypeSchema = z.object({
   search: z.array(z.string()).optional().describe("search terms"),
   id: z.string().optional().describe("`id` of notification"),
 });
-export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema.omit({
+  id: true,
+});
 export const orderStatusSchema = z
   .object({
     checkout: z
@@ -1562,6 +1564,7 @@ const checkoutCreateTypeWithoutIDSchema = checkoutCreateTypeSchema.omit({
 export const evoEntrySchema = z
   .object({
     discount_code: z.string().optional().describe("The discount code `handle`"),
+    discount: discountTypeSchema.optional().describe("The `discount`"),
     total_discount: z
       .number()
       .optional()
@@ -1660,6 +1663,10 @@ export const pricingDataSchema = z
     subtotal: z
       .number()
       .describe("`subtotal_undiscounted` - `subtotal_discount`"),
+    total_without_taxes: z
+      .number()
+      .optional()
+      .describe("`subtotal` + `shipping`"),
     total: z.number().describe("`subtotal` + `shipping` + `taxes`"),
     quantity_total: z.number().describe("How many items are eligible"),
     quantity_discounted: z.number().describe("How many items were discounted"),

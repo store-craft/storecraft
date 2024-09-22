@@ -1,3 +1,4 @@
+import type { App } from '../types.public.js';
 import type { 
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
@@ -82,7 +83,7 @@ export type events = {
  */
 export type PubSubEvent = events[keyof events] ;
 
-export type EventPayload<T=any, App=any> = {
+export type EventPayload<T=any, App=App> = {
   /**
    * @description payload
    */
@@ -109,23 +110,23 @@ export type EventPayload<T=any, App=any> = {
  * @description Subscriber method spec
  * 
  */
-export type PubSubSubscriber<T=any, AppType=any> = ((value: EventPayload<T, AppType>) => any) | 
+export type PubSubSubscriber<T=any, AppType=App> = ((value: EventPayload<T, AppType>) => any) | 
       ((value: EventPayload<T, AppType>) => Promise<any>);
 
-export type PubSubSubscriberForUpsert<T=any, AppType=any> = PubSubSubscriber<{
+export type PubSubSubscriberForUpsert<T=any, AppType=App> = PubSubSubscriber<{
   previous: T,
   current: T,
 }, AppType>;
 
-export type PubSubSubscriberForGet<T=any, AppType=any> = PubSubSubscriber<{ current: T }, AppType>;
+export type PubSubSubscriberForGet<T=any, AppType=App> = PubSubSubscriber<{ current: T }, AppType>;
 
-export type PubSubSubscriberForRemove<T=any, AppType=any> = PubSubSubscriber<{ previous: T, success: boolean }, AppType>;
+export type PubSubSubscriberForRemove<T=any, AppType=App> = PubSubSubscriber<{ previous: T, success: boolean }, AppType>;
 
 
 /**
  * @description `events` subscribtion callbacks
  */
-export interface PubSubOnEvents<R=Function, AppType=any> {
+export interface PubSubOnEvents<R=Function, AppType=App> {
   
   on(event: events['storefronts_upsert'], callback: PubSubSubscriberForUpsert<StorefrontType, AppType>) : R;
   on(event: events['storefronts_remove'], callback: PubSubSubscriberForRemove<StorefrontType, AppType>) : R;

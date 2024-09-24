@@ -13,7 +13,7 @@ const app = new App({
 .withStorage(new NodeLocalStorage())
 .withMailer(new MailerSendGrid())
 .on(
-  'checkout/create',
+  'orders/checkout/complete',
   async (event) => {
     const order: orderData = event.payload;
     // send email here

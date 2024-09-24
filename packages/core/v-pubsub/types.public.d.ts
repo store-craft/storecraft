@@ -66,7 +66,7 @@ export type events = {
   templates_get: 'templates/get', 
   templates_list: 'templates/list',
 
-  orders_checkout_create: 'orders/checkout/create', 
+  orders_checkout_created: 'orders/checkout/created', 
   orders_checkout_complete: 'orders/checkout/complete',
   orders_checkout_requires_action: 'orders/checkout/requires_action', 
   orders_checkout_failed: 'orders/checkout/failed',
@@ -210,7 +210,7 @@ export interface PubSubOnEvents<R=Function, AppType=App> {
   on(event: events['orders_get'], callback: PubSubSubscriberForGet<OrderData, AppType>) : R;
   on(event: events['orders_list'], callback: PubSubSubscriberForGet<OrderData[], AppType>) : R;
 
-  on(event: events['orders_checkout_create'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_checkout_created'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
   on(event: events['orders_checkout_complete'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
   on(event: events['orders_checkout_failed'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
   on(event: events['orders_checkout_requires_action'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;

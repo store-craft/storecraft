@@ -167,6 +167,9 @@ export class App {
           current: order_after
         }
 
+        // console.log('from app', event.payload.current.status)
+        // console.log('has_checkout_updated', has_checkout_updated)
+
         if(has_checkout_updated) {
           await this.pubsub.dispatch(
             `orders/checkout/${order_after.status.checkout.name2}`,

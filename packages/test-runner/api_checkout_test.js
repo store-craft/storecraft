@@ -72,10 +72,10 @@ export const create = app => {
   s('create -> complete checkout should succeed', async (ctx) => {
     
     let is_event_checkout_create_ok = false;
-    const unsub_checkout_create = app.pubsub.on(
-      'checkout/create',
-      (v) => {
-        is_event_checkout_create_ok = Boolean(v.payload.id);
+    const unsub_checkout_create = app2.pubsub.on(
+      'orders/checkout/created',
+      async (v) => {
+        is_event_checkout_create_ok = Boolean(v.payload.current.id);
       }
     );
 
@@ -143,9 +143,9 @@ export const create = app => {
     { // test the complete checkout part
       let is_event_checkout_complete_ok = false;
       const unsub_checkout_complete = app.pubsub.on(
-        'checkout/complete',
+        'orders/checkout/complete',
         (v) => {
-          is_event_checkout_complete_ok = Boolean(v.payload.id);
+          is_event_checkout_complete_ok = Boolean(v.payload.current.id);
         }
       );
   

@@ -252,13 +252,6 @@ async (order_checkout, gateway_handle) => {
 
   order.id = id;
 
-  { // dispatch event
-    await app.pubsub.dispatch(
-      'checkout/create',
-      order
-    );
-  }
-
   return order;
 }
 
@@ -342,13 +335,6 @@ async (checkoutId, client_payload) => {
   }
   
   await app.api.orders.upsert(order);
-
-  { // dispatch event
-    await app.pubsub.dispatch(
-      'checkout/complete',
-      order
-    )
-  }
 
   return order;
 }

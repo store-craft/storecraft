@@ -6,6 +6,13 @@
 import { enums } from '@storecraft/core/v-api';
 
 /**
+ * @description This extension will respond to various events to send customer emails:
+ * - `orders/checkout/complete`
+ * - `orders/fulfillment/shipped`
+ * - `orders/fulfillment/cancelled`
+ * - `auth/signup`
+ * - `auth/reset-password`
+ * 
  * @implements {extension}
  */
 export class PostmanExtension {
@@ -28,20 +35,10 @@ export class PostmanExtension {
     // checkout events notifications
 
     app.pubsub.on(
-      'orders/upsert',
+      'orders/checkout/complete',
       async (event) => {
-        const order_after = event.payload.current;
-        const order_before = event.payload.previous;
-
-        // test if the checkout now has turned complete
-        const has_checkout_completed_now = (
-          order_after.status.checkout.id===enums.CheckoutStatusEnum.complete.id &&
-          order_before?.status?.checkout?.id!==order_after.status.checkout.id
-        );
-
-        if(has_checkout_completed_now) {
-          // send checkout mail
-        }
+        const t = await event.app.api.templates.get('checkout-complete');
+        
       }
     );
 

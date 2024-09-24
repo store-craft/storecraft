@@ -1,4 +1,5 @@
-/** @import { EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber } from "./types.public.d.ts" */
+/** @import { EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber } from "./types.public.js" */
+
 
 /**
  * 
@@ -48,8 +49,9 @@ export class PubSub {
    * to other subscribers.
    * 
    * @template [P=any]
+   * @template {PubSubEvent | string} [E=(PubSubEvent)]
    * 
-   * @param {PubSubEvent} event a `storecraft` event type
+   * @param {E} event a `storecraft` event type
    * @param {P} [payload] extra payload to dispatch
    * 
    * @see {@link PubSubEvent}
@@ -57,7 +59,7 @@ export class PubSub {
   async dispatch(event, payload) {
     try {
       let is_event_stopped = false;
-      /** @type {EventPayload} */
+      /** @type {EventPayload<P, AppType, E>} */
       const event_payload = {
         event,
         payload,

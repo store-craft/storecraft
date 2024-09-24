@@ -1813,6 +1813,10 @@ export type PaymentOptionsEnum = {
   partially_refunded: { 
     id: 8, name?: string, name2: 'partially_refunded' 
   },
+  cancelled: { 
+    id: 9, name?: string, name2: 'cancelled' 
+  },
+
 }
 
 

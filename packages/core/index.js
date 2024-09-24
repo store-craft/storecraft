@@ -1,5 +1,6 @@
 /** 
  * @import { StorecraftConfig } from "./types.public.js";
+ * @import { OrderData } from "./v-api/types.public.js";
  * @import { storage_driver } from "./v-storage/types.public.js";
  * @import { db_driver } from "./v-database/types.public.js";
  * @import { payment_gateway } from "./v-payments/types.public.js";
@@ -7,13 +8,13 @@
  * @import { InferPlatformContext, InferPlatformNativeRequest, InferPlatformNativeResponse, PlatformAdapter } from "./v-platform/types.public.js";
  * @import { mailer } from "./v-mailer/types.public.js";
  * @import { tax_provider } from "./v-tax/types.public.js";
- * @import { PubSubOnEvents } from "./v-pubsub/types.public.js";
+ * @import { PayloadForUpsert, PubSubOnEvents } from "./v-pubsub/types.public.js";
  * @import { ApiResponse } from "./v-rest/types.public.js";
  * 
  */
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
-import { create_api } from './v-api/index.js'
+import { create_api, enums } from './v-api/index.js'
 import { PubSub } from './v-pubsub/public.js';
 import { UniformTaxes } from './v-tax/public.js';
 export * from './v-api/types.api.enums.js'
@@ -139,6 +140,60 @@ export class App {
     this.#_extensions = {
       'notifications': new NotificationsExtension()
     }
+
+    // add extra events for orders state
+    this.pubsub.on(
+      'orders/upsert',
+      async (event) => {
+        const order_after = event.payload.current;
+        const order_before = event.payload.previous;
+
+        // test if the checkout now has turned complete
+        const has_checkout_updated = (
+          order_before?.status?.checkout?.id!==order_after.status.checkout.id
+        );
+
+        const has_fulfillment_updated = (
+          order_before?.status?.fulfillment?.id!==order_after.status.fulfillment.id
+        );
+
+        const has_payment_updated = (
+          order_before?.status?.payment?.id!==order_after.status.payment.id
+        );
+
+        /** @type {PayloadForUpsert<Partial<OrderData>>} */
+        const payload = {
+          previous: order_before,
+          current: order_after
+        }
+
+        if(has_checkout_updated) {
+          await this.pubsub.dispatch(
+            `orders/checkout/${order_after.status.checkout.name2}`,
+            payload
+          );
+          await this.pubsub.dispatch('orders/checkout/update', payload);
+        }
+
+        if(has_fulfillment_updated) {
+          await this.pubsub.dispatch(
+            `orders/fulfillment/${order_after.status.fulfillment.name2}`,
+            payload
+          );
+          await this.pubsub.dispatch('orders/fulfillment/update', payload);
+        }
+
+        if(has_payment_updated) {
+          await this.pubsub.dispatch(
+            `orders/payments/${order_after.status.payment.name2}`,
+            payload
+          );
+          await this.pubsub.dispatch('orders/payments/update', payload);
+        }
+
+      }
+    );
+
   } 
 
 

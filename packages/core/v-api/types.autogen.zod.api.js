@@ -746,6 +746,11 @@ export const paymentOptionsEnumSchema = z
       name: z.string().optional(),
       name2: z.literal("partially_refunded"),
     }),
+    cancelled: z.object({
+      id: z.literal(9),
+      name: z.string().optional(),
+      name2: z.literal("cancelled"),
+    }),
   })
   .describe(
     "Payment options encapsulate the current state,\nsee <a href='#PaymentOptionsEnum'>#PaymentOptionsEnum</a>",

@@ -288,7 +288,7 @@ const reserve_stock_of_order = async (app, order) => {
 
 
 /**
- * Complete a checkout sync
+ * @description Complete a checkout syncronously
  * 
  * @param {App} app 
  */

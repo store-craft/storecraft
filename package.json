@@ -9,7 +9,8 @@
     "./packages/databases/*",
     "./packages/storage/*",
     "./packages/mailers/*",
-    "./packages/payments/*"
+    "./packages/payments/*",
+    "./packages/extensions/*"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

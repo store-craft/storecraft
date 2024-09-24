@@ -177,4 +177,7 @@ export const PaymentOptionsEnum = {
   partially_refunded: { 
     id: 8, name: 'Partially Refunded', name2: 'partially_refunded' 
   },
+  cancelled: { 
+    id: 9, name: 'Cancelled', name2: 'cancelled' 
+  },
 }

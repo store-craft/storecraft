@@ -270,7 +270,18 @@ export type ApiAuthSigninType = AuthBaseType;
 /**
  * @description Sign up type
  */
-export type ApiAuthSignupType = AuthBaseType;
+export type ApiAuthSignupType = AuthBaseType & {
+    /**
+   * @description (optional) readable `name` of `customer`
+   */
+    firstname?: string 
+
+    /**
+     * @description (optional) readable `name` of `customer`
+     */
+    lastname?: string 
+  
+};
 
 /**
  * @description Change Password Type
@@ -383,6 +394,16 @@ export type AuthUserType = Omit<BaseType, 'id'> & AuthBaseType & {
    * @description tags
    */
   tags?: string[];
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  firstname?: string 
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  lastname?: string 
 }
 
 // attributes

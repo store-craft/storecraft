@@ -22,13 +22,6 @@ const col = (d) => d.collection('auth_users');
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
 
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["get"]}
- */
-const get2 = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 

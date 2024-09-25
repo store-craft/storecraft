@@ -58,7 +58,7 @@ async (body) => {
 
   assert_zod(apiAuthSignupTypeSchema, body);
   
-  const { email, password } = body;
+  const { email, password, firstname, lastname } = body;
   
   // Check if the user already exists
   const existingUser = await app.db.resources.auth_users.getByEmail(email);
@@ -82,7 +82,9 @@ async (body) => {
       password: hashedPassword,
       confirmed_mail: false,
       roles,
-      description: `This user is a created with roles: [admin]`
+      description: `This user is a created with roles: [admin]`,
+      firstname,
+      lastname
     }
   );
 
@@ -99,8 +101,8 @@ async (body) => {
         email: au.email,
         auth_id: au.id,
         id: 'cus_' + au.id.split('_').at(-1),
-        firstname: undefined,
-        lastname: undefined
+        firstname,
+        lastname
       }
     )
   );

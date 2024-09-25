@@ -72,8 +72,20 @@ export const roleSchema = z
   .describe("Role of authenticated user");
 export const apiAuthSigninTypeSchema =
   authBaseTypeSchema.describe("Sign in type");
-export const apiAuthSignupTypeSchema =
-  authBaseTypeSchema.describe("Sign up type");
+export const apiAuthSignupTypeSchema = authBaseTypeSchema
+  .and(
+    z.object({
+      firstname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+      lastname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+    }),
+  )
+  .describe("Sign up type");
 export const apiAuthChangePasswordTypeSchema = z
   .object({
     user_id_or_email: z.string().describe("User `ID` or `Email`"),
@@ -1157,6 +1169,14 @@ export const authUserTypeSchema = baseTypeSchema
         .optional()
         .describe("list of roles and authorizations of the user"),
       tags: z.array(z.string()).optional().describe("tags"),
+      firstname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+      lastname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
     }),
   )
   .describe("Auth user type");

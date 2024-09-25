@@ -120,8 +120,10 @@ export interface Base {
 export interface AuthUserTypeTable extends Base {
   email: string;
   password: string;
-  confirmed_mail: number
+  confirmed_mail: number;
   roles: JSONColumnType<Role[]>;
+  firstname: string;
+  lastname: string;
 }
 
 export interface TagsTable extends Base {

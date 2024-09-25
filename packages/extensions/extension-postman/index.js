@@ -1,9 +1,66 @@
 /**
  * @import { extension } from '@storecraft/core/v-extensions';
- * @import { AuthUserType, OrderData } from '@storecraft/core/v-api';
+ * @import { AuthUserType, OrderData, TemplateType } from '@storecraft/core/v-api';
  */
 
+import { App } from '@storecraft/core';
 import { enums } from '@storecraft/core/v-api';
+import Handlebars from 'handlebars';
+
+/**
+ * @description compile a template into `html` and `text` if possible
+ * @param {TemplateType} template 
+ * @param {object} data 
+ */
+export const compileTemplate = (template, data) => {
+  let html, text;
+  if(template.template_html) {
+    const handlebarsTemplateHTML = Handlebars.compile(template.template_html);
+    html = handlebarsTemplateHTML(data);
+  }
+
+  if(template.template_text) {
+    const handlebarsTemplateTEXT = Handlebars.compile(template.template_text);
+    text = handlebarsTemplateTEXT(data);
+  }
+
+  return {
+    text, html
+  }
+}
+
+/**
+ * @description Send Email with `template`
+ * @param {App} app 
+ * @param {string[]} emails 
+ * @param {string} template_handle the template `handle` or `id` in the database
+ * @param {string} subject 
+ * @param {object} data 
+ */
+export const sendMailWithTemplate = async (app, emails, template_handle, subject, data) => {
+  if(!app.mailer)
+    return;
+
+  const template = await app.api.templates.get(template_handle);
+
+  const { html, text } = compileTemplate(
+    template, 
+    data
+  );
+
+  return app.mailer.email(
+    {
+      html,
+      text,
+      from: {
+        address: app.config.general_store_support_email,
+        name: 'Support'
+      },
+      to: emails.map(e => ({address: e})),
+      subject
+    }
+  )
+}
 
 /**
  * @description This extension will respond to various events to send customer emails:
@@ -37,47 +94,53 @@ export class PostmanExtension {
     app.pubsub.on(
       'orders/checkout/complete',
       async (event) => {
-        const t = await event.app.api.templates.get('checkout-complete');
-        
+
+        if(!event.payload.current?.contact?.email)
+          return;
+
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.current.contact.email ],
+          'checkout-complete',
+          'Your Order',
+          {
+            order: event.payload.current,
+            info: {
+              general_store_website: app.config.general_store_website,
+              general_store_name: app.config.general_store_name,
+              general_store_support_email: app.config.general_store_support_email,
+            }
+          }
+      
+        );
+
       }
     );
+    
 
     app.pubsub.on(
       'auth/signup',
       async (event) => {
+
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.email ],
+          'welcome-customer',
+          'Your Order',
+          {
+            order: event.payload.current,
+            info: {
+              general_store_website: app.config.general_store_website,
+              general_store_name: app.config.general_store_name,
+              general_store_support_email: app.config.general_store_support_email,
+            }
+          }
+      
+        );
+
       }
     );
 
   }
 
-}
-
-
-/**
- * 
- * @param {Partial<OrderData>} o 
- * @param {string} [title] 
- * @returns {NotificationTypeUpsert}
- */
-const checkout_notification = (o, title='Checkout Update') => {
-
-  return {
-    message: `
-💰 **${title}**\n 
-* \`${o?.address?.firstname ?? 'unknown'}\` has checkout update. 
-* 💳 Order total is \`${o?.pricing?.total ?? '-'}\`.
-* 📧 Email is ${o?.contact?.email ?? 'no-email'}
-`,
-    author: 'backend-bot 🤖',
-    actions: [
-      {
-        name: 'view',
-        type: 'route',
-        params: {
-          collection: 'orders',
-          document: o.id,
-        }
-      }
-    ]
-  }
 }

@@ -280,9 +280,9 @@ export const infer_mailer = info => {
   switch (info.id) {
     case 'sendgrid':
       return {
-        cls: `MailerSendGrid`,
+        cls: `SendGrid`,
         imports: [
-          `import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';`
+          `import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';`
         ],
         deps: [
           '@storecraft/mailer-providers-http'

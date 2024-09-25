@@ -13,9 +13,9 @@ Through the `@storecraft/mailer-providers-http` package.
 ## Sendgrid
 
 ```js
-import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 
-const mailer = new MailerSendGrid(
+const mailer = new SendGrid(
   {
       apikey: process.env.SEND_GRID_SECRET
   }
@@ -111,14 +111,14 @@ import { App } from '@storecraft/core';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/platforms/node';
 import { GoogleStorage } from '@storecraft/storage-google';
-import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 
 const app = new App(config)
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
 .withMailer(
-  new MailerSendGrid(
+  new SendGrid(
     {
       apikey: process.env.SEND_GRID_SECRET
     }

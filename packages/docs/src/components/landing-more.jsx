@@ -11,7 +11,7 @@ const app = new App({
 .withPlatform(new NodePlatform())
 .withDatabase(new SQLite())
 .withStorage(new NodeLocalStorage())
-.withMailer(new MailerSendGrid())
+.withMailer(new SendGrid())
 .on(
   'orders/checkout/complete',
   async (event) => {

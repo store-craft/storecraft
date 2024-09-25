@@ -5,9 +5,9 @@ import { convert_to_base64 } from "./adapter.utils.js";
  * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 
- * mailer with sendgrid http api
+ * @description mailer with sendgrid http api
  */
-export class MailerSendGrid {
+export class SendGrid {
   
   /** @type {Config} */ #_config;
 

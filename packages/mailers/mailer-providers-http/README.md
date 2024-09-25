@@ -23,9 +23,9 @@ npm i @storecraft/mailer-providers-http
 ### Sendgrid
 
 ```js
-import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 
-const mailer = new MailerSendGrid(
+const mailer = new SendGrid(
   {
       apikey: process.env.SEND_GRID_SECRET
   }

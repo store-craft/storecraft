@@ -4,9 +4,9 @@
 ## Howto
 
 ```js
-import { MailerSendGrid } from '@storecraft/mailer-sendgrid-http';
+import { SendGrid } from '@storecraft/mailer-sendgrid-http';
 
-const mailer = new MailerSendGrid(
+const mailer = new SendGrid(
   {
       apikey: process.env.SEND_GRID_SECRET
   }

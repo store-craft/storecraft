@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { MailerSendGrid } from '../index.js';
+import { SendGrid } from '../index.js';
 
-const mailer = new MailerSendGrid(
+const mailer = new SendGrid(
   {
       apikey: process.env.SEND_GRID_SECRET
   }

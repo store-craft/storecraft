@@ -30,7 +30,7 @@ import { NodePlatform } from '@storecraft/platforms/node';
 import { MongoDB, migrateToLast } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { DummyPayments } from '@storecraft/payments-dummy'
-import { MailerSendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 import { App } from '@storecraft/core';
  
 const app = new App(
@@ -47,7 +47,7 @@ const app = new App(
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ url: process.env.mongo_url }))
 .withStorage(new NodeLocalStorage())
-.withMailer(new MailerSendGrid({ apikey: process.env.SEND_GRID_SECRET }))
+.withMailer(new SendGrid({ apikey: process.env.SEND_GRID_SECRET }))
 .withPaymentGateways(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })

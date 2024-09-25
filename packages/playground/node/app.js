@@ -9,6 +9,7 @@ import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { Stripe } from '@storecraft/payments-stripe'
+import { PostmanExtension } from '@storecraft/extension-postman'
 import { App } from '@storecraft/core';
  
 export const app = new App(
@@ -43,5 +44,10 @@ export const app = new App(
       }
     ),
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+  }
+)
+.withExtensions(
+  {
+    'postman': new PostmanExtension()
   }
 )

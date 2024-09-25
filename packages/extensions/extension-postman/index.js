@@ -7,60 +7,6 @@ import { App } from '@storecraft/core';
 import { enums } from '@storecraft/core/v-api';
 import Handlebars from 'handlebars';
 
-/**
- * @description compile a template into `html` and `text` if possible
- * @param {TemplateType} template 
- * @param {object} data 
- */
-export const compileTemplate = (template, data) => {
-  let html, text;
-  if(template.template_html) {
-    const handlebarsTemplateHTML = Handlebars.compile(template.template_html);
-    html = handlebarsTemplateHTML(data);
-  }
-
-  if(template.template_text) {
-    const handlebarsTemplateTEXT = Handlebars.compile(template.template_text);
-    text = handlebarsTemplateTEXT(data);
-  }
-
-  return {
-    text, html
-  }
-}
-
-/**
- * @description Send Email with `template`
- * @param {App} app 
- * @param {string[]} emails 
- * @param {string} template_handle the template `handle` or `id` in the database
- * @param {string} subject 
- * @param {object} data 
- */
-export const sendMailWithTemplate = async (app, emails, template_handle, subject, data) => {
-  if(!app.mailer)
-    return;
-
-  const template = await app.api.templates.get(template_handle);
-
-  const { html, text } = compileTemplate(
-    template, 
-    data
-  );
-
-  return app.mailer.email(
-    {
-      html,
-      text,
-      from: {
-        address: app.config.general_store_support_email,
-        name: 'Support'
-      },
-      to: emails.map(e => ({address: e})),
-      subject
-    }
-  )
-}
 
 /**
  * @description This extension will respond to various events to send customer emails:
@@ -79,8 +25,8 @@ export class PostmanExtension {
    */
   get info() {
     return {
-      name: 'Notification Extension',
-      description: 'This extension listens to some events and publishes notifications',
+      name: 'Postman Extension',
+      description: 'This extension sends emails on events',
     }
   }
 
@@ -126,9 +72,9 @@ export class PostmanExtension {
           event.app,
           [ event.payload.email ],
           'welcome-customer',
-          'Your Order',
+          'Welcome',
           {
-            order: event.payload.current,
+            customer: event.payload,
             info: {
               general_store_website: app.config.general_store_website,
               general_store_name: app.config.general_store_name,
@@ -143,4 +89,62 @@ export class PostmanExtension {
 
   }
 
+}
+
+
+
+/**
+ * @description compile a template into `html` and `text` if possible
+ * @param {TemplateType} template 
+ * @param {object} data 
+ */
+export const compileTemplate = (template, data) => {
+  let html, text;
+  if(template.template_html) {
+    const handlebarsTemplateHTML = Handlebars.compile(template.template_html);
+    html = handlebarsTemplateHTML(data);
+  }
+
+  if(template.template_text) {
+    const handlebarsTemplateTEXT = Handlebars.compile(template.template_text);
+    text = handlebarsTemplateTEXT(data);
+  }
+
+  return {
+    text, html
+  }
+}
+
+/**
+ * @description Send Email with `template`
+ * 
+ * @param {App} app 
+ * @param {string[]} emails 
+ * @param {string} template_handle the template `handle` or `id` in the database
+ * @param {string} subject 
+ * @param {object} data 
+ */
+export const sendMailWithTemplate = async (app, emails, template_handle, subject, data) => {
+  if(!app.mailer)
+    return;
+
+  const template = await app.api.templates.get(template_handle);
+
+  const { html, text } = compileTemplate(
+    template, 
+    data
+  );
+
+  return app.mailer.email(
+    {
+      html,
+      text,
+      from: {
+        address: app.config.general_store_support_email,
+        name: 'Support'
+      },
+      to: emails.map(e => ({address: e})),
+      subject
+    }
+  )
 }

@@ -5,7 +5,8 @@ import useCollectionsActions from '../hooks/useCollectionsActions.js'
 import { useMemo } from 'react'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
-
+import { Favicon } from '@/comps/asset-favicon.jsx'
+import svg from '@/comps/favicon.svg';
 /**
  * 
  * @typedef {import('@storecraft/core/v-api').ExtensionItemGet} ExtensionItemGet
@@ -34,7 +35,7 @@ export const SpanWithLogo = (
     extra='max-w-[8rem] md:max-w-[18rem]', ...rest
   }
 ) => {
-  const logo = context.item.info.logo_url;
+  const logo = context.item?.info?.logo_url;
 
   const readable_span_cls = 'overflow-x-auto flex flex-row items-center \
     gap-2 inline-block whitespace-nowrap'
@@ -42,9 +43,12 @@ export const SpanWithLogo = (
   return (
     <div className={merged} {...rest} >
       {
-        logo &&
-        <img src={context?.item?.info?.logo_url} 
+        <img src={context?.item?.info?.logo_url ?? svg} 
             className='rounded-md w-6 h-6 object-cover border dark:opacity-80' />
+      }
+      {
+        // !logo &&
+        // <Favicon width='w-6' height='h-6' />
       }
       
       <div children={value ?? children} />
@@ -105,7 +109,7 @@ export default ({}) => {
   <div className='max-w-[56rem] mx-auto'>
     <ResourceTitle 
         should_onboard={resource_is_probably_empty}
-        overallColelctionCount={queryCount} 
+        overallCollectionCount={page?.length ?? 0} 
         hasLoaded={hasLoaded} 
         resource={resource}/>
 

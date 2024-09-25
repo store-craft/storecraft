@@ -11,13 +11,13 @@ import ShowIf from "./show-if.jsx"
  * @prop {string} resource
  * @prop {boolean} [should_onboard=false]
  * @prop {boolean} [hasLoaded=true]
- * @prop {number} [overallColelctionCount=undefined]
+ * @prop {number} [overallCollectionCount=undefined]
  * 
  * @param {ResourceTitleParams} params
  */
 export const ResourceTitle = (
   {
-    resource, should_onboard=false, hasLoaded=true, overallColelctionCount: overallCollectionCount
+    resource, should_onboard=false, hasLoaded=true, overallCollectionCount: overallCollectionCount
   }
 ) => {
 

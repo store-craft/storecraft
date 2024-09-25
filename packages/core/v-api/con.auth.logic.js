@@ -101,8 +101,8 @@ async (body) => {
         email: au.email,
         auth_id: au.id,
         id: 'cus_' + au.id.split('_').at(-1),
-        firstname,
-        lastname
+        firstname: firstname,
+        lastname: lastname
       }
     )
   );

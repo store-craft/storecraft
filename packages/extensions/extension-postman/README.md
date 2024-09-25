@@ -8,13 +8,10 @@
 ## Intro
 
 This extension will help you send emails for customers using `templates` on
-- `checkout/complete` event
-  - when an order is created and confirmed
-- `order/upsert` event
-  - when order is shipped
-  - when order is cancelled
+- `orders/checkout/complete` event
+- `orders/fulfillment/shipped` event
+- `orders/fulfillment/cancelled` event
 - `auth/signup` event
-  - when a user signs up
 
 ## Usage
 

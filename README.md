@@ -60,7 +60,7 @@ const app = new App(
     // Here you can send an onboarding email for example
   }
 ).on(
-  'checkout/complete',
+  'orders/checkout/complete',
   async (event) => {
     const order_data: OrderData = event.payload;
     // Here send an email with order details to customer

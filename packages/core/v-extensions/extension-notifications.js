@@ -26,19 +26,19 @@ export class NotificationsExtension {
     // checkout events notifications
 
     app.pubsub.on(
-      'checkout/create',
+      'orders/checkout/created',
       async (event) => {
         await event.app.api.notifications.addBulk([
-            checkout_notification(event.payload, 'Checkout Create')
+          checkout_notification(event.payload.current, 'Checkout Create')
         ]);
       }
     );
 
     app.pubsub.on(
-      'checkout/complete',
+      'orders/checkout/complete',
       async (event) => {
         await event.app.api.notifications.addBulk([
-          checkout_notification(event.payload, 'Checkout Complete')
+          checkout_notification(event.payload.current, 'Checkout Complete')
         ]);
       }
     );
@@ -54,7 +54,7 @@ export class NotificationsExtension {
             {
               message: `
 🔑 **New Signup**\n 
-* \`🙋🏻‍♂️ ${p.email ?? 'unknown'}\` has signed up. 
+* \`🙋🏻‍♂️ ${p.firstname ?? p.email ?? 'unknown'}\` has signed up. 
 `,
               author: 'backend-bot 🤖',
               actions: [

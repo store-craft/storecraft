@@ -21,7 +21,8 @@ const app = new App(config)
     const previous: CollectionType = event.payload.previous;
     const current: CollectionType = event.payload.current;
   }
-).on(
+)
+.on(
   'auth/signup',
   async (event) => {
     const user: Partial<AuthUserType> = event.payload;
@@ -30,12 +31,21 @@ const app = new App(config)
 
     console.log(user.email);
   }
-).on(
-  'checkout/complete',
+)
+.on(
+  'orders/checkout/complete',
   async (event) => {
-    const order_data: OrderData = event.payload;
+    const order_data: OrderData = event.payload.current;
 
     // Here send an email with order details to customer
+  }
+)
+.on(
+  'orders/fulfillment/shipped',
+  async (event) => {
+    const order_data: OrderData = event.payload.current;
+
+    // Here send an email with order shipping
   }
 );
 

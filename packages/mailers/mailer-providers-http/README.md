@@ -44,9 +44,9 @@ let { success, native_response } = await mailer.email({
 
 ### Resend
 ```js
-import { MailerResend } from '@storecraft/mailer-providers-http/resend';
+import { Resend } from '@storecraft/mailer-providers-http/resend';
 
-const mailer = new MailerResend(
+const mailer = new Resend(
   {
       apikey: process.env.RESEND_API_KEY
   }
@@ -66,9 +66,9 @@ let { success, native_response } = await mailer.email({
 ### Mailchimp
 
 ```js
-import { MailerMailChimp } from '@storecraft/mailer-providers-http/mailchimp';
+import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';
 
-const mailer = new MailerMailChimp(
+const mailer = new MailChimp(
   {
       apikey: process.env.MAILCHIMP_API_KEY
   }
@@ -88,9 +88,9 @@ let { success, native_response } = await mailer.email({
 ### Mailgun
 
 ```js
-import { MailerMailgun } from '@storecraft/mailer-providers-http/mailgun';
+import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';
 
-const mailer = new MailerMailgun(
+const mailer = new Mailgun(
   {
       apikey: process.env.MAILGUN_API_KEY
   }

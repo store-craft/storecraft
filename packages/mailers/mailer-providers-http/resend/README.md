@@ -4,9 +4,9 @@
 ## Howto
 
 ```js
-import { MailerResend } from '@storecraft/mailer-resend-http';
+import { Resend } from '@storecraft/mailer-resend-http';
 
-const mailer = new MailerResend(
+const mailer = new Resend(
   {
       apikey: process.env.RESEND_API_KEY
   }

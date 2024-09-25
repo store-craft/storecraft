@@ -290,9 +290,9 @@ export const infer_mailer = info => {
       }
     case 'resend':
       return {
-        cls: `MailerResend`,
+        cls: `Resend`,
         imports: [
-          `import { MailerResend } from '@storecraft/mailer-providers-http/resend';`
+          `import { Resend } from '@storecraft/mailer-providers-http/resend';`
         ],
         deps: [
           '@storecraft/mailer-providers-http'
@@ -300,9 +300,9 @@ export const infer_mailer = info => {
       }
     case 'mailchimp':
       return {
-        cls: `MailerMailChimp`,
+        cls: `MailChimp`,
         imports: [
-          `import { MailerMailChimp } from '@storecraft/mailer-providers-http/mailchimp';`
+          `import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';`
         ],
         deps: [
           '@storecraft/mailer-providers-http'
@@ -310,9 +310,9 @@ export const infer_mailer = info => {
       }
     case 'mailgun':
       return {
-        cls: `MailerMailgun`,
+        cls: `Mailgun`,
         imports: [
-          `import { MailerMailgun } from '@storecraft/mailer-providers-http/mailgun';`
+          `import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';`
         ],
         deps: [
           '@storecraft/mailer-providers-http'

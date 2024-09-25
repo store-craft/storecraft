@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { MailerResend } from '../index.js';
+import { Resend } from '../index.js';
 
-const mailer = new MailerResend(
+const mailer = new Resend(
   {
       apikey: process.env.RESEND_API_KEY
   }

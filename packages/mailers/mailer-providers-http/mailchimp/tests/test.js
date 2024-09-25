@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { MailerMailChimp } from '../index.js';
+import { MailChimp } from '../index.js';
 
-const mailer = new MailerMailChimp(
+const mailer = new MailChimp(
   {
       apikey: process.env.MAILCHIMP_API_KEY
   }

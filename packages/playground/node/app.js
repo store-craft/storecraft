@@ -10,6 +10,7 @@ import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { Stripe } from '@storecraft/payments-stripe'
 import { PostmanExtension } from '@storecraft/extension-postman'
+import { Resend } from '@storecraft/mailer-providers-http/resend'
 import { App } from '@storecraft/core';
  
 export const app = new App(
@@ -26,6 +27,7 @@ export const app = new App(
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
 .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+.withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
 .withPaymentGateways(
   {
     'paypal': new Paypal(

@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { MailerMailgun } from '../index.js';
+import { Mailgun } from '../index.js';
 
-const mailer = new MailerMailgun(
+const mailer = new Mailgun(
   {
       apikey: process.env.MAILGUN_API_KEY,
       domain_name: process.env.YOUR_DOMAIN_NAME

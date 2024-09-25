@@ -1,4 +1,4 @@
-export { MailerResend } from './adapter.js';
+export { Resend } from './adapter.js';
 
 /**
  * @description `Resend` config

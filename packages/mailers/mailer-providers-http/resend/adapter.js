@@ -5,9 +5,9 @@ import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js"
  * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 
- * mailer with Resend rest api
+ * @description mailer with Resend rest api
  */
-export class MailerResend {
+export class Resend {
   
   /** @type {Config} */ #_config;
 

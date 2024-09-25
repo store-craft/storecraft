@@ -4,9 +4,9 @@
 ## Howto
 
 ```js
-import { MailerMailChimp } from '@storecraft/mailer-mailchimp-http';
+import { MailChimp } from '@storecraft/mailer-mailchimp-http';
 
-const mailer = new MailerMailChimp(
+const mailer = new MailChimp(
   {
       apikey: process.env.MAILCHIMP_API_KEY
   }

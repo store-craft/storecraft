@@ -100,6 +100,8 @@ export type events = {
   auth_change_password: 'auth/change-password',
   auth_confirm_email_token_generated: 'auth/confirm-email-token-generated',
   auth_confirm_email_token_confirmed: 'auth/confirm-email-token-confirmed',
+  auth_forgot_password_token_generated: 'auth/forgot-password-token-generated',
+  auth_forgot_password_token_confirmed: 'auth/forgot-password-token-confirmed',
 }
 
 
@@ -243,11 +245,16 @@ export interface PubSubOnEvents<R=Function, AppType=App> {
   on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_upsert'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_confirm_email_token_generated'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_confirm_email_token_confirmed'], callback: PubSubSubscriber<{
+  on(event: events['auth_confirm_email_token_generated'], callback: PubSubSubscriber<{
     email: string,
-    confirm_email_token: string
+    token: string
   }, AppType>) : R;
+  on(event: events['auth_confirm_email_token_confirmed'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_forgot_password_token_generated'], callback: PubSubSubscriber<{
+    email: string,
+    token: string
+  }, AppType>) : R;
+  on(event: events['auth_forgot_password_token_confirmed'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_change_password'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
 
   // general gateway

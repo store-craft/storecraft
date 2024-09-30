@@ -48,7 +48,18 @@ export const create_routes = (app) => {
       const result = await app.api.auth.refresh(req.parsedBody);
       res.sendJson(result);
     }
-  )
+  );
+
+  // confirm email token 
+  polka.get(
+    '/confirm-email',
+    async (req, res) => {
+      const token = req.query.get('token');
+      const result = await app.api.auth.confirm_email(token);
+      res.end();
+    }
+  );
+
 
   // delete existing `api key`
   polka.delete(

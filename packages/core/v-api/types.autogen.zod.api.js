@@ -587,10 +587,12 @@ export const customerTypeSchema = baseTypeSchema.extend({
   firstname: z
     .string()
     .min(1, "Should be longer than 1 characters")
+    .optional()
     .describe("Firstname"),
   lastname: z
     .string()
     .min(1, "Should be longer than 1 characters")
+    .optional()
     .describe("Lastname"),
   email: z.string().email().describe("Email of customer"),
   phone_number: z

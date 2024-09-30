@@ -37,6 +37,9 @@ const data = [
       { event: 'auth/signin', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/refresh', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/remove', dispatches: 'Partial<AuthUserType>' },
+      { event: 'auth/upsert', dispatches: 'Partial<AuthUserType>' },
+      { event: 'auth/confirm-email-token-generated', dispatches: '{ email: string, confirm_email_token: string}' },
+      { event: 'auth/confirm-email-token-confirmed', dispatches: 'Partial<AuthUserType>' },
     ]
   },
   {

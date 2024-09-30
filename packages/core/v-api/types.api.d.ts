@@ -1401,13 +1401,13 @@ export interface CustomerType extends BaseType {
    * @description Firstname 
    * @minLength 1 Should be longer than 1 characters
    */
-  firstname: string;
+  firstname?: string;
 
   /** 
    * @description Lastname 
    * @minLength 1 Should be longer than 1 characters
    */
-  lastname: string;
+  lastname?: string;
 
   /**
    * @description Email of customer

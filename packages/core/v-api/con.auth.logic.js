@@ -19,6 +19,15 @@ import { decode, encode, fromUint8Array } from '../v-crypto/base64.js'
 import { isDef } from './utils.index.js'
 
 
+/**
+ * 
+ * @param {AuthUserType} au 
+ */
+const sanitize_auth_user = (au) => {
+  const sanitized = { ...au };
+  delete sanitized.password;
+  return sanitized;
+}
 
 /**
  * 
@@ -73,38 +82,41 @@ async (body) => {
   // Create a new user in the database
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
+  const confirm_email_token = await jwt.create(
+    app.config.auth_secret_access_token, 
+    { sub: id, aud: 'confirm-email-token' }
+  );
 
   /** @type {AuthUserType} */
-  const au = apply_dates(
-    {
-      id: id,
-      email, 
-      password: hashedPassword,
-      confirmed_mail: false,
-      roles,
-      description: `This user is a created with roles: [admin]`,
-      firstname,
-      lastname
-    }
-  );
+  const au = {
+    id: id,
+    email, 
+    password: hashedPassword,
+    confirmed_mail: false,
+    roles,
+    description: `This user is a created with roles: [admin]`,
+    firstname,
+    lastname,
+    attributes: [
+      {
+        key: 'confirm-email-token',
+        value: confirm_email_token.token
+      }
+    ]
+  }
 
-  await app.db.resources.auth_users.upsert(
-    au,
-    create_search_terms(au)
-  );
+  await upsert_auth_user(app)(au);
 
   // optional, but we set up a customer record directly into database
   // to avoid confusions
-  await app.db.resources.customers.upsert(
-    apply_dates(
-      {
-        email: au.email,
-        auth_id: au.id,
-        id: 'cus_' + au.id.split('_').at(-1),
-        firstname: firstname,
-        lastname: lastname
-      }
-    )
+  await app.api.customers.upsert(
+    {
+      email: au.email,
+      auth_id: au.id,
+      id: 'cus_' + au.id.split('_')?.at(-1),
+      firstname: firstname,
+      lastname: lastname
+    }
   );
 
   /** @type {Partial<import("../v-crypto/jwt.js").JWTClaims>} */
@@ -130,13 +142,20 @@ async (body) => {
 
   { // dispatch event
     if(app.pubsub.has('auth/signup')) {
-      const sanitized = { ...au };
-      delete sanitized.password;
       await app.pubsub.dispatch(
         'auth/signup',
-        sanitized
+        sanitize_auth_user(au)
       );
     }
+
+    await app.pubsub.dispatch(
+      'auth/confirm-email-token-generated',
+      {
+        email: au.email,
+        confirm_email_token: confirm_email_token.token
+      }
+    );
+
   }
 
   return {
@@ -224,11 +243,9 @@ async (body) => {
 
   { // dispatch event
     if(app.pubsub.has('auth/change-password')) {
-      const sanitized = { ...existingUser };
-      delete sanitized.password;
       await app.pubsub.dispatch(
         'auth/change-password',
-        sanitized
+        sanitize_auth_user(existingUser)
       );
     }
   }
@@ -299,11 +316,9 @@ async (body, fail_if_not_admin=false) => {
 
   { // dispatch event
     if(app.pubsub.has('auth/signin')) {
-      const sanitized = { ...existingUser };
-      delete sanitized.password;
       await app.pubsub.dispatch(
         'auth/signin',
-        sanitized
+        sanitize_auth_user(existingUser)
       );
     }
   }
@@ -497,10 +512,7 @@ async (body) => {
     verified, 'auth/error'
   )
 
-  // delete the hashed password
-  delete apikey_user.password;
-
-  return apikey_user;
+  return sanitize_auth_user(apikey_user);
 }
 
 /**
@@ -572,6 +584,31 @@ async (id_or_email) => {
 
 
 /**
+ * @description `upsert` an auth user and dispatch `auth/upsert` event
+ * 
+ * @param {App} app 
+ */  
+export const upsert_auth_user = (app) => 
+  /**
+   * 
+   * @param {AuthUserType} item 
+   */
+  async (item) => {
+
+    const final = apply_dates(item);
+
+    await app.db.resources.auth_users.upsert(
+      final,
+      create_search_terms(final)
+    );
+
+    await app.pubsub.dispatch(
+      'auth/upsert', final
+    );
+  }
+  
+
+/**
  * 
  * @param {App} app 
  */  
@@ -588,12 +625,9 @@ async (id_or_email) => {
         id_or_email
       );
 
-      if(user_to_remove)
-        delete user_to_remove.password;
-
       await app.pubsub.dispatch(
         'auth/remove',
-        user_to_remove
+        sanitize_auth_user(user_to_remove)
       );
     }
   }
@@ -603,6 +637,50 @@ async (id_or_email) => {
   );
 
 }
+
+
+/////
+// Verification tokens
+/////
+
+/**
+ * @description confirm `email` of authenticated user
+ * 
+ * @param {App} app 
+ */  
+export const confirm_email = (app) => 
+  /**
+   * 
+   * @param {string} token confirm email token
+   */
+  async (token) => {
+  
+    const  { 
+      verified, claims
+    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    
+    assert(verified, 'auth/error');
+    assert(claims.aud==='confirm-email-token', 'auth/error');
+
+    const auth_id = claims.sub;
+    const au = await app.db.resources.auth_users.get(auth_id);
+
+    au.confirmed_mail = true;
+
+    await app.db.resources.auth_users.upsert(
+      au,
+      create_search_terms(au)
+    );
+
+    { // dispatch event
+      await app.pubsub.dispatch(
+        'auth/confirm-email-token-confirmed',
+        sanitize_auth_user(au)
+      );
+    }
+  
+  }
+  
 
 /**
  * 
@@ -620,9 +698,12 @@ export const inter = app => {
     parse_api_key: parse_api_key,
     verify_api_key: verify_api_key(app),
     get_auth_user: get_auth_user(app),
+    upsert_auth_user: upsert_auth_user(app),
     list_auth_users: list_auth_users(app),
     remove_auth_user: remove_auth_user(app),
     removeByEmail: removeByEmail(app),
+
+    confirm_email: confirm_email(app),
   }
 
 }

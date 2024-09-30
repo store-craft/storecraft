@@ -32,11 +32,11 @@ export class PostmanExtension {
 
   /**
    * @type {extension["onInit"]}
-   */
+   */ 
   onInit(app) {
 
     // checkout events notifications
-
+ 
     app.pubsub.on(
       'orders/checkout/complete',
       async (event) => {

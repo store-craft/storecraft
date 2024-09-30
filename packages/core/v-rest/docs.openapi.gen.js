@@ -1206,6 +1206,32 @@ const register_auth = registry => {
       ...apply_security()
     }
   );  
+
+  // confirmations
+
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/confirm-email`,
+      description: 'Confirm an email with token',
+      summary: 'Confirm email of user',
+      tags,
+      request: {
+        query: z.object(
+          {
+            token: z.string({description: 'confirm email token'})
+          }
+        )
+      },
+      responses: {
+        200: {
+          description: 'all good',
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
 }
 
 const error = () => {

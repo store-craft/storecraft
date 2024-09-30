@@ -603,7 +603,7 @@ export const upsert_auth_user = (app) =>
     );
 
     await app.pubsub.dispatch(
-      'auth/upsert', final
+      'auth/upsert', sanitize_auth_user(final)
     );
   }
   

@@ -97,9 +97,13 @@ export type events = {
   auth_refersh: 'auth/refresh',
   auth_remove: 'auth/remove',
   auth_upsert: 'auth/upsert',
+  auth_apikey_created: 'auth/apikey-created',
+
   auth_change_password: 'auth/change-password',
+
   auth_confirm_email_token_generated: 'auth/confirm-email-token-generated',
   auth_confirm_email_token_confirmed: 'auth/confirm-email-token-confirmed',
+
   auth_forgot_password_token_generated: 'auth/forgot-password-token-generated',
   auth_forgot_password_token_confirmed: 'auth/forgot-password-token-confirmed',
 }
@@ -245,6 +249,7 @@ export interface PubSubOnEvents<R=Function, AppType=App> {
   on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_upsert'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_apikey_created'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_confirm_email_token_generated'], callback: PubSubSubscriber<{
     email: string,
     token: string

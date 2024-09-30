@@ -48,7 +48,7 @@ export const create_routes = (app) => {
       const result = await app.api.auth.change_password(req.parsedBody);
       res.sendJson(result);
     }
-  )
+  );
 
   // confirm email with token 
   polka.get(

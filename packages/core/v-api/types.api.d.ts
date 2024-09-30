@@ -43,10 +43,37 @@ export type StorecraftConfig = {
 
   /**
    *  
-   * @description The store `email-confirm`
-   * `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
+   * @description The store `email-confirm` base url into which a template
+   * action button will link into including a `token` as a query parameter.
+   * 
+   * ### For example:
+   * Suppose the base url is `https://store.com/confirm`,
+   * then `storecraft` default email template will use this to send
+   * a link with `https://store.com/confirm?token={{CONFIRM_TOKEN}}`
+   * 
+   * You can use this to delegate into `storecraft` auth backend endpoint
+   * `/api/auth/confirm-email?token={{CONFIRM_TOKEN}}`
+   * 
+   * @default `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
    */
   general_confirm_email_base_url?: string;
+
+  /**
+   *  
+   * @description The store `forgot-password` base url, into which template action
+   * button will link into including a `token` as a query parameter.
+   * 
+   * ### For example:
+   * Suppose the base url is `https://store.com/forgot-password-confirm`,
+   * then `storecraft` default email template will use this to send
+   * a link with `https://store.com/forgot-password-confirm?token={{CONFIRM_TOKEN}}`
+   * 
+   * You can use this to delegate into `storecraft` auth backend endpoint
+   * `/api/auth/forgot-password-request-confirm?token={{CONFIRM_TOKEN}}`
+   * 
+   * @default `platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment
+   */
+  general_forgot_password_confirm_base_url?: string;
   
 
   /**

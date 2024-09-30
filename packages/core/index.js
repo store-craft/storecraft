@@ -136,7 +136,9 @@ export class App {
     this.#_config = config;
     this.#_is_ready = false;
     this.#_pubsub = new PubSub(this);
+    // @ts-ignore
     this.#_taxes = new UniformTaxes(0);
+    // @ts-ignore
     this.#_extensions = {
       'notifications': new NotificationsExtension()
     }
@@ -193,7 +195,6 @@ export class App {
           );
           await this.pubsub.dispatch('orders/payments/update', payload);
         }
-
       }
     );
 
@@ -245,6 +246,9 @@ export class App {
                   env.SC_GENERAL_STORE_LOGO_URL,
       general_confirm_email_base_url: c?.general_confirm_email_base_url ?? 
                   env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
+      general_forgot_password_confirm_base_url: c?.general_forgot_password_confirm_base_url ?? 
+                  env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL,
+    
     }
   } 
 

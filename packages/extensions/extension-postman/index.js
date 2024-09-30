@@ -4,7 +4,7 @@
  */
 
 import { App } from '@storecraft/core';
-import { enums } from '@storecraft/core/v-api';
+import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/v-api/con.auth.logic.js';
 import Handlebars from 'handlebars';
 
 
@@ -14,6 +14,7 @@ import Handlebars from 'handlebars';
  * - `orders/fulfillment/shipped`
  * - `orders/fulfillment/cancelled`
  * - `auth/signup`
+ * - `auth/forgot-password-token-generated`
  * - `auth/reset-password`
  * 
  * @implements {extension}
@@ -51,23 +52,57 @@ export class PostmanExtension {
           'Your Order',
           {
             order: event.payload.current,
-            info: {
-              general_store_website: app.config.general_store_website,
-              general_store_name: app.config.general_store_name,
-              general_store_support_email: app.config.general_store_support_email,
-            }
+            info: get_info(app),
           }
-      
         );
-
       }
     );
     
+    app.pubsub.on(
+      'orders/fulfillment/shipped',
+      async (event) => {
+
+        if(!event.payload.current?.contact?.email)
+          return;
+
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.current.contact.email ],
+          'checkout-complete',
+          'Your Order Shipped',
+          {
+            order: event.payload.current,
+            info: get_info(app),
+          }
+        );
+      }
+    );
+    
+    app.pubsub.on(
+      'orders/fulfillment/cancelled',
+      async (event) => {
+
+        if(!event.payload.current?.contact?.email)
+          return;
+
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.current.contact.email ],
+          'checkout-complete',
+          'Your Order Cancelled',
+          {
+            order: event.payload.current,
+            info: get_info(app),
+          }
+        );
+      }
+    );
+        
+    // auth events
 
     app.pubsub.on(
       'auth/signup',
       async (event) => {
-
         await sendMailWithTemplate(
           event.app,
           [ event.payload.email ],
@@ -75,15 +110,59 @@ export class PostmanExtension {
           'Welcome',
           {
             customer: event.payload,
-            info: {
-              general_store_website: app.config.general_store_website,
-              general_store_name: app.config.general_store_name,
-              general_store_support_email: app.config.general_store_support_email,
-            }
+            info: get_info(app),
+            token: event.payload.attributes?.find(it => it.key===CONFIRM_EMAIL_TOKEN)?.value
           }
-      
         );
+      }
+    );
 
+    app.pubsub.on(
+      'auth/change-password',
+      async (event) => {
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.email ],
+          'general-message',
+          'Your Password was changed',
+          {
+            info: get_info(app),
+            message: 'Your password has been changed. If it wasn\'t you, please reply to this email',
+            firstname: event.payload.firstname ?? ''
+          }
+        );
+      }
+    );
+
+    app.pubsub.on(
+      'auth/confirm-email-token-generated',
+      async (event) => {
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.email ],
+          'confirm-email',
+          'Confirm Email',
+          {
+            info: get_info(app),
+            token: event.payload.token
+          }
+        );
+      }
+    );
+
+    app.pubsub.on(
+      'auth/forgot-password-token-generated',
+      async (event) => {
+        await sendMailWithTemplate(
+          event.app,
+          [ event.payload.email ],
+          'forgot-password',
+          'Confirm Forgot Password Request',
+          {
+            info: get_info(app),
+            token: event.payload.token
+          }
+        );
       }
     );
 
@@ -92,6 +171,19 @@ export class PostmanExtension {
 }
 
 
+/**
+ * 
+ * @param {App} app 
+ */
+const get_info = app => {
+  return {
+    general_store_website: app.config.general_store_website,
+    general_store_name: app.config.general_store_name,
+    general_store_support_email: app.config.general_store_support_email,
+    general_forgot_password_confirm_base_url: app.config.general_forgot_password_confirm_base_url,
+    general_confirm_email_base_url: app.config.general_confirm_email_base_url
+  }
+}
 
 /**
  * @description compile a template into `html` and `text` if possible

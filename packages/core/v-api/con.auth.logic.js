@@ -447,6 +447,8 @@ async () => {
 
   const apikey = encode(`${email}:${password}`, true);
 
+  await app.pubsub.dispatch('auth/apikey-created', au);
+
   return {
     apikey
   }

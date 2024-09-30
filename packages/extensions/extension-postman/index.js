@@ -68,7 +68,7 @@ export class PostmanExtension {
         await sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
-          'checkout-complete',
+          'order-shipped',
           'Your Order Shipped',
           {
             order: event.payload.current,
@@ -88,7 +88,7 @@ export class PostmanExtension {
         await sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
-          'checkout-complete',
+          'order-cancelled',
           'Your Order Cancelled',
           {
             order: event.payload.current,

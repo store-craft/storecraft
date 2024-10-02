@@ -22,9 +22,9 @@ export const app = new App(
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games',
     auth_admins_emails: ['john@doe.com'],
-    general_store_support_email: 'support@wush.games',
-    general_confirm_email_base_url: 'localhost:8000/api/auth/confirm-email',
-    general_forgot_password_confirm_base_url: 'localhost:8000/api/auth/forgot-password-request-confirm'
+    general_store_support_email: 'support@storecraft.app',
+    general_confirm_email_base_url: 'https://wush.games/api/auth/confirm-email',
+    general_forgot_password_confirm_base_url: 'https://wush.games/api/auth/forgot-password-request-confirm'
   }
 )
 .withPlatform(new NodePlatform())

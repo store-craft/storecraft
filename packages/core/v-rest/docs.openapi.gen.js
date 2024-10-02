@@ -420,7 +420,7 @@ const create_all = () => {
       title: 'StoreCraft API',
       description: 'Welcome to the `StoreCraft` **API**',
     },
-    servers: [{ url: 'api' }],
+    servers: [{ url: '/api' }],
   });
   
   writeFile(

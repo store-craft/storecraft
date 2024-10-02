@@ -227,7 +227,7 @@ export const sendMailWithTemplate = async (app, emails, template_handle, subject
     data
   );
 
-  return app.mailer.email(
+  const r = await app.mailer.email(
     {
       html,
       text,
@@ -238,5 +238,6 @@ export const sendMailWithTemplate = async (app, emails, template_handle, subject
       to: emails.map(e => ({address: e})),
       subject
     }
-  )
+  );
+
 }

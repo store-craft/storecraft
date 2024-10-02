@@ -23,7 +23,13 @@ export default
     <script>
       var configuration = {
         theme: 'solarized',
-        layout: 'modern'
+        layout: 'modern',
+        servers: [
+    {
+      url: '/api',
+      description: 'Production server',
+    },
+  ]
       }
 
       var apiReference = document.getElementById('api-reference')

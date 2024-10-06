@@ -38,11 +38,11 @@ export const create_routes = (app) => {
 
   // get item
   polka.get(
-    '/:handle',
+    '/:email_or_id',
     owner_or_admin_guard,
     async (req, res) => {
-      const handle_or_id = req?.params?.handle;
-      const item = await app.api.customers.get(handle_or_id);
+      const { email_or_id } = req?.params;
+      const item = await app.api.customers.get(email_or_id);
 
       assert(item, 'not-found', 404);
 
@@ -52,11 +52,11 @@ export const create_routes = (app) => {
 
   // delete item
   polka.delete(
-    '/:handle',
+    '/:email_or_id',
     middle_authorize_admin,
     async (req, res) => {
-      const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.customers.remove(handle_or_id);
+      const { email_or_id } = req?.params;
+      const removed = email_or_id && await app.api.customers.remove(email_or_id);
 
       res.setStatus(removed ? 200 : 404).end();
     }
@@ -76,12 +76,12 @@ export const create_routes = (app) => {
 
   // list orders of customer
   polka.get(
-    '/:id_or_email/orders',
+    '/:email_or_id/orders',
     owner_or_admin_guard,
     async (req, res) => {
-      const { id_or_email } = req.params;
+      const { email_or_id } = req.params;
       const q = parse_query(req.query);
-      const items = await app.api.customers.list_customer_orders(id_or_email, q);
+      const items = await app.api.customers.list_customer_orders(email_or_id, q);
       
       res.sendJson(items);
     }

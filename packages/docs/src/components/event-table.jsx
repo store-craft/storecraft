@@ -31,19 +31,55 @@ const get = v => {
 
 const data = [
   {
-    name: 'checkout',
-    events: [
-      { event: 'checkout/create', dispatches: 'Partial<OrderData>' },
-      { event: 'checkout/complete', dispatches: 'Partial<OrderData>' },
-    ]
-  },
-  {
     name: 'auth',
     events: [
       { event: 'auth/signup', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/signin', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/refresh', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/remove', dispatches: 'Partial<AuthUserType>' },
+      { event: 'auth/upsert', dispatches: 'Partial<AuthUserType>' },
+      { event: 'auth/apikey-created', dispatches: 'Partial<AuthUserType>' },
+
+      { event: 'auth/confirm-email-token-generated', dispatches: '{ email: string, token: string}' },
+      { event: 'auth/confirm-email-token-confirmed', dispatches: 'Partial<AuthUserType>' },
+
+      { event: 'auth/forgot-password-token-generated', dispatches: '{ email: string, token: string}' },
+      { event: 'auth/forgot-password-token-confirmed', dispatches: 'Partial<AuthUserType>' },
+    ]
+  },
+  {
+    name: 'orders',
+    events: [
+      { event: 'orders/upsert', dispatches: upsert('OrderData') },
+      { event: 'orders/remove', dispatches: remove('OrderData') },
+      { event: 'orders/get', dispatches: get('OrderData') },
+      { event: 'orders/list', dispatches: get('OrderData[]') },
+
+      { event: 'orders/checkout/created', dispatches: upsert('OrderData') },
+      { event: 'orders/checkout/complete', dispatches: upsert('OrderData') },
+      { event: 'orders/checkout/requires_action', dispatches: upsert('OrderData') },
+      { event: 'orders/checkout/failed', dispatches: upsert('OrderData') },
+      { event: 'orders/checkout/unknown', dispatches: upsert('OrderData') },
+      { event: 'orders/checkout/update', dispatches: upsert('OrderData') },
+
+      { event: 'orders/fulfillment/draft', dispatches: upsert('OrderData') },
+      { event: 'orders/fulfillment/processing', dispatches: upsert('OrderData') },
+      { event: 'orders/fulfillment/shipped', dispatches: upsert('OrderData') },
+      { event: 'orders/fulfillment/fulfilled', dispatches: upsert('OrderData') },
+      { event: 'orders/fulfillment/cancelled', dispatches: upsert('OrderData') },
+      { event: 'orders/fulfillment/update', dispatches: upsert('OrderData') },
+
+      { event: 'orders/payments/unpaid', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/authorized', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/captured', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/requires_auth', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/voided', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/failed', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/partially_paid', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/partially_refunded', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/cancelled', dispatches: upsert('OrderData') },
+      { event: 'orders/payments/update', dispatches: upsert('OrderData') },
+
     ]
   },
   {
@@ -80,15 +116,6 @@ const data = [
       { event: 'collections/remove', dispatches: remove('CollectionType') },
       { event: 'collections/get', dispatches: get('CollectionType') },
       { event: 'collections/list', dispatches: get('CollectionType[]') },
-    ]
-  },
-  {
-    name: 'orders',
-    events: [
-      { event: 'orders/upsert', dispatches: upsert('OrderData') },
-      { event: 'orders/remove', dispatches: remove('OrderData') },
-      { event: 'orders/get', dispatches: get('OrderData') },
-      { event: 'orders/list', dispatches: get('OrderData[]') },
     ]
   },
   {

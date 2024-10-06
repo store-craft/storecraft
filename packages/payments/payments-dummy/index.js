@@ -66,8 +66,7 @@ export class DummyPayments {
     return {
       name: 'Dummy payments',
       description: 'This is a `dummy` payment processor for playgorund purposes',
-      url: 'https://storecraft.dev',
-      logo_url: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg'
+      url: 'https://storecraft.app',
     }
   }
   

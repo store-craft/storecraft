@@ -7,7 +7,7 @@ import { convert_to_base64 } from "./adapter.utils.js";
  * 
  * mailer with mail-chimp / mandrill http api
  */
-export class MailerMailChimp {
+export class MailChimp {
   
   /** @type {Config} */ #_config;
 

@@ -21,7 +21,7 @@ export const create_routes = (app) => {
       const result = await app.api.auth.signup(req.parsedBody);
       res.sendJson(result);
     }
-  )
+  );
   
   // signin
   polka.post(
@@ -30,7 +30,16 @@ export const create_routes = (app) => {
       const result = await app.api.auth.signin(req.parsedBody);
       res.sendJson(result);
     }
-  )
+  );
+
+  // refresh 
+  polka.post(
+    '/refresh',
+    async (req, res) => {
+      const result = await app.api.auth.refresh(req.parsedBody);
+      res.sendJson(result);
+    }
+  );
 
   // change password
   polka.post(
@@ -39,38 +48,60 @@ export const create_routes = (app) => {
       const result = await app.api.auth.change_password(req.parsedBody);
       res.sendJson(result);
     }
-  )
-  
-  // refresh 
-  polka.post(
-    '/refresh',
+  );
+
+  // confirm email with token 
+  polka.get(
+    '/confirm-email',
     async (req, res) => {
-      const result = await app.api.auth.refresh(req.parsedBody);
+      const token = req.query.get('token');
+      const result = await app.api.auth.confirm_email(token);
+      res.end();
+    }
+  );
+
+  // initiate a `forgot-password` flow, which internally dispatches 
+  // an event with a token that should be sent to the user.
+  polka.get(
+    '/forgot-password-request',
+    async (req, res) => {
+      const email = req.query.get('email');
+      await app.api.auth.forgot_password_request(email);
+      res.end();
+    }
+  );
+
+  // Verifies, that a `forgot-password` request is legal, 
+  // changes the password to a random one, and returns it and 
+  // dispatches `auth/forgot-password-token-confirmed` event.
+  polka.get(
+    '/forgot-password-request-confirm',
+    async (req, res) => {
+      const token = req.query.get('token');
+      const result = await app.api.auth.forgot_password_request_confirm(token);
       res.sendJson(result);
     }
-  )
+  );
+
 
   // delete existing `api key`
   polka.delete(
     '/users/:email',
     middle_authorize_admin,
     async (req, res) => {
-
       await app.api.auth.remove_auth_user(req.params?.email);
-
       res.end();
     }
-  )
+  );
 
   polka.get(
     '/users/:email',
     middle_authorize_admin,
     async (req, res) => {
       const item = await app.api.auth.get_auth_user(req.params?.email);
-
       res.sendJson(item);
     }
-  )
+  );
 
   // delete existing `auth user`
   polka.get(
@@ -78,12 +109,10 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       let q = parse_query(req.query);
-
       const items = await app.api.auth.list_auth_users(q);
-
       res.sendJson(items);
     }
-  )
+  );
 
   // create and get a new `apikey`
   polka.post(
@@ -91,10 +120,9 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const result = await app.api.auth.create_api_key();
-
       res.sendJson(result);
     }
-  )
+  );
 
 
   // get all existing `apikeys`
@@ -103,11 +131,9 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const result = await app.api.auth.list_all_api_keys_info();
-
       res.sendJson(result);
     }
-  )
-
+  );
 
   return polka;
 }

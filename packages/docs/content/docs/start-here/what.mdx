@@ -16,14 +16,14 @@ export const app = new App({
 .withPlatform(new NodePlatform())
 .withDatabase(new SQLite())
 .withStorage(new NodeLocalStorage())
-.withMailer(new MailerSendGrid({ apikey: process.env.SENDGRID_APIKEY }))
+.withMailer(new SendGrid({ apikey: process.env.SENDGRID_APIKEY }))
 .withPaymentGateways(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
   }
 )
 .on(
-  'checkout/create',
+  'orders/checkout/created',
   async (evt) => {
 
   }

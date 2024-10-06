@@ -72,8 +72,20 @@ export const roleSchema = z
   .describe("Role of authenticated user");
 export const apiAuthSigninTypeSchema =
   authBaseTypeSchema.describe("Sign in type");
-export const apiAuthSignupTypeSchema =
-  authBaseTypeSchema.describe("Sign up type");
+export const apiAuthSignupTypeSchema = authBaseTypeSchema
+  .and(
+    z.object({
+      firstname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+      lastname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+    }),
+  )
+  .describe("Sign up type");
 export const apiAuthChangePasswordTypeSchema = z
   .object({
     user_id_or_email: z.string().describe("User `ID` or `Email`"),
@@ -320,9 +332,9 @@ export const filterValueOHasCustomersSchema = z
   .describe("Filter for order discount, order has customer id");
 export const filterMetaEnumSchema = z.object({
   any: z.object({
-    id: z.number(),
-    type: z.string(),
-    op: z.string(),
+    id: z.number().optional(),
+    type: z.string().optional(),
+    op: z.string().optional(),
     name: z.string().optional(),
   }),
   p_in_collections: z.object({
@@ -426,8 +438,8 @@ export const discountMetaEnumSchema = z
       name: z.string().optional(),
     }),
     any: z.object({
-      id: z.number(),
-      type: z.string(),
+      id: z.number().optional(),
+      type: z.string().optional(),
       name: z.string().optional(),
     }),
   })
@@ -575,10 +587,12 @@ export const customerTypeSchema = baseTypeSchema.extend({
   firstname: z
     .string()
     .min(1, "Should be longer than 1 characters")
+    .optional()
     .describe("Firstname"),
   lastname: z
     .string()
     .min(1, "Should be longer than 1 characters")
+    .optional()
     .describe("Lastname"),
   email: z.string().email().describe("Email of customer"),
   phone_number: z
@@ -745,6 +759,11 @@ export const paymentOptionsEnumSchema = z
       id: z.literal(8),
       name: z.string().optional(),
       name2: z.literal("partially_refunded"),
+    }),
+    cancelled: z.object({
+      id: z.literal(9),
+      name: z.string().optional(),
+      name2: z.literal("cancelled"),
     }),
   })
   .describe(
@@ -1152,6 +1171,14 @@ export const authUserTypeSchema = baseTypeSchema
         .optional()
         .describe("list of roles and authorizations of the user"),
       tags: z.array(z.string()).optional().describe("tags"),
+      firstname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
+      lastname: z
+        .string()
+        .optional()
+        .describe("(optional) readable `name` of `customer`"),
     }),
   )
   .describe("Auth user type");
@@ -1217,7 +1244,9 @@ const baseNotificationTypeSchema = z.object({
   search: z.array(z.string()).optional().describe("search terms"),
   id: z.string().optional().describe("`id` of notification"),
 });
-export const notificationTypeUpsertSchema = baseNotificationTypeSchema;
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema.omit({
+  id: true,
+});
 export const orderStatusSchema = z
   .object({
     checkout: z
@@ -1562,6 +1591,7 @@ const checkoutCreateTypeWithoutIDSchema = checkoutCreateTypeSchema.omit({
 export const evoEntrySchema = z
   .object({
     discount_code: z.string().optional().describe("The discount code `handle`"),
+    discount: discountTypeSchema.optional().describe("The `discount`"),
     total_discount: z
       .number()
       .optional()
@@ -1660,6 +1690,10 @@ export const pricingDataSchema = z
     subtotal: z
       .number()
       .describe("`subtotal_undiscounted` - `subtotal_discount`"),
+    total_without_taxes: z
+      .number()
+      .optional()
+      .describe("`subtotal` + `shipping`"),
     total: z.number().describe("`subtotal` + `shipping` + `taxes`"),
     quantity_total: z.number().describe("How many items are eligible"),
     quantity_discounted: z.number().describe("How many items were discounted"),

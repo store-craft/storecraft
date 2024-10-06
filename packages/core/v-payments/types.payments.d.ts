@@ -114,7 +114,7 @@ export declare interface payment_gateway<
    * @param order store-craft order, use it to infer pricing
    * 
    */
-  onCheckoutCreate: (order: OrderData) => Promise<CheckoutCreateResult>;
+  onCheckoutCreate: (order: Partial<OrderData>) => Promise<CheckoutCreateResult>;
 
   /**
    * 

@@ -6,9 +6,9 @@ import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.
  * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 
- * mailer with mailgun http api
+ * @description mailer with mailgun http api
  */
-export class MailerMailgun {
+export class Mailgun {
   
   /** @type {Config} */ #_config;
 

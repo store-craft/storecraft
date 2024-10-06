@@ -43,7 +43,7 @@ export default class Auth {
 
   /**
    * 
-   * Get the current `auth` config, which is one of:
+   * @description Get the current `auth` config, which is one of:
    * 
    * 1. `JWT` with `access_token`, `refresh_token`, `claims`
    * 2. `Api Key` with a single value, which can be used as is in:
@@ -77,7 +77,7 @@ export default class Auth {
 
   /**
    * 
-   * Get a working token, by the following strategy:
+   * @description Get a working token, by the following strategy:
    * 
    * - If you are in `JWT` strategy:
    *    - If the current `access_token` will expire soon or is already expired
@@ -106,7 +106,7 @@ export default class Auth {
 
   /**
    * 
-   * Perform re-authentication for `JWT` auth, which means:
+   * @description Perform re-authentication for `JWT` auth, which means:
    * 
    * - use the `refresh_token` to gain a new `access_token`
    * 
@@ -274,11 +274,14 @@ export default class Auth {
    * 
    * @param {string} email 
    * @param {string} password 
+   * @param {string} [firstname] 
+   * @param {string} [lastname] 
    */
-  signup = async (email, password) => {
+  signup = async (email, password, firstname, lastname) => {
     /** @type {import('@storecraft/core/v-api').ApiAuthSignupType} */
     const info = {
-      email, password
+      email, password,
+      firstname, lastname
     }
 
     const res = await fetch(

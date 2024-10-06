@@ -36,6 +36,8 @@ const upsert = (driver) => {
             updated_at: item.updated_at,
             id: item.id,
             roles: JSON.stringify(item.roles),
+            firstname: item.firstname,
+            lastname: item.lastname
           });
         }
       );

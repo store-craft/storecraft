@@ -56,7 +56,7 @@ import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
 import { NodePlatform } from "@storecraft/platforms/node"
 import { SQLite } from "@storecraft/database-sqlite"
 import { NodeLocalStorage } from "@storecraft/storage-local/node"
-import { MailerSendGrid } from "@storecraft/mailer-providers-http/sendgrid"
+import { SendGrid } from "@storecraft/mailer-providers-http/sendgrid"
 import { App } from "@storecraft/core"
 
 export const app = new App({
@@ -68,7 +68,7 @@ export const app = new App({
 .withPlatform(new NodePlatform({}))
 .withDatabase(new SQLite())
 .withStorage(new NodeLocalStorage())
-.withMailer(new MailerSendGrid({ apikey: process.env.SENDGRID_APIKEY }))
+.withMailer(new SendGrid({ apikey: process.env.SENDGRID_APIKEY }))
 .withPaymentGateways(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })

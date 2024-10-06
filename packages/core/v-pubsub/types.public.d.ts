@@ -1,3 +1,4 @@
+import type { App } from '../types.public.js';
 import type { 
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
@@ -65,14 +66,46 @@ export type events = {
   templates_get: 'templates/get', 
   templates_list: 'templates/list',
 
-  checkout_create: 'checkout/create', 
-  checkout_complete: 'checkout/complete',
+  orders_checkout_created: 'orders/checkout/created', 
+  orders_checkout_complete: 'orders/checkout/complete',
+  orders_checkout_requires_action: 'orders/checkout/requires_action', 
+  orders_checkout_failed: 'orders/checkout/failed',
+  orders_checkout_unknown: 'orders/checkout/unknown',
+  orders_checkout_update: 'orders/checkout/update',
+
+  orders_fulfillment_draft: 'orders/fulfillment/draft', 
+  orders_fulfillment_processing: 'orders/fulfillment/processing', 
+  orders_fulfillment_shipped: 'orders/fulfillment/shipped', 
+  orders_fulfillment_fulfilled: 'orders/fulfillment/fulfilled', 
+  orders_fulfillment_cancelled: 'orders/fulfillment/cancelled', 
+  orders_fulfillment_update: 'orders/fulfillment/update', 
+
+  orders_payments_unpaid: 'orders/payments/unpaid', 
+  orders_payments_authorized: 'orders/payments/authorized', 
+  orders_payments_captured: 'orders/payments/captured', 
+  orders_payments_requires_auth: 'orders/payments/requires_auth', 
+  orders_payments_voided: 'orders/payments/voided', 
+  orders_payments_failed: 'orders/payments/failed', 
+  orders_payments_partially_paid: 'orders/payments/partially_paid', 
+  orders_payments_refunded: 'orders/payments/refunded', 
+  orders_payments_partially_refunded: 'orders/payments/partially_refunded', 
+  orders_payments_cancelled: 'orders/payments/cancelled', 
+  orders_payments_update: 'orders/payments/update', 
 
   auth_signup: 'auth/signup', 
   auth_signin: 'auth/signin', 
   auth_refersh: 'auth/refresh',
   auth_remove: 'auth/remove',
+  auth_upsert: 'auth/upsert',
+  auth_apikey_created: 'auth/apikey-created',
+
   auth_change_password: 'auth/change-password',
+
+  auth_confirm_email_token_generated: 'auth/confirm-email-token-generated',
+  auth_confirm_email_token_confirmed: 'auth/confirm-email-token-confirmed',
+
+  auth_forgot_password_token_generated: 'auth/forgot-password-token-generated',
+  auth_forgot_password_token_confirmed: 'auth/forgot-password-token-confirmed',
 }
 
 
@@ -80,9 +113,9 @@ export type events = {
 /**
  * @description A list of native `storecraft` events
  */
-export type PubSubEvent = events[keyof events] ;
+export type PubSubEvent = events[keyof events];
 
-export type EventPayload<T=any, App=any> = {
+export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) = PubSubEvent> = {
   /**
    * @description payload
    */
@@ -91,7 +124,7 @@ export type EventPayload<T=any, App=any> = {
   /**
    * @description event type
    */
-  event: PubSubEvent;
+  event: E;
 
   /**
    * @description `storecraft` app instance
@@ -104,28 +137,32 @@ export type EventPayload<T=any, App=any> = {
   stopPropagation: () => any;
 }
 
+
+/**
+ * @description common payload types structures
+ */
+export type PayloadForGet<T=any> = { current: T };
+export type PayloadForUpsert<T=any> = { previous: T, current: T };
+export type PayloadForRemove<T=any> = { previous: T, success: boolean };
+
+
 /**
  * 
  * @description Subscriber method spec
  * 
  */
-export type PubSubSubscriber<T=any, AppType=any> = ((value: EventPayload<T, AppType>) => any) | 
+export type PubSubSubscriber<T=any, AppType=App> = ((value: EventPayload<T, AppType>) => any) | 
       ((value: EventPayload<T, AppType>) => Promise<any>);
 
-export type PubSubSubscriberForUpsert<T=any, AppType=any> = PubSubSubscriber<{
-  previous: T,
-  current: T,
-}, AppType>;
-
-export type PubSubSubscriberForGet<T=any, AppType=any> = PubSubSubscriber<{ current: T }, AppType>;
-
-export type PubSubSubscriberForRemove<T=any, AppType=any> = PubSubSubscriber<{ previous: T, success: boolean }, AppType>;
+export type PubSubSubscriberForGet<T=any, AppType=App> = PubSubSubscriber<PayloadForGet<T>, AppType>;
+export type PubSubSubscriberForUpsert<T=any, AppType=App> = PubSubSubscriber<PayloadForUpsert<T>, AppType>;
+export type PubSubSubscriberForRemove<T=any, AppType=App> = PubSubSubscriber<PayloadForRemove<T>, AppType>;
 
 
 /**
  * @description `events` subscribtion callbacks
  */
-export interface PubSubOnEvents<R=Function, AppType=any> {
+export interface PubSubOnEvents<R=Function, AppType=App> {
   
   on(event: events['storefronts_upsert'], callback: PubSubSubscriberForUpsert<StorefrontType, AppType>) : R;
   on(event: events['storefronts_remove'], callback: PubSubSubscriberForRemove<StorefrontType, AppType>) : R;
@@ -152,11 +189,6 @@ export interface PubSubOnEvents<R=Function, AppType=any> {
   on(event: events['collections_get'], callback: PubSubSubscriberForGet<CollectionType, AppType>) : R;
   on(event: events['collections_list'], callback: PubSubSubscriberForGet<CollectionType[], AppType>) : R;
 
-  on(event: events['orders_upsert'], callback: PubSubSubscriberForUpsert<OrderData, AppType>) : R;
-  on(event: events['orders_remove'], callback: PubSubSubscriberForRemove<OrderData, AppType>) : R;
-  on(event: events['orders_get'], callback: PubSubSubscriberForGet<OrderData, AppType>) : R;
-  on(event: events['orders_list'], callback: PubSubSubscriberForGet<OrderData[], AppType>) : R;
-
   on(event: events['discounts_upsert'], callback: PubSubSubscriberForUpsert<DiscountType, AppType>) : R;
   on(event: events['discounts_remove'], callback: PubSubSubscriberForRemove<DiscountType, AppType>) : R;
   on(event: events['discounts_get'], callback: PubSubSubscriberForGet<DiscountType, AppType>) : R;
@@ -182,12 +214,52 @@ export interface PubSubOnEvents<R=Function, AppType=any> {
   on(event: events['templates_get'], callback: PubSubSubscriberForGet<TemplateType, AppType>) : R;
   on(event: events['templates_list'], callback: PubSubSubscriberForGet<TemplateType[], AppType>) : R;
 
-  on(event: events['checkout_create'], callback: PubSubSubscriber<Partial<OrderData>, AppType>) : R;
-  on(event: events['checkout_complete'], callback: PubSubSubscriber<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_upsert'], callback: PubSubSubscriberForUpsert<OrderData, AppType>) : R;
+  on(event: events['orders_remove'], callback: PubSubSubscriberForRemove<OrderData, AppType>) : R;
+  on(event: events['orders_get'], callback: PubSubSubscriberForGet<OrderData, AppType>) : R;
+  on(event: events['orders_list'], callback: PubSubSubscriberForGet<OrderData[], AppType>) : R;
+
+  on(event: events['orders_checkout_created'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_checkout_complete'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_checkout_failed'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_checkout_requires_action'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_checkout_unknown'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_checkout_update'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+
+  on(event: events['orders_fulfillment_cancelled'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_fulfillment_draft'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_fulfillment_fulfilled'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_fulfillment_processing'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_fulfillment_shipped'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_fulfillment_update'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+
+  on(event: events['orders_payments_authorized'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_cancelled'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_captured'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_failed'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_partially_paid'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_partially_refunded'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_refunded'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_requires_auth'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_unpaid'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_voided'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
+  on(event: events['orders_payments_update'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
   
   on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_upsert'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_apikey_created'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_confirm_email_token_generated'], callback: PubSubSubscriber<{
+    email: string,
+    token: string
+  }, AppType>) : R;
+  on(event: events['auth_confirm_email_token_confirmed'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
+  on(event: events['auth_forgot_password_token_generated'], callback: PubSubSubscriber<{
+    email: string,
+    token: string
+  }, AppType>) : R;
+  on(event: events['auth_forgot_password_token_confirmed'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
   on(event: events['auth_change_password'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
 
   // general gateway

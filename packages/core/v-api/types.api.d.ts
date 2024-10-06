@@ -43,10 +43,37 @@ export type StorecraftConfig = {
 
   /**
    *  
-   * @description The store `email-confirm`
-   * `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
+   * @description The store `email-confirm` base url into which a template
+   * action button will link into including a `token` as a query parameter.
+   * 
+   * ### For example:
+   * Suppose the base url is `https://store.com/confirm`,
+   * then `storecraft` default email template will use this to send
+   * a link with `https://store.com/confirm?token={{CONFIRM_TOKEN}}`
+   * 
+   * You can use this to delegate into `storecraft` auth backend endpoint
+   * `/api/auth/confirm-email?token={{CONFIRM_TOKEN}}`
+   * 
+   * @default `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
    */
   general_confirm_email_base_url?: string;
+
+  /**
+   *  
+   * @description The store `forgot-password` base url, into which template action
+   * button will link into including a `token` as a query parameter.
+   * 
+   * ### For example:
+   * Suppose the base url is `https://store.com/forgot-password-confirm`,
+   * then `storecraft` default email template will use this to send
+   * a link with `https://store.com/forgot-password-confirm?token={{CONFIRM_TOKEN}}`
+   * 
+   * You can use this to delegate into `storecraft` auth backend endpoint
+   * `/api/auth/forgot-password-request-confirm?token={{CONFIRM_TOKEN}}`
+   * 
+   * @default `platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment
+   */
+  general_forgot_password_confirm_base_url?: string;
   
 
   /**
@@ -270,7 +297,18 @@ export type ApiAuthSigninType = AuthBaseType;
 /**
  * @description Sign up type
  */
-export type ApiAuthSignupType = AuthBaseType;
+export type ApiAuthSignupType = AuthBaseType & {
+    /**
+   * @description (optional) readable `name` of `customer`
+   */
+    firstname?: string 
+
+    /**
+     * @description (optional) readable `name` of `customer`
+     */
+    lastname?: string 
+  
+};
 
 /**
  * @description Change Password Type
@@ -383,6 +421,16 @@ export type AuthUserType = Omit<BaseType, 'id'> & AuthBaseType & {
    * @description tags
    */
   tags?: string[];
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  firstname?: string 
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  lastname?: string 
 }
 
 // attributes
@@ -965,8 +1013,8 @@ export type Filter = {
  */
 export interface FilterMetaEnum { 
   any: { // This is for future flexibility against zod
-    id: number, type: string, 
-    op: string, 
+    id?: number, type?: string, 
+    op?: string, 
     name?: string
   },
   p_in_collections: { 
@@ -1080,7 +1128,7 @@ export type DiscountMetaEnum = {
     name?: string,
   },
   any: { 
-    id: number, type: string, 
+    id?: number, type?: string, 
     name?: string,
   },
 
@@ -1380,13 +1428,13 @@ export interface CustomerType extends BaseType {
    * @description Firstname 
    * @minLength 1 Should be longer than 1 characters
    */
-  firstname: string;
+  firstname?: string;
 
   /** 
    * @description Lastname 
    * @minLength 1 Should be longer than 1 characters
    */
-  lastname: string;
+  lastname?: string;
 
   /**
    * @description Email of customer
@@ -1556,7 +1604,7 @@ export interface NotificationType extends BaseNotificationType, timestamps {
 /**
  * @description Notification upsert type
  */
-export interface NotificationTypeUpsert extends BaseNotificationType {
+export interface NotificationTypeUpsert extends Omit<BaseNotificationType, 'id'> {
 }
 
 /** 
@@ -1813,6 +1861,10 @@ export type PaymentOptionsEnum = {
   partially_refunded: { 
     id: 8, name?: string, name2: 'partially_refunded' 
   },
+  cancelled: { 
+    id: 9, name?: string, name2: 'cancelled' 
+  },
+
 }
 
 
@@ -1898,7 +1950,7 @@ export type PricingData = {
   /** 
    * @description `subtotal` + `shipping`
    */
-  total_without_taxes: number; 
+  total_without_taxes?: number; 
 
   /** 
    * @description `subtotal` + `shipping` + `taxes`

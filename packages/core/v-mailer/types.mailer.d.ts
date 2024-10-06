@@ -7,9 +7,14 @@ export type Attachment = {
 }
 
 export type MailAddress = {
-  /** name of addressee */
+  /** 
+   * @description name of addressee 
+   */
   name?: string;
-  /** the email address */
+
+  /** 
+   * @description the email address 
+   */
   address: string;
 }
 
@@ -23,23 +28,31 @@ export type MailObject = {
 }
 
 export type MailResponse<T=any> = {
-  /** success ? */
+  /** 
+   * @description success ? 
+   */
   success?: boolean;
-  /** The native response of the driver */
+
+  /** 
+   * @description The native response of the driver 
+   */
   native_response?: T;
 }
 
 /**
- * mailer interface.
+ * @description mailer interface.
  * 
  */
 export interface mailer<Config extends any, T=any> {
 
-  /** config of the mailer */
+  /** 
+   * @description config of the mailer 
+   */
   get config(): Config;
 
   /**
-   * Email something
+   * @description Email something
+   * 
    * @param o mail object
    */
   email: (o: MailObject) => Promise<MailResponse<T>>

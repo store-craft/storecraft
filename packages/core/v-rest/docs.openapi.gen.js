@@ -420,7 +420,7 @@ const create_all = () => {
       title: 'StoreCraft API',
       description: 'Welcome to the `StoreCraft` **API**',
     },
-    servers: [{ url: 'api' }],
+    servers: [{ url: '/api' }],
   });
   
   writeFile(
@@ -1206,6 +1206,87 @@ const register_auth = registry => {
       ...apply_security()
     }
   );  
+
+  // confirmations
+
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/confirm-email`,
+      description: 'Confirm an email with token, dispatches `auth/confirm-email` event',
+      summary: 'Confirm email of user',
+      tags,
+      request: {
+        query: z.object(
+          {
+            token: z.string({description: 'confirm email token'})
+          }
+        )
+      },
+      responses: {
+        200: {
+          description: 'all good',
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
+
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/forgot-password-request`,
+      description: 'Start a `forgot-password` flow, dispatches `auth/forgot-password-token-generated` event with token, that can be messaged to a user',
+      summary: 'Forgot Password Request',
+      tags,
+      request: {
+        query: z.object(
+          {
+            email: z.string({description: 'email or auth_id'})
+          }
+        )
+      },
+      responses: {
+        200: {
+          description: 'all good',
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
+  
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/forgot-password-request-confirm`,
+      description: 'Confirm identity of `forgot-password` flow initiator, dispatches `auth/forgot-password-token-confirmed` event with token, and also setups a new temporal password and returns it, you can display it to the user or even email it',
+      summary: 'Forgot Password Request Confirm',
+      tags,
+      request: {
+        query: z.object(
+          {
+            token: z.string({description: 'token genrated by the `forgot-password-request` flow'})
+          }
+        )
+      },
+      responses: {
+        200: {
+          description: 'email and password',
+          content: {
+            "application/json": {
+              schema: z.object({ email: z.string(), password: z.string()}),
+            },
+          },
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
+    
+  
 }
 
 const error = () => {

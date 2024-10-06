@@ -921,7 +921,8 @@ export const calculate_pricing = async (
   ];
 
   // protections against strings
-  shipping_method.price = parseFloat(String(shipping_method?.price ?? 0));
+  if(shipping_method)
+    shipping_method.price = parseFloat(String(shipping_method?.price ?? 0));
 
   line_items = line_items.map(
     li => (
@@ -943,7 +944,7 @@ export const calculate_pricing = async (
     (p, li) => p + li.qty , 0
   );
 
-  const initial_total = subtotal_undiscounted + shipping_method.price;
+  const initial_total = subtotal_undiscounted + (shipping_method?.price ?? 0);
 
   /**@type {PricingData} */
   const context = {

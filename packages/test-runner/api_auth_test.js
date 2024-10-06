@@ -24,6 +24,7 @@ export const create = app => {
   s('remove and signup admin', async () => {
 
     await app.api.auth.removeByEmail(admin_email);
+    await app.api.customers.remove(admin_email);
 
     let is_event_ok = false;
     const unsub = app.pubsub.on(

@@ -1,4 +1,4 @@
-export { MailerSendGrid } from './adapter.js';
+export { SendGrid } from './adapter.js';
 
 /**
  * @description `sendgrid` config

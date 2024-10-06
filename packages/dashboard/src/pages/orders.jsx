@@ -77,7 +77,7 @@ export default ({}) => {
   <div className='max-w-[56rem] mx-auto'>
     <ResourceTitle 
         should_onboard={resource_is_probably_empty}
-        overallColelctionCount={queryCount} 
+        overallCollectionCount={queryCount} 
         hasLoaded={hasLoaded} 
         resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />

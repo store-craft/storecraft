@@ -105,6 +105,8 @@ export const TemplateTemplate = (
   const [template, setTemplate] = useState(value);
   const { darkMode } = useDarkMode();
 
+  // console.log(template)
+
   /** @type {Parameters<Editor>["0"]["onChange"]} */
   const editor_onChange = useCallback(
     (value) => {

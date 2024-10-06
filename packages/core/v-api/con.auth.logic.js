@@ -19,6 +19,18 @@ import { decode, encode, fromUint8Array } from '../v-crypto/base64.js'
 import { isDef } from './utils.index.js'
 
 
+export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
+export const FORGOT_PASSWORD_IDENTITY_TOKEN = 'forgot-password-identity-token';
+
+/**
+ * 
+ * @param {AuthUserType} au 
+ */
+const sanitize_auth_user = (au) => {
+  const sanitized = { ...au };
+  delete sanitized.password;
+  return sanitized;
+}
 
 /**
  * 
@@ -58,14 +70,13 @@ async (body) => {
 
   assert_zod(apiAuthSignupTypeSchema, body);
   
-  const { email, password } = body;
+  const { email, password, firstname, lastname } = body;
   
   // Check if the user already exists
   const existingUser = await app.db.resources.auth_users.getByEmail(email);
 
   assert(!existingUser, 'auth/already-signed-up', 400);
 
-  // Hash the password using pbkdf2
   const hashedPassword = await app.platform.crypto.hash(
     password
   );
@@ -73,22 +84,42 @@ async (body) => {
   // Create a new user in the database
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
-
-  /** @type {AuthUserType} */
-  const au = apply_dates(
-    {
-      id: id,
-      email, 
-      password: hashedPassword,
-      confirmed_mail: false,
-      roles,
-      description: `This user is a created with roles: [admin]`
-    }
+  const confirm_email_token = await jwt.create(
+    app.config.auth_secret_access_token, 
+    { sub: id, aud: CONFIRM_EMAIL_TOKEN },
+    jwt.JWT_TIMES.WEEK
   );
 
-  await app.db.resources.auth_users.upsert(
-    au,
-    create_search_terms(au)
+  /** @type {AuthUserType} */
+  const au = {
+    id: id,
+    email, 
+    password: hashedPassword,
+    confirmed_mail: false,
+    roles,
+    description: `This user is a created with roles: [admin]`,
+    firstname,
+    lastname,
+    attributes: [
+      {
+        key: CONFIRM_EMAIL_TOKEN,
+        value: confirm_email_token.token
+      }
+    ]
+  }
+
+  await upsert_auth_user(app)(au);
+
+  // optional, but we set up a customer record directly into database
+  // to avoid confusions
+  await app.api.customers.upsert(
+    {
+      email: au.email,
+      auth_id: au.id,
+      id: 'cus_' + au.id.split('_')?.at(-1),
+      firstname: firstname,
+      lastname: lastname
+    }
   );
 
   /** @type {Partial<import("../v-crypto/jwt.js").JWTClaims>} */
@@ -114,13 +145,20 @@ async (body) => {
 
   { // dispatch event
     if(app.pubsub.has('auth/signup')) {
-      const sanitized = { ...au };
-      delete sanitized.password;
       await app.pubsub.dispatch(
         'auth/signup',
-        sanitized
+        sanitize_auth_user(au)
       );
     }
+
+    await app.pubsub.dispatch(
+      'auth/confirm-email-token-generated',
+      {
+        email: au.email,
+        token: confirm_email_token.token
+      }
+    );
+
   }
 
   return {
@@ -177,14 +215,11 @@ async (body) => {
   );
 
   // Upsert new hashed password
-  await app.db.resources.auth_users.upsert(
-    apply_dates(
-      {
-        ...existingUser,
-        password: hashedPassword
-      }
-    ),
-    create_search_terms(existingUser)
+  await upsert_auth_user(app)(
+    {
+      ...existingUser,
+      password: hashedPassword
+    }
   );
 
   /** 
@@ -208,11 +243,9 @@ async (body) => {
 
   { // dispatch event
     if(app.pubsub.has('auth/change-password')) {
-      const sanitized = { ...existingUser };
-      delete sanitized.password;
       await app.pubsub.dispatch(
         'auth/change-password',
-        sanitized
+        sanitize_auth_user(existingUser)
       );
     }
   }
@@ -283,11 +316,9 @@ async (body, fail_if_not_admin=false) => {
 
   { // dispatch event
     if(app.pubsub.has('auth/signin')) {
-      const sanitized = { ...existingUser };
-      delete sanitized.password;
       await app.pubsub.dispatch(
         'auth/signin',
-        sanitized
+        sanitize_auth_user(existingUser)
       );
     }
   }
@@ -387,12 +418,9 @@ async () => {
     true,
     ["sign", "verify"]
   );
-
   const exported = await crypto.subtle.exportKey("raw", key);
   const ui8a = new Uint8Array(exported);
   const password = fromUint8Array(ui8a, true);
-
-  // Hash the password using pbkdf2
   const hashedPassword = await app.platform.crypto.hash(
     password
   );
@@ -401,7 +429,7 @@ async () => {
   const id = ID('au');
 
   // this is just `email`
-  const email = `${id}@apikey.storecraft.api`;
+  const email = `${id}@apikey.storecraft.app`;
 
   /** @type {import('./types.api.d.ts').AuthUserType} */
   const au = {
@@ -415,12 +443,11 @@ async () => {
     description: `This user is a created apikey with roles: [admin]`
   }
 
-  await app.db.resources.auth_users.upsert(
-    apply_dates(au),
-    create_search_terms(au)
-  );
+  await upsert_auth_user(app)(au);
 
   const apikey = encode(`${email}:${password}`, true);
+
+  await app.pubsub.dispatch('auth/apikey-created', au);
 
   return {
     apikey
@@ -481,10 +508,7 @@ async (body) => {
     verified, 'auth/error'
   )
 
-  // delete the hashed password
-  delete apikey_user.password;
-
-  return apikey_user;
+  return sanitize_auth_user(apikey_user);
 }
 
 /**
@@ -556,6 +580,31 @@ async (id_or_email) => {
 
 
 /**
+ * @description `upsert` an auth user and dispatch `auth/upsert` event
+ * 
+ * @param {App} app 
+ */  
+export const upsert_auth_user = (app) => 
+  /**
+   * 
+   * @param {AuthUserType} item 
+   */
+  async (item) => {
+
+    const final = apply_dates(item);
+
+    await app.db.resources.auth_users.upsert(
+      final,
+      create_search_terms(final)
+    );
+
+    await app.pubsub.dispatch(
+      'auth/upsert', sanitize_auth_user(final)
+    );
+  }
+  
+
+/**
  * 
  * @param {App} app 
  */  
@@ -572,12 +621,9 @@ async (id_or_email) => {
         id_or_email
       );
 
-      if(user_to_remove)
-        delete user_to_remove.password;
-
       await app.pubsub.dispatch(
         'auth/remove',
-        user_to_remove
+        sanitize_auth_user(user_to_remove)
       );
     }
   }
@@ -587,6 +633,145 @@ async (id_or_email) => {
   );
 
 }
+
+
+/////
+// Verification tokens
+/////
+
+/**
+ * @description confirm `email` of authenticated user
+ * 
+ * @param {App} app 
+ */  
+export const confirm_email = (app) => 
+  /**
+   * 
+   * @param {string} token confirm email token
+   */
+  async (token) => {
+  
+    const  { 
+      verified, claims
+    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    
+    assert(verified, 'auth/error');
+    assert(claims.aud===CONFIRM_EMAIL_TOKEN, 'auth/error');
+
+    const auth_id = claims.sub;
+    const au = await app.db.resources.auth_users.get(auth_id);
+
+    au.confirmed_mail = true;
+
+    await upsert_auth_user(app)(au);
+
+    { // dispatch event
+      await app.pubsub.dispatch(
+        'auth/confirm-email-token-confirmed',
+        sanitize_auth_user(au)
+      );
+    }
+  
+  }
+  
+
+/**
+ * @description request a `forgot-password` workflow:
+ * - generate a special `token`
+ * - emit a `auth/forgot-password-token-generated` with the `token` payload.
+ * - the app will need to respons to the vent and send a private email with the token
+ * or a link with the token
+ * - customers clicks the link from his email to confirm, that it was him
+ * - this hit another endpoint which verifies/confirms
+ * - password is changed to a random password.
+ * - the app sends a private email with the random password to the customer.
+ * - now, the customer can login and update to another password
+ * 
+ * @param {App} app 
+ */  
+export const forgot_password_request = (app) => 
+  /**
+   * 
+   * @param {string} email confirm email token
+   */
+  async (email) => {
+  
+    // we do not verify the email in database, so it will not
+    // become a heavy DDos event
+    const token = await jwt.create(
+      app.config.auth_secret_access_token, 
+      { sub: email, aud: FORGOT_PASSWORD_IDENTITY_TOKEN },
+      jwt.JWT_TIMES.HOUR
+    );
+
+    { // dispatch event
+      await app.pubsub.dispatch(
+        'auth/forgot-password-token-generated',
+        { email, token }
+      );
+    }
+  
+  }
+  
+/**
+ * @description User has supplied the `token` generated by the {@link forgot_password_request},
+ * - a new random password will be generated and setup for him
+ * - we will inform the user
+ * 
+ * @param {App} app 
+ */  
+export const forgot_password_request_confirm = (app) => 
+  /**
+   * 
+   * @param {string} token forgot password identity token
+   */
+  async (token) => {
+  
+    const  { 
+      verified, claims
+    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    
+    assert(verified, 'auth/error');
+    assert(claims.aud===FORGOT_PASSWORD_IDENTITY_TOKEN, 'auth/error');
+
+    const auth_id_or_email = claims.sub;
+    const au = await app.db.resources.auth_users.get(auth_id_or_email);
+
+    const key = await crypto.subtle.generateKey(
+      {
+        name: "HMAC",
+        hash: {
+          name: "SHA-256"
+        }
+      },
+      true,
+      ["sign", "verify"]
+    );
+    const exported = await crypto.subtle.exportKey("raw", key);
+    const ui8a = new Uint8Array(exported);
+    const password = fromUint8Array(ui8a, true);
+    const hashedPassword = await app.platform.crypto.hash(
+      password
+    );
+
+    au.password = hashedPassword;
+  
+    await upsert_auth_user(app)(au);
+
+    { // dispatch event
+      await app.pubsub.dispatch(
+        'auth/forgot-password-token-confirmed',
+        sanitize_auth_user(au)
+      );
+    }
+
+    return {
+      email: au.email,
+      password,
+    }
+  
+  }
+    
 
 /**
  * 
@@ -599,14 +784,21 @@ export const inter = app => {
     signup: signup(app),
     change_password: change_password(app),
     refresh: refresh(app),
+
     create_api_key: create_api_key(app),
     list_all_api_keys_info: list_all_api_keys_info(app),
     parse_api_key: parse_api_key,
     verify_api_key: verify_api_key(app),
+
     get_auth_user: get_auth_user(app),
-    list_auth_users: list_auth_users(app),
+    upsert_auth_user: upsert_auth_user(app),
     remove_auth_user: remove_auth_user(app),
     removeByEmail: removeByEmail(app),
+    list_auth_users: list_auth_users(app),
+
+    confirm_email: confirm_email(app),
+    forgot_password_request: forgot_password_request(app),
+    forgot_password_request_confirm: forgot_password_request_confirm(app),
   }
 
 }

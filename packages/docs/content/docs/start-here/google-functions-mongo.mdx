@@ -26,7 +26,7 @@ Now, create a new file `app.js`
 import { GoogleFunctionsPlatform } from "@storecraft/platforms/google-functions"
 import { MongoDB } from "@storecraft/database-mongodb"
 import { GoogleStorage } from "@storecraft/storage-google"
-import { MailerSendGrid } from "@storecraft/mailer-providers-http/sendgrid"
+import { SendGrid } from "@storecraft/mailer-providers-http/sendgrid"
 import { Paypal } from "@storecraft/payments-paypal"
 import { App } from "@storecraft/core"
 
@@ -46,7 +46,7 @@ const app = new App({
     private_key: process.env.private_key,
   }),
 )
-.withMailer(new MailerSendGrid({ apikey: process.env.sendgrid_api_key }))
+.withMailer(new SendGrid({ apikey: process.env.sendgrid_api_key }))
 .withPaymentGateways({
   paypal: new Paypal({
     default_currency_code: "USD",

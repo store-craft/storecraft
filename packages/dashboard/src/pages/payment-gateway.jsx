@@ -7,6 +7,7 @@ import JsonView from '@/comps/json.jsx'
 import { Div, HR } from '@/comps/common-ui.jsx'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 import MDView from '../comps/md-view.jsx'
+import svg from '@/comps/favicon.svg';
 
 const root_left_schema = {
   name:'Root', comp: Div, 
@@ -138,7 +139,7 @@ export default (
         children='Payment Gateway' 
         className='text-3xl text-black dark:text-gray-300' />
     <div className='flex flex-row items-center gap-2 h-20'>
-      <Logo src={logo_url} className='w-8 h-8' />
+      <Logo src={logo_url ?? svg} className='w-8 h-8' />
       <span 
           children={doc?.info?.name} 
           className='text-3xl text-gray-500 tracking-wide' />

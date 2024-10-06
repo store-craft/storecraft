@@ -6,7 +6,7 @@ const html = `
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Storecraft - Next Gen Commerce-As-Code</title>
     <script 
@@ -19,14 +19,13 @@ const html = `
 
   </script>
   </head>
-  <body>
+  <body style="background-color: black">
     <div id="root"></div>
   </body>
 </html>
 `
 
 const favicon = `
-<?xml version="1.0" encoding="utf-8"?>
 <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
   <defs>
     <linearGradient id="gradient-0-0" gradientUnits="userSpaceOnUse" x1="128" y1="0" x2="128" y2="256" xlink:href="#gradient-0"/>
@@ -107,7 +106,8 @@ export const create_routes = (app) => {
   polka.get(
     '/favicon.svg',
     async (req, res) => {
-      res.sendHtml(favicon);
+      res.headers.set("Content-Type", "image/svg+xml");
+      res.send(favicon);
     }
   );
 

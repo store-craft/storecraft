@@ -52,7 +52,7 @@ export default ({}) => {
     <ShowIf show={!error}>
       <ResourceTitle 
         should_onboard={resource_is_probably_empty}
-        overallColelctionCount={queryCount} 
+        overallCollectionCount={queryCount} 
         hasLoaded={hasLoaded} 
         resource={resource}/>
     </ShowIf>

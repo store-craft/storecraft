@@ -1,5 +1,6 @@
 /** 
  * @import { StorecraftConfig } from "./types.public.js";
+ * @import { OrderData } from "./v-api/types.public.js";
  * @import { storage_driver } from "./v-storage/types.public.js";
  * @import { db_driver } from "./v-database/types.public.js";
  * @import { payment_gateway } from "./v-payments/types.public.js";
@@ -7,18 +8,24 @@
  * @import { InferPlatformContext, InferPlatformNativeRequest, InferPlatformNativeResponse, PlatformAdapter } from "./v-platform/types.public.js";
  * @import { mailer } from "./v-mailer/types.public.js";
  * @import { tax_provider } from "./v-tax/types.public.js";
- * @import { PubSubOnEvents } from "./v-pubsub/types.public.js";
+ * @import { PayloadForUpsert, PubSubOnEvents } from "./v-pubsub/types.public.js";
  * @import { ApiResponse } from "./v-rest/types.public.js";
  * 
  */
 import { STATUS_CODES } from './v-polka/codes.js';
 import { create_rest_api } from './v-rest/index.js';
-import { create_api } from './v-api/index.js'
+import { create_api, enums } from './v-api/index.js'
 import { PubSub } from './v-pubsub/public.js';
 import { UniformTaxes } from './v-tax/public.js';
 export * from './v-api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
+import { NotificationsExtension } from './v-extensions/extension-notifications.js';
 
+/**
+ * @typedef {{
+ *  'notifications': NotificationsExtension
+ * }} BaseExtensions
+ */
 
 /**
  * 
@@ -28,7 +35,7 @@ import pkg from './package.json' assert { type: "json" }
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {Record<string, extension>} [ExtensionsMap=Record<string, extension>]
+ * @template {Record<string, extension>} [ExtensionsMap=BaseExtensions]
  * `extensions` map type
  * @template {tax_provider} [Taxes=UniformTaxes]
  * 
@@ -129,7 +136,68 @@ export class App {
     this.#_config = config;
     this.#_is_ready = false;
     this.#_pubsub = new PubSub(this);
+    // @ts-ignore
     this.#_taxes = new UniformTaxes(0);
+    // @ts-ignore
+    this.#_extensions = {
+      'notifications': new NotificationsExtension()
+    }
+
+    // add extra events for orders state
+    this.pubsub.on(
+      'orders/upsert',
+      async (event) => {
+        const order_after = event.payload.current;
+        const order_before = event.payload.previous;
+
+        // test if the checkout now has turned complete
+        const has_checkout_updated = (
+          order_before?.status?.checkout?.id!==order_after.status.checkout.id
+        );
+
+        const has_fulfillment_updated = (
+          order_before?.status?.fulfillment?.id!==order_after.status.fulfillment.id
+        );
+
+        const has_payment_updated = (
+          order_before?.status?.payment?.id!==order_after.status.payment.id
+        );
+
+        /** @type {PayloadForUpsert<Partial<OrderData>>} */
+        const payload = {
+          previous: order_before,
+          current: order_after
+        }
+
+        // console.log('from app', event.payload.current.status)
+        // console.log('has_checkout_updated', has_checkout_updated)
+
+        if(has_checkout_updated) {
+          await this.pubsub.dispatch(
+            `orders/checkout/${order_after.status.checkout.name2}`,
+            payload
+          );
+          await this.pubsub.dispatch('orders/checkout/update', payload);
+        }
+
+        if(has_fulfillment_updated) {
+          await this.pubsub.dispatch(
+            `orders/fulfillment/${order_after.status.fulfillment.name2}`,
+            payload
+          );
+          await this.pubsub.dispatch('orders/fulfillment/update', payload);
+        }
+
+        if(has_payment_updated) {
+          await this.pubsub.dispatch(
+            `orders/payments/${order_after.status.payment.name2}`,
+            payload
+          );
+          await this.pubsub.dispatch('orders/payments/update', payload);
+        }
+      }
+    );
+
   } 
 
 
@@ -155,7 +223,7 @@ export class App {
     this.#_config = {
       ...c,
       auth_secret_access_token: c?.auth_secret_access_token ?? 
-                  env.SC_AUTH_SECRET_ACCESS_TOKEN ?? 'AUTH_SECRET_ACCESS_TOKEN',
+                  env.SC_AUTH_SECRET_ACCESS_TOKEN ?? 'SC_AUTH_SECRET_ACCESS_TOKEN',
       auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
                   env.SC_AUTH_SECRET_REFRESH_TOKEN ?? 'SC_AUTH_SECRET_REFRESH_TOKEN',
       auth_admins_emails: c?.auth_admins_emails ??  
@@ -178,6 +246,9 @@ export class App {
                   env.SC_GENERAL_STORE_LOGO_URL,
       general_confirm_email_base_url: c?.general_confirm_email_base_url ?? 
                   env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
+      general_forgot_password_confirm_base_url: c?.general_forgot_password_confirm_base_url ?? 
+                  env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL,
+    
     }
   } 
 
@@ -402,11 +473,14 @@ export class App {
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E, Taxes>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes>}
    */
   withExtensions(extensions) { 
     // @ts-ignore
-    this.#_extensions = extensions; 
+    this.#_extensions = {
+      ...this.#_extensions,
+      ...extensions
+    }; 
 
     // @ts-ignore
     return this;

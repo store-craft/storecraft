@@ -252,13 +252,6 @@ async (order_checkout, gateway_handle) => {
 
   order.id = id;
 
-  { // dispatch event
-    await app.pubsub.dispatch(
-      'checkout/create',
-      order
-    );
-  }
-
   return order;
 }
 
@@ -288,7 +281,7 @@ const reserve_stock_of_order = async (app, order) => {
 
 
 /**
- * Complete a checkout sync
+ * @description Complete a checkout syncronously
  * 
  * @param {App} app 
  */
@@ -342,13 +335,6 @@ async (checkoutId, client_payload) => {
   }
   
   await app.api.orders.upsert(order);
-
-  { // dispatch event
-    await app.pubsub.dispatch(
-      'checkout/complete',
-      order
-    )
-  }
 
   return order;
 }

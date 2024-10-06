@@ -120,6 +120,16 @@
       "import": "./extensions/public.js",
       "types": "./extensions/types.public.d.ts"
     },
+    "./extensions/*": {
+      "import": "./extensions/*"
+    },
+    "./extensions/postman": {
+      "import": "./extensions/postman/index.js",
+      "types": "./extensions/postman/types.public.d.ts"
+    },
+    "./extensions/notifications": {
+      "import": "./extensions/notifications/index.js"
+    },
     "./pubsub": {
       "import": "./pubsub/public.js",
       "types": "./pubsub/types.public.d.ts"

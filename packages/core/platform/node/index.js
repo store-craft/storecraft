@@ -99,6 +99,7 @@ export class NodePlatform {
       // @ts-ignore
       headers: from.headers,
       duplex: 'half',
+      // @ts-ignore
       body: (from.method==='HEAD' || from.method==='GET') ? undefined : Readable.toWeb(from),
     }
 

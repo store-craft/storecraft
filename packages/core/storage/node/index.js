@@ -192,7 +192,6 @@ export class NodeLocalStorage {
    */
   async getArraybuffer(key) {
 
-    /** @type {ArrayBuffer} */
     const buffer = await readFile(
       this.to_file_path(key),
     );

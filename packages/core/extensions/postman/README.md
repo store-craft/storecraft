@@ -20,10 +20,10 @@ events and templates
 
 ## Usage
 
-First, install
+First, install `handlebars`
 
 ```bash
-npm i @storecraft/extension-postman
+npm i handlebars
 ```
 
 Then, in your `storecraft` app

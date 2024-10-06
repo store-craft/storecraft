@@ -1,9 +1,9 @@
 /**
- * @import { extension } from '@storecraft/core/extensions';
- * @import { AuthUserType, OrderData, TemplateType } from '@storecraft/core/api';
+ * @import { extension } from '../types.public.js';
+ * @import { AuthUserType, OrderData, TemplateType } from '../../api/types.api.js';
  */
 
-import { App } from '@storecraft/core';
+import { App } from '../../index.js';
 import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
 import Handlebars from 'handlebars';
 
@@ -16,6 +16,8 @@ import Handlebars from 'handlebars';
  * - `auth/signup`
  * - `auth/forgot-password-token-generated`
  * - `auth/reset-password`
+ * 
+ * **NOTE:** You are required to install `handlebars` (`npm i handlebars`)
  * 
  * @implements {extension}
  */

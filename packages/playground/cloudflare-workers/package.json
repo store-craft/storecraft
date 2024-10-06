@@ -15,7 +15,6 @@
   }, 
   "dependencies": {
     "@storecraft/core": "*",
-    "@storecraft/database-cloudflare-d1": "*",
-    "@storecraft/core/platform": "*"
+    "@storecraft/database-cloudflare-d1": "*"
   }
 }

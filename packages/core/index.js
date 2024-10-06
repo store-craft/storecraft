@@ -19,7 +19,7 @@ import { PubSub } from './pubsub/public.js';
 import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
-import { NotificationsExtension } from './extensions/extension-notifications.js';
+import { NotificationsExtension } from './extensions/notifications/index.js';
 
 /**
  * @typedef {{

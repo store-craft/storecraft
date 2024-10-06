@@ -29,7 +29,6 @@
     "@types/better-sqlite3": "^7.6.9"
   },
   "devDependencies": {
-    "@storecraft/core/platform": "^1.0.0",
     "@storecraft/test-runner": "^1.0.0",
     "@types/node": "^20.11.0",
     "dotenv": "^16.3.1",

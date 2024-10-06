@@ -1,17 +1,17 @@
 import { join } from "node:path";
 import { homedir } from "node:os";
 
-import { NodeLocalStorage } from "@storecraft/core/storage/node";
+import { PostmanExtension } from "@storecraft/core/extensions/postman";
 import { MongoDB } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { Stripe } from '@storecraft/payments-stripe'
-import { PostmanExtension } from '@storecraft/extension-postman'
 import { Resend } from '@storecraft/mailer-providers-http/resend'
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node';
 
 
 export const app = new App(

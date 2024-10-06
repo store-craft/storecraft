@@ -1,6 +1,6 @@
 /**
- * @import { extension } from './types.public.js';
- * @import { NotificationTypeUpsert, OrderData } from '../api/types.api.js';
+ * @import { extension } from '../types.public.js';
+ * @import { NotificationTypeUpsert, OrderData } from '../../api/types.api.js';
  */
 
 /**

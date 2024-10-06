@@ -1,6 +1,6 @@
 import { App } from "@storecraft/core"
 import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
-import { CloudflareWorkersPlatform } from "@storecraft/platforms/cloudflare-workers"
+import { CloudflareWorkersPlatform } from "@storecraft/core/platform/cloudflare-workers"
 
 
 export default {

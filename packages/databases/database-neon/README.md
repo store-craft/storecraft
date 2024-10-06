@@ -24,7 +24,7 @@ npm i @storecraft/database-neon
 import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { NeonHttp } from '@storecraft/database-neon'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { migrateToLatest } from '@storecraft/database-neon/migrate.js'

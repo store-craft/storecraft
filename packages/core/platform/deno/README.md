@@ -8,16 +8,13 @@
 So, if you wanted to run `StoreCraft` on `deno`, this is the `platform`
 package for you :)
 
-```bash
-npm i @storecraft/platforms
-```
 
 ## usage
 
 ```js
 import 'dotenv/config';
 import { App } from '@storecraft/core'
-import { DenoPlatform } from '@storecraft/platforms/deno';
+import { DenoPlatform } from '@storecraft/core/platform/deno';
 import { DenoLocalStorage } from '@storecraft/storage-local/deno'
 import { MongoDB } from '@storecraft/database-mongodb'
 

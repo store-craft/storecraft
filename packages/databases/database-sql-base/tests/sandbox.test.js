@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { SqliteDialect } from 'kysely';
 import { homedir } from 'os';
 import { join } from 'path';

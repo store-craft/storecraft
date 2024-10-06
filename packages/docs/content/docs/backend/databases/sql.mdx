@@ -34,7 +34,7 @@ npm i @storecraft/core @storecraft/database-sql-base better-sqlite3
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import SQLite from 'better-sqlite3'
 import { SqliteDialect } from 'kysely';
 
@@ -77,7 +77,7 @@ npm i @storecraft/core @storecraft/database-sql-base pg
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { PostgresDialect } from 'kysely';
 import pg from 'pg'
 
@@ -126,7 +126,7 @@ npm i @storecraft/core @storecraft/database-sql-base mysql2
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { MysqlDialect } from 'kysely';
 import { createPool } from 'mysql2'
 

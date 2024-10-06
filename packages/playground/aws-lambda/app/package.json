@@ -26,7 +26,7 @@
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21",
     "@storecraft/core": "*",
-    "@storecraft/platforms": "*",
+    "@storecraft/core/platform": "*",
     "@storecraft/database-mongodb": "*"
   }
 }

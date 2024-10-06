@@ -5,46 +5,30 @@
        width='90%' />
 </div><hr/><br/>
 
-So, if you wanted to run `StoreCraft` on the following platforms,
-- Node.js
-- Deno
-- Bun
-- Cloudflare Workers
-- Google Functions
-- Azure Functions
-- AWS Lambda Functions (with API Gateway)
-- Vercel Platform
+So, if you wanted to run `StoreCraft` on `node.js`, this is the `platform`
+package for you :)
 
 ## What does it do exactly ?
-Basically, 
-- Translates incoming messages into web [Request]()
-- Translates outgoing messages into web [Response]()
-- Exposes `environmant` variables
-- Adds helpers
+Basically, it translates native **Node** `http.IncomingMessage` into Web API `Request`,
+and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
-```bash
-npm i @storecraft/platforms
-```
 
 ## usage
 
 ```js
 import 'dotenv/config';
 import http from "node:http";
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node'
-import { MongoDB } from '@storecraft/database-mongodb'
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { MongoDB } from '@storecraft/database-mongodb'
 
 const app = new App(
     config
   )
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
-  .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
+  .withStorage(new NodeLocalStorage('storage'))
 
 await app.init();
  

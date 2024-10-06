@@ -5,9 +5,6 @@
        width='90%' />
 </div><hr/><br/>
 
-```zsh
-npm i @storecraft/platforms
-```
 
 You can visit the [google functions playground example](https://github.com/store-craft/storecraft/tree/main/packages/playground/google-functions)
 
@@ -20,7 +17,6 @@ Install
 npm init
 
 npm i @storecraft/core
-npm i @storecraft/platforms
 npm i @google-cloud/functions-framework
 npm i dotenv
 ```
@@ -31,7 +27,7 @@ Add `index.js`
 import 'dotenv/config';
 import * as functions from '@google-cloud/functions-framework';
 import { App } from '@storecraft/core'
-import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions';
+import { GoogleFunctionsPlatform } from '@storecraft/core/platform/google-functions';
 import { MongoDB } from '@storecraft/database-mongodb'
 
 // console.log('env ', process.env)

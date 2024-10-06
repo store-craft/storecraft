@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "checkJs": true,
-    "target": "ESNext",
-    "resolveJsonModule": true,
-    "moduleResolution": "node"
-  },
-  "include": ["*/*"]
-}

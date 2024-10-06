@@ -67,4 +67,4 @@ export declare interface PlatformAdapter<
   $context?: PlatformContext;
 }
 
-// export {} from './public.js'
+export { tomer } from './index.js'

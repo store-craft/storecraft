@@ -1,7 +1,7 @@
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import  { api_index } from '@storecraft/test-runner'
 import { PostgresDialect } from 'kysely';
 import pg from 'pg'

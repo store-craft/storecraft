@@ -10,7 +10,6 @@
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",
     "@storecraft/payments-stripe": "^1.0.0",
-    "@storecraft/platforms": "^1.0.0",
     "@storecraft/storage-google": "^1.0.0",
     "@storecraft/storage-local": "^1.0.0",
     "@storecraft/storage-s3-compatible": "^1.0.0",

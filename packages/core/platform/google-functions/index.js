@@ -1,30 +1,26 @@
-import { Readable } from 'node:stream'
+// import { Readable } from 'node:stream'
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
 
 
-/**
- * 
- * @typedef {import('node:http').IncomingMessage} IncomingMessage
- * @typedef {import('node:http').ServerResponse} ServerResponse
- */
-
 
 /**
- * @typedef {import('@storecraft/core/platform').PlatformAdapter<
- *  IncomingMessage, ServerResponse, ServerResponse
+ * @typedef {import('../types.public.js').PlatformAdapter<
+ *  import('./types.private.js').GoogleFunctionRequest, 
+ *  import('./types.private.js').GoogleFunctionResponse, 
+ *  import('./types.private.js').GoogleFunctionResponse
  * >} PlatformAdapter
  * 
  * 
  * @implements {PlatformAdapter}
  */
-export class NodePlatform {
+export class GoogleFunctionsPlatform {
 
-  /** @type {import('./types.public.d.ts').NodePlatformConfig} */
+  /** @type {import('./types.public.d.ts').Config} */
   #config;
 
   /**
    * 
-   * @param {import('./types.public.d.ts').NodePlatformConfig} [config={}] 
+   * @param {import('./types.public.d.ts').Config} [config={}] 
    */
   constructor(config={}) {
     this.#config = {
@@ -87,34 +83,40 @@ export class NodePlatform {
   }
 
   /**
-   * @param {IncomingMessage} from
-   * 
-   * @returns {Promise<Request>}
+   * @type {PlatformAdapter["encode"]}
    */
   async encode(from) {
-
+    const empty_body = (from.method==='HEAD' || from.method==='GET');
+    
     /** @type {RequestInit} */
     const init = {
       method: from.method,
       // @ts-ignore
       headers: from.headers,
-      duplex: 'half',
-      body: (from.method==='HEAD' || from.method==='GET') ? undefined : Readable.toWeb(from),
+      duplex: 'half'
     }
 
-    /** @type {Request} */
+    if(!empty_body) {
+      init.body = new ReadableStream(
+        {
+          start(controller){
+            controller.enqueue(from.rawBody);
+            controller.close();
+          }
+        }
+      );
+    }
+
     const web_req = new Request(
       `http://localhost${from.url}`,
       init
-    )
+    );
   
-    return web_req
+    return web_req;
   }
 
   /**
-   * 
-   * @param {Response} web_response 
-   * @param {ServerResponse} context 
+   * @type {PlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, context) {
     try {

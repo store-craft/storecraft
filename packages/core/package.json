@@ -64,8 +64,35 @@
       "types": "./database/types.public.d.ts"
     },
     "./platform": {
-      "import": "./platform/public.js",
+      "import": "./platform/index.js",
       "types": "./platform/types.public.d.ts"
+    },
+    "./platform/*": {
+      "import": "./platform/*"
+    },
+    "./platform/node": {
+      "import": "./platform/node/index.js",
+      "types": "./platform/node/types.public.d.ts"
+    },
+    "./platform/deno": {
+      "import": "./platform/deno/index.js",
+      "types": "./platform/deno/types.public.d.ts"
+    },
+    "./platform/cloudflare-workers": {
+      "import": "./platform/cloudflare-workers/index.js",
+      "types": "./platform/cloudflare-workers/types.public.d.ts"
+    },
+    "./platform/aws-lambda": {
+      "import": "./platform/aws-lambda/index.js",
+      "types": "./platform/aws-lambda/types.public.d.ts"
+    },
+    "./platform/bun": {
+      "import": "./platform/bun/index.js",
+      "types": "./platform/bun/types.public.d.ts"
+    },
+    "./platform/google-functions": {
+      "import": "./platform/google-functions/index.js",
+      "types": "./platform/google-functions/types.public.d.ts"
     },
     "./extensions": {
       "import": "./extensions/public.js",

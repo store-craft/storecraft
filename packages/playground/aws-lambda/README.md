@@ -28,7 +28,6 @@ Now, install `storecraft`
 ```zsh
 npm i @storecraft/core
 npm i @storecraft/database-mongodb
-npm i @storecraft/platforms
 npm i -D dotenv
 ```
 
@@ -93,9 +92,9 @@ Add `lib/lambda/index.ts`
 ```ts
 import type { 
   LambdaEvent, LambdaContext, APIGatewayProxyResult 
-} from "@storecraft/platforms/aws-lambda";
+} from "@storecraft/core/platform/aws-lambda";
 import { app } from './app';
-import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'
+import { AWSLambdaPlatform } from '@storecraft/core/platform/aws-lambda'
 import { MongoDB } from '@storecraft/database-mongodb'
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { App } from '@storecraft/core';

@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { homedir } from "node:os";
 
-import { DenoPlatform } from '@storecraft/platforms/deno'
+import { DenoPlatform } from '@storecraft/core/platform/deno'
 import { DenoLocalStorage } from '@storecraft/storage-local/deno'
 import { MongoDB } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'

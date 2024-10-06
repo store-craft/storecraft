@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import  { api_index } from '@storecraft/test-runner'
 import { NeonHttp, NeonServerless } from '@storecraft/database-neon';
 import { migrateToLatest } from '@storecraft/database-neon/migrate.js';

@@ -10,7 +10,6 @@ First install the following packages
 
 ```bash
 npm i @storecraft/core 
-npm i @storecraft/platforms 
 npm i @storecraft/storage-local
 npm i @storecraft/payments-dummy
 npm i @storecraft/database-sqlite
@@ -29,7 +28,7 @@ import 'dotenv/config';
 import http from "node:http";
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
-import { NodePlatform } from "@storecraft/platforms/node"
+import { NodePlatform } from "@storecraft/core/platform/node"
 import { SQLite } from "@storecraft/database-sqlite"
 import { NodeLocalStorage } from "@storecraft/storage-local/node"
 import { SendGrid } from "@storecraft/mailer-providers-http/sendgrid"

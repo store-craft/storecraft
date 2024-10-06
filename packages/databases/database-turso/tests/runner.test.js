@@ -1,5 +1,5 @@
 import { App } from '@storecraft/core';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import  { api_index } from '@storecraft/test-runner'
 import { Turso } from '../index.js';
 import { migrateToLatest } from '../migrate.js';

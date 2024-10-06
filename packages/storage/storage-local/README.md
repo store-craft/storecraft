@@ -70,7 +70,7 @@ const { value } = await storage.getBlob(key);
 ## In Storecraft App
 
 ```js
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { App } from '@storecraft/core';

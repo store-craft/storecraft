@@ -8,16 +8,13 @@
 So, if you wanted to run `StoreCraft` on `cloudflare workers`, this is the `platform`
 package for you :)
 
-```bash
-npm i @storecraft/platforms
-```
 
 ## usage
 
 ```js
 import 'dotenv/config';
 import { App } from '@storecraft/core'
-import { CloudflareWorkersPlatform } from '@storecraft/platforms/cloudflare-workers';
+import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-workers';
 import { D1 } from '@storecraft/database-cloudflare-d1';
 import { R2 } from '@storecraft/storage-s3-compatible';
 
@@ -102,7 +99,7 @@ create a `src/index.ts` file
 ```ts
 import { App } from "@storecraft/core"
 import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
-import { CloudflareWorkersPlatform } from "@storecraft/platforms/cloudflare-workers"
+import { CloudflareWorkersPlatform } from "@storecraft/core/platform/cloudflare-workers"
 
 
 export default {

@@ -7,9 +7,6 @@ package for you :)
 Basically, it translates native **Node** `http.IncomingMessage` into Web API `Request`,
 and also streams result from Web API `Response` into **Node** `http.ServerResponse`.
 
-```bash
-npm i @storecraft/platforms
-```
 
 ## usage
 
@@ -17,7 +14,7 @@ npm i @storecraft/platforms
 import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { MongoDB } from '@storecraft/database-mongodb'
 

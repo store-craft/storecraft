@@ -17,7 +17,7 @@ npm i @storecraft/database-postgres
 import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { Postgres } from '@storecraft/database-postgres';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'

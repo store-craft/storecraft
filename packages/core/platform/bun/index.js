@@ -1,32 +1,24 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
-import { getProcessor } from './aws.utils.js';
 
 
 /**
- * @typedef {{
- *  _sc_event?: import('./types.private.d.ts').LambdaEvent,
- * } & import('./types.private.d.ts').LambdaContext} PlatformContext
- * 
- * @typedef {import('@storecraft/core/platform').PlatformAdapter<
- *  import('./types.private.js').LambdaEvent, 
- *  PlatformContext, 
- *  import('./types.private.js').APIGatewayProxyResult
+ * @typedef {import('../types.public.js').PlatformAdapter<
+ *  Request, any, Response
  * >} PlatformAdapter
  * 
  * 
  * @implements {PlatformAdapter}
  */
-export class AWSLambdaPlatform {
+export class BunPlatform {
 
-  /** @type {import('./types.public.d.ts').AWSLambdaConfig} */
+  /** @type {import('./types.public.d.ts').BunPlatformConfig} */
   #config;
 
   /**
    * 
-   * @param {import('./types.public.d.ts').AWSLambdaConfig} [config={}] 
+   * @param {import('./types.public.d.ts').BunPlatformConfig} [config={}] 
    */
   constructor(config={}) {
-
     this.#config = {
       ...config,
       scrypt_keylen: config?.scrypt_keylen ?? 64
@@ -34,7 +26,7 @@ export class AWSLambdaPlatform {
   }
 
   get env() {
-    return process?.env;
+    return Bun.env;
   }
 
   /** @type {PlatformAdapter["crypto"]} */
@@ -88,21 +80,14 @@ export class AWSLambdaPlatform {
   /**
    * @type {PlatformAdapter["encode"]}
    */
-  async encode(from, ctx) {
-    const event = ctx._sc_event = from;
-    const processor = getProcessor(event);
-    const req = processor.createRequest(event);
-
-    return req;
+  encode(from) {
+    return Promise.resolve(from);
   }
 
   /**
-   * 
    * @type {PlatformAdapter["handleResponse"]}
    */
-  async handleResponse(web_response, ctx) {
-    const processor = getProcessor(ctx._sc_event);
-
-    return processor.createResult(ctx._sc_event, web_response);
+  async handleResponse(web_response, context) {
+    return web_response;
   }  
 } 

@@ -29,7 +29,7 @@
     "pg": "^8.11.3"
   },
   "devDependencies": {
-    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/core/platform": "^1.0.0",
     "@storecraft/test-runner": "^1.0.0",
     "@types/pg": "^8.11.2",
     "@types/node": "^20.11.0",

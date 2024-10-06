@@ -26,30 +26,30 @@ export const infer_platform = platform => {
       return {
         cls: `NodePlatform`,
         imports: [
-          `import { NodePlatform } from '@storecraft/platforms/node'`
+          `import { NodePlatform } from '@storecraft/core/platform/node'`
         ],
         deps: [
-          '@storecraft/platforms'
+          '@storecraft/core/platform'
         ]
       }
     case 'bun':
       return {
         cls: `BunPlatform`,
         imports: [
-          `import { BunPlatform } from '@storecraft/platforms/bun'`
+          `import { BunPlatform } from '@storecraft/core/platform/bun'`
         ],
         deps: [
-          '@storecraft/platforms'
+          '@storecraft/core/platform'
         ]
       }
     case 'deno':
       return {
         cls: `DenoPlatform`,
         imports: [
-          `import { DenoPlatform } from '@storecraft/platforms/deno'`
+          `import { DenoPlatform } from '@storecraft/core/platform/deno'`
         ],
         deps: [
-          '@storecraft/platforms'
+          '@storecraft/core/platform'
         ]
       }
 
@@ -57,10 +57,10 @@ export const infer_platform = platform => {
       return {
         cls: `CloudflareWorkersPlatform`,
         imports: [
-          `import { CloudflareWorkersPlatform } from '@storecraft/platforms/cloudflare-workers'`
+          `import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-workers'`
         ],
         deps: [
-          '@storecraft/platforms'
+          '@storecraft/core/platform'
         ]
       }
 
@@ -68,10 +68,10 @@ export const infer_platform = platform => {
       return {
         cls: `AWSLambdaPlatform`,
         imports: [
-          `import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'`
+          `import { AWSLambdaPlatform } from '@storecraft/core/platform/aws-lambda'`
         ],
         deps: [
-          '@storecraft/platforms'
+          '@storecraft/core/platform'
         ]
       }
 
@@ -79,10 +79,10 @@ export const infer_platform = platform => {
       return {
         cls: `GoogleFunctionsPlatform`,
         imports: [
-          `import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions'`
+          `import { GoogleFunctionsPlatform } from '@storecraft/core/platform/google-functions'`
         ],
         deps: [
-          '@storecraft/platforms'
+          '@storecraft/core/platform'
         ]
       }
   }

@@ -56,7 +56,7 @@ new Stripe(config);
 ```ts
 import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 

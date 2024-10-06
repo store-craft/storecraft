@@ -1,7 +1,7 @@
 import { App } from '@storecraft/core';
 import { SQLite } from '@storecraft/database-sqlite';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import  { api_index } from '@storecraft/test-runner'
 import { homedir } from 'node:os';
 import { join } from 'node:path';

@@ -49,7 +49,7 @@
     "@storecraft/mailer-providers-http": "*",
     "@storecraft/payments-paypal": "*",
     "@storecraft/payments-stripe": "*",
-    "@storecraft/platforms": "*",
+    "@storecraft/core/platform": "*",
     "@storecraft/storage-google": "*",
     "@storecraft/storage-local": "*",
     "@storecraft/storage-s3-compatible": "*",

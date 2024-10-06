@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { homedir } from "node:os";
 
-import { BunPlatform } from '@storecraft/platforms/bun'
+import { BunPlatform } from '@storecraft/core/platform/bun'
 import { BunLocalStorage } from '@storecraft/storage-local/bun'
 import { MongoDB } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { Turso } from '@storecraft/database-turso';
 import { migrateToLatest } from '@storecraft/database-turso/migrate.js';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 
 export const test = async () => {
   const app = new App(

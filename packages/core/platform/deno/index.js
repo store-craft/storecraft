@@ -1,7 +1,7 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
 
 /**
- * @typedef {import('@storecraft/core/platform').PlatformAdapter<
+ * @typedef {import('../types.public.js').PlatformAdapter<
  *  Request, any, Response
  * >} PlatformAdapter
  * 

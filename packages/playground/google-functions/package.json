@@ -10,7 +10,7 @@
   "dependencies": {
     "@google-cloud/functions-framework": "^3.4.2",
     "@storecraft/core": "^1.0.0",
-    "@storecraft/platforms": "^1.0.0",
+    "@storecraft/core/platform": "^1.0.0",
     "@storecraft/database-mongodb": "^1.0.0",
     "@storecraft/payments-dummy": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",

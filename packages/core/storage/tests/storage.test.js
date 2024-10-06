@@ -5,6 +5,10 @@ import { NodeLocalStorage } from '../node/index.js'
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os'
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const areBlobsEqual = async (blob1, blob2) => {
   return !Buffer.from(await blob1.arrayBuffer()).compare(
@@ -24,7 +28,7 @@ test('blob put/get/delete', async () => {
     },
     {
       key: 'folder1/node.png',
-      blob: new Blob([await readFile('./node.png')])
+      blob: new Blob([await readFile(path.join(__dirname, 'node.png'))])
     }
   ];
 

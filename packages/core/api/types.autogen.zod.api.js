@@ -1113,7 +1113,19 @@ export const storecraftConfigSchema = z
       .string()
       .optional()
       .describe(
-        "The store `email-confirm`\n`platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment",
+        "The store `email-confirm` base url into which a template\naction button will link into including a `token` as a query parameter.\n\n### For example:\nSuppose the base url is `https://store.com/confirm`,\nthen `storecraft` default email template will use this to send\na link with `https://store.com/confirm?token={{CONFIRM_TOKEN}}`\n\nYou can use this to delegate into `storecraft` auth backend endpoint\n`/api/auth/confirm-email?token={{CONFIRM_TOKEN}}`",
+      )
+      .default(
+        "`platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment",
+      ),
+    general_forgot_password_confirm_base_url: z
+      .string()
+      .optional()
+      .describe(
+        "The store `forgot-password` base url, into which template action\nbutton will link into including a `token` as a query parameter.\n\n### For example:\nSuppose the base url is `https://store.com/forgot-password-confirm`,\nthen `storecraft` default email template will use this to send\na link with `https://store.com/forgot-password-confirm?token={{CONFIRM_TOKEN}}`\n\nYou can use this to delegate into `storecraft` auth backend endpoint\n`/api/auth/forgot-password-request-confirm?token={{CONFIRM_TOKEN}}`",
+      )
+      .default(
+        "`platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment",
       ),
     auth_admins_emails: z
       .array(z.string())

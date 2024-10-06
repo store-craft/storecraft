@@ -7,13 +7,17 @@
 
 ## Intro
 
-This extension will help you send emails for customers using [HandleBars](https://handlebarsjs.com/) `templates` on
+This extension will send transactional emails for customers using [HandleBars](https://handlebarsjs.com/) `templates` on the following events, 
 - `orders/checkout/complete` event
 - `orders/fulfillment/shipped` event
 - `orders/fulfillment/cancelled` event
 - `auth/signup` event
 - `auth/change-password` event
 - `auth/forgot-password-token-generated` event
+
+The templates are already seeded into your database and have the following handles, which
+`postman` recognizes:
+- `welcome-customer`, `forgot-password`, `checkout-complete`, `order-shipped`, `order-cancelled`
 
 You are more than encouraged to peek at the source code to learn how to manipulate these
 events and templates
@@ -29,6 +33,8 @@ npm i handlebars
 Then, in your `storecraft` app
 
 ```ts
+import { PostmanExtension } from "@storecraft/core/extensions/postman";
+
 export const app = new App(
   {
     auth_secret_access_token: 'auth_secret_access_token',
@@ -53,6 +59,7 @@ export const app = new App(
 );
 
 ```
+
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -53,6 +53,11 @@ export default {
       empty: true,
       groups: [
         {
+          title: '⚙️ Configuration',
+          route: 'backend/config',
+          path: 'content/docs/backend/config.mdx'
+        },
+        {
           title: '💾 Databases',
           route: 'backend/databases',
           empty: true,
@@ -284,6 +289,11 @@ export default {
               title: 'Overview',
               route: 'backend/extensions/overview',
               path: 'content/docs/backend/extensions/overview.mdx'
+            },
+            {
+              title: 'Postman Events Emailer',
+              route: 'backend/extensions/postman',
+              path: 'content/docs/backend/extensions/postman.mdx'
             },
             {
               title: 'Roll Your Own',

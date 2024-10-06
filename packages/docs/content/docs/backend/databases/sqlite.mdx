@@ -14,7 +14,7 @@ import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { SQLite } from '@storecraft/database-sqlite'
-import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
+import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js'
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const app = new App(

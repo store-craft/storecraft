@@ -26,7 +26,7 @@ import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NeonHttp } from '@storecraft/database-neon'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { migrateToLatest } from '@storecraft/database-neon/migrate.js'
 
 const app = new App(

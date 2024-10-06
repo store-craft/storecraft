@@ -8,10 +8,8 @@ First install the **core** package,
 
 ```bash
 npm i @storecraft/core
-npm i @storecraft/storage-local
 npm i @storecraft/database-mongodb
 npm i @storecraft/mailer-providers-http
-npm i @storecraft/payments-dummy
 npm i -D dotenv
 ```
 
@@ -27,8 +25,8 @@ import 'dotenv/config';
 import http from "node:http";
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { MongoDB, migrateToLast } from '@storecraft/database-mongodb'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
-import { DummyPayments } from '@storecraft/payments-dummy'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
+import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 import { App } from '@storecraft/core';
  

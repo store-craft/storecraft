@@ -111,7 +111,7 @@ export default {
           groups: [
             {
               title: 'Node / Deno / Bun Local Storage',
-              route: 'backend/storage/storage-local',
+              route: 'backend/storage/local',
               path: 'content/docs/backend/storage/storage-local.mdx'
             },
             {

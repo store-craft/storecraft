@@ -10,14 +10,10 @@ Local filesystem based **Storage** for `node.js`.
 Features:
 - Supports streaming `Get` / `Put` / `Delete`
 
-```bash
-npm i @storecraft/storage-local
-```
-
 ## usage
 
 ```js
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const storage = new Storage(path.join(homedir(), 'tomer'));
 

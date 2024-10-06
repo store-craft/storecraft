@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { NodeLocalStorage } from '../adapter.js'
+import { NodeLocalStorage } from '../node/index.js'
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os'
 import * as path from 'node:path';
@@ -14,7 +14,7 @@ const areBlobsEqual = async (blob1, blob2) => {
 
 const storage = new NodeLocalStorage(path.join(homedir(), 'tomer'));
 
-test.before(async () => await storage.init())
+test.before(async () => {await storage.init()})
 
 test('blob put/get/delete', async () => {
   const data = [

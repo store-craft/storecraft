@@ -5,7 +5,7 @@ import { enums } from '@storecraft/core/api';
 import { file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
-import { DummyPayments } from '@storecraft/payments-dummy'
+import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { assert_async_throws } from './utils.js';
 import { UniformTaxes } from '@storecraft/core/tax';
 

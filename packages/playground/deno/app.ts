@@ -2,12 +2,12 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 import { DenoPlatform } from '@storecraft/core/platform/deno'
-import { DenoLocalStorage } from '@storecraft/storage-local/deno'
+import { DenoLocalStorage } from '@storecraft/core/storage/deno'
 import { MongoDB } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
-import { DummyPayments } from '@storecraft/payments-dummy'
+import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { Stripe } from '@storecraft/payments-stripe'
 import { App } from '@storecraft/core';
 

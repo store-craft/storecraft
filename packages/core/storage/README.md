@@ -10,16 +10,13 @@ Local filesystem based **Storage** for `node.js` / `Deno` / `Bun`.
 Features:
 - Supports streaming `Get` / `Put` / `Delete`
 
-```bash
-npm i @storecraft/storage-local
-```
 
 ## usage
 
 Example Node.js 
 
 ```js
-import { NodeLocalStorage } from '@storecraft/storage-local/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node';
 
 const storage = new NodeLocalStorage('storage');
 
@@ -36,7 +33,7 @@ const { value } = await storage.getBlob(key);
 Example Deno 
 
 ```ts
-import { DenoLocalStorage } from '@storecraft/storage-local/deno';
+import { DenoLocalStorage } from '@storecraft/core/storage/deno';
 
 const storage = new DenoLocalStorage('storage');
 
@@ -53,7 +50,7 @@ const { value } = await storage.getBlob(key);
 Example Bun
 
 ```js
-import { BunLocalStorage } from '@storecraft/storage-local/bun';
+import { BunLocalStorage } from '@storecraft/core/storage/bun';
 
 const storage = new BunLocalStorage('storage');
 
@@ -70,10 +67,10 @@ const { value } = await storage.getBlob(key);
 ## In Storecraft App
 
 ```js
-import { NodePlatform } from '@storecraft/core/platform/node';
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
 import { App } from '@storecraft/core';
+import { NodePlatform } from '@storecraft/core/platform/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
  
 const app = new App(
   {

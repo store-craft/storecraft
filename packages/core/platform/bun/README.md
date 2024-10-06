@@ -15,7 +15,7 @@ package for you :)
 import 'dotenv/config';
 import { App } from '@storecraft/core'
 import { BunPlatform } from '@storecraft/core/platform/bun';
-import { BunLocalStorage } from '@storecraft/storage-local/bun'
+import { BunLocalStorage } from '@storecraft/core/storage/bun'
 import { MongoDB } from '@storecraft/database-mongodb'
 
 const app = new App(

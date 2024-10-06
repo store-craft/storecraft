@@ -1,3 +1,6 @@
+/**
+ * @import { storage_driver } from "../types.public.js"
+ */
 import { readFile, mkdir, open, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
@@ -43,8 +46,7 @@ const key_to_encoded = key => {
 
 
 /**
- * @typedef {import('@storecraft/core/storage').storage_driver} storage
- * @implements {storage}
+ * @implements {storage_driver}
  */
 export class NodeLocalStorage {
   
@@ -59,7 +61,7 @@ export class NodeLocalStorage {
   }
 
   features() {
-    /** @type {import('@storecraft/core/storage').StorageFeatures} */
+    /** @type {import('../types.public.js').StorageFeatures} */
     const f = {
       supports_signed_urls: false
     }
@@ -69,7 +71,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {App} app 
+   * @type {storage_driver["init"]}
    * 
    */
   async init(app) {
@@ -186,7 +188,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @type {storage["getArraybuffer"]}
+   * @type {storage_driver["getArraybuffer"]}
    */
   async getArraybuffer(key) {
 
@@ -204,7 +206,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @type {storage["getBlob"]}
+   * @type {storage_driver["getBlob"]}
    */
   async getBlob(key) {
 
@@ -225,7 +227,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @type {storage["getStream"]}
+   * @type {storage_driver["getStream"]}
    */
   async getStream(key) {
     try { 

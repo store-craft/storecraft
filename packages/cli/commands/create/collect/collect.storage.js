@@ -62,7 +62,7 @@ const collect_general_config = async (
     case 'node':
     case 'deno':
     case 'bun': {
-      /** @type {import('@storecraft/storage-local/node').Config} */
+      /** @type {import('@storecraft/core/storage/node').Config} */
       const config = await input(
         { 
           message: 'Local folder path',

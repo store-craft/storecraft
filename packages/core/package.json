@@ -39,6 +39,21 @@
       "import": "./storage/public.js",
       "types": "./storage/types.public.d.ts"
     },
+    "./storage/*": {
+      "import": "./storage/*"
+    },
+    "./storage/node": {
+      "import": "./storage/node/index.js",
+      "types": "./storage/node/types.public.d.ts"
+    },
+    "./storage/deno": {
+      "import": "./storage/deno/index.js",
+      "types": "./storage/deno/types.public.d.ts"
+    },
+    "./storage/bun": {
+      "import": "./storage/bun/index.js",
+      "types": "./storage/bun/types.public.d.ts"
+    },
     "./crypto": {
       "import": "./crypto/public.js",
       "types": "./crypto/types.public.d.ts"
@@ -50,6 +65,13 @@
     "./payments": {
       "import": "./payments/public.js",
       "types": "./payments/types.public.d.ts"
+    },
+    "./payments/*": {
+      "import": "./payments/*"
+    },
+    "./payments/dummy": {
+      "import": "./payments/dummy/index.js",
+      "types": "./payments/dummy/types.public.d.ts"
     },
     "./tax": {
       "import": "./tax/public.js",

@@ -19,7 +19,7 @@ import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { MongoDB } from '@storecraft/database-mongodb'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const app = new App(
   {

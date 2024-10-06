@@ -39,7 +39,6 @@ Then, let's install storecraft
 
 ```bash
 npm i @storecraft/core 
-npm i @storecraft/storage-local 
 npm i @storecraft/sqlite 
 npm i @storecraft/mailer-providers-http
 npm i -D dotenv
@@ -50,11 +49,11 @@ Create `index.js`
 ```ts
 import 'dotenv/config';
 import http from "node:http";
-import { DummyPayments } from '@storecraft/payments-dummy'
+import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
 import { NodePlatform } from "@storecraft/core/platform/node"
 import { SQLite } from "@storecraft/database-sqlite"
-import { NodeLocalStorage } from "@storecraft/storage-local/node"
+import { NodeLocalStorage } from "@storecraft/core/storage/node"
 import { SendGrid } from "@storecraft/mailer-providers-http/sendgrid"
 import { App } from "@storecraft/core"
 

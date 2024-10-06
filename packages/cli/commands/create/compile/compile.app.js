@@ -237,30 +237,27 @@ export const infer_storage = info => {
       return {
         cls: `DenoLocalStorage`,
         imports: [
-          `import { DenoLocalStorage } from '@storecraft/storage-local/deno'`
+          `import { DenoLocalStorage } from '@storecraft/core/storage/deno'`
         ],
         deps: [
-          '@storecraft/storage-local'
         ]
       }
     case 'node':
       return {
         cls: `NodeLocalStorage`,
         imports: [
-          `import { NodeLocalStorage } from '@storecraft/storage-local/node'`
+          `import { NodeLocalStorage } from '@storecraft/core/storage/node'`
         ],
         deps: [
-          '@storecraft/storage-local'
         ]
       }
     case 'bun':
       return {
         cls: `BunLocalStorage`,
         imports: [
-          `import { BunLocalStorage } from '@storecraft/storage-local/bun'`
+          `import { BunLocalStorage } from '@storecraft/core/storage/bun'`
         ],
         deps: [
-          '@storecraft/storage-local'
         ]
       }
   }

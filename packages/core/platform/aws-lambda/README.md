@@ -145,7 +145,7 @@ import type {
 import { app } from './app';
 import { AWSLambdaPlatform } from '@storecraft/core/platform/aws-lambda'
 import { MongoDB } from '@storecraft/database-mongodb'
-import { DummyPayments } from '@storecraft/payments-dummy'
+import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { App } from '@storecraft/core';
 
 export const app = new App(

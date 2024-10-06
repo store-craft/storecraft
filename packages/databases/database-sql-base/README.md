@@ -20,7 +20,7 @@ import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { SQL } from '@storecraft/database-sql-base'
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const app = new App(
   {

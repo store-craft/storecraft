@@ -12,7 +12,7 @@ import {
 } from './utils.relations.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_collections} db_col
+ * @typedef {import('@storecraft/core/database').db_collections} db_col
  */
 
 
@@ -183,8 +183,8 @@ const list_collection_products = (driver) => {
     /**
      * @type {import('mongodb').Filter<
      *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/v-api').ProductType | 
-     *    import('@storecraft/core/v-api').VariantType
+     *    import('@storecraft/core/api').ProductType | 
+     *    import('@storecraft/core/api').VariantType
      *  >
      * >}
      */

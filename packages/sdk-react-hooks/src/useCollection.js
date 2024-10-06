@@ -23,7 +23,7 @@ export const rest_resource_to_db_resource_table = resource => {
 }
 
 /**
- * @param {import("@storecraft/core/v-api").ApiQuery} query_api
+ * @param {import("@storecraft/core/api").ApiQuery} query_api
  * @param {number} [page_count=0]
  * @param {boolean} [hasLoaded=false]
  * @param {boolean} [loading=false]
@@ -55,7 +55,7 @@ export const resource_is_probably_empty = (
  * 
  * 
  * @param {StorecraftSDK} sdk
- * @param {import('@storecraft/core/v-api').ApiQuery} query 
+ * @param {import('@storecraft/core/api').ApiQuery} query 
  * @param {string} resource
  * 
  * 
@@ -64,7 +64,7 @@ const paginate_helper = (sdk, query, resource) => {
 
   query.sortBy = query.sortBy ?? ['updated_at', 'id'];
 
-  /** @type {import('@storecraft/core/v-api').Cursor} */
+  /** @type {import('@storecraft/core/api').Cursor} */
   let startAfter = query.startAfter;
 
   const next = async () => {
@@ -107,7 +107,7 @@ const paginate_helper = (sdk, query, resource) => {
  */
 
 
-/** @type {import('@storecraft/core/v-api').ApiQuery} */
+/** @type {import('@storecraft/core/api').ApiQuery} */
 export const q_initial = {
   sortBy: ['updated_at', 'id'],
   order: 'desc',
@@ -115,10 +115,10 @@ export const q_initial = {
 }
 
 /**
- * @template {Partial<import('@storecraft/core/v-api').BaseType>} T The type of the item
+ * @template {Partial<import('@storecraft/core/api').BaseType>} T The type of the item
  * 
  * @param {keyof App["db"]["resources"]} resource the base path of the resource 
- * @param {import('@storecraft/core/v-api').ApiQuery} q query
+ * @param {import('@storecraft/core/api').ApiQuery} q query
  * @param {boolean} autoLoad 
  */
 export const useCollection = (
@@ -246,7 +246,7 @@ export const useCollection = (
 
   const query = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ApiQuery} [q=q_initial] query object
+     * @param {import('@storecraft/core/api').ApiQuery} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
     async (q=_q.current, from_cache=true) => {

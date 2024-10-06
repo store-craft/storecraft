@@ -30,7 +30,7 @@ const infer_content_type = (name) => {
 
 /**
  * The base S3 compatible class
- * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
+ * @typedef {import('@storecraft/core/storage').storage_driver} storage
  * 
  * @implements {storage}
  */
@@ -74,7 +74,7 @@ export class S3CompatibleStorage {
   get config() { return this.#_config; }
 
   features() {
-    /** @type {import('@storecraft/core/v-storage').StorageFeatures} */
+    /** @type {import('@storecraft/core/storage').StorageFeatures} */
     const f = {
       supports_signed_urls: true
     }
@@ -137,7 +137,7 @@ export class S3CompatibleStorage {
   /**
    * 
    * @param {string} key 
-   * @returns {ReturnType<import('@storecraft/core/v-storage').storage_driver["putSigned"]>}
+   * @returns {ReturnType<import('@storecraft/core/storage').storage_driver["putSigned"]>}
    */
   async putSigned(key) {
     const url = new URL(this.get_file_url(key));
@@ -218,7 +218,7 @@ export class S3CompatibleStorage {
   /**
    * 
    * @param {string} key 
-   * @returns {ReturnType<import('@storecraft/core/v-storage').storage_driver["getSigned"]>}
+   * @returns {ReturnType<import('@storecraft/core/storage').storage_driver["getSigned"]>}
    */
   async getSigned(key) {
     const url = new URL(this.get_file_url(key));

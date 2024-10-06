@@ -9,7 +9,7 @@ import { Favicon } from '@/comps/asset-favicon.jsx'
 import svg from '@/comps/favicon.svg';
 /**
  * 
- * @typedef {import('@storecraft/core/v-api').ExtensionItemGet} ExtensionItemGet
+ * @typedef {import('@storecraft/core/api').ExtensionItemGet} ExtensionItemGet
  * 
  */
 
@@ -58,7 +58,7 @@ export const SpanWithLogo = (
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').ExtensionItemGet, any, any
+ *  import('@storecraft/core/api').ExtensionItemGet, any, any
  * >[]}
  */
 const schema_fields = [

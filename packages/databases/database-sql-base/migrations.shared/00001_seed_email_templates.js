@@ -1,6 +1,6 @@
 import { Kysely } from 'kysely'
 import { upsert } from '../src/con.templates.js'
-import { templates } from '@storecraft/core/v-assets/seed-templates.js';
+import { templates } from '@storecraft/core/assets/seed-templates.js';
 
 /**
  * @typedef {import('../types.sql.tables.js').Database} Database

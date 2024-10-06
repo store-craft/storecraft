@@ -7,7 +7,7 @@ import { getProcessor } from './aws.utils.js';
  *  _sc_event?: import('./types.private.d.ts').LambdaEvent,
  * } & import('./types.private.d.ts').LambdaContext} PlatformContext
  * 
- * @typedef {import('@storecraft/core/v-platform').PlatformAdapter<
+ * @typedef {import('@storecraft/core/platform').PlatformAdapter<
  *  import('./types.private.js').LambdaEvent, 
  *  PlatformContext, 
  *  import('./types.private.js').APIGatewayProxyResult

@@ -1,7 +1,7 @@
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
-} from '@storecraft/core/v-api/types.api.enums.js';
-import { assert, ID } from '@storecraft/core/v-api/utils.func.js';
+} from '@storecraft/core/api/types.api.enums.js';
+import { assert, ID } from '@storecraft/core/api/utils.func.js';
 import { DummyDatabase } from './dummy-database.js';
   
 
@@ -17,10 +17,10 @@ import { DummyDatabase } from './dummy-database.js';
 /**
  * 
  * @typedef {string} CreateResult
- * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
+ * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
+ * @typedef {import('@storecraft/core/api').OrderData} OrderData
  * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CreateResult>} payment_gateway
+ * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CreateResult>} payment_gateway
  */
 
 /** 
@@ -203,12 +203,12 @@ export class DummyPayments {
    * @param {CreateResult} create_result 
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').PaymentGatewayStatus>}
+   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayStatus>}
    */
   async status(create_result) {
     const order = await this.retrieve_gateway_order(create_result);
     
-    /** @type {import('@storecraft/core/v-api').PaymentGatewayStatus} */
+    /** @type {import('@storecraft/core/api').PaymentGatewayStatus} */
     const stat = {
       messages: [],
       actions: this.actions

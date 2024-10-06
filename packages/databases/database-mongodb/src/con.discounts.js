@@ -9,7 +9,7 @@ import {
 import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
-import { enums } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/api'
 import { 
   add_search_terms_relation_on, delete_me, 
   remove_entry_from_all_connection_of_relation, 
@@ -19,7 +19,7 @@ import {
 
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
+ * @typedef {import('@storecraft/core/database').db_discounts} db_col
  */
 
 
@@ -211,8 +211,8 @@ const list_discount_products = (driver) => {
     /**
      * @type {import('mongodb').Filter<
      *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/v-api').ProductType | 
-     *    import('@storecraft/core/v-api').VariantType
+     *    import('@storecraft/core/api').ProductType | 
+     *    import('@storecraft/core/api').VariantType
      *  >
      * >}
      */

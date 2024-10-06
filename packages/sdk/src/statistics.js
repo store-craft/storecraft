@@ -1,7 +1,7 @@
 import { App } from '@storecraft/core';
 import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
-import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
+import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js';
 
 /**
  * @description statistics endpoint
@@ -38,7 +38,7 @@ export default class Statistics  {
   /**
    * 
    * @param {string} key 
-   * @returns {import('@storecraft/core/v-api').OrdersStatisticsType}
+   * @returns {import('@storecraft/core/api').OrdersStatisticsType}
    */
   fromCache = (key) => {
     if(this.isCacheValid(key))
@@ -49,7 +49,7 @@ export default class Statistics  {
   /**
    * 
    * @param {string} key 
-   * @param {import('@storecraft/core/v-api').OrdersStatisticsType} value
+   * @param {import('@storecraft/core/api').OrdersStatisticsType} value
    */
   putCache = (key, value) => {
     this.#cache[key] = value
@@ -62,7 +62,7 @@ export default class Statistics  {
    * @param {string | number | Date} [from_day] `ISO` string | `UTC` | `timestamp` | `Date`
    * @param {string | number | Date} [to_day] `ISO` string | `UTC` | `timestamp` | `Date`
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').OrdersStatisticsType>}
+   * @returns {Promise<import('@storecraft/core/api').OrdersStatisticsType>}
    */
   orders = async (from_day, to_day) => {
     const search = new URLSearchParams();
@@ -82,7 +82,7 @@ export default class Statistics  {
    * @description Load **count** `statistics`
    * 
    * @param {keyof App["db"]["resources"]} table 
-   * @param {import('@storecraft/core/v-api').ApiQuery} [query]
+   * @param {import('@storecraft/core/api').ApiQuery} [query]
    * 
    * 
    * @returns {Promise<number>}

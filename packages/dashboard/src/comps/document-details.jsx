@@ -46,7 +46,7 @@ const ClipBoardCopy = ({ value }) => {
 
 /**
  * @typedef {object} InternalDocumentDetailsParams
- * @prop {import('@storecraft/core/v-api').BaseType} doc
+ * @prop {import('@storecraft/core/api').BaseType} doc
  * @prop {string} collectionId
  * @prop {string} [className]
  * 

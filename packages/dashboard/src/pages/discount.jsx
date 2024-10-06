@@ -21,7 +21,7 @@ import { RegularDocumentActions } from '@/comps/document-actions.jsx'
 import Attributes from '@/comps/attributes.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import MDEditor from '@/comps/md-editor.jsx'
-import { DiscountApplicationEnum } from '@storecraft/core/v-api/types.api.enums.js'
+import { DiscountApplicationEnum } from '@storecraft/core/api/types.api.enums.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 import DiscountPerformance from '../comps/discount-performance.jsx'
 
@@ -209,7 +209,7 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
 /**
  * 
  * @typedef {object} State Intrinsic state of `tag`
- * @property {import('@storecraft/core/v-api').DiscountType} data
+ * @property {import('@storecraft/core/api').DiscountType} data
  * @property {boolean} hasChanged
  * 
  *
@@ -233,7 +233,7 @@ export default (
 
   /** 
   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-  *  import('@storecraft/core/v-api').DiscountType>
+  *  import('@storecraft/core/api').DiscountType>
   * } 
   */
   const {

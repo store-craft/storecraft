@@ -5,7 +5,7 @@ import { create_handle, file_name,
   iso, add_list_integrity_tests} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { ID } from '@storecraft/core/v-api/utils.func.js';
+import { ID } from '@storecraft/core/api/utils.func.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -16,9 +16,9 @@ const handle_pr = create_handle('pr', file_name(import.meta.url));
 // virtual api of storecraft for insertion
 
 /**
- * @typedef {import('@storecraft/core/v-database').idable_concrete} idable_concrete
+ * @typedef {import('@storecraft/core/database').idable_concrete} idable_concrete
  */
-/** @type {(import('@storecraft/core/v-api').ProductType & idable_concrete)[]} */
+/** @type {(import('@storecraft/core/api').ProductType & idable_concrete)[]} */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -37,7 +37,7 @@ const items = Array.from({length: 10}).map(
   }
 );
 
-/** @type {(import('@storecraft/core/v-api').CollectionType & idable_concrete)[]} */
+/** @type {(import('@storecraft/core/api').CollectionType & idable_concrete)[]} */
 const collections_upsert = [
   {
     active: true,

@@ -4,7 +4,7 @@ import { count_regular, get_regular, list_regular,
   remove_regular, upsert_regular } from './con.shared.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_templates} db_col
+ * @typedef {import('@storecraft/core/database').db_templates} db_col
  */
 
 

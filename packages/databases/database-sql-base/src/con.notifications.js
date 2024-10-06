@@ -6,7 +6,7 @@ import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_notifications} db_col
+ * @typedef {import('@storecraft/core/database').db_notifications} db_col
  */
 export const table_name = 'notifications'
 

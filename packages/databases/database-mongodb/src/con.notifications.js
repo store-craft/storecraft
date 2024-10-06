@@ -4,10 +4,10 @@ import { count_regular, get_regular, list_regular,
   remove_regular, upsert_regular } from './con.shared.js'
 import { to_objid } from './utils.funcs.js';
 import { add_search_terms_relation_on } from './utils.relations.js';
-import { union } from '@storecraft/core/v-api/utils.func.js';
+import { union } from '@storecraft/core/api/utils.func.js';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_notifications} db_col
+ * @typedef {import('@storecraft/core/database').db_notifications} db_col
  */
 
 /**

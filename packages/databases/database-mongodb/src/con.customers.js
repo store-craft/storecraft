@@ -6,7 +6,7 @@ import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_customers} db_col
+ * @typedef {import('@storecraft/core/database').db_customers} db_col
  */
 
 /**
@@ -126,7 +126,7 @@ const list_customer_orders = (driver) => {
     /**
      * @type {import('mongodb').Filter<
      *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/v-api').OrderData
+     *    import('@storecraft/core/api').OrderData
      *  >
      * >}
      */

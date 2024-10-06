@@ -6,7 +6,7 @@ import { add_sanity_crud_to_test_suite,
   get_static_ids} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 
 /**
  * The Test Strategy:
@@ -19,7 +19,7 @@ import { enums } from '@storecraft/core/v-api';
 const A = 'tokenaaaaaaaa'
 const B = 'tokenbbbbbbbb'
 
-/** @type {import('@storecraft/core/v-api').TagTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').TagTypeUpsert[]} */
 const tags_upsert = [
   {
     handle: A,
@@ -31,7 +31,7 @@ const tags_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
 const products_upsert = [
   {
     handle: A,
@@ -49,7 +49,7 @@ const products_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').CollectionTypeUpsert[]} */
 const collections_upsert = [
   {
     handle: A,
@@ -63,7 +63,7 @@ const collections_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').ShippingMethodTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').ShippingMethodTypeUpsert[]} */
 const shipping_upsert = [
   {
     handle: A,
@@ -79,7 +79,7 @@ const shipping_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').StorefrontTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').StorefrontTypeUpsert[]} */
 const storefronts_upsert = [
   {
     handle: A,
@@ -93,7 +93,7 @@ const storefronts_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').PostTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').PostTypeUpsert[]} */
 const posts_upsert = [
   {
     handle: A,
@@ -109,7 +109,7 @@ const posts_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').OrderDataUpsert} */
+/** @type {import('@storecraft/core/api').OrderDataUpsert} */
 const order_base = {
   pricing: {
     quantity_discounted: 0,
@@ -141,7 +141,7 @@ const order_base = {
 // because search results for `orders` are just their `ids`
 const order_ids = get_static_ids('order');
 
-/** @type {import('@storecraft/core/v-api').OrderDataUpsert[]} */
+/** @type {import('@storecraft/core/api').OrderDataUpsert[]} */
 const orders_upsert = [
   {
     ...order_base,
@@ -157,7 +157,7 @@ const orders_upsert = [
 
 // this discount will not be applied to any product, which is important for the test
 
-/** @type {import('@storecraft/core/v-api').DiscountTypeUpsert} */
+/** @type {import('@storecraft/core/api').DiscountTypeUpsert} */
 const base_discount = {
   handle: undefined,
   title: undefined,
@@ -167,7 +167,7 @@ const base_discount = {
   info: {
     details: {
       meta: enums.DiscountMetaEnum.order,
-      /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+      /** @type {import('@storecraft/core/api').OrderDiscountExtra} */
       extra: {
         fixed: 0,
         percent: 10
@@ -176,7 +176,7 @@ const base_discount = {
     filters: [
       {
         meta: enums.FilterMetaEnum.p_in_products,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_products} */
         value: [
           {
             id: 'i-dont-exist-sajsiajsiasi'
@@ -187,7 +187,7 @@ const base_discount = {
   }
 }
 
-/** @type {import('@storecraft/core/v-api').DiscountTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').DiscountTypeUpsert[]} */
 const discounts_upsert = [
   {
     ...base_discount,
@@ -206,7 +206,7 @@ const discounts_upsert = [
  * 
  * @description verify a quick search result against the A and B sets
  * 
- * @param {import('@storecraft/core/v-api').QuickSearchResult} result 
+ * @param {import('@storecraft/core/api').QuickSearchResult} result 
  * @param {'A' | 'B'} inClass
  * @param {'A' | 'B'} outClass
  */

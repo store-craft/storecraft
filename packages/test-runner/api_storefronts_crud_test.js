@@ -8,7 +8,7 @@ import esMain from './utils.esmain.js';
 
 const handle_sf = create_handle('sf', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core/v-api').StorefrontTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').StorefrontTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle_sf(), title: 'sf 1', active: true

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
@@ -9,12 +9,12 @@ import { App } from '@storecraft/core';
 // const app = await create_app();
 
 /**
- * @typedef {import('@storecraft/core/v-api').StorefrontTypeUpsert} StorefrontTypeUpsert
- * @typedef {import('@storecraft/core/v-api').ProductTypeUpsert} ProductTypeUpsert
- * @typedef {import('@storecraft/core/v-api').CollectionTypeUpsert} CollectionTypeUpsert
- * @typedef {import('@storecraft/core/v-api').PostTypeUpsert} PostTypeUpsert
- * @typedef {import('@storecraft/core/v-api').ShippingMethodTypeUpsert} ShippingMethodTypeUpsert
- * @typedef {import('@storecraft/core/v-api').DiscountTypeUpsert} DiscountTypeUpsert
+ * @typedef {import('@storecraft/core/api').StorefrontTypeUpsert} StorefrontTypeUpsert
+ * @typedef {import('@storecraft/core/api').ProductTypeUpsert} ProductTypeUpsert
+ * @typedef {import('@storecraft/core/api').CollectionTypeUpsert} CollectionTypeUpsert
+ * @typedef {import('@storecraft/core/api').PostTypeUpsert} PostTypeUpsert
+ * @typedef {import('@storecraft/core/api').ShippingMethodTypeUpsert} ShippingMethodTypeUpsert
+ * @typedef {import('@storecraft/core/api').DiscountTypeUpsert} DiscountTypeUpsert
  */
 const handle_sf = create_handle('sf', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));

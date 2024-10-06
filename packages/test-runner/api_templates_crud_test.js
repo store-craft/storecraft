@@ -8,7 +8,7 @@ import esMain from './utils.esmain.js';
 
 const handle_tag = create_handle('template', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core/v-api').TemplateTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').TemplateTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle_tag(),

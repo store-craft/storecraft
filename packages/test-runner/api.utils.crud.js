@@ -3,10 +3,10 @@ import { basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { App } from '@storecraft/core'
 import { assert_async_throws, assert_partial } from './utils.js';
-import { to_handle } from '@storecraft/core/v-api/utils.func.js';
+import { to_handle } from '@storecraft/core/api/utils.func.js';
 import { 
   image_url_to_handle, image_url_to_name 
-} from '@storecraft/core/v-api/con.images.logic.js';
+} from '@storecraft/core/api/con.images.logic.js';
 
 /**
  * timestamp to iso
@@ -109,7 +109,7 @@ export const pick_random = items => {
 }
 
 /**
- * @typedef {Partial<import('@storecraft/core/v-api').BaseType>} PartialBase
+ * @typedef {Partial<import('@storecraft/core/api').BaseType>} PartialBase
  */
 
 /**
@@ -123,9 +123,9 @@ export const pick_random = items => {
  * @prop {(id: string) => Promise<G>} [ops.get]
  * @prop {(id: string) => Promise<boolean>} [ops.remove]
  * @prop {object} events
- * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.upsert_event
- * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.get_event
- * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.remove_event
+ * @prop {import('@storecraft/core/pubsub').PubSubEvent} events.upsert_event
+ * @prop {import('@storecraft/core/pubsub').PubSubEvent} events.get_event
+ * @prop {import('@storecraft/core/pubsub').PubSubEvent} events.remove_event
  * @prop {App} app
  * 
  */
@@ -275,7 +275,7 @@ const compare_tuples = (vec1, vec2) => {
  * @template {PartialBase} T
  * 
  * @param {T[]} list the result of the query
- * @param {import('@storecraft/core/v-api').ApiQuery} q the query used
+ * @param {import('@storecraft/core/api').ApiQuery} q the query used
  */
 export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
@@ -345,9 +345,9 @@ export const assert_query_list_integrity = (list, q) => {
  * @prop {(item: G) => Promise<string>} [ops.upsert]
  * @prop {(id: string) => Promise<G>} [ops.get]
  * @prop {(id: string) => Promise<boolean>} [ops.remove]
- * @prop {(q: import('@storecraft/core/v-api').ApiQuery) => Promise<G[]>} [ops.list]
+ * @prop {(q: import('@storecraft/core/api').ApiQuery) => Promise<G[]>} [ops.list]
  * @prop {object} events
- * @prop {import('@storecraft/core/v-pubsub').PubSubEvent} events.list_event
+ * @prop {import('@storecraft/core/pubsub').PubSubEvent} events.list_event
  * @prop {App} app
  * 
  */
@@ -388,7 +388,7 @@ export const add_list_integrity_tests = s => {
       let is_event_ok = false || !Boolean(ctx.events?.list_event);
       const limit = 3;
 
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q_asc = {
         startAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
@@ -397,7 +397,7 @@ export const add_list_integrity_tests = s => {
         expand: ['*']
       }
 
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -440,7 +440,7 @@ export const add_list_integrity_tests = s => {
   
   s('query startAt=(end_at:iso(5)), sortBy=(updated_at), order=asc|desc, limitToLast=2', 
     async (ctx) => {
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q_asc = {
         endAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
@@ -448,7 +448,7 @@ export const add_list_integrity_tests = s => {
         limitToLast: 2,
         expand: ['*']
       }
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -492,7 +492,7 @@ export const add_list_integrity_tests = s => {
       // last 3 items have the same timestamps, so we refine by ID
       // let's pick one before the last
       const item = ctx.items.at(-2);
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q = {
         startAt: [['updated_at', item.updated_at], ['id', item.id]],
         sortBy: ['updated_at', 'id'],

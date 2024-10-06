@@ -5,7 +5,7 @@ import { file_name,
   iso, add_list_integrity_tests,
   get_static_ids,
   create_handle} from './api.utils.crud.js';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -18,7 +18,7 @@ const handle_gen = create_handle('dis', file_name(import.meta.url));
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').DiscountType
+ *  import('@storecraft/core/api').DiscountType
  * )[]} 
  */
 const items = get_static_ids('dis').map(

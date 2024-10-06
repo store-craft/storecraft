@@ -3,14 +3,14 @@ import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
-import { func } from '@storecraft/core/v-api';
-import { ID } from '@storecraft/core/v-api/utils.func.js';
+import { func } from '@storecraft/core/api';
+import { ID } from '@storecraft/core/api/utils.func.js';
 import { 
   image_url_to_handle, image_url_to_name 
-} from '@storecraft/core/v-api/con.images.logic.js';
+} from '@storecraft/core/api/con.images.logic.js';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_images} db_col
+ * @typedef {import('@storecraft/core/database').db_images} db_col
  */
 
 /**
@@ -106,7 +106,7 @@ export const report_document_media = (driver) => {
      * 
      * 
      * @returns {import('mongodb').AnyBulkWriteOperation<
-     *  import('@storecraft/core/v-api').ImageType>
+     *  import('@storecraft/core/api').ImageType>
      * }
      */
     const url_to_update = url => {

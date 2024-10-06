@@ -118,7 +118,7 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
 /**
  * 
  * @typedef {object} State Intrinsic state of `shipping`
- * @property {import('@storecraft/core/v-api').ShippingMethodType} data
+ * @property {import('@storecraft/core/api').ShippingMethodType} data
  * @property {boolean} hasChanged
  * 
  *
@@ -143,7 +143,7 @@ export default (
 
   /** 
     * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-    *  import('@storecraft/core/v-api').ShippingMethodType>
+    *  import('@storecraft/core/api').ShippingMethodType>
     * } 
     */
   const {

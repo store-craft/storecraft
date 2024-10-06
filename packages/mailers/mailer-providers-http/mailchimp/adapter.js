@@ -2,7 +2,7 @@ import { convert_to_base64 } from "./adapter.utils.js";
 
 /**
  * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
+ * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 
  * mailer with mail-chimp / mandrill http api

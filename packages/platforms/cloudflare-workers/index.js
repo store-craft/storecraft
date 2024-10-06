@@ -1,7 +1,7 @@
-import { pbkdf2 } from '@storecraft/core/v-crypto';
+import { pbkdf2 } from '@storecraft/core/crypto';
 
 /**
- * @typedef {import('@storecraft/core/v-platform').PlatformAdapter<
+ * @typedef {import('@storecraft/core/platform').PlatformAdapter<
  *  Request, any, Response
  * >} PlatformAdapter
  * 

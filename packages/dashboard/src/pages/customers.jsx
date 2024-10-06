@@ -7,7 +7,7 @@ import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * 
- * @param {import('@storecraft/core/v-api').CustomerType} item 
+ * @param {import('@storecraft/core/api').CustomerType} item 
  */
 export const extract_contact_field = item => {
 
@@ -18,14 +18,14 @@ export const extract_contact_field = item => {
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').CustomerType, any, any
+ *  import('@storecraft/core/api').CustomerType, any, any
  * >[]}
  */
 const schema_fields = [
   { 
     key: 'undefined', name: 'Full Name', comp: Span, 
     transform: 
-      /** @param {import('@storecraft/core/v-api').CustomerType} item */
+      /** @param {import('@storecraft/core/api').CustomerType} item */
       item => extract_contact_field(item),
     comp_params: { className: 'font-semibold' } 
   },
@@ -47,7 +47,7 @@ const schema_fields = [
 export default ({}) => {
   /**
    * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  import('@storecraft/core/v-api').CustomerType>
+   *  import('@storecraft/core/api').CustomerType>
    * }
    */ 
   const { 

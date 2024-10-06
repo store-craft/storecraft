@@ -1,7 +1,7 @@
-import { assert, ID } from '@storecraft/core/v-api/utils.func.js';
-import type { payment_gateway } from '@storecraft/core/v-payments';
-import { OrderData, PaymentGatewayStatus } from '@storecraft/core/v-api';
-import { enums } from '@storecraft/core/v-api';
+import { assert, ID } from '@storecraft/core/api/utils.func.js';
+import type { payment_gateway } from '@storecraft/core/payments';
+import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api';
+import { enums } from '@storecraft/core/api';
   
 type Config = {
   default_currency_code?: string;

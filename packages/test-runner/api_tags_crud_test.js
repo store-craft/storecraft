@@ -9,7 +9,7 @@ import esMain from './utils.esmain.js';
 
 const handle_tag = create_handle('tag', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core/v-api').TagTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').TagTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle_tag(),

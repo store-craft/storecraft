@@ -4,10 +4,10 @@ import { count_regular, delete_me, delete_search_of, insert_search_of,
   regular_upsert_me, safe_trx, where_id_or_handle_table } from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
-import { base64 } from '@storecraft/core/v-crypto';
+import { base64 } from '@storecraft/core/crypto';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_templates} db_col
+ * @typedef {import('@storecraft/core/database').db_templates} db_col
  */
 export const table_name = 'templates'
 

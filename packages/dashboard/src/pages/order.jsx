@@ -20,7 +20,7 @@ import TagsEdit from '@/comps/tags-edit.jsx'
 import MDEditor from '@/comps/md-editor.jsx'
 import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
 import { PaymentOptionsEnum, FulfillOptionsEnum, 
-  CheckoutStatusEnum } from '@storecraft/core/v-api/types.api.enums.js'
+  CheckoutStatusEnum } from '@storecraft/core/api/types.api.enums.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 import { useCallback, useMemo } from 'react'
 
@@ -283,7 +283,7 @@ const root_schema = {
 /**
  * 
  * @typedef {object} State Intrinsic state of `order`
- * @property {import('@storecraft/core/v-api').OrderData} data
+ * @property {import('@storecraft/core/api').OrderData} data
  * @property {boolean} hasChanged
  * 
  * @typedef {object} InnerContext Inner `order` context
@@ -312,7 +312,7 @@ export default (
 
   /** 
   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-  *  import('@storecraft/core/v-api').OrderData>
+  *  import('@storecraft/core/api').OrderData>
   * } 
   */
   const {

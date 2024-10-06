@@ -1,10 +1,10 @@
 /**
- * @import { extension } from '@storecraft/core/v-extensions';
- * @import { AuthUserType, OrderData, TemplateType } from '@storecraft/core/v-api';
+ * @import { extension } from '@storecraft/core/extensions';
+ * @import { AuthUserType, OrderData, TemplateType } from '@storecraft/core/api';
  */
 
 import { App } from '@storecraft/core';
-import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/v-api/con.auth.logic.js';
+import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
 import Handlebars from 'handlebars';
 
 

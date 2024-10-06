@@ -25,66 +25,66 @@
       "types": "./types.public.d.ts"
     },
     "./package.json": "./package.json",
-    "./v-assets/*": {
-      "import": "./v-assets/*"
+    "./assets/*": {
+      "import": "./assets/*"
     },
-    "./v-api": {
-      "import": "./v-api/public.js",
-      "types": "./v-api/types.public.d.ts"
+    "./api": {
+      "import": "./api/public.js",
+      "types": "./api/types.public.d.ts"
     },
-    "./v-api/*": {
-      "import": "./v-api/*"
+    "./api/*": {
+      "import": "./api/*"
     },
-    "./v-storage": {
-      "import": "./v-storage/public.js",
-      "types": "./v-storage/types.public.d.ts"
+    "./storage": {
+      "import": "./storage/public.js",
+      "types": "./storage/types.public.d.ts"
     },
-    "./v-crypto": {
-      "import": "./v-crypto/public.js",
-      "types": "./v-crypto/types.public.d.ts"
+    "./crypto": {
+      "import": "./crypto/public.js",
+      "types": "./crypto/types.public.d.ts"
     },
-    "./v-ql": {
-      "import": "./v-ql/index.js",
-      "types": "./v-ql/types.d.ts"
+    "./vql": {
+      "import": "./vql/index.js",
+      "types": "./vql/types.d.ts"
     },
-    "./v-payments": {
-      "import": "./v-payments/public.js",
-      "types": "./v-payments/types.public.d.ts"
+    "./payments": {
+      "import": "./payments/public.js",
+      "types": "./payments/types.public.d.ts"
     },
-    "./v-tax": {
-      "import": "./v-tax/public.js",
-      "types": "./v-tax/types.public.d.ts"
+    "./tax": {
+      "import": "./tax/public.js",
+      "types": "./tax/types.public.d.ts"
     },
-    "./v-mailer": {
-      "import": "./v-mailer/public.js",
-      "types": "./v-mailer/types.public.d.ts"
+    "./mailer": {
+      "import": "./mailer/public.js",
+      "types": "./mailer/types.public.d.ts"
     },
-    "./v-database": {
-      "import": "./v-database/public.js",
-      "types": "./v-database/types.public.d.ts"
+    "./database": {
+      "import": "./database/public.js",
+      "types": "./database/types.public.d.ts"
     },
-    "./v-platform": {
-      "import": "./v-platform/public.js",
-      "types": "./v-platform/types.public.d.ts"
+    "./platform": {
+      "import": "./platform/public.js",
+      "types": "./platform/types.public.d.ts"
     },
-    "./v-extensions": {
-      "import": "./v-extensions/public.js",
-      "types": "./v-extensions/types.public.d.ts"
+    "./extensions": {
+      "import": "./extensions/public.js",
+      "types": "./extensions/types.public.d.ts"
     },
-    "./v-pubsub": {
-      "import": "./v-pubsub/public.js",
-      "types": "./v-pubsub/types.public.d.ts"
+    "./pubsub": {
+      "import": "./pubsub/public.js",
+      "types": "./pubsub/types.public.d.ts"
     },
-    "./v-rest": {
-      "import": "./v-rest/index.js",
-      "types": "./v-rest/types.public.d.ts"
+    "./rest": {
+      "import": "./rest/index.js",
+      "types": "./rest/types.public.d.ts"
     }
   },
   "scripts": {
     "core:test": "uvu -c",
-    "core:gen:zod": "npx ts-to-zod@latest ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js --skipValidation",
-    "core:gen:vql": "node ./v-ql/compile.js",
-    "core:gen:open-api": "node ./v-rest/docs.openapi.gen.js",
+    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",
+    "core:gen:vql": "node ./vql/compile.js",
+    "core:gen:open-api": "node ./rest/docs.openapi.gen.js",
     "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm publish --access public"
   },
   "devDependencies": {

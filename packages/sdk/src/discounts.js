@@ -5,8 +5,8 @@ import { collection_base } from './utils.api.fetch.js';
  * @description Base `discounts` **CRUD**
  * 
  * @extends {collection_base<
- *  import('@storecraft/core/v-api').DiscountTypeUpsert, 
- *  import('@storecraft/core/v-api').DiscountType>
+ *  import('@storecraft/core/api').DiscountTypeUpsert, 
+ *  import('@storecraft/core/api').DiscountType>
  * }
  */
 export default class Discounts extends collection_base {

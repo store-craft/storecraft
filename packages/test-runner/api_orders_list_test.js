@@ -3,7 +3,7 @@ import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, iso, add_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
@@ -14,7 +14,7 @@ import { App } from '@storecraft/core';
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').OrderData
+ *  import('@storecraft/core/api').OrderData
  * )[]} 
  */
 const items = get_static_ids('order').map(

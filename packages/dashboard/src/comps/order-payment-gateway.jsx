@@ -14,8 +14,8 @@ import { format_storecraft_errors } from './error-message.jsx'
  * Action button for payment gateway
  * 
  * @typedef {object} ActionButtonParams
- * @prop {import('@storecraft/core/v-api').PaymentGatewayAction} action
- * @prop {(action: import('@storecraft/core/v-api').PaymentGatewayAction) => Promise<void>} onClick
+ * @prop {import('@storecraft/core/api').PaymentGatewayAction} action
+ * @prop {(action: import('@storecraft/core/api').PaymentGatewayAction) => Promise<void>} onClick
  * 
  * 
  * @param {ActionButtonParams} params
@@ -50,7 +50,7 @@ const NoPaymentGatewayBlues = ({}) => {
 /**
  * 
  * @typedef {object} ChoosePaymentGatewayParams
- * @prop {import('@storecraft/core/v-api').OrderData} [full_order]
+ * @prop {import('@storecraft/core/api').OrderData} [full_order]
  * @prop {(pg_handle: string) => Promise<any>} onCreate
  * 
  * 
@@ -64,7 +64,7 @@ const ChoosePaymentGateway = (
   
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/v-api').PaymentGatewayItemGet>
+   *  import('@storecraft/core/api').PaymentGatewayItemGet>
    * }
    */
   const { 
@@ -121,9 +121,9 @@ const PleaseSave = ({}) => {
 /**
  * 
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/v-api').OrderPaymentGatewayData,
+ *   import('@storecraft/core/api').OrderPaymentGatewayData,
  *   import('../pages/order.jsx').Context,
- *   import('@storecraft/core/v-api').OrderData  
+ *   import('@storecraft/core/api').OrderData  
  *  > & 
  *   Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'>
  * } OrderPaymentGatewayParams
@@ -182,7 +182,7 @@ const OrderPaymentGateway = (
   const invokeAction = useCallback(
     /**
      * 
-     * @param {import('@storecraft/core/v-api').PaymentGatewayAction} action 
+     * @param {import('@storecraft/core/api').PaymentGatewayAction} action 
      */
     async (action) => {
       try {

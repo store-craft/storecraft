@@ -6,7 +6,7 @@ import { file_name, add_sanity_crud_to_test_suite,
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
 
-/** @type {import('@storecraft/core/v-api').CustomerTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').CustomerTypeUpsert[]} */
 const items_upsert = [
   {
     email: 'a1@a.com', firstname: 'name 1', lastname: 'last 1',

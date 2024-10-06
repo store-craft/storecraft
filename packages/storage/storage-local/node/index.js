@@ -43,7 +43,7 @@ const key_to_encoded = key => {
 
 
 /**
- * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
+ * @typedef {import('@storecraft/core/storage').storage_driver} storage
  * @implements {storage}
  */
 export class NodeLocalStorage {
@@ -59,7 +59,7 @@ export class NodeLocalStorage {
   }
 
   features() {
-    /** @type {import('@storecraft/core/v-storage').StorageFeatures} */
+    /** @type {import('@storecraft/core/storage').StorageFeatures} */
     const f = {
       supports_signed_urls: false
     }

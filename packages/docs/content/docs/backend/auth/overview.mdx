@@ -29,7 +29,7 @@ JWT is issued upon
 ### Example Signup / Signin
 
 ```ts
-import type { ApiAuthResult } = '@storecraft/core/v-api'
+import type { ApiAuthResult } = '@storecraft/core/api'
 
 const authResult: ApiAuthResult = await app.api.auth.signup(
   {
@@ -83,7 +83,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhN
 ### Example Refresh Token
 
 ```ts
-import type { ApiAuthResult } = '@storecraft/core/v-api';
+import type { ApiAuthResult } = '@storecraft/core/api';
 
 const authUser: ApiAuthResult = await app.api.auth.refresh(
   {
@@ -107,7 +107,7 @@ embedded in the api key.
 ### Example Create APIKey
 
 ```ts
-import type { ApiKeyResult } = '@storecraft/core/v-api';
+import type { ApiKeyResult } = '@storecraft/core/api';
 
 const apikeyResult: ApiKeyResult = await app.api.auth.create_api_key();
 

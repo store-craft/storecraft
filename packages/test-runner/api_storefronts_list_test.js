@@ -16,8 +16,8 @@ const handle = create_handle('sf', file_name(import.meta.url));
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').StorefrontType & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/api').StorefrontType & 
+ *  import('@storecraft/core/database').idable_concrete
  * )[]} 
  */
 const items = get_static_ids('sf').map(

@@ -12,7 +12,7 @@ import { query_to_eb, query_to_sort } from './utils.query.js'
 
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_collections} db_col
+ * @typedef {import('@storecraft/core/database').db_collections} db_col
  */
 export const table_name = 'collections'
 

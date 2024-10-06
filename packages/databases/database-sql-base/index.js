@@ -29,7 +29,7 @@ const assert = (b, msg) => {
  * @typedef {import('./types.public.d.ts').Config} Config
  * @typedef {import('./types.sql.tables.d.ts').Database} Database
  * @typedef {import('kysely').Dialect} Dialect
- * @typedef {import('@storecraft/core/v-database').db_driver} db_driver
+ * @typedef {import('@storecraft/core/database').db_driver} db_driver
 */
 
 /**

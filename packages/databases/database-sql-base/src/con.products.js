@@ -1,4 +1,4 @@
-import { enums } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/api'
 import { SQL } from '../index.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
@@ -18,7 +18,7 @@ import { report_document_media } from './con.images.js'
 
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_products} db_col
+ * @typedef {import('@storecraft/core/database').db_products} db_col
  */
 export const table_name = 'products'
 
@@ -247,8 +247,8 @@ const getBulk = (driver) => {
  */
 const remove_internal = (driver) => {
   /**
-   * @param {import('@storecraft/core/v-api').ProductType | 
-   *  import('@storecraft/core/v-api').VariantType
+   * @param {import('@storecraft/core/api').ProductType | 
+   *  import('@storecraft/core/api').VariantType
    * } product
    * @param {Transaction<import('../index.js').Database>} trx
    */

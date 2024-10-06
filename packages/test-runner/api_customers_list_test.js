@@ -5,7 +5,7 @@ import { create_handle, file_name,
   iso, add_list_integrity_tests} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { ID } from '@storecraft/core/v-api/utils.func.js';
+import { ID } from '@storecraft/core/api/utils.func.js';
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
@@ -14,8 +14,8 @@ import { ID } from '@storecraft/core/v-api/utils.func.js';
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').CustomerType & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/api').CustomerType & 
+ *  import('@storecraft/core/database').idable_concrete
  * )[]} 
  */
 const items = Array.from({length: 10}).map(

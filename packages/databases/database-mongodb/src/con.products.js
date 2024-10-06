@@ -18,15 +18,15 @@ import {
   update_specific_connection_of_relation,
   update_specific_connection_of_relation_with_filter
 } from './utils.relations.js'
-import { enums } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/api'
 import { report_document_media } from './con.images.js'
-import { union } from '@storecraft/core/v-api/utils.func.js'
+import { union } from '@storecraft/core/api/utils.func.js'
 import { 
   test_product_filters_against_product 
-} from '@storecraft/core/v-api/con.pricing.logic.js'
+} from '@storecraft/core/api/con.pricing.logic.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_products} db_col
+ * @typedef {import('@storecraft/core/database').db_products} db_col
  */
 
 /**
@@ -304,7 +304,7 @@ const count = (driver) => count_regular(driver, col(driver));
  */
 const list_product_collections = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
+    /** @type {import('@storecraft/core/database').RegularGetOptions} */
     const options = {
       expand: ['collections']
     };
@@ -329,7 +329,7 @@ const list_product_collections = (driver) => {
  */
 const list_product_variants = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
+    /** @type {import('@storecraft/core/database').RegularGetOptions} */
     const options = {
       expand: ['variants']
     };
@@ -359,7 +359,7 @@ const list_product_variants = (driver) => {
  */
 const list_related_products = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
+    /** @type {import('@storecraft/core/database').RegularGetOptions} */
     const options = {
       expand: ['related_products']
     };
@@ -380,7 +380,7 @@ const list_related_products = (driver) => {
  */
 const list_product_discounts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/v-database').RegularGetOptions} */
+    /** @type {import('@storecraft/core/database').RegularGetOptions} */
     const options = {
       expand: ['discounts']
     };
@@ -464,8 +464,8 @@ const changeStockOfBy = (driver) => {
     /** 
      * @type {import('mongodb').AnyBulkWriteOperation<
      *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/v-api').ProductType | 
-     *    import('@storecraft/core/v-api').VariantType
+     *    import('@storecraft/core/api').ProductType | 
+     *    import('@storecraft/core/api').VariantType
      *  >
      * >[]} 
      */

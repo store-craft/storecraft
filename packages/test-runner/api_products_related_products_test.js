@@ -11,7 +11,7 @@ import esMain from './utils.esmain.js';
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 
 
-/** @type {import('@storecraft/core/v-api').ProductTypeUpsert} */
+/** @type {import('@storecraft/core/api').ProductTypeUpsert} */
 const pr_upsert = {
   id: get_static_ids('pr').at(0),
   handle: handle_pr(),
@@ -31,7 +31,7 @@ const pr_upsert = {
   ],
 }
 
-/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
 const related_product_upsert = [
   {
     handle: handle_pr(),

@@ -3,7 +3,7 @@ import { LabelCapsule } from './capsule.jsx'
 import { discount_types_to_color } from './discounts-table-type.jsx'
 import { 
   DiscountMetaEnum, DiscountApplicationEnum 
-} from '@storecraft/core/v-api/types.api.enums.js'
+} from '@storecraft/core/api/types.api.enums.js'
 
 /**
  * 

@@ -40,7 +40,7 @@ with product and order filter:
 Each discount has a `info.details.meta` property, which is a const enum, that
 you assign to specify the type of discount.
 
-This enum is called `DiscountMetaEnum` and is Found at `import { enums } from '@storecraft/core/v-api'`
+This enum is called `DiscountMetaEnum` and is Found at `import { enums } from '@storecraft/core/api'`
 
 Here is it's defintion
 
@@ -81,7 +81,7 @@ is assigned at `info.details.extra`
 import type { 
   RegularDiscountExtra, OrderDiscountExtra, BulkDiscountExtra, 
   BuyXGetYDiscountExtra, BundleDiscountExtra
-} from '@storecraft/core/v-api'
+} from '@storecraft/core/api'
 ```
 
 > You will see soon in the examples below how simple it is
@@ -95,7 +95,7 @@ There are two types of discount applications:
 Each discount has a `application` property, which is a const enum, that
 you assign to specify the type of discount application.
 
-This relevant enum is called `DiscountApplicationEnum` and is Found at `import { enums } from '@storecraft/core/v-api'`
+This relevant enum is called `DiscountApplicationEnum` and is Found at `import { enums } from '@storecraft/core/api'`
 
 Here is it's defintion
 
@@ -135,8 +135,8 @@ We support,
 - **Product NOT In Products**, which qualifies products, that dont have the same `id` and `handle` as in the value array
 - **Product In Price Range**, which qualifies products, have their price in the range specified at `value` object
 
-Here is it's defintion, found at `import { enums } from '@storecraft/core/v-api'`, but also declared
-at `import type { FilterMetaEnum } from '@storecraft/core/v-api'`
+Here is it's defintion, found at `import { enums } from '@storecraft/core/api'`, but also declared
+at `import type { FilterMetaEnum } from '@storecraft/core/api'`
 
 ```ts
 /**
@@ -215,7 +215,7 @@ import type {
   FilterValue_p_in_products, FilterValue_p_not_in_products,
   FilterValue_p_in_tags, FilterValue_p_not_in_tags,
   FilterValue_p_in_price_range
-} from '@storecraft/core/v-api'
+} from '@storecraft/core/api'
 ```
 
 ### Order Filters
@@ -232,7 +232,7 @@ Each Filter enum hints the type of `value` parameters, that you have to specify 
 import type { 
   FilterValue_o_subtotal_in_range, FilterValue_o_items_count_in_range,
   FilterValue_o_date_in_range, FilterValue_o_has_customers
-} from '@storecraft/core/v-api'
+} from '@storecraft/core/api'
 ```
 
 
@@ -241,8 +241,8 @@ import type {
 In this example, `10% OFF` of products, that have the `regular` tag attached
 
 ```js
-import { enums } from '@storecraft/core/v-api';
-import type { DiscountUpsertType } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
+import type { DiscountUpsertType } from '@storecraft/core/api';
 
 const discount: DiscountUpsertType = { 
   active: true, 
@@ -253,7 +253,7 @@ const discount: DiscountUpsertType = {
   info: {
     details: {
       meta: enums.DiscountMetaEnum.regular,
-      /** @type {import('@storecraft/core/v-api').RegularDiscountExtra} */
+      /** @type {import('@storecraft/core/api').RegularDiscountExtra} */
       extra: {
         fixed: 0, percent: 10
       }
@@ -261,7 +261,7 @@ const discount: DiscountUpsertType = {
     filters: [
       { 
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
         value: ['regular']
       }
     ]
@@ -280,8 +280,8 @@ await app.api.discounts.upsert(discount);
 Upsert a recursive bulk `3 For 100` discount for products, that have the `tag` **bulk**
 
 ```ts
-import { enums } from '@storecraft/core/v-api';
-import type { DiscountUpsertType } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
+import type { DiscountUpsertType } from '@storecraft/core/api';
 
 const discount: DiscountUpsertType = { 
   active: true, id: '',
@@ -292,7 +292,7 @@ const discount: DiscountUpsertType = {
   info: {
     details: {
       meta: enums.DiscountMetaEnum.bulk,
-      /** @type {import('@storecraft/core/v-api').BulkDiscountExtra} */
+      /** @type {import('@storecraft/core/api').BulkDiscountExtra} */
       extra: {
         qty: 3,
         percent: 100,
@@ -303,7 +303,7 @@ const discount: DiscountUpsertType = {
     filters: [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
         value: ['bulk']
       }
     ]
@@ -321,8 +321,8 @@ Apply a **Bundle** Discount, 50% OFF for the bundle:
 - robot legs
 
 ```ts
-import { enums } from '@storecraft/core/v-api';
-import type { DiscountUpsertType } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
+import type { DiscountUpsertType } from '@storecraft/core/api';
 
 const discount: DiscountUpsertType = { 
   active: true, id: '',
@@ -333,7 +333,7 @@ const discount: DiscountUpsertType = {
   info: {
     details: {
       meta: enums.DiscountMetaEnum.bundle,
-      /** @type {import('@storecraft/core/v-api').BundleDiscountExtra} */
+      /** @type {import('@storecraft/core/api').BundleDiscountExtra} */
       extra: {
         fixed: 0, percent: 50, recursive: false
       }
@@ -341,12 +341,12 @@ const discount: DiscountUpsertType = {
     filters: [ // in bundle, each filter is part of the bundle
       { 
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
         value: ['robot_arm']
       },
       { 
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
         value: ['robot_leg']
       }
 
@@ -363,8 +363,8 @@ await app.api.discounts.upsert(discount);
 
 
 ```ts
-import { enums } from '@storecraft/core/v-api';
-import type { DiscountUpsertType } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
+import type { DiscountUpsertType } from '@storecraft/core/api';
 
 const discount: DiscountUpsertType = { 
   active: true, id: '',
@@ -375,7 +375,7 @@ const discount: DiscountUpsertType = {
   info: {
     details: {
       meta: enums.DiscountMetaEnum.buy_x_get_y,
-      /** @type {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} */
+      /** @type {import('@storecraft/core/api').BuyXGetYDiscountExtra} */
       extra: {
         fixed: 0, percent: 50,
         recursive: false,
@@ -384,7 +384,7 @@ const discount: DiscountUpsertType = {
         filters_y: [
           { // get y filters
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_arm']
           },
         ]
@@ -394,7 +394,7 @@ const discount: DiscountUpsertType = {
     filters: [ // in buy x get y, each filter is part of the buy x
       { 
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
         value: ['robot_leg']
       },
     ]

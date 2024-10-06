@@ -8,7 +8,7 @@ import esMain from './utils.esmain.js';
 
 const handle = create_handle('ship', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core/v-api').ShippingMethodTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').ShippingMethodTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle(), title: 'ship 1', price: 50

@@ -83,7 +83,7 @@ const DangerousHTMLView = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/v-api').TemplateType["template_html" | "template_text"]> 
+ *   import('@storecraft/core/api').TemplateType["template_html" | "template_text"]> 
  * } TemplateTemplateParams
  * 
  * @param {TemplateTemplateParams & 

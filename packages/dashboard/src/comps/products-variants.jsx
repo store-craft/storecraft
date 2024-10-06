@@ -16,9 +16,9 @@ import useNavigateWithState, {
 /**
  * 
  * @typedef {object} ProductOptionParams
- * @property {import('@storecraft/core/v-api').VariantOption} option
- * @property {(option: import('@storecraft/core/v-api').VariantOption) => void} onRemove
- * @property {(option: import('@storecraft/core/v-api').VariantOption) => void} onChange
+ * @property {import('@storecraft/core/api').VariantOption} option
+ * @property {(option: import('@storecraft/core/api').VariantOption) => void} onRemove
+ * @property {(option: import('@storecraft/core/api').VariantOption) => void} onChange
  * 
  * @param {ProductOptionParams} params
  */
@@ -34,7 +34,7 @@ const ProductOption = (
   const ref_value = useRef()
 
   const onChangeInternal = useCallback(
-    /** @param {import('@storecraft/core/v-api').VariantOption} option */
+    /** @param {import('@storecraft/core/api').VariantOption} option */
     (option) => {
       setO(option)
       onChange && onChange(option)
@@ -42,7 +42,7 @@ const ProductOption = (
   )
 
   const onClickCapsule = useCallback(
-    /**@param {import('@storecraft/core/v-api').TextEntity} value */
+    /**@param {import('@storecraft/core/api').TextEntity} value */
     value => {
       const mod = {
         ...o,
@@ -70,7 +70,7 @@ const ProductOption = (
       if(value?.trim()==='')
         return
 
-      /**@type {import('@storecraft/core/v-api').TextEntity} */
+      /**@type {import('@storecraft/core/api').TextEntity} */
       const v = {
         id: uuidv4(), value
       }
@@ -135,8 +135,8 @@ const ProductOption = (
 /**
  * 
  * @typedef {object} ProductOptionsParams
- * @property {import('@storecraft/core/v-api').VariantOption[]} options
- * @property {(option: import('@storecraft/core/v-api').VariantOption[]) => void} onChange
+ * @property {import('@storecraft/core/api').VariantOption[]} options
+ * @property {(option: import('@storecraft/core/api').VariantOption[]) => void} onChange
  * 
  * @param {ProductOptionsParams} params
  */
@@ -149,7 +149,7 @@ const ProductOptions = (
   const [opts, setOptions] = useState(options)
 
   const onChangeOption = useCallback(
-    /** @param {import('@storecraft/core/v-api').VariantOption} option */
+    /** @param {import('@storecraft/core/api').VariantOption} option */
     (option) => {
       const idx = opts?.findIndex(
         op => op.id===option.id
@@ -165,7 +165,7 @@ const ProductOptions = (
   );
 
   const onRemoveOption = useCallback(
-    /** @param {import('@storecraft/core/v-api').VariantOption} option */
+    /** @param {import('@storecraft/core/api').VariantOption} option */
     (option) => {
       let mod = [
         ...opts.filter(o => o.id!==option.id)
@@ -177,7 +177,7 @@ const ProductOptions = (
 
   const onAddOption = useCallback(
     () => {
-      /** @type {import('@storecraft/core/v-api').VariantOption} */
+      /** @type {import('@storecraft/core/api').VariantOption} */
       const option = {
         id: uuidv4(), 
         name: '',
@@ -241,8 +241,8 @@ const compute_combinations = (idx, collection=[]) => {
 
 /**
  * 
- * @param {import('@storecraft/core/v-api').VariantOptionSelection[]} c1 
- * @param {import('@storecraft/core/v-api').VariantOptionSelection[]} c2 
+ * @param {import('@storecraft/core/api').VariantOptionSelection[]} c1 
+ * @param {import('@storecraft/core/api').VariantOptionSelection[]} c2 
  */
 const compareCombinations = (c1, c2) => {
 
@@ -259,8 +259,8 @@ const compareCombinations = (c1, c2) => {
 /**
  * 
  * @typedef {object} VariantParams
- * @prop {import('@storecraft/core/v-api').VariantOption[]} options
- * @prop {import('@storecraft/core/v-api').VariantOptionSelection[]} combination
+ * @prop {import('@storecraft/core/api').VariantOption[]} options
+ * @prop {import('@storecraft/core/api').VariantOptionSelection[]} combination
  * @prop {Context} context
  * @prop {(error: string) => void} setError
  * 
@@ -294,7 +294,7 @@ const Variant = (
   )
 
   // TODO: requires testing
-  /**@type {Object.<string, import('@storecraft/core/v-api').VariantCombination>} */
+  /**@type {Object.<string, import('@storecraft/core/api').VariantCombination>} */
   const variants_products = context?.data?.variants?.reduce(
     (p, it) => {
       p[it.handle] = {
@@ -422,7 +422,7 @@ const Variant = (
 /**
  * 
  * @typedef {object} VariantsViewParams
- * @prop {import('@storecraft/core/v-api').VariantOption[]} options
+ * @prop {import('@storecraft/core/api').VariantOption[]} options
  * @prop {Context} context
  * @prop {(error: string) => void} setError 
  * 
@@ -434,7 +434,7 @@ const VariantsView = (
   }
 ) => {
 
-  /**@type {import('@storecraft/core/v-api').VariantOptionSelection[][]} */
+  /**@type {import('@storecraft/core/api').VariantOptionSelection[][]} */
   const combinations = useMemo(
     () => {
       const collections = options?.map(
@@ -495,14 +495,14 @@ const IamVariant = ({ context, ...rest }) => {
 
 /**
  * @typedef {import('./fields-view.jsx').FieldContextData<
- *  import('@storecraft/core/v-api').VariantType & 
- *  import('@storecraft/core/v-api').ProductType> & 
+ *  import('@storecraft/core/api').VariantType & 
+ *  import('@storecraft/core/api').ProductType> & 
  *  import('../pages/product.jsx').Context
  * } Context
  * 
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').VariantOption[], 
+ *  import('@storecraft/core/api').VariantOption[], 
  *  Context> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } params
@@ -517,7 +517,7 @@ const ProductVariants = (
   const [v, setV] = useState(value)
 
   const onChangeOptions = useCallback(
-    /** @param {import('@storecraft/core/v-api').VariantOption[]} options */
+    /** @param {import('@storecraft/core/api').VariantOption[]} options */
     (options) => {
       setV(options)
       onChange && onChange(options)

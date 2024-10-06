@@ -11,7 +11,7 @@ import {
 
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_posts} db_col
+ * @typedef {import('@storecraft/core/database').db_posts} db_col
  */
 
 /**

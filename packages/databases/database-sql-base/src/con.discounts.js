@@ -1,4 +1,4 @@
-import { enums } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/api'
 import { SQL } from '../index.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { delete_entity_values_by_value_or_reporter, 
@@ -12,7 +12,7 @@ import { query_to_eb, query_to_sort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_discounts} db_col
+ * @typedef {import('@storecraft/core/database').db_discounts} db_col
  */
 export const table_name = 'discounts'
 

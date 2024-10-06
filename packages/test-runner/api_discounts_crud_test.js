@@ -1,14 +1,14 @@
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 
 // const app = await create_app();
 
-/** @type {import('@storecraft/core/v-api').DiscountTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').DiscountTypeUpsert[]} */
 const items_upsert = [
   {
     active: true, 

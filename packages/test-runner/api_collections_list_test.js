@@ -5,7 +5,7 @@ import { create_handle, file_name,
   iso, add_list_integrity_tests} from './api.utils.crud.js';
 import { App } from '@storecraft/core';
 import esMain from './utils.esmain.js';
-import { ID } from '@storecraft/core/v-api/utils.func.js';
+import { ID } from '@storecraft/core/api/utils.func.js';
 
 const handle = create_handle('col', file_name(import.meta.url));
 
@@ -16,8 +16,8 @@ const handle = create_handle('col', file_name(import.meta.url));
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').CollectionType & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/api').CollectionType & 
+ *  import('@storecraft/core/database').idable_concrete
  * )[]} 
  */
 const items = Array.from({length: 10}).map(

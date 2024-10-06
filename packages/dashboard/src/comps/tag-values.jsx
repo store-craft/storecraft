@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react"
 import CapsulesView from "./capsules-view.jsx"
 import { BlingInput } from "./common-ui.jsx"
 import { BlingButton } from "./common-button.jsx"
-import { to_handle } from "@storecraft/core/v-api/utils.func.js"
+import { to_handle } from "@storecraft/core/api/utils.func.js"
 
 /**
  * @param {string} text 

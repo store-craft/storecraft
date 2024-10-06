@@ -7,8 +7,8 @@ import {
  * @description Base `notifications` **CRUD**
  * 
  * @extends {collection_base<
- *  import('@storecraft/core/v-api').NotificationTypeUpsert, 
- *  import('@storecraft/core/v-api').NotificationType>
+ *  import('@storecraft/core/api').NotificationTypeUpsert, 
+ *  import('@storecraft/core/api').NotificationType>
  * }
  */
 export default class Notifications extends collection_base {
@@ -23,7 +23,7 @@ export default class Notifications extends collection_base {
 
   /**
    * 
-   * @param {import('@storecraft/core/v-api').NotificationTypeUpsert[]} items 
+   * @param {import('@storecraft/core/api').NotificationTypeUpsert[]} items 
    */
   upsertBulk = items => {
     return fetchApiWithAuth(

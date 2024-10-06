@@ -14,8 +14,8 @@ import esMain from './utils.esmain.js';
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').NotificationType & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/api').NotificationType & 
+ *  import('@storecraft/core/database').idable_concrete
  * )[]} 
  */
 const items = get_static_ids('not').map(

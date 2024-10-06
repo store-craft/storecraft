@@ -5,8 +5,8 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
  * @description Base `storefronts` **CRUD**
  * 
  * @extends {collection_base<
- *  import('@storecraft/core/v-api').StorefrontTypeUpsert, 
- *  import('@storecraft/core/v-api').StorefrontType>
+ *  import('@storecraft/core/api').StorefrontTypeUpsert, 
+ *  import('@storecraft/core/api').StorefrontType>
  * }
  */
 export default class Storefronts extends collection_base {
@@ -24,7 +24,7 @@ export default class Storefronts extends collection_base {
    * beneficial for `collections`, that hardly change and therefore can be 
    * efficiently stored in a cost-effective `storage` and **CDN** network.
    * 
-   * @param {import('@storecraft/core/v-database').HandleOrId} handle_or_id
+   * @param {import('@storecraft/core/database').HandleOrId} handle_or_id
    */
   publish = async (handle_or_id) => {
 

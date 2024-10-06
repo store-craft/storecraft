@@ -7,8 +7,8 @@ import { GradientFillIcon } from './common-button.jsx'
 /**
  * 
  * @typedef {object} InnerAttrParams
- * @prop {import('@storecraft/core/v-api').AttributeType} attribute
- * @prop {(attribute: import('@storecraft/core/v-api').AttributeType) => void} onChange
+ * @prop {import('@storecraft/core/api').AttributeType} attribute
+ * @prop {(attribute: import('@storecraft/core/api').AttributeType) => void} onChange
  * @prop {() => void} onDelete
  * 
  * 
@@ -82,7 +82,7 @@ const Attribute = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').AttributeType[]> & 
+ *  import('@storecraft/core/api').AttributeType[]> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } AttributesParams
  * 
@@ -112,7 +112,7 @@ const Attributes = (
     /**
      * 
      * @param {number} idx 
-     * @param {import('@storecraft/core/v-api').AttributeType} val 
+     * @param {import('@storecraft/core/api').AttributeType} val 
      */
     (idx, val) => {
       const newAtts = [...atts];

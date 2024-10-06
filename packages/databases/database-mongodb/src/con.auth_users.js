@@ -6,7 +6,7 @@ import {
 } from './con.shared.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
+ * @typedef {import('@storecraft/core/database').db_auth_users} db_col
  */
 
 /**
@@ -33,7 +33,7 @@ const get = (driver) => {
   return async (id_or_email) => {
     const filter = objid_or_else_filter(id_or_email, 'email');
 
-    /** @type {import('@storecraft/core/v-api').AuthUserType} */
+    /** @type {import('@storecraft/core/api').AuthUserType} */
     const res = await col(driver).findOne(
       filter
     );
@@ -52,7 +52,7 @@ const getByEmail = (driver) => {
   return async (email) => {
     const filter = { email: email };
 
-    /** @type {import('@storecraft/core/v-api').AuthUserType} */
+    /** @type {import('@storecraft/core/api').AuthUserType} */
     const res = await col(driver).findOne(
       filter
     );
@@ -100,7 +100,7 @@ const remove = (driver) => {
  */
 const removeByEmail = (driver) => {
   return async (email) => {
-    /** @type {import('@storecraft/core/v-api').AuthUserType} */
+    /** @type {import('@storecraft/core/api').AuthUserType} */
     await col(driver).deleteOne(
       { email }
     );

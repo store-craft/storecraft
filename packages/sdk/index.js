@@ -19,8 +19,8 @@ import Storage from './src/storage.js'
 
 
 /**
- * @typedef {import('@storecraft/core/v-api').ApiAuthResult |
- *  import('@storecraft/core/v-api').ApiKeyResult
+ * @typedef {import('@storecraft/core/api').ApiAuthResult |
+ *  import('@storecraft/core/api').ApiKeyResult
  * } SdkConfigAuth The `storecraft` **SDK** `auth` config, represents
  * either `apikey` or `jwt` authentication
  * 

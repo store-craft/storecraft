@@ -1,6 +1,6 @@
 import { Db, MongoClient } from 'mongodb';
 import { MongoDB } from '../index.js'
-import { templates } from '@storecraft/core/v-assets/seed-templates.js'
+import { templates } from '@storecraft/core/assets/seed-templates.js'
 
 /**
  * 

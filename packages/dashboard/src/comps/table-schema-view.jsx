@@ -1,6 +1,6 @@
 
 /**
- * @template {any | import("@storecraft/core/v-api").BaseType} T
+ * @template {any | import("@storecraft/core/api").BaseType} T
  * 
  * @typedef {object} TableSchemaViewContext The context provided to 
  * components of `TableSchemaView`
@@ -65,7 +65,7 @@ const getValue = (key, item, transform = x => x) => {
  * @param {object} p
  * @param {any} p.context anything to pass to component
  * @param {TableSchemaViewField<T>[]} p.fields the fields schema
- * @param {import("@storecraft/core/v-api").BaseType[]} p.data the data
+ * @param {import("@storecraft/core/api").BaseType[]} p.data the data
  * @param {string} p.recordClassName
  * @param {string} [p.className]
  */
@@ -79,7 +79,7 @@ const Table = (
   /**
    * 
    * @param {object} param0 
-   * @param {import("@storecraft/core/v-api").BaseType} param0.item 
+   * @param {import("@storecraft/core/api").BaseType} param0.item 
    * @param {string} [param0.className] 
    */
   const Record = ({ item, className, ...rest }) => {

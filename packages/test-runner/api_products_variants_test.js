@@ -11,7 +11,7 @@ const handle_pr = create_handle('pr', file_name(import.meta.url));
 const handle_var = create_handle('var', file_name(import.meta.url));
 
 
-/** @type {import('@storecraft/core/v-api').ProductType} */
+/** @type {import('@storecraft/core/api').ProductType} */
 const pr_upsert = {
   id: get_static_ids('pr').at(0),
   handle: handle_pr(),
@@ -31,7 +31,7 @@ const pr_upsert = {
   ],
 }
 
-/** @type {import('@storecraft/core/v-api').VariantTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').VariantTypeUpsert[]} */
 const var_upsert = [
   {
     handle: handle_var(),

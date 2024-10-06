@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useIndexDB } from "./useIndexDB.js"
 import { 
   api_query_to_searchparams 
-} from "@storecraft/core/v-api/utils.query.js";
+} from "@storecraft/core/api/utils.query.js";
 
 /**
  * @template T
@@ -17,7 +17,7 @@ import {
  * A `react-hook` for managing cached documents
  * 
  * 
- * @template {Partial<import("@storecraft/core/v-api").BaseType>} T
+ * @template {Partial<import("@storecraft/core/api").BaseType>} T
  * 
  */
 export const useDocumentCache = () => {
@@ -134,7 +134,7 @@ export const useMiscCache = () => {
  * A `react-hook` for managing cached queries
  * 
  * 
- * @template {Partial<import("@storecraft/core/v-api").BaseType>} T
+ * @template {Partial<import("@storecraft/core/api").BaseType>} T
  * 
  * 
  */
@@ -151,7 +151,7 @@ export const useQueryCache = () => {
   const get = useCallback(
     /**
      * @param {string} resource the `table` / `resource` name
-     * @param {import("@storecraft/core/v-api").ApiQuery} query 
+     * @param {import("@storecraft/core/api").ApiQuery} query 
      * 
      */
     (resource, query) => {
@@ -164,7 +164,7 @@ export const useQueryCache = () => {
   const put = useCallback(
     /**
      * @param {string} resource the `table` / `resource` name
-     * @param {import("@storecraft/core/v-api").ApiQuery} query 
+     * @param {import("@storecraft/core/api").ApiQuery} query 
      * @param {T[]} items 
      * 
      */
@@ -178,7 +178,7 @@ export const useQueryCache = () => {
   const remove = useCallback(
     /**
      * @param {string} resource the `table` / `resource` name
-     * @param {import("@storecraft/core/v-api").ApiQuery} query 
+     * @param {import("@storecraft/core/api").ApiQuery} query 
      * 
      */
     (resource, query) => {

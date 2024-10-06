@@ -38,7 +38,7 @@ export const SettingsChangePassword = (
   const ref_new_pass = useRef();
   /** @type {React.LegacyRef<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>} */
   const ref_confirm_new_pass = useRef();
-  /** @type {ReturnType<typeof useState<import("@storecraft/core/v-api").error>>} */
+  /** @type {ReturnType<typeof useState<import("@storecraft/core/api").error>>} */
   const [error, setError] = useState();
   const [success, setSuccess] = useState(false);
 

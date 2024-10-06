@@ -7,8 +7,8 @@ import {
  * @description Base `products` **CRUD**
  * 
  * @extends {collection_base<
- *  import('@storecraft/core/v-api').ProductTypeUpsert, 
- *  import('@storecraft/core/v-api').ProductType>
+ *  import('@storecraft/core/api').ProductTypeUpsert, 
+ *  import('@storecraft/core/api').ProductType>
  * }
  */
 export default class Products extends collection_base {
@@ -44,8 +44,8 @@ export default class Products extends collection_base {
   /**
    * Add `products` to `collection`
    * 
-   * @param {import('@storecraft/core/v-api').ProductType[]} products 
-   * @param {import('@storecraft/core/v-api').CollectionType} collection 
+   * @param {import('@storecraft/core/api').ProductType[]} products 
+   * @param {import('@storecraft/core/api').CollectionType} collection 
    */
   batchAddProductsToCollection = async (products, collection) => {
     for (const pr of products) {
@@ -59,8 +59,8 @@ export default class Products extends collection_base {
   /**
    * Remove `products` from `collection`
    * 
-   * @param {import('@storecraft/core/v-api').ProductType[]} products 
-   * @param {import('@storecraft/core/v-api').CollectionType} collection 
+   * @param {import('@storecraft/core/api').ProductType[]} products 
+   * @param {import('@storecraft/core/api').CollectionType} collection 
    */
   batchRemoveProductsFromCollection = async (products, collection) => {
     for (const pr of products) {

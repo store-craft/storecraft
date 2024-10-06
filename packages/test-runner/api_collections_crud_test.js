@@ -15,7 +15,7 @@ const handle = create_handle('col', file_name(import.meta.url));
  */
 export const create = app => {
 
-  /** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').CollectionTypeUpsert[]} */
   const items_upsert = [
     {
       active: true,

@@ -1,12 +1,12 @@
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import { create_title_gen, file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
-import { calculate_pricing } from '@storecraft/core/v-api/con.pricing.logic.js';
-import { to_handle } from '@storecraft/core/v-api/utils.func.js';
-import { UniformTaxes } from '@storecraft/core/v-tax';
+import { calculate_pricing } from '@storecraft/core/api/con.pricing.logic.js';
+import { to_handle } from '@storecraft/core/api/utils.func.js';
+import { UniformTaxes } from '@storecraft/core/tax';
 
 
 /**
@@ -39,7 +39,7 @@ const title_gen = create_title_gen('product')
  * 
  * @param {string} tag 
  * 
- * @returns {import('@storecraft/core/v-api').ProductType} 
+ * @returns {import('@storecraft/core/api').ProductType} 
  */
 const gen_product = (tag='regular') => {
   const title = title_gen();
@@ -75,7 +75,7 @@ export const create = () => {
 
     const title = 'regular discount: 10% OFF only';
 
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_regular = { 
       id: '',
       active: true, 
@@ -86,7 +86,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.regular,
-          /** @type {import('@storecraft/core/v-api').RegularDiscountExtra} */
+          /** @type {import('@storecraft/core/api').RegularDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
           }
@@ -94,7 +94,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['regular']
           }
         ]
@@ -169,7 +169,7 @@ export const create = () => {
 
     const title = 'bulk discount: 3 for 100 recursive';
 
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_bulk_3_for_100_recursive = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -179,7 +179,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.bulk,
-          /** @type {import('@storecraft/core/v-api').BulkDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BulkDiscountExtra} */
           extra: {
             qty: 3,
             percent: 100,
@@ -190,7 +190,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['bulk']
           }
         ]
@@ -276,7 +276,7 @@ export const create = () => {
   s('bulk discount: 3 for 100 NON recursive ', async (ctx) => {
 
     const title = 'bulk discount: 3 for 100 NON recursive';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_bulk_3_for_100_recursive = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -286,7 +286,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.bulk,
-          /** @type {import('@storecraft/core/v-api').BulkDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BulkDiscountExtra} */
           extra: {
             qty: 3,
             percent: 100,
@@ -297,7 +297,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['bulk']
           }
         ]
@@ -383,7 +383,7 @@ export const create = () => {
   s('bundle discount: 50% OFF Bundle: Should NOT discount', async (ctx) => {
 
     const title = 'bundle discount: 50% OFF Bundle: Should NOT discount'
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -393,7 +393,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.bundle,
-          /** @type {import('@storecraft/core/v-api').BundleDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BundleDiscountExtra} */
           extra: {
             fixed: 0, percent: 50, recursive: false
           }
@@ -401,12 +401,12 @@ export const create = () => {
         filters: [ // in bundle, each filter is part of the bundle
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_arm']
           },
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_arm']
           }
 
@@ -463,7 +463,7 @@ export const create = () => {
   s('bundle discount: 50% OFF Bundle: robot arms and legs (not recursive)', async (ctx) => {
 
     const title = 'bundle discount: 50% OFF Bundle: robot arms and legs (not recursive)'
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -473,7 +473,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.bundle,
-          /** @type {import('@storecraft/core/v-api').BundleDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BundleDiscountExtra} */
           extra: {
             fixed: 0, percent: 50, recursive: false
           }
@@ -481,12 +481,12 @@ export const create = () => {
         filters: [ // in bundle, each filter is part of the bundle
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_arm']
           },
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_leg']
           }
 
@@ -573,7 +573,7 @@ export const create = () => {
   s('bundle discount: 50% OFF Bundle: robot arms and legs (recursive as much as possible)', async (ctx) => {
 
     const title = 'bundle discount: 50% OFF Bundle: robot arms and legs (recursive as much as possible)';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -583,7 +583,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.bundle,
-          /** @type {import('@storecraft/core/v-api').BundleDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BundleDiscountExtra} */
           extra: {
             fixed: 0, percent: 50, recursive: true
           }
@@ -591,12 +591,12 @@ export const create = () => {
         filters: [ // in bundle, each filter is part of the bundle
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_arm']
           },
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_leg']
           }
 
@@ -682,7 +682,7 @@ export const create = () => {
   s('buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF, only once not recursive', async (ctx) => {
 
     const title = 'buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF, only once not recursive';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -692,7 +692,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.buy_x_get_y,
-          /** @type {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BuyXGetYDiscountExtra} */
           extra: {
             fixed: 0, percent: 50,
             recursive: false,
@@ -701,7 +701,7 @@ export const create = () => {
             filters_y: [
               { 
                 meta: enums.FilterMetaEnum.p_in_tags,
-                /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+                /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
                 value: ['robot_arm']
               },
             ]
@@ -711,7 +711,7 @@ export const create = () => {
         filters: [ // in bundle, each filter is part of the bundle
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_leg']
           },
         ]
@@ -785,7 +785,7 @@ export const create = () => {
   s('buy X get Y discount: Buy 1 robot legs -> Get 1 Robot arms for 50% OFF, recursive, applied as much as possible', async (ctx) => {
 
     const title = 'buy X get Y discount: Buy 1 robot legs -> Get 1 Robot arms for 50% OFF, recursive, applied as much as possible';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount_regular = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -795,7 +795,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.buy_x_get_y,
-          /** @type {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} */
+          /** @type {import('@storecraft/core/api').BuyXGetYDiscountExtra} */
           extra: {
             fixed: 0, percent: 50,
             recursive: true,
@@ -804,7 +804,7 @@ export const create = () => {
             filters_y: [
               { 
                 meta: enums.FilterMetaEnum.p_in_tags,
-                /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+                /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
                 value: ['robot_arm']
               },
             ]
@@ -814,7 +814,7 @@ export const create = () => {
         filters: [ // in bundle, each filter is part of the bundle
           { 
             meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
             value: ['robot_leg']
           },
         ]
@@ -897,7 +897,7 @@ export const create = () => {
 
   s('order discount: 10% OFF IF order subtotal >= 300', async (ctx) => {
     const title = '10% OFF Order with sub-total >= 300';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -907,7 +907,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.order,
-          /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+          /** @type {import('@storecraft/core/api').OrderDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
           }
@@ -915,7 +915,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.o_subtotal_in_range,
-            /** @type {import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range} */
+            /** @type {import('@storecraft/core/api').FilterValue_o_subtotal_in_range} */
             value: {
               from: 300
             }
@@ -1050,7 +1050,7 @@ export const create = () => {
   s('order discount: 10% OFF IF order In the Next 60 seconds', async (ctx) => {
 
     const title = 'order discount: 10% OFF IF order In the Next 60 seconds';
-    /** @satisfies {import('@storecraft/core/v-api').DiscountType} */
+    /** @satisfies {import('@storecraft/core/api').DiscountType} */
     const discount = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -1060,7 +1060,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.order,
-          /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+          /** @type {import('@storecraft/core/api').OrderDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
           }
@@ -1068,7 +1068,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.o_date_in_range,
-            /** @type {import('@storecraft/core/v-api').FilterValue_o_date_in_range} */
+            /** @type {import('@storecraft/core/api').FilterValue_o_date_in_range} */
             value: {
               from: (new Date(Date.now() - 1000)).toISOString(),
               to: (new Date(Date.now() + 1000*60)).toISOString()
@@ -1162,7 +1162,7 @@ export const create = () => {
   s('order discount: 10% OFF IF Items count >= 10', async (ctx) => {
 
     const title = 'order discount: 10% OFF IF Items count >= 10';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -1172,7 +1172,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.order,
-          /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+          /** @type {import('@storecraft/core/api').OrderDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
           }
@@ -1180,7 +1180,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.o_items_count_in_range,
-            /** @type {import('@storecraft/core/v-api').FilterValue_o_items_count_in_range} */
+            /** @type {import('@storecraft/core/api').FilterValue_o_items_count_in_range} */
             value: {
               from: 10
             }
@@ -1292,7 +1292,7 @@ export const create = () => {
   s('order discount: 10% OFF For a specific customers', async (ctx) => {
 
     const title = 'order discount: 10% OFF For a specific customers';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -1302,7 +1302,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.order,
-          /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+          /** @type {import('@storecraft/core/api').OrderDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
           }
@@ -1310,7 +1310,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.o_has_customer,
-            /** @type {import('@storecraft/core/v-api').FilterValue_o_has_customers} */
+            /** @type {import('@storecraft/core/api').FilterValue_o_has_customers} */
             value: [
               {
                 id: 'cus_ID_i_promised_a_discount_to'
@@ -1405,7 +1405,7 @@ export const create = () => {
   s('order discount with 10% taxes: 10% OFF For a specific customers', async (ctx) => {
 
     const title = 'order discount with 10% taxes: 10% OFF For a specific customers';
-    /** @type {import('@storecraft/core/v-api').DiscountType} */
+    /** @type {import('@storecraft/core/api').DiscountType} */
     const discount = { 
       active: true, id: '',
       handle: to_handle(title), 
@@ -1415,7 +1415,7 @@ export const create = () => {
       info: {
         details: {
           meta: enums.DiscountMetaEnum.order,
-          /** @type {import('@storecraft/core/v-api').OrderDiscountExtra} */
+          /** @type {import('@storecraft/core/api').OrderDiscountExtra} */
           extra: {
             fixed: 0, percent: 10
           }
@@ -1423,7 +1423,7 @@ export const create = () => {
         filters: [
           { // discount for a specific product handle
             meta: enums.FilterMetaEnum.o_has_customer,
-            /** @type {import('@storecraft/core/v-api').FilterValue_o_has_customers} */
+            /** @type {import('@storecraft/core/api').FilterValue_o_has_customers} */
             value: [
               {
                 id: 'cus_ID_i_promised_a_discount_to'

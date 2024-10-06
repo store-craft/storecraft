@@ -1,7 +1,7 @@
 
 import { 
   api_query_to_searchparams 
-} from '@storecraft/core/v-api/utils.query.js';
+} from '@storecraft/core/api/utils.query.js';
 import { assert } from './utils.functional.js';
 
 
@@ -76,7 +76,7 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
  * @param {RequestInit} [init] request `init` type
  * 
  * 
- * @throws {import('@storecraft/core/v-api').error}
+ * @throws {import('@storecraft/core/api').error}
  * 
  * @returns {Promise<R>}
  */ 
@@ -183,7 +183,7 @@ export async function remove(sdk, resource, handle_or_id) {
  * 
  * @param {import('../index.js').StorecraftSDK} sdk
  * @param {string} resource base path of resource
- * @param {import('@storecraft/core/v-api').ApiQuery} [query] 
+ * @param {import('@storecraft/core/api').ApiQuery} [query] 
  * 
  * 
  * @returns {Promise<G[]>}
@@ -262,7 +262,7 @@ export class collection_base {
 
   /**
    * 
-   * @param {import('@storecraft/core/v-api').ApiQuery} query Query object
+   * @param {import('@storecraft/core/api').ApiQuery} query Query object
    * 
    * 
    * @returns {Promise<G[]>}

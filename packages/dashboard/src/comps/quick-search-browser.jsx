@@ -24,7 +24,7 @@ const useKeyboardHook_ops = createKeyboardMatchHook(
 
 
 /**
- * @type {Record<keyof import('@storecraft/core/v-database').db_driver["resources"], string>}
+ * @type {Record<keyof import('@storecraft/core/database').db_driver["resources"], string>}
  */
 const resource_to_base_url = {
   'collections': '/pages/collections',
@@ -141,7 +141,7 @@ const Footer = () => {
 
 
 /**
- * @type {Record<keyof import('@storecraft/core/v-database').db_driver["resources"], string>}
+ * @type {Record<keyof import('@storecraft/core/database').db_driver["resources"], string>}
  */
 const to_title = {
   'auth_users': 'auth_users',
@@ -164,7 +164,7 @@ const to_title = {
  * 
  * @typedef {object} SearchGroupParams
  * @prop {string} name
- * @prop {import('@storecraft/core/v-api').QuickSearchResource[]} group
+ * @prop {import('@storecraft/core/api').QuickSearchResource[]} group
  * @prop {number} index The group index
  * @prop {number} selectedItemIndex The item index
  * @prop {boolean} [scrollIntoView=true] The item index
@@ -236,7 +236,7 @@ const SearchGroup = (
 /** 
  * @typedef {object} QuickSearchBrowserParams
  * @prop {() => any} [onCancel]
- * @prop {(name: string, value: import('@storecraft/core/v-api').QuickSearchResource) => any} [onSelect]
+ * @prop {(name: string, value: import('@storecraft/core/api').QuickSearchResource) => any} [onSelect]
  * 
  * @param {QuickSearchBrowserParams} params
  */

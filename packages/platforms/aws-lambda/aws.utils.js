@@ -1,4 +1,4 @@
-import { base64 } from '@storecraft/core/v-crypto'
+import { base64 } from '@storecraft/core/crypto'
 
 /**
  * @description Implementation is taken from `hono` project and adapted to jsdocs

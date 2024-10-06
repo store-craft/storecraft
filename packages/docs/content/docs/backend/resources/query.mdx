@@ -9,7 +9,7 @@ All resources have a query functionality.
 The main query object is `ApiQuery`
 
 ```ts
-import type { ApiQuery } from '@storecraft/core/v-api'
+import type { ApiQuery } from '@storecraft/core/api'
 
 ```
 
@@ -17,7 +17,7 @@ Which, approximately have the following shape
 
 ```ts
 // Query types
-import type { VQL } from '../v-ql/types.js';
+import type { VQL } from '../vql/types.js';
 export type ApiQuerySortOrder = 'asc' | 'desc';
 export type Tuple<T extends string> = [key: string, value: T];
 export type Cursor = Tuple<string>[];

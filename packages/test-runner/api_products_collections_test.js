@@ -9,7 +9,7 @@ import { assert_partial, assert_partial_minus_relations } from './utils.js';
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').CollectionTypeUpsert[]} */
 const col_upsert = [
   {
     active: true,
@@ -25,7 +25,7 @@ const col_upsert = [
   },
 ]
 
-/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
 const pr_upsert = [
   {
     handle: handle_pr(),

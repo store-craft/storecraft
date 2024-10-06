@@ -12,7 +12,7 @@
  * - CVC code: 897
  * 
  * @param {import("./types.public.d.ts").Config} config 
- * @param {Partial<import("@storecraft/core/v-api").OrderData>} order_data 
+ * @param {Partial<import("@storecraft/core/api").OrderData>} order_data 
  */
 export default function html_buy_ui(config, order_data) {
 

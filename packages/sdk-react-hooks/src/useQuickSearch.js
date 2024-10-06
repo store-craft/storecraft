@@ -6,7 +6,7 @@ import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { useStorecraft } from './useStorecraft.js'
 
 
-/** @type {import('@storecraft/core/v-api').ApiQuery} */
+/** @type {import('@storecraft/core/api').ApiQuery} */
 const q_initial = {
   sortBy: ['updated_at', 'id'],
   order: 'desc',
@@ -16,7 +16,7 @@ const q_initial = {
 
 /**
  * 
- * @typedef {import('@storecraft/core/v-api').QuickSearchResult} QuickSearchResult
+ * @typedef {import('@storecraft/core/api').QuickSearchResult} QuickSearchResult
  */
 
 /**
@@ -38,7 +38,7 @@ export const useQuickSearch = (
   
   const query = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ApiQuery} q query object
+     * @param {import('@storecraft/core/api').ApiQuery} q query object
      * @param {boolean} [from_cache] 
      */
     async (q, from_cache=true) => {

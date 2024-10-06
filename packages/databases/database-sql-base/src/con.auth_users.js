@@ -7,7 +7,7 @@ import { count_regular, delete_me, insert_search_of, insert_tags_of, regular_ups
 import { query_to_eb, query_to_sort } from './utils.query.js';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_auth_users} db_col
+ * @typedef {import('@storecraft/core/database').db_auth_users} db_col
  */
 
 export const table_name = 'auth_users';

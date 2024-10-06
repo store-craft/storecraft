@@ -8,7 +8,7 @@ import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').StorefrontType, any, any
+ *  import('@storecraft/core/api').StorefrontType, any, any
  * >[]}
  */
 const schema_fields = [
@@ -32,7 +32,7 @@ export default ({}) => {
 
   /**
    * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  import('@storecraft/core/v-api').StorefrontType>
+   *  import('@storecraft/core/api').StorefrontType>
    * }
    */ 
   const { 

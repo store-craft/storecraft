@@ -83,7 +83,7 @@ const trans_or_batch = (driver) => {
  * @param {SQL} driver 
  * @param {keyof Database} table_name 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud["count"]}
+ * @returns {import('@storecraft/core/database').db_crud["count"]}
  */
 export const count_regular = (driver, table_name) => {
   return async (query) => {

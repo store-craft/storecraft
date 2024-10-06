@@ -8,9 +8,9 @@ import { SimpleLink } from './common-table-fields.jsx'
 /**
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *    import('@storecraft/core/v-api').CustomerType,
+ *    import('@storecraft/core/api').CustomerType,
  *    import('../pages/customer.jsx').Context,
- *    import('@storecraft/core/v-api').CustomerType
+ *    import('@storecraft/core/api').CustomerType
  *  > &
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } params 

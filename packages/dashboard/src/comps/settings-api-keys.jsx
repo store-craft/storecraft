@@ -11,8 +11,8 @@ import { CiBookmarkRemove } from "react-icons/ci/index.js";
 /**
  * 
  * @param {object} params
- * @param {import("@storecraft/core/v-api").AuthUserType} params.user
- * @param {(user: import("@storecraft/core/v-api").AuthUserType) => Promise<void>} params.removePromise
+ * @param {import("@storecraft/core/api").AuthUserType} params.user
+ * @param {(user: import("@storecraft/core/api").AuthUserType) => Promise<void>} params.removePromise
  */
 const ApikeyUser = (
   {
@@ -75,10 +75,10 @@ export const SettingsApiKeys = (
     }
   } = useAuth();
 
-  /** @type {ReturnType<typeof useState<import("@storecraft/core/v-api").AuthUserType[]>>} */
+  /** @type {ReturnType<typeof useState<import("@storecraft/core/api").AuthUserType[]>>} */
   const [apikeyUsers, setApikeysUsers] = useState([]);
   const [latestApiKey, setLatestApiKey] = useState('');
-  /** @type {ReturnType<typeof useState<import("@storecraft/core/v-api").error>>} */
+  /** @type {ReturnType<typeof useState<import("@storecraft/core/api").error>>} */
   const [error, setError] = useState();
 
   useEffect(
@@ -96,7 +96,7 @@ export const SettingsApiKeys = (
   const removePromise = useCallback(
     /**
      * 
-     * @param {import("@storecraft/core/v-api").AuthUserType} user 
+     * @param {import("@storecraft/core/api").AuthUserType} user 
      */
     (user) => {
       return remove(user.id).then(fetchApiKeyUsers).catch(setError);

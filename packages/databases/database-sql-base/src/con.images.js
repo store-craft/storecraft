@@ -1,4 +1,4 @@
-import { func } from '@storecraft/core/v-api'
+import { func } from '@storecraft/core/api'
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, 
   insert_search_of, regular_upsert_me, where_id_or_handle_table 
@@ -6,13 +6,13 @@ import { count_regular, delete_me, delete_search_of,
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
-import { ID } from '@storecraft/core/v-api/utils.func.js'
+import { ID } from '@storecraft/core/api/utils.func.js'
 import { 
   image_url_to_handle, image_url_to_name 
-} from '@storecraft/core/v-api/con.images.logic.js'
+} from '@storecraft/core/api/con.images.logic.js'
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_images} db_col
+ * @typedef {import('@storecraft/core/database').db_images} db_col
  */
 export const table_name = 'images'
 

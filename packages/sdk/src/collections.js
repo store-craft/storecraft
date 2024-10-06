@@ -6,8 +6,8 @@ import { filter_fields, filter_unused } from './utils.functional.js';
  * @description Base `collections` **CRUD**
  * 
  * @extends {collection_base<
- *  import('@storecraft/core/v-api').CollectionTypeUpsert, 
- *  import('@storecraft/core/v-api').CollectionType>
+ *  import('@storecraft/core/api').CollectionTypeUpsert, 
+ *  import('@storecraft/core/api').CollectionType>
  * }
  */
 export default class Collections extends collection_base {

@@ -9,14 +9,14 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Overlay } from './overlay.jsx';
 import { BrowseCustomers, BrowseProducts } from './resource-browse.jsx'
 import { BlingButton } from './common-button.jsx'
-import { FilterMetaEnum } from '@storecraft/core/v-api/types.api.enums.js'
+import { FilterMetaEnum } from '@storecraft/core/api/types.api.enums.js'
 import { SelectTags } from './tags-edit.jsx'
 import { extract_contact_field } from '../pages/customers.jsx'
 import useNavigateWithState from '../hooks/useNavigateWithState.jsx'
  
 /**
  * 
- * @param {import('@storecraft/core/v-api').Filter["meta"][]} v 
+ * @param {import('@storecraft/core/api').Filter["meta"][]} v 
  * @returns 
  */
 export const discount_filters_validator = v => {
@@ -31,9 +31,9 @@ export const discount_filters_validator = v => {
 /**
  * 
  * @typedef {object} Filter_ProductInCollectionsParams
- * @prop {import('@storecraft/core/v-api').FilterValue_p_in_collections} value
+ * @prop {import('@storecraft/core/api').FilterValue_p_in_collections} value
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_p_in_collections) => void
+ *  import('@storecraft/core/api').FilterValue_p_in_collections) => void
  * } onChange
  * @prop {import('../pages/discount.jsx').Context} context
  * 
@@ -50,7 +50,7 @@ const Filter_ProductInCollections = (
 
   /**
    * @type {import('./select-resource.jsx').SelectResourceParams<
-   *  import('@storecraft/core/v-api').CollectionType
+   *  import('@storecraft/core/api').CollectionType
    * >["onSelect"]
    * }
    */
@@ -140,9 +140,9 @@ const Filter_ProductNotInCollections = ( { ...rest } ) => {
 /**
  * 
  * @typedef {object} Filter_ProductHasTagsParams
- * @prop {import('@storecraft/core/v-api').FilterValue_p_in_tags} value
+ * @prop {import('@storecraft/core/api').FilterValue_p_in_tags} value
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_p_in_tags) => void
+ *  import('@storecraft/core/api').FilterValue_p_in_tags) => void
  * } onChange
  * @prop {import('../pages/discount.jsx').Context} context
  * 
@@ -217,9 +217,9 @@ const Filter_ProductHasTags = (
 /**
  * 
  * @typedef {object} Filter_ProductHasHandleParams
- * @prop {import('@storecraft/core/v-api').FilterValue_p_in_products} value
+ * @prop {import('@storecraft/core/api').FilterValue_p_in_products} value
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_p_in_products) => void
+ *  import('@storecraft/core/api').FilterValue_p_in_products) => void
  * } onChange
  * @prop {import('../pages/discount.jsx').Context} context
  * 
@@ -359,9 +359,9 @@ const Filter_ProductNotHasTags = (
 /**
  * 
  * @typedef {object} Filter_ProductPriceInRangeParams
- * @prop {import('@storecraft/core/v-api').FilterValue_p_in_price_range} value
+ * @prop {import('@storecraft/core/api').FilterValue_p_in_price_range} value
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_p_in_price_range) => void
+ *  import('@storecraft/core/api').FilterValue_p_in_price_range) => void
  * } onChange
  * 
  * 
@@ -438,9 +438,9 @@ const Filter_ProductAll = () => (<p children='All products are eligible' />)
 /**
  * 
  * @typedef {object} Filter_OrderSubTotalParams
- * @prop {import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range} value
+ * @prop {import('@storecraft/core/api').FilterValue_o_subtotal_in_range} value
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_o_subtotal_in_range) => void
+ *  import('@storecraft/core/api').FilterValue_o_subtotal_in_range) => void
  * } onChange
  * 
  * 
@@ -500,9 +500,9 @@ const Filter_OrderSubTotal = (
 /**
  * 
  * @typedef {object} Filter_OrderItemCountParams
- * @prop {import('@storecraft/core/v-api').FilterValue_o_items_count_in_range} [value]
+ * @prop {import('@storecraft/core/api').FilterValue_o_items_count_in_range} [value]
  * @prop {(filter_value: 
- *  import('@storecraft/core/v-api').FilterValue_o_items_count_in_range) => void
+ *  import('@storecraft/core/api').FilterValue_o_items_count_in_range) => void
  * } onChange
  * 
  * 
@@ -564,8 +564,8 @@ const Filter_OrderItemCount = (
 /**
  * 
  * @typedef {object} Filter_OrderDateParams
- * @prop {(value: import('@storecraft/core/v-api').FilterValue_o_date_in_range) => void} onChange
- * @prop {import('@storecraft/core/v-api').FilterValue_o_date_in_range} [value]
+ * @prop {(value: import('@storecraft/core/api').FilterValue_o_date_in_range) => void} onChange
+ * @prop {import('@storecraft/core/api').FilterValue_o_date_in_range} [value]
  * 
  * 
  * @param {Filter_OrderDateParams} params
@@ -626,8 +626,8 @@ const Filter_OrderDate = (
 /**
  * 
  * @typedef {object} Filter_OrderHasCustomersParams
- * @prop {(value: import('@storecraft/core/v-api').CustomerType[]) => void} onChange
- * @prop {import('@storecraft/core/v-api').CustomerType[]} value
+ * @prop {(value: import('@storecraft/core/api').CustomerType[]) => void} onChange
+ * @prop {import('@storecraft/core/api').CustomerType[]} value
  * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
@@ -645,7 +645,7 @@ const Filter_OrderHasCustomers = (
   
   /**
    * @type {import('./capsules-view.jsx').CapsulesViewParams<
-   *  import('@storecraft/core/v-api').CustomerType
+   *  import('@storecraft/core/api').CustomerType
    * >["onClick"]}
    */
   const onRemove = useCallback(
@@ -734,11 +734,11 @@ const Filter_OrderHasCustomers = (
  * 
  * @typedef {object} ProductFilterContainerParams
  * @prop {string} name
- * @prop {import('@storecraft/core/v-api').Filter["value"]} value
+ * @prop {import('@storecraft/core/api').Filter["value"]} value
  * @prop {filters_2_comp[0]["Comp"]} Comp
  * @prop {filters_2_comp[0]["CompParams"]} CompParams
- * @prop {import('@storecraft/core/v-api').Filter["meta"]["type"]} type
- * @prop {(value: import('@storecraft/core/v-api').Filter["value"]) => void} onChange
+ * @prop {import('@storecraft/core/api').Filter["meta"]["type"]} type
+ * @prop {(value: import('@storecraft/core/api').Filter["value"]) => void} onChange
  * @prop {() => void} onRemove
  * @prop {number} ix
  * @prop {import('../pages/order.jsx').Context} context
@@ -863,7 +863,7 @@ const fake_data = [
 
 /**
  * 
- * @param {import('@storecraft/core/v-api').Filter["meta"]["id"]} id Filter id
+ * @param {import('@storecraft/core/api').Filter["meta"]["id"]} id Filter id
  */
 const filterId2Comp = id => {
   const filter = filters_2_comp.find(it => it.id===id);
@@ -924,10 +924,10 @@ const AddFilter = (
 /**
  * 
  * @typedef {object} DiscountFiltersParams 
- * @prop {import('@storecraft/core/v-api').Filter[]} value bunch of filters
+ * @prop {import('@storecraft/core/api').Filter[]} value bunch of filters
  * @prop {('product' | 'order')[]} types bunch of filters
  * @prop {(filters: 
- *  import('@storecraft/core/v-api').Filter[]) => void
+ *  import('@storecraft/core/api').Filter[]) => void
  * } onChange bunch of filters
  * @prop {import('../pages/discount.jsx').Context} context
  * 
@@ -947,7 +947,7 @@ const DiscountFilters = (
   const setAndChange = useCallback(
     /**
      * 
-     * @param {import('@storecraft/core/v-api').Filter[]} fs 
+     * @param {import('@storecraft/core/api').Filter[]} fs 
      */
     (fs) => {
       setFilters(fs);
@@ -960,7 +960,7 @@ const DiscountFilters = (
     /**
      * 
      * @param {number} ix Filter index
-     * @param {import('@storecraft/core/v-api').Filter["value"]} v Filter value
+     * @param {import('@storecraft/core/api').Filter["value"]} v Filter value
      */
     (ix, v) => {
       filters[ix].value = v;
@@ -990,7 +990,7 @@ const DiscountFilters = (
     (filter_id) => {
       const fd = filters_2_comp.find(it => it.id==filter_id);
 
-      /** @type {import('@storecraft/core/v-api').Filter} */
+      /** @type {import('@storecraft/core/api').Filter} */
       const f = { 
         meta: {
           id: fd.id, type: fd.type, op: fd.op

@@ -8,8 +8,8 @@ import MDView from './md-view.jsx'
 /**
  * 
  * @typedef {object} ItemParams
- * @prop {import('@storecraft/core/v-api').DiscountType} value `discount`
- * @prop {(value: import('@storecraft/core/v-api').DiscountType) => void} onClick callback
+ * @prop {import('@storecraft/core/api').DiscountType} value `discount`
+ * @prop {(value: import('@storecraft/core/api').DiscountType) => void} onClick callback
  * 
  * 
  * @param {ItemParams} params
@@ -40,7 +40,7 @@ const Item = (
 /**
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *    import('@storecraft/core/v-api').ProductType["discounts"],
+ *    import('@storecraft/core/api').ProductType["discounts"],
  *    import('../pages/product.jsx').Context
  *  > &
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -59,7 +59,7 @@ const ProductDiscounts = (
   const onClick = useCallback(
     /**
      * 
-     * @param {import('@storecraft/core/v-api').DiscountType} discount 
+     * @param {import('@storecraft/core/api').DiscountType} discount 
      */
     (discount) => {
       // const all = context?.query.all.get(false)?.data

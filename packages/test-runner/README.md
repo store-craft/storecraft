@@ -13,15 +13,15 @@ A work in progress package to test:
 npm i @storecraft/test-runner
 ```
 
-## v-api controller test
-Everything prefixed with `api.` tests files within `v-api` folder
+## api controller test
+Everything prefixed with `api.` tests files within `api` folder
 of `StoreCraft`. This is just testing the controller and the database.
 
 ## storage integration
 storage is tested in it's own package, but integration test should be made available here
 
-## v-rest controller
-In the future, I will combine rest controller testing with `v-api`
+## rest controller
+In the future, I will combine rest controller testing with `api`
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

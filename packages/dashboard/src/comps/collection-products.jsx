@@ -15,7 +15,7 @@ import { TableSchemaView } from './table-schema-view.jsx'
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').ProductType, any, any
+ *  import('@storecraft/core/api').ProductType, any, any
  * >[]}
  */
 const schema = [
@@ -35,7 +35,7 @@ const CollectionBase = forwardRef(
    * @prop {number} [limit=5] `limit` of query
    * @prop {(count: number) => void} onLoaded when loaded reports query count
    * @prop {import('./fields-view.jsx').FieldContextData<
-   *  import('@storecraft/core/v-api').CollectionType> & 
+   *  import('@storecraft/core/api').CollectionType> & 
    *  import('../pages/collection.jsx').Context
    * } context context
    * 
@@ -54,7 +54,7 @@ const CollectionBase = forwardRef(
     
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/v-api').ProductType>
+   *  import('@storecraft/core/api').ProductType>
    * }
    */
   const { 
@@ -139,9 +139,9 @@ const CollectionBase = forwardRef(
  * collection with pagination.
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').CollectionType,
+ *  import('@storecraft/core/api').CollectionType,
  *  import('../pages/collection.jsx').Context,
- *  import('@storecraft/core/v-api').CollectionType
+ *  import('@storecraft/core/api').CollectionType
  * >} param
  */
 const CollectionProducts = (
@@ -166,7 +166,7 @@ const CollectionProducts = (
   const onBrowseAdd = useCallback(
     /**
      * 
-     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
+     * @param {import('@storecraft/core/api').ProductType[]} selected_items 
      */
     async (selected_items) => {
       setLoading(true)

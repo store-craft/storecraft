@@ -9,7 +9,7 @@ import esMain from './utils.esmain.js';
 // const app = await create_app();
 const handle = create_handle('post', file_name(import.meta.url));
 
-/** @type {import('@storecraft/core/v-api').PostTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').PostTypeUpsert[]} */
 const items_upsert = [
   {
     handle: handle(), title: 'post 1', text: 'blah blah 1'

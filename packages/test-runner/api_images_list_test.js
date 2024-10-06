@@ -19,8 +19,8 @@ const url_handle_name = image_mock_url_handle_name(
 
 /** 
  * @type {(
- *  import('@storecraft/core/v-api').ImageType & 
- *  import('@storecraft/core/v-database').idable_concrete
+ *  import('@storecraft/core/api').ImageType & 
+ *  import('@storecraft/core/database').idable_concrete
  * )[]} 
  */
 const items = get_static_ids('img').map(

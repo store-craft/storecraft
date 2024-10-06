@@ -1,23 +1,23 @@
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import { file_name } from './api.utils.crud.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 import { DummyPayments } from '@storecraft/payments-dummy'
 import { assert_async_throws } from './utils.js';
-import { UniformTaxes } from '@storecraft/core/v-tax';
+import { UniformTaxes } from '@storecraft/core/tax';
 
 
-/** @type {import('@storecraft/core/v-api').ShippingMethodTypeUpsert} */
+/** @type {import('@storecraft/core/api').ShippingMethodTypeUpsert} */
 const shipping = {
   handle: 'ship-checkout-test',
   price: 50,
   title: 'shipping checkout test',
 }
 
-/** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+/** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
 const products = [
   {
     price: 30,

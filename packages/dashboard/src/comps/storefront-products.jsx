@@ -12,7 +12,7 @@ import useNavigateWithState from '@/hooks/useNavigateWithState.jsx'
  * with pagination and selecting them.
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').ProductType[], 
+ *  import('@storecraft/core/api').ProductType[], 
  *  import('../pages/storefront.jsx').Context>} params 
  * 
  */
@@ -24,7 +24,7 @@ const StorefrontProducts = ({ field, context, value=[], onChange }) => {
 
   const onRemove = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ProductType} v 
+     * @param {import('@storecraft/core/api').ProductType} v 
      */
     (v) => {
       onChange(value.filter(pr => pr.handle!==v.handle));
@@ -37,7 +37,7 @@ const StorefrontProducts = ({ field, context, value=[], onChange }) => {
    */
   const onClick = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ProductType} v 
+     * @param {import('@storecraft/core/api').ProductType} v 
      */
     (v) => {
       const where = v.handle ?? v.id;
@@ -51,7 +51,7 @@ const StorefrontProducts = ({ field, context, value=[], onChange }) => {
 
   const onBrowseAdd = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
+     * @param {import('@storecraft/core/api').ProductType[]} selected_items 
      */
     (selected_items) => { 
       // only include unseen handles
@@ -88,7 +88,7 @@ const StorefrontProducts = ({ field, context, value=[], onChange }) => {
       onRemove={onRemove}
       name_fn={
         /**
-         * @param {import('@storecraft/core/v-api').ProductType} pr 
+         * @param {import('@storecraft/core/api').ProductType} pr 
          */
         pr => pr.title
       }

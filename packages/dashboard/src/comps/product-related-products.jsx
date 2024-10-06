@@ -10,7 +10,7 @@ import useNavigateWithState from '@/hooks/useNavigateWithState.jsx'
 
 /**
  * @param {object} param 
- * @param {import('@storecraft/core/v-api').ProductType} param.product
+ * @param {import('@storecraft/core/api').ProductType} param.product
  * @param {import('./fields-view.jsx').FieldContextData} param.context
  * @param {() => void} param.onRemove
  */
@@ -52,7 +52,7 @@ const Item = (
 /**
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').ProductType[]> &
+ *  import('@storecraft/core/api').ProductType[]> &
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } params 
  * 
@@ -69,7 +69,7 @@ const RelatedProducts = (
 
   const onBrowseAdd = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
+     * @param {import('@storecraft/core/api').ProductType[]} selected_items 
      */
     (selected_items) => {
       const ps = [

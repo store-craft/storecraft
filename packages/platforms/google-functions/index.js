@@ -4,7 +4,7 @@ import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
 
 
 /**
- * @typedef {import('@storecraft/core/v-platform').PlatformAdapter<
+ * @typedef {import('@storecraft/core/platform').PlatformAdapter<
  *  import('./types.private.js').GoogleFunctionRequest, 
  *  import('./types.private.js').GoogleFunctionResponse, 
  *  import('./types.private.js').GoogleFunctionResponse

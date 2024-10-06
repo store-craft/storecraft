@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { enums } from '@storecraft/core/v-api';
+import { enums } from '@storecraft/core/api';
 import { create_handle, create_title_gen, get_static_ids } from './api.utils.crud.js';
-import { to_handle } from '@storecraft/core/v-api/utils.func.js';
+import { to_handle } from '@storecraft/core/api/utils.func.js';
 
 /**
  * 
@@ -21,9 +21,9 @@ import { to_handle } from '@storecraft/core/v-api/utils.func.js';
 /**
  * 
  * @param {string} title 
- * @param {import('@storecraft/core/v-api').Filter[]} filters 
+ * @param {import('@storecraft/core/api').Filter[]} filters 
  * 
- * @return {import('@storecraft/core/v-api').DiscountTypeUpsert}
+ * @return {import('@storecraft/core/api').DiscountTypeUpsert}
  */
 const create_regular_discount_with_filters = (title, filters) => {
   return { 
@@ -35,7 +35,7 @@ const create_regular_discount_with_filters = (title, filters) => {
     info: {
       details: {
         meta: enums.DiscountMetaEnum.regular,
-        /** @type {import('@storecraft/core/v-api').RegularDiscountExtra} */
+        /** @type {import('@storecraft/core/api').RegularDiscountExtra} */
         extra: {
           fixed: 0, percent: 10
         }
@@ -55,7 +55,7 @@ export const setup_for_discount_filter_product_in_handles = () => {
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_positive = [1, 2].map(
     ix => {
       const title = positive_product_title_gen();
@@ -70,7 +70,7 @@ export const setup_for_discount_filter_product_in_handles = () => {
     }
   );
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_negative = [1, 2].map(
     ix => {
       const title = negative_product_title_gen();
@@ -90,7 +90,7 @@ export const setup_for_discount_filter_product_in_handles = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_in_products,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_products} */
         value: products_positive.map(
           pr => ({
             handle: pr.handle,
@@ -119,7 +119,7 @@ export const setup_for_discount_filter_product_NOT_in_handles = () => {
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_negative = [1, 2].map(
     ix => {
       const title = negative_product_title_gen();
@@ -134,7 +134,7 @@ export const setup_for_discount_filter_product_NOT_in_handles = () => {
     }
   );
   
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_positive = [1, 2].map(
     ix => {
       const title = positive_product_title_gen();
@@ -154,7 +154,7 @@ export const setup_for_discount_filter_product_NOT_in_handles = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_not_in_products,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_products} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_not_in_products} */
         value: products_negative.map(
           pr => ({
             handle: pr.handle,
@@ -185,7 +185,7 @@ export const setup_for_discount_filter_product_in_tags = () => {
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_negative = [1, 2].map(
     ix => {
       const title = negative_product_title_gen();
@@ -201,7 +201,7 @@ export const setup_for_discount_filter_product_in_tags = () => {
     }
   );
   
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_positive = [1, 2].map(
     ix => {
       const title = positive_product_title_gen();
@@ -222,7 +222,7 @@ export const setup_for_discount_filter_product_in_tags = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
         value: tags
       }
     ]
@@ -246,7 +246,7 @@ export const setup_for_discount_filter_product_NOT_in_tags = () => {
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_negative = [1, 2].map(
     ix => {
       const title = negative_product_title_gen();
@@ -262,7 +262,7 @@ export const setup_for_discount_filter_product_NOT_in_tags = () => {
     }
   );
   
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_positive = [1, 2].map(
     ix => {
       const title = positive_product_title_gen();
@@ -283,7 +283,7 @@ export const setup_for_discount_filter_product_NOT_in_tags = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_not_in_tags,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_tags} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_not_in_tags} */
         value: tags
       }
     ]
@@ -307,7 +307,7 @@ export const setup_for_discount_filter_product_in_collections = () => {
   const handle_col = create_handle('col', name);
   const ids_col = get_static_ids('col');
 
-  /** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').CollectionTypeUpsert[]} */
   const collections = [1, 2].map(
     ix => (
       {
@@ -323,7 +323,7 @@ export const setup_for_discount_filter_product_in_collections = () => {
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_negative = [1, 2].map(
     ix => {
       const title = negative_product_title_gen();
@@ -338,7 +338,7 @@ export const setup_for_discount_filter_product_in_collections = () => {
     }
   );
   
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_positive = [1, 2].map(
     ix => {
       const title = positive_product_title_gen();
@@ -360,7 +360,7 @@ export const setup_for_discount_filter_product_in_collections = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_in_collections,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_in_collections} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_in_collections} */
         value: collections
       }
     ]
@@ -385,7 +385,7 @@ export const setup_for_discount_filter_product_NOT_in_collections = () => {
   const handle_col = create_handle('col', name);
   const ids_col = get_static_ids('col');
 
-  /** @type {import('@storecraft/core/v-api').CollectionTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').CollectionTypeUpsert[]} */
   const collections = [1, 2].map(
     ix => (
       {
@@ -402,7 +402,7 @@ export const setup_for_discount_filter_product_NOT_in_collections = () => {
   const positive_product_title_gen = create_title_gen('pr', 'positive', name);
   const negative_product_title_gen = create_title_gen('pr', 'negative', name);
 
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_negative = [1, 2].map(
     ix => {
       const title = negative_product_title_gen();
@@ -418,7 +418,7 @@ export const setup_for_discount_filter_product_NOT_in_collections = () => {
     }
   );
   
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products_positive = [1, 2].map(
     ix => {
       const title = positive_product_title_gen();
@@ -439,7 +439,7 @@ export const setup_for_discount_filter_product_NOT_in_collections = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_not_in_collections,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_collections} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_not_in_collections} */
         value: collections
       }
     ]
@@ -463,7 +463,7 @@ export const setup_for_discount_filter_product_all = () => {
   const name =  enums.FilterMetaEnum.p_all.name;
   const handle_pr = create_handle('pr', name);
   
-  /** @type {import('@storecraft/core/v-api').ProductTypeUpsert[]} */
+  /** @type {import('@storecraft/core/api').ProductTypeUpsert[]} */
   const products = [1, 2].map(
     ix => (
       {
@@ -481,7 +481,7 @@ export const setup_for_discount_filter_product_all = () => {
     [
       { // discount for a specific product handle
         meta: enums.FilterMetaEnum.p_all,
-        /** @type {import('@storecraft/core/v-api').FilterValue_p_all} */
+        /** @type {import('@storecraft/core/api').FilterValue_p_all} */
         value: undefined
       }
     ]

@@ -29,7 +29,6 @@ export const infer_platform = platform => {
           `import { NodePlatform } from '@storecraft/core/platform/node'`
         ],
         deps: [
-          '@storecraft/core/platform'
         ]
       }
     case 'bun':
@@ -39,7 +38,6 @@ export const infer_platform = platform => {
           `import { BunPlatform } from '@storecraft/core/platform/bun'`
         ],
         deps: [
-          '@storecraft/core/platform'
         ]
       }
     case 'deno':
@@ -49,7 +47,6 @@ export const infer_platform = platform => {
           `import { DenoPlatform } from '@storecraft/core/platform/deno'`
         ],
         deps: [
-          '@storecraft/core/platform'
         ]
       }
 
@@ -60,7 +57,6 @@ export const infer_platform = platform => {
           `import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-workers'`
         ],
         deps: [
-          '@storecraft/core/platform'
         ]
       }
 
@@ -71,7 +67,6 @@ export const infer_platform = platform => {
           `import { AWSLambdaPlatform } from '@storecraft/core/platform/aws-lambda'`
         ],
         deps: [
-          '@storecraft/core/platform'
         ]
       }
 
@@ -82,7 +77,6 @@ export const infer_platform = platform => {
           `import { GoogleFunctionsPlatform } from '@storecraft/core/platform/google-functions'`
         ],
         deps: [
-          '@storecraft/core/platform'
         ]
       }
   }
@@ -422,8 +416,11 @@ ${
       `import { App } from '@storecraft/core'`
     ].flat(10),
     deps: [
-      platform.deps, database.deps, storage.deps, 
-      mailer.deps, payments.map(p => p.deps),
+      platform.deps, 
+      database.deps, 
+      storage.deps, 
+      mailer.deps, 
+      payments.map(p => p.deps),
       '@storecraft/core'
     ].flat(10),
   }

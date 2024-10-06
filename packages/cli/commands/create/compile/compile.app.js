@@ -403,14 +403,23 @@ ${
   ).join('\n')
 }
 })
+.withExtensions(
+  {
+    'postman': new PostmanExtension()
+  }
+)
 `;
 
   return {
     code,
     imports: [
-      platform.imports, database.imports, storage.imports, 
-      mailer.imports, payments.map(p => p.imports),
-      `import { App } from '@storecraft/core'`
+      platform.imports, 
+      database.imports, 
+      storage.imports, 
+      mailer.imports, 
+      payments.map(p => p.imports),
+      `import { App } from '@storecraft/core'`,
+      `import { PostmanExtension } from '@storecraft/core/extensions/postman'`,
     ].flat(10),
     deps: [
       platform.deps, 
@@ -418,7 +427,8 @@ ${
       storage.deps, 
       mailer.deps, 
       payments.map(p => p.deps),
-      '@storecraft/core'
+      '@storecraft/core',
+      'handlebars'
     ].flat(10),
   }
 }

@@ -25,6 +25,9 @@
       "types": "./types.public.d.ts"
     },
     "./package.json": "./package.json",
+    "./v-assets/*": {
+      "import": "./v-assets/*"
+    },
     "./v-api": {
       "import": "./v-api/public.js",
       "types": "./v-api/types.public.d.ts"

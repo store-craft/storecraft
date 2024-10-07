@@ -147,6 +147,7 @@
     "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm publish --access public"
   },
   "devDependencies": {
+    "@storecraft/database-sqlite": "latest",
     "@asteasolutions/zod-to-openapi": "^6.4.0",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",

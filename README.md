@@ -115,7 +115,7 @@ The core engine of storecraft
 - core VQL types and logic
 - core REST API controller
 
-### 🌐 Platforms [@storecraft/core/platform](packages/platforms/)
+### 🌐 Platforms [@storecraft/core/platform](packages/core/)
 
 Support for 
 - Node

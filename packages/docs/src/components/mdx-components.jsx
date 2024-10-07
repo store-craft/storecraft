@@ -9,9 +9,10 @@ import Drawer from './drawer.jsx'
 import { Image } from './image.jsx'
 import { Pink, Lime, Purple } from './labels.jsx'
 import { to_handle } from '@/utils/func.utils.js'
-import {EventsTable} from './event-table.jsx'
+import { EventsTable } from './event-table.jsx'
 import RestApiReference from './rest-api-reference.jsx'
 import { useEffect } from 'react'
+import { SimpleTable } from './simple-table.jsx'
 
 /**
  * 
@@ -66,6 +67,8 @@ const components = {
   strong: (props) => <strong fontWeight="semibold" className='text-kf-500 dark:text-kf-400' {...props} />,
   br: (props) => <span {...props} />,
   // a: (props) => <a  {...props} />,
+  div: (props) => <div  {...props} />,
+  img: (props) => <img  {...props} />,
   p: (props) => <p  {...props} />,
   ul: (props) => <ul  {...props} />,
   ol: (props) => <ol  {...props} />,
@@ -88,6 +91,7 @@ const components = {
   Pink, Purple, Lime,
   EventsTable,
   RestApiReference,
+  SimpleTable
 }
 
 export default components

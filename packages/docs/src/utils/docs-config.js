@@ -53,6 +53,11 @@ export default {
       empty: true,
       groups: [
         {
+          title: '✨ Quick Overview',
+          route: 'backend/overview',
+          path: 'content/docs/backend/overview.mdx'
+        },
+        {
           title: '⚙️ Configuration',
           route: 'backend/config',
           path: 'content/docs/backend/config.mdx'

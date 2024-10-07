@@ -59,23 +59,23 @@ each admin's initial password is `admin` and it can be changed later (through da
 
 ### auth_secret_access_token
 
-access token signing secret, if absent will be infered at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment.
+Access token signing secret, if absent will be infered at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment.
 
 ### auth_secret_refresh_token
 
-refresh token signing secret, if absent will be infered at init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment.
+Refresh token signing secret, if absent will be infered at init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment.
 
-### checkout_reserve_stock_on?: 'checkout_create' | 'checkout_complete' | 'never'
+### checkout_reserve_stock_on
 
-(Optional) automatically reserve stock, we recommend to use `never`.
+(Optional) Automatically reserve stock on key events such as `checkout_create` | `checkout_complete` | `never`, we recommend to use `never`.
 Depending on your needs you can alter this setting.
 if absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` 
 environment and then will default to `never`.
 
-@default never
+**@default** never
 
 
-### storage_rewrite_urls?: string
+### storage_rewrite_urls
 
 (Optional) Once object `storage` is used, you may have connected a 
 **CDN** to buckets to take advantage of faster assets serving instead of serving 
@@ -89,25 +89,24 @@ to the storage services. However, **CDN** is always the best choice for assets s
 cost and latency wise.
 
 if absent will be infered at init by `platform.env.SC_STORAGE_REWRITE_URLS` environment.
-@default undefined
+**@default** undefined
 
-### cors?: CORSOptions
+### cors
 (Optional) Your chance to override the default `CORS` config for HTTP requests
 
-
-### general_store_name?: string 
+### general_store_name
 (optional) The store name, also infered from `platform.env.SC_GENERAL_STORE_NAME` environment
 
-### general_store_website (optional)
+### general_store_website
 The store `website`, also infered from `platform.env.SC_GENERAL_STORE_WEBSITE` environment
 
-### general_store_logo_url (optional)
+### general_store_logo_url
 The store `logo` url, also infered from `platform.env.SC_GENERAL_STORE_LOGO_URL` environment
 
-### general_store_description (optional)
+### general_store_description
 The store `description`, also infered from `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
 
-### general_store_support_email (optional)
+### general_store_support_email
 The store support email `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
 
 ### general_confirm_email_base_url
@@ -122,7 +121,7 @@ a link with `https://store.com/confirm?token={{CONFIRM_TOKEN}}`
 You can use this to delegate into `storecraft` auth backend endpoint
 `/api/auth/confirm-email?token={{CONFIRM_TOKEN}}`
 
-@default `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
+**@default** `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
 
 
 ### general_forgot_password_confirm_base_url
@@ -138,5 +137,5 @@ a link with `https://store.com/forgot-password-confirm?token={{CONFIRM_TOKEN}}`
 You can use this to delegate into `storecraft` auth backend endpoint
 `/api/auth/forgot-password-request-confirm?token={{CONFIRM_TOKEN}}`
 
-@default `platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment
+**@default** `platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment
 

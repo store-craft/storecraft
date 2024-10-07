@@ -44,7 +44,7 @@ return (
               row.map(
                 (d, ix) => (
                   <td children={d} key={ix}
-                    className={'px-1 tracking-widest font-semibold text-sm ' + (first(ix) ? 'text-left' : (last(ix) ? 'text-right' : 'text-center'))} />
+                    className={'px-1 tracking-widest --font-semibold text-sm ' + (first(ix) ? 'text-left' : (last(ix) ? 'text-right' : 'text-center'))} />
                 )
               )
             }

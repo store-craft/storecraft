@@ -745,7 +745,7 @@ export type ProductTypeUpsert = Omit<
    * @description List of related products to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
-  related_products?: HandleAndID[];
+  related_products?: Partial<Pick<BaseProductType, 'id' | 'handle'>>[];
 } & withOptionalHandleOrID;
 
 

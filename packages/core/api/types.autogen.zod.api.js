@@ -1474,7 +1474,7 @@ export const productTypeUpsertSchema = productTypeSchema
           "List of collections to add the product into,\nthis is an explicit connection, to form a better UX experience",
         ),
       related_products: z
-        .array(handleAndIDSchema)
+        .array(baseProductTypeSchema.pick({ id: true, handle: true }))
         .optional()
         .describe(
           "List of related products to add the product into,\nthis is an explicit connection, to form a better UX experience",

@@ -2,10 +2,14 @@ import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
 import { NodePlatform } from '@storecraft/core/platform/node';
-import  { api_index } from '@storecraft/test-runner'
+import { api } from '@storecraft/core/test-runner'
 import { MssqlDialect } from 'kysely';
 import * as Tedious from 'tedious';
 import * as Tarn from 'tarn';
+
+/**
+ * NOTE: NON FUNCTIONAL YET
+ */
 
 const dialect = new MssqlDialect({
   tarn: {
@@ -56,12 +60,12 @@ export const create_app = async () => {
 async function test() {
   const app = await create_app();
 
-  Object.entries(api_index).slice(0, -1).forEach(
+  Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();
     }
   );
-  const last_test = Object.values(api_index).at(-1).create(app);
+  const last_test = Object.values(api).at(-1).create(app);
   last_test.after(async () => { await app.db.disconnect() });
   last_test.run();
 }

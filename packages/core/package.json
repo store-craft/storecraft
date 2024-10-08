@@ -137,6 +137,9 @@
     "./rest": {
       "import": "./rest/index.js",
       "types": "./rest/types.public.d.ts"
+    },
+    "./test-runner": {
+      "import": "./test-runner/index.js"
     }
   },
   "scripts": {

@@ -29,7 +29,6 @@
     "mongodb": "^6.3.0"
   },
   "devDependencies": {
-    "@storecraft/test-runner": "^1.0.0",
     "@types/migrate-mongo": "^10.0.4",
     "@types/node": "^20.11.0",
     "dotenv": "^16.3.1",

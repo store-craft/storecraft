@@ -31,7 +31,6 @@
     "kysely": "^0.27.2"
   },
   "devDependencies": {
-    "@storecraft/test-runner": "^1.0.0",
     "@types/better-sqlite3": "^7.6.9",
     "@types/node": "^20.11.0",
     "@types/pg": "^8.11.2",

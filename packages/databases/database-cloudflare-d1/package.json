@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240806.0",
-    "@storecraft/test-runner": "^1.0.0",
     "@types/node": "^20.11.0",
     "dotenv": "^16.3.1",
     "uvu": "^0.5.6"

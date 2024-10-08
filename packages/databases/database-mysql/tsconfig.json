@@ -13,6 +13,9 @@
     "migrations.sqlite/*", 
     "migrations.postgres/*", 
     "migrations.mysql/*", 
-    "test/*.js"
+    "tests/*.js"
+  ],
+  "exclude": [
+    "*.json"
   ]
 }

@@ -1,6 +1,6 @@
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
-import  { api_index } from '@storecraft/test-runner'
+import { api } from '@storecraft/core/test-runner'
 import { PlanetScale } from '@storecraft/database-planetscale';
 import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js';
 
@@ -31,12 +31,12 @@ async function test() {
 
   await migrateToLatest(app.db, false);
 
-  Object.entries(api_index).slice(0, -1).forEach(
+  Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();
     }
   );
-  const last_test = Object.values(api_index).at(-1).create(app);
+  const last_test = Object.values(api).at(-1).create(app);
   last_test.after(async ()=>{app.db.disconnect()});
   last_test.run();
 }

@@ -9,25 +9,25 @@
 
 # The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 
-Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
+Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
 
-⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node-js) (deno, bun, node, workers, aws-lambda, google-functions), serverless / serverful
+⭐ run on any javascript [platform](backend/platforms/node) (deno, bun, node, workers, aws-lambda, google-functions), serverless / serverful
 
-⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sql) (mongo, sqlite, postgres, mysql, neon, turso, d1, planetscale)
+⭐ connect to any [database](backend/databases/sqlite) (mongo, sqlite, postgres, mysql, neon, turso, d1, planetscale)
 
-⭐ use [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
+⭐ use [storage](backend/storage/s3) (local, r2, s3 compatible, google and more)
 
-⭐ It is [extensible and modular](https://storecraft.app/docs/backend/extensions/overview)
+⭐ It is [extensible and modular](backend/extensions/overview)
 
-⭐ It is [event based](https://storecraft.app/docs/backend/events)
+⭐ It is [event based](backend/events)
 
-⭐ Boasts an official [Dashboard](https://storecraft.app/docs/dashboard/overview)
+⭐ Boasts an official [Dashboard](dashboard/overview)
 
-⭐ Well documented [REST-API](https://storecraft.app/docs/rest-api/api) (can also be found in your `/api/reference` endpoint)
+⭐ Well documented [REST-API](rest-api/api) (can also be found in your `/api/reference` endpoint)
 
-⭐ Visit the [website](https://storecraft.app/docs)
+<hr/>
 
-<hr/><br/>
+Storecraft emphesizes modular commerce as code to achieve business logic,
 
 ```js
 import { App } from '@storecraft/core'
@@ -81,13 +81,13 @@ const server = http.createServer(app.handler).listen(
 
 Will produce
 
-<div style="text-align:center">
+<div style={{'text-align':'center'}}>
   <img src='https://storecraft.app/docs/main/storecraft-terminal.png' 
       width='80%' />
 </div><hr/><br/>
 
 
-## packages
+# packages
 
 This is a mono repo, where each folder in the `packages` folder is a package, that is published `@npm`.
 
@@ -115,7 +115,7 @@ The core engine of storecraft
 - core VQL types and logic
 - core REST API controller
 
-### 🌐 Platforms [@storecraft/core/platform](packages/core/)
+### 🌐 Platforms [@storecraft/core/platform](https://github.com/store-craft/storecraft/tree/main/packages/core/platform)
 
 Support for 
 - Node
@@ -129,29 +129,29 @@ Support for
 ### 💾 Databases
 
 Support for 
-- MongoDB ([@storecraft/database-mongo-node](packages/databases/database-mongodb/))
-- SQLite ([@storecraft/database-sqlite](packages/databases/database-sqlite/))
-- Postgres ([@storecraft/database-postgres](packages/databases/database-postgres/))
-- MySQL ([@storecraft/database-mysql](packages/databases/database-mysql/))
-- SQL Base ([@storecraft/database-sql-base](packages/databases/database-sql-base/))
-- Neon (Cloud Postgres, [@storecraft/database-neon](packages/databases/database-neon/))
-- PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](packages/databases/database-planetscale/))
-- Turso (Cloud Sqlite, [@storecraft/database-turso](packages/databases/database-turso/))
-- D1 (Cloud Sqlite, [@storecraft/database-cloudflare-d1](packages/databases/database-cloudflare-d1/))
+- MongoDB ([@storecraft/database-mongo-node](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-mongodb/))
+- SQLite ([@storecraft/database-sqlite](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-sqlite/))
+- Postgres ([@storecraft/database-postgres](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-postgres/))
+- MySQL ([@storecraft/database-mysql](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-mysql/))
+- SQL Base ([@storecraft/database-sql-base](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-sql-base/))
+- Neon (Cloud Postgres, [@storecraft/database-neon](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-neon/))
+- PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-planetscale/))
+- Turso (Cloud Sqlite, [@storecraft/database-turso](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-turso/))
+- D1 (Cloud Sqlite, [@storecraft/database-cloudflare-d1](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-cloudflare-d1/))
 
 ### 📦 Storage
 Support for,
-- Local storage (Node, Bun, Deno), [@storecraft/core/storage](packages/storage/core/storage/)
-- S3 Compatible ([@storecraft/storage-s3-compatible](packages/storage/storage-s3-compatible/))
+- Local storage (Node, Bun, Deno), [@storecraft/core/storage](https://github.com/store-craft/storecraft/tree/main/packages/storage/core/storage/)
+- S3 Compatible ([@storecraft/storage-s3-compatible](https://github.com/store-craft/storecraft/tree/main/packages/storage/storage-s3-compatible/))
   - Cloudflare R2
   - AWS S3
   - DigitalOcean Spaces
   - MinIO
-- Google Storage ([@storecraft/storage-google](packages/storage/storage-google/))
+- Google Storage ([@storecraft/storage-google](https://github.com/store-craft/storecraft/tree/main/packages/storage/storage-google/))
 
 ### 📧 Email Providers
-- node smtp support [@storecraft/mailer-smtp](packages/mailers/mailer-smtp/)
-- Http Mail services [@storecraft/mailer-providers-http](packages/mailers/mailer-providers-http/) 
+- node smtp support [@storecraft/mailer-smtp](https://github.com/store-craft/storecraft/tree/main/packages/mailers/mailer-smtp/)
+- Http Mail services [@storecraft/mailer-providers-http](https://github.com/store-craft/storecraft/tree/main/packages/mailers/mailer-providers-http/) 
   - mailchimp support
   - mailgun support
   - resend support
@@ -159,32 +159,32 @@ Support for,
 
 ### 💳 Payments 
 
-- Stripe [@storecraft/payments-stripe](packages/payments/payments-stripe/)
-- Paypal [@storecraft/payments-paypal](packages/payments/payments-paypal/)
-- You can roll your own (guide [here](https://storecraft.app/docs/backend/checkout-and-payments/roll-your-own))
+- Stripe [@storecraft/payments-stripe](https://github.com/store-craft/storecraft/tree/main/packages/payments/payments-stripe/)
+- Paypal [@storecraft/payments-paypal](https://github.com/store-craft/storecraft/tree/main/packages/payments/payments-paypal/)
+- You can roll your own (guide [here](backend/checkout-and-payments/roll-your-own))
 
 ### Dashboard
 
 The official dashboard
-- Learn how to use [here](https://storecraft.app/docs/dashboard/overview)
-- The [code](packages/dashboard/), 
+- Learn how to use [here](dashboard/overview)
+- The [code](https://github.com/store-craft/storecraft/tree/main/packages/dashboard/), 
   - mount is as a component
   - consume from cdn
 
 ### sdks
 
-- Universal (front/back) Javascript SDK, [@storecraft/sdk](packages/sdk/)
-- React Hooks SDK, [@storecraft/sdk-react-hooks](packages/sdk-react-hooks/)
+- Universal (front/back) Javascript SDK, [@storecraft/sdk](https://github.com/store-craft/storecraft/tree/main/packages/sdk/)
+- React Hooks SDK, [@storecraft/sdk-react-hooks](https://github.com/store-craft/storecraft/tree/main/packages/sdk-react-hooks/)
 
 ### Test Runner
 
-Test your api with
+Test your app and database integrations with
 
-[@storecraft/test-runner](packages/test-runner/) 
+[@storecraft/core/test-runner](https://github.com/store-craft/storecraft/tree/main/packages/core/test-runner/) 
 
 ### docs
 
-Docs website [code](packages/docs/)
+Docs website [code](https://github.com/store-craft/storecraft/tree/main/packages/docs/)
 
 ### CLI
 
@@ -192,12 +192,12 @@ Docs website [code](packages/docs/)
 npx storecraft create
 ```
 
-CLI [code](packages/cli/)
+CLI [code](https://github.com/store-craft/storecraft/tree/main/packages/cli/)
 
 
 ### Examples Playground
 
-[Here](packages/playground/) 
+[Here](https://github.com/store-craft/storecraft/tree/main/packages/playground/) 
 
 
 ```text

@@ -8,9 +8,7 @@ First install the following packages
 
 ```bash
 npm i @storecraft/core 
-npm i @storecraft/platforms 
 npm i @storecraft/storage-google
-npm i @storecraft/payments-dummy
 npm i @storecraft/database-sqlite
 npm i @google-cloud/functions-framework
 npm i -D dotenv
@@ -23,7 +21,7 @@ A very simple code
 Now, create a new file `app.js`
 
 ```ts
-import { GoogleFunctionsPlatform } from "@storecraft/platforms/google-functions"
+import { GoogleFunctionsPlatform } from "@storecraft/core/platform/google-functions"
 import { MongoDB } from "@storecraft/database-mongodb"
 import { GoogleStorage } from "@storecraft/storage-google"
 import { SendGrid } from "@storecraft/mailer-providers-http/sendgrid"

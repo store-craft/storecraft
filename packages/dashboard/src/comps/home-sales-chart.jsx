@@ -26,7 +26,7 @@ const to_millis = d => (new Date(d)).getTime()
 /**
  * 
  * @typedef {object} InnerSalesChartParams
- * @prop {import('@storecraft/core/v-api').OrdersStatisticsType} data
+ * @prop {import('@storecraft/core/api').OrdersStatisticsType} data
  * 
  * 
  * @typedef {InnerSalesChartParams & 
@@ -49,7 +49,7 @@ const SalesChart = (
   /** @type {import('chart.js').ChartConfiguration} */
   const config = useMemo(
     () => {
-      /** @type {import('@storecraft/core/v-api').OrdersStatisticsDay[]} */
+      /** @type {import('@storecraft/core/api').OrdersStatisticsDay[]} */
       let arr = Array.from({ length: data.count_days });
       Object.
         entries(data.days).

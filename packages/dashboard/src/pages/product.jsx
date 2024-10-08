@@ -194,8 +194,8 @@ const root_schema = {
 /**
  * 
  * @typedef {object} State Intrinsic state of `product`
- * @property {import('@storecraft/core/v-api').ProductType | 
- *  import('@storecraft/core/v-api').VariantType} data
+ * @property {import('@storecraft/core/api').ProductType | 
+ *  import('@storecraft/core/api').VariantType} data
  * @property {boolean} hasChanged
  * 
  *
@@ -226,8 +226,8 @@ export default (
 
   /** 
    * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-   *  import('@storecraft/core/v-api').ProductType &
-   *  import('@storecraft/core/v-api').VariantType>
+   *  import('@storecraft/core/api').ProductType &
+   *  import('@storecraft/core/api').VariantType>
    * } 
    */
   const {

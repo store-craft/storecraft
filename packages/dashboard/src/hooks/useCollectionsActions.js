@@ -4,7 +4,7 @@ import {
 import { App } from '@storecraft/core';
 import { 
   api_query_to_searchparams, parse_query 
-} from '@storecraft/core/v-api/utils.query.js';
+} from '@storecraft/core/api/utils.query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -32,12 +32,12 @@ import { useNavigate, useParams } from 'react-router-dom'
  * 
  * This hook wraps `useCollection` hook
  * 
- * @template {Partial<import('@storecraft/core/v-api').BaseType> | any} [T=any]
+ * @template {Partial<import('@storecraft/core/api').BaseType> | any} [T=any]
  * 
  * @param {((keyof App["db"]["resources"]) | 'payments/gateways' | 'extensions')} resource the collection id in backend 
  * @param {string} [slug] front end slug
  * @param {boolean} [autoLoad=true] 
- * @param {import('@storecraft/core/v-api').ApiQuery} [autoLoadQuery=q_initial] 
+ * @param {import('@storecraft/core/api').ApiQuery} [autoLoadQuery=q_initial] 
  */
 const useCollectionsActions = (
   resource, slug=resource, autoLoad=false, autoLoadQuery=q_initial
@@ -132,7 +132,7 @@ const useCollectionsActions = (
         limit, limitToLast, ...rest 
       } = query_api
 
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q = {
         ...query_api,
         limit: limit ? $limit : undefined,
@@ -163,7 +163,7 @@ const useCollectionsActions = (
         startAt, limit, limitToLast, ...rest 
       } = query_api
       
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q = {
         ...rest,
         startAfter: [
@@ -196,7 +196,7 @@ const useCollectionsActions = (
         startAt, limit, limitToLast, ...rest 
       } = query_api
       
-      /** @type {import('@storecraft/core/v-api').ApiQuery} */
+      /** @type {import('@storecraft/core/api').ApiQuery} */
       const q = {
         ...rest,
         endBefore: [

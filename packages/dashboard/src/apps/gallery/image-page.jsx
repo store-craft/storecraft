@@ -113,7 +113,7 @@ const ImagePage = ({}) => {
 
   /** 
    * @type {import('@storecraft/sdk-react-hooks').useDocumentHookReturnType<
-   *  import('@storecraft/core/v-api').ImageType>
+   *  import('@storecraft/core/api').ImageType>
    * } 
    */
   const { 

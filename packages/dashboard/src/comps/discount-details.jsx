@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { 
   DiscountMetaEnum, FilterMetaEnum
-} from '@storecraft/core/v-api/types.api.enums.js'
+} from '@storecraft/core/api/types.api.enums.js'
 import { BlingInput, HR } from './common-ui.jsx'
 import ShowIf from './show-if.jsx'
 import DiscountFilters from './discount-filters.jsx'
@@ -45,8 +45,8 @@ export const discount_types = [
 /**
  * 
  * @typedef {object} DiscountTypesParams
- * @prop {import('@storecraft/core/v-api').DiscountDetails["meta"]} selectedType
- * @prop {(meta: import('@storecraft/core/v-api').DiscountDetails["meta"]) => void} onChange
+ * @prop {import('@storecraft/core/api').DiscountDetails["meta"]} selectedType
+ * @prop {(meta: import('@storecraft/core/api').DiscountDetails["meta"]) => void} onChange
  * 
  * @param {DiscountTypesParams} params
  */
@@ -136,9 +136,9 @@ const explain_price = (prefix, percent, fixed) => {
  * 
  * @typedef {object} BulkDiscountParams
  * @prop {'bulk'} type
- * @prop {import('@storecraft/core/v-api').BulkDiscountExtra} value
+ * @prop {import('@storecraft/core/api').BulkDiscountExtra} value
  * @prop {(extra: 
- *  import('@storecraft/core/v-api').BulkDiscountExtra) => void
+ *  import('@storecraft/core/api').BulkDiscountExtra) => void
  * } onChange
  * 
  * 
@@ -253,7 +253,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
 
 /**
  * 
- * @param {import('@storecraft/core/v-api').Filter} f 
+ * @param {import('@storecraft/core/api').Filter} f 
  */
 const explain_filter = (f) => {
   switch (f.meta.op) {
@@ -265,7 +265,7 @@ const explain_filter = (f) => {
       );
     case FilterMetaEnum.p_in_collections.op:
       {
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_collections} */(f.value ?? []));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_in_collections} */(f.value ?? []));
   
         return (
         <>
@@ -286,7 +286,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_not_in_collections.op:
       {
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_collections} */(f.value ?? []));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_not_in_collections} */(f.value ?? []));
 
         return (
           <>
@@ -305,7 +305,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_in_tags.op:
       {
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_tags} */(f.value ?? []));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */(f.value ?? []));
 
         return (
         <>
@@ -323,7 +323,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_not_in_tags.op:
       {
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_tags} */(f.value ?? []));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_not_in_tags} */(f.value ?? []));
         
         return (
         <>
@@ -342,7 +342,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_in_products.op:
       {
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_products} */ (f.value ?? []));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_in_products} */ (f.value ?? []));
 
         return (
         <>
@@ -361,7 +361,7 @@ const explain_filter = (f) => {
     case FilterMetaEnum.p_not_in_products.op:
       {
         
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_not_in_products} */ (f.value ?? []));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_not_in_products} */ (f.value ?? []));
 
         return (
         <>
@@ -380,7 +380,7 @@ const explain_filter = (f) => {
       }
     case FilterMetaEnum.p_in_price_range.op:
       {
-        const cast = (/** @type {import('@storecraft/core/v-api').FilterValue_p_in_price_range} */(f.value));
+        const cast = (/** @type {import('@storecraft/core/api').FilterValue_p_in_price_range} */(f.value));
 
         return (
         <>
@@ -410,7 +410,7 @@ const to_order = (ix) => {
 
 /**
  * 
- * @param {import('@storecraft/core/v-api').Filter} f
+ * @param {import('@storecraft/core/api').Filter} f
  */
 const filter_legal = f => {
   return (f.meta.type==='product') 
@@ -420,10 +420,10 @@ const filter_legal = f => {
  * 
  * @typedef {object} BundleDiscountParams
  * @prop {'bundle'} meta
- * @prop {import('@storecraft/core/v-api').BundleDiscountExtra} value
+ * @prop {import('@storecraft/core/api').BundleDiscountExtra} value
  * @prop {import('./fields-view.jsx').FieldContextData} context
  * @prop {(extra: 
- *  import('@storecraft/core/v-api').BundleDiscountExtra) => void
+ *  import('@storecraft/core/api').BundleDiscountExtra) => void
  * } onChange
  * 
  * 
@@ -435,7 +435,7 @@ const BundleDiscount = (
   }
 ) => {
 
-  /** @type {import('./media.jsx').useStateInfer<import('@storecraft/core/v-api').Filter[]>} */
+  /** @type {import('./media.jsx').useStateInfer<import('@storecraft/core/api').Filter[]>} */
   const [filters, setFilters] = useState([]) 
   const [v, setV] = useState(value)
   
@@ -445,7 +445,7 @@ const BundleDiscount = (
   useEffect(
     () => {
       const set_filters = () => {
-        /**@type {import('@storecraft/core/v-api').Filter[]} */
+        /**@type {import('@storecraft/core/api').Filter[]} */
         const fs =  context?.query['info.filters']?.get() ?? [];
 
         setFilters(
@@ -469,7 +469,7 @@ const BundleDiscount = (
   const onChangeInternal = useCallback(
     /**
      * 
-     * @param {keyof import('@storecraft/core/v-api').BundleDiscountExtra} who 
+     * @param {keyof import('@storecraft/core/api').BundleDiscountExtra} who 
      * @param {*} val 
      */
     (who, val) => {
@@ -620,8 +620,8 @@ const ExplainPrice = (
  * 
  * @typedef {object} RegularDiscountParams
  * @prop {'regular'} type
- * @prop {import('@storecraft/core/v-api').RegularDiscountExtra} value
- * @prop {(extra: import('@storecraft/core/v-api').RegularDiscountExtra) => void} onChange
+ * @prop {import('@storecraft/core/api').RegularDiscountExtra} value
+ * @prop {(extra: import('@storecraft/core/api').RegularDiscountExtra) => void} onChange
  * 
  * 
  * @param {RegularDiscountParams} props
@@ -640,7 +640,7 @@ const RegularDiscount = (
 
   const onChangeInternal = useCallback(
     /**
-     * @param {keyof import('@storecraft/core/v-api').RegularDiscountExtra} who 
+     * @param {keyof import('@storecraft/core/api').RegularDiscountExtra} who 
      * @param {any} val 
      */
     (who, val) => {
@@ -726,8 +726,8 @@ const Dashed = ({ className='', ...rest }) => {
  * 
  * @typedef {object} BuyXGetYDiscountParams
  * @prop {'buy_x_get_y'} type
- * @prop {import('@storecraft/core/v-api').BuyXGetYDiscountExtra} value
- * @prop {(extra: import('@storecraft/core/v-api').BuyXGetYDiscountExtra) => void} onChange
+ * @prop {import('@storecraft/core/api').BuyXGetYDiscountExtra} value
+ * @prop {(extra: import('@storecraft/core/api').BuyXGetYDiscountExtra) => void} onChange
  * @prop {import('../pages/discount.jsx').Context} context
  * 
  * 
@@ -746,7 +746,7 @@ const BuyXGetYDiscount = (
 
   const onChangeInternal = useCallback(
     /**
-     * @param {keyof import('@storecraft/core/v-api').BuyXGetYDiscountExtra} who 
+     * @param {keyof import('@storecraft/core/api').BuyXGetYDiscountExtra} who 
      * @param {any} val 
      */
     (who, val) => {
@@ -884,8 +884,8 @@ const BuyXGetYDiscount = (
  * 
  * @typedef {object} OrderDiscountParams
  * @prop {'order'} type
- * @prop {import('@storecraft/core/v-api').OrderDiscountExtra} value
- * @prop {(extra: import('@storecraft/core/v-api').OrderDiscountExtra) => void} onChange
+ * @prop {import('@storecraft/core/api').OrderDiscountExtra} value
+ * @prop {(extra: import('@storecraft/core/api').OrderDiscountExtra) => void} onChange
  * 
  * 
  * @param {OrderDiscountParams} props
@@ -1021,10 +1021,10 @@ const discount_types_comps = [
 /**
  * 
  * @typedef {object} Type2CompParams
- * @prop {import('@storecraft/core/v-api').DiscountDetails["meta"]} meta
+ * @prop {import('@storecraft/core/api').DiscountDetails["meta"]} meta
  * @prop {Parameters<DiscountDetailsView>["0"]["context"]} context
- * @prop {(extra: import('@storecraft/core/v-api').DiscountDetails["extra"]) => void} onChange
- * @prop {import('@storecraft/core/v-api').DiscountDetails["extra"]} value
+ * @prop {(extra: import('@storecraft/core/api').DiscountDetails["extra"]) => void} onChange
+ * @prop {import('@storecraft/core/api').DiscountDetails["extra"]} value
  * 
  * 
  * @param {Type2CompParams} params 
@@ -1057,7 +1057,7 @@ const Type2Comp = (
 }
 
 /**
- * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} m 
+ * @param {import('@storecraft/core/api').DiscountDetails["meta"]} m 
  */
 const getDefaultExtraByMeta = m => {
   switch(m.id) {
@@ -1093,9 +1093,9 @@ const getDefaultExtraByMeta = m => {
 /**
  * 
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').DiscountDetails,
+ *  import('@storecraft/core/api').DiscountDetails,
  *  import('../pages/discount.jsx').Context,
- *  import('@storecraft/core/v-api').DiscountType
+ *  import('@storecraft/core/api').DiscountType
  * >
  * } params
  */
@@ -1110,8 +1110,8 @@ const DiscountDetailsView = (
 
   const notify = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} t 
-     * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} e 
+     * @param {import('@storecraft/core/api').DiscountDetails["meta"]} t 
+     * @param {import('@storecraft/core/api').DiscountDetails["extra"]} e 
      */
     (t, e) => {
       setType(t);
@@ -1124,7 +1124,7 @@ const DiscountDetailsView = (
   );
 
   const onTypeSelected = useCallback(
-    /** @param {import('@storecraft/core/v-api').DiscountDetails["meta"]} t */
+    /** @param {import('@storecraft/core/api').DiscountDetails["meta"]} t */
     (t) => {
       
       notify(t, getDefaultExtraByMeta(t))
@@ -1133,7 +1133,7 @@ const DiscountDetailsView = (
 
   const onExtraChange = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').DiscountDetails["extra"]} e
+     * @param {import('@storecraft/core/api').DiscountDetails["extra"]} e
      */
     (e) => {
       notify(meta, e)

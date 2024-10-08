@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -25,69 +25,132 @@
       "types": "./types.public.d.ts"
     },
     "./package.json": "./package.json",
-    "./v-assets/*": {
-      "import": "./v-assets/*"
+    "./assets/*": {
+      "import": "./assets/*"
     },
-    "./v-api": {
-      "import": "./v-api/public.js",
-      "types": "./v-api/types.public.d.ts"
+    "./api": {
+      "import": "./api/public.js",
+      "types": "./api/types.public.d.ts"
     },
-    "./v-api/*": {
-      "import": "./v-api/*"
+    "./api/*": {
+      "import": "./api/*"
     },
-    "./v-storage": {
-      "import": "./v-storage/public.js",
-      "types": "./v-storage/types.public.d.ts"
+    "./storage": {
+      "import": "./storage/public.js",
+      "types": "./storage/types.public.d.ts"
     },
-    "./v-crypto": {
-      "import": "./v-crypto/public.js",
-      "types": "./v-crypto/types.public.d.ts"
+    "./storage/*": {
+      "import": "./storage/*"
     },
-    "./v-ql": {
-      "import": "./v-ql/index.js",
-      "types": "./v-ql/types.d.ts"
+    "./storage/node": {
+      "import": "./storage/node/index.js",
+      "types": "./storage/node/types.public.d.ts"
     },
-    "./v-payments": {
-      "import": "./v-payments/public.js",
-      "types": "./v-payments/types.public.d.ts"
+    "./storage/deno": {
+      "import": "./storage/deno/index.js",
+      "types": "./storage/deno/types.public.d.ts"
     },
-    "./v-tax": {
-      "import": "./v-tax/public.js",
-      "types": "./v-tax/types.public.d.ts"
+    "./storage/bun": {
+      "import": "./storage/bun/index.js",
+      "types": "./storage/bun/types.public.d.ts"
     },
-    "./v-mailer": {
-      "import": "./v-mailer/public.js",
-      "types": "./v-mailer/types.public.d.ts"
+    "./crypto": {
+      "import": "./crypto/public.js",
+      "types": "./crypto/types.public.d.ts"
     },
-    "./v-database": {
-      "import": "./v-database/public.js",
-      "types": "./v-database/types.public.d.ts"
+    "./vql": {
+      "import": "./vql/index.js",
+      "types": "./vql/types.d.ts"
     },
-    "./v-platform": {
-      "import": "./v-platform/public.js",
-      "types": "./v-platform/types.public.d.ts"
+    "./payments": {
+      "import": "./payments/public.js",
+      "types": "./payments/types.public.d.ts"
     },
-    "./v-extensions": {
-      "import": "./v-extensions/public.js",
-      "types": "./v-extensions/types.public.d.ts"
+    "./payments/*": {
+      "import": "./payments/*"
     },
-    "./v-pubsub": {
-      "import": "./v-pubsub/public.js",
-      "types": "./v-pubsub/types.public.d.ts"
+    "./payments/dummy": {
+      "import": "./payments/dummy/index.js",
+      "types": "./payments/dummy/types.public.d.ts"
     },
-    "./v-rest": {
-      "import": "./v-rest/index.js",
-      "types": "./v-rest/types.public.d.ts"
+    "./tax": {
+      "import": "./tax/public.js",
+      "types": "./tax/types.public.d.ts"
+    },
+    "./mailer": {
+      "import": "./mailer/public.js",
+      "types": "./mailer/types.public.d.ts"
+    },
+    "./database": {
+      "import": "./database/public.js",
+      "types": "./database/types.public.d.ts"
+    },
+    "./platform": {
+      "import": "./platform/index.js",
+      "types": "./platform/types.public.d.ts"
+    },
+    "./platform/*": {
+      "import": "./platform/*"
+    },
+    "./platform/node": {
+      "import": "./platform/node/index.js",
+      "types": "./platform/node/types.public.d.ts"
+    },
+    "./platform/deno": {
+      "import": "./platform/deno/index.js",
+      "types": "./platform/deno/types.public.d.ts"
+    },
+    "./platform/cloudflare-workers": {
+      "import": "./platform/cloudflare-workers/index.js",
+      "types": "./platform/cloudflare-workers/types.public.d.ts"
+    },
+    "./platform/aws-lambda": {
+      "import": "./platform/aws-lambda/index.js",
+      "types": "./platform/aws-lambda/types.public.d.ts"
+    },
+    "./platform/bun": {
+      "import": "./platform/bun/index.js",
+      "types": "./platform/bun/types.public.d.ts"
+    },
+    "./platform/google-functions": {
+      "import": "./platform/google-functions/index.js",
+      "types": "./platform/google-functions/types.public.d.ts"
+    },
+    "./extensions": {
+      "import": "./extensions/public.js",
+      "types": "./extensions/types.public.d.ts"
+    },
+    "./extensions/*": {
+      "import": "./extensions/*"
+    },
+    "./extensions/postman": {
+      "import": "./extensions/postman/index.js",
+      "types": "./extensions/postman/types.public.d.ts"
+    },
+    "./extensions/notifications": {
+      "import": "./extensions/notifications/index.js"
+    },
+    "./pubsub": {
+      "import": "./pubsub/public.js",
+      "types": "./pubsub/types.public.d.ts"
+    },
+    "./rest": {
+      "import": "./rest/index.js",
+      "types": "./rest/types.public.d.ts"
+    },
+    "./test-runner": {
+      "import": "./test-runner/index.js"
     }
   },
   "scripts": {
     "core:test": "uvu -c",
-    "core:gen:zod": "npx ts-to-zod@latest ./v-api/types.api.d.ts ./v-api/types.autogen.zod.api.js --skipValidation",
-    "core:gen:vql": "node ./v-ql/compile.js",
-    "core:gen:open-api": "node ./v-rest/docs.openapi.gen.js",
+    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",
+    "core:gen:vql": "node ./vql/compile.js",
+    "core:gen:open-api": "node ./rest/docs.openapi.gen.js",
     "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm publish --access public"
   },
   "devDependencies": {
+    "@storecraft/database-sqlite": "latest",
     "@asteasolutions/zod-to-openapi": "^6.4.0",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",

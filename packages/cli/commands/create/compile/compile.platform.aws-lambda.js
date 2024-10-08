@@ -136,7 +136,7 @@ export class AppStack extends cdk.Stack {
 const lib_lambda_index_ts = () => `
 import type { 
   LambdaEvent, LambdaContext, APIGatewayProxyResult 
-} from "@storecraft/platforms/aws-lambda";
+} from "@storecraft/core/platform/aws-lambda";
 import { app } from './app';
 
 export const handler = async (event: LambdaEvent, context: LambdaContext): Promise<APIGatewayProxyResult> => {

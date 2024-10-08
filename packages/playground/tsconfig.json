@@ -3,8 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "allowJs": true,
-    "maxNodeModuleJsDepth": 10,
     "checkJs": true,
+    "maxNodeModuleJsDepth": 20,
     "resolveJsonModule": true,
     "target": "ESNext",
     "moduleResolution": "NodeNext",
@@ -14,5 +14,8 @@
       "../core/"
     ]
   },
-  "include": ["*", "*/*"]
+  "include": ["*", "*/*"],
+  "exclude": [
+    "*.json"
+  ]
 }

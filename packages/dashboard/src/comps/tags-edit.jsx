@@ -82,7 +82,7 @@ const ManualTag = (
  * 
  * @param {Omit<
  *  import('./select-resource.jsx').SelectResourceParams<
- *      import("@storecraft/core/v-api").TagType,
+ *      import("@storecraft/core/api").TagType,
  *      string
  *    >, 
  *    'resource' | 'transform_fn' | 'name_fn'
@@ -99,7 +99,7 @@ export const SelectTags = (
 
   /**
    * @type {import("./select-resource.jsx").SelectResourceParams<
-   *  import("@storecraft/core/v-api").TagType, string
+   *  import("@storecraft/core/api").TagType, string
    * >["transform_fn"]}
    */
  const transform_fn = useCallback(

@@ -16,7 +16,7 @@ export default class Storage {
 
   /**
    * @type {{
-   *  features: import('@storecraft/core/v-storage').StorageFeatures
+   *  features: import('@storecraft/core/storage').StorageFeatures
    * }}
    */
   #cache = {
@@ -36,7 +36,7 @@ export default class Storage {
    * - Does `storage` supports `pre-signed` urls for `download` / `upload`
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/v-storage').StorageFeatures>}
+   * @returns {Promise<import('@storecraft/core/storage').StorageFeatures>}
    */
   features = async () => {
     if(this.#cache.features)
@@ -78,7 +78,7 @@ export default class Storage {
    * 
    * @return {Promise<Blob>}
    * 
-   * @throws {import('@storecraft/core/v-api').error}
+   * @throws {import('@storecraft/core/api').error}
    */
   getBlobSigned = async (key) => {
 
@@ -98,7 +98,7 @@ export default class Storage {
 
     // `presigned` url instructions
     if(ctype === 'application/json') {
-      /** @type {import('@storecraft/core/v-storage').StorageSignedOperation} */
+      /** @type {import('@storecraft/core/storage').StorageSignedOperation} */
       const presigned_req = await r.json();
 
       const presigned_res = await fetch(
@@ -123,7 +123,7 @@ export default class Storage {
    * 
    * @return {Promise<Blob>}
    * 
-   * @throws {import('@storecraft/core/v-api').error}
+   * @throws {import('@storecraft/core/api').error}
    */
   getBlobUnsigned = async (key) => {
 
@@ -152,7 +152,7 @@ export default class Storage {
    * 
    * @return {Promise<Blob>}
    * 
-   * @throws {import('@storecraft/core/v-api').error}
+   * @throws {import('@storecraft/core/api').error}
    */
   getBlob = async (key) => {
 
@@ -238,7 +238,7 @@ export default class Storage {
 
     // `presigned` url instructions
     if(ctype === 'application/json') {
-      /** @type {import('@storecraft/core/v-storage').StorageSignedOperation} */
+      /** @type {import('@storecraft/core/storage').StorageSignedOperation} */
       const presigned_req = await r.json();
       const presigned_res = await fetch(
         presigned_req.url, 
@@ -294,7 +294,7 @@ export default class Storage {
    * 
    * @return {Promise<boolean>}
    * 
-   * @throws {import('@storecraft/core/v-api').error}
+   * @throws {import('@storecraft/core/api').error}
    */
   putBytes = async (key, data) => {
 

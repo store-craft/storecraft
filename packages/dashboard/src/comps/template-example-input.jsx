@@ -14,7 +14,7 @@ const info_example = {
 }
 
 /**
- * @type {import('@storecraft/core/v-api').OrderData}
+ * @type {import('@storecraft/core/api').OrderData}
  */
 const example_order = {
   contact: {
@@ -168,7 +168,7 @@ const example_order = {
 }
 
 /**
- * @type {import('@storecraft/core/v-api').CustomerType}
+ * @type {import('@storecraft/core/api').CustomerType}
  */
 const example_customer = {
   "email": "john@dow.com",
@@ -198,7 +198,7 @@ const capsules = [
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/v-api').TemplateType["reference_example_input"]> 
+ *   import('@storecraft/core/api').TemplateType["reference_example_input"]> 
  * } TemplateTemplateParams
  * 
  * @param {TemplateTemplateParams & 

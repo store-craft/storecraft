@@ -1,11 +1,11 @@
-import { enums } from "@storecraft/core/v-api";
+import { enums } from "@storecraft/core/api";
 
-/** @param {import("@storecraft/core/v-api").DiscountType} d */
+/** @param {import("@storecraft/core/api").DiscountType} d */
 const is_order_discount = d => {
   return (d.info.details.meta.id===enums.DiscountMetaEnum.order.id);
 }
 
-/** @param {import("@storecraft/core/v-api").DiscountType} d */
+/** @param {import("@storecraft/core/api").DiscountType} d */
 const is_automatic_discount = d => {
   return (d.application.id===enums.DiscountApplicationEnum.Auto.id);
 }
@@ -43,7 +43,7 @@ const eb_in = (eb, table, op, value) => {
  * create a mongodb conjunctions clauses from discount, intended
  * for filtering.
  * @param {import("kysely").ExpressionBuilder<Database, 'products'>} eb 
- * @param {import("@storecraft/core/v-api").DiscountType} d 
+ * @param {import("@storecraft/core/api").DiscountType} d 
  */
 export const discount_to_conjunctions = (eb, d) => {
   // discount has to be product discount + automatic + active + has filters
@@ -66,7 +66,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_in_products.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_products} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_in_products} */
           const cast = Array.isArray(filter?.value) ? filter.value : [];
 
           conjunctions.push(
@@ -79,7 +79,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_not_in_products.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_products} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_not_in_products} */
           const cast = Array.isArray(filter?.value) ? filter.value : [];
 
           conjunctions.push(
@@ -92,7 +92,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_in_tags.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_tags} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_in_tags} */
           const cast = Array.isArray(filter?.value) ? filter.value : [];
           
           conjunctions.push(
@@ -105,7 +105,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_not_in_tags.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_tags} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_not_in_tags} */
           const cast = Array.isArray(filter?.value) ? filter.value : [];
 
           conjunctions.push(
@@ -120,7 +120,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_in_collections.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_collections} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_in_collections} */
           const cast = Array.isArray(filter?.value) ? filter.value : [];
 
           // PROBLEM: we only have ids, but use handles in the filters
@@ -134,7 +134,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_not_in_collections.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_not_in_collections} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_not_in_collections} */
           const cast = Array.isArray(filter?.value) ? filter.value : [];
 
           conjunctions.push(
@@ -149,7 +149,7 @@ export const discount_to_conjunctions = (eb, d) => {
         break;
       case enums.FilterMetaEnum.p_in_price_range.op:
         {
-          /** @type {import("@storecraft/core/v-api").FilterValue_p_in_price_range} */
+          /** @type {import("@storecraft/core/api").FilterValue_p_in_price_range} */
           const cast = {
             from: 0,
             to: Number.POSITIVE_INFINITY,

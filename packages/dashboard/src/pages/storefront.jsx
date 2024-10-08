@@ -17,7 +17,7 @@ import Attributes from '@/comps/attributes.jsx'
 import { SelectResourceWithTags } from '@/comps/select-resource.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
-import { DiscountApplicationEnum } from '@storecraft/core/v-api/types.api.enums.js'
+import { DiscountApplicationEnum } from '@storecraft/core/api/types.api.enums.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 
 const test = {
@@ -64,7 +64,7 @@ const root_left_schema = {
         { 
           className:'w-full', add_all: true, resource: 'collections',
           /**
-           * @param {import('@storecraft/core/v-api').CollectionType} it 
+           * @param {import('@storecraft/core/api').CollectionType} it 
            */
           name_fn: it => it.title, slug: '/pages/collections'
 
@@ -79,7 +79,7 @@ const root_left_schema = {
         { 
           className: 'w-full', add_all: true, resource: 'discounts',
           /**
-           * @param {import('@storecraft/core/v-api').DiscountType[]} w 
+           * @param {import('@storecraft/core/api').DiscountType[]} w 
            */
           transform_fn: (w) => w.filter(
             it => it.application.id===DiscountApplicationEnum.Auto.id && it.active
@@ -96,7 +96,7 @@ const root_left_schema = {
         { 
           className: 'w-full', add_all: true, resource: 'shipping',
           /**
-           * @param {import('@storecraft/core/v-api').ShippingMethodType} it 
+           * @param {import('@storecraft/core/api').ShippingMethodType} it 
            */
           name_fn: it => it.title, slug: '/pages/shipping-methods'
         }
@@ -110,7 +110,7 @@ const root_left_schema = {
         { 
           className: 'w-full', add_all: true, resource: 'posts',
           /**
-           * @param {import('@storecraft/core/v-api').PostType} it 
+           * @param {import('@storecraft/core/api').PostType} it 
            */
           name_fn: it => it.title, slug: '/pages/posts'
         }
@@ -210,7 +210,7 @@ const Actions = (
 /**
  * 
  * @typedef {object} State Intrinsic state of `post`
- * @property {import('@storecraft/core/v-api').StorefrontType} data
+ * @property {import('@storecraft/core/api').StorefrontType} data
  * @property {boolean} hasChanged
  * 
  *
@@ -235,7 +235,7 @@ export default (
 
   /** 
     * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-    *  import('@storecraft/core/v-api').StorefrontType>
+    *  import('@storecraft/core/api').StorefrontType>
     * } 
     */
   const {

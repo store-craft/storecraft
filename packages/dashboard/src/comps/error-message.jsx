@@ -5,7 +5,7 @@ import { Bling } from "./common-ui.jsx"
 /**
  * Easily `format` errors coming from the `storecraft` backend
  * 
- * @param {import("@storecraft/core/v-api").error} error 
+ * @param {import("@storecraft/core/api").error} error 
  */
 export const format_storecraft_errors = error => {
   return error?.messages?.map(
@@ -24,7 +24,7 @@ export const format_storecraft_errors = error => {
  * error message view from document pages
  * 
  * @typedef {object} InternalEditMessage
- * @prop {import("@storecraft/core/v-api").error} [error]
+ * @prop {import("@storecraft/core/api").error} [error]
  * @prop {boolean} [positive]
  * @prop {string} [className]
  * 

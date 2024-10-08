@@ -8,8 +8,8 @@ const GallerySelect = forwardRef(
    * 
    * 
    * @typedef {object} GallerySelectParams
-   * @prop {import('@storecraft/core/v-api').ApiQuery} [query_params]
-   * @prop {(img: import('@storecraft/core/v-api').ImageType) => void} onSelect
+   * @prop {import('@storecraft/core/api').ApiQuery} [query_params]
+   * @prop {(img: import('@storecraft/core/api').ImageType) => void} onSelect
    * 
    * @param {GallerySelectParams} params 
    * @param {*} ref 

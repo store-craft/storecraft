@@ -9,7 +9,7 @@ import { useStorecraft } from '@storecraft/sdk-react-hooks'
  * @param {import('./fields-view.jsx').FieldLeafViewParams<
  *    undefined,
  *    import('../pages/discount.jsx').Context,
- *    import('@storecraft/core/v-api').DiscountType
+ *    import('@storecraft/core/api').DiscountType
  *  > &
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } params 

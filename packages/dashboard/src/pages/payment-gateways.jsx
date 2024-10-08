@@ -8,7 +8,7 @@ import svg from '@/comps/favicon.svg';
 
 /**
  * 
- * @typedef {import('@storecraft/core/v-api').PaymentGatewayItemGet} PaymentGatewayItemGet
+ * @typedef {import('@storecraft/core/api').PaymentGatewayItemGet} PaymentGatewayItemGet
  * 
  */
 
@@ -52,7 +52,7 @@ export const SpanWithLogo = (
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').PaymentGatewayItemGet, any, any
+ *  import('@storecraft/core/api').PaymentGatewayItemGet, any, any
  * >[]}
  */
 const schema_fields = [

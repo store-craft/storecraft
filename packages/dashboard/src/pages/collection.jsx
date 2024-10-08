@@ -139,7 +139,7 @@ const Actions = (
 /**
  * 
  * @typedef {object} State Intrinsic state of `collection`
- * @property {import('@storecraft/core/v-api').CollectionType} data
+ * @property {import('@storecraft/core/api').CollectionType} data
  * @property {boolean} hasChanged
  * 
  *
@@ -164,7 +164,7 @@ export default (
 
   /** 
    * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-   *  import('@storecraft/core/v-api').CollectionType>
+   *  import('@storecraft/core/api').CollectionType>
    * } 
    */
   const {

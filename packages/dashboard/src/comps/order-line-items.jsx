@@ -16,14 +16,14 @@ import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**
  * @typedef {object} InternalLineitemsTableParams
- * @prop {import('@storecraft/core/v-api').LineItem[]} [items]
+ * @prop {import('@storecraft/core/api').LineItem[]} [items]
  * @prop {import('./fields-view.jsx').FieldContextData & 
  *  import('../pages/order.jsx').Context
  * } [context]
  * @prop {(ix: number, op: Op, extra: any) => void} onChangeItem
  * @prop {(
  *  ix: number, 
- *  item: import('@storecraft/core/v-api').LineItem
+ *  item: import('@storecraft/core/api').LineItem
  * ) => void} onRemoveItem
  * 
  * @typedef {InternalLineitemsTableParams & 
@@ -39,7 +39,7 @@ const LineitemsTable = (
 ) => {
   
   /**
-   * @param {import('@storecraft/core/v-api').LineItem} it 
+   * @param {import('@storecraft/core/api').LineItem} it 
    */
   const msg = it => {
     return it.stock_reserved ? 
@@ -125,7 +125,7 @@ const LineitemsTable = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').LineItem[]> & 
+ *  import('@storecraft/core/api').LineItem[]> & 
  *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } OrderLineItemsParams
  * 
@@ -169,10 +169,10 @@ const OrderLineItems = (
 
   const onBrowseAdd = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').ProductType[]} selected_items 
+     * @param {import('@storecraft/core/api').ProductType[]} selected_items 
      */
     (selected_items) => {
-      /**@type {import('@storecraft/core/v-api').LineItem[]} */
+      /**@type {import('@storecraft/core/api').LineItem[]} */
       const mapped = selected_items.map(
         it => (
           {
@@ -202,7 +202,7 @@ const OrderLineItems = (
     /**
      * 
      * @param {number} ix 
-     * @param {import('@storecraft/core/v-api').LineItem} item 
+     * @param {import('@storecraft/core/api').LineItem} item 
      */
     (ix, item) => {
       if(item.stock_reserved && item.qty>0) {

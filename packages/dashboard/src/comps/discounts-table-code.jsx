@@ -1,4 +1,4 @@
-import { DiscountApplicationEnum } from "@storecraft/core/v-api/types.api.enums.js"
+import { DiscountApplicationEnum } from "@storecraft/core/api/types.api.enums.js"
 import { RiCoupon3Line } from "react-icons/ri/index.js"
 
 /**
@@ -6,7 +6,7 @@ import { RiCoupon3Line } from "react-icons/ri/index.js"
  * @param {object} param 
  * @param {string} param.value 
  * @param {import("./table-schema-view.jsx").TableSchemaViewContext<
- * import("@storecraft/core/v-api").DiscountType>} param.context 
+ * import("@storecraft/core/api").DiscountType>} param.context 
  */
 const Code = (
   { 

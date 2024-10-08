@@ -10,7 +10,7 @@ import { zeroed_relations } from './con.shared.js';
  * @typedef {Object} Relation
  * @property {ObjectId[]} [ids]
  * @property {Record<
- *  import('@storecraft/core/v-database').ID, T>
+ *  import('@storecraft/core/database').ID, T>
  * } [entries]
  */
 
@@ -27,7 +27,7 @@ import { zeroed_relations } from './con.shared.js';
  * Basically creates an ids array and embedded documents for fast retrival.
  * 
  * 
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template {import('@storecraft/core/api').BaseType} T
  * 
  * 
  * @param {MongoDB} driver our driver
@@ -50,7 +50,7 @@ export const create_explicit_relation = async (
   if(isUndef(value))
     return data;
    
-  /** @type {import('@storecraft/core/v-api').BaseType[]} */
+  /** @type {import('@storecraft/core/api').BaseType[]} */
   const items = Array.isArray(value) ? value : [value];
 
   /** @type {WithRelations<any>} */

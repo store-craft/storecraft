@@ -24,7 +24,7 @@ export default class Payments {
    * @param {string} handle payment gateway `handle`
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').PaymentGatewayItemGet>}
+   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayItemGet>}
    */
   get(handle) {
     return get(this.sdk, 'payments/gateways', handle);
@@ -33,7 +33,7 @@ export default class Payments {
   /**
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').PaymentGatewayItemGet[]>}
+   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayItemGet[]>}
    */
   list() {
     return list(this.sdk, 'payments/gateways');
@@ -48,7 +48,7 @@ export default class Payments {
    * 
    * @param {string} order_id 
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').PaymentGatewayStatus>}
+   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayStatus>}
    */
   paymentStatusOfOrder(order_id) {
     return fetchApiWithAuth(
@@ -69,7 +69,7 @@ export default class Payments {
    * @param {string} order_id the `id` of the `order`
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').PaymentGatewayStatus>}
+   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayStatus>}
    */
   invokeAction(action_handle, order_id) {
     return fetchApiWithAuth(

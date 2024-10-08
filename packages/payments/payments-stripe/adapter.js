@@ -1,17 +1,17 @@
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
-} from '@storecraft/core/v-api/types.api.enums.js';
-import { StorecraftError } from '@storecraft/core/v-api/utils.func.js';
+} from '@storecraft/core/api/types.api.enums.js';
+import { StorecraftError } from '@storecraft/core/api/utils.func.js';
 import html_buy_ui from './adapter.html.js';
 import { Stripe as StripeCls } from 'stripe'
 
 /**
  * @typedef {StripeCls.Response<StripeCls.PaymentIntent>} CheckoutCreateResult
- * @typedef {import('@storecraft/core/v-api').PaymentGatewayStatus} PaymentGatewayStatus
- * @typedef {import('@storecraft/core/v-api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/v-api').OrderData} OrderData
+ * @typedef {import('@storecraft/core/api').PaymentGatewayStatus} PaymentGatewayStatus
+ * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
+ * @typedef {import('@storecraft/core/api').OrderData} OrderData
  * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/v-payments').payment_gateway<Config, CheckoutCreateResult>} payment_gateway
+ * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CheckoutCreateResult>} payment_gateway
  */
 
 /**
@@ -268,8 +268,8 @@ export class Stripe {
 
   /**
    * @description [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
-   * @param {import('@storecraft/core/v-rest').ApiRequest} request 
-   * @param {import('@storecraft/core/v-rest').ApiResponse} response 
+   * @param {import('@storecraft/core/rest').ApiRequest} request 
+   * @param {import('@storecraft/core/rest').ApiResponse} response 
    * 
    * @type {payment_gateway["webhook"]}
    */

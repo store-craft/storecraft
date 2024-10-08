@@ -171,7 +171,7 @@ const root_schema = {
 /**
  * 
  * @typedef {object} State Intrinsic state of `tag`
- * @property {import('@storecraft/core/v-api').CustomerType} data
+ * @property {import('@storecraft/core/api').CustomerType} data
  * @property {boolean} hasChanged
  * 
  *
@@ -196,7 +196,7 @@ export default (
 
   /** 
   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
-  *  import('@storecraft/core/v-api').CustomerType>
+  *  import('@storecraft/core/api').CustomerType>
   * } 
   */
   const {

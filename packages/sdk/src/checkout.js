@@ -18,10 +18,10 @@ export default class Checkout {
   /**
    * @description Create a `checkout`
    * 
-   * @param {import('@storecraft/core/v-api').CheckoutCreateType} input 
+   * @param {import('@storecraft/core/api').CheckoutCreateType} input 
    * @param {string} gateway_handle 
    * 
-   * @returns {Promise<Partial<import('@storecraft/core/v-api').OrderData>>}
+   * @returns {Promise<Partial<import('@storecraft/core/api').OrderData>>}
    */
   create = async (input, gateway_handle) => {
 
@@ -46,7 +46,7 @@ export default class Checkout {
    * 
    * @param {string} order_id 
    * 
-   * @returns {Promise<Partial<import('@storecraft/core/v-api').OrderData>>}
+   * @returns {Promise<Partial<import('@storecraft/core/api').OrderData>>}
    */
   complete = async (order_id) => {
 
@@ -64,9 +64,9 @@ export default class Checkout {
   /**
    * @description calculate the pricing of an `order`. Using auto-discounts, coupons, shipping and line-items.
    * 
-   * @param {Partial<import('@storecraft/core/v-api').OrderData>} order 
+   * @param {Partial<import('@storecraft/core/api').OrderData>} order 
    * 
-   * @returns {Promise<Partial<import('@storecraft/core/v-api').PricingData>>}
+   * @returns {Promise<Partial<import('@storecraft/core/api').PricingData>>}
    */
   pricing = async (order) => {
 

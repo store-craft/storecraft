@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core/v-api/types.api.enums.js'
+  PaymentOptionsEnum } from '@storecraft/core/api/types.api.enums.js'
 import { LabelCapsule } from "./capsule.jsx"
 
 export const id2ColorFulfill = id => {

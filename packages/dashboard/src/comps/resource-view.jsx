@@ -40,7 +40,7 @@ const ResourceView = forwardRef(
     
   /**
    * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/v-api').ProductType>
+   *  import('@storecraft/core/api').ProductType>
    * }
    */
   const { 

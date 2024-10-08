@@ -1,25 +1,25 @@
 /** 
  * @import { StorecraftConfig } from "./types.public.js";
- * @import { OrderData } from "./v-api/types.public.js";
- * @import { storage_driver } from "./v-storage/types.public.js";
- * @import { db_driver } from "./v-database/types.public.js";
- * @import { payment_gateway } from "./v-payments/types.public.js";
- * @import { extension } from "./v-extensions/types.public.js";
- * @import { InferPlatformContext, InferPlatformNativeRequest, InferPlatformNativeResponse, PlatformAdapter } from "./v-platform/types.public.js";
- * @import { mailer } from "./v-mailer/types.public.js";
- * @import { tax_provider } from "./v-tax/types.public.js";
- * @import { PayloadForUpsert, PubSubOnEvents } from "./v-pubsub/types.public.js";
- * @import { ApiResponse } from "./v-rest/types.public.js";
+ * @import { OrderData } from "./api/types.public.js";
+ * @import { storage_driver } from "./storage/types.public.js";
+ * @import { db_driver } from "./database/types.public.js";
+ * @import { payment_gateway } from "./payments/types.public.js";
+ * @import { extension } from "./extensions/types.public.js";
+ * @import { InferPlatformContext, InferPlatformNativeRequest, InferPlatformNativeResponse, PlatformAdapter } from "./platform/types.public.js";
+ * @import { mailer } from "./mailer/types.public.js";
+ * @import { tax_provider } from "./tax/types.public.js";
+ * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
+ * @import { ApiResponse } from "./rest/types.public.js";
  * 
  */
-import { STATUS_CODES } from './v-polka/codes.js';
-import { create_rest_api } from './v-rest/index.js';
-import { create_api, enums } from './v-api/index.js'
-import { PubSub } from './v-pubsub/public.js';
-import { UniformTaxes } from './v-tax/public.js';
-export * from './v-api/types.api.enums.js'
+import { STATUS_CODES } from './polka/codes.js';
+import { create_rest_api } from './rest/index.js';
+import { create_api, enums } from './api/index.js'
+import { PubSub } from './pubsub/public.js';
+import { UniformTaxes } from './tax/public.js';
+export * from './api/types.api.enums.js'
 import pkg from './package.json' assert { type: "json" }
-import { NotificationsExtension } from './v-extensions/extension-notifications.js';
+import { NotificationsExtension } from './extensions/notifications/index.js';
 
 /**
  * @typedef {{

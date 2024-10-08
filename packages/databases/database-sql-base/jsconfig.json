@@ -11,6 +11,7 @@
     "migrations.sqlite/*", 
     "migrations.postgres/*", 
     "migrations.mysql/*", 
+    "migrations.shared/*", 
     "tests/*.js"
   ]
 }

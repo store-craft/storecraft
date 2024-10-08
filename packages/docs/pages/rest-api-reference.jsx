@@ -21,7 +21,7 @@ export default () => {
     <ApiReferenceReact
       configuration={{
         spec: {
-          url: 'https://cdn.jsdelivr.net/npm/@storecraft/core@1.0.1/v-rest/openapi.yaml',
+          url: 'https://cdn.jsdelivr.net/npm/@storecraft/core@latest/rest/openapi.yaml',
           
         },
         theme: 'purple',

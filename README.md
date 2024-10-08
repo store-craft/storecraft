@@ -31,7 +31,7 @@ Hi 👋, `Storecraft` is a next generation Commerce As Code backend.
 
 ```js
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node'
+import { NodePlatform } from '@storecraft/core/platform/node'
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 
@@ -115,7 +115,7 @@ The core engine of storecraft
 - core VQL types and logic
 - core REST API controller
 
-### 🌐 Platforms [@storecraft/platforms](packages/platforms/)
+### 🌐 Platforms [@storecraft/core/platform](packages/core/)
 
 Support for 
 - Node
@@ -141,7 +141,7 @@ Support for
 
 ### 📦 Storage
 Support for,
-- Local storage (Node, Bun, Deno), [@storecraft/storage-local](packages/storage/storage-local/)
+- Local storage (Node, Bun, Deno), [@storecraft/core/storage](packages/storage/core/storage/)
 - S3 Compatible ([@storecraft/storage-s3-compatible](packages/storage/storage-s3-compatible/))
   - Cloudflare R2
   - AWS S3

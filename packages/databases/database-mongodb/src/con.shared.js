@@ -8,15 +8,15 @@ import { add_search_terms_relation_on } from './utils.relations.js'
 
 
 /**
- * @template {import('@storecraft/core/v-api').BaseType} T
- * @template {import('@storecraft/core/v-api').BaseType} G
+ * @template {import('@storecraft/core/api').BaseType} T
+ * @template {import('@storecraft/core/api').BaseType} G
  * 
  * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["upsert"]}
+ * @returns {import('@storecraft/core/database').db_crud<T, G>["upsert"]}
  * 
  */
 export const upsert_regular = (driver, col) => {
@@ -87,7 +87,7 @@ export const get_relations_names = item => {
  * 
  * 
  * @param {import('./utils.relations.js').WithRelations<T>[]} items
- * @param {import('@storecraft/core/v-api').ExpandQuery} [expand_query] 
+ * @param {import('@storecraft/core/api').ExpandQuery} [expand_query] 
  * 
  */
 export const expand = (items, expand_query=undefined) => {
@@ -142,7 +142,7 @@ export const zeroed_relations = {
 
 /**
  * 
- * @param {import('@storecraft/core/v-database').RegularGetOptions["expand"]} expand 
+ * @param {import('@storecraft/core/database').RegularGetOptions["expand"]} expand 
  */
 export const expand_to_mongo_projection = (expand) => {
   let projection = {}
@@ -168,7 +168,7 @@ export const expand_to_mongo_projection = (expand) => {
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["get"]}
+ * @returns {import('@storecraft/core/database').db_crud<T, G>["get"]}
  */
 export const get_regular = (driver, col) => {
   return async (id_or_handle, options) => {
@@ -194,15 +194,15 @@ export const get_regular = (driver, col) => {
  * should be instead
  * 
  * 
- * @template {import('@storecraft/core/v-api').idable} T
- * @template {import('@storecraft/core/v-api').idable} G
+ * @template {import('@storecraft/core/api').idable} T
+ * @template {import('@storecraft/core/api').idable} G
  * 
  * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["getBulk"]}
+ * @returns {import('@storecraft/core/database').db_crud<T, G>["getBulk"]}
  */
 export const get_bulk = (driver, col) => {
   return async (ids, options) => {
@@ -247,7 +247,7 @@ export const get_bulk = (driver, col) => {
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["remove"]}
+ * @returns {import('@storecraft/core/database').db_crud<T, G>["remove"]}
  */
 export const remove_regular = (driver, col) => {
   return async (id_or_handle) => {
@@ -269,7 +269,7 @@ export const remove_regular = (driver, col) => {
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["list"]}
+ * @returns {import('@storecraft/core/database').db_crud<T, G>["list"]}
  */
 export const list_regular = (driver, col) => {
   return async (query) => {
@@ -313,7 +313,7 @@ export const list_regular = (driver, col) => {
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/v-database').db_crud<T, G>["count"]}
+ * @returns {import('@storecraft/core/database').db_crud<T, G>["count"]}
  */
 export const count_regular = (driver, col) => {
   return async (query) => {

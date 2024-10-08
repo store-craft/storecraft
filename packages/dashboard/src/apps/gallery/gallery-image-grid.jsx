@@ -4,10 +4,10 @@ import Img from '@/comps/img.jsx'
 
 /**
  * @typedef {object} InternalImageParams
- * @prop {import('@storecraft/core/v-api').ImageType} data
+ * @prop {import('@storecraft/core/api').ImageType} data
  * @prop {(
  *  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
- *  data: import('@storecraft/core/v-api').ImageType
+ *  data: import('@storecraft/core/api').ImageType
  * ) => void} onClickImage
  * @prop {string} [className]
  * 
@@ -55,10 +55,10 @@ export const Image = (
   
   /**
    * @typedef {object} InternalImageGridParams
-   * @prop {import('@storecraft/core/v-api').ImageType[]} images
+   * @prop {import('@storecraft/core/api').ImageType[]} images
    * @prop {(
    *  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
-   *  data: import('@storecraft/core/v-api').ImageType
+   *  data: import('@storecraft/core/api').ImageType
    * ) => void} onClickImage
    * @prop {string} [className]
    * 

@@ -1,9 +1,9 @@
-import { enums } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/api'
 import { useMemo } from 'react'
 
 /**
  * 
- * @param {import('@storecraft/core/v-api').DiscountDetails["meta"]["type"]} type 
+ * @param {import('@storecraft/core/api').DiscountDetails["meta"]["type"]} type 
  */
 export const discount_types_to_color = type => {
   switch (type) {
@@ -19,7 +19,7 @@ export const discount_types_to_color = type => {
 /**
  * 
  * @param {import('./table-schema-view.jsx').TableSchemaViewComponentParams<
- * import('@storecraft/core/v-api').DiscountDetails["meta"]>} param0 
+ * import('@storecraft/core/api').DiscountDetails["meta"]>} param0 
  * @returns 
  */
 const DiscountType = ({ value, ...rest }) => {

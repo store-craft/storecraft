@@ -6,7 +6,7 @@ can roll your own platform integration and implementation
 ## How It Works
 
 Under the hood, each platform module needs to implement the 
-`import("@storecraft/core/v-platform").PlatformAdapter` interface.
+`import("@storecraft/core/platform").PlatformAdapter` interface.
 
 This interface implementation 
 - Translate native `http` requests into Web [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
@@ -95,14 +95,14 @@ import { Readable } from 'node:stream'
  * 
  * @typedef {import('node:http').IncomingMessage} IncomingMessage
  * @typedef {import('node:http').ServerResponse} ServerResponse
- * @typedef {import("@storecraft/core/v-platform").PlatformAdapter<
+ * @typedef {import("@storecraft/core/platform").PlatformAdapter<
  *  IncomingMessage, ServerResponse
  * >} RequestEncoderType
  */
 
 
 /**
- * @typedef {import('@storecraft/core/v-platform').PlatformAdapter<
+ * @typedef {import('@storecraft/core/platform').PlatformAdapter<
  *  IncomingMessage, ServerResponse, ServerResponse
  * >} PlatformAdapter
  * 

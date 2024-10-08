@@ -26,30 +26,27 @@ export const infer_platform = platform => {
       return {
         cls: `NodePlatform`,
         imports: [
-          `import { NodePlatform } from '@storecraft/platforms/node'`
+          `import { NodePlatform } from '@storecraft/core/platform/node'`
         ],
         deps: [
-          '@storecraft/platforms'
         ]
       }
     case 'bun':
       return {
         cls: `BunPlatform`,
         imports: [
-          `import { BunPlatform } from '@storecraft/platforms/bun'`
+          `import { BunPlatform } from '@storecraft/core/platform/bun'`
         ],
         deps: [
-          '@storecraft/platforms'
         ]
       }
     case 'deno':
       return {
         cls: `DenoPlatform`,
         imports: [
-          `import { DenoPlatform } from '@storecraft/platforms/deno'`
+          `import { DenoPlatform } from '@storecraft/core/platform/deno'`
         ],
         deps: [
-          '@storecraft/platforms'
         ]
       }
 
@@ -57,10 +54,9 @@ export const infer_platform = platform => {
       return {
         cls: `CloudflareWorkersPlatform`,
         imports: [
-          `import { CloudflareWorkersPlatform } from '@storecraft/platforms/cloudflare-workers'`
+          `import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-workers'`
         ],
         deps: [
-          '@storecraft/platforms'
         ]
       }
 
@@ -68,10 +64,9 @@ export const infer_platform = platform => {
       return {
         cls: `AWSLambdaPlatform`,
         imports: [
-          `import { AWSLambdaPlatform } from '@storecraft/platforms/aws-lambda'`
+          `import { AWSLambdaPlatform } from '@storecraft/core/platform/aws-lambda'`
         ],
         deps: [
-          '@storecraft/platforms'
         ]
       }
 
@@ -79,10 +74,9 @@ export const infer_platform = platform => {
       return {
         cls: `GoogleFunctionsPlatform`,
         imports: [
-          `import { GoogleFunctionsPlatform } from '@storecraft/platforms/google-functions'`
+          `import { GoogleFunctionsPlatform } from '@storecraft/core/platform/google-functions'`
         ],
         deps: [
-          '@storecraft/platforms'
         ]
       }
   }
@@ -243,30 +237,27 @@ export const infer_storage = info => {
       return {
         cls: `DenoLocalStorage`,
         imports: [
-          `import { DenoLocalStorage } from '@storecraft/storage-local/deno'`
+          `import { DenoLocalStorage } from '@storecraft/core/storage/deno'`
         ],
         deps: [
-          '@storecraft/storage-local'
         ]
       }
     case 'node':
       return {
         cls: `NodeLocalStorage`,
         imports: [
-          `import { NodeLocalStorage } from '@storecraft/storage-local/node'`
+          `import { NodeLocalStorage } from '@storecraft/core/storage/node'`
         ],
         deps: [
-          '@storecraft/storage-local'
         ]
       }
     case 'bun':
       return {
         cls: `BunLocalStorage`,
         imports: [
-          `import { BunLocalStorage } from '@storecraft/storage-local/bun'`
+          `import { BunLocalStorage } from '@storecraft/core/storage/bun'`
         ],
         deps: [
-          '@storecraft/storage-local'
         ]
       }
   }
@@ -412,19 +403,32 @@ ${
   ).join('\n')
 }
 })
+.withExtensions(
+  {
+    'postman': new PostmanExtension()
+  }
+)
 `;
 
   return {
     code,
     imports: [
-      platform.imports, database.imports, storage.imports, 
-      mailer.imports, payments.map(p => p.imports),
-      `import { App } from '@storecraft/core'`
+      platform.imports, 
+      database.imports, 
+      storage.imports, 
+      mailer.imports, 
+      payments.map(p => p.imports),
+      `import { App } from '@storecraft/core'`,
+      `import { PostmanExtension } from '@storecraft/core/extensions/postman'`,
     ].flat(10),
     deps: [
-      platform.deps, database.deps, storage.deps, 
-      mailer.deps, payments.map(p => p.deps),
-      '@storecraft/core'
+      platform.deps, 
+      database.deps, 
+      storage.deps, 
+      mailer.deps, 
+      payments.map(p => p.deps),
+      '@storecraft/core',
+      'handlebars'
     ].flat(10),
   }
 }

@@ -1,0 +1,142 @@
+# **Configuration**
+
+Every storecraft app is instantiated with a configuration object, which helps the
+developer to configure some aspects of the internal logic of the app's engine.
+
+For example,
+
+```ts
+import { App } from '@storecraft/core';
+
+new App(
+  {
+    auth_admins_emails: ['admin@mydomain.com'],
+    auth_secret_access_token: process.env.auth_secret_access_token,
+    ...
+  }
+)...
+
+```
+
+Also
+
+# StorecraftConfig
+
+Config object is called `StorecraftConfig`, with the following properties
+
+```ts
+import type { StorecraftConfig } from '@storecraft/core';
+```
+
+<SimpleTable column_names={['property', 'type']}
+  rows={
+    [
+      ['auth_admins_emails', 'string[]'],
+      ['auth_secret_access_token', 'string'],
+      ['auth_secret_refresh_token', 'string'],
+      ['checkout_reserve_stock_on', `'checkout_create' | 'checkout_complete' | 'never'`],
+      ['storage_rewrite_urls', 'string'],
+      ['general_store_name', `string`],
+      ['general_store_website', `string`],
+      ['general_store_logo_url', `string`],
+      ['general_store_description', `string`],
+      ['general_store_support_email', `string`],
+      ['general_confirm_email_base_url', `string`],
+      ['general_forgot_password_confirm_base_url', `string`],
+    ]
+  }
+  />
+
+
+# Properties
+
+
+### auth_admins_emails
+
+Seed admin emails, if absent will be infered at init by `platform.env.SC_AUTH_ADMIN_EMAILS` environment as CSV of emails,
+each admin's initial password is `admin` and it can be changed later (through dashboard/settings)
+
+
+### auth_secret_access_token
+
+Access token signing secret, if absent will be infered at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment.
+
+### auth_secret_refresh_token
+
+Refresh token signing secret, if absent will be infered at init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment.
+
+### checkout_reserve_stock_on
+
+(Optional) Automatically reserve stock on key events such as `checkout_create` | `checkout_complete` | `never`, we recommend to use `never`.
+Depending on your needs you can alter this setting.
+if absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` 
+environment and then will default to `never`.
+
+**@default** never
+
+
+### storage_rewrite_urls
+
+(Optional) Once object `storage` is used, you may have connected a 
+**CDN** to buckets to take advantage of faster assets serving instead of serving 
+from your server / the storage service directly. If you are using an cloud based 
+storage service such as AWS S3, it is very recommended to attach the bucket to 
+a **CDN** for super fast and efficient serving.
+
+Take note, most cloud based storage services and `storecraft` drivers support creating 
+`presigned` urls for `download` / `upload`, which essentially delegate these operations
+to the storage services. However, **CDN** is always the best choice for assets serving
+cost and latency wise.
+
+if absent will be infered at init by `platform.env.SC_STORAGE_REWRITE_URLS` environment.
+
+**@default** undefined
+
+### cors
+(Optional) Your chance to override the default `CORS` config for HTTP requests
+
+### general_store_name
+(optional) The store name, also infered from `platform.env.SC_GENERAL_STORE_NAME` environment
+
+### general_store_website
+The store `website`, also infered from `platform.env.SC_GENERAL_STORE_WEBSITE` environment
+
+### general_store_logo_url
+The store `logo` url, also infered from `platform.env.SC_GENERAL_STORE_LOGO_URL` environment
+
+### general_store_description
+The store `description`, also infered from `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
+
+### general_store_support_email
+The store support email `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
+
+### general_confirm_email_base_url
+The store `email-confirm` base url into which a template
+action button will link into including a `token` as a query parameter.
+
+#### For example:
+Suppose the base url is `https://store.com/confirm`,
+then `storecraft` default email template will use this to send
+a link with `https://store.com/confirm?token={{CONFIRM_TOKEN}}`
+
+You can use this to delegate into `storecraft` auth backend endpoint
+`/api/auth/confirm-email?token={{CONFIRM_TOKEN}}`
+
+**@default** `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
+
+
+### general_forgot_password_confirm_base_url
+
+The store `forgot-password` base url, into which template action
+button will link into including a `token` as a query parameter.
+
+#### For example:
+Suppose the base url is `https://store.com/forgot-password-confirm`,
+then `storecraft` default email template will use this to send
+a link with `https://store.com/forgot-password-confirm?token={{CONFIRM_TOKEN}}`
+
+You can use this to delegate into `storecraft` auth backend endpoint
+`/api/auth/forgot-password-request-confirm?token={{CONFIRM_TOKEN}}`
+
+**@default** `platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment
+

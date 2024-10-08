@@ -18,11 +18,11 @@ import useCollectionsActions from '@/hooks/useCollectionsActions.js'
  * 
  * 
  * @typedef {object} InnerGalleryParams
- * @prop {import('@storecraft/core/v-api').ApiQuery
+ * @prop {import('@storecraft/core/api').ApiQuery
  * } [query_params={}] { vql: '', limit: 5}
  * @prop {(
  *  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
- *  data: import('@storecraft/core/v-api').ImageType
+ *  data: import('@storecraft/core/api').ImageType
  * ) => void} [onClickImage]
  * @prop {boolean} [useSearchParamsForQuery=true] Use url navigation
  * to paginate through search params, as opposed to in-memory. This
@@ -44,7 +44,7 @@ const Gallery = (
 
 /**
   * @type {import('@/hooks/useCollectionsActions.js').HookReturnType<
-  *  import('@storecraft/core/v-api').ImageType>
+  *  import('@storecraft/core/api').ImageType>
   * }
   */
   const { 

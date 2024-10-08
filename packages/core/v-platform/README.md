@@ -1,1 +1,0 @@
-# Storecraft platform types and logic

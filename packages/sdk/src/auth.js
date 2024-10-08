@@ -1,4 +1,4 @@
-import { api_query_to_searchparams } from '@storecraft/core/v-api/utils.query.js';
+import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js';
 import { StorecraftSDK } from '../index.js';
 import { fetchApiWithAuth, url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
@@ -136,7 +136,7 @@ export default class Auth {
         }
       );
 
-      /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
+      /** @type {import('@storecraft/core/api').ApiAuthResult} */
       let payload = undefined;
 
       if(auth_res.ok) {
@@ -203,7 +203,7 @@ export default class Auth {
 
   /**
    * 
-   * @param {import('@storecraft/core/v-api').ApiAuthResult} user 
+   * @param {import('@storecraft/core/api').ApiAuthResult} user 
    */
   #_update_and_notify_subscribers = (user) => {
     this.currentAuth = user
@@ -217,12 +217,12 @@ export default class Auth {
    * @param {string} password 
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/v-api').ApiAuthResult>}
+   * @returns {Promise<import('@storecraft/core/api').ApiAuthResult>}
    */
   signin = async (email, password) => {
     // console.log('ep ', email, password)
 
-    /** @type {import('@storecraft/core/v-api').ApiAuthSigninType} */
+    /** @type {import('@storecraft/core/api').ApiAuthSigninType} */
     const info = {
       email, password
     }
@@ -239,7 +239,7 @@ export default class Auth {
     );
     
     if(!res.ok) {
-      /** @type {import('@storecraft/core/v-api').error} */
+      /** @type {import('@storecraft/core/api').error} */
       let error_payload = {
         messages: [
           {
@@ -257,7 +257,7 @@ export default class Auth {
     }    
     // assert(res.ok, 'auth/error2');
 
-    /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
+    /** @type {import('@storecraft/core/api').ApiAuthResult} */
     const payload = await res.json();
 
     // console.log('auth_result', payload)
@@ -278,7 +278,7 @@ export default class Auth {
    * @param {string} [lastname] 
    */
   signup = async (email, password, firstname, lastname) => {
-    /** @type {import('@storecraft/core/v-api').ApiAuthSignupType} */
+    /** @type {import('@storecraft/core/api').ApiAuthSignupType} */
     const info = {
       email, password,
       firstname, lastname
@@ -297,7 +297,7 @@ export default class Auth {
     
     assert(res.ok, 'auth/error');
 
-    /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
+    /** @type {import('@storecraft/core/api').ApiAuthResult} */
     const payload = await res.json();
 
     this.#_update_and_notify_subscribers(
@@ -310,7 +310,7 @@ export default class Auth {
 
   /**
    * 
-   * @param {import('@storecraft/core/v-api').ApiAuthChangePasswordType} params 
+   * @param {import('@storecraft/core/api').ApiAuthChangePasswordType} params 
    */
   
   changePassword = async (params) => {
@@ -327,7 +327,7 @@ export default class Auth {
     );
     
     if(!res.ok) {
-      /** @type {import('@storecraft/core/v-api').error} */
+      /** @type {import('@storecraft/core/api').error} */
       let error_payload = {
         messages: [
           {
@@ -344,7 +344,7 @@ export default class Auth {
       throw error_payload;
     }
 
-    /** @type {import('@storecraft/core/v-api').ApiAuthResult} */
+    /** @type {import('@storecraft/core/api').ApiAuthResult} */
     const payload = await res.json();
 
     this.#_update_and_notify_subscribers(
@@ -367,7 +367,7 @@ export default class Auth {
 
 
   create_api_key = async () => {
-    /** @type {import('@storecraft/core/v-api').ApiKeyResult} */
+    /** @type {import('@storecraft/core/api').ApiKeyResult} */
     const item = await fetchApiWithAuth(
       this.#sdk,
       '/auth/apikeys',
@@ -386,7 +386,7 @@ export default class Auth {
    * @param {string} email_or_id
    */
   get_auth_user = async (email_or_id) => {
-    /** @type {import('@storecraft/core/v-api').AuthUserType} */
+    /** @type {import('@storecraft/core/api').AuthUserType} */
     const item = await fetchApiWithAuth(
       this.#sdk,
       `/auth/users/${email_or_id}`,
@@ -417,7 +417,7 @@ export default class Auth {
   /**
    * 
    * 
-   * @param {import('@storecraft/core/v-api').ApiQuery} query
+   * @param {import('@storecraft/core/api').ApiQuery} query
    * 
    */
   list_auth_users = async (query) => {
@@ -435,7 +435,7 @@ export default class Auth {
 
   list_api_keys_auth_users = async () => {
 
-    /** @type {import('@storecraft/core/v-api').AuthUserType[]} */
+    /** @type {import('@storecraft/core/api').AuthUserType[]} */
     const items = await fetchApiWithAuth(
       this.#sdk,
       '/auth/apikeys',

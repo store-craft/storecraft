@@ -6,7 +6,7 @@ Features:
 - Supports streaming `Get` / `Put` / `Delete`
 
 ```bash
-npm i @storecraft/storage-local
+npm i @storecraft/core
 ```
 
 ## usage
@@ -14,7 +14,7 @@ npm i @storecraft/storage-local
 Example Node.js 
 
 ```js
-import { NodeLocalStorage } from '@storecraft/storage-local/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node';
 
 const storage = new NodeLocalStorage('storage');
 
@@ -31,7 +31,7 @@ const { value } = await storage.getBlob(key);
 Example Deno 
 
 ```ts
-import { DenoLocalStorage } from '@storecraft/storage-local/deno';
+import { DenoLocalStorage } from '@storecraft/core/storage/deno';
 
 const storage = new DenoLocalStorage('storage');
 
@@ -48,7 +48,7 @@ const { value } = await storage.getBlob(key);
 Example Bun
 
 ```js
-import { BunLocalStorage } from '@storecraft/storage-local/bun';
+import { BunLocalStorage } from '@storecraft/core/storage/bun';
 
 const storage = new BunLocalStorage('storage');
 
@@ -65,9 +65,9 @@ const { value } = await storage.getBlob(key);
 ## In Storecraft App
 
 ```js
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { App } from '@storecraft/core';
  
 const app = new App(

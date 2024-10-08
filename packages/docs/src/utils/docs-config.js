@@ -53,6 +53,16 @@ export default {
       empty: true,
       groups: [
         {
+          title: '✨ Quick Overview',
+          route: 'backend/overview',
+          path: 'content/docs/backend/overview.mdx'
+        },
+        {
+          title: '⚙️ Configuration',
+          route: 'backend/config',
+          path: 'content/docs/backend/config.mdx'
+        },
+        {
           title: '💾 Databases',
           route: 'backend/databases',
           empty: true,
@@ -111,7 +121,7 @@ export default {
           groups: [
             {
               title: 'Node / Deno / Bun Local Storage',
-              route: 'backend/storage/storage-local',
+              route: 'backend/storage/local',
               path: 'content/docs/backend/storage/storage-local.mdx'
             },
             {
@@ -286,11 +296,21 @@ export default {
               path: 'content/docs/backend/extensions/overview.mdx'
             },
             {
+              title: 'Postman Events Emailer',
+              route: 'backend/extensions/postman',
+              path: 'content/docs/backend/extensions/postman.mdx'
+            },
+            {
               title: 'Roll Your Own',
               route: 'backend/extensions/roll-your-own',
               path: 'content/docs/backend/extensions/roll-your-own.mdx'
             },
           ]
+        },
+        {
+          title: '🔎 Testing',
+          route: 'backend/testing',
+          path: 'content/docs/backend/testing.mdx'
         },
       ]
     },

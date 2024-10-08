@@ -53,9 +53,9 @@ const Entry = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').PricingData,
+ *  import('@storecraft/core/api').PricingData,
  *  import('@/pages/order.jsx').Context,
- *  import('@storecraft/core/v-api').OrderData
+ *  import('@storecraft/core/api').OrderData
  * > & 
  *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } OrderPriceParams

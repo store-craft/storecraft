@@ -10,7 +10,7 @@ import {
 } from './utils.relations.js';
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_shipping} db_col
+ * @typedef {import('@storecraft/core/database').db_shipping} db_col
  */
 
 /**

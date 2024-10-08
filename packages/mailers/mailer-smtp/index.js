@@ -5,7 +5,7 @@ import { attachment_convert } from "./index.utils.js";
 /**
  * @typedef {nodemailer.Transporter<SMTPTransport.SentMessageInfo>} NodemailerClient
  * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/v-mailer').mailer<Config>} mailer
+ * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
  * @implements {mailer}
  * 
  * mailer with nodemailer for node.js

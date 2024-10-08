@@ -4,7 +4,7 @@ import SelectResource from './select-resource.jsx'
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').ShippingMethodType> & 
+ *  import('@storecraft/core/api').ShippingMethodType> & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } OrderDeliveryMethodParams
  * 

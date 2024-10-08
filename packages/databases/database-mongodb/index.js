@@ -42,7 +42,7 @@ const connect = async (uri, options) => {
 }
 
 /**
- * @typedef {import('@storecraft/core/v-database').db_driver} db_driver
+ * @typedef {import('@storecraft/core/database').db_driver} db_driver
  * 
  * 
  * @implements {db_driver}
@@ -178,7 +178,7 @@ export class MongoDB {
 
   /**
    * 
-   * @template {import('@storecraft/core/v-api').BaseType} T
+   * @template {import('@storecraft/core/api').BaseType} T
    * 
    * 
    * @param {string} name 

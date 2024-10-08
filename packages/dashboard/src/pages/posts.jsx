@@ -7,7 +7,7 @@ import { ResourceTitle } from '../comps/resource-title.jsx'
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').PostType, any, any
+ *  import('@storecraft/core/api').PostType, any, any
  * >[]}
  */
 const schema_fields = [

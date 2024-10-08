@@ -24,8 +24,8 @@ npm i @storecraft/database-planetscale
 import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/platforms/node';
-import { NodeLocalStorage } from '@storecraft/storage-local/node'
+import { NodePlatform } from '@storecraft/core/platform/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { PlanetScale } from '@storecraft/database-planetscale'
 import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js'
 

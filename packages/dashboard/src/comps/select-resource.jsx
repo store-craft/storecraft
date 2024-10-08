@@ -12,7 +12,7 @@ import { App } from '@storecraft/core'
 /**
  * picks the name from every item
  * 
- * @param {import('@storecraft/core/v-api').BaseType} it 
+ * @param {import('@storecraft/core/api').BaseType} it 
  */
 export const default_name_fn = it => it?.title ?? it?.handle ?? it?.id ?? 'unknown';
 
@@ -213,7 +213,7 @@ export default SelectResource;
 /**
  * A `FieldView` `select` control with `capsules` 
  * 
- * @template {import('@storecraft/core/v-api').BaseType} T
+ * @template {import('@storecraft/core/api').BaseType} T
  * 
  * @param {SelectResourceWithTagsParams<T>} params
  */

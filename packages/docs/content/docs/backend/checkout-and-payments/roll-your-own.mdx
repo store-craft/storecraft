@@ -8,7 +8,7 @@ This article will teach you,
 - The concepts of implemeting a payment integration
 - The code required
 
-> You are advised to pick the code of `@storecraft/payments-dummy` and `@storecraft/payments-paypal-standard`
+> You are advised to pick the code of `@storecraft/core/payments/dummy` and `@storecraft/payments-paypal-standard`
 
 ## Concepts
 
@@ -110,16 +110,16 @@ In this section, we will explore the interface and implement a dummy payment int
 Every Gateway should implement the following interface found at
 
 ```ts
-import type { payment_gateway } '@storecraft/core/v-payments';
+import type { payment_gateway } '@storecraft/core/payments';
 ```
 
 Which is,
 
 ```ts
-import type { ApiRequest, ApiResponse } from "../v-rest/types.public.d.ts";
+import type { ApiRequest, ApiResponse } from "../rest/types.public.d.ts";
 import type { 
   OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
-} from "../v-api/types.api.d.ts";
+} from "../api/types.api.d.ts";
 
 export type PaymentGatewayActionHandler<CheckoutCreateResult, Extra> = (input: CheckoutCreateResult, extra: Extra) => Promise<PaymentGatewayStatus>;
 export type OnCheckoutCompleteResult = {
@@ -155,19 +155,19 @@ export declare interface payment_gateway<Config extends any, CheckoutCreateResul
 
 ### Dummy Payments Example
 
-This is based on the official
+This is based on the official module
 
 ```bash
-npm i @storecraft/payments-dummy
+@storecraft/core/payments/dummy
 ```
 
 Which yields,
 
 ```ts
-import { assert, ID } from '@storecraft/core/v-api/utils.func.js';
-import type { payment_gateway } from '@storecraft/core/v-payments';
-import { OrderData, PaymentGatewayStatus } from '@storecraft/core/v-api';
-import { enums } from '@storecraft/core/v-api';
+import { assert, ID } from '@storecraft/core/api/utils.func.js';
+import type { payment_gateway } from '@storecraft/core/payments';
+import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api';
+import { enums } from '@storecraft/core/api';
   
 type Config = {
   default_currency_code?: string;
@@ -413,7 +413,7 @@ Then, connect your gateway as one of the payment providers,
 ```ts
 import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
-import { NodePlatform } from '@storecraft/platforms/node';
+import { NodePlatform } from '@storecraft/core/platform/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 import { PaypalStandard } from '@storecraft/payments-paypal-standard'
 

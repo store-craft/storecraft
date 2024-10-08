@@ -2,7 +2,7 @@
  * @typedef {import("../index.js").Database} Database
  */
 
-import { parse } from "@storecraft/core/v-ql";
+import { parse } from "@storecraft/core/vql";
 
 /**
  * Convert an API Query cursor into mongo dialect, also sanitize.
@@ -13,7 +13,7 @@ import { parse } from "@storecraft/core/v-ql";
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/v-api").Cursor} c 
+ * @param {import("@storecraft/core/api").Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
  */
@@ -73,7 +73,7 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
 /**
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/v-ql").VQL.Node} node 
+ * @param {import("@storecraft/core/vql").VQL.Node} node 
  * @param {keyof Database} table_name 
  */
 export const query_vql_node_to_eb = (eb, node, table_name) => {
@@ -120,7 +120,7 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
 
 /**
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/v-ql").VQL.Node} root 
+ * @param {import("@storecraft/core/vql").VQL.Node} root 
  * @param {keyof Database} table_name 
  */
 export const query_vql_to_eb = (eb, root, table_name) => {
@@ -133,7 +133,7 @@ export const query_vql_to_eb = (eb, root, table_name) => {
  * 
  * 
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/v-api").ApiQuery} q 
+ * @param {import("@storecraft/core/api").ApiQuery} q 
  * @param {keyof Database} table_name 
  * 
  */
@@ -177,7 +177,7 @@ const SIGN = {
 /**
  * Convert an API Query into mongo dialect, also sanitize.
  * 
- * @param {import("@storecraft/core/v-api").ApiQuery} q 
+ * @param {import("@storecraft/core/api").ApiQuery} q 
  */
 export const query_to_sort = (q={}) => {
   // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';

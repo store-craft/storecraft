@@ -3,17 +3,14 @@
 So, if you wanted to run `StoreCraft` on `bun`, this is the `platform`
 package for you :)
 
-```bash
-npm i @storecraft/platforms
-```
 
 ## usage
 
 ```js
 import 'dotenv/config';
 import { App } from '@storecraft/core'
-import { BunPlatform } from '@storecraft/platforms/bun';
-import { BunLocalStorage } from '@storecraft/storage-local/bun'
+import { BunPlatform } from '@storecraft/core/platform/bun';
+import { BunLocalStorage } from '@storecraft/core/storage/bun'
 import { MongoDB } from '@storecraft/database-mongodb'
 
 const app = new App(

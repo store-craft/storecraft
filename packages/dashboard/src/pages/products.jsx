@@ -21,7 +21,7 @@ const test = {
 
 /**
  * @type {import('../comps/table-schema-view.jsx').TableSchemaViewField<
- *  import('@storecraft/core/v-api').ProductType, any, any
+ *  import('@storecraft/core/api').ProductType, any, any
  * >[]}
  */
 const schema_fields = [
@@ -39,7 +39,7 @@ const schema_fields = [
                   inline-block whitespace-nowrap`,
       name_fn: 
         /** 
-         * @param {import('@storecraft/core/v-api').CollectionType} c 
+         * @param {import('@storecraft/core/api').CollectionType} c 
          */ 
         c => c.handle
     } 
@@ -59,8 +59,8 @@ export default ({}) => {
 
   /**
    * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  import('@storecraft/core/v-api').ProductType | 
-   *  import('@storecraft/core/v-api').VariantType>
+   *  import('@storecraft/core/api').ProductType | 
+   *  import('@storecraft/core/api').VariantType>
    * }
    */
   const { 

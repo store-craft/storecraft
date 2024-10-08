@@ -10,7 +10,7 @@ import { PromisableLoadingButton } from './common-button.jsx'
 import useInterval from '@/hooks/useInterval.js'
 import { useNavigate } from 'react-router-dom'
 
-/**@type {import('@storecraft/core/v-api').NotificationType} */
+/**@type {import('@storecraft/core/api').NotificationType} */
 const tn = {
   message: 'New `order` *was* **created** New order was created New order was created',
   updated_at: new Date().toISOString(),
@@ -28,7 +28,7 @@ const tn = {
   ]
 }
 
-/**@type {import('@storecraft/core/v-api').NotificationType} */
+/**@type {import('@storecraft/core/api').NotificationType} */
 const tn2 = {
   message: `* 🚀 a \n* b`,
   updated_at: new Date().toISOString(),
@@ -46,7 +46,7 @@ const tn2 = {
   ]
 }
 
-/**@type {import('@storecraft/core/v-api').NotificationType[]} */
+/**@type {import('@storecraft/core/api').NotificationType[]} */
 const test = [
   tn2, tn, tn, tn, {...tn, search: ['email']},
 ]
@@ -61,7 +61,7 @@ const message = `
 /**
  * 
  * @typedef {object} NotificationParams
- * @prop {import('@storecraft/core/v-api').NotificationType} notification
+ * @prop {import('@storecraft/core/api').NotificationType} notification
  * 
  * 
  * @param {NotificationParams} params
@@ -81,7 +81,7 @@ const Notification = (
       if(action)  {
         switch(action.type) {
           case 'route':
-            /** @type {import('@storecraft/core/v-api').NotificationActionRouteParams} */
+            /** @type {import('@storecraft/core/api').NotificationActionRouteParams} */
             let casted_params = params;
 
             nav(
@@ -89,7 +89,7 @@ const Notification = (
             );
             break;
           case 'url':
-            /** @type {import('@storecraft/core/v-api').NotificationActionUrlParams} */
+            /** @type {import('@storecraft/core/api').NotificationActionUrlParams} */
             let casted_params_2 = params;
 
             window.open(
@@ -135,7 +135,7 @@ const Notification = (
 /**
  * 
  * @typedef {object} FilterViewParams
- * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
+ * @prop {import('@storecraft/core/api').NotificationType[]} notis
  * @prop {string} [selected='All']
  * @prop {(filter: string) => void} [onChange]
  * 
@@ -205,7 +205,7 @@ const FilterView = (
 /**
  * 
  * @typedef {object} NotificationsViewParams
- * @prop {import('@storecraft/core/v-api').NotificationType[]} notis
+ * @prop {import('@storecraft/core/api').NotificationType[]} notis
  * @prop {() => Promise<any>} onLoadMore
  * 
  * 
@@ -268,7 +268,7 @@ const Notifications = forwardRef(
 
     /**
      * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-     *  import('@storecraft/core/v-api').NotificationType
+     *  import('@storecraft/core/api').NotificationType
      * >}
      */
     const { 
@@ -316,7 +316,7 @@ const Notifications = forwardRef(
       }, [start]
     );
 
-    /**@type {import('@storecraft/core/v-api').NotificationType[]} */
+    /**@type {import('@storecraft/core/api').NotificationType[]} */
     const flattened = useMemo(
       () => pages.flat(1), 
       [pages]

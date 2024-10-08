@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import CapsulesView from './capsules-view.jsx'
 import SelectResource from './select-resource.jsx'
 import { useNavigate } from 'react-router-dom'
-import { enums } from '@storecraft/core/v-api'
+import { enums } from '@storecraft/core/api'
 
 /** @param {string} str */
 const isEmpty = (str) => (!str?.trim().length)
@@ -10,7 +10,7 @@ const isEmpty = (str) => (!str?.trim().length)
 /**
  * 
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/v-api').DiscountType[]> & 
+ *  import('@storecraft/core/api').DiscountType[]> & 
 *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 * } MDEditorParams
 * 
@@ -26,13 +26,13 @@ const OrderCouponInfo = (
   const ref_name = useRef();
 
   const { key, name, comp_params } = field
-  /**@type {[discounts: import('@storecraft/core/v-api').DiscountType[], any]} */
+  /**@type {[discounts: import('@storecraft/core/api').DiscountType[], any]} */
   const [discounts, setDiscounts] = useState(value ?? [])
   const nav = useNavigate()
 
   const onSelect = useCallback(
     /**
-     * @param {import('@storecraft/core/v-api').DiscountType} t 
+     * @param {import('@storecraft/core/api').DiscountType} t 
      */
     (t) => {
       const new_discounts = [
@@ -56,7 +56,7 @@ const OrderCouponInfo = (
   const onClick = useCallback(
     /**
      * 
-     * @param {import('@storecraft/core/v-api').DiscountType} v 
+     * @param {import('@storecraft/core/api').DiscountType} v 
      */
     (v) => {
       const where = v.handle
@@ -66,7 +66,7 @@ const OrderCouponInfo = (
   )
 
   const onRemove = useCallback(
-    /** @param {import('@storecraft/core/v-api').DiscountType} t  */
+    /** @param {import('@storecraft/core/api').DiscountType} t  */
     (t) => {
       const new_discounts = [
         ...discounts.filter(d => d.handle!==t.handle)
@@ -85,13 +85,13 @@ const OrderCouponInfo = (
       className='mt-3' 
       transform_fn={
         page => page.filter(
-          /** @param {import('@storecraft/core/v-api').DiscountType} it  */
+          /** @param {import('@storecraft/core/api').DiscountType} it  */
           it => it.application.id==enums.DiscountApplicationEnum.Manual.id && it.active
         )
       }
       onSelect={onSelect}
       name_fn={
-        /** @param {import('@storecraft/core/v-api').DiscountType} d  */
+        /** @param {import('@storecraft/core/api').DiscountType} d  */
         d => d.handle 
       }
       header='Add Coupons you defined' 
@@ -102,7 +102,7 @@ const OrderCouponInfo = (
       onClick={onClick} 
       onRemove={onRemove}
       name_fn={
-        /** @param {import('@storecraft/core/v-api').DiscountType} d  */
+        /** @param {import('@storecraft/core/api').DiscountType} d  */
         d => d.handle
       }
       tags={discounts} className='mt-3' 

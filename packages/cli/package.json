@@ -49,9 +49,7 @@
     "@storecraft/mailer-providers-http": "*",
     "@storecraft/payments-paypal": "*",
     "@storecraft/payments-stripe": "*",
-    "@storecraft/platforms": "*",
     "@storecraft/storage-google": "*",
-    "@storecraft/storage-local": "*",
     "@storecraft/storage-s3-compatible": "*",
     "@types/yargs": "^17.0.33"
   },

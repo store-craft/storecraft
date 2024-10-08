@@ -11,7 +11,7 @@ import { AttributeType, AuthUserType, Role, TagType,
   OrderPaymentGatewayData, NotificationType,
   NotificationAction,
   DiscountInfo,
-  DiscountApplicationEnum} from '@storecraft/core/v-api'
+  DiscountApplicationEnum} from '@storecraft/core/api'
 import {
   ColumnType,
   Generated,

@@ -5,8 +5,8 @@ import { collection_base } from './utils.api.fetch.js';
  * @description Base `tags` **CRUD**
  * 
  * @extends {collection_base<
- *  import('@storecraft/core/v-api').TagTypeUpsert, 
- *  import('@storecraft/core/v-api').TagType>
+ *  import('@storecraft/core/api').TagTypeUpsert, 
+ *  import('@storecraft/core/api').TagType>
  * }
  */
 export default class Tags extends collection_base {

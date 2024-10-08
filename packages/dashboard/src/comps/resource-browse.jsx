@@ -14,7 +14,7 @@ import { App } from '@storecraft/core'
  * - query and filtering with `vql` search query
  * - designed to be used inside a popup modal.
  * 
- * @template {import('@storecraft/core/v-api').BaseType} [T=import('@storecraft/core/v-api').BaseType]
+ * @template {import('@storecraft/core/api').BaseType} [T=import('@storecraft/core/api').BaseType]
  * 
  * 
  * @typedef {object} BrowseCollectionParams
@@ -26,7 +26,7 @@ import { App } from '@storecraft/core'
  */
 
 /** 
- * @template {import('@storecraft/core/v-api').BaseType} [T=import('@storecraft/core/v-api').BaseType]
+ * @template {import('@storecraft/core/api').BaseType} [T=import('@storecraft/core/api').BaseType]
  * 
  * @param {BrowseCollectionParams<T>} params
  */
@@ -224,7 +224,7 @@ const BrowseCollection = (
 /**
  * 
  * @param {object} param
- * @param {import('@storecraft/core/v-api').CustomerType} param.data
+ * @param {import('@storecraft/core/api').CustomerType} param.data
  */
 const UserComp = ({ data }) => {
   return (
@@ -246,7 +246,7 @@ const UserComp = ({ data }) => {
 /**
  * 
  * @param {object} param
- * @param {import('@storecraft/core/v-api').ProductType} param.data
+ * @param {import('@storecraft/core/api').ProductType} param.data
  */
 const ProductComp = ({ data }) => {
   return (
@@ -265,7 +265,7 @@ const ProductComp = ({ data }) => {
 
 /**
  * @typedef {object} BrowseCustomersParams
- * @prop {(v: import('@storecraft/core/v-api').CustomerType[]) => void} onSave
+ * @prop {(v: import('@storecraft/core/api').CustomerType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
  * @param {BrowseCustomersParams} params 
@@ -284,7 +284,7 @@ export const BrowseCustomers = ({ onSave, onCancel }) => {
 
 /**
  * @typedef {object} BrowseProductsParams
- * @prop {(v: import('@storecraft/core/v-api').ProductType[]) => void} onSave
+ * @prop {(v: import('@storecraft/core/api').ProductType[]) => void} onSave
  * @prop {() => void} onCancel
  * 
  * @param {BrowseProductsParams} params

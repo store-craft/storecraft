@@ -30,7 +30,7 @@ const infer_content_type = (name) => {
 
 /**
  * Google Storage
- * @typedef {import('@storecraft/core/v-storage').storage_driver} storage
+ * @typedef {import('@storecraft/core/storage').storage_driver} storage
  * 
  * @implements {storage}
  */
@@ -66,7 +66,7 @@ export class GoogleStorage {
   }
 
   features() {
-    /** @type {import('@storecraft/core/v-storage').StorageFeatures} */
+    /** @type {import('@storecraft/core/storage').StorageFeatures} */
     const f = {
       supports_signed_urls: true
     }

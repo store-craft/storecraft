@@ -307,6 +307,11 @@ export default {
             },
           ]
         },
+        {
+          title: '🔎 Testing',
+          route: 'backend/testing',
+          path: 'content/docs/backend/testing.mdx'
+        },
       ]
     },
 

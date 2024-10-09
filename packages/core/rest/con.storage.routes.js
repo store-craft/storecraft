@@ -90,7 +90,9 @@ export const create_routes = (app) => {
       } else {
         const s = await app.storage.getStream(file_key);
 
-        if(s) {
+        // console.log(s)
+
+        if(s?.value) {
           res.sendReadableStream(s.value);
 
           s?.metadata?.contentType && res.headers.set(

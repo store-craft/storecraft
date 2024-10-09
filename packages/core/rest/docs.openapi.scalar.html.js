@@ -25,11 +25,11 @@ export default
         theme: 'solarized',
         layout: 'modern',
         servers: [
-    {
-      url: '/api',
-      description: 'Production server',
-    },
-  ]
+          {
+            url: '/api',
+            description: 'Production server',
+          },
+        ]
       }
 
       var apiReference = document.getElementById('api-reference')

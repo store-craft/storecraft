@@ -24,7 +24,7 @@ import { api } from '@storecraft/core/test-runner'
 
 The **api** object is made up of many tests (we are using [uvu](https://github.com/lukeed/uvu)).
 
-## Example
+## App Testing
 
 So, suppose you want to test your new application with a database integration you have written,
 
@@ -80,3 +80,22 @@ async function test() {
 }
 
 ```
+
+## Storage Testing
+
+In the same spirit, Simply
+
+```ts
+import { storage as storage_test_runner } from '@storecraft/core/test-runner';
+
+async function test() {
+  const my_storage_driver = new NodeLocalStorage('my-storage');
+
+  await my_storage_driver.init();
+
+  storage_test_runner.create(my_storage_driver).run();
+}
+
+```
+
+This will run some tests against your storage driver.

@@ -13,7 +13,7 @@
 - **Pricing** logic
 - **Checkout** logic
 - **Database** integration
-- **Storage** integration (soon)
+- **Storage** integration
 - **Events**
 
 This package is used by the core storecraft engine for dev testing, but also
@@ -29,7 +29,7 @@ import { api } from '@storecraft/core/test-runner'
 
 The **api** object is made up of many tests (we are using [uvu](https://github.com/lukeed/uvu)).
 
-## Example
+## App Testing
 
 So, suppose you want to test your new application with a database integration you have written,
 
@@ -44,7 +44,10 @@ const app = new App()
 Simply, import the **api** `test-runner`
 
 ```ts
-import { api as api_test_runner } from '@storecraft/core/test-runner'
+import { 
+  api as api_test_runner, 
+  storage as storage_test_runner 
+} from '@storecraft/core/test-runner'
 ```
 
 Each property of the `api_test_runner` is a test suite with the following signature
@@ -86,6 +89,24 @@ async function test() {
 
 ```
 
+## Storage Testing
+
+In the same spirit, Simply
+
+```ts
+import { storage as storage_test_runner } from '@storecraft/core/test-runner';
+
+async function test() {
+  const my_storage_driver = new NodeLocalStorage('my-storage');
+
+  await my_storage_driver.init();
+
+  storage_test_runner.create(my_storage_driver).run();
+}
+
+```
+
+This will run some tests against your storage driver.
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

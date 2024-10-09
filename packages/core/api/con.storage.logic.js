@@ -1,7 +1,8 @@
 import { App } from "../index.js";
 
 /**
- * prefer signed url get by default
+ * @description prefer signed url get by default
+ * 
  * @param {URLSearchParams} search_params
  */
 export const does_prefer_signed = search_params => {
@@ -10,10 +11,9 @@ export const does_prefer_signed = search_params => {
 
 
 /**
- * Recursively go over object keys, locate `media` keys, iterate
+ * @description Recursively go over object keys, locate `media` keys, iterate
  * them if they are `arrays` and replace `storage://` values with 
  * **CDN** rewrites.
- * 
  * 
  * @param {App} app 
  */
@@ -44,10 +44,9 @@ export const rewrite_media_from_storage = (app) =>
 }
 
 /**
- * Recursively go over object keys, locate `media` keys, iterate
+ * @description Recursively go over object keys, locate `media` keys, iterate
  * them if they are `arrays` and replace `app.config.storage_rewrite_urls`
  * into `storage://` 
- * 
  * 
  * @param {App} app 
  */

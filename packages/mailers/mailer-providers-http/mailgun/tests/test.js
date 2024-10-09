@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { Mailgun } from '../index.js';
+import { Mailgun } from '../adapter.js';
 
 const mailer = new Mailgun(
   {

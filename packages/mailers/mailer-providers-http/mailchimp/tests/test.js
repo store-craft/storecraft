@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { MailChimp } from '../index.js';
+import { MailChimp } from '../adapter.js';
 
 const mailer = new MailChimp(
   {

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { SendGrid } from '../index.js';
+import { SendGrid } from '../adapter.js';
 
 const mailer = new SendGrid(
   {

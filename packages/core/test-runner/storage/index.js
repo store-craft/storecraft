@@ -164,12 +164,11 @@ export const create = (storage, name) => {
     const buffer = data_with_buffers[0].buffer;
     
     await storage.putArraybuffer(key, buffer);
-    await sleep(1000);
+    // await sleep(1000);
     await storage.remove(key);
-    await sleep(1000);
+    // await sleep(1000);
     const removed = await storage.getArraybuffer(key);
 
-    console.log(removed)
     assert.ok(
       (removed.value===undefined) || 
       (removed.value.byteLength==0), 

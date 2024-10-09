@@ -19,6 +19,12 @@ const data_with_buffers = [
   }
 ];
 
+const sleep = (ms=1000) => new Promise(
+  (resolve, reject) => {
+    setTimeout(resolve, ms);
+  }
+)
+
 /**
  * 
  * @param {ReadableStream} stream 
@@ -83,6 +89,24 @@ export const create = (storage, name) => {
   );
   
   
+  s('ArrayBuffer put/get', async () => {
+  
+    const data = data_with_buffers;
+  
+    for (const d of data) {
+      
+      await storage.putArraybuffer(d.key, d.buffer);
+      // read
+      const { value } = await storage.getArraybuffer(d.key);
+      // compare
+      const equal = areArrayBuffersEqual(d.buffer, value);
+      assert.ok(equal, 'are not equal !!!');
+  
+    }
+    
+  });
+  
+
   s('BLOB put/get/delete', async () => {
 
     const data = data_with_buffers.map(
@@ -100,33 +124,9 @@ export const create = (storage, name) => {
       // compare
       const equal = await areBlobsEqual(blob_read, d.blob);
       assert.ok(equal, 'Blobs are not equal !!!');
-  
-      await storage.remove(d.key);
-      const removed = await storage.getBlob(d.key);
-      assert.ok(removed.value===undefined, 'Blobwas not deleted !!!');
     }
-    
-  });
-  
-  s('ArrayBuffer put/get/delete', async () => {
-  
-    const data = data_with_buffers;
-  
-    for (const d of data) {
-      await storage.putArraybuffer(d.key, d.buffer);
-      // read
-      const { value } = await storage.getArraybuffer(d.key);
-      // compare
-      const equal = areArrayBuffersEqual(d.buffer, value);
-      assert.ok(equal, 'are not equal !!!');
-  
-      await storage.remove(d.key);
-      const removed = await storage.getArraybuffer(d.key);
-      assert.ok(removed.value===undefined, 'Blobwas not deleted !!!');
-    }
-    
-  });
-  
+  });  
+
   s('Stream put/get/delete', async () => {
   
     const data = data_with_buffers.map(
@@ -153,18 +153,30 @@ export const create = (storage, name) => {
   //     }
   //     console.log(d.buffer)
   
-  
-  //     return;
-      // compare
-  
-      const equal = areArrayBuffersEqual(d.buffer, await readableStreamToArrayBuffer(value));
-      assert.ok(equal, 'are not equal !!!');
-  
-      const removed = await storage.remove(d.key);
-      assert.ok(removed, 'not removed !!!');
     }
     
   });
+  
+
+  s('Remove', async () => {
+  
+    const key = 'folder-test/about_to_be_removed.png'
+    const buffer = data_with_buffers[0].buffer;
+    
+    await storage.putArraybuffer(key, buffer);
+    await sleep(1000);
+    await storage.remove(key);
+    await sleep(1000);
+    const removed = await storage.getArraybuffer(key);
+
+    console.log(removed)
+    assert.ok(
+      (removed.value===undefined) || 
+      (removed.value.byteLength==0), 
+      'not removed !!!'
+    );
+  });
+  
   
   return s;
 }

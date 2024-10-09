@@ -273,8 +273,9 @@ export class GoogleStorage {
       }
     );
 
+    // console.log(await r.text())
+
     return r.ok;
-    // console.log(r)
   }
 }
 

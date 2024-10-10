@@ -39,6 +39,7 @@ const sleep = (ms=1000) => new Promise(
 
 
 /**
+ * @description compare web request against the fixture by `headers`, `body` and `url`
  * 
  * @param {Request | Response} web_request 
  */
@@ -51,7 +52,10 @@ const compare_web_request_or_response_to_fixture = async (web_request) => {
     new URL(fixture.request.url).pathname===new URL(web_request.url).pathname, 
     'URLs don\'t match'
   );
-  assert.ok(fixture.request.init.body===await web_request.text(), 'bodies don\'t match');
+  assert.ok(
+    fixture.request.init.body===await web_request.text(), 
+    'bodies don\'t match'
+  );
 
   Object.entries(fixture.request.init.headers).forEach(
     ([key, value]) => {
@@ -78,69 +82,90 @@ async function test() {
   s('Encode IncomingMessage -> Web Request (sanity)', async () => {
 
     let done = false;
+    let error = undefined;
+
     const server = http.createServer(
       async (req, res) => {
 
-        // console.log('hello ', req.url);
-
-        if(req.url==='/done') {
+        const close = () => {
           res.end();
-
+  
           server.closeAllConnections()
           server.close();
 
           done=true;
-
-          return;
         }
 
-        // encode native request into web-request
-        const web_request = await node_platform.encode(req);
+        // console.log('hello ', req.url);
+        try {
+          if(req.url==='/done') {
+            close();
+            return;
+          }
+  
+          // encode native request into web-request
+          const web_request = await node_platform.encode(req);
+  
+          // compare it against the appropriate fixture
+          const { fixture } = await compare_web_request_or_response_to_fixture(web_request);
+  
+          // send an identity response with the web-response into native response
+          await node_platform.handleResponse(
+            new Response(
+              fixture.request.init.body,
+              {
+                headers: web_request.headers,
+                status: 200,
+                statusText: 'OK'
+              }
+            ),
+            res
+          );
+        } catch (e) {
+          error = e;
+          res.end();
+          // close();
+        }
 
-        // compare it against the appropriate fixture
-        const { fixture } = await compare_web_request_or_response_to_fixture(web_request);
-
-        // send an identity response with the web-response into native response
-        await node_platform.handleResponse(
-          new Response(
-            fixture.request.init.body,
-            {
-              headers: web_request.headers,
-              status: 200,
-              statusText: 'OK'
-            }
-          ),
-          res
-        );
       }
     )
     
     server.listen(
       PORT,
       async () => {
-        for (const r of requests_fixtures) {
-          const response = await fetch(
-            r.request.url, 
-            {
-              ...r.request.init,
-              headers: {
-                ...r.request.init.headers,
-                'X-ID': r.id
-              }
-            }
-          );
+        try {
 
-          await compare_web_request_or_response_to_fixture(response);
+          for (const r of requests_fixtures) {
+            const response = await fetch(
+              r.request.url, 
+              {
+                ...r.request.init,
+                headers: {
+                  ...r.request.init.headers,
+                  'X-ID': r.id
+                }
+              }
+            );
+  
+            await compare_web_request_or_response_to_fixture(response);
+          }
+  
+        } catch (e) {
+          error=e;
         }
 
-        // send done signal
-        await fetch(`http://localhost:${PORT}/done`)
+        try {
+          // send done signal
+          await fetch(`http://localhost:${PORT}/done`);
+        } catch (e) {
+
+        }
+
       }
     ); 
 
     while (!done) {
-      // console.log(done);
-      
+      assert.not(error, String(error))
       await sleep(10);
     }
     

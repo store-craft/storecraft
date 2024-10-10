@@ -6,7 +6,9 @@ import { NodeCrypto } from '../node/node.crypto.js';
 
 
 /**
- * @typedef {PlatformAdapter<GoogleFunctionRequest, GoogleFunctionResponse, GoogleFunctionResponse>} GoogleFunctionPlatformAdapter
+ * @typedef {PlatformAdapter<
+ *  GoogleFunctionRequest, GoogleFunctionResponse, GoogleFunctionResponse
+ * >} GoogleFunctionPlatformAdapter
  * 
  * @implements {GoogleFunctionPlatformAdapter}
  */

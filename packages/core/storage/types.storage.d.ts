@@ -61,7 +61,7 @@ export declare interface storage_driver {
    * 
    * @description Init the storage
    */
-  init: (app?: App) => Promise<storage_driver>;
+  init: (app?: App) => Promise<any>;
 
   /**
    * 
@@ -96,7 +96,7 @@ export declare interface storage_driver {
    */
   getBlob: (key: string) => Promise<Get<Blob>>;
   getArraybuffer: (key: string) => Promise<Get<ArrayBuffer>>;
-  getStream: (key: string) => Promise<Get<Partial<ReadableStream<any>>>>;
+  getStream: (key: string) => Promise<Get<ReadableStream<any>>>;
   getSigned?: (key: string) => Promise<StorageSignedOperation>;
 
   /**

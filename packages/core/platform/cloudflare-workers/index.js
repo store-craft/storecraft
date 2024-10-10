@@ -1,7 +1,7 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
  */
-import { pbkdf2 } from '@storecraft/core/crypto';
+import { pbkdf2 } from '../../crypto/public.js';
 
 /**
  * @typedef {PlatformAdapter<Request, any, Response>} CloudflareWorkersPlatformAdapter

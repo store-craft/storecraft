@@ -4,12 +4,12 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 
 async function test() {
-  const storage = new DenoLocalStorage(
-    path.join(os.homedir(), 'test-storecraft-deno-local-storage')
-  );
-  const suite = storage_test_runner.create(storage);
-  suite.before(async () => { await storage.init();});
-  suite.run();
+  const folder = path.join(os.homedir(), 'test-storecraft-deno-local-storage');
+  const storage = new DenoLocalStorage(folder);
+
+  await storage.init();
+
+  storage_test_runner.create(storage).run()
 }
 
 test();

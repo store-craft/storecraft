@@ -4,12 +4,12 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 
 async function test() {
-  const storage = new BunLocalStorage(
-    path.join(os.homedir(), 'test-storecraft-bun-local-storage')
-  );
-  const suite = storage_test_runner.create(storage);
-  suite.before(async () => { await storage.init();});
-  suite.run();
+  const folder = path.join(os.homedir(), 'test-storecraft-bun-local-storage');
+  const storage = new BunLocalStorage(folder);
+
+  await storage.init();
+
+  storage_test_runner.create(storage).run()
 }
 
 test();

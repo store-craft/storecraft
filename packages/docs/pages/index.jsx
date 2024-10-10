@@ -66,7 +66,7 @@ export default () => {
             <Segment className='w-full'>
               <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] text-center md:text-left ' 
-                  children={<div>Craft the <u className='underline'>perfect</u> commerce as code application'</div>} />
+                  children={<div>Craft the <u className='underline'>perfect</u> commerce as code application_</div>} />
               <CodeBlock children={code} showLinesNumbers={false} 
                       outerClassName='w-full md:w-fit flex-shrink md:flex-shrink-0' />
             </Segment>

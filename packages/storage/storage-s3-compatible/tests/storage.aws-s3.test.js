@@ -1,10 +1,8 @@
 import 'dotenv/config';
-import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { S3 } from '@storecraft/storage-s3-compatible'
 import { readFile } from 'node:fs/promises';
-import { homedir } from 'node:os'
-import * as path from 'node:path';
+import { storage as storage_test_runner } from '@storecraft/core/test-runner'
 
 const areBlobsEqual = async (blob1, blob2) => {
   return !Buffer.from(await blob1.arrayBuffer()).compare(
@@ -22,16 +20,14 @@ const storage = new S3({
   secretAccessKey: process.env.S3_SECRET_KEY
 });
 
-test.before(async () => { await storage.init(null) })
+const suite = storage_test_runner.create(storage);
 
-test('blob put/get/delete', async () => {
+suite.before(async () => { await storage.init(undefined) });
+
+suite('blob put/get/delete', async () => {
   const data = [
-    // {
-    //   key: 'folder1/tomer.txt',
-    //   blob: new Blob(['this is some text from tomer :)']),
-    // },
     {
-      key: 'node2222.png',
+      key: 'folder2/node2222.png',
       blob: new Blob([await readFile('./node.png')])
     }
   ];
@@ -56,14 +52,10 @@ test('blob put/get/delete', async () => {
   
 });
 
-test('blob put (presign)', async () => {
+suite('blob put (presign)', async () => {
   const data = [
-    // {
-    //   key: 'folder1/tomer.txt',
-    //   blob: new Blob(['this is some text from tomer :)']),
-    // },
     {
-      key: 'node_test2.png',
+      key: 'folder2/node_test2.png',
       blob: new Blob([await readFile('./node.png')])
     }
   ];
@@ -81,10 +73,12 @@ test('blob put (presign)', async () => {
         }
       );
 
+      console.log(url)
+
       assert.ok(r.ok, 'upload failed')
     }
   );
   
 });
 
-test.run();
+suite.run();

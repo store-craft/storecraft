@@ -13,7 +13,7 @@ So, if you wanted to run `StoreCraft` on the following platforms,
 - Google Functions
 - Azure Functions
 - AWS Lambda Functions (with API Gateway)
-- Vercel Platform
+- Vercel Platform (in the future)
 
 ## What does it do exactly ?
 Basically, 
@@ -35,9 +35,7 @@ import { NodePlatform } from '@storecraft/core/platform/node'
 import { MongoDB } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
-const app = new App(
-    config
-  )
+const app = new App(config)
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
   .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))

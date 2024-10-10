@@ -4,6 +4,14 @@ export type InferPlatformContext<P> = P extends PlatformAdapter<infer A, infer B
 export type InferPlatformNativeResponse<P> = P extends PlatformAdapter<infer A, infer B, infer C> ? C : any;
 
 /**
+ * @description The `platform` interface can be described as an adapter, that helps
+ * `storecraft` run on any platform, To achieve that, the following have to be implemented:
+ * 1. `encoding` a native http request into a [Web Request](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+ * 2. Applying a [Web Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) 
+ * into a native platform response.
+ * 3. (Optional) Provide **crypto** methods such as `hash` for passwords and `verify`
+ * for passwords
+ * 4. Expose environment variables
  * 
  * @template PlatformNativeRequest The `native` `http` request in the platform
  * @template PlatformContext Additional `context`
@@ -14,20 +22,20 @@ export declare interface PlatformAdapter<
   > {
     
   /**
-   * @description convert a platform native request into web api request.
+   * @description convert a platform native request into [Web Request](https://developer.mozilla.org/en-US/docs/Web/API/Request).
    * 
-   * @param from something
+   * @param from A `platform` native request
    * 
    * @returns {Promise<Request>}
    */
-  encode: (from: PlatformNativeRequest, context: PlatformContext)=> Promise<Request>;
+  encode: (from: PlatformNativeRequest, context?: PlatformContext)=> Promise<Request>;
 
   /**
-   * @description Handle the computed web response with 
-   * context in case it is needed, In node.js for example, 
+   * @description Handle the computed [Web Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
+   * with context in case it is needed, In node.js for example, 
    * we have to stream it into the native server-response.
    * 
-   * @param web_response web standard `response` object
+   * @param web_response [Web Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
    * @param context additional `context`
    * 
    * 

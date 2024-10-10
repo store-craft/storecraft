@@ -38,9 +38,11 @@ export type StorageSignedOperation = {
 }
 
 
-export type Get<T extends (Blob | ArrayBuffer | ReadableStream)> = {
+export type Get<T extends (Blob | ArrayBuffer | ReadableStream | undefined)> = {
   metadata?: MetaData;
-  value: T;
+  value: T | undefined;
+  error?: boolean;
+  message?: string;
 }
 
 
@@ -59,7 +61,7 @@ export declare interface storage_driver {
    * 
    * @description Init the storage
    */
-  init: (app?: App) => Promise<storage_driver>;
+  init: (app?: App) => Promise<any>;
 
   /**
    * 
@@ -83,7 +85,7 @@ export declare interface storage_driver {
    */
   putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<boolean>; 
   putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<boolean>; 
-  putStream: (key: string, stream: ReadableStream, meta?: MetaData) => Promise<boolean>; 
+  putStream: (key: string, stream: Partial<ReadableStream<any>>, meta?: MetaData) => Promise<boolean>; 
   putSigned?: (key: string) => Promise<StorageSignedOperation | undefined>; 
 
   /**
@@ -94,7 +96,7 @@ export declare interface storage_driver {
    */
   getBlob: (key: string) => Promise<Get<Blob>>;
   getArraybuffer: (key: string) => Promise<Get<ArrayBuffer>>;
-  getStream: (key: string) => Promise<Get<ReadableStream>>;
+  getStream: (key: string) => Promise<Get<ReadableStream<any>>>;
   getSigned?: (key: string) => Promise<StorageSignedOperation>;
 
   /**

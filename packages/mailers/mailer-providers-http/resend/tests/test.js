@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { Resend } from '../index.js';
+import { Resend } from '../adapter.js';
 
 const mailer = new Resend(
   {

@@ -2,7 +2,7 @@
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
-       width='90%'' />
+       width='90%' />
 </div><hr/><br/>
 
 The Official `storecraft` Dashboard 🏆,
@@ -20,7 +20,7 @@ Build is handled by `Vite`
 
 
 ```bash
-npm i @storecraft/core
+npm i @storecraft/dashboard
 ```
 
 ## Development

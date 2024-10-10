@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/sdk-react-hooks",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Official Storecraft Javascript SDK React Hooks",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

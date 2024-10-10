@@ -153,8 +153,7 @@ export class NodeLocalStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ReadableStream} stream 
+   * @type {storage_driver["putStream"]}
    */
   async putStream(key, stream) {
     const f = this.to_file_path(key);
@@ -165,7 +164,7 @@ export class NodeLocalStorage {
     const reader = stream.getReader();
     const read_more = async () => {
       const { done, value } = await reader.read();
-      console.log(done)
+
       if (!done) {
         await file_handle.write(value);
         await read_more();
@@ -192,15 +191,24 @@ export class NodeLocalStorage {
    */
   async getArraybuffer(key) {
 
-    const buffer = await readFile(
-      this.to_file_path(key),
-    );
-    return {
-      value: buffer,
-      metadata: {
-        contentType: infer_content_type(key)
+    try {
+      const buffer = await readFile(
+        this.to_file_path(key),
+      );
+      return {
+        value: buffer,
+        metadata: {
+          contentType: infer_content_type(key)
+        }
+      };
+    } catch (e) {
+      return {
+        value: undefined,
+        error: true,
+        message: String(e),
+        metadata: undefined
       }
-    };
+    }
   }
 
   /**
@@ -209,10 +217,16 @@ export class NodeLocalStorage {
    */
   async getBlob(key) {
 
-    const buffer = await this.getArraybuffer(key);
-
+    const payload = await this.getArraybuffer(key);
+    if(payload.error) {
+      return {
+        ...payload,
+        value: undefined
+      };
+    }
+    
     const blob = new Blob(
-      [buffer.value], 
+      [payload.value], 
       { type: infer_content_type(key) }
     );
 
@@ -239,7 +253,12 @@ export class NodeLocalStorage {
       };
   
     } catch(e) {
-      
+      return {
+        error: true,
+        message: String(e),
+        value: undefined
+      };
+  
     }
 
     return undefined;

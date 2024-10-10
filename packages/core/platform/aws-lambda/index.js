@@ -1,5 +1,8 @@
-import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
+/**
+ * @import { PlatformAdapter } from '../types.public.js';
+ */
 import { getProcessor } from './aws.utils.js';
+import { NodeCrypto } from '../node/node.crypto.js';
 
 
 /**
@@ -7,19 +10,22 @@ import { getProcessor } from './aws.utils.js';
  *  _sc_event?: import('./types.private.d.ts').LambdaEvent,
  * } & import('./types.private.d.ts').LambdaContext} PlatformContext
  * 
- * @typedef {import('../types.public.js').PlatformAdapter<
+ * @typedef {PlatformAdapter<
  *  import('./types.private.js').LambdaEvent, 
  *  PlatformContext, 
  *  import('./types.private.js').APIGatewayProxyResult
- * >} PlatformAdapter
+ * >} AWSLambdaPlatformAdapter
  * 
  * 
- * @implements {PlatformAdapter}
+ * @implements {AWSLambdaPlatformAdapter}
  */
 export class AWSLambdaPlatform {
 
   /** @type {import('./types.public.d.ts').AWSLambdaConfig} */
   #config;
+
+  /** @type {NodeCrypto} */
+  #crypto;
 
   /**
    * 
@@ -31,62 +37,25 @@ export class AWSLambdaPlatform {
       ...config,
       scrypt_keylen: config?.scrypt_keylen ?? 64
     };
+
+    this.#crypto = new NodeCrypto(
+      this.#config.scrypt_keylen, 
+      this.#config.scrypt_options
+    );
+
   }
 
   get env() {
     return process?.env;
   }
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {AWSLambdaPlatformAdapter["crypto"]} */
   get crypto() {
-    const c = this.#config;
-
-    return {
-      hash: (password) => {
-        return new Promise(
-          (resolve, reject) => {
-            // generate random 16 bytes long salt - recommended by NodeJS Docs
-            const salt = randomBytes(16).toString("hex");
-    
-            scrypt(
-              password, salt, c.scrypt_keylen, c.scrypt_options,
-              (err, derivedKey) => {
-                if (err) reject(err);
-                // derivedKey is of type Buffer
-                resolve(`${salt}.${derivedKey.toString("hex")}`);
-              }
-            );
-          }
-        );
-      },
-
-      verify: (hash, password) => {
-        return new Promise(
-          (resolve, reject) => {
-            const [salt, hashKey] = hash?.split(".");
-
-            if(!salt || !hashKey)
-              reject(false);
-
-            // we need to pass buffer values to timingSafeEqual
-            const hashKeyBuff = Buffer.from(hashKey, "hex");
-            scrypt(
-              password, salt, c.scrypt_keylen, c.scrypt_options, 
-              (err, derivedKey) => {
-                if (err) reject(err);
-                // compare the new supplied password with the 
-                // hashed password using timeSafeEqual
-                resolve(timingSafeEqual(hashKeyBuff, derivedKey));
-              }
-            );
-          }
-        );
-      }
-    }
+    return this.#crypto;
   }
 
   /**
-   * @type {PlatformAdapter["encode"]}
+   * @type {AWSLambdaPlatformAdapter["encode"]}
    */
   async encode(from, ctx) {
     const event = ctx._sc_event = from;
@@ -98,7 +67,7 @@ export class AWSLambdaPlatform {
 
   /**
    * 
-   * @type {PlatformAdapter["handleResponse"]}
+   * @type {AWSLambdaPlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, ctx) {
     const processor = getProcessor(ctx._sc_event);

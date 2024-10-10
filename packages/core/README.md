@@ -6,6 +6,12 @@
 </div><hr/><br/>
 
 This package has
+- core App
+- core event system
+- core test-runner
+- core extensions
+- core platforms
+- core local storage
 - core types
 - core API
 - core database types
@@ -18,7 +24,32 @@ This package has
 - core VQL types and logic
 - core REST API controller
 
-## Tests
+### Testing
 
-While this package contains some tests,
-Most tests to this package are in the `@storecraft/test-runner` package.
+```bash
+npm run core:test
+```
+
+### Generate Zod Types
+
+```bash
+npm run core:gen:zod
+```
+
+### Generate VQL parser
+
+```bash
+npm run core:gen:vql
+```
+
+### Generate OpenAPI Spec
+
+```bash
+npm run core:gen:open-api
+```
+
+### Generate OpenAPI Spec
+
+```bash
+npm run core:gen:publish
+```

@@ -18,7 +18,8 @@ const requests_fixtures = [
         body: JSON.stringify('hello-request'),
         method: 'post',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Extra': 'extra',
         }
       }
     }
@@ -51,6 +52,15 @@ const compare_web_request_or_response_to_fixture = async (web_request) => {
     'URLs don\'t match'
   );
   assert.ok(fixture.request.init.body===await web_request.text(), 'bodies don\'t match');
+
+  Object.entries(fixture.request.init.headers).forEach(
+    ([key, value]) => {
+      assert.ok(
+        web_request.headers.get(key)===value,
+        `header ${key} was not matched`
+      )
+    }
+  )
 
   return {
     fixture
@@ -131,7 +141,7 @@ async function test() {
     while (!done) {
       // console.log(done);
       
-      await sleep(100);
+      await sleep(10);
     }
     
 

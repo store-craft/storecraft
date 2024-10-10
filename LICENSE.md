@@ -7,4 +7,4 @@ License is a custom open source semi-permissive license with the following restr
 on storecraft software. If you want to do so, you will have to ask for permission or extra license
 for that from us.
 2. Usage of storecraft is your own responsibility. Assume good intentions, Storecraft authors and contributors
-are not liable for any unfortunate event caused by the software.
+are not liable and will not be held responsible for any damage or unfortunate event caused by the software.

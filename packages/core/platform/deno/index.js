@@ -1,17 +1,19 @@
-import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
+/**
+ * @import { PlatformAdapter } from '../types.public.js';
+ */
+import { NodeCrypto } from '../node/node.crypto.js';
 
 /**
- * @typedef {import('../types.public.js').PlatformAdapter<
- *  Request, any, Response
- * >} PlatformAdapter
  * 
- * 
- * @implements {PlatformAdapter}
+ * @implements {PlatformAdapter<Request, any, Response>}
  */
 export class DenoPlatform {
 
   /** @type {import('./types.public.d.ts').DenoPlatformConfig} */
   #config;
+
+  /** @type {NodeCrypto} */
+  #crypto;
 
   /**
    * 
@@ -22,6 +24,12 @@ export class DenoPlatform {
       ...config,
       scrypt_keylen: config?.scrypt_keylen ?? 64
     };
+
+    this.#crypto = new NodeCrypto(
+      this.#config.scrypt_keylen, 
+      this.#config.scrypt_options
+    );
+
   }
 
   get env() {
@@ -30,50 +38,7 @@ export class DenoPlatform {
 
   /** @type {PlatformAdapter["crypto"]} */
   get crypto() {
-    const c = this.#config;
-
-    return {
-      hash: (password) => {
-        return new Promise(
-          (resolve, reject) => {
-            // generate random 16 bytes long salt - recommended by NodeJS Docs
-            const salt = randomBytes(16).toString("hex");
-    
-            scrypt(
-              password, salt, c.scrypt_keylen, c.scrypt_options,
-              (err, derivedKey) => {
-                if (err) reject(err);
-                // derivedKey is of type Buffer
-                resolve(`${salt}.${derivedKey.toString("hex")}`);
-              }
-            );
-          }
-        );
-      },
-
-      verify: (hash, password) => {
-        return new Promise(
-          (resolve, reject) => {
-            const [salt, hashKey] = hash?.split(".");
-
-            if(!salt || !hashKey)
-              reject(false);
-
-            // we need to pass buffer values to timingSafeEqual
-            const hashKeyBuff = Buffer.from(hashKey, "hex");
-            scrypt(
-              password, salt, c.scrypt_keylen, c.scrypt_options, 
-              (err, derivedKey) => {
-                if (err) reject(err);
-                // compare the new supplied password with the 
-                // hashed password using timeSafeEqual
-                resolve(timingSafeEqual(hashKeyBuff, derivedKey));
-              }
-            );
-          }
-        );
-      }
-    }
+    return this.#crypto;
   }
 
   /**

@@ -1,5 +1,5 @@
 import { NodePlatform } from './index.js';
-import  { platform as platform_test_runner } from '../../test-runner/index.js';
+import { platform as platform_test_runner } from '../../test-runner/index.js';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import http from "node:http";
@@ -24,7 +24,8 @@ const requests_fixtures = [
       }
     }
   }
-]
+];
+
 
 const get_request_fixture_by_id = (id='') => {
   return requests_fixtures.find(r => r.id===id)
@@ -74,11 +75,13 @@ const compare_web_request_or_response_to_fixture = async (web_request) => {
 async function test() {
   const node_platform = new NodePlatform();
 
+  // test crypto first
   platform_test_runner.crypto.create(node_platform).run();
 
 
   const s = suite('encode / handle tests');
   
+  // test message translation
   s('Encode IncomingMessage -> Web Request (sanity)', async () => {
 
     let done = false;
@@ -158,7 +161,7 @@ async function test() {
           // send done signal
           await fetch(`http://localhost:${PORT}/done`);
         } catch (e) {
-
+          error=e;
         }
 
       }
@@ -169,7 +172,6 @@ async function test() {
       await sleep(10);
     }
     
-
   })
 
   s.run();

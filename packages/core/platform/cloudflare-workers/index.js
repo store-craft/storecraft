@@ -1,12 +1,11 @@
+/**
+ * @import { PlatformAdapter } from '../types.public.js';
+ */
 import { pbkdf2 } from '@storecraft/core/crypto';
 
 /**
- * @typedef {import('../types.public.js').PlatformAdapter<
- *  Request, any, Response
- * >} PlatformAdapter
  * 
- * 
- * @implements {PlatformAdapter}
+ * @implements {PlatformAdapter<Request, any, Response>}
  */
 export class CloudflareWorkersPlatform {
 

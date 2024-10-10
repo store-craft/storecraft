@@ -107,7 +107,7 @@ export const create = (storage, name) => {
   });
   
 
-  s('BLOB put/get/delete', async () => {
+  s('BLOB put/get', async () => {
 
     const data = data_with_buffers.map(
       d => ({
@@ -127,7 +127,7 @@ export const create = (storage, name) => {
     }
   });  
 
-  s('Stream put/get/delete', async () => {
+  s('Stream put/get', async () => {
   
     const data = data_with_buffers.map(
       d => ({
@@ -142,16 +142,24 @@ export const create = (storage, name) => {
       await storage.putStream(d.key, d.stream);
       // read
       const { value } = await storage.getStream(d.key);
-  // //
-  //     const reader = value.getReader();
-  
-  //     while(true) {
-  //       const {done, value: value2 } = await reader.read();
-  //       if(done)
-  //         break;
-  //       console.log('CHUNK: ', value2);
-  //     }
-  //     console.log(d.buffer)
+
+      // let's read
+      const reader = value.getReader();
+      let stream_bytes_length = 0;
+      while(true) {
+        const {done, value: chunk } = await reader.read();
+        if(done)
+          break;
+        stream_bytes_length += chunk.byteLength;
+      }
+
+      // console.log(d.buffer.byteLength);
+      // console.log(stream_bytes_length);
+
+      assert.ok(
+        d.buffer.byteLength==stream_bytes_length, 
+        `stream mismatch bytes length, read ${stream_bytes_length} != ${d.buffer.byteLength}`
+      );
   
     }
     

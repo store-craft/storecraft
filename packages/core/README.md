@@ -24,6 +24,12 @@ This package has
 - core VQL types and logic
 - core REST API controller
 
+### Usage
+
+```bash
+npm i @storecraft/core
+```
+
 ### Testing
 
 ```bash
@@ -48,7 +54,7 @@ npm run core:gen:vql
 npm run core:gen:open-api
 ```
 
-### Generate OpenAPI Spec
+### Publishing
 
 ```bash
 npm run core:gen:publish

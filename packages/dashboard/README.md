@@ -5,6 +5,11 @@
        width='90%' />
 </div><hr/><br/>
 
+<div style='text-align: center'>
+  <img src='https://storecraft.app/landing/main.webp' 
+      width='100%' />
+</div><hr/><br/>
+
 The Official `storecraft` Dashboard 🏆,
 - Leveraging `static rendering` / `client side rendering` / `swr`
 - Can be deployed into cost effective **CDN**

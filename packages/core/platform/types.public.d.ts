@@ -28,7 +28,7 @@ export declare interface PlatformAdapter<
    * 
    * @returns {Promise<Request>}
    */
-  encode: (from: PlatformNativeRequest, context: PlatformContext)=> Promise<Request>;
+  encode: (from: PlatformNativeRequest, context?: PlatformContext)=> Promise<Request>;
 
   /**
    * @description Handle the computed [Web Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)

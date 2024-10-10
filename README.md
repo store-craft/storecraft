@@ -6,26 +6,33 @@
   Commerce as Code
 </div><hr/><br/>
 
-
 # The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 
 Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
 
-⭐ run on any javascript [platform](backend/platforms/node) (deno, bun, node, workers, aws-lambda, google-functions), serverless / serverful
+⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node) (deno, bun, node, workers, aws-lambda, google-functions), serverless / serverful
 
-⭐ connect to any [database](backend/databases/sqlite) (mongo, sqlite, postgres, mysql, neon, turso, d1, planetscale)
+⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sqlite) (mongo, sqlite, postgres, mysql, neon, turso, d1, planetscale)
 
-⭐ use [storage](backend/storage/s3) (local, r2, s3 compatible, google and more)
+⭐ use [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
 
-⭐ It is [extensible and modular](backend/extensions/overview)
+⭐ It is [extensible and modular](https://storecraft.app/docs/backend/extensions/overview)
 
-⭐ It is [event based](backend/events)
+⭐ It is [event based](https://storecraft.app/docs/backend/events)
 
-⭐ Boasts an official [Dashboard](dashboard/overview)
+⭐ Boasts an official [Dashboard](https://storecraft.app/docs/dashboard/overview)
 
-⭐ Well documented [REST-API](rest-api/api) (can also be found in your `/api/reference` endpoint)
+⭐ Well documented [REST-API](https://storecraft.app/docs/rest-api/api) (can also be found in your `/api/reference` endpoint)
 
 <hr/>
+
+  
+
+## **GET STARTED WITH CLI NOW** 👇
+
+```bash
+npx storecraft create
+```
 
 Storecraft emphesizes modular commerce as code to achieve business logic,
 
@@ -79,11 +86,37 @@ const server = http.createServer(app.handler).listen(
 
 ```
 
-Will produce
+**Will produce**
 
-<div style={{'text-align':'center'}}>
+<div style='text-align: center'>
   <img src='https://storecraft.app/docs/main/storecraft-terminal.png' 
-      width='80%' />
+      width='100%' />
+</div><hr/><br/>
+
+# Dashboard
+
+Located at `/api/dashboard`
+
+<div style='text-align: center'>
+  <img src='https://storecraft.app/landing/main.webp' 
+      width='100%' />
+</div><hr/><br/>
+
+# API Reference
+
+Located at `/api/reference` (powered by [Scalar](scalar.com))
+
+
+<div style='text-align: center'>
+  <img src='https://storecraft.app/landing/reference_api.webp' 
+      width='100%' />
+</div><hr/><br/>
+
+# CLI (npx storecraft create)
+
+<div style='text-align: center'>
+  <img src='https://storecraft.app/cli.gif' 
+      width='100%' />
 </div><hr/><br/>
 
 
@@ -101,7 +134,7 @@ npm install
 
 The following is the layout of the packages
 
-### Core ([@storecraft/core](packages/core/))
+### Core ([@storecraft/core](https://github.com/store-craft/storecraft/tree/main/packages/core/))
 
 The core engine of storecraft
 - core types

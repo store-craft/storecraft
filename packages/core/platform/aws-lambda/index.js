@@ -14,10 +14,10 @@ import { NodeCrypto } from '../node/node.crypto.js';
  *  import('./types.private.js').LambdaEvent, 
  *  PlatformContext, 
  *  import('./types.private.js').APIGatewayProxyResult
- * >} PlatformAdapter
+ * >} AWSLambdaPlatformAdapter
  * 
  * 
- * @implements {PlatformAdapter}
+ * @implements {AWSLambdaPlatformAdapter}
  */
 export class AWSLambdaPlatform {
 
@@ -49,13 +49,13 @@ export class AWSLambdaPlatform {
     return process?.env;
   }
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {AWSLambdaPlatformAdapter["crypto"]} */
   get crypto() {
     return this.#crypto;
   }
 
   /**
-   * @type {PlatformAdapter["encode"]}
+   * @type {AWSLambdaPlatformAdapter["encode"]}
    */
   async encode(from, ctx) {
     const event = ctx._sc_event = from;
@@ -67,7 +67,7 @@ export class AWSLambdaPlatform {
 
   /**
    * 
-   * @type {PlatformAdapter["handleResponse"]}
+   * @type {AWSLambdaPlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, ctx) {
     const processor = getProcessor(ctx._sc_event);

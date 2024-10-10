@@ -4,8 +4,9 @@
 import { pbkdf2 } from '@storecraft/core/crypto';
 
 /**
+ * @typedef {PlatformAdapter<Request, any, Response>} CloudflareWorkersPlatformAdapter
  * 
- * @implements {PlatformAdapter<Request, any, Response>}
+ * @implements {CloudflareWorkersPlatformAdapter}
  */
 export class CloudflareWorkersPlatform {
 
@@ -36,7 +37,7 @@ export class CloudflareWorkersPlatform {
   }
 
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {CloudflareWorkersPlatformAdapter["crypto"]} */
   get crypto() {
 
     return {
@@ -50,14 +51,15 @@ export class CloudflareWorkersPlatform {
     }
   }
 
-  /** @type {PlatformAdapter["encode"]} */
+  /** @type {CloudflareWorkersPlatformAdapter["encode"]} */
   async encode(from) {
+    // @ts-ignore
     from.duplex = 'half';
     return from;
   }
 
 
-  /** @type {PlatformAdapter["handleResponse"]} */
+  /** @type {CloudflareWorkersPlatformAdapter["handleResponse"]} */
   async handleResponse(web_response, context) {
     return web_response;
   }  

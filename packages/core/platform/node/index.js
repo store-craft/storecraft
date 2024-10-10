@@ -7,8 +7,9 @@ import { NodeCrypto } from './node.crypto.js';
 
 
 /**
+ * @typedef {PlatformAdapter<IncomingMessage, ServerResponse, ServerResponse>} NodePlatformAdapter
  * 
- * @implements {PlatformAdapter<IncomingMessage, ServerResponse, ServerResponse>}
+ * @implements {NodePlatformAdapter}
  */
 export class NodePlatform {
 
@@ -38,15 +39,13 @@ export class NodePlatform {
     return process?.env;
   }
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {NodePlatformAdapter["crypto"]} */
   get crypto() {
     return this.#crypto;
   }
 
   /**
-   * @param {IncomingMessage} from
-   * 
-   * @returns {Promise<Request>}
+   * @type {NodePlatformAdapter["encode"]}
    */
   async encode(from) {
 
@@ -71,8 +70,7 @@ export class NodePlatform {
 
   /**
    * 
-   * @param {Response} web_response 
-   * @param {ServerResponse} context 
+   * @type {NodePlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, context) {
     try {

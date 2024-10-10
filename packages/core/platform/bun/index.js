@@ -5,8 +5,9 @@ import { NodeCrypto } from '../node/node.crypto.js';
 
 
 /**
+ * @typedef {PlatformAdapter<Request, any, Response>} BunPlatformAdapter
  * 
- * @implements {PlatformAdapter<Request, any, Response>}
+ * @implements {BunPlatformAdapter}
  */
 export class BunPlatform {
 
@@ -37,20 +38,20 @@ export class BunPlatform {
     return Bun.env;
   }
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {BunPlatformAdapter["crypto"]} */
   get crypto() {
     return this.#crypto;
   }
 
   /**
-   * @type {PlatformAdapter["encode"]}
+   * @type {BunPlatformAdapter["encode"]}
    */
   encode(from) {
     return Promise.resolve(from);
   }
 
   /**
-   * @type {PlatformAdapter["handleResponse"]}
+   * @type {BunPlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, context) {
     return web_response;

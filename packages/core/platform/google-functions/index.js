@@ -6,8 +6,9 @@ import { NodeCrypto } from '../node/node.crypto.js';
 
 
 /**
+ * @typedef {PlatformAdapter<GoogleFunctionRequest, GoogleFunctionResponse, GoogleFunctionResponse>} GoogleFunctionPlatformAdapter
  * 
- * @implements {PlatformAdapter<GoogleFunctionRequest, GoogleFunctionResponse, GoogleFunctionResponse>}
+ * @implements {GoogleFunctionPlatformAdapter}
  */
 export class GoogleFunctionsPlatform {
 
@@ -39,13 +40,13 @@ export class GoogleFunctionsPlatform {
     return process?.env;
   }
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {GoogleFunctionPlatformAdapter["crypto"]} */
   get crypto() {
     return this.#crypto;
   }
 
   /**
-   * @type {PlatformAdapter["encode"]}
+   * @type {GoogleFunctionPlatformAdapter["encode"]}
    */
   async encode(from) {
     const empty_body = (from.method==='HEAD' || from.method==='GET');
@@ -55,6 +56,7 @@ export class GoogleFunctionsPlatform {
       method: from.method,
       // @ts-ignore
       headers: from.headers,
+      // @ts-ignore
       duplex: 'half'
     }
 
@@ -78,7 +80,7 @@ export class GoogleFunctionsPlatform {
   }
 
   /**
-   * @type {PlatformAdapter["handleResponse"]}
+   * @type {GoogleFunctionPlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, context) {
     try {

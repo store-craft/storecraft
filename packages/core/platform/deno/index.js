@@ -4,8 +4,9 @@
 import { NodeCrypto } from '../node/node.crypto.js';
 
 /**
+ * @typedef {PlatformAdapter<Request, any, Response>} DenoPlatformAdapter
  * 
- * @implements {PlatformAdapter<Request, any, Response>}
+ * @implements {DenoPlatformAdapter}
  */
 export class DenoPlatform {
 
@@ -36,20 +37,20 @@ export class DenoPlatform {
     return Deno.env.toObject();
   }
 
-  /** @type {PlatformAdapter["crypto"]} */
+  /** @type {DenoPlatformAdapter["crypto"]} */
   get crypto() {
     return this.#crypto;
   }
 
   /**
-   * @type {PlatformAdapter["encode"]}
+   * @type {DenoPlatformAdapter["encode"]}
    */
   encode(from) {
     return Promise.resolve(from);
   }
 
   /**
-   * @type {PlatformAdapter["handleResponse"]}
+   * @type {DenoPlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, context) {
     return web_response;

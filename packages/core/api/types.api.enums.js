@@ -11,6 +11,10 @@ export const DiscountApplicationEnum = {
  */
 export const FilterMetaEnum = { 
   any: {
+    id: undefined,
+    name: undefined,
+    op: undefined,
+    type: undefined
   },
   p_in_collections: 
   { 
@@ -79,7 +83,9 @@ export const FilterMetaEnum = {
  */
 export const DiscountMetaEnum = {
   any: {
-
+    id: undefined,
+    type: undefined,
+    name: undefined
   },
   regular: { 
     id: 0, 

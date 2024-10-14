@@ -19,7 +19,7 @@ const DiscountsQuickSearchActions =
       <LabelCapsule value='all' bgColor='bg-pink-400 dark:bg-pink-400/60' />
     </Link>
     {
-      Object.values(DiscountMetaEnum).map(
+      Object.values(DiscountMetaEnum).filter(it => Boolean(it.type)).map(
         it => (
           <Link 
               key={it.id} 

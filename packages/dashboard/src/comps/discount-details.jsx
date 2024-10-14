@@ -89,7 +89,7 @@ const DiscountTypes = (
 <div className='flex flex-row flex-wrap gap-5 --items-start'>
   <div className='flex flex-col gap-2 --flex-shrink-0 w-fit'>
   {
-    Object.values(DiscountMetaEnum).map(
+    Object.values(DiscountMetaEnum).filter(it => it.type).map(
       (it, ix) => (
         <Option type={it} key={it.type} />
       )

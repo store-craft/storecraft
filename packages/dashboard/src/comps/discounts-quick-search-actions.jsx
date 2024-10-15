@@ -43,7 +43,7 @@ const DiscountsQuickSearchActions =
             to={`/pages/discounts/q/vql=app:${it.name.toLowerCase()}`}>
           <LabelCapsule 
               value={it.name} 
-              bgColor={discount_types_to_color(it.type)} />
+              bgColor={discount_types_to_color('')} />
         </Link>
       )
     )

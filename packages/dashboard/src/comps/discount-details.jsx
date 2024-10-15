@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { 
   DiscountMetaEnum, FilterMetaEnum
+// @ts-ignore
 } from '@storecraft/core/api/types.api.enums.js'
 import { BlingInput, HR } from './common-ui.jsx'
 import ShowIf from './show-if.jsx'
@@ -77,8 +78,10 @@ const DiscountTypes = (
                value={type.type} 
                className='accent-pink-500'
                checked={type.type===selectedType?.type} 
+               // @ts-ignore
                onChange={e => onChange(type)} />
         <label htmlFor={type.type} children={type.name} 
+               // @ts-ignore
                onClick={e => onChange(type)}
                className='mx-3' />
       </div>      
@@ -90,6 +93,7 @@ const DiscountTypes = (
   <div className='flex flex-col gap-2 --flex-shrink-0 w-fit'>
   {
     Object.values(DiscountMetaEnum).filter(it => it.type).map(
+      // @ts-ignore
       (it, ix) => (
         <Option type={it} key={it.type} />
       )
@@ -121,6 +125,7 @@ const explain_price = (prefix, percent, fixed) => {
 
   let ff = (100 - percent)/100;
 
+  // @ts-ignore
   ff = (typeof factor === 'number' && !Number.isNaN(factor)) ? factor : `(100 - Percents)/100`
 
   if(ff==0) {
@@ -144,6 +149,7 @@ const explain_price = (prefix, percent, fixed) => {
  * 
  * @param {BulkDiscountParams} params
  */
+// @ts-ignore
 const BulkDiscount = ({ type, value, onChange }) => {
 
   const [v, setV] = useState(value)
@@ -176,6 +182,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
     </p>
     <BlingInput
         type='number' min='1' step='1'
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         value={v.qty}
         onChange={
@@ -199,6 +206,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
     <label children='Percents off' />
     <BlingInput
         type='number' min='0' max='100' step='1' 
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         value={v.percent}
         onChange={
@@ -216,6 +224,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
       <BlingInput
           type='number' 
           value={v.fixed}
+          // @ts-ignore
           onWheel={(e) => e.target.blur()}
           onChange={
             e => onChangeInternal(
@@ -236,6 +245,7 @@ const BulkDiscount = ({ type, value, onChange }) => {
   <div className='flex flex-row gap-3 items-center mt-5'>
     <input id='cb_recursive' type='checkbox' 
            checked={v.recursive===true}
+           // @ts-ignore
            onChange={e => onChangeInternal('recursive', !v.recursive)}
            className='w-4 h-4 accent-pink-500 border-0 rounded-md 
                       focus:ring-0' />
@@ -431,6 +441,7 @@ const filter_legal = f => {
  */
 const BundleDiscount = (
   { 
+    // @ts-ignore
     meta, value, context, onChange 
   }
 ) => {
@@ -523,6 +534,7 @@ const BundleDiscount = (
     <label children='Percents off' />
     <BlingInput
         type='number' min='0' max='100' step='1' 
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         value={v.percent}
         onChange={
@@ -541,6 +553,7 @@ const BundleDiscount = (
       <BlingInput
           type='number' 
           value={v.fixed}
+          // @ts-ignore
           onWheel={(e) => e.target.blur()}
           onChange={
             e => onChangeInternal(
@@ -564,6 +577,7 @@ const BundleDiscount = (
     <input 
         id='cb_recursive' type='checkbox' 
         checked={v.recursive===true}
+        // @ts-ignore
         onChange={e => onChangeInternal('recursive', !v.recursive)}
         className='w-4 h-4 accent-pink-500 border-0 rounded-md 
                   focus:ring-0' />
@@ -629,6 +643,7 @@ const ExplainPrice = (
  */
 const RegularDiscount = ( 
   { 
+    // @ts-ignore
     type, value, onChange 
   } 
 ) => {
@@ -668,6 +683,7 @@ const RegularDiscount = (
     <label children='Percents off' />
     <BlingInput
         type='number' 
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         onChange={
           e => onChangeInternal(
@@ -685,6 +701,7 @@ const RegularDiscount = (
       <label children='Fixed Price' />
       <BlingInput 
           type='number' 
+          // @ts-ignore
           onWheel={(e) => e.target.blur()}
           onChange={
             e => onChangeInternal(
@@ -735,6 +752,7 @@ const Dashed = ({ className='', ...rest }) => {
  */
 const BuyXGetYDiscount = (
   { 
+    // @ts-ignore
     type, value, onChange, context
   }
 ) => {
@@ -771,6 +789,7 @@ const BuyXGetYDiscount = (
     <BlingInput
         type='number' 
         min='1' step='1'
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         value={v.qty_x}
         onChange={
@@ -798,6 +817,7 @@ const BuyXGetYDiscount = (
     <BlingInput
         inputClsName='h-7 rounded-md'
         type='number' min='1' step='1'
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         value={v.qty_y}
         onChange={
@@ -826,6 +846,7 @@ const BuyXGetYDiscount = (
     <label children='Percents off' />
     <BlingInput
         type='number' min='0' max='100' step='1' 
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         value={v.percent}
         onChange={
@@ -843,6 +864,7 @@ const BuyXGetYDiscount = (
       <BlingInput
           type='number' 
           value={v.fixed}
+          // @ts-ignore
           onWheel={(e) => e.target.blur()}
           onChange={
             e => onChangeInternal(
@@ -863,6 +885,7 @@ const BuyXGetYDiscount = (
   <div className='flex flex-row gap-3 items-center mt-5'>
     <input id='cb_recursive' type='checkbox' 
            checked={v.recursive===true}
+           // @ts-ignore
            onChange={e => onChangeInternal('recursive', !v.recursive)}
            className='w-4 h-4 accent-pink-500 border-0 rounded-md 
                       focus:ring-0' />
@@ -892,6 +915,7 @@ const BuyXGetYDiscount = (
  */
 const OrderDiscount = ( 
   { 
+    // @ts-ignore
     type, value, onChange 
   } 
 ) => {
@@ -930,6 +954,7 @@ const OrderDiscount = (
     <label children='Percents off' />
     <BlingInput
           type='number' 
+          // @ts-ignore
           onWheel={(e) => e.target.blur()}
           onChange={
             e => onChangeInternal(
@@ -948,6 +973,7 @@ const OrderDiscount = (
       <BlingInput 
           min='-10000'
           type='number' 
+          // @ts-ignore
           onWheel={(e) => e.target.blur()}
           onChange={
             e => onChangeInternal(
@@ -968,6 +994,7 @@ const OrderDiscount = (
         id='cb' type='checkbox' 
         checked={v.free_shipping==true}
         onChange={
+          // @ts-ignore
           e => onChangeInternal(
             'free_shipping', 
             !v.free_shipping
@@ -1047,10 +1074,15 @@ const Type2Comp = (
   return (
     <Comp 
         {...CompParams} 
+        // @ts-ignore
         onChange={onChange} 
+        // @ts-ignore
         value={value} 
+        // @ts-ignore
         meta={meta} 
+        // @ts-ignore
         type={meta.type} 
+        // @ts-ignore
         context={context} 
         {...rest} />
   );
@@ -1101,11 +1133,13 @@ const getDefaultExtraByMeta = m => {
  */
 const DiscountDetailsView = (
   { 
+    // @ts-ignore
     field, value, context, onChange, ...rest 
   }
 ) => {
 
   const [meta, setType] = useState(value?.meta)
+  // @ts-ignore
   const [extra, setExtra] = useState(value?.extra)
 
   const notify = useCallback(

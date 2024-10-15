@@ -14,7 +14,9 @@ export const discount_types_to_color = type => {
     case enums.DiscountMetaEnum.bundle.type: return 'bg-sky-500 dark:bg-sky-400/40'
     default: return 'bg-slate-400 dark:bg-slate-400/20'
   }
+
 }
+
 
 /**
  * 

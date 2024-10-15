@@ -1103,7 +1103,6 @@ export type DiscountDetails = {
 
 /** 
  * @description Discount meta data, 
- * see <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>  
  */
 export type DiscountMetaEnum = {
   regular: { 

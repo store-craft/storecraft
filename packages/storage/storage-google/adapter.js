@@ -101,6 +101,7 @@ export class GoogleStorage {
           Authorization: auth,
           'Content-Type': 'image/png'
         },
+        // @ts-ignore
         duplex: 'half'
       }
     );

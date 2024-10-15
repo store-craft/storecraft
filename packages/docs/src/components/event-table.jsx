@@ -205,7 +205,7 @@ return (
             <td children={it.event} 
                 className='pl-1 tracking-widest font-semibold text-sm 
                         text-kf-500 dark:text-kf-400' />
-            <td cchildren={it.dispatches} 
+            <td
                 className='pl-5 tracking-widest font-semibold 
                         text-pink-500 dark:text-pink-400 w-10
                           --max-w-xs overflow-x-scroll' >

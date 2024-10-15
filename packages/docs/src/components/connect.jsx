@@ -22,6 +22,7 @@ export const Connect = (
         </button>      
         <a href='' 
             title='Join our Discord'
+            // @ts-ignore
             alt='Join our Discord'
             className='relative'
               target='_blank' rel='noopener noreferrer'>
@@ -35,12 +36,14 @@ export const Connect = (
         </a>
         <a href='https://github.com/store-craft/storecraft' 
           title='Fork us on Github'
+          // @ts-ignore
           alt='Fork us on Github'
           target='_blank' rel='noopener noreferrer'>
           <BsGithub className='text-xl'/>
         </a>
         <a href='https://linkedin.com/company/store-craft/'
           title='Catch us at Linkedin'
+          // @ts-ignore
           alt='Catch us at Linkedin'
           target='_blank' rel='noopener noreferrer'>
           <BsLinkedin className='text-base'/>

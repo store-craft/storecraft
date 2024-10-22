@@ -1,6 +1,6 @@
 {
   "name": "storecraft",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Official storecraft CLI",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,7 +21,8 @@
   },
   "scripts": {
     "cli:test": "echo \"Error: no test specified\" && exit 1",
-    "cli:publish": "npm version patch --force && npm publish --access public"
+    "test": "npm run cli:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "type": "module",
   "types": "./types.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-postgres",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Official Postgres Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

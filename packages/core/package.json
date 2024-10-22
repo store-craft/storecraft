@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.8",
+  "version": "1.0.11",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -143,11 +143,12 @@
     }
   },
   "scripts": {
+    "test": "npm run core:test",
+    "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
     "core:test": "uvu -c",
     "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",
     "core:gen:vql": "node ./vql/compile.js",
-    "core:gen:open-api": "node ./rest/docs.openapi.gen.js",
-    "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force && npm publish --access public"
+    "core:gen:open-api": "node ./rest/docs.openapi.gen.js"
   },
   "devDependencies": {
     "@storecraft/database-sqlite": "latest",

@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-mongodb:test": "node ./tests/runner.test.js",
-    "database-mongodb:publish": "npm version patch --force && npm publish --access public"
+    "test": "npm run database-mongodb:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

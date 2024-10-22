@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "mailer-providers-http:test": "uvu -c",
-    "mailer-providers-http:publish": "npm version patch --force && npm publish --access public"
+    "test": "npm run mailer-providers-http:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "exports": {
     ".": {

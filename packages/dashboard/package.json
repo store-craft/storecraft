@@ -32,9 +32,8 @@
     "dashboard:lib:build": "vite build -c vite.lib.config.js",
     "dashboard:lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "dashboard:preview": "vite preview",
-    "dashboard:publish": "npm version patch --force && npm publish --access public",
     "dashboard:analyze": "npx vite-bundle-visualizer -c vite.lib.config.js",
-    "prepublishOnly": "npm run dashboard:build"
+    "prepublishOnly": "npm run dashboard:build && npm version patch --force"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

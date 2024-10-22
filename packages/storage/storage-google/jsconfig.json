@@ -3,6 +3,7 @@
     "checkJs": true,
     "target": "ESNext",
     "moduleResolution": "NodeNext",
+    "maxNodeModuleJsDepth": 10,
     "module": "NodeNext",
     "composite": true,
   },

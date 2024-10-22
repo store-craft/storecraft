@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-cloudflare-d1:test": "node ./tests/runner.test.js",
-    "database-cloudflare-d1:publish": "npm version patch --force && npm publish --access public"
+    "test": "npm run database-cloudflare-d1:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "peerDependencies": {
     "kysely": "*"

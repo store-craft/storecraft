@@ -21,7 +21,8 @@
   "types": "types.public.d.ts",
   "scripts": {
     "payments-paypal:test": "uvu -c",
-    "payments-paypal:publish": "npm version patch --force && npm publish --access public"
+    "test": "npm run payments-paypal:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "dependencies": {
   },

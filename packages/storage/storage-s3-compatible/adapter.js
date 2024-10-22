@@ -29,7 +29,8 @@ const infer_content_type = (name) => {
  */
 
 /**
- * The base S3 compatible class
+ * @description The base S3 compatible class
+ * 
  * @typedef {import('@storecraft/core/storage').storage_driver} storage
  * 
  * @implements {storage}

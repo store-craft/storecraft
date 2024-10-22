@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "mailer-smtp:test": "uvu -c",
-    "mailer-smtp:publish": "npm version patch --force && npm publish --access public"
+    "test": "npm run mailer-smtp:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "dependencies": {
     "nodemailer": "^6.9.9"

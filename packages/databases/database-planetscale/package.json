@@ -21,7 +21,7 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-planetscale:test": "node ./tests/runner.test.js",
-    "database-planetscale:publish": "npm publish --access public"
+    "database-planetscale:publish": "npm version patch --force && npm publish --access public"
   },
   "peerDependencies": {
     "kysely": "*"

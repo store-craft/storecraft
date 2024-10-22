@@ -21,7 +21,7 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-turso:test": "node ./tests/runner.test.js",
-    "database-turso:publish": "npm publish --access public"
+    "database-turso:publish": "npm version patch --force && npm publish --access public"
   },
   "peerDependencies": {
     "kysely": "*"

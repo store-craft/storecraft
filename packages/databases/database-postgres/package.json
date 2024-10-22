@@ -21,7 +21,7 @@
   "types": "types.public.d.ts",
   "scripts": {
     "database-postgres:test": "node ./tests/runner.test.js",
-    "database-postgres:publish": "npm publish --access public"
+    "database-postgres:publish": "npm version patch --force && npm publish --access public"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

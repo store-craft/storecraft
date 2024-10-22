@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "sdk:test": "echo \"Error: no test specified\" && exit 1",
-    "sdk:publish": "npm publish --access public"
+    "sdk:publish": "npm version patch --force && npm publish --access public"
   },
   "type": "module",
   "types": "./types.d.ts",

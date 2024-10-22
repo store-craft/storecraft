@@ -147,7 +147,7 @@
     "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",
     "core:gen:vql": "node ./vql/compile.js",
     "core:gen:open-api": "node ./rest/docs.openapi.gen.js",
-    "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm publish --access public"
+    "core:publish": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force && npm publish --access public"
   },
   "devDependencies": {
     "@storecraft/database-sqlite": "latest",

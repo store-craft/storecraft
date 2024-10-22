@@ -21,7 +21,7 @@
   "types": "types.public.d.ts",
   "scripts": {
     "database-mysql:test": "node ./tests/runner.test.js",
-    "database-mysql:publish": "npm publish --access public"
+    "database-mysql:publish": "npm version patch --force && npm publish --access public"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

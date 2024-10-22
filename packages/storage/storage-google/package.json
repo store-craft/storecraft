@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "storage-google:test": "uvu -c",
-    "storage-google:publish": "npm publish --access public"
+    "storage-google:publish": "npm version patch --force && npm publish --access public"
   },
   "type": "module",
   "main": "adapter.js",

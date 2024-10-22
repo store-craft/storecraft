@@ -21,7 +21,7 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-neon:test": "node ./tests/runner.test.js",
-    "database-neon:publish": "npm publish --access public"
+    "database-neon:publish": "npm version patch --force && npm publish --access public"
   },
   "peerDependencies": {
     "kysely": "*"

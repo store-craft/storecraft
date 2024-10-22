@@ -2,7 +2,7 @@ import { chdir, cwd } from 'node:process';
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 
-export const publish_folder = (path='') => {
+export const publish_folder = (path='', throw_on_error=true) => {
   const current_working_dir = cwd();
   try {
     chdir(path);
@@ -10,6 +10,10 @@ export const publish_folder = (path='') => {
   } catch(e) {
     console.log(`Failed with ${path}`);
     console.log(e);
+
+    if(throw_on_error) {
+      throw e;
+    }
 
     return {
       path,
@@ -57,5 +61,5 @@ export const publish_folder = (path='') => {
   p => join('./packages', p)
 )
 .map(
-  publish_folder
+  p => publish_folder(p, true)
 );

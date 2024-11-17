@@ -4,6 +4,7 @@
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "composite": true,
+    "maxNodeModuleJsDepth": 10
   },
   "include": [
     "*", 

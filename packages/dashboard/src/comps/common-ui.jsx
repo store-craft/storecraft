@@ -187,6 +187,7 @@ export const Input = forwardRef(
     return (
   <input {...rest}
         ref={ref}
+        // @ts-ignore
         onWheel={(e) => e.target.blur()}
         className={cls} 
         />    
@@ -277,6 +278,7 @@ export const Bling = (
     {...rest}
     style={
       {
+        // @ts-ignore
         'background-clip': 'border-box',
         'border-color': 'transparent',
         'background-origin': 'border-box'
@@ -316,7 +318,7 @@ export const Div = ({setError, ...rest}) =>
 /**
  * @typedef {object} InternalCardParams
  * @property {React.ReactNode} [name] 
- * @property {(e:string) => void} [setError] 
+ * @property {(e:any) => void} [setError] 
  * @property {string} [error] 
  * @property {React.ReactNode} children 
  * @property {boolean} [border=true] 

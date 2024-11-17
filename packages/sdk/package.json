@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/sdk",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Official storecraft Universal Javascript SDK",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "sdk:test": "echo \"Error: no test specified\" && exit 1",
-    "sdk:publish": "npm publish --access public"
+    "test": "npm run sdk:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "type": "module",
   "types": "./types.d.ts",

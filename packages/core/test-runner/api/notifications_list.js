@@ -78,6 +78,7 @@ export const create = app => {
     }
   );
 
+  // @ts-ignore
   add_list_integrity_tests(s);
 
   return s;

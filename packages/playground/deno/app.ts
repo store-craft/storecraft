@@ -11,6 +11,7 @@ import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { Stripe } from '@storecraft/payments-stripe'
 import { App } from '@storecraft/core';
 
+// @ts-ignore
 const env = Deno.env.toObject();
 
 export const app = new App(

@@ -139,6 +139,7 @@ export const create = (storage, name) => {
     );
   
     for (const d of data) {
+      // @ts-ignore
       await storage.putStream(d.key, d.stream);
       // read
       const { value } = await storage.getStream(d.key);

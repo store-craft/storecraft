@@ -8,7 +8,9 @@ export const admin_password = 'password';
 export const create_app = async () => {
   const app = new App(
     {
-      auth_admins_emails: [admin_email]
+      auth_admins_emails: [admin_email],
+      auth_secret_access_token: '****',
+      auth_secret_refresh_token: '****',
     }
   )
   .withPlatform(new NodePlatform())

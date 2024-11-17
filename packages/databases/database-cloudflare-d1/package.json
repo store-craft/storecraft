@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-cloudflare-d1",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "`Storecraft` database driver for `cloudflare` D1 (cloud sqlite)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-cloudflare-d1:test": "node ./tests/runner.test.js",
-    "database-cloudflare-d1:publish": "npm publish --access public"
+    "test": "npm run database-cloudflare-d1:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "peerDependencies": {
     "kysely": "*"

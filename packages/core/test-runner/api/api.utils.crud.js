@@ -251,6 +251,7 @@ export const add_sanity_crud_to_test_suite = s => {
 
   s('missing fields should throw', async (ctx) => {
     await assert_async_throws(
+      // @ts-ignore
       async () => await ctx.ops.upsert({})
     );
   })
@@ -347,13 +348,13 @@ export const assert_query_list_integrity = (list, q) => {
  * 
  * @typedef {object} ListTestContext
  * @prop {G[]} items
- * @prop {keyof App["db"]["resources"]} resource
+ * @prop {keyof Omit<App["db"]["resources"], 'search'>} resource
  * @prop {object} ops
  * @prop {(item: G) => Promise<string>} [ops.upsert]
  * @prop {(id: string) => Promise<G>} [ops.get]
  * @prop {(id: string) => Promise<boolean>} [ops.remove]
  * @prop {(q: ApiQuery) => Promise<G[]>} [ops.list]
- * @prop {object} events
+ * @prop {object} [events]
  * @prop {PubSubEvent} events.list_event
  * @prop {App} app
  * 

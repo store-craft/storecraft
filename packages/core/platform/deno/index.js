@@ -34,6 +34,7 @@ export class DenoPlatform {
   }
 
   get env() {
+    // @ts-ignore
     return Deno.env.toObject();
   }
 

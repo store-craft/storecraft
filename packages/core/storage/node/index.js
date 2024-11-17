@@ -246,6 +246,7 @@ export class NodeLocalStorage {
     try { 
       const s = createReadStream(this.to_file_path(key));
       return {
+        // @ts-ignore
         value: Readable.toWeb(s), 
         metadata: {
           contentType: infer_content_type(key)

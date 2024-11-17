@@ -64,7 +64,7 @@ const components = {
   h3: (props) => <h3 {...props} id={sanitize_and_handle(props.children)} />,
   h4: (props) => <h4 {...props} id={sanitize_and_handle(props.children)}/>,
   hr: (props) => <hr {...props} />,
-  strong: (props) => <strong fontWeight="semibold" className='text-kf-500 dark:text-kf-400' {...props} />,
+  strong: (props) => <strong className='text-kf-500 dark:text-kf-400' {...props} />,
   br: (props) => <span {...props} />,
   // a: (props) => <a  {...props} />,
   div: (props) => <div  {...props} />,

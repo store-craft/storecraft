@@ -6,6 +6,7 @@
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "composite": true,
+    "noEmit": true
   },
   "include": [
     "*.js", 

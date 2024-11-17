@@ -14,8 +14,7 @@ import { RiLockPasswordLine } from "react-icons/ri/index.js";
  * @typedef {object} SettingsChangePasswordParams
  * 
  * 
- * @param {SettingsChangePassword & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+ * @param { React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
  * } params
  * 
  */

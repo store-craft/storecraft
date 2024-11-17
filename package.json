@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Storecraft Mono Repo",
   "main": "index.js",
+  "type": "module",
   "workspaces": [
     "./packages/*",
     "./packages/databases/*",
@@ -13,7 +14,9 @@
     "./packages/extensions/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publishAll": "node ./publish-all.js"
+
   },
   "author": "",
   "license": "ISC"

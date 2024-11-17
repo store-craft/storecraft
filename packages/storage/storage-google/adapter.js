@@ -29,7 +29,7 @@ const infer_content_type = (name) => {
  */
 
 /**
- * Google Storage
+ * @description Google Storage adapter
  * @typedef {import('@storecraft/core/storage').storage_driver} storage
  * 
  * @implements {storage}
@@ -101,6 +101,7 @@ export class GoogleStorage {
           Authorization: auth,
           'Content-Type': 'image/png'
         },
+        // @ts-ignore
         duplex: 'half'
       }
     );

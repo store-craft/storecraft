@@ -35,6 +35,7 @@ export class BunPlatform {
   }
 
   get env() {
+    // @ts-ignore
     return Bun.env;
   }
 

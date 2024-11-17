@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mysql",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Official MySQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,7 +21,8 @@
   "types": "types.public.d.ts",
   "scripts": {
     "database-mysql:test": "node ./tests/runner.test.js",
-    "database-mysql:publish": "npm publish --access public"
+    "test": "npm run database-mysql:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

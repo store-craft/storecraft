@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-neon",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "`Storecraft` database driver for `Neon` over http",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-neon:test": "node ./tests/runner.test.js",
-    "database-neon:publish": "npm publish --access public"
+    "test": "npm run database-neon:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "peerDependencies": {
     "kysely": "*"

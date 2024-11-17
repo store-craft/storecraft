@@ -1,6 +1,6 @@
 {
   "name": "storecraft",
-  "version": "1.0.3",
+  "version": "1.0.10",
   "description": "Official storecraft CLI",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,7 +21,8 @@
   },
   "scripts": {
     "cli:test": "echo \"Error: no test specified\" && exit 1",
-    "cli:publish": "npm publish --access public"
+    "test": "npm run cli:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "type": "module",
   "types": "./types.d.ts",
@@ -36,21 +37,21 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@storecraft/core": "*",
-    "@storecraft/database-cloudflare-d1": "*",
-    "@storecraft/database-mongodb": "*",
-    "@storecraft/database-mysql": "*",
-    "@storecraft/database-neon": "*",
-    "@storecraft/database-planetscale": "*",
-    "@storecraft/database-postgres": "*",
-    "@storecraft/database-sql-base": "*",
-    "@storecraft/database-sqlite": "*",
-    "@storecraft/database-turso": "*",
-    "@storecraft/mailer-providers-http": "*",
-    "@storecraft/payments-paypal": "*",
-    "@storecraft/payments-stripe": "*",
-    "@storecraft/storage-google": "*",
-    "@storecraft/storage-s3-compatible": "*",
+    "@storecraft/core": "latest",
+    "@storecraft/database-cloudflare-d1": "latest",
+    "@storecraft/database-mongodb": "latest",
+    "@storecraft/database-mysql": "latest",
+    "@storecraft/database-neon": "latest",
+    "@storecraft/database-planetscale": "latest",
+    "@storecraft/database-postgres": "latest",
+    "@storecraft/database-sql-base": "latest",
+    "@storecraft/database-sqlite": "latest",
+    "@storecraft/database-turso": "latest",
+    "@storecraft/mailer-providers-http": "latest",
+    "@storecraft/payments-paypal": "latest",
+    "@storecraft/payments-stripe": "latest",
+    "@storecraft/storage-google": "latest",
+    "@storecraft/storage-s3-compatible": "latest",
     "@types/yargs": "^17.0.33"
   },
   "bugs": {

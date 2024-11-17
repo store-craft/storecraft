@@ -443,9 +443,7 @@ export const discountMetaEnumSchema = z
       name: z.string().optional(),
     }),
   })
-  .describe(
-    "Discount meta data,\nsee <a href='#DiscountMetaEnum'>#DiscountMetaEnum</a>",
-  );
+  .describe("Discount meta data,");
 export const regularDiscountExtraSchema = z
   .object({
     fixed: z

@@ -1,6 +1,5 @@
 import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/comps/show-if.jsx'
-import DocumentTitle from '@/comps/document-title.jsx'
 import ErrorMessage from '@/comps/error-message.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { 
@@ -24,16 +23,12 @@ const info_auth = value => {
     value?.auth_admins_emails.map(mail => `  - ${mail}`).join('\n');
   }
 
-  if(value?.auth_password_hash_rounds) {
-    text += `\n- Passwords are hashed with **${value?.auth_password_hash_rounds}** rounds`
-  }
-
   if(value?.auth_secret_access_token) {
-    text += `\n- **JWT** access token \`secret\` is **${value?.auth_secret_access_token}**`
+    text += `\n- **JWT** access token \`secret\` is **${value?.auth_secret_access_token?.slice(0, 4) + '------------'}**`
   }
 
   if(value?.auth_secret_refresh_token) {
-    text += `\n- **JWT** refresh token \`secret\` is **${value?.auth_secret_refresh_token}**`
+    text += `\n- **JWT** refresh token \`secret\` is **${value?.auth_secret_refresh_token?.slice(0, 4) + '------------'}**`
   }
 
   return text;

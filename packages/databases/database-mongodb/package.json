@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mongodb",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Storecraft database driver for mongodb on node / bun / deno platform",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,7 +21,8 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "database-mongodb:test": "node ./tests/runner.test.js",
-    "database-mongodb:publish": "npm publish --access public"
+    "test": "npm run database-mongodb:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

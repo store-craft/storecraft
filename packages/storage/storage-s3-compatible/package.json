@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/storage-s3-compatible",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Official S3-Compatible Storage adapter for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "storage-s3-compatible:test": "uvu -c",
-    "storage-s3-compatible:publish": "npm publish --access public"
+    "test": "npm run storage-s3-compatible:test",
+    "prepublishOnly": "npm version patch --force"
   },
   "type": "module",
   "main": "adapter.js",

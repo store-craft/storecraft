@@ -18,7 +18,7 @@ const MDView = (
   
   return (
 <div {...rest}>
-  <p className='--mdx md-view' 
+  <p className='--mdx md-view overflow-auto' 
     dangerouslySetInnerHTML={
       {
         __html : marked.parse(

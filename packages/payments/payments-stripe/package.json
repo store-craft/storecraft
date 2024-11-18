@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/payments-stripe",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Official Storecraft <-> Stripe integration",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

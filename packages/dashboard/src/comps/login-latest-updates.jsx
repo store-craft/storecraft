@@ -74,7 +74,7 @@ const LoginLatestUpdates = (
       async function get_commits() {
         try {
           const response = await fetch(
-            'https://api.github.com/repos/micro-gl/micro-gl/commits'
+            'https://api.github.com/repos/store-craft/storecraft/commits'
           );
   
           const json = await response.json();

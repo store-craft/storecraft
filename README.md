@@ -34,7 +34,7 @@ Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
 npx storecraft create
 ```
 
-Storecraft emphesizes modular commerce as code to achieve business logic,
+Storecraft emphasizes modular commerce as code to achieve business logic,
 
 ```js
 import { App } from '@storecraft/core'

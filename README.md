@@ -104,7 +104,7 @@ Located at `/api/dashboard`
 
 # API Reference
 
-Located at `/api/reference` (powered by [Scalar](scalar.com))
+Located at `/api/reference` (powered by [Scalar](https://scalar.com))
 
 
 <div style='text-align: center'>

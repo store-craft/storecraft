@@ -34,7 +34,7 @@
     "@types/better-sqlite3": "^7.6.9",
     "@types/node": "^20.11.0",
     "@types/pg": "^8.11.2",
-    "better-sqlite3": "^9.4.3",
+    "better-sqlite3": "^11.7.0",
     "dotenv": "^16.3.1",
     "mysql2": "^3.9.2",
     "pg": "^8.11.3",

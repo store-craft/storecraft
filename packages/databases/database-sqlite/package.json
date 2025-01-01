@@ -27,7 +27,8 @@
   "dependencies": {
     "@storecraft/core": "^1.0.0",
     "@storecraft/database-sql-base": "^1.0.0",
-    "@types/better-sqlite3": "^7.6.9"
+    "@types/better-sqlite3": "^7.6.9",
+    "better-sqlite3": "^11.7.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

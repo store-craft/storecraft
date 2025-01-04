@@ -174,7 +174,7 @@ Support for
 
 ### 📦 Storage
 Support for,
-- Local storage (Node, Bun, Deno), [@storecraft/core/storage](https://github.com/store-craft/storecraft/tree/main/core/storage/)
+- Local storage (Node, Bun, Deno), [@storecraft/core/storage](https://github.com/store-craft/storecraft/tree/main/packages/core/storage/)
 - S3 Compatible ([@storecraft/storage-s3-compatible](https://github.com/store-craft/storecraft/tree/main/packages/storage/storage-s3-compatible/))
   - Cloudflare R2
   - AWS S3

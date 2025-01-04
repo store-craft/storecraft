@@ -180,9 +180,7 @@ export const infer_database = info => {
           '@storecraft/database-turso'
         ]
       }
-    case 'sqlite':
-    case 'postgres':
-    case 'mysql':
+    default:
       throw 'implement me !!'
   }
 }

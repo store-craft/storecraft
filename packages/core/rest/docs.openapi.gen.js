@@ -383,7 +383,7 @@ const create_all = () => {
   );
 
   // register routes
-  register_settings(registry);
+  register_reference(registry);
   register_auth(registry);
   register_storage(registry);
   register_checkout(registry);
@@ -920,15 +920,15 @@ const register_checkout = (registry) => {
 /**
  * @param {OpenAPIRegistry} registry 
  */
-const register_settings = (registry) => {
+const register_reference = (registry) => {
   registry.register('storecraftConfigSchema', storecraftConfigSchema);
 
   registry.registerPath({
     method: 'get',
-    path: `/info/settings`,
+    path: `/reference/settings`,
     description: `Get the settings of your store`,
     summary: `Get the settings of your store`,
-    tags: ['info'],
+    tags: ['reference'],
     responses: {
       200: {
         description: `Your storecraft settings`,

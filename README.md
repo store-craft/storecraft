@@ -194,7 +194,7 @@ Support for,
 
 - Stripe [@storecraft/payments-stripe](https://github.com/store-craft/storecraft/tree/main/packages/payments/payments-stripe/)
 - Paypal [@storecraft/payments-paypal](https://github.com/store-craft/storecraft/tree/main/packages/payments/payments-paypal/)
-- You can roll your own (guide [here](https://https://storecraft.app/docs/backend/checkout-and-payments/roll-your-own))
+- You can roll your own (guide [here](https://storecraft.app/docs/backend/checkout-and-payments/roll-your-own))
 
 ### Dashboard
 

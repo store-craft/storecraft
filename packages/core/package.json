@@ -1,10 +1,13 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.19",
+  "version": "1.0.21",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
+  "engines": {
+    "node": "v16.14.0 || v17.1.0 || v18.20.0 || >=v20.10.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/store-craft/storecraft.git",
@@ -151,8 +154,8 @@
     "core:gen:open-api": "node ./rest/docs.openapi.gen.js"
   },
   "devDependencies": {
-    "@storecraft/database-sqlite": "latest",
     "@asteasolutions/zod-to-openapi": "^6.4.0",
+    "@storecraft/database-sqlite": "^1.0.7",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",
     "uvu": "^0.5.6"

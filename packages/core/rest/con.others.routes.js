@@ -3,7 +3,7 @@ import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js';
 import openapi_html from './docs.openapi.scalar.html.js'
-import openapi_json from './openapi.json' assert { type: 'json' }
+import openapi_json from './openapi.json' with { type: 'json' }
 
 /**
  * 

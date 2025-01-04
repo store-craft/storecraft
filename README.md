@@ -104,7 +104,7 @@ Located at `/api/dashboard`
 
 # API Reference
 
-Located at `/api/reference` (powered by [Scalar](scalar.com))
+Located at `/api/reference` (powered by [Scalar](https://scalar.com))
 
 
 <div style='text-align: center'>
@@ -174,7 +174,7 @@ Support for
 
 ### 📦 Storage
 Support for,
-- Local storage (Node, Bun, Deno), [@storecraft/core/storage](https://github.com/store-craft/storecraft/tree/main/packages/storage/core/storage/)
+- Local storage (Node, Bun, Deno), [@storecraft/core/storage](https://github.com/store-craft/storecraft/tree/main/packages/core/storage/)
 - S3 Compatible ([@storecraft/storage-s3-compatible](https://github.com/store-craft/storecraft/tree/main/packages/storage/storage-s3-compatible/))
   - Cloudflare R2
   - AWS S3
@@ -194,12 +194,12 @@ Support for,
 
 - Stripe [@storecraft/payments-stripe](https://github.com/store-craft/storecraft/tree/main/packages/payments/payments-stripe/)
 - Paypal [@storecraft/payments-paypal](https://github.com/store-craft/storecraft/tree/main/packages/payments/payments-paypal/)
-- You can roll your own (guide [here](backend/checkout-and-payments/roll-your-own))
+- You can roll your own (guide [here](https://https://storecraft.app/docs/backend/checkout-and-payments/roll-your-own))
 
 ### Dashboard
 
 The official dashboard
-- Learn how to use [here](dashboard/overview)
+- Learn how to use [here](https://storecraft.app/docs/dashboard/overview)
 - The [code](https://github.com/store-craft/storecraft/tree/main/packages/dashboard/), 
   - mount is as a component
   - consume from cdn

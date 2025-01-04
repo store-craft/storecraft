@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/payments-paypal",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Official Paypal integration with Storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

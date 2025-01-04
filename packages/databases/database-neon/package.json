@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-neon",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "`Storecraft` database driver for `Neon` over http",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

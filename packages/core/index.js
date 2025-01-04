@@ -18,7 +18,7 @@ import { create_api, enums } from './api/index.js'
 import { PubSub } from './pubsub/public.js';
 import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
-// import pkg from './package.json' assert { type: "json" }
+import pkg from './package.json' with { type: "json" }
 import { NotificationsExtension } from './extensions/notifications/index.js';
 
 /**
@@ -252,7 +252,7 @@ export class App {
     }
   } 
 
-  print_banner(host='', version='1.0.0') {
+  print_banner(host='', version=(pkg.version??'1.0.0')) {
     const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
     const c = {
       red: '\x1b[1;31m',

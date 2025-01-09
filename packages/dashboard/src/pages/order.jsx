@@ -38,6 +38,22 @@ const contact_schema = {
       comp_params: {className: 'w-full h-fit mt-5 text-gray-400'} 
     },
     { 
+      key: 'firstname', name: 'First Name', type: 'text', 
+      validate: true, editable: true, 
+      comp: withCard(
+        withBling(MInput), { className: 'h-10'}, false
+      ), 
+      comp_params: {className: 'w-full h-fit mt-5 text-gray-400'} 
+    },
+    { 
+      key: 'lastname', name: 'Last Name', type: 'text', 
+      validate: true, editable: true, 
+      comp: withCard(
+        withBling(MInput), { className: 'h-10'}, false
+      ), 
+      comp_params: {className: 'w-full h-fit mt-5 text-gray-400'} 
+    },
+    { 
       key: 'phone_number', name: 'Phone Number', type: 'number', 
       validate: true, editable: true, 
       comp: withCard(

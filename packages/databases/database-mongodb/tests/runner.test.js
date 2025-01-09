@@ -22,6 +22,8 @@ async function test() {
 
   await migrateToLatest(app.db, false);
 
+  // api.collections_list.create(app).run();
+
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();

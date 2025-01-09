@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -147,6 +147,7 @@
   },
   "scripts": {
     "test": "npm run core:test",
+    "sc-publish": "npm publish",
     "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
     "core:test": "uvu -c",
     "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",

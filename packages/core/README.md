@@ -5,7 +5,7 @@
        width='90%' />
 </div><hr/><br/>
 
-[![Test Core Package](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
+[![Core](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
 
 This package has
 - core App

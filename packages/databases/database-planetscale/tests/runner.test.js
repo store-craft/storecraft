@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { api } from '@storecraft/core/test-runner'

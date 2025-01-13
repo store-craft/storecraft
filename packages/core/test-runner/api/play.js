@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/core/platform/node';

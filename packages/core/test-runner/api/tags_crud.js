@@ -5,7 +5,6 @@
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
  * 
  */
-import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { assert_async_throws } from './utils.js';

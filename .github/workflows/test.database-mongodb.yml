@@ -1,0 +1,52 @@
+name: MongoDB
+on: 
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+
+  test-mongodb:
+    name: Test MongoDB
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    services:
+      mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: password
+          MONGO_INITDB_DATABASE: test
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./packages/databases/database-mongodb
+        run: npm ci
+
+      - name: Test
+        run: npm test
+        working-directory: ./packages/databases/database-mongodb
+        env:
+          # The hostname used to communicate with the mysql service container
+          MONGODB_NAME: test
+          MONGODB_URL: mongodb+srv://root:password@localhost:27017/?retryWrites=true&w=majority

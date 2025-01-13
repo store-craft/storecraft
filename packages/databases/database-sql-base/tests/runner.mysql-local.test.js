@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { SQL } from '@storecraft/database-sql-base';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';

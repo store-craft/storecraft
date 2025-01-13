@@ -5,7 +5,6 @@
  * 
  */
 
-import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { add_sanity_crud_to_test_suite, 

@@ -5,6 +5,8 @@
        width='90%' />
 </div><hr/><br/>
 
+[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)
+
 Official `Postgres` driver for `StoreCraft` using `pg` package.
 
 ```bash

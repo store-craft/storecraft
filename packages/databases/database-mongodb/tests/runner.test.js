@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/core/platform/node';
@@ -12,7 +13,14 @@ export const create_app = async () => {
     }
   )
   .withPlatform(new NodePlatform())
-  .withDatabase(new MongoDB({ db_name: 'test'}))
+  .withDatabase(
+    new MongoDB(
+      { 
+        db_name: process.env.MONGODB_NAME,
+        url: process.env.MONGODB_URL
+      }
+    )
+  )
   
   return app.init();
 }

@@ -16,10 +16,11 @@ export async function up(db, client) {
 
   const session = client.startSession();
   try {
-    await session.withTransaction(async () => {
+    await session.withTransaction(async ($session) => {
       for (const collection_name of collections) {
 
-        await db.collection(collection_name).dropIndexes({ session });
+        await db.createCollection(collection_name, {session: $session})
+        await db.collection(collection_name).dropIndexes({ session: $session });
 
         await db.collection(collection_name).createIndexes(
           [
@@ -40,7 +41,7 @@ export async function up(db, client) {
               background: false, sparse: true
             }, 
           ], {
-            session
+            session: $session
           }
         )
       }

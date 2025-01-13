@@ -20,7 +20,7 @@ import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
-import { MongoDB } from '@storecraft/database-mongodb'
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const app = new App(
@@ -34,7 +34,8 @@ const app = new App(
 .withDatabase(new MongoDB({ db_name: 'test', url: '...', options: {}}))
 
 await app.init();
- 
+await migrateToLatest(app.db, false);
+
 const server = http.createServer(app.handler).listen(
   8000,
   () => {

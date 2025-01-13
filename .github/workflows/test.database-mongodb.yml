@@ -34,7 +34,7 @@ jobs:
       - name: Start mongo
         id: start-mongo
         run: >-
-          docker run --rm -d -p 27017:27017 
+          docker run -d -p 27017:27017 
           -e MONGO_INITDB_ROOT_USERNAME=root 
           -e MONGO_INITDB_ROOT_PASSWORD=password 
           -e MONGO_INITDB_DATABASE=test 

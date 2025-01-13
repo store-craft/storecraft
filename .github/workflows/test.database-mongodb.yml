@@ -33,12 +33,12 @@ jobs:
     steps:
       - name: Start mongo
         id: start-mongo
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: password
-          MONGO_INITDB_DATABASE: test
-          
-        run: docker run --rm -d -p 27017:27017 --name mongo  mongo:latest --replSet rs_test --bind_ip_all
+        run: >-
+          docker run --rm -d -p 27017:27017 
+          -e MONGO_INITDB_ROOT_USERNAME=root 
+          -e MONGO_INITDB_ROOT_PASSWORD=password 
+          -e MONGO_INITDB_DATABASE=test 
+          --name mongo --replSet rs_test --bind_ip_all mongo:latest
 
       - name: Initialize MongoDB Replica Set
         run: |

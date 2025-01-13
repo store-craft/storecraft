@@ -6,6 +6,8 @@
   Commerce as Code
 </div><hr/><br/>
 
+[![Test Core Package](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
+
 # The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 
 Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.

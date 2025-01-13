@@ -5,6 +5,8 @@
        width='90%' />
 </div><hr/><br/>
 
+[![MongoDB](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml)
+
 Official `mongodb` driver for `StoreCraft` on **Node.js** / **Deno** / **Bun** platforms.
 
 ```bash
@@ -29,7 +31,7 @@ const app = new App(
   }
 )
 .withPlatform(new NodePlatform())
-.withDatabase(new MongoDB({ db_name: 'test'}))
+.withDatabase(new MongoDB({ db_name: 'test', url: '...', options: {}}))
 
 await app.init();
  

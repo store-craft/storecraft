@@ -8,3 +8,4 @@ database-sql-base.temp
 deno.lock
 wush
 my-storecraft-app
+store-craft.code-workspace

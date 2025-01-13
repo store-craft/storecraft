@@ -380,8 +380,8 @@ export const create = app => {
       }
     );
 
-    console.log('resultA', resultA)
-    console.log('resultB', resultB)
+    // console.log('resultA', resultA)
+    // console.log('resultB', resultB)
 
     // now verify
     assert.ok(

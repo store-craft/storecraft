@@ -5,7 +5,7 @@
        width='90%' />
 </div><hr/><br/>
 
-Official `mongodb` driver for `StoreCraft` on **Node.js** platforms.
+Official `mongodb` driver for `StoreCraft` on **Node.js** / **Deno** / **Bun** platforms.
 
 ```bash
 npm i @storecraft/database-mongodb

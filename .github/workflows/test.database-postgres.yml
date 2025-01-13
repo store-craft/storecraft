@@ -8,7 +8,7 @@ on:
 
 jobs:
   # Label of the runner job
-  runner-job:
+  test-postgres:
     # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
 

@@ -1,0 +1,126 @@
+name: Test Sqlite / Postgres / Mysql
+on: 
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+
+  test-sqlite:
+    name: Test SQLite
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./packages/databases/database-sqlite
+        run: npm ci
+
+      - name: Test
+        run: npm test
+        working-directory: ./packages/databases/database-sqlite
+
+
+  test-postgres:
+    name: Test Postgres
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./packages/databases/database-postgres
+        run: npm ci
+
+      - name: Test
+        run: npm test
+        working-directory: ./packages/databases/database-postgres
+        # Environment variables used by the `client.js` script to create
+        # a new PostgreSQL table.
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+
+  test-mysql:
+    name: Test MySql
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    services:
+      mysql:
+        # Docker Hub image
+        image: mysql
+        env:
+          MYSQL_DATABASE: main
+          MYSQL_ROOT_PASSWORD: password
+        # Set health checks 
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 3306:3306
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./packages/databases/database-mysql
+        run: npm ci
+
+      - name: Test
+        run: npm test
+        working-directory: ./packages/databases/database-mysql
+        env:
+          # The hostname used to communicate with the mysql service container
+          MYSQL_DATABASE: main
+          MYSQL_USER: root
+          MYSQL_PASSWORD: password
+          MYSQL_PORT: 3306
+          MYSQL_HOST: localhost

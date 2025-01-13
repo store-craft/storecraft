@@ -35,15 +35,12 @@ jobs:
         id: start-mongo
         run: >-
           docker run --rm -d -p 27017:27017 
-          -e MONGO_INITDB_ROOT_USERNAME=root 
-          -e MONGO_INITDB_ROOT_PASSWORD=password 
-          -e MONGO_INITDB_DATABASE=test 
-          --name mongo mongo:latest --replSet test --bind_ip_all 
+          --name mongo mongo:latest --replSet rs_test --bind_ip_all 
 
       - name: Initialize MongoDB Replica Set
         run: |
           sleep 5 # Give mongo a chance to start up
-          docker run --rm mongo:latest mongosh --host 172.17.0.1 --eval 'rs.initiate({_id: "test", members: [{_id: 0, host: "172.17.0.1:27017"}]})'
+          docker run --rm mongo:latest mongosh --host 172.17.0.1 --eval 'rs.initiate({_id: "rs_test", members: [{_id: 0, host: "172.17.0.1:27017"}]})'
 
       - name: Check out repository code
         uses: actions/checkout@v4

@@ -1,4 +1,4 @@
-name: Test Sqlite / Postgres / Mysql
+name: SQLite / Postgres / MySQL
 on: 
   push:
     branches: [ "main" ]

@@ -7,6 +7,7 @@
 </div><hr/><br/>
 
 [![Test Core Package](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
+[![Test database-postgres](https://github.com/store-craft/storecraft/actions/workflows/test.database-postgres.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-postgres.yml)
 
 # The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 

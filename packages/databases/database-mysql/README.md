@@ -34,7 +34,7 @@ const app = new App(
   new MySQL(
     {
       pool_options: {
-        database: process.env.MYSQL_DB_NAME,
+        database: process.env.MYSQL_DATABASE,
         host: process.env.MYSQL_HOST,
         port: parseInt(process.env.MYSQL_PORT),
         user: process.env.MYSQL_USER,
@@ -66,9 +66,8 @@ docker pull mysql
 docker run --name mysql \
            -v $(pwd):/etc/mysql/conf.d \
            -v /my/own/datadir:/var/lib/mysql \
-           -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_ROOT_HOST=localhost \
-           -e MYSQL_DATABASE=main -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin \
-           -p 8080:3306 -d mysql
+           -e MYSQL_DATABASE=main -e MYSQL_ROOT_PASSWORD=password \
+           -p 3306:3306 -d mysql
 ```
 
 2. create Environment
@@ -76,10 +75,11 @@ docker run --name mysql \
 create `.env` file with
 
 ```bash
-MYSQL_USER='root'
-MYSQL_ROOT_PASSWORD='password'
-MYSQL_PORT=8080
-MYSQL_HOST='localhost'
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=main
+MYSQL_PORT=3306
+MYSQL_HOST=localhost
 ```
 
 3. Run `tests/runner.test.js`

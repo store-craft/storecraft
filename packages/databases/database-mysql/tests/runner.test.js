@@ -18,7 +18,7 @@ export const create_app = async () => {
     new MySQL(
       {
         pool_options: {
-          database: process.env.MYSQL_DB_NAME,
+          database: process.env.MYSQL_DATABASE,
           host: process.env.MYSQL_HOST,
           port: parseInt(process.env.MYSQL_PORT),
           user: process.env.MYSQL_USER,

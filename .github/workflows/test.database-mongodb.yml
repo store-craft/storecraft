@@ -49,4 +49,4 @@ jobs:
         env:
           # The hostname used to communicate with the mysql service container
           MONGODB_NAME: test
-          MONGODB_URL: mongodb+srv://root:password@localhost:27017/?retryWrites=true&w=majority
+          MONGODB_URL: mongodb://root:password@localhost:27017/?retryWrites=true&w=majority

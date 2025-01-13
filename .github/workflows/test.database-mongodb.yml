@@ -14,22 +14,37 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-    services:
-      mongodb:
-        image: mongo
+    # services:
+    #   mongodb:
+    #     image: mongo
+        
+    #     env:
+    #       MONGO_INITDB_ROOT_USERNAME: root
+    #       MONGO_INITDB_ROOT_PASSWORD: password
+    #       MONGO_INITDB_DATABASE: test
+    #     options: >-
+    #       --health-cmd "echo 'db.runCommand("ping").ok' | mongosh mongodb://localhost:27017 --quiet"
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 27017:27017
+
+    steps:
+      - name: Start mongo
+        id: start-mongo
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: password
           MONGO_INITDB_DATABASE: test
-        options: >-
-          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh mongodb://localhost:27017 --quiet"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 27017:27017
+          
+        run: docker run --rm -d -p 27017:27017 --name mongo  mongo:latest --replSet rs_test --bind_ip_all
 
-    steps:
+      - name: Initialize MongoDB Replica Set
+        run: |
+          sleep 5 # Give mongo a chance to start up
+          docker run --rm mongo:latest mongosh --host 172.17.0.1 --eval 'rs.initiate({_id: "rs_test", members: [{_id: 0, host: "172.17.0.1:27017"}]})'
+
       - name: Check out repository code
         uses: actions/checkout@v4
 
@@ -49,4 +64,4 @@ jobs:
         env:
           # The hostname used to communicate with the mysql service container
           MONGODB_NAME: test
-          MONGODB_URL: mongodb://root:password@localhost:27017/?retryWrites=false
+          MONGODB_URL: mongodb://root:password@localhost:27017

@@ -354,7 +354,6 @@ export const create = app => {
           await app.api.discounts.upsert(p);
         }
 
-
         for(const p of orders_upsert)
           await app.api.orders.upsert(p);
 
@@ -381,8 +380,8 @@ export const create = app => {
       }
     );
 
-    // console.log('resultA', resultA)
-    // console.log('resultB', resultB)
+    console.log('resultA', resultA)
+    console.log('resultB', resultB)
 
     // now verify
     assert.ok(

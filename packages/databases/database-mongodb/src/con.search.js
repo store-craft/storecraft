@@ -100,7 +100,7 @@ export const quicksearch = (driver) => {
       }
     ];
 
-    const db = driver.mongo_client.db();
+    const db = driver.mongo_client.db(driver.name);
     
     /** @type {import('@storecraft/core/api').QuickSearchResource[]} */ 
     const items = await db.collection(tables_filtered[0]).aggregate(

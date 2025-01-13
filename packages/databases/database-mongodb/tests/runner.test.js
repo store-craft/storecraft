@@ -17,7 +17,7 @@ export const create_app = async () => {
     new MongoDB(
       { 
         db_name: 'test222',//process.env.MONGODB_NAME,
-        url: process.env.MONGODB_URL
+        url: process.env.MONGODB_URL,
       }
     )
   )
@@ -29,8 +29,6 @@ async function test() {
   const app = await create_app();
 
   await migrateToLatest(app.db, false);
-
-  // api.collections_list.create(app).run();
 
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {

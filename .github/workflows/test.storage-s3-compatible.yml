@@ -28,8 +28,8 @@ jobs:
           minio/minio server /data
       - run: wget https://dl.min.io/client/mc/release/linux-amd64/mc
       - run: chmod +x ./mc
-      - run: ./mc alias set minio http://127.0.0.1:9000 ${{env._access_key}} ${{env._secret_key}}
-      - run: ./mc mb --ignore-existing http://127.0.0.1:9000/${{env._bucket}}
+      - run: ./mc alias set myminio http://127.0.0.1:9000 ${{env._access_key}} ${{env._secret_key}}
+      - run: ./mc mb --ignore-existing myminio/${{env._bucket}}
 
       - name: Check out repository code
         uses: actions/checkout@v4

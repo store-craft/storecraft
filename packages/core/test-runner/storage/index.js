@@ -109,6 +109,7 @@ export const create = (storage, name) => {
       // read
       const { value } = await storage.getArraybuffer(d.key);
 
+      console.log('d.buffer.toString()', d.buffer.toString())
       console.log('as_array_buffer', as_array_buffer)
       console.log('value', value)
       // compare

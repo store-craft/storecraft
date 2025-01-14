@@ -13,7 +13,7 @@ jobs:
     env:
       _access_key: minioadmin
       _secret_key: minioadmin
-      _bucket: test_bucket
+      _bucket: test-bucket
     runs-on: ubuntu-latest
     strategy:
       matrix:

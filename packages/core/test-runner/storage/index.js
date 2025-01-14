@@ -147,13 +147,19 @@ export const create = (storage, name) => {
         ...d,
         stream: Readable.toWeb(Readable.from(d.buffer)),
         // stream: Readable.toWeb(createReadStream('node.png')),
-        key: 'folder1/stream_node.png'
+        key: 'folder1/stream_node.png', 
+        length: d.buffer.byteLength
       })
     );
   
     for (const d of data) {
       // @ts-ignore
-      const success = await storage.putStream(d.key, d.stream);
+      const success = await storage.putStream(
+        d.key, d.stream, 
+        {
+          'Content-Length': d.length
+        }
+      );
       // read
       const get_stream = await storage.getStream(d.key);
 

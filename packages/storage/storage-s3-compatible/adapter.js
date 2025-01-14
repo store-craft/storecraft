@@ -95,13 +95,15 @@ export class S3CompatibleStorage {
    * 
    * @param {string} key 
    * @param {BodyInit} body 
+   * @param {object} [headers={}] 
    */
-  async #put_internal(key, body) {
+  async #put_internal(key, body, headers={}) {
     const r = await this.client.fetch(
       this.get_file_url(key),
       {
         method: 'PUT',
-        body
+        body,
+        headers
       }
     );
 
@@ -134,9 +136,11 @@ export class S3CompatibleStorage {
    * 
    * @type {storage["putStream"]}
    */
-  async putStream(key, stream) {
+  async putStream(key, stream, meta) {
     // @ts-ignore
-    return this.#put_internal(key, stream);
+    return this.#put_internal(
+      key, stream, meta
+    );
   }
 
   /**

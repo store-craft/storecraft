@@ -56,6 +56,7 @@ export const create_routes = (app) => {
         res.headers.set(HEADER_PRESIGNED, 'true');
         res.sendJson(r);
       } else {
+        
         await app.storage.putStream(file_key, req.body);
 
         res.headers.set(HEADER_PRESIGNED, 'false');

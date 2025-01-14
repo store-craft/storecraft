@@ -1,0 +1,56 @@
+name: S3 Compatible
+on: 
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+
+  test:
+    name: Test
+    env:
+      _access_key: minioadmin
+      _secret_key: minioadmin
+      _bucket: test-bucket
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Setup minio
+        run: >-
+          docker run -d -p 9000:9000 --name minio 
+          -e MINIO_ACCESS_KEY=${{env._access_key}} 
+          -e MINIO_SECRET_KEY=${{env._secret_key}} 
+          -v /tmp/data:/data -v /tmp/config:/root/.minio 
+          minio/minio server /data
+      - run: wget https://dl.min.io/client/mc/release/linux-amd64/mc
+      - run: chmod +x ./mc
+      - run: ./mc alias set myminio http://127.0.0.1:9000 ${{env._access_key}} ${{env._secret_key}}
+      - run: ./mc mb --ignore-existing myminio/${{env._bucket}}
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./packages/storage/storage-s3-compatible
+        run: npm ci
+
+      - name: Test
+        run: npm test
+        working-directory: ./packages/storage/storage-s3-compatible
+        env:
+          ACCESS_KEY_ID: ${{env._access_key}}
+          SECRET_ACCESS_KEY: ${{env._secret_key}}
+          BUCKET: ${{env._bucket}}
+          ENDPOINT: http://127.0.0.1:9000
+          REGION: us-east-1
+      

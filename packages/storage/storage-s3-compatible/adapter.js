@@ -95,23 +95,30 @@ export class S3CompatibleStorage {
    * 
    * @param {string} key 
    * @param {BodyInit} body 
+   * @param {object} [headers={}] 
    */
-  async #put_internal(key, body) {
+  async #put_internal(key, body, headers={}) {
     const r = await this.client.fetch(
       this.get_file_url(key),
       {
         method: 'PUT',
-        body
+        body,
+        headers
       }
     );
+
+    if(!r.ok) {
+      console.log(
+        await r.text()
+      );
+    }
 
     return r.ok;
   }
 
   /**
    * 
-   * @param {string} key 
-   * @param {Blob} blob 
+   * @type {storage["putBlob"]}
    */
   async putBlob(key, blob) {
     return this.#put_internal(key, blob);
@@ -119,8 +126,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ArrayBuffer} buffer 
+   * @type {storage["putArraybuffer"]}
    */
   async putArraybuffer(key, buffer) {
     return this.#put_internal(key, buffer);
@@ -128,17 +134,23 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ReadableStream} stream 
+   * @type {storage["putStream"]}
    */
-  async putStream(key, stream) {
-    return this.#put_internal(key, stream);
+  async putStream(key, stream, meta={}, bytesLength=0) {
+    const extra_headers = {};
+    if(Boolean(bytesLength)) {
+      extra_headers["Content-Length"] = bytesLength;
+    }
+
+    return this.#put_internal(
+      // @ts-ignore
+      key, stream, extra_headers
+    );
   }
 
   /**
    * 
-   * @param {string} key 
-   * @returns {ReturnType<import('@storecraft/core/storage').storage_driver["putSigned"]>}
+   * @type {storage["putSigned"]}
    */
   async putSigned(key) {
     const url = new URL(this.get_file_url(key));
@@ -171,14 +183,14 @@ export class S3CompatibleStorage {
   }
 
   /**
-   * 
-   * @param {string} key 
+   * @type {storage["getArraybuffer"]}
    */
   async getArraybuffer(key) {
     const r = await this.#get_request(key);
-    const b = await r.arrayBuffer();
     return {
-      value: b, 
+      value: r.ok ? (await r.arrayBuffer()) : undefined, 
+      error: !r.ok,
+      message: r.ok ? undefined : await r.text(),
       metadata: {
         contentType: infer_content_type(key)
       }
@@ -187,13 +199,14 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage["getBlob"]}
    */
   async getBlob(key) {
     const r = await this.#get_request(key);
-    const b = await r.blob();
     return {
-      value: b, 
+      value: r.ok ? (await r.blob()) : undefined, 
+      error: !r.ok,
+      message: r.ok ? undefined : await r.text(),
       metadata: {
         contentType: infer_content_type(key)
       }
@@ -201,15 +214,15 @@ export class S3CompatibleStorage {
   }
 
   /**
-   * 
-   * @param {string} key 
-   * @param {Response} key 
+   * @type {storage["getStream"]}
    */
   async getStream(key) {
-
-    const s = (await this.#get_request(key)).body
+    const r = await this.#get_request(key);
+    const b = r.body;
     return {
-      value: s, 
+      value: r.ok ? b : undefined, 
+      error: !r.ok,
+      message: r.ok ? undefined : await r.text(),
       metadata: {
         contentType: infer_content_type(key)
       }
@@ -218,8 +231,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @returns {ReturnType<import('@storecraft/core/storage').storage_driver["getSigned"]>}
+   * @type {storage["getSigned"]}
    */
   async getSigned(key) {
     const url = new URL(this.get_file_url(key));
@@ -244,7 +256,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage["remove"]}
    */
   async remove(key) {
     const r = await this.client.fetch(

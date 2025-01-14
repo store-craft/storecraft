@@ -85,7 +85,7 @@ export declare interface storage_driver {
    */
   putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<boolean>; 
   putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<boolean>; 
-  putStream: (key: string, stream: Partial<ReadableStream<any>>, meta?: MetaData) => Promise<boolean>; 
+  putStream: (key: string, stream: Partial<ReadableStream<any>>, meta?: MetaData, bytesLength: number) => Promise<boolean>; 
   putSigned?: (key: string) => Promise<StorageSignedOperation | undefined>; 
 
   /**

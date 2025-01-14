@@ -25,6 +25,14 @@ const sleep = (ms=1000) => new Promise(
   }
 )
 
+function buffer_to_arraybuffer(buffer) {
+  const arrayBuffer = new ArrayBuffer(buffer.length);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < buffer.length; ++i) {
+    view[i] = buffer[i];
+  }
+  return arrayBuffer;
+}
 /**
  * 
  * @param {ReadableStream} stream 
@@ -54,8 +62,8 @@ const readableStreamToArrayBuffer = async (stream) => {
  */
 const areStreamsEqual = async (lhs, rhs) => {
   return areArrayBuffersEqual(
-    await readableStreamToArrayBuffer(lhs), 
-    await readableStreamToArrayBuffer(rhs)
+    (await readableStreamToArrayBuffer(lhs)).buffer, 
+    (await readableStreamToArrayBuffer(rhs)).buffer
   );
 }
 /**
@@ -94,19 +102,24 @@ export const create = (storage, name) => {
     const data = data_with_buffers;
   
     for (const d of data) {
+
+      const as_array_buffer = buffer_to_arraybuffer(d.buffer);
       
-      await storage.putArraybuffer(d.key, d.buffer);
+      await storage.putArraybuffer(d.key, as_array_buffer);
       // read
       const { value } = await storage.getArraybuffer(d.key);
+
+      // console.log('as_array_buffer', as_array_buffer)
+      // console.log('value', value)
+      // console.log('decoded', new TextDecoder("utf-8").decode(value))
       // compare
-      const equal = areArrayBuffersEqual(d.buffer, value);
+      const equal = areArrayBuffersEqual(as_array_buffer, value);
       assert.ok(equal, 'are not equal !!!');
   
     }
     
   });
   
-
   s('BLOB put/get', async () => {
 
     const data = data_with_buffers.map(
@@ -134,18 +147,24 @@ export const create = (storage, name) => {
         ...d,
         stream: Readable.toWeb(Readable.from(d.buffer)),
         // stream: Readable.toWeb(createReadStream('node.png')),
-        key: 'folder1/stream_node.png'
+        key: 'folder1/stream_node.png', 
+        length: d.buffer.byteLength
       })
     );
   
     for (const d of data) {
       // @ts-ignore
-      await storage.putStream(d.key, d.stream);
+      const success = await storage.putStream(
+        d.key, d.stream, {}, d.buffer.byteLength
+      );
       // read
-      const { value } = await storage.getStream(d.key);
+      const get_stream = await storage.getStream(d.key);
+
+      console.log('success ', success);
+      console.log('get_stream ', get_stream);
 
       // let's read
-      const reader = value.getReader();
+      const reader = get_stream.value.getReader();
       let stream_bytes_length = 0;
       while(true) {
         const {done, value: chunk } = await reader.read();
@@ -172,15 +191,15 @@ export const create = (storage, name) => {
     const key = 'folder-test/about_to_be_removed.png'
     const buffer = data_with_buffers[0].buffer;
     
-    await storage.putArraybuffer(key, buffer);
+    await storage.putArraybuffer(key, buffer_to_arraybuffer(buffer));
     // await sleep(1000);
     await storage.remove(key);
-    // await sleep(1000);
+    await sleep(2000);
     const removed = await storage.getArraybuffer(key);
 
     assert.ok(
-      (removed.value===undefined) || 
-      (removed.value.byteLength==0), 
+      (removed.error) || 
+      (!Boolean(removed.value)), 
       'not removed !!!'
     );
   });

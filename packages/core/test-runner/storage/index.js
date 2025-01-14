@@ -103,16 +103,16 @@ export const create = (storage, name) => {
   
     for (const d of data) {
 
-      const ab = buffer_to_arraybuffer(d.buffer);
+      const as_array_buffer = buffer_to_arraybuffer(d.buffer);
       
-      await storage.putArraybuffer(d.key, ab);
+      await storage.putArraybuffer(d.key, as_array_buffer);
       // read
       const { value } = await storage.getArraybuffer(d.key);
 
-      console.log('d.buffer', d.buffer)
+      console.log('as_array_buffer', as_array_buffer)
       console.log('value', value)
       // compare
-      const equal = areArrayBuffersEqual(ab, value);
+      const equal = areArrayBuffersEqual(as_array_buffer, value);
       assert.ok(equal, 'are not equal !!!');
   
     }

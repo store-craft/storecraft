@@ -25,6 +25,14 @@ const sleep = (ms=1000) => new Promise(
   }
 )
 
+function buffer_to_arraybuffer(buffer) {
+  const arrayBuffer = new ArrayBuffer(buffer.length);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < buffer.length; ++i) {
+    view[i] = buffer[i];
+  }
+  return arrayBuffer;
+}
 /**
  * 
  * @param {ReadableStream} stream 
@@ -94,15 +102,17 @@ export const create = (storage, name) => {
     const data = data_with_buffers;
   
     for (const d of data) {
+
+      const ab = buffer_to_arraybuffer(d.buffer);
       
-      await storage.putArraybuffer(d.key, d.buffer);
+      await storage.putArraybuffer(d.key, ab);
       // read
       const { value } = await storage.getArraybuffer(d.key);
 
       console.log('d.buffer', d.buffer)
       console.log('value', value)
       // compare
-      const equal = areArrayBuffersEqual(d.buffer, value);
+      const equal = areArrayBuffersEqual(ab, value);
       assert.ok(equal, 'are not equal !!!');
   
     }

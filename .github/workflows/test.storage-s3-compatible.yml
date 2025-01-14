@@ -20,13 +20,12 @@ jobs:
         node-version: [22.x]
     steps:
       - name: Setup minio
-        run: |
+        run: >-
           docker run -d -p 9000:9000 --name minio 
-                     -e MINIO_ACCESS_KEY=${{env._access_key}} 
-                     -e MINIO_SECRET_KEY=${{env._secret_key}} 
-                     -v /tmp/data:/data 
-                     -v /tmp/config:/root/.minio 
-                     minio/minio server /data
+          -e MINIO_ACCESS_KEY=${{env._access_key}} 
+          -e MINIO_SECRET_KEY=${{env._secret_key}} 
+          -v /tmp/data:/data -v /tmp/config:/root/.minio 
+          minio/minio server /data
       - run: wget https://dl.min.io/client/mc/release/linux-amd64/mc
       - run: chmod +x ./mc
       - run: ./mc alias set minio http://127.0.0.1:9000 ${{env._access_key}} ${{env._secret_key}}

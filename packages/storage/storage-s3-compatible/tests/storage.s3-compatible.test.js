@@ -11,7 +11,7 @@ const storage = new S3CompatibleStorage(
     bucket: process.env.BUCKET,
     endpoint: process.env.ENDPOINT,
     forcePathStyle: FORCE_PATH_STYLE,
-    region: undefined
+    region: process.env.REGION
   }
 );
 

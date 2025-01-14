@@ -52,4 +52,5 @@ jobs:
           SECRET_ACCESS_KEY: ${{env._secret_key}}
           BUCKET: ${{env._bucket}},
           ENDPOINT: http://127.0.0.1:9000
+          REGION: us-east-1
       

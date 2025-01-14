@@ -109,9 +109,9 @@ export const create = (storage, name) => {
       // read
       const { value } = await storage.getArraybuffer(d.key);
 
-      console.log('d.buffer.toString()', d.buffer.toString())
       console.log('as_array_buffer', as_array_buffer)
       console.log('value', value)
+      console.log('decoded', new TextDecoder("utf-8").decode(value))
       // compare
       const equal = areArrayBuffersEqual(as_array_buffer, value);
       assert.ok(equal, 'are not equal !!!');

@@ -17,8 +17,7 @@
     "storecraft"
   ],
   "scripts": {
-    "storage-s3-compatible:test": "uvu -c",
-    "test": "npm run storage-s3-compatible:test",
+    "test": "node ./tests/storage.s3-compatible.test.js",
     "prepublishOnly": "npm version patch --force"
   },
   "type": "module",

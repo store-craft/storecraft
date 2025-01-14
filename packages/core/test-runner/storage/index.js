@@ -62,8 +62,8 @@ const readableStreamToArrayBuffer = async (stream) => {
  */
 const areStreamsEqual = async (lhs, rhs) => {
   return areArrayBuffersEqual(
-    await readableStreamToArrayBuffer(lhs), 
-    await readableStreamToArrayBuffer(rhs)
+    (await readableStreamToArrayBuffer(lhs)).buffer, 
+    (await readableStreamToArrayBuffer(rhs)).buffer
   );
 }
 /**
@@ -109,9 +109,9 @@ export const create = (storage, name) => {
       // read
       const { value } = await storage.getArraybuffer(d.key);
 
-      console.log('as_array_buffer', as_array_buffer)
-      console.log('value', value)
-      console.log('decoded', new TextDecoder("utf-8").decode(value))
+      // console.log('as_array_buffer', as_array_buffer)
+      // console.log('value', value)
+      // console.log('decoded', new TextDecoder("utf-8").decode(value))
       // compare
       const equal = areArrayBuffersEqual(as_array_buffer, value);
       assert.ok(equal, 'are not equal !!!');
@@ -120,8 +120,6 @@ export const create = (storage, name) => {
     
   });
   
-  return s;
-
   s('BLOB put/get', async () => {
 
     const data = data_with_buffers.map(
@@ -187,16 +185,15 @@ export const create = (storage, name) => {
     const key = 'folder-test/about_to_be_removed.png'
     const buffer = data_with_buffers[0].buffer;
     
-    await storage.putArraybuffer(key, buffer);
+    await storage.putArraybuffer(key, buffer_to_arraybuffer(buffer));
     // await sleep(1000);
     await storage.remove(key);
     await sleep(2000);
     const removed = await storage.getArraybuffer(key);
 
-    console.log('removed ', removed)
     assert.ok(
-      (removed.value===undefined) || 
-      (removed.value.byteLength==0), 
+      (removed.error) || 
+      (!Boolean(removed.value)), 
       'not removed !!!'
     );
   });

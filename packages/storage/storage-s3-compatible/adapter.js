@@ -105,6 +105,12 @@ export class S3CompatibleStorage {
       }
     );
 
+    if(!r.ok) {
+      console.log(
+        await r.text()
+      );
+    }
+
     return r.ok;
   }
 

@@ -153,11 +153,12 @@ export const create = (storage, name) => {
   
     for (const d of data) {
       // @ts-ignore
-      await storage.putStream(d.key, d.stream);
+      const success = await storage.putStream(d.key, d.stream);
       // read
       const get_stream = await storage.getStream(d.key);
 
-      console.log('get_stream ', get_stream)
+      console.log('success ', success);
+      console.log('get_stream ', get_stream);
 
       // let's read
       const reader = get_stream.value.getReader();

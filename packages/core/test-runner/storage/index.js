@@ -160,8 +160,8 @@ export const create = (storage, name) => {
       // read
       const get_stream = await storage.getStream(d.key);
 
-      console.log('success ', success);
-      console.log('get_stream ', get_stream);
+      // console.log('success ', success);
+      // console.log('get_stream ', get_stream);
 
       // let's read
       const reader = get_stream.value.getReader();

@@ -98,6 +98,9 @@ export const create = (storage, name) => {
       await storage.putArraybuffer(d.key, d.buffer);
       // read
       const { value } = await storage.getArraybuffer(d.key);
+
+      console.log('d.buffer', d.buffer)
+      console.log('value', value)
       // compare
       const equal = areArrayBuffersEqual(d.buffer, value);
       assert.ok(equal, 'are not equal !!!');
@@ -106,6 +109,7 @@ export const create = (storage, name) => {
     
   });
   
+  return s;
 
   s('BLOB put/get', async () => {
 

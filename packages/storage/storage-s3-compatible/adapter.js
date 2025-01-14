@@ -136,10 +136,15 @@ export class S3CompatibleStorage {
    * 
    * @type {storage["putStream"]}
    */
-  async putStream(key, stream, meta) {
-    // @ts-ignore
+  async putStream(key, stream, meta={}, bytesLength=0) {
+    const extra_headers = {};
+    if(Boolean(bytesLength)) {
+      extra_headers["Content-Length"] = bytesLength;
+    }
+
     return this.#put_internal(
-      key, stream, meta
+      // @ts-ignore
+      key, stream, extra_headers
     );
   }
 

@@ -5,6 +5,8 @@
        width='90%' />
 </div><hr/><br/>
 
+[![S3 Compatible](https://github.com/store-craft/storecraft/actions/workflows/test.storage-s3-compatible.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.storage-s3-compatible.yml)
+
 `fetch` ready support for an `S3` like storage:
 - `Amazon S3`
 - `Cloudflare R2`

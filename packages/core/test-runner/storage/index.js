@@ -155,10 +155,12 @@ export const create = (storage, name) => {
       // @ts-ignore
       await storage.putStream(d.key, d.stream);
       // read
-      const { value } = await storage.getStream(d.key);
+      const get_stream = await storage.getStream(d.key);
+
+      console.log('get_stream ', get_stream)
 
       // let's read
-      const reader = value.getReader();
+      const reader = get_stream.value.getReader();
       let stream_bytes_length = 0;
       while(true) {
         const {done, value: chunk } = await reader.read();

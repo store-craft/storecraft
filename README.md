@@ -9,7 +9,7 @@
 [![Core](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
 [![MongoDB](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml)[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)
 [![S3 Compatible](https://github.com/store-craft/storecraft/actions/workflows/test.storage-s3-compatible.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.storage-s3-compatible.yml)
-
+[![what](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fshalev_tomer&style=social&label=Storecraft)](https://x.com/shalev_tomer)
 
 # The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 

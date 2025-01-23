@@ -143,6 +143,10 @@
     },
     "./test-runner": {
       "import": "./test-runner/index.js"
+    },
+    "./ai": {
+      "import": "./ai/index.js",
+      "types": "./ai/types.public.d.ts"
     }
   },
   "scripts": {

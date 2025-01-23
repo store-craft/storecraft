@@ -7,7 +7,7 @@ export interface AI<Config extends any = any> {
 
 export type general_chat_completion_message = {
   content: string;
-  role: 'user' | 'developer' | 'system' | string;
+  role: 'user' | 'developer' | 'system';
   name?: string;
 }
 

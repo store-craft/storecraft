@@ -1,5 +1,5 @@
 /**
- * @import { AI, chat_completion_result } from "./types.llm.completion.d.ts";
+ * @import { AI, chat_completion_chunk_result, chat_completion_result } from "./types.llm.completion.d.ts";
  */
 
 
@@ -38,7 +38,11 @@ export class OpenAI {
         }
       );
 
-      /** @type {chat_completion_result} */
+      // for await(const chunk of result.body) {
+      //   console.log(new TextDecoder().decode(chunk), '\n\n\n')
+      // }
+
+      /** @type {chat_completion_result & chat_completion_chunk_result} */
       const json = await result.json();
 
       return json;

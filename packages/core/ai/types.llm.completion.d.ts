@@ -1,13 +1,13 @@
 
 export interface AI<Config extends any = any> {
   config: Config;
-  complete: (input: chat_completion_input) => Promise<chat_completion_result>;
+  complete: (input: chat_completion_input) => Promise<chat_completion_result & chat_completion_chunk_result>;
 }
 
 
 export type general_chat_completion_message = {
   content: string;
-  role: 'user' | 'developer' | 'system';
+  role: 'user' | 'developer' | 'system' | 'assistant';
   name?: string;
 }
 

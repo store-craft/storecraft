@@ -61,6 +61,6 @@ export declare interface extension<Config extends any=any, AppType extends any =
    * @description Invoke a public action 
    * @param action_handle the identifier of the `action`
    */
-  invokeAction?<P extends any=any>(action_handle: string): ExtensionActionHandler<P>;
+  invokeAction?(action_handle: string): ExtensionActionHandler<any>;
 
 }

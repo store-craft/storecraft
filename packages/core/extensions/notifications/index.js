@@ -4,9 +4,17 @@
  */
 
 /**
- * @implements {extension}
+ * @implements {extension<unknown>}
  */
 export class NotificationsExtension {
+
+  get config() {
+    return undefined;
+  }
+
+  get actions() {
+    return [];
+  }
 
   /**
    * @type {extension["info"]}

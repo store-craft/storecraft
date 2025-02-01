@@ -18,11 +18,12 @@ export const create_routes = (app) => {
   const polka = new Polka();
 
   // admin only
-  polka.use(authorize_admin(app));
+  // polka.use();
 
   // get extension
   polka.get(
     '/:extension_handle',
+    authorize_admin(app),
     async (req, res) => {
       const { extension_handle } = req.params;
       const r = get_extension(
@@ -36,6 +37,7 @@ export const create_routes = (app) => {
   // list extensions
   polka.get(
     '/',
+    authorize_admin(app),
     async (req, res) => {
       const r = list_extensions(
         app

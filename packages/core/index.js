@@ -469,7 +469,7 @@ export class App {
   /** 
    * @description Update new payment gateways and rewrite types 
    * 
-   * @template {Record<string, extension>} E
+   * @template {Record<string, extension<any, this & App>>} E
    * 
    * @param {E} extensions 
    * 

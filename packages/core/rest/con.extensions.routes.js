@@ -17,9 +17,6 @@ export const create_routes = (app) => {
   /** @type {ApiPolka} */
   const polka = new Polka();
 
-  // admin only
-  // polka.use();
-
   // get extension
   polka.get(
     '/:extension_handle',

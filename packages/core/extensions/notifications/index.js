@@ -98,7 +98,7 @@ const checkout_notification = (o, title='Checkout Update') => {
   return {
     message: `
 💰 **${title}**\n 
-* \`${o?.address?.firstname ?? 'unknown'}\` has checkout update. 
+* \`${o?.contact?.firstname ?? o?.address?.firstname ?? 'unknown'}\` has checkout update. 
 * 💳 Order total is \`${o?.pricing?.total ?? '-'}\`.
 * 📧 Email is ${o?.contact?.email ?? 'no-email'}
 `,

@@ -44,6 +44,7 @@ export class PostmanExtension {
       'orders/checkout/complete',
       async (event) => {
 
+        console.log(event.payload.current)
         if(!event.payload.current?.contact?.email)
           return;
 
@@ -234,12 +235,16 @@ export const sendMailWithTemplate = async (app, emails, template_handle, subject
       html,
       text,
       from: {
-        address: app.config.general_store_support_email,
+        address: app.config.general_store_support_email ?? 'support@storecraft.app',
         name: 'Support'
       },
       to: emails.map(e => ({address: e})),
       subject
     }
   );
+
+  if(!r?.success) {
+    console.log(r);
+  }
 
 }

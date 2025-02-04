@@ -22,7 +22,13 @@ export const collect_config = async () => {
           validate: v => Boolean(tokens(v).every(validateEmail))
         }
       )
-    )
+    ),
+    general_store_support_email: await input(
+      { 
+        message: 'What is your support email (important for email sending)',
+        default: 'support@storecraft.app',
+      },
+    ),
   }
 
   return {

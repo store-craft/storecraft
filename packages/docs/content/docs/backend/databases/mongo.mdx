@@ -13,6 +13,7 @@ Here is a sample of `mongodb` integration
 npm i @storecraft/core @storecraft/database-mongodb
 ```
 
+
 ```js
 import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
@@ -46,5 +47,11 @@ const app = new App(
 await app.init();
 await migrateToLatest(app.db, false);
 
+const server = http.createServer(app.handler).listen(
+  8000,
+  () => {
+    console.log(`Server is running on http://localhost:8000`);
+  }
+); 
 
 ```

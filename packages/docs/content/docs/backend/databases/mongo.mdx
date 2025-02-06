@@ -17,6 +17,7 @@ npm i @storecraft/core @storecraft/database-mongodb
 import { App } from '@storecraft/core';
 import { MongoDB } from '@storecraft/database-mongodb';
 import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
+import { MongoVectorSearch } from '@storecraft/database-mongodb/vector-search-extension.js'
 import { NodePlatform } from '@storecraft/core/platform/node';
 
 const app = new App(
@@ -38,6 +39,9 @@ const app = new App(
   )
 )
 .withStorage(new GoogleStorage())
+.withExtensions(
+  'mongo-vector-search': new MongoVectorSearch({ openai_key: process.env.OPENAI })
+)
 
 await app.init();
 await migrateToLatest(app.db, false);

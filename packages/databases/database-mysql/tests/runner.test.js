@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { MySQL } from '@storecraft/database-mysql';
-import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js';
+import { migrateToLatest } from '@storecraft/database-mysql/migrate.js';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { api } from '@storecraft/core/test-runner'
 

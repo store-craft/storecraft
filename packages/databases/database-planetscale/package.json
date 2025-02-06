@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-planetscale",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "`Storecraft` database driver for `PlanetScale` (cloud mysql)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -19,6 +19,15 @@
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./types.public.d.ts"
+    },
+    "./*": {
+      "import": "./*"
+    }
+  },
   "scripts": {
     "database-planetscale:test": "node ./tests/runner.test.js",
     "test": "npm run database-planetscale:test",

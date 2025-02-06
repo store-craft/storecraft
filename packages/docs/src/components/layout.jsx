@@ -31,7 +31,7 @@ const Layout = (
   const [menu, toggleMenu] = useToggle(false);
   const { darkMode } = useDarkMode();
 
-  // console.log(data);
+  console.log(data);
 
   /** @type {React.LegacyRef<HTMLDivElement>} */
   const main_ref = useRef();
@@ -89,13 +89,13 @@ const Layout = (
 
           <div className='relative w-full h-fit flex flex-col'>
             <div 
-                className='--w-full block px-5 md:px-5 --h-fit pb-20
+                className={`--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
                           pt-[130px] md:pt-[90px] prose prose-base
                           prose-slate text-[17px] 
                         --text-base max-w-none h-full
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
-                          text-slate-600 dark:text-slate-400'
+                          text-slate-600 dark:text-slate-400`}
                 children={content_hydrated} />
             <Copyright />               
           </div>

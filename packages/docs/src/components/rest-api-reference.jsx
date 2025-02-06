@@ -151,7 +151,7 @@ export default function RestApiReference() {
           
         },
         theme: 'kepler',
-        customCss: nextjsThemeCss,
+        customCss3: nextjsThemeCss,
         darkMode: darkMode
       }}
       

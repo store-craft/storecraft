@@ -137,7 +137,7 @@ export const _getStaticProps = async (
       scope: data,
     }
   );
-
+ 
   // console.log(docs)
 
   return {

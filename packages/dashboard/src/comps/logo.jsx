@@ -2,6 +2,7 @@ import pkg from '../../package.json'
 import { Bling } from '@/comps/common-ui.jsx'
 import main_png from './main.png'
 import { LogoGradient, LogoText } from './logo-text.jsx'
+import useDarkMode from '@/hooks/useDarkMode.js'
 
 export const StorecraftText = (
   {
@@ -36,6 +37,8 @@ export const Logo = (
   }
 ) => {
 
+  const { darkMode } = useDarkMode();
+
   const Capsule = ({}) => {
 
     return (
@@ -57,9 +60,20 @@ export const Logo = (
                  text-xl font-bold 
                 --pr-3 overflow-x-clip shadow-md' 
                 {...rest}>
-                  
-  <LogoV2 className='h-full object-contain rounded-xl bg-teal-400 
-                  scale-90 border-kf-600 --shadow-lg opacity-80' />                  
+
+  {
+    darkMode &&
+    ( <img src='/favicon.svg' className='h-full p-1 opacity-80' /> )
+  }
+  {
+    !darkMode && (
+      <LogoV2 className='h-full object-contain rounded-xl bg-teal-400 
+                      scale-90 border-kf-600 --shadow-lg opacity-80' />                  
+    )
+  }
+  
+  
+
 
   <div className='flex flex-col justify-between h-full p-0.5'>
     {/* <LogoText /> */}

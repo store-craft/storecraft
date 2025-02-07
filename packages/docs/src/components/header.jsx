@@ -124,8 +124,9 @@ const Header = (
     <div className='flex flex-row w-fit h-fit items-center gap-3'>
       <Link href='/'>
         <div className='w- flex flex-row items-center gap-1 relative'>
-          <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
-                        scale-90 border-kf-600 --shadow-lg opacity-80' />                  
+          {/* <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
+                        scale-90 border-kf-600 --shadow-lg opacity-80' />                   */}
+          <img src='/favicon.svg' className='w-7 h-7' />
           <LogoGradient className='h-6' />
           {
             show_docs_decoration &&

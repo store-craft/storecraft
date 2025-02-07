@@ -31,7 +31,7 @@ const connect = async (uri, options) => {
     ignoreUndefined: true,
     serverApi: {
       version: ServerApiVersion.v1,
-      strict: true,
+      strict: false,
       deprecationErrors: true,
 
     }

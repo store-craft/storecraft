@@ -43,13 +43,13 @@ export const create_routes = (app) => {
 
       // console.log('req?.params ', req?.params);
 
-      if(does_prefer_signed(req?.query)) {
-        if(!supports_signed) {
-          throw new StorecraftError(
-            'Storage driver does not support signed urls',
-            501
-          );
-        }
+      if(does_prefer_signed(req?.query) && supports_signed) {
+        // if(!supports_signed) {
+        //   throw new StorecraftError(
+        //     'Storage driver does not support signed urls',
+        //     501
+        //   );
+        // }
 
         const r = await app.storage.putSigned(file_key);
 
@@ -79,13 +79,13 @@ export const create_routes = (app) => {
       }
 
       // try to see if redirect is supported
-      if(does_prefer_signed(req?.query)) {
-        if(!supports_signed) {
-          throw new StorecraftError(
-            'Storage driver does not support signed urls',
-            501
-          );
-        }
+      if(does_prefer_signed(req?.query) && supports_signed) {
+        // if(!supports_signed) {
+        //   throw new StorecraftError(
+        //     'Storage driver does not support signed urls',
+        //     501
+        //   );
+        // }
 
         const r = await app.storage.getSigned(file_key);
 

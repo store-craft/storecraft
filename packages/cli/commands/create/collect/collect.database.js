@@ -177,6 +177,13 @@ const collect_general_config = async (
             message: 'Enter the connection url',
             required: true,
           }
+        ),
+        db_name: await input(
+          { 
+            message: 'Enter the Database name',
+            required: true,
+            default: 'test'
+          }
         )
       }
       return config;

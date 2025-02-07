@@ -34,7 +34,8 @@ Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
 
 <hr/>
 
-  
+
+[![Watch on Youtube](https://img.youtube.com/vi/OO4arXfO75U/0.jpg)](https://www.youtube.com/watch?v=OO4arXfO75U)
 
 ## **GET STARTED WITH CLI NOW** 👇
 

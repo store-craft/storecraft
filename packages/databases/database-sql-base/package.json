@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-sql-base",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Official SQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -19,6 +19,15 @@
   "type": "module",
   "main": "index.js",
   "types": "./types.public.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./types.public.d.ts"
+    },
+    "./*": {
+      "import": "./*"
+    }
+  },
   "scripts": {
     "database-sql-base:test:sqlite": "node ./tests/runner.sqlite-local.test.js",
     "database-sql-base:test:postgres": "node ./tests/runner.postgres-local.test.js",

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-sqlite",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "Official SQLite Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -19,6 +19,15 @@
   "type": "module",
   "main": "index.js",
   "types": "types.public.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./types.public.d.ts"
+    },
+    "./*": {
+      "import": "./*"
+    }
+  },
   "scripts": {
     "database-sqlite:test": "node ./tests/runner.test.js",
     "test": "npm run database-sqlite:test",

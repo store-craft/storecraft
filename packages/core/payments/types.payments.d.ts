@@ -103,8 +103,8 @@ export declare interface payment_gateway<
    * @param action_handle the identifier of the `action`
    * @param extra extra parameters for the action
    */
-  invokeAction<E extends any=any>(action_handle: string): 
-      PaymentGatewayActionHandler<CheckoutCreateResult, E>;
+  invokeAction(action_handle: string): 
+      PaymentGatewayActionHandler<CheckoutCreateResult, any>;
 
   /**
    * 

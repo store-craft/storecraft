@@ -3,7 +3,7 @@ import { App } from '@storecraft/core';
 import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
 import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
 import { NodePlatform } from '@storecraft/core/platform/node';
-import  { api_index } from '@storecraft/test-runner'
+import  { api } from '@storecraft/core/test-runner'
 
 export const test = async () => {
   const app = new App(

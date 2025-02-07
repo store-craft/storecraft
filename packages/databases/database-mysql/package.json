@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mysql",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "Official MySQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -19,6 +19,15 @@
   "type": "module",
   "main": "index.js",
   "types": "types.public.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./types.public.d.ts"
+    },
+    "./*": {
+      "import": "./*"
+    }
+  },
   "scripts": {
     "database-mysql:test": "node ./tests/runner.test.js",
     "test": "npm run database-mysql:test",

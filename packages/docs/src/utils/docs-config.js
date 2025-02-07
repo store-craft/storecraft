@@ -373,6 +373,7 @@ export default {
         name: 'BiLogoStackOverflow',
         params: { classNames: 'stroke-kf-600'}
       }, 
+      padding_override: 'px-0',
       route: 'rest-api/api',
       path: 'content/docs/rest-api/api.mdx'
   // external: '/rest-api-reference'
@@ -385,7 +386,6 @@ export default {
       }, 
       route: 'cli',
       path: 'content/docs/cli/cli.mdx'
-  // external: '/rest-api-reference'
     },
 
 

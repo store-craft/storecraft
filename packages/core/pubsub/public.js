@@ -1,12 +1,14 @@
 /** @import { EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber } from "./types.public.js" */
 
+import { App } from "../index.js";
+
 
 /**
  * 
  * @description `pubsub` controller for `storecraft` events
  * 
  * 
- * @template AppType
+ * @template {App} [AppType=App]
  */
 export class PubSub {
 

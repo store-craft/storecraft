@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-inter: Inter, sans-serif;
   --animate-wiggle: wiggle 1s ease-in-out infinite;
@@ -13,6 +15,37 @@
       transform: rotate(3deg);
     }
   }
+}
+
+@layer components {
+
+  .chat-border-color {
+    @apply border-gray-300 dark:border-slate-600;
+  }
+
+  .chat-bg-overlay {
+    @apply bg-black/10 dark:bg-white/10;
+  }
+
+  .chat-border-overlay {
+    @apply border-black/10 dark:border-white/10 ;
+  }
+
+  .chat-border-color-soft {
+    @apply border-gray-300 dark:border-slate-600;
+  }
+
+  .chat-card {
+    @apply border-gray-300 dark:border-slate-600;
+    @apply bg-white dark:bg-[rgb(41,52,69)] ;
+    /* @apply bg-white dark:bg-slate-700/50 ;
+    dark:bg-[rgb(41,52,69)] */
+  }
+
+  .chat-text {
+    @apply text-gray-800 dark:text-gray-200;
+  }
+
 }
 
 /* 

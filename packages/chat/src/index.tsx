@@ -15,7 +15,8 @@ export const mountChat = () => {
 
 export const Chat = () => {
   return (
-    <div className='w-screen h-screen flex flex-row justify-center items-center'>
+    <div className='dark bg-gray-800 chat-text w-screen 
+          h-screen flex flex-row justify-center items-center'>
       <div className='w-[400px] h-32 font-inter '>
 
         <ChatInput />

@@ -1,6 +1,7 @@
 import pkg from '../../package.json'
 import { Bling } from '@/comps/common-ui.jsx'
-import main_png from './main.png'
+import main_png from './main.png';
+import svg from './favicon.svg'
 import { LogoGradient, LogoText } from './logo-text.jsx'
 import useDarkMode from '@/hooks/useDarkMode.js'
 
@@ -63,7 +64,7 @@ export const Logo = (
 
   {
     darkMode &&
-    ( <img src='/favicon.svg' className='h-full p-1 opacity-80' /> )
+    ( <img src={svg} className='h-full p-1 opacity-80' /> )
   }
   {
     !darkMode && (

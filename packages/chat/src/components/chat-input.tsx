@@ -2,13 +2,21 @@ import { useCallback, useRef, useState } from "react"
 import { Card } from "./card"
 import { BsSend } from "react-icons/bs";
 import  { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
+import { withDiv } from "./common.types";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
-export const ChatInput = (
+export type ChatInputParams = withDiv<
   {
-    maxLines = 3
+    maxLines?: number
   }
+>;
+
+export const ChatInputView = (
+  {
+    maxLines = 3,
+    ...rest
+  }: ChatInputParams
 ) => {
   const [hasText, setHasText] = useState(false);
   const ref_ta = useRef<HTMLTextAreaElement>(undefined);
@@ -34,10 +42,10 @@ export const ChatInput = (
 
   hook_shift_enter(
     onSend
-  )
+  );
 
   return (
-    <div className='w-full h-full '>
+    <div {...rest}>
       <Card className='w-full h-fit overflow-clip shadow-2xl'>
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>
           <textarea rows={1}
@@ -54,12 +62,15 @@ export const ChatInput = (
             <BsSend className='w-full h-full text-white' />
           </button>
 
-          <div className='w-fit h-fit text-xs self-end px-3 -hidden tracking-wider font-light'>
+          <div className='w-fit h-fit text-xs self-end px-3 -hidden 
+                  tracking-wider font-light'>
             <span children='Shift' 
-                className='border chat-border-overlay chat-bg-overlay p-0.5 rounded-md text-[11px] font-mono font-bold'/>
+                className='border chat-border-overlay chat-bg-overlay p-0.5 
+                      rounded-md text-[11px] font-mono font-bold'/>
             <span children=' + ' className='opacity-60'/>
             <span children='Enter' 
-                className='border chat-border-overlay chat-bg-overlay p-0.5 rounded-md text-[11px] font-mono font-bold'/>
+                className='border chat-border-overlay chat-bg-overlay p-0.5 
+                        rounded-md text-[11px] font-mono font-bold'/>
             <span children=' to send' className='opacity-50'/>
           </div>
 

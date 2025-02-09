@@ -1,7 +1,8 @@
 import './index.css'
 import { createRoot } from 'react-dom/client'
 import { StrictMode } from 'react'
-import { ChatInput } from './components/chat-input'
+import { Chat } from './components/chat'
+export { Chat } from './components/chat';
 
 export const mountChat = () => {
   createRoot(
@@ -13,14 +14,3 @@ export const mountChat = () => {
   )
 }
 
-export const Chat = () => {
-  return (
-    <div className='dark bg-gray-800 chat-text w-screen 
-          h-screen flex flex-row justify-center items-center'>
-      <div className='w-[700px] h-32 font-inter '>
-
-        <ChatInput />
-      </div>
-    </div>
-  )
-}

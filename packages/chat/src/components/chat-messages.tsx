@@ -1,3 +1,4 @@
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ChatMessage, withDiv } from "./common.types";
 import svg from './favicon.svg';
 
@@ -11,6 +12,7 @@ export type MessageParams = withDiv<
 export type MessagesParams = withDiv<
   {
     messages: ChatMessage[];
+    onChatWindowScroll?: (el?: HTMLDivElement) => void
   }
 >;
 
@@ -26,7 +28,8 @@ export const ChatMessageView = (
       <img src={'./vite.svg'} 
         className='w-8 h-8 border-1 chat-border-overlay
           rounded-md object-fill bg-cyan-400' />
-      <div className='max-w-full flex-1' children={message?.content} />
+      <div className='max-w-full flex-1' 
+          children={message?.content} />
     </div>
   )
 }
@@ -84,27 +87,66 @@ export const ChatMessageV2View = (
   )
 }
 
-export const ChatMessagesView = (
-  {
-    messages,
-    ...rest
-  }: MessagesParams
-) => {
-
-  return (
-    <div {...rest}>
-      <div className='w-full h-full flex flex-col pb-44 
-            gap-0 p-5 overflow-y-scroll'>
-        {
-          messages?.map(
-            (m, ix) => (
-              <ChatMessageV2View 
-                  key={ix} message={m} 
-                  avatar_icon={undefined} />
-            )
-          )
-        }
-      </div>
-    </div>
-  )
+export type ChatMessagesViewImperativeInterface = {
+  scroll: () => void;
 }
+
+export const ChatMessagesView = forwardRef<ChatMessagesViewImperativeInterface, MessagesParams>(
+  (
+    {
+      messages, onChatWindowScroll,
+      ...rest
+    }: MessagesParams,
+    ref
+  ) => {
+      
+    const ref_div = useRef<HTMLDivElement>(undefined);
+
+    useImperativeHandle<ChatMessagesViewImperativeInterface, ChatMessagesViewImperativeInterface>(
+      ref,
+      () => (
+        {
+          scroll: () => {
+            ref_div.current?.scroll(
+              {
+                top: ref_div.current.scrollHeight - ref_div.current.clientHeight,
+                behavior: "smooth"
+              }
+            )
+          }
+        }
+      )
+    );
+
+    const internal_onScroll: React.UIEventHandler<HTMLDivElement> = useCallback(
+      (e) => {
+        onChatWindowScroll?.(e.currentTarget);
+      }, [onChatWindowScroll]
+    );
+
+    useEffect(
+      () => {
+        onChatWindowScroll?.(ref_div.current)
+      }, [onChatWindowScroll]
+    );
+
+    return (
+      <div {...rest}>
+        <div className='w-full h-full flex flex-col pb-44 
+              gap-0 p-5 overflow-y-scroll'
+            onScroll={internal_onScroll}
+            ref={ref_div}>
+          {
+            messages?.map(
+              (m, ix) => (
+                <ChatMessageV2View 
+                    key={ix} message={m} 
+                    avatar_icon={undefined} />
+              )
+            )
+          }
+        </div>
+      </div>
+    )
+  }
+)

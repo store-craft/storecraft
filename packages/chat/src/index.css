@@ -19,6 +19,10 @@
 
 @layer components {
 
+  .chat-bg {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+  
   .chat-border-color {
     @apply border-gray-300 dark:border-slate-600;
   }

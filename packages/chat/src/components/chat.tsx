@@ -22,12 +22,18 @@ export const Chat = () => {
       ref_chat_messages.current?.scroll();
     }, []
   );
+
+  useEffect(
+    () => {
+      ref_chat_messages.current?.scroll();
+    }, []
+  );
   
   return (
     <div className='dark chat-bg chat-text w-screen 
           h-screen flex flex-row justify-center items-center
           font-inter'>
-      <div className='w-[700px] max-w-full h-full relative --bg-red-100 
+      <div className='max-w-[800px] w-full h-full relative --bg-red-100 
               flex flex-col gap-0 items-center'>
 
         <ChatMessagesView messages={fixture_chat_1} 
@@ -43,7 +49,7 @@ export const Chat = () => {
           <FaArrowDownLong className='w-6 h-6 m-px p-1' />
         </button>    
 
-        <ChatInputView className='w-full absolute bottom-10 px-10' />
+        <ChatInputView className='w-full absolute bottom-10 px-3' />
 
       </div>      
     </div>

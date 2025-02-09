@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-inter: Inter, sans-serif;

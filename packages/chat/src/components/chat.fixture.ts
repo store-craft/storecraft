@@ -51,7 +51,18 @@ export const fixture_chat_1: ChatMessage[] = [
   },
   {
     role: "assistant",
-    content: 'porta mus lorem rhoncus consectetur. Interdum mauris sollicitudin cras natoque tempor habitasse aptent. Orci penatibus sagittis tincidunt quam imperdiet cubilia.'
+    content: `The Official \`storecraft\` AI Chat 🏆,
+- Leveraging \`static rendering\` / \`client side rendering\` / \`swr\`
+- Can be deployed into cost effective **CDN**
+- Also available at \`jsDelivr\` **CDN**
+
+\`\`\` 
+int a = 5;
+int a = 5;
+int a = 5;
+int a = 5;
+\`\`\` 
+`
   }
 
 

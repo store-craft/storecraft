@@ -1,21 +1,21 @@
 import { 
   create_local_storage_hook 
-} from '@storecraft/sdk-react-hooks'
+} from './use-local-storage'
 
 /**
  * 
- * @typedef {object} StorecraftDashboardPreferences
+ * @typedef {object} ChatPreferences
  * @prop {boolean} [darkMode]
  * 
  */
 
 
-/** @type {StorecraftDashboardPreferences} */
+/** @type {ChatPreferences} */
 const default_value = {
   darkMode: true
 }
 
-const KEY = 'storecraft_dashboard_preferences';
+const KEY = 'storecraft_chat_preferences';
 
 export const usePreferences = create_local_storage_hook(
   KEY, default_value

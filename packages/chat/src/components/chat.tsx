@@ -4,6 +4,7 @@ import { ChatMessagesView, ChatMessagesViewImperativeInterface } from "./chat-me
 import { fixture_chat_1 } from "./chat.fixture"
 import { delta_to_scroll_end } from "./chat.utils"
 import { FaArrowDownLong } from "react-icons/fa6";
+import useDarkMode from "@/hooks/use-dark-mode"
 
 export const Chat = () => {
 
@@ -28,11 +29,15 @@ export const Chat = () => {
       ref_chat_messages.current?.scroll();
     }, []
   );
+
+  const { darkMode } = useDarkMode();
+
+  const dark_class = darkMode ? 'dark' : '';
   
   return (
-    <div className='dark chat-bg chat-text w-screen 
+    <div className={dark_class + ` chat-bg chat-text w-screen 
           h-screen flex flex-row justify-center items-center
-          font-inter'>
+          font-inter`} >
       <div className='max-w-[800px] w-full h-full relative --bg-red-100 
               flex flex-col gap-0 items-center'>
 

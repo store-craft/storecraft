@@ -3,6 +3,7 @@ import { Card } from "./card"
 import { BsSend } from "react-icons/bs";
 import  { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
 import { withDiv } from "./common.types";
+import { DarkModeSwitch } from "./dark-mode-switch";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
@@ -62,21 +63,32 @@ export const ChatInputView = (
             <BsSend className='w-full h-full text-white' />
           </button>
 
-          <div className='w-fit h-fit text-xs self-end px-3 -hidden 
-                  tracking-wider font-light'>
-            <span children='Shift' 
-                className='border chat-border-overlay chat-bg-overlay p-0.5 
-                      rounded-md text-[11px] font-mono font-bold'/>
-            <span children=' + ' className='opacity-60'/>
-            <span children='Enter' 
-                className='border chat-border-overlay chat-bg-overlay p-0.5 
-                        rounded-md text-[11px] font-mono font-bold'/>
-            <span children=' to send' className='opacity-50'/>
+          <div className='flex flex-row justify-between w-full h-fit px-3'>
+            <DarkModeSwitch/>
+            <Tip/>
           </div>
+
 
         </div>
       </Card>
 
     </div>
+  )
+}
+
+const Tip = () => {
+
+  return (
+    <div className='w-fit h-fit text-xs self-end px-3 -hidden 
+        tracking-wider font-light'>
+      <span children='Shift' 
+        className='border chat-border-overlay chat-bg-overlay p-0.5 
+              rounded-md text-[11px] font-mono font-bold'/>
+      <span children=' + ' className='opacity-60'/>
+      <span children='Enter' 
+        className='border chat-border-overlay chat-bg-overlay p-0.5 
+                rounded-md text-[11px] font-mono font-bold'/>
+      <span children=' to send' className='opacity-50'/>
+    </div>    
   )
 }

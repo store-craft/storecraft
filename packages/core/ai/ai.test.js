@@ -137,16 +137,16 @@ test(
     // console.log(await r.json());
 
     const ai = new OpenAI({
-      // api_key: process.env.AI_API_KEY,
-      // endpoint: 'https://api.groq.com/openai/v1/chat/completions'
+      // api_key: process.env.GROQ,
+      // endpoint: 'https://api.groq.com/openai/',
       
       api_key: process.env.OPENAI,
-      endpoint: 'https://api.openai.com/v1/chat/completions',
+      // endpoint: 'https://api.openai.com/',
 
       // model: "deepseek-r1-distill-llama-70b",
       // model: "llama-3.1-8b-instant",
       // model: "llama-3.3-70b-versatile",
-      model: "gpt-4o",
+      // model: "gpt-4o",
       // model: "mixtral-8x7b-32768",
       // model: "llama3-8b-8192",
       // model: "gemma2-9b-it",
@@ -172,23 +172,28 @@ test(
             role: 'user',
               content: 'token_sodkosd8u328u32823hui2j3'
           },
-       
         ],
-        // tools,
+
         tools: [
           tool(
             {
               schema: {
-                name: '',
+                name: 'search_products',
+                description: 'Search products of the store for info like pricing, discounts and collections',
                 parameters: z.object(
                   {
-                    a: z.number()
+                    query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion'),
+                    count: z.number().describe('how many search results')
                   }
                 )
               },
-              use: function (input) {
-                input.a
-                throw new Error('Function not implemented.');
+              use: async function (input) {
+                return [
+                  {
+                    title: 'super mario NES game',
+                    price: 100
+                  }
+                ]
               }
             }
           )

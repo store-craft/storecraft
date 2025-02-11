@@ -9,8 +9,9 @@ export { OpenAI } from './openai/index.js' ;
  * writing and also helps with correctness of tools type with the `use` method
  * 
  * @template {z.ZodTypeAny} [Params=any]
+ * @template {any} [Result=any]
  * 
- * @param {import('./types.js').Tool<Params>} tool
+ * @param {import('./types.js').Tool<Params, Result>} tool
  */
 export const tool = (tool) => {
   return tool;

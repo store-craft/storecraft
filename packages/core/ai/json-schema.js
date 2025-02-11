@@ -40,7 +40,7 @@ export const zod_to_json_schema = (schema) => {
     const entries = Object.entries(schema.shape);
     // loop through key/value pairs
     return {
-      "parameters": Object.fromEntries(
+      "properties": Object.fromEntries(
         entries.map(
           ([key, value]) => {
             // get nested keys

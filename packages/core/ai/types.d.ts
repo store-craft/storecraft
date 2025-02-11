@@ -6,10 +6,10 @@ export type Tool<
   > = {
   schema: {
     name: string,
-    description?: string,
+    description: string,
     parameters: ToolInput,
   };
-  use: (input: z.infer<ToolInput>) => Promise<void>;
+  use: (input: z.infer<ToolInput>) => Promise<ToolResult>;
 }
 
 export type GenerateTextParams<MessageType extends any = any> = {

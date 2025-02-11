@@ -1,7 +1,8 @@
 
 export type openai_config = {
-  model: string,
+  model?: string,
   endpoint?: string,
+  api_version?: string;
   api_key: string
 }
 

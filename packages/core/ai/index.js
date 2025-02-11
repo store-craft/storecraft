@@ -1,1 +1,1 @@
-export { OpenAI } from './openai.js' ;
+export { OpenAI } from './openai/index.js' ;

@@ -1,9 +1,9 @@
 
-export interface AI<Config extends any = any> {
-  config: Config;
-  complete: (input: chat_completion_input) => Promise<chat_completion_result & chat_completion_chunk_result>;
+export type openai_config = {
+  model: string,
+  endpoint?: string,
+  api_key: string
 }
-
 
 export type general_chat_completion_message = {
   content: string;

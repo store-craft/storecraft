@@ -1,10 +1,15 @@
+import {z} from 'zod';
 
 export type Tool<
-  ToolInput extends any = any, 
-  ToolOutput extends any = any
+  ToolInput extends z.ZodTypeAny=any,
+  ToolResult extends any = any
   > = {
-  json_schema: object;
-  execute: (input: ToolInput) => Promise<ToolOutput>;
+  schema: {
+    name: string,
+    description?: string,
+    parameters: ToolInput,
+  };
+  use: (input: z.infer<ToolInput>) => Promise<void>;
 }
 
 export type GenerateTextParams<MessageType extends any = any> = {

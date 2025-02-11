@@ -1,7 +1,8 @@
 import 'dotenv/config';
-import { OpenAI } from './index.js';
+import { OpenAI, tool } from './index.js';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
+import { z } from 'zod';
 
 const tools = [
   {
@@ -173,12 +174,35 @@ test(
           },
        
         ],
-        tools,
+        // tools,
+        tools: [
+          tool(
+            {
+              schema: {
+                name: '',
+                parameters: z.object(
+                  {
+                    a: z.number()
+                  }
+                )
+              },
+              use: function (input) {
+                input.a
+                throw new Error('Function not implemented.');
+              }
+            }
+          )
+        ]
+          
+        
       }
     );
     
     console.log(JSON.stringify(output, null, 2));
   }
+
 );
+
+
 
 test.run();

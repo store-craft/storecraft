@@ -1,7 +1,7 @@
 /**
  * @import { 
  *  chat_completion_chunk_result, chat_completion_input, chat_completion_result, 
- *  general_chat_completion_message, config, tool_chat_completion_message 
+ *  chat_message, config 
  * } from "./types.js";
  * @import { AI, Tool } from "../types.js";
  */
@@ -11,7 +11,7 @@ import { zod_to_json_schema } from "../json-schema.js";
 /**
  * @typedef {AI<
  *  config, 
- *  general_chat_completion_message | tool_chat_completion_message, 
+ *  chat_message, 
  *  chat_completion_result
  * >} OpenAIImpl
  */

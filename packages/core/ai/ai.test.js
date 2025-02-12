@@ -20,7 +20,7 @@ const models = async () => {
   return r.json();
 }
 
-console.log(await models());
+// console.log(await models());
 
 const prompt2 = `
 <who_are_you>
@@ -65,19 +65,19 @@ test(
   'sanity', 
   async () => {
 
-    const ai = new Groq(
+    const ai2 = new Groq(
       {
         api_key: process.env.GROQ,
         model: 'llama-3.3-70b-versatile'
       }
     );
 
-    // const ai = new OpenAI(
-    //   {
-    //     api_key: process.env.OPENAI,
-    //     model: 'gpt-4o'
-    //   }
-    // );
+    const ai = new OpenAI(
+      {
+        api_key: process.env.OPENAI,
+        model: 'gpt-4o'
+      }
+    );
 
     const output = await ai.generateText(
       {

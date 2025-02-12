@@ -25,8 +25,8 @@ export type Tool<
  * @description A user prompt in generic form, later will be translated into LLM specific message
  */
 export type UserPrompt = {
-  type: 'text',
-  content: string | string[];
+  type: 'text' | 'image' | (string & {}),
+  content: string;
 }
 
 export type GenerateTextParams<MessageType extends any = any> = {

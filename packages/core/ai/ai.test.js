@@ -57,7 +57,7 @@ test(
       }
     );
 
-    const ai3 = new OpenAI(
+    const ai33 = new OpenAI(
       {
         api_key: process.env.OPENAI,
         model: 'gpt-4o'
@@ -67,22 +67,26 @@ test(
     const ai = new Claude(
       {
         api_key: process.env.ANTHROPIC,
+        model:'claude-3-haiku-20240307'
       }
     );
 
     const output = await ai.generateText(
       {
         messages: [
-          {
-            role: 'system',
-            content: prompt2
-          },
+          // {
+          //   role: 'system',
+          //   content: prompt2
+          // },
           {
             role: 'user',
             content: 'Do you have super mario games ?'
           }
         ],
-
+        prompt: {
+          type: 'text',
+          content: 'Do you have super mario games ?'
+        },
         tools: [
           tool(
             {

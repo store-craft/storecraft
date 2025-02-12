@@ -55,10 +55,7 @@ export class Claude {
     return tools.map(
       (tool) => (
         { 
-          input_schema: {
-            type: 'object',
-            properties: zod_to_json_schema(tool.schema.parameters)
-          },
+          input_schema: zod_to_json_schema(tool.schema.parameters),
           name: tool.schema.name,
           description: tool.schema.description,
         }
@@ -79,11 +76,12 @@ export class Claude {
         tools: this.#to_native_tools(params.tools),
         stream: false,
         tool_choice: { type: 'auto' },
-        max_tokens: params.maxTokens
+        max_tokens: params.maxTokens ?? 1024
       })
     );
 
     // console.log(JSON.stringify(body.tools, null, 2))
+    // return;
 
     const result = await fetch(
       this.#chat_completion_url,

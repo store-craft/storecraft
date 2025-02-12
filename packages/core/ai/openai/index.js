@@ -3,12 +3,12 @@
  *  chat_completion_input, chat_completion_result, 
  *  chat_message, config 
  * } from "./types.js";
- * @import { AI, content } from "../types.js";
+ * @import { AI, content, GenerateTextParams } from "../types.js";
  */
 
 import { invoke_tool_safely } from "../index.js";
 import { zod_to_json_schema } from "../json-schema.js";
-import { assistant_message_to_content } from "./utils.js";
+
 
 /**
  * @typedef {AI<
@@ -46,8 +46,9 @@ export class OpenAI {
     ).toString();
   }
 
-  /** @type {Impl["translateUserPrompt"]} */
-  translateUserPrompt = (prompts) => {
+
+  /** @type {Impl["user_content_to_llm_user_message"]} */
+  user_content_to_llm_user_message = (prompts) => {
     return prompts.map(
       (pr) => (
         {
@@ -57,6 +58,43 @@ export class OpenAI {
       )
     )
   };
+
+  /** @type {Impl["llm_assistant_message_to_user_content"]} */
+  llm_assistant_message_to_user_content = (message) => {
+
+    if(message.role!=='assistant')
+      throw new Error("message.role !== 'assistant'");
+
+    if(typeof message.content === 'string') {
+      return [
+        {
+          content: message.content,
+          type: 'text'
+        }
+      ];
+    }
+  
+    if(Array.isArray(message.content)) {
+      return message.content.map(
+        (part) => {
+          if('refusal' in part) {
+            return {
+              content: part.refusal,
+              type:'error'
+            }
+          } else {
+            return {
+              content: part.text,
+              type: 'text'
+            }
+          }
+        }
+      )
+    }
+    
+    return undefined;
+  };
+
 
   /**
    * 
@@ -117,6 +155,7 @@ export class OpenAI {
     return result.json();
   }
 
+  
   /**
    * 
    * @type {Impl["generateText"]} 
@@ -131,7 +170,7 @@ export class OpenAI {
         role: 'system'
       },
       ...params.history?.filter(m => m.role!=='system'),
-      ...this.translateUserPrompt(params.prompt)
+      ...this.user_content_to_llm_user_message(params.prompt)
     ];
 
     try {
@@ -181,7 +220,7 @@ export class OpenAI {
       console.log('history', JSON.stringify(params.history, null, 2))
 
       return {
-        contents: assistant_message_to_content(
+        contents: this.llm_assistant_message_to_user_content(
           current.choices[0].message
         )
       };

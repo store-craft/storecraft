@@ -59,7 +59,7 @@ export type image_content = {
 
 
 export type claude_message = {
-  content: string | ((text_content | image_content | tool_use_content | tool_result_content) & with_cache_control);
+  content: string | ((text_content | image_content | tool_use_content | tool_result_content) & with_cache_control)[];
   role: 'user' | 'assistant'
 }
 

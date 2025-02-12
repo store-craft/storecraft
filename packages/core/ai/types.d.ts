@@ -111,6 +111,13 @@ export interface AI<
    * @description Translate a generic user prompt into an LLM `user` message
    * @param prompt user prompt
    */
-  translateUserPrompt: (prompt: content[]) => MessageType[];
+  user_content_to_llm_user_message: (prompt: content[]) => MessageType[];
+
+  /**
+   * @description Translate a specific LLM Assistant message into simple user content
+   * @param message llm message
+   */
+  llm_assistant_message_to_user_content: (message: MessageType) => content[];
+
 
 }

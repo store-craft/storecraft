@@ -3,16 +3,16 @@
  *  chat_completion_input, claude_completion_response,
  *  config, claude_message
  * } from "./types.js";
- * @import { AI, Tool } from "../types.js";
+ * @import { AI, content, GenerateTextParams, Tool } from "../types.js";
  */
 
+import { invoke_tool_safely } from "../index.js";
 import { zod_to_json_schema } from "../json-schema.js";
 
 /**
  * @typedef {AI<
  *  config, 
- *  claude_message, 
- *  claude_completion_response
+ *  claude_message
  * >} Impl
  */
 
@@ -65,17 +65,14 @@ export class Claude {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
-   * @return {Promise<Impl["__gen_text_response_type"]>}
+   * @return {Promise<claude_completion_response>}
    */
   #text_complete = async (params) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
-        messages: [
-          ...params.history,
-          this.translateUserPrompt(params.prompt)
-        ].filter(Boolean),
+        messages: params.history,
         system: params.system,
         tools: this.#to_native_tools(params.tools),
         stream: false,
@@ -109,34 +106,142 @@ export class Claude {
     return result.json();
   }
 
-    /** @type {Impl["translateUserPrompt"]} */
-    translateUserPrompt = (prompt) => {
-      return {
-        role: 'user',
-        content: prompt.content
-      }
-    };
+  /** @type {Impl["user_content_to_llm_user_message"]} */
+  user_content_to_llm_user_message = (prompts) => {
+    return prompts.map(
+      (pr) => (
+        {
+          role: 'user',
+          content: pr.content
+        }
+      )
+    )
+  };
+
+  /** @type {Impl["llm_assistant_message_to_user_content"]} */
+  llm_assistant_message_to_user_content = (message) => {
+    if(message.role!=='assistant') {
+      throw new Error(
+        "llm_assistant_message_to_user_content:: message.role!=='assistant'"
+      );
+    }
+
+    if(typeof message.content === 'string') {
+      return [
+        {
+          content: message.content,
+          type: 'text'
+        }
+      ];
+    }
   
+    if(Array.isArray(message.content)) {
+      return message.content.filter(p => p.type==='text').map(
+        (part) => (
+          {
+            type: 'text',
+            content: part.text
+          }
+        )
+      )
+    }
+    
+    throw new Error("llm_assistant_message_to_user_content:: invalid data");;  
+  };
+
+
   /**
    * 
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
+
+    let max_steps = params.maxSteps ?? 6;
+
+    params.history = [
+      ...params.history,
+      ...this.user_content_to_llm_user_message(params.prompt)
+    ];
+
     try {
-      const result = await this.#text_complete(params);
+      let current = await this.#text_complete(params);
+      /** @type {content[]} */
+      let contents = [];
 
-      // console.log(JSON.stringify(input, null, 2))
+      // console.log(JSON.stringify(current, null, 2));
+      // return;
 
-      return result;
+      // while we are at a tool call, we iterate internally
+      while(
+        (current.stop_reason === 'tool_use') &&
+        (max_steps > 0)
+      ) {
+
+        max_steps -= 1;
+        console.log(max_steps)
+        // push `assistant` message into history
+        params.history.push(
+          {
+            role: current.role,
+            content: current.content
+          }
+        );
+
+        // invoke tools
+        for(const tool_call of current.content.filter(it => it.type==='tool_use')) {
+
+          // add tools results messages
+          params.history.push(
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'tool_result',
+                  tool_use_id: tool_call.id,
+                  content: JSON.stringify(
+                    await invoke_tool_safely(
+                      params.tools[tool_call.name],
+                      tool_call.input
+                    )
+                  )
+                }
+              ]
+              // 
+            }
+          );
+        }
+
+        // again
+        current = await this.#text_complete(params);
+      }
+
+      // push `assistant` message into history
+      params.history.push(
+        {
+          role: 'assistant',
+          content: current.content
+        }
+      );
+
+      console.log('history', JSON.stringify(params.history, null, 2))
+
+      return {
+        contents: this.llm_assistant_message_to_user_content(
+          current
+        )
+      };
 
     } catch (e) {
-      console.log('OpenAI', e)
+      console.log('Anthropic', e);
+
+      return undefined;
     } finally {
 
     }
 
     return undefined;
   }
+
 
   models = async () => {
     const r = await fetch(

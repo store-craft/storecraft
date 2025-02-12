@@ -71,7 +71,7 @@ test(
       }
     );
 
-    const output = await ai_oai.generateText(
+    const output = await ai_claude.generateText(
       {
         history: [
         ],

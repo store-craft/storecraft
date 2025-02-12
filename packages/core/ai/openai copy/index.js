@@ -1,9 +1,9 @@
 /**
  * @import { 
  *  chat_completion_chunk_result, chat_completion_input, chat_completion_result, 
- *  chat_message, config 
+ *  general_chat_completion_message, config, tool_chat_completion_message 
  * } from "./types.js";
- * @import { AI, GenerateTextParams, Tool, UserPrompt } from "../types.js";
+ * @import { AI, Tool } from "../types.js";
  */
 
 import { zod_to_json_schema } from "../json-schema.js";
@@ -11,13 +11,13 @@ import { zod_to_json_schema } from "../json-schema.js";
 /**
  * @typedef {AI<
  *  config, 
- *  chat_message, 
+ *  general_chat_completion_message | tool_chat_completion_message, 
  *  chat_completion_result
- * >} Impl
+ * >} OpenAIImpl
  */
 
 /**
- * @implements {Impl}
+ * @implements {OpenAIImpl}
  */
 export class OpenAI {
   #chat_completion_url = '';
@@ -45,20 +45,12 @@ export class OpenAI {
     ).toString();
   }
 
-  /** @type {Impl["translateUserPrompt"]} */
-  translateUserPrompt = (prompt) => {
-    return {
-      role: 'user',
-      content: prompt.content
-    }
-  };
-
   /**
    * 
    * @param {Tool[]} tools 
    * @return {chat_completion_input["tools"]}
    */
-  #to_native_tools = (tools) => {
+  #to_oai_tools = (tools) => {
     return tools.map(
       (tool) => (
         {
@@ -74,29 +66,22 @@ export class OpenAI {
   }
 
   /**
-   * @param {Impl["__gen_text_params_type"]} params
-   * @return {Promise<Impl["__gen_text_response_type"]>}
+   * @param {OpenAIImpl["__gen_text_params_type"]} params
+   * @return {Promise<OpenAIImpl["__gen_text_response_type"]>}
    */
   #text_complete = async (params) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
-        messages: [
-          params.system ? {
-            content: params.system,
-            role: 'system'
-          } : undefined,
-          ...params.history?.filter(m => m.role!=='system'),
-          this.translateUserPrompt(params.prompt)
-        ].filter(Boolean),
-        tools: this.#to_native_tools(params.tools),
+        messages: params.history,
+        tools: this.#to_oai_tools(params.tools),
         stream: false,
         tool_choice: 'auto'
       })
     );
 
-    console.log(JSON.stringify(body, null, 2))
+    // console.log(JSON.stringify(body.tools, null, 2))
 
     const result = await fetch(
       this.#chat_completion_url,
@@ -121,7 +106,7 @@ export class OpenAI {
 
   /**
    * 
-   * @type {Impl["generateText"]} 
+   * @type {OpenAIImpl["generateText"]} 
    */
   generateText = async (params) => {
     try {

@@ -72,7 +72,11 @@ export class Claude {
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
-        messages: params.messages,
+        messages: [
+          ...params.history,
+          this.translateUserPrompt(params.prompt)
+        ].filter(Boolean),
+        system: params.system,
         tools: this.#to_native_tools(params.tools),
         stream: false,
         tool_choice: { type: 'auto' },
@@ -80,7 +84,7 @@ export class Claude {
       })
     );
 
-    // console.log(JSON.stringify(body.tools, null, 2))
+    // console.log(JSON.stringify(body, null, 2))
     // return;
 
     const result = await fetch(
@@ -105,6 +109,14 @@ export class Claude {
     return result.json();
   }
 
+    /** @type {Impl["translateUserPrompt"]} */
+    translateUserPrompt = (prompt) => {
+      return {
+        role: 'user',
+        content: prompt.content
+      }
+    };
+  
   /**
    * 
    * @type {Impl["generateText"]} 

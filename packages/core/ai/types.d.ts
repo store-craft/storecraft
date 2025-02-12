@@ -35,9 +35,13 @@ export type GenerateTextParams<MessageType extends any = any> = {
    */
   tools?: Tool[],
   /**
+   * @description System prompt
+   */
+  system?: string;
+  /**
    * @description history native messages specific to the LLM
    */
-  messages: MessageType[],
+  history: MessageType[],
   /**
    * @description A user prompt in generic form, later will be translated into LLM specific message
    */

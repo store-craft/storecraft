@@ -5,7 +5,8 @@ export type config = {
     'claude-3-5-haiku-20241022' | 
     'claude-3-haiku-20240307' | 
     'claude-3-opus-20240229') | ({} & string),
-  api_version?: string = "2023-06-01";
+  api_version?: string = "v1";
+  anthropic_version?: string = "2023-06-01";
   api_key: string
 }
 

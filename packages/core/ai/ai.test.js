@@ -4,23 +4,8 @@ import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { z } from 'zod';
 import { Groq } from './groq/index.js';
+import { Claude } from './anthropic/index.js';
 
-const models = async () => {
-  const r = await fetch(
-    'https://api.anthropic.com/v1/models',
-    {
-      method: 'get',
-      headers: {
-        'x-api-key': process.env.ANTHROPIC,
-        "anthropic-version": "2023-06-01"
-      }
-    }
-  );
-
-  return r.json();
-}
-
-// console.log(await models());
 
 const prompt2 = `
 <who_are_you>
@@ -72,10 +57,16 @@ test(
       }
     );
 
-    const ai = new OpenAI(
+    const ai3 = new OpenAI(
       {
         api_key: process.env.OPENAI,
         model: 'gpt-4o'
+      }
+    );
+
+    const ai = new Claude(
+      {
+        api_key: process.env.ANTHROPIC,
       }
     );
 

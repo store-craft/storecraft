@@ -3,7 +3,7 @@
  *  chat_completion_chunk_result, chat_completion_input, chat_completion_result, 
  *  chat_message, config 
  * } from "./types.js";
- * @import { AI, Tool } from "../types.js";
+ * @import { AI, GenerateTextParams, Tool, UserPrompt } from "../types.js";
  */
 
 import { zod_to_json_schema } from "../json-schema.js";
@@ -13,11 +13,11 @@ import { zod_to_json_schema } from "../json-schema.js";
  *  config, 
  *  chat_message, 
  *  chat_completion_result
- * >} OpenAIImpl
+ * >} Impl
  */
 
 /**
- * @implements {OpenAIImpl}
+ * @implements {Impl}
  */
 export class OpenAI {
   #chat_completion_url = '';
@@ -45,12 +45,20 @@ export class OpenAI {
     ).toString();
   }
 
+  /** @type {Impl["translateUserPrompt"]} */
+  translateUserPrompt = (prompt) => {
+    return {
+      role: 'user',
+      content: prompt.content
+    }
+  };
+
   /**
    * 
    * @param {Tool[]} tools 
    * @return {chat_completion_input["tools"]}
    */
-  #to_oai_tools = (tools) => {
+  #to_native_tools = (tools) => {
     return tools.map(
       (tool) => (
         {
@@ -66,8 +74,8 @@ export class OpenAI {
   }
 
   /**
-   * @param {OpenAIImpl["__gen_text_params_type"]} params
-   * @return {Promise<OpenAIImpl["__gen_text_response_type"]>}
+   * @param {Impl["__gen_text_params_type"]} params
+   * @return {Promise<Impl["__gen_text_response_type"]>}
    */
   #text_complete = async (params) => {
 
@@ -75,7 +83,7 @@ export class OpenAI {
       ({
         model: this.config.model,
         messages: params.messages,
-        tools: this.#to_oai_tools(params.tools),
+        tools: this.#to_native_tools(params.tools),
         stream: false,
         tool_choice: 'auto'
       })
@@ -106,7 +114,7 @@ export class OpenAI {
 
   /**
    * 
-   * @type {OpenAIImpl["generateText"]} 
+   * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
     try {

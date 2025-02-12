@@ -48,15 +48,15 @@ export class Claude {
 
   /**
    * 
-   * @param {Tool[]} tools 
+   * @param {Impl["__gen_text_params_type"]["tools"]} tools 
    * @return {chat_completion_input["tools"]}
    */
   #to_native_tools = (tools) => {
-    return tools.map(
-      (tool) => (
+    return Object.entries(tools).map(
+      ([name, tool]) => (
         { 
           input_schema: zod_to_json_schema(tool.schema.parameters),
-          name: tool.schema.name,
+          name: name,
           description: tool.schema.description,
         }
       )

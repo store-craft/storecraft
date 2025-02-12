@@ -1,18 +1,19 @@
 /**
  * @import { 
- *  chat_completion_chunk_result, chat_completion_input, chat_completion_result, 
+ *  chat_completion_input, chat_completion_result, 
  *  chat_message, config 
  * } from "./types.js";
- * @import { AI, GenerateTextParams, Tool, UserPrompt } from "../types.js";
+ * @import { AI, content } from "../types.js";
  */
 
+import { invoke_tool_safely } from "../index.js";
 import { zod_to_json_schema } from "../json-schema.js";
+import { assistant_message_to_content } from "./utils.js";
 
 /**
  * @typedef {AI<
  *  config, 
- *  chat_message, 
- *  chat_completion_result
+ *  chat_message
  * >} Impl
  */
 
@@ -46,26 +47,30 @@ export class OpenAI {
   }
 
   /** @type {Impl["translateUserPrompt"]} */
-  translateUserPrompt = (prompt) => {
-    return {
-      role: 'user',
-      content: prompt.content
-    }
+  translateUserPrompt = (prompts) => {
+    return prompts.map(
+      (pr) => (
+        {
+          role: 'user',
+          content: pr.content
+        }
+      )
+    )
   };
 
   /**
    * 
-   * @param {Tool[]} tools 
+   * @param {Impl["__gen_text_params_type"]["tools"]} tools 
    * @return {chat_completion_input["tools"]}
    */
   #to_native_tools = (tools) => {
-    return tools.map(
-      (tool) => (
+    return Object.entries(tools).map(
+      ([name, tool]) => (
         {
           type: 'function',
           function: {
             description: tool.schema.description,
-            name: tool.schema.name,
+            name: name,
             parameters: zod_to_json_schema(tool.schema.parameters)
           } 
         }
@@ -75,28 +80,21 @@ export class OpenAI {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
-   * @return {Promise<Impl["__gen_text_response_type"]>}
+   * @return {Promise<chat_completion_result>}
    */
   #text_complete = async (params) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
-        messages: [
-          params.system ? {
-            content: params.system,
-            role: 'system'
-          } : undefined,
-          ...params.history?.filter(m => m.role!=='system'),
-          this.translateUserPrompt(params.prompt)
-        ].filter(Boolean),
+        messages: params.history,
         tools: this.#to_native_tools(params.tools),
         stream: false,
         tool_choice: 'auto'
       })
     );
 
-    console.log(JSON.stringify(body, null, 2))
+    // console.log(JSON.stringify(body, null, 2))
 
     const result = await fetch(
       this.#chat_completion_url,
@@ -124,15 +122,74 @@ export class OpenAI {
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
+
+    let max_steps = params.maxSteps ?? 6;
+
+    params.history = [
+      { // rewrite system prompt
+        content: params.system,
+        role: 'system'
+      },
+      ...params.history?.filter(m => m.role!=='system'),
+      ...this.translateUserPrompt(params.prompt)
+    ];
+
     try {
-      const result = await this.#text_complete(params);
+      let current = await this.#text_complete(params);
+      /** @type {content[]} */
+      let contents = [];
 
-      // console.log(JSON.stringify(input, null, 2))
+      // console.log(JSON.stringify(current, null, 2));
+      // return;
 
-      return result;
+      // while we are at a tool call, we iterate internally
+      while(
+        (current.choices[0].finish_reason === 'tool_calls') &&
+        (max_steps > 0)
+      ) {
+
+        max_steps -= 1;
+        console.log(max_steps)
+        // push `assistant` message into history
+        params.history.push(current.choices[0].message);
+
+        // invoke tools
+        for(const tool_call of current.choices[0].message.tool_calls) {
+
+          // add tools results messages
+          params.history.push(
+            {
+              role: 'tool',
+              tool_call_id: tool_call.id,
+              content: JSON.stringify(
+                await invoke_tool_safely(
+                  params.tools[tool_call.function.name],
+                  JSON.parse(tool_call.function.arguments)
+                )
+              )
+            }
+          );
+        }
+
+        // again
+        current = await this.#text_complete(params);
+      }
+
+      // push `assistant` message into history
+      params.history.push(current.choices[0].message);
+
+      console.log('history', JSON.stringify(params.history, null, 2))
+
+      return {
+        contents: assistant_message_to_content(
+          current.choices[0].message
+        )
+      };
 
     } catch (e) {
-      console.log('OpenAI', e)
+      console.log('OpenAI', e);
+
+      return undefined;
     } finally {
 
     }
@@ -141,6 +198,7 @@ export class OpenAI {
   }
 
   models = async () => {
+
     const r = await fetch(
       this.#chat_models_url,
       {

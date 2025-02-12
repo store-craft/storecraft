@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { tool } from './index.js'
 
 /**
  * @description General Tool specification
@@ -11,7 +12,6 @@ export type Tool<
      * @description schema of tool
      */
     schema: {
-      name: string,
       description: string,
       /**
        * @description `zod` schema for the parameters of the tool
@@ -21,19 +21,23 @@ export type Tool<
     use: (input: z.infer<ToolInput>) => Promise<ToolResult>;
   }
 
-/**
- * @description A user prompt in generic form, later will be translated into LLM specific message
- */
-export type UserPrompt = {
-  type: 'text' | 'image' | (string & {}),
+
+
+/** @description A general content type from and to user */
+export type content = {
+  type: 'text' | 'image' | 'tool' | 'json' | 'error' | (string & {}),
   content: string;
+  meta_data?: any;
 }
 
+/**
+ * @description Text generation parameters
+ */
 export type GenerateTextParams<MessageType extends any = any> = {
   /**
    * @description tools
    */
-  tools?: Tool[],
+  tools?: Record<string, Tool>,
   /**
    * @description System prompt
    */
@@ -45,8 +49,22 @@ export type GenerateTextParams<MessageType extends any = any> = {
   /**
    * @description A user prompt in generic form, later will be translated into LLM specific message
    */
-  prompt: UserPrompt,
+  prompt: content[],
+  /**
+   * @description Max tokens
+   */
   maxTokens?: number
+  /**
+   * @description The maximum amount of steps to iterate
+   */
+  maxSteps?: number
+}
+
+/**
+ * @description Content response from the LLM in a unified structure
+ */
+export type GenerateTextResponse = {
+  contents: content[]
 }
 
 /**
@@ -54,28 +72,45 @@ export type GenerateTextParams<MessageType extends any = any> = {
  */
 export interface AI<
   Config extends any = any, 
-  MessageType extends any = any,
-  GenerateTextResponseType extends any = any
+  MessageType extends any = any
   > {
   
   __message_type?: MessageType;
   __gen_text_params_type?: GenerateTextParams<MessageType>;
-  __gen_text_response_type?: GenerateTextResponseType;
 
   config?: Config;
 
   /**
-   * @description Generate text
+   * @description The purpose of this method is to generate new {@link content} array based on 
+   * #### 1. LLM history
+   * Which Array of native LLM specific messages
+   * 
+   * #### 2. User prompt
+   * Which is a simple array of {@link content}, such as
+   * 
+   * ```js
+   * [{ type:'text', content: 'user prompt'}, { type:'image', content: 'base64_****'}]
+   * ```
+   * #### 3. Tools
+   * A dictionary of {@link Tool}. Each has schema typed with `zod`. Be sure to use the {@link tool} helper
+   * fot extra type safety
+   * 
+   * #### 4. Return content
+   * Each generation returns an array of regular {@link content} simple as
+   * ```js
+   * [{ type:'text', content: 'LLM response'}]
+   * ```
+   * 
    * @param params params
    */
   generateText: (
     params: GenerateTextParams<MessageType>
-  ) => Promise<GenTextResponseType>;
+  ) => Promise<GenerateTextResponse>;
 
   /**
    * @description Translate a generic user prompt into an LLM `user` message
    * @param prompt user prompt
    */
-  translateUserPrompt: (prompt: UserPrompt) => MessageType;
+  translateUserPrompt: (prompt: content[]) => MessageType[];
 
 }

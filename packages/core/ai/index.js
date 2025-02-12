@@ -16,3 +16,21 @@ export { OpenAI } from './openai/index.js' ;
 export const tool = (tool) => {
   return tool;
 }
+
+/**
+ * 
+ * @param {import('./types.js').Tool} tool
+ * @param {object} input 
+ * @returns {Promise<{ result?: any, error?: any}>}
+ */
+export const invoke_tool_safely = async (tool, input) => {
+  try {
+    return {
+      result: await tool.use(input)
+    }
+  } catch (e) {
+    return {
+      error: e
+    }
+  }
+}

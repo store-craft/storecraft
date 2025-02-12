@@ -50,42 +50,43 @@ test(
   'sanity', 
   async () => {
 
-    const ai2 = new Groq(
+    const ai_groq = new Groq(
       {
         api_key: process.env.GROQ,
         model: 'llama-3.3-70b-versatile'
       }
     );
 
-    const ai = new OpenAI(
+    const ai_oai = new OpenAI(
       {
         api_key: process.env.OPENAI,
         model: 'gpt-4o'
       }
     );
 
-    const ai22 = new Claude(
+    const ai_claude = new Claude(
       {
         api_key: process.env.ANTHROPIC,
         model:'claude-3-haiku-20240307'
       }
     );
 
-    const output = await ai.generateText(
+    const output = await ai_oai.generateText(
       {
         history: [
-          
         ],
         system: prompt2,
-        prompt: {
-          type: 'text',
-          content: 'Do you have super mario games ?'
-        },
-        tools: [
-          tool(
+        prompt: [
+          {
+            type: 'text',
+            content: 'Do you have super mario games ?'
+          }
+        ],
+        tools: {
+          search_products: tool(
             {
               schema: {
-                name: 'search_products',
+                // name: 'search_products',
                 description: 'Search products of the store for info like pricing, discounts and collections',
                 parameters: z.object(
                   {
@@ -104,8 +105,7 @@ test(
               }
             }
           )
-        ]
-        
+        }
       }
     );
     

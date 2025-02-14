@@ -12,7 +12,9 @@ import { Resend } from '@storecraft/mailer-providers-http/resend'
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node';
-import { Groq } from '@storecraft/core/ai/groq';
+import { OpenAI } from "@storecraft/core/ai/openai";
+import { Claude } from "@storecraft/core/ai/anthropic";
+import { Groq } from "@storecraft/core/ai/groq";
 
 export const app = new App(
   {

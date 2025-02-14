@@ -44,20 +44,39 @@ export class StoreAgent {
    */
   run = async (params) => {
     console.log(params)
-    const { contents } = await this.provider.generateText(
-      {
-        history: params.history ?? [],
-        prompt: params.prompt,
-        system: SYSTEM,
-        tools: TOOLS,
-        maxSteps: params.maxSteps,
-        maxTokens: params.maxTokens
-      }
-    );
+    try {
 
-    return {
-      contents: contents
+      const { contents } = await this.provider.generateText(
+        {
+          history: params.history ?? [],
+          prompt: params.prompt,
+          system: SYSTEM,
+          tools: TOOLS,
+          maxSteps: params.maxSteps,
+          maxTokens: params.maxTokens
+        }
+      );
+  
+      return {
+        contents: contents
+      }
+
+    } catch(e) {
+      console.log(e);
+
+      return {
+        contents: [
+          {
+            type: 'error',
+            content: "Something went wrong",
+            meta_data: {
+              native: (e instanceof Error) ? e?.toString() : e
+            }
+          }
+        ]
+      }
     }
+
   }
 
 

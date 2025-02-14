@@ -42,9 +42,6 @@
       "import": "./storage/public.js",
       "types": "./storage/types.public.d.ts"
     },
-    "./storage/*": {
-      "import": "./storage/*"
-    },
     "./storage/node": {
       "import": "./storage/node/index.js",
       "types": "./storage/node/types.public.d.ts"
@@ -56,6 +53,9 @@
     "./storage/bun": {
       "import": "./storage/bun/index.js",
       "types": "./storage/bun/types.public.d.ts"
+    },
+    "./storage/*": {
+      "import": "./storage/*"
     },
     "./crypto": {
       "import": "./crypto/public.js",
@@ -92,9 +92,6 @@
       "import": "./platform/index.js",
       "types": "./platform/types.public.d.ts"
     },
-    "./platform/*": {
-      "import": "./platform/*"
-    },
     "./platform/node": {
       "import": "./platform/node/index.js",
       "types": "./platform/node/types.public.d.ts"
@@ -118,6 +115,9 @@
     "./platform/google-functions": {
       "import": "./platform/google-functions/index.js",
       "types": "./platform/google-functions/types.public.d.ts"
+    },
+    "./platform/*": {
+      "import": "./platform/*"
     },
     "./extensions": {
       "import": "./extensions/public.js",
@@ -148,9 +148,6 @@
       "import": "./ai/index.js",
       "types": "./ai/types.public.d.ts"
     },
-    "./ai/*": {
-      "import": "./ai/*"
-    },
     "./ai/openai": {
       "import": "./ai/openai/index.js",
       "types": "./ai/openai/types.d.ts"
@@ -162,6 +159,9 @@
     "./ai/anthropic": {
       "import": "./ai/anthropic/index.js",
       "types": "./ai/anthropic/types.d.ts"
+    },
+    "./ai/*": {
+      "import": "./ai/*"
     }
   },
   "scripts": {

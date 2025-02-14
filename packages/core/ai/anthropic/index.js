@@ -159,7 +159,7 @@ export class Claude {
     let max_steps = params.maxSteps ?? 6;
 
     params.history = [
-      ...params.history,
+      ...(params.history ?? []),
       ...this.user_content_to_llm_user_message(params.prompt)
     ];
 

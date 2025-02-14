@@ -384,6 +384,7 @@ const create_all = () => {
 
   // register routes
   register_reference(registry);
+  register_ai(registry);
   register_auth(registry);
   register_storage(registry);
   register_checkout(registry);
@@ -907,6 +908,91 @@ const register_checkout = (registry) => {
                   ],
                   "active": true
               },
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_ai = (registry) => {
+
+  const aiMessageContent = z.object(
+    {
+      type: z.union([z.enum(["text", "image", "tool", "json", "error"]), z.string()]).describe('The type of the content'),
+      content: z.string().optional().describe('The data of the content'),
+      meta_data: z.record(z.string(), z.any()).optional().describe('optional mete data')
+    }
+  )
+  const storeAgentRunParametersSchema = z.object(
+    {
+      thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
+      history: z.array(z.any()).describe('The Native **LLM** messages history of the conversation thread'),
+      prompt: z.array(aiMessageContent).describe('Current customer prompt'),
+      maxTokens: z.number().optional().describe('Max tokens'),
+      maxSteps: z.number().optional().describe('Max steps per agent'),
+    }
+  );
+
+  const storeAgentRunResponseSchema = z.object(
+    {
+      thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
+      contents: z.array(aiMessageContent).describe('Current **LLM** formatted responses'),
+    }
+  );
+
+  registry.register(
+    'aiMessageContent', aiMessageContent
+  );
+  registry.register(
+    'storeAgentRunParameters', storeAgentRunParametersSchema
+  );
+  registry.register(
+    'storeAgentRunResponseSchema', storeAgentRunResponseSchema
+  );
+
+  registry.registerPath({
+    method: 'post',
+    path: `/ai`,
+    description: 'Speak with `Storecraft` AI agent',
+    summary: 'Speak with AI agent',
+    tags: ['ai'],
+    request: {
+      body: {
+        description: 'User Prompts',
+        content: {
+          "application/json": {
+            schema: storeAgentRunParametersSchema,
+            example: {
+              prompt: [
+                {
+                  type: 'text',
+                  content: 'What is the price of Super Mario for the NES console ?'
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: `LLM formatted/readable Response`,
+        content: {
+          'application/json': {
+            schema: storeAgentRunResponseSchema,
+            example: {
+              contents: [
+                {
+                  type: 'text',
+                  content: 'It is 100$, can I help you with more Mario games ?'
+                }
+              ]
             }
           },
         },

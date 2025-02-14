@@ -1,17 +1,28 @@
 /**
- * @import { AgentRunParameters, AgentRunResponse } from './types.js'
+ * @import { AgentConfig, AgentRunParameters, AgentRunResponse } from './types.js'
+ * @import { AI } from '../types.private.js'
  */
 
 import { App } from "../../index.js";
 import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
 
+/**
+ * @template {AI} [AI_PROVIDER=AI]
+ */
 export class StoreAgent {
   /** @type {App} */
   #app;
 
-  constructor() {
+  /** @type {AgentConfig<AI_PROVIDER>} */
+  #config;
 
+  /**
+   * 
+   * @param {AgentConfig<AI_PROVIDER>} config 
+   */
+  constructor(config) {
+    this.#config = config;
   }
 
   /**
@@ -22,8 +33,8 @@ export class StoreAgent {
     this.#app = app;
   }
 
-  get ai() {
-    return this.#app.ai;
+  get provider() {
+    return this.#config.ai;
   }
 
   /**
@@ -32,10 +43,10 @@ export class StoreAgent {
    * @returns {Promise<AgentRunResponse>}
    */
   run = async (params) => {
-
-    const { contents } = await this.ai.generateText(
+    console.log(params)
+    const { contents } = await this.provider.generateText(
       {
-        history: params.history,
+        history: params.history ?? [],
         prompt: params.prompt,
         system: SYSTEM,
         tools: TOOLS,

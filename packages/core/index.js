@@ -21,6 +21,7 @@ import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
 import pkg from './package.json' with { type: "json" }
 import { NotificationsExtension } from './extensions/notifications/index.js';
+import { StoreAgent } from './ai/agents/agent.js';
 
 /**
  * @typedef {{
@@ -52,7 +53,7 @@ export class App {
   #_platform;
 
   /** 
-   * @type {AiProvider} 
+   * @type {StoreAgent<AiProvider>} 
    */
   #_ai;
   
@@ -306,6 +307,12 @@ export class App {
         const ext = this.extension(ext_handle);
         ext?.onInit(app);
       }
+
+      // settle ai agent
+      if(this.#_ai) {
+        this.#_ai.init(this);
+      }
+
   
     } catch (e) {
       this.#_is_ready = false;
@@ -366,7 +373,7 @@ export class App {
    */
   withAI(ai) {
     // @ts-ignore
-    this.#_ai = ai;
+    this.#_ai = new StoreAgent({ ai });
 
     // @ts-ignore
     return this;

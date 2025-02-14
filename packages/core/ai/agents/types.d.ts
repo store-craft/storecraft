@@ -1,12 +1,16 @@
 import { content } from "../types.private.js"
 
+export type AgentConfig<AI> = {
+  ai: AI
+}
+
 /**
  * @description Parameters for the `storecraft` agent
  */
 export type AgentRunParameters = {
   thread_id?: string;
   /**
-   * @description The messages history of the conversation thread
+   * @description The Native **LLM** messages history of the conversation thread
    */
   history: any[],
   /**
@@ -20,7 +24,7 @@ export type AgentRunParameters = {
   /**
    * @description The maximum amount of steps to iterate
    */
-  maxSteps?: number  
+  maxSteps?: number
 }
 
 /**
@@ -28,7 +32,7 @@ export type AgentRunParameters = {
  */
 export type AgentRunResponse = {
   /**
-   * @description Current customer prompt
+   * @description Current **LLM** formatted responses
    */
   contents: content[]
 }

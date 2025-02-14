@@ -169,7 +169,7 @@ export class OpenAI {
         content: params.system,
         role: 'system'
       },
-      ...params.history?.filter(m => m.role!=='system'),
+      ...(params.history ?? [])?.filter(m => m.role!=='system'),
       ...this.user_content_to_llm_user_message(params.prompt)
     ];
 

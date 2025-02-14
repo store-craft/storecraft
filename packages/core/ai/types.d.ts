@@ -18,6 +18,13 @@ export type Tool<
        */
       parameters: ToolInput,
     };
+
+    /**
+     * @description Invoke / Use the tool
+     * 
+     * @param input `zod` schema
+     * @returns 
+     */
     use: (input: z.infer<ToolInput>) => Promise<ToolResult>;
   }
 
@@ -118,6 +125,5 @@ export interface AI<
    * @param message llm message
    */
   llm_assistant_message_to_user_content: (message: MessageType) => content[];
-
 
 }

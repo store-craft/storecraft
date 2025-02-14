@@ -10,6 +10,7 @@
  * @import { tax_provider } from "./tax/types.public.js";
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
+ * @import { AI } from "./ai/types.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';
@@ -38,6 +39,7 @@ import { NotificationsExtension } from './extensions/notifications/index.js';
  * @template {Record<string, extension>} [ExtensionsMap=BaseExtensions]
  * `extensions` map type
  * @template {tax_provider} [Taxes=UniformTaxes]
+ * @template {AI} [AiProvider=AI]
  * 
  * @description This is the main `storecraft` **App**
  * 
@@ -49,6 +51,11 @@ export class App {
    */
   #_platform;
 
+  /** 
+   * @type {AiProvider} 
+   */
+  #_ai;
+  
   /** 
    * 
    * @description The private database driver
@@ -322,54 +329,13 @@ export class App {
   }
 
   /** 
-   * 
-   * @description Get the Database driver 
-   */
-  get db() { 
-    return this.#_db_driver; 
-  }
-
-  /** 
-   * 
-   * @description Get the native platform object 
-   */
-  get platform() { 
-    return this.#_platform; 
-  }
-
-  /** 
-   * 
-   * @description Get the native storage object 
-   */
-  get storage() { 
-    return this.#_storage; 
-  }
-
-  /** 
-   * 
-   * @description Get the payment gateways 
-   */
-  get gateways() { 
-    return this.#_payment_gateways; 
-  }
-
-  /** 
-   * 
-   * @description Get the taxes provider
-   */
-  get taxes() { 
-    return this.#_taxes; 
-  }
-  
-
-  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {PlatformAdapter} P
    * 
    * @param {P} platform 
    * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes>}
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
    * 
    */
   withPlatform(platform) {
@@ -381,13 +347,47 @@ export class App {
   } 
 
   /** 
+   * 
+   * @description Get the native platform object 
+   */
+  get platform() { 
+    return this.#_platform; 
+  }
+
+  /** 
+   * @description Update new payment gateways and rewrite types 
+   * 
+   * @template {AI} P
+   * 
+   * @param {P} ai 
+   * 
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P>}
+   * 
+   */
+  withAI(ai) {
+    // @ts-ignore
+    this.#_ai = ai;
+
+    // @ts-ignore
+    return this;
+  } 
+
+  /** 
+   * 
+   * @description Get the AI provider
+   */
+  get ai() { 
+    return this.#_ai; 
+  }
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {db_driver} D
    * 
    * @param {D} database 
    * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes>}
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
    */
   withDatabase(database) {
     // @ts-ignore
@@ -398,13 +398,21 @@ export class App {
   }   
 
   /** 
+   * 
+   * @description Get the Database driver 
+   */
+  get db() { 
+    return this.#_db_driver; 
+  }
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {storage_driver} S
    * 
    * @param {S} storage 
    * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes>}
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
    */
   withStorage(storage) {
     // @ts-ignore
@@ -415,13 +423,21 @@ export class App {
   }   
 
   /** 
+   * 
+   * @description Get the native storage object 
+   */
+  get storage() { 
+    return this.#_storage; 
+  }
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {mailer} M
    * 
    * @param {M} mailer 
    * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes>}
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -432,13 +448,21 @@ export class App {
   }   
 
   /** 
+   * 
+   * @description Mailer driver 
+   */
+  get mailer() { 
+    return this.#_mailer; 
+  }
+
+  /** 
    * @description Update new tax provider
    * 
    * @template {tax_provider} T
    * 
    * @param {T} taxes 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider>}
    */
   withTaxes(taxes) {
     // @ts-ignore
@@ -448,6 +472,13 @@ export class App {
     return this;
   }
 
+  /** 
+   * 
+   * @description Get the taxes provider
+   */
+  get taxes() { 
+    return this.#_taxes; 
+  }
 
   /** 
    * @description Update new payment gateways and rewrite types 
@@ -456,7 +487,7 @@ export class App {
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -467,13 +498,21 @@ export class App {
   }
 
   /** 
+   * 
+   * @description Get the payment gateways 
+   */
+  get gateways() { 
+    return this.#_payment_gateways; 
+  }
+
+  /** 
    * @description Update new payment gateways and rewrite types 
    * 
    * @template {Record<string, extension<any, this & App>>} E
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider>}
    */
   withExtensions(extensions) { 
     // @ts-ignore
@@ -484,14 +523,6 @@ export class App {
 
     // @ts-ignore
     return this;
-  }
-
-  /** 
-   * 
-   * @description Mailer driver 
-   */
-  get mailer() { 
-    return this.#_mailer; 
   }
 
   /** 

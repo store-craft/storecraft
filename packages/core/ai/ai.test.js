@@ -71,7 +71,7 @@ test(
       }
     );
 
-    const output = await ai_claude.generateText(
+    const output = await ai_oai.generateText(
       {
         history: [
         ],
@@ -86,7 +86,6 @@ test(
           search_products: tool(
             {
               schema: {
-                // name: 'search_products',
                 description: 'Search products of the store for info like pricing, discounts and collections',
                 parameters: z.object(
                   {

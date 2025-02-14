@@ -1,10 +1,11 @@
 import 'dotenv/config';
-import { OpenAI, tool } from './index.js';
+import { tool } from '../index.js';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { z } from 'zod';
-import { Groq } from './groq/index.js';
-import { Claude } from './anthropic/index.js';
+import { OpenAI } from '../openai/index.js';
+import { Groq } from '../groq/index.js';
+import { Claude } from '../anthropic/index.js';
 
 
 const prompt2 = `

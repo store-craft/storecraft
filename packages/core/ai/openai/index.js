@@ -3,7 +3,7 @@
  *  chat_completion_input, chat_completion_result, 
  *  chat_message, config 
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams } from "../types.js";
+ * @import { AI, content, GenerateTextParams } from "../types.private.js";
  */
 
 import { invoke_tool_safely } from "../index.js";

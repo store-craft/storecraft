@@ -1,3 +1,4 @@
+export * from './index.js';
 
 export type config = {
   model?: (

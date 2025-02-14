@@ -4,7 +4,7 @@
     "noEmit": true,
     "allowJs": true,
     "checkJs": true,
-    "maxNodeModuleJsDepth": 40,
+    "maxNodeModuleJsDepth": 100,
     "resolveJsonModule": true,
     "target": "ESNext",
     "moduleResolution": "NodeNext",

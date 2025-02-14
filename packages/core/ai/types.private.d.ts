@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool } from './index.js'
+import { tool } from './index.js';
 
 /**
  * @description General Tool specification

@@ -3,7 +3,7 @@
  *  chat_completion_input, claude_completion_response,
  *  config, claude_message
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams, Tool } from "../types.js";
+ * @import { AI, content, GenerateTextParams, Tool } from "../types.private.js";
  */
 
 import { invoke_tool_safely } from "../index.js";

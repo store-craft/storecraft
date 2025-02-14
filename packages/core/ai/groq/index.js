@@ -1,7 +1,5 @@
 import { OpenAI } from "../openai/index.js";
 
-
-
 export class Groq extends OpenAI {
 
   /**

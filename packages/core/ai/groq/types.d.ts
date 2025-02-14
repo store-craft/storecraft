@@ -11,3 +11,6 @@ export type config = {
   api_version?: string;
   api_key: string
 }
+
+
+export * from './index.js';

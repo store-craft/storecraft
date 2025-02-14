@@ -147,6 +147,21 @@
     "./ai": {
       "import": "./ai/index.js",
       "types": "./ai/types.public.d.ts"
+    },
+    "./ai/*": {
+      "import": "./ai/*"
+    },
+    "./ai/openai": {
+      "import": "./ai/openai/index.js",
+      "types": "./ai/openai/types.d.ts"
+    },
+    "./ai/groq": {
+      "import": "./ai/groq/index.js",
+      "types": "./ai/groq/types.d.ts"
+    },
+    "./ai/anthropic": {
+      "import": "./ai/anthropic/index.js",
+      "types": "./ai/anthropic/types.d.ts"
     }
   },
   "scripts": {

@@ -12,7 +12,7 @@ import { Resend } from '@storecraft/mailer-providers-http/resend'
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node';
-
+import { Groq } from '@storecraft/core/ai/groq';
 
 export const app = new App(
   {
@@ -56,4 +56,11 @@ export const app = new App(
   {
     'postman': new PostmanExtension()
   }
+)
+.withAI(
+  new Groq(
+    {
+      api_key: process.env.GROQ
+    }
+  )
 )

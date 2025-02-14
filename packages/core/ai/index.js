@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-export { OpenAI } from './openai/index.js' ;
-
 /**
  * @description Helper method to give typescript a context to infer tools parameters.
  * This is helpful when adding a tool in an `Tool<any>` typed property or writing
@@ -11,7 +9,7 @@ export { OpenAI } from './openai/index.js' ;
  * @template {z.ZodTypeAny} [Params=any]
  * @template {any} [Result=any]
  * 
- * @param {import('./types.js').Tool<Params, Result>} tool
+ * @param {import('./types.private.js').Tool<Params, Result>} tool
  */
 export const tool = (tool) => {
   return tool;
@@ -19,7 +17,7 @@ export const tool = (tool) => {
 
 /**
  * 
- * @param {import('./types.js').Tool} tool
+ * @param {import('./types.private.js').Tool} tool
  * @param {object} input 
  * @returns {Promise<{ result?: any, error?: any}>}
  */

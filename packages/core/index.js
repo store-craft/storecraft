@@ -10,7 +10,7 @@
  * @import { tax_provider } from "./tax/types.public.js";
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
- * @import { AI } from "./ai/types.js";
+ * @import { AI } from "./ai/types.private.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';

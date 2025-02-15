@@ -13,7 +13,7 @@ import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node';
 import { OpenAI } from "@storecraft/core/ai/openai";
-import { Claude } from "@storecraft/core/ai/anthropic";
+import { Anthropic } from "@storecraft/core/ai/anthropic";
 import { Groq } from "@storecraft/core/ai/groq";
 
 export const app = new App(

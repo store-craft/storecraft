@@ -43,7 +43,9 @@ export class StoreAgent {
    * @returns {Promise<AgentRunResponse>}
    */
   run = async (params) => {
-    console.log(params)
+
+    console.log(params);
+
     try {
 
       const { contents } = await this.provider.generateText(

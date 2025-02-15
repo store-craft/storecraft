@@ -16,7 +16,7 @@ import { zod_to_json_schema } from "../json-schema.js";
 /**
  * @implements {Impl}
  */
-export class Claude {
+export class Anthropic {
   #chat_completion_url = '';
   #chat_models_url = '';
   #anthropic_endpoint = 'https://api.anthropic.com'

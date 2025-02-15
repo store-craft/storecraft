@@ -5,7 +5,7 @@ import * as assert from 'uvu/assert';
 import { z } from 'zod';
 import { OpenAI } from '../openai/index.js';
 import { Groq } from '../groq/index.js';
-import { Claude } from '../anthropic/index.js';
+import { Anthropic } from '../anthropic/index.js';
 
 
 const prompt2 = `
@@ -65,7 +65,7 @@ test(
       }
     );
 
-    const ai_claude = new Claude(
+    const ai_claude = new Anthropic(
       {
         api_key: process.env.ANTHROPIC,
         model:'claude-3-haiku-20240307'

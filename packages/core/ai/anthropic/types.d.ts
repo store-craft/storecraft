@@ -150,3 +150,66 @@ export type claude_completion_response = {
     output_tokens: number;
   }
 }
+
+// streaming
+
+export type stream_event_error = {
+  type: 'error',
+  error: {
+    type: string, 
+    message: string
+  }
+}
+
+export type stream_event_ping = {
+  type: 'ping',
+}
+
+export type Pick<H> = H extends (infer F)[] ? F : never;
+
+export type stream_event_content_block_start = {
+  type: "content_block_start",
+  index: number,
+  content_block: Partial<text_content | tool_use_content>
+}
+
+export type stream_event_content_block_delta = {
+  type: "content_block_delta",
+  index: number,
+  delta: {
+    type: "text_delta", 
+    text: string
+  } | {
+    type: "input_json_delta", 
+    partial_json: string
+  }
+}
+
+export type stream_event_content_block_stop = {
+  type: "content_block_stop",
+  index: number,
+}
+
+
+export type stream_event_message_start = {
+  type: "message_start",
+  message: Partial<claude_completion_response>
+}
+
+export type stream_event_message_delta = {
+  type: "message_delta",
+  delta: Partial<claude_completion_response>
+}
+
+export type stream_event_message_stop = {
+  type: "message_stop",
+}
+
+export type stream_event = |
+      stream_event_message_stop |
+      stream_event_message_delta |
+      stream_event_message_start | 
+      stream_event_content_block_stop | 
+      stream_event_content_block_delta | 
+      stream_event_content_block_start |
+      stream_event_ping | stream_event_error;

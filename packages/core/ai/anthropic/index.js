@@ -1,13 +1,15 @@
 /**
  * @import { 
  *  chat_completion_input, claude_completion_response,
- *  config, claude_message
+ *  config, claude_message,
+ stream_event
  * } from "./types.js";
- * @import { AI, content } from "../types.private.js";
+ * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../types.private.js";
  */
 
 import { invoke_tool_safely } from "../index.js";
 import { zod_to_json_schema } from "../json-schema.js";
+import { SSEGenerator } from "../sse.js";
 
 /**
  * @typedef {AI<config, claude_message>} Impl
@@ -62,7 +64,7 @@ export class Anthropic {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
-   * @return {Promise<claude_completion_response>}
+   * @return {Promise<Response>}
    */
   #text_complete = async (params) => {
 
@@ -104,8 +106,294 @@ export class Anthropic {
       throw (await result.text());
     }
 
-    return (await result.json());
+    return result;
   }
+
+  /**
+   * @param {Impl["__gen_text_params_type"]} params
+   * @return {AsyncGenerator<stream_event>}
+   */
+  #text_complete_stream = async function *(params) {
+
+    const stream = await this.#text_complete(params, true)
+  
+    for await (const frame of SSEGenerator(stream)) {
+      // if(frame.data==='[DONE]')
+        // continue;
+
+      // console.log(frame);
+      yield JSON.parse(frame.data);
+    }
+  }
+
+  /**
+   * 
+   * @param {GenerateTextParams<claude_message>} params
+   * @returns {AsyncGenerator<content>} 
+   */
+  async * #_gen_text_generator(params) {
+    let max_steps = params.maxSteps ?? 6;
+
+    params.history = [
+      ...(params.history ?? []),
+      ...this.user_content_to_llm_user_message(params.prompt)
+    ];
+
+    let current_stream = this.#text_complete_stream(params);
+
+    /**
+     * 
+     */
+    const message_builder = () => {
+      /** @type {claude_completion_response} */
+      let final;
+
+      return {
+        /** @param {stream_event} delta */
+        add_delta: (delta) => {
+          if(!Boolean(delta))
+            return;
+
+          if(!Boolean(final)) {
+            final = {
+              created: delta.created,
+              id: delta.id,
+              model: delta.model,
+              system_fingerprint: delta.system_fingerprint,
+              object: 'chat.completion',
+              usage: delta.usage,
+              choices: [
+                {
+                  finish_reason: delta.choices[0].finish_reason,
+                  index: delta.choices[0].index,
+                  logprobs: delta.choices[0].logprobs,
+                  message: delta.choices[0].delta
+                }
+              ], 
+            };
+
+            return;
+          }
+
+          const d_choice = delta.choices?.[0];
+
+          if(d_choice?.finish_reason)
+            final.choices[0].finish_reason = d_choice.finish_reason;
+
+          if(d_choice?.delta?.content) {
+            final.choices[0].message.content = (final.choices[0].message.content ?? '') + 
+            d_choice.delta.content;
+          }
+          
+          if(d_choice?.delta?.refusal)
+            final.choices[0].message.refusal = d_choice.delta.refusal;
+
+          if(d_choice?.delta?.tool_calls) {
+            if(!final.choices[0].message.tool_calls) {
+              final.choices[0].message.tool_calls = d_choice.delta.tool_calls;
+            } else {
+              final.choices[0].message.tool_calls.forEach(
+                (tc, ix) => {
+                  tc.function.arguments += d_choice.delta.tool_calls[ix].function.arguments;
+                }
+              );
+            }
+          }
+
+        },
+        done: () => final
+      }
+    }
+
+    const builder = message_builder();
+    
+    for await (const chunk of current_stream) {
+      builder.add_delta(chunk);
+
+      if(
+        (chunk.type==='content_block_delta') &&
+        (chunk.delta.type==='text_delta')
+      ){
+        yield {
+          type: 'delta_text',
+          content: chunk.delta.text
+        }
+      }
+
+    }
+
+    let current = builder.done();
+
+    /** @type {content[]} */
+    let contents = [];
+
+    // while we are at a tool call, we iterate internally
+    while(
+      (current.stop_reason === 'tool_use') &&
+      (max_steps > 0)
+    ) {
+
+      yield {
+        type: 'tool_use',
+        content: current.content.filter(
+          c => c.type==='tool_use'
+        ).map(
+          tc => ({
+            name: tc.name
+          })
+        )
+      }
+
+      max_steps -= 1;
+
+      // push `assistant` message into history
+      params.history.push(
+        {
+          role: current.role,
+          content: current.content
+        }
+      );
+
+      // invoke tools
+      for(const tool_call of current.content.filter(it => it.type==='tool_use')) {
+
+        // add tools results messages
+        const tool_result = await invoke_tool_safely(
+          params.tools[tool_call.name],
+          tool_call.input
+        );
+
+        yield {
+          type: 'tool_result',
+          content: tool_result
+        }
+
+        params.history.push(
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'tool_result',
+                tool_use_id: tool_call.id,
+                content: JSON.stringify(tool_result)
+              }
+            ]
+          }
+        );
+      }
+
+      // again
+      current_stream = this.#text_complete_stream(params);
+      
+      const builder = message_builder();
+    
+      for await (const chunk of current_stream) {
+        builder.add_delta(chunk);
+  
+        if(
+          (chunk.type==='content_block_delta') &&
+          (chunk.delta.type==='text_delta')
+        ){
+          yield {
+            type: 'delta_text',
+            content: chunk.delta.text
+          }
+        }
+  
+        // console.log(chunk)
+      }
+  
+      current = builder.done();  
+          
+    }
+
+    // push `assistant` message into history
+    params.history.push(
+      {
+        role: 'assistant',
+        content: current.content
+      }
+    );
+
+    return {
+      contents: this.llm_assistant_message_to_user_content(
+        current
+      )
+    };
+
+  }
+  
+  
+  /** @type {Impl["streamText"]} */
+  streamText = async (params) => {
+    
+    /** @type {ReadableStream<content>} */
+    const stream = new ReadableStream(
+      {
+        start: async (controller) => {
+          try {
+            for await (const m of this.#_gen_text_generator(params)) {
+              controller.enqueue(m);
+            }
+          } catch(e) {
+            controller.enqueue(
+              {
+                type: 'error',
+                content: e
+              }
+            )
+          } 
+
+          controller.close();
+        }
+      }
+    );
+
+    return {
+      stream
+    }
+  }
+  
+  /**
+   * 
+   * @type {Impl["generateText"]} 
+   */
+  generateText = async (params) => {
+
+    /** @type {GenerateTextResponse} */
+    const contents = {
+      contents: []
+    }
+
+    /** @type {content[]} */
+    const text_deltas = [];
+
+    const { stream } = await this.streamText(params);
+
+    for await(const update of stream) {
+      if(update.type==='delta_text')
+        text_deltas.push(update);
+      else
+        contents.contents.push(update);
+    }
+
+    // reduce text deltas
+    const reduced_text_content = text_deltas.reduce(
+      (p, update) => {
+        p.content += update.content;
+
+        return p;
+      }, {
+        content: '',
+        type: 'text'
+      }
+    );
+
+    contents.contents.push(reduced_text_content);
+
+    return contents;
+  }
+
 
   /** @type {Impl["user_content_to_llm_user_message"]} */
   user_content_to_llm_user_message = (prompts) => {
@@ -157,7 +445,7 @@ export class Anthropic {
    * 
    * @type {Impl["generateText"]} 
    */
-  generateText = async (params) => {
+  generateText_OLD = async (params) => {
 
     let max_steps = params.maxSteps ?? 6;
 

@@ -3,12 +3,11 @@
 chat_completion_chunk_result,
  *  chat_completion_input, chat_completion_result, chat_message, config 
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../types.private.js";
+ * @import { AI, content, GenerateTextParams } from "../types.private.js";
  */
 
 import { invoke_tool_safely } from "../index.js";
 import { zod_to_json_schema } from "../json-schema.js";
-import { SSEGenerator } from "../sse.js";
 
 
 /**
@@ -116,20 +115,21 @@ export class OpenAI {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
-   * @param {boolean} [stream=false]
-   * @return {Promise<ReadableStream>}
+   * @return {Promise<chat_completion_result>}
    */
-  #text_complete = async (params, stream=false) => {
+  #text_complete = async (params) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
         messages: params.history,
         tools: this.#to_native_tools(params.tools),
-        stream: stream,
+        stream: false,
         tool_choice: 'auto'
       })
     );
+
+    // console.log(JSON.stringify(body, null, 2))
 
     const result = await fetch(
       this.#chat_completion_url,
@@ -152,7 +152,7 @@ export class OpenAI {
     if(!result.ok) 
       throw (await result.text())
     
-    return result.body;
+    return await result.json();
   }
 
   /**
@@ -161,15 +161,61 @@ export class OpenAI {
    */
   #text_complete_stream = async function *(params) {
 
-    const stream = await this.#text_complete(params, true)
-  
-    for await (const frame of SSEGenerator(stream)) {
-      if(frame.data==='[DONE]')
-        continue;
+    const body = (/** @type {chat_completion_input} */
+      ({
+        model: this.config.model,
+        messages: params.history,
+        tools: this.#to_native_tools(params.tools),
+        stream: true,
+        tool_choice: 'auto'
+      })
+    );
 
-      // console.log(frame);
-      yield JSON.parse(frame.data);
+    // console.log(JSON.stringify(body, null, 2))
+
+    const result = await fetch(
+      this.#chat_completion_url,
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          "Authorization" : `Bearer ${this.config.api_key}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if(!result.ok) 
+      throw (await result.text())
+
+    // return result.body;
+
+    for await(const chunk of result.body) {
+      const text = (new TextDecoder()).decode(chunk); 
+      const lines = text.match(/[^\r\n]+/g).map(l => l.trim());
+      const datas = lines.filter(l => l.startsWith('data:')).map(
+        l => l.split('data:').at(1).trim()
+      );
+
+      for (const data of datas) {
+        if(data==='[DONE]')
+          continue;
+        
+        let payload;
+        try {
+          payload = JSON.parse(
+            data
+          );
+        } catch (e) {
+          // console.log('error parsing ', data)
+          // console.log('error parsing text ', text)
+          // throw e;
+        }
+
+        yield payload;
+      }
     }
+
   }
 
   /**
@@ -225,20 +271,20 @@ export class OpenAI {
             return;
           }
 
-          const d_choice = delta.choices?.[0];
+          const d_choice = delta.choices[0];
 
-          if(d_choice?.finish_reason)
+          if(d_choice.finish_reason)
             final.choices[0].finish_reason = d_choice.finish_reason;
 
-          if(d_choice?.delta?.content) {
+          if(d_choice.delta.content) {
             final.choices[0].message.content = (final.choices[0].message.content ?? '') + 
             d_choice.delta.content;
           }
           
-          if(d_choice?.delta?.refusal)
+          if(d_choice.delta.refusal)
             final.choices[0].message.refusal = d_choice.delta.refusal;
 
-          if(d_choice?.delta?.tool_calls) {
+          if(d_choice.delta.tool_calls) {
             if(!final.choices[0].message.tool_calls) {
               final.choices[0].message.tool_calls = d_choice.delta.tool_calls;
             } else {
@@ -260,19 +306,24 @@ export class OpenAI {
     for await (const chunk of current_stream) {
       builder.add_delta(chunk);
 
-      if(chunk?.choices?.[0].delta.content) {
+      if(chunk.choices[0].delta.content) {
         yield {
           type: 'delta_text',
           content: chunk.choices[0].delta.content
         }
       }
-
+      // console.log(JSON.stringify(chunk, null, 2))
     }
 
     let current = builder.done();
 
+    // console.log(JSON.stringify(current, null, 2));
+
     /** @type {content[]} */
     let contents = [];
+
+    // console.log(JSON.stringify(current, null, 2));
+    // return;
 
     // while we are at a tool call, we iterate internally
     while(
@@ -290,13 +341,14 @@ export class OpenAI {
       }
 
       max_steps -= 1;
-
+      // console.log(max_steps)
       // push `assistant` message into history
       params.history.push(current.choices[0].message);
 
       // invoke tools
       for(const tool_call of current.choices[0].message.tool_calls) {
 
+        // console.log('tool_call.function.arguments', tool_call.function.arguments)
         // add tools results messages
         const tool_result = await invoke_tool_safely(
           params.tools[tool_call.function.name],
@@ -342,6 +394,8 @@ export class OpenAI {
 
     // push `assistant` message into history
     params.history.push(current.choices[0].message);
+
+    // console.log('history', JSON.stringify(params.history, null, 2))
 
     return {
       contents: this.llm_assistant_message_to_user_content(
@@ -392,36 +446,71 @@ export class OpenAI {
    */
   generateText = async (params) => {
 
-    /** @type {GenerateTextResponse} */
-    const contents = {
-      contents: []
-    }
+    let max_steps = params.maxSteps ?? 6;
+
+    params.history = [
+      { // rewrite system prompt
+        content: params.system,
+        role: 'system'
+      },
+      ...(params.history ?? [])?.filter(m => m.role!=='system'),
+      ...this.user_content_to_llm_user_message(params.prompt)
+    ];
+
+    let current = await this.#text_complete(params);
+
+    // console.log(current)
 
     /** @type {content[]} */
-    const text_deltas = [];
+    let contents = [];
 
-    for await(const update of this.#_gen_text_generator(params)) {
-      if(update.type==='delta_text')
-        text_deltas.push(update);
-      else
-        contents.contents.push(update);
+    // console.log(JSON.stringify(current, null, 2));
+    // return;
+
+    // while we are at a tool call, we iterate internally
+    while(
+      (current.choices?.[0].finish_reason === 'tool_calls') &&
+      (max_steps > 0)
+    ) {
+
+      max_steps -= 1;
+      console.log(max_steps)
+      // push `assistant` message into history
+      params.history.push(current.choices[0].message);
+
+      // invoke tools
+      for(const tool_call of current.choices[0].message.tool_calls) {
+
+        // add tools results messages
+        params.history.push(
+          {
+            role: 'tool',
+            tool_call_id: tool_call.id,
+            content: JSON.stringify(
+              await invoke_tool_safely(
+                params.tools[tool_call.function.name],
+                JSON.parse(tool_call.function.arguments)
+              )
+            )
+          }
+        );
+      }
+
+      // again
+      current = await this.#text_complete(params);
     }
 
-    // reduce text deltas
-    const reduced_text_content = text_deltas.reduce(
-      (p, update) => {
-        p.content += update.content;
-        return p;
-      },
-      {
-        content: '',
-        type: 'text'
-      }
-    );
+    // push `assistant` message into history
+    params.history.push(current.choices[0].message);
 
-    contents.contents.push(reduced_text_content);
+    // console.log('history', JSON.stringify(params.history, null, 2))
 
-    return contents;
+    return {
+      contents: this.llm_assistant_message_to_user_content(
+        current.choices[0].message
+      )
+    };
+
   }
 
   models = async () => {

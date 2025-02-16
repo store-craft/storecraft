@@ -147,7 +147,9 @@ export class Anthropic {
       )
     }
     
-    throw new Error("llm_assistant_message_to_user_content:: invalid data");;  
+    throw new Error(
+      "llm_assistant_message_to_user_content:: invalid data"
+    );  
   };
 
 

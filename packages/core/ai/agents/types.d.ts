@@ -1,7 +1,8 @@
-import { content } from "../types.private.js"
+import { AI, content, LLMHistoryProvider } from "../types.private.js"
 
-export type AgentConfig<AI> = {
-  ai: AI
+export type AgentConfig<MessageType extends any = any> = {
+  ai: AI<MessageType>,
+  history_provider: LLMHistoryProvider<MessageType>
 }
 
 /**
@@ -9,10 +10,6 @@ export type AgentConfig<AI> = {
  */
 export type AgentRunParameters = {
   thread_id?: string;
-  /**
-   * @description The Native **LLM** messages history of the conversation thread
-   */
-  history: any[],
   /**
    * @description Current customer prompt
    */

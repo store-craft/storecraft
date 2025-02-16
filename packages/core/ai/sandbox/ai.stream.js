@@ -72,7 +72,7 @@ test(
       }
     );
 
-    const output = await ai_groq.generateText(
+    const output = await ai_groq.streamText(
       {
         history: [
         ],
@@ -109,7 +109,11 @@ test(
       }
     );
     
-    console.log(JSON.stringify(output, null, 2));
+    // console.log(JSON.stringify(output, null, 2));
+
+    for await (const m of output.stream) {
+      console.log(m)
+    }
   }
 
 );

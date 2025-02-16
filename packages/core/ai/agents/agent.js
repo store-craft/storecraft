@@ -48,9 +48,61 @@ export class StoreAgent {
 
     try {
 
+      const history = await this.#config.history_provider.load(
+        params.thread_id, this.#app
+      );
+
+      const { stream } = await this.provider.streamText(
+        {
+          history: history.toArray() ?? [],
+          prompt: params.prompt,
+          system: SYSTEM,
+          tools: TOOLS,
+          maxSteps: params.maxSteps,
+          maxTokens: params.maxTokens
+        }
+      );
+  
+      return {
+        contents: null
+      }
+
+    } catch(e) {
+      console.log(e);
+
+      return {
+        contents: [
+          {
+            type: 'error',
+            content: "Something went wrong",
+            meta_data: {
+              native: (e instanceof Error) ? e?.toString() : e
+            }
+          }
+        ]
+      }
+    }
+
+  }
+
+    /**
+   * 
+   * @param {AgentRunParameters} params 
+   * @returns {Promise<AgentRunResponse>}
+   */
+  run_OLD = async (params) => {
+
+    console.log(params);
+
+    try {
+
+      const history = await this.#config.history_provider.load(
+        params.thread_id, this.#app
+      );
+
       const { contents } = await this.provider.generateText(
         {
-          history: params.history ?? [],
+          history: history.toArray() ?? [],
           prompt: params.prompt,
           system: SYSTEM,
           tools: TOOLS,

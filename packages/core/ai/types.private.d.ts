@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { tool } from './index.js';
+import { App } from '../types.public.js';
 
 /**
  * @description General Tool specification
@@ -31,11 +32,16 @@ export type Tool<
 
 
 /** @description A general content type from and to user */
-export type content = {
-  type: 'text' | 'image' | 'tool' | 'json' | 'error' | (string & {}),
-  content: string;
-  meta_data?: any;
-}
+export type content = |
+{ type: 'text' | 'delta_text', content: string } | 
+{ type: 'tool_use', content: { name?: string, title?: string }[] } | 
+{ type: 'tool_result', content: any } | 
+{ type: 'image', content: string } | 
+{ type: 'json', content: string } | 
+{ type: 'object', content: Object } | 
+{ type: 'error', content: { code: string, message: string}};
+
+
 
 /**
  * @description Text generation parameters
@@ -71,7 +77,7 @@ export type GenerateTextParams<MessageType extends any = any> = {
  * @description Content response from the LLM in a unified structure
  */
 export type GenerateTextResponse = {
-  contents: content[]
+  contents: content[],
 }
 
 /**
@@ -114,6 +120,12 @@ export interface AI<
     params: GenerateTextParams<MessageType>
   ) => Promise<GenerateTextResponse>;
 
+  streamText?: (
+    params: GenerateTextParams<MessageType>
+  ) => Promise<{
+    stream: ReadableStream
+  }>
+
   /**
    * @description Translate a generic user prompt into an LLM `user` message
    * @param prompt user prompt
@@ -139,8 +151,8 @@ export interface LLMHistory<LLMMessageType extends any = any> {
 
   threadId: string;
   add: (...messages: LLMMessageType[]) => this;
-  commit: () => Promise<this>;
-  toArray: () => LLMMessageType[];
+  commit?: () => Promise<this>;
+  toArray?: () => LLMMessageType[];
 }
 
 /**
@@ -153,7 +165,8 @@ export interface LLMHistoryProvider<LLMMessageType extends any = any> {
   /**
    * @description Load the **LLM** messages history for a conversation/thread `id`
    * @param threadId Conversation `id`
+   * @param app `storecraft` app instance for context
    */
-  load: (threadId: string) => Promise<LLMHistory<LLMMessageType>>;
+  load: (threadId: string, app: App) => Promise<LLMHistory<LLMMessageType>>;
 
 }

@@ -39,7 +39,7 @@ export type content = |
 { type: 'image', content: string } | 
 { type: 'json', content: string } | 
 { type: 'object', content: Object } | 
-{ type: 'error', content: { code: string, message: string}};
+{ type: 'error', content: { code?: string, message?: string} | string};
 
 
 

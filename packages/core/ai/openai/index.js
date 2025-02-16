@@ -77,8 +77,10 @@ export class OpenAI {
         (part) => {
           if('refusal' in part) {
             return {
-              content: part.refusal,
-              type:'error'
+              type:'error',
+              content: {
+                message: part.refusal
+              },
             }
           } else {
             return {
@@ -95,7 +97,8 @@ export class OpenAI {
 
 
   /**
-   * 
+   * @description Transform our tools specification in to **OpenAI**
+   * tools spec.
    * @param {Impl["__gen_text_params_type"]["tools"]} tools 
    * @return {chat_completion_input["tools"]}
    */
@@ -355,16 +358,12 @@ export class OpenAI {
   /** @type {Impl["streamText"]} */
   streamText = async (params) => {
     
-    /** @type {ReadableStreamDefaultController} */
-    let _controller;
-
     /** @type {ReadableStream<content>} */
     const stream = new ReadableStream(
       {
         start: async (controller) => {
           try {
             for await (const m of this.#_gen_text_generator(params)) {
-              // console.log('chunk ', m)
               controller.enqueue(m);
             }
           } catch(e) {
@@ -400,7 +399,9 @@ export class OpenAI {
     /** @type {content[]} */
     const text_deltas = [];
 
-    for await(const update of this.#_gen_text_generator(params)) {
+    const { stream } = await this.streamText(params);
+
+    for await(const update of stream) {
       if(update.type==='delta_text')
         text_deltas.push(update);
       else
@@ -411,9 +412,9 @@ export class OpenAI {
     const reduced_text_content = text_deltas.reduce(
       (p, update) => {
         p.content += update.content;
+
         return p;
-      },
-      {
+      }, {
         content: '',
         type: 'text'
       }

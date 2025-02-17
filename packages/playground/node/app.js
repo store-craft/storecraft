@@ -62,7 +62,7 @@ export const app = new App(
 .withAI(
   new Groq(
     {
-      api_key: process.env.GROQ
+      api_key: process.env.Groq
     }
   )
 )

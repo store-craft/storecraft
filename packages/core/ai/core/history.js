@@ -3,7 +3,7 @@
  * @import { LLMHistoryProvider, LLMHistory } from './types.private.js'
  */
 
-import { App } from '../../types.public.js';
+import { App } from '../../index.js';
 
 
 /**

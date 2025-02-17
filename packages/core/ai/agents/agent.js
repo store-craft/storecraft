@@ -4,6 +4,7 @@
  */
 
 import { App } from "../../index.js";
+import { StorageHistoryProvider } from "../core/history.js";
 import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
 
@@ -23,6 +24,7 @@ export class StoreAgent {
    */
   constructor(config) {
     this.#config = config;
+    this.history_provider = new StorageHistoryProvider();
   }
 
   /**
@@ -48,7 +50,7 @@ export class StoreAgent {
 
     try {
 
-      const history = await this.#config.history_provider.load(
+      const history = await this.history_provider.load(
         params.thread_id, this.#app
       );
 
@@ -91,7 +93,7 @@ export class StoreAgent {
 
     try {
 
-      const history = await this.#config.history_provider.load(
+      const history = await this.history_provider.load(
         params.thread_id, this.#app
       );
 

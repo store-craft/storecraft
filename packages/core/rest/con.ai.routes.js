@@ -58,7 +58,7 @@ const readable_stream_to_sse = (stream, transform=(x) => String(x)) => {
       start: async (controller) => {
         for await (const chunk of stream) {
           controller.enqueue(
-            'data: ' + transform(chunk) + '\r\n'
+            'data: ' + transform(chunk) + '\r\n\r\n'
           )
         }
 

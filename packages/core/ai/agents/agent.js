@@ -60,37 +60,32 @@ export class StoreAgent {
           tools: TOOLS,
           maxSteps: params.maxSteps,
           maxTokens: params.maxTokens
+        },
+        {
+          onDone: async (messages) => {
+            await history.add(...messages).commit();
+          }
         }
       );
   
       return {
-        contents: null
+        stream
       }
 
     } catch(e) {
       console.log(e);
 
-      return {
-        contents: [
-          {
-            type: 'error',
-            content: "Something went wrong",
-            meta_data: {
-              native: (e instanceof Error) ? e?.toString() : e
-            }
-          }
-        ]
-      }
+      throw e;
     }
 
   }
 
-    /**
+  /**
    * 
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunResponse>}
    */
-  run_OLD = async (params) => {
+  run = async (params) => {
 
     console.log(params);
 
@@ -100,7 +95,9 @@ export class StoreAgent {
         params.thread_id, this.#app
       );
 
-      const { contents } = await this.provider.generateText(
+      const { 
+        contents, delta_messages 
+      } = await this.provider.generateText(
         {
           history: history.toArray() ?? [],
           prompt: params.prompt,
@@ -110,25 +107,17 @@ export class StoreAgent {
           maxTokens: params.maxTokens
         }
       );
+
+      await history.add(...delta_messages).commit();
   
       return {
-        contents: contents
+        contents
       }
 
     } catch(e) {
       console.log(e);
 
-      return {
-        contents: [
-          {
-            type: 'error',
-            content: "Something went wrong",
-            meta_data: {
-              native: (e instanceof Error) ? e?.toString() : e
-            }
-          }
-        ]
-      }
+      throw e;
     }
 
   }

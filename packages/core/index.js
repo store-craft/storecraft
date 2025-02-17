@@ -618,6 +618,11 @@ export class App {
         return this.send(o);
       },
 
+      sendServerSentEvents(o) {
+        this.headers.append('Content-Type', 'text/event-stream');
+        return this.send(o);
+      },
+
       sendJson(o) {
         this.headers.set('Content-Type', 'application/json');
         return this.send(o===undefined ? undefined : JSON.stringify(o))

@@ -9,6 +9,9 @@ export type AgentConfig<MessageType extends any = any> = {
  * @description Parameters for the `storecraft` agent
  */
 export type AgentRunParameters = {
+  /**
+   * @description The `thread` / `conversation` identifier
+   */
   thread_id?: string;
   /**
    * @description Current customer prompt
@@ -31,13 +34,17 @@ export type AgentRunStreamResponse = {
   /**
    * @description Current **LLM** formatted responses
    */
-  stream: ReadableStream<content>
+  stream: ReadableStream<content>;
 }
 
 /**
  * @description Response for the `storecraft` agent
  */
 export type AgentRunResponse = {
+  /**
+   * @description The `thread` / `conversation` identifier
+   */
+  thread_id?: string;
   /**
    * @description Current **LLM** formatted responses
    */

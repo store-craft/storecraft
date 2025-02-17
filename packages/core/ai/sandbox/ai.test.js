@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { tool } from '../index.js';
+import { tool } from '../core/tools.js';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { z } from 'zod';

@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { tool } from "../index.js"
+import { tool } from "../core/tools.js"
 
 export const TOOLS = {
   search_products: tool(

@@ -1,5 +1,5 @@
 /**
- * @import { content, GenerateTextResponse } from './types.private.js'
+ * @import { content, GenerateTextResponse } from './types.private.d.ts'
  */
 
 /**

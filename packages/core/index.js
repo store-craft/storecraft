@@ -5,12 +5,15 @@
  * @import { db_driver } from "./database/types.public.js";
  * @import { payment_gateway } from "./payments/types.public.js";
  * @import { extension } from "./extensions/types.public.js";
- * @import { InferPlatformContext, InferPlatformNativeRequest, InferPlatformNativeResponse, PlatformAdapter } from "./platform/types.public.js";
+ * @import { 
+ *  InferPlatformContext, InferPlatformNativeRequest, 
+ *  InferPlatformNativeResponse, PlatformAdapter 
+ * } from "./platform/types.public.js";
  * @import { mailer } from "./mailer/types.public.js";
  * @import { tax_provider } from "./tax/types.public.js";
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
- * @import { AI } from "./ai/types.private.js";
+ * @import { AI } from "./ai/core/types.private.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { tool } from './index.js';
-import { App } from '../types.public.js';
+import { App } from '../../types.public.js';
 
 /**
  * @description General Tool specification
@@ -94,7 +94,9 @@ export interface AI<
   config?: Config;
 
   /**
-   * @description The purpose of this method is to generate new {@link content} array based on 
+   * @description The purpose of this method is to generate new {@link content} 
+   * array based on,
+   *  
    * #### 1. LLM history
    * Which Array of native LLM specific messages
    * 
@@ -105,7 +107,8 @@ export interface AI<
    * [{ type:'text', content: 'user prompt'}, { type:'image', content: 'base64_****'}]
    * ```
    * #### 3. Tools
-   * A dictionary of {@link Tool}. Each has schema typed with `zod`. Be sure to use the {@link tool} helper
+   * A dictionary of {@link Tool}. Each has schema typed with `zod`. 
+   * Be sure to use the {@link tool} helper
    * fot extra type safety
    * 
    * #### 4. Return content
@@ -119,7 +122,6 @@ export interface AI<
   generateText: (
     params: GenerateTextParams<MessageType>
   ) => Promise<GenerateTextResponse>;
-
   streamText?: (
     params: GenerateTextParams<MessageType>
   ) => Promise<{

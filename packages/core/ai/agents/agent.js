@@ -1,6 +1,6 @@
 /**
  * @import { AgentConfig, AgentRunParameters, AgentRunResponse } from './types.js'
- * @import { AI } from '../types.private.js'
+ * @import { AI } from '../core/types.private.js'
  */
 
 import { App } from "../../index.js";

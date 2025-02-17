@@ -1,13 +1,13 @@
 /**
  * @import { chat_completion_chunk_result, chat_completion_input, chat_message, config 
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../types.private.js";
+ * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../core/types.private.js";
  */
 
-import { invoke_tool_safely } from "../index.js";
-import { zod_to_json_schema } from "../json-schema.js";
-import { SSEGenerator } from "../sse.js";
-import { stream_accumulate } from "../stream-accumulate.js";
+import { invoke_tool_safely } from "../core/tools.js";
+import { zod_to_json_schema } from "../core/json-schema.js";
+import { SSEGenerator } from "../core/sse.js";
+import { stream_accumulate } from "../core/stream-accumulate.js";
 import { stream_message_builder } from "./stream-message-builder.js";
 
 

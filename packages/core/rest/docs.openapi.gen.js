@@ -1005,14 +1005,14 @@ const register_ai = (registry) => {
       maxTokens: z.number().optional().describe('Max tokens'),
       maxSteps: z.number().optional().describe('Max steps per agent'),
     }
-  );
+  ).describe('The agent tun parameters');
 
   const storeAgentRunResponseSchema = z.object(
     {
       thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
       contents: z.array(all_messages).describe('Current **LLM** formatted responses'),
     }
-  );
+  ).describe('The response');
 
   registry.register('aiMessageTextContent', aiMessageTextContent);
   registry.register('aiMessageTextDeltaContent', aiMessageTextDeltaContent);
@@ -1066,6 +1066,17 @@ const register_ai = (registry) => {
             example: "data: { type: 'delta_text', content: ' games. Specifically, there' }",
           },
         },
+        headers: z.object(
+          {
+            'X-STORECRAFT-THREAD-ID': z.string().openapi(
+              {
+                example: 'thread_sdj9musd8sd9m8sd8',
+                description: 'The thread / conversation identifier'
+              }
+            )
+          }
+        )
+
       },
       ...error() 
     },
@@ -1098,6 +1109,16 @@ const register_ai = (registry) => {
     responses: {
       200: {
         description: `LLM formatted/readable Response`,
+        headers: z.object(
+          {
+            'X-STORECRAFT-THREAD-ID': z.string().openapi(
+              {
+                example: 'thread_sdj9musd8sd9m8sd8',
+                description: 'The thread / conversation identifier'
+              }
+            )
+          }
+        ),
         content: {
           'application/json': {
             schema: storeAgentRunResponseSchema,
@@ -1116,7 +1137,7 @@ const register_ai = (registry) => {
                   content: 'It is 100$, can I help you with more Mario games ?'
                 }
               ]
-            }
+            },
           },
         },
       },

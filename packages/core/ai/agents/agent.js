@@ -7,7 +7,7 @@ import { App } from "../../index.js";
 import { StorageHistoryProvider } from "../core/history.js";
 import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
-
+import { id } from '../../crypto/object-id.js'
 /**
  * @template {AI} [AI_PROVIDER=AI]
  */
@@ -71,7 +71,8 @@ export class StoreAgent {
       );
   
       return {
-        stream
+        stream,
+        thread_id: params.thread_id ?? ('thread_' + id())
       }
 
     } catch(e) {
@@ -113,7 +114,8 @@ export class StoreAgent {
       await history.add(...delta_messages).commit();
   
       return {
-        contents
+        contents,
+        thread_id: params.thread_id ?? ('thread_' + id())
       }
 
     } catch(e) {

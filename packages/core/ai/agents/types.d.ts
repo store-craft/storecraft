@@ -34,6 +34,10 @@ export type AgentRunStreamResponse = {
    * @description Current **LLM** formatted responses
    */
   stream: ReadableStream<content>;
+  /**
+   * @description The `thread` / `conversation` identifier
+   */
+  thread_id?: string;
 }
 
 /**
@@ -47,5 +51,9 @@ export type AgentRunResponse = {
   /**
    * @description Current **LLM** formatted responses
    */
-  contents: content[]
+  contents: content[];
+  /**
+   * @description The `thread` / `conversation` identifier
+   */
+  thread_id?: string;
 }

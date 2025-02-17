@@ -62,7 +62,8 @@ export default class Payments {
   
   /**
    * 
-   * Invoke a `payment gateway` action on `order`
+   * Invoke a `payment gateway` action on `order`. The list of available actions can be found
+   * using {@link get} or {@link paymentStatusOfOrder}
    * 
    * 
    * @param {string} action_handle The `action` handle at the gateway

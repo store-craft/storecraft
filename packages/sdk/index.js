@@ -16,6 +16,7 @@ import Payments from './src/payments.js'
 import Settings from './src/settings.js'
 import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
+import AI from './src/ai.js'
 
 
 /**
@@ -49,6 +50,7 @@ export class StorecraftSDK {
   constructor(config) {
     this.#_config = config;
 
+    this.ai = new AI(this);
     this.auth = new Auth(this);
     this.storage = new Storage(this);
 

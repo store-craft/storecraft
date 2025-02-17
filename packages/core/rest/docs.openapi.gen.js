@@ -1005,7 +1005,7 @@ const register_ai = (registry) => {
       maxTokens: z.number().optional().describe('Max tokens'),
       maxSteps: z.number().optional().describe('Max steps per agent'),
     }
-  ).describe('The agent tun parameters');
+  ).describe('The agent run parameters');
 
   const storeAgentRunResponseSchema = z.object(
     {
@@ -1037,7 +1037,6 @@ const register_ai = (registry) => {
     tags: ['ai'],
     request: {
       body: {
-        description: 'User Prompts',
         content: {
           "application/json": {
             schema: storeAgentRunParametersSchema,
@@ -1090,7 +1089,6 @@ const register_ai = (registry) => {
     tags: ['ai'],
     request: {
       body: {
-        description: 'User Prompts',
         content: {
           "application/json": {
             schema: storeAgentRunParametersSchema,

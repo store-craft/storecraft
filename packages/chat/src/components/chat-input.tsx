@@ -7,6 +7,36 @@ import { DarkModeSwitch } from "./dark-mode-switch";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
+
+const test = async (text: string = '') => {
+
+  const response = await fetch(
+    'http://localhost:8000/api/ai/agent/stream',
+    {
+      method: 'post',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(
+        {
+          prompt: [
+            {
+              type: "text",
+              content: "What is the price of Super Mario for the NES console ?"
+            }
+          ]
+        } 
+      )
+    }
+  );
+
+  for await (const chunk of response.body) {
+    console.log('chunk, ', new TextDecoder().decode(chunk))
+  }
+
+}
+
+
 export type ChatInputParams = withDiv<
   {
     maxLines?: number
@@ -35,9 +65,17 @@ export const ChatInputView = (
   );
 
   const onSend = useCallback(
-    () => {
+    async () => {
+      const value = ref_ta.current?.value;
+
       ref_ta.current && (ref_ta.current.value = '');
-      onChange()
+
+      onChange();
+
+      await test(value);
+      console.log('ENDS')
+
+
     }, [onChange]
   );
 

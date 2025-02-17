@@ -123,7 +123,7 @@ export interface AI<
   streamText?: (
     params: GenerateTextParams<MessageType>
   ) => Promise<{
-    stream: ReadableStream
+    stream: ReadableStream<content>
   }>
 
   /**

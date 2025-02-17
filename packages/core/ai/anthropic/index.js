@@ -1,17 +1,15 @@
 /**
  * @import { 
- *  chat_completion_input, claude_completion_response,
- *  config, claude_message,
- stream_event,
- text_content,
- tool_use_content
+ *  chat_completion_input, config, claude_message, stream_event,
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../types.private.js";
+ * @import { AI, content, GenerateTextParams } from "../types.private.js";
  */
 
 import { invoke_tool_safely } from "../index.js";
 import { zod_to_json_schema } from "../json-schema.js";
 import { SSEGenerator } from "../sse.js";
+import { stream_accumulate } from "../stream-accumulate.js";
+import { stream_message_builder } from "./stream-message-builder.js";
 
 /**
  * @typedef {AI<config, claude_message>} Impl
@@ -108,7 +106,7 @@ export class Anthropic {
       throw (await result.text());
     }
 
-    return result.body;
+    return result;
   }
 
   /**
@@ -119,7 +117,7 @@ export class Anthropic {
 
     const stream = await this.#text_complete(params, true);
   
-    for await (const frame of SSEGenerator(stream)) {
+    for await (const frame of SSEGenerator(stream.body)) {
       // console.log(frame);
       yield JSON.parse(frame.data);
     }
@@ -140,58 +138,7 @@ export class Anthropic {
 
     let current_stream = this.#text_complete_stream(params);
 
-    /**
-     * 
-     */
-    const message_builder = () => {
-      /** @type {claude_completion_response} */
-      let final;
-
-      return {
-        /** @param {stream_event} delta */
-        add_delta: (delta) => {
-          if(delta.type==='message_start') {
-            final = {...delta.message};
-          } else if(delta.type==='message_delta') {
-            final = {...final, ...delta.delta};
-          } else if(delta.type==='error') {
-            console.log('Anthropic::add_delta ', delta);
-            throw delta.error;
-          } else if(delta.type==='content_block_start') {
-            final.content[delta.index] = delta.content_block;
-          } else if(delta.type==='content_block_delta') {
-            if(delta.delta.type==='text_delta') {
-              const c = (/** @type {text_content} */ (final.content[delta.index]));
-              final.content[delta.index] = {
-                ...c,
-                text: c.text + delta.delta.text
-              } ;
-            } else if(delta.delta.type==='input_json_delta') {
-              const c = (/** @type {tool_use_content} */ (final.content[delta.index]));
-              final.content[delta.index] = {
-                ...c,
-                __partial_json: (c.__partial_json ?? '') + delta.delta.partial_json,
-              } ;
-            }
-          } else if(delta.type==='content_block_stop') {
-            const c = final.content[delta.index];
-            // Parse accumulated JSON string into object to conform with
-            // the type
-            if(c.type==='tool_use') {
-              c.input = JSON.parse(c.__partial_json);
-              delete c['__partial_json']
-            }
-
-          } else {
-            //ignore other events
-          }
-
-        },
-        done: () => final
-      }
-    }
-
-    const builder = message_builder();
+    const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
       builder.add_delta(chunk);
@@ -275,7 +222,7 @@ export class Anthropic {
       // again
       current_stream = this.#text_complete_stream(params);
       
-      const builder = message_builder();
+      const builder = stream_message_builder();
     
       for await (const chunk of current_stream) {
         builder.add_delta(chunk);
@@ -313,7 +260,6 @@ export class Anthropic {
 
   }
   
-  
   /** @type {Impl["streamText"]} */
   streamText = async (params) => {
     
@@ -349,41 +295,10 @@ export class Anthropic {
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
-
-    /** @type {GenerateTextResponse} */
-    const contents = {
-      contents: []
-    }
-
-    /** @type {content[]} */
-    const text_deltas = [];
-
     const { stream } = await this.streamText(params);
-
-    for await(const update of stream) {
-      if(update.type==='delta_text')
-        text_deltas.push(update);
-      else
-        contents.contents.push(update);
-    }
-
-    // reduce text deltas
-    const reduced_text_content = text_deltas.reduce(
-      (p, update) => {
-        p.content += update.content;
-
-        return p;
-      }, {
-        content: '',
-        type: 'text'
-      }
-    );
-
-    contents.contents.push(reduced_text_content);
-
-    return contents;
+    const result = await stream_accumulate(stream);
+    return result;
   }
-
 
   /** @type {Impl["user_content_to_llm_user_message"]} */
   user_content_to_llm_user_message = (prompts) => {
@@ -429,90 +344,6 @@ export class Anthropic {
       "llm_assistant_message_to_user_content:: invalid data"
     );  
   };
-
-
-  /**
-   * 
-   * @type {Impl["generateText"]} 
-   */
-  generateText_OLD = async (params) => {
-
-    let max_steps = params.maxSteps ?? 6;
-
-    params.history = [
-      ...(params.history ?? []),
-      ...this.user_content_to_llm_user_message(params.prompt)
-    ];
-
-    let current = await this.#text_complete(params);
-    /** @type {content[]} */
-    let contents = [];
-
-    // console.log(JSON.stringify(current, null, 2));
-    // return;
-
-    // while we are at a tool call, we iterate internally
-    while(
-      (current.stop_reason === 'tool_use') &&
-      (max_steps > 0)
-    ) {
-
-      max_steps -= 1;
-      console.log(max_steps)
-      // push `assistant` message into history
-      params.history.push(
-        {
-          role: current.role,
-          content: current.content
-        }
-      );
-
-      // invoke tools
-      for(const tool_call of current.content.filter(it => it.type==='tool_use')) {
-
-        // add tools results messages
-        params.history.push(
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'tool_result',
-                tool_use_id: tool_call.id,
-                content: JSON.stringify(
-                  await invoke_tool_safely(
-                    params.tools[tool_call.name],
-                    tool_call.input
-                  )
-                )
-              }
-            ]
-            // 
-          }
-        );
-      }
-
-      // again
-      current = await this.#text_complete(params);
-    }
-
-    // push `assistant` message into history
-    params.history.push(
-      {
-        role: 'assistant',
-        content: current.content
-      }
-    );
-
-    console.log('history', JSON.stringify(params.history, null, 2))
-
-    return {
-      contents: this.llm_assistant_message_to_user_content(
-        current
-      )
-    };
-
-  }
-
 
   models = async () => {
     const r = await fetch(

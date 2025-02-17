@@ -4,11 +4,48 @@ import { BsSend } from "react-icons/bs";
 import  { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
 import { withDiv } from "./common.types";
 import { DarkModeSwitch } from "./dark-mode-switch";
+import { StorecraftSDK } from "@storecraft/sdk";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
+const test_sync = async (text: string = '') => {
+  const sdk = new StorecraftSDK({endpoint: 'http://localhost:8000'});
+
+  const sync = await sdk.ai.speak(
+    {
+      prompt: [
+        {
+          type: "text",
+          content: "What is the price of Super Mario for the NES console ?"
+        }
+      ]
+    } 
+  );
+
+  console.log(sync)
+}
 
 const test = async (text: string = '') => {
+  const sdk = new StorecraftSDK({endpoint: 'http://localhost:8000'});
+
+  const gen = await sdk.ai.streamSpeak(
+    {
+      prompt: [
+        {
+          type: "text",
+          content: "What is the price of Super Mario for the NES console ?"
+        }
+      ]
+    } 
+  );
+
+  for await (const chunk of gen) {
+    console.log(chunk)
+  }
+}
+
+
+const test2 = async (text: string = '') => {
 
   const response = await fetch(
     'http://localhost:8000/api/ai/agent/stream',

@@ -72,7 +72,7 @@ test(
       }
     );
 
-    const output = await ai_groq.streamText(
+    const output = await ai_claude.streamText(
       {
         history: [
         ],

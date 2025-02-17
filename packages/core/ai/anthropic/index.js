@@ -2,7 +2,9 @@
  * @import { 
  *  chat_completion_input, claude_completion_response,
  *  config, claude_message,
- stream_event
+ stream_event,
+ text_content,
+ tool_use_content
  * } from "./types.js";
  * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../types.private.js";
  */
@@ -64,9 +66,9 @@ export class Anthropic {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
-   * @return {Promise<Response>}
+   * @param {boolean} [stream=false]
    */
-  #text_complete = async (params) => {
+  #text_complete = async (params, stream) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
@@ -74,7 +76,7 @@ export class Anthropic {
         messages: params.history,
         system: params.system,
         tools: this.#to_native_tools(params.tools),
-        stream: false,
+        stream: stream,
         tool_choice: { type: 'auto' },
         max_tokens: params.maxTokens ?? 1024
       })
@@ -96,31 +98,28 @@ export class Anthropic {
       }
     );
 
-    if(false) {
-      for await(const chunk of result.body) {
-        console.log(new TextDecoder().decode(chunk), '\n\n\n')
-      }
-    }
+    // if(false) {
+    //   for await(const chunk of result.body) {
+    //     console.log(new TextDecoder().decode(chunk), '\n\n\n')
+    //   }
+    // }
 
     if(!result.ok) {
       throw (await result.text());
     }
 
-    return result;
+    return result.body;
   }
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
    * @return {AsyncGenerator<stream_event>}
    */
-  #text_complete_stream = async function *(params) {
+  async * #text_complete_stream(params) {
 
-    const stream = await this.#text_complete(params, true)
+    const stream = await this.#text_complete(params, true);
   
     for await (const frame of SSEGenerator(stream)) {
-      // if(frame.data==='[DONE]')
-        // continue;
-
       // console.log(frame);
       yield JSON.parse(frame.data);
     }
@@ -151,53 +150,40 @@ export class Anthropic {
       return {
         /** @param {stream_event} delta */
         add_delta: (delta) => {
-          if(!Boolean(delta))
-            return;
-
-          if(!Boolean(final)) {
-            final = {
-              created: delta.created,
-              id: delta.id,
-              model: delta.model,
-              system_fingerprint: delta.system_fingerprint,
-              object: 'chat.completion',
-              usage: delta.usage,
-              choices: [
-                {
-                  finish_reason: delta.choices[0].finish_reason,
-                  index: delta.choices[0].index,
-                  logprobs: delta.choices[0].logprobs,
-                  message: delta.choices[0].delta
-                }
-              ], 
-            };
-
-            return;
-          }
-
-          const d_choice = delta.choices?.[0];
-
-          if(d_choice?.finish_reason)
-            final.choices[0].finish_reason = d_choice.finish_reason;
-
-          if(d_choice?.delta?.content) {
-            final.choices[0].message.content = (final.choices[0].message.content ?? '') + 
-            d_choice.delta.content;
-          }
-          
-          if(d_choice?.delta?.refusal)
-            final.choices[0].message.refusal = d_choice.delta.refusal;
-
-          if(d_choice?.delta?.tool_calls) {
-            if(!final.choices[0].message.tool_calls) {
-              final.choices[0].message.tool_calls = d_choice.delta.tool_calls;
-            } else {
-              final.choices[0].message.tool_calls.forEach(
-                (tc, ix) => {
-                  tc.function.arguments += d_choice.delta.tool_calls[ix].function.arguments;
-                }
-              );
+          if(delta.type==='message_start') {
+            final = {...delta.message};
+          } else if(delta.type==='message_delta') {
+            final = {...final, ...delta.delta};
+          } else if(delta.type==='error') {
+            console.log('Anthropic::add_delta ', delta);
+            throw delta.error;
+          } else if(delta.type==='content_block_start') {
+            final.content[delta.index] = delta.content_block;
+          } else if(delta.type==='content_block_delta') {
+            if(delta.delta.type==='text_delta') {
+              const c = (/** @type {text_content} */ (final.content[delta.index]));
+              final.content[delta.index] = {
+                ...c,
+                text: c.text + delta.delta.text
+              } ;
+            } else if(delta.delta.type==='input_json_delta') {
+              const c = (/** @type {tool_use_content} */ (final.content[delta.index]));
+              final.content[delta.index] = {
+                ...c,
+                __partial_json: (c.__partial_json ?? '') + delta.delta.partial_json,
+              } ;
             }
+          } else if(delta.type==='content_block_stop') {
+            const c = final.content[delta.index];
+            // Parse accumulated JSON string into object to conform with
+            // the type
+            if(c.type==='tool_use') {
+              c.input = JSON.parse(c.__partial_json);
+              delete c['__partial_json']
+            }
+
+          } else {
+            //ignore other events
           }
 
         },
@@ -239,7 +225,8 @@ export class Anthropic {
           c => c.type==='tool_use'
         ).map(
           tc => ({
-            name: tc.name
+            name: tc.name,
+            id: tc.id
           })
         )
       }
@@ -265,7 +252,10 @@ export class Anthropic {
 
         yield {
           type: 'tool_result',
-          content: tool_result
+          content: {
+            data: tool_result,
+            id: tool_call.id
+          }
         }
 
         params.history.push(

@@ -72,7 +72,7 @@ test(
       }
     );
 
-    const output = await ai_groq.generateText(
+    const output = await ai_claude.generateText(
       {
         history: [
         ],

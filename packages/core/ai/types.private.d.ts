@@ -34,8 +34,8 @@ export type Tool<
 /** @description A general content type from and to user */
 export type content = |
 { type: 'text' | 'delta_text', content: string } | 
-{ type: 'tool_use', content: { name?: string, title?: string }[] } | 
-{ type: 'tool_result', content: any } | 
+{ type: 'tool_use', content: { name?: string, title?: string, id?: string }[] } | 
+{ type: 'tool_result', content: { data: any, id?: string } } | 
 { type: 'image', content: string } | 
 { type: 'json', content: string } | 
 { type: 'object', content: Object } | 

@@ -162,7 +162,7 @@ export class OpenAI {
    * @param {Impl["__gen_text_params_type"]} params
    * @return {AsyncGenerator<chat_completion_chunk_result>}
    */
-  #text_complete_stream = async function *(params) {
+   async * #text_complete_stream(params) {
 
     const stream = await this.#text_complete(params, true)
   
@@ -287,7 +287,8 @@ export class OpenAI {
         type: 'tool_use',
         content: current.choices[0].message.tool_calls.map(
           tc => ({
-            name: tc.function.name
+            name: tc.function.name,
+            id: tc.id
           })
         )
       }
@@ -308,7 +309,10 @@ export class OpenAI {
 
         yield {
           type: 'tool_result',
-          content: tool_result
+          content: {
+            data: tool_result,
+            id: tool_call.id
+          }
         }
 
         params.history.push(

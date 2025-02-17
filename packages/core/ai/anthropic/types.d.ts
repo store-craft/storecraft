@@ -39,6 +39,7 @@ export type tool_use_content = {
   input: object
   name: string
   type: 'tool_use'
+  __partial_json?: string;
 }
 
 export type tool_result_content = {
@@ -170,7 +171,7 @@ export type Pick<H> = H extends (infer F)[] ? F : never;
 export type stream_event_content_block_start = {
   type: "content_block_start",
   index: number,
-  content_block: Partial<text_content | tool_use_content>
+  content_block: text_content | tool_use_content
 }
 
 export type stream_event_content_block_delta = {
@@ -193,12 +194,12 @@ export type stream_event_content_block_stop = {
 
 export type stream_event_message_start = {
   type: "message_start",
-  message: Partial<claude_completion_response>
+  message: claude_completion_response
 }
 
 export type stream_event_message_delta = {
   type: "message_delta",
-  delta: Partial<claude_completion_response>
+  delta: claude_completion_response
 }
 
 export type stream_event_message_stop = {

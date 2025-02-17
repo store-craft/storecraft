@@ -106,6 +106,9 @@ test(
             }
           )
         }
+      },
+      {
+        onDone: console.log
       }
     );
     

@@ -1,5 +1,5 @@
 /**
- * @import { AgentConfig, AgentRunParameters, AgentRunResponse } from './types.js'
+ * @import { AgentConfig, AgentRunParameters, AgentRunResponse, AgentRunStreamResponse } from './types.js'
  * @import { AI } from '../core/types.private.js'
  */
 
@@ -40,9 +40,9 @@ export class StoreAgent {
   /**
    * 
    * @param {AgentRunParameters} params 
-   * @returns {Promise<AgentRunResponse>}
+   * @returns {Promise<AgentRunStreamResponse>}
    */
-  run = async (params) => {
+  runStream = async (params) => {
 
     console.log(params);
 

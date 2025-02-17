@@ -25,6 +25,16 @@ export type AgentRunParameters = {
 }
 
 /**
+ * @description Response for the `storecraft` agent stream / updates
+ */
+export type AgentRunStreamResponse = {
+  /**
+   * @description Current **LLM** formatted responses
+   */
+  stream: ReadableStream<content>
+}
+
+/**
  * @description Response for the `storecraft` agent
  */
 export type AgentRunResponse = {

@@ -2,7 +2,7 @@
  * @import { 
  *  chat_completion_input, config, claude_message, stream_event,
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams } from "../core/types.private.js";
+ * @import { AI, content, GenerateTextParams, StreamTextCallbacks } from "../core/types.private.js";
  */
 
 import { invoke_tool_safely } from "../core/tools.js";
@@ -126,10 +126,12 @@ export class Anthropic {
   /**
    * 
    * @param {GenerateTextParams<claude_message>} params
+   * @param {StreamTextCallbacks<claude_message>} [callbacks]
    * @returns {AsyncGenerator<content>} 
    */
-  async * #_gen_text_generator(params) {
+  async * #_gen_text_generator(params, callbacks) {
     let max_steps = params.maxSteps ?? 6;
+    const base_history_length = params.history.length;
 
     params.history = [
       ...(params.history ?? []),
@@ -156,9 +158,6 @@ export class Anthropic {
     }
 
     let current = builder.done();
-
-    /** @type {content[]} */
-    let contents = [];
 
     // while we are at a tool call, we iterate internally
     while(
@@ -252,23 +251,24 @@ export class Anthropic {
       }
     );
 
-    return {
-      contents: this.llm_assistant_message_to_user_content(
-        current
-      )
-    };
+    if(callbacks?.onDone) {
+      await callbacks.onDone(
+        params.history.slice(1 + base_history_length)
+      );
+    }
 
   }
   
+  
   /** @type {Impl["streamText"]} */
-  streamText = async (params) => {
+  streamText = async (params, callbacks) => {
     
     /** @type {ReadableStream<content>} */
     const stream = new ReadableStream(
       {
         start: async (controller) => {
           try {
-            for await (const m of this.#_gen_text_generator(params)) {
+            for await (const m of this.#_gen_text_generator(params, callbacks)) {
               controller.enqueue(m);
             }
           } catch(e) {
@@ -295,10 +295,24 @@ export class Anthropic {
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
-    const { stream } = await this.streamText(params);
-    const result = await stream_accumulate(stream);
-    return result;
+    let delta_messages = [];
+    const { stream } = await this.streamText(
+      params,
+      {
+        onDone: async (messages) => {
+          delta_messages = messages;
+        }
+      }
+    );
+
+    const contents = await stream_accumulate(stream);
+
+    return {
+      contents,
+      delta_messages
+    };
   }
+
 
   /** @type {Impl["user_content_to_llm_user_message"]} */
   user_content_to_llm_user_message = (prompts) => {

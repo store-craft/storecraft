@@ -1,7 +1,7 @@
 /**
  * @import { chat_completion_chunk_result, chat_completion_input, chat_message, config 
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams, GenerateTextResponse } from "../core/types.private.js";
+ * @import { AI, content, GenerateTextParams, StreamTextCallbacks } from "../core/types.private.js";
  */
 
 import { invoke_tool_safely } from "../core/tools.js";
@@ -170,12 +170,14 @@ export class OpenAI {
 
   /**
    * 
-   * @param {GenerateTextParams} params
+   * @param {GenerateTextParams<chat_message>} params
+   * @param {StreamTextCallbacks<chat_message>} [callbacks]
    * @returns {AsyncGenerator<content>} 
    */
-  async * #_gen_text_generator(params) {
+  async * #_gen_text_generator(params, callbacks) {
     let max_steps = params.maxSteps ?? 6;
 
+    const base_history_length = params.history.length;
     params.history = [
       { // rewrite system prompt
         content: params.system,
@@ -202,9 +204,6 @@ export class OpenAI {
     }
 
     let current = builder.done();
-
-    /** @type {content[]} */
-    let contents = [];
 
     // while we are at a tool call, we iterate internally
     while(
@@ -269,34 +268,31 @@ export class OpenAI {
             content: chunk.choices[0].delta.content
           }
         }
-        // console.log(chunk)
       }
   
       current = builder.done();  
-          
     }
-
+    
     // push `assistant` message into history
     params.history.push(current.choices[0].message);
 
-    return {
-      contents: this.llm_assistant_message_to_user_content(
-        current.choices[0].message
-      )
-    };
-
+    if(callbacks?.onDone) {
+      await callbacks.onDone(
+        params.history.slice(1 + base_history_length)
+      );
+    }
   }
   
   
   /** @type {Impl["streamText"]} */
-  streamText = async (params) => {
+  streamText = async (params, callbacks) => {
     
     /** @type {ReadableStream<content>} */
     const stream = new ReadableStream(
       {
         start: async (controller) => {
           try {
-            for await (const m of this.#_gen_text_generator(params)) {
+            for await (const m of this.#_gen_text_generator(params, callbacks)) {
               controller.enqueue(m);
             }
           } catch(e) {
@@ -323,9 +319,22 @@ export class OpenAI {
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
-    const { stream } = await this.streamText(params);
-    const result = await stream_accumulate(stream);
-    return result;
+    let delta_messages = [];
+    const { stream } = await this.streamText(
+      params,
+      {
+        onDone: async (messages) => {
+          delta_messages = messages;
+        }
+      }
+    );
+
+    const contents = await stream_accumulate(stream);
+
+    return {
+      contents,
+      delta_messages
+    };
   }
 
   models = async () => {

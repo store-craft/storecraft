@@ -9,10 +9,8 @@
  * @param {ReadableStream<content>} stream
  */
 export const stream_accumulate = async (stream) => {
-  /** @type {GenerateTextResponse} */
-  const contents = {
-    contents: []
-  }
+  /** @type {content[]} */
+  const contents = []
 
   /** @type {content[]} */
   const text_deltas = [];
@@ -21,7 +19,7 @@ export const stream_accumulate = async (stream) => {
     if(update.type==='delta_text')
       text_deltas.push(update);
     else
-      contents.contents.push(update);
+      contents.push(update);
   }
 
   // reduce text deltas
@@ -38,7 +36,7 @@ export const stream_accumulate = async (stream) => {
       }
     );
   
-    contents.contents.push(reduced_text_content);
+    contents.push(reduced_text_content);
   }
 
   return contents;

@@ -76,20 +76,48 @@ export type GenerateTextParams<MessageType extends any = any> = {
 /**
  * @description Content response from the LLM in a unified structure
  */
-export type GenerateTextResponse = {
-  contents: content[],
+export type GenerateTextResponse<LLMMessageType extends any = any> = {
+  /**
+   * @description Formatted response contents, including text, tool usage etc..
+   */
+  contents?: content[],
+  /**
+   * @description Native LLM messages, that were generated during the generation process,
+   * we report it for saving purposes of the history
+   */
+  delta_messages?: LLMMessageType[]
+}
+
+/**
+ * @description Content response from the LLM in a unified structure
+ */
+export type StreamTextResponse = {
+  stream: ReadableStream<content>
+}
+
+/**
+ * @description Callbacks related to streaming async nature
+ */
+export type StreamTextCallbacks<LLMMessageType extends any = any> = {
+  /**
+   * 
+   * @param delta_messages **LLM** messages, that were generated during the generation
+   */
+  onDone?: (delta_messages: LLMMessageType[]) => Promise<any> | void
 }
 
 /**
  * @description **AI** Provider interface
+ * @template Config config type
+ * @template LLMMessageType Native LLM message type
  */
 export interface AI<
   Config extends any = any, 
-  MessageType extends any = any
+  LLMMessageType extends any = any
   > {
   
-  __message_type?: MessageType;
-  __gen_text_params_type?: GenerateTextParams<MessageType>;
+  __message_type?: LLMMessageType;
+  __gen_text_params_type?: GenerateTextParams<LLMMessageType>;
 
   config?: Config;
 
@@ -120,25 +148,24 @@ export interface AI<
    * @param params params
    */
   generateText: (
-    params: GenerateTextParams<MessageType>
-  ) => Promise<GenerateTextResponse>;
+    params: GenerateTextParams<LLMMessageType>
+  ) => Promise<GenerateTextResponse<LLMMessageType>>;
   streamText?: (
-    params: GenerateTextParams<MessageType>
-  ) => Promise<{
-    stream: ReadableStream<content>
-  }>
+    params: GenerateTextParams<LLMMessageType>,
+    callbacks?: StreamTextCallbacks<LLMMessageType>
+  ) => Promise<StreamTextResponse>
 
   /**
    * @description Translate a generic user prompt into an LLM `user` message
    * @param prompt user prompt
    */
-  user_content_to_llm_user_message: (prompt: content[]) => MessageType[];
+  user_content_to_llm_user_message: (prompt: content[]) => LLMMessageType[];
 
   /**
    * @description Translate a specific LLM Assistant message into simple user content
    * @param message llm message
    */
-  llm_assistant_message_to_user_content: (message: MessageType) => content[];
+  llm_assistant_message_to_user_content: (message: LLMMessageType) => content[];
 
 }
 

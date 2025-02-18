@@ -45,10 +45,6 @@ export type AgentRunStreamResponse = {
  */
 export type AgentRunResponse = {
   /**
-   * @description The `thread` / `conversation` identifier
-   */
-  thread_id?: string;
-  /**
    * @description Current **LLM** formatted responses
    */
   contents: content[];

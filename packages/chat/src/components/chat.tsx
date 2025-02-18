@@ -34,14 +34,15 @@ export const Chat = () => {
   const {
     loading, messages, error, threadId,
     actions: {
-      speak
+      speak, streamSpeak
     }
   } = useChat();
 
 
   const onSend = useCallback(
     async (contents: content[]) => {
-      await speak(contents);
+      // await speak(contents);
+      await streamSpeak(contents);
       
     }, [speak]
   );
@@ -51,7 +52,7 @@ export const Chat = () => {
       requestAnimationFrame(
         () => {ref_chat_messages.current?.scroll()}
       );
-    }, [messages?.length ?? 0]
+    }, [messages]
   )
 
   const dark_class = darkMode ? 'dark' : '';

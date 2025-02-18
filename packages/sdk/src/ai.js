@@ -5,6 +5,7 @@
  * @import { content } from '@storecraft/core/ai/types.public.js'
  */
 
+import { HEADER_STORECRAFT_THREAD_ID } from '../../core/rest/con.ai.routes.js';
 import { StorecraftSDK } from '../index.js'
 import { url } from './utils.api.fetch.js';
 
@@ -46,9 +47,8 @@ export default class AI {
   /**
    * @description Stream Speak with the main `storecraft` agent via Server-Sent Events
    * @param {AgentRunParameters} params 
-   * @returns {AsyncGenerator<content>}
    */
-  streamSpeak = async function*(params) {
+  streamSpeak = async function(params) {
     const response = await fetch(
       url(this.sdk.config, 'ai/agent/stream'),
       {
@@ -60,19 +60,44 @@ export default class AI {
       }
     );
 
-    for await (const sse of SSEGenerator2(response.body)) {
-      yield ( /** @type {content} */ (JSON.parse(sse.data)));
+    // for await (const sse of SSEGenerator(response.body)) {
+    //   yield ( /** @type {content} */ (JSON.parse(sse.data)));
+    // }
+
+    return {
+      threadId: response.headers.get(HEADER_STORECRAFT_THREAD_ID) ?? undefined,
+      generator: () => StreamSpeakGenerator(response.body)
     }
   }
 
 }
 
+const sleep = (ms=100) => {
+  return new Promise(
+    (resolve, reject) => {
+      setTimeout(
+        resolve, ms
+      )
+    }
+  )
+}
 
 /**
  * @description Server Sent Events async generator
  * @param {ReadableStream} stream web stream
  */
-export const SSEGenerator2 = async function *(stream) {
+const StreamSpeakGenerator = async function *(stream) {
+  for await (const sse of SSEGenerator(stream)) {
+    await sleep(50);
+    yield ( /** @type {content} */ (JSON.parse(sse.data)));
+  }
+}
+
+/**
+ * @description Server Sent Events async generator
+ * @param {ReadableStream} stream web stream
+ */
+export const SSEGenerator = async function *(stream) {
 
   let active_frame = [];
   let residual_line = '';

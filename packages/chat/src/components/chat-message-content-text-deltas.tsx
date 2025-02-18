@@ -26,6 +26,8 @@ export const ChatMessageTextDeltasContent = (
     }, [chat.content]
   );
 
+  // console.log(chat.content)
+
   return (
     <MDView value={reduced} 
             className='max-w-full flex-1 prose dark:prose-invert

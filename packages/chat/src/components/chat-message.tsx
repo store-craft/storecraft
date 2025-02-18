@@ -38,7 +38,7 @@ export const UserChatMessageView = (
 ) => {
 
   return (
-    <div className='w-full h-fit flex flex-row gap-5 px-5 py-2.5 
+    <div className='w-fit h-fit flex flex-row gap-5 px-5 py-2.5 
         max-w-[60%] self-end rounded-3xl chat-card --text-right'>
       <div className='max-w-full flex-1'>
         {

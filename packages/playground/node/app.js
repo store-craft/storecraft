@@ -60,9 +60,9 @@ export const app = new App(
   }
 )
 .withAI(
-  new Groq(
+  new OpenAI(
     {
-      api_key: process.env.Groq
+      api_key: process.env.OpenAI
     }
   )
 )

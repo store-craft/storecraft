@@ -7,7 +7,7 @@ export type content_multiple_text_deltas = {
   content: content_delta_text[]
 }
 
-export type ChatMessage<T extends (content)[] = ((content)[])> = {
+export type ChatMessage<T extends (content|content_multiple_text_deltas)[] = ((content|content_multiple_text_deltas)[])> = {
   role: 'assistant' | 'user';
-  content?: T;
+  contents?: T;
 }

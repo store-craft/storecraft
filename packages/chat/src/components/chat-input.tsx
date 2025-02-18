@@ -10,7 +10,7 @@ const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
 export type ChatInputParams = withDiv<
   {
-    chat?: {
+    chat: {
       maxLines?: number,
       loading?: boolean,
       onSend?: (contents: content[]) => void

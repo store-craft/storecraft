@@ -52,7 +52,7 @@ export class StorageHistoryProvider {
 
 
   /** @param {string} threadId */
-  #to_key = (threadId) => `chats/${threadId}`;
+  #to_key = (threadId) => `chats/${threadId}.json`;
 
   /** @type {LLMHistoryProvider["load"]} */
   load = async (threadId, app) => {

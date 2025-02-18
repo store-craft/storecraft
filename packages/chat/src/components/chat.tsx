@@ -1,36 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ChatInputView } from "./chat-input"
-import { ChatMessagesView, ChatMessagesViewImperativeInterface } from "./chat-messages"
+import { ChatMessagesView } from "./chat-messages"
 import { fixture_chat_1 } from "./chat.fixture"
 import { delta_to_scroll_end } from "./chat.utils"
 import { FaArrowDownLong } from "react-icons/fa6";
 import useDarkMode from "@/hooks/use-dark-mode"
-import { useStorecraft } from "@storecraft/sdk-react-hooks"
+import { ChatMessagesViewImperativeInterface } from "./chat-message"
+import { useChat } from "@/hooks/use-chat"
 import { content } from "@storecraft/core/ai"
 
-const useChat = () => {
-  const { sdk } = useStorecraft();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(undefined);
-  const [threadId, setThreadId] = useState<string>();
 
-  const speak = useCallback(
-    async (prompt: content[]) => {
-      const response = await sdk.ai.speak(
-        {
-          prompt, 
-          thread_id: threadId
-        }
-      );
-
-      setThreadId(threadId ??response.thread_id);
-      
-
-    }, [threadId]
-  );
-
-
-}
 
 export const Chat = () => {
 
@@ -52,6 +31,19 @@ export const Chat = () => {
     }, []
   );
   const { darkMode } = useDarkMode();
+  const {
+    loading, messages, error, threadId,
+    actions: {
+      speak
+    }
+  } = useChat();
+
+
+  const onSend = useCallback(
+    (contents: content[]) => {
+      speak(contents);
+    }, [speak]
+  );
 
   const dark_class = darkMode ? 'dark' : '';
   
@@ -62,7 +54,7 @@ export const Chat = () => {
       <div className='max-w-[800px] w-full h-full relative --bg-red-100 
               flex flex-col gap-0 items-center'>
 
-        <ChatMessagesView messages={fixture_chat_1} 
+        <ChatMessagesView messages={messages} 
             onChatWindowScroll={onChatMessagesScroll}
             className='w-full h-full '
             ref={ref_chat_messages}/>
@@ -75,7 +67,7 @@ export const Chat = () => {
           <FaArrowDownLong className='w-6 h-6 m-px p-1' />
         </button>    
 
-        <ChatInputView className='w-full absolute bottom-10 px-3' />
+        <ChatInputView chat={{onSend}} className='w-full absolute bottom-10 px-3' />
 
       </div>      
     </div>

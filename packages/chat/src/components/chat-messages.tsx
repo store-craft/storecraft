@@ -1,14 +1,6 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import type { ChatMessage, withDiv } from "./common.types";
-import svg from './favicon.svg';
-import { MDView } from "./md-view";
-
-export type MessageParams = withDiv<
-  {
-    message: ChatMessage;
-    avatar_icon?: any;
-  }
->;
+import { ChatMessagesViewImperativeInterface, ChatMessageView } from "./chat-message";
 
 export type MessagesParams = withDiv<
   {
@@ -17,82 +9,9 @@ export type MessagesParams = withDiv<
   }
 >;
 
-export const ChatMessageView = (
-  {
-    message,
-    avatar_icon
-  }: MessageParams
-) => {
-
-  return (
-    <div className='w-full h-fit flex flex-row gap-5 p-5'>
-      <img src={'./vite.svg'} 
-        className='w-8 h-8 border-1 chat-border-overlay
-          rounded-md object-fill bg-cyan-400' />
-      <div className='max-w-full flex-1' 
-          children={message?.content} />
-    </div>
-  )
-}
-
-
-
-export const UserChatMessageView = (
-  {
-    message,
-  }: MessageParams
-) => {
-
-  return (
-    <div className='w-full h-fit flex flex-row gap-5 px-5 py-2.5 
-        max-w-[60%] self-end rounded-3xl chat-card --text-right'>
-      <div className='max-w-full flex-1' children={message?.content} />
-    </div>
-  )
-}
-
-export const AssistantChatMessageView = (
-  {
-    message,
-  }: MessageParams
-) => {
-
-  return (
-    <div className='w-full h-fit flex flex-row gap-5 p-5 self-start'>
-      <img src={svg} 
-        className='w-8 h-8 border-1 chat-border-overlay
-          rounded-md object-fill bg-purple-500/50
-          shadow-lg shadow-purple-500/50 ' />
-      {/* <div className='max-w-full flex-1' 
-          children={message?.content} /> */}
-      <MDView value={message?.content} 
-        className='max-w-full flex-1 prose dark:prose-invert
-        prose-headings:mt-0 prose-headings:mb-0 prose-p:mt-0' />
-    </div>
-  )
-}
-//  prose-headings:mt-0 prose-headings:mb-0 prose-p:mt-0
-export const ChatMessageV2View = (
-  {
-    message,
-  }: MessageParams
-) => {
-
-  const is_user = message.role==='user';
-
-  if(is_user)
-    return (<UserChatMessageView message={message} />)
-
-  return (
-    <AssistantChatMessageView message={message} />
-  )
-}
-
-export type ChatMessagesViewImperativeInterface = {
-  scroll: () => void;
-}
-
-export const ChatMessagesView = forwardRef<ChatMessagesViewImperativeInterface, MessagesParams>(
+export const ChatMessagesView = forwardRef<
+  ChatMessagesViewImperativeInterface, MessagesParams
+>(
   (
     {
       messages, onChatWindowScroll,
@@ -103,7 +22,10 @@ export const ChatMessagesView = forwardRef<ChatMessagesViewImperativeInterface, 
       
     const ref_div = useRef<HTMLDivElement>(undefined);
 
-    useImperativeHandle<ChatMessagesViewImperativeInterface, ChatMessagesViewImperativeInterface>(
+    useImperativeHandle<
+      ChatMessagesViewImperativeInterface, 
+      ChatMessagesViewImperativeInterface
+    >(
       ref,
       () => (
         {
@@ -140,7 +62,7 @@ export const ChatMessagesView = forwardRef<ChatMessagesViewImperativeInterface, 
           {
             messages?.map(
               (m, ix) => (
-                <ChatMessageV2View 
+                <ChatMessageView 
                     key={ix} message={m} 
                     avatar_icon={undefined} />
               )

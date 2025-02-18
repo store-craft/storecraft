@@ -4,85 +4,23 @@ import { BsSend } from "react-icons/bs";
 import  { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
 import { withDiv } from "./common.types";
 import { DarkModeSwitch } from "./dark-mode-switch";
-import { StorecraftSDK } from "@storecraft/sdk";
+import type { content } from "@storecraft/core/ai";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
-const test_sync = async (text: string = '') => {
-  const sdk = new StorecraftSDK({endpoint: 'http://localhost:8000'});
-
-  const sync = await sdk.ai.speak(
-    {
-      prompt: [
-        {
-          type: "text",
-          content: "What is the price of Super Mario for the NES console ?"
-        }
-      ]
-    } 
-  );
-
-  console.log(sync)
-}
-
-const test = async (text: string = '') => {
-  const sdk = new StorecraftSDK({endpoint: 'http://localhost:8000'});
-
-  const gen = await sdk.ai.streamSpeak(
-    {
-      prompt: [
-        {
-          type: "text",
-          content: "What is the price of Super Mario for the NES console ?"
-        }
-      ]
-    } 
-  );
-
-  for await (const chunk of gen) {
-    console.log(chunk)
-  }
-}
-
-
-const test2 = async (text: string = '') => {
-
-  const response = await fetch(
-    'http://localhost:8000/api/ai/agent/stream',
-    {
-      method: 'post',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          prompt: [
-            {
-              type: "text",
-              content: "What is the price of Super Mario for the NES console ?"
-            }
-          ]
-        } 
-      )
-    }
-  );
-
-  for await (const chunk of response.body) {
-    console.log('chunk, ', new TextDecoder().decode(chunk))
-  }
-
-}
-
-
 export type ChatInputParams = withDiv<
   {
-    maxLines?: number
+    chat?: {
+      maxLines?: number,
+      loading?: boolean,
+      onSend?: (contents: content[]) => void
+    }
   }
 >;
 
 export const ChatInputView = (
   {
-    maxLines = 3,
+    chat = {loading: false, maxLines: 3},
     ...rest
   }: ChatInputParams
 ) => {
@@ -92,16 +30,16 @@ export const ChatInputView = (
   const onChange = useCallback(
     () => {
       const num_lines = ref_ta.current?.value.split('\n').length ?? 0;
-      ref_ta.current && (ref_ta.current.rows = Math.min(num_lines, maxLines));
+      ref_ta.current && (ref_ta.current.rows = Math.min(num_lines, chat.maxLines ?? 3));
 
       // console.log(ref_ta.current.value);
 
       setHasText(Boolean(ref_ta.current?.value));
 
-    }, [maxLines]
+    }, [chat.maxLines]
   );
 
-  const onSend = useCallback(
+  const internal_onSend = useCallback(
     async () => {
       const value = ref_ta.current?.value;
 
@@ -109,15 +47,23 @@ export const ChatInputView = (
 
       onChange();
 
-      await test(value);
-      console.log('ENDS')
+      // await test(value);
+      // console.log('ENDS')
+      chat.onSend && chat.onSend(
+        [
+          {
+            type: 'text',
+            content: value ?? ''
+          }
+        ]
+      );
 
 
-    }, [onChange]
+    }, [onChange, chat]
   );
 
   hook_shift_enter(
-    onSend
+    internal_onSend
   );
 
   return (
@@ -130,7 +76,7 @@ export const ChatInputView = (
                   -bg-red-100 font-light' 
             placeholder='Ask me anything' />
 
-          <button onClick={onSend} 
+          <button onClick={internal_onSend} 
               className={`rounded-md h-8 w-8 p-2  absolute right-3 
                         cursor-pointer bg-blue-500 shadow-lg  shadow-blue-500/50
                         ease-in-out top-3 transition-all duration-300 ` + 

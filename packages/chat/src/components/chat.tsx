@@ -40,10 +40,19 @@ export const Chat = () => {
 
 
   const onSend = useCallback(
-    (contents: content[]) => {
-      speak(contents);
+    async (contents: content[]) => {
+      await speak(contents);
+      
     }, [speak]
   );
+
+  useEffect(
+    () => {
+      requestAnimationFrame(
+        () => {ref_chat_messages.current?.scroll()}
+      );
+    }, [messages?.length ?? 0]
+  )
 
   const dark_class = darkMode ? 'dark' : '';
   
@@ -67,7 +76,8 @@ export const Chat = () => {
           <FaArrowDownLong className='w-6 h-6 m-px p-1' />
         </button>    
 
-        <ChatInputView chat={{onSend}} className='w-full absolute bottom-10 px-3' />
+        <ChatInputView chat={{onSend}} 
+              className='w-full absolute bottom-10 px-3' />
 
       </div>      
     </div>

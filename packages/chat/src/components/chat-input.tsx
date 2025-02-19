@@ -5,6 +5,8 @@ import  { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
 import { withDiv } from "./common.types";
 import { DarkModeSwitch } from "./dark-mode-switch";
 import type { content } from "@storecraft/core/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ShowSwitch } from "./show-if";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
@@ -13,6 +15,7 @@ export type ChatInputParams = withDiv<
     chat: {
       maxLines?: number,
       loading?: boolean,
+      disabled?: boolean,
       onSend?: (contents: content[]) => void
     }
   }
@@ -20,7 +23,7 @@ export type ChatInputParams = withDiv<
 
 export const ChatInputView = (
   {
-    chat = {loading: false, maxLines: 3},
+    chat = {loading: false, disabled:false, maxLines: 3},
     ...rest
   }: ChatInputParams
 ) => {
@@ -66,9 +69,12 @@ export const ChatInputView = (
     internal_onSend
   );
 
+
   return (
     <div {...rest}>
-      <Card className='w-full h-fit overflow-clip shadow-2xl'>
+      <Card className={'w-full h-fit overflow-clip shadow-2xl '}
+            card={{loading: chat.loading}}>
+
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>
           <textarea rows={1}
             ref={ref_ta} onChange={onChange}
@@ -76,12 +82,17 @@ export const ChatInputView = (
                   -bg-red-100 font-light' 
             placeholder='Ask me anything' />
 
-          <button onClick={internal_onSend} 
+          <button onClick={chat.loading ? undefined : internal_onSend} 
               className={`rounded-md h-8 w-8 p-2  absolute right-3 
                         cursor-pointer bg-blue-500 shadow-lg  shadow-blue-500/50
                         ease-in-out top-3 transition-all duration-300 ` + 
-                        (hasText ? `-translate-y-0` : '-translate-y-10') }>
-            <BsSend className='w-full h-full text-white' />
+                        ((hasText || chat.loading) ? `-translate-y-0` : '-translate-y-10') }>
+
+            <ShowSwitch index={chat.loading ? 1 : 0}>
+              <BsSend className='w-full h-full text-white' />
+              <AiOutlineLoading3Quarters 
+                  className='w-full h-full text-white animate-spin' />
+            </ShowSwitch>
           </button>
 
           <div className='flex flex-row justify-between w-full h-fit px-3'>

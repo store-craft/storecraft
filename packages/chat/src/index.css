@@ -6,6 +6,7 @@
 @theme {
   --font-inter: Inter, sans-serif;
   --animate-wiggle: wiggle 1s ease-in-out infinite;
+  --animate-rotate-bg: rotate-bg 8s linear infinite;
   
   @keyframes wiggle {
     0%,
@@ -14,6 +15,15 @@
     }
     50% {
       transform: rotate(3deg);
+    }
+  }
+
+  @keyframes rotate-bg {
+    0% { 
+      transform: rotate(0deg) scale(10);
+    }
+    100% { 
+      transform: rotate(-360deg) scale(10);
     }
   }
 }

@@ -77,7 +77,7 @@ export const Chat = () => {
           <FaArrowDownLong className='w-6 h-6 m-px p-1' />
         </button>    
 
-        <ChatInputView chat={{onSend}} 
+        <ChatInputView chat={{onSend, loading, disabled: loading}} 
               className='w-full absolute bottom-10 px-3' />
 
       </div>      

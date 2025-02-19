@@ -1,21 +1,38 @@
+import { withDiv } from "./common.types"
 
+export type CardParams = withDiv<
+  {
+    card?: {
+      loading?: boolean;
+    }
+  }
+>;
 
 export const Card = (
   {
-    children, 
+    children, card = { loading: false },
     ...rest
-  }: {
-    children?: React.ReactNode
-  } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+  }: CardParams
 ) => {
 
   return (
     <div {...rest}>
 
-      <div className='w-full h-full border-1 rounded-lg --p-3 chat-card'>
+      <div className='relative z-10 w-full h-full border rounded-lg p-[1.5px]  chat-card overflow-hidden'>
         {
-          children
+          card.loading && (
+            <div className='absolute inset-0 h-full w-full rounded-full 
+            bg-conic/shorter from-purple-500/60 via-pink-500 to-transparent from-0% via-25% to-40%
+                    --bg-[conic-gradient(#0ea5e9_20deg,transparent_120deg)] animate-rotate-bg'/>
+      
+          )
         }
+      
+        <div className='relative w-full chat-card rounded-md'>
+          {
+            children
+          }
+        </div>
       </div>
       
     </div>

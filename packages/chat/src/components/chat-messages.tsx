@@ -56,7 +56,7 @@ export const ChatMessagesView = forwardRef<
     return (
       <div {...rest}>
         <div className='w-full h-full flex flex-col pb-44 
-              gap-0 p-5 overflow-y-scroll'
+              gap-0 pt-5 pr-5 overflow-y-scroll'
             onScroll={internal_onScroll}
             ref={ref_div}>
           {

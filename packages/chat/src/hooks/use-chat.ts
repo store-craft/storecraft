@@ -16,6 +16,7 @@ export const useChat = () => {
 
   const speak = useCallback(
     async (prompt: content[]) => {
+      setLoading(true);
       setMessages(
         (ms) => [
           ...ms,
@@ -42,12 +43,14 @@ export const useChat = () => {
           }
         ]
       );
+      setLoading(false);
       setThreadId(threadId ?? response.thread_id);
     }, [threadId]
   );
 
   const streamSpeak = useCallback(
     async (prompt: content[]) => {
+      setLoading(true);
       setMessages(
         (ms) => [
           ...ms,
@@ -88,7 +91,7 @@ export const useChat = () => {
           }
         );
       }
-      
+      setLoading(false);
       setThreadId(threadId ?? thread_id);
     }, [threadId]
   );

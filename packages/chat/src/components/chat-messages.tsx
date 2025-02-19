@@ -63,6 +63,7 @@ export const ChatMessagesView = forwardRef<
             messages?.map(
               (m, ix) => (
                 <ChatMessageView 
+                    message_index={ix}
                     key={ix} message={m} 
                     avatar_icon={undefined} />
               )

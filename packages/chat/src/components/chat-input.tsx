@@ -7,6 +7,8 @@ import { DarkModeSwitch } from "./dark-mode-switch";
 import type { content } from "@storecraft/core/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { ShowSwitch } from "./show-if";
+import banner from './storecraft-color.svg';
+import { LogoGradient, LogoText } from "./logo-text";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
@@ -103,7 +105,7 @@ export const ChatInputView = (
 
         </div>
       </Card>
-
+      <PoweredBy/>
     </div>
   )
 }
@@ -122,5 +124,18 @@ const Tip = () => {
                 rounded-md text-[11px] font-mono font-bold'/>
       <span children=' to send' className='opacity-50'/>
     </div>    
+  )
+}
+
+export const PoweredBy = () => {
+
+  return (
+    <div className='inline-flex flex-row justify-end --items-baseline gap-0.5 w-full h-fit 
+                text-[9px] tracking-wider uppercase italic --scale-200 font-bold'>
+      <span className=''>powered</span>
+      <span className=''>by</span>
+      {/* <img src={banner} className='inline-block h-[14px] -translate-y-[2px]' /> */}
+      <LogoGradient className='h-[15px] -translate-y-[3px]' />
+    </div>
   )
 }

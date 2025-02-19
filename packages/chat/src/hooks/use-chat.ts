@@ -1,6 +1,5 @@
 import { ChatMessage, content_multiple_text_deltas } from "@/components/common.types";
 import { content } from "@storecraft/core/ai";
-import { StorecraftSDK } from "@storecraft/sdk";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
 
@@ -8,14 +7,16 @@ export type ChatHookConfig = {
   threadId?: string;
 }
 
-export type ChatPubSubEvents = {
+export type ChatPubSubEvent_State = {
   event: 'state',
   payload: {
     loading?: boolean,
     error?: any,
     messages?: ChatMessage[]
   }
-} | {
+}
+
+export type ChatPubSubEvents = ChatPubSubEvent_State | {
   event: 'request-retry',
   payload: {
     prompt: content[]
@@ -44,7 +45,7 @@ class ChatPubSub {
 
 export const pubsub = new ChatPubSub();
 
-
+let err_index = 0;
 /**
  * @description `chat` hook
  * 
@@ -125,7 +126,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   const streamSpeak = useCallback(
     async (prompt: content[]) => {
       try {
-
+        
         setError(undefined);
         setLoading(true);
         setMessages(
@@ -140,7 +141,13 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
             ]
           }
         );
-  
+
+        {
+          err_index+=1;
+          if(err_index==1)
+            throw 'error'
+          
+        }
         const {
           threadId: thread_id,
           generator

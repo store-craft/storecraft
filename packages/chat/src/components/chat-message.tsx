@@ -3,11 +3,16 @@ import type { ChatMessage, content_multiple_text_deltas, withDiv } from "./commo
 import svg from './favicon.svg';
 import { ChatMessageTextContent } from "./chat-message-content-text";
 import { ChatMessageTextDeltasContent } from "./chat-message-content-text-deltas";
+import ShowIf from "./show-if";
+import { ChatPubSubEvent_State, pubsub } from "@/hooks/use-chat";
+import { useCallback, useEffect, useState } from "react";
+import { BiRefresh } from "react-icons/bi";
 
 
 export type MessageParams = withDiv<
   {
     message: ChatMessage;
+    message_index: number;
     avatar_icon?: any;
   }
 >;
@@ -34,19 +39,63 @@ const content_to_view = (content: content | content_multiple_text_deltas, key: R
 export const UserChatMessageView = (
   {
     message,
+    message_index
   }: MessageParams
 ) => {
+  const [chatState, setChatState] = useState<ChatPubSubEvent_State>();
+  const show_retry = (
+    Boolean(chatState?.payload.error) && 
+    !Boolean(chatState?.payload.loading) && 
+    message_index==(chatState?.payload.messages?.length ?? 0)-1
+  );
+
+  useEffect(
+    () => {
+      return pubsub.add(
+        (update) => {
+          if(update.event==='state') {
+            setChatState(update);
+          }
+        }
+      )
+
+    }, []
+  );
+
+  const onClickRetry = useCallback(
+    () => {
+      pubsub.dispatch(
+        {
+          event: 'request-retry',
+          payload: {
+            prompt: message.contents as content[]
+          }
+        }
+      )
+    }, []
+  );
 
   return (
-    <div className='w-fit h-fit flex flex-row gap-5 px-5 py-2.5 
-        max-w-[60%] self-end rounded-3xl chat-card --text-right'>
-      <div className='max-w-full flex-1'>
+    <div className='w-full h-fit items-end flex flex-col gap-3 '>
+      <div className='max-w-[60%] w-fit flex flex-col gap-3 px-5 py-2.5 
+                      rounded-3xl chat-card'>
         {
           message.contents?.filter(c => c.type==='text').map(
             (c, ix) => content_to_view(c, ix)
           )
         }
       </div>
+
+      <ShowIf show={show_retry}>
+        <button className='cursor-pointer hover:opacity-70 transition-opacity' 
+                onClick={onClickRetry}>
+          <span children='someting went wrong, retry' 
+                className='text-xs  tracking-wider'/>
+          <BiRefresh className='inline-block text-lg' />
+        </button>
+      </ShowIf>
+
+      
     </div>
   )
 }
@@ -78,16 +127,17 @@ export const AssistantChatMessageView = (
 export const ChatMessageView = (
   {
     message,
+    message_index
   }: MessageParams
 ) => {
 
   const is_user = message.role==='user';
 
   if(is_user)
-    return (<UserChatMessageView message={message} />)
+    return (<UserChatMessageView message={message} message_index={message_index} />)
 
   return (
-    <AssistantChatMessageView message={message} />
+    <AssistantChatMessageView message={message} message_index={message_index} />
   )
 }
 

@@ -17,7 +17,7 @@ export const getLatestConfig = () => {
 /**
  * @type {StorecraftSDK}
  */
-var sdk = new StorecraftSDK();
+export const sdk = new StorecraftSDK();
 
 
 /**

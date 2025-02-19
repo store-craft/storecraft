@@ -1,82 +1,24 @@
 import { ChatMessage, content_multiple_text_deltas } from "@/components/common.types";
 import { content } from "@storecraft/core/ai";
-import { StorecraftSDK } from "@storecraft/sdk";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-export type ChatHookConfig = {
-  threadId?: string;
+class ChatActionsController {
+  constructor() {}
+
+  
 }
-
-export type ChatPubSubEvents = {
-  event: 'state',
-  payload: {
-    loading?: boolean,
-    error?: any,
-    messages?: ChatMessage[]
-  }
-} | {
-  event: 'request-retry',
-  payload: {
-    prompt: content[]
-  }
-}
-
-
-export type ChatPubSubSubscriber = (update: ChatPubSubEvents) => void;
-
-class ChatPubSub {
-  #subscribers = new Set<ChatPubSubSubscriber>();
-
-  add = (sub: ChatPubSubSubscriber) => {
-    this.#subscribers.add(sub);
-    return () => { this.#subscribers.delete(sub) }
-  } 
-
-  dispatch = (payload: ChatPubSubEvents) => {
-    this.#subscribers.forEach(
-      sub => { 
-        sub(payload);
-      }
-    )
-  }
-}
-
-export const pubsub = new ChatPubSub();
-
 
 /**
  * @description `chat` hook
  * 
  */
-export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
+export const useChat = () => {
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(undefined);
-  const [threadId, setThreadId] = useState<string | undefined>(config.threadId);
+  const [threadId, setThreadId] = useState<string>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-
-  useEffect(
-    () => {
-      return pubsub.dispatch(
-        {
-          event: 'state',
-          payload: {
-            error, loading, messages
-          }
-        }
-      );
-    }, [loading, error, messages]
-  );
-
-  useEffect(
-    () => {
-      async function load_thread() {
-        // here load
-      }
-      load_thread();
-    }, []
-  );
 
   const speak = useCallback(
     async (prompt: content[]) => {
@@ -85,16 +27,13 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         setError(undefined);
         setLoading(true);
         setMessages(
-          (ms) => {
-            const base = ms.at(-1)?.role==='user' ? ms.slice(0, -1) : ms;
-            return [
-              ...base,
-              {
-                role: 'user',
-                contents: prompt
-              }
-            ]
-          }
+          (ms) => [
+            ...ms,
+            {
+              role: 'user',
+              contents: prompt
+            }
+          ]
         );
   
         const response = await sdk.ai.speak(
@@ -129,16 +68,13 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         setError(undefined);
         setLoading(true);
         setMessages(
-          (ms) => {
-            const base = ms.at(-1)?.role==='user' ? ms.slice(0, -1) : ms;
-            return [
-              ...base,
-              {
-                role: 'user',
-                contents: prompt
-              }
-            ]
-          }
+          (ms) => [
+            ...ms,
+            {
+              role: 'user',
+              contents: prompt
+            }
+          ]
         );
   
         const {
@@ -179,18 +115,6 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         setLoading(false);
       }
     }, [threadId]
-  );
-
-  useEffect(
-    () => {
-      return pubsub.add(
-        (update) => {
-          if(update.event==='request-retry') {
-            streamSpeak(update.payload.prompt);
-          }
-        }
-      );
-    }, [streamSpeak]
   );
 
   return {

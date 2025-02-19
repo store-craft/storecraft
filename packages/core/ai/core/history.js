@@ -66,8 +66,8 @@ export class StorageHistoryProvider {
 
       threadId,
 
-      add: (...messages) => {
-        messages.push(...messages);
+      add: (...messages_delta) => {
+        messages.push(...messages_delta);
 
         return history;
       },

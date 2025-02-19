@@ -71,6 +71,8 @@ export const useChat = () => {
         }
       );
 
+      console.log(threadId, thread_id)
+
       const acc: content[] = [];
 
       for await (const content of generator()) {

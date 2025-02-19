@@ -50,6 +50,8 @@ export class StoreAgent {
 
     try {
 
+      params.thread_id = params.thread_id ?? ('thread_' + id());
+
       const history = await this.history_provider.load(
         params.thread_id, this.#app
       );
@@ -72,7 +74,7 @@ export class StoreAgent {
   
       return {
         stream,
-        thread_id: params.thread_id ?? ('thread_' + id())
+        thread_id: params.thread_id
       }
 
     } catch(e) {
@@ -93,6 +95,7 @@ export class StoreAgent {
     console.log(params);
 
     try {
+      params.thread_id = params.thread_id ?? ('thread_' + id());
 
       const history = await this.history_provider.load(
         params.thread_id, this.#app
@@ -115,7 +118,7 @@ export class StoreAgent {
   
       return {
         contents,
-        thread_id: params.thread_id ?? ('thread_' + id())
+        thread_id: params.thread_id
       }
 
     } catch(e) {

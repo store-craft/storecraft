@@ -60,12 +60,17 @@ export default class AI {
       }
     );
 
-    // for await (const sse of SSEGenerator(response.body)) {
-    //   yield ( /** @type {content} */ (JSON.parse(sse.data)));
-    // }
+    const threadId = response.headers.get(HEADER_STORECRAFT_THREAD_ID ?? 'X-Storecraft-Thread-Id');
 
+    if(!threadId) {
+      throw new Error(
+        `X-Storecraft-Thread-Id is missing, please tell the backend admin to 
+        change the cors' Access-Control-Expose-Headers to accept the header`
+      )
+    }
+    
     return {
-      threadId: response.headers.get(HEADER_STORECRAFT_THREAD_ID) ?? undefined,
+      threadId,
       generator: () => StreamSpeakGenerator(response.body)
     }
   }

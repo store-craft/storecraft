@@ -34,7 +34,7 @@ export const Chat = () => {
   const {
     loading, messages, error, threadId,
     actions: {
-      speak, streamSpeak
+      speak, streamSpeak, createNewChat
     }
   } = useChat();
 
@@ -77,7 +77,7 @@ export const Chat = () => {
           <FaArrowDownLong className='w-6 h-6 m-px p-1' />
         </button>    
 
-        <ChatInputView chat={{onSend, loading, disabled: loading}} 
+        <ChatInputView chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
               className='w-full absolute bottom-10 px-3' />
 
       </div>      

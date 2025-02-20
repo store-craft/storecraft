@@ -24,7 +24,10 @@ export type MessagesParams = withDiv<
   }
 >;
 
-const content_to_view = (content: content | content_multiple_text_deltas, key: React.Key) => {
+const content_to_view = (
+  content: content | content_multiple_text_deltas, 
+  key: React.Key
+) => {
   switch (content.type) {
     case 'text':
       return (<ChatMessageTextContent chat={{content}} key={key} />)
@@ -44,7 +47,7 @@ export const UserChatMessageView = (
 ) => {
   const [chatState, setChatState] = useState<ChatPubSubEvent_State>();
   const show_retry = (
-    Boolean(chatState?.payload.error) && 
+    Boolean(chatState?.payload.error?.type==='network-error') && 
     !Boolean(chatState?.payload.loading) && 
     message_index==(chatState?.payload.messages?.length ?? 0)-1
   );
@@ -134,10 +137,15 @@ export const ChatMessageView = (
   const is_user = message.role==='user';
 
   if(is_user)
-    return (<UserChatMessageView message={message} message_index={message_index} />)
+    return (
+      <UserChatMessageView 
+          message={message} 
+          message_index={message_index} />)
 
   return (
-    <AssistantChatMessageView message={message} message_index={message_index} />
+    <AssistantChatMessageView 
+        message={message} 
+        message_index={message_index} />
   )
 }
 

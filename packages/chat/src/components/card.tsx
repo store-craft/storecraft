@@ -18,7 +18,7 @@ export const Card = (
   return (
     <div {...rest}>
 
-      <div className='relative z-10 w-full h-full border rounded-lg p-[1.5px]  chat-card overflow-hidden'>
+      <div className='relative z-10 w-full h-full border rounded-lg p-[1.5px]  chat-card overflow-clip'>
         {
           card.loading && (
             <div className='absolute inset-0 h-full w-full rounded-full 

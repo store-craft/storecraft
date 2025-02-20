@@ -9,6 +9,8 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { ShowSwitch } from "./show-if";
 import banner from './storecraft-color.svg';
 import { LogoGradient, LogoText } from "./logo-text";
+import { FaPenToSquare, FaRegPenToSquare } from "react-icons/fa6";
+import { ToolTip } from "./tooltip";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);
 
@@ -18,7 +20,8 @@ export type ChatInputParams = withDiv<
       maxLines?: number,
       loading?: boolean,
       disabled?: boolean,
-      onSend?: (contents: content[]) => void
+      onSend?: (contents: content[]) => void,
+      onNewChat?: () => void
     }
   }
 >;
@@ -48,6 +51,9 @@ export const ChatInputView = (
     async () => {
       const value = ref_ta.current?.value;
 
+      if(!Boolean(value))
+        return;
+
       ref_ta.current && (ref_ta.current.value = '');
 
       onChange();
@@ -71,10 +77,9 @@ export const ChatInputView = (
     internal_onSend
   );
 
-
   return (
     <div {...rest}>
-      <Card className={'w-full h-fit overflow-clip shadow-2xl '}
+      <Card className={'w-full h-fit --overflow-clip shadow-2xl '}
             card={{loading: chat.loading}}>
 
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>
@@ -98,7 +103,13 @@ export const ChatInputView = (
           </button>
 
           <div className='flex flex-row justify-between w-full h-fit px-3'>
-            <DarkModeSwitch/>
+            <div className='flex flex-row gap-3 items-center'>
+              <DarkModeSwitch />
+              <ToolTip tooltip='New chat'>
+                <FaRegPenToSquare className='---translate-y-px cursor-pointer'
+                    onClick={chat.onNewChat} />
+              </ToolTip>
+            </div>
             <Tip/>
           </div>
 

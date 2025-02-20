@@ -2,17 +2,27 @@ import { ChatMessage, content_multiple_text_deltas } from "@/components/common.t
 import { content } from "@storecraft/core/ai";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
+import { useIndexDB } from "./use-index-db";
 
 export type ChatHookConfig = {
   threadId?: string;
+}
+
+export type ChatError = {
+  type: 'network-error',
+  content?: string
+} | {
+  type: 'load-thread-error',
+  content?: string
 }
 
 export type ChatPubSubEvent_State = {
   event: 'state',
   payload: {
     loading?: boolean,
-    error?: any,
-    messages?: ChatMessage[]
+    error?: ChatError,
+    messages?: ChatMessage[],
+    threadId?: string
   }
 }
 
@@ -53,9 +63,14 @@ let err_index = 0;
 export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(undefined);
+  const [error, setError] = useState<ChatError>();
   const [threadId, setThreadId] = useState<string | undefined>(config.threadId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const {
+    actions: {
+      get: get_db, put: put_db,
+    }
+  } = useIndexDB<ChatMessage[]>('chat_threads_database');
 
   useEffect(
     () => {
@@ -63,20 +78,41 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         {
           event: 'state',
           payload: {
-            error, loading, messages
+            error, loading, messages, threadId
           }
         }
       );
-    }, [loading, error, messages]
+    }, [loading, error, messages, threadId]
   );
 
   useEffect(
     () => {
       async function load_thread() {
         // here load
+        if(config.threadId) {
+          setLoading(true);
+
+          try {
+            const messages = await get_db(config.threadId);
+            setMessages(messages ?? []);
+            setThreadId(config.threadId);
+            setError(undefined);
+
+          } catch (e) {
+            setError(
+              {
+                type: 'load-thread-error',
+                content: String(e)
+              }
+            );
+          } finally {
+            setLoading(false);
+          }
+
+        }
       }
       load_thread();
-    }, []
+    }, [config.threadId]
   );
 
   const speak = useCallback(
@@ -116,11 +152,41 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         );
         setThreadId(threadId ?? response.thread_id);
       } catch (e) {
-        setError(e);
+        setError(
+          {
+            type: 'network-error',
+            content: String(e)
+          }
+        );
       } finally {
         setLoading(false);
       }
     }, [threadId]
+  );
+
+  const loadThread = useCallback(
+    async (thread_id: string) => {
+      setLoading(true);
+
+      try {
+        const messages = await get_db(thread_id);
+        setMessages(messages ?? []);
+        setThreadId(thread_id);
+        setError(undefined);
+
+      } catch (e) {
+        setError(
+          {
+            type: 'load-thread-error',
+            content: String(e)
+          }
+        );
+
+      } finally {
+        setLoading(false);
+      }
+
+    }, [get_db]
   );
 
   const streamSpeak = useCallback(
@@ -181,11 +247,25 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         setThreadId(threadId ?? thread_id);
 
       } catch (e) {
-        setError(e)
+        setError(
+          {
+            type: 'network-error',
+            content: String(e)
+          }
+        );
       } finally {
         setLoading(false);
       }
     }, [threadId]
+  );
+
+  const createNewChat = useCallback(
+    () => {
+      setError(undefined);
+      setLoading(false);
+      setMessages([]);
+      setThreadId(undefined);
+    }, []
   );
 
   useEffect(
@@ -200,10 +280,12 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
     }, [streamSpeak]
   );
 
+
+
   return {
     messages, threadId, loading, error,
     actions: {
-      speak, streamSpeak
+      speak, streamSpeak, createNewChat
     }
   }
 

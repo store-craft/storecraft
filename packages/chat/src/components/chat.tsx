@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ChatInputView } from "./chat-input"
 import { ChatMessagesView } from "./chat-messages"
-import { fixture_chat_1 } from "./chat.fixture"
 import { delta_to_scroll_end } from "./chat.utils"
 import { FaArrowDownLong } from "react-icons/fa6";
 import useDarkMode from "@/hooks/use-dark-mode"
 import { ChatMessagesViewImperativeInterface } from "./chat-message"
 import { useChat } from "@/hooks/use-chat"
 import { content } from "@storecraft/core/ai"
+import { PoweredBy } from "./powered-by"
+import { withDiv } from "./common.types"
+import { HiDuplicate } from "react-icons/hi"
+import { sleep } from "@/hooks/sleep"
 
 
 
@@ -65,9 +68,9 @@ export const Chat = () => {
               flex flex-col gap-0 items-center'>
 
         <ChatMessagesView messages={messages} 
-            onChatWindowScroll={onChatMessagesScroll}
-            className='w-full h-full '
-            ref={ref_chat_messages}/>
+          onChatWindowScroll={onChatMessagesScroll}
+          className='w-full h-full '
+          ref={ref_chat_messages}/>
 
         <button className={`absolute mx-auto rounded-full border 
                 transition-all duration-[400ms] cursor-pointer
@@ -77,82 +80,50 @@ export const Chat = () => {
           <FaArrowDownLong className='w-6 h-6 m-px p-1' />
         </button>    
 
-        <ChatInputView chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
-              className='w-full absolute bottom-5 px-3' />
+        <div className='w-full h-fit absolute bottom-5 px-3'>
+          <ChatInputView 
+            chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
+            className='w-full' />
+          <div className='flex flex-row justify-between w-full h-fit mt-2'>
+            <ThreadIdView threadId={threadId}/>
+            <PoweredBy/>
+          </div>
+        </div>
 
       </div>      
     </div>
   )
 }
 
-
-
-
-////
-
-
-
-const test_sync = async (text: string = '') => {
-  const sdk = new StorecraftSDK({endpoint: 'http://localhost:8000'});
-
-  const sync = await sdk.ai.speak(
-    {
-      prompt: [
-        {
-          type: "text",
-          content: "What is the price of Super Mario for the NES console ?"
-        }
-      ]
-    } 
+const ThreadIdView = ({threadId, ...rest}: withDiv<{threadId?: string}>) => {
+  const [wasCopied, setWasCopied] = useState(false);
+  const onClick = useCallback(
+    async() => {
+      if(!threadId)
+        return;
+      await navigator.clipboard.writeText(threadId);
+      setWasCopied(true);
+      await sleep(1500);
+      setWasCopied(false);
+    }, [threadId]
   );
 
-  console.log(sync)
-}
+  if(!threadId)
+    return <span />
 
-const test = async (text: string = '') => {
-  const sdk = new StorecraftSDK({endpoint: 'http://localhost:8000'});
-
-  const gen = await sdk.ai.streamSpeak(
-    {
-      prompt: [
-        {
-          type: "text",
-          content: "What is the price of Super Mario for the NES console ?"
-        }
-      ]
-    } 
-  );
-
-  for await (const chunk of gen) {
-    console.log(chunk)
-  }
-}
-
-
-const test2 = async (text: string = '') => {
-
-  const response = await fetch(
-    'http://localhost:8000/api/ai/agent/stream',
-    {
-      method: 'post',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          prompt: [
-            {
-              type: "text",
-              content: "What is the price of Super Mario for the NES console ?"
-            }
-          ]
-        } 
-      )
-    }
-  );
-
-  for await (const chunk of response.body) {
-    console.log('chunk, ', new TextDecoder().decode(chunk))
-  }
-
+  return (
+    <div className='flex flex-row items-center gap-1 opacity-50 
+          hover:opacity-75 transition-opacity cursor-pointer
+          font-mono text-[9px]'
+      onClick={threadId ? onClick : undefined}>
+      <span className='' 
+            children={`(${threadId})`}  />
+      <HiDuplicate className='text-[12px] -translate-y-px' />
+      {
+        wasCopied && (
+          <span children='copied' />
+        )
+      }
+    </div>
+  )
 }

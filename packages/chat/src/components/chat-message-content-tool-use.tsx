@@ -42,11 +42,11 @@ export const ChatMessageToolUseContent = (
   );
 
   return (
-    <div className='flex flex-col gap-3 w-fit'>
+    <div className='flex flex-col gap-3 w-fit -skew-x-6'>
       {
         chat.content.content.map(
-          (c) => (
-            <Card card={{loading}} >
+          (c, ix) => (
+            <Card card={{loading}} key={ix} >
               <MDView value={c.title} 
                     className='max-w-full flex-1 prose dark:prose-invert px-2
                               prose-headings:mt-0 prose-headings:mb-0 

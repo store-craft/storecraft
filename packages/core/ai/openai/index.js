@@ -240,7 +240,8 @@ export class OpenAI {
           type: 'tool_result',
           content: {
             data: tool_result,
-            id: tool_call.id
+            id: tool_call.id,
+            name: tool_call.function.name
           }
         }
 

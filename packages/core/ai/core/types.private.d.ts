@@ -31,11 +31,10 @@ export type Tool<
   }
 
 
-
 export type content_text = { type: 'text', content: string };
 export type content_delta_text = { type: 'delta_text' | 'delta_text', content: string };
 export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string }[] };
-export type content_tool_result = { type: 'tool_result', content: { data: any, id?: string } };
+export type content_tool_result = { type: 'tool_result', content: { data: any, id?: string, name: string } };
 export type content_image = { type: 'image', content: string };
 export type content_json = { type: 'json', content: string };
 export type content_object = { type: 'object', content: Object };

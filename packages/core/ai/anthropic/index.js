@@ -200,7 +200,8 @@ export class Anthropic {
           type: 'tool_result',
           content: {
             data: tool_result,
-            id: tool_call.id
+            id: tool_call.id,
+            name: tool_call.name
           }
         }
 

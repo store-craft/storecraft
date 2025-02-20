@@ -7,6 +7,7 @@ import ShowIf from "./show-if";
 import { ChatPubSubEvent_State, pubsub } from "@/hooks/use-chat";
 import { useCallback, useEffect, useState } from "react";
 import { BiRefresh } from "react-icons/bi";
+import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
 
 
 export type MessageParams = withDiv<
@@ -33,7 +34,9 @@ const content_to_view = (
       return (<ChatMessageTextContent chat={{content}} key={key} />)
     case 'multiple-text-deltas':
       return (<ChatMessageTextDeltasContent chat={{content}} key={key} />)
-  
+    case 'tool_use':
+      return (<ChatMessageToolUseContent chat={{content}} key={key} />)
+    
     default:
       return null;
   }

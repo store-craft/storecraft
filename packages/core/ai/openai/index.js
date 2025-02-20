@@ -216,7 +216,8 @@ export class OpenAI {
         content: current.choices[0].message.tool_calls.map(
           tc => ({
             name: tc.function.name,
-            id: tc.id
+            id: tc.id,
+            title: params.tools?.[tc.function.name].title
           })
         )
       }

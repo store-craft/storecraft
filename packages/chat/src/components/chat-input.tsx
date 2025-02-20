@@ -38,7 +38,9 @@ export const ChatInputView = (
   const onChange = useCallback(
     () => {
       const num_lines = ref_ta.current?.value.split('\n').length ?? 0;
-      ref_ta.current && (ref_ta.current.rows = Math.min(num_lines, chat.maxLines ?? 3));
+      ref_ta.current && (ref_ta.current.rows = Math.min(
+        num_lines, chat.maxLines ?? 3)
+      );
 
       // console.log(ref_ta.current.value);
 
@@ -79,7 +81,7 @@ export const ChatInputView = (
 
   return (
     <div {...rest}>
-      <Card className={'w-full h-fit --overflow-clip shadow-2xl '}
+      <Card className={'w-full h-fit shadow-2xl '}
             card={{loading: chat.loading}}>
 
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>

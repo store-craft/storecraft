@@ -9,6 +9,7 @@ export type Tool<
   ToolInput extends z.ZodTypeAny=any,
   ToolResult extends any = any
   > = {
+    title: string,
     /**
      * @description schema of tool
      */

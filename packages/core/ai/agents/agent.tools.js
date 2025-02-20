@@ -4,6 +4,7 @@ import { tool } from "../core/tools.js"
 export const TOOLS = {
   search_products: tool(
     {
+      title: '**searching** in `products`',
       schema: {
         description: 'Search products of the store for info like pricing, discounts and collections',
         parameters: z.object(

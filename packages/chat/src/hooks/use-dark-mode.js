@@ -1,6 +1,10 @@
 import { useCallback } from 'react'
-import { usePreferences } from './use-preferences.js';
+import { create_local_storage_hook } from './use-local-storage.js';
 
+const usePreference = create_local_storage_hook(
+  'chat_dark_mode',
+  true
+);
 
 /**
  * 
@@ -8,21 +12,18 @@ import { usePreferences } from './use-preferences.js';
  * 
  */
 export default function useDarkMode() {
-  const { state, setState } = usePreferences();
+  const { state, setState } = usePreference();
 
   const toggle = useCallback(
     () => {
       setState(
-        {
-          ...state,
-          darkMode: !state.darkMode
-        }
+        x => !x
       )
-    }, [state]
+    }, []
   );
 
   return { 
-    darkMode: state.darkMode, 
+    darkMode: state, 
     toggle 
   }
 }

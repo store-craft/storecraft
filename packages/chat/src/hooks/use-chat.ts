@@ -3,6 +3,7 @@ import { content } from "@storecraft/core/ai";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
 import { useIndexDB } from "./use-index-db";
+import { create_local_storage_hook } from "./use-local-storage";
 
 export type ChatHookConfig = {
   threadId?: string;
@@ -56,6 +57,13 @@ class ChatPubSub {
 export const pubsub = new ChatPubSub();
 
 let err_index = 0;
+
+
+const usePreference = create_local_storage_hook<string | undefined>(
+  'chat_preference_latest_thread_id',
+  undefined
+)
+
 /**
  * @description `chat` hook
  * 
@@ -66,11 +74,26 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   const [error, setError] = useState<ChatError>();
   const [threadId, setThreadId] = useState<string | undefined>(config.threadId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const preferences = usePreference();
+
   const {
+    error: error_db,
     actions: {
       get: get_db, put: put_db,
     }
   } = useIndexDB<ChatMessage[]>('chat_threads_database');
+
+  if(error_db) {
+    throw error_db
+  }
+
+  useEffect(
+    () => {
+      preferences.setState(threadId);
+      if(threadId)
+        put_db(threadId, messages);
+    }, [threadId, messages, put_db]
+  );
 
   useEffect(
     () => {
@@ -83,36 +106,6 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         }
       );
     }, [loading, error, messages, threadId]
-  );
-
-  useEffect(
-    () => {
-      async function load_thread() {
-        // here load
-        if(config.threadId) {
-          setLoading(true);
-
-          try {
-            const messages = await get_db(config.threadId);
-            setMessages(messages ?? []);
-            setThreadId(config.threadId);
-            setError(undefined);
-
-          } catch (e) {
-            setError(
-              {
-                type: 'load-thread-error',
-                content: String(e)
-              }
-            );
-          } finally {
-            setLoading(false);
-          }
-
-        }
-      }
-      load_thread();
-    }, [config.threadId]
   );
 
   const speak = useCallback(
@@ -150,7 +143,12 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
             }
           ]
         );
-        setThreadId(threadId ?? response.thread_id);
+
+        if(!response.thread_id) {
+          throw new Error('Thread ID is missing from the backend');
+        }
+
+        setThreadId(response.thread_id);
       } catch (e) {
         setError(
           {
@@ -162,31 +160,6 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         setLoading(false);
       }
     }, [threadId]
-  );
-
-  const loadThread = useCallback(
-    async (thread_id: string) => {
-      setLoading(true);
-
-      try {
-        const messages = await get_db(thread_id);
-        setMessages(messages ?? []);
-        setThreadId(thread_id);
-        setError(undefined);
-
-      } catch (e) {
-        setError(
-          {
-            type: 'load-thread-error',
-            content: String(e)
-          }
-        );
-
-      } finally {
-        setLoading(false);
-      }
-
-    }, [get_db]
   );
 
   const streamSpeak = useCallback(
@@ -209,8 +182,9 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         );
 
         {
+          // test
           err_index+=1;
-          if(err_index==1)
+          if(err_index==2)
             throw 'error'
           
         }
@@ -224,6 +198,12 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           }
         );
   
+        if(!thread_id) {
+          throw new Error('Thread ID is missing from the backend');
+        }
+
+        setThreadId(thread_id);
+
         const acc: content[] = [];
   
         for await (const content of generator()) {
@@ -244,9 +224,9 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
             }
           );
         }
-        setThreadId(threadId ?? thread_id);
 
       } catch (e) {
+        console.log(e);
         setError(
           {
             type: 'network-error',
@@ -259,6 +239,32 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
     }, [threadId]
   );
 
+  const loadThread = useCallback(
+    async (thread_id: string) => {
+      setLoading(true);
+
+      try {
+        const messages = await get_db(thread_id);
+
+        setMessages(messages ?? []);
+        setThreadId(thread_id);
+        setError(undefined);
+
+      } catch (e) {
+        setError(
+          {
+            type: 'load-thread-error',
+            content: String(e)
+          }
+        );
+
+      } finally {
+        setLoading(false);
+      }
+
+    }, [get_db]
+  );
+
   const createNewChat = useCallback(
     () => {
       setError(undefined);
@@ -266,6 +272,15 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
       setMessages([]);
       setThreadId(undefined);
     }, []
+  );
+
+  useEffect(
+    () => {
+      const thread_id = config.threadId ?? preferences.state;
+      if(thread_id) { 
+        loadThread(thread_id);
+      };
+    }, [config.threadId, loadThread]
   );
 
   useEffect(
@@ -280,12 +295,10 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
     }, [streamSpeak]
   );
 
-
-
   return {
     messages, threadId, loading, error,
     actions: {
-      speak, streamSpeak, createNewChat
+      speak, streamSpeak, createNewChat, loadThread
     }
   }
 

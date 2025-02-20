@@ -60,16 +60,20 @@ export const create_local_storage_hook = (key, defaultValue) => {
 
     const setState = useCallback(
       /**
-       * @param {S} $state 
+       * @param {S | ((current: S) => S)} $state 
        */
       ($state) => {
-        let new_state = $state;
+        /** @type {S} */
+        let new_state;
 
         if(typeof $state === 'function') {
+          // @ts-ignore
           new_state = $state(state);
+        } else {
+          new_state = $state;
         }
 
-        notify($state);
+        notify(new_state);
 
       }, []
     );

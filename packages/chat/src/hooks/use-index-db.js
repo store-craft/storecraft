@@ -72,10 +72,9 @@ const idb_put = (db_name, object_store_name='main') => {
       .then(
         db => {
           let transaction = db.transaction(object_store_name, "readwrite");
-          let objectStore = transaction.objectStore(object_store_name);
-          
+          let objectStore = transaction.objectStore(object_store_name);      
           let putRequest = objectStore.put(value, key);
-          
+
           putRequest.onsuccess = function(event) {
             const _key = (/** @type {typeof putRequest} */ (event.target)).result;
 
@@ -230,6 +229,7 @@ export const useIndexDB = (db_name) => {
 
         return result;
       } catch (e) {
+        console.log(e)
         // @ts-ignore
         setError(e);
       }

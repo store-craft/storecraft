@@ -87,8 +87,8 @@ export const ChatInputView = (
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>
           <textarea rows={1}
             ref={ref_ta} onChange={onChange}
-            className='resize-none text-sm w-full outline-none pl-3 h-fit min-h-8 
-                  -bg-red-100 font-light' 
+            className='resize-none text-base w-full outline-none pl-3 
+                      h-fit min-h-8 font-normal dark:font-light' 
             placeholder='Ask me anything' />
 
           <button onClick={chat.loading ? undefined : internal_onSend} 
@@ -126,7 +126,7 @@ export const ChatInputView = (
 const Tip = () => {
 
   return (
-    <div className='w-fit h-fit text-xs self-end px-3 -hidden 
+    <div className='w-fit h-fit text-xs self-end --px-3 -hidden 
         tracking-wider font-light'>
       <span children='Shift' 
         className='border chat-border-overlay chat-bg-overlay p-0.5 

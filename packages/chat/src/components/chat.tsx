@@ -78,7 +78,7 @@ export const Chat = () => {
         </button>    
 
         <ChatInputView chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
-              className='w-full absolute bottom-10 px-3' />
+              className='w-full absolute bottom-5 px-3' />
 
       </div>      
     </div>

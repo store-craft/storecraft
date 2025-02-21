@@ -2,24 +2,38 @@ import { z } from 'zod';
 import { tool } from './index.js';
 import { App } from '../../types.public.js';
 
+export type InferToolInputSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<I> : never;
+export type InferToolReturnSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<O> : never;
+
 /**
  * @description General Tool specification
  */
 export type Tool<
   ToolInput extends z.ZodTypeAny=any,
-  ToolResult extends any = any
+  ToolResult extends z.ZodTypeAny = any,
   > = {
-    title: string,
+    __TOOL_INPUT_SCHEMA_TYPE?: ToolInput,
+    __TOOL_RESULT_SCHEMA_TYPE?: ToolResult,
+
     /**
-     * @description schema of tool
+     * @description Short title about this tool
      */
-    schema: {
-      description: string,
-      /**
-       * @description `zod` schema for the parameters of the tool
-       */
-      parameters: ToolInput,
-    };
+    title: string,
+
+    /**
+     * @description Full description of this tool
+     */
+    description: string,
+
+    /**
+     * @description `zod` schema for the parameters of the tool
+     */
+    schema: ToolInput,
+
+    /**
+     * @description Optional result type of tool
+     */
+    schema_result?:  ToolResult,
 
     /**
      * @description Invoke / Use the tool
@@ -27,14 +41,21 @@ export type Tool<
      * @param input `zod` schema
      * @returns 
      */
-    use: (input: z.infer<ToolInput>) => Promise<ToolResult>;
+    use: (input: z.infer<ToolInput>) => Promise<Partial<z.infer<ToolResult>>>;
   }
 
 
 export type content_text = { type: 'text', content: string };
 export type content_delta_text = { type: 'delta_text' | 'delta_text', content: string };
 export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string }[] };
-export type content_tool_result = { type: 'tool_result', content: { data: any, id?: string, name: string } };
+export type content_tool_result<T extends any = any> = { 
+  type: 'tool_result', 
+  content: { 
+    data: { result: T} | { error: any }, 
+    id?: string, 
+    name: string 
+  } 
+};
 export type content_image = { type: 'image', content: string };
 export type content_json = { type: 'json', content: string };
 export type content_object = { type: 'object', content: Object };

@@ -39,13 +39,15 @@ export class StorageHistoryProvider {
           return [];
 
       let text = '';
+      const decoder = new TextDecoder();
       for await (const part of stream.value) {
-        text += part;
+        text += decoder.decode(part);
       }
-  
+   
       return JSON.parse(text);
 
     } catch(e) {
+      console.log('load chat', e)
       return [];
     }
   }

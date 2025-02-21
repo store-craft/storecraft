@@ -61,6 +61,7 @@ export const pubsub = new ChatPubSub();
 
 let err_index = 0;
 
+// "thread_67b75c6e000000cffa74a362"	
 
 const usePreference = create_local_storage_hook<string | undefined>(
   'chat_preference_latest_thread_id',
@@ -77,7 +78,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   const [error, setError] = useState<ChatError>();
   const [threadId, setThreadId] = useState<string | undefined>(config.threadId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const preferences = usePreference();
+  const {state: preference, setState: setPreference} = usePreference();
 
   const {
     error: error_db,
@@ -86,16 +87,18 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
     }
   } = useIndexDB<ChatMessage[]>('chat_threads_database');
 
-  if(error_db) {
-    throw error_db
-  }
+  useEffect(
+    () => {
+      if(threadId) {
+        put_db(threadId, messages);
+      }
+    }, [threadId, messages]
+  );
 
   useEffect(
     () => {
-      preferences.setState(threadId);
-      if(threadId)
-        put_db(threadId, messages);
-    }, [threadId, messages, put_db]
+      setPreference(threadId);
+    }, [threadId]
   );
 
   useEffect(
@@ -243,11 +246,11 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   );
 
   const loadThread = useCallback(
-    async (thread_id: string) => {
+    async (thread_id?: string) => {
       setLoading(true);
 
       try {
-        const messages = await get_db(thread_id);
+        const messages = thread_id ? (await get_db(thread_id)) : [];
 
         setMessages(messages ?? []);
         setThreadId(thread_id);
@@ -263,27 +266,28 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
 
       } finally {
         setLoading(false);
+        console.log(thread_id)
+        setPreference(thread_id);
       }
 
-    }, [get_db]
+    }, []
   );
 
   const createNewChat = useCallback(
     () => {
-      setError(undefined);
-      setLoading(false);
-      setMessages([]);
-      setThreadId(undefined);
-    }, []
+      loadThread(undefined);
+    }, [loadThread]
   );
 
   useEffect(
     () => {
-      const thread_id = config.threadId ?? preferences.state;
+      // we give one shot to see latest saved thread in preferences
+      // this is why is not in dep list
+      const thread_id = config.threadId ?? preference;
       if(thread_id) { 
         loadThread(thread_id);
       };
-    }, [config.threadId, loadThread]
+    }, [config.threadId]
   );
 
   useEffect(

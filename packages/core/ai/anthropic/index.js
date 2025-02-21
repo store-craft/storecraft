@@ -54,9 +54,9 @@ export class Anthropic {
     return Object.entries(tools).map(
       ([name, tool]) => (
         { 
-          input_schema: zod_to_json_schema(tool.schema.parameters),
+          input_schema: zod_to_json_schema(tool.schema),
           name: name,
-          description: tool.schema.description,
+          description: tool.description,
         }
       )
     );
@@ -172,7 +172,8 @@ export class Anthropic {
         ).map(
           tc => ({
             name: tc.name,
-            id: tc.id
+            id: tc.id,
+            title: params.tools?.[tc.name].title
           })
         )
       }

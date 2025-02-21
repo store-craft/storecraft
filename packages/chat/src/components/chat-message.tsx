@@ -8,6 +8,7 @@ import { ChatPubSubEvent_State, pubsub } from "@/hooks/use-chat";
 import { useCallback, useEffect, useState } from "react";
 import { BiRefresh } from "react-icons/bi";
 import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
+import { ChatMessageToolResultContent } from "./chat-message-content-tool-result";
 
 
 export type MessageParams = withDiv<
@@ -36,6 +37,8 @@ const content_to_view = (
       return (<ChatMessageTextDeltasContent chat={{content}} key={key} />)
     case 'tool_use':
       return (<ChatMessageToolUseContent chat={{content}} key={key} />)
+    case 'tool_result':
+      return (<ChatMessageToolResultContent chat={{content}} key={key} />)
     
     default:
       return null;
@@ -114,12 +117,12 @@ export const AssistantChatMessageView = (
 ) => {
 
   return (
-    <div className='w-full h-fit flex flex-row gap-5 p-5 self-start'>
+    <div className='w-full h-fit flex flex-row gap-5 py-5 pl-5 self-start'>
       <img src={svg} 
         className='w-8 h-8 border-1 chat-border-overlay
           rounded-md object-fill bg-purple-500/50
           shadow-lg shadow-purple-500/50 ' />
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 w-full overflow-x-hidden'>
         {
           message.contents?.map(
             (c, ix) => content_to_view(c, ix)

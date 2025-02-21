@@ -108,9 +108,9 @@ export class OpenAI {
         {
           type: 'function',
           function: {
-            description: tool.schema.description,
+            description: tool.description,
             name: name,
-            parameters: zod_to_json_schema(tool.schema.parameters)
+            parameters: zod_to_json_schema(tool.schema)
           } 
         }
       )
@@ -236,6 +236,7 @@ export class OpenAI {
           JSON.parse(tool_call.function.arguments)
         );
 
+        console.log('tool result', tool_result)
         yield {
           type: 'tool_result',
           content: {

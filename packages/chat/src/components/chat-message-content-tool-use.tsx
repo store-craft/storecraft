@@ -4,6 +4,7 @@ import { MDView } from "./md-view";
 import { Card } from "./card";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
+import { sleep } from "@/hooks/sleep";
 
 export type Params = withDiv<
   {
@@ -12,16 +13,6 @@ export type Params = withDiv<
     };
   }
 >;
-
-const sleep = (ms=100) => {
-  return new Promise(
-    (resolve, reject) => {
-      setTimeout(
-        resolve, ms
-      )
-    }
-  )
-}
 
 export const ChatMessageToolUseContent = (
   {
@@ -33,9 +24,18 @@ export const ChatMessageToolUseContent = (
   useEffect(
     () => {
       return pubsub.add(
-        async () => {
-          await sleep(1000);
-          setLoading(false);
+        async (update) => {
+          if(update.event==='state') {
+            const filtered = update.payload.messages?.at(-1)?.contents?.filter(
+              c => (c.type==='tool_result' || c.type==='error')
+            );
+
+            if(filtered?.length) {
+              await sleep(1000);
+  
+              setLoading(false);            
+            }
+          }
         }
       );
     }, []
@@ -48,7 +48,7 @@ export const ChatMessageToolUseContent = (
           (c, ix) => (
             <Card card={{loading}} key={ix} >
               <MDView 
-                value={c.title} 
+                value={c.title ?? 'Performing Action'} 
                 className='max-w-full flex-1 prose dark:prose-invert px-2
                           prose-headings:mt-0 prose-headings:mb-0 
                           prose-p:mt-0 prose-p:mb-0 prose-ul:my-0

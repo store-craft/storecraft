@@ -4,7 +4,6 @@ import { useMemo } from "react";
 
 export type Params = withDiv<
   {
-    // content: content_delta_text[];
     chat: {
       content: content_multiple_text_deltas
     }
@@ -29,10 +28,11 @@ export const ChatMessageTextDeltasContent = (
   // console.log(chat.content)
 
   return (
-    <MDView value={reduced} 
-            className='max-w-full flex-1 prose dark:prose-invert
-                       prose-headings:mt-0 prose-headings:mb-0 
-                       prose-p:mt-0' />
+    <MDView 
+      value={reduced} 
+      className='max-w-full flex-1 prose dark:prose-invert
+                  prose-headings:mt-0 prose-headings:mb-0 
+                  prose-p:mt-0' />
   )
 }
 

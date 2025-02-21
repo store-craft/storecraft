@@ -54,6 +54,9 @@ class ChatPubSub {
   }
 }
 
+/**
+ * @description Current thread chat event bus
+ */
 export const pubsub = new ChatPubSub();
 
 let err_index = 0;

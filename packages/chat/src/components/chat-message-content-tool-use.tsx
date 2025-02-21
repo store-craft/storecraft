@@ -47,11 +47,12 @@ export const ChatMessageToolUseContent = (
         chat.content.content.map(
           (c, ix) => (
             <Card card={{loading}} key={ix} >
-              <MDView value={c.title} 
-                    className='max-w-full flex-1 prose dark:prose-invert px-2
-                              prose-headings:mt-0 prose-headings:mb-0 
-                              prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
-                              prose-ol:my-0' />
+              <MDView 
+                value={c.title} 
+                className='max-w-full flex-1 prose dark:prose-invert px-2
+                          prose-headings:mt-0 prose-headings:mb-0 
+                          prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
+                          prose-ol:my-0' />
             </Card>
           )
         )

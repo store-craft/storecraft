@@ -23,5 +23,27 @@ export const TOOLS = {
         ]
       }
     }
+  ),
+
+  login_frontend: tool(
+    {
+      title: 'Sending login form',
+      schema: {
+        description: 'This will send a form to the customer with login inputs, so he can fill his credentials at the frontend side',
+        parameters: z.object(
+          {
+            message: z.string().describe('sends message to customer with the form'),
+          }
+        )   
+      },
+      use: async function (input) {
+        return [
+          {
+            message: input.message,
+            form_type: 'login'
+          }
+        ]
+      }
+    }
   )
 }

@@ -7,9 +7,7 @@ import { DarkModeSwitch } from "./dark-mode-switch";
 import type { content } from "@storecraft/core/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { ShowSwitch } from "./show-if";
-import banner from './storecraft-color.svg';
-import { LogoGradient, LogoText } from "./logo-text";
-import { FaPenToSquare, FaRegPenToSquare } from "react-icons/fa6";
+import { FaRegPenToSquare } from "react-icons/fa6";
 import { ToolTip } from "./tooltip";
 
 const hook_shift_enter = createKeyboardMatchHook(['Shift', 'Enter']);

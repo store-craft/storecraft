@@ -25,7 +25,7 @@ export const TOOLS = {
       ),
       schema_result: z.array(productTypeSchema.partial()),
       use: async function (input) {
-        await sleep(300);
+        await sleep(3000);
 
         return [
           {

@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { BiRefresh } from "react-icons/bi";
 import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
 import { ChatMessageToolResultContent } from "./chat-message-content-tool-result";
+import { sleep } from "@/hooks/sleep";
 
 
 export type MessageParams = withDiv<
@@ -85,7 +86,7 @@ export const UserChatMessageView = (
   );
 
   return (
-    <div className='w-full h-fit items-end flex flex-col gap-3 '>
+    <div className='w-full h-fit items-end flex flex-col px-3 gap-3 '>
       <div className='max-w-[60%] w-fit flex flex-col gap-3 px-5 py-2.5 
                       rounded-3xl chat-card'>
         {
@@ -112,23 +113,42 @@ export const UserChatMessageView = (
 
 export const AssistantChatMessageView = (
   {
-    message,
+    message, message_index
   }: MessageParams
 ) => {
 
+  const [remove, setRemove] = useState(false);
+
+  useEffect(
+    () => {
+      return pubsub.add(
+        (update) => {
+          if(update.event==='state') {
+            if(message_index < (update.payload.messages ?? []).length-1) {
+              setRemove(true);
+            }
+          }
+        }
+      )
+      // sleep(1000).then(() => setRemove(true))
+    }, [message_index]
+  );
+
   return (
-    <div className='w-full h-fit flex flex-row gap-5 py-5 pl-5 self-start'>
+    <div className='w-full h-fit flex flex-row --gap-5 py-5 --pl-5 self-start'>
       <img src={svg} 
-        className='w-8 h-8 border-1 chat-border-overlay
-          rounded-md object-fill bg-purple-500/50
-          shadow-lg shadow-purple-500/50 ' />
-        <div className='flex flex-col gap-3 w-full overflow-x-hidden'>
+        className={` h-8 chat-border-overlay transition-all duration-400
+          rounded-md object-cover bg-purple-500/50 shadow-lg shadow-purple-500/50 
+          sm:ml-3 sm:w-8 sm:border-1 ` + 
+          (remove ? 'w-0 ml-0 border-0' : 'ml-3 w-8 border-1')} />
+
+      <div className='flex flex-col gap-3 px-3 w-full overflow-x-hidden'>
         {
           message.contents?.map(
             (c, ix) => content_to_view(c, ix)
           )
         }
-        </div>
+      </div>
     </div>
   )
 }

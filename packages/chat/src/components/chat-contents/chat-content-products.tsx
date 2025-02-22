@@ -77,12 +77,13 @@ export const ToolResultContent_Products = (
   const products = data.result;
 
   return (
-    <div className='flex flex-row w-full gap-2 overflow-x-scroll h-fit pr-40'
+    <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
+                  overflow-x-auto h-fit pr-40 pb-5'
       style={{'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
       {
         products.slice(0,4).map(
           (p, ix) => (
-            <Card card={{loading: loading}} className='w-fit' >
+            <Card key={ix} card={{loading: loading}} className='w-fit' >
               <ProductView key={ix} product={p} />
             </Card>
           )

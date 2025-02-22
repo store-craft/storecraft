@@ -32,7 +32,8 @@ export const ChatMessageTextDeltasContent = (
       value={reduced} 
       className='max-w-full flex-1 prose dark:prose-invert
                   prose-headings:mt-0 prose-headings:mb-0 
-                  prose-p:mt-0' />
+                  prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
+                  prose-ol:m-0 prose-li:my-1' />
   )
 }
 

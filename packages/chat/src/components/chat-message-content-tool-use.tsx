@@ -24,14 +24,15 @@ export const ChatMessageToolUseContent = (
   useEffect(
     () => {
       return pubsub.add(
-        async (update) => {
+        (update) => {
           if(update.event==='state') {
             const filtered = update.payload.messages?.at(-1)?.contents?.filter(
               c => (c.type==='tool_result' || c.type==='error')
             );
+            console.log(filtered)
 
             if(filtered?.length) {
-              await sleep(1000);
+              // await sleep(1000);
   
               setLoading(false);            
             }

@@ -4,7 +4,6 @@ import { MDView } from "./md-view";
 import { Card } from "./card";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
-import { sleep } from "@/hooks/sleep";
 
 export type Params = withDiv<
   {
@@ -29,11 +28,9 @@ export const ChatMessageToolUseContent = (
             const filtered = update.payload.messages?.at(-1)?.contents?.filter(
               c => (c.type==='tool_result' || c.type==='error')
             );
-            console.log(filtered)
 
             if(filtered?.length) {
               // await sleep(1000);
-  
               setLoading(false);            
             }
           }

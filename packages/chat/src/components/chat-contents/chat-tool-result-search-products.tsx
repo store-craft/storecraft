@@ -3,8 +3,8 @@ import { TOOLS } from "@storecraft/core/ai/agents/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
-import { withDiv } from "../common.types";
-import { Card } from "../card";
+import { withDiv } from "../common.types.js";
+import { Card } from "../card.js";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
 type ToolResult = InferToolReturnSchema<typeof TOOLS["search_products"]>;
@@ -94,9 +94,3 @@ export const ToolResultContent_Products = (
 }
 
 
-{/* <MDView 
-        value={c.title} 
-        className='max-w-full flex-1 prose dark:prose-invert px-2
-                  prose-headings:mt-0 prose-headings:mb-0 
-                  prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
-                  prose-ol:my-0' /> */}

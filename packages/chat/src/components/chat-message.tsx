@@ -10,6 +10,7 @@ import { BiRefresh } from "react-icons/bi";
 import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
 import { ChatMessageToolResultContent } from "./chat-message-content-tool-result";
 import { sleep } from "@/hooks/sleep";
+import { ChatMessageErrorContent } from "./chat-message-content-error";
 
 
 export type MessageParams = withDiv<
@@ -40,6 +41,8 @@ const content_to_view = (
       return (<ChatMessageToolUseContent chat={{content}} key={key} />)
     case 'tool_result':
       return (<ChatMessageToolResultContent chat={{content}} key={key} />)
+    case 'error':
+      return (<ChatMessageErrorContent chat={{content}} key={key} />)
     
     default:
       return null;

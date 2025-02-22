@@ -103,7 +103,6 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
 
   useEffect(
     () => {
-      console.log('update event')
       pubsub.dispatch(
         {
           event: 'state',

@@ -15,6 +15,10 @@ import { stream_message_builder } from "./stream-message-builder.js";
  * @typedef {AI<config, chat_message>} Impl
  */
 
+const strip_leading = (text = '') => {
+  return (text[0]==='/') ? text.slice(1) : text;
+}
+
 /**
  * @implements {Impl}
  */
@@ -34,12 +38,12 @@ export class OpenAI {
     }
 
     this.#chat_completion_url = new URL(
-      this.config.api_version + '/chat/completions', 
+      strip_leading(this.config.api_version + '/chat/completions'), 
       this.config.endpoint
     ).toString();
 
     this.#chat_models_url = new URL(
-      this.config.api_version + '/models', 
+      strip_leading(this.config.api_version + '/models'), 
       this.config.endpoint
     ).toString();
   }
@@ -145,6 +149,14 @@ export class OpenAI {
       }
     );
 
+    // for await (const c of result.body) {
+    //   console.log(new TextDecoder().decode(c))
+    // }
+
+    console.log(this.#chat_completion_url)
+    console.log(body)
+    console.log(result.ok)
+    // throw 'stop'
     if(!result.ok) 
       throw (await result.text());
     
@@ -160,10 +172,14 @@ export class OpenAI {
     const stream = await this.#text_complete(params, true)
   
     for await (const frame of SSEGenerator(stream.body)) {
-      if(frame.data==='[DONE]')
+      console.log(frame);
+
+      if(!frame.data)
+        continue;
+      
+      if(frame.data.trim()==='[DONE]')
         continue;
 
-      // console.log(frame);
       yield JSON.parse(frame.data);
     }
   }
@@ -207,7 +223,10 @@ export class OpenAI {
 
     // while we are at a tool call, we iterate internally
     while(
-      (current.choices?.[0].finish_reason === 'tool_calls') &&
+      (
+        current.choices?.[0].finish_reason === 'tool_calls' || 
+        current.choices?.[0].message?.tool_calls?.length > 0
+      ) &&
       (max_steps > 0)
     ) {
 
@@ -299,6 +318,7 @@ export class OpenAI {
               controller.enqueue(m);
             }
           } catch(e) {
+            console.log(e)
             controller.enqueue(
               {
                 type: 'error',

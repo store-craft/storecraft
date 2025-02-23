@@ -15,6 +15,7 @@ import { NodeLocalStorage } from '@storecraft/core/storage/node';
 import { OpenAI } from "@storecraft/core/ai/openai";
 import { Anthropic } from "@storecraft/core/ai/anthropic";
 import { Groq } from "@storecraft/core/ai/groq";
+import { Gemini } from "@storecraft/core/ai/gemini";
 
 export const app = new App(
   {
@@ -60,9 +61,10 @@ export const app = new App(
   }
 )
 .withAI(
-  new OpenAI(
+  new Gemini(
     {
-      api_key: process.env.OpenAI
+      // api_key: process.env.OpenAI
+      api_key: process.env.Gemini,
     }
   )
 )

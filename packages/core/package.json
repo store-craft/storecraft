@@ -152,6 +152,10 @@
       "import": "./ai/openai/index.js",
       "types": "./ai/openai/types.d.ts"
     },
+    "./ai/gemini": {
+      "import": "./ai/gemini/index.js",
+      "types": "./ai/gemini/types.d.ts"
+    },
     "./ai/groq": {
       "import": "./ai/groq/index.js",
       "types": "./ai/groq/types.d.ts"

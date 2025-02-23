@@ -15,12 +15,15 @@ const parse_frame = (lines) => {
     lines.map(
       (l) => {
         const delimiter = l.indexOf(':');
+        const key = l.slice(0, delimiter).trim();
+        const value = l.slice(delimiter + 1);
+
         return [
-          l.slice(0, delimiter).trim(),
-          l.slice(delimiter + 1).trim(),
+          key,
+          value,
         ]
       }
-    )
+    ).filter(([key, value]) => Boolean(key))
   );
 }
 
@@ -35,14 +38,14 @@ export const SSEGenerator = async function *(stream) {
 
   for await(const chunk of stream) {
     let text = (new TextDecoder()).decode(chunk); 
-    // console.log('text \n\n', text)
+    console.log('text \n', text)
 
     if(residual_line) {
       text = residual_line + text;
       residual_line = '';
     }
 
-    const lines = text.split(/\r\n|\n|\r/).map(l => l.trim());
+    const lines = text.split(/\r\n|\n|\r/);//.map(l => l.trim());
 
     for(const line of lines) {
       if(line==='' && active_frame.length) {

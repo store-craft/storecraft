@@ -62,7 +62,7 @@ export const app = new App(
 .withAI(
   new OpenAI(
     {
-      api_key: process.env.OpenAI
+      api_key: process.env.OpenAI2
     }
   )
 )

@@ -12,12 +12,12 @@ import { Resend } from '@storecraft/mailer-providers-http/resend'
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node';
-import { OpenAI } from "@storecraft/core/ai/openai";
-import { Anthropic } from "@storecraft/core/ai/anthropic";
-import { Groq } from "@storecraft/core/ai/groq";
-import { Gemini } from "@storecraft/core/ai/gemini";
-import { Mistral } from "@storecraft/core/ai/mistral";
-import { XAI } from "@storecraft/core/ai/xai";
+import { Anthropic } from "@storecraft/core/ai/models/anthropic";
+import { Groq } from "@storecraft/core/ai/models/groq";
+import { Gemini } from "@storecraft/core/ai/models/gemini";
+import { Mistral } from "@storecraft/core/ai/models/mistral";
+import { XAI } from "@storecraft/core/ai/models/xai";
+import { OpenAI } from "@storecraft/core/ai/models/openai";
 
 export const app = new App(
   {
@@ -63,10 +63,10 @@ export const app = new App(
   }
 )
 .withAI(
-  new Anthropic(
+  new OpenAI(
     {
-      // api_key: process.env.OpenAI
-      api_key: process.env.Anthropic,
+      api_key: process.env.OpenAI
+      // api_key: process.env.Anthropic,
     }
   )
 )

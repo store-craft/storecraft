@@ -1,5 +1,3 @@
-
-
 export type config = {
   model?: "grok-2" | 
           "grok-2-vision",
@@ -7,6 +5,5 @@ export type config = {
   api_version?: string;
   api_key: string
 }
-
 
 export * from './index.js';

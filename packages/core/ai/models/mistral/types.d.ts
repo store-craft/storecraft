@@ -1,5 +1,3 @@
-
-
 export type config = {
   model?: "mistral-large-latest" | 
           "pixtral-large-latest" | 
@@ -13,6 +11,5 @@ export type config = {
   api_key: string,
   api_version?: string
 }
-
 
 export * from './index.js';

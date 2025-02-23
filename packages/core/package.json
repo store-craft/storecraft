@@ -148,29 +148,29 @@
       "import": "./ai/index.js",
       "types": "./ai/types.public.d.ts"
     },
-    "./ai/openai": {
-      "import": "./ai/openai/index.js",
-      "types": "./ai/openai/types.d.ts"
+    "./ai/models/openai": {
+      "import": "./ai/models/openai/index.js",
+      "types": "./ai/models/openai/types.d.ts"
     },
-    "./ai/gemini": {
-      "import": "./ai/gemini/index.js",
-      "types": "./ai/gemini/types.d.ts"
+    "./ai/models/gemini": {
+      "import": "./ai/models/gemini/index.js",
+      "types": "./ai/models/gemini/types.d.ts"
     },
-    "./ai/mistral": {
-      "import": "./ai/mistral/index.js",
-      "types": "./ai/mistral/types.d.ts"
+    "./ai/models/mistral": {
+      "import": "./ai/models/mistral/index.js",
+      "types": "./ai/models/mistral/types.d.ts"
     },
-    "./ai/groq": {
-      "import": "./ai/groq/index.js",
-      "types": "./ai/groq/types.d.ts"
+    "./ai/models/groq": {
+      "import": "./ai/models/groq/index.js",
+      "types": "./ai/models/groq/types.d.ts"
     },
-    "./ai/xai": {
-      "import": "./ai/xai/index.js",
-      "types": "./ai/xai/types.d.ts"
+    "./ai/models/xai": {
+      "import": "./ai/models/xai/index.js",
+      "types": "./ai/models/xai/types.d.ts"
     },
-    "./ai/anthropic": {
-      "import": "./ai/anthropic/index.js",
-      "types": "./ai/anthropic/types.d.ts"
+    "./ai/models/anthropic": {
+      "import": "./ai/models/anthropic/index.js",
+      "types": "./ai/models/anthropic/types.d.ts"
     },
     "./ai/*": {
       "import": "./ai/*"

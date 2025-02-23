@@ -3,9 +3,9 @@ import { tool } from '../core/tools.js';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { z } from 'zod';
-import { OpenAI } from '../openai/index.js';
-import { Groq } from '../groq/index.js';
-import { Anthropic } from '../anthropic/index.js';
+import { OpenAI } from '../models/openai/index.js';
+import { Groq } from '../models/groq/index.js';
+import { Anthropic } from '../models/anthropic/index.js';
 
 
 const prompt2 = `
@@ -86,15 +86,14 @@ test(
         tools: {
           search_products: tool(
             {
-              schema: {
-                description: 'Search products of the store for info like pricing, discounts and collections',
-                parameters: z.object(
-                  {
-                    query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion'),
-                    count: z.number().describe('how many search results to query, default to 5')
-                  }
-                )
-              },
+              title: '',
+              description: 'Search products of the store for info like pricing, discounts and collections',
+              schema: z.object(
+                {
+                  query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion'),
+                  count: z.number().describe('how many search results to query, default to 5')
+                }
+              ),
               use: async function (input) {
                 return [
                   {

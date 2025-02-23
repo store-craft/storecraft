@@ -1,5 +1,7 @@
 /**
- * @import { AgentConfig, AgentRunParameters, AgentRunResponse, AgentRunStreamResponse } from './types.js'
+ * @import { 
+ *  AgentConfig, AgentRunParameters, AgentRunResponse, 
+ *  AgentRunStreamResponse } from './types.js'
  * @import { AI } from '../core/types.private.js'
  */
 

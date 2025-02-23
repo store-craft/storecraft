@@ -1,5 +1,3 @@
-
-
 export type config = {
   model?: "deepseek-r1-distill-llama-70b" | 
           "llama-3.3-70b-versatile" | 
@@ -11,6 +9,5 @@ export type config = {
   api_version?: string;
   api_key: string
 }
-
 
 export * from './index.js';

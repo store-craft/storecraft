@@ -15,6 +15,5 @@ export class Groq extends OpenAI {
       }
     )
   }
-
 }
 

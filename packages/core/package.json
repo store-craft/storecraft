@@ -156,6 +156,10 @@
       "import": "./ai/gemini/index.js",
       "types": "./ai/gemini/types.d.ts"
     },
+    "./ai/mistral": {
+      "import": "./ai/mistral/index.js",
+      "types": "./ai/mistral/types.d.ts"
+    },
     "./ai/groq": {
       "import": "./ai/groq/index.js",
       "types": "./ai/groq/types.d.ts"

@@ -16,6 +16,7 @@ import { OpenAI } from "@storecraft/core/ai/openai";
 import { Anthropic } from "@storecraft/core/ai/anthropic";
 import { Groq } from "@storecraft/core/ai/groq";
 import { Gemini } from "@storecraft/core/ai/gemini";
+import { Mistral } from "@storecraft/core/ai/mistral";
 
 export const app = new App(
   {
@@ -61,10 +62,10 @@ export const app = new App(
   }
 )
 .withAI(
-  new Gemini(
+  new Mistral(
     {
       // api_key: process.env.OpenAI
-      api_key: process.env.Gemini,
+      api_key: process.env.Mistral
     }
   )
 )

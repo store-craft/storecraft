@@ -11,6 +11,8 @@ import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
 import { ChatMessageToolResultContent } from "./chat-message-content-tool-result";
 import { sleep } from "@/hooks/sleep";
 import { ChatMessageErrorContent } from "./chat-message-content-error";
+import { FiRefreshCcw } from "react-icons/fi";
+import { HiRefresh } from "react-icons/hi";
 
 
 export type MessageParams = withDiv<
@@ -89,14 +91,24 @@ export const UserChatMessageView = (
   );
 
   return (
-    <div className='w-full h-fit items-end flex flex-col px-3 gap-3 '>
-      <div className='max-w-[60%] w-fit flex flex-col gap-3 px-5 py-2.5 
-                      rounded-3xl chat-card'>
-        {
-          message.contents?.filter(c => c.type==='text').map(
-            (c, ix) => content_to_view(c, ix)
-          )
-        }
+    <div className='group relative w-full h-fit items-end flex flex-col px-3 gap-3 --pb-10 '>
+      <div className=' w-fit max-w-[60%] flex flex-row items-center gap-3'>
+        <div className='w-fit flex flex-col gap-3 px-5 py-2.5 
+                        rounded-3xl chat-card'>
+          {
+            message.contents?.filter(c => c.type==='text').map(
+              (c, ix) => content_to_view(c, ix)
+            )
+          }
+        </div>
+
+      </div>
+
+      <div className='invisible group-hover:visible flex flex-row gap-3 opacity-50'>
+        <HiRefresh 
+          title='retry'
+          className='inline-block text-lg cursor-pointer' 
+          onClick={onClickRetry} />
       </div>
 
       <ShowIf show={show_retry}>

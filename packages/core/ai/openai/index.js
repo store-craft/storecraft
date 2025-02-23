@@ -1,7 +1,7 @@
 /**
  * @import { chat_completion_chunk_result, chat_completion_input, chat_message, config 
  * } from "./types.js";
- * @import { AI, content, GenerateTextParams, StreamTextCallbacks } from "../core/types.private.js";
+ * @import { AI, content, content_text, GenerateTextParams, StreamTextCallbacks } from "../core/types.private.js";
  */
 
 import { invoke_tool_safely } from "../core/tools.js";
@@ -51,14 +51,28 @@ export class OpenAI {
 
   /** @type {Impl["user_content_to_llm_user_message"]} */
   user_content_to_llm_user_message = (prompts) => {
-    return prompts.map(
-      (pr) => (
-        {
-          role: 'user',
-          content: pr.content
-        }
+    const prompts_filtered = prompts.filter(
+      p => (p.type==='text' || p.type==='image')
+    );
+
+    return {
+      role: 'user',
+      content: prompts_filtered.map(
+        (pr) => (
+
+          (pr.type==='text') ? { 
+            type: 'text', text: pr.content 
+          } : {
+            type: 'image_url',
+            image_url: {
+              url: pr.content,
+              detail: 'auto'
+            }
+          }
+        )
       )
-    )
+    }
+
   };
 
   /** @type {Impl["llm_assistant_message_to_user_content"]} */
@@ -200,7 +214,7 @@ export class OpenAI {
         role: 'system'
       },
       ...(params.history ?? [])?.filter(m => m.role!=='system'),
-      ...this.user_content_to_llm_user_message(params.prompt)
+      this.user_content_to_llm_user_message(params.prompt)
     ];
 
     let current_stream = this.#text_complete_stream(params);

@@ -54,9 +54,10 @@ export type user_message_content_audio_part = {
 
 /** Messages sent by an end user, containing prompts or additional context information. */
 export type user_message = {
-  content: string | user_message_content_text_part | 
+  content: string | 
+      (user_message_content_text_part | 
       user_message_content_image_part | 
-      user_message_content_audio_part;
+      user_message_content_audio_part)[];
   role: 'user';
   /** An optional name for the participant. Provides the model information to differentiate between participants of the same role. */
   name?: string;

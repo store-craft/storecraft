@@ -1,6 +1,8 @@
 /**
  * @import { 
  *  chat_completion_input, config, claude_message, stream_event,
+ text_content,
+ image_content,
  * } from "./types.js";
  * @import { AI, content, GenerateTextParams, StreamTextCallbacks } from "../core/types.private.js";
  */
@@ -135,7 +137,7 @@ export class Anthropic {
 
     params.history = [
       ...(params.history ?? []),
-      ...this.user_content_to_llm_user_message(params.prompt)
+      this.user_content_to_llm_user_message(params.prompt)
     ];
 
     let current_stream = this.#text_complete_stream(params);
@@ -318,14 +320,34 @@ export class Anthropic {
 
   /** @type {Impl["user_content_to_llm_user_message"]} */
   user_content_to_llm_user_message = (prompts) => {
-    return prompts.map(
-      (pr) => (
-        {
-          role: 'user',
-          content: pr.content
+    const prompts_filtered = prompts.filter(
+      p => (p.type==='text' || p.type==='image')
+    );
+
+    return {
+      role: 'user',
+      content: prompts_filtered.map(
+        (pr) => {
+          if(pr.type==='text') {
+            return (/** @satisfies {text_content} */({
+              type: 'text',
+              text: pr.content
+            }))
+          }
+          
+          if(pr.type==='image') {
+            return (/** @satisfies {image_content} */({
+              type: 'image',
+              source: {
+                data: pr.content, 
+                media_type: 'image/png',
+                type: 'base64'
+              }
+            }))
+          }
         }
       )
-    )
+    }
   };
 
   /** @type {Impl["llm_assistant_message_to_user_content"]} */

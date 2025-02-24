@@ -17,14 +17,31 @@ import { sleep } from "@/hooks/sleep"
 export const Chat = () => {
 
   const [showScroller, setShowScroller] = useState(false);
+  const ref_sticky = useRef(true);
+  const ref_current_scroll_pos = useRef({scrollLeft: 0, scrollTop: 0});
   const onChatMessagesScroll = useCallback(
     (div?: HTMLDivElement) => {
+      if(!div)
+        return;
+
+      const is_scrolling_up = (
+        div.scrollTop - ref_current_scroll_pos.current.scrollTop
+      ) < 0;
+      ref_current_scroll_pos.current = {
+        scrollLeft: div.scrollLeft, scrollTop: div.scrollTop
+      }
+
+      if(is_scrolling_up) {
+        ref_sticky.current = false;
+      }
+
       setShowScroller(delta_to_scroll_end(div) > 100);
     }, []
   );
   const ref_chat_messages = useRef<ChatMessagesViewImperativeInterface>(null);
   const onScrollerClick = useCallback(
     () => {
+      ref_sticky.current = true;
       ref_chat_messages.current?.scroll();
     }, []
   );
@@ -44,6 +61,7 @@ export const Chat = () => {
 
   const onSend = useCallback(
     async (contents: content[]) => {
+      ref_sticky.current = true;
       // await speak(contents);
       await streamSpeak(contents);
       
@@ -52,11 +70,14 @@ export const Chat = () => {
 
   useEffect(
     () => {
+      if(!ref_sticky.current)
+        return;
+
       requestAnimationFrame(
         () => {ref_chat_messages.current?.scroll()}
       );
     }, [messages]
-  )
+  );
 
   const dark_class = darkMode ? 'dark' : '';
   

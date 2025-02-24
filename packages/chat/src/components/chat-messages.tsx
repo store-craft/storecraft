@@ -41,8 +41,10 @@ export const ChatMessagesView = forwardRef<
       )
     );
 
+
     const internal_onScroll: React.UIEventHandler<HTMLDivElement> = useCallback(
       (e) => {
+
         onChatWindowScroll?.(e.currentTarget);
       }, [onChatWindowScroll]
     );

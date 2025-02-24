@@ -3,7 +3,7 @@ import type { ChatMessage, content_multiple_text_deltas, withDiv } from "./commo
 import svg from './favicon.svg';
 import { ChatMessageTextContent } from "./chat-message-content-text";
 import { ChatMessageTextDeltasContent } from "./chat-message-content-text-deltas";
-import ShowIf from "./show-if";
+import ShowIf, { ShowBinarySwitch } from "./show-if";
 import { ChatPubSubEvent_State, pubsub } from "@/hooks/use-chat";
 import { useCallback, useEffect, useState } from "react";
 import { BiRefresh } from "react-icons/bi";
@@ -104,21 +104,25 @@ export const UserChatMessageView = (
 
       </div>
 
-      <div className='invisible group-hover:visible flex flex-row gap-3 opacity-50'>
-        <HiRefresh 
-          title='retry'
-          className='inline-block text-lg cursor-pointer' 
-          onClick={onClickRetry} />
+      <div className={' flex flex-row gap-3 opacity-50 ' + (show_retry ? '' : 'invisible group-hover:visible')}>
+        <ShowBinarySwitch index={show_retry ? 1 : 0}>
+
+          <HiRefresh 
+            title='retry'
+            className='inline-block text-lg cursor-pointer' 
+            onClick={onClickRetry} />
+            
+          <button className='cursor-pointer hover:opacity-70 transition-opacity' 
+                  onClick={onClickRetry}>
+            <span children='something went wrong, retry' 
+                  className='text-sm px-1 tracking-wider'/>
+            <HiRefresh 
+              title='retry'
+              className='inline-block text-lg cursor-pointer' />
+          </button>
+        </ShowBinarySwitch>
       </div>
 
-      <ShowIf show={show_retry}>
-        <button className='cursor-pointer hover:opacity-70 transition-opacity' 
-                onClick={onClickRetry}>
-          <span children='someting went wrong, retry' 
-                className='text-xs  tracking-wider'/>
-          <BiRefresh className='inline-block text-lg' />
-        </button>
-      </ShowIf>
 
       
     </div>

@@ -116,7 +116,7 @@ export const query_vql_to_mongo = root => {
  * Let's transform ids into mongo ids
  * 
  * 
- * @param {import("@storecraft/core/api").Tuple<string>} c a cursor record
+ * @param {import("@storecraft/core/api").Tuple<>} c a cursor record
  * 
  * 
  * @returns {[k: string, v: any]}
@@ -124,7 +124,7 @@ export const query_vql_to_mongo = root => {
 const transform = c => {
   if(c[0]!=='id') 
     return c;
-  return [ '_id', to_objid(c[1]) ];
+  return [ '_id', to_objid(String(c[1])) ];
 }
 
 /**

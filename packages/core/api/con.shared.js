@@ -1,38 +1,37 @@
+/**
+ * @import {searchable, BaseType} from './types.api.js'
+ * @import {RegularGetOptions, db_crud, withConcreteId} from '../database/types.public.js'
+ * @import {PubSubEvent} from '../pubsub/types.public.js'
+ * @import {ApiQuery} from './types.api.query.js'
+ */
+
 import { ID, apply_dates, assert } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { create_search_index } from './utils.index.js'
-import { ZodSchema } from 'zod'
+import { ZodSchema,  } from 'zod'
 import { 
   rewrite_media_from_storage, rewrite_media_to_storage 
 } from './con.storage.logic.js'
 import { App } from '../index.js';
 
-/**
- * @typedef {import('./types.api.d.ts').searchable} searchable
- * @typedef {import('./types.api.d.ts').BaseType} ItemType
- * @typedef {import('../database/types.public.d.ts').RegularGetOptions} RegularGetOptions
- */
 
 /**
  * @description This type of upsert might be uniform and re-occurring, so it is
  * refactored. There is a hook to add more functionality.
  * 
- * @template {Partial<import('./types.api.d.ts').BaseType>} G
- * @template {Partial<import('./types.api.d.ts').BaseType>} U
+ * @template {Partial<BaseType>} G
+ * @template {Partial<BaseType>} U
  * 
  * 
  * @param {App} app app instance
- * @param {import("../database/types.public.d.ts").db_crud<
- *  import('../database/types.public.d.ts').withConcreteId<U>, 
- *  import('../database/types.public.d.ts').withConcreteId<G>
- * >} db db instance
+ * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
  * @param {string} id_prefix
  * @param {ZodSchema} schema
  * @param {<H extends U>(final: H) => H} pre_hook Hook before validation, this is 
  * your chance to fill gaps in data
  * @param {<H extends U>(final: H) => string[]} post_hook 
  * hook into final state, returns extra search terms
- * @param {import('../pubsub/types.public.d.ts').PubSubEvent} [event] keep 
+ * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  * 
@@ -49,7 +48,7 @@ export const regular_upsert = (
   return async (item) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
-    /** @type {import('../database/types.public.d.ts').withConcreteId<G>} */
+    /** @type {withConcreteId<G>} */
     let previous_item;
 
     item = pre_hook(item);
@@ -97,17 +96,13 @@ export const regular_upsert = (
 /**
  * @description a regular document fetch
  * 
- * @template {Partial<import('./types.api.d.ts').BaseType>} G
- * @template {Partial<import('./types.api.d.ts').BaseType>} U
+ * @template {Partial<BaseType>} G
+ * @template {Partial<BaseType>} U
  * 
  * 
  * @param {App} app
- * @param {import("../database/types.public.d.ts").db_crud<
- *  import('../database/types.public.d.ts').withConcreteId<U>, 
- *  import('../database/types.public.d.ts').withConcreteId<G>
- * >} db db instance
- * @param {import('../pubsub/types.public.d.ts').PubSubEvent} [event] keep 
- * `undefined` to avoid event processing
+ * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {PubSubEvent} [event] keep `undefined` to avoid event processing
  * 
  */
 export const regular_get = (app, db, event) => 
@@ -137,16 +132,13 @@ export const regular_get = (app, db, event) =>
 /**
  * @description a regular document removal
  * 
- * @template {Partial<import('./types.api.d.ts').BaseType>} G
- * @template {Partial<import('./types.api.d.ts').BaseType>} U
+ * @template {Partial<BaseType>} G
+ * @template {Partial<BaseType>} U
  * 
  * 
  * @param {App} app
- * @param {import("../database/types.public.d.ts").db_crud<
- *  import('../database/types.public.d.ts').withConcreteId<U>, 
- *  import('../database/types.public.d.ts').withConcreteId<G>
- * >} db db instance
- * @param {import('../pubsub/types.public.d.ts').PubSubEvent} [event] keep 
+ * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  */
@@ -158,7 +150,7 @@ export const regular_remove = (app, db, event) =>
   async (id) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
-    /** @type {import('../database/types.public.d.ts').withConcreteId<G>} */
+    /** @type {withConcreteId<G>} */
     let previous;
 
     // fetch item before removal
@@ -185,22 +177,19 @@ export const regular_remove = (app, db, event) =>
  * @description a regular document list with query operation
  * 
  * 
- * @template {Partial<import('./types.api.d.ts').BaseType>} G
- * @template {Partial<import('./types.api.d.ts').BaseType>} U
+ * @template {Partial<BaseType>} G
+ * @template {Partial<BaseType>} U
  * 
  * 
  * @param {App} app
- * @param {import("../database/types.public.d.ts").db_crud<
- *  import('../database/types.public.d.ts').withConcreteId<U>, 
- *  import('../database/types.public.d.ts').withConcreteId<G>
- * >} db db instance
- * @param {import('../pubsub/types.public.d.ts').PubSubEvent} [event] keep 
+ * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
  */
 export const regular_list = (app, db, event) => 
   /**
-   * @param {import('./types.api.query.d.ts').ApiQuery} q 
+   * @param {ApiQuery<G>} q 
    */
   async (q={}) => {
     // console.log('query', q);

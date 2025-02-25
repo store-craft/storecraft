@@ -124,13 +124,13 @@ export const list_product_collections = (app) =>
  * @param {App} app
  */
 export const list_product_variants = (app) => 
-/**
- * 
- * @param {string} product handle or id
- */
-(product) => {
-  return db(app).list_product_variants(product);
-}
+  /**
+   * 
+   * @param {string} product handle or id
+   */
+  (product) => {
+    return db(app).list_product_variants(product);
+  }
 
 
 /**

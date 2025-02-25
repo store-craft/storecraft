@@ -265,7 +265,7 @@ const cursor_to_string = c => {
 
 /**
  * 
- * @param {ApiQuery} q 
+ * @param {ApiQuery<any>} q 
  */
 export const api_query_to_searchparams = q => {
   const sp = new URLSearchParams();

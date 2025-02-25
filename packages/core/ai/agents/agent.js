@@ -10,6 +10,7 @@ import { StorageHistoryProvider } from "../core/history.js";
 import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
 import { id } from '../../crypto/object-id.js'
+
 /**
  * @template {AI} [AI_PROVIDER=AI]
  */
@@ -63,7 +64,7 @@ export class StoreAgent {
           history: history.toArray() ?? [],
           prompt: params.prompt,
           system: SYSTEM,
-          tools: TOOLS,
+          tools: TOOLS({ app: this.#app}),
           maxSteps: params.maxSteps,
           maxTokens: params.maxTokens
         },
@@ -110,7 +111,7 @@ export class StoreAgent {
           history: history.toArray() ?? [],
           prompt: params.prompt,
           system: SYSTEM,
-          tools: TOOLS,
+          tools: TOOLS({ app: this.#app}),
           maxSteps: params.maxSteps,
           maxTokens: params.maxTokens
         }
@@ -130,6 +131,5 @@ export class StoreAgent {
     }
 
   }
-
 
 }

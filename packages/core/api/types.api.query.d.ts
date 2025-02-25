@@ -73,4 +73,12 @@ export type ApiQuery = {
    */
   endAt?: Cursor;
   endBefore?: Cursor;
+
+  /**
+   * @description A shortcut for using `endAt` and `startAt` to query an
+   * exact value. For example getting all the items which have `active=true`
+   * @example 
+   * [['active', false]]
+   */
+  equals?: Cursor
 }

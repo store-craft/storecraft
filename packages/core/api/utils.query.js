@@ -13,6 +13,7 @@ const LIMIT = 'limit';
 const LIMIT_TO_LAST = 'limitToLast';
 const VQL = 'vql';
 // const VQL_STRING = 'vqlString';
+const EQUALS = 'equals';
 const START_AT = 'startAt';
 const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
@@ -172,6 +173,12 @@ export const parse_query = (s) => {
 
   q.vql = s.get(VQL);
 
+  if(s.get(EQUALS)) {
+    // let's map it
+    s.set(START_AT, s.get(EQUALS));
+    s.set(END_AT, s.get(EQUALS));
+  }
+
   ////
   // RANGE CURSORS PARSING and VALIDATE
   ////
@@ -266,6 +273,7 @@ export const api_query_to_searchparams = q => {
   // cursors
   // console.log(q);
   [
+    { cursor: q.equals, key: EQUALS},
     { cursor: q.endAt, key: END_AT},
     { cursor: q.endBefore, key: END_BEFORE},
     { cursor: q.startAt, key: START_AT},

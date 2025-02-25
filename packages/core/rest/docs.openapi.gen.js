@@ -310,6 +310,7 @@ const create_query = () => {
     startAfter: cursor,
     endAt: cursor,
     endBefore: cursor,
+    equals: cursor,
     sortBy: z.string().optional().openapi(
       { 
         examples: ['(updated_at,id)', '(price)'],

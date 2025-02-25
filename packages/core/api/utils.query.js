@@ -144,7 +144,7 @@ export const parse_query = (s) => {
   /** @type {ApiQuery} */
   const q = {};
 
-  console.log(s.toString())
+  // console.log(s.toString())
 
   q.expand = parse_expand(s);
   q.limit = parseInt(s.get(LIMIT)) ? 
@@ -229,7 +229,7 @@ export const parse_query = (s) => {
   }
 
   // console.log(q)
-  console.log(JSON.stringify(q, null, 2))
+  // console.log(JSON.stringify(q, null, 2))
   return q;
 }
 

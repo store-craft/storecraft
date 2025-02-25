@@ -4,7 +4,7 @@ import { parse_query } from '../utils.query.js'
 
 const data = [
   {
-    q: new URLSearchParams('?startAt=(updated_at:2012, id:0)&sortBy=(updated_at, id)&order=asc&limit=10'),
+    q: new URLSearchParams('?startAt=(updated_at:"2012", id:"0")&sortBy=(updated_at, id)&order=asc&limit=10'),
     expected: {
       "limit": 10,
       "startAt": [
@@ -16,7 +16,7 @@ const data = [
   },
   {
     description: 'range cursor dictates sort and overrides it',
-    q: new URLSearchParams('?startAt=(updated_at:2012, id:0)&sort=(created_at)'),
+    q: new URLSearchParams('?startAt=(updated_at:"2012", id:"0")&sort=(created_at)'),
     expected: {
       "startAt": [
         [ "updated_at", "2012" ],
@@ -27,7 +27,7 @@ const data = [
   },
   {
     description: 'range cursor dictates missing sort',
-    q: new URLSearchParams('?startAt=(updated_at:2012, id:0)'),
+    q: new URLSearchParams('?startAt=(updated_at:"2012", id:"0")'),
     expected: {
       "startAt": [
         [ "updated_at", "2012" ],
@@ -37,6 +37,28 @@ const data = [
       "order": "desc"
     }
   },
+  {
+    description: 'boolean parsing',
+    q: new URLSearchParams('?startAt=(active:true)'),
+    expected: {
+      "startAt": [
+        [ "active", true ],
+      ],
+      "sortBy": [ "active"],
+      "order": "desc"
+    }
+  },
+  {
+    description: 'numbers parsing',
+    q: new URLSearchParams('?startAt=(price:50)'),
+    expected: {
+      "startAt": [
+        [ "price", 50 ],
+      ],
+      "sortBy": [ "price"],
+      "order": "desc"
+    }
+  },  
   {
     description: 'just sort',
     q: new URLSearchParams('?sortBy=(price, id)&order=asc'),
@@ -60,7 +82,7 @@ test('parse queries', async () => {
 
   data.forEach(
     (d, ix) => {
-      console.log(`Example #${ix}`);
+      // console.log(`Example #${ix}`);
       let parsed = undefined;
       try {
         parsed = parse_query(d.q);

@@ -19,17 +19,56 @@ const END_AT = 'endAt';
 const END_BEFORE = 'endBefore';
 const EXPAND = 'expand';
 
+export function is_string_a_number(str='') {
+  if (typeof str != "string") return false // we only process strings!
+  // could also coerce to string: str = ""+str
+  // @ts-ignore
+  return !isNaN(str) && !isNaN(parseFloat(str))
+}
+
 /**
- * @description Parse string tuples of the form (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
- * @template {string} T
+ * part may be:
+ * 1. direct-string: 'string1' | "string2"
+ * 2. boolean: true | false
+ * 3. number: 50, 10.32 ...
+ * 4. indirect-string: if does not start+end with commas '..', "..", we cast it as string
+ * @param {string} part 
+ */
+export const parse_value_part = (part='') => {
+  // first test if direct-string
+  if(
+    (part.startsWith("'") && part.endsWith("'")) ||
+    (part.startsWith('"') && part.endsWith('"'))
+  ) {
+    return part.slice(1, -1)
+  }
+
+  if(is_string_a_number(part))
+    return parseFloat(part);
+
+  if(part==='true') {
+    return true;
+  }
+
+  if(part==='false') {
+    return false;
+  }
+
+  // else return as indirect string
+  return part;
+}
+
+/**
+ * @description Parse string tuples of the form 
+ * - (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
  * @param {string} str 
- * @returns {Tuple<T>[] | undefined}
+ * @returns {Tuple[]}
  */
 export const parse_tuples = (str="") => {
   if(!str) return undefined;
 
   const reg_prefix = /(^[^\w]+)/g;
-  const reg_postfix = /([^\w]+$)/g;
+  const reg_postfix = /([^\w\"\']+$)/g;
   
   let a = str.match(reg_prefix);
   let b = str.match(reg_postfix);
@@ -39,16 +78,21 @@ export const parse_tuples = (str="") => {
 
   if(sub==='') return undefined;
 
-  return sub.split(',')
-            .map(
-              s => {
-                const parts = s.split(':');
-                return [
-                  parts[0].trim(),
-                  parts.slice(1).join(':').trim()
-                ]
-              }
-            );
+  return sub
+    .split(',')
+    .map(
+      s => {
+        const parts = s.split(':');
+        const key = parts[0].trim();
+        // value can be: 'string', 43.434, true, false
+        const value_part = parts.slice(1).join(':').trim();
+        const value = parse_value_part(value_part);
+        return [
+          key,
+          value
+        ]
+      }
+    );
 }
 
 /**
@@ -99,9 +143,13 @@ export const parse_query = (s) => {
   /** @type {ApiQuery} */
   const q = {};
 
+  console.log(s.toString())
+
   q.expand = parse_expand(s);
-  q.limit = parseInt(s.get(LIMIT)) ? Math.abs(parseInt(s.get(LIMIT))) : undefined;
-  q.limitToLast = parseInt(s.get(LIMIT_TO_LAST)) ? Math.abs(parseInt(s.get(LIMIT_TO_LAST))) : undefined;
+  q.limit = parseInt(s.get(LIMIT)) ? 
+        Math.abs(parseInt(s.get(LIMIT))) : undefined;
+  q.limitToLast = parseInt(s.get(LIMIT_TO_LAST)) ? 
+        Math.abs(parseInt(s.get(LIMIT_TO_LAST))) : undefined;
 
   if(!q.limitToLast && !q.limit) {
     q.limit = 5;
@@ -129,11 +177,17 @@ export const parse_query = (s) => {
   ////
   q.startAt = parse_tuples(s.get(START_AT));
   q.startAfter = parse_tuples(s.get(START_AFTER));
-  assert(!(q.startAt && q.startAfter), 'Cannot set both startAt and startAfter', 401);
+  assert(
+    !(q.startAt && q.startAfter), 
+    'Cannot set both startAt and startAfter', 401
+  );
 
   q.endAt = parse_tuples(s.get(END_AT));
   q.endBefore = parse_tuples(s.get(END_BEFORE));
-  assert(!(q.endAt && q.endBefore), 'Cannot set both endAt and endAfter', 401);
+  assert(
+    !(q.endAt && q.endBefore), 
+    'Cannot set both endAt and endAfter', 401
+  );
 
   // pick the chose representitives from range cursors
   const rep_start = q.startAt || q.startAfter;
@@ -145,7 +199,10 @@ export const parse_query = (s) => {
     for(let ix=0; ix < rep_shorter.length; ix++) {
       const k1 = rep_shorter[ix][0];
       const k2 = rep_longer[ix][0];
-      assert(k1===k2, `non matching keys \`${k1}\`!==\`${k2}\` in range cursors`, 401);
+      assert(
+        k1===k2, 
+        `non matching keys \`${k1}\`!==\`${k2}\` in range cursors`, 401
+      );
     }
   }
 
@@ -165,7 +222,7 @@ export const parse_query = (s) => {
   }
 
   // console.log(q)
-  // console.log(JSON.stringify(q, null, 2))
+  console.log(JSON.stringify(q, null, 2))
   return q;
 }
 

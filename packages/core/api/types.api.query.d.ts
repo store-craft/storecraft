@@ -1,8 +1,8 @@
 // Query types
 import type { VQL } from '../vql/types.d.ts';
 export type ApiQuerySortOrder = 'asc' | 'desc';
-export type Tuple<T extends string> = [key: string, value: T];
-export type Cursor = Tuple<string>[];
+export type Tuple<T extends any = any> = [key: string, value: T];
+export type Cursor = Tuple<string | number | boolean>[];
 export type SortCursor = string[];
 export type SortOrder = 'asc' | 'desc';
 

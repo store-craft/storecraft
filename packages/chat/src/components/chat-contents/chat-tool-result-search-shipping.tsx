@@ -7,7 +7,7 @@ import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
-type ToolResult = InferToolReturnSchema<typeof TOOLS["search_products"]>;
+type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["search_products"]>;
 type ShippingType = ExtractArrayType<ToolResult>;
 
 export type Params = withDiv<

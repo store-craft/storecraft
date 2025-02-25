@@ -278,7 +278,7 @@ export const list_regular = (driver, col) => {
 
     // console.log('reverse_sign', reverse_sign)
     // console.log('query', query)
-    // console.log('filter', JSON.stringify(filter, null, 2))
+    console.log('filter', JSON.stringify(filter, null, 2))
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
 

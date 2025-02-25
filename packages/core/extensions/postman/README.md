@@ -8,19 +8,35 @@
 ## Intro
 
 This extension will send transactional emails for customers using [HandleBars](https://handlebarsjs.com/) `templates` on the following events, 
-- `orders/checkout/complete` event
-- `orders/fulfillment/shipped` event
-- `orders/fulfillment/cancelled` event
-- `auth/signup` event
-- `auth/change-password` event
-- `auth/forgot-password-token-generated` event
+
+ * - `orders/checkout/complete` via `checkout-complete` template, uses {@link OrderData}
+ * - `orders/fulfillment/shipped` via `order-shipped` template, uses {@link OrderData}
+ * - `orders/fulfillment/cancelled` via `order-cancelled` template, uses {@link OrderData}
+ * - `auth/signup` via `welcome-customer` template, uses {@link AuthUserType}
+ * - `auth/change-password` via `general-message` template, uses {@link AuthUserType}  
+ * - `auth/forgot-password-token-generated` via `forgot-password` template, uses `{email: string, token: string}`
+ * - `auth/confirm-email-token-generated` via `confirm-email` template (currently not present), uses `{email: string, token: string}`
 
 The templates are already seeded into your database and have the following handles, which
 `postman` recognizes:
 - `welcome-customer`, `forgot-password`, `checkout-complete`, `order-shipped`, `order-cancelled`
 
 You are more than encouraged to peek at the source code to learn how to manipulate these
-events and templates
+events and templates and event implement your own extension or override new events like,
+
+```js
+conat app = new App(
+  {
+    ...
+  }
+).on(
+  'auth/confirm-email-token-generated',
+  async (event) => {
+    event.stopPropagation();
+    // Do something with `event.payload`
+  }
+)
+```
 
 ## Usage
 

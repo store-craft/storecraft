@@ -39,6 +39,8 @@ Speak with a `storecraft` agent (Supports streaming :))
 
 Start by installing, 
 
+Plus, everything is typed so you dont have to guess any parameter or queryable key
+
 ```bash
 npm i @storecraft/sdk
 ```
@@ -136,10 +138,14 @@ const auth_result = await sdk.auth.signout();
 ## Querying
 
 
-Here are some examples for querying
+Here are some examples for querying.
+
+- Every key and string in the example below is fully typed with `typescript`,
+- so you get **intellisense** out of the box for better developer experience
+- And, you don't have to guess anything
 
 
-```js
+```ts
 import { StorecraftSDK } from '@storecraft/sdk'
 
 const sdk = new StorecraftSDK();
@@ -147,10 +153,10 @@ const sdk = new StorecraftSDK();
 const products: ProductType[] = await sdk.products.list(
   {
     expand: ['collections', 'variants'],
-    sortBy: ['updated_at', 'id'],
+    sortBy: ['updated_at', 'id'], // all keys will show up in intellisense
     order: 'desc',
     startAt: [
-      ['updated_at': '2024-03-24']
+      ['updated_at': '2024-03-24'],
     ],
     limit: 5,
     vql: '(keyword1 | keyword2) -(keyword3)'
@@ -159,6 +165,21 @@ const products: ProductType[] = await sdk.products.list(
 
 ```
 
+Or, 
+
+```ts
+import { StorecraftSDK } from '@storecraft/sdk'
+
+const sdk = new StorecraftSDK();
+
+const collections: CollectionType[] = await sdk.collections.list(
+  {
+    equals: [['active': true]]
+    limit: 5,
+  }
+);
+
+```
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

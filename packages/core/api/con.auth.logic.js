@@ -1,19 +1,14 @@
 /**
- * @import { 
- ApiAuthSignupType,
- ApiAuthResult,
- AuthUserType,
- ApiAuthChangePasswordType,
- ApiAuthSigninType,
- ApiAuthRefreshType,
- ApiKeyResult
+ * @import { ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
+ *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult
  * } from './types.api.js';
  */
 import * as jwt from '../crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
-import { apiAuthChangePasswordTypeSchema, apiAuthRefreshTypeSchema, apiAuthSigninTypeSchema, 
-  apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
+import { 
+  apiAuthChangePasswordTypeSchema, apiAuthRefreshTypeSchema, 
+  apiAuthSigninTypeSchema, apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../crypto/base64.js'
 import { isDef } from './utils.index.js'
@@ -547,7 +542,7 @@ async () => {
  */  
 export const list_auth_users = (app) => 
 /**
- * @param {import('./types.api.query.js').ApiQuery} [query={}] 
+ * @param {import('./types.api.query.js').ApiQuery<import('../database/types.public.js').db_auth_users["$type_get"]>} [query={}] 
  */
 async (query={}) => {
 

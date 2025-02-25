@@ -92,12 +92,12 @@ export declare interface db_crud<U extends idable, G extends idable=U> {
   /**
    * List items with `query`
    */
-  list: (query: ApiQuery) => Promise<G[]>;
+  list: (query: ApiQuery<G>) => Promise<G[]>;
 
   /**
    * Count items with `query`
    */
-  count?: (query: ApiQuery) => Promise<number>;
+  count?: (query: ApiQuery<G>) => Promise<number>;
 
 }
 

@@ -183,7 +183,7 @@ export async function remove(sdk, resource, handle_or_id) {
  * 
  * @param {import('../index.js').StorecraftSDK} sdk
  * @param {string} resource base path of resource
- * @param {import('@storecraft/core/api').ApiQuery} [query] 
+ * @param {import('@storecraft/core/api').ApiQuery<G>} [query] 
  * 
  * 
  * @returns {Promise<G[]>}
@@ -262,7 +262,7 @@ export class collection_base {
 
   /**
    * 
-   * @param {import('@storecraft/core/api').ApiQuery} query Query object
+   * @param {import('@storecraft/core/api').ApiQuery<G>} query Query object
    * 
    * 
    * @returns {Promise<G[]>}

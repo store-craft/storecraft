@@ -5,9 +5,10 @@ import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
+import { LoadingImage } from "../loading-image.js";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
-type ToolResult = InferToolReturnSchema<typeof TOOLS["search_products"]>;
+type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["search_products"]>;
 type ProductType = ExtractArrayType<ToolResult>;
 
 export type Params = withDiv<
@@ -20,20 +21,23 @@ export type Params = withDiv<
 
 export const ProductView = (
   {
-    product
-  }: withDiv<{product: ProductType}>
+    product, index
+  }: withDiv<{product: ProductType, index: number}>
 ) => {
+  const [ready, setReady] = useState(false);
+  useEffect(
+    () => {
+      sleep((index + 1) * 300).then(() => {setReady(true)})
+    }, []
+  );
 
   return (
-    <div className='flex flex-col gap-3 items-center p-3 w-44 h-fit'>
+    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
                   blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
-        <img src={product.media?.at(0) ?? 'placeholder'}
-            className='absolute inset-0 rounded-md object-cover h-full w-full 
-                  --blur-xs opacity-40' />
-        <img src={product.media?.at(0) ?? 'placeholder'}
-          className='absolute inset-0 rounded-md object-contain h-full w-full' />
+        <LoadingImage src={product.media?.at(0) ?? 'placeholder'}
+            className=' rounded-md object-contain h-full w-full' />
       </div>
 
       <p children={product.title} 
@@ -84,7 +88,7 @@ export const ToolResultContent_Products = (
         products.slice(0,4).map(
           (p, ix) => (
             <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ProductView key={ix} product={p} />
+              <ProductView key={ix} product={p} index={ix} />
             </Card>
           )
         )

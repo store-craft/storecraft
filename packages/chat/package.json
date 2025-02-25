@@ -38,7 +38,7 @@
     "@storecraft/sdk": "^1.0.8",
     "@storecraft/sdk-react-hooks": "^1.0.30",
     "@tailwindcss/typography": "^0.5.16",
-    "@tailwindcss/vite": "^4.0.5",
+    "@tailwindcss/vite": "^4.0.9",
     "marked": "^15.0.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

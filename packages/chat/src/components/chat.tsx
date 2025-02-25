@@ -53,7 +53,7 @@ export const Chat = () => {
   const { darkMode } = useDarkMode();
   const {
     loading, messages, error, threadId,
-    actions: {
+    pubsub, actions: {
       speak, streamSpeak, createNewChat
     }
   } = useChat();
@@ -77,6 +77,18 @@ export const Chat = () => {
         () => {ref_chat_messages.current?.scroll()}
       );
     }, [messages]
+  );
+
+ useEffect(
+    () => {
+      return pubsub.add(
+        (update) => {
+          if(update.event==='request-retry') {
+            ref_sticky.current = true;
+          }
+        }
+      );
+    }, []
   );
 
   const dark_class = darkMode ? 'dark' : '';

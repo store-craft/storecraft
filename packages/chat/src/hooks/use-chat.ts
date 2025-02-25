@@ -303,7 +303,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   );
 
   return {
-    messages, threadId, loading, error,
+    messages, threadId, loading, error, pubsub,
     actions: {
       speak, streamSpeak, createNewChat, loadThread
     }

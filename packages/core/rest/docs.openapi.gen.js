@@ -285,6 +285,8 @@ const create_query = () => {
         '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)',
         '(updated_at:"2024-01-24T20:28:24.126Z", id:"tag_65b172ebc4c9552fd46c1027")',
         '(price: 50, updated_at:"2024-01-24T20:28:24.126Z")',
+        '(active: true)',
+        '(active: false)',
       ],
       description: 'A cursor in CSV format of key and values, example: \
       `(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)`'

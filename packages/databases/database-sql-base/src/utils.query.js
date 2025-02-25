@@ -129,6 +129,21 @@ export const query_vql_to_eb = (eb, root, table_name) => {
 
 
 /**
+ * 
+ * @param {[k: string, v: any]} kv 
+ * @returns {[k: string, v: any]}  
+ */
+const transform_boolean_to_0_or_1 = (kv) => {
+  if(typeof kv[1] === 'boolean') {
+    return [
+      kv[0],
+      kv[1] ? 1 : 0
+    ]
+  }
+  return kv;
+}
+
+/**
  * Convert an API Query into mongo dialect, also sanitize.
  * 
  * 
@@ -145,15 +160,15 @@ export const query_to_eb = (eb, q={}, table_name) => {
 
   // compute index clauses
   if(q.startAt) {
-    clauses.push(query_cursor_to_eb(eb, q.startAt, asc ? '>=' : '<='));
+    clauses.push(query_cursor_to_eb(eb, q.startAt, asc ? '>=' : '<=', transform_boolean_to_0_or_1));
   } else if(q.startAfter) {
-    clauses.push(query_cursor_to_eb(eb, q.startAfter, asc ? '>' : '<'));
+    clauses.push(query_cursor_to_eb(eb, q.startAfter, asc ? '>' : '<', transform_boolean_to_0_or_1));
   }
 
   if(q.endAt) {
-    clauses.push(query_cursor_to_eb(eb, q.endAt, asc ? '<=' : '>='));
+    clauses.push(query_cursor_to_eb(eb, q.endAt, asc ? '<=' : '>=', transform_boolean_to_0_or_1));
   } else if(q.endBefore) {
-    clauses.push(query_cursor_to_eb(eb, q.endBefore, asc ? '<' : '>'));
+    clauses.push(query_cursor_to_eb(eb, q.endBefore, asc ? '<' : '>', transform_boolean_to_0_or_1));
   }
 
   // compute VQL clauses 

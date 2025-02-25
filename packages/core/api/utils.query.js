@@ -251,7 +251,14 @@ const string_array_to_string = array => {
  */
 const cursor_to_string = c => {
   const string_array = c.map(
-    tuple => `${tuple[0]}:${tuple[1]}`
+    tuple => {
+      // This will reinforce strings using commas as
+      // we search for leading+trailing commas during parsing
+      if(typeof tuple[1]==='string') {
+        return `${tuple[0]}:'${tuple[1]}'`
+      }
+      return `${tuple[0]}:${tuple[1]}`
+    }
   );
   return string_array_to_string(string_array);
 }

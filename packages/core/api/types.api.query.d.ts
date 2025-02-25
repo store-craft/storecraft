@@ -1,8 +1,8 @@
 // Query types
 import type { VQL } from '../vql/types.d.ts';
 export type ApiQuerySortOrder = 'asc' | 'desc';
-export type Tuple<T extends string> = [key: string, value: T];
-export type Cursor = Tuple<string>[];
+export type Tuple<T extends any = any> = [key: string, value: T];
+export type Cursor = Tuple<string | number | boolean>[];
 export type SortCursor = string[];
 export type SortOrder = 'asc' | 'desc';
 
@@ -73,4 +73,12 @@ export type ApiQuery = {
    */
   endAt?: Cursor;
   endBefore?: Cursor;
+
+  /**
+   * @description A shortcut for using `endAt` and `startAt` to query an
+   * exact value. For example getting all the items which have `active=true`
+   * @example 
+   * [['active', false]]
+   */
+  equals?: Cursor
 }

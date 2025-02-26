@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { tool } from "../core/tools.js"
 import { 
+  collectionTypeSchema,
   productTypeSchema, shippingMethodTypeSchema 
 } from '@storecraft/core/api/types.autogen.zod.api.js'
 import { App } from "../../index.js"
@@ -81,6 +82,44 @@ export const TOOLS = (context) => {
         schema_result: z.array(shippingMethodTypeSchema.partial()),
         use: async function (input) {
           const shipping_methods = await context.app.api.shipping_methods.list(
+            {
+              equals: [['active', false]],
+              limit: 10
+            }
+          );
+
+          return shipping_methods;
+        }
+      }
+    ),
+
+    fetch_collections: tool(
+      {
+        title: '**fetching** `collections`',
+        description: 'Fetch all active product collections offered by the store',
+        schema: z.object({}),
+        schema_result: z.array(collectionTypeSchema.partial()),
+        use: async function (input) {
+          const shipping_methods = await context.app.api.collections.list(
+            {
+              equals: [['active', false]],
+              limit: 10
+            }
+          );
+
+          return shipping_methods;
+        }
+      }
+    ),
+
+    fetch_discounts: tool(
+      {
+        title: '**fetching** `discounts`',
+        description: 'Fetch all active automatic discounts offered by the store',
+        schema: z.object({}),
+        schema_result: z.array(collectionTypeSchema.partial()),
+        use: async function (input) {
+          const shipping_methods = await context.app.api.discounts.list(
             {
               equals: [['active', false]],
               limit: 10

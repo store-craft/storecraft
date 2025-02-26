@@ -9,7 +9,7 @@ import { FaShippingFast } from "react-icons/fa";
 import { LoadingImage } from "../loading-image.js";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
-type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["fetch_shipping_methods"]>;
+type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["fetch_collections"]>;
 type ItemType = ExtractArrayType<ToolResult>;
 
 export type Params = withDiv<
@@ -49,9 +49,9 @@ export const ItemView = (
       <p children={item.title} 
         className='whitespace-nowrap truncate font-medium capitalize 
             text-base  w-full --max-w-20' />
-      <p children={item.price + '$'} 
+      {/* <p children={item.price + '$'} 
         className='whitespace-nowrap font-bold text-2xl 
-              text-green-600 font-mono' />
+              text-green-600 font-mono' /> */}
       <button children='use' 
         className='uppercase tracking-widest font-bold w-full 
             dark:bg-pink-500 bg-black text-white
@@ -60,7 +60,7 @@ export const ItemView = (
   )
 }
 
-export const ToolResultContent_ShippingMethods = (
+export const ToolResultContent_Collections = (
   {
     chat,
   }: Params

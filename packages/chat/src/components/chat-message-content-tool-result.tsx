@@ -3,6 +3,8 @@ import { TOOLS } from "@storecraft/core/ai/agents/agent.tools.js";
 import type { withDiv } from "./common.types";
 import { ToolResultContent_Products } from "./chat-contents/chat-tool-result-search-products";
 import { ToolResultContent_ShippingMethods } from "./chat-contents/chat-tool-result-search-shipping";
+import { ToolResultContent_Collections } from "./chat-contents/chat-tool-result-search-collections";
+import { ToolResultContent_Discounts } from "./chat-contents/chat-tool-result-discounts";
 
 
 
@@ -26,6 +28,10 @@ export const content_to_view = (
       return (<ToolResultContent_Products chat={{content}}  />)
     case 'fetch_shipping_methods':
       return (<ToolResultContent_ShippingMethods chat={{content}}  />)
+    case 'fetch_collections':
+      return (<ToolResultContent_Collections chat={{content}}  />)
+    case 'fetch_discounts':
+      return (<ToolResultContent_Discounts chat={{content}}  />)
     
     default:
       return null;

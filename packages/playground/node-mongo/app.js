@@ -63,9 +63,9 @@ export const app = new App(
   }
 )
 .withAI(
-  new OpenAI(
+  new XAI(
     {
-      api_key: process.env.OpenAI
+      api_key: process.env.XAI
       // api_key: process.env.Anthropic,
     }
   )

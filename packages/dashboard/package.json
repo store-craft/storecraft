@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/dashboard",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Storecraft Official Dashboard",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -33,7 +33,7 @@
     "dashboard:lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "dashboard:preview": "vite preview",
     "dashboard:analyze": "npx vite-bundle-visualizer -c vite.lib.config.js",
-    "prepublishOnly": "npm run dashboard:build && npm version patch --force",
+    "prepublishOnly": "npm version patch --force && npm run dashboard:build",
     "sc-publish": "npm publish"
   },
   "dependencies": {

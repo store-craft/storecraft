@@ -99,6 +99,7 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
+      res.headers.append('Cache-Control', 'stale-while-revalidate')
       res.sendHtml(html);
     }
   );

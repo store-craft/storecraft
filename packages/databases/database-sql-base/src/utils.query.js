@@ -146,9 +146,10 @@ const transform_boolean_to_0_or_1 = (kv) => {
 /**
  * Convert an API Query into mongo dialect, also sanitize.
  * 
+ * @template {any} [T=any]
  * 
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/api").ApiQuery} q 
+ * @param {import("@storecraft/core/api").ApiQuery<T>} q 
  * @param {keyof Database} table_name 
  * 
  */

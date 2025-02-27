@@ -3,7 +3,7 @@ import { report_document_media } from './con.images.js'
 import { count_regular, delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags} from './con.shared.js'
+  with_media, with_search, with_tags} from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -64,6 +64,7 @@ const get = (driver) => {
       .select(eb => [
         with_media(eb, id, driver.dialectType),
         with_tags(eb, id, driver.dialectType),
+        with_search(eb, id, driver.dialectType),
       ])
       .where(where_id_or_handle_table(id))
       .executeTakeFirst();
@@ -129,6 +130,7 @@ const list = (driver) => {
       .select(eb => [
         with_media(eb, eb.ref('customers.id'), driver.dialectType),
         with_tags(eb, eb.ref('customers.id'), driver.dialectType),
+        with_search(eb, eb.ref('customers.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {

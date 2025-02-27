@@ -6,7 +6,8 @@ import { delete_entity_values_by_value_or_reporter,
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, select_entity_ids_by_value_or_reporter, regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags,
-  count_regular} from './con.shared.js'
+  count_regular,
+  with_search} from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
@@ -100,6 +101,7 @@ const get = (driver) => {
       .select(eb => [
         with_media(eb, id_or_handle, driver.dialectType),
         with_tags(eb, id_or_handle, driver.dialectType),
+        with_search(eb, id_or_handle, driver.dialectType),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
@@ -156,6 +158,7 @@ const list = (driver) => {
       .select(eb => [
         with_media(eb, eb.ref('discounts.id'), driver.dialectType),
         with_tags(eb, eb.ref('discounts.id'), driver.dialectType),
+        with_search(eb, eb.ref('discounts.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {

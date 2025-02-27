@@ -6,7 +6,8 @@ import { delete_entity_values_by_value_or_reporter, delete_me,
   select_entity_ids_by_value_or_reporter, 
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
-  count_regular} from './con.shared.js'
+  count_regular,
+  with_search} from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -67,7 +68,8 @@ const get = (driver) => {
       .selectAll('collections')
       .select(eb => [
         with_tags(eb, eb.ref('collections.id'), driver.dialectType),
-        with_media(eb, eb.ref('collections.id'), driver.dialectType)
+        with_media(eb, eb.ref('collections.id'), driver.dialectType),
+        with_search(eb, eb.ref('collections.id'), driver.dialectType)
       ])
       .where(where_id_or_handle_table(id_or_handle))
     //  .compile()
@@ -124,6 +126,7 @@ const list = (driver) => {
       .select(eb => [
         with_tags(eb, eb.ref('collections.id'), driver.dialectType),
         with_media(eb, eb.ref('collections.id'), driver.dialectType),
+        with_search(eb, eb.ref('collections.id'), driver.dialectType),
       ])
       .where(
         (eb) => {

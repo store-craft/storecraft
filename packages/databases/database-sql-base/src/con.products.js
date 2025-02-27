@@ -10,7 +10,8 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
   products_with_discounts,
   products_with_variants,
   count_regular,
-  products_with_related_products} from './con.shared.js'
+  products_with_related_products,
+  with_search} from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
@@ -186,7 +187,8 @@ const get = (driver) => {
         expand_collections && products_with_collections(eb, id_or_handle, dtype),
         expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
         expand_variants && products_with_variants(eb, id_or_handle, dtype),
-        expand_related_products && products_with_related_products(eb, id_or_handle, dtype)
+        expand_related_products && products_with_related_products(eb, id_or_handle, dtype),
+        with_search(eb, id_or_handle, dtype)
       ].filter(Boolean)
     )
     .where(where_id_or_handle_table(id_or_handle))
@@ -221,7 +223,8 @@ const getBulk = (driver) => {
         expand_collections && products_with_collections(eb, eb.ref('products.id'), dtype),
         expand_discounts && products_with_discounts(eb, eb.ref('products.id'), dtype),
         expand_variants && products_with_variants(eb, eb.ref('products.id'), dtype),
-        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), dtype)
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), dtype),
+        with_search(eb, eb.ref('products.id'), dtype)
       ].filter(Boolean)
     )
     .where(
@@ -349,7 +352,8 @@ const list = (driver) => {
         expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
         expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
         expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
-        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType)
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType),
+        with_search(eb, eb.ref('products.id'), driver.dialectType)
       ].filter(Boolean)
     )
     .where(

@@ -1023,7 +1023,7 @@ export const calculate_pricing = async (
   {
     if(tax_provider) {
       report.taxes = await tax_provider.compute(shipping_address, {...report});
-      report.total += report.taxes.reduce((p, c) => p + c.value ?? 0, 0);
+      report.total += report.taxes.reduce((p, c) => p + (c.value ?? 0), 0);
     }
   }
 

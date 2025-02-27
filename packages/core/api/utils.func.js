@@ -54,14 +54,16 @@ export const assert = (c, message, code=400) => {
 
 /**
  * @template {any} T
- * @param {T} d 
- * @returns {T & { created_at: string, updated_at: string}} d 
+ * @param {T & Partial<{ created_at: string, updated_at: string}>} d 
+ * @returns {T & { created_at: string, updated_at: string}} 
  */
 export const apply_dates = d => {
   const now_iso = new Date().toISOString();
   d.created_at = d.created_at ?? now_iso;
   d.updated_at = now_iso;
-  return d;
+  // casting
+  const c = /** @type {T & { created_at: string, updated_at: string}} */(d);
+  return c;
 }
 
 
@@ -136,11 +138,9 @@ export const to_tokens = (text) => {
   // match can return null
   let tokens = text?.toString().toLowerCase().match(/[\p{L}\d]+/gu) ?? [];
 
-  tokens = tokens.filter(
+  return tokens.filter(
     t => !STOP_WORDS.includes(t)
   );
-
-  return tokens;
 }
 
 /**

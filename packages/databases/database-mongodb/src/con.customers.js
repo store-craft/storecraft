@@ -12,7 +12,6 @@ import { query_to_mongo } from './utils.query.js';
 /**
  * @param {MongoDB} d 
  * 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('customers');

@@ -71,6 +71,7 @@ export const upsert = (app) =>
 (item) => regular_upsert(
   app, db(app), 'order', orderDataUpsertSchema, 
   (before) => {
+    
     return {
       ...before,
       pricing: before.pricing ?? default_pricing

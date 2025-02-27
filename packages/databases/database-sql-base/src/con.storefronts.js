@@ -10,7 +10,7 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   with_media, with_tags, 
   count_regular,
   with_search} from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -98,6 +98,7 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
+  // @ts-ignore
   return (id_or_handle, options) => {
     const expand = options?.expand ?? ['*'];
     const expand_all = expand.includes('*');
@@ -122,7 +123,8 @@ const get = (driver) => {
     ]
     .filter(Boolean))
     .where(where_id_or_handle_table(id_or_handle))
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(sanitize);
   }
 }
 
@@ -164,6 +166,7 @@ const remove = (driver) => {
  * @returns {db_col["list"]}
  */
 const list = (driver) => {
+  // @ts-ignore
   return async (query) => {
     const expand = query?.expand ?? ['*'];
     const expand_all = expand.includes('*');
@@ -192,7 +195,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, table_name))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

@@ -17,7 +17,7 @@ export type SortOrder = 'asc' | 'desc';
  * @description Expend several relations 
  */
 export type ExpandQuery<T extends any = undefined> = T extends undefined ? 
-    string[] : Exclude<'*' | PickKeysByValueType<T, any[]>, 'tags' | 'media' | 'attributes'>[];
+    string[] : Exclude<'none' | '*' | PickKeysByValueType<T, any[]>, 'tags' | 'media' | 'attributes'>[];
 
 /**
  * @description Query base type for most collections
@@ -27,7 +27,7 @@ export type ExpandQuery<T extends any = undefined> = T extends undefined ?
 export type ApiQuery<T extends any = undefined> = {
   /**
    * @description Expand connections of items returned from Query
-   * @example ['products', 'tags']
+   * @example ['products', 'tags', 'none']
    * @default ['*']
    */
   expand?: ExpandQuery<T>;

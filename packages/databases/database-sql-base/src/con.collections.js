@@ -8,7 +8,7 @@ import { delete_entity_values_by_value_or_reporter, delete_me,
   with_media, with_tags, 
   count_regular,
   with_search} from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 
@@ -62,7 +62,6 @@ const upsert = (driver) => {
  */
 const get = (driver) => {
   return (id_or_handle, options) => {
-
     return driver.client
       .selectFrom(table_name)
       .selectAll('collections')
@@ -72,8 +71,8 @@ const get = (driver) => {
         with_search(eb, eb.ref('collections.id'), driver.dialectType)
       ])
       .where(where_id_or_handle_table(id_or_handle))
-    //  .compile()
-      .executeTakeFirst();
+      .executeTakeFirst()
+      .then(sanitize);
   }
 }
 
@@ -133,7 +132,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'collections'))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
@@ -169,7 +168,7 @@ const list_collection_products = (driver) => {
           ].filter(Boolean)
         )
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'products'))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

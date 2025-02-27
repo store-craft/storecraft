@@ -22,7 +22,7 @@ import { assert_zod } from './middle.zod-validate.js';
 
 /**
  * 
- * @param {ItemTypeUpsert} item 
+ * @param {any} item 
  */
 export const isVariant = item => {
   return (
@@ -49,15 +49,16 @@ export const upsert = (app) =>
  * @param {ItemTypeUpsert} item
  */
 (item) => regular_upsert(
-  app, db(app), 'pr', undefined, 
+  app, db(app), 'pr', (productTypeUpsertSchema.or(variantTypeUpsertSchema)), 
   (before) => {
+    
     before = {
       ...before,
       handle: before.handle ?? to_handle(before.title)
     }
 
     const is_variant = isVariant(before);
-
+    
     assert_zod(
       is_variant ? variantTypeUpsertSchema : productTypeUpsertSchema, 
       item
@@ -74,7 +75,7 @@ export const upsert = (app) =>
       `qty:${item.qty}`
     );
   },
-  'products/upsert'
+  'products/upsert',
 )(item);
 
 

@@ -13,7 +13,8 @@ import type {
   StorefrontType, StorefrontTypeUpsert, 
   TagType, TagTypeUpsert, 
   TemplateType, TemplateTypeUpsert, 
-  QuickSearchResult, 
+  QuickSearchResult,
+  timestamps, 
 } from "../api/types.api.d.ts";
 import type { ExpandQuery, ApiQuery } from "../api/types.api.query.d.ts";
 import type { App } from '../types.public.d.ts'
@@ -43,11 +44,13 @@ export type Aug = {
 
 type idable = { id: string }
 export type withConcreteId<T> = Omit<T, 'id'> & idable;
+export type withConcreteIdAndHandle<T> = Omit<T, 'id' | 'handle'> & { id: string, handle: string};
 
 /**
  * @description Basic collection or table
  */
-export declare interface db_crud<U extends idable, G extends idable=U> {
+// export declare interface db_crud<U extends idable, G extends idable=U> {
+export declare interface db_crud<U, G=U> {
   /** upsert type */
   $type_upsert?: U;
   /** get type */
@@ -104,7 +107,7 @@ export declare interface db_crud<U extends idable, G extends idable=U> {
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
 
 /** @description `AuthUserType` crud */
-export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & idable_concrete>> {
+export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
   /**
    * get by email
    * @param email 
@@ -119,13 +122,13 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType & id
 }
 
 /** @description `TagType` crud */
-export interface db_tags extends db_crud<withConcreteId<TagTypeUpsert>, withConcreteId<TagType>> {
+export interface db_tags extends db_crud<withConcreteIdAndHandle<TagTypeUpsert>, TagType> {
 }
 
 /** @description `CollectionType` crud */
 export interface db_collections extends db_crud<
-  withConcreteId<CollectionTypeUpsert>, 
-  withConcreteId<CollectionType>
+  withConcreteIdAndHandle<CollectionTypeUpsert>, 
+  CollectionType
   > {
 
   /**
@@ -139,8 +142,8 @@ export interface db_collections extends db_crud<
 
 /** @description `ProductType` crud */
 export interface db_products extends db_crud<
-  withConcreteId<ProductTypeUpsert | VariantTypeUpsert>, 
-  withConcreteId<ProductType | VariantType>> {
+  withConcreteIdAndHandle<ProductTypeUpsert> | withConcreteIdAndHandle<VariantTypeUpsert>, 
+  ProductType | VariantType> {
 
   /**
    * increment / decrement stock of multiple products
@@ -204,8 +207,7 @@ export interface db_products extends db_crud<
 /** @description `CustomerType` crud */
 export interface db_customers extends OmitGetByHandle<db_crud<
   withConcreteId<CustomerTypeUpsert>, 
-  withConcreteId<CustomerType>>
-  > {
+  CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
   /**
    * 
@@ -217,8 +219,8 @@ export interface db_customers extends OmitGetByHandle<db_crud<
 
 /** @description `StorefrontType` crud */
 export interface db_storefronts extends db_crud<
-  withConcreteId<StorefrontTypeUpsert>, 
-  withConcreteId<StorefrontType>
+  withConcreteIdAndHandle<StorefrontTypeUpsert>, 
+  StorefrontType
   > {
   /**
    * list all of the product related to storefront, returns eveything, this is not query based,
@@ -263,8 +265,8 @@ export interface db_storefronts extends db_crud<
  * @description `ImageType` crud 
  */
 export interface db_images extends db_crud<
-    withConcreteId<ImageTypeUpsert>, 
-    withConcreteId<ImageType>
+  withConcreteIdAndHandle<ImageTypeUpsert>, 
+  ImageType
     > {
   /**
    * report the media images
@@ -278,35 +280,36 @@ export interface db_images extends db_crud<
  * @description `PostType` crud 
  */
 export interface db_posts extends db_crud<
-    withConcreteId<PostTypeUpsert>, withConcreteId<PostType>
+  withConcreteIdAndHandle<PostTypeUpsert>,
+  PostType
   > {
 }
 
 /** @description `TemplateType` crud */
 export interface db_templates extends db_crud<
-  withConcreteId<TemplateTypeUpsert>, 
-  withConcreteId<TemplateType>
+  withConcreteIdAndHandle<TemplateTypeUpsert>, 
+  TemplateType
 > {
 }
 
 /** @description `ShippingMethodType` crud */
 export interface db_shipping extends db_crud<
-  withConcreteId<ShippingMethodTypeUpsert>, 
-  withConcreteId<ShippingMethodType>
+  withConcreteIdAndHandle<ShippingMethodTypeUpsert>, 
+  ShippingMethodType
 > {
 }
 
 /** @description `NotificationType` crud */
 export interface db_notifications extends OmitGetByHandle<db_crud<
-  withConcreteId<NotificationTypeUpsert>, 
-  withConcreteId<NotificationType>>
+  withConcreteId<NotificationTypeUpsert & timestamps>, 
+  NotificationType>
   > {
 }
 
 /** @description `DiscountType` crud */
 export interface db_discounts extends db_crud<
-  withConcreteId<DiscountTypeUpsert>, 
-  withConcreteId<DiscountType>
+  withConcreteIdAndHandle<DiscountTypeUpsert>, 
+  DiscountType
   > {
 
   /**
@@ -320,7 +323,7 @@ export interface db_discounts extends db_crud<
 /** @description `OrderData` crud */
 export interface db_orders extends OmitGetByHandle<db_crud<
   withConcreteId<OrderDataUpsert>, 
-  withConcreteId<OrderData>>
+  OrderData>
   > {
 }
 

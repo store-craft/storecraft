@@ -8,7 +8,7 @@
 import { ID, apply_dates, assert } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { create_search_index } from './utils.index.js'
-import { ZodSchema,  } from 'zod'
+import { z, ZodSchema,  } from 'zod'
 import { 
   rewrite_media_from_storage, rewrite_media_to_storage 
 } from './con.storage.logic.js'
@@ -17,19 +17,21 @@ import { App } from '../index.js';
 
 /**
  * @description This type of upsert might be uniform and re-occurring, so it is
- * refactored. There is a hook to add more functionality.
+ * refactored. There is a hook to add more functionality. The purpose is:
+ * - Convert an API upsert schema of zod into Database Upsert type
  * 
- * @template {Partial<BaseType>} G
- * @template {Partial<BaseType>} U
+ * @template {Partial<BaseType>} DB_GET_TYPE Database `get` type
+ * @template {Partial<BaseType>} DB_UPSERT_TYPE Database `upsert` type
+ * @template {ZodSchema} [API_UPSERT_ZOD_SCHEMA=ZodSchema] zod schema is the api upsert type
  * 
  * 
  * @param {App} app app instance
- * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {db_crud<DB_UPSERT_TYPE, DB_GET_TYPE>} db db instance
  * @param {string} id_prefix
- * @param {ZodSchema} schema
- * @param {<H extends U>(final: H) => H} pre_hook Hook before validation, this is 
+ * @param {API_UPSERT_ZOD_SCHEMA} schema
+ * @param {<H extends z.infer<API_UPSERT_ZOD_SCHEMA>>(final: H) => H} pre_hook Hook before validation, this is 
  * your chance to fill gaps in data
- * @param {<H extends U>(final: H) => string[]} post_hook 
+ * @param {<H extends DB_UPSERT_TYPE>(final: DB_UPSERT_TYPE) => string[]} post_hook 
  * hook into final state, returns extra search terms
  * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
@@ -43,12 +45,12 @@ export const regular_upsert = (
 ) => {
 
   /**
-   * @param {U} item
+   * @param {z.infer<API_UPSERT_ZOD_SCHEMA>} item
    */
   return async (item) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
-    /** @type {withConcreteId<G>} */
+    /** @type {DB_GET_TYPE} */
     let previous_item;
 
     item = pre_hook(item);
@@ -101,7 +103,7 @@ export const regular_upsert = (
  * 
  * 
  * @param {App} app
- * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {db_crud<U, G>} db db instance
  * @param {PubSubEvent} [event] keep `undefined` to avoid event processing
  * 
  */
@@ -137,7 +139,7 @@ export const regular_get = (app, db, event) =>
  * 
  * 
  * @param {App} app
- * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {db_crud<U, G>} db db instance
  * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
@@ -150,7 +152,7 @@ export const regular_remove = (app, db, event) =>
   async (id) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
-    /** @type {withConcreteId<G>} */
+    /** @type {G} */
     let previous;
 
     // fetch item before removal
@@ -182,7 +184,7 @@ export const regular_remove = (app, db, event) =>
  * 
  * 
  * @param {App} app
- * @param {db_crud<withConcreteId<U>, withConcreteId<G>>} db db instance
+ * @param {db_crud<U, G>} db db instance
  * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
  * 
@@ -197,6 +199,7 @@ export const regular_list = (app, db, event) =>
     const items = await db.list(
       {
         ...q,
+        // @ts-ignore
         expand: q.expand ?? ['*']
       }
     );

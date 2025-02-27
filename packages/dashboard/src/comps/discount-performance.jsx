@@ -36,13 +36,13 @@ const DiscountPerformance = (
       async function get() {
         const affected_products_count = await sdk.statistics.countOf(
           'products', {
-            vql: `discount:${discount.handle}`
+            vql: `discount:${discount.handle} | discount:${discount.id}`
           }
         );
 
         const affected_orders_count = await sdk.statistics.countOf(
           'orders', {
-            vql: `discount:${discount.handle}`
+            vql: `discount:${discount.handle} | discount:${discount.id}`
           }
         );
 

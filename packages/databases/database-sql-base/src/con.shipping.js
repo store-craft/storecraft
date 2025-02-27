@@ -5,7 +5,7 @@ import { count_regular, delete_entity_values_by_value_or_reporter,
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
   with_media, with_search, with_tags } from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -54,18 +54,20 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
-  return (id_or_handle, options) => {
-    return driver.client
-    .selectFrom(table_name)
-    .selectAll()
-    .select(eb => [
-      with_media(eb, id_or_handle, driver.dialectType),
-      with_tags(eb, id_or_handle, driver.dialectType),
-      with_search(eb, id_or_handle, driver.dialectType),
-    ]
-    .filter(Boolean))
-    .where(where_id_or_handle_table(id_or_handle))
-    .executeTakeFirst();
+  return async (id_or_handle, options) => {
+    const result = await driver.client
+      .selectFrom(table_name)
+      .selectAll()
+      .select(eb => [
+        with_media(eb, id_or_handle, driver.dialectType),
+        with_tags(eb, id_or_handle, driver.dialectType),
+        with_search(eb, id_or_handle, driver.dialectType),
+      ]
+      .filter(Boolean))
+      .where(where_id_or_handle_table(id_or_handle))
+      .executeTakeFirst();
+    
+    return sanitize(result);
   }
 }
 
@@ -122,12 +124,12 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'shipping_methods'))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
     if(query.limitToLast) items.reverse();
-
+    
     return sanitize_array(items);
   }
 }

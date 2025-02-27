@@ -1,9 +1,9 @@
 import { SQL } from '../index.js'
-import { sanitize_array } from './utils.funcs.js'
-import { count_regular, delete_me, insert_search_of, insert_tags_of, regular_upsert_me, 
-  where_id_or_handle_table, 
-  with_media, 
-  with_tags} from './con.shared.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
+import { 
+  count_regular, delete_me, insert_search_of, insert_tags_of, regular_upsert_me, 
+  where_id_or_handle_table, with_media, with_tags
+} from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js';
 
 /**
@@ -60,7 +60,8 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .where(where_id_or_handle_table(id_or_email))
-      .executeTakeFirst();
+      .executeTakeFirst()
+      .then(sanitize);
   }
 }
 
@@ -70,11 +71,12 @@ const get = (driver) => {
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
-  return (email) => {
+  return async (email) => {
     return driver.client
       .selectFrom('auth_users')
       .selectAll().where('email', '=', email)
-      .executeTakeFirst();
+      .executeTakeFirst()
+      .then(sanitize);
   }
 }
 
@@ -134,13 +136,13 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'auth_users'))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
     if(query.limitToLast) items.reverse();
 
-    return items;
+    return sanitize_array(items);
   }
 }
 

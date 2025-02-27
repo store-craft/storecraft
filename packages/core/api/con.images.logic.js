@@ -29,15 +29,17 @@ async (item) => {
 
   assert_zod(imageTypeUpsertSchema, item);
 
-  item.handle = to_handle(decodeURIComponent(item.name));
-
   // Check if exists
   const id = !Boolean(item.id) ? ID('img') : item.id;
   // search index
   let search = create_search_index(item);
   // apply dates and index
   const final = apply_dates(
-    { ...item, id }
+    { 
+      ...item, 
+      handle: to_handle(decodeURIComponent(item.name)),
+      id 
+    }
   );
 
   await db(app).upsert(final, search);

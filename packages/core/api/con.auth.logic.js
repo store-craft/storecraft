@@ -1,5 +1,6 @@
 /**
- * @import { ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
+ * @import { 
+ *  ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
  *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult
  * } from './types.api.js';
  */

@@ -94,6 +94,7 @@ export const export_collection = (app) => {
     const publish_path = `storage://${key}`;
     const success = await app.storage.putArraybuffer(
       key,
+      // @ts-ignore
       array
     );
 

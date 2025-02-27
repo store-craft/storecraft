@@ -184,7 +184,7 @@ export type searchable = {
 /**
  * @description with `id`
  */
-export type idable = {
+export type withOptionalID = {
   /** 
    * @description ID 
    */
@@ -456,7 +456,7 @@ export type AttributeType = {
 /**
  * @description Tag type
  */
-export interface TagType extends idable, timestamps {
+export interface TagType extends BaseType {
   /** 
    * @description The key name 
    */
@@ -673,7 +673,7 @@ export interface BaseProductType extends BaseType {
  */
 export type VariantTypeUpsert = Omit<
   VariantType, 
-  'collections' | 'published' | 'discounts' | 'related_products' | 'id' | 'handle'> & {
+  'collections' | 'discounts' | 'related_products' | 'id' | 'handle'> & {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
@@ -732,7 +732,7 @@ export type HandleAndID = {
  */
 export type ProductTypeUpsert = Omit<
   ProductType, 
-  'collections' | 'published' | 'related_products' | 'discounts' | 'variants' | 'id' | 'handle'
+  'collections' | 'related_products' | 'discounts' | 'variants' | 'id' | 'handle'
   > & {
 
   /** 
@@ -1456,7 +1456,7 @@ export interface CustomerType extends BaseType {
 /**
  * @description Customer upsert type
  */
-export type CustomerTypeUpsert = Omit<CustomerType, 'id' | 'handle'> & withOptionalHandleOrID;
+export type CustomerTypeUpsert = Omit<CustomerType, 'id'> & withOptionalID;
 
 // image
 
@@ -1591,7 +1591,7 @@ interface BaseNotificationType {
   /**
    * @description `id` of notification
    */
-  id?: string;
+  id: string;
 }
 
 /**
@@ -2440,7 +2440,7 @@ export interface TemplateType extends BaseType {
   /**
    * @description `handle`
    */
-  handle?: string;
+  handle: string;
 
   /**
    * @description `title` of `template`

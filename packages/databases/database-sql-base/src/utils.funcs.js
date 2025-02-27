@@ -19,14 +19,13 @@ export const delete_keys = (...keys) => {
   }
 }
 
+
+
 /**
  * Sanitize null/undefined valued keys
- * 
- * 
- * @template {Record<string, any>} T
- * 
- * 
+ * @template T
  * @param {T} o 
+ * @return {import("./utils.types.js").ReplaceValuesOfKeys<T, 'active' | 'confirmed_mail', boolean>}
  */
 export const sanitize = o => {
   for (const key in o) {
@@ -37,12 +36,19 @@ export const sanitize = o => {
       continue;
     }
     if(key==='active') {
+      // @ts-ignore
+      o[key] = Boolean(value);
+    }
+    else if(key==='confirmed_mail') {
+      // @ts-ignore
       o[key] = Boolean(value);
     }
     else if(key==='price') {
+      // @ts-ignore
       o[key] = parseFloat(value);
     }
     else if(key==='compare_at_price') {
+      // @ts-ignore
       o[key] = parseFloat(value);
     }
     else if(typeof value === 'object') {
@@ -50,6 +56,7 @@ export const sanitize = o => {
     }
   }
 
+  // @ts-ignore
   return o;
 }
 
@@ -62,10 +69,11 @@ export const sanitize = o => {
  * @param {T[]} arr 
  */
 export const sanitize_array = arr => {
+  const xx = []
   for(const p of arr) {
-    sanitize(p);
+    xx.push(sanitize(p));
   }
-  return arr;
+  return xx;
 }
 
 /**

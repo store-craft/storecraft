@@ -136,7 +136,9 @@ export interface db_collections extends db_crud<
    * @param handle_or_id collection handle or id
    * @param query query
    */
-  list_collection_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<Partial<ProductType>[]>
+  list_collection_products: (
+    handle_or_id: HandleOrId, query: ApiQuery<ProductType>
+  ) => Promise<Partial<ProductType>[]>
 
 }
 
@@ -214,7 +216,9 @@ export interface db_customers extends OmitGetByHandle<db_crud<
    * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
    * @param query query object
    */
-  list_customer_orders: (customer_id: ID, query: ApiQuery) => Promise<OrderData[]>;
+  list_customer_orders: (
+    customer_id: ID, query: ApiQuery<OrderData>
+  ) => Promise<OrderData[]>;
 }
 
 /** @description `StorefrontType` crud */
@@ -317,7 +321,9 @@ export interface db_discounts extends db_crud<
    * @param handle_or_id discount handle or id
    * @param query query
    */
-  list_discount_products: (handle_or_id: HandleOrId, query: ApiQuery) => Promise<ProductType[]>
+  list_discount_products: (
+    handle_or_id: HandleOrId, query: ApiQuery<ProductType>
+  ) => Promise<ProductType[]>
 }
 
 /** @description `OrderData` crud */

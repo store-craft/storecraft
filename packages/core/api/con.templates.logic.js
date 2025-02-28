@@ -1,14 +1,12 @@
+/**
+ * @import { TemplateType, TemplateTypeUpsert } from './types.api.js'
+ */
 import { assert, to_handle } from './utils.func.js'
 import { templateTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 import { decode } from '../crypto/base64.js';
 import { App } from "../index.js";
-
-/**
- * @typedef {import('./types.api.d.ts').TemplateType} ItemType
- * @typedef {import('./types.api.d.ts').TemplateTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -35,7 +33,7 @@ const decode_if_base64 = val => {
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {TemplateTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'template', templateTypeUpsertSchema, 

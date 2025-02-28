@@ -1,3 +1,6 @@
+/**
+ * @import { BaseType, ImageType, ImageTypeUpsert } from './types.api.js'
+ */
 import { ID, apply_dates, to_handle } from './utils.func.js'
 import { imageTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list } from './con.shared.js'
@@ -5,10 +8,6 @@ import { create_search_index } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 import { App } from '../index.js';
 
-/**
- * @typedef {import('./types.api.d.ts').ImageType} ItemType
- * @typedef {import('./types.api.d.ts').ImageTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -22,7 +21,7 @@ export const db = app => app.db.resources.images;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {ImageTypeUpsert} item
  */
 async (item) => {
   const requires_event_processing = app.pubsub.has('images/upsert');
@@ -107,7 +106,7 @@ export const image_url_to_handle = url => to_handle(image_url_to_name(url));
 /**
  * report media usages
  * @param {App} app
- * @param {import('./types.api.d.ts').BaseType} data data being reported
+ * @param {BaseType} data data being reported
  */
 export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
   await db(app).report_document_media(data)

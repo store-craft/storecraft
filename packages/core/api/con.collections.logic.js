@@ -1,3 +1,8 @@
+/**
+ * @import { CollectionType, CollectionTypeUpsert, ProductType } from './types.api.js'
+ * @import { HandleOrId, RegularGetOptions, ID as IDType } from '../database/types.public.js'
+ * @import { ApiQuery } from './types.api.query.js'
+ */
 import { assert, to_handle } from './utils.func.js'
 import { collectionTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
@@ -5,11 +10,6 @@ import {
   regular_remove, regular_upsert 
 } from './con.shared.js';
 import { App } from '../index.js';
-
-/**
- * @typedef {import('./types.api.d.ts').CollectionType} ItemType
- * @typedef {import('./types.api.d.ts').CollectionTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -23,7 +23,7 @@ export const db = app => app.db.resources.collections;
 export const upsert = (app) => 
   /**
    * 
-   * @param {ItemTypeUpsert} item
+   * @param {CollectionTypeUpsert} item
    */
   (item) => regular_upsert(
     app, db(app), 'col', collectionTypeUpsertSchema, 
@@ -44,13 +44,13 @@ export const upsert = (app) =>
  * return products of that collection
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const list_collection_products = (app) => 
   /**
    * 
-   * @param {import('../database/types.public.d.ts').HandleOrId} handle_or_id 
-   * @param {import('./types.api.query.d.ts').ApiQuery} [q] 
+   * @param {HandleOrId} handle_or_id 
+   * @param {ApiQuery<ProductType} [q] 
    */
   (handle_or_id, q={}) => {
     return db(app).list_collection_products(handle_or_id, q);
@@ -63,13 +63,13 @@ export const list_collection_products = (app) =>
  * efficiently stored in a cost-effective `storage` and **CDN** network.
  * 
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const export_collection = (app) => {
   
   /**
    * 
-   * @param {import('../database/types.public.d.ts').HandleOrId} handle_or_id 
+   * @param {HandleOrId} handle_or_id 
    * 
    * @return {Promise<string>}
    */

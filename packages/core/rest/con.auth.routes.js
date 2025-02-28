@@ -1,4 +1,8 @@
-/** @import { ApiPolka } from './types.public.js' */
+/** 
+ * @import { ApiPolka } from './types.public.js' 
+ * @import { AuthUserType } from '../api/types.public.js' 
+ * @import { ApiQuery } from '../api/types.api.query.js' 
+ */
 import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
 import { authorize_admin } from './con.auth.middle.js';
@@ -108,7 +112,9 @@ export const create_routes = (app) => {
     '/users',
     middle_authorize_admin,
     async (req, res) => {
-      let q = parse_query(req.query);
+      let q = (/** @type {ApiQuery<AuthUserType>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.auth.list_auth_users(q);
       res.sendJson(items);
     }

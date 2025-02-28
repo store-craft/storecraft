@@ -1,4 +1,8 @@
-/** @import { ApiPolka } from './types.public.js' */
+/** 
+ * @import { ApiPolka } from './types.public.js' 
+ * @import { ApiQuery } from '../api/types.api.query.js' 
+ * @import { OrderData } from '../api/types.api.js' 
+ */
 import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
 import { assert } from '../api/utils.func.js'
@@ -73,7 +77,9 @@ export const create_routes = (app) => {
     '/',
     parse_auth_user(app),
     async (req, res) => {
-      const q = parse_query(req.query);
+      const q = (/** @type {ApiQuery<OrderData>} */ (
+        parse_query(req.query))
+      );
       
       let items = [];
 

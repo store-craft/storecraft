@@ -1,13 +1,11 @@
+/**
+ * @import { PostType, PostTypeUpsert } from './types.api.js'
+ */
 import { assert, to_handle } from './utils.func.js'
 import { postTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js';
 import { App } from '../index.js';
-
-/**
- * @typedef {import('./types.api.d.ts').PostType} ItemType
- * @typedef {import('./types.api.d.ts').PostTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -21,7 +19,7 @@ export const db = app => app.db.resources.posts;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {PostTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'post', postTypeUpsertSchema, 

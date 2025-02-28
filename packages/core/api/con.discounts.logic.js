@@ -1,3 +1,8 @@
+/**
+ * @import { DiscountType, DiscountTypeUpsert, ProductType } from './types.api.js'
+ * @import { HandleOrId, RegularGetOptions, ID as IDType } from '../database/types.public.js'
+ * @import { ApiQuery } from './types.api.query.js'
+ */
 import { assert, to_handle, union } from './utils.func.js'
 import { discountTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
@@ -5,10 +10,6 @@ import { regular_get, regular_list,
 import { isDef } from './utils.index.js';
 import { App } from '../index.js';
 
-/**
- * @typedef {import('./types.api.d.ts').DiscountType} ItemType
- * @typedef {import('./types.api.d.ts').DiscountTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -22,7 +23,7 @@ export const db = app => app.db.resources.discounts;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {DiscountTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'dis', discountTypeUpsertSchema, 
@@ -53,8 +54,8 @@ export const upsert = (app) =>
 export const list_discounts_products = (app) => 
 /**
  * 
- * @param {import('../database/types.public.d.ts').HandleOrId} handle_or_id 
- * @param {import('./types.api.query.d.ts').ApiQuery} [q] 
+ * @param {HandleOrId} handle_or_id 
+ * @param {ApiQuery<ProductType>} [q] 
  */
 (handle_or_id, q) => {
   return db(app).list_discount_products(handle_or_id, q);

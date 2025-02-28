@@ -1,3 +1,6 @@
+/**
+ * @import { OrderData, OrderDataUpsert } from './types.api.js'
+ */
 import { orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
@@ -6,17 +9,12 @@ import { isDef } from './utils.index.js';
 import { App } from '../index.js';
 
 /**
- * @typedef {import('./types.api.d.ts').OrderData} ItemType
- * @typedef {import('./types.api.d.ts').OrderDataUpsert} ItemTypeUpsert
- */
-
-/**
  * @param {App} app
  */
 export const db = app => app.db.resources.orders;
 
 /**
- * @param {ItemTypeUpsert} data
+ * @param {OrderDataUpsert} data
  * 
  * 
  * @returns {string[]}
@@ -66,7 +64,7 @@ const default_pricing = {
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {OrderDataUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'order', orderDataUpsertSchema, 

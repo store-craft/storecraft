@@ -1,3 +1,6 @@
+/**
+ * @import { ProductType, ProductTypeUpsert, VariantTypeUpsert } from './types.api.js'
+ */
 import { assert, to_handle, union } from './utils.func.js'
 import { 
   productTypeUpsertSchema, variantTypeUpsertSchema 
@@ -8,16 +11,6 @@ import {
 } from './con.shared.js'
 import { App } from '../index.js';
 import { assert_zod } from './middle.zod-validate.js';
-
-
-/**
- * 
- * @typedef {import('./types.api.d.ts').ProductType} ItemType
- * @typedef {import('./types.api.d.ts').ProductTypeUpsert |
- *  import('./types.api.d.ts').VariantTypeUpsert
- * } ItemTypeUpsert
- * 
- */
 
 
 /**
@@ -46,7 +39,7 @@ export const db = app => app.db.resources.products;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {ProductTypeUpsert | VariantTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'pr', (productTypeUpsertSchema.or(variantTypeUpsertSchema)), 
@@ -95,7 +88,7 @@ export const add_product_to_collection = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const remove_product_from_collection = (app) => 
 /**

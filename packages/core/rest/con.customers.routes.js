@@ -1,6 +1,8 @@
 /** 
  * @import { ApiRequest, ApiResponse, ApiPolka } from './types.public.js' 
  * @import { Role } from "../api/types.api.js"; 
+ * @import { CustomerType } from "../api/types.api.js"; 
+ * @import { ApiQuery } from "../api/types.api.query.js"; 
  */
 import { Polka } from '../polka/index.js'
 import { assert } from '../api/utils.func.js'
@@ -67,7 +69,9 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const q = parse_query(req.query);
+      let q = (/** @type {ApiQuery<CustomerType>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.customers.list(q);
 
       res.sendJson(items);

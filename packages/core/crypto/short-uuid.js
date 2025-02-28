@@ -30,6 +30,7 @@ export const convert = function (number, srcAlphabet, dstAlphabet) {
     fromBase = srcAlphabet.length,
     toBase = dstAlphabet.length,
     length = number.length,
+    /** @type {string | string[]} */
     result = typeof number === 'string' ? '' : [];
 
   if (!isValid(number, srcAlphabet)) {
@@ -52,13 +53,14 @@ export const convert = function (number, srcAlphabet, dstAlphabet) {
     for (i = 0; i < length; i++) {
       divide = divide * fromBase + numberMap[i];
       if (divide >= toBase) {
-        numberMap[newlen++] = parseInt(divide / toBase, 10);
+        numberMap[newlen++] = parseInt(String(divide / toBase), 10);
         divide = divide % toBase;
       } else if (newlen > 0) {
         numberMap[newlen++] = 0;
       }
     }
     length = newlen;
+    // @ts-ignore
     result = dstAlphabet.slice(divide, divide + 1).concat(result);
   } while (newlen !== 0);
 

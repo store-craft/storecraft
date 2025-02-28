@@ -198,6 +198,7 @@ export class NodeLocalStorage {
         this.to_file_path(key),
       );
       return {
+        // @ts-ignore
         value: buffer,
         metadata: {
           contentType: infer_content_type(key)

@@ -34,15 +34,16 @@ import { StoreAgent } from './ai/agents/agent.js';
 
 /**
  * 
+ * 
  * @template {PlatformAdapter} [Platform=PlatformAdapter]
  * @template {db_driver} [Database=db_driver]
  * @template {storage_driver} [Storage=storage_driver]
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {Record<string, extension>} [ExtensionsMap=BaseExtensions]
+ * @template {Record<string, extension> & BaseExtensions} [ExtensionsMap=(BaseExtensions)]
  * `extensions` map type
- * @template {tax_provider} [Taxes=UniformTaxes]
+ * @template {tax_provider} [Taxes=tax_provider]
  * @template {AI} [AiProvider=AI]
  * 
  * @description This is the main `storecraft` **App**
@@ -112,7 +113,7 @@ export class App {
   /**
    * @description The app's pubsub system
    * 
-   * @type {PubSub}
+   * @type {PubSub<App>}
    */
   #_pubsub;
 
@@ -146,14 +147,16 @@ export class App {
   ) {
     this.#_config = config;
     this.#_is_ready = false;
-    this.#_pubsub = new PubSub(this);
     // @ts-ignore
     this.#_taxes = new UniformTaxes(0);
     // @ts-ignore
     this.#_extensions = {
       'notifications': new NotificationsExtension()
     }
-
+    
+    // @ts-ignore
+    this.#_pubsub = new PubSub(this);
+    
     // add extra events for orders state
     this.pubsub.on(
       'orders/upsert',
@@ -313,6 +316,7 @@ export class App {
 
       // settle ai agent
       if(this.#_ai) {
+        // @ts-ignore
         this.#_ai.init(this);
       }
 
@@ -592,6 +596,7 @@ export class App {
    * @returns {Promise<InferPlatformNativeResponse<Platform>>}
    */
   handler = async (req, context) => {
+    // @ts-ignore
     context = context ?? {};
     const start_millis = Date.now();
     const request = await this.#_platform.encode(req, context);

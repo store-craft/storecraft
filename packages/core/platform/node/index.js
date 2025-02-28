@@ -1,5 +1,6 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
+ * @import { NodePlatformConfig } from './types.public.js';
  */
 import { Readable } from 'node:stream'
 import { IncomingMessage, ServerResponse } from "node:http";
@@ -13,7 +14,7 @@ import { NodeCrypto } from './node.crypto.js';
  */
 export class NodePlatform {
 
-  /** @type {import('./types.public.d.ts').NodePlatformConfig} */
+  /** @type {NodePlatformConfig} */
   #config;
 
   /** @type {NodeCrypto} */
@@ -21,7 +22,7 @@ export class NodePlatform {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').NodePlatformConfig} [config={}] 
+   * @param {NodePlatformConfig} [config={}] 
    */
   constructor(config={}) {
     this.#config = {

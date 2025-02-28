@@ -70,3 +70,21 @@ export const app = new App(
     }
   )
 )
+.on(
+  'auth/signin',
+  async (evt) => {
+    // evt.payload.
+  }
+)
+.on(
+  'auth/remove',
+  async (evt) => {
+    evt.payload
+  }
+).on(
+  'auth/change-password', 
+  async evt => {
+    evt
+  }
+)
+

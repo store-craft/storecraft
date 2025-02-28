@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  *  base64.ts
  *

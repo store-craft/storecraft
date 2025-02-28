@@ -25,6 +25,7 @@ const upsert = (driver) => {
             item.id, item.id, table_name
             );
           await regular_upsert_me(trx, table_name, {
+            handle: null,
             created_at: item.created_at,
             updated_at: item.updated_at,
             message: item.message,

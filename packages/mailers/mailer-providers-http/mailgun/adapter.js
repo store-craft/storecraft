@@ -1,10 +1,14 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { mailer } from '@storecraft/core/mailer'
+ * @import { 
+ * } from './types.private.js'
+*/
 import { base64 } from "@storecraft/core/crypto";
 import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.utils.js";
 
 /**
- * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
- * @implements {mailer}
+ * @implements {mailer<Config>}
  * 
  * @description mailer with mailgun http api
  */

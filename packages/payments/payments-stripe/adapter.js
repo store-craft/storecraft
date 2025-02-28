@@ -1,3 +1,11 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
+ * @import { payment_gateway } from '@storecraft/core/payments'
+ * @import { ApiRequest, ApiResponse } from '@storecraft/core/rest'
+ * @import { } from './types.private.js'
+ */
+
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
 } from '@storecraft/core/api/types.api.enums.js';
@@ -7,11 +15,6 @@ import { Stripe as StripeCls } from 'stripe'
 
 /**
  * @typedef {StripeCls.Response<StripeCls.PaymentIntent>} CheckoutCreateResult
- * @typedef {import('@storecraft/core/api').PaymentGatewayStatus} PaymentGatewayStatus
- * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/api').OrderData} OrderData
- * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CheckoutCreateResult>} payment_gateway
  */
 
 /**
@@ -21,7 +24,7 @@ import { Stripe as StripeCls } from 'stripe'
 export const metadata_storecraft_order_id = 'storecraft_order_id'
 
 /**
- * @implements {payment_gateway}
+ * @implements {payment_gateway<Config, CheckoutCreateResult>}
  * 
  * @description **Stripe** gateway (https://docs.stripe.com/payments/place-a-hold-on-a-payment-method)
  */
@@ -268,8 +271,8 @@ export class Stripe {
 
   /**
    * @description [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
-   * @param {import('@storecraft/core/rest').ApiRequest} request 
-   * @param {import('@storecraft/core/rest').ApiResponse} response 
+   * @param {ApiRequest} request 
+   * @param {ApiResponse} response 
    * 
    * @type {payment_gateway["webhook"]}
    */
@@ -295,6 +298,7 @@ export class Stripe {
     /** @type {StripeCls.PaymentIntent} */
     let payment_intent;
 
+    /** @type {PaymentOptionsEnum[keyof PaymentOptionsEnum]} */
     let payment_status = PaymentOptionsEnum.unpaid;
     
     // Handle the event

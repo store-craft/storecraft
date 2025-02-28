@@ -1,3 +1,9 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
+ * @import { payment_gateway } from '@storecraft/core/payments'
+ * @import { paypal_order, paypal_order_request } from './types.private.js'
+*/
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
 } from '@storecraft/core/api/types.api.enums.js';
@@ -6,19 +12,14 @@ import { StorecraftError } from '@storecraft/core/api/utils.func.js';
 import html_buy_ui from './adapter.html.js';
 
 /**
- * @typedef {import('./types.private.d.ts').paypal_order} CreateResult
- * @typedef {import('@storecraft/core/api').PaymentGatewayStatus} PaymentGatewayStatus
- * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/api').OrderData} OrderData
- * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CreateResult>} payment_gateway
+ * @typedef {paypal_order} CreateResult
  */
 
 /**
- * @implements {payment_gateway}
- * 
  * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
- */
+ * 
+ * @implements {payment_gateway<Config, CreateResult>}
+*/
 export class Paypal {
   
   /** @type {Config} */ #_config;
@@ -131,7 +132,7 @@ export class Paypal {
   async onCheckoutCreate(order) {
     const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
 
-    /** @type {import('./types.private.js').paypal_order_request} */
+    /** @type {paypal_order_request} */
     const body = {
       intent: intent_on_checkout==='AUTHORIZE' ? 'AUTHORIZE' : 'CAPTURE',
       purchase_units: [
@@ -179,7 +180,7 @@ export class Paypal {
 
     await throw_bad_response(response);
     
-    /** @type {import('./types.private.js').paypal_order} */
+    /** @type {paypal_order} */
     const payload = await response.json();
     
     let status;
@@ -297,7 +298,7 @@ export class Paypal {
    * 
    * @param {CreateResult} create_result first create result, holds paypal id
    * 
-   * @return {Promise<import('./types.private.js').paypal_order>} 
+   * @return {Promise<paypal_order>} 
    */
   retrieve_order = async (create_result) => {
     const response = await fetch_with_auth(
@@ -308,7 +309,7 @@ export class Paypal {
 
     await throw_bad_response(response);
 
-    /** @type {import('./types.private.js').paypal_order} */
+    /** @type {paypal_order} */
     const jsonData = await response.json();
     return jsonData;
   }  

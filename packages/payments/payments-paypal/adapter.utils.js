@@ -1,12 +1,11 @@
+/**
+ * @import { Config } from './types.public.js'
+*/
 
 export const endpoints = {
   test: 'https://api-m.sandbox.paypal.com',
   prod: 'https://api-m.paypal.com'
 }
-
-/**
- * @typedef {import("./types.public.d.ts").Config} Config
- */
 
 /**
  * @param {Config} config 

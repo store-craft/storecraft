@@ -1,10 +1,13 @@
+/**
+ * @import { mailer, MailObject } from '@storecraft/core/mailer'
+*/
 import { Readable } from 'node:stream'
 
 /**
  * convert:
  * - arraybuffer -> Buffer
  * - readablestream -> readable
- * @param {import('@storecraft/core/mailer').MailObject["attachments"][0]["content"]} c 
+ * @param {MailObject["attachments"][0]["content"]} c 
  */
 export const attachment_convert = c => {
   if(c instanceof ArrayBuffer)

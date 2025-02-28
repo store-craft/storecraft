@@ -1,7 +1,10 @@
+/**
+ * @import { MailAddress, MailObject } from '@storecraft/core/mailer'
+*/
 
 /**
  * 
- * @param {import('@storecraft/core/mailer').MailObject["attachments"][0]["content"]} c 
+ * @param {MailObject["attachments"][0]["content"]} c 
  */
 export const convert_attachment_to_blob = async c => {
   if(c instanceof ArrayBuffer)
@@ -27,7 +30,7 @@ export const convert_attachment_to_blob = async c => {
 
 /**
  * 
- * @param {import('@storecraft/core/mailer').MailAddress} a 
+ * @param {MailAddress} a 
  */
 export const address_to_friendly_name = a => {
   return a.name ? `${a.name} <${a.address}>` : a.address;

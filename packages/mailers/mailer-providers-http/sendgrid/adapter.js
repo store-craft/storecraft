@@ -1,11 +1,14 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { mailer } from '@storecraft/core/mailer'
+ * @import { SendgridV3_sendmail } from './types.private.js'
+*/
 import { convert_to_base64 } from "./adapter.utils.js";
 
 /**
- * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
- * @implements {mailer}
- * 
  * @description mailer with sendgrid http api
+ * 
+ * @implements {mailer<Config>}
  */
 export class SendGrid {
   
@@ -27,7 +30,7 @@ export class SendGrid {
    */
   async email(o) {
 
-    /** @type {import("./types.private.js").SendgridV3_sendmail} */
+    /** @type {SendgridV3_sendmail} */
     const body = {
       content: [
           { 

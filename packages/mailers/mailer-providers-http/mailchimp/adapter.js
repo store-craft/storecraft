@@ -1,11 +1,17 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { mailer } from '@storecraft/core/mailer'
+ * @import { 
+ *  Mailchimp_sendmail, Mailchimp_sendmail_message_attachment 
+ * } from './types.private.js'
+*/
+
 import { convert_to_base64 } from "./adapter.utils.js";
 
 /**
- * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
- * @implements {mailer}
+ * @description mailer with mail-chimp / mandrill http api
  * 
- * mailer with mail-chimp / mandrill http api
+ * @implements {mailer<Config>}
  */
 export class MailChimp {
   
@@ -27,7 +33,7 @@ export class MailChimp {
    */
   async email(o) {
 
-    /** @type {import("./types.private.js").Mailchimp_sendmail} */
+    /** @type {Mailchimp_sendmail} */
     const body = {
       key: this.config.apikey,
       message: {
@@ -40,7 +46,7 @@ export class MailChimp {
         attachments: o.attachments && await Promise.all(
           o.attachments.map(
             /**
-             * @returns {Promise<import("./types.private.js").Mailchimp_sendmail_message_attachment>}
+             * @returns {Promise<Mailchimp_sendmail_message_attachment>}
              */
             async a => ({
               type: a.content_type, 

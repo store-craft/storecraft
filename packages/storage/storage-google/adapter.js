@@ -1,3 +1,8 @@
+/**
+ * @import { Config, ServiceFile } from './types.public.js' 
+ * @import { storage_driver, StorageFeatures } from '@storecraft/core/storage' 
+ */
+
 import { getJWTFromServiceAccount, presign } from './adapter.utils.js';
 
 const types = {
@@ -24,15 +29,9 @@ const infer_content_type = (name) => {
 
 
 /**
- * @typedef {import('./types.public.d.ts').ServiceFile} ServiceFile
- * @typedef {import('./types.public.d.ts').Config} Config
- */
-
-/**
  * @description Google Storage adapter
- * @typedef {import('@storecraft/core/storage').storage_driver} storage
  * 
- * @implements {storage}
+ * @implements {storage_driver}
  */
 export class GoogleStorage {
   
@@ -49,7 +48,7 @@ export class GoogleStorage {
   get config() { return this.#_config; }
 
   /**
-   * @type {storage["init"]}
+   * @type {storage_driver["init"]}
    */
   async init(app) {
     if(!app)
@@ -66,7 +65,7 @@ export class GoogleStorage {
   }
 
   features() {
-    /** @type {import('@storecraft/core/storage').StorageFeatures} */
+    /** @type {StorageFeatures} */
     const f = {
       supports_signed_urls: true
     }

@@ -1,3 +1,7 @@
+/**
+ * @import { AwsS3Config, Config, R2Config } from './types.public.js'
+ * @import { storage_driver, StorageFeatures } from '@storecraft/core/storage'
+ */
 import { App } from '@storecraft/core'
 import { AwsClient } from './aws4fetch.js';
 
@@ -25,15 +29,9 @@ const infer_content_type = (name) => {
 
 
 /**
- * @typedef {import('./types.public.d.ts').Config} Config
- */
-
-/**
  * @description The base S3 compatible class
  * 
- * @typedef {import('@storecraft/core/storage').storage_driver} storage
- * 
- * @implements {storage}
+ * @implements {storage_driver}
  */
 export class S3CompatibleStorage {
   
@@ -75,7 +73,7 @@ export class S3CompatibleStorage {
   get config() { return this.#_config; }
 
   features() {
-    /** @type {import('@storecraft/core/storage').StorageFeatures} */
+    /** @type {StorageFeatures} */
     const f = {
       supports_signed_urls: true
     }
@@ -85,7 +83,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["init"]}
+   * @type {storage_driver["init"]}
    */
   async init(app) { return this; }
 
@@ -118,7 +116,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["putBlob"]}
+   * @type {storage_driver["putBlob"]}
    */
   async putBlob(key, blob) {
     return this.#put_internal(key, blob);
@@ -126,7 +124,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["putArraybuffer"]}
+   * @type {storage_driver["putArraybuffer"]}
    */
   async putArraybuffer(key, buffer) {
     return this.#put_internal(key, buffer);
@@ -134,7 +132,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["putStream"]}
+   * @type {storage_driver["putStream"]}
    */
   async putStream(key, stream, meta={}, bytesLength=0) {
     const extra_headers = {};
@@ -150,7 +148,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["putSigned"]}
+   * @type {storage_driver["putSigned"]}
    */
   async putSigned(key) {
     const url = new URL(this.get_file_url(key));
@@ -183,7 +181,7 @@ export class S3CompatibleStorage {
   }
 
   /**
-   * @type {storage["getArraybuffer"]}
+   * @type {storage_driver["getArraybuffer"]}
    */
   async getArraybuffer(key) {
     const r = await this.#get_request(key);
@@ -199,7 +197,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["getBlob"]}
+   * @type {storage_driver["getBlob"]}
    */
   async getBlob(key) {
     const r = await this.#get_request(key);
@@ -214,7 +212,7 @@ export class S3CompatibleStorage {
   }
 
   /**
-   * @type {storage["getStream"]}
+   * @type {storage_driver["getStream"]}
    */
   async getStream(key) {
     const r = await this.#get_request(key);
@@ -231,7 +229,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["getSigned"]}
+   * @type {storage_driver["getSigned"]}
    */
   async getSigned(key) {
     const url = new URL(this.get_file_url(key));
@@ -256,7 +254,7 @@ export class S3CompatibleStorage {
 
   /**
    * 
-   * @type {storage["remove"]}
+   * @type {storage_driver["remove"]}
    */
   async remove(key) {
     const r = await this.client.fetch(
@@ -272,7 +270,7 @@ export class S3CompatibleStorage {
 export class R2 extends S3CompatibleStorage {
 
   /**
-   * @param {import('./types.public.d.ts').R2Config} config
+   * @param {R2Config} config
    */
   constructor({bucket, account_id, accessKeyId, secretAccessKey}) {
     super(
@@ -292,7 +290,7 @@ export class R2 extends S3CompatibleStorage {
 export class S3 extends S3CompatibleStorage {
 
   /**
-   * @param {import('./types.public.d.ts').AwsS3Config} config
+   * @param {AwsS3Config} config
    */
   constructor({bucket, region, accessKeyId, secretAccessKey, forcePathStyle=false}) {
     super(
@@ -312,7 +310,7 @@ export class S3 extends S3CompatibleStorage {
 export class DigitalOceanSpaces extends S3CompatibleStorage {
 
   /**
-   * @param {Omit<import('./types.public.d.ts').Config, 'endpoint' | 'forcePathStyle'>} config
+   * @param {Omit<Config, 'endpoint' | 'forcePathStyle'>} config
    */
   constructor({bucket, region, accessKeyId, secretAccessKey}) {
     super(

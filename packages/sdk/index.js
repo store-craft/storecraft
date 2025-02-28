@@ -70,15 +70,6 @@ export class StorecraftSDK {
     this.checkout = new Checkout(this);
     this.settings = new Settings(this);
     this.notifications = new Notifications(this);
-
-    this.products.list(
-      {
-        endAt: [
-          ['active', true]
-        ],
-        expand: ['']
-      }
-    )
   }
 
   /**

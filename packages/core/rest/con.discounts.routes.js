@@ -1,7 +1,7 @@
 /** 
  * @import { ApiPolka } from './types.public.js' 
  * @import { ApiQuery } from '../api/types.api.query.js' 
- * @import { DiscountType } from '../api/types.api.js' 
+ * @import { DiscountType, ProductType } from '../api/types.api.js' 
  */
 import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
@@ -78,7 +78,9 @@ export const create_routes = (app) => {
     '/:discount/products',
     async (req, res) => {
       const { discount } = req?.params;
-      const q = parse_query(req.query);
+      const q = (/** @type {ApiQuery<ProductType>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.discounts.list_discounts_products(discount, q);
 
       res.sendJson(items);

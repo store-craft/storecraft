@@ -1,6 +1,6 @@
 /** 
  * @import { ApiRequest, ApiResponse, ApiPolka } from './types.public.js' 
- * @import { Role } from "../api/types.api.js"; 
+ * @import { OrderData, Role } from "../api/types.api.js"; 
  * @import { CustomerType } from "../api/types.api.js"; 
  * @import { ApiQuery } from "../api/types.api.query.js"; 
  */
@@ -69,7 +69,7 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      let q = (/** @type {ApiQuery<CustomerType>} */ (
+      const q = (/** @type {ApiQuery<CustomerType>} */ (
         parse_query(req.query))
       );
       const items = await app.api.customers.list(q);
@@ -84,7 +84,9 @@ export const create_routes = (app) => {
     owner_or_admin_guard,
     async (req, res) => {
       const { email_or_id } = req.params;
-      const q = parse_query(req.query);
+      const q = (/** @type {ApiQuery<OrderData>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.customers.list_customer_orders(email_or_id, q);
       
       res.sendJson(items);

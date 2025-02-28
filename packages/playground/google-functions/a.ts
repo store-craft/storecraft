@@ -10,7 +10,9 @@ export const app = new App(
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games',
-    auth_admins_emails: ['john@doe.com']
+    auth_admins_emails: ['john@doe.com'],
+    auth_secret_access_token: '',
+    auth_secret_refresh_token: ''
   }
 )
 .withPlatform(new GoogleFunctionsPlatform())
@@ -25,5 +27,11 @@ export const app = new App(
         env: 'test' 
       }
     ),
+  }
+)
+.on(
+  'auth/apikey-created',
+  async (evt) => {
+    evt.payload
   }
 )

@@ -33,7 +33,7 @@ import { StoreAgent } from './ai/agents/agent.js';
  */
 
 /**
- * 
+ * @description This is the main `storecraft` **App**
  * 
  * @template {PlatformAdapter} [Platform=PlatformAdapter]
  * @template {db_driver} [Database=db_driver]
@@ -45,9 +45,6 @@ import { StoreAgent } from './ai/agents/agent.js';
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {AI} [AiProvider=AI]
- * 
- * @description This is the main `storecraft` **App**
- * 
  */
 export class App {
 

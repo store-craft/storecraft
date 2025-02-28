@@ -8,7 +8,8 @@
     ],
     "declaration": true,
     "allowJs": true,
-    "maxNodeModuleJsDepth": 10,
+    "maxNodeModuleJsDepth": 100,
+
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -22,6 +23,7 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+
     "typeRoots": [
       "./node_modules/@types"
     ]
@@ -29,6 +31,7 @@
   "exclude": [
     "jest.config.js",
     "node_modules",
-    "cdk.out"
+    "cdk.out",
+    "tsconfig.json",
   ]
 }

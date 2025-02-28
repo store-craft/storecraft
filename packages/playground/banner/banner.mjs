@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
 import * as path from 'node:path';

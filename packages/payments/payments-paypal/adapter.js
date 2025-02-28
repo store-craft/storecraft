@@ -13,12 +13,13 @@ import html_buy_ui from './adapter.html.js';
 
 /**
  * @typedef {paypal_order} CreateResult
+ * @typedef {payment_gateway<Config, CreateResult>} Impl
  */
 
 /**
  * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
  * 
- * @implements {payment_gateway<Config, CreateResult>}
+ * @implements {Impl}
 */
 export class Paypal {
   
@@ -92,7 +93,7 @@ export class Paypal {
 
   /**
    * 
-   * @type {payment_gateway["invokeAction"]}
+   * @type {Impl["invokeAction"]}
    */
   invokeAction(action_handle) {
     switch (action_handle) {
@@ -109,11 +110,7 @@ export class Paypal {
   }
 
   /**
-   * @description (Optional) buy link ui
-   * 
-   * @param {Partial<OrderData>} order 
-   * 
-   * @return {Promise<string>} html 
+   * @type {Impl["onBuyLinkHtml"]}
    */
   async onBuyLinkHtml(order) {
 
@@ -125,9 +122,7 @@ export class Paypal {
   /**
    * @description TODO: the user prefers to capture intent instead
    * 
-   * @param {OrderData} order 
-   * 
-   * @return {Promise<CreateResult>}
+   * @type {Impl["onCheckoutCreate"]}
    */
   async onCheckoutCreate(order) {
     const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
@@ -164,9 +159,7 @@ export class Paypal {
   /**
    * @description todo: logic for if user wanted capture at approval
    * 
-   * @param {CreateResult} create_result 
-   * 
-   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>}  
+   * @type {Impl["onCheckoutComplete"]}
    */
   async onCheckoutComplete(create_result) {
     // the url based on authorize or capture intent
@@ -212,11 +205,7 @@ export class Paypal {
   /**
    * @description Fetch the order and analyze it's status
    * 
-   * 
-   * @param {CreateResult} create_result 
-   * 
-   * 
-   * @returns {Promise<PaymentGatewayStatus>}
+   * @type {Impl["status"]}
    */
   async status(create_result) {
     const o = await this.retrieve_order(create_result);
@@ -287,9 +276,10 @@ export class Paypal {
   /**
    * @description [https://developer.paypal.com/api/rest/webhooks/rest/](https://developer.paypal.com/api/rest/webhooks/rest/)
    * 
-   * @param {Request} request 
+   * @type {Impl["webhook"]}
    */
   async webhook(request) {
+    throw new Error('Paypal:: webhook - not supported yet !');
     return null;
   }
 

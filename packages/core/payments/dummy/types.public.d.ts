@@ -15,5 +15,3 @@ export type Config = {
    */
   intent_on_checkout?: 'AUTHORIZE' | 'CAPTURE';
 }
-
-

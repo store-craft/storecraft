@@ -1,3 +1,10 @@
+/**
+ * @import { OrderData, PaymentGatewayStatus } from '../../api/types.api.js'
+ * @import { Config } from './types.public.js'
+ * @import { DummyPaymentData } from './types.private.js'
+ * @import { payment_gateway } from '../../payments/types.public.js'
+ */
+
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
 } from '@storecraft/core/api/types.api.enums.js';
@@ -6,21 +13,10 @@ import { DummyDatabase } from './dummy-database.js';
   
 
 /**
- * @typedef {object} DummyPaymentData
- * @prop {'created' | 'authorized' | 'captured' | 'voided' | 'refunded' | 'unknown'} status
- * @prop {string} id
- * @prop {string} created_at
- * @prop {number} price
- * @prop {string} currency
- */
-
-/**
  * 
  * @typedef {string} CreateResult
- * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/api').OrderData} OrderData
- * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CreateResult>} payment_gateway
+ * @typedef {payment_gateway<Config, CreateResult>} Impl
+ * 
  */
 
 /** 
@@ -28,7 +24,7 @@ import { DummyDatabase } from './dummy-database.js';
  * - testing purposes
  * - playground and shaping new features
  * 
- * @implements {payment_gateway}
+ * @implements {Impl}
  */
 export class DummyPayments {
   
@@ -96,7 +92,7 @@ export class DummyPayments {
 
   /**
    * 
-   * @type {payment_gateway["invokeAction"]}
+   * @type {Impl["invokeAction"]}
    */
   invokeAction(action_handle) {
     switch (action_handle) {
@@ -118,9 +114,7 @@ export class DummyPayments {
 
   /**
    * 
-   * @param {OrderData} order 
-   * 
-   * @return {Promise<CreateResult>}
+   * @type {Impl["onCheckoutCreate"]}
    */
   async onCheckoutCreate(order) { 
     const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
@@ -158,9 +152,7 @@ export class DummyPayments {
 
   /**
    * 
-   * @param {CreateResult} create_result 
-   * 
-   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>} create_result 
+   * @type {Impl["onCheckoutComplete"]}
    */
   async onCheckoutComplete(create_result) {
     const payment = await this.retrieve_gateway_order(create_result);
@@ -199,16 +191,12 @@ export class DummyPayments {
   /**
    * Fetch the order and analyze it's status
    * 
-   * 
-   * @param {CreateResult} create_result 
-   * 
-   * 
-   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayStatus>}
+   * @type {Impl["status"]}
    */
   async status(create_result) {
     const order = await this.retrieve_gateway_order(create_result);
     
-    /** @type {import('@storecraft/core/api').PaymentGatewayStatus} */
+    /** @type {PaymentGatewayStatus} */
     const stat = {
       messages: [],
       actions: this.actions

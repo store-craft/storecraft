@@ -6,6 +6,7 @@
     "checkJs": true,
     "maxNodeModuleJsDepth": 40,
     "resolveJsonModule": true,
+    "strict": true,
     "target": "ESNext",
     "moduleResolution": "NodeNext",
     "module": "NodeNext",

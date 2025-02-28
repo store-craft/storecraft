@@ -15,6 +15,6 @@ export const handler = async (event: LambdaEvent, context: LambdaContext): Promi
 
   // // handler
   const response = await app.handler(event, context);
-  console.log('tomer', response);
+  console.log('hello storecraft', response);
   return response;
 }

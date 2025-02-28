@@ -31,7 +31,7 @@ export const searchableSchema = z
     search: z.array(z.string()).optional(),
   })
   .describe("searchable");
-export const idableSchema = z
+export const withOptionalIDSchema = z
   .object({
     id: z.string().optional().describe("ID"),
   })
@@ -143,12 +143,10 @@ export const baseTypeSchema = idableConcreteSchema
     description: z.string().optional().describe("Rich description"),
     active: z.boolean().optional().describe("Is the entity active ?"),
   });
-export const tagTypeSchema = idableSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    handle: z.string().describe("The key name"),
-    values: z.array(z.string()).describe("List of values, related to the key"),
-  });
+export const tagTypeSchema = baseTypeSchema.extend({
+  handle: z.string().describe("The key name"),
+  values: z.array(z.string()).describe("List of values, related to the key"),
+});
 export const tagTypeUpsertSchema = tagTypeSchema
   .omit({ id: true, handle: true })
   .and(withOptionalHandleOrIDSchema)
@@ -601,8 +599,8 @@ export const customerTypeSchema = baseTypeSchema.extend({
   address: addressTypeSchema.optional().describe("Address info of customer"),
 });
 export const customerTypeUpsertSchema = customerTypeSchema
-  .omit({ id: true, handle: true })
-  .and(withOptionalHandleOrIDSchema)
+  .omit({ id: true })
+  .and(withOptionalIDSchema)
   .describe("Customer upsert type");
 export const imageTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("Unique handle"),
@@ -1027,7 +1025,7 @@ export const paymentGatewayItemGetSchema = z
   })
   .describe("Upon querying the payment gateways");
 export const templateTypeSchema = baseTypeSchema.extend({
-  handle: z.string().optional().describe("`handle`"),
+  handle: z.string().describe("`handle`"),
   title: z.string().describe("`title` of `template`"),
   template_html: z
     .string()
@@ -1252,7 +1250,7 @@ const baseNotificationTypeSchema = z.object({
     .optional()
     .describe("List of actions"),
   search: z.array(z.string()).optional().describe("search terms"),
-  id: z.string().optional().describe("`id` of notification"),
+  id: z.string().describe("`id` of notification"),
 });
 export const notificationTypeUpsertSchema = baseNotificationTypeSchema.omit({
   id: true,
@@ -1456,7 +1454,6 @@ export const productTypeSchema = baseProductTypeSchema.extend({
 export const productTypeUpsertSchema = productTypeSchema
   .omit({
     collections: true,
-    published: true,
     related_products: true,
     discounts: true,
     variants: true,
@@ -1653,7 +1650,6 @@ export const variantCombinationSchema = z
 export const variantTypeUpsertSchema = variantTypeSchema
   .omit({
     collections: true,
-    published: true,
     discounts: true,
     related_products: true,
     id: true,

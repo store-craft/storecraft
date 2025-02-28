@@ -6,8 +6,9 @@ import { delete_entity_values_by_value_or_reporter,
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, select_entity_ids_by_value_or_reporter, regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags,
-  count_regular} from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+  count_regular,
+  with_search} from './con.shared.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
@@ -37,6 +38,12 @@ const upsert = (driver) => {
           // remove all products relation to this discount
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
             trx, item.id, item.handle);
+
+          await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
+            trx, `discount:${item.id}`);
+          await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
+            trx, `discount:${item.handle}`);
+
           if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
             // make connections
             await trx
@@ -56,6 +63,37 @@ const upsert = (driver) => {
                 )
             ).execute();
 
+            await trx
+            .insertInto('entity_to_search_terms')
+            .columns(['entity_handle', 'entity_id', 'value'])
+            .expression(eb => 
+              eb.selectFrom('products')
+                .select(eb => [
+                    'handle as entity_handle',
+                    'id as entity_id',
+                    eb.val(`discount:${item.id}`).as('value'),
+                  ]
+                )
+                .where(
+                  eb => eb.and(discount_to_conjunctions(eb, item))
+                )
+            ).execute();      
+
+            await trx
+            .insertInto('entity_to_search_terms')
+            .columns(['entity_handle', 'entity_id', 'value'])
+            .expression(eb => 
+              eb.selectFrom('products')
+                .select(eb => [
+                    'handle as entity_handle',
+                    'id as entity_id',
+                    eb.val(`discount:${item.handle}`).as('value'),
+                  ]
+                )
+                .where(
+                  eb => eb.and(discount_to_conjunctions(eb, item))
+                )
+            ).execute();                     
           }
 
           ///
@@ -100,9 +138,11 @@ const get = (driver) => {
       .select(eb => [
         with_media(eb, id_or_handle, driver.dialectType),
         with_tags(eb, id_or_handle, driver.dialectType),
+        with_search(eb, id_or_handle, driver.dialectType),
       ].filter(Boolean))
       .where(where_id_or_handle_table(id_or_handle))
-      .executeTakeFirst();
+      .executeTakeFirst()
+      .then(sanitize);
   }
 }
 
@@ -156,13 +196,14 @@ const list = (driver) => {
       .select(eb => [
         with_media(eb, eb.ref('discounts.id'), driver.dialectType),
         with_tags(eb, eb.ref('discounts.id'), driver.dialectType),
+        with_search(eb, eb.ref('discounts.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, table_name))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
@@ -179,6 +220,10 @@ const list = (driver) => {
 const list_discount_products = (driver) => {
   return async (handle_or_id, query={}) => {
 
+    // TODO: try to rewrite this with JOIN to products_to_discounts ON products.id=entity_id
+    // TODO: and then filter by value==handle_or_id_of_discount
+    // TODO: I think it will be better and more memory efficient for the database
+    // TODO: becausee right now it loads all the eligible products ids in advance
     const items = await driver.client
       .selectFrom('products')
       .selectAll()
@@ -198,7 +243,7 @@ const list_discount_products = (driver) => {
           ].filter(Boolean)
         )
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'products'))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

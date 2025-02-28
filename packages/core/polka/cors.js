@@ -16,7 +16,7 @@ export const CORSDefault = {
   origin: '*',
   allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH'],
   allowHeaders: [],
-  exposeHeaders: [],
+  exposeHeaders: ['*'],
 }
 
 /**
@@ -44,8 +44,8 @@ export const cors = (options) => {
   })(opts.origin);
 
   /**
-   * @param {import("../types.public.d.ts").ApiRequest} req
-   * @param {import("../types.public.d.ts").ApiResponse} res
+   * @param {import("../rest/types.public.d.ts").ApiRequest} req
+   * @param {import("../rest/types.public.d.ts").ApiResponse} res
    */
   return async function cors(req, res) {
 

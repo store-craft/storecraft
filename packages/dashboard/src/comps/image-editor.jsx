@@ -1,3 +1,6 @@
+/**
+ * @import { Crop } from 'react-image-crop'
+ */
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { BiRotateRight, BiMove, BiCrop } from 'react-icons/bi/index.js'
@@ -297,7 +300,7 @@ const ImageEditor = (
 ) => {
 
   const imgRef = useRef(null)
-  /** @type {useStateInfer<import('react-image-crop/index.js').Crop>} */
+  /** @type {useStateInfer<import('react-image-crop/index.js').PercentCrop>} */
   const [completedCrop, setCompletedCrop] = useState()
   /** @type {useStateInfer<import('react-image-crop/index.js').Crop>} */
   const [crop, setCrop] = useState();
@@ -324,7 +327,20 @@ const ImageEditor = (
       const image = imgRef.current
       const canvas = document.createElement("canvas")
       const { rotate, trans, scale } = panelValues
-      const crop = completedCrop
+      // const crop = completedCrop
+      // const crop = completedCrop
+      console.log('completedCrop', completedCrop)
+      /** @type {typeof completedCrop} */
+      const crop = {
+        width: (image.width * completedCrop.width)/100,
+        height: (image.height * completedCrop.height)/100,
+        x: (image.width * completedCrop.x)/100,
+        y: (image.height * completedCrop.y)/100,
+      }
+      // crop.x *=2;
+      // crop.y *=2;
+      // crop.width *=2;
+      // crop.height *=2;
       const ctx = canvas.getContext('2d')
       const TO_RADIANS = Math.PI / 180.0
 
@@ -469,7 +485,7 @@ const ImageEditor = (
         className='m-0 w-full'
         crop={crop}
         onChange={(_, percentCrop) => setCrop(percentCrop)}
-        onComplete={(c) => setCompletedCrop(c)}
+        onComplete={(pix, perc) => setCompletedCrop(perc)}
         aspect={undefined} >
         <Img
             crossOrigin='anonymous'

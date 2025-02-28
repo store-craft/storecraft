@@ -42,6 +42,7 @@ export interface VPolkaResponse {
   sendArrayBuffer: (o: ArrayBuffer) => VPolkaResponse
   sendSearchParams: (o: URLSearchParams) => VPolkaResponse
   sendFormData: (o: FormData) => VPolkaResponse
+  sendServerSentEvents: (o: ReadableStream) => VPolkaResponse
   setStatus: (code: number, text?: string) => VPolkaResponse
 }
 

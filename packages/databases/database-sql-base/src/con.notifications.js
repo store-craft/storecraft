@@ -25,6 +25,7 @@ const upsert = (driver) => {
             item.id, item.id, table_name
             );
           await regular_upsert_me(trx, table_name, {
+            handle: null,
             created_at: item.created_at,
             updated_at: item.updated_at,
             message: item.message,
@@ -121,7 +122,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'notifications'))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

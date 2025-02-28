@@ -73,6 +73,7 @@ const upsert = (driver) => {
             driver, 'collections', objid, data, session
           );
 
+        // @ts-ignore
         }, transactionOptions
       );
     
@@ -136,6 +137,7 @@ const remove = (driver) => {
             driver, 'collections', objid, session
           );
 
+        // @ts-ignore
         }, transactionOptions
       );
     } catch(e) {

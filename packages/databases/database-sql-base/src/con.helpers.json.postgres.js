@@ -51,7 +51,7 @@ import { extract_first_selection } from './con.helpers.json.js';
  * ```
  * @template O
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
+ * @returns {import('kysely').RawBuilder<string[]>}
  */
 export function pg_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');

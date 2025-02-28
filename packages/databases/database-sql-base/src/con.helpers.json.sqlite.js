@@ -114,7 +114,7 @@ export function sqlite_jsonArrayFrom(expr) {
  * ```
  * @template O
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
+ * @returns {import('kysely').RawBuilder<string[]>}
  */
 export function sqlite_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');

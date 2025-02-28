@@ -42,6 +42,7 @@ const upsertBulk = (driver) => {
     items = items.map(item => ({...item}));
     items.forEach(
       (item, ix) => {
+        // @ts-ignore
         item._id = to_objid(item.id);
         
         add_search_terms_relation_on(

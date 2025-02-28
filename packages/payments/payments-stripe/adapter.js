@@ -1,3 +1,11 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
+ * @import { payment_gateway } from '@storecraft/core/payments'
+ * @import { ApiRequest, ApiResponse } from '@storecraft/core/rest'
+ * @import { } from './types.private.js'
+ */
+
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
 } from '@storecraft/core/api/types.api.enums.js';
@@ -7,11 +15,7 @@ import { Stripe as StripeCls } from 'stripe'
 
 /**
  * @typedef {StripeCls.Response<StripeCls.PaymentIntent>} CheckoutCreateResult
- * @typedef {import('@storecraft/core/api').PaymentGatewayStatus} PaymentGatewayStatus
- * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/api').OrderData} OrderData
- * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CheckoutCreateResult>} payment_gateway
+ * @typedef {payment_gateway<Config, CheckoutCreateResult>} Impl
  */
 
 /**
@@ -21,7 +25,7 @@ import { Stripe as StripeCls } from 'stripe'
 export const metadata_storecraft_order_id = 'storecraft_order_id'
 
 /**
- * @implements {payment_gateway}
+ * @implements {Impl}
  * 
  * @description **Stripe** gateway (https://docs.stripe.com/payments/place-a-hold-on-a-payment-method)
  */
@@ -110,7 +114,7 @@ export class Stripe {
 
   /**
    * 
-   * @type {payment_gateway["invokeAction"]}
+   * @type {Impl["invokeAction"]}
    */
   invokeAction(action_handle) {
     switch (action_handle) {
@@ -129,9 +133,7 @@ export class Stripe {
   /**
    * @description (Optional) buy link ui
    * 
-   * @param {Partial<OrderData>} order 
-   * 
-   * @return {Promise<string>} html 
+   * @type {Impl["onBuyLinkHtml"]}
    */
   async onBuyLinkHtml(order) {
 
@@ -143,9 +145,7 @@ export class Stripe {
   /**
    * @description on checkout create `hook`
    * 
-   * @param {OrderData} order 
-   * 
-   * @return {Promise<CheckoutCreateResult>}
+   * @type {Impl["onCheckoutCreate"]}
    */
   async onCheckoutCreate(order) {
 
@@ -169,12 +169,10 @@ export class Stripe {
    * client side into their servers, and then you are notified via a
    * webhook.
    * 
-   * @param {CheckoutCreateResult} create_result 
-   * 
-   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>}  
+   * @type {Impl["onCheckoutComplete"]}  
    */
   async onCheckoutComplete(create_result) {
-
+    
     const intent = await this.stripe.paymentIntents.confirm(
       create_result.id
     );
@@ -215,11 +213,7 @@ export class Stripe {
   /**
    * @description Fetch the order and analyze it's status
    * 
-   * 
-   * @param {CheckoutCreateResult} create_result 
-   * 
-   * 
-   * @returns {Promise<PaymentGatewayStatus>}
+   * @type {Impl["status"]}
    */
   async status(create_result) {
     const o = await this.retrieve_order(create_result);
@@ -268,10 +262,8 @@ export class Stripe {
 
   /**
    * @description [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
-   * @param {import('@storecraft/core/rest').ApiRequest} request 
-   * @param {import('@storecraft/core/rest').ApiResponse} response 
    * 
-   * @type {payment_gateway["webhook"]}
+   * @type {Impl["webhook"]}
    */
   async webhook(request, response) {
     const sig = request.headers.get('Stripe-Signature');
@@ -295,6 +287,7 @@ export class Stripe {
     /** @type {StripeCls.PaymentIntent} */
     let payment_intent;
 
+    /** @type {PaymentOptionsEnum[keyof PaymentOptionsEnum]} */
     let payment_status = PaymentOptionsEnum.unpaid;
     
     // Handle the event
@@ -323,8 +316,10 @@ export class Stripe {
       case 'charge.refund.updated':
         payment_status = PaymentOptionsEnum.refunded;
 
-      default:
+      default: {
         console.log(`Unhandled event type ${event.type}`);
+        return undefined;
+      }
     }
   
     // Return a response to acknowledge receipt of the event

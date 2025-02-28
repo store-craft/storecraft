@@ -46,9 +46,6 @@ const prefix_to_resource = {
   
 }
 
-/**
- * @type {Record<keyof import('@storecraft/core/database').db_driver["resources"], string[]>}
- */
 const resource_to_props = {
   'auth_users': ['id', 'handle'],
   'collections': ['id', 'handle'],
@@ -100,8 +97,12 @@ export const quicksearch = (driver) => {
         .entries(resource_to_props)
         .filter(t => all || expand.includes(t[0]))
         .map(
+          /**
+           * @param {any} param0 
+           */
           ([table_name, props]) => {
             // console.log(table_name, props)
+            props
             return jsonArrayFrom(
               eb
               .selectFrom(table_name)
@@ -111,7 +112,7 @@ export const quicksearch = (driver) => {
                   return query_to_eb(eb, query, table_name);
                 }
               )
-              .orderBy(query_to_sort(query))
+              .orderBy(query_to_sort(query, table_name))
               .limit(query.limit ?? 5),
               driver.dialectType
             ).as(table_name)
@@ -119,8 +120,10 @@ export const quicksearch = (driver) => {
         )
     )
     
-    /** @type {import('@storecraft/core/api').QuickSearchResult} */
-    const items = await sts.executeTakeFirst();
+    
+    const items = (/** @type {import('@storecraft/core/api').QuickSearchResult} */(
+      await sts.executeTakeFirst())
+    );
 
     const sanitized = Object.fromEntries(
       Object.entries(items).filter(

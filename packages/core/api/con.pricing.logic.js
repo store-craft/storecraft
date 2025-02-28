@@ -1,24 +1,27 @@
 
 /**
- * @import {ProductType} from './types.api.js';
- * @import {ProductTypeUpsert} from './types.api.js';
- * @import {VariantType} from './types.api.js';
- * @import {VariantTypeUpsert} from './types.api.js';
- * @typedef {ProductType | ProductTypeUpsert | VariantType | VariantTypeUpsert} ProductLike
- * @import {ShippingMethodType} from './types.api.js';
- * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
- * @import {Filter} from './types.api.js';
- * @import {DiscountType} from './types.api.js';
- * @import {DiscountDetails} from './types.api.js';
- * @typedef {import('./types.api.js').DiscountMetaEnum} DiscountMeta
- * @import {BulkDiscountExtra} from './types.api.js';
- * @import {OrderDiscountExtra} from './types.api.js';
- * @import {RegularDiscountExtra} from './types.api.js';
- * @import {BuyXGetYDiscountExtra} from './types.api.js';
- * @import {BundleDiscountExtra} from './types.api.js';
- * @import {LineItem} from './types.api.js';
- * @import {PricingData} from './types.api.js';
+ * @import { 
+ *  AddressType, OrderData, ProductType, ProductTypeUpsert,
+ *  VariantType, VariantTypeUpsert, ShippingMethodType,
+ *  DiscountType, DiscountDetails, LineItem, PricingData
+ * } from './types.api.js';
+ * @import { 
+ *  Filter, FilterValue_o_date_in_range, FilterValue_o_has_customers, 
+ *  FilterValue_o_items_count_in_range, FilterValue_o_subtotal_in_range,
+ *  FilterValue_p_all, FilterValue_p_in_collections, 
+ *  FilterValue_p_in_price_range, FilterValue_p_in_products, FilterValue_p_in_tags, 
+ *  FilterValue_p_not_in_collections, FilterValue_p_not_in_products, 
+ *  FilterValue_p_not_in_tags
+ * } from './types.api.js';
+ * @import { tax_provider } from '../tax/types.public.js';
+ * @import { 
+ *  BulkDiscountExtra, OrderDiscountExtra, RegularDiscountExtra, 
+ *  BuyXGetYDiscountExtra, BundleDiscountExtra 
+ * } from './types.api.js';
  * 
+ * @typedef { ProductType | ProductTypeUpsert | VariantType | VariantTypeUpsert } ProductLike
+ * @typedef {import('./types.api.js').FilterMetaEnum} FilterMeta
+ * @typedef {import('./types.api.js').DiscountMetaEnum} DiscountMeta
  */
 
 
@@ -53,12 +56,12 @@ export const test_product_filter_against_product =
 
       case FilterMetaEnum.p_in_price_range.op:
         {
-          /** @type {import('./types.api.d.ts').FilterValue_p_in_price_range} */
+          /** @type {FilterValue_p_in_price_range} */
           const cast = { 
             from: 0, 
             to: Number.POSITIVE_INFINITY,
             ...(
-              (/** @type {import('./types.api.d.ts').FilterValue_p_in_price_range} */ (filter?.value)) ?? {}
+              (/** @type {FilterValue_p_in_price_range} */ (filter?.value)) ?? {}
             )
           };
 
@@ -71,7 +74,7 @@ export const test_product_filter_against_product =
       case FilterMetaEnum.p_in_collections.op:
         {
           
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_p_in_collections} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_p_in_collections} */ (filter?.value)) ?? [];
           
           return product?.collections?.some(
             c => cast.map(v => v.id).includes(c.id)
@@ -81,7 +84,7 @@ export const test_product_filter_against_product =
       case FilterMetaEnum.p_not_in_collections.op:
         {
           
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_p_not_in_collections} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_p_not_in_collections} */ (filter?.value)) ?? [];
 
           return product?.collections?.every(
               c => !cast.map(v => v.id).includes(c.id)
@@ -91,7 +94,7 @@ export const test_product_filter_against_product =
       case FilterMetaEnum.p_in_products.op:
         {
           
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_p_in_products} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_p_in_products} */ (filter?.value)) ?? [];
 
           return cast.map(it => it.handle).includes(product.handle);
         }
@@ -99,7 +102,7 @@ export const test_product_filter_against_product =
       case FilterMetaEnum.p_not_in_products.op:
         {
           
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_p_not_in_products} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_p_not_in_products} */ (filter?.value)) ?? [];
 
           return !cast.map(it => it.handle).includes(product.handle);
         }
@@ -107,7 +110,7 @@ export const test_product_filter_against_product =
       case FilterMetaEnum.p_in_tags.op:
         {
           
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_p_in_tags} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_p_in_tags} */ (filter?.value)) ?? [];
 
           return product?.tags?.some(
             c => cast.includes(c)
@@ -116,7 +119,7 @@ export const test_product_filter_against_product =
       case FilterMetaEnum.p_not_in_tags.op:
         {
           
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_p_not_in_tags} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_p_not_in_tags} */ (filter?.value)) ?? [];
 
           return product?.tags?.every(
             c => !cast.includes(c)
@@ -178,12 +181,12 @@ const test_order_filter =
         {
           const now = (new Date()).toISOString();
 
-          /** @type {import('./types.api.d.ts').FilterValue_o_date_in_range} */
+          /** @type {FilterValue_o_date_in_range} */
           const cast = {
             from: (new Date(0)).toISOString(),
             to: now,
             ...(
-              ( /** @type {import('./types.api.d.ts').FilterValue_o_date_in_range} */ (filter.value)) ?? {}
+              ( /** @type {FilterValue_o_date_in_range} */ (filter.value)) ?? {}
             )
           };
 
@@ -196,7 +199,7 @@ const test_order_filter =
 
       case FilterMetaEnum.o_has_customer.op: 
         {
-          const cast = (/** @type {import('./types.api.d.ts').FilterValue_o_has_customers} */ (filter?.value)) ?? [];
+          const cast = (/** @type {FilterValue_o_has_customers} */ (filter?.value)) ?? [];
           
           return Boolean(
             cast.find(cus => cus.id===uid)
@@ -205,11 +208,11 @@ const test_order_filter =
 
       case FilterMetaEnum.o_items_count_in_range.op:
         {
-          /** @type {import('./types.api.d.ts').FilterValue_o_items_count_in_range} */
+          /** @type {FilterValue_o_items_count_in_range} */
           const cast = { 
             from: 0,
             ...(
-              (/** @type {import('./types.api.d.ts').FilterValue_o_items_count_in_range} */ (filter?.value)) ?? {}
+              (/** @type {FilterValue_o_items_count_in_range} */ (filter?.value)) ?? {}
             )
           };
 
@@ -218,11 +221,11 @@ const test_order_filter =
 
       case FilterMetaEnum.o_subtotal_in_range.op:
         {
-          /** @type {import('./types.api.d.ts').FilterValue_o_subtotal_in_range} */
+          /** @type {FilterValue_o_subtotal_in_range} */
           const cast = { 
             from: 0,
             ...(
-              (/** @type {import('./types.api.d.ts').FilterValue_o_subtotal_in_range} */ (filter?.value)) ?? {}
+              (/** @type {FilterValue_o_subtotal_in_range} */ (filter?.value)) ?? {}
             )
           };
 
@@ -887,10 +890,10 @@ export const calculate_line_items_for_discount =
  * @param {DiscountType[]} auto_discounts disabled discounted will be filtered out
  * @param {DiscountType[]} coupons disabled coupons will be filtered out
  * @param {Partial<ShippingMethodType>} [shipping_method] 
- * @param {Partial<import('./types.api.d.ts').AddressType>} [shipping_address]
+ * @param {Partial<AddressType>} [shipping_address]
  * @param {string} [uid=undefined] 
- * @param {import('../tax/types.public.d.ts').tax_provider} [tax_provider=undefined] 
- * @param {import('./types.api.d.ts').OrderData} [tax_provider=undefined] 
+ * @param {tax_provider} [tax_provider=undefined] 
+ * @param {OrderData} [tax_provider=undefined] 
  * 
  * @returns {Promise<PricingData>}
  */
@@ -1023,7 +1026,7 @@ export const calculate_pricing = async (
   {
     if(tax_provider) {
       report.taxes = await tax_provider.compute(shipping_address, {...report});
-      report.total += report.taxes.reduce((p, c) => p + c.value ?? 0, 0);
+      report.total += report.taxes.reduce((p, c) => p + (c.value ?? 0), 0);
     }
   }
 

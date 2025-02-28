@@ -240,7 +240,7 @@ export interface DiscountsTable extends Base {
   /** details and filters of the discount */
   info: JSONColumnType<DiscountInfo>;
   /** discount application (automatic and coupons) */
-  application: JSONColumnType<DiscountApplicationEnum>;
+  application: JSONColumnType<DiscountApplicationEnum[keyof DiscountApplicationEnum]>;
   /** internal usage, the application type id */
   _application_id: number;
   /** internal usage, the discount type id */

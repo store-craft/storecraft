@@ -1,0 +1,62 @@
+{
+  "name": "@storecraft/chat",
+  "version": "0.0.1",
+  "description": "Storecraft Official Chat",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/chat"
+  },
+  "keywords": [
+    "commerce",
+    "chat",
+    "react",
+    "storecraft"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/src/index.d.ts",
+      "import": "./dist/lib/index.js",
+      "require": "./dist/lib/index.umd.cjs"
+    }
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "vite --host",
+    "build": "tsc -b && vite build && vite build -c vite.lib.config.js",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "dashboard:analyze": "npx vite-bundle-visualizer -c vite.lib.config.js",
+    "prepublishOnly": "npm run build && npm version patch --force",
+    "sc-publish": "npm publish"
+  },
+  "dependencies": {
+    "@storecraft/sdk": "^1.0.8",
+    "@storecraft/sdk-react-hooks": "^1.0.30",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.0.9",
+    "marked": "^15.0.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "tailwindcss": "^4.0.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@storecraft/core": "^1.0.27",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^15.14.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.22.0",
+    "vite": "^6.1.0"
+  }
+}

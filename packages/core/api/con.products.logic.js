@@ -1,3 +1,6 @@
+/**
+ * @import { ProductType, ProductTypeUpsert, VariantTypeUpsert } from './types.api.js'
+ */
 import { assert, to_handle, union } from './utils.func.js'
 import { 
   productTypeUpsertSchema, variantTypeUpsertSchema 
@@ -12,17 +15,7 @@ import { assert_zod } from './middle.zod-validate.js';
 
 /**
  * 
- * @typedef {import('./types.api.d.ts').ProductType} ItemType
- * @typedef {import('./types.api.d.ts').ProductTypeUpsert |
- *  import('./types.api.d.ts').VariantTypeUpsert
- * } ItemTypeUpsert
- * 
- */
-
-
-/**
- * 
- * @param {ItemTypeUpsert} item 
+ * @param {any} item 
  */
 export const isVariant = item => {
   return (
@@ -46,18 +39,19 @@ export const db = app => app.db.resources.products;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {ProductTypeUpsert | VariantTypeUpsert} item
  */
 (item) => regular_upsert(
-  app, db(app), 'pr', undefined, 
+  app, db(app), 'pr', (productTypeUpsertSchema.or(variantTypeUpsertSchema)), 
   (before) => {
+    
     before = {
       ...before,
       handle: before.handle ?? to_handle(before.title)
     }
 
     const is_variant = isVariant(before);
-
+    
     assert_zod(
       is_variant ? variantTypeUpsertSchema : productTypeUpsertSchema, 
       item
@@ -74,7 +68,7 @@ export const upsert = (app) =>
       `qty:${item.qty}`
     );
   },
-  'products/upsert'
+  'products/upsert',
 )(item);
 
 
@@ -94,7 +88,7 @@ export const add_product_to_collection = (app) =>
 
 /**
  * 
- * @param {import("../types.public.d.ts").App} app
+ * @param {App} app
  */
 export const remove_product_from_collection = (app) => 
 /**

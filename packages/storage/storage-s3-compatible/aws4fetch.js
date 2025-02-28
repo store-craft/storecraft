@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 
 /**
  * @license MIT <https://opensource.org/licenses/MIT>

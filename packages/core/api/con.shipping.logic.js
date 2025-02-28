@@ -1,13 +1,11 @@
+/**
+ * @import { ShippingMethodType, ShippingMethodTypeUpsert } from './types.api.js'
+ */
 import { shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
 import { to_handle } from './utils.func.js';
 import { App } from '../index.js';
-
-/**
- * @typedef {import('./types.api.d.ts').ShippingMethodType} ItemType
- * @typedef {import('./types.api.d.ts').ShippingMethodTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -21,7 +19,7 @@ export const db = app => app.db.resources.shipping_methods;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {ShippingMethodTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'ship', shippingMethodTypeUpsertSchema, 

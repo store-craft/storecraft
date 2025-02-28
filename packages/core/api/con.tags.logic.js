@@ -1,13 +1,11 @@
+/**
+ * @import { TagType, TagTypeUpsert } from './types.api.js'
+ */
 import { App } from "../index.js";
 import { assert, to_handle } from './utils.func.js';
 import { tagTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
-
-/**
- * @typedef {import('./types.api.d.ts').TagType} ItemType
- * @typedef {import('./types.api.d.ts').TagTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -21,7 +19,7 @@ export const db = app => app.db.resources.tags;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {TagTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'tag', tagTypeUpsertSchema, 

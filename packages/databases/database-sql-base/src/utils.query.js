@@ -72,9 +72,10 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
 
 /**
+ * @template {keyof Database} T
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
  * @param {import("@storecraft/core/vql").VQL.Node} node 
- * @param {keyof Database} table_name 
+ * @param {T} table_name 
  */
 export const query_vql_node_to_eb = (eb, node, table_name) => {
   if(node.op==='LEAF') {
@@ -146,9 +147,10 @@ const transform_boolean_to_0_or_1 = (kv) => {
 /**
  * Convert an API Query into mongo dialect, also sanitize.
  * 
+ * @template {any} [T=any]
  * 
  * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/api").ApiQuery} q 
+ * @param {import("@storecraft/core/api").ApiQuery<T>} q 
  * @param {keyof Database} table_name 
  * 
  */
@@ -189,12 +191,22 @@ const SIGN = {
   '-1': 'desc'
 }
 
+// export type DirectedOrderByStringReference<DB, TB extends keyof DB, O> = `${StringReference<DB, TB> | (keyof O & string)} ${OrderByDirection}`;
+
+/**
+ * @import {DirectedOrderByStringReference} from './utils.types.js'
+ */
+// OE extends OrderByExpression<DB, TB, O>
 /**
  * Convert an API Query into mongo dialect, also sanitize.
+ * @template {Record<string, any>} [Type=Record<string, any>]
+ * @template {keyof Database} [Table=keyof Database]
  * 
- * @param {import("@storecraft/core/api").ApiQuery} q 
+ * @param {import("@storecraft/core/api").ApiQuery<Type>} q 
+ * @param {Table} table 
+ * @returns {DirectedOrderByStringReference<Database, Table, Database[Table]>[]}
  */
-export const query_to_sort = (q={}) => {
+export const query_to_sort = (q={}, table) => {
   // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
   const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
@@ -202,9 +214,11 @@ export const query_to_sort = (q={}) => {
   const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
   // compute sort fields and order
-  const sort = (q.sortBy?.length ? q.sortBy :  ['updated_at', 'id']).map(
+  const keys = q.sortBy?.length ? q.sortBy :  ['updated_at', 'id'];
+  const sort = keys.map(
     s => `${s} ${SIGN[sort_sign]}`
   )
-  
+  // it's too complicated to map each ket to table column.
+  // kysely was designed to do this in place
   return sort;
 }

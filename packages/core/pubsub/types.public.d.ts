@@ -115,7 +115,7 @@ export type events = {
  */
 export type PubSubEvent = events[keyof events];
 
-export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) = PubSubEvent> = {
+export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =( PubSubEvent | string)> = {
   /**
    * @description payload
    */

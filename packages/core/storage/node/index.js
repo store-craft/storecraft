@@ -137,6 +137,7 @@ export class NodeLocalStorage {
    * @param {ArrayBuffer} buffer 
    */
   async putArraybuffer(key, buffer) {
+
     const arr = new Uint8Array(buffer);
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w');
@@ -144,6 +145,7 @@ export class NodeLocalStorage {
     try{
       await file_handle.write(arr);
     } catch (e) {
+      console.log(e);
       ok = false;
     } finally {
       await file_handle.close();
@@ -196,6 +198,7 @@ export class NodeLocalStorage {
         this.to_file_path(key),
       );
       return {
+        // @ts-ignore
         value: buffer,
         metadata: {
           contentType: infer_content_type(key)

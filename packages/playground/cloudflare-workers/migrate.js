@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+// @ts-nocheck
 
 import 'dotenv/config';
 import { D1_HTTP } from '@storecraft/database-cloudflare-d1';

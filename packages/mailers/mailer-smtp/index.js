@@ -1,14 +1,21 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { mailer } from '@storecraft/core/mailer'
+ * @import { 
+ * } from './types.private.js'
+*/
 import nodemailer from "nodemailer"
 import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 import { attachment_convert } from "./index.utils.js";
 
 /**
  * @typedef {nodemailer.Transporter<SMTPTransport.SentMessageInfo>} NodemailerClient
- * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
- * @implements {mailer}
+ */
+
+/**
+ * @description mailer with nodemailer for node.js
  * 
- * mailer with nodemailer for node.js
+ * @implements {mailer<Config>}
  */
 export class MailerSmtpNode {
   

@@ -20,15 +20,62 @@ export const isUnd = v => !isDef(v);
  * @returns {string[]}
  */
 export const create_search_index = (data) => {
-  let s = [];
-  s.push(...(data?.tags ?? []).map(t => `tag:${t}`));
-  isDef(data.handle) && s.push(`handle:${data.handle}`, data.handle);
-  isDef(data.id) && s.push(`id:${data.id}`, data.id, data.id.split('_').at(-1));
-  isDef(data.active) && s.push(`active:${Boolean(data.active)}`);
-  isDef(data.title) && s.push(...to_tokens(data.title), data.title.toLowerCase().trim());
-  isDef(data.name) && s.push(...to_tokens(data.name), data.name.toLowerCase().trim());
+  
+  let s = /** @type {string[]} */([]);
+
+  s.push(
+    ...(data?.tags ?? []).map(t => `tag:${t}`)
+  );
+
+  if(
+    ('handle' in data) &&
+    isDef(data.handle) &&
+    (typeof data.handle === 'string')
+  ) {
+     s.push(`handle:${data.handle}`, data.handle);
+  } 
+
+  if(isDef(data.id)) {
+    s.push(
+      `id:${data.id}`, data.id, data.id.split('_').at(-1)
+    );
+  }
+
+  if(isDef(data.active)) {
+    s.push(`active:${Boolean(data.active)}`);
+  }
+
+  if(
+    ('title' in data) && 
+    (isDef(data.title)) &&
+    (typeof data.title === 'string')
+  ) {
+    s.push(
+      ...to_tokens(data.title), 
+      data.title.toLowerCase().trim()
+    );
+  }
+
+  if(
+    ('name' in data) && 
+    isDef(data.name) &&
+    (typeof data.name === 'string')
+  ) {
+    s.push(
+      ...to_tokens(data.name), 
+      data.name.toLowerCase().trim()
+    );
+  }
+
+  if(
+    ('published' in data) && 
+    isDef(data.published)
+  ) {
+    s.push(`published:${Boolean(data?.published)}`);
+
+  }
+
   // isDef(data.desc) && s.push(...to_tokens(data.desc));
-  isDef(data._published) && s.push(`published:${Boolean(data?._published)}`);
 
   return s;
 }

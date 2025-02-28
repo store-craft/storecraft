@@ -1,4 +1,8 @@
-/** @import { ApiPolka } from './types.public.js' */
+/** 
+ * @import { ApiPolka } from './types.public.js' 
+ * @import { ApiQuery } from '../api/types.api.query.js' 
+ * @import { ImageType } from '../api/types.api.js' 
+ */
 import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
 import { assert } from '../api/utils.func.js'
@@ -60,7 +64,9 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      const q = parse_query(req.query);
+      let q = (/** @type {ApiQuery<ImageType>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.images.list(q);
 
       res.sendJson(items);

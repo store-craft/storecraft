@@ -22,7 +22,9 @@ import { create_routes as create_extensions_route } from "./con.extensions.route
 import { create_routes as create_statistics_route } from "./con.statistics.routes.js";
 import { create_routes as create_others_route } from "./con.others.routes.js";
 import { create_routes as create_dashboard_route } from "./con.dashboard.routes.js";
+import { create_routes as create_chat_route } from "./con.chat.routes.js";
 import { create_routes as create_search_route } from "./con.search.routes.js";
+import { create_routes as create_ai_route } from "./con.ai.routes.js";
 import { cors } from "../polka/cors.js";
 
 
@@ -74,6 +76,8 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/extensions'] = create_extensions_route;
       this.#factory['/api/search'] = create_search_route;
       this.#factory['/api/dashboard'] = create_dashboard_route;
+      this.#factory['/api/chat'] = create_chat_route;
+      this.#factory['/api/ai'] = create_ai_route;
     }
 
     /** 

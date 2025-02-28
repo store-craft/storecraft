@@ -1,3 +1,7 @@
+/**
+ * @import { NotificationType, NotificationTypeUpsert } from './types.api.js'
+ * @import { ID as IDType } from '../database/types.public.js'
+ */
 import { ID, apply_dates } from './utils.func.js'
 import { notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
@@ -5,11 +9,6 @@ import {
   regular_remove } from './con.shared.js'
 import { assert_zod } from './middle.zod-validate.js';
 import { App } from '../index.js';
-
-/**
- * @typedef {import('./types.api.d.ts').NotificationType} ItemType
- * @typedef {import('./types.api.d.ts').NotificationTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -23,8 +22,8 @@ export const db = app => app.db.resources.notifications;
 export const addBulk = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert | ItemTypeUpsert[]} items
- * @return {Promise<import('../database/types.public.d.ts').ID[]>}
+ * @param {NotificationTypeUpsert | NotificationTypeUpsert[]} items
+ * @return {Promise<IDType[]>}
  */
 async (items) => {
   

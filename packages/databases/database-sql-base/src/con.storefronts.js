@@ -8,8 +8,9 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   storefront_with_products, storefront_with_shipping, 
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
-  count_regular} from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+  count_regular,
+  with_search} from './con.shared.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -97,6 +98,7 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
+  // @ts-ignore
   return (id_or_handle, options) => {
     const expand = options?.expand ?? ['*'];
     const expand_all = expand.includes('*');
@@ -112,6 +114,7 @@ const get = (driver) => {
     .select(eb => [
       with_media(eb, id_or_handle, driver.dialectType),
       with_tags(eb, id_or_handle, driver.dialectType),
+      with_search(eb, id_or_handle, driver.dialectType),
       expand_collections && storefront_with_collections(eb, id_or_handle, driver.dialectType),
       expand_products && storefront_with_products(eb, id_or_handle, driver.dialectType),
       expand_discounts && storefront_with_discounts(eb, id_or_handle, driver.dialectType),
@@ -120,7 +123,8 @@ const get = (driver) => {
     ]
     .filter(Boolean))
     .where(where_id_or_handle_table(id_or_handle))
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(sanitize);
   }
 }
 
@@ -162,6 +166,7 @@ const remove = (driver) => {
  * @returns {db_col["list"]}
  */
 const list = (driver) => {
+  // @ts-ignore
   return async (query) => {
     const expand = query?.expand ?? ['*'];
     const expand_all = expand.includes('*');
@@ -177,6 +182,7 @@ const list = (driver) => {
       .select(eb => [
           with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
           with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
+          with_search(eb, eb.ref('storefronts.id'), driver.dialectType),
           expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
           expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
           expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
@@ -189,7 +195,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, table_name))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

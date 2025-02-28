@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -42,9 +42,6 @@
       "import": "./storage/public.js",
       "types": "./storage/types.public.d.ts"
     },
-    "./storage/*": {
-      "import": "./storage/*"
-    },
     "./storage/node": {
       "import": "./storage/node/index.js",
       "types": "./storage/node/types.public.d.ts"
@@ -56,6 +53,9 @@
     "./storage/bun": {
       "import": "./storage/bun/index.js",
       "types": "./storage/bun/types.public.d.ts"
+    },
+    "./storage/*": {
+      "import": "./storage/*"
     },
     "./crypto": {
       "import": "./crypto/public.js",
@@ -92,9 +92,6 @@
       "import": "./platform/index.js",
       "types": "./platform/types.public.d.ts"
     },
-    "./platform/*": {
-      "import": "./platform/*"
-    },
     "./platform/node": {
       "import": "./platform/node/index.js",
       "types": "./platform/node/types.public.d.ts"
@@ -118,6 +115,9 @@
     "./platform/google-functions": {
       "import": "./platform/google-functions/index.js",
       "types": "./platform/google-functions/types.public.d.ts"
+    },
+    "./platform/*": {
+      "import": "./platform/*"
     },
     "./extensions": {
       "import": "./extensions/public.js",
@@ -143,6 +143,37 @@
     },
     "./test-runner": {
       "import": "./test-runner/index.js"
+    },
+    "./ai": {
+      "import": "./ai/index.js",
+      "types": "./ai/types.public.d.ts"
+    },
+    "./ai/models/openai": {
+      "import": "./ai/models/openai/index.js",
+      "types": "./ai/models/openai/types.d.ts"
+    },
+    "./ai/models/gemini": {
+      "import": "./ai/models/gemini/index.js",
+      "types": "./ai/models/gemini/types.d.ts"
+    },
+    "./ai/models/mistral": {
+      "import": "./ai/models/mistral/index.js",
+      "types": "./ai/models/mistral/types.d.ts"
+    },
+    "./ai/models/groq": {
+      "import": "./ai/models/groq/index.js",
+      "types": "./ai/models/groq/types.d.ts"
+    },
+    "./ai/models/xai": {
+      "import": "./ai/models/xai/index.js",
+      "types": "./ai/models/xai/types.d.ts"
+    },
+    "./ai/models/anthropic": {
+      "import": "./ai/models/anthropic/index.js",
+      "types": "./ai/models/anthropic/types.d.ts"
+    },
+    "./ai/*": {
+      "import": "./ai/*"
     }
   },
   "scripts": {

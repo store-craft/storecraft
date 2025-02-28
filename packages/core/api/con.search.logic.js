@@ -1,3 +1,7 @@
+/**
+ * @import { ApiQuery } from './types.api.query.js'
+ */
+
 import { App } from '../index.js';
 
 /**
@@ -12,7 +16,7 @@ export const db = app => app.db.resources.search;
 export const quicksearch = (app) => 
 /**
  * 
- * @param {import('./types.api.query.d.ts').ApiQuery} query
+ * @param {ApiQuery} query
  */
 (query) => {
   return app.db.resources.search.quicksearch(

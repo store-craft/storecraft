@@ -10,9 +10,34 @@ which means you can you it both at browser and at backend runtimes such (`node` 
 
 It will allow you to fetch / mutate all of the resources at the `backend` in a 
 convenient manner with `javascript`, such as:
-`products`, `collections`, `authentication`, `customers`, `orders`, `discounts`,
-`storage`, `storefronts`, `shipping`, `statistics`, `tags`, `posts`, `notifications`,
-`templates`, `extensions` and more :)
+
+#### collections
+`products`, `collections`, `auth_users`, `customers`, `orders`, `discounts`,
+`storefronts`, `shipping`, `tags`, `posts`, `notifications`,
+`templates`, `extensions`, `images`
+
+#### Auth
+Perform authentication such as `signin` / `signup` / `api-key`
+
+#### Checkout
+Perform checkout `create` / `complete`
+
+#### Storage
+Perform storage operations such as `put` / `get` / `delete`
+
+#### Payments
+Perform payments `status-check` / `invoke-action`
+
+#### Statistics
+- Query some basic statistics about `orders` in a time span
+- Query count of items in collections
+
+#### AI
+Speak with a `storecraft` agent (Supports streaming :))
+
+<hr/>
+
+Start by installing, 
 
 Plus, everything is typed so you dont have to guess any parameter or queryable key
 

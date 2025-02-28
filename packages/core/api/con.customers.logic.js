@@ -1,3 +1,8 @@
+/**
+ * @import { CustomerType, CustomerTypeUpsert, OrderData } from './types.api.js'
+ * @import { RegularGetOptions, ID as IDType } from '../database/types.public.js'
+ * @import { ApiQuery } from './types.api.query.js'
+ */
 import { ID, apply_dates, assert, to_handle } from './utils.func.js'
 import { customerTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
@@ -7,10 +12,6 @@ import { create_search_index, isDef } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 import { App } from '../index.js';
 
-/**
- * @typedef {import('./types.api.d.ts').CustomerType} ItemType
- * @typedef {import('./types.api.d.ts').CustomerTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -24,7 +25,7 @@ export const db = app => app.db.resources.customers;
 export const upsert = (app) => 
   /**
    * 
-   * @param {ItemTypeUpsert} item
+   * @param {CustomerTypeUpsert} item
    */
   async (item) => {
     const requires_event_processing = app.pubsub.has('customers/upsert');
@@ -79,7 +80,7 @@ export const getByEmail = (app) =>
 /**
  * 
  * @param {string} email
- * @param {import('../database/types.public.d.ts').RegularGetOptions} [options]
+ * @param {RegularGetOptions} [options]
  */
 (email, options) => {
   return db(app).getByEmail(email);
@@ -96,8 +97,8 @@ export const getByEmail = (app) =>
 export const list_customer_orders = (app) => 
 /**
  * 
- * @param {import('../database/types.public.d.ts').ID} customer_id 
- * @param {import('./types.api.query.d.ts').ApiQuery} q 
+ * @param {IDType} customer_id 
+ * @param {ApiQuery<OrderData>} q 
  */
 (customer_id, q) => {
   return db(app).list_customer_orders(customer_id, q);

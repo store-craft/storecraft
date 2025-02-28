@@ -1,11 +1,15 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { mailer } from '@storecraft/core/mailer'
+ * @import { Resend_sendmail, Resend_sendmail_attachment } from './types.private.js'
+*/
+
 import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js";
 
 /**
- * @typedef {import("./types.public.d.ts").Config} Config
- * @typedef {import('@storecraft/core/mailer').mailer<Config>} mailer
- * @implements {mailer}
- * 
  * @description mailer with Resend rest api
+ * 
+ * @implements {mailer<Config>}
  */
 export class Resend {
   
@@ -27,7 +31,7 @@ export class Resend {
    */
   async email(o) {
 
-    /** @type {import("./types.private.js").Resend_sendmail} */
+    /** @type {Resend_sendmail} */
     const body = {
       from: address_to_friendly_name(o.from),
       to: o.to.map(t => t.address),
@@ -37,7 +41,7 @@ export class Resend {
       attachments: o.attachments && await Promise.all(
         o.attachments.map(
           /**
-           * @returns {Promise<import("./types.private.js").Resend_sendmail_attachment>}
+           * @returns {Promise<Resend_sendmail_attachment>}
            */
           async a => (
             {

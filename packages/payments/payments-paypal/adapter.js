@@ -1,3 +1,9 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
+ * @import { payment_gateway } from '@storecraft/core/payments'
+ * @import { paypal_order, paypal_order_request } from './types.private.js'
+*/
 import { 
   CheckoutStatusEnum, PaymentOptionsEnum 
 } from '@storecraft/core/api/types.api.enums.js';
@@ -6,19 +12,15 @@ import { StorecraftError } from '@storecraft/core/api/utils.func.js';
 import html_buy_ui from './adapter.html.js';
 
 /**
- * @typedef {import('./types.private.d.ts').paypal_order} CreateResult
- * @typedef {import('@storecraft/core/api').PaymentGatewayStatus} PaymentGatewayStatus
- * @typedef {import('@storecraft/core/api').CheckoutStatusEnum} CheckoutStatusOptions
- * @typedef {import('@storecraft/core/api').OrderData} OrderData
- * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('@storecraft/core/payments').payment_gateway<Config, CreateResult>} payment_gateway
+ * @typedef {paypal_order} CreateResult
+ * @typedef {payment_gateway<Config, CreateResult>} Impl
  */
 
 /**
- * @implements {payment_gateway}
- * 
  * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
- */
+ * 
+ * @implements {Impl}
+*/
 export class Paypal {
   
   /** @type {Config} */ #_config;
@@ -91,7 +93,7 @@ export class Paypal {
 
   /**
    * 
-   * @type {payment_gateway["invokeAction"]}
+   * @type {Impl["invokeAction"]}
    */
   invokeAction(action_handle) {
     switch (action_handle) {
@@ -108,11 +110,7 @@ export class Paypal {
   }
 
   /**
-   * @description (Optional) buy link ui
-   * 
-   * @param {Partial<OrderData>} order 
-   * 
-   * @return {Promise<string>} html 
+   * @type {Impl["onBuyLinkHtml"]}
    */
   async onBuyLinkHtml(order) {
 
@@ -124,14 +122,12 @@ export class Paypal {
   /**
    * @description TODO: the user prefers to capture intent instead
    * 
-   * @param {OrderData} order 
-   * 
-   * @return {Promise<CreateResult>}
+   * @type {Impl["onCheckoutCreate"]}
    */
   async onCheckoutCreate(order) {
     const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
 
-    /** @type {import('./types.private.js').paypal_order_request} */
+    /** @type {paypal_order_request} */
     const body = {
       intent: intent_on_checkout==='AUTHORIZE' ? 'AUTHORIZE' : 'CAPTURE',
       purchase_units: [
@@ -163,9 +159,7 @@ export class Paypal {
   /**
    * @description todo: logic for if user wanted capture at approval
    * 
-   * @param {CreateResult} create_result 
-   * 
-   * @return {ReturnType<payment_gateway["onCheckoutComplete"]>}  
+   * @type {Impl["onCheckoutComplete"]}
    */
   async onCheckoutComplete(create_result) {
     // the url based on authorize or capture intent
@@ -179,7 +173,7 @@ export class Paypal {
 
     await throw_bad_response(response);
     
-    /** @type {import('./types.private.js').paypal_order} */
+    /** @type {paypal_order} */
     const payload = await response.json();
     
     let status;
@@ -211,11 +205,7 @@ export class Paypal {
   /**
    * @description Fetch the order and analyze it's status
    * 
-   * 
-   * @param {CreateResult} create_result 
-   * 
-   * 
-   * @returns {Promise<PaymentGatewayStatus>}
+   * @type {Impl["status"]}
    */
   async status(create_result) {
     const o = await this.retrieve_order(create_result);
@@ -286,9 +276,10 @@ export class Paypal {
   /**
    * @description [https://developer.paypal.com/api/rest/webhooks/rest/](https://developer.paypal.com/api/rest/webhooks/rest/)
    * 
-   * @param {Request} request 
+   * @type {Impl["webhook"]}
    */
   async webhook(request) {
+    throw new Error('Paypal:: webhook - not supported yet !');
     return null;
   }
 
@@ -297,7 +288,7 @@ export class Paypal {
    * 
    * @param {CreateResult} create_result first create result, holds paypal id
    * 
-   * @return {Promise<import('./types.private.js').paypal_order>} 
+   * @return {Promise<paypal_order>} 
    */
   retrieve_order = async (create_result) => {
     const response = await fetch_with_auth(
@@ -308,7 +299,7 @@ export class Paypal {
 
     await throw_bad_response(response);
 
-    /** @type {import('./types.private.js').paypal_order} */
+    /** @type {paypal_order} */
     const jsonData = await response.json();
     return jsonData;
   }  

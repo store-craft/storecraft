@@ -389,6 +389,7 @@ const create_all = () => {
 
   // register routes
   register_reference(registry);
+  register_ai(registry);
   register_auth(registry);
   register_storage(registry);
   register_checkout(registry);
@@ -919,6 +920,234 @@ const register_checkout = (registry) => {
       ...error() 
     },
   });
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_ai = (registry) => {
+
+  const aiMessageTextContent = z.object(
+    {
+      type: z.literal("text"),
+      content: z.string().optional().describe('text of prompt'),
+    }
+  ).describe('Text content');
+
+  const aiMessageTextDeltaContent = z.object(
+    {
+      type: z.literal("delta_text"),
+      content: z.string().optional().describe('Partial text update'),
+    }
+  ).describe('Text delta / update');
+
+  const aiMessageToolUseContent = z.object(
+    {
+      type: z.literal("tool_use"),
+      content: z.object(
+        {
+          name: z.string().optional().describe("Name of the tool"),
+          id: z.string().optional().describe("id of the tool call"),
+          title: z.string().optional().describe("Optional readable name"),
+        }
+      ),
+    }
+  ).describe('Tool use update content');
+
+  const aiMessageToolResultContent = z.object(
+    {
+      type: z.literal("tool_result"),
+      content: z.object(
+        {
+          data: z.any().describe("Result of the tool call"),
+          id: z.string().optional().describe("id of the tool call"),
+        }
+      ),
+    }
+  ).describe('Tool result update content');
+
+  const aiMessageImageContent = z.object(
+    {
+      type: z.literal("image"),
+      content: z.string().optional().describe("base64 encoded image"),
+    }
+  ).describe('Image content');
+
+  const aiMessageObjectContent = z.object(
+    {
+      type: z.literal("object"),
+      content: z.any().optional().describe("any object"),
+    }
+  ).describe('Object content');
+
+  const aiMessageErrorContent = z.object(
+    {
+      type: z.literal("error"),
+      content: z.union([
+        z.string().optional().describe("any object"),
+        z.object(
+          {
+            code: z.string().optional().describe("code of error"),
+            message: z.string().optional().describe("message of error"),
+          }
+        )
+      ]),
+    }
+  ).describe('Error content');
+
+  const all_messages = z.union(
+    [
+      aiMessageTextContent, aiMessageTextDeltaContent, aiMessageToolUseContent,
+      aiMessageToolResultContent, aiMessageObjectContent, aiMessageImageContent, 
+      aiMessageErrorContent
+    ]
+  ).describe('All messages types between user and LLM')
+
+  const storeAgentRunParametersSchema = z.object(
+    {
+      thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
+      prompt: z.array(all_messages).describe('Current customer prompt'),
+      maxTokens: z.number().optional().describe('Max tokens'),
+      maxSteps: z.number().optional().describe('Max steps per agent'),
+    }
+  ).describe('The agent run parameters');
+
+  const storeAgentRunResponseSchema = z.object(
+    {
+      thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
+      contents: z.array(all_messages).describe('Current **LLM** formatted responses'),
+    }
+  ).describe('The response');
+
+  registry.register('aiMessageTextContent', aiMessageTextContent);
+  registry.register('aiMessageTextDeltaContent', aiMessageTextDeltaContent);
+  registry.register('aiMessageToolUseContent', aiMessageToolUseContent);
+  registry.register('aiMessageToolResultContent', aiMessageToolResultContent);
+  registry.register('aiMessageObjectContent', aiMessageObjectContent);
+  registry.register('aiMessageImageContent', aiMessageImageContent);
+  registry.register('aiMessageErrorContent', aiMessageErrorContent);
+
+  registry.register(
+    'storeAgentRunParameters', storeAgentRunParametersSchema
+  );
+  registry.register(
+    'storeAgentRunResponseSchema', storeAgentRunResponseSchema
+  );
+
+  registry.registerPath({
+    method: 'post',
+    path: `/ai/agent/stream`,
+    description: 'Speak with `Storecraft` AI agent in stream (Server-Sent Events)',
+    summary: 'Speak with AI agent (stream)',
+    tags: ['ai'],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: storeAgentRunParametersSchema,
+            example: {
+              prompt: [
+                {
+                  type: 'text',
+                  content: 'What is the price of Super Mario for the NES console ?'
+                },
+                {
+                  type: 'image',
+                  content: 'base64_......'
+                },
+              ]
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: "JSON updates of text and tools (\`content\` data type) with Server-Sent Events formats, such as `data: { type: 'delta_text', content: ' games. Specifically, there' }`",
+        content: {
+          'text/event-stream': {
+            schema: z.string(),
+            example: "data: { type: 'delta_text', content: ' games. Specifically, there' }",
+          },
+        },
+        headers: z.object(
+          {
+            'X-STORECRAFT-THREAD-ID': z.string().openapi(
+              {
+                example: 'thread_sdj9musd8sd9m8sd8',
+                description: 'The thread / conversation identifier'
+              }
+            )
+          }
+        )
+
+      },
+      ...error() 
+    },
+  });
+
+  registry.registerPath({
+    method: 'post',
+    path: `/ai/agent/run`,
+    description: 'Speak with `Storecraft` AI agent synchronously',
+    summary: 'Speak with AI agent (sync)',
+    tags: ['ai'],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: storeAgentRunParametersSchema,
+            example: {
+              prompt: [
+                {
+                  type: 'text',
+                  content: 'What is the price of Super Mario for the NES console ?'
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: `LLM formatted/readable Response`,
+        headers: z.object(
+          {
+            'X-STORECRAFT-THREAD-ID': z.string().openapi(
+              {
+                example: 'thread_sdj9musd8sd9m8sd8',
+                description: 'The thread / conversation identifier'
+              }
+            )
+          }
+        ),
+        content: {
+          'application/json': {
+            schema: storeAgentRunResponseSchema,
+            example: {
+              contents: [
+                {
+                  type: 'tool_use',
+                  content: [ { name: 'search_products', id: 'toolu_01VCfArjSHTVXATyCfBanF3q' } ]
+                },
+                {
+                  type: 'tool_result',
+                  content: { data: { result: 100 }, id: 'toolu_01VCfArjSHTVXATyCfBanF3q' }
+                },
+                {
+                  type: 'text',
+                  content: 'It is 100$, can I help you with more Mario games ?'
+                }
+              ]
+            },
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
 }
 
 

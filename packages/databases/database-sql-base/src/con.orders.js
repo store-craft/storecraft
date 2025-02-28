@@ -3,8 +3,8 @@ import { report_document_media } from './con.images.js'
 import { count_regular, delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags} from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+  with_media, with_search, with_tags} from './con.shared.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
 /**
@@ -82,10 +82,12 @@ const get = (driver) => {
     .select(eb => [
       with_media(eb, id_or_handle, driver.dialectType),
       with_tags(eb, id_or_handle, driver.dialectType),
+      with_search(eb, id_or_handle, driver.dialectType),
     ]
     .filter(Boolean))
     .where(where_id_or_handle_table(id_or_handle))
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(sanitize);
   }
 }
 
@@ -138,13 +140,14 @@ const list = (driver) => {
       .select(eb => [
         with_media(eb, eb.ref('orders.id'), driver.dialectType),
         with_tags(eb, eb.ref('orders.id'), driver.dialectType),
+        with_search(eb, eb.ref('orders.id'), driver.dialectType),
       ].filter(Boolean))
       .where(
         (eb) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, table_name))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

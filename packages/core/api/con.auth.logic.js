@@ -1,14 +1,18 @@
 /**
- * @import { ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
+ * @import { 
+ *  ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
  *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult
  * } from './types.api.js';
+ * @import { ApiQuery } from './types.api.query.js'
+ * @import { JWTClaims } from '../crypto/jwt.js'
  */
 import * as jwt from '../crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { 
   apiAuthChangePasswordTypeSchema, apiAuthRefreshTypeSchema, 
-  apiAuthSigninTypeSchema, apiAuthSignupTypeSchema } from './types.autogen.zod.api.js'
+  apiAuthSigninTypeSchema, apiAuthSignupTypeSchema 
+} from './types.autogen.zod.api.js'
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../crypto/base64.js'
 import { isDef } from './utils.index.js'
@@ -117,7 +121,7 @@ async (body) => {
     }
   );
 
-  /** @type {Partial<import("../crypto/jwt.js").JWTClaims>} */
+  /** @type {Partial<JWTClaims>} */
   const claims = {
     sub: id, 
     // @ts-ignore
@@ -218,7 +222,7 @@ async (body) => {
   );
 
   /** 
-   * @type {Partial<Partial<import('../crypto/jwt.js').JWTClaims> & 
+   * @type {Partial<Partial<JWTClaims> & 
    * Pick<AuthUserType, 'roles'>> } 
    */
   const claims = {
@@ -291,7 +295,7 @@ async (body, fail_if_not_admin=false) => {
   assert(verified, 'auth/error', 401);
 
   /** 
-   * @type {Partial<Partial<import('../crypto/jwt.js').JWTClaims> & 
+   * @type {Partial<Partial<JWTClaims> & 
    * Pick<AuthUserType, 'roles'>> } 
    */
   const claims = {
@@ -426,7 +430,7 @@ async () => {
   // this is just `email`
   const email = `${id}@apikey.storecraft.app`;
 
-  /** @type {import('./types.api.d.ts').AuthUserType} */
+  /** @type {AuthUserType} */
   const au = {
     id,
     email, 
@@ -542,7 +546,7 @@ async () => {
  */  
 export const list_auth_users = (app) => 
 /**
- * @param {import('./types.api.query.js').ApiQuery<import('../database/types.public.js').db_auth_users["$type_get"]>} [query={}] 
+ * @param {ApiQuery<AuthUserType>} [query={}] 
  */
 async (query={}) => {
 

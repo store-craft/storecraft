@@ -102,25 +102,26 @@ export const quicksearch = (driver) => {
 
     const db = driver.mongo_client.db(driver.name);
     
-    /** @type {import('@storecraft/core/api').QuickSearchResource[]} */ 
-    const items = await db.collection(tables_filtered[0]).aggregate(
-      [
-        ...pipeline,
-        ...tables_filtered.slice(1).map(
-          t => (
-            {
-              $unionWith: {
-                coll: t,
-                pipeline: pipeline
+    
+    const items = /** @type {import('@storecraft/core/api').QuickSearchResource[]} */ (
+      await db.collection(tables_filtered[0]).aggregate(
+        [
+          ...pipeline,
+          ...tables_filtered.slice(1).map(
+            t => (
+              {
+                $unionWith: {
+                  coll: t,
+                  pipeline: pipeline
+                }
               }
-            }
+            )
           )
-        )
-      ], 
-      {
-        
-      }
-    ).toArray();
+        ], 
+        {
+        }
+      ).toArray()
+    );
 
 
     /** @type {import('@storecraft/core/api').QuickSearchResult} */

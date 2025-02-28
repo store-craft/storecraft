@@ -76,7 +76,7 @@ export type OnWebHookResult = {
  * 
  */
 export declare interface payment_gateway<
-  Config extends any, CheckoutCreateResult extends any
+  Config extends any=any, CheckoutCreateResult extends any=any
 > {
 
   /** 
@@ -164,5 +164,5 @@ export declare interface payment_gateway<
    * @param response HTTP `Response` object
    * 
    */
-  webhook?: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult>;
+  webhook?: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult | undefined | null>;
 }

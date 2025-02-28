@@ -11,15 +11,13 @@ import { add_search_terms_relation_on } from './utils.relations.js'
  * @template {import('@storecraft/core/api').BaseType} T
  * @template {import('@storecraft/core/api').BaseType} G
  * 
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
- * 
  * @returns {import('@storecraft/core/database').db_crud<T, G>["upsert"]}
- * 
  */
 export const upsert_regular = (driver, col) => {
+  
   return async (data, search_terms=[]) => {
 
     data = {...data};
@@ -194,8 +192,8 @@ export const get_regular = (driver, col) => {
  * should be instead
  * 
  * 
- * @template {import('@storecraft/core/api').idable} T
- * @template {import('@storecraft/core/api').idable} G
+ * @template {import('@storecraft/core/api').withOptionalID} T
+ * @template {import('@storecraft/core/api').withOptionalID} G
  * 
  * 
  * @param {MongoDB} driver 
@@ -278,7 +276,7 @@ export const list_regular = (driver, col) => {
 
     // console.log('reverse_sign', reverse_sign)
     // console.log('query', query)
-    // console.log('filter', JSON.stringify(filter, null, 2))
+    console.log('filter', JSON.stringify(filter, null, 2))
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
 

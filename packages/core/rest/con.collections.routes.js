@@ -1,4 +1,8 @@
-/** @import { ApiPolka } from './types.public.js' */
+/** 
+ * @import { ApiPolka } from './types.public.js' 
+ * @import { ApiQuery } from '../api/types.api.query.js' 
+ * @import { CollectionType, ProductType } from '../api/types.api.js' 
+ */
 import { Polka } from '../polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
@@ -55,7 +59,10 @@ export const create_routes = (app) => {
   polka.get(
     '/',
     async (req, res) => {
-      let q = parse_query(req.query);
+      
+      const q = (/** @type {ApiQuery<CollectionType>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.collections.list(q);
 
       res.sendJson(items);
@@ -67,7 +74,9 @@ export const create_routes = (app) => {
     '/:collection/products',
     async (req, res) => {
       const { collection } = req.params;
-      const q = parse_query(req.query);
+      const q = (/** @type {ApiQuery<ProductType>} */ (
+        parse_query(req.query))
+      );
       const items = await app.api.collections.list_collection_products(collection, q);
       
       res.sendJson(items);

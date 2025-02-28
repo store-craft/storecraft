@@ -1,0 +1,3 @@
+import { mountChat } from ".";
+
+mountChat();

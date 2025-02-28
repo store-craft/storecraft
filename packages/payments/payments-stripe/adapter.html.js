@@ -1,4 +1,9 @@
 /**
+ * @import { Config } from './types.public.js'
+ * @import { OrderData } from '@storecraft/core/api'
+ */
+
+/**
  * 
  * @description Official `Stripe` UI integration with `storecraft`.
  * 
@@ -11,8 +16,8 @@
  * - Expiry date: 12/2027
  * - CVC code: 897
  * 
- * @param {import("./types.public.d.ts").Config} config 
- * @param {Partial<import("@storecraft/core/api").OrderData>} order_data 
+ * @param {Config} config 
+ * @param {Partial<OrderData>} order_data 
  */
 export default function html_buy_ui(config, order_data) {
 

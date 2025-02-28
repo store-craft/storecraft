@@ -2,7 +2,7 @@ import { Kysely } from 'kysely'
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, safe_trx, where_id_or_handle_table } from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { base64 } from '@storecraft/core/crypto';
 
@@ -71,7 +71,8 @@ const get = (driver) => {
     .selectFrom(table_name)
     .selectAll()
     .where(where_id_or_handle_table(id_or_handle))
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(sanitize);
   }
 }
 
@@ -119,7 +120,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, table_name))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

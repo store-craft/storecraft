@@ -10,12 +10,13 @@ import Handlebars from 'handlebars';
 
 /**
  * @description This extension will respond to various events to send customer emails:
- * - `orders/checkout/complete`
- * - `orders/fulfillment/shipped`
- * - `orders/fulfillment/cancelled`
- * - `auth/signup`
- * - `auth/forgot-password-token-generated`
- * - `auth/reset-password`
+ * - `orders/checkout/complete` via `checkout-complete` template, uses {@link OrderData}
+ * - `orders/fulfillment/shipped` via `order-shipped` template, uses {@link OrderData}
+ * - `orders/fulfillment/cancelled` via `order-cancelled` template, uses {@link OrderData}
+ * - `auth/signup` via `welcome-customer` template, uses {@link AuthUserType}
+ * - `auth/change-password` via `general-message` template, uses {@link AuthUserType}  
+ * - `auth/forgot-password-token-generated` via `forgot-password` template, uses `{email: string, token: string}`
+ * - `auth/confirm-email-token-generated` via `confirm-email` template (currently not present), uses `{email: string, token: string}`
  * 
  * **NOTE:** You are required to install `handlebars` (`npm i handlebars`)
  * 
@@ -224,6 +225,12 @@ export const sendMailWithTemplate = async (app, emails, template_handle, subject
     return;
 
   const template = await app.api.templates.get(template_handle);
+
+  if(!template) {
+    throw new Error(
+      `Template ${template_handle} not found !!`
+    )
+  }
 
   const { html, text } = compileTemplate(
     template, 

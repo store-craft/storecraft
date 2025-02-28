@@ -3,7 +3,7 @@ import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, 
   insert_search_of, regular_upsert_me, where_id_or_handle_table 
 } from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { ID } from '@storecraft/core/api/utils.func.js'
@@ -58,7 +58,8 @@ const get = (driver) => {
     .selectFrom(table_name)
     .selectAll()
     .where(where_id_or_handle_table(id_or_handle))
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(sanitize);
   }
 }
 
@@ -193,7 +194,6 @@ export const report_document_media = (driver) => {
  */
 const list = (driver) => {
   return async (query) => {
-
     const items = await driver.client
       .selectFrom(table_name)
       .selectAll()
@@ -202,7 +202,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query))
+      .orderBy(query_to_sort(query, 'images')) // ts complains because `usage` field is absent
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

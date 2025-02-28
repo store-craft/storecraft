@@ -10,11 +10,13 @@ import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media
   products_with_discounts,
   products_with_variants,
   count_regular,
-  products_with_related_products} from './con.shared.js'
-import { sanitize_array } from './utils.funcs.js'
+  products_with_related_products,
+  with_search} from './con.shared.js'
+import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { report_document_media } from './con.images.js'
+import { union } from '@storecraft/core/api/utils.func.js'
 
 
 /**
@@ -27,7 +29,7 @@ export const table_name = 'products'
  * @param {db_col["$type_upsert"]} item 
  */
 const is_variant = item => {
-  if(item && ('variant_hint' in item)) {
+  if(item && ('variant_hint' in item) && ('parent_handle' in item)&& ('parent_id' in item)) {
     return item.parent_handle && item.parent_id && item.variant_hint;
   }
 
@@ -61,7 +63,15 @@ const upsert = (driver) => {
 
       const eligible_discounts = discounts.filter(
         d => driver.app.api.pricing.test_product_filters_against_product(d.info.filters, item)
-      );      
+      );
+
+      search_terms = union(
+        [
+          search_terms, 
+          eligible_discounts.map(d => `discount:${d.handle}`),
+          eligible_discounts.map(d => `discount:${d.id}`),
+        ]
+      );
 
       const t = await driver.client.transaction().execute(
         async (trx) => {
@@ -88,13 +98,13 @@ const upsert = (driver) => {
             qty: item.qty,
             variants_options: 'variants_options' in item ? JSON.stringify(item.variants_options) : undefined,
             // no variants yet
-            parent_handle: 'parent_handle' in item ? item.parent_handle : undefined,
-            parent_id: 'parent_id' in item ? item.parent_id : undefined,
-            variant_hint: 'variant_hint' in item ? JSON.stringify(item.variant_hint) : undefined,
+            parent_handle: ('parent_handle' in item) ? item.parent_handle : undefined,
+            parent_id: ('parent_id' in item) ? item.parent_id : undefined,
+            variant_hint: ('variant_hint' in item) ? JSON.stringify(item.variant_hint) : undefined,
           });
 
           // PRODUCTS => VARIANTS
-          if(item && 'variant_hint' in item && is_variant(item)) {
+          if(item && ('variant_hint' in item) && is_variant(item)) {
             // remove previous
             await delete_entity_values_by_value_or_reporter('products_to_variants')(
               trx, item.id, item.handle
@@ -167,6 +177,7 @@ const upsert = (driver) => {
  * @returns {db_col["get"]}
  */
 const get = (driver) => {
+  // @ts-ignore
   return (id_or_handle, options) => {
 
     const expand = options?.expand ?? ['*'];
@@ -186,12 +197,14 @@ const get = (driver) => {
         expand_collections && products_with_collections(eb, id_or_handle, dtype),
         expand_discounts && products_with_discounts(eb, id_or_handle, dtype),
         expand_variants && products_with_variants(eb, id_or_handle, dtype),
-        expand_related_products && products_with_related_products(eb, id_or_handle, dtype)
+        expand_related_products && products_with_related_products(eb, id_or_handle, dtype),
+        with_search(eb, id_or_handle, dtype)
       ].filter(Boolean)
     )
     .where(where_id_or_handle_table(id_or_handle))
     // .compile()
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(sanitize);
   }
 }
 
@@ -202,6 +215,7 @@ const get = (driver) => {
  * @returns {db_col["getBulk"]}
  */
 const getBulk = (driver) => {
+  // @ts-ignore
   return async (ids, options) => {
 
     const expand = options?.expand ?? ['*'];
@@ -221,7 +235,8 @@ const getBulk = (driver) => {
         expand_collections && products_with_collections(eb, eb.ref('products.id'), dtype),
         expand_discounts && products_with_discounts(eb, eb.ref('products.id'), dtype),
         expand_variants && products_with_variants(eb, eb.ref('products.id'), dtype),
-        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), dtype)
+        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), dtype),
+        with_search(eb, eb.ref('products.id'), dtype)
       ].filter(Boolean)
     )
     .where(
@@ -233,7 +248,8 @@ const getBulk = (driver) => {
       )
     )
     // .compile()
-    .execute();
+    .execute()
+    .then(sanitize_array);
 
     return ids.map(
       id => r.find(s => s.id===id || s?.handle===id)
@@ -331,11 +347,13 @@ const remove = (driver) => {
  * @returns {db_col["list"]}
  */
 const list = (driver) => {
+  // @ts-ignore
   return async (query) => {
 
     const expand = query.expand ?? ['*'];
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
+    // @ts-ignore
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
 
@@ -346,10 +364,19 @@ const list = (driver) => {
       eb => [
         with_tags(eb, eb.ref('products.id'), driver.dialectType),
         with_media(eb, eb.ref('products.id'), driver.dialectType),
-        expand_collections && products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
-        expand_discounts && products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
-        expand_variants && products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
-        expand_related_products && products_with_related_products(eb, eb.ref('products.id'), driver.dialectType)
+        with_search(eb, eb.ref('products.id'), driver.dialectType),
+
+        expand_collections && 
+        products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
+
+        expand_discounts && 
+        products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
+
+        expand_variants && 
+        products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
+
+        expand_related_products && 
+        products_with_related_products(eb, eb.ref('products.id'), driver.dialectType),
       ].filter(Boolean)
     )
     .where(
@@ -357,14 +384,14 @@ const list = (driver) => {
         return query_to_eb(eb, query, table_name);
       }
     )
-    .orderBy(query_to_sort(query))
+    .orderBy(query_to_sort(query, table_name))
     .limit(query.limitToLast ?? query.limit ?? 10)
     .execute();
 
-  if(query.limitToLast) items.reverse();
+    if(query.limitToLast) items.reverse();
     // .compile();
         // console.log(items)
-    
+
     return sanitize_array(items);
   }
 }

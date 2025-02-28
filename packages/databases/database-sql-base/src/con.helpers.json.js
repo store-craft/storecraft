@@ -140,8 +140,8 @@ export function jsonArrayFrom(expr, sql_type) {
       return pg_jsonArrayFrom(expr);
     case 'MYSQL':
       return mysql_jsonArrayFrom(expr);
-    case 'MSSQL':
-      return mssql_jsonArrayFrom(expr);
+    // case 'MSSQL':
+    //   return mssql_jsonArrayFrom(expr);
     default:
       throw new Error(`sql_type=${sql_type} NOT SUPPORTED !`);
   }  
@@ -171,7 +171,6 @@ export function jsonArrayFrom(expr, sql_type) {
  * @template O
  * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
  * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
  */
 export function stringArrayFrom(expr, sql_type) {
   switch(sql_type) {
@@ -181,12 +180,13 @@ export function stringArrayFrom(expr, sql_type) {
       return pg_stringArrayFrom(expr);
     case 'MYSQL':
       return mysql_stringArrayFrom(expr);
-    case 'MSSQL':
-      return mssql_stringArrayFrom(expr);
+    // case 'MSSQL':
+    //   return mssql_stringArrayFrom(expr);
     default:
       throw new Error(`sql_type=${sql_type} NOT SUPPORTED !`);
   }  
 }
+
 
 /**
  * ### Examples
@@ -223,8 +223,8 @@ export function jsonObjectFrom(expr, sql_type) {
       return pg_jsonObjectFrom(expr);
     case 'MYSQL':
       return mysql_jsonObjectFrom(expr);
-    case 'MSSQL':
-      return mssql_jsonObjectFrom(expr);
+    // case 'MSSQL':
+    //   return mssql_jsonObjectFrom(expr);
     default:
       throw new Error(`sql_type=${sql_type} NOT SUPPORTED !`);
   }

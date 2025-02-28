@@ -89,7 +89,9 @@ export const text2tokens = (text) => {
   // let tokens = text?.toString().toLowerCase().match(/[^\W_]+/g)
   let tokens = text?.toString().toLowerCase().match(/[\p{L}\d]+/gu)
 
+  // @ts-ignore
   tokens = tokens ?? []
+  // @ts-ignore
   tokens = tokens.filter(
     t => !STOP_WORDS.includes(t)
   )

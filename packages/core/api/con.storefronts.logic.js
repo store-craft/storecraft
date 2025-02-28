@@ -1,13 +1,12 @@
+/**
+ * @import { StorefrontType, StorefrontTypeUpsert } from './types.api.js'
+ * @import { HandleOrId, ID as IDType } from '../database/types.public.js'
+ */
 import { App } from "../index.js";
 import { assert, to_handle } from './utils.func.js'
 import { storefrontTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
   regular_remove, regular_upsert } from './con.shared.js'
-
-/**
- * @typedef {import('./types.api.d.ts').StorefrontType} ItemType
- * @typedef {import('./types.api.d.ts').StorefrontTypeUpsert} ItemTypeUpsert
- */
 
 /**
  * @param {App} app
@@ -21,7 +20,7 @@ export const db = app => app.db.resources.storefronts;
 export const upsert = (app) => 
 /**
  * 
- * @param {ItemTypeUpsert} item
+ * @param {StorefrontTypeUpsert} item
  */
 (item) => regular_upsert(
   app, db(app), 'sf', storefrontTypeUpsertSchema, 
@@ -111,7 +110,7 @@ export const list_storefront_posts = (app) =>
 export const export_storefront = (app) => {
   /**
    * 
-   * @param {import('../database/types.public.d.ts').HandleOrId} handle_or_id 
+   * @param {HandleOrId} handle_or_id 
    * 
    * @return {Promise<string>}
    */
@@ -130,6 +129,7 @@ export const export_storefront = (app) => {
     const publish_path = `storage://${key}`;
     const success = await app.storage.putArraybuffer(
       key,
+      // @ts-ignore
       array
     );
 

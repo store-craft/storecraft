@@ -50,7 +50,7 @@ export class PubSub {
    * - Also, you can use `stopPropagation()` method to stop the event from propagating
    * to other subscribers.
    * 
-   * @template [P=any]
+   * @template {any} [P=any]
    * @template {PubSubEvent | string} [E=(PubSubEvent)]
    * 
    * @param {E} event a `storecraft` event type
@@ -117,8 +117,6 @@ export class PubSub {
    * @description Subscribe to a `storecraft` event
    * 
    * @type {PubSubOnEvents["on"]}
-   * 
-   * @returns {Function} a self invoking `unsubscribe` function for the event
    */
   on = (event, callback) => {
     return this.#on(event, callback);

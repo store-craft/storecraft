@@ -1,3 +1,4 @@
+// @ts-ignore
 import { ExpressionWrapper, InsertQueryBuilder, Kysely, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';
@@ -271,7 +272,7 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('e
  * 
  * @param {Kysely<Database>} trx 
  * @param {T} table_name 
- * @param {import('kysely').InsertObject<Database, T>} item values of the entity
+ * @param {import('kysely').InsertObject<Database, T> & {id: string, handle: string}} item values of the entity
  * 
  */
 export const regular_upsert_me = async (trx, table_name, item) => {
@@ -280,8 +281,10 @@ export const regular_upsert_me = async (trx, table_name, item) => {
   await trx.deleteFrom(table_name).where(
     eb => eb.or(
       [
-        item.id && eb('id', '=', item.id),
-        item.handle && eb('handle', '=', item.handle),
+        // @ts-ignore
+        item?.id && eb('id', '=', item.id),
+        // @ts-ignore
+        item?.handle && eb('handle', '=', item.handle),
       ].filter(Boolean)
     )
   ).execute();
@@ -345,20 +348,6 @@ export const with_media = (eb, id_or_handle, sql_type) => {
   ).as('media');
 }
 
-/**
- * helper to select base attributes
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
- * @param {keyof Database} table 
- * @return {import('kysely').SelectQueryBuilder<Database, table>}
- */
-const select_base_from = (eb, table) => {
-  return [ 
-    'active', 'attributes', 'created_at', 'updated_at',
-    'description', 'handle', 'id'
-  ].map(k => `${table}.${k}`).reduce(
-    (p, c) => p.select(c), eb.selectFrom(table)
-  );
-}
 
 /**
  * select as json array collections of a product
@@ -369,7 +358,14 @@ const select_base_from = (eb, table) => {
  */
 export const products_with_collections = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'collections')
+    eb.selectFrom('collections')
+      .select('collections.active')
+      .select('collections.attributes')
+      .select('collections.created_at')
+      .select('collections.updated_at')
+      .select('collections.description')
+      .select('collections.handle')
+      .select('collections.id')
       .select('collections.title')
       .select('collections.published')
       .select(eb => [
@@ -393,7 +389,14 @@ export const products_with_collections = (eb, product_id_or_handle, sql_type) =>
  */
 export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'discounts')
+    eb.selectFrom('discounts')
+      .select('discounts.active')
+      .select('discounts.attributes')
+      .select('discounts.created_at')
+      .select('discounts.updated_at')
+      .select('discounts.description')
+      .select('discounts.handle')
+      .select('discounts.id')
       .select('discounts.title')
       .select('discounts.published')
       .select('discounts.application')
@@ -420,7 +423,14 @@ export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
  */
 export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'products')
+    eb.selectFrom('products')
+      .select('products.active')
+      .select('products.attributes')
+      .select('products.created_at')
+      .select('products.updated_at')
+      .select('products.description')
+      .select('products.handle')
+      .select('products.id')
       .select('products.compare_at_price')
       .select('products.parent_handle')
       .select('products.parent_id')
@@ -451,7 +461,14 @@ export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
  */
 export const products_with_related_products = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'products')
+    eb.selectFrom('products')
+      .select('products.active')
+      .select('products.attributes')
+      .select('products.created_at')
+      .select('products.updated_at')
+      .select('products.description')
+      .select('products.handle')
+      .select('products.id')
       .select('products.compare_at_price')
       .select('products.parent_handle')
       .select('products.parent_id')
@@ -483,10 +500,17 @@ export const products_with_related_products = (eb, product_id_or_handle, sql_typ
  */
 export const storefront_with_collections = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'collections')
-    .select('collections.title')
-    .select('collections.published')
-    .select(eb => [
+    eb.selectFrom('collections')
+      .select('collections.active')
+      .select('collections.attributes')
+      .select('collections.created_at')
+      .select('collections.updated_at')
+      .select('collections.description')
+      .select('collections.handle')
+      .select('collections.id')
+      .select('collections.title')
+      .select('collections.published')
+      .select(eb => [
       with_tags(eb, eb.ref('collections.id'), sql_type),
       with_media(eb, eb.ref('collections.id'), sql_type),
     ])
@@ -507,7 +531,14 @@ export const storefront_with_collections = (eb, sf_id_or_handle, sql_type) => {
  */
 export const storefront_with_products = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'products')
+    eb.selectFrom('products')
+    .select('products.active')
+    .select('products.attributes')
+    .select('products.created_at')
+    .select('products.updated_at')
+    .select('products.description')
+    .select('products.handle')
+    .select('products.id')
     .select('products.title')
     .select('products.compare_at_price')
     .select('products.parent_handle')
@@ -538,7 +569,14 @@ export const storefront_with_products = (eb, sf_id_or_handle, sql_type) => {
  */
 export const storefront_with_discounts = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'discounts')
+    eb.selectFrom('discounts')
+    .select('discounts.active')
+    .select('discounts.attributes')
+    .select('discounts.created_at')
+    .select('discounts.updated_at')
+    .select('discounts.description')
+    .select('discounts.handle')
+    .select('discounts.id')
     .select('discounts.application')
     .select('discounts.info')
     .select('discounts.priority')
@@ -565,7 +603,14 @@ export const storefront_with_discounts = (eb, sf_id_or_handle, sql_type) => {
  */
 export const storefront_with_posts = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'posts')
+    eb.selectFrom('posts')
+    .select('posts.active')
+    .select('posts.attributes')
+    .select('posts.created_at')
+    .select('posts.updated_at')
+    .select('posts.description')
+    .select('posts.handle')
+    .select('posts.id')
     .select('posts.text')
     .select('posts.title')
     .select(eb => [
@@ -589,7 +634,14 @@ export const storefront_with_posts = (eb, sf_id_or_handle, sql_type) => {
  */
 export const storefront_with_shipping = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
-    select_base_from(eb, 'shipping_methods')
+    eb.selectFrom('shipping_methods')
+    .select('shipping_methods.active')
+    .select('shipping_methods.attributes')
+    .select('shipping_methods.created_at')
+    .select('shipping_methods.updated_at')
+    .select('shipping_methods.description')
+    .select('shipping_methods.handle')
+    .select('shipping_methods.id')
     .select('shipping_methods.price')
     .select('shipping_methods.title')
     .select(eb => [

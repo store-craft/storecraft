@@ -1,5 +1,5 @@
 /**
- * @import { OrderData, OrderDataUpsert } from './types.api.js'
+ * @import { OrderData, OrderDataUpsert, PricingData } from './types.api.js'
  */
 import { orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
@@ -45,7 +45,7 @@ const create_search_index = (data) => {
 
 
 /**
- * @type {import('./types.api.d.ts').PricingData}
+ * @type {PricingData}
  */
 const default_pricing = {
   quantity_discounted: 0,

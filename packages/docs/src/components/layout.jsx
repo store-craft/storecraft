@@ -91,11 +91,11 @@ const Layout = (
             <div 
                 className={`--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
                           pt-[130px] md:pt-[90px] prose prose-base
-                          prose-slate text-[17px] 
+                          prose-slate text-[16px] font-light
                         --text-base max-w-none h-full
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
-                          text-slate-600 dark:text-slate-400`}
+                          text-slate-800 dark:text-slate-300`}
                 children={content_hydrated} />
             <Copyright />               
           </div>

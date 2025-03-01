@@ -26,15 +26,19 @@ const strip_tags = s => {
 
 const lvl2pl = [
   'pl-0',
+  'pl-2',
   'pl-4',
   'pl-8',
-  'pl-16',
 ]
+
+export const chop_words = (line='', max=3) => {
+  return line.split(' ').slice(0, max).join(' ') + '...'
+}
 
 /**
  * @typedef {object} TOCParams
  * @prop {string} [className]
- * @prop {import('../../pages/[[...slug]].js').PostPageProps["data"]["headings"]} [headings]
+ * @prop {import('../../pages/docs/[[...slug]].js').PostPageProps["data"]["headings"]} [headings]
  * 
  * @param {TOCParams & 
  *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -71,11 +75,13 @@ export const TOC = (
       
   return (
   <div {...rest} >
-    <div className='px-4 flex flex-col font-medium gap-1.5 text-sm w-full h-fit border-l border-gray-400/40 '>
+    <div className='px-4 flex flex-col font-normal antialiased gap-3 
+          overflow-y-scroll overflow-x-clip text-sm w-full h-fit max-h-full border-l 
+          border-gray-400/40 pb-10'>
       <div 
           children='On this page' 
-          className='text-kf-600 dark:text-white 
-                prose prose-slate font-bold text-base mb-2'/>        
+          className='text-kf-600 dark:text-white font-medium
+                prose prose-slate --font-bold text-sm mb-2'/>        
 
       {
         headings_with_handles.map(
@@ -84,9 +90,9 @@ export const TOC = (
                 key={ix}
                 href={'#' + h.handle} 
                 className={
-                  `hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500 ' : '')
+                  `opacity-70 text-ellipsis  hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500 ' : '')
                 }>
-                <MDView value={(h.level>1 ? '' : '') + h.text} />
+                <MDView value={(h.level>1 ? '' : '') + h.text??chop_words(h.text, 10)} />
               </Link>
           )
         )

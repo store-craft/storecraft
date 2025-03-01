@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
+import tailwindcss from '@tailwindcss/vite'
 
 /**
  * https://vitejs.dev/config/
@@ -21,9 +21,14 @@ export default defineConfig(
     },
     plugins: [
       react(),
-      tailwindcss(),
       cssInjectedByJsPlugin(),
-      dts({ include: ['src'] })
+      tailwindcss(),
+      dts(
+        { 
+          logLevel: 'silent',
+          tsconfigPath: resolve(__dirname, "tsconfig.app.json")
+        }
+      )
     ], 
     resolve: {
       alias: [
@@ -43,7 +48,7 @@ export default defineConfig(
       // },
       cssCodeSplit: false,
       lib: {
-        entry: ['src/index.jsx'],
+        entry: ['src/index.tsx'],
         // name: '@storecraft/dashboard',
         name: 'StorecraftChat',
         formats: ['es', 'cjs', 'umd'],

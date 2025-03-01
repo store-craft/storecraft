@@ -21,7 +21,10 @@ export default defineConfig(
     plugins: [
       react(),
       cssInjectedByJsPlugin(),
-      dts({ include: ['src'] })
+      dts({ 
+        tsconfigPath: resolve(__dirname, "tsconfig.json"),
+        outDir: 'dist/lib'
+       })
     ], 
     resolve: {
       alias: [
@@ -35,7 +38,10 @@ export default defineConfig(
       copyPublicDir: false,
       assetsInlineLimit: 1048576,
       emptyOutDir: true,
-      outDir: 'dist/lib',
+      commonjsOptions: {
+        strictRequires: 'auto',
+      },
+      outDir: 'dist/lib/src',
       // commonjsOptions: {
       //   include: [/node_modules/],
       // },

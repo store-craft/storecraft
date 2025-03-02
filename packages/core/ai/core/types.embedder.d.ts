@@ -3,14 +3,14 @@ import { content_image, content_text } from "./types.chat.js"
 /**
  * @description Text generation parameters
  */
-export type GenerateEmbeddingParams = {
+export type GenerateEmbeddingsParams = {
   content: (content_image | content_text)[]
 }
 
 /**
  * @description Text generation parameters
  */
-export type GenerateEmbeddingResult = {
+export type GenerateEmbeddingsResult = {
   content: number[][]
 }
 
@@ -30,9 +30,9 @@ export interface AIEmbedder<
    * 
    * @param params params
    */
-  generateEmbedding: (
-    params: GenerateEmbeddingParams
-  ) => Promise<GenerateEmbeddingResult>;
+  generateEmbeddings: (
+    params: GenerateEmbeddingsParams
+  ) => Promise<GenerateEmbeddingsResult>;
   
 }
 

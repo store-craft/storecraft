@@ -1,4 +1,4 @@
-export { OpenAIEmbedder } from './index.js';
+export * from './index.js';
 
 export type config = {
   model?: ('@cf/baai/bge-base-en-v1.5' | '@cf/baai/bge-large-en-v1.5' | '@cf/baai/bge-small-en-v1.5') | ({} & string),

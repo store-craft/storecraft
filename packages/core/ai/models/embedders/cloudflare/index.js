@@ -34,6 +34,12 @@ export class CloudflareEmbedder {
       model: config.model ?? '@cf/baai/bge-large-en-v1.5',
     }
 
+    if(
+      this.config.account_id && this.config.api_key && this.config.cf_email
+    ) {
+      throw new Error('CloudflareEmbedder:: Missing config values !!!')
+    }
+
     this.#embeddings_url = new URL(
       `https://api.cloudflare.com/client/v4/accounts/${config.account_id}/ai/run/${config.model}`
     ).toString();

@@ -1,3 +1,4 @@
+import { AIEmbedder } from "./types.embedder.js";
 
 export interface VectorStoreDocumentInterface<
   Metadata extends Record<string, any> = Record<string, any>
@@ -27,7 +28,7 @@ export type VectorStoreAddDocumentOptions = Record<string, any>;
 
 
 export interface VectorStore<
-  Embedder extends any = any, 
+  Embedder extends AIEmbedder = AIEmbedder, 
   Metadata extends Record<string, any> = Record<string, any>
 > {
   embedder: Embedder;
@@ -64,10 +65,9 @@ export interface VectorStore<
   /**
    * Deletes documents from the vector store based on the specified parameters.
    *
-   * @param _params - Flexible key-value pairs defining conditions for document deletion.
+   * @param ids - array of ids.
    * @returns A promise that resolves once the deletion is complete.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async delete(ids: string[]): Promise<void>;
 
   /**
@@ -83,7 +83,7 @@ export interface VectorStore<
   async similaritySearch(
     query: string,
     k = 4,
-    filter: any | undefined = undefined,
+    filter?: object,
   ): Promise<VectorStoreSimilaritySearchQueryResult[]>;
 
 }

@@ -1,4 +1,4 @@
-export { OpenAIEmbedder } from './index.js';
+export * from './index.js';
 
 export type config = {
   model?: ('voyage-3-large' | 'voyage-3' | 'voyage-3-lite' | 'voyage-code-3' | 'voyage-finance-2' | 'voyage-law-2') | ({} & string),

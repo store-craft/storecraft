@@ -1,4 +1,4 @@
-export { OpenAIEmbedder } from './index.js';
+export * from './index.js';
 
 export type config = {
   model?: ('text-embedding-004' | 'text-embedding-001') | ({} & string),

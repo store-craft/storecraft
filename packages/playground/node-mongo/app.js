@@ -12,12 +12,12 @@ import { Resend } from '@storecraft/mailer-providers-http/resend'
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node';
-import { Anthropic } from "@storecraft/core/ai/models/anthropic";
-import { Groq } from "@storecraft/core/ai/models/groq";
-import { Gemini } from "@storecraft/core/ai/models/gemini";
-import { Mistral } from "@storecraft/core/ai/models/mistral";
-import { XAI } from "@storecraft/core/ai/models/xai";
-import { OpenAI } from "@storecraft/core/ai/models/openai";
+import { Anthropic } from "@storecraft/core/ai/models/chat/anthropic";
+import { Groq } from "@storecraft/core/ai/models/chat/groq";
+import { Gemini } from "@storecraft/core/ai/models/chat/gemini";
+import { Mistral } from "@storecraft/core/ai/models/chat/mistral";
+import { XAI } from "@storecraft/core/ai/models/chat/xai";
+import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
 
 export const app = new App(
   {

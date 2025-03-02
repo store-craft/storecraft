@@ -4,18 +4,18 @@
  *  text_content, image_content,
  * } from "./types.js";
  * @import { 
- *  AI, content, GenerateTextParams, StreamTextCallbacks 
- * } from "../../core/types.private.js";
+ *  ChatAI, content, GenerateTextParams, StreamTextCallbacks 
+ * } from "../../../core/types.private.js";
  */
 
-import { invoke_tool_safely } from "../../core/tools.js";
-import { zod_to_json_schema } from "../../core/json-schema.js";
-import { SSEGenerator } from "../../core/sse.js";
-import { stream_accumulate } from "../../core/stream-accumulate.js";
+import { invoke_tool_safely } from "../../../core/tools.js";
+import { zod_to_json_schema } from "../../../core/json-schema.js";
+import { SSEGenerator } from "../../../core/sse.js";
+import { stream_accumulate } from "../../../core/stream-accumulate.js";
 import { stream_message_builder } from "./stream-message-builder.js";
 
 /**
- * @typedef {AI<config, claude_message>} Impl
+ * @typedef {ChatAI<config, claude_message>} Impl
  */
 
 /**

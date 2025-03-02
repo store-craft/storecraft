@@ -1,7 +1,7 @@
-import { AI, content, LLMHistoryProvider } from "../core/types.private.js"
+import { ChatAI, content, LLMHistoryProvider } from "../core/types.private.js"
 
 export type AgentConfig<MessageType extends any = any> = {
-  ai: AI<MessageType>
+  ai: ChatAI<MessageType>
 }
 
 /**

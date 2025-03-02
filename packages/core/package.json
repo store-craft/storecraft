@@ -148,29 +148,29 @@
       "import": "./ai/index.js",
       "types": "./ai/types.public.d.ts"
     },
-    "./ai/models/openai": {
-      "import": "./ai/models/openai/index.js",
-      "types": "./ai/models/openai/types.d.ts"
+    "./ai/models/chat/openai": {
+      "import": "./ai/models/chat/openai/index.js",
+      "types": "./ai/models/chat/openai/types.d.ts"
     },
-    "./ai/models/gemini": {
-      "import": "./ai/models/gemini/index.js",
-      "types": "./ai/models/gemini/types.d.ts"
+    "./ai/models/chat/gemini": {
+      "import": "./ai/models/chat/gemini/index.js",
+      "types": "./ai/models/chat/gemini/types.d.ts"
     },
-    "./ai/models/mistral": {
-      "import": "./ai/models/mistral/index.js",
-      "types": "./ai/models/mistral/types.d.ts"
+    "./ai/models/chat/mistral": {
+      "import": "./ai/models/chat/mistral/index.js",
+      "types": "./ai/models/chat/mistral/types.d.ts"
     },
-    "./ai/models/groq": {
-      "import": "./ai/models/groq/index.js",
-      "types": "./ai/models/groq/types.d.ts"
+    "./ai/models/chat/groq": {
+      "import": "./ai/models/chat/groq/index.js",
+      "types": "./ai/models/chat/groq/types.d.ts"
     },
-    "./ai/models/xai": {
-      "import": "./ai/models/xai/index.js",
-      "types": "./ai/models/xai/types.d.ts"
+    "./ai/models/chat/xai": {
+      "import": "./ai/models/chat/xai/index.js",
+      "types": "./ai/models/chat/xai/types.d.ts"
     },
-    "./ai/models/anthropic": {
-      "import": "./ai/models/anthropic/index.js",
-      "types": "./ai/models/anthropic/types.d.ts"
+    "./ai/models/chat/anthropic": {
+      "import": "./ai/models/chat/anthropic/index.js",
+      "types": "./ai/models/chat/anthropic/types.d.ts"
     },
     "./ai/*": {
       "import": "./ai/*"

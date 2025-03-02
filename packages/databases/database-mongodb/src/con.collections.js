@@ -1,3 +1,10 @@
+/**
+ * @import { db_collections as db_col } from '@storecraft/core/database'
+ * @import { ProductType, VariantType } from '@storecraft/core/api'
+ * @import { WithRelations } from './utils.relations.js'
+ * @import { Filter } from 'mongodb'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, expand, get_regular, list_regular } from './con.shared.js'
@@ -11,10 +18,6 @@ import {
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_collections} db_col
- */
-
 
 const transactionOptions = {
   readPreference: 'primary',
@@ -26,9 +29,7 @@ const transactionOptions = {
  * @param {MongoDB} d 
  * 
  * 
- * @returns {Collection<
- *  import('./utils.relations.js').WithRelations<db_col["$type_get"]>
- * >}
+ * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('collections');
 
@@ -175,7 +176,9 @@ const count = (driver) => count_regular(driver, col(driver));
 const list_collection_products = (driver) => {
   return async (handle_or_id, query) => {
 
-    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
+    const { 
+      filter: filter_query, sort, reverse_sign 
+    } = query_to_mongo(query);
 
     // console.log('query', query)
     // console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -183,12 +186,8 @@ const list_collection_products = (driver) => {
     // console.log('expand', query?.expand)
     
     /**
-     * @type {import('mongodb').Filter<
-     *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/api').ProductType | 
-     *    import('@storecraft/core/api').VariantType
-     *  >
-     * >}
+     * @type {Filter<WithRelations<ProductType | VariantType>>
+     * }
      */
     const filter = {
       $and: [

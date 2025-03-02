@@ -22,6 +22,7 @@ export async function migrateToLatest(driver, destroy_db_upon_completion=true) {
 
   config.set(config_migrate);
 
+  // @ts-ignore
   driver.mongo_client.__db_driver = driver;
 
   const results = await up(

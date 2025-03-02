@@ -1,12 +1,20 @@
+/**
+ * @import { 
+ *  DiscountType, FilterValue_p_in_price_range, FilterValue_p_not_in_collections, 
+ *  FilterValue_p_in_collections, FilterValue_p_not_in_tags, FilterValue_p_in_tags, 
+ *  FilterValue_p_in_products, FilterValue_p_not_in_products 
+ * } from '@storecraft/core/api'
+ */
+
 import { enums } from "@storecraft/core/api";
 import { to_objid_safe } from "./utils.funcs.js";
 
-/** @param {import("@storecraft/core/api").DiscountType} d */
+/** @param {DiscountType} d */
 const is_order_discount = d => {
   return (d.info.details.meta.id===enums.DiscountMetaEnum.order.id);
 }
 
-/** @param {import("@storecraft/core/api").DiscountType} d */
+/** @param {DiscountType} d */
 const is_automatic_discount = d => {
   return (d.application.id===enums.DiscountApplicationEnum.Auto.id);
 }
@@ -20,7 +28,7 @@ const extract_abs_number = v => {
  * for filtering.
  * 
  * 
- * @param {import("@storecraft/core/api").DiscountType} d 
+ * @param {DiscountType} d 
  */
 export const discount_to_mongo_conjunctions = d => {
   // discount has to be product discount + automatic + active + has filters
@@ -40,7 +48,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_in_products.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_in_products} */ (
+          const cast = /** @type {FilterValue_p_in_products} */ (
             filter.value ?? []
           );
           
@@ -51,7 +59,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_not_in_products.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_not_in_products} */(
+          const cast = /** @type {FilterValue_p_not_in_products} */(
             filter.value ?? []
           );
           
@@ -62,7 +70,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_in_tags.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_in_tags} */ (
+          const cast = /** @type {FilterValue_p_in_tags} */ (
             filter.value ?? []
           );
           
@@ -73,7 +81,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_not_in_tags.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_not_in_tags} */(
+          const cast = /** @type {FilterValue_p_not_in_tags} */(
             filter.value ?? []
           );
 
@@ -84,7 +92,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_in_collections.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_in_collections} */ (
+          const cast = /** @type {FilterValue_p_in_collections} */ (
             filter.value ?? []
           );
 
@@ -99,7 +107,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_not_in_collections.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_not_in_collections} */ (
+          const cast = /** @type {FilterValue_p_not_in_collections} */ (
             filter.value ?? []
           );
 
@@ -114,7 +122,7 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_in_price_range.op:
         {
-          const cast = /** @type {import("@storecraft/core/api").FilterValue_p_in_price_range} */ (
+          const cast = /** @type {FilterValue_p_in_price_range} */ (
             {
               from: 0,
               to: Number.POSITIVE_INFINITY,

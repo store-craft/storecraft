@@ -1,3 +1,10 @@
+/**
+ * @import { db_discounts as db_col } from '@storecraft/core/database'
+ * @import { ProductType, VariantType } from '@storecraft/core/api'
+ * @import { WithRelations } from './utils.relations.js'
+ * @import { Filter } from 'mongodb'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
@@ -16,11 +23,6 @@ import {
   save_me, 
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js'
-
-
-/**
- * @typedef {import('@storecraft/core/database').db_discounts} db_col
- */
 
 
 /**
@@ -208,14 +210,7 @@ const list_discount_products = (driver) => {
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
     
-    /**
-     * @type {import('mongodb').Filter<
-     *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/api').ProductType | 
-     *    import('@storecraft/core/api').VariantType
-     *  >
-     * >}
-     */
+    /** @type {Filter<WithRelations<ProductType | VariantType>>} */
     const filter = {
       $and: [
         { '_relations.search': `discount:${handle_or_id}` },

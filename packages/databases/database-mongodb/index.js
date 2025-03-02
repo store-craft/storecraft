@@ -1,3 +1,9 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { MongoClientOptions } from 'mongodb'
+ * @import { db_driver } from '@storecraft/core/database'
+ * @import { BaseType } from '@storecraft/core/api'
+ */
 import { App } from '@storecraft/core';
 import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 import { impl as auth_users } from './src/con.auth_users.js';
@@ -17,13 +23,9 @@ import { impl as search } from './src/con.search.js';
 export { migrateToLatest } from './migrate.js';
 
 /**
- * @typedef {Partial<import('./types.public.d.ts').Config>} Config
- */
-
-/**
  * 
  * @param {string} uri 
- * @param {import('mongodb').MongoClientOptions} [options] 
+ * @param {MongoClientOptions} [options] 
  */
 const connect = async (uri, options) => {
 
@@ -42,9 +44,6 @@ const connect = async (uri, options) => {
 }
 
 /**
- * @typedef {import('@storecraft/core/database').db_driver} db_driver
- * 
- * 
  * @implements {db_driver}
  */
 export class MongoDB {
@@ -72,9 +71,6 @@ export class MongoDB {
    * @type {Config} 
    */ 
   #_config;
-
-  // /** @type {db_driver["resources"]} */
-  // #_resources;
 
   /**
    * 
@@ -178,7 +174,7 @@ export class MongoDB {
 
   /**
    * 
-   * @template {import('@storecraft/core/api').BaseType} T
+   * @template {BaseType} T
    * 
    * 
    * @param {string} name 

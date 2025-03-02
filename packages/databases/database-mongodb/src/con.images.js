@@ -1,3 +1,9 @@
+/**
+ * @import { db_images as db_col } from '@storecraft/core/database'
+ * @import { ImageType } from '@storecraft/core/api'
+ * @import { Filter, AnyBulkWriteOperation } from 'mongodb'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
@@ -9,9 +15,6 @@ import {
   image_url_to_handle, image_url_to_name 
 } from '@storecraft/core/api/con.images.logic.js';
 
-/**
- * @typedef {import('@storecraft/core/database').db_images} db_col
- */
 
 /**
  * @param {MongoDB} d @returns {Collection<db_col["$type_get"]>}
@@ -105,9 +108,7 @@ export const report_document_media = (driver) => {
      * @param {string} url 
      * 
      * 
-     * @returns {import('mongodb').AnyBulkWriteOperation<
-     *  import('@storecraft/core/api').ImageType>
-     * }
+     * @returns {AnyBulkWriteOperation<ImageType>}
      */
     const url_to_update = url => {
       const id_on_insert = ID('img');

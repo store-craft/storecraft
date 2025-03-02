@@ -140,10 +140,12 @@ export const handle_or_id = (handle_or_id) => {
  */
 export const objid_or_else_filter = (id_or_else, else_key='handle') => {
   try {
+    // @ts-ignore
     return {
       _id: to_objid(id_or_else)
     }
   } catch (e) {
+    // @ts-ignore
     return {
       [else_key]: id_or_else
     }

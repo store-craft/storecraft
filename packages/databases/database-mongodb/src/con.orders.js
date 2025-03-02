@@ -1,11 +1,11 @@
+/**
+ * @import { db_orders as db_col } from '@storecraft/core/database'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
   remove_regular, upsert_regular } from './con.shared.js'
-
-/**
- * @typedef {import('@storecraft/core/database').db_orders} db_col
- */
 
 /**
  * @param {MongoDB} d 

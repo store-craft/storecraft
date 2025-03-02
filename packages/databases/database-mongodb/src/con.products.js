@@ -1,3 +1,10 @@
+/**
+ * @import { db_products as db_col, RegularGetOptions } from '@storecraft/core/database'
+ * @import { ProductType, VariantType } from '@storecraft/core/api'
+ * @import { WithRelations } from './utils.relations.js'
+ * @import { Filter, AnyBulkWriteOperation } from 'mongodb'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
@@ -26,17 +33,10 @@ import {
 } from '@storecraft/core/api/con.pricing.logic.js'
 
 /**
- * @typedef {import('@storecraft/core/database').db_products} db_col
- */
-
-/**
  * @param {MongoDB} d 
  * 
  * 
- * @returns {Collection<
- *  import('./utils.relations.js').WithRelations<db_col["$type_get"]>
- * >}
- * 
+ * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('products');
 
@@ -304,7 +304,7 @@ const count = (driver) => count_regular(driver, col(driver));
  */
 const list_product_collections = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['collections']
     };
@@ -329,7 +329,7 @@ const list_product_collections = (driver) => {
  */
 const list_product_variants = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['variants']
     };
@@ -380,7 +380,7 @@ const list_related_products = (driver) => {
  */
 const list_product_discounts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['discounts']
     };
@@ -462,12 +462,7 @@ const changeStockOfBy = (driver) => {
   return async (product_ids_or_handles, deltas) => {
 
     /** 
-     * @type {import('mongodb').AnyBulkWriteOperation<
-     *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/api').ProductType | 
-     *    import('@storecraft/core/api').VariantType
-     *  >
-     * >[]} 
+     * @type {AnyBulkWriteOperation<WithRelations<ProductType | VariantType>>[]}
      */
     let ops = []
 

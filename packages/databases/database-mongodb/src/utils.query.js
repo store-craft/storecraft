@@ -1,3 +1,8 @@
+/**
+ * @import { ApiQuery, Cursor, Tuple } from '@storecraft/core/api'
+ * @import { VQL } from '@storecraft/core/vql'
+ */
+
 import { to_objid } from "./utils.funcs.js";
 import { parse } from "@storecraft/core/vql";
 
@@ -17,7 +22,7 @@ let a = {
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
  * 
- * @param {import("@storecraft/core/api").Cursor} c 
+ * @param {Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer 
  * Your chance to change key and value
@@ -70,7 +75,7 @@ export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
 }
 
 /**
- * @param {import("@storecraft/core/vql").VQL.Node} node 
+ * @param {VQL.Node} node 
  */
 export const query_vql_node_to_mongo = node => {
   if(node.op==='LEAF') {
@@ -106,7 +111,7 @@ export const query_vql_node_to_mongo = node => {
 
 /**
  * 
- * @param {import("@storecraft/core/vql").VQL.Node} root 
+ * @param {VQL.Node} root 
  */
 export const query_vql_to_mongo = root => {
   return root ? query_vql_node_to_mongo(root) : undefined;
@@ -115,9 +120,7 @@ export const query_vql_to_mongo = root => {
 /**
  * Let's transform ids into mongo ids
  * 
- * 
- * @param {import("@storecraft/core/api").Tuple<>} c a cursor record
- * 
+ * @param {Tuple} c a cursor record
  * 
  * @returns {[k: string, v: any]}
  */
@@ -131,7 +134,7 @@ const transform = c => {
  * Convert an API Query into mongo dialect, also sanitize.
  * 
  * 
- * @param {import("@storecraft/core/api").ApiQuery} q 
+ * @param {ApiQuery<any>} q 
  */
 export const query_to_mongo = (q) => {
   try {

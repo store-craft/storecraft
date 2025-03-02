@@ -1,13 +1,16 @@
+/**
+ * @import { db_auth_users as db_col } from '@storecraft/core/database'
+ * @import { AuthUserType } from '@storecraft/core/api'
+ */
+
 import { MongoDB } from '../index.js'
 import { Collection } from 'mongodb'
-import { objid_or_else_filter, sanitize_one, to_objid_safe } from './utils.funcs.js'
+import { 
+  objid_or_else_filter, sanitize_one, to_objid_safe 
+} from './utils.funcs.js'
 import { 
   count_regular, get_regular, list_regular, upsert_regular 
 } from './con.shared.js'
-
-/**
- * @typedef {import('@storecraft/core/database').db_auth_users} db_col
- */
 
 /**
  * @param {MongoDB} d 
@@ -32,8 +35,6 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
 const get = (driver) => {
   return async (id_or_email) => {
     const filter = objid_or_else_filter(id_or_email, 'email');
-
-    /** @type {import('@storecraft/core/api').AuthUserType} */
     const res = await col(driver).findOne(
       filter
     );
@@ -51,8 +52,6 @@ const get = (driver) => {
 const getByEmail = (driver) => {
   return async (email) => {
     const filter = { email: email };
-
-    /** @type {import('@storecraft/core/api').AuthUserType} */
     const res = await col(driver).findOne(
       filter
     );
@@ -100,7 +99,6 @@ const remove = (driver) => {
  */
 const removeByEmail = (driver) => {
   return async (email) => {
-    /** @type {import('@storecraft/core/api').AuthUserType} */
     await col(driver).deleteOne(
       { email }
     );

@@ -23,27 +23,6 @@ import { impl as search } from './src/con.search.js';
 export { migrateToLatest } from './migrate.js';
 
 /**
- * 
- * @param {string} uri 
- * @param {MongoClientOptions} [options] 
- */
-const connect = async (uri, options) => {
-
-  options = options ?? {
-    ignoreUndefined: true,
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: false,
-      deprecationErrors: true,
-
-    }
-  }
-  const client = new MongoClient(uri, options);
-
-  return client.connect();
-}
-
-/**
  * @implements {db_driver}
  */
 export class MongoDB {
@@ -96,10 +75,18 @@ export class MongoDB {
     this.#_config = {
       ...c, 
       url: c?.url ?? app.platform.env.MONGODB_URL,
-      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
+      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main',
+      options: c.options ?? {
+        ignoreUndefined: true,
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: false,
+          deprecationErrors: true,
+        }
+      }
     }
 
-    this.#_mongo_client = await connect(
+    this.#_mongo_client = new MongoClient(
       this.config.url,
       this.config.options
     );

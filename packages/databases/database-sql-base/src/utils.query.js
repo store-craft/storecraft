@@ -1,5 +1,8 @@
 /**
- * @typedef {import("../index.js").Database} Database
+ * @import { ApiQuery, Cursor } from '@storecraft/core/api'
+ * @import { VQL } from '@storecraft/core/vql'
+ * @import { Database } from '../types.sql.tables.js'
+ * @import { ExpressionBuilder } from 'kysely'
  */
 
 import { parse } from "@storecraft/core/vql";
@@ -12,8 +15,8 @@ import { parse } from "@storecraft/core/vql";
  * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
  * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
  * 
- * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/api").Cursor} c 
+ * @param {ExpressionBuilder<Database>} eb 
+ * @param {Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
  */
@@ -73,8 +76,8 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
 /**
  * @template {keyof Database} T
- * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/vql").VQL.Node} node 
+ * @param {ExpressionBuilder<Database>} eb 
+ * @param {VQL.Node} node 
  * @param {T} table_name 
  */
 export const query_vql_node_to_eb = (eb, node, table_name) => {
@@ -120,8 +123,8 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
 }
 
 /**
- * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/vql").VQL.Node} root 
+ * @param {ExpressionBuilder<Database>} eb 
+ * @param {VQL.Node} root 
  * @param {keyof Database} table_name 
  */
 export const query_vql_to_eb = (eb, root, table_name) => {
@@ -149,8 +152,8 @@ const transform_boolean_to_0_or_1 = (kv) => {
  * 
  * @template {any} [T=any]
  * 
- * @param {import("kysely").ExpressionBuilder<Database>} eb 
- * @param {import("@storecraft/core/api").ApiQuery<T>} q 
+ * @param {ExpressionBuilder<Database>} eb 
+ * @param {ApiQuery<T>} q 
  * @param {keyof Database} table_name 
  * 
  */
@@ -202,7 +205,7 @@ const SIGN = {
  * @template {Record<string, any>} [Type=Record<string, any>]
  * @template {keyof Database} [Table=keyof Database]
  * 
- * @param {import("@storecraft/core/api").ApiQuery<Type>} q 
+ * @param {ApiQuery<Type>} q 
  * @param {Table} table 
  * @returns {DirectedOrderByStringReference<Database, Table, Database[Table]>[]}
  */

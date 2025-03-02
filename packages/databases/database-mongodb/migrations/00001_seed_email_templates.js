@@ -14,6 +14,7 @@ export async function up(db, client) {
     await session.withTransaction(
       async (s) => {
         /** @type {MongoDB} */
+        // @ts-ignore
         const driver = client.__db_driver;
 
         for (const template of templates) {

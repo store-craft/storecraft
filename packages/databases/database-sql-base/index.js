@@ -1,3 +1,9 @@
+/**
+ * @import { db_driver } from '@storecraft/core/database'
+ * @import { Database } from './types.sql.tables.js'
+ * @import { Config } from './types.public.js'
+ */
+
 import { App } from '@storecraft/core';
 import { impl as auth_users } from './src/con.auth_users.js';
 import { impl as collections } from './src/con.collections.js';
@@ -24,13 +30,6 @@ import { SanitizePlugin } from './src/kysely.sanitize.plugin.js';
 const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
-
-/**
- * @typedef {import('./types.public.d.ts').Config} Config
- * @typedef {import('./types.sql.tables.d.ts').Database} Database
- * @typedef {import('kysely').Dialect} Dialect
- * @typedef {import('@storecraft/core/database').db_driver} db_driver
-*/
 
 /**
  * @implements {db_driver}

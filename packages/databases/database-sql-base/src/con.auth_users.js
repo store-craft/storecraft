@@ -1,14 +1,14 @@
+/**
+ * @import { db_auth_users as db_col } from '@storecraft/core/database'
+ */
 import { SQL } from '../index.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { 
-  count_regular, delete_me, insert_search_of, insert_tags_of, regular_upsert_me, 
-  where_id_or_handle_table, with_media, with_tags
+  count_regular, delete_me, insert_search_of, insert_tags_of, 
+  regular_upsert_me, where_id_or_handle_table, with_media, with_tags
 } from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js';
 
-/**
- * @typedef {import('@storecraft/core/database').db_auth_users} db_col
- */
 
 export const table_name = 'auth_users';
 

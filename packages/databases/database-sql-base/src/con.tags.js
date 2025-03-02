@@ -1,12 +1,12 @@
+/**
+ * @import { db_tags as db_col } from '@storecraft/core/database'
+ */
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, where_id_or_handle_table } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_tags} db_col
- */
 export const table_name = 'tags'
 
 /**

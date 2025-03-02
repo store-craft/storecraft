@@ -1,3 +1,7 @@
+/**
+ * @import { db_templates as db_col } from '@storecraft/core/database'
+ * @import { Database } from '../types.sql.tables.js'
+ */
 import { Kysely } from 'kysely'
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
@@ -6,9 +10,6 @@ import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { base64 } from '@storecraft/core/crypto';
 
-/**
- * @typedef {import('@storecraft/core/database').db_templates} db_col
- */
 export const table_name = 'templates'
 
 /**
@@ -25,8 +26,7 @@ const decode_if_base64 = val => {
 }
 
 /**
- * @param {Kysely<import('../index.js').Database>} client 
- * 
+ * @param {Kysely<Database>} client 
  * 
  * @returns {db_col["upsert"]}
  */

@@ -1,3 +1,7 @@
+/**
+ * @import { ReplaceValuesOfKeys } from './utils.types.js'
+ */
+
 export const isDef = v => v!==undefined && v!==null;
 export const isUndef = v => !isDef(v);
 
@@ -25,7 +29,7 @@ export const delete_keys = (...keys) => {
  * Sanitize null/undefined valued keys
  * @template T
  * @param {T} o 
- * @return {import("./utils.types.js").ReplaceValuesOfKeys<T, 'active' | 'confirmed_mail', boolean>}
+ * @return {ReplaceValuesOfKeys<T, 'active' | 'confirmed_mail', boolean>}
  */
 export const sanitize = o => {
   for (const key in o) {

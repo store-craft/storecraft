@@ -1,3 +1,8 @@
+/**
+ * @import { db_images as db_col } from '@storecraft/core/database'
+ * @import { Database } from '../types.sql.tables.js'
+ */
+
 import { func } from '@storecraft/core/api'
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, 
@@ -11,9 +16,6 @@ import {
   image_url_to_handle, image_url_to_name 
 } from '@storecraft/core/api/con.images.logic.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_images} db_col
- */
 export const table_name = 'images'
 
 /**
@@ -106,7 +108,7 @@ const remove = (driver) => {
  */
 export const report_document_media = (driver) => {
   /**
-   * @param {Transaction<import('../index.js').Database>} [transaction]
+   * @param {Transaction<Database>} [transaction]
    */
   return async (item, transaction) => {
     if(!(item?.media?.length))
@@ -114,7 +116,7 @@ export const report_document_media = (driver) => {
   
     /**
      * 
-   * @param {Transaction<import('../index.js').Database>} trx
+   * @param {Transaction<Database>} trx
      */
     const doit = async (trx) => {
       const dates = func.apply_dates({});

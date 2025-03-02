@@ -1,3 +1,6 @@
+/**
+ * @import { db_discounts as db_col } from '@storecraft/core/database'
+ */
 import { enums } from '@storecraft/core/api'
 import { SQL } from '../index.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
@@ -12,9 +15,6 @@ import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_discounts} db_col
- */
 export const table_name = 'discounts'
 
 /**

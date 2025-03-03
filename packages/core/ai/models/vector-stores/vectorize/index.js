@@ -11,6 +11,7 @@
  * } from './types.js'
  */
 
+export const NAMESPACE_KEY = '__namespace'
 
 /**
  * @implements {VectorStore}
@@ -29,7 +30,9 @@ export class Vectorize {
   }
 
   /** @type {VectorStore["embedder"]} */
-  embedder
+  get embedder() {
+    return this.config.embedder
+  }
 
   /** @type {VectorStore["addVectors"]} */
   addVectors = async (vectors, documents, options) => {
@@ -39,7 +42,10 @@ export class Vectorize {
       (d, ix) => (
         {
           id: d.id,
-          metadata: d.metadata,
+          metadata: {
+            ...d.metadata,
+            [NAMESPACE_KEY]: d.namespace
+          },
           values: vectors[ix]
         }
       )
@@ -105,7 +111,7 @@ export class Vectorize {
   }
 
   /** @type {VectorStore["similaritySearch"]} */
-  similaritySearch = async (query, k, filter) => {
+  similaritySearch = async (query, k, namespaces) => {
 
     const embedding_result = await this.embedder.generateEmbeddings(
       {
@@ -122,10 +128,15 @@ export class Vectorize {
     /** @type {query_vectors_params} */
     const body = {
       vector,
-      filter,
       returnMetadata: 'all',
       returnValues: false,
       topK: k
+    }
+
+    if(Array.isArray(namespaces) && namespaces.length) {
+      body.filter = {
+        [NAMESPACE_KEY]: { $in: namespaces}
+      }
     }
 
     const r = await fetch(

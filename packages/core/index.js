@@ -284,8 +284,8 @@ export class App {
   ${c.red}Website:        ${c.reset}https://storecraft.app
   ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
   ${c.yellow}Statistics:     ${c.reset}initialized in ${(Date.now() - ms_init_start)}ms
-      `
-  
+      `;
+
     console.log(final);
   }
 

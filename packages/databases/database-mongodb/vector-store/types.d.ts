@@ -1,4 +1,7 @@
-import { MongoClientOptions } from 'mongodb';
+
+import type { AIEmbedder } from '@storecraft/core/ai';
+import type { MongoClientOptions } from 'mongodb';
+export * from './index.js';
 
 export type Config = {
   /**
@@ -33,5 +36,7 @@ export type Config = {
    * @description The similiarity metric
    * @default 'cosine'
    */
-  similarity?: 'euclidean' | 'cosine' | 'dotProduct'
+  similarity?: 'euclidean' | 'cosine' | 'dotProduct',
+
+  embedder: AIEmbedder
 }

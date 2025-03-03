@@ -4,8 +4,12 @@ export interface VectorStoreDocumentInterface<
   Metadata extends Record<string, any> = Record<string, any>
 > {
   pageContent: string;
-
   metadata: Metadata;
+
+  /**
+   * @description used to filter results by a category, for example 'products' | 'discounts' etc..
+   */
+  namespace?: string;
 
   /**
    * An optional identifier for the document.
@@ -28,8 +32,7 @@ export type VectorStoreAddDocumentOptions = Record<string, any>;
 
 
 export interface VectorStore<
-  Embedder extends AIEmbedder = AIEmbedder, 
-  Metadata extends Record<string, any> = Record<string, any>
+  Embedder extends AIEmbedder = AIEmbedder
 > {
   embedder: Embedder;
 
@@ -76,14 +79,14 @@ export interface VectorStore<
    *
    * @param query - Text query for finding similar documents.
    * @param k - Number of similar results to return. Defaults to 4.
-   * @param filter - Optional filter based on `FilterType`.
+   * @param namespace - Optional filter based on namespaces.
    * @returns A promise resolving to an array of 
    * `DocumentInterface` instances representing similar documents.
    */
   async similaritySearch(
     query: string,
     k = 4,
-    filter?: object,
+    namespaces?: string[],
   ): Promise<VectorStoreSimilaritySearchQueryResult[]>;
 
 }

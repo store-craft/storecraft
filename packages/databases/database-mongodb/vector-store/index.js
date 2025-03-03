@@ -5,21 +5,35 @@
  * @import {
  *  Config
  * } from './types.js'
- * @import { MongoClientOptions } from 'mongodb'
+ * @import {
+mongo_vectorSearch_pipeline,
+ *  MongoVectorDocument
+ * } from './types.private.js'
+ * 
+ * @import { 
+ *  AnyBulkWriteOperation, Document, AggregationCursor 
+ * } from 'mongodb'
  */
 
+import { Collection } from 'mongodb';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-export const KEY_PATH = 'embedding';
+export const EMBEDDING_KEY_PATH = 'embedding';
+export const NAMESPACE_KEY = 'namespace';
+export const DEFAULT_INDEX_NAME = 'vector_store';
 
 /**
  * @typedef {VectorStore} Impl
  */
 
 /**
+ * @description MongoDB Atlas Vector Store
+ * {@link https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-type/#:~:text=You%20can%20use%20the%20vectorSearch,to%20pre%2Dfilter%20your%20data.}
+ * 
  * @implements {VectorStore}
  */
 export class MongoVectorStore {
+
   /** @type {Config} */
   config;
 
@@ -33,7 +47,7 @@ export class MongoVectorStore {
   constructor(config) {
     this.config = {
       ...config,
-      index_name: config.index_name ?? 'vector_store',
+      index_name: config.index_name ?? DEFAULT_INDEX_NAME,
       similarity: config.similarity ?? 'cosine',
       options: config.options ?? {
         ignoreUndefined: true,
@@ -50,15 +64,56 @@ export class MongoVectorStore {
   }
 
   /** @type {VectorStore["embedder"]} */
-  embedder
+  get embedder() {
+    return this.config.embedder
+  }
+
+  /** @type {Collection<MongoVectorDocument>} */
+  get vector_collection() {
+    return this.client.db(this.config.db_name).collection(this.config.index_name);
+  }
 
   /** @type {VectorStore["addVectors"]} */
   addVectors = async (vectors, documents, options) => {
-    
+    /** @type {MongoVectorDocument[]} */
+    const mongo_docs = documents.map(
+      (doc, ix) => (
+        {
+          updated_at: new Date().toISOString(),
+          embedding: vectors[ix],
+          metadata: doc.metadata,
+          pageContent: doc.pageContent,
+          [NAMESPACE_KEY]: doc.namespace,
+          id: doc.id
+        }
+      )
+    );
+
+    // upsert all docs
+    /** @type {AnyBulkWriteOperation<MongoVectorDocument>[]} */
+    const mongo_replace_ops = mongo_docs.map(
+      (doc) => (
+        {
+          replaceOne: {
+            filter: {
+              id: doc.id
+            },
+            replacement: doc,
+            upsert: true
+          }
+        }
+      )
+    )
+
+    const results = await this.vector_collection.bulkWrite(
+      mongo_replace_ops
+    );
+
   }
 
   /** @type {VectorStore["addDocuments"]} */
   addDocuments = async (documents, options) => {
+    // first, generate embeddings for the documents
     const result = await this.embedder.generateEmbeddings(
       {
         content: documents.map(
@@ -81,25 +136,16 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["delete"]} */
   delete = async (ids) => {
-    const r = await fetch(
-      this.#to_cf_url(`${this.config.index_name}/query`),
+    const result = await this.vector_collection.deleteMany(
       {
-        method: 'post',
-        headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ids })
+        id: { $in: ids }
       }
     );
-
-    /** @type {query_vectors_result} */
-    const json = await r.json();
+    
   }
 
   /** @type {VectorStore["similaritySearch"]} */
-  similaritySearch = async (query, k, filter) => {
+  similaritySearch = async (query, k, namespaces) => {
 
     const embedding_result = await this.embedder.generateEmbeddings(
       {
@@ -113,40 +159,46 @@ export class MongoVectorStore {
     );
     const vector = embedding_result.content[0]
 
-    /** @type {query_vectors_params} */
-    const body = {
-      vector,
-      filter,
-      returnMetadata: 'all',
-      returnValues: false,
-      topK: k
+    const agg = [
+      {
+        '$vectorSearch': /** @type {mongo_vectorSearch_pipeline} */ ({
+          index: this.config.index_name,
+          path: EMBEDDING_KEY_PATH,
+          queryVector: vector,
+          numCandidates: k,
+          limit: k,
+          exact: false,
+        })
+      }, {
+        '$project': {
+          '_id': 0,
+          [EMBEDDING_KEY_PATH]: 0,
+          'score': {
+            '$meta': 'vectorSearchScore'
+          }
+        }
+      }
+    ];
+
+    if(Array.isArray(namespaces) && namespaces.length) {
+      agg[0].$vectorSearch.filter = {
+        [NAMESPACE_KEY]: {$in: namespaces}
+      }
     }
 
-    const r = await fetch(
-      this.#to_cf_url(`${this.config.index_name}/query`),
-      {
-        method: 'post',
-        headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-    );
+    /** @type {AggregationCursor<MongoVectorDocument>} */
+    const agg_result = this.vector_collection.aggregate(agg);
+    const mongo_vector_docs = await agg_result.toArray();
 
-    /** @type {query_vectors_result} */
-    const json = await r.json();
-
-    return json.matches.map(
-      (match) => {
-        const { score, metadata } = match;
-        const { pageContent, ...restMetaData } = metadata;
+    return mongo_vector_docs.map(
+      (doc) => {
         return {
-          score: match.score,
+          score: doc.score,
           document: {
-            metadata: restMetaData,
-            pageContent: pageContent
+            id: doc.id,
+            metadata: doc.metadata,
+            pageContent: doc.pageContent,
+            namespace: doc.namespace
           }
         }
       }
@@ -171,10 +223,14 @@ export class MongoVectorStore {
           fields: [
             {
               type: 'vector',
-              path: KEY_PATH,
+              path: EMBEDDING_KEY_PATH,
               numDimensions: this.config.dimensions,
               similarity: this.config.similarity
-            }
+            },
+            {
+              type: 'filter',
+              path: NAMESPACE_KEY
+            },
           ]
         }
       }
@@ -189,3 +245,4 @@ export class MongoVectorStore {
 
   
 }
+

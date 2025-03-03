@@ -11,6 +11,7 @@
  * } from './types.js'
  */
 
+export const NAMESPACE_KEY = '__namespace'
 
 /**
  * @implements {VectorStore}
@@ -25,7 +26,9 @@ export class Pinecone {
   }
 
   /** @type {VectorStore["embedder"]} */
-  embedder
+  get embedder() {
+    return this.config.embedder
+  }
 
   /** @type {VectorStore["addVectors"]} */
   addVectors = async (vectors, documents, options) => {
@@ -35,7 +38,10 @@ export class Pinecone {
       (d, ix) => (
         {
           id: d.id,
-          metadata: d.metadata,
+          metadata: {
+            ...d.metadata,
+            [NAMESPACE_KEY]: d.namespace
+          },
           values: vectors[ix]
         }
       )
@@ -103,7 +109,7 @@ export class Pinecone {
   }
 
   /** @type {VectorStore["similaritySearch"]} */
-  similaritySearch = async (query, k, filter) => {
+  similaritySearch = async (query, k, namespaces) => {
 
     const embedding_result = await this.embedder.generateEmbeddings(
       {
@@ -120,10 +126,15 @@ export class Pinecone {
     /** @type {query_vectors_params} */
     const body = {
       vector,
-      filter,
       includeMetadata: true,
       includeValues: false,
       topK: k
+    }
+
+    if(Array.isArray(namespaces) && namespaces.length) {
+      body.filter = {
+        [NAMESPACE_KEY]: { $in: namespaces}
+      }
     }
 
     const r = await fetch(

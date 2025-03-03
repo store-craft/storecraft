@@ -1,6 +1,6 @@
 import { MongoClientOptions } from 'mongodb';
 
-export { MongoDB, migrateToLatest } from './index.js';
+export { MongoDB, migrateToLatest, MongoVectorStore } from './index.js';
 
 export type Config = {
   /**

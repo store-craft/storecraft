@@ -21,6 +21,7 @@ import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
 import { impl as search } from './src/con.search.js';
 export { migrateToLatest } from './migrate.js';
+export { MongoVectorStore } from './vector-store/index.js';
 
 /**
  * @implements {db_driver}

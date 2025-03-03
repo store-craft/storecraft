@@ -1,10 +1,10 @@
 import { AIEmbedder } from "./types.embedder.js";
 
 export interface VectorStoreDocumentInterface<
-  Metadata extends Record<string, any> = Record<string, any>
+  Metadata extends Record<string, string | number | boolean> = Record<string, string | number | boolean>
 > {
   pageContent: string;
-  metadata: Metadata;
+  metadata?: Metadata;
 
   /**
    * @description used to filter results by a category, for example 'products' | 'discounts' etc..

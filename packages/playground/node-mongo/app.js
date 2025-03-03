@@ -18,6 +18,9 @@ import { Gemini } from "@storecraft/core/ai/models/chat/gemini";
 import { Mistral } from "@storecraft/core/ai/models/chat/mistral";
 import { XAI } from "@storecraft/core/ai/models/chat/xai";
 import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
+import { MongoVectorStore } from "@storecraft/database-mongodb";
+import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize/index.js";
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare/index.js";
 
 export const app = new App(
   {
@@ -70,21 +73,12 @@ export const app = new App(
     }
   )
 )
-.on(
-  'auth/signin',
-  async (evt) => {
-    // evt.payload.
-  }
-)
-.on(
-  'auth/remove',
-  async (evt) => {
-    evt.payload
-  }
-).on(
-  'auth/change-password', 
-  async evt => {
-    evt
-  }
+.withVectorStore(
+  new MongoVectorStore(
+    {
+      dimensions: 1536,
+      embedder: new CloudflareEmbedder({account_id:'', api_key:'', cf_email:''}),
+    }
+  )
 )
 

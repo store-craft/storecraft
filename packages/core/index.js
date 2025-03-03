@@ -13,7 +13,7 @@
  * @import { tax_provider } from "./tax/types.public.js";
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
- * @import { ChatAI } from "./ai/core/types.private.js";
+ * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';
@@ -25,6 +25,9 @@ export * from './api/types.api.enums.js'
 import pkg from './package.json' with { type: "json" }
 import { NotificationsExtension } from './extensions/notifications/index.js';
 import { StoreAgent } from './ai/agents/agent.js';
+import { 
+  save_collection, save_discount, save_product, save_shipping_method 
+} from './ai/models/vector-stores/index.js';
 
 /**
  * @typedef {{
@@ -47,6 +50,7 @@ let ms_init_start = 0;
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
+ * @template {VectorStore} [VectorStoreProvider=VectorStore]
  */
 export class App {
 
@@ -59,6 +63,11 @@ export class App {
    * @type {StoreAgent<AiProvider>} 
    */
   #_ai;
+
+  /** 
+   * @type {VectorStoreProvider} 
+   */
+  #_vector_store;
   
   /** 
    * 
@@ -321,6 +330,38 @@ export class App {
         this.#_ai.init(this);
       }
 
+      // settle vector store events
+      if(this.vectorstore) {
+        this.pubsub.on(
+          'products/upsert',
+          async (evt) => {
+            await save_product(evt.payload.current, this.vectorstore);
+          }
+        );
+
+        this.pubsub.on(
+          'collections/upsert',
+          async (evt) => {
+            await save_collection(evt.payload.current, this.vectorstore);
+          }
+        );
+
+        this.pubsub.on(
+          'discounts/upsert',
+          async (evt) => {
+            await save_discount(evt.payload.current, this.vectorstore);
+          }
+        );
+
+        this.pubsub.on(
+          'shipping/upsert',
+          async (evt) => {
+            await save_shipping_method(evt.payload.current, this.vectorstore);
+          }
+        );
+
+      }
+
   
     } catch (e) {
       this.#_is_ready = false;
@@ -349,7 +390,7 @@ export class App {
    * 
    * @param {P} platform 
    * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
    * 
    */
   withPlatform(platform) {
@@ -375,7 +416,7 @@ export class App {
    * 
    * @param {P} ai 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider>}
    * 
    */
   withAI(ai) {
@@ -397,11 +438,37 @@ export class App {
   /** 
    * @description Update new payment gateways and rewrite types 
    * 
+   * @template {VectorStore} P
+   * 
+   * @param {P} store 
+   * 
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P>}
+   * 
+   */
+  withVectorStore(store) {
+    // @ts-ignore
+    this.#_vector_store = store;
+
+    // @ts-ignore
+    return this;
+  } 
+
+  /** 
+   * 
+   * @description Get the Vector Store
+   */
+  get vectorstore() { 
+    return this.#_vector_store; 
+  }
+
+  /** 
+   * @description Update new payment gateways and rewrite types 
+   * 
    * @template {db_driver} D
    * 
    * @param {D} database 
    * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
    */
   withDatabase(database) {
     // @ts-ignore
@@ -426,7 +493,7 @@ export class App {
    * 
    * @param {S} storage 
    * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
    */
   withStorage(storage) {
     // @ts-ignore
@@ -451,7 +518,7 @@ export class App {
    * 
    * @param {M} mailer 
    * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider>}
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -476,7 +543,7 @@ export class App {
    * 
    * @param {T} taxes 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider>}
    */
   withTaxes(taxes) {
     // @ts-ignore
@@ -501,7 +568,7 @@ export class App {
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -526,7 +593,7 @@ export class App {
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider>}
    */
   withExtensions(extensions) { 
     // @ts-ignore

@@ -437,7 +437,7 @@ export const discountMetaEnumSchema = z
     }),
     any: z.object({
       id: z.number().optional(),
-      type: z.string().optional(),
+      type: z.never().optional(),
       name: z.string().optional(),
     }),
   })
@@ -511,7 +511,6 @@ export const filterSchema = z
         filterMetaEnumSchema.shape.o_has_customer,
         filterMetaEnumSchema.shape.o_items_count_in_range,
         filterMetaEnumSchema.shape.o_subtotal_in_range,
-        filterMetaEnumSchema.shape.any,
       ])
       .describe("Meta data related to identifying the filter"),
     value: z
@@ -1264,10 +1263,6 @@ export const orderStatusSchema = z
         checkoutStatusEnumSchema.shape.failed,
         checkoutStatusEnumSchema.shape.requires_action,
         checkoutStatusEnumSchema.shape.unknown,
-        z.object({
-          id: z.number(),
-          name2: z.string(),
-        }),
       ])
       .describe("`checkout` status"),
     payment: z
@@ -1281,10 +1276,6 @@ export const orderStatusSchema = z
         paymentOptionsEnumSchema.shape.requires_auth,
         paymentOptionsEnumSchema.shape.unpaid,
         paymentOptionsEnumSchema.shape.voided,
-        z.object({
-          id: z.number(),
-          name2: z.string(),
-        }),
       ])
       .describe("`payment` status"),
     fulfillment: z
@@ -1294,10 +1285,6 @@ export const orderStatusSchema = z
         fulfillOptionsEnumSchema.shape.fulfilled,
         fulfillOptionsEnumSchema.shape.processing,
         fulfillOptionsEnumSchema.shape.shipped,
-        z.object({
-          id: z.number(),
-          name2: z.string(),
-        }),
       ])
       .describe("`fulfillment` status"),
   })
@@ -1331,7 +1318,6 @@ export const discountDetailsSchema = z
         discountMetaEnumSchema.shape.bundle,
         discountMetaEnumSchema.shape.buy_x_get_y,
         discountMetaEnumSchema.shape.order,
-        discountMetaEnumSchema.shape.any,
       ])
       .describe("metadata to identify the type of discount"),
     extra: z
@@ -1382,11 +1368,6 @@ export const discountTypeSchema = baseTypeSchema.extend({
     .union([
       discountApplicationEnumSchema.shape.Auto,
       discountApplicationEnumSchema.shape.Manual,
-      z.object({
-        id: z.number(),
-        name: z.string().optional(),
-        name2: z.string(),
-      }),
     ])
     .describe("Discount application (`automatic` and `manual`)"),
 });

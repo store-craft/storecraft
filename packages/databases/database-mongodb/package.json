@@ -24,6 +24,10 @@
       "import": "./index.js",
       "types": "./types.public.d.ts"
     },
+    "./vector-store": {
+      "import": "./vector-store/index.js",
+      "types": "./vector-store/types.d.ts"
+    },
     "./*": {
       "import": "./*"
     }

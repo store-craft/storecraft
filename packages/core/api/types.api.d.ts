@@ -794,7 +794,7 @@ export interface DiscountType extends BaseType {
   /** 
    * @description Discount application (`automatic` and `manual`) 
    */
-  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"] | { id: number, name?: string, name2: string };
+  application: DiscountApplicationEnum["Auto"] | DiscountApplicationEnum["Manual"] //| { id: number, name?: string, name2: string };
 }
 
 
@@ -994,8 +994,8 @@ export type Filter = {
         FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_products'] |
         FilterMetaEnum['p_not_in_products'] | FilterMetaEnum["p_in_price_range"] | 
         FilterMetaEnum['o_date_in_range'] | FilterMetaEnum['o_has_customer'] | 
-        FilterMetaEnum['o_items_count_in_range'] | FilterMetaEnum['o_subtotal_in_range'] | 
-        FilterMetaEnum["any"];
+        FilterMetaEnum['o_items_count_in_range'] | FilterMetaEnum['o_subtotal_in_range'] 
+        //| FilterMetaEnum["any"];
 
   /** 
    * @description The filter params 
@@ -1090,7 +1090,7 @@ export type DiscountDetails = {
    */
   meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
         DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
-        DiscountMetaEnum['order'] | DiscountMetaEnum['any'];
+        DiscountMetaEnum['order']// | DiscountMetaEnum['any'];
 
 
   /** 
@@ -1127,7 +1127,7 @@ export type DiscountMetaEnum = {
     name?: string,
   },
   any: { 
-    id?: number, type?: string, 
+    id?: number, type?: never, 
     name?: string,
   },
 
@@ -1786,7 +1786,7 @@ export type OrderStatus = {
    */
   checkout: CheckoutStatusEnum['complete'] | CheckoutStatusEnum['created'] | 
             CheckoutStatusEnum['failed'] | CheckoutStatusEnum['requires_action'] |
-            CheckoutStatusEnum['unknown'] | { id: number, name2: string };
+            CheckoutStatusEnum['unknown'] //| { id: number, name2: string };
 
   /**
    * @description `payment` status
@@ -1795,14 +1795,14 @@ export type OrderStatus = {
            PaymentOptionsEnum['failed'] | PaymentOptionsEnum['partially_paid'] | 
            PaymentOptionsEnum['partially_refunded'] | PaymentOptionsEnum['refunded'] |
            PaymentOptionsEnum['requires_auth'] | PaymentOptionsEnum['unpaid'] | 
-           PaymentOptionsEnum['voided'] | { id: number, name2: string };
+           PaymentOptionsEnum['voided'] //| { id: number, name2: string };
 
   /**
    * @description `fulfillment` status
    */
   fulfillment: FulfillOptionsEnum['cancelled'] | FulfillOptionsEnum['draft'] |
                FulfillOptionsEnum['fulfilled'] | FulfillOptionsEnum['processing'] | 
-               FulfillOptionsEnum['shipped'] | { id: number, name2: string };
+               FulfillOptionsEnum['shipped'] //| { id: number, name2: string };
 }
 
 /** 

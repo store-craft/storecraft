@@ -13,7 +13,7 @@
  * @import { tax_provider } from "./tax/types.public.js";
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
- * @import { AI } from "./ai/core/types.private.js";
+ * @import { ChatAI } from "./ai/core/types.private.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';
@@ -32,6 +32,8 @@ import { StoreAgent } from './ai/agents/agent.js';
  * }} BaseExtensions
  */
 
+let ms_init_start = 0;
+
 /**
  * @description This is the main `storecraft` **App**
  * 
@@ -44,7 +46,7 @@ import { StoreAgent } from './ai/agents/agent.js';
  * @template {Record<string, extension> & BaseExtensions} [ExtensionsMap=(BaseExtensions)]
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
- * @template {AI} [AiProvider=AI]
+ * @template {ChatAI} [AiProvider=ChatAI]
  */
 export class App {
 
@@ -142,6 +144,7 @@ export class App {
   constructor(
     config
   ) {
+    ms_init_start = Date.now();
     this.#_config = config;
     this.#_is_ready = false;
     // @ts-ignore
@@ -263,7 +266,7 @@ export class App {
     }
   } 
 
-  print_banner(host='', version=(pkg.version??'1.0.0')) {
+  print_banner(host='', version=(pkg.version ?? '1.0.0')) {
     const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
     const c = {
       red: '\x1b[1;31m',
@@ -280,6 +283,7 @@ export class App {
   ${c.red}API Reference:  ${c.reset + host}/api/reference    
   ${c.red}Website:        ${c.reset}https://storecraft.app
   ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
+  ${c.yellow}Statistics:     ${c.reset}initialized in ${(Date.now() - ms_init_start)}ms
       `
   
     console.log(final);
@@ -327,7 +331,6 @@ export class App {
     } finally {
       print_banner && this.print_banner();
     }
-
     return this;
   }
 
@@ -368,7 +371,7 @@ export class App {
   /** 
    * @description Update new payment gateways and rewrite types 
    * 
-   * @template {AI} P
+   * @template {ChatAI} P
    * 
    * @param {P} ai 
    * 

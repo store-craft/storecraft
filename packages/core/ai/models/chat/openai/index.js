@@ -14,7 +14,6 @@ import { SSEGenerator } from "../../../core/sse.js";
 import { stream_accumulate } from "../../../core/stream-accumulate.js";
 import { stream_message_builder } from "./stream-message-builder.js";
 
-
 /**
  * @typedef {ChatAI<config, chat_message>} Impl
  */
@@ -23,12 +22,19 @@ const strip_leading = (text = '') => {
   return (text[0]==='/') ? text.slice(1) : text;
 }
 
+export const ENV_OPENAI_API_KEY = 'OPENAI_API_KEY';
+
 /**
  * @implements {Impl}
  */
 export class OpenAI {
   #chat_completion_url = '';
   #chat_models_url = '';
+
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_OPENAI_API_KEY]; 
+  }
 
   /**
    * @param {config} config 

@@ -8,9 +8,10 @@ export type config = {
     'claude-3-opus-20240229') | ({} & string),
   api_version?: string = "v1";
   anthropic_version?: string = "2023-06-01";
-  api_key: string
-}
 
+  /** If missing, then will be read from environment variable `ANTHROPIC_API_KEY` */
+  api_key?: string
+}
 
 export type with_cache_control = {
   cache_control?: {type: 'ephemeral'}

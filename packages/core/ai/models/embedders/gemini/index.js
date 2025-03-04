@@ -7,7 +7,7 @@
  * } from "../../../core/types.private.js";
  */
 
-
+export const ENV_GEMINI_API_KEY = 'GEMINI_API_KEY'
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -23,7 +23,6 @@ const strip_leading = (text = '') => {
  * @implements {Impl}
  */
 export class GeminiEmbedder {
-  #embeddings_url = '';
 
   /**
    * @param {config} config 
@@ -35,15 +34,20 @@ export class GeminiEmbedder {
       api_version: config.api_version ?? 'v1beta'
     }
 
-    this.#embeddings_url = new URL(
-      strip_leading(this.config.api_version + '/models/' + this.config.model + ':batchEmbedContents?key=' + this.config.api_key), 
-      'https://generativelanguage.googleapis.com'
-    ).toString();
+  }
 
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_GEMINI_API_KEY]; 
   }
 
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {
+
+    const embeddings_url = new URL(
+      strip_leading(this.config.api_version + '/models/' + this.config.model + ':batchEmbedContents?key=' + this.config.api_key), 
+      'https://generativelanguage.googleapis.com'
+    ).toString();
 
     const body = (/** @type {RequestBody} */ (
       {
@@ -63,7 +67,7 @@ export class GeminiEmbedder {
     ));
 
     const r = await fetch(
-      this.#embeddings_url,
+      embeddings_url,
       {
         method: 'post',
         headers: {

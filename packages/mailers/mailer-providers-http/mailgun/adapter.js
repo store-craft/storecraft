@@ -7,6 +7,8 @@
 import { base64 } from "@storecraft/core/crypto";
 import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.utils.js";
 
+export const ENV_MAILGUN_API_KEY = 'MAILGUN_API_KEY';
+
 /**
  * @implements {mailer<Config>}
  * 
@@ -25,6 +27,11 @@ export class Mailgun {
   }
 
   get config() { return this.#_config; }
+
+  /** @type {mailer<Config>["onInit"]} */
+  onInit = (app) => {
+    this.config.apikey = this.config.apikey ?? app.platform.env[ENV_MAILGUN_API_KEY];
+  };
 
   /**
    * 

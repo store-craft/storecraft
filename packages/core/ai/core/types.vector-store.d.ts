@@ -1,3 +1,4 @@
+import { App } from "../../types.public.js";
 import { AIEmbedder } from "./types.embedder.js";
 
 export interface VectorStoreDocumentInterface<
@@ -35,6 +36,12 @@ export interface VectorStore<
   Embedder extends AIEmbedder = AIEmbedder
 > {
   embedder: Embedder;
+
+  /**
+   * @description Your chance to read `env` variable for the config
+   * @param app `storecraft` app instance
+   */
+  onInit?: (app: App) => any | void;
 
   /**
    * Adds precomputed vectors and corresponding documents to the vector store.
@@ -79,7 +86,7 @@ export interface VectorStore<
    *
    * @param query - Text query for finding similar documents.
    * @param k - Number of similar results to return. Defaults to 4.
-   * @param namespace - Optional filter based on namespaces.
+   * @param namespaces - Optional filter based on namespaces.
    * @returns A promise resolving to an array of 
    * `DocumentInterface` instances representing similar documents.
    */

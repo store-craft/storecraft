@@ -21,6 +21,8 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 export const EMBEDDING_KEY_PATH = 'embedding';
 export const NAMESPACE_KEY = 'namespace';
 export const DEFAULT_INDEX_NAME = 'vector_store';
+export const ENV_MONGODB_URL = 'MONGODB_URL';
+export const ENV_MONGODB_NAME = 'MONGODB_NAME';
 
 /**
  * @typedef {VectorStore} Impl
@@ -38,7 +40,7 @@ export class MongoVectorStore {
   config;
 
   /** @type {MongoClient} */
-  client
+  #client
 
   /**
    * 
@@ -58,9 +60,23 @@ export class MongoVectorStore {
         }
       }
     };
-    this.client = new MongoClient(
+  }
+
+  get client() {
+    if(!this.config.db_name || !this.config.url) {
+      throw new Error('MongoVectorStore::client() - missing url or db_name');
+    }
+    
+    this.#client = this.#client ?? new MongoClient(
       this.config.url, this.config.options
     );
+    return this.#client;
+  }
+
+  /** @type {VectorStore["onInit"]} */
+  onInit = (app) => {
+    this.config.url = this.config.url ?? app.platform.env[ENV_MONGODB_URL]; 
+    this.config.db_name = this.config.db_name ?? app.platform.env[ENV_MONGODB_NAME] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */

@@ -1,5 +1,7 @@
 import { OpenAI } from "../openai/index.js";
 
+export const ENV_GEMINI_API_KEY = 'GEMINI_API_KEY';
+
 export class Gemini extends OpenAI {
 
   /**
@@ -15,6 +17,11 @@ export class Gemini extends OpenAI {
         api_version: ''
       }
     )
+  }
+
+  /** @type {OpenAI["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_GEMINI_API_KEY]; 
   }
 
 }

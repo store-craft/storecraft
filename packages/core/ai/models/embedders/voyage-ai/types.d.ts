@@ -4,7 +4,9 @@ export type config = {
   model?: ('voyage-3-large' | 'voyage-3' | 'voyage-3-lite' | 'voyage-code-3' | 'voyage-finance-2' | 'voyage-law-2') | ({} & string),
   endpoint?: string,
   api_version?: string;
-  api_key: string
+
+  /** If absent, will be infered from environment variable `VOYAGE_AI_API_KEY` */
+  api_key?: string
 }
 
 export type RequestBody = {

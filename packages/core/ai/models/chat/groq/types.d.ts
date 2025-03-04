@@ -7,7 +7,9 @@ export type config = {
           "llama3-8b-8192" | 
           "llama-3.2-3b-preview",
   api_version?: string;
-  api_key: string
+  
+  /** If missing, then will be read from environment variable `GROQ_API_KEY` */
+  api_key?: string
 }
 
 export * from './index.js';

@@ -1,0 +1,1 @@
+export type * from '../../core/types.vector-store.d.ts';

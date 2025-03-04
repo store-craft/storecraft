@@ -12,6 +12,9 @@
  */
 
 export const NAMESPACE_KEY = '__namespace'
+export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID'
+export const ENV_CF_API_KEY = 'CF_API_KEY'
+export const ENV_CF_EMAIL = 'CF_EMAIL'
 
 /**
  * @implements {VectorStore}
@@ -23,6 +26,13 @@ export class Vectorize {
    */
   constructor(config) {
     this.config = config;
+  }
+
+  /** @type {VectorStore["onInit"]} */
+  onInit = (app) => {
+    this.config.account_id = this.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID]; 
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_API_KEY]; 
+    this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 
   #to_cf_url = (path = '') => {
@@ -94,9 +104,9 @@ export class Vectorize {
   /** @type {VectorStore["delete"]} */
   delete = async (ids) => {
     const r = await fetch(
-      this.#to_cf_url(`${this.config.index_name}/query`),
+      this.#to_cf_url(`${this.config.index_name}`),
       {
-        method: 'post',
+        method: 'delete',
         headers: {
           'X-Auth-Email': this.config.cf_email,
           'X-Auth-Key': this.config.api_key,

@@ -18,6 +18,8 @@ import { stream_message_builder } from "./stream-message-builder.js";
  * @typedef {ChatAI<config, claude_message>} Impl
  */
 
+export const ENV_ANTHROPIC_API_KEY = 'ANTHROPIC_API_KEY';
+
 /**
  * @implements {Impl}
  */
@@ -46,6 +48,11 @@ export class Anthropic {
       this.config.api_version + '/models', 
       this.#anthropic_endpoint
     ).toString();
+  }
+
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_ANTHROPIC_API_KEY]; 
   }
 
   /**

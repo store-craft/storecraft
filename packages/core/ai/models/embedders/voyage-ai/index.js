@@ -7,7 +7,7 @@
  * } from "../../../core/types.private.js";
  */
 
-
+export const ENV_VOYAGE_AI_API_KEY = 'VOYAGE_AI_API_KEY';
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -40,6 +40,12 @@ export class OpenAIEmbedder {
     ).toString();
 
   }
+
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_VOYAGE_AI_API_KEY]; 
+  }
+
 
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {

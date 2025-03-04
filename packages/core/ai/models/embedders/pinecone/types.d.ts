@@ -25,7 +25,9 @@ export type Llama_Text_Embed_V2 = {
 
 export type config = {
   model?: Multilingual_E5_Large | Llama_Text_Embed_V2,
-  api_key: string,
+
+  /** If absent, will be infered from environment variable `PINECONE_API_KEY` */
+  api_key?: string,
 }
 
 export type RequestBody = {

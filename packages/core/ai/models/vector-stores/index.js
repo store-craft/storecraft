@@ -20,7 +20,7 @@ const save_with = (content, page_content, vector_store, namespace) => {
       {
         id: content.handle,
         pageContent: page_content,
-        namespace: 'products',
+        namespace: namespace,
         metadata: {
           json: JSON.stringify(content),
           handle: content.handle,

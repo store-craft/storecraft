@@ -13,6 +13,7 @@ export type Config = {
   /** 
    * @description the name of the database, if absent, will be infered at init
    * with env `app.platform.env.MONGODB_NAME` 
+   * @default 'main'
    */
   db_name?: string;
 

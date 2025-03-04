@@ -18,12 +18,14 @@
  * @typedef {AIEmbedder<config>} Impl
  */
 
+export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID'
+export const ENV_CF_API_KEY = 'CF_API_KEY'
+export const ENV_CF_EMAIL = 'CF_EMAIL'
 
 /**
  * @implements {Impl}
  */
 export class CloudflareEmbedder {
-  #embeddings_url = '';
 
   /**
    * @param {config} config 
@@ -33,21 +35,27 @@ export class CloudflareEmbedder {
       ...config,
       model: config.model ?? '@cf/baai/bge-large-en-v1.5',
     }
+  }
 
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.account_id = this.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID]; 
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_API_KEY]; 
+    this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
+  }
+
+
+  /** @type {Impl["generateEmbeddings"]} */
+  generateEmbeddings = async (params) => {
     if(
       this.config.account_id && this.config.api_key && this.config.cf_email
     ) {
       throw new Error('CloudflareEmbedder:: Missing config values !!!')
     }
 
-    this.#embeddings_url = new URL(
-      `https://api.cloudflare.com/client/v4/accounts/${config.account_id}/ai/run/${config.model}`
+    const embeddings_url = new URL(
+      `https://api.cloudflare.com/client/v4/accounts/${this.config.account_id}/ai/run/${this.config.model}`
     ).toString();
-
-  }
-
-  /** @type {Impl["generateEmbeddings"]} */
-  generateEmbeddings = async (params) => {
 
     const body = (/** @type {RequestBody} */ (
       {
@@ -56,7 +64,7 @@ export class CloudflareEmbedder {
     ));
     
     const r = await fetch(
-      this.#embeddings_url,
+      embeddings_url,
       {
         method: 'post',
         headers: {

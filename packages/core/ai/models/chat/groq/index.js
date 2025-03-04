@@ -1,5 +1,7 @@
 import { OpenAI } from "../openai/index.js";
 
+export const ENV_GROQ_API_KEY = 'GROQ_API_KEY';
+
 export class Groq extends OpenAI {
 
   /**
@@ -15,5 +17,11 @@ export class Groq extends OpenAI {
       }
     )
   }
+
+  /** @type {OpenAI["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_GROQ_API_KEY]; 
+  }
+
 }
 

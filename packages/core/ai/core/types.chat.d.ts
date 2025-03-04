@@ -148,6 +148,12 @@ export interface ChatAI<
   config?: Config;
 
   /**
+   * @description Your chance to read `env` variable for the config
+   * @param app `storecraft` app instance
+   */
+  onInit?: (app: App) => any | void;
+
+  /**
    * @description The purpose of this method is to generate new {@link content} 
    * array based on,
    *  

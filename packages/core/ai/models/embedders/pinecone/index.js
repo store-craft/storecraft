@@ -7,7 +7,7 @@
  * } from "../../../core/types.private.js";
  */
 
-
+export const ENV_PINECONE_API_KEY = 'PINECONE_API_KEY'
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -34,6 +34,11 @@ export class PineconeEmbedder {
         }
       }
     }
+  }
+
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_PINECONE_API_KEY]; 
   }
 
   /** @type {Impl["generateEmbeddings"]} */

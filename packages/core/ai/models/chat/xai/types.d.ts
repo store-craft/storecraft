@@ -3,7 +3,8 @@ export type config = {
           "grok-2-vision",
           
   api_version?: string;
-  api_key: string
+  /** If missing, then will be read from environment variable `XAI_API_KEY` */
+  api_key?: string
 }
 
 export * from './index.js';

@@ -6,6 +6,8 @@
 
 import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js";
 
+export const ENV_RESEND_API_KEY = 'RESEND_API_KEY';
+
 /**
  * @description mailer with Resend rest api
  * 
@@ -19,11 +21,17 @@ export class Resend {
    * 
    * @param {Config} config 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#_config = config;
   }
 
   get config() { return this.#_config; }
+
+
+  /** @type {mailer<Config>["onInit"]} */
+  onInit = (app) => {
+    this.config.apikey = this.config.apikey ?? app.platform.env[ENV_RESEND_API_KEY];
+  };
 
   /**
    * 

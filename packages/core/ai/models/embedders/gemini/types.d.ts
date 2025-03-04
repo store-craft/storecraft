@@ -3,6 +3,8 @@ export * from './index.js';
 export type config = {
   model?: ('text-embedding-004' | 'text-embedding-001') | ({} & string),
   api_version?: string;
+
+  /** If absent, will be infered from environment variable `GEMINI_API_KEY` */
   api_key: string
 }
 

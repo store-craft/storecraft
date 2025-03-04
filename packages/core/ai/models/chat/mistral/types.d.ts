@@ -8,8 +8,10 @@ export type config = {
           "mistral-small-latest" |
           "pixtral-12b-2409" |
           "open-mistral-nemo",
-  api_key: string,
   api_version?: string
+
+  /** If missing, then will be read from environment variable `MISTRAL_API_KEY` */
+  api_key?: string
 }
 
 export * from './index.js';

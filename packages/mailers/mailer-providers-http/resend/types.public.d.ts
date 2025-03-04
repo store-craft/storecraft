@@ -5,8 +5,8 @@ export { Resend } from './adapter.js';
  */
 export type Config = {
   /**
-   * @description Your API Key
+   * @description Your API Key, if missing, it will be inferred from environment variable `RESEND_API_KEY`
    */
-  apikey: string,
+  apikey?: string,
 };
 

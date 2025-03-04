@@ -12,6 +12,7 @@
  */
 
 export const NAMESPACE_KEY = '__namespace'
+export const ENV_PINECONE_API_KEY = 'PINECONE_API_KEY'
 
 /**
  * @implements {VectorStore}
@@ -23,6 +24,11 @@ export class Pinecone {
    */
   constructor(config) {
     this.config = config;
+  }
+
+  /** @type {VectorStore["onInit"]} */
+  onInit = (app) => {
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_PINECONE_API_KEY]; 
   }
 
   /** @type {VectorStore["embedder"]} */

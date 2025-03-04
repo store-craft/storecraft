@@ -39,7 +39,7 @@ export class DummyPayments {
    * 
    * @param {Config} config 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#_config = this.#validate_and_resolve_config(config);
     this.#_db = new DummyDatabase();
   }

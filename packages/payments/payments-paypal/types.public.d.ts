@@ -28,6 +28,7 @@ export type Config = {
   
   /**
    * @description default intent to `authorize` or `capture` on order creation
+   * @default 'AUTHORIZE'
    */
   intent_on_checkout?: 'AUTHORIZE' | 'CAPTURE';
 }

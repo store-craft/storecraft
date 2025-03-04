@@ -1,6 +1,3 @@
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
 import { MongoDB } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
@@ -38,26 +35,13 @@ export const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
-.withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
-.withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
+.withStorage(new NodeLocalStorage('storage'))
+.withMailer(new Resend())
 .withPaymentGateways(
   {
-    'paypal': new Paypal(
-      { 
-        client_id: process.env.PAYPAL_CLIENT_ID, 
-        secret: process.env.PAYPAL_SECRET, 
-        intent_on_checkout: 'AUTHORIZE',
-        env: 'test'  
-      }
-    ),
-    'stripe': new Stripe(
-      { 
-        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret_key: process.env.STRIPE_SECRET_KEY, 
-        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
-      }
-    ),
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+    'paypal': new Paypal({ env: 'test' }),
+    'stripe': new Stripe(),
+    'dummy_payments': new DummyPayments(),
   }
 )
 .withExtensions(
@@ -66,18 +50,13 @@ export const app = new App(
   }
 )
 .withAI(
-  new XAI(
-    {
-      api_key: process.env.XAI
-      // api_key: process.env.Anthropic,
-    }
-  )
+  new XAI()
 )
 .withVectorStore(
   new MongoVectorStore(
     {
       dimensions: 1536,
-      embedder: new CloudflareEmbedder({account_id:'', api_key:'', cf_email:''}),
+      embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5' }),
     }
   )
 )

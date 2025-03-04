@@ -5,7 +5,7 @@ export type Config = {
   /** If absent, will be infered from environment variable `CF_ACCOUNT_ID` */
   account_id?: string;
 
-  /** If absent, will be infered from environment variable `CF_API_KEY` */
+  /** If absent, will be infered from environment variable `CF_VECTORIZE_API_KEY` and then `CF_API_KEY` */
   api_key?: string;
 
   /** If absent, will be infered from environment variable `CF_EMAIL` */

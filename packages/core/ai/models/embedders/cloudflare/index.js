@@ -20,6 +20,7 @@
 
 export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID'
 export const ENV_CF_API_KEY = 'CF_API_KEY'
+export const ENV_CF_AI_API_KEY = 'CF_AI_API_KEY'
 export const ENV_CF_EMAIL = 'CF_EMAIL'
 
 /**
@@ -40,7 +41,8 @@ export class CloudflareEmbedder {
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.account_id = this.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID]; 
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_API_KEY]; 
+    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_AI_API_KEY] 
+          ?? app.platform.env[ENV_CF_API_KEY]; 
     this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 

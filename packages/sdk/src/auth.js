@@ -3,6 +3,7 @@
  *  ApiAuthChangePasswordType, ApiAuthResult, ApiAuthSigninType, ApiAuthSignupType, 
  *  ApiKeyResult, ApiQuery, AuthUserType, error
  * } from '@storecraft/core/api'
+ * @import { SdkConfigAuth } from '../types.js';
  */
 
 import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js';
@@ -12,10 +13,6 @@ import { assert } from './utils.functional.js';
 
 
 /**
- * 
- * @typedef {import('../index.js').SdkConfigAuth} SdkConfigAuth
- * 
- * 
  * @typedef {object} SubscriberCallbackPayload
  * @prop {SdkConfigAuth} auth
  * @prop {boolean} isAuthenticated
@@ -72,7 +69,7 @@ export default class Auth {
   }
 
   /**
-   * @param {import('../index.js').SdkConfigAuth} value 
+   * @param {SdkConfigAuth} value 
    */
   set currentAuth(value) {
     this.#sdk.config.auth = value;

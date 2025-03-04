@@ -1,13 +1,13 @@
+/**
+ * @import { ShippingMethodTypeUpsert, ShippingMethodType } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
  * @description Base `shipping` **CRUD**
  * 
- * @extends {collection_base<
- *  import('@storecraft/core/api').ShippingMethodTypeUpsert, 
- *  import('@storecraft/core/api').ShippingMethodType>
- * }
+ * @extends {collection_base<ShippingMethodTypeUpsert, ShippingMethodType>}
  */
 export default class Shipping extends collection_base {
 

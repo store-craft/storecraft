@@ -1,4 +1,8 @@
-
+/**
+ * @import { error, ApiQuery } from '@storecraft/core/api'
+ * @import { StorecraftSDK } from '../index.js'
+ * @import { StorecraftSDKConfig } from '../types.js'
+ */
 import { 
   api_query_to_searchparams 
 } from '@storecraft/core/api/utils.query.js';
@@ -7,7 +11,7 @@ import { assert } from './utils.functional.js';
 
 /**
  * 
- * @param {import("../index.js").StorecraftSDKConfig} config 
+ * @param {StorecraftSDKConfig} config 
  * @param {string} path 
  */
 export const url = (config, path) => {
@@ -26,7 +30,7 @@ export const url = (config, path) => {
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
  * 
- * @param {import('../index.js').StorecraftSDK} sdk 
+ * @param {StorecraftSDK} sdk 
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * 
@@ -71,12 +75,12 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
  * 
  * @template {any} R
  * 
- * @param {import('../index.js').StorecraftSDK} sdk
+ * @param {StorecraftSDK} sdk
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * 
  * 
- * @throws {import('@storecraft/core/api').error}
+ * @throws {error}
  * 
  * @returns {Promise<R>}
  */ 
@@ -108,7 +112,7 @@ export const fetchApiWithAuth = async (sdk, path, init={}) => {
  * @template {any} G Get type
  * 
  * 
- * @param {import('../index.js').StorecraftSDK} sdk
+ * @param {StorecraftSDK} sdk
  * @param {string} handle_or_id `handle` or `id`
  * @param {string} resource base path of resource
  * 
@@ -131,7 +135,7 @@ export async function get(sdk, resource, handle_or_id) {
  * @template {any} U the upsert type
  * 
  * 
- * @param {import('../index.js').StorecraftSDK} sdk
+ * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {U} item Item to upsert
  * 
@@ -155,7 +159,7 @@ export async function upsert(sdk, resource, item) {
 
 /**
  * 
- * @param {import('../index.js').StorecraftSDK} sdk
+ * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {string} handle_or_id `handle` or `id`
  * 
@@ -181,9 +185,9 @@ export async function remove(sdk, resource, handle_or_id) {
  * @template {any} G Get type
  * 
  * 
- * @param {import('../index.js').StorecraftSDK} sdk
+ * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
- * @param {import('@storecraft/core/api').ApiQuery<G>} [query] 
+ * @param {ApiQuery<G>} [query] 
  * 
  * 
  * @returns {Promise<G[]>}
@@ -210,7 +214,7 @@ export async function list(sdk, resource, query={}) {
  */
 export class collection_base {
   
-  /** @type {import('../index.js').StorecraftSDK} */
+  /** @type {StorecraftSDK} */
   #sdk = undefined;
   
   /** @type {string} */
@@ -218,7 +222,7 @@ export class collection_base {
 
   /**
    * 
-   * @param {import('../index.js').StorecraftSDK} sdk storecraft sdk
+   * @param {StorecraftSDK} sdk storecraft sdk
    * @param {string} base_name base name of resource type
    */
   constructor(sdk, base_name) {
@@ -262,7 +266,7 @@ export class collection_base {
 
   /**
    * 
-   * @param {import('@storecraft/core/api').ApiQuery<G>} query Query object
+   * @param {ApiQuery<G>} query Query object
    * 
    * 
    * @returns {Promise<G[]>}

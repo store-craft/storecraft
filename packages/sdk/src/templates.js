@@ -1,13 +1,13 @@
+/**
+ * @import { TemplateTypeUpsert, TemplateType } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { collection_base } from './utils.api.fetch.js';
 
 /**
  * @description Base `templates` **CRUD**
  * 
- * @extends {collection_base<
- *  import('@storecraft/core/api').TemplateTypeUpsert, 
- *  import('@storecraft/core/api').TemplateType>
- * }
+ * @extends {collection_base<TemplateTypeUpsert, TemplateType>}
  */
 export default class Templates extends collection_base {
 

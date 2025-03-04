@@ -1,3 +1,6 @@
+/**
+ * @import { StorecraftSDKConfig } from './types.js'
+ */
 import Auth from './src/auth.js'
 import Customers from './src/customers.js'
 import Tags from './src/tags.js'
@@ -19,22 +22,6 @@ import Storage from './src/storage.js'
 import AI from './src/ai.js'
 
 
-/**
- * @typedef {import('@storecraft/core/api').ApiAuthResult |
- *  import('@storecraft/core/api').ApiKeyResult
- * } SdkConfigAuth The `storecraft` **SDK** `auth` config, represents
- * either `apikey` or `jwt` authentication
- * 
- */
-
-
-/**
- * 
- * @typedef {object} StorecraftSDKConfig The `storecraft` **SDK** config
- * @property {string} [endpoint] Endpoint of `backend`
- * @property {SdkConfigAuth} [auth] `auth` info, may be either `apikey` or
- * `jwt` results
- */
 
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
@@ -53,7 +40,6 @@ export class StorecraftSDK {
     this.ai = new AI(this);
     this.auth = new Auth(this);
     this.storage = new Storage(this);
-
     this.customers = new Customers(this);
     this.tags = new Tags(this);
     this.templates = new Templates(this);

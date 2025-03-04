@@ -1,13 +1,14 @@
+/**
+ * @import { HandleOrId } from '@storecraft/core/database'
+ * @import { StorefrontType, StorefrontTypeUpsert } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 
 /**
  * @description Base `storefronts` **CRUD**
  * 
- * @extends {collection_base<
- *  import('@storecraft/core/api').StorefrontTypeUpsert, 
- *  import('@storecraft/core/api').StorefrontType>
- * }
+ * @extends {collection_base<StorefrontTypeUpsert, StorefrontType>}
  */
 export default class Storefronts extends collection_base {
 
@@ -24,7 +25,7 @@ export default class Storefronts extends collection_base {
    * beneficial for `collections`, that hardly change and therefore can be 
    * efficiently stored in a cost-effective `storage` and **CDN** network.
    * 
-   * @param {import('@storecraft/core/database').HandleOrId} handle_or_id
+   * @param {HandleOrId} handle_or_id
    */
   publish = async (handle_or_id) => {
 

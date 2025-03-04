@@ -1,3 +1,6 @@
+/**
+ * @import { NotificationTypeUpsert, NotificationType } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { 
   collection_base, fetchApiWithAuth 
@@ -6,10 +9,7 @@ import {
 /**
  * @description Base `notifications` **CRUD**
  * 
- * @extends {collection_base<
- *  import('@storecraft/core/api').NotificationTypeUpsert, 
- *  import('@storecraft/core/api').NotificationType>
- * }
+ * @extends {collection_base<NotificationTypeUpsert, NotificationType>}
  */
 export default class Notifications extends collection_base {
 
@@ -23,7 +23,7 @@ export default class Notifications extends collection_base {
 
   /**
    * 
-   * @param {import('@storecraft/core/api').NotificationTypeUpsert[]} items 
+   * @param {NotificationTypeUpsert[]} items 
    */
   upsertBulk = items => {
     return fetchApiWithAuth(

@@ -1,3 +1,6 @@
+/**
+ * @import { CollectionType, CollectionTypeUpsert } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 import { filter_fields, filter_unused } from './utils.functional.js';
@@ -5,10 +8,7 @@ import { filter_fields, filter_unused } from './utils.functional.js';
 /**
  * @description Base `collections` **CRUD**
  * 
- * @extends {collection_base<
- *  import('@storecraft/core/api').CollectionTypeUpsert, 
- *  import('@storecraft/core/api').CollectionType>
- * }
+ * @extends {collection_base<CollectionTypeUpsert, CollectionType>}
  */
 export default class Collections extends collection_base {
 

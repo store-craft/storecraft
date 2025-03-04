@@ -1,3 +1,6 @@
+/**
+ * @import { PaymentGatewayItemGet, PaymentGatewayStatus } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { 
   fetchApiWithAuth, get, list 
@@ -8,7 +11,7 @@ import {
  */
 export default class Payments {
 
-  /** @type {import('../index.js').StorecraftSDK} */
+  /** @type {StorecraftSDK} */
   #sdk = undefined;
   
   /**
@@ -24,7 +27,7 @@ export default class Payments {
    * @param {string} handle payment gateway `handle`
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayItemGet>}
+   * @returns {Promise<PaymentGatewayItemGet>}
    */
   get(handle) {
     return get(this.sdk, 'payments/gateways', handle);
@@ -33,7 +36,7 @@ export default class Payments {
   /**
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayItemGet[]>}
+   * @returns {Promise<PaymentGatewayItemGet[]>}
    */
   list() {
     return list(this.sdk, 'payments/gateways');
@@ -48,7 +51,7 @@ export default class Payments {
    * 
    * @param {string} order_id 
    * 
-   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayStatus>}
+   * @returns {Promise<PaymentGatewayStatus>}
    */
   paymentStatusOfOrder(order_id) {
     return fetchApiWithAuth(
@@ -70,7 +73,7 @@ export default class Payments {
    * @param {string} order_id the `id` of the `order`
    * 
    * 
-   * @returns {Promise<import('@storecraft/core/api').PaymentGatewayStatus>}
+   * @returns {Promise<PaymentGatewayStatus>}
    */
   invokeAction(action_handle, order_id) {
     return fetchApiWithAuth(

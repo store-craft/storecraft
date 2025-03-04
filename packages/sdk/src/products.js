@@ -1,3 +1,6 @@
+/**
+ * @import { ProductTypeUpsert, ProductType, CollectionType } from '@storecraft/core/api'
+ */
 import { StorecraftSDK } from '../index.js'
 import { 
   collection_base, fetchOnlyApiResponseWithAuth 
@@ -6,10 +9,7 @@ import {
 /**
  * @description Base `products` **CRUD**
  * 
- * @extends {collection_base<
- *  import('@storecraft/core/api').ProductTypeUpsert, 
- *  import('@storecraft/core/api').ProductType>
- * }
+ * @extends {collection_base<ProductTypeUpsert, ProductType>}
  */
 export default class Products extends collection_base {
 
@@ -44,8 +44,8 @@ export default class Products extends collection_base {
   /**
    * Add `products` to `collection`
    * 
-   * @param {import('@storecraft/core/api').ProductType[]} products 
-   * @param {import('@storecraft/core/api').CollectionType} collection 
+   * @param {ProductType[]} products 
+   * @param {CollectionType} collection 
    */
   batchAddProductsToCollection = async (products, collection) => {
     for (const pr of products) {
@@ -59,8 +59,8 @@ export default class Products extends collection_base {
   /**
    * Remove `products` from `collection`
    * 
-   * @param {import('@storecraft/core/api').ProductType[]} products 
-   * @param {import('@storecraft/core/api').CollectionType} collection 
+   * @param {ProductType[]} products 
+   * @param {CollectionType} collection 
    */
   batchRemoveProductsFromCollection = async (products, collection) => {
     for (const pr of products) {

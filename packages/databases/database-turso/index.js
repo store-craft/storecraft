@@ -1,6 +1,5 @@
 /**
  * @import { Config } from './types.public.js';
- * @import { Config as SQL_BASE_CONFIG } from '@storecraft/database-sql-base';
  */
 
 import { SQL } from '@storecraft/database-sql-base';
@@ -10,7 +9,7 @@ export const ENV_LIBSQL_AUTH_TOKEN = 'LIBSQL_AUTH_TOKEN';
 export const ENV_LIBSQL_URL = 'LIBSQL_URL';
 
 /**
- * @extends {SQL<SQL_BASE_CONFIG<LibsqlDialect>>}
+ * @extends {SQL}
  */
 export class Turso extends SQL {
 
@@ -35,11 +34,11 @@ export class Turso extends SQL {
 
   /** @type {SQL["init"]} */
   init = (app) => { 
-    this.config.dialect.config.authToken = this.config.dialect.config.authToken 
-        ?? app.platform.env[ENV_LIBSQL_AUTH_TOKEN];
-
-    this.config.dialect.config.url = this.config.dialect.config.url 
-        ?? app.platform.env[ENV_LIBSQL_URL];
+    const dialect = /** @type {LibsqlDialect}*/ (this.config.dialect);
+    const dconfig = dialect.config;
+    
+    dconfig.authToken = dconfig.authToken ?? app.platform.env[ENV_LIBSQL_AUTH_TOKEN];
+    dconfig.url = dconfig.url ?? app.platform.env[ENV_LIBSQL_URL];
         
     super.init(app);
   }

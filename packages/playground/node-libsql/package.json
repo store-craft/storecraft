@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",
-    "@storecraft/database-sqlite": "^1.0.0",
+    "@storecraft/database-mongodb": "^1.0.0",
     "@storecraft/payments-paypal": "^1.0.0",
     "@storecraft/payments-stripe": "^1.0.0",
     "@storecraft/mailer-providers-http": "^1.0.0",

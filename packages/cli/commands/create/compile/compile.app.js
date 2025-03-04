@@ -170,6 +170,17 @@ export const infer_database = info => {
         ]
       }
 
+    case 'libsql-local':
+      return {
+        cls: `Turso`,
+        imports: [
+          `import { Turso } from '@storecraft/database-turso';`
+        ],
+        deps: [
+          '@storecraft/database-turso'
+        ]
+      }
+
     case 'turso':
       return {
         cls: `Turso`,

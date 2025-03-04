@@ -19,10 +19,6 @@ export const create_app = async () => {
     new Turso(
       { 
         prefers_batch_over_transactions: true,
-        libsqlConfig: {
-          url: process.env.TURSO_URL,
-          authToken: process.env.TURSO_API_TOKEN,
-        }
       }
     )
   );

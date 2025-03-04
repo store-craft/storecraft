@@ -1,4 +1,9 @@
+import { join } from "node:path";
+import { homedir } from "node:os";
+
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
+import { MongoDB } from '@storecraft/database-mongodb'
+import { Turso } from '@storecraft/database-turso'
 import { SQLite } from '@storecraft/database-sqlite'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
@@ -31,12 +36,8 @@ export const app = new App(
   }
 )
 .withPlatform(new NodePlatform())
-.withDatabase(
-  new SQLite({
-    options: {},
-    filepath: "data.db",
-  }),
-)
+.withDatabase(new Turso())
+// .withDatabase(new Turso({ url: 'file:data.db' }))
 .withStorage(new NodeLocalStorage("storage"))
 .withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
 .withPaymentGateways(

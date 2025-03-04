@@ -66,13 +66,9 @@ export class MongoDB {
   }
 
   /**
-   * 
-   * @param {App} app 
-   * 
-   * 
-   * @returns {Promise<this>}
+   * @type {db_driver["init"]}
    */
-  async init(app) {
+  init(app) {
     if(this.isReady)
       return this;
     const c = this.#_config;

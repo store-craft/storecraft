@@ -2,6 +2,7 @@
  * @import { db_driver } from '@storecraft/core/database'
  * @import { Database } from './types.sql.tables.js'
  * @import { Config } from './types.public.js'
+ * @import { Dialect } from 'kysely'
  */
 
 import { App } from '@storecraft/core';
@@ -31,8 +32,10 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
+
 /**
- * @implements {db_driver}
+ * @template {Config} [ConfigType=Config]
+ * @implements {db_driver<ConfigType>}
  */
 export class SQL {
 
@@ -42,7 +45,7 @@ export class SQL {
   /** @type {App<any, any, any>} */ 
   #_app;
 
-  /** @type {Config} */ 
+  /** @type {ConfigType} */ 
   #_config;
 
   /** @type {Kysely<Database>} */ 
@@ -53,7 +56,7 @@ export class SQL {
 
   /**
    * 
-   * @param {Config} [config] config 
+   * @param {ConfigType} [config] config 
    */
   constructor(config) {
     this.#_is_ready = false;
@@ -68,16 +71,6 @@ export class SQL {
       this.#_config.dialect_type, 
       'No Dialect Type specified !'
     );
-
-    this.#_client = new Kysely(
-      {
-        dialect: this.#_config.dialect, 
-        plugins: [
-          new ParseJSONResultsPlugin(),
-          new SanitizePlugin()
-        ]
-      }
-    );
   }
 
   throwIfNotReady() {
@@ -88,13 +81,9 @@ export class SQL {
   }
 
   /**
-   * 
-   * @param {App<any, any, any>} app 
-   * 
-   * 
-   * @returns {Promise<this>}
+   * @type {db_driver["init"]}
    */
-  async init(app) {
+  init(app) {
     if(this.isReady)
       return this;
 
@@ -143,6 +132,16 @@ export class SQL {
   }
 
   get client() { 
+    this.#_client = this.#_client ?? new Kysely(
+      {
+        dialect: this.config.dialect, 
+        plugins: [
+          new ParseJSONResultsPlugin(),
+          new SanitizePlugin()
+        ]
+      }
+    );
+
     return this.#_client; 
   }
 

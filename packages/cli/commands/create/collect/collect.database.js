@@ -1,9 +1,18 @@
+/**
+ * @import { Choice } from '../../utils.js';
+ */
+
 import { select, input, confirm } from "@inquirer/prompts";
 
-/** @satisfies {import("../../utils.js").Choice[]} */
+/** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
-    name: 'sqlite',
+    name: 'sqlite (libsql)',
+    value: 'libsql-local',
+    description: 'Local SQLite database (Recommended)'
+  },
+  {
+    name: 'sqlite (better-sqlite3)',
     value: 'sqlite',
   },
   {
@@ -19,7 +28,7 @@ export const choices = /** @type {const} */ ([
     value: 'mongo_db',
   },
   {
-    name: 'Turso',
+    name: 'Turso (libsql)',
     value: 'turso',
     description: 'Cloud SQLite database'
   },
@@ -189,25 +198,36 @@ const collect_general_config = async (
       return config;
     }
 
+    case "libsql-local": {
+      /** @type {import('@storecraft/database-turso').Config} */
+      let config = {
+        url: 'file:' + await input(
+          { 
+            message: 'Enter the local file name',
+            required: true,
+            default: 'data.db'
+          }
+        ),
+      }
+      return config;
+    }
+
     case "turso": {
       /** @type {import('@storecraft/database-turso').Config} */
       let config = {
-        prefers_batch_over_transactions: true,
-        libsqlConfig: {
-          url: await input(
-            { 
-              message: 'Enter connection url',
-              required: true,
-            }
-          ),
-          authToken: await input(
-            { 
-              message: 'Enter the auth token',
-              required: true,
-              default: '*****'
-            }
-          )
-        }
+        url: await input(
+          { 
+            message: 'Enter connection url',
+            required: true,
+          }
+        ),
+        authToken: await input(
+          { 
+            message: 'Enter the auth token',
+            required: true,
+            default: '*****'
+          }
+        )
       }
       return config;
     }

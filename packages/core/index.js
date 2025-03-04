@@ -314,7 +314,7 @@ export class App {
       this.#settle_config_after_init();
 
       // settle database
-      this.db.init?.(app);
+      this.db?.init?.(app);
 
       // settle storage
       this.storage?.init?.(app);

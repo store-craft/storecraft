@@ -7,7 +7,7 @@ export type SqlDialectType = 'SQLITE' | 'POSTGRES' | 'MYSQL';
 /**
  * The Storecraft SQL config
  */
-export type Config = {
+export type Config<DialectType extends Dialect = Dialect> = {
   /**
    * @description Database name
    * 
@@ -18,7 +18,7 @@ export type Config = {
   /**
    * @description The `Kysely` dialect
    */
-  dialect: Dialect,
+  dialect: DialectType,
 
   /**
    * @description The type of the sql dialect `SQLITE`, `POSTGRES`, `MYSQL`

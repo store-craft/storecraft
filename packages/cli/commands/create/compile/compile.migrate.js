@@ -52,6 +52,7 @@ export const compile_migrate = (meta) => {
       return d1_migrate();
     }
     case 'sqlite':
+    case 'libsql-local':
     case 'postgres':
     case 'mysql':
     case 'mongo_db':

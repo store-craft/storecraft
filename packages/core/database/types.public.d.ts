@@ -338,16 +338,18 @@ export interface search {
   quicksearch: (query: ApiQuery) => Promise<QuickSearchResult>
 }
 
-export interface db_driver {
+export interface db_driver<ConfigType extends any = any> {
   /**
    * Init to the database
    */
-  init: (app: App) => Promise<this>;
+  init: (app: App) => any | void;
 
   /** 
    * Disconnect the database if possible 
    */
   disconnect: () => Promise<boolean>;
+
+  config?: ConfigType;
 
   /**
    * Is the driver ready ?

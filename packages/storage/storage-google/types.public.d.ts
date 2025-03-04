@@ -15,12 +15,12 @@ export type ServiceFile = {
 }
 
 export type Config = {
-  /** bucket name */
-  bucket: string;
-  /** client email from the service file */
-  client_email: string;
-  /** private key */
-  private_key: string;
-  /** private key id */
-  private_key_id: string;
+  /** bucket name, if missing will be inferred by env variable `GS_BUCKET` */
+  bucket?: string;
+  /** client email from the service file, if missing will be inferred by env variable `GS_CLIENT_EMAIL` */
+  client_email?: string;
+  /** private key, if missing will be inferred by env variable `GS_PRIVATE_KEY` */
+  private_key?: string;
+  /** private key id, if missing will be inferred by env variable `GS_PRIVATE_KEY_ID` */
+  private_key_id?: string;
 }

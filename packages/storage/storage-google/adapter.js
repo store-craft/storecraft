@@ -27,6 +27,10 @@ const infer_content_type = (name) => {
   return type ?? 'application/octet-stream';
 }
 
+export const ENV_GS_BUCKET = 'GS_BUCKET';
+export const ENV_GS_CLIENT_EMAIL = 'GS_CLIENT_EMAIL';
+export const ENV_GS_PRIVATE_KEY = 'GS_PRIVATE_KEY';
+export const ENV_GS_PRIVATE_KEY_ID = 'GS_PRIVATE_KEY_ID';
 
 /**
  * @description Google Storage adapter
@@ -40,7 +44,7 @@ export class GoogleStorage {
   /**
    * @param {Config} [config]
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#_config = config;
   }
 
@@ -54,12 +58,10 @@ export class GoogleStorage {
     if(!app)
       return this;
 
-    this.#_config = this.#_config ?? {
-      bucket: app.platform.env.GS_BUCKET,
-      client_email: app.platform.env.GS_CLIENT_EMAIL,
-      private_key: app.platform.env.GS_PRIVATE_KEY,
-      private_key_id: app.platform.env.GS_PRIVATE_KEY_ID,
-    }
+    this.#_config.bucket = this.#_config.bucket ?? app.platform.env[ENV_GS_BUCKET];
+    this.#_config.client_email = this.#_config.client_email ?? app.platform.env[ENV_GS_CLIENT_EMAIL];
+    this.#_config.private_key = this.#_config.private_key ?? app.platform.env[ENV_GS_PRIVATE_KEY];
+    this.#_config.private_key_id = this.#_config.private_key_id ?? app.platform.env[ENV_GS_PRIVATE_KEY_ID];
 
     return this; 
   }

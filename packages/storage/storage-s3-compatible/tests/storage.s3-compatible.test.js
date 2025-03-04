@@ -6,12 +6,13 @@ const FORCE_PATH_STYLE = true;
 
 const storage = new S3CompatibleStorage(
   {
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    bucket: process.env.BUCKET,
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    bucket: process.env.S3_BUCKET,
     endpoint: process.env.ENDPOINT,
     forcePathStyle: FORCE_PATH_STYLE,
-    region: process.env.REGION
+    // @ts-ignore
+    region: process.env.S3_REGION
   }
 );
 

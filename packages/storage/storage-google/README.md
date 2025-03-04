@@ -71,14 +71,7 @@ const app = new App(
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(
-  new GoogleStorage(
-    {
-      bucket: process.env.GS_BUCKET, 
-      client_email: process.env.GS_CLIENT_EMAIL, 
-      private_key: process.env.GS_PRIVATE_KEY, 
-      private_key_id: process.env.GS_PRIVATE_KEY_ID
-    }
-  )
+  new GoogleStorage() // config inferred from env variables
 );
   
 await app.init();

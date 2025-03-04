@@ -16,6 +16,7 @@ const storage = new S3({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
   bucket: process.env.S3_BUCKET,
   forcePathStyle: FORCE_PATH_STYLE,
+  // @ts-ignore
   region: process.env.S3_REGION,
   secretAccessKey: process.env.S3_SECRET_KEY
 });

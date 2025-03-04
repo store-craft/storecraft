@@ -312,26 +312,38 @@ export class App {
     try{
       // first let's settle config
       this.#settle_config_after_init();
-      await this.db.init(app);
-      this.storage && await this.storage.init(app);
+
+      // settle database
+      this.db.init?.(app);
+
+      // settle storage
+      this.storage?.init?.(app);
+
+      // settle programmatic API
       this.api = create_api(app);
+      // settle REST-API
       this.#_rest_controller = create_rest_api(app, this.config);
-      this.#_is_ready = true;
   
       // settle extensions
       for(const ext_handle in this.extensions) {
         const ext = this.extension(ext_handle);
-        ext?.onInit(app);
+        ext?.onInit?.(app);
+      }
+
+      // settle payment gateways
+      for(const handle in this.gateways) {
+        const gateway = this.gateway(handle);
+        gateway?.onInit?.(app);
       }
 
       // settle ai agent
       if(this.#_ai) {
-        // @ts-ignore
-        this.#_ai.init(this);
+        this.#_ai.init(app);
       }
 
       // settle vector store events
       if(this.vectorstore) {
+        this.vectorstore.onInit(app);
         this.pubsub.on(
           'products/upsert',
           async (evt) => {
@@ -362,9 +374,11 @@ export class App {
 
       }
 
-      // @ts-ignore
-      this.mailer?.onInit?.(this);
+      // settle mailer
+      this.mailer?.onInit?.(app);
   
+      this.#_is_ready = true;
+
     } catch (e) {
       this.#_is_ready = false;
 

@@ -1,3 +1,10 @@
+/**
+ * @import { 
+ *  GetDatabaseResponse, ListDatabasesResponse, QueryDatabaseParams, 
+ *  QueryDatabaseResponse, RawDatabaseParams, RawDatabaseResponse 
+ * } from './api.types.js';
+ */
+
 
 /**
  * @description consult these resources:
@@ -30,7 +37,7 @@ export class Client {
   
   /**
    * 
-   * @returns {Promise<import("./api.types.js").ListDatabasesResponse>}
+   * @returns {Promise<ListDatabasesResponse>}
    */
   list = async () => {
 
@@ -51,7 +58,7 @@ export class Client {
 
   /**
    * 
-   * @returns {Promise<import("./api.types.js").GetDatabaseResponse>}
+   * @returns {Promise<GetDatabaseResponse>}
    */
   get = async () => {
 
@@ -71,9 +78,9 @@ export class Client {
 
   /**
    * 
-   * @param {import("./api.types.js").QueryDatabaseParams} params
+   * @param {QueryDatabaseParams} params
    * 
-   * @returns {Promise<import("./api.types.js").QueryDatabaseResponse>}
+   * @returns {Promise<QueryDatabaseResponse>}
    */
   query = async (params) => {
     const url = this.to_url(`/${this.database_id}/query`);
@@ -113,9 +120,9 @@ export class Client {
 
   /**
    * 
-   * @param {import("./api.types.js").RawDatabaseParams} params
+   * @param {RawDatabaseParams} params
    * 
-   * @returns {Promise<import("./api.types.js").RawDatabaseResponse>}
+   * @returns {Promise<RawDatabaseResponse>}
    */
   raw = async (params) => {
 

@@ -40,9 +40,9 @@ import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
 const migrate = async () => {
   const d1_over_http = new D1_HTTP(
     {
-      account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
-      api_token: process.env.CLOUDFLARE_D1_API_TOKEN,
-      database_id: process.env.CLOUDFLARE_D1_DATABASE_ID
+      account_id: process.env.CF_ACCOUNT_ID,
+      api_token: process.env.D1_API_KEY,
+      database_id: process.env.D1_DATABASE_ID
     }
   )
   
@@ -54,9 +54,9 @@ migrate();
 
 create a `.env` file with (find the values from cloudflare dashboard)
 ```zsh
-CLOUDFLARE_ACCOUNT_ID=".."
-CLOUDFLARE_D1_API_TOKEN=".."
-CLOUDFLARE_D1_DATABASE_ID=".."
+CF_ACCOUNT_ID=".."
+D1_API_TOKEN=".."
+D1_DATABASE_ID=".."
 ```
 
 simply run it,

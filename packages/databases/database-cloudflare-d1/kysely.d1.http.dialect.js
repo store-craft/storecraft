@@ -1,3 +1,7 @@
+/**
+ * @import { Driver, Dialect, DatabaseConnection, QueryResult } from 'kysely';
+ * @import { D1ConfigHTTP as Config } from './types.public.js';
+ */
 import {
   CompiledQuery,
   Kysely,
@@ -10,13 +14,6 @@ import { prepare_and_bind } from './kysely.d1.utils.js';
 
 
 /**
- * @typedef {import('kysely').Driver} Driver
- * @typedef {import('kysely').Dialect} Dialect
- * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.d.ts').D1ConfigHTTP} Config
- */
-
-/**
  * @description Official Storecraft <-> Cloudflare D1 HTTP adapter
  * 
  * @implements {Dialect}
@@ -27,8 +24,12 @@ export class D1_HTTP_Dialect {
   #config;
 
   /** @param {Config} config */
-  constructor(config) {
+  constructor(config={}) {
     this.#config = config;
+  }
+
+  get config() {
+    return this.#config;
   }
 
   createAdapter() { return new SqliteAdapter(); }
@@ -131,7 +132,7 @@ class D1Connection {
    * 
    * @param {CompiledQuery[]} compiledQueries 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<QueryResult<R>>}
    */
   async _internal_execute(compiledQueries) {
     // Transactions are not supported yet.
@@ -189,7 +190,7 @@ class D1Connection {
    * 
    * @param {CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<QueryResult<R>>}
    */
   async executeQuery(compiledQuery) {
     console.log('this.isBatch', this.isBatch)

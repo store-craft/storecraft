@@ -1,13 +1,13 @@
 import 'dotenv/config';
-import { Client } from '../d1/api.js';
+import { Client } from '../d1-http-api/api.js';
 import sql from 'better-sqlite3'
 
 const test = async () => {
 
   const client = new Client(
-    process.env.CLOUDFLARE_ACCOUNT_ID, 
-    "6040a5d5-82a5-4c6e-b505-ca45d2f17de9" ,//process.env.CLOUDFLARE_D1_DATABASE_ID, 
-    process.env.CLOUDFLARE_D1_API_TOKEN
+    process.env.CF_ACCOUNT_ID, 
+    process.env.D1_DATABASE_ID, 
+    process.env.D1_API_KEY
   );
   
   // client.list()

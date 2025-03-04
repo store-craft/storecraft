@@ -7,22 +7,26 @@ export { D1_HTTP, D1_WORKER } from './index.js';
  */
 export type D1ConfigHTTP = {
   /**
-   * @description Cloudflare account id
+   * @description Cloudflare account id. 
    * 
+   * If missing, will be inferred by env variable `CF_ACCOUNT_ID`
    */
-  account_id: string
+  account_id?: string
 
   /**
    * @description api token, can be generated at dashboard, 
    * [instructions](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)
    * 
+   * If missing, will be inferred by env variable `D1_API_KEY` or `D1_API_TOKEN`
    */
-  api_token: string
+  api_token?: string
 
   /**
-   * @description Your `D1` database ID
+   * @description Your `D1` database ID/
+   * 
+   * If missing, will be inferred by env variable `D1_DATABASE_ID`
    */
-  database_id: string;
+  database_id?: string;
 
   /**
    * @description Your `D1` database name

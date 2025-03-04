@@ -1,3 +1,7 @@
+/**
+ * @import { Driver, Dialect, DatabaseConnection, QueryResult } from 'kysely';
+ * @import { D1ConfigWorker as Config } from './types.public.js';
+ */
 import {
   CompiledQuery,
   Kysely,
@@ -5,13 +9,6 @@ import {
   SqliteIntrospector,
   SqliteQueryCompiler,
 } from 'kysely';
-
-/**
- * @typedef {import('kysely').Driver} Driver
- * @typedef {import('kysely').Dialect} Dialect
- * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.d.ts').D1ConfigWorker} Config
- */
 
 /**
  * @description Official Storecraft Cloudflare D1 adapter on Worker
@@ -102,7 +99,7 @@ class D1Connection {
    * 
    * @param {CompiledQuery[]} compiledQueries 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<QueryResult<R>>}
    */
   async _internal_execute(compiledQueries) {
 
@@ -149,7 +146,7 @@ class D1Connection {
    * 
    * @param {CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<QueryResult<R>>}
    */
   async executeQuery(compiledQuery) {
     console.log('this.isBatch', this.isBatch);

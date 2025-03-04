@@ -2,6 +2,7 @@ import type { ApiRequest, ApiResponse } from "../rest/types.public.d.ts";
 import type { 
   OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
 } from "../api/types.api.d.ts";
+import { App } from "../types.public.js";
 
 
 /**
@@ -96,6 +97,12 @@ export declare interface payment_gateway<
    * @description the eligible actions in this interface for remote invocation
    */
   actions: PaymentGatewayAction[];
+
+  /**
+   * @description Your chance to find env variables and more things
+   * @param app `storecraft` app instance
+   */
+  onInit?: (app: App) => void;
 
   /**
    * @description Invoke a gateway `action`

@@ -16,6 +16,9 @@ import html_buy_ui from './adapter.html.js';
  * @typedef {payment_gateway<Config, CreateResult>} Impl
  */
 
+export const ENV_PAYPAL_CLIENT_ID = 'PAYPAL_CLIENT_ID';
+export const ENV_PAYPAL_SECRET = 'PAYPAL_SECRET';
+
 /**
  * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
  * 
@@ -29,23 +32,22 @@ export class Paypal {
    * 
    * @param {Config} config 
    */
-  constructor(config) {
-    this.#_config = this.#validate_and_resolve_config(config);
-  }
-
-  /**
-   * 
-   * @param {Config} config 
-   */
-  #validate_and_resolve_config(config) {
-    config = {
+  constructor(config={}) {
+    // this.#_config = this.#validate_and_resolve_config(config);
+    this.#_config = {
       default_currency_code: 'USD',
       env: 'prod',
       intent_on_checkout: 'AUTHORIZE',
       ...config,
     }
+  }
 
-    const is_valid = config.client_id && config.secret;
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.client_id = this.config.client_id ?? app.platform.env[ENV_PAYPAL_CLIENT_ID];
+    this.config.secret = this.config.secret ?? app.platform.env[ENV_PAYPAL_SECRET];
+
+    const is_valid = this.config.client_id && this.config.secret;
 
     if(!is_valid) {
       throw new StorecraftError(
@@ -53,8 +55,6 @@ export class Paypal {
         Missing client_id or secret`
       )
     }
-
-    return config;
   }
 
   get info() {

@@ -362,6 +362,8 @@ export class App {
 
       }
 
+      // @ts-ignore
+      this.mailer?.onInit?.(this);
   
     } catch (e) {
       this.#_is_ready = false;

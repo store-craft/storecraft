@@ -19,13 +19,13 @@ npm i @storecraft/payments-paypal
 
 ## Howto
 
-```js
-import { PayPal } from '@storecraft/payments-paypal';
+```ts
+import { PayPal, Config } from '@storecraft/payments-paypal';
 
-const config = {
+const config: Config = {
   env: 'prod',
-  client_id: '<get-from-your-paypal-dashboard>',
-  secret: '<get-from-your-paypal-dashboard>',
+  client_id: process.env.PAYPAL_CLIENT_ID,
+  secret: env.process.PAYPAL_SECRET,
   currency_code: 'USD',
   intent_on_checkout: 'AUTHORIZE'
 }
@@ -48,13 +48,7 @@ const app = new App(config)
 .withStorage(new GoogleStorage())
 .withPaymentGateways(
   {
-    'paypal_standard_prod': new Paypal(
-      { 
-        client_id: process.env.PAYPAL_CLIENT_ID, 
-        secret: process.env.PAYPAL_SECRET, 
-        env: 'prod' 
-      }
-    ),
+    'paypal_standard_prod': new Paypal() // config can be inferred from env variables
   }
 );
 

@@ -23,6 +23,9 @@ import { Stripe as StripeCls } from 'stripe'
  * storage where we store the `order_id` of the `storecraft` order.
  */
 export const metadata_storecraft_order_id = 'storecraft_order_id'
+export const ENV_STRIPE_PUBLISHABLE_KEY = 'STRIPE_PUBLISHABLE_KEY';
+export const ENV_STRIPE_SECRET_KEY = 'STRIPE_SECRET_KEY';
+export const ENV_STRIPE_WEBHOOK_SECRET = 'STRIPE_WEBHOOK_SECRET';
 
 /**
  * @implements {Impl}
@@ -32,24 +35,14 @@ export const metadata_storecraft_order_id = 'storecraft_order_id'
 export class Stripe {
   
   /** @type {Config} */ #_config;
+  /** @type {StripeCls} */ #stripe;
 
   /**
    * 
    * @param {Config} config 
    */
-  constructor(config) {
-    this.#_config = this.#validate_and_resolve_config(config);
-    this.stripe = new StripeCls(
-      this.#_config.secret_key, this.#_config.stripe_config ?? {}
-    );
-  }
-
-  /**
-   * 
-   * @param {Config} config 
-   */
-  #validate_and_resolve_config(config) {
-    config = {
+  constructor(config={}) {
+    this.#_config = {
       stripe_config: {
         httpClient: StripeCls.createFetchHttpClient()
       },
@@ -65,9 +58,21 @@ export class Stripe {
         },
       },
       ...config,
-    }
+    };
+  }
 
-    const is_valid = config.publishable_key && config.secret_key;
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.publishable_key = this.config.publishable_key ?? 
+        app.platform.env[ENV_STRIPE_PUBLISHABLE_KEY];
+    this.config.secret_key = this.config.secret_key ?? 
+        app.platform.env[ENV_STRIPE_SECRET_KEY];
+    this.config.webhook_endpoint_secret = this.config.webhook_endpoint_secret ?? 
+        app.platform.env[ENV_STRIPE_WEBHOOK_SECRET];
+  }
+
+  get stripe() {
+    const is_valid = this.config.publishable_key && this.config.secret_key;
 
     if(!is_valid) {
       throw new StorecraftError(
@@ -76,7 +81,11 @@ export class Stripe {
       )
     }
 
-    return config;
+    this.#stripe = this.#stripe ?? new StripeCls(
+      this.config.secret_key, this.config.stripe_config ?? {}
+    );
+
+    return this.#stripe;
   }
 
   get info() {

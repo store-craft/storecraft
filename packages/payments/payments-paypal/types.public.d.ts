@@ -6,23 +6,25 @@ export { Paypal } from './adapter.js';
 export type Config = {
   /**
    * @description default currency code
+   * @default 'USD'
    */
   default_currency_code?: string;
 
   /**
    * @description the environment
+   * @default 'prod'
    */
-  env: 'prod' | 'test';
+  env?: 'prod' | 'test';
 
   /**
-   * @description private client id
+   * @description private client id. If missing, will be inferred from env variable `PAYPAL_CLIENT_ID`
    */
-  client_id: string;
+  client_id?: string;
 
   /**
-   * @description private secret
+   * @description private secret. If missing, will be inferred from env variable `PAYPAL_SECRET`
    */
-  secret: string;
+  secret?: string;
   
   /**
    * @description default intent to `authorize` or `capture` on order creation

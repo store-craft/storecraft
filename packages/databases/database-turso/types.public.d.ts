@@ -1,5 +1,5 @@
 import type { Config as LibSqlConfig } from '@libsql/client'
-export { Turso } from './index.js';
+export * from './index.js';
 
 export type Config = Partial<Omit<LibSqlConfig, 'url' | 'authToken'>> & {
 

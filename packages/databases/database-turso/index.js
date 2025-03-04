@@ -8,6 +8,8 @@ import { LibsqlDialect } from './kysely.turso.dialect.js';
 export const ENV_LIBSQL_AUTH_TOKEN = 'LIBSQL_AUTH_TOKEN';
 export const ENV_LIBSQL_URL = 'LIBSQL_URL';
 
+export { LibSQLVectorStore } from './vector-store/index.js'
+
 /**
  * @extends {SQL}
  */

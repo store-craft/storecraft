@@ -1,3 +1,6 @@
+/**
+ * @import { inferDocumentCache, inferUseQueryCache } from './useStorecraftCache.js'
+ */
 import { useCallback, useEffect, useRef, useState } from "react"
 import useTrigger from "./useTrigger.js"
 import { useStorecraft } from "./useStorecraft.js";
@@ -37,7 +40,7 @@ export function useDocument(
   try_cache_on_autoload=true
 ) {
 
-  /** @type {import('./useStorecraftCache.js').inferDocumentCache<T>} */
+  /** @type {inferDocumentCache<T>} */
   const {
     actions: {
       get: cache_document_get,

@@ -1,3 +1,6 @@
+/**
+ * @import { ApiAuthResult } from '@storecraft/core/api';
+ */
 import { useEffect } from "react";
 import { useStorecraft } from "./useStorecraft.js";
 import useTrigger from "./useTrigger.js";
@@ -30,8 +33,8 @@ export const useAuth = () => {
 
   return {
     sdk,
-    /** @type {import("@storecraft/core/api").ApiAuthResult} */ 
-    auth: sdk.auth.currentAuth,
+    
+    auth: (/** @type {ApiAuthResult} */  (sdk.auth.currentAuth)),
     isAuthenticated: sdk.auth.isAuthenticated,
     actions: {
       signin : sdk.auth.signin, 

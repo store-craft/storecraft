@@ -1,8 +1,8 @@
-import type { Config as LibSqlConfig } from '@libsql/client'
-export { Turso } from './index.js';
 
-export type Config = Partial<Omit<LibSqlConfig, 'url' | 'authToken'>> & {
+import type { AIEmbedder } from '@storecraft/core/ai';
+export * from './index.js';
 
+export type Config = {
   /** The database URL.
    *
    * The client supports `libsql:`, `http:`/`https:`, `ws:`/`wss:` and `file:` URL. For more infomation,
@@ -21,9 +21,21 @@ export type Config = Partial<Omit<LibSqlConfig, 'url' | 'authToken'>> & {
   authToken?: string;
 
   /**
-   * @description if `true`, transactions are converted into a non-interactive batch,
-   * use with caution and prefer this when transactions are non-interactive
-   * @default true
+   * @description The name of the index
+   * @default 'vector_store'
    */
-  prefers_batch_over_transactions?: boolean;
+  index_name?: string,
+
+  /**
+   * @description The dimensions of the vectors
+   */
+  dimensions: number,
+
+  /**
+   * @description The similiarity metric
+   * @default 'cosine'
+   */
+  similarity?: 'euclidean' | 'cosine',
+
+  embedder: AIEmbedder
 }

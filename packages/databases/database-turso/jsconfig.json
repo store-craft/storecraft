@@ -9,6 +9,6 @@
     "*", 
     "src/*", 
     "tests/*.js",
-    "d1/*"
+    "vector-store/*"
   ]
 }

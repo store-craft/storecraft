@@ -22,6 +22,7 @@ const idb_database = (name) => new Promise(
     request.onupgradeneeded = function(event) {
       // Save the IDBDatabase interface
       /** @type {IDBDatabase} */
+      // @ts-ignore
       const db = event.target.result;
       
       // Create an objectStore for this database
@@ -34,6 +35,7 @@ const idb_database = (name) => new Promise(
      * @param {Event} event 
      */
     request.onsuccess = function (event) {
+      // @ts-ignore
       resolve(event.target.result);
     }
     
@@ -41,6 +43,7 @@ const idb_database = (name) => new Promise(
      * @param {Event} event 
      */
     request.onerror = function(event) {
+      // @ts-ignore
       reject(event.target.errorCode);
     };
   }
@@ -75,6 +78,7 @@ const idb_put = (db_name, object_store_name='main') => {
           let putRequest = objectStore.put(value, key);
           
           putRequest.onsuccess = function(event) {
+            // @ts-ignore
             const _key = event.target.result;
 
             if(key===_key)
@@ -83,6 +87,7 @@ const idb_put = (db_name, object_store_name='main') => {
           };
 
           putRequest.onerror = function (event) {
+            // @ts-ignore
             reject(event.target.errorCode);
           }
         }
@@ -119,6 +124,7 @@ const idb_get = (db_name, object_store_name='main') => {
           let getRequest = objectStore.get(key);
 
           getRequest.onsuccess = function(event) {
+            // @ts-ignore
             const value = event.target.result;
             if(value)
               resolve(value);
@@ -126,6 +132,7 @@ const idb_get = (db_name, object_store_name='main') => {
           };
 
           getRequest.onerror = function (event) {
+            // @ts-ignore
             reject(event.target.errorCode);
           }
         }
@@ -158,11 +165,13 @@ const idb_remove = (db_name, object_store_name='main') => {
           let objectStore = transaction.objectStore(object_store_name);
           let request = objectStore.delete(key);
 
+          // @ts-ignore
           request.onsuccess = function(event) {
             resolve(key);
           };
 
           request.onerror = function (event) {
+            // @ts-ignore
             reject(event.target.errorCode);
           }
         }

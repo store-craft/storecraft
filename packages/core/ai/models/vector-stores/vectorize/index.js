@@ -3,6 +3,7 @@
  *  AIEmbedder, VectorStore 
  * } from '../../../core/types.private.js'
  * @import {
+cf_response_wrapper,
  *  create_vector_index_params, create_vector_index_result, 
  *  query_vectors_params, query_vectors_result, vectorize_vector
  * } from './types.private.vectorize.js'
@@ -21,12 +22,23 @@ export const ENV_CF_EMAIL = 'CF_EMAIL'
  * @implements {VectorStore}
  */
 export class Vectorize {
+
+  /** @type {Config} */ #config;
+
   /**
    * 
    * @param {Config} config 
    */
   constructor(config) {
-    this.config = config;
+    this.#config = {
+      index_name: 'vector_index',
+      dimension: 1536,
+      ...config,
+    }
+  }
+
+  get config() {
+    return this.#config;
   }
 
   /** @type {VectorStore["onInit"]} */
@@ -184,11 +196,16 @@ export class Vectorize {
 
   /**
    * 
-   * @param {Omit<create_vector_index_params, 'name'>} params 
-   * @returns {Promise<create_vector_index_result>}
+   * @param {{ description?: string, metric?: create_vector_index_params["config"]["metric"] }} params 
+   * @param {boolean} [delete_index_if_exists_before=false] 
+   * @returns {Promise<cf_response_wrapper<create_vector_index_result>>}
    */
-  createVectorIndex = async (params) => {
-
+  createVectorIndex = async (params, delete_index_if_exists_before=false) => {
+    
+    if(delete_index_if_exists_before) {
+      await this.deleteVectorIndex();
+    }
+    
     const r = await fetch(
       this.#to_cf_url(),
       {
@@ -200,17 +217,44 @@ export class Vectorize {
         },
         body: JSON.stringify( 
           /** @type {create_vector_index_params} */({
-            ...params,
-            name: this.config.index_name
+            name: this.config.index_name,
+            description: params.description,
+            config: {
+              dimensions: this.config.dimension,
+              metric: params.metric ?? 'cosine'
+            }
           })
         )
       }
     );
 
-    /** @type {create_vector_index_result} */
+    /** @type {cf_response_wrapper<create_vector_index_result>} */
     const json = await r.json();
-
+    
     return json;
   }
 
+  /**
+   * 
+   * @returns {Promise<boolean>}
+   */
+  deleteVectorIndex = async () => {
+    
+    const r = await fetch(
+      this.#to_cf_url(this.config.index_name),
+      {
+        method: 'delete',
+        headers: {
+          'X-Auth-Email': this.config.cf_email,
+          'X-Auth-Key': this.config.api_key,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    /** @type {cf_response_wrapper} */
+    const json = await r.json();
+
+    return json.success;
+  }  
 }

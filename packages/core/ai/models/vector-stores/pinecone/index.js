@@ -11,6 +11,8 @@
  * } from './types.js'
  */
 
+import { truncate_or_pad_vector } from '../index.js';
+
 export const NAMESPACE_KEY = '__namespace'
 export const ENV_PINECONE_API_KEY = 'PINECONE_API_KEY'
 
@@ -18,12 +20,24 @@ export const ENV_PINECONE_API_KEY = 'PINECONE_API_KEY'
  * @implements {VectorStore}
  */
 export class Pinecone {
+
+  #host_name_cache = ''
+  /** @type {Config} */ #config;
+
   /**
    * 
    * @param {Config} config 
    */
   constructor(config) {
-    this.config = config;
+    this.#config = {
+      dimension: 1536,
+      index_name: 'vector_index',
+      ...config
+    };
+  }
+
+  get config() {
+    return this.#config;
   }
 
   /** @type {VectorStore["onInit"]} */
@@ -34,6 +48,14 @@ export class Pinecone {
   /** @type {VectorStore["embedder"]} */
   get embedder() {
     return this.config.embedder
+  }
+
+  fetchIndexHostName = async () => {
+    this.#host_name_cache = this.#host_name_cache ? 
+      this.#host_name_cache :
+      (await this.describeIndex()).host;
+    
+    return this.#host_name_cache;
   }
 
   /** @type {VectorStore["addVectors"]} */
@@ -48,7 +70,9 @@ export class Pinecone {
             ...d.metadata,
             [NAMESPACE_KEY]: d.namespace
           },
-          values: vectors[ix]
+          values: truncate_or_pad_vector(
+            vectors[ix], this.config.dimension
+          )
         }
       )
     );
@@ -59,7 +83,7 @@ export class Pinecone {
     }
 
     const r = await fetch(
-      `https://${this.config.index_host}/vectors/upsert`,
+      `https://${await this.fetchIndexHostName()}/vectors/upsert`,
       {
         method: 'post',
         headers: {
@@ -99,7 +123,7 @@ export class Pinecone {
   /** @type {VectorStore["delete"]} */
   delete = async (ids) => {
     const r = await fetch(
-      `https://${this.config.index_host}/vectors/delete`,
+      `https://${await this.fetchIndexHostName()}/vectors/delete`,
       {
         method: 'post',
         headers: {
@@ -127,7 +151,10 @@ export class Pinecone {
         ]
       }
     );
-    const vector = embedding_result.content[0]
+
+    const vector = truncate_or_pad_vector(
+      embedding_result.content[0], this.config.dimension
+    );
 
     /** @type {query_vectors_params} */
     const body = {
@@ -144,7 +171,7 @@ export class Pinecone {
     }
 
     const r = await fetch(
-      `https://${this.config.index_host}/query`,
+      `https://${await this.fetchIndexHostName()}/query`,
       {
         method: 'post',
         headers: {
@@ -175,10 +202,15 @@ export class Pinecone {
 
   /**
    * 
-   * @param {create_vector_index_params} params 
+   * @param {Omit<create_vector_index_params, 'name' | 'dimension'>} params 
+   * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<create_vector_index_result>}
    */
-  createVectorIndex = async (params) => {
+  createVectorIndex = async (params, delete_index_if_exists_before=false) => {
+
+    if(delete_index_if_exists_before) {
+      await this.deleteVectorIndex();
+    }
 
     const r = await fetch(
       'https://api.pinecone.io/indexes',
@@ -192,7 +224,8 @@ export class Pinecone {
         body: JSON.stringify( 
           /** @type {create_vector_index_params} */({
             ...params,
-            name: params.name
+            name: this.config.index_name,
+            dimension: this.config.dimension
           })
         )
       }
@@ -202,6 +235,49 @@ export class Pinecone {
     const json = await r.json();
 
     return json;
+  }
+
+  /**
+   * 
+   * @returns {Promise<boolean>}
+   */
+  deleteVectorIndex = async () => {
+
+    const r = await fetch(
+      `https://api.pinecone.io/indexes/${this.config.index_name}`,
+      {
+        method: 'delete',
+        headers: {
+          'Api-Key': this.config.api_key,
+          'Accept': 'application/json'
+        }
+      }
+    );
+
+    return r.ok;
+  }
+
+  /**
+   * 
+   * @returns {Promise<Partial<create_vector_index_result>>}
+   */
+  describeIndex = async () => {
+
+    const r = await fetch(
+      `https://api.pinecone.io/indexes/${this.config.index_name}`,
+      {
+        method: 'get',
+        headers: {
+          'Api-Key': this.config.api_key,
+          'Accept': 'application/json'
+        }
+      }
+    );
+
+    /** @type {Partial<create_vector_index_result>} */
+    const result = await r.json();
+
+    return result;
   }
 
 }

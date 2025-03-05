@@ -8,6 +8,30 @@
 import { DiscountApplicationEnum } from '../../../api/types.api.enums.js'
 
 /**
+ * @description Given a vector of length `n`, reshape it to another `dimension`.
+ * - Truncate if `n>dimension`
+ * - Add zeroes if `n<dimension`
+ * @param {number[]} vector A vector
+ * @param {number} dimension The number of requested dimension
+ */
+export const truncate_or_pad_vector = (vector, dimension) => {
+  const n = vector.length;
+  if(n==dimension)
+    return vector;
+
+  // truncate
+  if(n>dimension) {
+    return vector.slice(0, dimension);
+  }
+
+  // pad with zeroes
+  else [
+    ...vector,
+    ...(new Array(dimension-n).fill(0))
+  ]
+}
+
+/**
  * 
  * @param {ProductType | CollectionType | DiscountType | ShippingMethodType} content 
  * @param {string} page_content 

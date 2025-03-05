@@ -34,7 +34,7 @@ export type create_vector_index_params = {
 
   /** The spec object defines how the index should be deployed. For serverless indexes, you define only the cloud and region where the index should be hosted. For pod-based indexes, you define the environment where the index should be hosted, the pod type and size to use, and other index characteristics. */
   spec: spec_serverless | spec_pod,
-
+  
   /** The dimensions of the vectors to be inserted in the index. */
   dimension: number,
 

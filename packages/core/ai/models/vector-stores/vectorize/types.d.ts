@@ -10,7 +10,21 @@ export type Config = {
 
   /** If absent, will be infered from environment variable `CF_EMAIL` */
   cf_email?: string,
-  
-  index_name: string,
+
+  /** 
+   * @description name of the index 
+   * @default 'vector_index'
+   */
+  index_name?: string,
+
+  /** 
+   * @description The dimensions of the vectors to be inserted in the index. 
+   * @default 1536
+   */
+  dimension?: number,
+
+  /**
+   * @description Embedding model provider
+   */
   embedder: AIEmbedder
 }

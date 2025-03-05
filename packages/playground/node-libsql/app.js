@@ -3,7 +3,7 @@ import { homedir } from "node:os";
 
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
 import { MongoDB } from '@storecraft/database-mongodb'
-import { Turso } from '@storecraft/database-turso'
+import { LibSQLVectorStore, Turso } from '@storecraft/database-turso'
 import { SQLite } from '@storecraft/database-sqlite'
 import { R2 } from '@storecraft/storage-s3-compatible'
 import { GoogleStorage } from '@storecraft/storage-google'
@@ -20,6 +20,7 @@ import { Gemini } from "@storecraft/core/ai/models/chat/gemini";
 import { Mistral } from "@storecraft/core/ai/models/chat/mistral";
 import { XAI } from "@storecraft/core/ai/models/chat/xai";
 import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare/index.js";
 
 export const app = new App(
   {
@@ -54,4 +55,11 @@ export const app = new App(
 )
 .withAI(
   new XAI()
+)
+.withVectorStore(
+  new LibSQLVectorStore(
+    {
+      embedder: new CloudflareEmbedder({model})
+    }
+  )
 )

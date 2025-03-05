@@ -6,6 +6,20 @@ export type Config = {
   api_key?: string;
   
   /** This is a `url` where you should query the index, get it from the console | describe api call */
-  index_host: string,
-  embedder: AIEmbedder
+  /**
+   * @description The index name
+   * @default 'vector_index'
+   */
+  index_name?: string,
+  
+  /** 
+   * @description The dimensions of the vectors to be inserted in the index. 
+   * @default 1536
+   */
+  dimension?: number,
+
+  /**
+   * @description Embedding model provider
+   */
+  embedder: AIEmbedder,
 }

@@ -25,15 +25,24 @@ const strip_leading = (text = '') => {
 export class GeminiEmbedder {
 
   /**
-   * @param {config} config 
+   * @param {config} [config={}] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
       model: config.model ?? 'text-embedding-004',
       api_version: config.api_version ?? 'v1beta'
     }
 
+  }
+
+  /** @type {Impl["tag"]} */
+  get tag() {
+    return {
+      dimension: 768,
+      model: this.config.model,
+      provider: 'GeminiEmbedder'
+    }
   }
 
   /** @type {Impl["onInit"]} */
@@ -56,7 +65,7 @@ export class GeminiEmbedder {
         ).map(
           c => (
             {
-              model: this.config.model,
+              model: `models/${this.config.model}`,
               content: {
                 parts: params.content.map(c => ({text: c.content}))
               }
@@ -79,6 +88,12 @@ export class GeminiEmbedder {
 
     /** @type {RequestResult} */
     const json = await r.json();
+
+    if(!r.ok) {
+      throw new Error(JSON.stringify(json, null, 2));
+    }
+    
+    // console.log(json)
 
     return {
       content: json.embeddings.map(

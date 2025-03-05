@@ -26,6 +26,13 @@ export const ENV_CF_API_KEY = 'CF_API_KEY'
 export const ENV_CF_AI_API_KEY = 'CF_AI_API_KEY'
 export const ENV_CF_EMAIL = 'CF_EMAIL'
 
+/** @type {Record<config["model"], number>} */
+const TAGS = {
+  '@cf/baai/bge-large-en-v1.5': 1024,
+  '@cf/baai/bge-base-en-v1.5': 768,
+  '@cf/baai/bge-small-en-v1.5': 384,
+}
+
 /**
  * @implements {Impl}
  */
@@ -38,6 +45,15 @@ export class CloudflareEmbedder {
     this.config = {
       ...config,
       model: config.model ?? '@cf/baai/bge-large-en-v1.5',
+    }
+  }
+
+  /** @type {Impl["tag"]} */
+  get tag() {
+    return {
+      dimension: TAGS[this.config.model],
+      model: this.config.model,
+      provider: 'CloudflareEmbedder'
     }
   }
 

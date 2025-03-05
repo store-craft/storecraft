@@ -23,6 +23,10 @@ import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
 import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare";
 import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize";
 import { Pinecone } from "@storecraft/core/ai/models/vector-stores/pinecone";
+import { PineconeEmbedder } from "@storecraft/core/ai/models/embedders/pinecone";
+import { VoyageAIEmbedder } from "@storecraft/core/ai/models/embedders/voyage-ai";
+import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
+import { GeminiEmbedder } from "@storecraft/core/ai/models/embedders/gemini";
 
 export const app = new App(
   {
@@ -68,7 +72,7 @@ export const app = new App(
 .withVectorStore(
   new Pinecone(
     {
-      embedder: new CloudflareEmbedder(),
+      embedder: new PineconeEmbedder({model: {name:'llama-text-embed-v2' }}),
     }
   )
 )

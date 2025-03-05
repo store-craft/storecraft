@@ -49,6 +49,7 @@ const save_with = (content, page_content, vector_store, namespace) => {
           json: JSON.stringify(content),
           handle: content.handle,
           id: content.id,
+          embedder_tag_json: JSON.stringify(vector_store.embedder.tag) ?? vector_store.constructor.name
         }
       }
     ]

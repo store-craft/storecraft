@@ -20,16 +20,16 @@ const strip_leading = (text = '') => {
 /**
  * @implements {Impl}
  */
-export class OpenAIEmbedder {
+export class VoyageAIEmbedder {
   #embeddings_url = '';
 
   /**
-   * @param {config} config 
+   * @param {config} [config={}] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
-      model: config.model ?? 'voyage-3',
+      model: config.model ?? 'voyage-3-1024',
       endpoint: config.endpoint ?? 'https://api.voyageai.com/',
       api_version: config.api_version ?? 'v1'
     }
@@ -41,24 +41,45 @@ export class OpenAIEmbedder {
 
   }
 
+  get model_and_dim() {
+    const parts = this.config.model.split('-');
+    const model = parts.slice(0, -1).join('-');
+    const output_dimension = parseFloat(parts.at(-1));
+    return {
+      model, output_dimension
+    }
+  }
+
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.api_key = this.config.api_key ?? app.platform.env[ENV_VOYAGE_AI_API_KEY]; 
   }
 
+  /** @type {Impl["tag"]} */
+  get tag() {
+    const { model, output_dimension } = this.model_and_dim;
+    
+    return {
+      dimension: output_dimension,
+      model: model,
+      provider: 'VoyageAIEmbedder'
+    }
+  }
 
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {
 
+    const { model, output_dimension } = this.model_and_dim;
     const body = (/** @type {RequestBody} */ (
       {
         input_type: null,
         truncation: true,
         input: params.content.filter(c => c.type==='text').map(c => c.content),
-        model: this.config.model,
+        model,
+        output_dimension,
         encoding_format: null
       }
-    ))
+    ));
 
     const r = await fetch(
       this.#embeddings_url,
@@ -74,6 +95,8 @@ export class OpenAIEmbedder {
 
     /** @type {RequestResult} */
     const json = await r.json();
+
+    // console.log(json)
 
     return {
       content: json.data.map(

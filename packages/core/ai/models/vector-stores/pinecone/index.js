@@ -241,7 +241,7 @@ export class Pinecone {
     /** @type {create_vector_index_result} */
     const json = await r.json();
 
-    console.log(json)
+    // console.log(json)
 
     return json;
   }

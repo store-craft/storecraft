@@ -24,6 +24,18 @@ export interface AIEmbedder<
   Config extends any = any, 
   > {
   
+  /**
+   * @description A tag describing the embedder provider, model and dimension.
+   * 
+   * Many providers have various models with various dimensions. It will be beneficial
+   * for debugging purposes to know about the model.
+   */
+  tag: {
+    provider: string,
+    model: string,
+    dimension: number
+  },
+    
   config?: Config;
 
   /**

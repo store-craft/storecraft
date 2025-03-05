@@ -17,6 +17,13 @@ const strip_leading = (text = '') => {
   return (text[0]==='/') ? text.slice(1) : text;
 }
 
+/** @type {Record<config["model"], number>} */
+const DIM = {
+  'text-embedding-ada-002': 1536,
+  'text-embedding-3-small': 1536,
+  'text-embedding-3-large': 3072
+}
+
 /**
  * @implements {Impl}
  */
@@ -24,9 +31,9 @@ export class OpenAIEmbedder {
   #embeddings_url = '';
 
   /**
-   * @param {config} config 
+   * @param {config} [config={}] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
       model: config.model ?? 'text-embedding-3-large',
@@ -45,6 +52,16 @@ export class OpenAIEmbedder {
   onInit = (app) => {
     this.config.api_key = this.config.api_key ?? app.platform.env[ENV_OPENAI_API_KEY]; 
   }
+
+  /** @type {Impl["tag"]} */
+  get tag() {
+    return {
+      dimension: DIM[this.config.model],
+      model: this.config.model,
+      provider: 'OpenAIEmbedder'
+    }
+  }
+  
 
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {
@@ -71,6 +88,10 @@ export class OpenAIEmbedder {
 
     /** @type {RequestResult} */
     const json = await r.json();
+
+    if(!r.ok) {
+      throw new Error(JSON.stringify(json, null, 2));
+    }
 
     return {
       content: json.data.map(

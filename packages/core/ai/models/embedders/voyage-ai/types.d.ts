@@ -1,7 +1,18 @@
 export * from './index.js';
 
 export type config = {
-  model?: ('voyage-3-large' | 'voyage-3' | 'voyage-3-lite' | 'voyage-code-3' | 'voyage-finance-2' | 'voyage-law-2') | ({} & string),
+  /**
+   * @default voyage-3-large-1024
+   */
+  model?: (
+    `voyage-3-large-${256 | 512 | 1024 | 2048}` | 
+    'voyage-3-1024' | 
+    'voyage-3-lite-512' | 
+    `voyage-code-3-${256 | 512 | 1024 | 2048}` | 
+    'voyage-finance-2-1024' | 
+    'voyage-law-2-1024' |
+    'voyage-code-2-1536'
+  ) | ({} & string),
   endpoint?: string,
   api_version?: string;
 

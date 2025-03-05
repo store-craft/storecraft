@@ -5,7 +5,7 @@ export type config = {
   api_version?: string;
 
   /** If absent, will be infered from environment variable `GEMINI_API_KEY` */
-  api_key: string
+  api_key?: string
 }
 
 export type RequestBody = {

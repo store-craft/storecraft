@@ -3,7 +3,7 @@
  *  config, RequestBody, RequestResult
  * } from "./types.js";
  * @import { 
- *  GenerateEmbeddingsParams, GenerateEmbeddingsResult, AIEmbedder
+ *  AIEmbedder
  * } from "../../../core/types.private.js";
  */
 
@@ -21,9 +21,9 @@ export class PineconeEmbedder {
   #embeddings_url = 'https://api.pinecone.io/embed';
 
   /**
-   * @param {config} config 
+   * @param {config} [config={}] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
       model: config.model ?? {
@@ -34,11 +34,30 @@ export class PineconeEmbedder {
         }
       }
     }
+
+    // now fix some defaults
+    this.config.model.parameters = this.config.model.parameters ?? {};
+    this.config.model.parameters.input_type = this.config.model.parameters.input_type ?? 'passage';
+    this.config.model.parameters.truncate = this.config.model.parameters.truncate ?? 'END';
+    if(this.config.model.name==='llama-text-embed-v2') {
+      this.config.model.parameters.dimension = this.config.model.parameters.dimension ?? 1024;
+    }
+    
   }
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.api_key = this.config.api_key ?? app.platform.env[ENV_PINECONE_API_KEY]; 
+  }
+
+  /** @type {Impl["tag"]} */
+  get tag() {
+    return {
+      dimension: this.config.model.name==='multilingual-e5-large' 
+          ? 1024 : this.config.model.parameters.dimension,
+      model: this.config.model.name,
+      provider: 'PineconeEmbedder'
+    }
   }
 
   /** @type {Impl["generateEmbeddings"]} */
@@ -59,17 +78,22 @@ export class PineconeEmbedder {
       }
     ));
 
+    // console.log(body)
+
     const r = await fetch(
       this.#embeddings_url,
       {
         method: 'post',
         headers: {
           'Api-Key': this.config.api_key,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Pinecone-API-Version': '2025-01'
         },
         body: JSON.stringify(body)
       }
     );
+
+    // console.log(r)
 
     /** @type {RequestResult} */
     const json = await r.json();

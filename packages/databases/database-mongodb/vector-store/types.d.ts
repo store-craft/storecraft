@@ -28,10 +28,11 @@ export type Config = {
    */
   index_name?: string,
 
-  /**
-   * @description The dimensions of the vectors
+  /** 
+   * @description The dimensions of the vectors to be inserted in the index. 
+   * @default 1536
    */
-  dimensions: number,
+  dimensions?: number,
 
   /**
    * @description The similiarity metric

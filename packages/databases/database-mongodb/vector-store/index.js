@@ -49,8 +49,9 @@ export class MongoVectorStore {
   constructor(config) {
     this.config = {
       ...config,
-      index_name: config.index_name ?? DEFAULT_INDEX_NAME,
+      index_name: config.index_name ?? 'vector_store',
       similarity: config.similarity ?? 'cosine',
+      dimensions: config.dimensions ?? 1536,
       options: config.options ?? {
         ignoreUndefined: true,
         serverApi: {
@@ -222,11 +223,14 @@ export class MongoVectorStore {
   }
 
   /**
-   * 
-   * @param {any} params 
+   * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (params) => {
+  createVectorIndex = async (delete_index_if_exists_before=false) => {
+    if(delete_index_if_exists_before) {
+      await this.deleteVectorIndex();
+    }
+
     const db = this.client.db(this.config.db_name);
     const collection_name = this.config.index_name;
     // collection name will have the same name as the index
@@ -259,6 +263,18 @@ export class MongoVectorStore {
     return true;
   }
 
+  /**
+   * @returns {Promise<boolean>}
+   */
+  deleteVectorIndex = async () => {
+    const db = this.client.db(this.config.db_name);
+    const collection_name = this.config.index_name;
+    const index_result = await db.collection(collection_name).dropSearchIndex(
+      this.config.index_name
+    );
+
+    return true;
+  }  
   
 }
 

@@ -196,16 +196,16 @@ export class Vectorize {
 
   /**
    * 
-   * @param {{ description?: string, metric?: create_vector_index_params["config"]["metric"] }} params 
+   * @param {{ description?: string, metric?: create_vector_index_params["config"]["metric"] }} [params={}] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<cf_response_wrapper<create_vector_index_result>>}
    */
-  createVectorIndex = async (params, delete_index_if_exists_before=false) => {
+  createVectorIndex = async (params={}, delete_index_if_exists_before=false) => {
     
     if(delete_index_if_exists_before) {
       await this.deleteVectorIndex();
     }
-    
+
     const r = await fetch(
       this.#to_cf_url(),
       {

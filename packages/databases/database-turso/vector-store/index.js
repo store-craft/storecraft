@@ -59,6 +59,7 @@ export class LibSQLVectorStore {
     this.config = {
       index_name: DEFAULT_INDEX_NAME,
       similarity: 'cosine',
+      dimensions: 1536,
       ...config,
     };
   }
@@ -235,11 +236,10 @@ export class LibSQLVectorStore {
 
   /**
    * 
-   * @param {any} params 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (params, delete_index_if_exists_before=false) => {
+  createVectorIndex = async (delete_index_if_exists_before=false) => {
 
     /** @type {string[]} */
     const batch = [];

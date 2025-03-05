@@ -55,8 +55,7 @@ export const app = new App(
 .withVectorStore(
   new MongoVectorStore(
     {
-      dimensions: 1536,
-      embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5' }),
+      embedder: new CloudflareEmbedder(),
     }
   )
 )

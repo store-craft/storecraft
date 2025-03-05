@@ -223,10 +223,11 @@ export class MongoVectorStore {
   }
 
   /**
+   * @param {boolean} [disconnect_after_finish=true] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (delete_index_if_exists_before=false) => {
+  createVectorIndex = async (disconnect_after_finish=true, delete_index_if_exists_before=false) => {
     if(delete_index_if_exists_before) {
       await this.deleteVectorIndex();
     }
@@ -259,6 +260,9 @@ export class MongoVectorStore {
     if(index_result!==this.config.index_name) {
       throw new Error('MongoVectorStore::createVectorIndex failed');
     }
+
+    if(disconnect_after_finish)
+      await this.client.close();
 
     return true;
   }

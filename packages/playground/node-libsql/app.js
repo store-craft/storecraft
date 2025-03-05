@@ -59,7 +59,7 @@ export const app = new App(
 .withVectorStore(
   new LibSQLVectorStore(
     {
-      embedder: new CloudflareEmbedder({model})
+      embedder: new CloudflareEmbedder(),
     }
   )
 )

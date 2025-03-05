@@ -90,8 +90,8 @@ export class MongoVectorStore {
     return this.client.db(this.config.db_name).collection(this.config.index_name);
   }
 
-  /** @type {VectorStore["addVectors"]} */
-  addVectors = async (vectors, documents, options) => {
+  /** @type {VectorStore["upsertVectors"]} */
+  upsertVectors = async (vectors, documents, options) => {
     /** @type {MongoVectorDocument[]} */
     const mongo_docs = documents.map(
       (doc, ix) => (
@@ -128,8 +128,8 @@ export class MongoVectorStore {
 
   }
 
-  /** @type {VectorStore["addDocuments"]} */
-  addDocuments = async (documents, options) => {
+  /** @type {VectorStore["upsertDocuments"]} */
+  upsertDocuments = async (documents, options) => {
     // first, generate embeddings for the documents
     const result = await this.embedder.generateEmbeddings(
       {
@@ -146,7 +146,7 @@ export class MongoVectorStore {
 
     const vectors = result.content;
 
-    return this.addVectors(
+    return this.upsertVectors(
       vectors, documents, options
     )
   }

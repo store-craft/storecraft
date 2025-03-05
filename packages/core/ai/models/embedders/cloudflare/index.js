@@ -31,7 +31,7 @@ export class CloudflareEmbedder {
   /**
    * @param {config} config 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
       model: config.model ?? '@cf/baai/bge-large-en-v1.5',

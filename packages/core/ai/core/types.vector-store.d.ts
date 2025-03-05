@@ -52,7 +52,7 @@ export interface VectorStore<
    * @returns A promise resolving to an array of document IDs or void, based on implementation.
    * @abstract
    */
-  abstract addVectors(
+  abstract upsertVectors(
     vectors: number[][],
     documents: VectorStoreDocumentInterface[],
     options?: VectorStoreAddDocumentOptions
@@ -67,7 +67,7 @@ export interface VectorStore<
    * @returns A promise resolving to an array of document IDs or void, based on implementation.
    * @abstract
    */
-  abstract addDocuments(
+  abstract upsertDocuments(
     documents: VectorStoreDocumentInterface[],
     options?: VectorStoreAddDocumentOptions
   ): Promise<string[] | void>;

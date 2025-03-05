@@ -86,8 +86,8 @@ export class LibSQLVectorStore {
     return this.config.embedder
   }
   // (id TEXT, metadata TEXT, pageContent Text, updated_at TEXT, namespace TEXT, embedding F32_BLOB
-  /** @type {VectorStore["addVectors"]} */
-  addVectors = async (vectors, documents, options) => {
+  /** @type {VectorStore["upsertVectors"]} */
+  upsertVectors = async (vectors, documents, options) => {
     const updated_at = new Date().toISOString();
     /** @type {VectorDocumentUpsert[]} */
     const docs_upsert = documents.map(
@@ -136,8 +136,8 @@ export class LibSQLVectorStore {
     console.log(result);
   }
 
-  /** @type {VectorStore["addDocuments"]} */
-  addDocuments = async (documents, options) => {
+  /** @type {VectorStore["upsertDocuments"]} */
+  upsertDocuments = async (documents, options) => {
     // first, generate embeddings for the documents
     const result = await this.embedder.generateEmbeddings(
       {
@@ -154,7 +154,7 @@ export class LibSQLVectorStore {
 
     const vectors = result.content;
 
-    return this.addVectors(
+    return this.upsertVectors(
       vectors, documents, options
     )
   }

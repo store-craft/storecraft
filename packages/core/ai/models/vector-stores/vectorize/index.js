@@ -58,8 +58,8 @@ export class Vectorize {
     return this.config.embedder
   }
 
-  /** @type {VectorStore["addVectors"]} */
-  addVectors = async (vectors, documents, options) => {
+  /** @type {VectorStore["upsertVectors"]} */
+  upsertVectors = async (vectors, documents, options) => {
 
     /** @type {vectorize_vector[]} */
     const cf_format = documents.map(
@@ -93,8 +93,8 @@ export class Vectorize {
     const json = await r.json();
   }
 
-  /** @type {VectorStore["addDocuments"]} */
-  addDocuments = async (documents, options) => {
+  /** @type {VectorStore["upsertDocuments"]} */
+  upsertDocuments = async (documents, options) => {
     const result = await this.embedder.generateEmbeddings(
       {
         content: documents.map(
@@ -110,7 +110,7 @@ export class Vectorize {
 
     const vectors = result.content;
 
-    return this.addVectors(
+    return this.upsertVectors(
       vectors, documents, options
     )
   }

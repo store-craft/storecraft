@@ -58,8 +58,8 @@ export class Pinecone {
     return this.#host_name_cache;
   }
 
-  /** @type {VectorStore["addVectors"]} */
-  addVectors = async (vectors, documents, options) => {
+  /** @type {VectorStore["upsertVectors"]} */
+  upsertVectors = async (vectors, documents, options) => {
 
     /** @type {vector[]} */
     const vectors_pinecone = documents.map(
@@ -98,8 +98,8 @@ export class Pinecone {
     const json = await r.json();
   }
 
-  /** @type {VectorStore["addDocuments"]} */
-  addDocuments = async (documents, options) => {
+  /** @type {VectorStore["upsertDocuments"]} */
+  upsertDocuments = async (documents, options) => {
     const result = await this.embedder.generateEmbeddings(
       {
         content: documents.map(
@@ -115,7 +115,7 @@ export class Pinecone {
 
     const vectors = result.content;
 
-    return this.addVectors(
+    return this.upsertVectors(
       vectors, documents, options
     )
   }

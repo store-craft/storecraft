@@ -39,7 +39,7 @@ export const truncate_or_pad_vector = (vector, dimension) => {
  * @param {'products' | 'collections' | 'shipping_methods' | 'discounts'} namespace 
  */
 const save_with = (content, page_content, vector_store, namespace) => {
-  return vector_store.addDocuments(
+  return vector_store.upsertDocuments(
     [
       {
         id: content.handle,

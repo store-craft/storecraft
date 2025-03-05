@@ -1,6 +1,9 @@
 /**
  * @import { 
- *  config, RequestBody, RequestResult
+ *  RequestBody, RequestResult, cf_response_wrapper
+ * } from "./types.private.js";
+ * @import { 
+ *  config
  * } from "./types.js";
  * @import { 
  *  GenerateEmbeddingsParams, GenerateEmbeddingsResult, AIEmbedder
@@ -43,17 +46,19 @@ export class CloudflareEmbedder {
     this.config.account_id = this.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID]; 
     this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_AI_API_KEY] 
           ?? app.platform.env[ENV_CF_API_KEY]; 
-    this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
+    // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 
 
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {
     if(
-      this.config.account_id && this.config.api_key && this.config.cf_email
+      !(this.config.account_id && this.config.api_key)
     ) {
       throw new Error('CloudflareEmbedder:: Missing config values !!!')
     }
+
+    // console.log(this.config)
 
     const embeddings_url = new URL(
       `https://api.cloudflare.com/client/v4/accounts/${this.config.account_id}/ai/run/${this.config.model}`
@@ -70,19 +75,23 @@ export class CloudflareEmbedder {
       {
         method: 'post',
         headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
+          'Authorization': `Bearer ${this.config.api_key}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
       }
     );
 
-    /** @type {RequestResult} */
+    /** @type {cf_response_wrapper<RequestResult>} */
     const json = await r.json();
 
+    if(!json.success) {
+      throw new Error(JSON.stringify(json, null, 2))
+      // console.log(JSON.stringify(json, null, 2))
+    }
+
     return {
-      content: json.data
+      content: json?.result?.data
     }
   }
 

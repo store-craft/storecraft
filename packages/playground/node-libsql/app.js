@@ -20,7 +20,9 @@ import { Gemini } from "@storecraft/core/ai/models/chat/gemini";
 import { Mistral } from "@storecraft/core/ai/models/chat/mistral";
 import { XAI } from "@storecraft/core/ai/models/chat/xai";
 import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
-import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare/index.js";
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare";
+import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize";
+import { Pinecone } from "@storecraft/core/ai/models/vector-stores/pinecone";
 
 export const app = new App(
   {
@@ -56,8 +58,15 @@ export const app = new App(
 .withAI(
   new XAI()
 )
+// .withVectorStore(
+//   new LibSQLVectorStore(
+//     {
+//       embedder: new CloudflareEmbedder(),
+//     }
+//   )
+// )
 .withVectorStore(
-  new LibSQLVectorStore(
+  new Pinecone(
     {
       embedder: new CloudflareEmbedder(),
     }

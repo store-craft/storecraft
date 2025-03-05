@@ -39,7 +39,7 @@ export type create_vector_index_params = {
   dimension: number,
 
   /** The distance metric to be used for similarity search. You can use 'euclidean', 'cosine', or 'dotproduct'. If the 'vector_type' is 'sparse', the metric must be 'dotproduct'. If the vector_type is dense, the metric defaults to 'cosine'. */
-  metric: 'cosine' | 'euclidean' | 'dotproduct'
+  metric?: 'cosine' | 'euclidean' | 'dotproduct'
 
   /** Whether deletion protection is enabled/disabled for the index. */
   deletion_protection?: 'disabled' | 'enabled',

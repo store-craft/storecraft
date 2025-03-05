@@ -6,7 +6,7 @@
  *  Config
  * } from './types.js'
  * @import { 
- *  create_vector_index_params, VectorDocumentUpsert 
+ *  VectorDocumentUpsert 
  * } from './types.private.js'
  * @import { InArgs } from '@libsql/client';
  */
@@ -75,6 +75,14 @@ export class LibSQLVectorStore {
     return this.#client;
   }
 
+  get index_name() {
+    return this.config.index_name;
+  }
+
+  get table_name() {
+    return `${this.index_name}_table`;
+  }
+
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
     this.config.authToken = this.config.authToken ?? app.platform.env[ENV_LIBSQL_AUTH_TOKEN];
@@ -85,9 +93,11 @@ export class LibSQLVectorStore {
   get embedder() {
     return this.config.embedder
   }
+
   // (id TEXT, metadata TEXT, pageContent Text, updated_at TEXT, namespace TEXT, embedding F32_BLOB
   /** @type {VectorStore["upsertVectors"]} */
   upsertVectors = async (vectors, documents, options) => {
+
     const updated_at = new Date().toISOString();
     /** @type {VectorDocumentUpsert[]} */
     const docs_upsert = documents.map(
@@ -101,13 +111,13 @@ export class LibSQLVectorStore {
           namespace: doc.namespace,
         }
       )
-    )
+    );
 
     /** @type {import("@libsql/client").InStatement[]} */
     const stmts_delete = docs_upsert.map(
       (doc, ix) => (
         {
-          sql: `DELETE FROM ${this.config.index_name} WHERE id=?`,
+          sql: `DELETE FROM ${this.table_name} WHERE id=?`,
           args: [doc.id]
         }
       )
@@ -118,7 +128,7 @@ export class LibSQLVectorStore {
       (doc, ix) => (
         {
           sql: `
-          INSERT INTO ${this.config.index_name} (id, metadata, pageContent, updated_at, namespace, embedding) 
+          INSERT INTO ${this.table_name} (id, metadata, pageContent, updated_at, namespace, embedding) 
           VALUES (:id, :metadata, :pageContent, :updated_at, :namespace, vector(:embedding))
           `,
           args: doc
@@ -133,7 +143,6 @@ export class LibSQLVectorStore {
       ]
     );
 
-    console.log(result);
   }
 
   /** @type {VectorStore["upsertDocuments"]} */
@@ -154,6 +163,8 @@ export class LibSQLVectorStore {
 
     const vectors = result.content;
 
+    // console.log(vectors)
+
     return this.upsertVectors(
       vectors, documents, options
     )
@@ -163,7 +174,7 @@ export class LibSQLVectorStore {
   delete = async (ids) => {
     await this.client.execute(
       {
-        sql: `DELETE FROM ${this.config.index_name} WHERE id IN (${ids.map(id => '?').join(',')})`,
+        sql: `DELETE FROM ${this.table_name} WHERE id IN (${ids.map(id => '?').join(',')})`,
         args: ids
       }
     );
@@ -191,8 +202,8 @@ export class LibSQLVectorStore {
     // FROM vector_top_k('movies_idx', vector32('[0.064, 0.777, 0.661, 0.687]'), 3)
     // JOIN movies ON movies.rowid = id
     // WHERE year >= 2020;    
-    const table = this.config.index_name;
-    const index_name = this.config.index_name;
+    const table = this.table_name;
+    const index_name = this.index_name;
     /** @type {InArgs} */
     let args = [];
     let sql = `
@@ -249,8 +260,8 @@ export class LibSQLVectorStore {
     }
 
     batch.push(
-      `CREATE TABLE IF NOT EXISTS ${this.config.index_name} (id TEXT, metadata TEXT, pageContent Text, updated_at TEXT, namespace TEXT, embedding F32_BLOB(${this.config.dimensions}));`,
-      `CREATE INDEX IF NOT EXISTS ${this.config.index_name} ON ${this.config.index_name}(libsql_vector_idx(embedding));`
+      `CREATE TABLE IF NOT EXISTS ${this.table_name} (id TEXT, metadata TEXT, pageContent Text, updated_at TEXT, namespace TEXT, embedding F32_BLOB(${this.config.dimensions}));`,
+      `CREATE INDEX IF NOT EXISTS ${this.index_name} ON ${this.table_name}(libsql_vector_idx(embedding));`
     );
 
     const result = await this.client.batch(batch);
@@ -267,8 +278,8 @@ deleteVectorIndex = async () => {
   const batch = [];
 
   batch.push(
-    `DROP INDEX IF EXISTS ${this.config.index_name}`,
-    `DROP TABLE IF EXISTS ${this.config.index_name}`,
+    `DROP INDEX IF EXISTS ${this.index_name}`,
+    `DROP TABLE IF EXISTS ${this.table_name}`,
   );
 
   const result = await this.client.batch(batch);

@@ -344,6 +344,7 @@ export class App {
       // settle vector store events
       if(this.vectorstore) {
         this.vectorstore.onInit(app);
+        this.vectorstore?.embedder?.onInit(app);
         this.pubsub.on(
           'products/upsert',
           async (evt) => {

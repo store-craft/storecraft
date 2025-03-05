@@ -25,7 +25,7 @@ export const truncate_or_pad_vector = (vector, dimension) => {
   }
 
   // pad with zeroes
-  else [
+  else return [
     ...vector,
     ...(new Array(dimension-n).fill(0))
   ]

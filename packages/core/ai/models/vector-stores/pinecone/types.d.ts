@@ -8,7 +8,7 @@ export type Config = {
   /** This is a `url` where you should query the index, get it from the console | describe api call */
   /**
    * @description The index name
-   * @default 'vector_index'
+   * @default 'vector-index'
    */
   index_name?: string,
   

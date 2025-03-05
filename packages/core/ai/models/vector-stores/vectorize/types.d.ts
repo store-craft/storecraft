@@ -8,9 +8,6 @@ export type Config = {
   /** If absent, will be infered from environment variable `CF_VECTORIZE_API_KEY` and then `CF_API_KEY` */
   api_key?: string;
 
-  /** If absent, will be infered from environment variable `CF_EMAIL` */
-  cf_email?: string,
-
   /** 
    * @description name of the index 
    * @default 'vector_index'

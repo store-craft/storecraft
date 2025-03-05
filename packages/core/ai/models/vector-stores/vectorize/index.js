@@ -12,6 +12,8 @@ cf_response_wrapper,
  * } from './types.js'
  */
 
+import { truncate_or_pad_vector } from '../index.js'
+
 export const NAMESPACE_KEY = '__namespace'
 export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID'
 export const ENV_CF_API_KEY = 'CF_API_KEY'
@@ -46,7 +48,7 @@ export class Vectorize {
     this.config.account_id = this.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID]; 
     this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_VECTORIZE_API_KEY] 
           ?? app.platform.env[ENV_CF_API_KEY]; 
-    this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
+    // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 
   #to_cf_url = (path = '') => {
@@ -70,7 +72,7 @@ export class Vectorize {
             ...d.metadata,
             [NAMESPACE_KEY]: d.namespace
           },
-          values: vectors[ix]
+          values: truncate_or_pad_vector(vectors[ix], this.config.dimension)
         }
       )
     );
@@ -81,8 +83,7 @@ export class Vectorize {
       {
         method: 'post',
         headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
+          'Authorization': 'Bearer ' + this.config.api_key,
           'Content-Type': 'application/x-ndjson'
         },
         body: ndjson
@@ -91,6 +92,8 @@ export class Vectorize {
 
     /** @type {{mutationId: string}} */
     const json = await r.json();
+
+    console.log(json)
   }
 
   /** @type {VectorStore["upsertDocuments"]} */
@@ -122,8 +125,7 @@ export class Vectorize {
       {
         method: 'delete',
         headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
+          'Authorization': 'Bearer ' + this.config.api_key,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ ids })
@@ -147,7 +149,10 @@ export class Vectorize {
         ]
       }
     );
-    const vector = embedding_result.content[0]
+    const vector = truncate_or_pad_vector(
+      embedding_result.content[0],
+      this.config.dimension
+    );
 
     /** @type {query_vectors_params} */
     const body = {
@@ -168,8 +173,7 @@ export class Vectorize {
       {
         method: 'post',
         headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
+          'Authorization': 'Bearer ' + this.config.api_key,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
@@ -211,8 +215,7 @@ export class Vectorize {
       {
         method: 'post',
         headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
+          'Authorization': 'Bearer ' + this.config.api_key,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify( 
@@ -230,7 +233,9 @@ export class Vectorize {
 
     /** @type {cf_response_wrapper<create_vector_index_result>} */
     const json = await r.json();
-    
+
+    // console.log(json)
+
     return json;
   }
 
@@ -245,8 +250,7 @@ export class Vectorize {
       {
         method: 'delete',
         headers: {
-          'X-Auth-Email': this.config.cf_email,
-          'X-Auth-Key': this.config.api_key,
+          'Authorization': 'Bearer ' + this.config.api_key,
           'Content-Type': 'application/json'
         }
       }

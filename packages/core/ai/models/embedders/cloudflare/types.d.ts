@@ -12,16 +12,4 @@ export type config = {
 
   /** If absent, will be infered from environment variable `CF_AI_API_KEY` and then `CF_API_KEY` */
   api_key?: string;
-
-  /** If absent, will be infered from environment variable `CF_EMAIL` */
-  cf_email?: string,
 }
-
-export type RequestBody = {
-  text: string | string[]
-}
-
-export type RequestResult = {
-  shape:  number[],
-  data: number[][];
-};

@@ -172,6 +172,34 @@
       "import": "./ai/models/chat/anthropic/index.js",
       "types": "./ai/models/chat/anthropic/types.d.ts"
     },
+    "./ai/models/embedders/cloudflare": {
+      "import": "./ai/models/embedders/cloudflare/index.js",
+      "types": "./ai/models/embedders/cloudflare/types.d.ts"
+    },
+    "./ai/models/embedders/gemini": {
+      "import": "./ai/models/embedders/gemini/index.js",
+      "types": "./ai/models/embedders/gemini/types.d.ts"
+    },
+    "./ai/models/embedders/openai": {
+      "import": "./ai/models/embedders/openai/index.js",
+      "types": "./ai/models/embedders/openai/types.d.ts"
+    },
+    "./ai/models/embedders/pinecone": {
+      "import": "./ai/models/embedders/pinecone/index.js",
+      "types": "./ai/models/embedders/pinecone/types.d.ts"
+    },
+    "./ai/models/embedders/voyage-ai": {
+      "import": "./ai/models/embedders/voyage-ai/index.js",
+      "types": "./ai/models/embedders/voyage-ai/types.d.ts"
+    },
+    "./ai/models/vector-stores/pinecone": {
+      "import": "./ai/models/vector-stores/pinecone/index.js",
+      "types": "./ai/models/vector-stores/pinecone/types.d.ts"
+    },
+    "./ai/models/vector-stores/vectorize": {
+      "import": "./ai/models/vector-stores/vectorize/index.js",
+      "types": "./ai/models/vector-stores/vectorize/types.d.ts"
+    },
     "./ai/*": {
       "import": "./ai/*"
     }

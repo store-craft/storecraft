@@ -31,8 +31,8 @@ export class Pinecone {
   constructor(config) {
     this.#config = {
       dimension: 1536,
-      index_name: 'vector_index',
-      ...config
+      index_name: 'vector-index',
+      ...config,
     };
   }
 
@@ -200,13 +200,20 @@ export class Pinecone {
     );
   }
 
+
+  /** @type {Omit<create_vector_index_params, 'name' | 'dimension'>} */
+  #default_create_index_params = { metric: 'cosine', spec: { serverless : {cloud: 'aws', region: 'us-east-1' }}} 
+
   /**
    * 
-   * @param {Omit<create_vector_index_params, 'name' | 'dimension'>} params 
+   * @param {Omit<create_vector_index_params, 'name' | 'dimension'>} [params] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<create_vector_index_result>}
    */
-  createVectorIndex = async (params, delete_index_if_exists_before=false) => {
+  createVectorIndex = async (
+    params=this.#default_create_index_params, 
+    delete_index_if_exists_before=false
+  ) => {
 
     if(delete_index_if_exists_before) {
       await this.deleteVectorIndex();
@@ -233,6 +240,8 @@ export class Pinecone {
 
     /** @type {create_vector_index_result} */
     const json = await r.json();
+
+    console.log(json)
 
     return json;
   }

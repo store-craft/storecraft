@@ -14,8 +14,3 @@ export type VectorDocumentUpsert = Omit<VectorDocument, 'embedding' | 'metadata'
   metadata: string,
 }
 
-
-export type create_vector_index_params = {
-  /** Drop the table and index before creating it, this is good for reset */
-  dropTableAndIndexIfExists?: boolean
-}

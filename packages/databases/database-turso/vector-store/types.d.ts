@@ -3,7 +3,8 @@ import type { AIEmbedder } from '@storecraft/core/ai';
 export * from './index.js';
 
 export type Config = {
-  /** The database URL.
+  /** 
+   * @description The database URL.
    *
    * The client supports `libsql:`, `http:`/`https:`, `ws:`/`wss:` and `file:` URL. For more infomation,
    * please refer to the project README:
@@ -14,9 +15,11 @@ export type Config = {
    */
   url?: string;
   /** 
-   * Authentication token for the database. Not applicable for `url`=`file:local.db`.
+   * @description Authentication token for the database. Not applicable for `url`=`file:local.db`.
    * 
    * If missing, it will be inferred by env variable `LIBSQL_AUTH_TOKEN`
+   * 
+   * @default ENV variable `LIBSQL_AUTH_TOKEN`
    */
   authToken?: string;
 
@@ -37,5 +40,8 @@ export type Config = {
    */
   similarity?: 'euclidean' | 'cosine',
 
-  embedder: AIEmbedder
+   /**
+   * @description Embedding model provider
+   */
+   embedder: AIEmbedder
 }

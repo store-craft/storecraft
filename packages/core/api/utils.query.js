@@ -18,7 +18,7 @@ const START_AT = 'startAt';
 const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
 const END_BEFORE = 'endBefore';
-const EXPAND = 'expand';
+export const EXPAND = 'expand';
 
 export function is_string_a_number(str='') {
   if (typeof str != "string") return false // we only process strings!
@@ -59,15 +59,17 @@ export const parse_value_part = (part='') => {
   return part;
 }
 
+
 /**
  * @description Parse string tuples of the form 
  * - (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
+ * - updated:2010-20-10 ,  id:my-id => [['updated', '2010-20-10'], ['id', 'my-id']]
  * @param {string} str 
  * @returns {Tuple[]}
  */
-export const parse_tuples = (str="") => {
+export const parse_tuples_old = (str="") => {
   if(!str) return undefined;
-
+  // q.match(/[a-zA-Z0-9_:-]+/g)
   const reg_prefix = /(^[^\w]+)/g;
   const reg_postfix = /([^\w\"\']+$)/g;
   
@@ -97,31 +99,57 @@ export const parse_tuples = (str="") => {
 }
 
 /**
+ * @description Parse string tuples of the form 
+ * - (updated:2010-20-10,id:my-id) => [['updated', '2010-20-10'], ['id', 'my-id']]
+ * - updated:2010-20-10 ,  id:my-id => [['updated', '2010-20-10'], ['id', 'my-id']]
+ * - updated:2010-20-10|id:my-id => [['updated', '2010-20-10'], ['id', 'my-id']]
+ * @param {string} str 
+ * @returns {Tuple<string>[]}
+ */
+export const parse_tuples = (str="") => {
+  if(!str) return undefined;
+  // ['k1:v1', 'k2:v2']
+  const kv_parts = str.match(/[a-zA-Z0-9\_\:\-\+\*\s\'\"]+/g)
+
+  return kv_parts.map(
+    (part) => {
+      const parts = part.split(':');
+      const key = parts[0].trim();
+      // value can be: 'string', 43.434, true, false
+      const value_part = parts.slice(1).join(':').trim();
+      const value = parse_value_part(value_part);
+      return [
+        key,
+        value
+      ]
+    }
+  );
+}
+
+/**
  * 
  * @param {URLSearchParams} s 
  * @param {ExpandQuery} [def=['*']] default value 
  * @return {ExpandQuery}
  */
 export const parse_expand = (s, def = ['*']) => {
-  return (
-    s.get(EXPAND)?.replace(/[()]/g, '').split(',')?.map(
-      s => s.trim()).filter(Boolean)
-    ) ?? def;
+  return parse_list_from_string(s.get(EXPAND), def);
 }
 
 /**
  * 
- * @param {string} s 
+ * @param {string} [s] 
  * @returns {SortCursor}
  */
 export const parse_sortby = (s) => {
-  return (s ?? '(updated_at, id)').replace(/[()]/g, '').split(',').map(
-    s => s.trim()).filter(Boolean);
+  return parse_list_from_string(
+    s ?? '(updated_at, id)'
+  );
 }
 
 /**
  * 
- * @param {string} s 
+ * @param {string} [s] 
  * @returns {SortOrder}
  */
 export const parse_sort_order = (s='desc') => {
@@ -142,22 +170,20 @@ export const parse_sort_order = (s='desc') => {
  * @returns {string[]}
  */
 export const parse_list_from_string = (q='', defaultList=[]) => {
-  const list = q.match(/[a-zA-Z0-9_:-]+/g) ?? defaultList;
+  const list = q?.match(/[a-zA-Z0-9\_\:\-\+\*\s\'\"]+/g).map(p => p.trim())?.filter(Boolean) ?? defaultList;
   return list;
 }
 
 /**
  * 
  * @param {string} q 
- * @param {number | undefined} [defaultValue] 
+ * @param {number} [defaultValue=Number.NaN] 
  * @returns {number | undefined}
  */
-export const parse_number_from_string = (q, defaultValue) => {
-  const v = parseFloat(q);
-  if(!Boolean(v)) {
-    return defaultValue;
-  }
-  return v
+export const parse_number_from_string = (q, defaultValue=Number.NaN) => {
+  if(is_string_a_number(q))
+    return parseFloat(q);
+  return defaultValue;
 }
 
 /**

@@ -932,7 +932,7 @@ const register_ai = (registry) => {
   const aiMessageTextContent = z.object(
     {
       type: z.literal("text"),
-      content: z.string().optional().describe('text of prompt'),
+      content: z.string().optional().describe('text or prompt'),
     }
   ).describe('Text content');
 
@@ -1008,7 +1008,7 @@ const register_ai = (registry) => {
   const storeAgentRunParametersSchema = z.object(
     {
       thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
-      prompt: z.array(all_messages).describe('Current customer prompt'),
+      prompt: z.array(z.union([aiMessageTextContent, aiMessageImageContent])).describe('Current customer prompt'),
       maxTokens: z.number().optional().describe('Max tokens'),
       maxSteps: z.number().optional().describe('Max steps per agent'),
     }

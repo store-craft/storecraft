@@ -441,7 +441,7 @@ export const discountMetaEnumSchema = z.object({
   }),
   any: z.object({
     id: z.number().optional(),
-    type: z.never().optional(),
+    type: z.unknown().optional(),
     name: z.string().optional(),
   }),
 });

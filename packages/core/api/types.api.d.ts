@@ -752,8 +752,6 @@ export interface ProductTypeUpsert extends Omit<
   related_products?: HandleAndID[];
 };
 
-
-
 // discounts
 
 /**
@@ -1131,7 +1129,7 @@ export interface DiscountMetaEnum  {
     name?: string,
   },
   any: { 
-    id?: number, type?: never, 
+    id?: number, type?: unknown, 
     name?: string,
   },
 

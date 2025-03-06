@@ -25,14 +25,13 @@ import { create_routes as create_dashboard_route } from "./con.dashboard.routes.
 import { create_routes as create_chat_route } from "./con.chat.routes.js";
 import { create_routes as create_search_route } from "./con.search.routes.js";
 import { create_routes as create_ai_route } from "./con.ai.routes.js";
+import { create_routes as create_semantic_search_route } from "./con.semantic-search.routes.js";
 import { cors } from "../polka/cors.js";
 
 
 /**
- * 
  * @typedef {object} RestApiConfig
  * @prop {import("../polka/cors.js").CORSOptions} [cors]
- * 
  */
 
 
@@ -78,6 +77,7 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/dashboard'] = create_dashboard_route;
       this.#factory['/api/chat'] = create_chat_route;
       this.#factory['/api/ai'] = create_ai_route;
+      this.#factory['/api/semantic-search'] = create_semantic_search_route;
     }
 
     /** 

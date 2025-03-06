@@ -1126,10 +1126,10 @@ export type DiscountMetaEnum = {
     id: 4, type: 'bundle', 
     name?: string,
   },
-  any: { 
-    id?: number, type?: never, 
-    name?: string,
-  },
+  // any: { 
+  //   id?: number, type?: never, 
+  //   name?: string,
+  // },
 
 }
 
@@ -2491,4 +2491,25 @@ export type tables = 'auth_users' | 'tags' | 'collections' |
 
 export type QuickSearchResult = Record<tables | string, QuickSearchResource[]>;
 
+// Semantic search result types
+
+/**
+ * @description Similiarity / semantic search result
+ */
+export type SimilaritySearchResult = {
+  /**
+   * @description The score of similarity, lower is better
+   */
+  score: number,
+
+  /**
+   * @description The type of the content
+   */
+  namespace: 'products' | 'discounts' | 'collections' | 'shipping',
+
+  /**
+   * @description The content
+   */
+  content: ProductType | DiscountType | CollectionType | ShippingMethodType
+}
 

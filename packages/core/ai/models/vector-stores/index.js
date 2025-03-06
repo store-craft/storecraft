@@ -3,6 +3,7 @@
  *  ProductType, CollectionType, DiscountType, ShippingMethodType 
  * } from '../../../api/types.api.js'
  * @import { VectorStore } from '../../types.public.js'
+ * @import { StorecraftVectorMetaData, vector_namespaces } from './types.js'
  */
 
 import { DiscountApplicationEnum } from '../../../api/types.api.enums.js'
@@ -36,7 +37,7 @@ export const truncate_or_pad_vector = (vector, dimension) => {
  * @param {ProductType | CollectionType | DiscountType | ShippingMethodType} content 
  * @param {string} page_content 
  * @param {VectorStore} vector_store 
- * @param {'products' | 'collections' | 'shipping_methods' | 'discounts'} namespace 
+ * @param {vector_namespaces} namespace 
  */
 const save_with = (content, page_content, vector_store, namespace) => {
   return vector_store.upsertDocuments(
@@ -45,12 +46,12 @@ const save_with = (content, page_content, vector_store, namespace) => {
         id: content.handle,
         pageContent: page_content,
         namespace: namespace,
-        metadata: {
+        metadata: /** @type {StorecraftVectorMetaData} */ ({
           json: JSON.stringify(content),
           handle: content.handle,
           id: content.id,
           embedder_tag_json: JSON.stringify(vector_store.embedder.tag) ?? vector_store.constructor.name
-        }
+        })
       }
     ]
   );
@@ -121,7 +122,7 @@ export const save_shipping_method = (c, vector_store) => {
       final += `\nTags: ${c.tags.join(', ')}`
   }
 
-  return save_with(c, final, vector_store, 'shipping_methods');
+  return save_with(c, final, vector_store, 'shipping');
 }
 
 

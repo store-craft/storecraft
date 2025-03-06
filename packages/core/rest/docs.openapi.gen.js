@@ -45,6 +45,7 @@ import {
   quickSearchResultSchema,
   shippingMethodTypeSchema,
   shippingMethodTypeUpsertSchema,
+  similaritySearchResultSchema,
   storecraftConfigSchema,
   storefrontTypeSchema,
   storefrontTypeUpsertSchema,
@@ -390,6 +391,7 @@ const create_all = () => {
   // register routes
   register_reference(registry);
   register_ai(registry);
+  register_semantic_search(registry);
   register_auth(registry);
   register_storage(registry);
   register_checkout(registry);
@@ -428,7 +430,7 @@ const create_all = () => {
     },
     servers: [{ url: '/api' }],
   });
-  
+
   writeFile(
     path.join(__dirname, 'openapi.yaml'), 
     YAMLStringify(out)
@@ -1141,6 +1143,56 @@ const register_ai = (registry) => {
                 }
               ]
             },
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_semantic_search = (registry) => {
+  
+  registry.register('similaritySearchResultSchema', similaritySearchResultSchema);
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/semantic-search`,
+    description: 'Search `Storecraft` with AI for `products`, `discounts`, `collections`, `shipping`',
+    summary: 'Search with AI',
+    tags: ['semantic-search'],
+    request: {
+      query: z.object(
+        {
+          'q': z.string().openapi({description: 'Human query', example: 'I am looking for Super Mario Games for Nintndo Switch'}),
+          'namespaces': z.enum(['products', 'discounts', 'collections', 'shipping', 'all', '*']).optional().openapi({description: 'Filter query further by a category specified in a CSV format string', examples: ['products,discounts', 'all'], default: 'all'}),
+          // 'namespaces': z.enum(['products', 'discounts', 'collections', 'shipping', 'all', '*']).optional().openapi({description: 'Filter query further by a category', examples: ['products', 'all'], default: 'all'}),
+          'limit': z.number().optional().openapi({description: 'Limit the query to Top K similar results', examples: [5], default: 5})
+        }
+      )
+    },
+    responses: {
+      200: {
+        description: "A list of similar entities",
+        content: {
+          'application/json': {
+            schema: z.array(similaritySearchResultSchema),
+            example: [
+              {
+                score: 0.0032,
+                namespace: 'products',
+                content: {
+                  id: 'pr_sdsduhd77238dsjisjd9',
+                  handle: 'super-mario-world',
+                  price: 49,
+                  description: '...',
+                }
+              }
+            ]
           },
         },
       },

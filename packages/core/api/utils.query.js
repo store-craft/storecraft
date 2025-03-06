@@ -129,6 +129,38 @@ export const parse_sort_order = (s='desc') => {
 }
 
 /**
+ * @description Given a string query, that represents a Delmiter NOT from `[a-zA-Z0-9_:-]`, 
+ * then parse it into list.
+ * 
+ * Examples:
+ * 1. '(a, b, c)' => ['a', 'b', 'c']
+ * 2. 'a | b | c' => ['a', 'b', 'c']
+ * 2. 'k1:v1 | k2:v2' => ['k1:v1', 'k2:v2']
+ * 
+ * @param {string} q
+ * @param {string[]} [defaultList=[]]
+ * @returns {string[]}
+ */
+export const parse_list_from_string = (q='', defaultList=[]) => {
+  const list = q.match(/[a-zA-Z0-9_:-]+/g) ?? defaultList;
+  return list;
+}
+
+/**
+ * 
+ * @param {string} q 
+ * @param {number | undefined} [defaultValue] 
+ * @returns {number | undefined}
+ */
+export const parse_number_from_string = (q, defaultValue) => {
+  const v = parseFloat(q);
+  if(!Boolean(v)) {
+    return defaultValue;
+  }
+  return v
+}
+
+/**
  * @description Parse a queries such as:
  * 1. `vql="tag:a (tag:b)"&limit=10&startAt=(updated:2012,id:tomer)&order=asc`
  * 2. `startAt=(updated:2012,id:tomer)&sort=(updated:+, id:+)`

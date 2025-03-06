@@ -21,8 +21,10 @@ export interface VectorStoreDocumentInterface<
   id?: string;
 }
 
-export type VectorStoreSimilaritySearchQueryResult = {
-  document: VectorStoreDocumentInterface,
+export type VectorStoreSimilaritySearchQueryResult<
+  Metadata extends Record<string, string | number | boolean> = Record<string, string | number | boolean>
+> = {
+  document: VectorStoreDocumentInterface<Metadata>,
   score: number
 }
 
@@ -90,10 +92,12 @@ export interface VectorStore<
    * @returns A promise resolving to an array of 
    * `DocumentInterface` instances representing similar documents.
    */
-  async similaritySearch(
+  async similaritySearch<
+    Metadata extends Record<string, string | number | boolean> = Record<string, string | number | boolean>
+  >(
     query: string,
     k = 4,
     namespaces?: string[],
-  ): Promise<VectorStoreSimilaritySearchQueryResult[]>;
+  ): Promise<VectorStoreSimilaritySearchQueryResult<Metadata>[]>;
 
 }

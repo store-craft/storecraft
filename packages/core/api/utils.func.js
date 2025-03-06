@@ -52,6 +52,14 @@ export const assert = (c, message, code=400) => {
   };
 }
 
+export const parse_json_safely = (v='') => {
+  try {
+    return JSON.parse(v);
+  } catch (e) {
+    return undefined;
+  }
+}
+
 /**
  * @template {any} T
  * @param {T & Partial<{ created_at: string, updated_at: string}>} d 

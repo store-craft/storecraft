@@ -435,11 +435,6 @@ export const discountMetaEnumSchema = z
       type: z.literal("bundle"),
       name: z.string().optional(),
     }),
-    any: z.object({
-      id: z.number().optional(),
-      type: z.never().optional(),
-      name: z.string().optional(),
-    }),
   })
   .describe("Discount meta data,");
 export const regularDiscountExtraSchema = z
@@ -1618,6 +1613,27 @@ export const evoEntrySchema = z
   .describe(
     "Explains how a specific discount was used\nto discount line items",
   );
+export const similaritySearchResultSchema = z
+  .object({
+    score: z.number().describe("The score of similarity, lower is better"),
+    namespace: z
+      .union([
+        z.literal("products"),
+        z.literal("discounts"),
+        z.literal("collections"),
+        z.literal("shipping"),
+      ])
+      .describe("The type of the content"),
+    content: z
+      .union([
+        productTypeSchema,
+        discountTypeSchema,
+        collectionTypeSchema,
+        shippingMethodTypeSchema,
+      ])
+      .describe("The content"),
+  })
+  .describe("Similiarity / semantic search result");
 export const variantCombinationSchema = z
   .object({
     selection: z

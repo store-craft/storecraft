@@ -1169,7 +1169,7 @@ const register_semantic_search = (registry) => {
       query: z.object(
         {
           'q': z.string().openapi({description: 'Human query', example: 'I am looking for Super Mario Games for Nintndo Switch'}),
-          'namespaces': z.enum(['products', 'discounts', 'collections', 'shipping', 'all', '*']).optional().openapi({description: 'Filter query further by a category specified in a CSV format string', examples: ['products,discounts', 'all'], default: 'all'}),
+          'namespaces': z.string().optional().openapi({description: 'Filter query further by a category specified in a CSV format string', examples: ['products,discounts', 'all'], default: 'all'}),
           // 'namespaces': z.enum(['products', 'discounts', 'collections', 'shipping', 'all', '*']).optional().openapi({description: 'Filter query further by a category', examples: ['products', 'all'], default: 'all'}),
           'limit': z.number().optional().openapi({description: 'Limit the query to Top K similar results', examples: [5], default: 5})
         }
@@ -1358,7 +1358,7 @@ const register_auth = registry => {
         params: z.object({
           email_or_id: z.string().openapi(
             { 
-              example: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
+              examples: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
               description: `The \`id\` or \`email\` of auth user`
             }
           ),
@@ -1392,7 +1392,7 @@ const register_auth = registry => {
         params: z.object({
           email_or_id: z.string().openapi(
             { 
-              example: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
+              examples: ['au_65f98390d6a34550cdc651a1', 'a@a.com'],
               description: `The \`id\` or \`email\` of auth user`
             }
           ),

@@ -1,8 +1,9 @@
 /**
- * @import { BaseType, CollectionTypeUpsert } from '../../api/types.api.js'
+ * @import { BaseType, CollectionType, CollectionTypeUpsert } from '../../api/types.api.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { ListTestContext, CrudTestContext } from './api.utils.crud.js';
+ * @import { Test } from 'uvu';
  */
 
 import { suite } from 'uvu';
@@ -44,7 +45,7 @@ export const create = app => {
   ]
 
 
-  /** @type {import('uvu').Test<import('./api.utils.crud.js').CrudTestContext<>>} */
+  /** @type {Test<CrudTestContext<CollectionType>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 

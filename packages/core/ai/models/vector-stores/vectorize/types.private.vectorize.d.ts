@@ -2,7 +2,7 @@
 export type vectorize_vector = {
   id: string,
   values: number[],
-  metadata: Record<string, any>
+  metadata: any
 }
 
 export type cf_response_wrapper<T extends any = undefined> = {

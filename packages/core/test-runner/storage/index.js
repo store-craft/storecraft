@@ -155,6 +155,7 @@ export const create = (storage, name) => {
     for (const d of data) {
       // @ts-ignore
       const success = await storage.putStream(
+        // @ts-ignore
         d.key, d.stream, {}, d.buffer.byteLength
       );
       // read

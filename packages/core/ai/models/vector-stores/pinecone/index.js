@@ -185,6 +185,7 @@ export class Pinecone {
     /** @type {query_vectors_result} */
     const json = await r.json();
 
+    // @ts-ignore
     return json.matches.map(
       (match) => {
         const { score, metadata } = match;

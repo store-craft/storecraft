@@ -46,6 +46,7 @@ export const regular_upsert = (
 
   /**
    * @param {z.infer<API_UPSERT_ZOD_SCHEMA>} item
+   * @returns {Promise<string>} id
    */
   return async (item) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
@@ -67,8 +68,8 @@ export const regular_upsert = (
     }
 
     // Check if exists
-    const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
-    const final = apply_dates({ ...item, id })
+    const id = !Boolean(item.id) ? ID(id_prefix) : String(item.id);
+    const final = apply_dates({ ...item, id });
     const search = [
       ...create_search_index(final), 
       ...post_hook(final)

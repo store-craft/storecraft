@@ -1,5 +1,6 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
+ * @import { BunPlatformConfig } from './types.public.js';
  */
 import { NodeCrypto } from '../node/node.crypto.js';
 
@@ -11,7 +12,7 @@ import { NodeCrypto } from '../node/node.crypto.js';
  */
 export class BunPlatform {
 
-  /** @type {import('./types.public.d.ts').BunPlatformConfig} */
+  /** @type {BunPlatformConfig} */
   #config;
 
   /** @type {NodeCrypto} */
@@ -19,7 +20,7 @@ export class BunPlatform {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').BunPlatformConfig} [config={}] 
+   * @param {BunPlatformConfig} [config={}] 
    */
   constructor(config={}) {
     this.#config = {

@@ -378,7 +378,7 @@ export interface ApiKeyResult  {
  */
 export interface ApiAuthResult  {
   /**
-   * @description The interface of token, should be `bearer` or `refresh`
+   * @description The type of token, should be `bearer` or `refresh`
    */
   token_type: string;
 
@@ -436,7 +436,7 @@ export interface AuthUserType extends Omit<BaseType, 'id'>, AuthBaseType {
 // attributes
 
 /**
- * @description Attribute interface, a key/value storage
+ * @description Attribute type, a key/value storage
  */
 export interface AttributeType  {
   /**
@@ -451,10 +451,10 @@ export interface AttributeType  {
 }
 
 
-// tag interface
+// tag type
 
 /**
- * @description Tag interface
+ * @description Tag type
  */
 export interface TagType extends BaseType {
   /** 
@@ -469,7 +469,7 @@ export interface TagType extends BaseType {
 }
 
 /**
- * @description Tag upsert interface
+ * @description Tag upsert type
  */
 export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptionalHandleOrID {
 }
@@ -477,7 +477,7 @@ export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptio
 // collections
 
 /**
- * @description Collection interface
+ * @description Collection type
  */
 export interface CollectionType extends BaseType {
 
@@ -505,7 +505,7 @@ export interface CollectionType extends BaseType {
 }
 
 /**
- * @description Collection upsert interface
+ * @description Collection upsert type
  */
 export interface CollectionTypeUpsert extends Omit<CollectionType, 'id' | 'handle'>, withOptionalHandleOrID{
 }
@@ -1015,7 +1015,7 @@ export interface Filter  {
  */
 export interface FilterMetaEnum { 
   any: { // This is for future flexibility against zod
-    id?: number, interface?: string, 
+    id?: number, type?: string, 
     op?: string, 
     name?: string
   },
@@ -1621,7 +1621,7 @@ export interface NotificationAction  {
   /** 
    * @description The interface of action 
    */
-  interface?: NotificationActionType;
+  type?: NotificationActionType;
 
   /** 
    * @description Extra params for the actions interface 

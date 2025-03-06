@@ -124,9 +124,9 @@ export const pick_random = items => {
  * @template {PartialBase} [U=PartialBase]
  * 
  * @typedef {object} CrudTestContext
- * @prop {G[]} items
+ * @prop {Partial<U>[]} items
  * @prop {object} ops
- * @prop {(item: G) => Promise<string>} [ops.upsert]
+ * @prop {(item: Partial<U>) => Promise<string>} [ops.upsert]
  * @prop {(id: string) => Promise<G>} [ops.get]
  * @prop {(id: string) => Promise<boolean>} [ops.remove]
  * @prop {object} events
@@ -283,7 +283,7 @@ const compare_tuples = (vec1, vec2) => {
  * @template {PartialBase} T
  * 
  * @param {T[]} list the result of the query
- * @param {ApiQuery} q the query used
+ * @param {ApiQuery<any>} q the query used
  */
 export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
@@ -347,13 +347,13 @@ export const assert_query_list_integrity = (list, q) => {
  * @template {PartialBase} [U=PartialBase]
  * 
  * @typedef {object} ListTestContext
- * @prop {G[]} items
+ * @prop {Partial<G>[]} items
  * @prop {keyof Omit<App["db"]["resources"], 'search'>} resource
  * @prop {object} ops
  * @prop {(item: G) => Promise<string>} [ops.upsert]
  * @prop {(id: string) => Promise<G>} [ops.get]
  * @prop {(id: string) => Promise<boolean>} [ops.remove]
- * @prop {(q: ApiQuery) => Promise<G[]>} [ops.list]
+ * @prop {(q: ApiQuery<G>) => Promise<G[]>} [ops.list]
  * @prop {object} [events]
  * @prop {PubSubEvent} events.list_event
  * @prop {App} app
@@ -396,16 +396,16 @@ export const add_list_integrity_tests = s => {
       let is_event_ok = false || !Boolean(ctx.events?.list_event);
       const limit = 3;
 
-      /** @type {ApiQuery} */
+      /** @type {ApiQuery<any>} */
       const q_asc = {
-        startAt: [['updated_at', iso(5)]],
-        sortBy: ['updated_at'],
+        startAt: [['created_at', iso(5)]],
+        sortBy: ['created_at'],
         order: 'asc',
         limit: limit,
         expand: ['*']
       }
 
-      /** @type {ApiQuery} */
+      /** @type {ApiQuery<any>} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -454,7 +454,7 @@ export const add_list_integrity_tests = s => {
   
   s('query startAt=(end_at:iso(5)), sortBy=(updated_at), order=asc|desc, limitToLast=2', 
     async (ctx) => {
-      /** @type {ApiQuery} */
+      /** @type {ApiQuery<any>} */
       const q_asc = {
         endAt: [['updated_at', iso(5)]],
         sortBy: ['updated_at'],
@@ -462,7 +462,7 @@ export const add_list_integrity_tests = s => {
         limitToLast: 2,
         expand: ['*']
       }
-      /** @type {ApiQuery} */
+      /** @type {ApiQuery<any>} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -504,7 +504,7 @@ export const add_list_integrity_tests = s => {
       // last 3 items have the same timestamps, so we refine by ID
       // let's pick one before the last
       const item = ctx.items.at(-2);
-      /** @type {ApiQuery} */
+      /** @type {ApiQuery<any>} */
       const q = {
         startAt: [['updated_at', item.updated_at], ['id', item.id]],
         sortBy: ['updated_at', 'id'],

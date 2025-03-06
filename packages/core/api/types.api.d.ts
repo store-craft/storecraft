@@ -2,7 +2,7 @@
  * 
  * @description Basic config for `storecraft`
  */
-export type StorecraftConfig = {
+export interface StorecraftConfig  {
 
   /**
    *  
@@ -49,10 +49,10 @@ export type StorecraftConfig = {
    * ### For example:
    * Suppose the base url is `https://store.com/confirm`,
    * then `storecraft` default email template will use this to send
-   * a link with `https://store.com/confirm?token={{CONFIRM_TOKEN}}`
+   * a link with `https://store.com/confirm?token{{CONFIRM_TOKEN}}`
    * 
    * You can use this to delegate into `storecraft` auth backend endpoint
-   * `/api/auth/confirm-email?token={{CONFIRM_TOKEN}}`
+   * `/api/auth/confirm-email?token{{CONFIRM_TOKEN}}`
    * 
    * @default `platform.env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL` environment
    */
@@ -66,10 +66,10 @@ export type StorecraftConfig = {
    * ### For example:
    * Suppose the base url is `https://store.com/forgot-password-confirm`,
    * then `storecraft` default email template will use this to send
-   * a link with `https://store.com/forgot-password-confirm?token={{CONFIRM_TOKEN}}`
+   * a link with `https://store.com/forgot-password-confirm?token{{CONFIRM_TOKEN}}`
    * 
    * You can use this to delegate into `storecraft` auth backend endpoint
-   * `/api/auth/forgot-password-request-confirm?token={{CONFIRM_TOKEN}}`
+   * `/api/auth/forgot-password-request-confirm?token{{CONFIRM_TOKEN}}`
    * 
    * @default `platform.env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL` environment
    */
@@ -133,7 +133,7 @@ export type StorecraftConfig = {
   cors?: CORSOptions;
 }
 
-export type CORSOptions = {
+export interface CORSOptions  {
   origin: string | string[];
   allowMethods?: string[];
   allowHeaders?: string[];
@@ -143,7 +143,7 @@ export type CORSOptions = {
 }
 
 
-export type error_item = {
+export interface error_item  {
   message?: string,
   code?: string,
   expected?: string,
@@ -151,7 +151,7 @@ export type error_item = {
   path?: string[]
 }
 
-export type error = {
+export interface error  {
   messages?: error_item[]
 }
 
@@ -161,7 +161,7 @@ export type ID = string;
 /**
  * @description Timestamps
  */
-export type timestamps = {
+export interface timestamps  {
   /**
    * @description ISO string creation time
    */
@@ -176,7 +176,7 @@ export type timestamps = {
 /**
  * @description searchable
  */
-export type searchable = {
+export interface searchable  {
   /** Search terms, usually computed by backend */
   search?: string[];
 }
@@ -184,7 +184,7 @@ export type searchable = {
 /**
  * @description with `id`
  */
-export type withOptionalID = {
+export interface withOptionalID  {
   /** 
    * @description ID 
    */
@@ -194,14 +194,14 @@ export type withOptionalID = {
 /**
  * @description with `id`
  */
-export type idable_concrete = {
+export interface idable_concrete {
   /** 
    * @description ID 
    */
   id: string;
 }
 
-export type withOptionalHandleOrID = {
+export interface withOptionalHandleOrID {
   /** 
    * @description Optional `id`
    */
@@ -265,9 +265,9 @@ interface JWTClaims {
 }
 
 /**
- * @description Auth base type
+ * @description Auth base interface
  */
-export type AuthBaseType = {
+export interface AuthBaseType  {
   /**
    * @description Email of user
    * @format email
@@ -290,14 +290,14 @@ export type AuthBaseType = {
 export type Role = 'admin' | 'user' | string;
 
 /**
- * @description Sign in type
+ * @description Sign in interface
  */
 export type ApiAuthSigninType = AuthBaseType;
 
 /**
- * @description Sign up type
+ * @description Sign up interface
  */
-export type ApiAuthSignupType = AuthBaseType & {
+export interface ApiAuthSignupType extends AuthBaseType {
     /**
    * @description (optional) readable `name` of `customer`
    */
@@ -313,7 +313,7 @@ export type ApiAuthSignupType = AuthBaseType & {
 /**
  * @description Change Password Type
  */
-export type ApiAuthChangePasswordType = {
+export interface ApiAuthChangePasswordType  {
 
   /**
    * @description User `ID` or `Email`
@@ -337,9 +337,9 @@ export type ApiAuthChangePasswordType = {
 };
 
 /**
- * @description Refresh token input type
+ * @description Refresh token input interface
  */
-export type ApiAuthRefreshType = {
+export interface ApiAuthRefreshType  {
   /**
    * @description A refresh token
    */
@@ -349,7 +349,7 @@ export type ApiAuthRefreshType = {
 /**
  * @description API token with parsed claims
  */
-export type ApiTokenWithClaims = {
+export interface ApiTokenWithClaims  {
   /**
    * @description a token (`access` or `refresh`)
    */
@@ -364,7 +364,7 @@ export type ApiTokenWithClaims = {
 /**
  * @description Result of `auth` `apikey` creation
  */
-export type ApiKeyResult = {
+export interface ApiKeyResult  {
   /**
    * @description The `apikey` is `base64_uri(apikey@storecraft.api:{password})`.
    * It will be shown only once to the user, at the `backend`, the password hash
@@ -376,9 +376,9 @@ export type ApiKeyResult = {
 /**
  * @description Result of `auth` request for `signin` / `signup` / `refresh`
  */
-export type ApiAuthResult = {
+export interface ApiAuthResult  {
   /**
-   * @description The type of token, should be `bearer` or `refresh`
+   * @description The interface of token, should be `bearer` or `refresh`
    */
   token_type: string;
 
@@ -399,9 +399,9 @@ export type ApiAuthResult = {
 }
 
 /**
- * @description Auth user type
+ * @description Auth user interface
  */
-export type AuthUserType = Omit<BaseType, 'id'> & AuthBaseType & {
+export interface AuthUserType extends Omit<BaseType, 'id'>, AuthBaseType {
   /** 
    * @description ID 
    */
@@ -436,9 +436,9 @@ export type AuthUserType = Omit<BaseType, 'id'> & AuthBaseType & {
 // attributes
 
 /**
- * @description Attribute type, a key/value storage
+ * @description Attribute interface, a key/value storage
  */
-export type AttributeType = {
+export interface AttributeType  {
   /**
    * @description The key
    */
@@ -451,10 +451,10 @@ export type AttributeType = {
 }
 
 
-// tag type
+// tag interface
 
 /**
- * @description Tag type
+ * @description Tag interface
  */
 export interface TagType extends BaseType {
   /** 
@@ -469,14 +469,15 @@ export interface TagType extends BaseType {
 }
 
 /**
- * @description Tag upsert type
+ * @description Tag upsert interface
  */
-export type TagTypeUpsert = Omit<TagType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptionalHandleOrID {
+}
   
 // collections
 
 /**
- * @description Collection type
+ * @description Collection interface
  */
 export interface CollectionType extends BaseType {
 
@@ -504,9 +505,10 @@ export interface CollectionType extends BaseType {
 }
 
 /**
- * @description Collection upsert type
+ * @description Collection upsert interface
  */
-export type CollectionTypeUpsert = Omit<CollectionType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface CollectionTypeUpsert extends Omit<CollectionType, 'id' | 'handle'>, withOptionalHandleOrID{
+}
 
 
 // products
@@ -514,7 +516,7 @@ export type CollectionTypeUpsert = Omit<CollectionType, 'id' | 'handle'> & withO
 /** 
  * @description A tuple of option id and selected value id 
  */
-export type VariantCombination = {
+export interface VariantCombination  {
   /** 
    * @description A list of selection of option and value 
    */
@@ -529,7 +531,7 @@ export type VariantCombination = {
 /** 
  * @description The data of a variant option 
  */
-export type VariantOption = {
+export interface VariantOption  {
   /** 
    * @description Variant option name (for example 'Size') 
    * @minLength 3 Name should be longer than 3
@@ -549,9 +551,9 @@ export type VariantOption = {
 }
 
 /**
- * @description Identifiable text entity type
+ * @description Identifiable text entity interface
  */
-export type TextEntity = {
+export interface TextEntity  {
   /** 
    * @description The `id` of the entity 
    */
@@ -564,9 +566,9 @@ export type TextEntity = {
 }
 
 /**
- * @description Variant option selection type
+ * @description Variant option selection interface
  */
-export type VariantOptionSelection = {
+export interface VariantOptionSelection  {
   /** 
    * @description Variant option id 
    */
@@ -579,7 +581,7 @@ export type VariantOptionSelection = {
 }
 
 /**
- * @description Variant type
+ * @description Variant interface
  */
 export interface VariantType extends BaseProductType {
   /** 
@@ -609,7 +611,7 @@ export interface VariantType extends BaseProductType {
 }
 
 /**
- * @description Base product type
+ * @description Base product interface
  */
 export interface BaseProductType extends BaseType {
   /** 
@@ -663,17 +665,18 @@ export interface BaseProductType extends BaseType {
 
   /** 
    * @description Discounts we know were applied to this product, 
-   * expanded type 
+   * expanded interface 
    */
   discounts?: DiscountType[];
 }
 
 /**
- * @description Variant upsert type
+ * @description Variant upsert interface
  */
-export type VariantTypeUpsert = Omit<
-  VariantType, 
-  'collections' | 'discounts' | 'related_products' | 'id' | 'handle'> & {
+export interface VariantTypeUpsert extends Omit<
+    VariantType, 
+    'collections' | 'discounts' | 'related_products' | 'id' | 'handle'
+  >, withOptionalHandleOrID {
   /** 
    * @description List of collections to add the product into, 
    * this is an explicit connection, to form a better UX experience 
@@ -685,15 +688,15 @@ export type VariantTypeUpsert = Omit<
    * this is an explicit connection, to form a better UX experience 
    */
   related_products?: Pick<BaseProductType, 'id' | 'handle'>[];
-} & withOptionalHandleOrID;
+};
 
 
 /**
- * @description Product type
+ * @description Product interface
  */
 export interface ProductType extends BaseProductType {
   /** 
-   * @description Product variants, expanded type 
+   * @description Product variants, expanded interface 
    */
   variants?: VariantType[];
 
@@ -713,7 +716,7 @@ export interface ProductType extends BaseProductType {
 /** 
  * @description both `id` and `handle` of entity required
  */
-export type HandleAndID = {
+export interface HandleAndID  {
 
   /** 
    * @description The `id` of the entity
@@ -728,12 +731,13 @@ export type HandleAndID = {
 
 
 /**
- * @description Product upsert type
+ * @description Product upsert interface
  */
-export type ProductTypeUpsert = Omit<
+export interface ProductTypeUpsert extends Omit<
   ProductType, 
   'collections' | 'related_products' | 'discounts' | 'variants' | 'id' | 'handle'
-  > & {
+  >, withOptionalHandleOrID
+  {
 
   /** 
    * @description List of collections to add the product into, 
@@ -745,15 +749,15 @@ export type ProductTypeUpsert = Omit<
    * @description List of related products to add the product into, 
    * this is an explicit connection, to form a better UX experience 
    */
-  related_products?: Partial<Pick<BaseProductType, 'id' | 'handle'>>[];
-} & withOptionalHandleOrID;
+  related_products?: HandleAndID[];
+};
 
 
 
 // discounts
 
 /**
- * @description Discount type
+ * @description Discount interface
  */
 export interface DiscountType extends BaseType {
   /**
@@ -799,16 +803,16 @@ export interface DiscountType extends BaseType {
 
 
 /**
- * @description Discount upsert type
+ * @description Discount upsert interface
  */
-export type DiscountTypeUpsert = Omit<DiscountType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface DiscountTypeUpsert extends Omit<DiscountType, 'id' | 'handle'>, withOptionalHandleOrID {};
 
 /** 
  * @description details and filters of the discount 
  */
-export type DiscountInfo = {
+export interface DiscountInfo  {
   /** 
-   * @description Discount details, decribes the `discount` type and more 
+   * @description Discount details, decribes the `discount` interface and more 
    */
   details: DiscountDetails;
 
@@ -821,9 +825,9 @@ export type DiscountInfo = {
 
 /** 
  * @description Discounts can be manual(coupon) or automatic types, 
- * see <a href='#DiscountApplicationEnum'>#DiscountApplicationEnum</a>  
+ * see <a href'#DiscountApplicationEnum'>#DiscountApplicationEnum</a>  
  */
-export type DiscountApplicationEnum = {
+export interface DiscountApplicationEnum  {
   Auto:   { id: 0, name?: string, name2: 'automatic'},
   Manual: { id: 1, name?: string, name2: 'manual'},
 }
@@ -985,7 +989,7 @@ export type FilterValue_o_has_customers = {
 /** 
  * @description Discount filter schema
  */
-export type Filter = {
+export interface Filter  {
   /** 
    * @description Meta data related to identifying the filter 
    */
@@ -1013,7 +1017,7 @@ export type Filter = {
  */
 export interface FilterMetaEnum { 
   any: { // This is for future flexibility against zod
-    id?: number, type?: string, 
+    id?: number, interface?: string, 
     op?: string, 
     name?: string
   },
@@ -1082,11 +1086,11 @@ export interface FilterMetaEnum {
 
 /** 
  * @description The details of how to apply a discount. 
- * The type of discount and it's params 
+ * The interface of discount and it's params 
  */
-export type DiscountDetails = {
+export interface DiscountDetails  {
   /** 
-   * @description metadata to identify the type of discount 
+   * @description metadata to identify the interface of discount 
    */
   meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
         DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
@@ -1094,7 +1098,7 @@ export type DiscountDetails = {
 
 
   /** 
-   * @description Extra parameters of the specific discount type 
+   * @description Extra parameters of the specific discount interface 
    */
   extra: RegularDiscountExtra | OrderDiscountExtra 
   | BulkDiscountExtra | BuyXGetYDiscountExtra 
@@ -1104,7 +1108,7 @@ export type DiscountDetails = {
 /** 
  * @description Discount meta data, 
  */
-export type DiscountMetaEnum = {
+export interface DiscountMetaEnum  {
   regular: { 
     id: 0, 
     type: 'regular',          
@@ -1126,10 +1130,10 @@ export type DiscountMetaEnum = {
     id: 4, type: 'bundle', 
     name?: string,
   },
-  // any: { 
-  //   id?: number, type?: never, 
-  //   name?: string,
-  // },
+  any: { 
+    id?: number, type?: never, 
+    name?: string,
+  },
 
 }
 
@@ -1137,7 +1141,7 @@ export type DiscountMetaEnum = {
 /** 
  *  @description Parameters of a regular discount 
  */
-export type RegularDiscountExtra = {
+export interface RegularDiscountExtra  {
   /** 
    * @description `RegularDiscountExtra` params, Fixed price addition 
    */
@@ -1152,7 +1156,7 @@ export type RegularDiscountExtra = {
 /** 
  * @description Parameters of order discount 
  */
-export type OrderDiscountExtra = {
+export interface OrderDiscountExtra  {
   /** 
    * @description `OrderDiscountExtra` params, Fixed price addition 
    */
@@ -1172,7 +1176,7 @@ export type OrderDiscountExtra = {
 /** 
  * @description Parameters of bulk discount 
  */
-export type BulkDiscountExtra = {
+export interface BulkDiscountExtra  {
   /** 
    * @description `BulkDiscountExtra` params, Fixed price addition 
    */
@@ -1199,7 +1203,7 @@ export type BulkDiscountExtra = {
 /** 
  * @description Parameters of bulk discount 
  */
-export type BuyXGetYDiscountExtra = {
+export interface BuyXGetYDiscountExtra  {
   /** 
    * @description `BuyXGetYDiscountExtra` params, Fixed price addition 
    */
@@ -1238,7 +1242,7 @@ export type BuyXGetYDiscountExtra = {
 /** 
  * @description Parameters of bulk discount 
  */
-export type BundleDiscountExtra = {
+export interface BundleDiscountExtra  {
   /** 
    * @description `BundleDiscountExtra` params, Fixed price addition 
    */
@@ -1259,7 +1263,7 @@ export type BundleDiscountExtra = {
 // storefront
 
 /**
- * @description The `storefront` data type
+ * @description The `storefront` data interface
  */
 export interface StorefrontType extends BaseType {
   /** 
@@ -1317,11 +1321,11 @@ export interface StorefrontType extends BaseType {
 
 
 /** 
- * @description Storefront upsert type
+ * @description Storefront upsert interface
  */
-export type StorefrontTypeUpsert = Omit<
+export interface StorefrontTypeUpsert extends Omit<
   StorefrontType,
-  'collections' | 'products' | 'posts' | 'discounts' | 'shipping_methods' | 'id' | 'handle'> & {
+  'collections' | 'products' | 'posts' | 'discounts' | 'shipping_methods' | 'id' | 'handle'>, withOptionalHandleOrID {
 
   /** 
    * @description Collections related to this storefront 
@@ -1348,14 +1352,14 @@ export type StorefrontTypeUpsert = Omit<
    */
   posts?: HandleAndID[];
 
-} & withOptionalHandleOrID;
+};
 
 //
 
 /** 
- * @description Address type 
+ * @description Address interface 
  */
-export type AddressType = {
+export interface AddressType  {
   /** 
    * @description First name of recipient 
    */
@@ -1414,7 +1418,7 @@ export type AddressType = {
 }
 
 /**
- * @description Customer type
+ * @description Customer interface
  */
 export interface CustomerType extends BaseType {
   /** 
@@ -1454,14 +1458,14 @@ export interface CustomerType extends BaseType {
 }
 
 /**
- * @description Customer upsert type
+ * @description Customer upsert interface
  */
-export type CustomerTypeUpsert = Omit<CustomerType, 'id'> & withOptionalID;
+export interface CustomerTypeUpsert extends Omit<CustomerType, 'id'>, withOptionalID{};
 
 // image
 
 /**
- * @description Image type
+ * @description Image interface
  */
 export interface ImageType extends BaseType {
   /** 
@@ -1488,20 +1492,20 @@ export interface ImageType extends BaseType {
 }
 
 /**
- * @description Image upsert type
+ * @description Image upsert interface
  */
-export type ImageTypeUpsert = Omit<ImageType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface ImageTypeUpsert extends Omit<ImageType, 'id' | 'handle'>, withOptionalHandleOrID {};
 
 // shipping
 
 
 /**
- * Shipping type
+ * Shipping interface
  */
 export interface ShippingMethodType extends BaseType {
   /**
    * @description Shipping method price
-   * @minimum 0 Please set a price >= 0
+   * @minimum 0 Please set a price > 0
    */
   price: number;
 
@@ -1518,14 +1522,14 @@ export interface ShippingMethodType extends BaseType {
 }
 
 /**
- * @description Shipping upsert type
+ * @description Shipping upsert interface
  */
-export type ShippingMethodTypeUpsert = Omit<ShippingMethodType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface ShippingMethodTypeUpsert extends Omit<ShippingMethodType, 'id' | 'handle'>, withOptionalHandleOrID{};
 
 // posts
 
 /**
- * Post type
+ * Post interface
  */
 export interface PostType extends BaseType {
   /** 
@@ -1546,15 +1550,15 @@ export interface PostType extends BaseType {
 }
 
 /**
- * @description Post upsert type
+ * @description Post upsert interface
  */
-export type PostTypeUpsert = Omit<PostType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface PostTypeUpsert extends Omit<PostType, 'id' | 'handle'>, withOptionalHandleOrID{};
 
 // settings
 
 
 /**
- * @description Settings type
+ * @description Settings interface
  */
 export interface SettingsType extends BaseType {
 
@@ -1564,7 +1568,7 @@ export interface SettingsType extends BaseType {
 // notifications
 
 /**
- * @description Base Notification type
+ * @description Base Notification interface
  */
 interface BaseNotificationType {
   /** 
@@ -1595,13 +1599,13 @@ interface BaseNotificationType {
 }
 
 /**
- * @description Notification type
+ * @description Notification interface
  */
 export interface NotificationType extends BaseNotificationType, timestamps {
 }
 
 /**
- * @description Notification upsert type
+ * @description Notification upsert interface
  */
 export interface NotificationTypeUpsert extends Omit<BaseNotificationType, 'id'> {
 }
@@ -1610,19 +1614,19 @@ export interface NotificationTypeUpsert extends Omit<BaseNotificationType, 'id'>
  * @description Each notification may have an actionable item 
  * associated with it. For example, clicking an order notification 
  * will route to the order page */
-export type NotificationAction = {
+export interface NotificationAction  {
   /** 
    * @description Name of the action 
    */
   name?: string;
 
   /** 
-   * @description The type of action 
+   * @description The interface of action 
    */
-  type?: NotificationActionType;
+  interface?: NotificationActionType;
 
   /** 
-   * @description Extra params for the actions type 
+   * @description Extra params for the actions interface 
    */
   params?: NotificationActionRouteParams | NotificationActionUrlParams;
 }
@@ -1635,7 +1639,7 @@ export type NotificationActionType = 'route' | 'url';
 /** 
  * @description route inside admin panel action params 
  */
-export type NotificationActionRouteParams = {
+export interface NotificationActionRouteParams  {
   /** 
    * @description Which collection 
    */
@@ -1648,9 +1652,9 @@ export type NotificationActionRouteParams = {
 }
 
 /** 
- * @description Action params for actions of type 'url' 
+ * @description Action params for actions of interface 'url' 
  */
-export type NotificationActionUrlParams = {
+export interface NotificationActionUrlParams  {
   /** 
    * @description Ppen the url in new window 
    */
@@ -1666,7 +1670,7 @@ export type NotificationActionUrlParams = {
 // order types
 
 /**
- * @description Base Checkout type
+ * @description Base Checkout interface
  */
 export interface BaseCheckoutCreateType {
 
@@ -1703,7 +1707,7 @@ export interface BaseCheckoutCreateType {
 
 
 /**
- * @description Checkout Create type
+ * @description Checkout Create interface
  */
 export interface CheckoutCreateType extends BaseCheckoutCreateType {
   /** 
@@ -1712,10 +1716,10 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
   coupons?: DiscountType[]; 
 }
 
-type CheckoutCreateTypeWithoutID = Omit<CheckoutCreateType, 'id'>;
+interface CheckoutCreateTypeWithoutID extends Omit<CheckoutCreateType, 'id'> {};
 
 /**
- * @description Order type
+ * @description Order interface
  */
 export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
   /** 
@@ -1741,16 +1745,16 @@ export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
 }
 
 /**
- * @description Order upsert type
+ * @description Order upsert interface
  */
-export type OrderDataUpsert = Omit<OrderData, 'id'> & withOptionalHandleOrID;
+export interface OrderDataUpsert extends Omit<OrderData, 'id'>, withOptionalHandleOrID {};
 
 
 
 /** 
  * @description Order buyer info 
  */
-export type OrderContact = {
+export interface OrderContact  {
   /**
    * @description First name
    */
@@ -1780,7 +1784,7 @@ export type OrderContact = {
 /** 
  * @description Status of `checkout`, `fulfillment` and `payment` 
  */
-export type OrderStatus = {
+export interface OrderStatus  {
   /**
    * @description `checkout` status
    */
@@ -1807,9 +1811,9 @@ export type OrderStatus = {
 
 /** 
  * @description Fulfillment options encapsulate the current state, 
- * see <a href='#FulfillOptionsEnum'>#FulfillOptionsEnum</a>  
+ * see <a href'#FulfillOptionsEnum'>#FulfillOptionsEnum</a>  
  */
-export type FulfillOptionsEnum = {
+export interface FulfillOptionsEnum  {
   draft: { 
     id: 0, name2: 'draft', name?: string
   },
@@ -1830,9 +1834,9 @@ export type FulfillOptionsEnum = {
 
 /** 
  * @description Payment options encapsulate the current state, 
- * see <a href='#PaymentOptionsEnum'>#PaymentOptionsEnum</a>  
+ * see <a href'#PaymentOptionsEnum'>#PaymentOptionsEnum</a>  
  */
-export type PaymentOptionsEnum = {
+export interface PaymentOptionsEnum  {
   unpaid: { 
     id: 0, name?: string, name2: 'unpaid'
   },
@@ -1869,9 +1873,9 @@ export type PaymentOptionsEnum = {
 
 /** 
  * @description Checkout status encapsulate the current state, 
- * see <a href='#CheckoutStatusEnum'>#CheckoutStatusEnum</a>  
+ * see <a href'#CheckoutStatusEnum'>#CheckoutStatusEnum</a>  
  */
-export type CheckoutStatusEnum = {
+export interface CheckoutStatusEnum  {
   created: { 
     id: 0, name2: 'created', name?: string
   },
@@ -1893,7 +1897,7 @@ export type CheckoutStatusEnum = {
  * @description tax record
  */
 
-export type TaxRecord = {
+export interface TaxRecord  {
   /**
    * @description the name of the tax deduction
    */
@@ -1915,7 +1919,7 @@ export type TaxRecord = {
  * was calculated given a stack of automatic discounts, coupons, 
  * line items and shipping method 
  */
-export type PricingData = {
+export interface PricingData  {
   /** 
    * @description Explanation of how discounts stack and change pricing 
    */
@@ -1981,7 +1985,7 @@ export type PricingData = {
 /** 
  * @description A line item is a product, that appeared in an order 
  */
-export type LineItem = {
+export interface LineItem  {
   /**  
    * @description `id` or `handle` of product 
    */
@@ -2012,9 +2016,9 @@ export type LineItem = {
 }
 
 /**
- * @description Discount error type
+ * @description Discount error interface
  */
-export type DiscountError = {
+export interface DiscountError  {
   /**
    * @description `handle` of the discount
    */
@@ -2030,7 +2034,7 @@ export type DiscountError = {
  * @description Explains how a specific discount was used 
  * to discount line items 
  */
-export type EvoEntry = {
+export interface EvoEntry  {
   /** 
    * @description The discount code `handle`
    */
@@ -2083,7 +2087,7 @@ export type EvoEntry = {
  * @description Checkouts or draft orders might be validated 
  * in automatic systems 
  */
-export type ValidationEntry = {
+export interface ValidationEntry  {
   /**
    * @description `id`
    */
@@ -2106,7 +2110,7 @@ export type ValidationEntry = {
 /** 
  * @description How did the order interacted with a payment gateway ?  
  */
-export type OrderPaymentGatewayData = {
+export interface OrderPaymentGatewayData  {
   /** 
    * @description The payment gateway identifier 
    */
@@ -2136,7 +2140,7 @@ export type OrderPaymentGatewayData = {
 /**
  * @description Stats of an `entity` in a day
  */
-export type OrdersStatisticsEntity = {
+export interface OrdersStatisticsEntity  {
   /**
    * @description `handle` of entity
    */
@@ -2160,7 +2164,7 @@ export type OrdersStatisticsEntity = {
   [x: string]: any;
 }
 
-export type OrdersStatisticsDayMetric = {
+export interface OrdersStatisticsDayMetric  {
 
   /**
    * @description The total income in a day for a metric
@@ -2176,7 +2180,7 @@ export type OrdersStatisticsDayMetric = {
 /**
  * @description Stats of a day
  */
-export type OrdersStatisticsDay = {
+export interface OrdersStatisticsDay  {
 
   /**
    * @description metrics for many `order` statuses
@@ -2223,7 +2227,7 @@ export type OrdersStatisticsDay = {
 /**
  * @description `Statisitics` of requested days
  */
-export type OrdersStatisticsType = {
+export interface OrdersStatisticsType  {
 
   /**
    * @description The days statistics
@@ -2251,7 +2255,7 @@ export type OrdersStatisticsType = {
 
 
 
-export type ConfigField = {
+export interface ConfigField  {
   /**
    * @description the `key` of the field
    */
@@ -2278,7 +2282,7 @@ export type ConfigField = {
   editable?: boolean;
 
   /**
-   * @description The type of the `field`
+   * @description The interface of the `field`
    */
   metadata: {
     component: 'select' | 'input' | 'label' | 'textarea';
@@ -2290,7 +2294,7 @@ export type ConfigField = {
 /**
  * @description `extension` description, logos and urls
  */
-export type ExtensionInfo = {
+export interface ExtensionInfo  {
   /** 
    * 
    * @description name of the `extension` 
@@ -2318,7 +2322,7 @@ export type ExtensionInfo = {
  * @description Every `extension` have `actions`,  that are registered as 
  * **REST** endpoints
  */
-export type ExtensionAction = {
+export interface ExtensionAction  {
   /** 
    * @description action name for display 
    */
@@ -2340,7 +2344,7 @@ export type ExtensionAction = {
  * 
  * @description Upon querying the `extension`
  */
-export type ExtensionItemGet = {
+export interface ExtensionItemGet  {
   /**
    * @description The info such as `name`, `description` etc..
    */
@@ -2369,13 +2373,13 @@ export type ExtensionItemGet = {
 /**
  * @description Payment gateway description, logos and urls
  */
-export type PaymentGatewayInfo = ExtensionInfo
+export interface PaymentGatewayInfo extends ExtensionInfo{}
 
 /**
  * @description Upon status query, the gateway return a list of possible actions,
  * such as `void`, `capture`, `refund` etc... 
  */
-export type PaymentGatewayAction = ExtensionAction & {
+export interface PaymentGatewayAction extends ExtensionAction {
 
   /**
    * @description Action might have extra parameters, 
@@ -2389,7 +2393,7 @@ export type PaymentGatewayAction = ExtensionAction & {
 /** 
  * @description A payment `status`
  */
-export type PaymentGatewayStatus = {
+export interface PaymentGatewayStatus  {
   /** 
    * @description List of possible actions to take 
    */
@@ -2407,7 +2411,7 @@ export type PaymentGatewayStatus = {
  * 
  * @description Upon querying the payment gateways
  */
-export type PaymentGatewayItemGet = {
+export interface PaymentGatewayItemGet  {
   /**
    * @description The info such as `name`, `description` etc..
    */
@@ -2433,7 +2437,7 @@ export type PaymentGatewayItemGet = {
 // email templates
 
 /**
- * @description `Email Template` type
+ * @description `Email Template` interface
  */
 export interface TemplateType extends BaseType {
 
@@ -2464,9 +2468,9 @@ export interface TemplateType extends BaseType {
 }
 
 /**
- * @description Upsert type for email template
+ * @description Upsert interface for email template
  */
-export type TemplateTypeUpsert = Omit<TemplateType, 'id' | 'handle'> & withOptionalHandleOrID;
+export interface TemplateTypeUpsert extends Omit<TemplateType, 'id' | 'handle'>, withOptionalHandleOrID{};
 
 
 // quick search
@@ -2474,7 +2478,7 @@ export type TemplateTypeUpsert = Omit<TemplateType, 'id' | 'handle'> & withOptio
 /**
  * @description result of quick search for a specific `resource`
  */
-export type QuickSearchResource = {
+export interface QuickSearchResource  {
   id: string;
   handle?: string;
   title?: string;
@@ -2496,14 +2500,14 @@ export type QuickSearchResult = Record<tables | string, QuickSearchResource[]>;
 /**
  * @description Similiarity / semantic search result
  */
-export type SimilaritySearchResult = {
+export interface SimilaritySearchResult  {
   /**
    * @description The score of similarity, lower is better
    */
   score: number,
 
   /**
-   * @description The type of the content
+   * @description The interface of the content
    */
   namespace: 'products' | 'discounts' | 'collections' | 'shipping',
 

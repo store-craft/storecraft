@@ -209,7 +209,7 @@
     "sc-publish": "npm publish",
     "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
     "core:test": "uvu -c",
-    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",
+    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.ts && mv ./api/types.autogen.zod.api.ts ./api/types.autogen.zod.api.js",
     "core:gen:vql": "node ./vql/compile.js",
     "core:gen:open-api": "node ./rest/docs.openapi.gen.js"
   },

@@ -28,6 +28,7 @@ export const upsert = (app) =>
 (item) => regular_upsert(
   app, db(app), 'dis', discountTypeUpsertSchema, 
   (before) => {
+    
     return {
       ...before,
       handle: before.handle ?? to_handle(before.title)
@@ -35,6 +36,7 @@ export const upsert = (app) =>
   },
   (final) => {
     return union(
+      
       isDef(final?.application) && `app:${final.application.id}`,
       isDef(final?.application?.name) && `app:${final.application.name.toLowerCase()}`,
       isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.id}`,

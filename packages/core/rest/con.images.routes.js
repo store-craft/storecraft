@@ -10,10 +10,6 @@ import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../api/utils.query.js'
 
 /**
- * @typedef {import('../api/types.api.d.ts').ImageType} ItemType
- */
-
-/**
  * 
  * @param {App} app
  */

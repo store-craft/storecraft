@@ -1,9 +1,12 @@
+/**
+ * @import { ApiRequest, ApiResponse } from './types.public.js'
+ */
 import { assert_generic_auth, has_role } from './con.auth.middle.js';
 import { isDef } from '../api/utils.index.js';
 
 /**
- * @param {import('./types.public.d.ts').ApiRequest} req 
- * @param {import('./types.public.d.ts').ApiResponse} res 
+ * @param {ApiRequest} req 
+ * @param {ApiResponse} res 
  */
 export const owner_or_admin_guard = async (req, res) => {
   assert_generic_auth(req.user);

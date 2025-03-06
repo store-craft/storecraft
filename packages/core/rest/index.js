@@ -1,4 +1,7 @@
-/** @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' */
+/** 
+ * @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' 
+ * @import { CORSOptions } from '../polka/cors.js' 
+ */
 import { App } from '../index.js';
 import { json } from "../polka/body-parse.js";
 import { Polka } from "../polka/index.js";
@@ -31,7 +34,7 @@ import { cors } from "../polka/cors.js";
 
 /**
  * @typedef {object} RestApiConfig
- * @prop {import("../polka/cors.js").CORSOptions} [cors]
+ * @prop {CORSOptions} [cors]
  */
 
 

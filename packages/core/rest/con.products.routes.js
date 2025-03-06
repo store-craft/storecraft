@@ -2,17 +2,13 @@
  * @import { ApiPolka } from './types.public.js' 
  * @import { ApiQuery } from '../api/types.api.query.js' 
  * @import { ProductType } from '../api/types.api.js' 
+ * @import { RegularGetOptions } from '../database/types.public.js' 
  */
 import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_expand, parse_query } from '../api/utils.query.js'
-
-
-/**
- * @typedef {import('../api/types.api.d.ts').ProductType} ItemType
- */
 
 /**
  * 
@@ -61,7 +57,7 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      /** @type {import('../database/types.public.d.ts').RegularGetOptions} */
+      /** @type {RegularGetOptions} */
       const options = {
         expand: parse_expand(req.query)
       };

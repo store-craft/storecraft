@@ -1,7 +1,9 @@
 /** 
  * @import { ApiPolka } from './types.public.js' 
  * @import { VectorStoreSimilaritySearchQueryResult } from '../ai/types.public.js' 
- * @import { StorecraftVectorMetaData, vector_namespaces } from '../ai/models/vector-stores/types.js' 
+ * @import { 
+ *  StorecraftVectorMetaData, vector_namespaces 
+ * } from '../ai/models/vector-stores/types.js' 
  * @import { SimilaritySearchResult } from '../api/types.api.js' 
  * @import { semantic_search_namespaces } from './con.semantic-search.types.js' 
  */

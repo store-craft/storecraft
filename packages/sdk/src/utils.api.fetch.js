@@ -13,12 +13,18 @@ import { assert } from './utils.functional.js';
  * 
  * @param {StorecraftSDKConfig} config 
  * @param {string} path 
+ * @param {URLSearchParams} [query] url search params
  */
-export const url = (config, path) => {
+export const url = (config, path, query) => {
   let base = config?.endpoint?.trim();
 
   base = base?.endsWith('/') ? base.slice(0, -1) : base;
   path = path?.startsWith('/') ? path.slice(1) : path;
+
+  if(query?.size) {
+    path = path?.endsWith('/') ? path.slice(0, -1) : path;
+    path += '?' + query.toString();
+  }
 
   return base ? `${base}/api/${path}` : `/api/${path}`;
 }
@@ -33,10 +39,11 @@ export const url = (config, path) => {
  * @param {StorecraftSDK} sdk 
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
+ * @param {URLSearchParams} [query] url search params
  * 
  * @returns {Promise<Response>}
  */ 
-export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
+export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}, query=undefined) => {
 
   const auth_token = await sdk.auth.working_auth_token();
   const auth_header_value = (
@@ -45,7 +52,7 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
   
 
   const response = await fetch(
-    url(sdk.config, path),
+    url(sdk.config, path, query),
     {
       ...init,
       headers: {
@@ -78,16 +85,16 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}) => {
  * @param {StorecraftSDK} sdk
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
- * 
+ * @param {URLSearchParams} [query] url search params
  * 
  * @throws {error}
  * 
  * @returns {Promise<R>}
  */ 
-export const fetchApiWithAuth = async (sdk, path, init={}) => {
+export const fetchApiWithAuth = async (sdk, path, init={}, query=undefined) => {
 
   const response = await fetchOnlyApiResponseWithAuth(
-    sdk, path, init
+    sdk, path, init, query
   );
 
   // console.log('fetchApiWithAuth::response', response)
@@ -119,7 +126,7 @@ export const fetchApiWithAuth = async (sdk, path, init={}) => {
  * 
  * @returns {Promise<G>}
  */
-export async function get(sdk, resource, handle_or_id) {
+export async function get_from_collection_resource(sdk, resource, handle_or_id) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}/${handle_or_id}`,
@@ -142,7 +149,7 @@ export async function get(sdk, resource, handle_or_id) {
  * 
  * @returns {Promise<string>} id
  */
-export async function upsert(sdk, resource, item) {
+export async function upsert_to_collection_resource(sdk, resource, item) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}`,
@@ -166,7 +173,7 @@ export async function upsert(sdk, resource, item) {
  * 
  * @returns {Promise<boolean>}
  */
-export async function remove(sdk, resource, handle_or_id) {
+export async function remove_from_collection_resource(sdk, resource, handle_or_id) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}/${handle_or_id}`,
@@ -192,7 +199,7 @@ export async function remove(sdk, resource, handle_or_id) {
  * 
  * @returns {Promise<G[]>}
  */
-export async function list(sdk, resource, query={}) {
+export async function list_from_collection_resource(sdk, resource, query={}) {
   const sq = api_query_to_searchparams(query);
 
   // console.log('sq', sq.toString())
@@ -239,7 +246,7 @@ export class collection_base {
    * @returns {Promise<G>}
    */
   async get(handle_or_id) {
-    return get(this.sdk, this.base_name, handle_or_id);
+    return get_from_collection_resource(this.sdk, this.base_name, handle_or_id);
   }
 
   /**
@@ -250,7 +257,7 @@ export class collection_base {
    * @returns {Promise<string>} id
    */
   async upsert(item) {
-    return upsert(this.sdk, this.base_name, item);
+    return upsert_to_collection_resource(this.sdk, this.base_name, item);
   }
 
   /**
@@ -261,7 +268,7 @@ export class collection_base {
    * @returns {Promise<boolean>}
    */
   async remove(handle_or_id) {
-    return remove(this.sdk, this.base_name, handle_or_id);
+    return remove_from_collection_resource(this.sdk, this.base_name, handle_or_id);
   }
 
   /**
@@ -272,7 +279,7 @@ export class collection_base {
    * @returns {Promise<G[]>}
    */
   async list(query) {
-    return list(this.sdk, this.base_name, query);
+    return list_from_collection_resource(this.sdk, this.base_name, query);
   }
 
   get base_name() {

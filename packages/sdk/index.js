@@ -21,8 +21,6 @@ import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
 
-
-
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
  */

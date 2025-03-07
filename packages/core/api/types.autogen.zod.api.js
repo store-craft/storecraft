@@ -118,7 +118,7 @@ export const apiKeyResultSchema = z.object({
 export const apiAuthResultSchema = z.object({
   token_type: z
     .string()
-    .describe("The interface of token, should be `bearer` or `refresh`"),
+    .describe("The type of token, should be `bearer` or `refresh`"),
   user_id: z.string().describe("the `ID` of user, example `au_....`"),
   access_token: apiTokenWithClaimsSchema.describe("The access token"),
   refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
@@ -335,7 +335,7 @@ export const filterValueOHasCustomersSchema = z
 export const filterMetaEnumSchema = z.object({
   any: z.object({
     id: z.number().optional(),
-    interface: z.string().optional(),
+    type: z.string().optional(),
     op: z.string().optional(),
     name: z.string().optional(),
   }),
@@ -1040,6 +1040,24 @@ export const quickSearchResultSchema = z.record(
   z.array(quickSearchResourceSchema),
 );
 
+export const similaritySearchAllowedNamespacesSchema = z.union([
+  z.literal("products"),
+  z.literal("discounts"),
+  z.literal("collections"),
+  z.literal("shipping"),
+  z.literal("all"),
+  z.literal("*"),
+]);
+
+export const similaritySearchInputSchema = z.object({
+  q: z.string().describe("The query"),
+  namespaces: z
+    .array(similaritySearchAllowedNamespacesSchema)
+    .optional()
+    .describe("Furher filter by namespace"),
+  limit: z.number().optional().describe("The content").default(5),
+});
+
 export const storecraftConfigSchema = z.object({
   general_store_name: z
     .string()
@@ -1177,7 +1195,7 @@ export const buyXGetYDiscountExtraSchema = z.object({
 
 export const notificationActionSchema = z.object({
   name: z.string().optional().describe("Name of the action"),
-  interface: notificationActionTypeSchema
+  type: notificationActionTypeSchema
     .optional()
     .describe("The interface of action"),
   params: z
@@ -1569,14 +1587,9 @@ export const evoEntrySchema = z.object({
 
 export const similaritySearchResultSchema = z.object({
   score: z.number().describe("The score of similarity, lower is better"),
-  namespace: z
-    .union([
-      z.literal("products"),
-      z.literal("discounts"),
-      z.literal("collections"),
-      z.literal("shipping"),
-    ])
-    .describe("The interface of the content"),
+  namespace: similaritySearchAllowedNamespacesSchema.describe(
+    "The namespace of the content",
+  ),
   content: z
     .union([
       productTypeSchema,

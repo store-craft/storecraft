@@ -391,7 +391,7 @@ const create_all = () => {
   // register routes
   register_reference(registry);
   register_ai(registry);
-  register_semantic_search(registry);
+  register_similarity_search(registry);
   register_auth(registry);
   register_storage(registry);
   register_checkout(registry);
@@ -1155,16 +1155,16 @@ const register_ai = (registry) => {
 /**
  * @param {OpenAPIRegistry} registry 
  */
-const register_semantic_search = (registry) => {
+const register_similarity_search = (registry) => {
   
   registry.register('similaritySearchResultSchema', similaritySearchResultSchema);
   
   registry.registerPath({
     method: 'get',
-    path: `/semantic-search`,
+    path: `/similarity-search`,
     description: 'Search `Storecraft` with AI for `products`, `discounts`, `collections`, `shipping`',
     summary: 'Search with AI',
-    tags: ['semantic-search'],
+    tags: ['similarity-search'],
     request: {
       query: z.object(
         {

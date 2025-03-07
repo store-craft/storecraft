@@ -2493,7 +2493,32 @@ export type tables = 'auth_users' | 'tags' | 'collections' |
 
 export type QuickSearchResult = Record<tables | string, QuickSearchResource[]>;
 
-// Semantic search result types
+// Similarity / Semantic search result types
+
+export type SimilaritySearchAllowedNamespaces = 'products' | 'discounts' | 'collections' | 'shipping' | 'all' | '*';
+
+/**
+ * @description Similiarity / semantic search result
+ */
+export interface SimilaritySearchInput  {
+  /**
+   * @description The query
+   * @example I am looking for Super Mario Games for Nintndo Switch
+   */
+  q: string,
+
+  /**
+   * @description Furher filter by namespace
+   */
+  namespaces?: SimilaritySearchAllowedNamespaces[],
+
+  /**
+   * @description The content
+   * @default 5
+   */
+  limit?: number
+}
+
 
 /**
  * @description Similiarity / semantic search result
@@ -2505,9 +2530,9 @@ export interface SimilaritySearchResult  {
   score: number,
 
   /**
-   * @description The interface of the content
+   * @description The namespace of the content
    */
-  namespace: 'products' | 'discounts' | 'collections' | 'shipping',
+  namespace: SimilaritySearchAllowedNamespaces;
 
   /**
    * @description The content

@@ -297,8 +297,12 @@ export const parse_query = (s) => {
 /**
  * 
  * @param {string[]} array 
+ * @param {string} [defaultValue] 
  */
-const string_array_to_string = array => {
+export const string_array_to_string = (array, defaultValue) => {
+  if(!(Array.isArray(array)))
+    return defaultValue;
+  
   const fill = array.join(',');
   return '(' + fill + ')';
 }
@@ -361,4 +365,14 @@ export const api_query_to_searchparams = q => {
   q.limitToLast && sp.set(LIMIT_TO_LAST, q.limitToLast.toString());
 
   return sp;
+}
+
+
+/**
+ * 
+ * @param {Record<string, string | number | boolean>} o 
+ */
+export const object_to_search_params = o => {
+  // @ts-ignore
+  return new URLSearchParams(o);
 }

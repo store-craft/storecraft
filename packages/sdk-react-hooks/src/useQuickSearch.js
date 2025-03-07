@@ -5,7 +5,7 @@ import {
   useCallback, useRef, useState 
 } from 'react'
 import useTrigger from './useTrigger.js'
-import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
+import { list_from_collection_resource } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { useStorecraft } from './useStorecraft.js'
 
 
@@ -48,7 +48,7 @@ export const useQuickSearch = (
       try {
         /** @type {QuickSearchResult} */
         // @ts-ignore
-        const item = await list(
+        const item = await list_from_collection_resource(
           sdk,
           'search', 
           q

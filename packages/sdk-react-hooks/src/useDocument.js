@@ -6,7 +6,7 @@ import useTrigger from "./useTrigger.js"
 import { useStorecraft } from "./useStorecraft.js";
 import { useDocumentCache } from "./useStorecraftCache.js";
 import { 
-  get as sdk_get, upsert as upsert_sdk, remove as sdk_remove 
+  get_from_collection_resource as sdk_get, upsert_to_collection_resource as upsert_sdk, remove_from_collection_resource as sdk_remove 
 } from "@storecraft/sdk/src/utils.api.fetch.js";
 
 /**

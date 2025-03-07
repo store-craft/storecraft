@@ -3,7 +3,7 @@
  */
 import { StorecraftSDK } from '../index.js'
 import { 
-  fetchApiWithAuth, get, list 
+  fetchApiWithAuth, get_from_collection_resource, list_from_collection_resource 
 } from './utils.api.fetch.js';
 
 /**
@@ -30,7 +30,7 @@ export default class Payments {
    * @returns {Promise<PaymentGatewayItemGet>}
    */
   get(handle) {
-    return get(this.sdk, 'payments/gateways', handle);
+    return get_from_collection_resource(this.sdk, 'payments/gateways', handle);
   }
 
   /**
@@ -39,7 +39,7 @@ export default class Payments {
    * @returns {Promise<PaymentGatewayItemGet[]>}
    */
   list() {
-    return list(this.sdk, 'payments/gateways');
+    return list_from_collection_resource(this.sdk, 'payments/gateways');
   }
 
 
@@ -66,7 +66,7 @@ export default class Payments {
   /**
    * 
    * Invoke a `payment gateway` action on `order`. The list of available actions can be found
-   * using {@link get} or {@link paymentStatusOfOrder}
+   * using {@link get_from_collection_resource} or {@link paymentStatusOfOrder}
    * 
    * 
    * @param {string} action_handle The `action` handle at the gateway

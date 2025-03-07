@@ -6,13 +6,13 @@ import {
   useCallback, useEffect, useRef, useState 
 } from 'react'
 import useTrigger from './useTrigger.js'
-import { list } from '@storecraft/sdk/src/utils.api.fetch.js'
+import { list_from_collection_resource } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 import { useStorecraft } from './useStorecraft.js'
 import { useDocumentCache, useQueryCache } from './useStorecraftCache.js'
 import { StorecraftSDK } from '@storecraft/sdk'
 import { 
-  remove as sdk_remove 
+  remove_from_collection_resource as sdk_remove 
 } from "@storecraft/sdk/src/utils.api.fetch.js";
 
 /**
@@ -80,7 +80,7 @@ const paginate_helper = (sdk, query, resource) => {
     }
 
     /** @type{G[]} */
-    const l = await list(
+    const l = await list_from_collection_resource(
       sdk,
       resource,
       current

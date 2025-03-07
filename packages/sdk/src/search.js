@@ -30,9 +30,12 @@ export default class Search {
   }
 
   /**
-   * @description Speak with the main `storecraft` agent sync. It is
-   * recommended to use the streamed version {@link streamSpeak}
-   * @param {ApiQuery} params 
+   * @description List super lite search results with `id`, `handle`, `title`. 
+   * Primarily used for quick and responsive lookup, this is cheap and cost-effective 
+   * and works well in the dashboard. If an admin is hitting the endpoint, then he can 
+   * even get results for orders, customer and auth_users. You can also use the expand in the 
+   * query to efficiently control which resources are searched at the database
+   * @param {ApiQuery} params A regular {@link ApiQuery} object
    * @returns {Promise<QuickSearchResult>}
    */
   quick = async (params) => {
@@ -50,9 +53,10 @@ export default class Search {
 
 
   /**
-   * @description Speak with the main `storecraft` agent sync. It is
-   * recommended to use the streamed version {@link streamSpeak}
-   * @param {SimilaritySearchInput} params 
+   * @description Search Storecraft with AI for similar 
+   * `products`, `discounts`, `collections`, `shipping`
+   * based on a prompt
+   * @param {SimilaritySearchInput} params A {@link SimilaritySearchInput} object
    * @returns {Promise<SimilaritySearchResult>}
    */
   similarity = async (params) => {

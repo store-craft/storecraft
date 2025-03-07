@@ -35,6 +35,12 @@ Perform payments `status-check` / `invoke-action`
 #### AI
 Speak with a `storecraft` agent (Supports streaming :))
 
+#### Semantic / Similarity Search
+Search Storecraft with AI for similar `products`, `discounts`, `collections`, `shipping` based on a prompt.
+
+#### Quick Search
+List super lite search results with `id`, `handle`, `title` over most resources 
+
 <hr/>
 
 Start by installing, 

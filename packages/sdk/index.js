@@ -20,6 +20,7 @@ import Settings from './src/settings.js'
 import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
+import Search from './src/search.js'
 
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
@@ -36,6 +37,7 @@ export class StorecraftSDK {
     this.#_config = config;
 
     this.ai = new AI(this);
+    this.search = new Search(this);
     this.auth = new Auth(this);
     this.storage = new Storage(this);
     this.customers = new Customers(this);

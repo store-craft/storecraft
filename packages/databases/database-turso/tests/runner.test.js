@@ -18,6 +18,7 @@ export const create_app = async () => {
   .withDatabase(
     new Turso(
       { 
+        url: ':memory:',
         prefers_batch_over_transactions: true,
       }
     )

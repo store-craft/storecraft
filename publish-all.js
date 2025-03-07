@@ -53,8 +53,8 @@ export const publish_folder = (path='', throw_on_error=true) => {
   '/payments/payments-paypal',
   '/payments/payments-stripe',
 
-  '/sdk',
-  '/sdk-react-hooks',
+  '/sdks/sdk',
+  '/sdks/sdk-react-hooks',
 ]
 .slice(0)
 .map(

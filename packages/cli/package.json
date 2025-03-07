@@ -29,13 +29,11 @@
   "types": "./types.d.ts",
   "main": "./index.js",
   "dependencies": {
-    "@inquirer/prompts": "^5.3.8",
+    "@clack/prompts": "^0.10.0",
     "boxen": "^8.0.1",
     "chalk": "^5.3.0",
-    "cli-spinners": "^3.2.0",
-    "enquirer": "^2.4.1",
     "gradient-string": "^2.0.2",
-    "prettier": "^3.3.3",
+    "prettier": "^3.5.3",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

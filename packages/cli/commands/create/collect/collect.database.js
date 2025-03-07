@@ -1,18 +1,27 @@
 /**
  * @import { Choice } from '../../utils.js';
  */
-
-import { select, input, confirm } from "@inquirer/prompts";
+import {
+  intro,
+  outro,
+  confirm,
+  select,
+  spinner,
+  isCancel,
+  cancel,
+  text, 
+} from '@clack/prompts';
+import { required, withCancel } from './collect.utils.js';
 
 /** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
-    name: 'sqlite (libsql)',
+    name: 'sqlite (with libsql)',
     value: 'libsql-local',
     description: 'Local SQLite database (Recommended)'
   },
   {
-    name: 'sqlite (better-sqlite3)',
+    name: 'sqlite (with better-sqlite3)',
     value: 'sqlite',
   },
   {
@@ -28,12 +37,12 @@ export const choices = /** @type {const} */ ([
     value: 'mongo_db',
   },
   {
-    name: 'Turso (libsql)',
+    name: 'Turso (Cloud libsql)',
     value: 'turso',
     description: 'Cloud SQLite database'
   },
   {
-    name: 'Cloudflare D1',
+    name: 'Cloudflare D1 (Cloud sqlite)',
     value: 'd1',
     description: 'Cloud SQLite database'
   },
@@ -57,12 +66,20 @@ export const choices = /** @type {const} */ ([
 
 export const collect_database = async () => {
 
-  const id = await select(
-    {
-      message: '💾 Select a database',
-      choices,
-      loop: true,
-    }
+  const id = await withCancel(
+    select(
+      {
+        message: '💾 Select a database',
+        options: choices.map(
+          c => (
+            {
+              value: c.value,
+              label: c.name
+            }
+          )
+        )
+      }
+    )
   );
 
   return {
@@ -85,13 +102,15 @@ const collect_general_config = async (
       /** @type {import('@storecraft/database-sqlite').Config} */
       const config = {
         options: {},
-        filepath: await input(
-          { 
-            message: 'Enter the local file name',
-            required: true,
-            default: 'data.db'
-          }
-        )
+        filepath: await withCancel(
+          text(
+            { 
+              message: 'Sqlite local file name',
+              defaultValue: 'data.db',
+              placeholder: 'data.db',
+            }
+          )
+        ) 
       }
       return config;
     }
@@ -99,36 +118,44 @@ const collect_general_config = async (
       /** @type {import('@storecraft/database-postgres').Config} */
       const config = {
         pool_config: {
-          host: await input(
-            { 
-              message: 'Enter the host',
-              required: true,
-              default: 'localhost'
-            }
+          host: await withCancel(
+            text(
+              { 
+                message: 'Postgres host',
+                defaultValue: 'localhost',
+                placeholder: 'localhost'
+              }
+            ),
           ),
           port: parseInt(
-            await input(
+            await withCancel(
+              text(
+                { 
+                  message: 'Postgres port',
+                  defaultValue: '6432',
+                  placeholder: '6432',
+                }
+              )
+            )
+          ),
+          user: await withCancel(
+            text(
               { 
-                message: 'Enter the port',
-                required: true,
-                default: '6432'
+                message: 'Postgres user',
+                defaultValue: 'admin',
+                placeholder: 'admin',
               }
             )
           ),
-          user: await input(
-            { 
-              message: 'Enter the user',
-              required: true,
-              default: 'admin'
-            }
-          ),
-          password: await input(
-            { 
-              message: 'Enter the password',
-              required: true,
-              default: 'admin'
-            }
-          ),
+          password: await withCancel(
+            text(
+              { 
+                message: 'Postgres password',
+                defaultValue: 'admin',
+                placeholder: 'admin',
+              }
+            ),
+          )
         }
       }
       return config;
@@ -137,43 +164,53 @@ const collect_general_config = async (
       /** @type {import('@storecraft/database-mysql').Config} */
       const config = {
         pool_options: {
-          database: await input(
-            { 
-              message: 'database name',
-              required: true,
-              default: 'main'
-            }
+          database: await withCancel(
+            text(
+              { 
+                message: 'MySQL database name',
+                defaultValue: 'main',
+                placeholder: 'main',
+              }
+            ),
           ),
-          host: await input(
-            { 
-              message: 'database host',
-              required: true,
-              default: 'localhost'
-            }
+          host: await withCancel(
+            text(
+              { 
+                message: 'MySQL database host',
+                defaultValue: 'localhost',
+                placeholder: 'localhost',
+              }
+            ),
           ),
           port: parseInt(
-            await input(
+            await withCancel(
+              text(
+                { 
+                  message: 'MySQL database port',
+                  defaultValue: '8080',
+                  placeholder: '8080',
+                }
+              )
+            ),
+          ),
+          user: await withCancel(
+            text(
               { 
-                message: 'database port',
-                required: true,
-                default: '8080'
+                message: 'MySQL user name',
+                defaultValue: 'admin',
+                placeholder: 'admin',
               }
-            )
+            ),
           ),
-          user: await input(
-            { 
-              message: 'user name',
-              required: true,
-              default: 'admin'
-            }
-          ),
-          password: await input(
-            { 
-              message: 'user password',
-              required: true,
-              default: 'admin'
-            }
-          ),
+          password: await withCancel(
+            text(
+              { 
+                message: 'MySQL user password',
+                defaultValue: 'admin',
+                placeholder: 'admin',
+              }
+            ),
+          )
         }
       }
       return config;
@@ -181,18 +218,22 @@ const collect_general_config = async (
     case "mongo_db": {
       /** @type {import('@storecraft/database-mongodb').Config} */
       const config = {
-        url: await input(
-          { 
-            message: 'Enter the connection url',
-            required: true,
-          }
+        url: await withCancel(
+          text(
+            { 
+              message: 'MongoDB connection url',
+              validate: required,
+            }
+          ),
         ),
-        db_name: await input(
-          { 
-            message: 'Enter the Database name',
-            required: true,
-            default: 'test'
-          }
+        db_name: await withCancel(
+          text(
+            { 
+              message: 'MongoDB Database name',
+              defaultValue: 'test',
+              placeholder: 'test',
+            }
+          )
         )
       }
       return config;
@@ -201,13 +242,15 @@ const collect_general_config = async (
     case "libsql-local": {
       /** @type {import('@storecraft/database-turso').Config} */
       let config = {
-        url: 'file:' + await input(
-          { 
-            message: 'Enter the local file name',
-            required: true,
-            default: 'data.db'
-          }
-        ),
+        url: 'file:' + await withCancel(
+          text(
+            { 
+              message: 'Sqlite local file name',
+              defaultValue: 'data.db',
+              placeholder: 'data.db',
+            }
+          ),
+        )
       }
       return config;
     }
@@ -215,18 +258,22 @@ const collect_general_config = async (
     case "turso": {
       /** @type {import('@storecraft/database-turso').Config} */
       let config = {
-        url: await input(
-          { 
-            message: 'Enter connection url',
-            required: true,
-          }
+        url: await withCancel(
+          text(
+            { 
+              message: 'Turso connection url',
+              validate: required,
+            }
+          ),
         ),
-        authToken: await input(
-          { 
-            message: 'Enter the auth token',
-            required: true,
-            default: '*****'
-          }
+        authToken: await withCancel(
+          text(
+            { 
+              message: 'Turso auth token',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          )
         )
       }
       return config;
@@ -235,26 +282,32 @@ const collect_general_config = async (
     case "d1": {
       /** @type {import('@storecraft/database-cloudflare-d1').D1ConfigHTTP} */
       let config = {
-        account_id: await input(
-          { 
-            message: 'Cloudflare Account ID',
-            required: true,
-            default: '*****'
-          }
+        account_id: await withCancel(
+          text(
+            { 
+              message: 'Cloudflare Account ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        database_id: await input(
-          { 
-            message: 'Cloudflare D1 Database ID',
-            required: true,
-          }
+        database_id: await withCancel(
+          text(
+            { 
+              message: 'Cloudflare D1 Database ID',
+              validate: required,
+            }
+          ),
         ),
-        api_token: await input(
-          { 
-            message: 'Cloudflare Access API Token with D1 Read/Write roles',
-            required: true,
-            default: '*****'
-          }
-        ),
+        api_token: await withCancel(
+          text(
+            { 
+              message: 'Cloudflare Access API Token with D1 Read/Write roles',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        )
       }
       return config;
     }
@@ -262,12 +315,14 @@ const collect_general_config = async (
     case "neon_http": {
       /** @type {import('@storecraft/database-neon').NeonHttpConfig} */
       let config = {
-        connectionString: await input(
-          { 
-            message: 'Neon Connection String',
-            required: true,
-          }
-        ),
+        connectionString: await withCancel(
+          text(
+            { 
+              message: 'Neon Connection String',
+              validate: required,
+            }
+          ),
+        )
       }
       return config;
     }
@@ -279,12 +334,14 @@ const collect_general_config = async (
         neonConfig: {
         },
         poolConfig: {
-          connectionString: await input(
-            { 
-              message: 'Neon Connection String',
-              required: true,
-            }
-          ),
+          connectionString: await withCancel(
+            text(
+              { 
+                message: 'Neon Connection String',
+                validate: required,
+              }
+            ),
+          )
         }
       }
       return config;
@@ -294,18 +351,24 @@ const collect_general_config = async (
     case "planetscale": {
       /** @type {import('@storecraft/database-planetscale').PlanetScaleDialectConfig} */
       let config = {
-        url: await input(
-          { 
-            message: 'Connection URL',
-            required: true,
-          }
+        url: await withCancel(
+          text(
+            { 
+              message: 'Planetscale Connection URL',
+              validate: required,
+            }
+          ),
         ),
-        useSharedConnection: await confirm(
-          { 
-            message: 'Use shared connection',
-            default: true,
-          }
-        ),
+        useSharedConnection: await withCancel(
+          confirm(
+            { 
+              message: 'Planetscale: Use shared connection ?',
+              active: 'Yes',
+              inactive: 'No',
+              initialValue: true
+            }
+          ),
+        )
       }
       return config;
     }

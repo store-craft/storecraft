@@ -6,9 +6,12 @@ import { collect_mailer } from "./collect/collect.mailer.js";
 import { collect_payments } from "./collect/collect.payments.js";
 import { logo_gradient } from '../logo.js';
 import { compile_all } from "./compile/index.js";
-import { spinner } from "./spinner.js";
+// import { spinner } from "./spinner.js";
 import chalk from 'chalk';
 import { error, good } from "./label.js";
+import { intro, outro, spinner } from '@clack/prompts';
+import { setTimeout as sleep } from 'node:timers/promises';
+import { exit } from "node:process";
 
 /**
  * @type {import("yargs").CommandModule}
@@ -19,7 +22,8 @@ export const command_create = {
   handler: async (args) => {
     try {
       console.log(logo_gradient);
-  
+
+      intro("Let's go")
       const config = await collect_config();
       const platform = await collect_platform();
       const database = await collect_database();
@@ -36,10 +40,15 @@ export const command_create = {
         payments      
       }
   
-      await spinner(compile_all(meta), 'Setting Up, hold on')();
-  
+      // await spinner(compile_all(meta), 'Setting Up, hold on')();
+      const s = spinner({indicator: 'dots'});
+      s.start('Installing')
+      await compile_all(meta);
+      // await sleep(3000);
+      s.stop();
+      outro('Done')
       console.log(
-        good(
+        '\n'+good(
           config.config.general_store_name,
           [
             `▸ Don't forget to migrate the database with ${chalk.magentaBright('npm run migrate')}`,
@@ -47,6 +56,8 @@ export const command_create = {
           ].join('\n'),
         )
       );
+
+      // )
 
     } catch (e) {
       console.log(error(String(e)));

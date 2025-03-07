@@ -172,21 +172,21 @@ s('api_query_to_url_query_params_and_back', async () => {
   /** @type {ApiQuery[]} */
   const cases = [
     {
-      endAt: [['updated_at', '2012'], ['price', 100], ['active', true]],
+      endAt: [['updated_at', '2025-03-07T10:34:13.058Z'], ['price', 100], ['active', true]],
       expand: ['products'],
       limit: 10,
       order: 'asc',
       sortBy: ['updated_at', 'price', 'active'],
-      startAt: [['updated_at', '"2012"'], ['price', 50], ['active', true]],
+      startAt: [['updated_at', '"2025-03-07T10:34:13.058Z"'], ['price', 50], ['active', true]],
       vql: '-a | (b & c)'
     },
     {
-      endBefore: [['updated_at', '"2012"'], ['price', 100], ['active', true]],
+      endBefore: [['updated_at', '"2025-03-07T10:34:13.058Z"'], ['price', 100], ['active', true]],
       sortBy: ['updated_at', 'price', 'active'],
       expand: ['products'],
       limitToLast: 10,
       order: 'desc',
-      startAfter: [['updated_at', '"2012"'], ['price', 50], ['active', true]],
+      startAfter: [['updated_at', '"2025-03-07T10:34:13.058Z"'], ['price', 50], ['active', true]],
       vql: '-a | (b & c)'
     },
   ];

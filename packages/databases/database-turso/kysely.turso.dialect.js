@@ -140,6 +140,7 @@ export class LibsqlConnection {
    * @returns {Promise<QueryResult<Row>>}
    */
   async #internal_executeQuery(compiledQueries) {
+    // console.log(compiledQueries)
     const target = this.#transaction ?? this.client;
 
     const stmts = compiledQueries.map(

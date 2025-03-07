@@ -19,6 +19,7 @@ const START_AFTER = 'startAfter';
 const END_AT = 'endAt';
 const END_BEFORE = 'endBefore';
 export const EXPAND = 'expand';
+export const REGEX_ALLOWED_CHARS = /[a-zA-Z0-9\_\:\-\+\*\s\'\"\.]+/g
 
 export function is_string_a_number(str='') {
   if (typeof str != "string") return false // we only process strings!
@@ -109,7 +110,7 @@ export const parse_tuples_old = (str="") => {
 export const parse_tuples = (str="") => {
   if(!str) return undefined;
   // ['k1:v1', 'k2:v2']
-  const kv_parts = str.match(/[a-zA-Z0-9\_\:\-\+\*\s\'\"]+/g)
+  const kv_parts = str.match(REGEX_ALLOWED_CHARS)
 
   return kv_parts.map(
     (part) => {
@@ -170,7 +171,7 @@ export const parse_sort_order = (s='desc') => {
  * @returns {string[]}
  */
 export const parse_list_from_string = (q='', defaultList=[]) => {
-  const list = q?.match(/[a-zA-Z0-9\_\:\-\+\*\s\'\"]+/g).map(p => p.trim())?.filter(Boolean) ?? defaultList;
+  const list = q?.match(REGEX_ALLOWED_CHARS).map(p => p.trim())?.filter(Boolean) ?? defaultList;
   return list;
 }
 

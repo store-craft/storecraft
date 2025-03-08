@@ -13,6 +13,7 @@ mongo_vectorSearch_pipeline,
  * @import { 
  *  AnyBulkWriteOperation, Document, AggregationCursor 
  * } from 'mongodb'
+ * @import { ENV } from '@storecraft/core';
  */
 
 import { Collection } from 'mongodb';
@@ -21,8 +22,12 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 export const EMBEDDING_KEY_PATH = 'embedding';
 export const NAMESPACE_KEY = 'namespace';
 export const DEFAULT_INDEX_NAME = 'vector_store';
-export const ENV_MONGODB_URL = 'MONGODB_URL';
-export const ENV_MONGODB_NAME = 'MONGODB_NAME';
+
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  db_name: 'MONGODB_NAME',
+  url: 'MONGODB_URL'
+}
 
 /**
  * @typedef {VectorStore} Impl
@@ -76,8 +81,8 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.url = this.config.url ?? app.platform.env[ENV_MONGODB_URL]; 
-    this.config.db_name = this.config.db_name ?? app.platform.env[ENV_MONGODB_NAME] ?? 'main'; 
+    this.config.url ??= app.platform.env[EnvConfig.url]; 
+    this.config.db_name ??= app.platform.env[EnvConfig.db_name] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */
@@ -213,7 +218,7 @@ export class MongoVectorStore {
           score: doc.score,
           document: {
             id: doc.id,
-            metadata: doc.metadata,
+            metadata: /** @type {any}*/ (doc.metadata),
             pageContent: doc.pageContent,
             namespace: doc.namespace
           }

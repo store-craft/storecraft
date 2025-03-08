@@ -1,14 +1,19 @@
 /**
  * @import { Config } from './types.public.js';
+ * @import { ENV } from '@storecraft/core';
  */
 
 import { SQL } from '@storecraft/database-sql-base';
 import { LibsqlDialect } from './kysely.turso.dialect.js';
 
-export const ENV_LIBSQL_AUTH_TOKEN = 'LIBSQL_AUTH_TOKEN';
-export const ENV_LIBSQL_URL = 'LIBSQL_URL';
-
 export { LibSQLVectorStore } from './vector-store/index.js'
+
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  authToken: 'LIBSQL_AUTH_TOKEN',
+  url: 'LIBSQL_URL'
+}
+
 
 /**
  * @extends {SQL}
@@ -39,8 +44,8 @@ export class Turso extends SQL {
     const dialect = /** @type {LibsqlDialect}*/ (this.config.dialect);
     const dconfig = dialect.config;
     
-    dconfig.authToken = dconfig.authToken ?? app.platform.env[ENV_LIBSQL_AUTH_TOKEN];
-    dconfig.url = dconfig.url ?? app.platform.env[ENV_LIBSQL_URL];
+    dconfig.authToken ??= app.platform.env[EnvConfig.authToken];
+    dconfig.url ??= app.platform.env[EnvConfig.url];
         
     super.init(app);
   }

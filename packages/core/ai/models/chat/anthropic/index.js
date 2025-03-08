@@ -6,6 +6,7 @@
  * @import { 
  *  ChatAI, content, GenerateTextParams, StreamTextCallbacks 
  * } from "../../../core/types.private.js";
+ * @import { ENV } from '../../../../types.public.js';
  */
 
 import { invoke_tool_safely } from "../../../core/tools.js";
@@ -18,7 +19,11 @@ import { stream_message_builder } from "./stream-message-builder.js";
  * @typedef {ChatAI<config, claude_message>} Impl
  */
 
-export const ENV_ANTHROPIC_API_KEY = 'ANTHROPIC_API_KEY';
+
+/** @type {ENV<config>} */
+const EnvConfig = {
+  api_key: 'ANTHROPIC_API_KEY'
+}
 
 /**
  * @implements {Impl}
@@ -52,7 +57,7 @@ export class Anthropic {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_ANTHROPIC_API_KEY]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
   }
 
   /**

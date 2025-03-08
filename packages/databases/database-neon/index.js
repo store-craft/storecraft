@@ -1,3 +1,8 @@
+/**
+ * @import { NeonServerlessConfig, NeonHttpConfig } from './types.public.js';
+ * @import { ENV } from '@storecraft/core';
+ * 
+ */
 import { SQL } from '@storecraft/database-sql-base';
 import { NeonServerlessDialect } from './kysely.neon.dialect.js';
 import { NeonHTTPDialect } from './kysely.neon-http.dialect.js';
@@ -10,6 +15,16 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
+/** @type {ENV<NeonServerlessConfig>} */
+const NeonServerlessEnvConfig = {
+  poolConfig: {
+    database: 'NEON_DATABASE',
+    host: 'NEON_HOST',
+    port: 'NEON_PORT',
+    user: 'NEON_USER',
+    password: 'NEON_PASSWORD'
+  }
+}
 
 /**
  * @description serverless neon, supports interactive transactions over websockets.
@@ -21,7 +36,7 @@ export class NeonServerless extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').NeonServerlessConfig} [config] config 
+   * @param {NeonServerlessConfig} [config] config 
    */
   constructor(config) {
     super(
@@ -33,8 +48,35 @@ export class NeonServerless extends SQL {
 
   }
 
+  /** @type {SQL["init"]} */
+  init = (app) => {
+    const neon_dialect = /** @type {NeonServerlessDialect} */ (this.config.dialect);
+    const config = neon_dialect.config;
+
+    config.poolConfig.database ??= 
+      app.platform.env[NeonServerlessEnvConfig.poolConfig.database];
+
+    config.poolConfig.host ??= 
+      app.platform.env[NeonServerlessEnvConfig.poolConfig.host];
+
+    config.poolConfig.port ??= 
+      parseFloat(app.platform.env[NeonServerlessEnvConfig.poolConfig.port]);
+
+    config.poolConfig.user ??= 
+      app.platform.env[NeonServerlessEnvConfig.poolConfig.user];
+
+    config.poolConfig.password ??= 
+      app.platform.env[NeonServerlessEnvConfig.poolConfig.password];
+
+    super.init(app);
+  }
+
 }
 
+/** @type {ENV<NeonHttpConfig>} */
+const NeonHttpEnvConfig = {
+  connectionString: 'NEON_CONNECTION_URL'
+}
 
 /**
  * @description serverless http only neon, supports NON-interactive 
@@ -49,7 +91,7 @@ export class NeonHttp extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').NeonHttpConfig} [config] config 
+   * @param {NeonHttpConfig} [config] config 
    */
   constructor(config) {
     super(
@@ -59,6 +101,17 @@ export class NeonHttp extends SQL {
       }
     );
 
+  }
+
+  /** @type {SQL["init"]} */
+  init = (app) => {
+    const neon_dialect = /** @type {NeonHTTPDialect} */ (this.config.dialect);
+    const config = neon_dialect.config;
+
+    config.connectionString ??= 
+      app.platform.env[NeonHttpEnvConfig.connectionString];
+
+    super.init(app);
   }
 
 }

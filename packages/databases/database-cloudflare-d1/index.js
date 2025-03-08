@@ -1,5 +1,6 @@
 /**
  * @import { D1ConfigHTTP, D1ConfigWorker } from './types.public.js';
+ * @import { ENV } from '@storecraft/core';
  */
 
 import { SQL } from '@storecraft/database-sql-base';
@@ -14,10 +15,13 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
-export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID';
-export const ENV_D1_API_KEY = 'D1_API_KEY';
-export const ENV_D1_API_TOKEN = 'D1_API_TOKEN';
-export const ENV_D1_DATABASE_ID = 'D1_DATABASE_ID';
+/** @type {ENV<D1ConfigHTTP>} */
+const EnvConfig = {
+  account_id: 'CF_ACCOUNT_ID',
+  api_token: 'D1_API_TOKEN',
+  database_id: 'D1_DATABASE_ID',
+}
+
 
 /**
  * @extends {SQL}
@@ -42,10 +46,17 @@ export class D1_HTTP extends SQL {
   init = (app) => {
     const dialect = (/** @type {D1_HTTP_Dialect} */ (this.config.dialect));
 
-    dialect.config.account_id = dialect.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID];
-    dialect.config.api_token = dialect.config.api_token ?? app.platform.env[ENV_D1_API_KEY] 
-        ?? app.platform.env[ENV_D1_API_TOKEN];
-    dialect.config.database_id = dialect.config.database_id ?? app.platform.env[ENV_D1_DATABASE_ID];
+    dialect.config.account_id = dialect.config.account_id 
+      ?? app.platform.env[EnvConfig.account_id];
+
+    dialect.config.api_token = dialect.config.api_token 
+      ?? app.platform.env[EnvConfig.api_token] 
+      ?? app.platform.env['D1_API_KEY'];
+
+    dialect.config.database_id = dialect.config.database_id 
+      ?? app.platform.env[EnvConfig.database_id];
+      
+    super.init(app);
   }
 
 }

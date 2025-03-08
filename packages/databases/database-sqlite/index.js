@@ -1,17 +1,26 @@
+/**
+ * @import { Config } from './types.public.js';
+ * @import { ENV } from '@storecraft/core';
+ */
 import { SQL } from '@storecraft/database-sql-base';
 import { SqliteDialect } from 'kysely';
 import BetterSQLite from 'better-sqlite3';
 
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  filepath: 'SQLITE_FILEPATH',
+}
+
 
 /**
- * @description `better-sqlite` driver for storecraft
+ * @description `better-sqlite` driver for `storecraft`
  * 
  */
 export class SQLite extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').Config} [config] config 
+   * @param {Config} [config] config 
    */
   constructor(config={ filepath: 'database.db' }) {
     super(
@@ -19,12 +28,23 @@ export class SQLite extends SQL {
         dialect_type: 'SQLITE',
         dialect: new SqliteDialect(
           {
-            database: async () => new BetterSQLite(config.filepath, config.options)
+            database: async () => new BetterSQLite(
+              config.filepath, config.options
+            )
           }
         ),
       }
     );
 
+    // a bit hacky
+    this.dialect_config = config;
+  }
+
+
+  /** @type {SQL["init"]} */
+  init = (app) => {
+    this.dialect_config.filepath ??= app.platform.env[EnvConfig.filepath];
+    super.init(app);
   }
 
 }

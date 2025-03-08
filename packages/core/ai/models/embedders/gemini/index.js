@@ -5,9 +5,13 @@
  * @import { 
  *  GenerateEmbeddingsParams, GenerateEmbeddingsResult, AIEmbedder
  * } from "../../../core/types.private.js";
+ * @import { ENV } from '../../../../types.public.js';
  */
 
-export const ENV_GEMINI_API_KEY = 'GEMINI_API_KEY'
+/** @type {ENV<config>} */
+const EnvConfig = {
+  api_key: 'GEMINI_API_KEY'
+}
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -47,7 +51,7 @@ export class GeminiEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_GEMINI_API_KEY]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
   }
 
   /** @type {Impl["generateEmbeddings"]} */

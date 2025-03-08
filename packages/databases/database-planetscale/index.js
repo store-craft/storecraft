@@ -1,3 +1,8 @@
+/**
+ * @import { PlanetScaleDialectConfig } from './types.public.js';
+ * @import { ENV } from '@storecraft/core';
+ * 
+ */
 import { SQL } from '@storecraft/database-sql-base';
 import { PlanetScaleDialect } from './kysely.planet.dialect.js';
 
@@ -10,6 +15,11 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
+/** @type {ENV<PlanetScaleDialectConfig>} */
+const EnvConfig = {
+  url: 'PLANETSCALE_CONNECTION_URL'
+}
+
 
 /**
  * 
@@ -19,7 +29,7 @@ export class PlanetScale extends SQL {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').PlanetScaleDialectConfig} [config] config 
+   * @param {PlanetScaleDialectConfig} [config] config 
    */
   constructor(config) {
     super(
@@ -29,6 +39,16 @@ export class PlanetScale extends SQL {
       }
     );
 
+  }
+
+  /** @type {SQL["init"]} */
+  init = (app) => {
+    const dialect = /** @type {PlanetScaleDialect} */ (this.config.dialect);
+    const config = dialect.config;
+
+    config.url ??= app.platform.env[EnvConfig.url];
+    
+    super.init(app);
   }
 
 }

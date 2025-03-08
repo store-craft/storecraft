@@ -1,3 +1,6 @@
+/**
+ * @import { Meta } from './compile.app.js';
+ */
 import { compile_aws } from "./compile.platform.aws-lambda.js";
 import { compile_bun } from "./compile.platform.bun.js";
 import { compile_workers } from "./compile.platform.cloudflare-workers.js";
@@ -8,7 +11,7 @@ import { compile_node } from "./compile.platform.node.js";
 
 /**
  * 
- * @param {import("./compile.app.js").Meta} meta 
+ * @param {Meta} meta 
  */
 export const compile_all = async (meta) => {
 

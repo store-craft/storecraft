@@ -2,6 +2,7 @@
  * @import { 
  *  AIEmbedder, VectorStore 
  * } from '@storecraft/core/ai/core/types.private.js'
+ * @import { ENV } from '@storecraft/core';
  * @import {
  *  Config
  * } from './types.js'
@@ -12,11 +13,18 @@
  */
 
 import * as libsql from "@libsql/client";
-import { truncate_or_pad_vector } from "@storecraft/core/ai/models/vector-stores/index.js";
+import { 
+  truncate_or_pad_vector 
+} from "@storecraft/core/ai/models/vector-stores/index.js";
 
 export const DEFAULT_INDEX_NAME = 'vector_store';
-export const ENV_LIBSQL_AUTH_TOKEN = 'LIBSQL_AUTH_TOKEN';
-export const ENV_LIBSQL_URL = 'LIBSQL_URL';
+
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  authToken: 'LIBSQL_AUTH_TOKEN',
+  url: 'LIBSQL_URL',
+}
+
 
 /** @param {any} json */
 const parse_json_safely = json => {
@@ -85,8 +93,8 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.authToken = this.config.authToken ?? app.platform.env[ENV_LIBSQL_AUTH_TOKEN];
-    this.config.url = this.config.url ?? app.platform.env[ENV_LIBSQL_URL];
+    this.config.authToken ??= app.platform.env[EnvConfig.authToken];
+    this.config.url ??= app.platform.env[EnvConfig.url];
   }
 
   /** @type {VectorStore["embedder"]} */

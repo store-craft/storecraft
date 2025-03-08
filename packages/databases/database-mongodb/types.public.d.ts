@@ -21,3 +21,4 @@ export type Config = {
    */
   options?: MongoClientOptions;
 }
+

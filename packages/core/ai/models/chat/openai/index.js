@@ -6,6 +6,7 @@
  * @import { 
  *  content, content_text, GenerateTextParams, StreamTextCallbacks, ChatAI
  * } from "../../../core/types.private.js";
+ * @import { ENV } from '../../../../types.public.js';
  */
 
 import { invoke_tool_safely } from "../../../core/tools.js";
@@ -22,7 +23,10 @@ const strip_leading = (text = '') => {
   return (text[0]==='/') ? text.slice(1) : text;
 }
 
-export const ENV_OPENAI_API_KEY = 'OPENAI_API_KEY';
+/** @type {ENV<config>} */
+const EnvConfig = {
+  api_key: 'OPENAI_API_KEY'
+}
 
 /**
  * @implements {Impl}
@@ -33,7 +37,7 @@ export class OpenAI {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_OPENAI_API_KEY]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
   }
 
   /**

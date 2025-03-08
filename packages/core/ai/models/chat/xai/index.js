@@ -1,11 +1,18 @@
+/**
+ * @import { ENV } from '../../../../types.public.js';
+ * @import { config } from './types.js';
+ */
 import { OpenAI } from "../openai/index.js";
 
-export const ENV_XAI_API_KEY = 'XAI_API_KEY';
+/** @type {ENV<config>} */
+const EnvConfig = {
+  api_key: 'XAI_API_KEY'
+}
 
 export class XAI extends OpenAI {
 
   /**
-   * @param {import("./types.js").config} config 
+   * @param {config} config 
    */
   constructor(config={}) {
     super(
@@ -20,7 +27,7 @@ export class XAI extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_XAI_API_KEY]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
   }
 
 }

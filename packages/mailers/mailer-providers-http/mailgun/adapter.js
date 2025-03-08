@@ -1,13 +1,17 @@
 /**
  * @import { Config } from './types.public.js'
  * @import { mailer } from '@storecraft/core/mailer'
+ * @import { ENV } from '@storecraft/core';
  * @import { 
  * } from './types.private.js'
 */
 import { base64 } from "@storecraft/core/crypto";
 import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.utils.js";
 
-export const ENV_MAILGUN_API_KEY = 'MAILGUN_API_KEY';
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  apikey: 'MAILGUN_API_KEY'
+}
 
 /**
  * @implements {mailer<Config>}
@@ -30,7 +34,7 @@ export class Mailgun {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey = this.config.apikey ?? app.platform.env[ENV_MAILGUN_API_KEY];
+    this.config.apikey ??= app.platform.env[EnvConfig.apikey];
   };
 
   /**

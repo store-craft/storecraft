@@ -85,7 +85,7 @@ export const collect_database = async () => {
   return {
     type: 'database',
     id: id,
-    config: await collect_general_config(id)
+    config: await collect_general_config(id),
   };
 }
 

@@ -10,15 +10,19 @@ cf_response_wrapper,
  * @import {
  *  Config
  * } from './types.js'
+ * @import { ENV } from '../../../../types.public.js';
  */
 
 import { truncate_or_pad_vector } from '../index.js'
 
 export const NAMESPACE_KEY = '__namespace'
-export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID'
-export const ENV_CF_API_KEY = 'CF_API_KEY'
-export const ENV_CF_VECTORIZE_API_KEY = 'CF_VECTORIZE_API_KEY'
-export const ENV_CF_EMAIL = 'CF_EMAIL'
+// export const ENV_CF_EMAIL = 'CF_EMAIL'
+
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  api_key: 'CF_VECTORIZE_API_KEY',
+  account_id: 'CF_ACCOUNT_ID',
+}
 
 /**
  * @implements {VectorStore}
@@ -45,9 +49,9 @@ export class Vectorize {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.account_id = this.config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID]; 
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_CF_VECTORIZE_API_KEY] 
-          ?? app.platform.env[ENV_CF_API_KEY]; 
+    this.config.account_id ??= app.platform.env[EnvConfig.account_id]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key] 
+          ?? app.platform.env['CF_API_KEY']; 
     // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 

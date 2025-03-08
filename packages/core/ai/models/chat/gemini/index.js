@@ -1,11 +1,18 @@
+/**
+ * @import { ENV } from '../../../../types.public.js';
+ * @import { config } from './types.js';
+ */
 import { OpenAI } from "../openai/index.js";
 
-export const ENV_GEMINI_API_KEY = 'GEMINI_API_KEY';
+/** @type {ENV<config>} */
+const EnvConfig = {
+  api_key: 'GEMINI_API_KEY'
+}
 
 export class Gemini extends OpenAI {
 
   /**
-   * @param {import("./types.js").config} config 
+   * @param {config} config 
    */
   constructor(config) {
     super(
@@ -21,7 +28,7 @@ export class Gemini extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_GEMINI_API_KEY]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
   }
 
 }

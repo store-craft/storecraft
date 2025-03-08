@@ -1,5 +1,6 @@
 /**
  * @import { AwsS3Config, Config, R2Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { storage_driver, StorageFeatures } from '@storecraft/core/storage'
  */
 import { App } from '@storecraft/core'
@@ -27,11 +28,13 @@ const infer_content_type = (name) => {
   return type ?? 'application/octet-stream';
 }
 
-export const ENV_S3_ACCESS_KEY_ID = 'S3_ACCESS_KEY_ID';
-export const ENV_S3_SECRET_ACCESS_KEY = 'S3_SECRET_ACCESS_KEY';
-export const ENV_S3_REGION = 'ENV_S3_REGION';
-export const ENV_S3_BUCKET = 'ENV_S3_BUCKET';
-export const ENV_CF_ACCOUNT_ID = 'CF_ACCOUNT_ID';
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  accessKeyId: 'S3_ACCESS_KEY_ID',
+  secretAccessKey: 'S3_SECRET_ACCESS_KEY',
+  bucket: 'ENV_S3_BUCKET',
+  region: 'ENV_S3_REGION',
+}
 
 /**
  * @description The base S3 compatible class
@@ -78,11 +81,11 @@ export class S3CompatibleStorage {
    * @type {storage_driver["init"]}
    */
   async init(app) { 
-    this.config.accessKeyId = this.config.accessKeyId ?? app.platform.env[ENV_S3_ACCESS_KEY_ID]
-    this.config.secretAccessKey = this.config.secretAccessKey ?? app.platform.env[ENV_S3_SECRET_ACCESS_KEY]
+    this.config.accessKeyId ??= app.platform.env[EnvConfig.accessKeyId];
+    this.config.secretAccessKey ??= app.platform.env[EnvConfig.secretAccessKey];
+    this.config.bucket ??= app.platform.env[EnvConfig.bucket];
     // @ts-ignore
-    this.config.region = this.config.region ?? app.platform.env[ENV_S3_REGION];
-    this.config.bucket = this.config.bucket ?? app.platform.env[ENV_S3_BUCKET];
+    this.config.region ??= app.platform.env[EnvConfig.region];
     return this; 
   }
 
@@ -273,6 +276,14 @@ export class S3CompatibleStorage {
   }
 }
 
+/** @type {ENV<R2Config>} */
+const R2EnvConfig = {
+  accessKeyId: 'S3_ACCESS_KEY_ID',
+  secretAccessKey: 'S3_SECRET_ACCESS_KEY',
+  bucket: 'ENV_S3_BUCKET',
+  account_id: 'CF_ACCOUNT_ID'
+}
+
 /**
  * Cloudflare R2
  */
@@ -298,12 +309,19 @@ export class R2 extends S3CompatibleStorage {
   /** @type {S3CompatibleStorage["init"]} */
   init = async (app) => {
     await super.init(app);
-    const cf_account_id = this.r2_config.account_id ?? app.platform.env[ENV_CF_ACCOUNT_ID];
-    this.config.endpoint = this.config.endpoint ?? `https://${cf_account_id}.r2.cloudflarestorage.com`
+    this.r2_config.account_id ??= app.platform.env[R2EnvConfig.account_id];
+    this.config.endpoint = this.config.endpoint ?? `https://${this.r2_config.account_id}.r2.cloudflarestorage.com`
     return this;
   }
   
 }
+
+
+/** @type {ENV<AwsS3Config>} */
+const AWSS3EnvConfig = {
+  ...EnvConfig
+}
+
 
 /**
  * Amazon S3
@@ -336,6 +354,11 @@ export class S3 extends S3CompatibleStorage {
 
 }
 
+
+/** @type {ENV<AwsS3Config>} */
+const DOEnvConfig = {
+  ...EnvConfig
+}
 
 /**
  * Digital Ocean spaces

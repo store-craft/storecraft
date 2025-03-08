@@ -9,12 +9,17 @@
  * @import {
  *  Config
  * } from './types.js'
+ * @import { ENV } from '../../../../types.public.js';
  */
 
 import { truncate_or_pad_vector } from '../index.js';
 
-export const NAMESPACE_KEY = '__namespace'
-export const ENV_PINECONE_API_KEY = 'PINECONE_API_KEY'
+export const NAMESPACE_KEY = '__namespace';
+
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  api_key: 'PINECONE_API_KEY'
+}
 
 /**
  * @implements {VectorStore}
@@ -42,7 +47,7 @@ export class Pinecone {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.api_key = this.config.api_key ?? app.platform.env[ENV_PINECONE_API_KEY]; 
+    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
   }
 
   /** @type {VectorStore["embedder"]} */

@@ -1,3 +1,6 @@
+/**
+ * @import { Meta } from './compile.app.js';
+ */
 import { compile_app } from './compile.app.js'
 import { compile_migrate } from './compile.migrate.js';
 import { 
@@ -7,7 +10,7 @@ import {
 
 /**
  * 
- * @param {import("./compile.app.js").Meta} meta 
+ * @param {Meta} meta 
  */
 export const compile_node = async (meta) => {
   const compiled_app = compile_app(meta);

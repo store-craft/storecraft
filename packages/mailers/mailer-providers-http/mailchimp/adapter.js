@@ -1,5 +1,6 @@
 /**
  * @import { Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { mailer } from '@storecraft/core/mailer'
  * @import { 
  *  Mailchimp_sendmail, Mailchimp_sendmail_message_attachment 
@@ -8,7 +9,11 @@
 
 import { convert_to_base64 } from "./adapter.utils.js";
 
-export const ENV_MAILCHIMP_API_KEY = 'MAILCHIMP_API_KEY';
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  apikey: 'MAILCHIMP_API_KEY'
+}
+
 
 /**
  * @description mailer with mail-chimp / mandrill http api
@@ -31,7 +36,7 @@ export class MailChimp {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey = this.config.apikey ?? app.platform.env[ENV_MAILCHIMP_API_KEY];
+    this.config.apikey ??= app.platform.env[EnvConfig.apikey];
   };
 
   /**

@@ -1,5 +1,6 @@
 /**
  * @import { Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
  * @import { payment_gateway } from '@storecraft/core/payments'
  * @import { paypal_order, paypal_order_request } from './types.private.js'
@@ -16,8 +17,11 @@ import html_buy_ui from './adapter.html.js';
  * @typedef {payment_gateway<Config, CreateResult>} Impl
  */
 
-export const ENV_PAYPAL_CLIENT_ID = 'PAYPAL_CLIENT_ID';
-export const ENV_PAYPAL_SECRET = 'PAYPAL_SECRET';
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  client_id: 'PAYPAL_CLIENT_ID',
+  secret: 'PAYPAL_SECRET'
+}
 
 /**
  * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
@@ -44,8 +48,8 @@ export class Paypal {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.client_id = this.config.client_id ?? app.platform.env[ENV_PAYPAL_CLIENT_ID];
-    this.config.secret = this.config.secret ?? app.platform.env[ENV_PAYPAL_SECRET];
+    this.config.client_id = this.config.client_id ?? app.platform.env[EnvConfig.client_id];
+    this.config.secret = this.config.secret ?? app.platform.env[EnvConfig.secret];
 
     const is_valid = this.config.client_id && this.config.secret;
 

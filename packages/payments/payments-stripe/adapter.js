@@ -1,5 +1,6 @@
 /**
  * @import { Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
  * @import { payment_gateway } from '@storecraft/core/payments'
  * @import { ApiRequest, ApiResponse } from '@storecraft/core/rest'
@@ -23,9 +24,13 @@ import { Stripe as StripeCls } from 'stripe'
  * storage where we store the `order_id` of the `storecraft` order.
  */
 export const metadata_storecraft_order_id = 'storecraft_order_id'
-export const ENV_STRIPE_PUBLISHABLE_KEY = 'STRIPE_PUBLISHABLE_KEY';
-export const ENV_STRIPE_SECRET_KEY = 'STRIPE_SECRET_KEY';
-export const ENV_STRIPE_WEBHOOK_SECRET = 'STRIPE_WEBHOOK_SECRET';
+
+/** @type {ENV<Config>} */
+const EnvConfig = {
+  publishable_key: 'STRIPE_PUBLISHABLE_KEY',
+  secret_key: 'STRIPE_SECRET_KEY',
+  webhook_endpoint_secret: 'STRIPE_WEBHOOK_SECRET'
+}
 
 /**
  * @implements {Impl}
@@ -64,11 +69,11 @@ export class Stripe {
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.publishable_key = this.config.publishable_key ?? 
-        app.platform.env[ENV_STRIPE_PUBLISHABLE_KEY];
+        app.platform.env[EnvConfig.publishable_key];
     this.config.secret_key = this.config.secret_key ?? 
-        app.platform.env[ENV_STRIPE_SECRET_KEY];
+        app.platform.env[EnvConfig.secret_key];
     this.config.webhook_endpoint_secret = this.config.webhook_endpoint_secret ?? 
-        app.platform.env[ENV_STRIPE_WEBHOOK_SECRET];
+        app.platform.env[EnvConfig.webhook_endpoint_secret];
   }
 
   get stripe() {

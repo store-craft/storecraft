@@ -1,3 +1,6 @@
+/**
+ * @import { CommandModule } from 'yargs';
+ */
 import { collect_config } from "./collect/collect.config.js";
 import { collect_platform } from "./collect/collect.platform.js";
 import { collect_database } from "./collect/collect.database.js";
@@ -14,7 +17,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { exit } from "node:process";
 
 /**
- * @type {import("yargs").CommandModule}
+ * @type {CommandModule}
  */
 export const command_create = {
   command: 'create',

@@ -24,17 +24,17 @@ import { impl as search } from './src/con.search.js';
 export { migrateToLatest } from './migrate.js';
 export { MongoVectorStore } from './vector-store/index.js';
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  db_name: 'MONGODB_NAME',
-  url: 'MONGODB_URL',
-}
-
 
 /**
  * @implements {db_driver}
  */
 export class MongoDB {
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    db_name: 'MONGODB_NAME',
+    url: 'MONGODB_URL',
+  });
 
   /** 
    * 
@@ -87,8 +87,8 @@ export class MongoDB {
     if(this.isReady)
       return this;
     const c = this.#config;
-    c.db_name ??= app.platform.env[EnvConfig.db_name];
-    c.url ??= app.platform.env[EnvConfig.url] ?? 'main';
+    c.db_name ??= app.platform.env[MongoDB.EnvConfig.db_name];
+    c.url ??= app.platform.env[MongoDB.EnvConfig.url] ?? 'main';
 
     if(!this.config.db_name || !this.config.url) {
       throw new Error('MongoVectorStore::client() - missing url or db_name');

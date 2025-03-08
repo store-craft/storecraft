@@ -4,12 +4,14 @@
  */
 import { OpenAI } from "../openai/index.js";
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'MISTRAL_API_KEY'
-}
-
+/**
+ */
 export class Mistral extends OpenAI {
+
+  /** @satisfies {ENV<config>} */
+  static MistralEnvConfig = /** @type{const} */ ({
+    api_key: 'MISTRAL_API_KEY'
+  });
 
   /**
    * @param {import("./types.js").config} config 
@@ -28,7 +30,7 @@ export class Mistral extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[Mistral.MistralEnvConfig.api_key]; 
   }
 
 }

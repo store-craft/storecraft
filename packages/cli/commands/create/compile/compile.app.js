@@ -1,3 +1,4 @@
+import { SQLite } from '@storecraft/database-sqlite'
 import { o2s } from '../../utils.js'
 import { collect_config } from '../collect/collect.config.js'
 import { collect_database } from '../collect/collect.database.js'
@@ -5,6 +6,7 @@ import { collect_mailer } from '../collect/collect.mailer.js'
 import { collect_payments } from '../collect/collect.payments.js'
 import { collect_platform } from '../collect/collect.platform.js'
 import { collect_storage } from '../collect/collect.storage.js'
+import { extract_env_variables } from './compile.utils.js'
 
 
 /**
@@ -95,7 +97,15 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-sqlite'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof SQLite.EnvConfig} */ (
+            {
+              filepath: 'SQLITE_FILEPATH',
+            }
+          )
+        )
       }
     case 'postgres':
       return {

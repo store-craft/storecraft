@@ -18,7 +18,7 @@ export { App } from './index.js';
  */
 export type ENV<T> = Partial<
   {
-    [K in keyof T]: T[K] extends Record<string, any> ? ENV<T[K]> : (string)
+    readonly [K in keyof T]: T[K] extends Record<string, any> ? ENV<T[K]> : (string)
   }
 >;
   

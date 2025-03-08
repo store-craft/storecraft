@@ -8,10 +8,6 @@
 import { base64 } from "@storecraft/core/crypto";
 import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.utils.js";
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  apikey: 'MAILGUN_API_KEY'
-}
 
 /**
  * @implements {mailer<Config>}
@@ -20,6 +16,11 @@ const EnvConfig = {
  */
 export class Mailgun {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    apikey: 'MAILGUN_API_KEY'
+  });
+
   /** @type {Config} */ #_config;
 
   /**
@@ -34,7 +35,7 @@ export class Mailgun {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.platform.env[EnvConfig.apikey];
+    this.config.apikey ??= app.platform.env[Mailgun.EnvConfig.apikey];
   };
 
   /**

@@ -15,17 +15,16 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
-/** @type {ENV<PlanetScaleDialectConfig>} */
-const EnvConfig = {
-  url: 'PLANETSCALE_CONNECTION_URL'
-}
-
-
 /**
  * 
  * @extends {SQL}
  */
 export class PlanetScale extends SQL {
+
+  /** @satisfies {ENV<PlanetScaleDialectConfig>} */
+  static EnvConfig = /** @type{const} */ ({
+    url: 'PLANETSCALE_CONNECTION_URL'
+  });
 
   /**
    * 
@@ -46,7 +45,7 @@ export class PlanetScale extends SQL {
     const dialect = /** @type {PlanetScaleDialect} */ (this.config.dialect);
     const config = dialect.config;
 
-    config.url ??= app.platform.env[EnvConfig.url];
+    config.url ??= app.platform.env[PlanetScale.EnvConfig.url];
     
     super.init(app);
   }

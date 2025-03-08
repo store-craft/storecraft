@@ -19,13 +19,6 @@ import {
 
 export const DEFAULT_INDEX_NAME = 'vector_store';
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  authToken: 'LIBSQL_AUTH_TOKEN',
-  url: 'LIBSQL_URL',
-}
-
-
 /** @param {any} json */
 const parse_json_safely = json => {
   try {
@@ -52,6 +45,12 @@ const parse_json_safely = json => {
  * @implements {VectorStore}
  */
 export class LibSQLVectorStore {
+  
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    authToken: 'LIBSQL_AUTH_TOKEN',
+    url: 'LIBSQL_URL',
+  });
 
   /** @type {Config} */
   config;
@@ -93,8 +92,8 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.authToken ??= app.platform.env[EnvConfig.authToken];
-    this.config.url ??= app.platform.env[EnvConfig.url];
+    this.config.authToken ??= app.platform.env[LibSQLVectorStore.EnvConfig.authToken];
+    this.config.url ??= app.platform.env[LibSQLVectorStore.EnvConfig.url];
   }
 
   /** @type {VectorStore["embedder"]} */

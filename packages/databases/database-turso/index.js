@@ -8,18 +8,17 @@ import { LibsqlDialect } from './kysely.turso.dialect.js';
 
 export { LibSQLVectorStore } from './vector-store/index.js'
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  authToken: 'LIBSQL_AUTH_TOKEN',
-  url: 'LIBSQL_URL'
-}
-
-
 /**
  * @extends {SQL}
  */
 export class Turso extends SQL {
 
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    authToken: 'LIBSQL_AUTH_TOKEN',
+    url: 'LIBSQL_URL'
+  });
+  
   /**
    * 
    * @param {Config} [config] config 
@@ -44,8 +43,8 @@ export class Turso extends SQL {
     const dialect = /** @type {LibsqlDialect}*/ (this.config.dialect);
     const dconfig = dialect.config;
     
-    dconfig.authToken ??= app.platform.env[EnvConfig.authToken];
-    dconfig.url ??= app.platform.env[EnvConfig.url];
+    dconfig.authToken ??= app.platform.env[Turso.EnvConfig.authToken];
+    dconfig.url ??= app.platform.env[Turso.EnvConfig.url];
         
     super.init(app);
   }

@@ -28,13 +28,6 @@ const infer_content_type = (name) => {
   return type ?? 'application/octet-stream';
 }
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  bucket: 'GS_BUCKET',
-  client_email: 'GS_CLIENT_EMAIL',
-  private_key: 'GS_PRIVATE_KEY',
-  private_key_id: 'GS_PRIVATE_KEY_ID',
-}
 
 /**
  * @description Google Storage adapter
@@ -43,6 +36,14 @@ const EnvConfig = {
  */
 export class GoogleStorage {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    bucket: 'GS_BUCKET',
+    client_email: 'GS_CLIENT_EMAIL',
+    private_key: 'GS_PRIVATE_KEY',
+    private_key_id: 'GS_PRIVATE_KEY_ID',
+  });
+
   /** @type {Config} */ #_config;
 
   /**
@@ -62,10 +63,10 @@ export class GoogleStorage {
     if(!app)
       return this;
 
-    this.#_config.bucket ??= app.platform.env[EnvConfig.bucket];
-    this.#_config.client_email ??= app.platform.env[EnvConfig.client_email];
-    this.#_config.private_key ??= app.platform.env[EnvConfig.private_key];
-    this.#_config.private_key_id ??= app.platform.env[EnvConfig.private_key_id];
+    this.#_config.bucket ??= app.platform.env[GoogleStorage.EnvConfig.bucket];
+    this.#_config.client_email ??= app.platform.env[GoogleStorage.EnvConfig.client_email];
+    this.#_config.private_key ??= app.platform.env[GoogleStorage.EnvConfig.private_key];
+    this.#_config.private_key_id ??= app.platform.env[GoogleStorage.EnvConfig.private_key_id];
 
     return this; 
   }

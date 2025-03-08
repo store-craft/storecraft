@@ -20,15 +20,16 @@ import { stream_message_builder } from "./stream-message-builder.js";
  */
 
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'ANTHROPIC_API_KEY'
-}
-
 /**
  * @implements {Impl}
  */
 export class Anthropic {
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'ANTHROPIC_API_KEY'
+  });
+
   #chat_completion_url = '';
   #chat_models_url = '';
   #anthropic_endpoint = 'https://api.anthropic.com'
@@ -57,7 +58,7 @@ export class Anthropic {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[Anthropic.EnvConfig.api_key]; 
   }
 
   /**

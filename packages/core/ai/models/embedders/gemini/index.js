@@ -8,10 +8,6 @@
  * @import { ENV } from '../../../../types.public.js';
  */
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'GEMINI_API_KEY'
-}
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -27,6 +23,11 @@ const strip_leading = (text = '') => {
  * @implements {Impl}
  */
 export class GeminiEmbedder {
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'GEMINI_API_KEY'
+  });
 
   /**
    * @param {config} [config={}] 
@@ -51,7 +52,7 @@ export class GeminiEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[GeminiEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["generateEmbeddings"]} */

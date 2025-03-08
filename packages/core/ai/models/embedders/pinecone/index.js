@@ -8,11 +8,6 @@
  * @import { ENV } from '../../../../types.public.js';
  */
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'PINECONE_API_KEY'
-}
-
 /**
  * @typedef {AIEmbedder<config>} Impl
  */
@@ -22,6 +17,12 @@ const EnvConfig = {
  * @implements {Impl}
  */
 export class PineconeEmbedder {
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'PINECONE_API_KEY'
+  });
+
   #embeddings_url = 'https://api.pinecone.io/embed';
 
   /**
@@ -51,7 +52,7 @@ export class PineconeEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[PineconeEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

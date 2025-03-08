@@ -18,16 +18,17 @@ import { truncate_or_pad_vector } from '../index.js'
 export const NAMESPACE_KEY = '__namespace'
 // export const ENV_CF_EMAIL = 'CF_EMAIL'
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  api_key: 'CF_VECTORIZE_API_KEY',
-  account_id: 'CF_ACCOUNT_ID',
-}
-
 /**
  * @implements {VectorStore}
  */
 export class Vectorize {
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'CF_VECTORIZE_API_KEY',
+    account_id: 'CF_ACCOUNT_ID',
+  });
+
 
   /** @type {Config} */ #config;
 
@@ -49,14 +50,14 @@ export class Vectorize {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.account_id ??= app.platform.env[EnvConfig.account_id]; 
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key] 
+    this.config.account_id ??= app.platform.env[Vectorize.EnvConfig.account_id]; 
+    this.config.api_key ??= app.platform.env[Vectorize.EnvConfig.api_key] 
           ?? app.platform.env['CF_API_KEY']; 
     // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 
   #to_cf_url = (path = '') => {
-    return `https://api.cloudflare.com/client/v4/accounts/${this.config.account_id}/vectorize/v2/indexes${path ? ('/' + path) : ''}`
+    return `https://api.cloudflare.com/client/v4/accounts/${this.config.account_id}/vectorize/v2/indexes${path ? ('/' + path) : ''}`;
   }
 
   /** @type {VectorStore["embedder"]} */

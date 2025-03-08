@@ -1,8 +1,9 @@
 import { cancel, isCancel } from "@clack/prompts";
 
 /**
- * 
- * @param {Promise<any>} prompt 
+ * @template T
+ * @param {Promise<T>} prompt 
+ * @returns {Promise<Exclude<T, symbol>>} prompt 
  */
 export const withCancel = async (prompt) => {
   const v = await prompt;
@@ -10,6 +11,7 @@ export const withCancel = async (prompt) => {
     cancel('cancelled');
     process.exit(0)
   }
+  // @ts-ignore
   return v;
 }
 

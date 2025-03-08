@@ -16,15 +16,15 @@ import { truncate_or_pad_vector } from '../index.js';
 
 export const NAMESPACE_KEY = '__namespace';
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  api_key: 'PINECONE_API_KEY'
-}
-
 /**
  * @implements {VectorStore}
  */
 export class Pinecone {
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'PINECONE_API_KEY'
+  });
 
   #host_name_cache = ''
   /** @type {Config} */ #config;
@@ -47,7 +47,7 @@ export class Pinecone {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[Pinecone.EnvConfig.api_key]; 
   }
 
   /** @type {VectorStore["embedder"]} */

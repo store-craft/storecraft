@@ -23,12 +23,6 @@ export const EMBEDDING_KEY_PATH = 'embedding';
 export const NAMESPACE_KEY = 'namespace';
 export const DEFAULT_INDEX_NAME = 'vector_store';
 
-/** @type {ENV<Config>} */
-const EnvConfig = {
-  db_name: 'MONGODB_NAME',
-  url: 'MONGODB_URL'
-}
-
 /**
  * @typedef {VectorStore} Impl
  */
@@ -40,6 +34,12 @@ const EnvConfig = {
  * @implements {VectorStore}
  */
 export class MongoVectorStore {
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    db_name: 'MONGODB_NAME',
+    url: 'MONGODB_URL'
+  });
 
   /** @type {Config} */
   config;
@@ -81,8 +81,8 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.url ??= app.platform.env[EnvConfig.url]; 
-    this.config.db_name ??= app.platform.env[EnvConfig.db_name] ?? 'main'; 
+    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url]; 
+    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */

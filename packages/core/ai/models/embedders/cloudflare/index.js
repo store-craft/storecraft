@@ -23,13 +23,6 @@
  */
 
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'CF_AI_API_KEY',
-  account_id: 'CF_ACCOUNT_ID',
-}
-
-
 /** @type {Record<config["model"], number>} */
 const TAGS = {
   '@cf/baai/bge-large-en-v1.5': 1024,
@@ -41,6 +34,12 @@ const TAGS = {
  * @implements {Impl}
  */
 export class CloudflareEmbedder {
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'CF_AI_API_KEY',
+    account_id: 'CF_ACCOUNT_ID',
+  });
 
   /**
    * @param {config} config 
@@ -63,8 +62,8 @@ export class CloudflareEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.account_id ??= app.platform.env[EnvConfig.account_id]; 
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key] 
+    this.config.account_id ??= app.platform.env[CloudflareEmbedder.EnvConfig.account_id]; 
+    this.config.api_key ??= app.platform.env[CloudflareEmbedder.EnvConfig.api_key] 
           ?? app.platform.env['CF_API_KEY']; 
     // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }

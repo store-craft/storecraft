@@ -23,21 +23,23 @@ const strip_leading = (text = '') => {
   return (text[0]==='/') ? text.slice(1) : text;
 }
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'OPENAI_API_KEY'
-}
 
 /**
  * @implements {Impl}
  */
-export class OpenAI {
+export class OpenAI { 
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'OPENAI_API_KEY'
+  });
+
   #chat_completion_url = '';
   #chat_models_url = '';
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[OpenAI.EnvConfig.api_key]; 
   }
 
   /**

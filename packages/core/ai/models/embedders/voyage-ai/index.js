@@ -8,10 +8,6 @@
  * @import { ENV } from '../../../../types.public.js';
  */
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'VOYAGE_AI_API_KEY'
-}
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -25,6 +21,12 @@ const strip_leading = (text = '') => {
  * @implements {Impl}
  */
 export class VoyageAIEmbedder {
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'VOYAGE_AI_API_KEY'
+  });
+
   #embeddings_url = '';
 
   /**
@@ -56,7 +58,7 @@ export class VoyageAIEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[VoyageAIEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

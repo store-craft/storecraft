@@ -15,17 +15,6 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
-/** @type {ENV<NeonServerlessConfig>} */
-const NeonServerlessEnvConfig = {
-  poolConfig: {
-    database: 'NEON_DATABASE',
-    host: 'NEON_HOST',
-    port: 'NEON_PORT',
-    user: 'NEON_USER',
-    password: 'NEON_PASSWORD'
-  }
-}
-
 /**
  * @description serverless neon, supports interactive transactions over websockets.
  * You can also try the `http` variant which supports batches here {@link NeonHttp}
@@ -33,6 +22,17 @@ const NeonServerlessEnvConfig = {
  * @extends {SQL}
  */
 export class NeonServerless extends SQL {
+
+  /** @satisfies {ENV<NeonServerlessConfig>} */
+  static NeonServerlessEnvConfig = /** @type{const} */ ({
+    poolConfig: {
+      database: 'NEON_DATABASE',
+      host: 'NEON_HOST',
+      port: 'NEON_PORT',
+      user: 'NEON_USER',
+      password: 'NEON_PASSWORD'
+    }
+  });
 
   /**
    * 
@@ -54,28 +54,23 @@ export class NeonServerless extends SQL {
     const config = neon_dialect.config;
 
     config.poolConfig.database ??= 
-      app.platform.env[NeonServerlessEnvConfig.poolConfig.database];
+      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.database];
 
     config.poolConfig.host ??= 
-      app.platform.env[NeonServerlessEnvConfig.poolConfig.host];
+      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.host];
 
     config.poolConfig.port ??= 
-      parseFloat(app.platform.env[NeonServerlessEnvConfig.poolConfig.port]);
+      parseFloat(app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.port]);
 
     config.poolConfig.user ??= 
-      app.platform.env[NeonServerlessEnvConfig.poolConfig.user];
+      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.user];
 
     config.poolConfig.password ??= 
-      app.platform.env[NeonServerlessEnvConfig.poolConfig.password];
+      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.password];
 
     super.init(app);
   }
 
-}
-
-/** @type {ENV<NeonHttpConfig>} */
-const NeonHttpEnvConfig = {
-  connectionString: 'NEON_CONNECTION_URL'
 }
 
 /**
@@ -88,6 +83,11 @@ const NeonHttpEnvConfig = {
  * @extends {SQL}
  */
 export class NeonHttp extends SQL {
+
+  /** @type {ENV<NeonHttpConfig>} */
+  static NeonHttpEnvConfig = /** @type{const} */ ({
+    connectionString: 'NEON_CONNECTION_URL',
+  });
 
   /**
    * 
@@ -109,7 +109,7 @@ export class NeonHttp extends SQL {
     const config = neon_dialect.config;
 
     config.connectionString ??= 
-      app.platform.env[NeonHttpEnvConfig.connectionString];
+      app.platform.env[NeonHttp.NeonHttpEnvConfig.connectionString];
 
     super.init(app);
   }

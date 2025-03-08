@@ -8,10 +8,6 @@
  * @import { ENV } from '../../../../types.public.js';
  */
 
-/** @type {ENV<config>} */
-const EnvConfig = {
-  api_key: 'OPENAI_API_KEY'
-}
 
 /**
  * @typedef {AIEmbedder<config>} Impl
@@ -32,6 +28,12 @@ const DIM = {
  * @implements {Impl}
  */
 export class OpenAIEmbedder {
+
+  /** @satisfies {ENV<config>} */
+  static EnvConfig = /** @type{const} */ ({
+    api_key: 'OPENAI_API_KEY'
+  });
+
   #embeddings_url = '';
 
   /**
@@ -54,7 +56,7 @@ export class OpenAIEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[EnvConfig.api_key]; 
+    this.config.api_key ??= app.platform.env[OpenAIEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

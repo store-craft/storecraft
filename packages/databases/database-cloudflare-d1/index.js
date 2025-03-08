@@ -15,18 +15,18 @@ const assert = (b, msg) => {
   if(!Boolean(b)) throw new Error(msg);
 }
 
-/** @type {ENV<D1ConfigHTTP>} */
-const EnvConfig = {
-  account_id: 'CF_ACCOUNT_ID',
-  api_token: 'D1_API_TOKEN',
-  database_id: 'D1_DATABASE_ID',
-}
-
 
 /**
  * @extends {SQL}
  */
 export class D1_HTTP extends SQL {
+
+  /** @satisfies {ENV<D1ConfigHTTP>} */
+  static EnvConfig = /** @type{const} */ ({
+    account_id: 'CF_ACCOUNT_ID',
+    api_token: 'D1_API_TOKEN',
+    database_id: 'D1_DATABASE_ID',
+  });
 
   /**
    * 
@@ -47,14 +47,14 @@ export class D1_HTTP extends SQL {
     const dialect = (/** @type {D1_HTTP_Dialect} */ (this.config.dialect));
 
     dialect.config.account_id = dialect.config.account_id 
-      ?? app.platform.env[EnvConfig.account_id];
+      ?? app.platform.env[D1_HTTP.EnvConfig.account_id];
 
     dialect.config.api_token = dialect.config.api_token 
-      ?? app.platform.env[EnvConfig.api_token] 
+      ?? app.platform.env[D1_HTTP.EnvConfig.api_token] 
       ?? app.platform.env['D1_API_KEY'];
 
     dialect.config.database_id = dialect.config.database_id 
-      ?? app.platform.env[EnvConfig.database_id];
+      ?? app.platform.env[D1_HTTP.EnvConfig.database_id];
       
     super.init(app);
   }

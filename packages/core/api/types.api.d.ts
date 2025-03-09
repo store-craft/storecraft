@@ -75,7 +75,6 @@ export interface StorecraftConfig  {
    */
   general_forgot_password_confirm_base_url?: string;
   
-
   /**
    *  
    * @description Seed admin emails, if absent will be infered at init by 
@@ -88,14 +87,14 @@ export interface StorecraftConfig  {
    * @description access token signing secret, if absent will be infered 
    * at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  
    */
-  auth_secret_access_token: string;
+  auth_secret_access_token?: string;
 
   /** 
    * 
    * @description refresh token signing secret, if absent will be infered at 
    * init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment  
    */
-  auth_secret_refresh_token: string;
+  auth_secret_refresh_token?: string;
 
   /** 
    * 

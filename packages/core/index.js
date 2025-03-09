@@ -1,5 +1,5 @@
 /** 
- * @import { StorecraftConfig } from "./types.public.js";
+ * @import { ENV, StorecraftConfig } from "./types.public.js";
  * @import { OrderData } from "./api/types.public.js";
  * @import { storage_driver } from "./storage/types.public.js";
  * @import { db_driver } from "./database/types.public.js";
@@ -54,20 +54,36 @@ let ms_init_start = 0;
  */
 export class App {
 
+  /** @satisfies {ENV<StorecraftConfig>} */
+  static EnvConfig = /** @type{const} */ ({
+    auth_admins_emails: 'SC_AUTH_ADMIN_EMAILS',
+    auth_secret_access_token: 'SC_AUTH_SECRET_ACCESS_TOKEN',
+    auth_secret_refresh_token: 'SC_AUTH_SECRET_REFRESH_TOKEN',
+    checkout_reserve_stock_on: 'SC_CHECKOUT_RESERVE_STOCK_ON',
+    general_confirm_email_base_url: 'SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL',
+    general_forgot_password_confirm_base_url: 'SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL',
+    general_store_description: 'SC_GENERAL_STORE_DESCRIPTION',
+    general_store_logo_url: 'SC_GENERAL_STORE_LOGO_URL',
+    general_store_name: 'SC_GENERAL_STORE_NAME',
+    general_store_support_email: 'SC_GENERAL_STORE_SUPPORT_EMAIL',
+    general_store_website: 'SC_GENERAL_STORE_WEBSITE',
+    storage_rewrite_urls: 'SC_STORAGE_REWRITE_URLS'
+  });
+
   /** 
    * @type {Platform} 
    */
-  #_platform;
+  #platform;
 
   /** 
    * @type {StoreAgent<AiProvider>} 
    */
-  #_ai;
+  #ai;
 
   /** 
    * @type {VectorStoreProvider} 
    */
-  #_vector_store;
+  #vector_store;
   
   /** 
    * 
@@ -76,7 +92,7 @@ export class App {
    * 
    * @type {Database} 
    */ 
-  #_db_driver;
+  #db_driver;
 
   /** 
    * 
@@ -84,7 +100,7 @@ export class App {
    * 
    * @type {Storage} 
    */ 
-  #_storage;
+  #storage;
 
   /** 
    * 
@@ -92,7 +108,7 @@ export class App {
    * 
    * @type {Mailer} 
    */ 
-  #_mailer;
+  #mailer;
 
   /** 
    * 
@@ -100,7 +116,7 @@ export class App {
    * 
    * @type {Taxes} 
    */ 
-  #_taxes;
+  #taxes;
 
   /** 
    * 
@@ -108,7 +124,7 @@ export class App {
    * 
    * @type {PaymentMap} 
    */ 
-  #_payment_gateways;
+  #payment_gateways;
 
   /** 
    * 
@@ -116,55 +132,55 @@ export class App {
    * 
    * @type {ExtensionsMap} 
    */ 
-  #_extensions;
+  #extensions;
 
   /**
    * @description The app's pubsub system
    * 
    * @type {PubSub<App>}
    */
-  #_pubsub;
+  #pubsub;
 
   /** 
    * @description The Storecraft App Config
    * 
    * @type {StorecraftConfig} 
    */ 
-  #_config;
+  #config;
 
   /** 
    * @description The REST API controller
    * 
    * @type {ReturnType<typeof create_rest_api>} 
    */ 
-  #_rest_controller;
+  #rest_controller;
 
   /** 
    * @description Flag for app is ready 
    * 
    * @type {boolean} 
    */ 
-  #_is_ready;
+  #is_ready;
 
   /**
    * 
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
-    config
+    config={}
   ) {
     ms_init_start = Date.now();
-    this.#_config = config;
-    this.#_is_ready = false;
+    this.#config = config;
+    this.#is_ready = false;
     // @ts-ignore
-    this.#_taxes = new UniformTaxes(0);
+    this.#taxes = new UniformTaxes(0);
     // @ts-ignore
-    this.#_extensions = {
+    this.#extensions = {
       'notifications': new NotificationsExtension()
     }
     
     // @ts-ignore
-    this.#_pubsub = new PubSub(this);
+    this.#pubsub = new PubSub(this);
     
     // add extra events for orders state
     this.pubsub.on(
@@ -237,41 +253,30 @@ export class App {
    * find them in platform environment.
    */
   #settle_config_after_init() {
-    if(!this.platform)
-      return;
+    if(!this.platform) {
+      throw new Error('Storecraft:: No Platform Found !!')
+    }
 
-    const c = this.#_config;
     const env = this.platform.env;
 
-    this.#_config = {
-      ...c,
-      auth_secret_access_token: c?.auth_secret_access_token ?? 
-                  env.SC_AUTH_SECRET_ACCESS_TOKEN ?? 'SC_AUTH_SECRET_ACCESS_TOKEN',
-      auth_secret_refresh_token: c?.auth_secret_refresh_token ?? 
-                  env.SC_AUTH_SECRET_REFRESH_TOKEN ?? 'SC_AUTH_SECRET_REFRESH_TOKEN',
-      auth_admins_emails: c?.auth_admins_emails ??  
-                  env.SC_AUTH_ADMINS_EMAILS?.split(',').map(
-                    s => s.trim()).filter(Boolean) ?? [],
+    this.#config = {
+      auth_secret_access_token: env[App.EnvConfig.auth_secret_access_token],
+      auth_secret_refresh_token: env[App.EnvConfig.auth_secret_refresh_token],
+      auth_admins_emails: env[App.EnvConfig.auth_admins_emails]?.split(',')
+        .map(s => s.trim()).filter(Boolean) ?? [],
       // @ts-ignore
-      checkout_reserve_stock_on: c?.checkout_reserve_stock_on ?? 
-                  env.SC_CHECKOUT_RESERVE_STOCK_ON ?? 'never',
-      storage_rewrite_urls: c?.storage_rewrite_urls ?? 
-                  env.SC_STORAGE_REWRITE_URLS,
-      general_store_name: c?.general_store_name ?? 
-                  env.SC_GENERAL_STORE_NAME,
-      general_store_website: c?.general_store_website ?? 
-                  env.SC_GENERAL_STORE_WEBSITE,
-      general_store_description: c?.general_store_description ?? 
-                  env.SC_GENERAL_STORE_DESCRIPTION,
-      general_store_support_email: c?.general_store_support_email ?? 
-                  env.SC_GENERAL_STORE_SUPPORT_EMAIL,
-      general_store_logo_url: c?.general_store_logo_url ?? 
-                  env.SC_GENERAL_STORE_LOGO_URL,
-      general_confirm_email_base_url: c?.general_confirm_email_base_url ?? 
-                  env.SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL,
-      general_forgot_password_confirm_base_url: c?.general_forgot_password_confirm_base_url ?? 
-                  env.SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL,
-    
+      checkout_reserve_stock_on: env[App.EnvConfig.checkout_reserve_stock_on] ?? 'never',
+      storage_rewrite_urls: env[App.EnvConfig.storage_rewrite_urls],
+      general_store_name: env[App.EnvConfig.general_store_name],
+      general_store_website: env[App.EnvConfig.general_store_website],
+      general_store_description: env[App.EnvConfig.general_store_description],
+      general_store_support_email: env[App.EnvConfig.general_store_support_email],
+      general_store_logo_url: env[App.EnvConfig.general_store_logo_url],
+      general_confirm_email_base_url: env[App.EnvConfig.general_confirm_email_base_url],
+      general_forgot_password_confirm_base_url: env[
+        App.EnvConfig.general_forgot_password_confirm_base_url
+      ],
+      ...this.config,
     }
   } 
 
@@ -322,7 +327,7 @@ export class App {
       // settle programmatic API
       this.api = create_api(app);
       // settle REST-API
-      this.#_rest_controller = create_rest_api(app, this.config);
+      this.#rest_controller = create_rest_api(app, this.config);
   
       // settle extensions
       for(const ext_handle in this.extensions) {
@@ -337,8 +342,8 @@ export class App {
       }
 
       // settle ai agent
-      if(this.#_ai) {
-        this.#_ai.init(app);
+      if(this.#ai) {
+        this.#ai.init(app);
       }
 
       // settle vector store events
@@ -378,10 +383,10 @@ export class App {
       // settle mailer
       this.mailer?.onInit?.(app);
   
-      this.#_is_ready = true;
+      this.#is_ready = true;
 
     } catch (e) {
-      this.#_is_ready = false;
+      this.#is_ready = false;
 
       console.log(e);
       
@@ -397,7 +402,7 @@ export class App {
    * @description Get the REST API controller 
    */
   get rest_controller() { 
-    return this.#_rest_controller; 
+    return this.#rest_controller; 
   }
 
   /** 
@@ -412,7 +417,7 @@ export class App {
    */
   withPlatform(platform) {
     // @ts-ignore
-    this.#_platform = platform;
+    this.#platform = platform;
 
     // @ts-ignore
     return this;
@@ -423,7 +428,7 @@ export class App {
    * @description Get the native platform object 
    */
   get platform() { 
-    return this.#_platform; 
+    return this.#platform; 
   }
 
   /** 
@@ -438,7 +443,7 @@ export class App {
    */
   withAI(ai) {
     // @ts-ignore
-    this.#_ai = new StoreAgent({ ai });
+    this.#ai = new StoreAgent({ ai });
 
     // @ts-ignore
     return this;
@@ -449,7 +454,7 @@ export class App {
    * @description Get the AI provider
    */
   get ai() { 
-    return this.#_ai; 
+    return this.#ai; 
   }
 
   /** 
@@ -464,7 +469,7 @@ export class App {
    */
   withVectorStore(store) {
     // @ts-ignore
-    this.#_vector_store = store;
+    this.#vector_store = store;
 
     // @ts-ignore
     return this;
@@ -475,7 +480,7 @@ export class App {
    * @description Get the Vector Store
    */
   get vectorstore() { 
-    return this.#_vector_store; 
+    return this.#vector_store; 
   }
 
   /** 
@@ -489,7 +494,7 @@ export class App {
    */
   withDatabase(database) {
     // @ts-ignore
-    this.#_db_driver = database;
+    this.#db_driver = database;
 
     // @ts-ignore
     return this;
@@ -500,7 +505,7 @@ export class App {
    * @description Get the Database driver 
    */
   get db() { 
-    return this.#_db_driver; 
+    return this.#db_driver; 
   }
 
   /** 
@@ -514,7 +519,7 @@ export class App {
    */
   withStorage(storage) {
     // @ts-ignore
-    this.#_storage = storage;
+    this.#storage = storage;
 
     // @ts-ignore
     return this;
@@ -525,7 +530,7 @@ export class App {
    * @description Get the native storage object 
    */
   get storage() { 
-    return this.#_storage; 
+    return this.#storage; 
   }
 
   /** 
@@ -539,7 +544,7 @@ export class App {
    */
   withMailer(mailer) {
     // @ts-ignore
-    this.#_mailer = mailer;
+    this.#mailer = mailer;
 
     // @ts-ignore
     return this;
@@ -550,7 +555,7 @@ export class App {
    * @description Mailer driver 
    */
   get mailer() { 
-    return this.#_mailer; 
+    return this.#mailer; 
   }
 
   /** 
@@ -564,7 +569,7 @@ export class App {
    */
   withTaxes(taxes) {
     // @ts-ignore
-    this.#_taxes = taxes;
+    this.#taxes = taxes;
 
     // @ts-ignore
     return this;
@@ -575,7 +580,7 @@ export class App {
    * @description Get the taxes provider
    */
   get taxes() { 
-    return this.#_taxes; 
+    return this.#taxes; 
   }
 
   /** 
@@ -589,7 +594,7 @@ export class App {
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
-    this.#_payment_gateways = gateways; 
+    this.#payment_gateways = gateways; 
 
     // @ts-ignore
     return this;
@@ -600,7 +605,7 @@ export class App {
    * @description Get the payment gateways 
    */
   get gateways() { 
-    return this.#_payment_gateways; 
+    return this.#payment_gateways; 
   }
 
   /** 
@@ -614,8 +619,8 @@ export class App {
    */
   withExtensions(extensions) { 
     // @ts-ignore
-    this.#_extensions = {
-      ...this.#_extensions,
+    this.#extensions = {
+      ...this.#extensions,
       ...extensions
     }; 
 
@@ -628,14 +633,14 @@ export class App {
    * @description extensions
    */
   get extensions() { 
-    return this.#_extensions; 
+    return this.#extensions; 
   }
 
   /** 
    * @description Pub-Sub `events` module 
    */
   get pubsub() { 
-    return this.#_pubsub; 
+    return this.#pubsub; 
   }
 
 
@@ -643,14 +648,14 @@ export class App {
    * @description Config 
    */
   get config() { 
-    return this.#_config; 
+    return this.#config; 
   }
 
   /**
    * @description Is the app ready ?
    */
   get ready() { 
-    return this.#_is_ready; 
+    return this.#is_ready; 
   }
 
   /**
@@ -683,7 +688,7 @@ export class App {
     // @ts-ignore
     context = context ?? {};
     const start_millis = Date.now();
-    const request = await this.#_platform.encode(req, context);
+    const request = await this.#platform.encode(req, context);
     
     /** @type {ApiResponse} */
     const polka_response = {
@@ -793,7 +798,7 @@ export class App {
       }
     )
 
-    const response = await this.#_platform.handleResponse(
+    const response = await this.#platform.handleResponse(
       response_web, context
     );
 

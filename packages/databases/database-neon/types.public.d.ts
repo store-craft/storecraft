@@ -7,8 +7,12 @@ export { NeonHttp, NeonServerless } from './index.js';
  */
 export type NeonServerlessConfig = {
 
-  neonConfig: NeonConfig;
-  poolConfig: PoolConfig
+  neonConfig?: NeonConfig;
+  /**
+   * @description `pool` config, if missing the `connectionString`, will be 
+   * inferred by the `NEON_CONNECTION_URL` env variable
+   */
+  poolConfig?: PoolConfig;
 }
 
 
@@ -19,7 +23,8 @@ export type NeonServerlessConfig = {
 export type NeonHttpConfig = {
 
   /**
-   * @description `neon` connection string
+   * @description `neon` connection string, if missing, will be 
+   * inferred by the `NEON_CONNECTION_URL` env variable
    */
-  connectionString: string
+  connectionString?: string
 }

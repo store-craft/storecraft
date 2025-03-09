@@ -120,7 +120,8 @@ export const infer_platform = platform => {
       return {
         cls: `CloudflareWorkersPlatform`,
         imports: [
-          `import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-workers'`
+          `import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-workers'`,
+          `import { type ExportedHandler, type ExecutionContext, type Request, type Response } from '@cloudflare/workers-types'`
         ],
         deps: [
         ]

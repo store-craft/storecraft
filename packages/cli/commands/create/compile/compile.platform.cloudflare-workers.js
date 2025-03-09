@@ -15,7 +15,7 @@ export const compile_workers = async (meta) => {
 
   await pkgr.init();
   await pkgr.installDeps([...compiled_app.deps]);
-  await pkgr.installDevDeps([ "dotenv", "@types/node", "typescript", "wrangler"]);
+  await pkgr.installDevDeps([ "dotenv", "@types/node", "typescript", "wrangler", '@cloudflare/workers-types']);
   const package_json = await pkgr.package_json();
   await pkgr.write_package_json(
     { 
@@ -67,16 +67,15 @@ export default {
 	 */
 	async fetch(request, env, ctx): Promise<Response> {
 
-${app_code}    
+    const app = ${app_code}    
 
-    app = await app.init();
+    await app.init();
     
     const response = await app.handler(request);
 
     return response;
-
 	},
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler;
 
 `;
 

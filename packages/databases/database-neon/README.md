@@ -5,7 +5,9 @@
        width='90%' />
 </div><hr/><br/>
 
-Official `Neon` driver for `StoreCraft` on any platforms.
+Official `Neon` driver for `StoreCraft` on any platforms. Supports two serverless drivers:
+1. `NeonServerless` - serverless neon, supports interactive transactions over websockets.
+2. `NeonHttp` - serverless http only neon, supports NON-interactive transactions, only batches over HTTP.
 
 ```bash
 npm i @storecraft/database-neon
@@ -25,7 +27,7 @@ import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
-import { NeonHttp } from '@storecraft/database-neon'
+import { NeonHttp, NeonServerless } from '@storecraft/database-neon'
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { migrateToLatest } from '@storecraft/database-neon/migrate.js'
 

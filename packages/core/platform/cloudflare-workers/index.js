@@ -1,6 +1,7 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
  * @import { Config } from './types.public.js';
+ * @import { type Request, type Response } from "@cloudflare/workers-types"
  */
 import { pbkdf2 } from '../../crypto/public.js';
 
@@ -56,12 +57,15 @@ export class CloudflareWorkersPlatform {
   async encode(from) {
     // @ts-ignore
     from.duplex = 'half';
+    
+    // @ts-ignore
     return from;
   }
 
 
   /** @type {CloudflareWorkersPlatformAdapter["handleResponse"]} */
   async handleResponse(web_response, context) {
+    // @ts-ignore
     return web_response;
   }  
 } 

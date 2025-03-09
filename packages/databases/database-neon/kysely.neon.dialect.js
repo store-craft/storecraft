@@ -1,3 +1,11 @@
+/**
+ * @import { NeonServerlessConfig } from './types.public.js';
+ * @import { 
+ *  Dialect, Driver, DatabaseConnection, 
+ *  TransactionSettings,QueryResult 
+ * } from 'kysely';
+ * @import { PoolClient, NeonQueryFunction } from '@neondatabase/serverless';
+ */
 import {
   CompiledQuery,
   PostgresAdapter,
@@ -8,14 +16,6 @@ import {
   Pool,
   neonConfig,
 } from "@neondatabase/serverless"
-
-/**
- * @typedef {import("./types.public.d.ts").NeonServerlessConfig} NeonServerlessConfig
- * @typedef {import("kysely").Dialect} Dialect
- * @typedef {import("kysely").Driver} Driver
- * @typedef {import("kysely").DatabaseConnection} DatabaseConnection
- */
-
 
 /**
  * @implements {Dialect}
@@ -41,7 +41,7 @@ export class NeonServerlessDialect {
  * @implements {Driver}
  */
 class NeonDriver {
-  /** @type {WeakMap<import("@neondatabase/serverless").PoolClient, NeonConnection>} */
+  /** @type {WeakMap<PoolClient, NeonConnection>} */
   #connections = new WeakMap()
   /** @type {Pool} */
   #pool;
@@ -54,6 +54,7 @@ class NeonDriver {
   }
 
   async init() {
+    neonConfig.webSocketConstructor = WebSocket;
     Object.assign(neonConfig, this.config.neonConfig);
     this.#pool = new Pool(this.config.poolConfig);
   }
@@ -73,7 +74,7 @@ class NeonDriver {
   /**
    * 
    * @param {NeonConnection} conn 
-   * @param {import("kysely").TransactionSettings} settings 
+   * @param {TransactionSettings} settings 
    */
   async beginTransaction(conn, settings) {
     if (settings.isolationLevel) {
@@ -121,7 +122,7 @@ class NeonDriver {
 
 /**
  * @typedef {object} Client
- * @prop {import("@neondatabase/serverless").NeonQueryFunction} query
+ * @prop {NeonQueryFunction} query
  * @prop {() => void} [release]
  */
 
@@ -134,7 +135,7 @@ export class NeonConnection {
 
   /**
    * 
-   * @param {import("@neondatabase/serverless").PoolClient} client 
+   * @param {PoolClient} client 
    */
   constructor(client) {
     this.client = client
@@ -145,7 +146,7 @@ export class NeonConnection {
    * 
    * @param {CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult<R>>}
+   * @returns {Promise<QueryResult<R>>}
    */
   async executeQuery(compiledQuery) {
     
@@ -182,7 +183,7 @@ export class NeonConnection {
    * @param {CompiledQuery} compiledQuery 
    * @param {number} chunkSize 
    * 
-   * @returns {AsyncIterableIterator<import('kysely').QueryResult<R>>}
+   * @returns {AsyncIterableIterator<QueryResult<R>>}
    */
   async *streamQuery(compiledQuery, chunkSize) {
     throw new Error("Neon Driver does not support streaming")

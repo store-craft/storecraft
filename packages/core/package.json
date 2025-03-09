@@ -215,6 +215,7 @@
   },
   "devDependencies": {
     "@asteasolutions/zod-to-openapi": "^6.4.0",
+    "@cloudflare/workers-types": "^4.20250303.0",
     "@storecraft/database-sqlite": "^1.0.7",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",

@@ -11,13 +11,13 @@ export type Config = {
    *
    * https://github.com/libsql/libsql-client-ts#supported-urls
    * 
-   * If missing, it will be inferred by env variable `LIBSQL_URL`
+   * If missing, it will be inferred by env variable `LIBSQL_VECTOR_URL` or `LIBSQL_URL`
    */
   url?: string;
   /** 
-   * @description Authentication token for the database. Not applicable for `url`=`file:local.db`.
+   * @description Authentication token for the database. Not applicable for local `url`=`file:local.db`.
    * 
-   * If missing, it will be inferred by env variable `LIBSQL_AUTH_TOKEN`
+   * If missing, it will be inferred by env variable `LIBSQL_VECTOR_AUTH_TOKEN` or `LIBSQL_AUTH_TOKEN`
    * 
    * @default ENV variable `LIBSQL_AUTH_TOKEN`
    */

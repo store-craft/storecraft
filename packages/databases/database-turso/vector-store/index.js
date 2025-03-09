@@ -48,8 +48,8 @@ export class LibSQLVectorStore {
   
   /** @satisfies {ENV<Config>} */
   static EnvConfig = /** @type{const} */ ({
-    authToken: 'LIBSQL_AUTH_TOKEN',
-    url: 'LIBSQL_URL',
+    authToken: 'LIBSQL_VECTOR_AUTH_TOKEN',
+    url: 'LIBSQL_VECTOR_URL',
   });
 
   /** @type {Config} */
@@ -92,8 +92,12 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.authToken ??= app.platform.env[LibSQLVectorStore.EnvConfig.authToken];
-    this.config.url ??= app.platform.env[LibSQLVectorStore.EnvConfig.url];
+    this.config.authToken ??= app.platform.env[
+      LibSQLVectorStore.EnvConfig.authToken ?? 'LIBSQL_AUTH_TOKEN'
+    ];
+    this.config.url ??= app.platform.env[
+      LibSQLVectorStore.EnvConfig.url ?? 'LIBSQL_URL'
+    ];
   }
 
   /** @type {VectorStore["embedder"]} */

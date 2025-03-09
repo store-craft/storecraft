@@ -26,11 +26,7 @@ export class NeonServerless extends SQL {
   /** @satisfies {ENV<NeonServerlessConfig>} */
   static NeonServerlessEnvConfig = /** @type{const} */ ({
     poolConfig: {
-      database: 'NEON_DATABASE',
-      host: 'NEON_HOST',
-      port: 'NEON_PORT',
-      user: 'NEON_USER',
-      password: 'NEON_PASSWORD'
+      connectionString: 'NEON_CONNECTION_URL',
     }
   });
 
@@ -53,20 +49,8 @@ export class NeonServerless extends SQL {
     const neon_dialect = /** @type {NeonServerlessDialect} */ (this.config.dialect);
     const config = neon_dialect.config;
 
-    config.poolConfig.database ??= 
-      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.database];
-
-    config.poolConfig.host ??= 
-      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.host];
-
-    config.poolConfig.port ??= 
-      parseFloat(app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.port]);
-
-    config.poolConfig.user ??= 
-      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.user];
-
-    config.poolConfig.password ??= 
-      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.password];
+    config.poolConfig.connectionString ??= 
+      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.connectionString];
 
     super.init(app);
   }

@@ -1,3 +1,6 @@
+/**
+ * @import { MigrationLockOptions } from 'kysely';
+ */
 import { DialectAdapterBase, Kysely, sql } from "kysely"
 
 // Random id for our transaction lock.
@@ -25,7 +28,7 @@ export class NeonHttpAdapter extends DialectAdapterBase{
   /**
    * 
    * @param {Kysely<any>} db 
-   * @param {import("kysely").MigrationLockOptions} _opt 
+   * @param {MigrationLockOptions} _opt 
    */
   async acquireMigrationLock(db, _opt) {
     // Acquire a transaction level advisory lock.
@@ -36,7 +39,7 @@ export class NeonHttpAdapter extends DialectAdapterBase{
   /**
    * 
    * @param {Kysely<any>} db 
-   * @param {import("kysely").MigrationLockOptions} _opt 
+   * @param {MigrationLockOptions} _opt 
    */
   async releaseMigrationLock(db, _opt) {
     await sql`select pg_advisory_unlock(${sql.lit(LOCK_ID)})`.execute(db)

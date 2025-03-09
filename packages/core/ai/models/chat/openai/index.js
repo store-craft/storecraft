@@ -1,8 +1,9 @@
 /**
+ * @import { config } from "./types.js";
  * @import { 
  *  chat_completion_chunk_result, chat_completion_input, 
- *  chat_message, config 
- * } from "./types.js";
+ *  chat_message 
+ * } from "./types.private.js";
  * @import { 
  *  content, content_text, GenerateTextParams, StreamTextCallbacks, ChatAI
  * } from "../../../core/types.private.js";

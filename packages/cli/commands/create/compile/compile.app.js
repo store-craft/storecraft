@@ -3,6 +3,9 @@
  * // - We import types rather than regular classes import because these
  * //   packages are DEV dependencies. Otherwise, it will crash in production. 
  * //
+ * 
+ * // databases
+ * 
  * @import { SQLite } from '@storecraft/database-sqlite';
  * @import { Postgres } from '@storecraft/database-postgres';
  * @import { MySQL } from '@storecraft/database-mysql';
@@ -11,14 +14,47 @@
  * @import { NeonHttp, NeonServerless } from '@storecraft/database-neon';
  * @import { PlanetScale } from '@storecraft/database-planetscale';
  * @import { Turso } from '@storecraft/database-turso';
+ * 
+ * // storage
+ * 
  * @import { R2, S3, S3CompatibleStorage } from '@storecraft/storage-s3-compatible';
  * @import { GoogleStorage } from '@storecraft/storage-google';
+ * 
+ * // mail providers
+ * 
  * @import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
  * @import { Resend } from '@storecraft/mailer-providers-http/resend';
  * @import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';
  * @import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';
+ * 
+ * // payments
+ * 
  * @import { Paypal } from '@storecraft/payments-paypal';
  * @import { Stripe } from '@storecraft/payments-stripe';
+ * 
+ * // ai-chat
+ * 
+ * @import { Anthropic } from '@storecraft/core/ai/models/chat/anthropic';
+ * @import { Gemini } from '@storecraft/core/ai/models/chat/gemini';
+ * @import { Groq } from '@storecraft/core/ai/models/chat/groq';
+ * @import { Mistral } from '@storecraft/core/ai/models/chat/mistral';
+ * @import { OpenAI } from '@storecraft/core/ai/models/chat/openai';
+ * @import { XAI } from '@storecraft/core/ai/models/chat/xai';
+ * 
+ * // ai-embedders
+ * 
+ * @import { CloudflareEmbedder } from '@storecraft/core/ai/models/embedders/cloudflare';
+ * @import { GeminiEmbedder } from '@storecraft/core/ai/models/embedders/gemini';
+ * @import { OpenAIEmbedder } from '@storecraft/core/ai/models/embedders/openai';
+ * @import { PineconeEmbedder } from '@storecraft/core/ai/models/embedders/pinecone';
+ * @import { VoyageAIEmbedder } from '@storecraft/core/ai/models/embedders/voyage-ai';
+ * 
+ * // ai-vector-stores
+ * @import { Pinecone } from '@storecraft/core/ai/models/vector-stores/pinecone';
+ * @import { Vectorize } from '@storecraft/core/ai/models/vector-stores/vectorize';
+ * @import { LibSQLVectorStore } from '@storecraft/database-turso/vector-store';
+ * @import { MongoVectorStore } from '@storecraft/database-mongodb/vector-store';
+ * 
  */
 import { o2s } from '../../utils.js'
 import { collect_config } from '../collect/collect.config.js'
@@ -27,6 +63,9 @@ import { collect_mailer } from '../collect/collect.mailer.js'
 import { collect_payments } from '../collect/collect.payments.js'
 import { collect_platform } from '../collect/collect.platform.js'
 import { collect_storage } from '../collect/collect.storage.js'
+import { collect_ai_chat } from '../collect/collect.ai.chat.js'
+import { collect_ai_vector_store } from '../collect/collect.ai.vector-store.js'
+import { collect_ai_embedder } from '../collect/collect.ai.embedder.js'
 import { extract_env_variables } from './compile.utils.js'
 
 
@@ -520,6 +559,324 @@ export const infer_mailer = info => {
           )
         )
       }
+  }
+}
+
+
+/**
+ * @param {Awaited<ReturnType<collect_ai_chat>>} info 
+ */
+export const infer_ai_chat = info => {
+  switch (info.id) {
+    case 'anthropic': {
+      return {
+        cls: `Anthropic`,
+        imports: [
+          `import { Anthropic } from '@storecraft/core/ai/models/chat/anthropic';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Anthropic.EnvConfig} */ (
+            {
+              api_key: 'ANTHROPIC_API_KEY'
+            }
+          )
+        )
+      }
+    }
+
+    case 'gemini': {
+      return {
+        cls: `Gemini`,
+        imports: [
+          `import { Gemini } from '@storecraft/core/ai/models/chat/gemini';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Gemini.GeminiEnvConfig} */ (
+            {
+              api_key: 'GEMINI_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'groq': {
+      return {
+        cls: `Groq`,
+        imports: [
+          `import { Groq } from '@storecraft/core/ai/models/chat/groq';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Groq.GroqEnvConfig} */ (
+            {
+              api_key: 'GROQ_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'mistral': {
+      return {
+        cls: `Mistral`,
+        imports: [
+          `import { Mistral } from '@storecraft/core/ai/models/chat/mistral';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Mistral.MistralEnvConfig} */ (
+            {
+              api_key: 'MISTRAL_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'openai': {
+      return {
+        cls: `OpenAI`,
+        imports: [
+          `import { OpenAI } from '@storecraft/core/ai/models/chat/openai';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof OpenAI.EnvConfig} */ (
+            {
+              api_key: 'OPENAI_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'xai': {
+      return {
+        cls: `XAI`,
+        imports: [
+          `import { XAI } from '@storecraft/core/ai/models/chat/xai';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof XAI.XAIEnvConfig} */ (
+            {
+              api_key: 'XAI_API_KEY'
+            }
+          )
+        )
+      }      
+    }                    
+  }
+}
+
+
+/**
+ * @param {Awaited<ReturnType<collect_ai_embedder>>} info 
+ */
+export const infer_ai_embedder = info => {
+  switch (info.id) {
+    case 'cloudflare': {
+      return {
+        cls: `CloudflareEmbedder`,
+        imports: [
+          `import { CloudflareEmbedder } from '@storecraft/core/ai/models/embedders/cloudflare';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof CloudflareEmbedder.EnvConfig} */ (
+            {
+              account_id: 'CF_ACCOUNT_ID',
+              api_key: 'CF_AI_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'gemini': {
+      return {
+        cls: `GeminiEmbedder`,
+        imports: [
+          `import { GeminiEmbedder } from '@storecraft/core/ai/models/embedders/gemini';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof GeminiEmbedder.EnvConfig} */ (
+            {
+              api_key: 'GEMINI_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'openai': {
+      return {
+        cls: `OpenAIEmbedder`,
+        imports: [
+          `import { OpenAIEmbedder } from '@storecraft/core/ai/models/embedders/openai';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof OpenAIEmbedder.EnvConfig} */ (
+            {
+              api_key: 'OPENAI_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'pinecone': {
+      return {
+        cls: `PineconeEmbedder`,
+        imports: [
+          `import { PineconeEmbedder } from '@storecraft/core/ai/models/embedders/pinecone';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof PineconeEmbedder.EnvConfig} */ (
+            {
+              api_key: 'PINECONE_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'voyage-ai': {
+      return {
+        cls: `VoyageAIEmbedder`,
+        imports: [
+          `import { VoyageAIEmbedder } from '@storecraft/core/ai/models/embedders/voyage-ai';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof VoyageAIEmbedder.EnvConfig} */ (
+            {
+              api_key: 'VOYAGE_AI_API_KEY'
+            }
+          )
+        )
+      }
+    }
+  }
+}
+
+
+/**
+ * @param {Awaited<ReturnType<collect_ai_vector_store>>} info 
+ */
+export const infer_ai_vector_store = info => {
+  switch (info.id) {
+    case 'cloudflare-vectorize': {
+      return {
+        cls: `Vectorize`,
+        imports: [
+          `import { Vectorize } from '@storecraft/core/ai/models/vector-stores/vectorize';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Vectorize.EnvConfig} */ (
+            {
+              account_id: 'CF_ACCOUNT_ID',
+              api_key: 'CF_VECTORIZE_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'pinecone': {
+      return {
+        cls: `Pinecone`,
+        imports: [
+          `import { Pinecone } from '@storecraft/core/ai/models/vector-stores/pinecone';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Pinecone.EnvConfig} */ (
+            {
+              api_key: 'PINECONE_API_KEY'
+            }
+          )
+        )
+      }
+    }
+    case 'mongodb': {
+      return {
+        cls: `MongoVectorStore`,
+        imports: [
+          `import { MongoVectorStore } from '@storecraft/database-mongodb/vector-store';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof MongoVectorStore.EnvConfig} */ (
+            {
+              db_name: 'MONGODB_NAME',
+              url: 'MONGODB_URL'
+            }
+          )
+        )
+      }
+    }    
+    case 'libsql-cloud': 
+    case 'libsql-local': {
+      return {
+        cls: `MongoVectorStore`,
+        imports: [
+          `import { MongoVectorStore } from '@storecraft/database-turso/vector-store';`
+        ],
+        deps: [
+          '@storecraft/core'
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof LibSQLVectorStore.EnvConfig} */ (
+            {
+              url: 'LIBSQL_URL',
+              authToken: 'LIBSQL_AUTH_TOKEN'
+            }
+          )
+        )
+      }
+    }        
   }
 }
 

@@ -1,7 +1,8 @@
 /**
+ * @import { config } from "./types.js";
  * @import { 
- *  config, RequestBody, RequestResult
- * } from "./types.js";
+ *  RequestBody, RequestResult
+ * } from "./types.private.js";
  * @import { 
  *  AIEmbedder
  * } from "../../../core/types.private.js";

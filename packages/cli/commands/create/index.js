@@ -15,6 +15,9 @@ import { error, good } from "./label.js";
 import { intro, outro, spinner } from '@clack/prompts';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { exit } from "node:process";
+import { collect_ai_chat } from "./collect/collect.ai.chat.js";
+import { collect_ai_vector_store } from "./collect/collect.ai.vector-store.js";
+import { collect_ai_embedder } from "./collect/collect.ai.embedder.js";
 
 /**
  * @type {CommandModule}
@@ -26,11 +29,15 @@ export const command_create = {
     try {
       console.log(logo_gradient);
 
-      intro("Let's go")
+      intro("Let's go");
+      
       const config = await collect_config();
       const platform = await collect_platform();
       const database = await collect_database();
       const storage = await collect_storage();
+      const ai_chat = await collect_ai_chat();
+      const ai_vector_store = await collect_ai_vector_store();
+      const ai_embedder = await collect_ai_embedder();
       const mailer = await collect_mailer();
       const payments = await collect_payments();
   
@@ -39,17 +46,25 @@ export const command_create = {
         platform,
         database, 
         storage,
+        ai_chat, 
+        ai_vector_store,
+        ai_embedder,
         mailer,
         payments      
       }
   
       // await spinner(compile_all(meta), 'Setting Up, hold on')();
       const s = spinner({indicator: 'dots'});
+
       s.start('Installing')
+
       await compile_all(meta);
       // await sleep(3000);
+
       s.stop();
+
       outro('Done')
+
       console.log(
         '\n'+good(
           config.config.general_store_name,
@@ -59,8 +74,6 @@ export const command_create = {
           ].join('\n'),
         )
       );
-
-      // )
 
     } catch (e) {
       console.log(error(String(e)));

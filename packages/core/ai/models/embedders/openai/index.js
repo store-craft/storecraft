@@ -1,7 +1,10 @@
 /**
  * @import { 
- *  config, RequestBody, RequestResult
+ *  config
  * } from "./types.js";
+ * @import { 
+ *  RequestBody, RequestResult
+ * } from "./types.private.js";
  * @import { 
  *  GenerateEmbeddingsParams, GenerateEmbeddingsResult, AIEmbedder
  * } from "../../../core/types.private.js";

@@ -1,4 +1,25 @@
-import { SQLite } from '@storecraft/database-sqlite'
+/**
+ * // IMPORTANT: 
+ * // - We import types rather than regular classes import because these
+ * //   packages are DEV dependencies. Otherwise, it will crash in production. 
+ * //
+ * @import { SQLite } from '@storecraft/database-sqlite';
+ * @import { Postgres } from '@storecraft/database-postgres';
+ * @import { MySQL } from '@storecraft/database-mysql';
+ * @import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
+ * @import { MongoDB } from '@storecraft/database-mongodb';
+ * @import { NeonHttp, NeonServerless } from '@storecraft/database-neon';
+ * @import { PlanetScale } from '@storecraft/database-planetscale';
+ * @import { Turso } from '@storecraft/database-turso';
+ * @import { R2, S3, S3CompatibleStorage } from '@storecraft/storage-s3-compatible';
+ * @import { GoogleStorage } from '@storecraft/storage-google';
+ * @import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+ * @import { Resend } from '@storecraft/mailer-providers-http/resend';
+ * @import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';
+ * @import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';
+ * @import { Paypal } from '@storecraft/payments-paypal';
+ * @import { Stripe } from '@storecraft/payments-stripe';
+ */
 import { o2s } from '../../utils.js'
 import { collect_config } from '../collect/collect.config.js'
 import { collect_database } from '../collect/collect.database.js'
@@ -18,6 +39,7 @@ import { extract_env_variables } from './compile.utils.js'
  * @prop {Awaited<ReturnType<collect_platform>>} platform
  * @prop {Awaited<ReturnType<collect_storage>>} storage
  */
+
 
 /**
  * @param {Awaited<ReturnType<collect_platform>>} platform 
@@ -115,7 +137,20 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-postgres'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Postgres.EnvConfig} */ (
+            {
+              pool_config: {
+                host: 'POSTGRES_HOST',
+                password: 'POSTGRES_PASSWORD',
+                port: 'POSTGRES_PORT',
+                user: 'POSTGRES_USER'
+              }
+            }
+          )
+        )
       }
     case 'mysql':
       return {
@@ -125,7 +160,21 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-mysql'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof MySQL.EnvConfig} */ (
+            {
+              pool_options: {
+                database: 'MYSQL_DATABASE',
+                host: 'MYSQL_HOST',
+                password: 'MYSQL_PASSWORD',
+                port: 'MYSQL_PORT',
+                user: 'MYSQL_USER'
+              }
+            }
+          )
+        )
       }
     case 'd1':
       return {
@@ -135,7 +184,17 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-cloudflare-d1'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof D1_HTTP.EnvConfig} */ (
+            {
+              account_id: 'CF_ACCOUNT_ID',
+              api_token: 'D1_API_TOKEN',
+              database_id: 'D1_DATABASE_ID'
+            }
+          )
+        )
       }
     case 'mongo_db':
       return {
@@ -145,7 +204,16 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-mongodb'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof MongoDB.EnvConfig} */ (
+            {
+              db_name: 'MONGODB_NAME',
+              url: 'MONGODB_URL'
+            }
+          )
+        )
       }
     case 'neon_http':
       return {
@@ -155,7 +223,15 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-neon'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof NeonHttp.NeonHttpEnvConfig} */ (
+            {
+              connectionString: 'NEON_CONNECTION_URL'
+            }
+          )
+        )
       }
 
     case 'neon_ws':
@@ -166,7 +242,21 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-neon'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof NeonServerless.NeonServerlessEnvConfig} */ (
+            {
+              poolConfig: {
+                database: 'NEON_DATABASE',
+                host: 'NEON_HOST',
+                password: 'NEON_PASSWORD',
+                port: 'NEON_PORT',
+                user: 'NEON_USER'
+              }
+            }
+          )
+        )
       }
 
     case 'planetscale':
@@ -177,7 +267,15 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-planetscale'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof PlanetScale.EnvConfig} */ (
+            {
+              url: 'PLANETSCALE_CONNECTION_URL'
+            }
+          )
+        )
       }
 
     case 'libsql-local':
@@ -188,7 +286,16 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-turso'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Turso.EnvConfig} */ (
+            {
+              url: 'LIBSQL_URL',
+              authToken: 'LIBSQL_AUTH_TOKEN'
+            }
+          )
+        )
       }
 
     case 'turso':
@@ -199,7 +306,16 @@ export const infer_database = info => {
         ],
         deps: [
           '@storecraft/database-turso'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Turso.EnvConfig} */ (
+            {
+              authToken: 'LIBSQL_AUTH_TOKEN',
+              url: 'LIBSQL_URL'
+            }
+          )
+        )
       }
     default:
       throw 'implement me !!'
@@ -220,7 +336,18 @@ export const infer_storage = info => {
         ],
         deps: [
           '@storecraft/storage-s3-compatible'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof S3.AWSS3EnvConfig} */ (
+            {
+              accessKeyId: 'S3_ACCESS_KEY_ID',
+              bucket: 'S3_BUCKET',
+              region: 'S3_REGION',
+              secretAccessKey: 'S3_SECRET_ACCESS_KEY'
+            }
+          )
+        )
       }
     case 'cloudflare_r2':
       return {
@@ -230,7 +357,18 @@ export const infer_storage = info => {
         ],
         deps: [
           '@storecraft/storage-s3-compatible'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof R2.R2EnvConfig} */ (
+            {
+              accessKeyId: 'S3_ACCESS_KEY_ID',
+              account_id: 'CF_ACCOUNT_ID',
+              bucket: 'S3_BUCKET',
+              secretAccessKey: 'S3_SECRET_ACCESS_KEY'
+            }
+          )
+        )
       }
     case 's3_compatible':
       return {
@@ -240,7 +378,18 @@ export const infer_storage = info => {
         ],
         deps: [
           '@storecraft/storage-s3-compatible'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof S3CompatibleStorage.EnvConfig} */ (
+            {
+              accessKeyId: 'S3_ACCESS_KEY_ID',
+              bucket: 'S3_BUCKET',
+              region: 'S3_REGION',
+              secretAccessKey: 'S3_SECRET_ACCESS_KEY'
+            }
+          )
+        )
       }
     case 'google_storage':
       return {
@@ -250,7 +399,18 @@ export const infer_storage = info => {
         ],
         deps: [
           '@storecraft/storage-google'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof GoogleStorage.EnvConfig} */ (
+            {
+              bucket: 'GS_BUCKET',
+              client_email: 'GS_CLIENT_EMAIL',
+              private_key: 'GS_PRIVATE_KEY',
+              private_key_id: 'GS_PRIVATE_KEY_ID'
+            }
+          )
+        )
       }
     case 'deno':
       return {
@@ -296,7 +456,15 @@ export const infer_mailer = info => {
         ],
         deps: [
           '@storecraft/mailer-providers-http'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof SendGrid.EnvConfig} */ (
+            {
+              apikey: 'SENDGRID_API_KEY'
+            }
+          )
+        )
       }
     case 'resend':
       return {
@@ -306,7 +474,15 @@ export const infer_mailer = info => {
         ],
         deps: [
           '@storecraft/mailer-providers-http'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Resend.EnvConfig} */ (
+            {
+              apikey: 'RESEND_API_KEY'
+            }
+          )
+        )
       }
     case 'mailchimp':
       return {
@@ -316,7 +492,15 @@ export const infer_mailer = info => {
         ],
         deps: [
           '@storecraft/mailer-providers-http'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof MailChimp.EnvConfig} */ (
+            {
+              apikey: 'MAILCHIMP_API_KEY'
+            }
+          )
+        )
       }
     case 'mailgun':
       return {
@@ -326,7 +510,15 @@ export const infer_mailer = info => {
         ],
         deps: [
           '@storecraft/mailer-providers-http'
-        ]
+        ],
+        env: extract_env_variables(
+          info.config, 
+          /** @satisfies {typeof Mailgun.EnvConfig} */ (
+            {
+              apikey: 'MAILGUN_API_KEY'
+            }
+          )
+        )
       }
   }
 }
@@ -339,7 +531,11 @@ export const infer_payments = info => {
   return info.map(
     (info, idx) => {
       switch (info.id) {
-        case 'paypal':
+        case 'paypal': {
+          const paypal_config = /** @type {import('@storecraft/payments-paypal').Config} */ (
+            info.config
+          );
+
           return {
             cls: `Paypal`,
             imports: [
@@ -347,9 +543,32 @@ export const infer_payments = info => {
             ],
             deps: [
               '@storecraft/payments-paypal'
-            ]
+            ],
+            env: extract_env_variables(
+              info.config, 
+              paypal_config.env==='prod' ? (
+                /** @satisfies {typeof Paypal.EnvConfigProd} */ (
+                  {
+                    client_id: 'PAYPAL_CLIENT_ID_PROD',
+                    secret: 'PAYPAL_SECRET_PROD'
+                  }
+                )
+              ) : (
+                /** @satisfies {typeof Paypal.EnvConfigTest} */ (
+                  {
+                    client_id: 'PAYPAL_CLIENT_ID_TEST',
+                    secret: 'PAYPAL_SECRET_TEST'
+                  }
+                )
+              )
+            )
           }
-        case 'stripe':
+        }
+        case 'stripe': {
+          const config = /** @type {import('@storecraft/payments-stripe').Config} */ (
+            info.config
+          );
+
           return {
             cls: `Stripe`,
             imports: [
@@ -357,13 +576,23 @@ export const infer_payments = info => {
             ],
             deps: [
               '@storecraft/payments-stripe'
-            ]
+            ],
+            env: extract_env_variables(
+              info.config, 
+              /** @satisfies {typeof Stripe.EnvConfig} */ (
+                {
+                  publishable_key: 'STRIPE_PUBLISHABLE_KEY',
+                  secret_key: 'STRIPE_SECRET_KEY',
+                  webhook_endpoint_secret: 'STRIPE_WEBHOOK_SECRET'
+                }
+              )
+            )
           }
+        }
       }
     }
   )
 }
-
 
 
 /**

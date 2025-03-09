@@ -26,9 +26,15 @@ import html_buy_ui from './adapter.html.js';
 export class Paypal {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
-    client_id: 'PAYPAL_CLIENT_ID',
-    secret: 'PAYPAL_SECRET'
+  static EnvConfigProd = /** @type{const} */ ({
+    client_id: `PAYPAL_CLIENT_ID_PROD`,
+    secret: 'PAYPAL_SECRET_PROD',
+  });
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfigTest = /** @type{const} */ ({
+    client_id: `PAYPAL_CLIENT_ID_TEST`,
+    secret: 'PAYPAL_SECRET_TEST',
   });
 
   /** @type {Config} */ #_config;
@@ -49,8 +55,14 @@ export class Paypal {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.client_id ??= app.platform.env[Paypal.EnvConfig.client_id];
-    this.config.secret ??= app.platform.env[Paypal.EnvConfig.secret];
+    const is_prod = Boolean(this.config.env==='prod');
+    this.config.client_id ??= app.platform.env[
+      is_prod ? Paypal.EnvConfigProd.client_id : Paypal.EnvConfigTest.client_id
+    ] ?? 'PAYPAL_CLIENT_ID';
+
+    this.config.secret ??= app.platform.env[
+      is_prod ? Paypal.EnvConfigProd.secret : Paypal.EnvConfigTest.secret
+    ] ?? 'PAYPAL_SECRET';
 
     const is_valid = this.config.client_id && this.config.secret;
 

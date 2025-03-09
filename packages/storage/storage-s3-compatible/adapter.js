@@ -39,8 +39,8 @@ export class S3CompatibleStorage {
   static EnvConfig = /** @type{const} */ ({
     accessKeyId: 'S3_ACCESS_KEY_ID',
     secretAccessKey: 'S3_SECRET_ACCESS_KEY',
-    bucket: 'ENV_S3_BUCKET',
-    region: 'ENV_S3_REGION',
+    bucket: 'S3_BUCKET',
+    region: 'S3_REGION',
   });
 
   /** @type {AwsClient} */ #_client;
@@ -285,7 +285,7 @@ export class R2 extends S3CompatibleStorage {
   static R2EnvConfig = /** @type{const} */ ({
     accessKeyId: 'S3_ACCESS_KEY_ID',
     secretAccessKey: 'S3_SECRET_ACCESS_KEY',
-    bucket: 'ENV_S3_BUCKET',
+    bucket: 'S3_BUCKET',
     account_id: 'CF_ACCOUNT_ID',
   });
 

@@ -17,12 +17,16 @@ export type Config = {
   env?: 'prod' | 'test';
 
   /**
-   * @description private client id. If missing, will be inferred from env variable `PAYPAL_CLIENT_ID`
+   * @description private client id. If missing, 
+   * - if `env===prod` -> will be inferred from env variable `PAYPAL_CLIENT_ID_PROD` or `PAYPAL_CLIENT_ID`
+   * - if `env===test` -> will be inferred from env variable `PAYPAL_CLIENT_ID_TEST` or `PAYPAL_CLIENT_ID`
    */
   client_id?: string;
 
   /**
-   * @description private secret. If missing, will be inferred from env variable `PAYPAL_SECRET`
+   * @description private secret. If missing, 
+   * - if `env===prod` -> will be inferred from env variable `PAYPAL_SECRET_PROD` or `PAYPAL_SECRET`
+   * - if `env===test` -> will be inferred from env variable `PAYPAL_SECRET_TEST` or `PAYPAL_SECRET`
    */
   secret?: string;
   

@@ -84,7 +84,7 @@ export class NeonServerless extends SQL {
  */
 export class NeonHttp extends SQL {
 
-  /** @type {ENV<NeonHttpConfig>} */
+  /** @satisfies {ENV<NeonHttpConfig>} */
   static NeonHttpEnvConfig = /** @type{const} */ ({
     connectionString: 'NEON_CONNECTION_URL',
   });

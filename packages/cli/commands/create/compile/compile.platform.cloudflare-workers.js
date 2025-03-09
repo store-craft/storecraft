@@ -1,7 +1,8 @@
 import { compile_app } from './compile.app.js'
 import { compile_migrate } from './compile.migrate.js';
 import { 
-  combine_and_pretty, object_to_env_file_string, Packager 
+  combine_and_pretty, object_to_env_file_string, Packager, 
+  run_cmd
 } from './compile.platform.utils.js';
 
 
@@ -30,7 +31,7 @@ export const compile_workers = async (meta) => {
       }
     }
   );
-  await pkgr.write_tsconfig_json();
+  await pkgr.write_tsconfig_json(ts_config);
   await pkgr.write_file(
     `src/index.ts`,
     await combine_and_pretty(
@@ -41,12 +42,17 @@ export const compile_workers = async (meta) => {
   await pkgr.write_file(
     `migrate.js`, compile_migrate(meta)
   );
+  await pkgr.write_env_file(
+    compiled_app.env
+  );
   await pkgr.write_file(
     'wrangler.toml', wrangler_toml(meta, compiled_app.env)
   );
   await pkgr.write_file(
     'README.md', readme_md()
   );
+
+  await run_cmd('npx wrangler types');
 
 }
 
@@ -104,7 +110,7 @@ ${object_to_env_file_string(env_vars)}
       (/** @type {import('@storecraft/database-cloudflare-d1').D1ConfigHTTP} */ (meta.database.config)).database_id
     ) :
     undefined
-].filter(Boolean).join('/n/n');
+].filter(Boolean).join('\n\n');
 
 }
 
@@ -117,7 +123,7 @@ const wrangler_toml_with_d1 = d1_id => `
 # Bind a D1 database. D1 is Cloudflare’s native serverless SQL database.
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#d1-databases
 [[d1_databases]]
-binding = "D1"
+binding = "DB"
 database_name = "main"
 database_id = "${d1_id}"
 
@@ -158,3 +164,53 @@ Author: Tomer Shalev (tomer.shalev@gmail.com)
 \`\`\`
 `
 }
+
+
+const ts_config = `
+{
+	"compilerOptions": {
+		/* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+		/* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+		"target": "es2021",
+		/* Specify a set of bundled library declaration files that describe the target runtime environment. */
+		"lib": ["es2021"],
+		/* Specify what JSX code is generated. */
+		"jsx": "react-jsx",
+
+		/* Specify what module code is generated. */
+		"module": "es2022",
+		/* Specify how TypeScript looks up a file from a given module specifier. */
+		"moduleResolution": "Bundler",
+		/* Specify type package names to be included without being referenced in a source file. */
+		"types": [
+			"@cloudflare/workers-types/2023-07-01"
+		],
+		/* Enable importing .json files */
+		"resolveJsonModule": true,
+
+		/* Allow JavaScript files to be a part of your program. Use the \`checkJS\` option to get errors from these files. */
+		"allowJs": true,
+		/* Enable error reporting in type-checked JavaScript files. */
+		"checkJs": false,
+
+		/* Disable emitting files from a compilation. */
+		"noEmit": true,
+
+		/* Ensure that each file can be safely transpiled without relying on other imports. */
+		"isolatedModules": true,
+		/* Allow 'import x from y' when a module doesn't have a default export. */
+		"allowSyntheticDefaultImports": true,
+		/* Ensure that casing is correct in imports. */
+		"forceConsistentCasingInFileNames": true,
+
+		/* Enable all strict type-checking options. */
+		"strict": true,
+
+		/* Skip type checking all .d.ts files. */
+		"skipLibCheck": true
+	},
+	"exclude": ["test"],
+	"include": ["worker-configuration.d.ts", "src/**/*.ts"]
+}
+`

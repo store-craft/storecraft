@@ -124,7 +124,11 @@ export const infer_platform = platform => {
           `import { type ExportedHandler, type ExecutionContext, type Request, type Response } from '@cloudflare/workers-types'`
         ],
         deps: [
-        ]
+        ],
+        extra_kv: {
+          env: 'env' // pass the worker ENV to CloudflareWorkersPlatform
+        }
+
       }
 
     case 'aws-lambda':
@@ -228,13 +232,17 @@ export const infer_database = info => {
         deps: [
           '@storecraft/database-cloudflare-d1'
         ],
+        config: {}, // override config
+        // we are fetching info for `D1_HTTP` that does migrations for us, so 
+        // it is a bit confusing to have `D1_WORKER` up here
         env: extract_env_variables(
           info.config, 
           /** @satisfies {typeof D1_HTTP.EnvConfig} */ (
             {
               account_id: 'CF_ACCOUNT_ID',
               api_token: 'D1_API_TOKEN',
-              database_id: 'D1_DATABASE_ID'
+              database_id: 'D1_DATABASE_ID',
+              db_name: 'D1_DATABASE_NAME'
             }
           )
         )
@@ -964,9 +972,12 @@ const compose_instance_with_config = (cls_name, config={}, extra_kvs={}) => {
   {
     const entries = Object.entries(extra_kvs)
     if(entries.length) {
-      str_config = str_config.slice(1);
+      str_config = str_config.slice(1); // { || ......}
       for(const [k, v] of entries) {
-        str_config = `${k}: ${String(v)}, ` + str_config;
+        if(k===v)
+          str_config = `${k}, ` + str_config;
+        else 
+          str_config = `${k}: ${String(v)}, ` + str_config;
       }
       str_config = '{' + str_config;
     }
@@ -1006,10 +1017,10 @@ export const compile_app = (meta) => {
 ${o2s(meta.config.config)}
 )
 .withPlatform(
-${compose_instance_with_config(platform.cls, meta.platform.config)}
+${compose_instance_with_config(platform.cls, meta.platform.config, platform.extra_kv)}
 )
 .withDatabase(
-${compose_instance_with_config(database.cls, meta.database.config)}
+${compose_instance_with_config(database.cls, database.config ?? meta.database.config)}
 )
 .withStorage(
 ${compose_instance_with_config(storage.cls, meta.storage.config)}

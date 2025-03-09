@@ -66,6 +66,7 @@ export const command_create = {
       );
 
     } catch (e) {
+      throw e;
       console.log(error(String(e)));
     }
   },

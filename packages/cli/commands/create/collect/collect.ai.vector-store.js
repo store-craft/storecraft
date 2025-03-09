@@ -65,7 +65,7 @@ export const collect_ai_vector_store = async () => {
 
 /**
  * 
- * @param {choices[number]["value"]} id 
+ * @param {typeof choices[number]["value"]} id 
  * @returns 
  */
 const collect_general_config = async (
@@ -120,11 +120,11 @@ const collect_general_config = async (
     case 'libsql-local': {
       /** @type {import('@storecraft/database-turso/vector-store').Config} */
       const config = {
-        url: await withCancel(
+        url: 'file:' + await withCancel(
           text(
             { 
               message: 'What is the local file path ?',
-              defaultValue: '',
+              defaultValue: 'vector-local.db',
               placeholder: 'vector-local.db',
             }
           )

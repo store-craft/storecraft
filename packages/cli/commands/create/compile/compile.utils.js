@@ -1,5 +1,9 @@
 import * as prettier from "prettier";
 
+export const assert = (any, message='failed') => {
+  if(!Boolean(any))
+    throw new Error(message);
+}
 
 /**
  * @description use `prettier` package to prettify the code
@@ -31,11 +35,12 @@ export const dedup_value_array = (arr=[]) => {
  */
 export const dedup_object_array = (arr=[]) => {
   return arr.reduce(
-    (p, c) => ({...p, ...c}),
+    (p, c) => ({...p, ...(c??{})}),
     {}
   );
 }
 
+const is_defined = (o) => o!==undefined && o!==null;
 
 /**
  * @description Given an `object` and another object with partial properties,
@@ -53,8 +58,8 @@ export const record_intersecting_values = (o={}, shadow={}, path='', acc=[]) => 
     const is_regular_value = typeof value==='number' || 
         typeof value==='string' || 
         typeof value==='boolean';
-    const acc_path = path + '.' + key;
-    if(is_regular_value && shadow_value && value) {
+    const acc_path = path ? (path + '.' + key) : key;
+    if(is_regular_value && Boolean(shadow_value) && is_defined(value)) {
       acc.push({shadow_value, value, key: acc_path});
     }
     if(!is_regular_value) {
@@ -76,7 +81,7 @@ export const record_intersecting_values = (o={}, shadow={}, path='', acc=[]) => 
  */
 export const extract_env_variables = (config, env_config) => {
   const items = record_intersecting_values(config, env_config);
-
+  // console.log('items', items)
   const set = {};
   for(const item of items) {
     const env_var_path = item.key;
@@ -94,7 +99,14 @@ export const extract_env_variables = (config, env_config) => {
         (p, c) => p?.[c],
         config
       );
-      delete pre_value[last_key];
+
+      // console.log('keys', keys)
+      // console.log('pre_keys', pre_keys)
+      // console.log('last_key', last_key)
+      // console.log('pre_value', pre_value)
+
+      if(pre_value)
+        delete pre_value[last_key];
     }
   }
 
@@ -114,7 +126,12 @@ export const clean_empty_values = (o={}) => {
       delete o[key];
       continue;
     }
-    if(is_object_or_function(value))
+    if(is_object_or_function(value)) {
       clean_empty_values(value);
+      const empty_value = Object.keys(value ?? {}).length==0;
+      if(empty_value)
+        delete o[key];
+    }
+
   }
 }

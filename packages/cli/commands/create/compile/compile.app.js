@@ -290,11 +290,7 @@ export const infer_database = info => {
           /** @satisfies {typeof NeonServerless.NeonServerlessEnvConfig} */ (
             {
               poolConfig: {
-                database: 'NEON_DATABASE',
-                host: 'NEON_HOST',
-                password: 'NEON_PASSWORD',
-                port: 'NEON_PORT',
-                user: 'NEON_USER'
+                connectionString: 'NEON_CONNECTION_URL'
               }
             }
           )
@@ -862,9 +858,9 @@ export const infer_ai_vector_store = (info) => {
     case 'libsql-cloud': 
     case 'libsql-local': {
       return {
-        cls: `MongoVectorStore`,
+        cls: `LibSQLVectorStore`,
         imports: [
-          `import { MongoVectorStore } from '@storecraft/database-turso/vector-store';`
+          `import { LibSQLVectorStore } from '@storecraft/database-turso/vector-store';`
         ],
         deps: [
           '@storecraft/database-turso'
@@ -873,8 +869,8 @@ export const infer_ai_vector_store = (info) => {
           info.config, 
           /** @satisfies {typeof LibSQLVectorStore.EnvConfig} */ (
             {
-              url: 'LIBSQL_URL',
-              authToken: 'LIBSQL_AUTH_TOKEN'
+              url: 'LIBSQL_VECTOR_URL',
+              authToken: 'LIBSQL_VECTOR_AUTH_TOKEN'
             }
           )
         )
@@ -967,15 +963,15 @@ const compose_instance_with_config = (cls_name, config={}, extra_kvs={}) => {
   {
     const entries = Object.entries(extra_kvs)
     if(entries.length) {
-      str_config = str_config.slice(0, -1);
+      str_config = str_config.slice(1);
       for(const [k, v] of entries) {
-        str_config += `${k}: ${String(v)}`;
+        str_config = `${k}: ${String(v)}, ` + str_config;
       }
-      str_config += '}';
+      str_config = '{' + str_config;
     }
   }
 
-  return `new ${cls_name}(${o2s(config)})`;
+  return `new ${cls_name}(${str_config})`;
 }
 
 
@@ -1050,7 +1046,7 @@ ${compose_instance_with_config(ai_chat.cls, meta.ai_chat.config)}
     code += `
 .withVectorStore(
 ${compose_instance_with_config(
-  ai_vector_store.cls, meta.ai_chat.config, {embedder: embedder_inst}
+  ai_vector_store.cls, meta.ai_vector_store.config, {embedder: embedder_inst}
 )}
 )
 `;    

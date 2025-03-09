@@ -20,7 +20,7 @@
     "storecraft": "bin/index.js"
   },
   "scripts": {
-    "cli:test": "echo \"Error: no test specified\" && exit 1",
+    "cli:test": "uvu -c",
     "test": "npm run cli:test",
     "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
@@ -52,7 +52,8 @@
     "@storecraft/payments-stripe": "latest",
     "@storecraft/storage-google": "latest",
     "@storecraft/storage-s3-compatible": "latest",
-    "@types/yargs": "^17.0.33"
+    "@types/yargs": "^17.0.33",
+    "uvu": "^0.5.6"
   },
   "bugs": {
     "url": "https://github.com/store-craft/storecraft/issues"

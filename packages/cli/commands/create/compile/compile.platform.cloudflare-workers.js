@@ -1,7 +1,7 @@
 import { compile_app } from './compile.app.js'
 import { compile_migrate } from './compile.migrate.js';
 import { 
-  combine_and_pretty, Packager 
+  combine_and_pretty, object_to_env_file_string, Packager 
 } from './compile.platform.utils.js';
 
 
@@ -42,7 +42,7 @@ export const compile_workers = async (meta) => {
     `migrate.js`, compile_migrate(meta)
   );
   await pkgr.write_file(
-    'wrangler.toml', wrangler_toml(meta)
+    'wrangler.toml', wrangler_toml(meta, compiled_app.env)
   );
   await pkgr.write_file(
     'README.md', readme_md()
@@ -84,8 +84,9 @@ ${app_code}
 /**
  * 
  * @param {import('./compile.app.js').Meta} meta 
+ * @param {Record<string, string>} env_vars
  */
-const wrangler_toml = (meta) => {
+const wrangler_toml = (meta, env_vars={}) => {
   const uses_d1 = meta.database.id==='d1';
 
   return [
@@ -96,7 +97,7 @@ main = "src/index.ts"
 compatibility_date = "2024-08-06"
 
 [vars]
-MY_VARIABLE = "production_value"
+${object_to_env_file_string(env_vars)}
 
 `,
   uses_d1 ? 

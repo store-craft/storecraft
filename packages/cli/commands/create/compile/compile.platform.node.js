@@ -31,6 +31,7 @@ export const compile_node = async (meta) => {
     }
   );
   await pkgr.write_tsconfig_json();
+  await pkgr.write_env_file(compiled_app.env);
   await pkgr.write_file(
     `app.js`,
     await combine_and_pretty(

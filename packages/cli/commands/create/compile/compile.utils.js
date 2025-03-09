@@ -16,6 +16,28 @@ export const prettify = (source, options={}) => {
 }
 
 /**
+ * @description Dedup (even highly nested) arrays by values
+ * @param {any[]} arr 
+ */
+export const dedup_value_array = (arr=[]) => {
+  return Array.from(
+    new Set(arr.flat(100))
+  );
+}
+
+/**
+ * @description Dedup record object by keys
+ * @param {Record<string, any>[]} arr 
+ */
+export const dedup_object_array = (arr=[]) => {
+  return arr.reduce(
+    (p, c) => ({...p, ...c}),
+    {}
+  );
+}
+
+
+/**
  * @description Given an `object` and another object with partial properties,
  * Walk on the object and the shadow object, and record values of both when
  * they both have values 

@@ -50,6 +50,16 @@ export const combine_and_pretty = async (...sources) => {
   return await prettify(all);
 }
 
+  /**
+   * @param {Record<string, string>} obj env-vars
+   */
+export const object_to_env_file_string = (obj) => {
+  return Object.entries(obj).reduce(
+    (p, c) => `${p}${c[0]}="${c[1]}"\n`,
+    '\n'
+  );
+}
+
 
 export class Packager {
 
@@ -134,6 +144,14 @@ export class Packager {
   write_package_json(obj) {
     return writeFile('package.json', JSON.stringify(obj, null, 2));
   }
+
+  /**
+   * @param {Record<string, string>} obj env-vars
+   */
+  write_env_file(obj, path='.env') {
+    return writeFile(path, object_to_env_file_string(obj));
+  }
+
 
   /**
    * @param {string} path 

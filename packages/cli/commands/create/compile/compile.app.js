@@ -66,17 +66,20 @@ import { collect_storage } from '../collect/collect.storage.js'
 import { collect_ai_chat } from '../collect/collect.ai.chat.js'
 import { collect_ai_vector_store } from '../collect/collect.ai.vector-store.js'
 import { collect_ai_embedder } from '../collect/collect.ai.embedder.js'
-import { extract_env_variables } from './compile.utils.js'
+import { dedup_object_array, dedup_value_array, extract_env_variables } from './compile.utils.js'
 
 
 /**
  * @typedef {object} Meta
- * @prop {Awaited<ReturnType<collect_config>>} config
+ * @prop {Awaited<ReturnType<typeof collect_config>>} config
  * @prop {Awaited<ReturnType<typeof collect_database>>} database
- * @prop {Awaited<ReturnType<collect_mailer>>} mailer
- * @prop {Awaited<ReturnType<collect_payments>>} payments
- * @prop {Awaited<ReturnType<collect_platform>>} platform
- * @prop {Awaited<ReturnType<collect_storage>>} storage
+ * @prop {Awaited<ReturnType<typeof collect_mailer>>} mailer
+ * @prop {Awaited<ReturnType<typeof collect_payments>>} payments
+ * @prop {Awaited<ReturnType<typeof collect_platform>>} platform
+ * @prop {Awaited<ReturnType<typeof collect_storage>>} storage
+ * @prop {Awaited<ReturnType<typeof collect_ai_chat>>} ai_chat
+ * @prop {Awaited<ReturnType<typeof collect_ai_embedder>>} ai_embedder
+ * @prop {Awaited<ReturnType<typeof collect_ai_vector_store>>} ai_vector_store
  */
 
 
@@ -363,7 +366,7 @@ export const infer_database = info => {
 
 
 /**
- * @param {Awaited<ReturnType<collect_storage>>} info 
+ * @param {Awaited<ReturnType<typeof collect_storage>>} info 
  */
 export const infer_storage = info => {
   switch (info.id) {
@@ -564,10 +567,10 @@ export const infer_mailer = info => {
 
 
 /**
- * @param {Awaited<ReturnType<collect_ai_chat>>} info 
+ * @param {Awaited<ReturnType<typeof collect_ai_chat>>} [info] 
  */
-export const infer_ai_chat = info => {
-  switch (info.id) {
+export const infer_ai_chat = (info) => {
+  switch (info?.id) {
     case 'anthropic': {
       return {
         cls: `Anthropic`,
@@ -688,10 +691,10 @@ export const infer_ai_chat = info => {
 
 
 /**
- * @param {Awaited<ReturnType<collect_ai_embedder>>} info 
+ * @param {Awaited<ReturnType<collect_ai_embedder>>} [info] 
  */
-export const infer_ai_embedder = info => {
-  switch (info.id) {
+export const infer_ai_embedder = (info) => {
+  switch (info?.id) {
     case 'cloudflare': {
       return {
         cls: `CloudflareEmbedder`,
@@ -793,10 +796,10 @@ export const infer_ai_embedder = info => {
 
 
 /**
- * @param {Awaited<ReturnType<collect_ai_vector_store>>} info 
+ * @param {Awaited<ReturnType<collect_ai_vector_store>>} [info] 
  */
-export const infer_ai_vector_store = info => {
-  switch (info.id) {
+export const infer_ai_vector_store = (info) => {
+  switch (info?.id) {
     case 'cloudflare-vectorize': {
       return {
         cls: `Vectorize`,
@@ -843,7 +846,7 @@ export const infer_ai_vector_store = info => {
           `import { MongoVectorStore } from '@storecraft/database-mongodb/vector-store';`
         ],
         deps: [
-          '@storecraft/core'
+          '@storecraft/database-mongodb'
         ],
         env: extract_env_variables(
           info.config, 
@@ -864,7 +867,7 @@ export const infer_ai_vector_store = info => {
           `import { MongoVectorStore } from '@storecraft/database-turso/vector-store';`
         ],
         deps: [
-          '@storecraft/core'
+          '@storecraft/database-turso'
         ],
         env: extract_env_variables(
           info.config, 
@@ -956,8 +959,22 @@ export const infer_payments = info => {
  * 
  * @param {string} cls_name 
  * @param {any} config 
+ * @param {Record<string, string>} [extra_kvs] 
  */
-const compose_instance_with_config = (cls_name, config) => {
+const compose_instance_with_config = (cls_name, config={}, extra_kvs={}) => {
+  let str_config = o2s(config);
+
+  {
+    const entries = Object.entries(extra_kvs)
+    if(entries.length) {
+      str_config = str_config.slice(0, -1);
+      for(const [k, v] of entries) {
+        str_config += `${k}: ${String(v)}`;
+      }
+      str_config += '}';
+    }
+  }
+
   return `new ${cls_name}(${o2s(config)})`;
 }
 
@@ -978,13 +995,17 @@ export const counter = (pre, idx) => {
  * @param {Meta} meta 
  */
 export const compile_app = (meta) => {
+  
   const platform = infer_platform(meta.platform);
   const database = infer_database(meta.database);
   const storage = infer_storage(meta.storage);
   const mailer = infer_mailer(meta.mailer);
   const payments = infer_payments(meta.payments);
+  const ai_chat = infer_ai_chat(meta.ai_chat);
+  const ai_embedder = infer_ai_embedder(meta.ai_embedder);
+  const ai_vector_store = infer_ai_vector_store(meta.ai_vector_store);
 
-  const code = `new App(
+  let code = `new App(
 ${o2s(meta.config.config)}
 )
 .withPlatform(
@@ -1012,12 +1033,35 @@ ${
   {
     'postman': new PostmanExtension()
   }
+)`;
+
+  if(ai_chat) {
+    code += `
+.withAI(
+${compose_instance_with_config(ai_chat.cls, meta.ai_chat.config)}
+)`;    
+  }
+
+  if(ai_embedder && ai_vector_store) {
+    const embedder_inst = compose_instance_with_config(
+      ai_embedder.cls, meta.ai_embedder.config
+    );
+
+    code += `
+.withVectorStore(
+${compose_instance_with_config(
+  ai_vector_store.cls, meta.ai_chat.config, {embedder: embedder_inst}
+)}
 )
-`;
+`;    
+  }
 
   return {
     code,
-    imports: [
+    imports: dedup_value_array([
+      ai_chat.imports, 
+      ai_embedder.imports, 
+      ai_vector_store.imports, 
       platform.imports, 
       database.imports, 
       storage.imports, 
@@ -1025,8 +1069,11 @@ ${
       payments.map(p => p.imports),
       `import { App } from '@storecraft/core'`,
       `import { PostmanExtension } from '@storecraft/core/extensions/postman'`,
-    ].flat(10),
-    deps: [
+    ]),
+    deps: dedup_value_array([
+      ai_chat.deps, 
+      ai_embedder.deps, 
+      ai_vector_store.deps, 
       platform.deps, 
       database.deps, 
       storage.deps, 
@@ -1034,7 +1081,16 @@ ${
       payments.map(p => p.deps),
       '@storecraft/core',
       'handlebars'
-    ].flat(10),
+    ]),
+    env: dedup_object_array([
+      ai_chat.env, 
+      ai_embedder.env, 
+      ai_vector_store.env, 
+      platform.env, 
+      database.env, 
+      storage.env, 
+      mailer.env,     
+    ])
   }
 }
 

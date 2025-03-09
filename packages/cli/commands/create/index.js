@@ -30,27 +30,17 @@ export const command_create = {
       console.log(logo_gradient);
 
       intro("Let's go");
-      
-      const config = await collect_config();
-      const platform = await collect_platform();
-      const database = await collect_database();
-      const storage = await collect_storage();
-      const ai_chat = await collect_ai_chat();
-      const ai_vector_store = await collect_ai_vector_store();
-      const ai_embedder = await collect_ai_embedder();
-      const mailer = await collect_mailer();
-      const payments = await collect_payments();
   
       const meta = {
-        config, 
-        platform,
-        database, 
-        storage,
-        ai_chat, 
-        ai_vector_store,
-        ai_embedder,
-        mailer,
-        payments      
+        config: await collect_config(), 
+        platform: await collect_platform(),
+        database: await collect_database(), 
+        storage: await collect_storage(),
+        ai_chat: await collect_ai_chat(), 
+        ai_vector_store: await collect_ai_vector_store(),
+        ai_embedder: await collect_ai_embedder(),
+        mailer: await collect_mailer(),
+        payments: await collect_payments()    
       }
   
       // await spinner(compile_all(meta), 'Setting Up, hold on')();
@@ -67,7 +57,7 @@ export const command_create = {
 
       console.log(
         '\n'+good(
-          config.config.general_store_name,
+          meta.config.config.general_store_name,
           [
             `▸ Don't forget to migrate the database with ${chalk.magentaBright('npm run migrate')}`,
             `▸ Then run ${chalk.magentaBright('npm start')}`,

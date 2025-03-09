@@ -16,6 +16,7 @@ export const compile_google_functions = async (meta) => {
   await pkgr.init();
   await pkgr.installDeps([...compiled_app.deps, "@google-cloud/functions-framework"]);
   await pkgr.installDevDeps([ "dotenv", "@types/node"]);
+  await pkgr.write_env_file(compiled_app.env);
   const package_json = await pkgr.package_json();
   await pkgr.write_package_json(
     { 

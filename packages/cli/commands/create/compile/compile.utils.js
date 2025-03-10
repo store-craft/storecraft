@@ -21,7 +21,8 @@ export const prettify = (source, options={}) => {
 
 /**
  * @description Dedup (even highly nested) arrays by values
- * @param {any[]} arr 
+ * @param {any[] } arr 
+ * @returns {string[]}
  */
 export const dedup_value_array = (arr=[]) => {
   return Array.from(

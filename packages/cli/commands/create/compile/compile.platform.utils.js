@@ -104,7 +104,7 @@ export class Packager {
    * @param  {string[]} deps 
    * @param  {Record<string, string>} [options] 
    */
-  async installDeps(deps, options = {}) {
+  async installDeps(deps, options = {'-P': ''}) {
     if(!this.#hasInit)
       throw new Error('please init first !!!');
 

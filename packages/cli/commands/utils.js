@@ -22,6 +22,7 @@ export const parse_csv = (v) => {
  * @prop {string} [short]
  * @prop {boolean | string} [disabled]
  * @prop {never} [type]
+ * @prop {boolean} [ignore=false] ignore or filter
  */
 
 

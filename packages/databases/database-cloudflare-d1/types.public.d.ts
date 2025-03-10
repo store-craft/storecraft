@@ -38,5 +38,10 @@ export type D1ConfigHTTP = {
  * @description config for D1 over worker runtime
  */
 export type D1ConfigWorker = {
-  db: D1Database;
+  /**
+   * @description The Cloudflare D1 Database binding.
+   * If missing, it will be inferred by CF `ENV.DB` binding after
+   * init by `storecraft`
+   */
+  db?: D1Database;
 }

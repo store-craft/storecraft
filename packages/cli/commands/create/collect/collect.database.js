@@ -43,8 +43,14 @@ export const choices = /** @type {const} */ ([
   },
   {
     name: 'Cloudflare D1 (Cloud sqlite)',
-    value: 'd1',
+    value: 'd1-http',
     description: 'Cloud SQLite database'
+  },
+  {
+    name: 'Cloudflare D1 (Cloud sqlite)',
+    value: 'd1-worker',
+    description: 'Cloud SQLite database',
+    ignore: true
   },
   {
     name: 'Neon (http)',
@@ -70,7 +76,7 @@ export const collect_database = async () => {
     select(
       {
         message: '💾 Select a database',
-        options: choices.map(
+        options: choices.filter(c => !Boolean(c?.ignore)).map(
           c => (
             {
               value: c.value,
@@ -280,7 +286,10 @@ const collect_general_config = async (
       return config;
     }
 
-    case "d1": {
+    case "d1-worker": {
+      return {}
+    }
+    case "d1-http": {
       /** @type {import('@storecraft/database-cloudflare-d1').D1ConfigHTTP} */
       let config = {
         account_id: await withCancel(

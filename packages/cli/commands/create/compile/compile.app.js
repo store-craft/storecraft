@@ -223,16 +223,15 @@ export const infer_database = info => {
           )
         )
       }
-    case 'd1':
+    case 'd1-http':
       return {
-        cls: `D1_WORKER`,
+        cls: `D1_HTTP`,
         imports: [
-          `import { D1_WORKER } from '@storecraft/database-cloudflare-d1'`
+          `import { D1_HTTP } from '@storecraft/database-cloudflare-d1'`
         ],
         deps: [
           '@storecraft/database-cloudflare-d1'
         ],
-        config: {}, // override config
         // we are fetching info for `D1_HTTP` that does migrations for us, so 
         // it is a bit confusing to have `D1_WORKER` up here
         env: extract_env_variables(
@@ -247,6 +246,17 @@ export const infer_database = info => {
           )
         )
       }
+    case 'd1-worker':
+      return {
+        cls: `D1_WORKER`,
+        imports: [
+          `import { D1_WORKER } from '@storecraft/database-cloudflare-d1'`
+        ],
+        deps: [
+          '@storecraft/database-cloudflare-d1'
+        ],
+        config: {}, 
+      }      
     case 'mongo_db':
       return {
         cls: `MongoDB`,

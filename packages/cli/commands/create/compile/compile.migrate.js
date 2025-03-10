@@ -48,9 +48,8 @@ export const compile_migrate = (meta) => {
   const database = infer_database(meta.database);
 
   switch(meta.database.id) {
-    case 'd1': {
-      return d1_migrate();
-    }
+    case 'd1-http': 
+    case 'd1-worker': 
     case 'sqlite':
     case 'libsql-local':
     case 'postgres':

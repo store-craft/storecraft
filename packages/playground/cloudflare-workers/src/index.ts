@@ -13,7 +13,8 @@ export default {
 	 * @returns The response to be sent back to the client
 	 */
 	async fetch(request, env, ctx): Promise<Response> {
-    let app = new App(
+    
+    const app = new App(
       {
         auth_secret_access_token: 'auth_secret_access_token',
         auth_secret_refresh_token: 'auth_secret_refresh_token',
@@ -24,7 +25,7 @@ export default {
         auth_admins_emails: ['tomer.shalev@gmail.com']
       }
     )
-    .withPlatform(new CloudflareWorkersPlatform())
+    .withPlatform(new CloudflareWorkersPlatform({ env }))
     .withDatabase(
       new D1_WORKER(
         {
@@ -33,7 +34,7 @@ export default {
       )
     );
 
-    app = await app.init();
+    await app.init();
     
     const response = await app.handler(request);
 

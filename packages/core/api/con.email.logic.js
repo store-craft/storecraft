@@ -32,70 +32,89 @@ const compileTemplate = (template, data) => {
 /**
  * @description Send Email with `template` and typed parameters (great developer experience)
  * 
- * 
- * @template {templates_keys | string} [HANDLE=keyof templates_input_types]
  * @param {App} app 
- * @param {string[]} emails 
- * @param {HANDLE} template_handle the template `handle` or `id` in the database
- * @param {string} subject 
- * @param {HANDLE extends templates_keys ? templates_input_types[HANDLE] : any} data 
  */
-export const sendMailWithTemplate = async (app, emails, template_handle, subject, data) => {
-  if(!app.mailer)
-    return;
-  
-  const template = await app.api.templates.get(template_handle);
+export const sendMailWithTemplate = (app) => 
+  /**
+   * 
+   * @template {templates_keys | string} [HANDLE=keyof templates_input_types]
+   * @param {App} app 
+   * @param {string[]} emails 
+   * @param {HANDLE} template_handle the template `handle` or `id` in the database
+   * @param {string} subject 
+   * @param {HANDLE extends templates_keys ? templates_input_types[HANDLE] : any} data 
+   */
+  async (app, emails, template_handle, subject, data) => {
+    if(!app.mailer)
+      return;
+    
+    const template = await app.api.templates.get(template_handle);
 
-  if(!template) {
-    throw new Error(
-      `Template ${template_handle} not found !!`
-    )
-  }
-
-  const { html, text } = compileTemplate(
-    template, 
-    data
-  );
-
-  return sendMail(
-    app,
-    {
-      html,
-      text,
-      from: {
-        address: app.config.general_store_support_email ?? 'support@storecraft.app',
-        name: 'Support'
-      },
-      to: emails.map(e => ({address: e})),
-      subject
+    if(!template) {
+      throw new Error(
+        `Template ${template_handle} not found !!`
+      )
     }
-  );
-}
+
+    const { html, text } = compileTemplate(
+      template, 
+      data
+    );
+
+    return sendMail(app)(
+      {
+        html,
+        text,
+        from: {
+          address: app.config.general_store_support_email ?? 'support@storecraft.app',
+          name: 'Support'
+        },
+        to: emails.map(e => ({address: e})),
+        subject
+      }
+    );
+  }
 
 /**
  * @description send email and dispatch events
  * @param {App} app 
- * @param {MailObject} mail 
  */
-export const sendMail = async (app, mail) => {
-  await app.pubsub.dispatch(
-    'email/before-send',
-    mail
-  );
+export const sendMail = (app) => 
+  /**
+   * @param {MailObject} mail 
+   */
+  async (mail) => {
+    await app.pubsub.dispatch(
+      'email/before-send',
+      mail
+    );
 
-  const r = await app.mailer.email(mail);
+    const r = await app.mailer.email(mail);
 
-  await app.pubsub.dispatch(
-    'email/after-send',
-    {
-      mail_object: mail,
-      mail_response: r
+    await app.pubsub.dispatch(
+      'email/after-send',
+      {
+        mail_object: mail,
+        mail_response: r
+      }
+    );
+
+
+    if(!r?.success) {
+      console.log(r);
     }
-  );
-
-
-  if(!r?.success) {
-    console.log(r);
+    return r;
   }
-  return r;
+
+
+/**
+ * 
+ * @param {App} app
+ */  
+export const inter = app => {
+
+  return {
+    sendMail: sendMail(app),
+    sendMailWithTemplate: sendMailWithTemplate(app),
+  }
 }

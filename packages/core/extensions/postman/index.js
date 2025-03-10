@@ -5,7 +5,6 @@
 
 import { App } from '../../index.js';
 import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
-import { sendMailWithTemplate } from '../../api/con.email.logic.js';
 
 
 /**
@@ -49,7 +48,7 @@ export class PostmanExtension {
         if(!event.payload.current?.contact?.email)
           return;
 
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
           'checkout-complete',
@@ -69,7 +68,7 @@ export class PostmanExtension {
         if(!event.payload.current?.contact?.email)
           return;
 
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
           'order-shipped',
@@ -89,7 +88,7 @@ export class PostmanExtension {
         if(!event.payload.current?.contact?.email)
           return;
 
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
           'order-cancelled',
@@ -107,7 +106,7 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/signup',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.email ],
           'welcome-customer',
@@ -124,7 +123,7 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/change-password',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.email ],
           'general-message',
@@ -141,7 +140,7 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/confirm-email-token-generated',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.auth_user.email ],
           'confirm-email',
@@ -160,7 +159,7 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/forgot-password-token-generated',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.auth_user.email ],
           'forgot-password',

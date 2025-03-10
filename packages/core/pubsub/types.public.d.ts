@@ -81,7 +81,6 @@ export type events = {
   'orders/fulfillment/cancelled': PayloadForUpsert<OrderData>
   'orders/fulfillment/update': PayloadForUpsert<OrderData> 
 
-  
   'orders/payments/unpaid': PayloadForUpsert<OrderData> 
   'orders/payments/authorized': PayloadForUpsert<OrderData> 
   'orders/payments/captured': PayloadForUpsert<OrderData>
@@ -100,24 +99,20 @@ export type events = {
   'auth/remove': Partial<AuthUserType>
   'auth/upsert': Partial<AuthUserType>
   'auth/apikey-created': Partial<AuthUserType>
-
   'auth/confirm-email-token-generated': {
     auth_user: Partial<AuthUserType>,
     /** confirm email token */
     token: string
   }
-
   'auth/confirm-email-token-confirmed': Partial<AuthUserType>
-
   'auth/forgot-password-token-generated': {
     auth_user: Partial<AuthUserType>,
     /** confirm email token */
     token: string
   }
-
   'auth/forgot-password-token-confirmed': Partial<AuthUserType>
-
   'auth/change-password': Partial<AuthUserType> 
+
 
   /** email, before sending */
   'email/before-send': Partial<MailObject>

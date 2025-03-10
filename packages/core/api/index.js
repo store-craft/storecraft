@@ -15,6 +15,7 @@ import { inter as templates } from './con.templates.logic.js';
 import * as pricing from './con.pricing.logic.js';
 import { inter as statistics } from './con.statistics.logic.js';
 import { inter as search } from './con.search.logic.js';
+import { inter as email } from './con.email.logic.js';
 export * as func from './utils.func.js'
 export * as index from './utils.index.js'
 export * as query from './utils.query.js'
@@ -45,6 +46,7 @@ export const create_api = app => {
     statistics: statistics(app),
     templates: templates(app),
     search: search(app),
+    email: email(app),
     pricing,
     enums
   }

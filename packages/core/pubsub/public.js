@@ -1,6 +1,6 @@
 /** 
  * @import { 
- *  EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber,
+ *  EventPayload, PubSubEvent, PubSubSubscriber,
  *  events 
  * } from "./types.public.js" */
 

@@ -45,7 +45,7 @@ export class PostmanExtension {
       'orders/checkout/complete',
       async (event) => {
 
-        console.log(event.payload.current)
+        // console.log(event.payload.current)
         if(!event.payload.current?.contact?.email)
           return;
 

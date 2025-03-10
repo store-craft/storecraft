@@ -39,12 +39,20 @@ const data = [
       { event: 'auth/remove', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/upsert', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/apikey-created', dispatches: 'Partial<AuthUserType>' },
+      { event: 'auth/change-password', dispatches: 'Partial<AuthUserType>' },
 
-      { event: 'auth/confirm-email-token-generated', dispatches: '{ email: string, token: string}' },
+      { event: 'auth/confirm-email-token-generated', dispatches: '{ auth_user: Partial<AuthUserType>, token: string }' },
       { event: 'auth/confirm-email-token-confirmed', dispatches: 'Partial<AuthUserType>' },
 
-      { event: 'auth/forgot-password-token-generated', dispatches: '{ email: string, token: string}' },
+      { event: 'auth/forgot-password-token-generated', dispatches: '{ auth_user: Partial<AuthUserType>, token: string }' },
       { event: 'auth/forgot-password-token-confirmed', dispatches: 'Partial<AuthUserType>' },
+    ]
+  },
+  {
+    name: 'email',
+    events: [
+      { event: 'email/before-send', dispatches: 'Partial<MailObject>' },
+      { event: 'email/after-send', dispatches: '{ mail_object: Partial<MailObject>, mail_response: Partial<MailResponse> }' },
     ]
   },
   {
@@ -174,7 +182,12 @@ const data = [
   },
 ]
 
-
+/**
+ * @typedef {object} Params
+ * @prop {{event: string, dispatches: string}[]} rows
+ * 
+ * @param {Params & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} param0 
+ */
 const EventTable = (
   { 
     rows, className='w-full', ...rest 

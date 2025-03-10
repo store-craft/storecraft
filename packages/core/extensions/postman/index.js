@@ -1,5 +1,6 @@
 /**
  * @import { extension } from '../types.public.js';
+ * @import { templates_input_types } from './types.public.js';
  * @import { AuthUserType, OrderData, TemplateType } from '../../api/types.api.js';
  */
 
@@ -40,7 +41,7 @@ export class PostmanExtension {
   onInit(app) {
 
     // checkout events notifications
- 
+
     app.pubsub.on(
       'orders/checkout/complete',
       async (event) => {
@@ -143,12 +144,15 @@ export class PostmanExtension {
       async (event) => {
         await sendMailWithTemplate(
           event.app,
-          [ event.payload.email ],
+          [ event.payload.auth_user.email ],
           'confirm-email',
           'Confirm Email',
           {
             info: get_info(app),
-            token: event.payload.token
+            message: {
+              token: event.payload.token,
+              firstname: event.payload.auth_user.firstname
+            }
           }
         );
       }
@@ -159,7 +163,7 @@ export class PostmanExtension {
       async (event) => {
         await sendMailWithTemplate(
           event.app,
-          [ event.payload.email ],
+          [ event.payload.auth_user.email ],
           'forgot-password',
           'Confirm Forgot Password Request',
           {
@@ -213,17 +217,17 @@ export const compileTemplate = (template, data) => {
 
 /**
  * @description Send Email with `template`
- * 
+ * @template {keyof templates_input_types} [HANDLE=keyof templates_input_types]
  * @param {App} app 
  * @param {string[]} emails 
- * @param {string} template_handle the template `handle` or `id` in the database
+ * @param {HANDLE} template_handle the template `handle` or `id` in the database
  * @param {string} subject 
- * @param {object} data 
+ * @param {templates_input_types[HANDLE]} data 
  */
 export const sendMailWithTemplate = async (app, emails, template_handle, subject, data) => {
   if(!app.mailer)
     return;
-
+  
   const template = await app.api.templates.get(template_handle);
 
   if(!template) {

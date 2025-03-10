@@ -143,6 +143,8 @@ async (body) => {
   );
 
   { // dispatch event
+    const sanitized = sanitize_auth_user(au);
+
     if(app.pubsub.has('auth/signup')) {
       await app.pubsub.dispatch(
         'auth/signup',
@@ -153,8 +155,8 @@ async (body) => {
     await app.pubsub.dispatch(
       'auth/confirm-email-token-generated',
       {
-        email: au.email,
-        token: confirm_email_token.token
+        auth_user: sanitized,
+        token: confirm_email_token.token,
       }
     );
 
@@ -706,7 +708,12 @@ export const forgot_password_request = (app) =>
     { // dispatch event
       await app.pubsub.dispatch(
         'auth/forgot-password-token-generated',
-        { email, token }
+        { 
+          auth_user: {
+            email
+          }, 
+          token: token.token 
+        }
       );
     }
   

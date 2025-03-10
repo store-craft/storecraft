@@ -1,4 +1,8 @@
-/** @import { EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber } from "./types.public.js" */
+/** 
+ * @import { 
+ *  EventPayload, PubSubEvent, PubSubOnEvents, PubSubSubscriber,
+ *  events 
+ * } from "./types.public.js" */
 
 import { App } from "../index.js";
 
@@ -35,8 +39,8 @@ export class PubSub {
   /**
    * 
    * @description Does a `storecraft` `event` has handlers ?
-   * 
-   * @param {PubSubEvent} event 
+   * @template {PubSubEvent | string} [E=PubSubEvent]
+   * @param {E} event 
    */
   has(event) {
     return this.#subscribersOf(event).length > 0;
@@ -50,18 +54,17 @@ export class PubSub {
    * - Also, you can use `stopPropagation()` method to stop the event from propagating
    * to other subscribers.
    * 
-   * @template {any} [P=any]
-   * @template {PubSubEvent | string} [E=(PubSubEvent)]
+   * @template {PubSubEvent | string} [E=PubSubEvent]
    * 
    * @param {E} event a `storecraft` event type
-   * @param {P} [payload] extra payload to dispatch
+   * @param {E extends keyof events ? events[E] : any} [payload] extra payload to dispatch
    * 
    * @see {@link PubSubEvent}
    */
   async dispatch(event, payload) {
     try {
       let is_event_stopped = false;
-      /** @type {EventPayload<P, AppType, E>} */
+      /** @type {EventPayload<E extends keyof events ? events[E] : any, AppType, E>} */
       const event_payload = {
         event,
         payload,
@@ -96,7 +99,7 @@ export class PubSub {
    * 
    * @description Subscribe to a `storecraft` event
    * 
-   * @param {PubSubEvent} event An event identifier
+   * @param {PubSubEvent | string} event An event identifier
    * @param {PubSubSubscriber} callback a `callback` 
    * event handler to invoke, can be a `promise`
    * 
@@ -115,8 +118,9 @@ export class PubSub {
 
   /**
    * @description Subscribe to a `storecraft` event
-   * 
-   * @type {PubSubOnEvents["on"]}
+   * @template {PubSubEvent | string} [E=PubSubEvent]
+   * @param {E} event
+   * @param {E extends keyof events ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback
    */
   on = (event, callback) => {
     return this.#on(event, callback);
@@ -125,12 +129,12 @@ export class PubSub {
 
   /**
    * @description unsubscribe to a `storecraft` event
-   * 
-   * @param {PubSubEvent} event An event identifier
-   * @param {PubSubSubscriber} callback a `callback` 
+   * @template {PubSubEvent | string} [E=PubSubEvent]
+   * @param {E} event An event identifier
+   * @param {E extends keyof events ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback a `callback` 
    * event handler to remove
    */
-  remove(event, callback) {
+  remove = (event, callback) => {
     this.#subscribers[event] = this.#subscribersOf(event).filter(
       cb => cb!==callback
     );

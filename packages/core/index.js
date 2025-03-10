@@ -202,7 +202,7 @@ export class App {
           order_before?.status?.payment?.id!==order_after.status.payment.id
         );
 
-        /** @type {PayloadForUpsert<Partial<OrderData>>} */
+        /** @type {PayloadForUpsert<OrderData>} */
         const payload = {
           previous: order_before,
           current: order_after
@@ -824,11 +824,12 @@ export class App {
    * @description Quickly attach an `event` subscriber. This is just a quick way
    * to interface into {@link PubSub}
    * 
-   * @type {PubSubOnEvents<this, this>["on"]}
+   * @type {PubSub["on"]}
    */
   on = (event, callback) => {
     this.pubsub.on(event, callback);
 
+    // @ts-ignore
     return this;
   }
 

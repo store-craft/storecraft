@@ -80,7 +80,7 @@ export const regular_upsert = (
     // dispatch event
     if(requires_event_processing) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           previous: previous_item, 
           current: final,
@@ -121,7 +121,7 @@ export const regular_get = (app, db, event) =>
 
     if(Boolean(event)) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           current: item,
         }
@@ -165,7 +165,7 @@ export const regular_remove = (app, db, event) =>
 
     if(requires_event_processing) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           previous,
           success
@@ -180,8 +180,8 @@ export const regular_remove = (app, db, event) =>
  * @description a regular document list with query operation
  * 
  * 
- * @template {Partial<BaseType>} G
- * @template {Partial<BaseType>} U
+ * @template  G
+ * @template  U
  * 
  * 
  * @param {App} app
@@ -209,7 +209,7 @@ export const regular_list = (app, db, event) =>
 
     if(Boolean(event)) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           current: items,
         }

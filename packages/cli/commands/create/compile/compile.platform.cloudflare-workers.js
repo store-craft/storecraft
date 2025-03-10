@@ -38,9 +38,9 @@ export const compile_workers = async (meta) => {
     },
   });
 
-  console.log(meta)
-  console.log(compiled_app_workers)
-  console.log(compiled_app_node)
+  // console.log(meta)
+  // console.log(compiled_app_workers)
+  // console.log(compiled_app_node)
 
 
   const pkgr = new Packager(meta.config.config.general_store_name);
@@ -100,7 +100,7 @@ export const compile_workers = async (meta) => {
   );
   // await pkgr.
 
-  await run_cmd('npx wrangler types');
+  await run_cmd('npx wrangler types ./src/worker-configuration.d.ts');
 
 }
 

@@ -119,8 +119,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {Blob} blob 
+   * @type {storage_driver["putBlob"]}
    */
   async putBlob(key, blob) {
     return this.#put_internal(key, blob);
@@ -128,8 +127,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ArrayBuffer} buffer 
+   * @type {storage_driver["putArraybuffer"]}
    */
   async putArraybuffer(key, buffer) {
     return this.#put_internal(key, buffer);
@@ -137,8 +135,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ReadableStream} stream 
+   * @type {storage_driver["putStream"]}
    */
   async putStream(key, stream) {
     return this.#put_internal(key, stream);
@@ -146,7 +143,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getSigned"]}
    */
   async putSigned(key) {
     const ct = infer_content_type(key);
@@ -196,7 +193,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getArraybuffer"]}
    */
   async getArraybuffer(key) {
     const r = await this.#get_request(key);
@@ -211,7 +208,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getBlob"]}
    */
   async getBlob(key) {
     const r = await this.#get_request(key);
@@ -228,8 +225,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {Response} key 
+   * @type {storage_driver["getStream"]}
    */
   async getStream(key) {
 
@@ -244,7 +240,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getSigned"]}
    */
   async getSigned(key) {
     const sf = this.config;
@@ -266,7 +262,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["remove"]}
    */
   async remove(key) {
     const Authorization = 'Bearer ' + await getJWTFromServiceAccount(this.config);

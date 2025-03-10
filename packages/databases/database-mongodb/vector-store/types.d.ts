@@ -6,13 +6,13 @@ export * from './index.js';
 export type Config = {
   /**
    * @description mongo connection url, if absent, will be infered at init
-   * with env `app.platform.env.MONGODB_URL`
+   * with env `MONGODB_VECTOR_STORE_URL` or `MONGODB_URL`
    */
   url?: string;
 
   /** 
    * @description the name of the database, if absent, will be infered at init
-   * with env `app.platform.env.MONGODB_NAME` 
+   * with env `MONGODB_VECTOR_STORE_NAME` or `MONGODB_NAME` 
    * @default 'main'
    */
   db_name?: string;

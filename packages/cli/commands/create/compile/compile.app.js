@@ -867,8 +867,8 @@ export const infer_ai_vector_store = (info) => {
           info.config, 
           /** @satisfies {typeof MongoVectorStore.EnvConfig} */ (
             {
-              db_name: 'MONGODB_NAME',
-              url: 'MONGODB_URL'
+              db_name: 'MONGODB_VECTOR_STORE_DB_NAME',
+              url: 'MONGODB_VECTOR_STORE_URL'
             }
           )
         )
@@ -1107,7 +1107,8 @@ ${compose_instance_with_config(
       platform.env, 
       database.env, 
       storage.env, 
-      mailer.env,     
+      mailer.env,   
+      meta.config.env  
     ])
   }
 }

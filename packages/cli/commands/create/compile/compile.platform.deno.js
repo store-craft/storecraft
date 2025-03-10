@@ -51,7 +51,7 @@ export const compile_deno = async (meta) => {
 
 
 const index_js = `
-import { app } from './app.ts';
+import { app } from './app.js';
 
 await app.init(false);
 

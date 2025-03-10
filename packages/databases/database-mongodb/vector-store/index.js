@@ -37,8 +37,8 @@ export class MongoVectorStore {
 
   /** @satisfies {ENV<Config>} */
   static EnvConfig = /** @type{const} */ ({
-    db_name: 'MONGODB_NAME',
-    url: 'MONGODB_URL'
+    db_name: 'MONGODB_VECTOR_STORE_DB_NAME',
+    url: 'MONGODB_VECTOR_STORE_URL'
   });
 
   /** @type {Config} */
@@ -81,8 +81,8 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url]; 
-    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name] ?? 'main'; 
+    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url ?? 'MONGODB_URL']; 
+    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name ?? 'MONGODB_DB_NAME'] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */

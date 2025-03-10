@@ -138,6 +138,7 @@ export const baseTypeSchema = idableConcreteSchema
       .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
     description: z.string().optional().describe("Rich description"),
     active: z.boolean().optional().describe("Is the entity active ?"),
+    search: z.array(z.string()).optional().describe("search terms"),
   });
 
 export const tagTypeSchema = baseTypeSchema.extend({
@@ -1115,11 +1116,13 @@ export const storecraftConfigSchema = z.object({
     ),
   auth_secret_access_token: z
     .string()
+    .optional()
     .describe(
       "access token signing secret, if absent will be infered\nat init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment",
     ),
   auth_secret_refresh_token: z
     .string()
+    .optional()
     .describe(
       "refresh token signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment",
     ),

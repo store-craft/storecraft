@@ -59,11 +59,11 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, id_or_handle, driver.dialectType),
-        with_tags(eb, id_or_handle, driver.dialectType),
-        with_search(eb, id_or_handle, driver.dialectType),
-      ]
-      .filter(Boolean))
+          with_media(eb, id_or_handle, driver.dialectType),
+          with_tags(eb, id_or_handle, driver.dialectType),
+          with_search(eb, id_or_handle, driver.dialectType),
+        ].filter(Boolean)
+      )
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
     

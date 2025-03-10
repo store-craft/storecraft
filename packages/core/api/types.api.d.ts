@@ -241,6 +241,11 @@ export interface BaseType extends idable_concrete, timestamps {
    * @description Is the entity active ? 
    */
   active?: boolean;
+
+  /**
+   * @description search terms
+   */
+  search?: string[];
 }
 
 

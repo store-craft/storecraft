@@ -3,7 +3,9 @@
  */
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
-  regular_upsert_me, where_id_or_handle_table } from './con.shared.js'
+  regular_upsert_me, where_id_or_handle_table, 
+  with_media,
+  with_search} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -47,6 +49,10 @@ const get = (driver) => {
     return driver.client
     .selectFrom(table_name)
     .selectAll()
+    .select(eb => [
+        with_search(eb, id_or_handle, driver.dialectType),
+      ].filter(Boolean)
+    )
     .where(where_id_or_handle_table(id_or_handle))
     .executeTakeFirst()
     .then(sanitize);
@@ -90,6 +96,9 @@ const list = (driver) => {
     const items = await driver.client
       .selectFrom(table_name)
       .selectAll()
+      .select(eb => [
+        with_search(eb, eb.ref('tags.id'), driver.dialectType),
+      ].filter(Boolean))
       .where(
         (eb) => {
           return query_to_eb(eb, query, table_name);

@@ -334,5 +334,4 @@ s('setting_same_direction_range_cursor_throws', async () => {
   }
 });
 
-
 s.run();

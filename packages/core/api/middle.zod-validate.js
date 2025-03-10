@@ -1,3 +1,8 @@
+/**
+ * @import { SafeParseError } from 'zod'
+ * @import { ApiRequest, ApiResponse } from '../rest/types.public.js'
+ * 
+ */
 import { ZodSchema } from 'zod'
 import { StorecraftError } from './utils.func.js';
 
@@ -28,7 +33,7 @@ export const assert_zod = (zod_schema, item) => {
   
   if(!result.success) {
     
-    const casted = (/** @type {import("zod").SafeParseError<any>} */ result);
+    const casted = (/** @type {SafeParseError<any>} */ (result));
 
     // console.log(JSON.stringify(casted.error?.issues, null, 2))
 
@@ -41,8 +46,8 @@ export const assert_zod = (zod_schema, item) => {
  */
 export const zod_validate_body = (zod_schema) => {
   /**
-   * @param {import("../rest/types.public.d.ts").ApiRequest} req
-   * @param {import("../rest/types.public.d.ts").ApiResponse} res
+   * @param {ApiRequest} req
+   * @param {ApiResponse} res
    */
   return async (req, res) => {
     assert_zod(zod_schema, req.parsedBody);

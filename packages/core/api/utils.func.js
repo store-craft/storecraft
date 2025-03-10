@@ -1,28 +1,31 @@
 import { id } from '../crypto/object-id.js';
  
 export class StorecraftError extends Error {
+  #message_string;
   /**
    * 
    * @param {any} message 
    * @param {number} code 
    */
   constructor(message, code=400) {
-    super(JSON.stringify(message, null, 2));
+    super();
 
     this.code = code;
-    // this.message = message;
-
+    this.message = message;
     try {
-      this.message_string = JSON.stringify(this.message, null, 2);
+      this.#message_string = JSON.stringify(this.message, null, 2);
     } catch (e) {
-      this.message_string = ':('
+      this.#message_string = ':('
     }
+
+    if(this.message!==undefined || this.message!==null)
+    this.message.toString = () => this.#message_string;
     
     // console.log(JSON.stringify(message, null, 2));
   }
 
   toString() {
-    return this.message_string;
+    return this.#message_string;
   }
 }
 

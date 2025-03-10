@@ -57,14 +57,14 @@ export class PubSub {
    * @template {PubSubEvent | string} [E=PubSubEvent]
    * 
    * @param {E} event a `storecraft` event type
-   * @param {E extends keyof events ? events[E] : any} [payload] extra payload to dispatch
+   * @param {E extends PubSubEvent ? events[E] : any} [payload] extra payload to dispatch
    * 
    * @see {@link PubSubEvent}
    */
   async dispatch(event, payload) {
     try {
       let is_event_stopped = false;
-      /** @type {EventPayload<E extends keyof events ? events[E] : any, AppType, E>} */
+      /** @type {EventPayload<E extends PubSubEvent ? events[E] : any, AppType, E>} */
       const event_payload = {
         event,
         payload,
@@ -120,7 +120,7 @@ export class PubSub {
    * @description Subscribe to a `storecraft` event
    * @template {PubSubEvent | string} [E=PubSubEvent]
    * @param {E} event
-   * @param {E extends keyof events ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback
+   * @param {E extends PubSubEvent ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback
    */
   on = (event, callback) => {
     return this.#on(event, callback);
@@ -131,7 +131,7 @@ export class PubSub {
    * @description unsubscribe to a `storecraft` event
    * @template {PubSubEvent | string} [E=PubSubEvent]
    * @param {E} event An event identifier
-   * @param {E extends keyof events ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback a `callback` 
+   * @param {E extends PubSubEvent ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback a `callback` 
    * event handler to remove
    */
   remove = (event, callback) => {

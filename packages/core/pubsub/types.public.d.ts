@@ -4,6 +4,7 @@ import type {
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
   StorefrontType, StorefrontTypeUpsert, TagType, TemplateType 
 } from '../api/types.api.d.ts';
+import { MailObject, MailResponse } from '../mailer/types.mailer.js';
 
 export * from './public.js';
 
@@ -117,6 +118,10 @@ export type events = {
   'auth/forgot-password-token-confirmed': Partial<AuthUserType>
 
   'auth/change-password': Partial<AuthUserType> 
+
+  /** email, before sending */
+  'email/before-send': Partial<MailObject>
+  'email/after-send': { mail_object: Partial<MailObject>, mail_response: Partial<MailResponse> }
 }
 
 
@@ -126,7 +131,7 @@ export type events = {
  */
 export type PubSubEvent = keyof events;
 
-export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =( PubSubEvent | string)> = {
+export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =(PubSubEvent | string)> = {
   /**
    * @description payload
    */

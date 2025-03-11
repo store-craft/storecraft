@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/storage-google",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Official Google Storage adapter for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

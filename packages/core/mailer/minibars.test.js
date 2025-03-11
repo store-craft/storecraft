@@ -1,5 +1,4 @@
 import { Minibars } from "./minibars.js";
-import Handlebars from 'handlebars';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 

@@ -155,11 +155,10 @@ export const to_tokens = (text) => {
 }
 
 /**
- * @param  {...any} args 
+ * @template T
+ * @param  {...(T | T[] | T[][])} args 
  */
-export const union = (...args) => [
-  ...new Set(args.flat(Infinity))
-].filter(Boolean);
+export const union = (...args) => [...new Set(args.flat(10))].filter(Boolean);
 
 export const isEmpty = (str) => (!str?.trim().length);
 

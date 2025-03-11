@@ -5,7 +5,8 @@
        width='90%' />
 </div><hr/><br/>
 
-Official `Turso` / `libSql` driver for `StoreCraft` on any platforms.
+Official `libSql` / `Turso` driver for `StoreCraft` on any platforms.
+Includes a vector store.
 
 ```bash
 npm i @storecraft/database-turso
@@ -29,7 +30,7 @@ import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
-import { Turso } from '@storecraft/database-turso'
+import { Turso, LibSQLVectorStore } from '@storecraft/database-turso'
 import { migrateToLatest } from '@storecraft/database-turso/migrate.js'
 
 const app = new App(
@@ -53,6 +54,13 @@ const app = new App(
   )
 )
 .withStorage(new NodeLocalStorage('storage'))
+.withVectorStore(
+  new LibSQLVectorStore(
+    {
+      embedder: new OpenAIEmbedder()
+    }
+  )
+)
 
 await app.init();
 await migrateToLatest(app.db, false);

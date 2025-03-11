@@ -1106,7 +1106,8 @@ ${compose_instance_with_config(
       platform.env, 
       database.env, 
       storage.env, 
-      mailer.env,   
+      mailer.env,
+      ...payments.map(p => p.env),
       meta.config.env  
     ])
   }

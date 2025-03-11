@@ -36,8 +36,10 @@ export const collect_config = async () => {
         text(
           { 
             message: 'Enter the emails of the admins',
-            validate: v => !Boolean(v) || !Boolean(parse_csv(v).every(validateEmail)) ? 
-                'Email format is incorrect' : undefined,
+            placeholder: 'john@storecraft.app',
+            defaultValue: 'john@storecraft.app',
+            // validate: v => !Boolean(v) || !Boolean(parse_csv(v).every(validateEmail)) ? 
+            //     'Email format is incorrect' : undefined,
           }
         )
       )

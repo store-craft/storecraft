@@ -26,7 +26,7 @@ export const prettify = (source, options={}) => {
  */
 export const dedup_value_array = (arr=[]) => {
   return Array.from(
-    new Set(arr.flat(100))
+    new Set(arr.flat(Infinity))
   );
 }
 

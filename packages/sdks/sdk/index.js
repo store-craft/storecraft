@@ -1,5 +1,6 @@
 /**
  * @import { StorecraftSDKConfig } from './types.js'
+ * @import { App } from '@storecraft/core'
  */
 import Auth from './src/auth.js'
 import Customers from './src/customers.js'

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -140,6 +140,9 @@
     "./rest": {
       "import": "./rest/index.js",
       "types": "./rest/types.public.d.ts"
+    },
+    "./rest/*": {
+      "import": "./rest/*"
     },
     "./test-runner": {
       "import": "./test-runner/index.js"

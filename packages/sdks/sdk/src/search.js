@@ -7,8 +7,11 @@
  * } from '@storecraft/core/api'
  */
 
-import { api_query_to_searchparams, object_to_search_params, parse_query, string_array_to_string } from '@storecraft/core/api/utils.query.js';
-import { HEADER_STORECRAFT_THREAD_ID } from '../../core/rest/con.ai.routes.js';
+import { 
+  api_query_to_searchparams, object_to_search_params, 
+  parse_query, string_array_to_string 
+} from '@storecraft/core/api/utils.query.js';
+import { HEADER_STORECRAFT_THREAD_ID } from '@storecraft/core/rest/con.ai.routes.js';
 import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth, url } from './utils.api.fetch.js';
 

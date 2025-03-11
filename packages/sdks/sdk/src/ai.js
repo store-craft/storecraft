@@ -5,7 +5,7 @@
  * @import { content } from '@storecraft/core/ai/types.public.js'
  */
 
-import { HEADER_STORECRAFT_THREAD_ID } from '../../core/rest/con.ai.routes.js';
+import { HEADER_STORECRAFT_THREAD_ID } from '@storecraft/core/rest/con.ai.routes.js';
 import { StorecraftSDK } from '../index.js'
 import { url } from './utils.api.fetch.js';
 

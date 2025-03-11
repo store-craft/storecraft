@@ -4,3 +4,4 @@ import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
  
 await app.init();
 await migrateToLatest(app.db, true);
+await app.vectorstore.createVectorIndex();

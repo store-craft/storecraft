@@ -1,3 +1,6 @@
+/**
+ * @import { db_shipping as db_col } from '@storecraft/core/database'
+ */
 import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
 import { count_regular, delete_entity_values_by_value_or_reporter, 
@@ -8,9 +11,6 @@ import { count_regular, delete_entity_values_by_value_or_reporter,
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_shipping} db_col
- */
 export const table_name = 'shipping_methods'
 
 /**
@@ -59,11 +59,11 @@ const get = (driver) => {
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
-        with_media(eb, id_or_handle, driver.dialectType),
-        with_tags(eb, id_or_handle, driver.dialectType),
-        with_search(eb, id_or_handle, driver.dialectType),
-      ]
-      .filter(Boolean))
+          with_media(eb, id_or_handle, driver.dialectType),
+          with_tags(eb, id_or_handle, driver.dialectType),
+          with_search(eb, id_or_handle, driver.dialectType),
+        ].filter(Boolean)
+      )
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
     

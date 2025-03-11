@@ -1,0 +1,31 @@
+{
+  "name": "@storecraft/sdk",
+  "version": "1.0.11",
+  "description": "Official storecraft Universal Javascript SDK",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/sdk"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "scripts": {
+    "sdk:test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run sdk:test",
+    "sc-publish": "npm publish",
+    "prepublishOnly": "npm version patch --force"
+  },
+  "type": "module",
+  "types": "./types.d.ts",
+  "main": "./index.js",
+  "dependencies": {
+    "@storecraft/core": "^1.0.0"
+  }
+}

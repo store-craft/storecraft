@@ -47,7 +47,8 @@ async (item) => {
     await app.pubsub.dispatch(
       'images/upsert',
       {
-        current: final
+        current: final,
+        previous: undefined
       }
     )
   }

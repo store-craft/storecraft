@@ -1,6 +1,8 @@
 /**
  * @import { TemplateType } from '../../api/types.api.js'
  * @import { idable_concrete } from '../../database/types.public.js'
+ * @import { ListTestContext, CrudTestContext } from './api.utils.crud.js';
+ * @import { Test } from 'uvu';
  * 
  */
 import { suite } from 'uvu';
@@ -45,7 +47,7 @@ const items = Array.from({length: 10}).map(
  */
 export const create = app => {
 
-  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
+  /** @type {Test<ListTestContext<TemplateType>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 

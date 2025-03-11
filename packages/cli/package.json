@@ -1,6 +1,6 @@
 {
   "name": "storecraft",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "Official storecraft CLI",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -20,7 +20,7 @@
     "storecraft": "bin/index.js"
   },
   "scripts": {
-    "cli:test": "echo \"Error: no test specified\" && exit 1",
+    "cli:test": "uvu -c",
     "test": "npm run cli:test",
     "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
@@ -29,13 +29,11 @@
   "types": "./types.d.ts",
   "main": "./index.js",
   "dependencies": {
-    "@inquirer/prompts": "^5.3.8",
+    "@clack/prompts": "^0.10.0",
     "boxen": "^8.0.1",
     "chalk": "^5.3.0",
-    "cli-spinners": "^3.2.0",
-    "enquirer": "^2.4.1",
     "gradient-string": "^2.0.2",
-    "prettier": "^3.3.3",
+    "prettier": "^3.5.3",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -54,7 +52,8 @@
     "@storecraft/payments-stripe": "latest",
     "@storecraft/storage-google": "latest",
     "@storecraft/storage-s3-compatible": "latest",
-    "@types/yargs": "^17.0.33"
+    "@types/yargs": "^17.0.33",
+    "uvu": "^0.5.6"
   },
   "bugs": {
     "url": "https://github.com/store-craft/storecraft/issues"

@@ -1,12 +1,10 @@
+/**
+ * @import { Driver, Dialect, DatabaseConnection, QueryResult } from 'kysely';
+ * @import { Config } from './types.public.js';
+ * @import { Row, InArgs } from '@libsql/client';
+ */
 import * as libsql from "@libsql/client";
 import * as kysely from "kysely";
-
-/**
- * @typedef {import('kysely').Driver} Driver
- * @typedef {import('kysely').Dialect} Dialect
- * @typedef {import('kysely').DatabaseConnection} DatabaseConnection
- * @typedef {import('./types.public.d.ts').Config} Config
- */
 
 /**
  * 
@@ -24,18 +22,23 @@ export class LibsqlDialect {
     this.#config = config;
   }
 
+  get config() {
+    return this.#config;
+  }
+
   createAdapter() { return new kysely.SqliteAdapter(); }
   createQueryCompiler() { return new kysely.SqliteQueryCompiler(); }
   createDriver() {
 
-    if (this.#config?.libsqlConfig?.url===undefined) {
+    if (this.#config?.url===undefined) {
       throw new Error(
         "Please specify either `client` or `url` in the LibsqlDialect config"
       );
     }
 
     return new LibsqlDriver(
-      libsql.createClient(this.#config.libsqlConfig), 
+      // @ts-ignore
+      libsql.createClient(this.#config), 
       this.#config
     );
   }
@@ -134,16 +137,17 @@ export class LibsqlConnection {
   /**
    * @param {kysely.CompiledQuery[]} compiledQueries 
    * 
-   * @returns {Promise<import('kysely').QueryResult<import("@libsql/client").Row>>}
+   * @returns {Promise<QueryResult<Row>>}
    */
   async #internal_executeQuery(compiledQueries) {
+    // console.log(compiledQueries)
     const target = this.#transaction ?? this.client;
 
     const stmts = compiledQueries.map(
       cq => (
         {
           sql: cq.sql,
-          args: (/** @type {import("@libsql/client").InArgs} */ (cq.parameters)),
+          args: (/** @type {InArgs} */ (cq.parameters)),
         }
       )
     );
@@ -153,8 +157,8 @@ export class LibsqlConnection {
     );
 
     // console.log('q', JSON.stringify({sql, params}, null, 2))
-    console.log('stmts', JSON.stringify(stmts, null, 2))
-    console.log('result', JSON.stringify(results, null, 2))
+    // console.log('stmts', JSON.stringify(stmts, null, 2))
+    // console.log('result', JSON.stringify(results, null, 2))
 
     const last_result = results?.at(-1);
 
@@ -172,10 +176,10 @@ export class LibsqlConnection {
    * 
    * @param {kysely.CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult>}
+   * @returns {Promise<QueryResult>}
    */
   async executeQuery(compiledQuery) {
-    console.log('this.isBatch', this.isBatch)
+    // console.log('this.isBatch', this.isBatch)
     if(this.isBatch) {
       this.batch.push(compiledQuery);
       return Promise.resolve(
@@ -202,7 +206,7 @@ export class LibsqlConnection {
   }
 
   async commitTransaction() {
-    console.log('commitTransaction')
+    // console.log('commitTransaction')
     if(this.isBatch) {
       // console.trace()
       await this.#internal_executeQuery(this.batch);
@@ -237,7 +241,7 @@ export class LibsqlConnection {
    * @param {kysely.CompiledQuery} compiledQuery 
    * @param {number} chunkSize 
    * 
-   * @returns {AsyncIterableIterator<import('kysely').QueryResult<R>>}
+   * @returns {AsyncIterableIterator<QueryResult<R>>}
    */
   async *streamQuery(compiledQuery, chunkSize) {
     throw new Error("Libsql Driver does not support streaming yet");

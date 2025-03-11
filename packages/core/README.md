@@ -25,6 +25,8 @@ This package has
 - core platform types
 - core VQL types and logic
 - core REST API controller
+- core AI types and agent
+- core Vector Stores types and logic
 
 ### Usage
 

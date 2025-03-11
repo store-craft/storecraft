@@ -1,3 +1,5 @@
+import { AuthUserType, type OrderData } from '../../api/types.api.js';
+
 export { PostmanExtension } from './index.js';
 
 /**
@@ -5,5 +7,3 @@ export { PostmanExtension } from './index.js';
  */
 export type Config = {
 }
-
-

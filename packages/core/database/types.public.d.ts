@@ -28,8 +28,8 @@ type SearchTermsType = {
   search?: string[];
 }
 
-export type RegularGetOptions = {
-  expand? : ExpandQuery;
+export type RegularGetOptions<T extends any = any> = {
+  expand? : ExpandQuery<T>;
 }
 
 export type idable_concrete = {
@@ -61,14 +61,14 @@ export declare interface db_crud<U, G=U> {
    * @param id_or_handle 
    * @param options 
    */
-  get: (id_or_handle: HandleOrId, options?: RegularGetOptions) => Promise<G>;
+  get: (id_or_handle: HandleOrId, options?: RegularGetOptions<G>) => Promise<G>;
   /**
    * get bulk of items, ordered, if something is missing, `undefined`
    * should be instead
    * @param ids array of ids
    * @param options 
    */
-  getBulk?: (ids: string[], options?: RegularGetOptions) => Promise<G[]>;
+  getBulk?: (ids: string[], options?: RegularGetOptions<G>) => Promise<G[]>;
 
   /**
    * Insert or Replace an item
@@ -338,16 +338,18 @@ export interface search {
   quicksearch: (query: ApiQuery) => Promise<QuickSearchResult>
 }
 
-export interface db_driver {
+export interface db_driver<ConfigType extends any = any> {
   /**
    * Init to the database
    */
-  init: (app: App) => Promise<this>;
+  init: (app: App) => any | void;
 
   /** 
    * Disconnect the database if possible 
    */
   disconnect: () => Promise<boolean>;
+
+  config?: ConfigType;
 
   /**
    * Is the driver ready ?

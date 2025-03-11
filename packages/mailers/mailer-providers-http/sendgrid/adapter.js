@@ -1,5 +1,6 @@
 /**
  * @import { Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { mailer } from '@storecraft/core/mailer'
  * @import { SendgridV3_sendmail } from './types.private.js'
 */
@@ -12,17 +13,27 @@ import { convert_to_base64 } from "./adapter.utils.js";
  */
 export class SendGrid {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    apikey: 'SENDGRID_API_KEY'
+  });
+
   /** @type {Config} */ #_config;
 
   /**
    * 
    * @param {Config} config 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#_config = config;
   }
 
   get config() { return this.#_config; }
+
+  /** @type {mailer<Config>["onInit"]} */
+  onInit = (app) => {
+    this.config.apikey ??= app.platform.env[SendGrid.EnvConfig.apikey];
+  };
 
   /**
    * 

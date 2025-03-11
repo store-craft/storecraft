@@ -1,0 +1,34 @@
+{
+  "name": "@storecraft/sdk-react-hooks",
+  "version": "1.0.32",
+  "description": "Official Storecraft Javascript SDK React Hooks",
+  "license": "MIT",
+  "author": "Tomer Shalev (https://github.com/store-craft)",
+  "homepage": "https://github.com/store-craft/storecraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/store-craft/storecraft.git",
+    "directory": "packages/sdk-react-hooks"
+  },
+  "keywords": [
+    "commerce",
+    "dashboard",
+    "code",
+    "storecraft"
+  ],
+  "scripts": {
+    "sdk-react-hooks:test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run sdk-react-hooks:test",
+    "prepublishOnly": "npm version patch --force"
+  },
+  "type": "module",
+  "types": "./types.d.ts",
+  "main": "./index.js",
+  "dependencies": {
+    "@storecraft/sdk": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}

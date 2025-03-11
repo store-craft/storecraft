@@ -1,3 +1,10 @@
+/**
+ * @import { 
+ *  db_storefronts as db_col, RegularGetOptions 
+ * } from '@storecraft/core/database'
+ * @import { WithRelations } from './utils.relations.js'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
@@ -9,17 +16,9 @@ import {
 import { report_document_media } from './con.images.js';
 
 /**
- * @typedef {import('@storecraft/core/database').db_storefronts} db_col
- */
-
-/**
  * @param {MongoDB} d 
  * 
- * 
- * @returns {Collection<
- *  import('./utils.relations.js').WithRelations<db_col["$type_get"]>>
- * }
- * 
+ * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('storefronts');
 
@@ -113,7 +112,7 @@ const count = (driver) => count_regular(driver, col(driver));
  */
 const list_storefront_products = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['products']
     };
@@ -132,7 +131,7 @@ const list_storefront_products = (driver) => {
  */
 const list_storefront_collections = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['collections']
     };
@@ -151,7 +150,7 @@ const list_storefront_collections = (driver) => {
  */
 const list_storefront_discounts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['discounts']
     };
@@ -169,7 +168,7 @@ const list_storefront_discounts = (driver) => {
  */
 const list_storefront_shipping_methods = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['shipping_methods']
     };
@@ -188,7 +187,7 @@ const list_storefront_shipping_methods = (driver) => {
  */
 const list_storefront_posts = (driver) => {
   return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
+    /** @type {RegularGetOptions} */
     const options = {
       expand: ['posts']
     };

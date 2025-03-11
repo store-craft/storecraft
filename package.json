@@ -11,7 +11,8 @@
     "./packages/storage/*",
     "./packages/mailers/*",
     "./packages/payments/*",
-    "./packages/extensions/*"
+    "./packages/extensions/*",
+    "./packages/sdks/*"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

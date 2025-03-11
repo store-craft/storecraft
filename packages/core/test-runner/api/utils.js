@@ -31,9 +31,6 @@ const filter_actual_keys_by_expected = (actual, expected) => {
   )
 }
 
-
-
-
 /**
  * @description given two objects `actual` and `expected`, perform deep equal test
  * between expected and it's mutual keys with actual

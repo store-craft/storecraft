@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "noEmit": true,
     "allowJs": true,
     "checkJs": true,
     "resolveJsonModule": true,
@@ -9,5 +10,5 @@
     "esModuleInterop": true
   },
   "include": ["*", "**/*"],
-  "exclude": ["*.json"]
+  "exclude": ["*.json", "node_modules"]
 }

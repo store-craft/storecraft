@@ -46,6 +46,7 @@ export const regular_upsert = (
 
   /**
    * @param {z.infer<API_UPSERT_ZOD_SCHEMA>} item
+   * @returns {Promise<string>} id
    */
   return async (item) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
@@ -67,8 +68,8 @@ export const regular_upsert = (
     }
 
     // Check if exists
-    const id = !Boolean(item.id) ? ID(id_prefix) : item.id;
-    const final = apply_dates({ ...item, id })
+    const id = !Boolean(item.id) ? ID(id_prefix) : String(item.id);
+    const final = apply_dates({ ...item, id });
     const search = [
       ...create_search_index(final), 
       ...post_hook(final)
@@ -79,7 +80,7 @@ export const regular_upsert = (
     // dispatch event
     if(requires_event_processing) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           previous: previous_item, 
           current: final,
@@ -120,7 +121,7 @@ export const regular_get = (app, db, event) =>
 
     if(Boolean(event)) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           current: item,
         }
@@ -164,7 +165,7 @@ export const regular_remove = (app, db, event) =>
 
     if(requires_event_processing) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           previous,
           success
@@ -179,8 +180,8 @@ export const regular_remove = (app, db, event) =>
  * @description a regular document list with query operation
  * 
  * 
- * @template {Partial<BaseType>} G
- * @template {Partial<BaseType>} U
+ * @template  G
+ * @template  U
  * 
  * 
  * @param {App} app
@@ -208,7 +209,7 @@ export const regular_list = (app, db, event) =>
 
     if(Boolean(event)) {
       await app.pubsub.dispatch(
-        event,
+        String(event),
         {
           current: items,
         }

@@ -12,9 +12,9 @@ const html = `
     <script 
     id='_storecraft_script_' 
     type="module">
-    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@latest/dist/lib/index.min.js';
-    mountStorecraftDashboard(
-      document.getElementById('root'), false
+    import { mountChat } from 'https://cdn.jsdelivr.net/npm/@storecraft/chat@latest/dist/lib/index.min.js';
+    mountChat(
+      document.getElementById('root')
     );
 
   </script>

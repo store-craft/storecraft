@@ -1,5 +1,6 @@
 /**
  * @import { Config, ServiceFile } from './types.public.js' 
+ * @import { ENV } from '@storecraft/core';
  * @import { storage_driver, StorageFeatures } from '@storecraft/core/storage' 
  */
 
@@ -35,12 +36,20 @@ const infer_content_type = (name) => {
  */
 export class GoogleStorage {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    bucket: 'GS_BUCKET',
+    client_email: 'GS_CLIENT_EMAIL',
+    private_key: 'GS_PRIVATE_KEY',
+    private_key_id: 'GS_PRIVATE_KEY_ID',
+  });
+
   /** @type {Config} */ #_config;
 
   /**
    * @param {Config} [config]
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#_config = config;
   }
 
@@ -54,12 +63,10 @@ export class GoogleStorage {
     if(!app)
       return this;
 
-    this.#_config = this.#_config ?? {
-      bucket: app.platform.env.GS_BUCKET,
-      client_email: app.platform.env.GS_CLIENT_EMAIL,
-      private_key: app.platform.env.GS_PRIVATE_KEY,
-      private_key_id: app.platform.env.GS_PRIVATE_KEY_ID,
-    }
+    this.#_config.bucket ??= app.platform.env[GoogleStorage.EnvConfig.bucket];
+    this.#_config.client_email ??= app.platform.env[GoogleStorage.EnvConfig.client_email];
+    this.#_config.private_key ??= app.platform.env[GoogleStorage.EnvConfig.private_key];
+    this.#_config.private_key_id ??= app.platform.env[GoogleStorage.EnvConfig.private_key_id];
 
     return this; 
   }
@@ -112,8 +119,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {Blob} blob 
+   * @type {storage_driver["putBlob"]}
    */
   async putBlob(key, blob) {
     return this.#put_internal(key, blob);
@@ -121,8 +127,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ArrayBuffer} buffer 
+   * @type {storage_driver["putArraybuffer"]}
    */
   async putArraybuffer(key, buffer) {
     return this.#put_internal(key, buffer);
@@ -130,8 +135,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {ReadableStream} stream 
+   * @type {storage_driver["putStream"]}
    */
   async putStream(key, stream) {
     return this.#put_internal(key, stream);
@@ -139,7 +143,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getSigned"]}
    */
   async putSigned(key) {
     const ct = infer_content_type(key);
@@ -189,7 +193,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getArraybuffer"]}
    */
   async getArraybuffer(key) {
     const r = await this.#get_request(key);
@@ -204,7 +208,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getBlob"]}
    */
   async getBlob(key) {
     const r = await this.#get_request(key);
@@ -221,8 +225,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
-   * @param {Response} key 
+   * @type {storage_driver["getStream"]}
    */
   async getStream(key) {
 
@@ -237,7 +240,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["getSigned"]}
    */
   async getSigned(key) {
     const sf = this.config;
@@ -259,7 +262,7 @@ export class GoogleStorage {
 
   /**
    * 
-   * @param {string} key 
+   * @type {storage_driver["remove"]}
    */
   async remove(key) {
     const Authorization = 'Bearer ' + await getJWTFromServiceAccount(this.config);

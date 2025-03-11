@@ -1,5 +1,7 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
+ * @import { Config } from './types.public.js';
+ * @import { type Request, type Response } from "@cloudflare/workers-types"
  */
 import { pbkdf2 } from '../../crypto/public.js';
 
@@ -10,7 +12,7 @@ import { pbkdf2 } from '../../crypto/public.js';
  */
 export class CloudflareWorkersPlatform {
 
-  /** @type {import('./types.public.d.ts').Config} */
+  /** @type {Config} */
   #config;
 
   /** @type {Record<string, any>} */
@@ -18,7 +20,7 @@ export class CloudflareWorkersPlatform {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').Config} [config={}] 
+   * @param {Config} [config={}] 
    */
   constructor(config={}) {
     this.#env = config.env ?? {};
@@ -55,12 +57,15 @@ export class CloudflareWorkersPlatform {
   async encode(from) {
     // @ts-ignore
     from.duplex = 'half';
+    
+    // @ts-ignore
     return from;
   }
 
 
   /** @type {CloudflareWorkersPlatformAdapter["handleResponse"]} */
   async handleResponse(web_response, context) {
+    // @ts-ignore
     return web_response;
   }  
 } 

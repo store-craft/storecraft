@@ -3,9 +3,9 @@ import { tool } from '../core/tools.js';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { z } from 'zod';
-import { OpenAI } from '../models/openai/index.js';
-import { Groq } from '../models/groq/index.js';
-import { Anthropic } from '../models/anthropic/index.js';
+import { OpenAI } from '../models/chat/openai/index.js';
+import { Groq } from '../models/chat/groq/index.js';
+import { Anthropic } from '../models/chat/anthropic/index.js';
 
 
 const prompt2 = `

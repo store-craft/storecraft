@@ -1,13 +1,16 @@
+/**
+ * @import { db_customers as db_col } from '@storecraft/core/database'
+ * @import { OrderData } from '@storecraft/core/api'
+ * @import { WithRelations } from './utils.relations.js'
+ * @import { Filter } from 'mongodb'
+ */
+
 import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
 import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
-
-/**
- * @typedef {import('@storecraft/core/database').db_customers} db_col
- */
 
 /**
  * @param {MongoDB} d 
@@ -122,13 +125,7 @@ const list_customer_orders = (driver) => {
     console.log('sort', sort)
     console.log('expand', query?.expand)
     
-    /**
-     * @type {import('mongodb').Filter<
-     *  import('./utils.relations.js').WithRelations<
-     *    import('@storecraft/core/api').OrderData
-     *  >
-     * >}
-     */
+    /** @type {Filter<WithRelations<OrderData>>} */
     const filter = {
       $and: [
         {'_relations.search': `customer:${customer_id}` },

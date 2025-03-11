@@ -1,7 +1,6 @@
 /** 
  * @import { ApiRequest, ApiResponse, ApiPolka } from './types.public.js' 
- * @import { OrderData, Role } from "../api/types.api.js"; 
- * @import { CustomerType } from "../api/types.api.js"; 
+ * @import { CustomerType, OrderData } from "../api/types.api.js"; 
  * @import { ApiQuery } from "../api/types.api.query.js"; 
  */
 import { Polka } from '../polka/index.js'
@@ -10,10 +9,6 @@ import { parse_auth_user, roles_guard } from './con.auth.middle.js'
 import { parse_query } from '../api/utils.query.js'
 import { owner_or_admin_guard } from './con.customers.middle.js'
 import { App } from '../index.js'
-
-/**
- * @typedef {import('../api/types.api.d.ts').CustomerType} ItemType
- */
 
 /**
  * 

@@ -3,7 +3,8 @@
  * @import { idable_concrete } from '../../database/types.public.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -46,7 +47,7 @@ const items = get_static_ids('img').map(
  */
 export const create = app => {
 
-  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
+  /** @type {Test<ListTestContext<ImageType>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 

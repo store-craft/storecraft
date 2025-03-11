@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.32",
+  "version": "1.0.34",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -141,6 +141,9 @@
       "import": "./rest/index.js",
       "types": "./rest/types.public.d.ts"
     },
+    "./rest/*": {
+      "import": "./rest/*"
+    },
     "./test-runner": {
       "import": "./test-runner/index.js"
     },
@@ -148,29 +151,57 @@
       "import": "./ai/index.js",
       "types": "./ai/types.public.d.ts"
     },
-    "./ai/models/openai": {
-      "import": "./ai/models/openai/index.js",
-      "types": "./ai/models/openai/types.d.ts"
+    "./ai/models/chat/openai": {
+      "import": "./ai/models/chat/openai/index.js",
+      "types": "./ai/models/chat/openai/types.d.ts"
     },
-    "./ai/models/gemini": {
-      "import": "./ai/models/gemini/index.js",
-      "types": "./ai/models/gemini/types.d.ts"
+    "./ai/models/chat/gemini": {
+      "import": "./ai/models/chat/gemini/index.js",
+      "types": "./ai/models/chat/gemini/types.d.ts"
     },
-    "./ai/models/mistral": {
-      "import": "./ai/models/mistral/index.js",
-      "types": "./ai/models/mistral/types.d.ts"
+    "./ai/models/chat/mistral": {
+      "import": "./ai/models/chat/mistral/index.js",
+      "types": "./ai/models/chat/mistral/types.d.ts"
     },
-    "./ai/models/groq": {
-      "import": "./ai/models/groq/index.js",
-      "types": "./ai/models/groq/types.d.ts"
+    "./ai/models/chat/groq": {
+      "import": "./ai/models/chat/groq/index.js",
+      "types": "./ai/models/chat/groq/types.d.ts"
     },
-    "./ai/models/xai": {
-      "import": "./ai/models/xai/index.js",
-      "types": "./ai/models/xai/types.d.ts"
+    "./ai/models/chat/xai": {
+      "import": "./ai/models/chat/xai/index.js",
+      "types": "./ai/models/chat/xai/types.d.ts"
     },
-    "./ai/models/anthropic": {
-      "import": "./ai/models/anthropic/index.js",
-      "types": "./ai/models/anthropic/types.d.ts"
+    "./ai/models/chat/anthropic": {
+      "import": "./ai/models/chat/anthropic/index.js",
+      "types": "./ai/models/chat/anthropic/types.d.ts"
+    },
+    "./ai/models/embedders/cloudflare": {
+      "import": "./ai/models/embedders/cloudflare/index.js",
+      "types": "./ai/models/embedders/cloudflare/types.d.ts"
+    },
+    "./ai/models/embedders/gemini": {
+      "import": "./ai/models/embedders/gemini/index.js",
+      "types": "./ai/models/embedders/gemini/types.d.ts"
+    },
+    "./ai/models/embedders/openai": {
+      "import": "./ai/models/embedders/openai/index.js",
+      "types": "./ai/models/embedders/openai/types.d.ts"
+    },
+    "./ai/models/embedders/pinecone": {
+      "import": "./ai/models/embedders/pinecone/index.js",
+      "types": "./ai/models/embedders/pinecone/types.d.ts"
+    },
+    "./ai/models/embedders/voyage-ai": {
+      "import": "./ai/models/embedders/voyage-ai/index.js",
+      "types": "./ai/models/embedders/voyage-ai/types.d.ts"
+    },
+    "./ai/models/vector-stores/pinecone": {
+      "import": "./ai/models/vector-stores/pinecone/index.js",
+      "types": "./ai/models/vector-stores/pinecone/types.d.ts"
+    },
+    "./ai/models/vector-stores/vectorize": {
+      "import": "./ai/models/vector-stores/vectorize/index.js",
+      "types": "./ai/models/vector-stores/vectorize/types.d.ts"
     },
     "./ai/*": {
       "import": "./ai/*"
@@ -181,12 +212,13 @@
     "sc-publish": "npm publish",
     "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
     "core:test": "uvu -c",
-    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.js --skipValidation",
+    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.ts && mv ./api/types.autogen.zod.api.ts ./api/types.autogen.zod.api.js",
     "core:gen:vql": "node ./vql/compile.js",
     "core:gen:open-api": "node ./rest/docs.openapi.gen.js"
   },
   "devDependencies": {
     "@asteasolutions/zod-to-openapi": "^6.4.0",
+    "@cloudflare/workers-types": "^4.20250303.0",
     "@storecraft/database-sqlite": "^1.0.7",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",

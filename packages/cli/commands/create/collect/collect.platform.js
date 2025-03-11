@@ -1,6 +1,19 @@
-import { select } from "@inquirer/prompts";
+/**
+ * @import { Choice } from '../../utils.js';
+ */
+import {
+  intro,
+  outro,
+  confirm,
+  select,
+  spinner,
+  isCancel,
+  cancel,
+  text, 
+} from '@clack/prompts';
+import { withCancel } from './collect.utils.js';
 
-/** @satisfies {import("../../utils.js").Choice[]} */
+/** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
     name: 'node',
@@ -30,12 +43,20 @@ export const choices = /** @type {const} */ ([
 
 export const collect_platform = async () => {
 
-  const id = await select(
-    {
-      message: '🌐 Select a platform to run the store',
-      choices,
-      loop: true,
-    }
+  const id = await withCancel(
+    select(
+      {
+        message: '🌐 Select a platform to run the store',
+        options: choices.map(
+          c => (
+            {
+              value: c.value,
+              label: c.name
+            }
+          )
+        ),
+      }
+    )
   );
 
   return {

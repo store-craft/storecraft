@@ -1,3 +1,6 @@
+/**
+ * @import { db_customers as db_col } from '@storecraft/core/database'
+ */
 import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
 import { count_regular, delete_me, delete_media_of, delete_search_of, 
@@ -7,9 +10,6 @@ import { count_regular, delete_me, delete_media_of, delete_search_of,
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_customers} db_col
- */
 export const table_name = 'customers'
 
 /**

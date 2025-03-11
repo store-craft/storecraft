@@ -1,6 +1,6 @@
 /**
  * @import { ProductTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
+ * @import { idable_concrete, withConcreteIdAndHandle } from '../../database/types.public.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
  * 
@@ -17,7 +17,7 @@ import esMain from './utils.esmain.js';
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 
 
-/** @type {idable_concrete & ProductTypeUpsert} */
+/** @type {withConcreteIdAndHandle<ProductTypeUpsert>} */
 const pr_upsert = {
   id: get_static_ids('pr').at(0),
   handle: handle_pr(),
@@ -38,7 +38,7 @@ const pr_upsert = {
 }
 
 /** @type {ProductTypeUpsert[]} */
-const related_product_upsert = [
+const related_product_for_upsert = [
   {
     handle: handle_pr(),
     active: true,
@@ -64,7 +64,7 @@ export const create = app => {
       assert.ok(app.ready);
       try {
         await app.api.products.remove(pr_upsert.handle);
-        for(const p of related_product_upsert)
+        for(const p of related_product_for_upsert)
           await app.api.products.remove(p.handle);
       } catch(e) {
         console.log(e)
@@ -80,8 +80,16 @@ export const create = app => {
     await app.db.resources.products.upsert(pr_upsert);
 
     // upsert all variants
-    const ids = await promises_sequence(
-      related_product_upsert.map(v => () => app.api.products.upsert(v))
+    const related_product_upserted_ids_and_handles = await promises_sequence(
+      related_product_for_upsert.map(
+        v => async () => (
+          {
+            // we only care for `id` and `handle`
+            id: await app.api.products.upsert(v),
+            handle: v.handle
+          }
+        )
+      )
     )
 
     // console.log('ids', ids)
@@ -90,7 +98,7 @@ export const create = app => {
     await app.db.resources.products.upsert(
       {
         ...pr_upsert,
-        related_products: ids.map(id => ({ id }))
+        related_products: related_product_upserted_ids_and_handles
       }
     );
 
@@ -102,9 +110,9 @@ export const create = app => {
 
     // console.log('related_products', related_products)
 
-    assert.ok(related_products.length>=related_product_upsert.length, 'got less')
+    assert.ok(related_products.length>=related_product_for_upsert.length, 'got less')
     assert.ok(
-      related_product_upsert.every(
+      related_product_for_upsert.every(
         (v) => related_products.find(x => x.handle===v.handle)
       ), 
       'got less'
@@ -113,7 +121,7 @@ export const create = app => {
 
   s('remove the 1st related product and query again', async () => {
     // upsert 1st product straight to the db because we have ID
-    const remove_handle = related_product_upsert[0].handle;
+    const remove_handle = related_product_for_upsert[0].handle;
 
     await app.api.products.remove(
       remove_handle

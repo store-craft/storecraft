@@ -1,6 +1,7 @@
 /**
  * @import { Config } from './types.public.js'
  * @import { mailer } from '@storecraft/core/mailer'
+ * @import { ENV } from '@storecraft/core';
  * @import { Resend_sendmail, Resend_sendmail_attachment } from './types.private.js'
 */
 
@@ -13,17 +14,28 @@ import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js"
  */
 export class Resend {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    apikey: 'RESEND_API_KEY'
+  });
+
   /** @type {Config} */ #_config;
 
   /**
    * 
    * @param {Config} config 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#_config = config;
   }
 
   get config() { return this.#_config; }
+
+
+  /** @type {mailer<Config>["onInit"]} */
+  onInit = (app) => {
+    this.config.apikey ??= app.platform.env[Resend.EnvConfig.apikey];
+  };
 
   /**
    * 

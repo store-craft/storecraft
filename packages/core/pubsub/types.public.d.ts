@@ -2,8 +2,9 @@ import type { App } from '../types.public.js';
 import type { 
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
-  StorefrontType, TagType, TemplateType 
+  StorefrontType, StorefrontTypeUpsert, TagType, TemplateType 
 } from '../api/types.api.d.ts';
+import { MailObject, MailResponse } from '../mailer/types.mailer.js';
 
 export * from './public.js';
 
@@ -11,101 +12,111 @@ export * from './public.js';
  * @description `storecraft` events map, use {@link PubSubEvent} for name guidance
  */
 export type events = {
-  storefronts_upsert: 'storefronts/upsert', 
-  storefronts_remove: 'storefronts/remove',
-  storefronts_get: 'storefronts/get',
-  storefronts_list: 'storefronts/list',
+  'storefronts/upsert': PayloadForUpsert<StorefrontType>, 
+  'storefronts/remove': PayloadForRemove<StorefrontType>,
+  'storefronts/get': PayloadForGet<StorefrontType>,
+  'storefronts/list': PayloadForGet<StorefrontType[]>,
 
-  customers_upsert: 'customers/upsert', 
-  customers_remove: 'customers/remove',
-  customers_get: 'customers/get',
-  customers_list: 'customers/list',
+  'customers/upsert': PayloadForUpsert<CustomerType> 
+  'customers/remove': PayloadForRemove<CustomerType> ,
+  'customers/get': PayloadForGet<CustomerType> 
+  'customers/list': PayloadForGet<CustomerType[]>,
 
-  tags_upsert: 'tags/upsert',
-  tags_remove: 'tags/remove',
-  tags_get: 'tags/get',
-  tags_list: 'tags/list',
+  'tags/upsert': PayloadForUpsert<TagType>
+  'tags/remove': PayloadForRemove<TagType> ,
+  'tags/get': PayloadForGet<TagType>
+  'tags/list': PayloadForGet<TagType[]>
 
-  products_upsert: 'products/upsert', 
-  products_remove: 'products/remove',
-  products_get: 'products/get', 
-  products_list: 'products/list',
+  'products/upsert': PayloadForUpsert<ProductType> 
+  'products/remove': PayloadForRemove<ProductType>,
+  'products/get': PayloadForGet<ProductType>
+  'products/list': PayloadForGet<ProductType[]>
 
-  collections_upsert: 'collections/upsert', 
-  collections_remove: 'collections/remove',
-  collections_get: 'collections/get', 
-  collections_list: 'collections/list',
+  'collections/upsert': PayloadForUpsert<CollectionType> 
+  'collections/remove': PayloadForRemove<CollectionType>
+  'collections/get': PayloadForGet<CollectionType>
+  'collections/list': PayloadForGet<CollectionType[]>
 
-  orders_upsert: 'orders/upsert', 
-  orders_remove: 'orders/remove',
-  orders_get: 'orders/get', 
-  orders_list: 'orders/list',
+  'orders/upsert': PayloadForUpsert<OrderData> 
+  'orders/remove': PayloadForRemove<OrderData>
+  'orders/get': PayloadForGet<OrderData>
+  'orders/list': PayloadForGet<OrderData[]>
 
-  discounts_upsert: 'discounts/upsert', 
-  discounts_remove: 'discounts/remove',
-  discounts_get: 'discounts/get', 
-  discounts_list: 'discounts/list',
+  'discounts/upsert': PayloadForUpsert<DiscountType>
+  'discounts/remove': PayloadForRemove<DiscountType>
+  'discounts/get': PayloadForGet<DiscountType>
+  'discounts/list': PayloadForGet<DiscountType[]>
 
-  shipping_upsert: 'shipping/upsert', 
-  shipping_remove: 'shipping/remove',
-  shipping_get: 'shipping/get', 
-  shipping_list: 'shipping/list',
+  'shipping/upsert': PayloadForUpsert<ShippingMethodType>
+  'shipping/remove': PayloadForRemove<ShippingMethodType>
+  'shipping/get': PayloadForGet<ShippingMethodType>
+  'shipping/list': PayloadForGet<ShippingMethodType[]>
 
-  posts_upsert: 'posts/upsert', 
-  posts_remove: 'posts/remove',
-  posts_get: 'posts/get', 
-  posts_list: 'posts/list',
+  'posts/upsert': PayloadForUpsert<PostType>
+  'posts/remove': PayloadForRemove<PostType>
+  'posts/get': PayloadForGet<PostType>
+  'posts/list': PayloadForGet<PostType[]>
 
-  images_upsert: 'images/upsert', 
-  images_remove: 'images/remove',
-  images_get: 'images/get', 
-  images_list: 'images/list',
+  'images/upsert': PayloadForUpsert<ImageType>
+  'images/remove': PayloadForRemove<ImageType>
+  'images/get': PayloadForGet<ImageType>
+  'images/list': PayloadForGet<ImageType[]>
 
-  templates_upsert: 'templates/upsert', 
-  templates_remove: 'templates/remove',
-  templates_get: 'templates/get', 
-  templates_list: 'templates/list',
+  'templates/upsert': PayloadForUpsert<TemplateType>
+  'templates/remove': PayloadForRemove<TemplateType>
+  'templates/get': PayloadForGet<TemplateType>
+  'templates/list': PayloadForGet<TemplateType[]>
 
-  orders_checkout_created: 'orders/checkout/created', 
-  orders_checkout_complete: 'orders/checkout/complete',
-  orders_checkout_requires_action: 'orders/checkout/requires_action', 
-  orders_checkout_failed: 'orders/checkout/failed',
-  orders_checkout_unknown: 'orders/checkout/unknown',
-  orders_checkout_update: 'orders/checkout/update',
+  'orders/checkout/created': PayloadForUpsert<OrderData>
+  'orders/checkout/complete': PayloadForUpsert<OrderData>
+  'orders/checkout/requires_action': PayloadForUpsert<OrderData>
+  'orders/checkout/failed': PayloadForUpsert<OrderData>
+  'orders/checkout/unknown': PayloadForUpsert<OrderData>
+  'orders/checkout/update': PayloadForUpsert<OrderData>
 
-  orders_fulfillment_draft: 'orders/fulfillment/draft', 
-  orders_fulfillment_processing: 'orders/fulfillment/processing', 
-  orders_fulfillment_shipped: 'orders/fulfillment/shipped', 
-  orders_fulfillment_fulfilled: 'orders/fulfillment/fulfilled', 
-  orders_fulfillment_cancelled: 'orders/fulfillment/cancelled', 
-  orders_fulfillment_update: 'orders/fulfillment/update', 
+  'orders/fulfillment/draft': PayloadForUpsert<OrderData>
+  'orders/fulfillment/processing': PayloadForUpsert<OrderData>
+  'orders/fulfillment/shipped': PayloadForUpsert<OrderData>
+  'orders/fulfillment/fulfilled': PayloadForUpsert<OrderData>
+  'orders/fulfillment/cancelled': PayloadForUpsert<OrderData>
+  'orders/fulfillment/update': PayloadForUpsert<OrderData> 
 
-  orders_payments_unpaid: 'orders/payments/unpaid', 
-  orders_payments_authorized: 'orders/payments/authorized', 
-  orders_payments_captured: 'orders/payments/captured', 
-  orders_payments_requires_auth: 'orders/payments/requires_auth', 
-  orders_payments_voided: 'orders/payments/voided', 
-  orders_payments_failed: 'orders/payments/failed', 
-  orders_payments_partially_paid: 'orders/payments/partially_paid', 
-  orders_payments_refunded: 'orders/payments/refunded', 
-  orders_payments_partially_refunded: 'orders/payments/partially_refunded', 
-  orders_payments_cancelled: 'orders/payments/cancelled', 
-  orders_payments_update: 'orders/payments/update', 
+  'orders/payments/unpaid': PayloadForUpsert<OrderData> 
+  'orders/payments/authorized': PayloadForUpsert<OrderData> 
+  'orders/payments/captured': PayloadForUpsert<OrderData>
+  'orders/payments/requires_auth': PayloadForUpsert<OrderData>
+  'orders/payments/voided': PayloadForUpsert<OrderData>
+  'orders/payments/failed': PayloadForUpsert<OrderData>
+  'orders/payments/partially_paid': PayloadForUpsert<OrderData>
+  'orders/payments/refunded': PayloadForUpsert<OrderData>
+  'orders/payments/partially_refunded': PayloadForUpsert<OrderData>
+  'orders/payments/cancelled': PayloadForUpsert<OrderData>
+  'orders/payments/update': PayloadForUpsert<OrderData>
 
-  auth_signup: 'auth/signup', 
-  auth_signin: 'auth/signin', 
-  auth_refersh: 'auth/refresh',
-  auth_remove: 'auth/remove',
-  auth_upsert: 'auth/upsert',
-  auth_apikey_created: 'auth/apikey-created',
+  'auth/signup': Partial<AuthUserType>
+  'auth/signin': Partial<AuthUserType>
+  'auth/refresh': Partial<AuthUserType>
+  'auth/remove': Partial<AuthUserType>
+  'auth/upsert': Partial<AuthUserType>
+  'auth/apikey-created': Partial<AuthUserType>
+  'auth/confirm-email-token-generated': {
+    auth_user: Partial<AuthUserType>,
+    /** confirm email token */
+    token: string
+  }
+  'auth/confirm-email-token-confirmed': Partial<AuthUserType>
+  'auth/forgot-password-token-generated': {
+    auth_user: Partial<AuthUserType>,
+    /** confirm email token */
+    token: string
+  }
+  'auth/forgot-password-token-confirmed': Partial<AuthUserType>
+  'auth/change-password': Partial<AuthUserType> 
 
-  auth_change_password: 'auth/change-password',
 
-  auth_confirm_email_token_generated: 'auth/confirm-email-token-generated',
-  auth_confirm_email_token_confirmed: 'auth/confirm-email-token-confirmed',
-
-  auth_forgot_password_token_generated: 'auth/forgot-password-token-generated',
-  auth_forgot_password_token_confirmed: 'auth/forgot-password-token-confirmed',
+  /** email, before sending */
+  'email/before-send': Partial<MailObject>
+  'email/after-send': { mail_object: Partial<MailObject>, mail_response: Partial<MailResponse> }
 }
 
 
@@ -113,9 +124,9 @@ export type events = {
 /**
  * @description A list of native `storecraft` events
  */
-export type PubSubEvent = events[keyof events];
+export type PubSubEvent = keyof events;
 
-export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =( PubSubEvent | string)> = {
+export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =(PubSubEvent | string)> = {
   /**
    * @description payload
    */
@@ -158,110 +169,12 @@ export type PubSubSubscriberForGet<T=any, AppType=App> = PubSubSubscriber<Payloa
 export type PubSubSubscriberForUpsert<T=any, AppType=App> = PubSubSubscriber<PayloadForUpsert<T>, AppType>;
 export type PubSubSubscriberForRemove<T=any, AppType=App> = PubSubSubscriber<PayloadForRemove<T>, AppType>;
 
-
 /**
- * @description `events` subscribtion callbacks
+ * @description `events` subscribtion callbacks, currently not using this.
+ * It demonstrates function overloading with templates
  */
 export interface PubSubOnEvents<R=Function, AppType=App> {
-  
-  on(event: events['storefronts_upsert'], callback: PubSubSubscriberForUpsert<StorefrontType, AppType>) : R;
-  on(event: events['storefronts_remove'], callback: PubSubSubscriberForRemove<StorefrontType, AppType>) : R;
-  on(event: events['storefronts_get'], callback: PubSubSubscriberForGet<StorefrontType, AppType>) : R;
-  on(event: events['storefronts_list'], callback: PubSubSubscriberForGet<StorefrontType[], AppType>) : R;
-  
-  on(event: events['customers_upsert'], callback: PubSubSubscriberForUpsert<CustomerType, AppType>) : R;
-  on(event: events['customers_remove'], callback: PubSubSubscriberForRemove<CustomerType, AppType>) : R;
-  on(event: events['customers_get'], callback: PubSubSubscriberForGet<CustomerType, AppType>) : R;
-  on(event: events['customers_list'], callback: PubSubSubscriberForGet<CustomerType[], AppType>) : R;
-  
-  on(event: events['tags_upsert'], callback: PubSubSubscriberForUpsert<TagType, AppType>) : R;
-  on(event: events['tags_remove'], callback: PubSubSubscriberForRemove<TagType, AppType>) : R;
-  on(event: events['tags_get'], callback: PubSubSubscriberForGet<TagType, AppType>) : R;
-  on(event: events['tags_list'], callback: PubSubSubscriberForGet<TagType[], AppType>) : R;
-
-  on(event: events['products_upsert'], callback: PubSubSubscriberForUpsert<ProductType, AppType>) : R;
-  on(event: events['products_remove'], callback: PubSubSubscriberForRemove<ProductType, AppType>) : R;
-  on(event: events['products_get'], callback: PubSubSubscriberForGet<ProductType, AppType>) : R;
-  on(event: events['products_list'], callback: PubSubSubscriberForGet<ProductType[], AppType>) : R;
-
-  on(event: events['collections_upsert'], callback: PubSubSubscriberForUpsert<CollectionType, AppType>) : R;
-  on(event: events['collections_remove'], callback: PubSubSubscriberForRemove<CollectionType, AppType>) : R;
-  on(event: events['collections_get'], callback: PubSubSubscriberForGet<CollectionType, AppType>) : R;
-  on(event: events['collections_list'], callback: PubSubSubscriberForGet<CollectionType[], AppType>) : R;
-
-  on(event: events['discounts_upsert'], callback: PubSubSubscriberForUpsert<DiscountType, AppType>) : R;
-  on(event: events['discounts_remove'], callback: PubSubSubscriberForRemove<DiscountType, AppType>) : R;
-  on(event: events['discounts_get'], callback: PubSubSubscriberForGet<DiscountType, AppType>) : R;
-  on(event: events['discounts_list'], callback: PubSubSubscriberForGet<DiscountType[], AppType>) : R;
-
-  on(event: events['shipping_upsert'], callback: PubSubSubscriberForUpsert<ShippingMethodType, AppType>) : R;
-  on(event: events['shipping_remove'], callback: PubSubSubscriberForRemove<ShippingMethodType, AppType>) : R;
-  on(event: events['shipping_get'], callback: PubSubSubscriberForGet<ShippingMethodType, AppType>) : R;
-  on(event: events['shipping_list'], callback: PubSubSubscriberForGet<ShippingMethodType[], AppType>) : R;
-
-  on(event: events['posts_upsert'], callback: PubSubSubscriberForUpsert<PostType, AppType>) : R;
-  on(event: events['posts_remove'], callback: PubSubSubscriberForRemove<PostType, AppType>) : R;
-  on(event: events['posts_get'], callback: PubSubSubscriberForGet<PostType, AppType>) : R;
-  on(event: events['posts_list'], callback: PubSubSubscriberForGet<PostType[], AppType>) : R;
-
-  on(event: events['images_upsert'], callback: PubSubSubscriberForUpsert<ImageType, AppType>) : R;
-  on(event: events['images_remove'], callback: PubSubSubscriberForRemove<ImageType, AppType>) : R;
-  on(event: events['images_get'], callback: PubSubSubscriberForGet<ImageType, AppType>) : R;
-  on(event: events['images_list'], callback: PubSubSubscriberForGet<ImageType[], AppType>) : R;
-
-  on(event: events['templates_upsert'], callback: PubSubSubscriberForUpsert<TemplateType, AppType>) : R;
-  on(event: events['templates_remove'], callback: PubSubSubscriberForRemove<TemplateType, AppType>) : R;
-  on(event: events['templates_get'], callback: PubSubSubscriberForGet<TemplateType, AppType>) : R;
-  on(event: events['templates_list'], callback: PubSubSubscriberForGet<TemplateType[], AppType>) : R;
-
-  on(event: events['orders_upsert'], callback: PubSubSubscriberForUpsert<OrderData, AppType>) : R;
-  on(event: events['orders_remove'], callback: PubSubSubscriberForRemove<OrderData, AppType>) : R;
-  on(event: events['orders_get'], callback: PubSubSubscriberForGet<OrderData, AppType>) : R;
-  on(event: events['orders_list'], callback: PubSubSubscriberForGet<OrderData[], AppType>) : R;
-
-  on(event: events['orders_checkout_created'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_checkout_complete'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_checkout_failed'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_checkout_requires_action'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_checkout_unknown'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_checkout_update'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-
-  on(event: events['orders_fulfillment_cancelled'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_fulfillment_draft'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_fulfillment_fulfilled'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_fulfillment_processing'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_fulfillment_shipped'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_fulfillment_update'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-
-  on(event: events['orders_payments_authorized'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_cancelled'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_captured'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_failed'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_partially_paid'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_partially_refunded'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_refunded'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_requires_auth'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_unpaid'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_voided'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  on(event: events['orders_payments_update'], callback: PubSubSubscriberForUpsert<Partial<OrderData>, AppType>) : R;
-  
-  on(event: events['auth_signup'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_signin'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_remove'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_upsert'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_apikey_created'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_confirm_email_token_generated'], callback: PubSubSubscriber<{
-    email: string,
-    token: string
-  }, AppType>) : R;
-  on(event: events['auth_confirm_email_token_confirmed'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_forgot_password_token_generated'], callback: PubSubSubscriber<{
-    email: string,
-    token: string
-  }, AppType>) : R;
-  on(event: events['auth_forgot_password_token_confirmed'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-  on(event: events['auth_change_password'], callback: PubSubSubscriber<Partial<AuthUserType>, AppType>) : R;
-
+  on<E extends keyof events>(event: E, callback: PubSubSubscriber<events[E], AppType>): R;
   // general gateway
-  on<E=any>(event: string, callback: PubSubSubscriber<Partial<E>, AppType>) : R;
+  on(event: string, callback: PubSubSubscriber<any, AppType>) : R;
 }

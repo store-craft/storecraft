@@ -1,11 +1,10 @@
 /**
  * @import { extension } from '../types.public.js';
- * @import { AuthUserType, OrderData, TemplateType } from '../../api/types.api.js';
+ * @import { AuthUserType, OrderData } from '../../api/types.api.js';
  */
 
 import { App } from '../../index.js';
 import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
-import Handlebars from 'handlebars';
 
 
 /**
@@ -18,7 +17,6 @@ import Handlebars from 'handlebars';
  * - `auth/forgot-password-token-generated` via `forgot-password` template, uses `{email: string, token: string}`
  * - `auth/confirm-email-token-generated` via `confirm-email` template (currently not present), uses `{email: string, token: string}`
  * 
- * **NOTE:** You are required to install `handlebars` (`npm i handlebars`)
  * 
  * @implements {extension}
  */
@@ -40,16 +38,16 @@ export class PostmanExtension {
   onInit(app) {
 
     // checkout events notifications
- 
+
     app.pubsub.on(
       'orders/checkout/complete',
       async (event) => {
 
-        console.log(event.payload.current)
+        // console.log(event.payload.current)
         if(!event.payload.current?.contact?.email)
           return;
 
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
           'checkout-complete',
@@ -69,7 +67,7 @@ export class PostmanExtension {
         if(!event.payload.current?.contact?.email)
           return;
 
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
           'order-shipped',
@@ -89,7 +87,7 @@ export class PostmanExtension {
         if(!event.payload.current?.contact?.email)
           return;
 
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.current.contact.email ],
           'order-cancelled',
@@ -107,7 +105,7 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/signup',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.email ],
           'welcome-customer',
@@ -124,7 +122,7 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/change-password',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
           [ event.payload.email ],
           'general-message',
@@ -141,14 +139,17 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/confirm-email-token-generated',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
-          [ event.payload.email ],
+          [ event.payload.auth_user.email ],
           'confirm-email',
           'Confirm Email',
           {
             info: get_info(app),
-            token: event.payload.token
+            message: {
+              token: event.payload.token,
+              firstname: event.payload.auth_user.firstname
+            }
           }
         );
       }
@@ -157,9 +158,9 @@ export class PostmanExtension {
     app.pubsub.on(
       'auth/forgot-password-token-generated',
       async (event) => {
-        await sendMailWithTemplate(
+        await app.api.email.sendMailWithTemplate(
           event.app,
-          [ event.payload.email ],
+          [ event.payload.auth_user.email ],
           'forgot-password',
           'Confirm Forgot Password Request',
           {
@@ -189,69 +190,3 @@ const get_info = app => {
   }
 }
 
-/**
- * @description compile a template into `html` and `text` if possible
- * @param {TemplateType} template 
- * @param {object} data 
- */
-export const compileTemplate = (template, data) => {
-  let html, text;
-  if(template.template_html) {
-    const handlebarsTemplateHTML = Handlebars.compile(template.template_html);
-    html = handlebarsTemplateHTML(data);
-  }
-
-  if(template.template_text) {
-    const handlebarsTemplateTEXT = Handlebars.compile(template.template_text);
-    text = handlebarsTemplateTEXT(data);
-  }
-
-  return {
-    text, html
-  }
-}
-
-/**
- * @description Send Email with `template`
- * 
- * @param {App} app 
- * @param {string[]} emails 
- * @param {string} template_handle the template `handle` or `id` in the database
- * @param {string} subject 
- * @param {object} data 
- */
-export const sendMailWithTemplate = async (app, emails, template_handle, subject, data) => {
-  if(!app.mailer)
-    return;
-
-  const template = await app.api.templates.get(template_handle);
-
-  if(!template) {
-    throw new Error(
-      `Template ${template_handle} not found !!`
-    )
-  }
-
-  const { html, text } = compileTemplate(
-    template, 
-    data
-  );
-
-  const r = await app.mailer.email(
-    {
-      html,
-      text,
-      from: {
-        address: app.config.general_store_support_email ?? 'support@storecraft.app',
-        name: 'Support'
-      },
-      to: emails.map(e => ({address: e})),
-      subject
-    }
-  );
-
-  if(!r?.success) {
-    console.log(r);
-  }
-
-}

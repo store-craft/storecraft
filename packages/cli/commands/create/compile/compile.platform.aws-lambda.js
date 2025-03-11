@@ -55,6 +55,12 @@ export const compile_aws = async (meta) => {
     `lib/app-stack.ts`,
     await prettify(lib_app_stack_ts())
   );
+  await pkgr.write_env_file( // for migrate
+    compiled_app.env, '.env'
+  );
+  await pkgr.write_env_file( // for lambda
+    compiled_app.env, 'lib/lambda/.env'
+  );
   await pkgr.write_file(
     `lib/lambda/index.ts`,
     await prettify(lib_lambda_index_ts())

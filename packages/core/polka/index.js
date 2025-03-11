@@ -35,7 +35,7 @@ export const onError = async (error, req, res) => {
     messages = [{ message: error ?? 'unknown-error'}];
   } else {
     // assume { message: string, code: number }
-    code = error?.code ?? code;
+    code = (error && ('code' in error)) ? error?.code : code;
     messages = [{ message: error.message ?? 'unknown-error'}];
   }
 
@@ -97,6 +97,7 @@ export class Polka extends Trouter {
     let funcs = is_base_func ? [base, ...fns] : fns
     base = is_base_func ? '/' : base
     /** @type {string | RegExp} */
+    // @ts-ignore
     let pattern = is_base_func ? '/' : base
 
     super.use(

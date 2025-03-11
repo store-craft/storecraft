@@ -1,5 +1,6 @@
 /**
  * @import { Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
  * @import { payment_gateway } from '@storecraft/core/payments'
  * @import { ApiRequest, ApiResponse } from '@storecraft/core/rest'
@@ -31,25 +32,22 @@ export const metadata_storecraft_order_id = 'storecraft_order_id'
  */
 export class Stripe {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    publishable_key: 'STRIPE_PUBLISHABLE_KEY',
+    secret_key: 'STRIPE_SECRET_KEY',
+    webhook_endpoint_secret: 'STRIPE_WEBHOOK_SECRET',
+  });
+
   /** @type {Config} */ #_config;
+  /** @type {StripeCls} */ #stripe;
 
   /**
    * 
    * @param {Config} config 
    */
-  constructor(config) {
-    this.#_config = this.#validate_and_resolve_config(config);
-    this.stripe = new StripeCls(
-      this.#_config.secret_key, this.#_config.stripe_config ?? {}
-    );
-  }
-
-  /**
-   * 
-   * @param {Config} config 
-   */
-  #validate_and_resolve_config(config) {
-    config = {
+  constructor(config={}) {
+    this.#_config = {
       stripe_config: {
         httpClient: StripeCls.createFetchHttpClient()
       },
@@ -65,9 +63,21 @@ export class Stripe {
         },
       },
       ...config,
-    }
+    };
+  }
 
-    const is_valid = config.publishable_key && config.secret_key;
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    this.config.publishable_key ??=
+        app.platform.env[Stripe.EnvConfig.publishable_key];
+    this.config.secret_key ??= 
+        app.platform.env[Stripe.EnvConfig.secret_key];
+    this.config.webhook_endpoint_secret ??= 
+        app.platform.env[Stripe.EnvConfig.webhook_endpoint_secret];
+  }
+
+  get stripe() {
+    const is_valid = this.config.publishable_key && this.config.secret_key;
 
     if(!is_valid) {
       throw new StorecraftError(
@@ -76,7 +86,11 @@ export class Stripe {
       )
     }
 
-    return config;
+    this.#stripe = this.#stripe ?? new StripeCls(
+      this.config.secret_key, this.config.stripe_config ?? {}
+    );
+
+    return this.#stripe;
   }
 
   get info() {

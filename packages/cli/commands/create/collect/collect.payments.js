@@ -1,6 +1,19 @@
-import { select, input, confirm } from "@inquirer/prompts";
+/**
+ * @import { Choice } from '../../utils.js';
+ */
+import {
+  intro,
+  outro,
+  confirm,
+  select,
+  spinner,
+  isCancel,
+  cancel,
+  text, 
+} from '@clack/prompts';
+import { required, withCancel } from './collect.utils.js';
 
-/** @satisfies {import("../../utils.js").Choice[]} */
+/** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
     name: 'Stripe',
@@ -18,13 +31,21 @@ export const collect_payments = async () => {
   let more = true;
 
   while(more) {
-    const id = await select(
-      {
-        message: '💳 Select Payment Provider',
-        choices: choices,
-        loop: true,
-      }
-    );
+    const id = await withCancel(
+      select(
+        {
+          message: '💳 Select Payment Provider',
+          options: choices.map(
+            c => (
+              {
+                value: c.value,
+                label: c.name
+              }
+            )
+          ),
+        }
+      )
+    )
 
     configs.push(
       {
@@ -34,11 +55,15 @@ export const collect_payments = async () => {
       }
     )
 
-    more = await confirm(
-      {
-        message: 'Add another payment gateway or config ?',
-        default: false
-      }
+    more = await withCancel(
+      confirm(
+        {
+          message: 'Add another payment gateway or config ?',
+          active: 'Yes',
+          inactive: 'No',
+          initialValue: false
+        }
+      )
     )
   }  
 
@@ -57,48 +82,58 @@ const collect_general_config = async (
     case 'paypal': {
       /** @type {import('@storecraft/payments-paypal').Config} */
       const config = {
-        default_currency_code: await input(
-          { 
-            message: 'Currency Code',
-            required: true,
-            default: 'USD'
-          }
+        default_currency_code: await withCancel(
+          text(
+            { 
+              message: 'Paypal Currency Code',
+              defaultValue: 'USD',
+              placeholder: 'USD',
+            }
+          ),
         ),
         // @ts-ignore
-        env: await select(
-          { 
-            message: 'Environment',
-            choices: [
-              { name: 'prod',value: 'prod' },
-              { name: 'test',value: 'test' },
-            ],
-            default: 'prod'
-          }
+        env: await withCancel(
+          select(
+            { 
+              message: 'Paypal Environment',
+              options: [
+                { label: 'prod',value: 'prod' },
+                { label: 'test',value: 'test' },
+              ],
+              initialValue: 'prod'
+            }
+          ),
         ),
         // @ts-ignore
-        intent_on_checkout: await select(
-          { 
-            message: 'Intent on checkout Creation',
-            choices: [
-              { name: 'AUTHORIZE',value: 'AUTHORIZE' },
-              { name: 'CAPTURE',value: 'CAPTURE' },
-            ],
-            default: 'AUTHORIZE'
-          }
+        intent_on_checkout: await withCancel(
+          select(
+            { 
+              message: 'Paypal Intent on checkout Creation',
+              options: [
+                { label: 'AUTHORIZE',value: 'AUTHORIZE' },
+                { label: 'CAPTURE',value: 'CAPTURE' },
+              ],
+              initialValue: 'AUTHORIZE'
+            }
+          ),
         ),
-        client_id: await input(
-          { 
-            message: 'Client ID',
-            required: true,
-            default: '*****'
-          }
+        client_id: await withCancel(
+          text(
+            { 
+              message: 'Paypal Client ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        secret: await input(
-          { 
-            message: 'Secret',
-            required: true,
-            default: '*****'
-          }
+        secret: await withCancel(
+          text(
+            { 
+              message: 'Paypal Secret',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          )
         )
       }
 
@@ -109,27 +144,33 @@ const collect_general_config = async (
       /** @type {import('@storecraft/payments-stripe').Config} */
       const config = {
         stripe_intent_create_params: {
-          currency: await input(
+          currency: await withCancel(
+            text(
+              { 
+                message: 'Stripe Currency Code',
+                defaultValue: 'USD',
+                placeholder: 'USD',
+              }
+            ),
+          )
+        },
+        publishable_key: await withCancel(
+          text(
             { 
-              message: 'Currency Code',
-              required: true,
-              default: 'USD'
+              message: 'Stripe Publishable Key',
+              defaultValue: '*****',
+              placeholder: '*****',
             }
           ),
-        },
-        publishable_key: await input(
-          { 
-            message: 'Publishable Key',
-            required: true,
-            default: '*****'
-          }
         ),
-        secret_key: await input(
-          { 
-            message: 'Secret Key',
-            required: true,
-            default: '*****'
-          }
+        secret_key: await withCancel(
+          text(
+            { 
+              message: 'Stripe Secret Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
         stripe_config: {
         }

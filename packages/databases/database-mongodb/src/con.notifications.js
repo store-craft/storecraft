@@ -1,3 +1,7 @@
+/**
+ * @import { db_notifications as db_col } from '@storecraft/core/database'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
@@ -5,10 +9,6 @@ import { count_regular, get_regular, list_regular,
 import { to_objid } from './utils.funcs.js';
 import { add_search_terms_relation_on } from './utils.relations.js';
 import { union } from '@storecraft/core/api/utils.func.js';
-
-/**
- * @typedef {import('@storecraft/core/database').db_notifications} db_col
- */
 
 /**
  * @param {MongoDB} d 

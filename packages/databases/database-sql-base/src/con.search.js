@@ -1,15 +1,14 @@
+/**
+ * @import { QuickSearchResult } from '@storecraft/core/api'
+ * @import { search as db_col, db_driver } from '@storecraft/core/database'
+ */
+
 import { SQL } from '../index.js'
 import { jsonArrayFrom } from './con.helpers.json.js';
 import { query_to_eb, query_to_sort } from './utils.query.js';
 
 /**
- * @typedef {import('@storecraft/core/database').search} db_col
- */
-
-
-
-/**
- * @type {(keyof import('@storecraft/core/database').db_driver["resources"])[]}
+ * @type {(keyof db_driver["resources"])[]}
  */
 const tables = [
   'tags',
@@ -27,7 +26,7 @@ const tables = [
 ]
 
 /**
- * @type {Record<string, keyof import('@storecraft/core/database').db_driver["resources"]>}
+ * @type {Record<string, keyof db_driver["resources"]>}
  */
 const prefix_to_resource = {
   'au': 'auth_users',
@@ -65,7 +64,7 @@ const resource_to_props = {
  * 
  * @param {string} id 
  * 
- * @returns {keyof import('@storecraft/core/database').db_driver["resources"]}
+ * @returns {keyof db_driver["resources"]}
  */
 export const id_to_resource = id => {
   let result = undefined;
@@ -121,7 +120,7 @@ export const quicksearch = (driver) => {
     )
     
     
-    const items = (/** @type {import('@storecraft/core/api').QuickSearchResult} */(
+    const items = (/** @type {QuickSearchResult} */(
       await sts.executeTakeFirst())
     );
 

@@ -12,10 +12,10 @@ const areBlobsEqual = async (blob1, blob2) => {
 };
 
 const storage = new R2({
-  accessKeyId: process.env.R2_ACCESS_KEY_ID,
-  account_id: process.env.R2_ACCOUNT_ID,
-  bucket: process.env.R2_BUCKET,
-  secretAccessKey: process.env.R2_SECRET_ACCESS_KEY
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  account_id: process.env.CF_ACCOUNT_ID,
+  bucket: process.env.S3_BUCKET,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 });
 
 const suite = storage_test_runner.create(storage);

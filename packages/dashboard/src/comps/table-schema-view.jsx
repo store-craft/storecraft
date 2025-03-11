@@ -21,7 +21,7 @@
 
 /**
  * @template {any} T The item general type
- * @template {keyof T} [Key=keyof T]
+ * @template {Exclude<keyof T, symbol | number>} [Key=Exclude<keyof T, symbol | number>]
  * @template {React.FC} [Comp=React.FC<TableSchemaViewComponentParams<T, Key>>]
  * 
  * @typedef {object} TableSchemaViewField The `field` parameter given to `TableSchemaView`
@@ -48,13 +48,14 @@
  */
 
 /**
- * @param {string} key
+ * @param {string | undefined} key
  * @param {any} item data record
  * @param {(x: any) => any} transform transform function
  */
 const getValue = (key, item, transform = x => x) => {
   if(key===undefined)
-    return transform(item)
+    return transform(item);
+
   const parts = key ? key.split('.') : []
   return transform(parts.reduce((p, c) => p?.[c], item))
 }
@@ -107,7 +108,7 @@ const Table = (
                   <field.comp 
                       context={{ item, ...context}} 
                       field={field} 
-                      value={getValue(String(field.key), item, field.transform)}
+                      value={getValue(field.key, item, field.transform)}
                       {...field.comp_params} />
                     </>
                   )

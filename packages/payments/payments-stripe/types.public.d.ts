@@ -7,19 +7,21 @@ import type { Stripe as StripeCls } from 'stripe'
 export type Config = {
 
   /**
-   * @description `stripe` publishable key
+   * @description `stripe` publishable key. If missing, will be inferred from env variable `STRIPE_PUBLISHABLE_KEY`
    */
-  publishable_key: string;
+  publishable_key?: string;
 
   /**
-   * @description `stripe` private secret
+   * @description `stripe` private secret. If missing, will be inferred from env variable `STRIPE_SECRET_KEY`
    */
-  secret_key: string;
+  secret_key?: string;
 
   /**
    * @description (Optional) `webhook` Endpoint private secret in case
    * you are configuring webhook for async payments 
-   * [https://docs.stripe.com/webhooks?verify=check-signatures-library](https://docs.stripe.com/webhooks?verify=check-signatures-library)
+   * [https://docs.stripe.com/webhooks?verify=check-signatures-library](https://docs.stripe.com/webhooks?verify=check-signatures-library).
+   * 
+   * If missing, will be inferred from env variable `STRIPE_WEBHOOK_SECRET`
    */
   webhook_endpoint_secret?: string;
   

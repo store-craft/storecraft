@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -7,6 +8,8 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    "esModuleInterop": true,
+    
     "allowJs": true,
     "checkJs": true,
 
@@ -19,7 +22,7 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
+    "strict": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
@@ -31,3 +34,39 @@
   },
   "include": ["src"]
 }
+
+
+// {
+//   "compileOnSave": false,
+//   "compilerOptions": {
+//     "noEmit": true,
+//     "allowJs": true,
+//     "maxNodeModuleJsDepth": 20,
+//     "checkJs": true,
+//     "resolveJsonModule": true,
+//     "target": "ESNext",
+//     "module": "NodeNext",
+//     "moduleResolution": "NodeNext",
+//     "esModuleInterop": true,
+//     "lib": [
+//       "dom",
+//       "dom.iterable",
+//       "esnext"
+//     ],
+//     "skipLibCheck": true,
+//     "strict": false,
+//     "incremental": true,
+//     "isolatedModules": true,
+//     "jsx": "preserve",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     },
+//   },
+//   "include": [
+//     "*",
+//     "**/*"
+//   ],
+//   "exclude": [
+//     "**/*.json"
+//   ]
+// }

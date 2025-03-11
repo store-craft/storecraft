@@ -1,3 +1,10 @@
+/**
+ * @import { Config } from './types.public.js'
+ * @import { MongoClientOptions } from 'mongodb'
+ * @import { db_driver } from '@storecraft/core/database'
+ * @import { BaseType } from '@storecraft/core/api'
+ * @import { ENV } from '@storecraft/core'
+ */
 import { App } from '@storecraft/core';
 import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 import { impl as auth_users } from './src/con.auth_users.js';
@@ -15,66 +22,43 @@ import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
 import { impl as search } from './src/con.search.js';
 export { migrateToLatest } from './migrate.js';
+export { MongoVectorStore } from './vector-store/index.js';
+
 
 /**
- * @typedef {Partial<import('./types.public.d.ts').Config>} Config
- */
-
-/**
- * 
- * @param {string} uri 
- * @param {import('mongodb').MongoClientOptions} [options] 
- */
-const connect = async (uri, options) => {
-
-  options = options ?? {
-    ignoreUndefined: true,
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: false,
-      deprecationErrors: true,
-
-    }
-  }
-  const client = new MongoClient(uri, options);
-
-  return client.connect();
-}
-
-/**
- * @typedef {import('@storecraft/core/database').db_driver} db_driver
- * 
- * 
  * @implements {db_driver}
  */
 export class MongoDB {
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    db_name: 'MONGODB_NAME',
+    url: 'MONGODB_URL',
+  });
 
   /** 
    * 
    * @type {boolean} 
    */ 
-  #_is_ready;
+  #is_ready;
 
   /** 
    * 
    * @type {App<any, any, any>} 
    */ 
-  #_app;
+  #app;
 
   /** 
    * 
    * @type {MongoClient} 
    */ 
-  #_mongo_client;
+  #mongo_client;
 
   /** 
    * 
    * @type {Config} 
    */ 
-  #_config;
-
-  // /** @type {db_driver["resources"]} */
-  // #_resources;
+  #config;
 
   /**
    * 
@@ -82,34 +66,35 @@ export class MongoDB {
    * env variables `MONGODB_URL` will be used for uri upon init later
    */
   constructor(config) {
-    this.#_is_ready = false;
-    this.#_config = config;
+    this.#is_ready = false;
+    this.#config = {
+      options: {
+        ignoreUndefined: true,
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: false,
+          deprecationErrors: true,
+        }
+      },
+      ...config
+    };
   }
 
   /**
-   * 
-   * @param {App} app 
-   * 
-   * 
-   * @returns {Promise<this>}
+   * @type {db_driver["init"]}
    */
-  async init(app) {
+  init(app) {
     if(this.isReady)
       return this;
-    const c = this.#_config;
-    this.#_config = {
-      ...c, 
-      url: c?.url ?? app.platform.env.MONGODB_URL,
-      db_name: c?.db_name ?? app.platform.env.MONGODB_NAME ?? 'main'
+    const c = this.#config;
+    c.db_name ??= app.platform.env[MongoDB.EnvConfig.db_name];
+    c.url ??= app.platform.env[MongoDB.EnvConfig.url] ?? 'main';
+
+    if(!this.config.db_name || !this.config.url) {
+      throw new Error('MongoVectorStore::client() - missing url or db_name');
     }
-
-    this.#_mongo_client = await connect(
-      this.config.url,
-      this.config.options
-    );
-   
-    this.#_app = app;
-
+    
+    this.#app = app;
     this.resources = {
       auth_users: auth_users(this),
       collections: collections(this),
@@ -127,7 +112,7 @@ export class MongoDB {
       search: search(this),
     }
     
-    this.#_is_ready = true; 
+    this.#is_ready = true; 
 
     return this;
   }
@@ -137,7 +122,7 @@ export class MongoDB {
     return true;
   }
 
-  get isReady() { return this.#_is_ready; }
+  get isReady() { return this.#is_ready; }
 
   throwIfNotReady() {
     if(!this.isReady)
@@ -157,7 +142,7 @@ export class MongoDB {
    * @description Get the `storecraft` app
    */
   get app() { 
-    return this.#_app; 
+    return this.#app; 
   }
 
   /**
@@ -165,7 +150,15 @@ export class MongoDB {
    * @description Get the native `mongodb` client
    */
   get mongo_client() {
-    return this.#_mongo_client;
+    if(!this.config.db_name || !this.config.url) {
+      throw new Error('MongoVectorStore::client() - missing url or db_name');
+    }
+      
+    this.#mongo_client = this.#mongo_client ?? new MongoClient(
+      this.config.url, this.config.options
+    );
+  
+    return this.#mongo_client;
   }
 
   /**
@@ -173,12 +166,12 @@ export class MongoDB {
    * @description Get the config object
    */
   get config() { 
-    return this.#_config; 
+    return this.#config; 
   }
 
   /**
    * 
-   * @template {import('@storecraft/core/api').BaseType} T
+   * @template {BaseType} T
    * 
    * 
    * @param {string} name 

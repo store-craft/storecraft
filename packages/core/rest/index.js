@@ -1,4 +1,7 @@
-/** @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' */
+/** 
+ * @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' 
+ * @import { CORSOptions } from '../polka/cors.js' 
+ */
 import { App } from '../index.js';
 import { json } from "../polka/body-parse.js";
 import { Polka } from "../polka/index.js";
@@ -25,14 +28,13 @@ import { create_routes as create_dashboard_route } from "./con.dashboard.routes.
 import { create_routes as create_chat_route } from "./con.chat.routes.js";
 import { create_routes as create_search_route } from "./con.search.routes.js";
 import { create_routes as create_ai_route } from "./con.ai.routes.js";
+import { create_routes as create_similarity_search_route } from "./con.similarity-search.routes.js";
 import { cors } from "../polka/cors.js";
 
 
 /**
- * 
  * @typedef {object} RestApiConfig
- * @prop {import("../polka/cors.js").CORSOptions} [cors]
- * 
+ * @prop {CORSOptions} [cors]
  */
 
 
@@ -78,6 +80,7 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/dashboard'] = create_dashboard_route;
       this.#factory['/api/chat'] = create_chat_route;
       this.#factory['/api/ai'] = create_ai_route;
+      this.#factory['/api/similarity-search'] = create_similarity_search_route;
     }
 
     /** 

@@ -1,3 +1,6 @@
+/**
+ * @import { db_storefronts as db_col } from '@storecraft/core/database'
+ */
 import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
 import { delete_entity_values_of_by_entity_id_or_handle, 
@@ -13,9 +16,6 @@ import { delete_entity_values_of_by_entity_id_or_handle,
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
-/**
- * @typedef {import('@storecraft/core/database').db_storefronts} db_col
- */
 export const table_name = 'storefronts'
 
 /**

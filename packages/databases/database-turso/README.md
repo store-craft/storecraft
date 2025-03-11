@@ -12,7 +12,10 @@ npm i @storecraft/database-turso
 ```
 
 ## Setup
+You can run a local database,
+or,
 
+connect to a cloud `libsql` and `Turso` platform
 - First, login to your [turso](https://turso.tech) account.
 - Create a database.
 - Create an API Key.
@@ -41,10 +44,11 @@ const app = new App(
   new Turso(
     { 
       prefers_batch_over_transactions: true,
-      libsqlConfig: {
-        url: process.env.TURSO_URL,
-        authToken: process.env.TURSO_API_TOKEN,
-      }
+      // all of these configurations can be inferred by env variables at init
+      url: process.env.LIBSQL_URL,
+      authToken: process.env.LIBSQL_API_TOKEN,
+      // or local
+      url: 'file:local.db',
     }
   )
 )

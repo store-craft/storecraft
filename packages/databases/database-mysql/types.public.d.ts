@@ -14,5 +14,5 @@ export type Config = {
    *
    * https://node-postgres.com/apis/pool
    */
-  pool_options: PoolOptions;
+  pool_options?: PoolOptions;
 }

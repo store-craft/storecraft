@@ -1,0 +1,1 @@
+export type * from '../../core/types.embedder.d.ts';

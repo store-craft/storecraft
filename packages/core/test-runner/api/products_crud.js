@@ -1,9 +1,10 @@
 /**
- * @import { ProductTypeUpsert } from '../../api/types.api.js'
+ * @import { ProductType, ProductTypeUpsert } from '../../api/types.api.js'
  * @import { idable_concrete } from '../../database/types.public.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { ListTestContext, CrudTestContext } from './api.utils.crud.js';
+ * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -47,7 +48,7 @@ const items_upsert = [
  */
 export const create = app => {
 
-  /** @type {import('uvu').Test<import('./api.utils.crud.js').CrudTestContext<>>} */
+  /** @type {Test<CrudTestContext<ProductType>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 

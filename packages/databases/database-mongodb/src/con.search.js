@@ -1,14 +1,14 @@
+/**
+ * @import { search as db_col, db_driver } from '@storecraft/core/database'
+ * @import { QuickSearchResource, QuickSearchResult } from '@storecraft/core/api'
+ */
+
 import { MongoDB } from '../index.js'
 import { query_to_mongo } from './utils.query.js';
 
-/**
- * @typedef {import('@storecraft/core/database').search} db_col
- */
-
-
 
 /**
- * @type {(keyof import('@storecraft/core/database').db_driver["resources"])[]}
+ * @type {(keyof db_driver["resources"])[]}
  */
 const tables = [
   'tags',
@@ -26,7 +26,7 @@ const tables = [
 ]
 
 /**
- * @type {Record<string, keyof import('@storecraft/core/database').db_driver["resources"]>}
+ * @type {Record<string, keyof db_driver["resources"]>}
  */
 const prefix_to_resource = {
   'au': 'auth_users',
@@ -49,7 +49,7 @@ const prefix_to_resource = {
  * 
  * @param {string} id 
  * 
- * @returns {keyof import('@storecraft/core/database').db_driver["resources"]}
+ * @returns {keyof db_driver["resources"]}
  */
 export const id_to_resource = id => {
   let result = undefined;
@@ -103,7 +103,7 @@ export const quicksearch = (driver) => {
     const db = driver.mongo_client.db(driver.name);
     
     
-    const items = /** @type {import('@storecraft/core/api').QuickSearchResource[]} */ (
+    const items = /** @type {QuickSearchResource[]} */ (
       await db.collection(tables_filtered[0]).aggregate(
         [
           ...pipeline,
@@ -124,7 +124,7 @@ export const quicksearch = (driver) => {
     );
 
 
-    /** @type {import('@storecraft/core/api').QuickSearchResult} */
+    /** @type {QuickSearchResult} */
     const result = {};
 
     items.reduce(

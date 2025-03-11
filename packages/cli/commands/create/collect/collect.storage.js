@@ -1,6 +1,19 @@
-import { select, input, confirm } from "@inquirer/prompts";
+/**
+ * @import { Choice } from '../../utils.js';
+ */
+import {
+  intro,
+  outro,
+  confirm,
+  select,
+  spinner,
+  isCancel,
+  cancel,
+  text, 
+} from '@clack/prompts';
+import { required, withCancel } from './collect.utils.js';
 
-/** @satisfies {import("../../utils.js").Choice[]} */
+/** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
     name: 'Node Local Storage',
@@ -35,12 +48,20 @@ export const choices = /** @type {const} */ ([
 
 export const collect_storage = async () => {
 
-  const id = await select(
-    {
-      message: '📦 Select Storage (for images and assets)',
-      choices,
-      loop: true,
-    }
+  const id = await withCancel(
+    select(
+      {
+        message: '📦 Select Storage (for images and assets)',
+        options: choices.map(
+          c => (
+            {
+              value: c.value,
+              label: c.name
+            }
+          )
+        ),
+      }
+    )
   );
 
   return {
@@ -63,13 +84,15 @@ const collect_general_config = async (
     case 'deno':
     case 'bun': {
       /** @type {import('@storecraft/core/storage/node').Config} */
-      const config = await input(
-        { 
-          message: 'Local folder path',
-          required: true,
-          default: 'storage'
-        }
-      );
+      const config = await withCancel(
+        text(
+          { 
+            message: 'Storage Local folder path',
+            defaultValue: 'storage',
+            placeholder: 'storage',
+          }
+        )
+      )
 
       return config;
     }
@@ -77,33 +100,41 @@ const collect_general_config = async (
     case 'cloudflare_r2': {
       /** @type {import('@storecraft/storage-s3-compatible').R2Config} */
       const config = {
-        account_id: await input(
-          { 
-            message: 'Cloudflare Account ID',
-            required: true,
-            default: '*****'
-          }
+        account_id: await withCancel(
+          text(
+            { 
+              message: 'Cloudflare Account ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        bucket: await input(
-          { 
-            message: 'Bucket ID',
-            required: true,
-          }
+        bucket: await withCancel(
+          text(
+            { 
+              message: 'R2 Bucket ID',
+              validate: required,
+            }
+          ),
         ),
-        accessKeyId: await input(
-          { 
-            message: 'Access Key ID',
-            required: true,
-            default: '*****'
-          }
+        accessKeyId: await withCancel(
+          text(
+            { 
+              message: 'R2 Access Key ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        secretAccessKey: await input(
-          { 
-            message: 'Secret Access Key',
-            required: true,
-            default: '*****'
-          }
-        ),
+        secretAccessKey: await withCancel(
+          text(
+            { 
+              message: 'R2 Secret Access Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          )
+        )
       }
 
       return config;
@@ -112,39 +143,51 @@ const collect_general_config = async (
     case 'aws_s3': {
       /** @type {import('@storecraft/storage-s3-compatible').AwsS3Config} */
       const config = {
-        region: await input(
-          { 
-            message: 'Region',
-            required: true,
-            default: 'auto'
-          }
+        region: await withCancel(
+          text(
+            { 
+              message: 'S3 Region',
+              defaultValue: 'auto',
+              placeholder: 'auto',
+            }
+          ),
         ),
-        bucket: await input(
-          { 
-            message: 'Bucket ID',
-            required: true,
-          }
+        bucket: await withCancel(
+          text(
+            { 
+              message: 'S3 Bucket ID',
+              validate: required,
+            }
+          ),
         ),
-        forcePathStyle: await confirm(
-          { 
-            message: 'Force Path Style',
-            default: true,
-          }
+        forcePathStyle: await withCancel(
+          confirm(
+            { 
+              message: 'S3: Force Path Style ?',
+              active: 'Yes',
+              inactive: 'No',
+              initialValue: true,
+            }
+          ),
         ),
-        accessKeyId: await input(
-          { 
-            message: 'Access Key ID',
-            required: true,
-            default: '*****'
-          }
+        accessKeyId: await withCancel(
+          text(
+            { 
+              message: 'S3 Access Key ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        secretAccessKey: await input(
-          { 
-            message: 'Secret Access Key',
-            required: true,
-            default: '*****'
-          }
-        ),
+        secretAccessKey: await withCancel(
+          text(
+            { 
+              message: 'S3 Secret Access Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        )
       }
 
       return config;
@@ -153,45 +196,59 @@ const collect_general_config = async (
     case 's3_compatible': {
       /** @type {import('@storecraft/storage-s3-compatible').Config} */
       const config = {
-        endpoint: await input(
-          { 
-            message: 'Endpoint',
-            required: true,
-          }
+        endpoint: await withCancel(
+          text(
+            { 
+              message: 'S3 Compatible Endpoint',
+              validate: required,
+            }
+          ),
         ),
-        region: await input(
-          { 
-            message: 'Region',
-            required: true,
-            default: 'auto'
-          }
+        region: await withCancel(
+          text(
+            { 
+              message: 'S3 Compatible Region',
+              defaultValue: 'auto',
+              placeholder: 'auto',
+            }
+          ),
         ),
-        bucket: await input(
-          { 
-            message: 'Bucket ID',
-            required: true,
-          }
+        bucket: await withCancel(
+          text(
+            { 
+              message: 'S3 Compatible Bucket ID',
+              validate: required,
+            }
+          ),
         ),
-        forcePathStyle: await confirm(
-          { 
-            message: 'Force Path Style',
-            default: true,
-          }
+        forcePathStyle: await withCancel(
+          confirm(
+            { 
+              message: 'S3 Copatible > Force Path Style ?',
+              active: 'Yes',
+              inactive: 'No',
+              initialValue: true,
+            }
+          ),
         ),
-        accessKeyId: await input(
-          { 
-            message: 'Access Key ID',
-            required: true,
-            default: '*****'
-          }
+        accessKeyId: await withCancel(
+          text(
+            { 
+              message: 'S3 Copatible Access Key ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        secretAccessKey: await input(
-          { 
-            message: 'Secret Access Key',
-            required: true,
-            default: '*****'
-          }
-        ),
+        secretAccessKey: await withCancel(
+          text(
+            { 
+              message: 'S3 Copatible Secret Access Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        )
       }
 
       return config;
@@ -200,32 +257,40 @@ const collect_general_config = async (
     case 'google_storage': {
       /** @type {import('@storecraft/storage-google').Config} */
       const config = {
-        bucket: await input(
-          { 
-            message: 'Bucket ID',
-            required: true,
-          }
+        bucket: await withCancel(
+          text(
+            { 
+              message: 'Google Storage Bucket ID',
+              validate: required,
+            }
+          ),
         ),
-        client_email: await input(
-          { 
-            message: 'Client Email',
-            required: true,
-          }
+        client_email: await withCancel(
+          text(
+            { 
+              message: 'Google Storage Client Email',
+              validate: required,
+            }
+          ),
         ),
-        private_key_id: await input(
-          { 
-            message: 'Private Key ID',
-            required: true,
-            default: '*****'
-          }
+        private_key_id: await withCancel(
+          text(
+            { 
+              message: 'Google Storage Private Key ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        private_key: await input(
-          { 
-            message: 'Private Key',
-            required: true,
-            default: '*****'
-          }
-        ),
+        private_key: await withCancel(
+          text(
+            { 
+              message: 'Google Storage Private Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        )
       }
 
       return config;

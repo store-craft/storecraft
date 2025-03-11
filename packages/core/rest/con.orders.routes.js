@@ -11,10 +11,6 @@ import { assert_generic_auth, authorize_admin,
 import { parse_query } from '../api/utils.query.js'
 
 /**
- * @typedef {import('../api/types.api.d.ts').OrderData} ItemType
- */
-
-/**
  * 
  * @param {App} app
  */

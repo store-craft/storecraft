@@ -1,3 +1,11 @@
+/**
+ * @import { db_crud, RegularGetOptions } from '@storecraft/core/database'
+ * @import { ApiQuery, BaseType, Cursor, ExpandQuery, QuickSearchResource, QuickSearchResult, Tuple, withOptionalID } from '@storecraft/core/api'
+ * @import { VQL } from '@storecraft/core/vql'
+ * @import { WithRelations } from './utils.relations.js'
+ * @import { WithId } from 'mongodb'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { handle_or_id, isUndef, sanitize_array, 
@@ -8,13 +16,13 @@ import { add_search_terms_relation_on } from './utils.relations.js'
 
 
 /**
- * @template {import('@storecraft/core/api').BaseType} T
- * @template {import('@storecraft/core/api').BaseType} G
+ * @template {BaseType} T
+ * @template {BaseType} G
  * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
- * @returns {import('@storecraft/core/database').db_crud<T, G>["upsert"]}
+ * @returns {db_crud<T, G>["upsert"]}
  */
 export const upsert_regular = (driver, col) => {
   
@@ -80,13 +88,10 @@ export const get_relations_names = item => {
 /**
  * Expand relations in-place
  * 
- * 
  * @template {any} T
  * 
- * 
- * @param {import('./utils.relations.js').WithRelations<T>[]} items
- * @param {import('@storecraft/core/api').ExpandQuery} [expand_query] 
- * 
+ * @param {WithRelations<T>[]} items
+ * @param {ExpandQuery<T>} [expand_query] 
  */
 export const expand = (items, expand_query=undefined) => {
   
@@ -98,9 +103,9 @@ export const expand = (items, expand_query=undefined) => {
   const all = expand_query.includes('*');
   
   for(const item of items) {
-    expand_query = all ? get_relations_names(item) : expand_query;
+    const what_to_expand = all ? get_relations_names(item) : expand_query;
 
-    for(const e of (expand_query ?? [])) {
+    for(const e of (what_to_expand ?? [])) {
       // try to find embedded documents relations
       const rel = item?._relations?.[e];
       if(rel===undefined || rel===null)
@@ -139,8 +144,8 @@ export const zeroed_relations = {
 
 
 /**
- * 
- * @param {import('@storecraft/core/database').RegularGetOptions["expand"]} expand 
+ * @template T
+ * @param {ExpandQuery<T>} expand 
  */
 export const expand_to_mongo_projection = (expand) => {
   let projection = {}
@@ -161,18 +166,16 @@ export const expand_to_mongo_projection = (expand) => {
 /**
  * @template T, G
  * 
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
- * 
- * @returns {import('@storecraft/core/database').db_crud<T, G>["get"]}
+ * @returns {db_crud<T, G>["get"]}
  */
 export const get_regular = (driver, col) => {
   return async (id_or_handle, options) => {
     const filter = handle_or_id(id_or_handle);
 
-    /** @type {import('./utils.relations.js').WithRelations<import('mongodb').WithId<G>>} */
+    /** @type {WithRelations<WithId<G>>} */
     const res = await col.findOne(
       filter,
       {
@@ -192,15 +195,15 @@ export const get_regular = (driver, col) => {
  * should be instead
  * 
  * 
- * @template {import('@storecraft/core/api').withOptionalID} T
- * @template {import('@storecraft/core/api').withOptionalID} G
+ * @template {withOptionalID} T
+ * @template {withOptionalID} G
  * 
  * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/database').db_crud<T, G>["getBulk"]}
+ * @returns {db_crud<T, G>["getBulk"]}
  */
 export const get_bulk = (driver, col) => {
   return async (ids, options) => {
@@ -245,7 +248,7 @@ export const get_bulk = (driver, col) => {
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/database').db_crud<T, G>["remove"]}
+ * @returns {db_crud<T, G>["remove"]}
  */
 export const remove_regular = (driver, col) => {
   return async (id_or_handle) => {
@@ -259,15 +262,15 @@ export const remove_regular = (driver, col) => {
 }
 
 /**
- * @template {any} T
- * @template {any} G
+ * @template T
+ * @template G
  * 
  * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/database').db_crud<T, G>["list"]}
+ * @returns {db_crud<T, G>["list"]}
  */
 export const list_regular = (driver, col) => {
   return async (query) => {
@@ -276,11 +279,11 @@ export const list_regular = (driver, col) => {
 
     // console.log('reverse_sign', reverse_sign)
     // console.log('query', query)
-    console.log('filter', JSON.stringify(filter, null, 2))
+    // console.log('filter', JSON.stringify(filter, null, 2))
     // console.log('sort', sort)
     // console.log('expand', query?.expand)
 
-    /** @type {import('mongodb').WithId<G>[]} */
+    /** @type {WithRelations<WithId<G>>[]} */
     const items = await col.find(
       filter,  {
         sort, 
@@ -293,7 +296,7 @@ export const list_regular = (driver, col) => {
 
     // try expand relations, that were asked
     const items_expended = expand(items, query?.expand);
-
+    
     const sanitized = sanitize_array(items_expended);
 
     // console.log('sanitized', sanitized)
@@ -311,7 +314,7 @@ export const list_regular = (driver, col) => {
  * @param {Collection<G>} col 
  * 
  * 
- * @returns {import('@storecraft/core/database').db_crud<T, G>["count"]}
+ * @returns {db_crud<T, G>["count"]}
  */
 export const count_regular = (driver, col) => {
   return async (query) => {

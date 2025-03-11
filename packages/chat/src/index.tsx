@@ -4,9 +4,9 @@ import { StrictMode } from 'react'
 import { Chat } from './components/chat'
 export { Chat } from './components/chat';
 
-export const mountChat = () => {
+export const mountChat = (container: HTMLElement) => {
   createRoot(
-    document.getElementById('root')!
+    container ?? document.getElementById('root')!
   ).render(
     <StrictMode>
       <Chat />

@@ -1,14 +1,16 @@
+/**
+ * @import { db_templates as db_col } from '@storecraft/core/database'
+ * @import { Database } from '../types.sql.tables.js'
+ */
 import { Kysely } from 'kysely'
 import { SQL } from '../index.js'
 import { count_regular, delete_me, delete_search_of, insert_search_of, 
-  regular_upsert_me, safe_trx, where_id_or_handle_table } from './con.shared.js'
+  regular_upsert_me, safe_trx, where_id_or_handle_table, 
+  with_search} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { base64 } from '@storecraft/core/crypto';
 
-/**
- * @typedef {import('@storecraft/core/database').db_templates} db_col
- */
 export const table_name = 'templates'
 
 /**
@@ -25,8 +27,7 @@ const decode_if_base64 = val => {
 }
 
 /**
- * @param {Kysely<import('../index.js').Database>} client 
- * 
+ * @param {Kysely<Database>} client 
  * 
  * @returns {db_col["upsert"]}
  */
@@ -70,6 +71,10 @@ const get = (driver) => {
     return driver.client
     .selectFrom(table_name)
     .selectAll()
+    .select(eb => [
+        with_search(eb, id_or_handle, driver.dialectType),
+      ].filter(Boolean)
+    )
     .where(where_id_or_handle_table(id_or_handle))
     .executeTakeFirst()
     .then(sanitize);
@@ -115,6 +120,11 @@ const list = (driver) => {
     const items = await driver.client
       .selectFrom(table_name)
       .selectAll()
+      .select(
+        eb => [
+          with_search(eb, eb.ref('templates.id'), driver.dialectType),
+        ].filter(Boolean)
+      )
       .where(
         (eb) => {
           return query_to_eb(eb, query, table_name);

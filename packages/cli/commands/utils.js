@@ -9,8 +9,8 @@ export const validateEmail = (email) => {
 /**
  * @param {string} v 
  */
-export const tokens = (v) => {
-  return (v?.split(' ').map(s => s.trim()).filter(Boolean)) ?? [];
+export const parse_csv = (v) => {
+  return (v?.split(/[\s\,]+/).map(s => s.trim()).filter(Boolean)) ?? [];
 }
 
 /**
@@ -22,6 +22,7 @@ export const tokens = (v) => {
  * @prop {string} [short]
  * @prop {boolean | string} [disabled]
  * @prop {never} [type]
+ * @prop {boolean} [ignore=false] ignore or filter
  */
 
 

@@ -1,3 +1,6 @@
+/**
+ * @import { TemplateType } from '../api/types.api.js'
+ */
 import { base64 } from '../crypto/public.js';
 
 /**
@@ -10,6 +13,9 @@ const base64_encode = val => {
 }
 
 
+/**
+ * @type {TemplateType[]}
+ */
 export const templates = [
   {
     "title": "Order Cancelled",

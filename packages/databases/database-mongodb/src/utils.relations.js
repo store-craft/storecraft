@@ -1,3 +1,10 @@
+/**
+ * @import { ID } from '@storecraft/core/database'
+ * @import { BaseType } from '@storecraft/core/api'
+ * @import { WithRelations } from './utils.relations.js'
+ * @import { Filter } from 'mongodb'
+ */
+
 import { ClientSession, ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../index.js';
@@ -6,12 +13,9 @@ import { zeroed_relations } from './con.shared.js';
 /**
  * @template {any} T
  * 
- * 
  * @typedef {Object} Relation
  * @property {ObjectId[]} [ids]
- * @property {Record<
- *  import('@storecraft/core/database').ID, T>
- * } [entries]
+ * @property {Record<ID, T>} [entries]
  */
 
 /**
@@ -27,7 +31,7 @@ import { zeroed_relations } from './con.shared.js';
  * Basically creates an ids array and embedded documents for fast retrival.
  * 
  * 
- * @template {import('@storecraft/core/api').BaseType} T
+ * @template {BaseType} T
  * 
  * 
  * @param {MongoDB} driver our driver
@@ -50,7 +54,7 @@ export const create_explicit_relation = async (
   if(isUndef(value))
     return data;
    
-  /** @type {import('@storecraft/core/api').BaseType[]} */
+  /** @type {BaseType[]} */
   const items = Array.isArray(value) ? value : [value];
 
   /** @type {WithRelations<any>} */
@@ -328,7 +332,7 @@ export const remove_specific_connection_of_relation = (
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
- * @param {import('mongodb').Filter<any>} from_object_filter 
+ * @param {Filter<any>} from_object_filter 
  * `mongodb` Filter to locate the first document, the from part of the connection
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {ClientSession} [session] client `session` for atomicity purposes

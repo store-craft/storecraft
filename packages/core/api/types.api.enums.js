@@ -1,3 +1,4 @@
+
 /** 
  * @satisfies {import('./types.api.d.ts').DiscountApplicationEnum} 
  */
@@ -84,7 +85,6 @@ export const FilterMetaEnum = {
 export const DiscountMetaEnum = {
   any: {
     id: undefined,
-    type: undefined,
     name: undefined
   },
   regular: { 

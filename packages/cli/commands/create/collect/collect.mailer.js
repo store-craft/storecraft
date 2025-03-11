@@ -1,6 +1,19 @@
-import { select, input } from "@inquirer/prompts";
+/**
+ * @import { Choice } from '../../utils.js';
+ */
+import {
+  intro,
+  outro,
+  confirm,
+  select,
+  spinner,
+  isCancel,
+  cancel,
+  text, 
+} from '@clack/prompts';
+import { required, withCancel } from "./collect.utils.js";
 
-/** @satisfies {import("../../utils.js").Choice[]} */
+/** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
     name: 'SendGrid',
@@ -23,12 +36,20 @@ export const choices = /** @type {const} */ ([
 
 export const collect_mailer = async () => {
 
-  const id = await select(
-    {
-      message: '📧 Select Email Provider',
-      choices: choices,
-      loop: true,
-    }
+  const id = await withCancel(
+    select(
+      {
+        message: '📧 Select Email Provider',
+        options: choices.map(
+          c => (
+            {
+              value: c.value,
+              label: c.name
+            }
+          )
+        ),
+      }
+    )
   );
 
   return {
@@ -50,12 +71,14 @@ const collect_general_config = async (
     case 'mailchimp': {
       /** @type {import('@storecraft/mailer-providers-http/mailchimp').Config} */
       const config = {
-        apikey: await input(
-          { 
-            message: 'API Key',
-            required: true,
-            default: '*****'
-          }
+        apikey: await withCancel(
+          text(
+            { 
+              message: 'Mailchimp API Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          )
         )
       }
 
@@ -65,18 +88,22 @@ const collect_general_config = async (
     case 'mailgun': {
       /** @type {import('@storecraft/mailer-providers-http/mailgun').Config} */
       const config = {
-        apikey: await input(
-          { 
-            message: 'API Key',
-            required: true,
-            default: '*****'
-          }
+        apikey: await withCancel(
+          text(
+            { 
+              message: 'Mailgun API Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
         ),
-        domain_name: await input(
-          { 
-            message: 'Domain Name',
-            required: true,
-          }
+        domain_name: await withCancel(
+          text(
+            { 
+              message: 'Domain Name',
+              validate: required,
+            }
+          )
         )
       }
       
@@ -86,13 +113,15 @@ const collect_general_config = async (
     case 'resend': {
       /** @type {import('@storecraft/mailer-providers-http/resend').Config} */
       const config = {
-        apikey: await input(
-          { 
-            message: 'API Key',
-            required: true,
-            default: '*****'
-          }
-        ),
+        apikey: await withCancel(
+          text(
+            { 
+              message: 'Resend API Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        )
       }
       
       return config;
@@ -101,13 +130,15 @@ const collect_general_config = async (
     case 'sendgrid': {
       /** @type {import('@storecraft/mailer-providers-http/sendgrid').Config} */
       const config = {
-        apikey: await input(
-          { 
-            message: 'API Key',
-            required: true,
-            default: '*****'
-          }
-        ),
+        apikey: await withCancel(
+          text(
+            { 
+              message: 'Sendgrid API Key',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        )
       }
       
       return config;

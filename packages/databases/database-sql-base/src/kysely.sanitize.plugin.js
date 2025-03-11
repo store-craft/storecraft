@@ -1,3 +1,9 @@
+/**
+ * @import { 
+ *  KyselyPlugin, PluginTransformQueryArgs, RootOperationNode, 
+ *  PluginTransformResultArgs, QueryResult, UnknownRow 
+ * } from 'kysely'
+ */
 import { sanitize } from './utils.funcs.js';
 
 /**
@@ -6,20 +12,16 @@ import { sanitize } from './utils.funcs.js';
  * - sanitize `undefined` and `null` values
  * - `active` keys will be transformed to `boolean`
  * 
- * 
- * @typedef {import('kysely').KyselyPlugin} KyselyPlugin
- * 
- * 
  * @implements {KyselyPlugin}
  */
 export class SanitizePlugin {
 
   /**
    * 
-   * @param {import('kysely').PluginTransformQueryArgs} args 
+   * @param {PluginTransformQueryArgs} args 
    * 
    * 
-   * @returns {import('kysely').RootOperationNode}
+   * @returns {RootOperationNode}
    */
   transformQuery(args) {
     return args.node;
@@ -27,10 +29,10 @@ export class SanitizePlugin {
 
   /**
    * 
-   * @param {import('kysely').PluginTransformResultArgs} args 
+   * @param {PluginTransformResultArgs} args 
    * 
    * 
-   * @returns {Promise<import('kysely').QueryResult<import('kysely').UnknownRow>>}
+   * @returns {Promise<QueryResult<UnknownRow>>}
    */
   transformResult(args){
     sanitize(args.result.rows);

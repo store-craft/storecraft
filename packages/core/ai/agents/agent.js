@@ -2,7 +2,7 @@
  * @import { 
  *  AgentConfig, AgentRunParameters, AgentRunResponse, 
  *  AgentRunStreamResponse } from './types.js'
- * @import { AI } from '../core/types.private.js'
+ * @import { ChatAI } from '../core/types.private.js'
  */
 
 import { App } from "../../index.js";
@@ -12,7 +12,7 @@ import { TOOLS } from "./agent.tools.js";
 import { id } from '../../crypto/object-id.js'
 
 /**
- * @template {AI} [AI_PROVIDER=AI]
+ * @template {ChatAI} [AI_PROVIDER=ChatAI]
  */
 export class StoreAgent {
   /** @type {App} */

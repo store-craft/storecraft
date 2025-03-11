@@ -1,5 +1,6 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
+ * @import { DenoPlatformConfig } from './types.public.js';
  */
 import { NodeCrypto } from '../node/node.crypto.js';
 
@@ -10,7 +11,7 @@ import { NodeCrypto } from '../node/node.crypto.js';
  */
 export class DenoPlatform {
 
-  /** @type {import('./types.public.d.ts').DenoPlatformConfig} */
+  /** @type {DenoPlatformConfig} */
   #config;
 
   /** @type {NodeCrypto} */
@@ -18,7 +19,7 @@ export class DenoPlatform {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').DenoPlatformConfig} [config={}] 
+   * @param {DenoPlatformConfig} [config={}] 
    */
   constructor(config={}) {
     this.#config = {

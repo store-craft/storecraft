@@ -10,7 +10,7 @@ import { ResourceTitle } from '../comps/resource-title.jsx'
  * @param {import('@storecraft/core/api').CustomerType} item 
  */
 export const extract_contact_field = item => {
-
+  console.log('item', item)
   return item?.firstname ?
   item?.firstname + (item?.lastname ? ' ' + item?.lastname : '') : 
   item?.email ?? 'anonymous'
@@ -23,7 +23,7 @@ export const extract_contact_field = item => {
  */
 const schema_fields = [
   { 
-    key: 'undefined', name: 'Full Name', comp: Span, 
+    key: undefined, name: 'Full Name', comp: Span, 
     transform: 
       /** @param {import('@storecraft/core/api').CustomerType} item */
       item => extract_contact_field(item),

@@ -1,5 +1,5 @@
 /**
- * @import { OrderData, OrderDataUpsert } from './types.api.js'
+ * @import { OrderData, OrderDataUpsert, PricingData } from './types.api.js'
  */
 import { orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
@@ -17,7 +17,6 @@ export const db = app => app.db.resources.orders;
  * @param {OrderDataUpsert} data
  * 
  * 
- * @returns {string[]}
  */
 const create_search_index = (data) => {
   return union(
@@ -28,7 +27,7 @@ const create_search_index = (data) => {
     data?.contact?.email && `customer:${data?.contact?.email}`,
     data?.contact?.customer_id,
     data?.contact?.email,
-    data?.pricing?.total && Math.floor(data.pricing?.total),
+    data?.pricing?.total && String(Math.floor(data.pricing?.total)),
     data?.status?.payment?.name2 && `payment:${data.status.payment.name2}`,
     isDef(data?.status?.payment?.id) && `payment:${data.status.payment.id}`,
     data?.status?.fulfillment?.name2 && `fulfill:${data.status.fulfillment.name2}`,
@@ -45,7 +44,7 @@ const create_search_index = (data) => {
 
 
 /**
- * @type {import('./types.api.d.ts').PricingData}
+ * @type {PricingData}
  */
 const default_pricing = {
   quantity_discounted: 0,

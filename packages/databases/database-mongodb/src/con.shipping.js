@@ -1,3 +1,8 @@
+/**
+ * @import { db_shipping as db_col } from '@storecraft/core/database'
+ * @import { WithRelations } from './utils.relations.js'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular } from './con.shared.js'
@@ -10,14 +15,10 @@ import {
 } from './utils.relations.js';
 
 /**
- * @typedef {import('@storecraft/core/database').db_shipping} db_col
- */
-
-/**
  * @param {MongoDB} d 
  * 
  * 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
+ * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('shipping_methods');
 

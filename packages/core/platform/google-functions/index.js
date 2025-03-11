@@ -1,6 +1,7 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
  * @import { GoogleFunctionRequest, GoogleFunctionResponse } from './types.private.js';
+ * @import { Config } from './types.public.js';
  */
 import { NodeCrypto } from '../node/node.crypto.js';
 
@@ -14,7 +15,7 @@ import { NodeCrypto } from '../node/node.crypto.js';
  */
 export class GoogleFunctionsPlatform {
 
-  /** @type {import('./types.public.d.ts').Config} */
+  /** @type {Config} */
   #config;
 
   /** @type {NodeCrypto} */
@@ -22,7 +23,7 @@ export class GoogleFunctionsPlatform {
 
   /**
    * 
-   * @param {import('./types.public.d.ts').Config} [config={}] 
+   * @param {Config} [config={}] 
    */
   constructor(config={}) {
     this.#config = {

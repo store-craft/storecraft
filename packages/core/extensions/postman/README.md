@@ -14,8 +14,8 @@ This extension will send transactional emails for customers using [HandleBars](h
  * - `orders/fulfillment/cancelled` via `order-cancelled` template, uses {@link OrderData}
  * - `auth/signup` via `welcome-customer` template, uses {@link AuthUserType}
  * - `auth/change-password` via `general-message` template, uses {@link AuthUserType}  
- * - `auth/forgot-password-token-generated` via `forgot-password` template, uses `{email: string, token: string}`
- * - `auth/confirm-email-token-generated` via `confirm-email` template (currently not present), uses `{email: string, token: string}`
+ * - `auth/forgot-password-token-generated` via `forgot-password` template
+ * - `auth/confirm-email-token-generated` via `confirm-email` template
 
 The templates are already seeded into your database and have the following handles, which
 `postman` recognizes:
@@ -40,13 +40,7 @@ conat app = new App(
 
 ## Usage
 
-First, install `handlebars`
-
-```bash
-npm i handlebars
-```
-
-Then, in your `storecraft` app
+in your `storecraft` app
 
 ```ts
 import { PostmanExtension } from "@storecraft/core/extensions/postman";

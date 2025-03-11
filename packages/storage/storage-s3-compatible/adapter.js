@@ -1,5 +1,6 @@
 /**
  * @import { AwsS3Config, Config, R2Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { storage_driver, StorageFeatures } from '@storecraft/core/storage'
  */
 import { App } from '@storecraft/core'
@@ -27,7 +28,6 @@ const infer_content_type = (name) => {
   return type ?? 'application/octet-stream';
 }
 
-
 /**
  * @description The base S3 compatible class
  * 
@@ -35,24 +35,16 @@ const infer_content_type = (name) => {
  */
 export class S3CompatibleStorage {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfig = /** @type{const} */ ({
+    accessKeyId: 'S3_ACCESS_KEY_ID',
+    secretAccessKey: 'S3_SECRET_ACCESS_KEY',
+    bucket: 'S3_BUCKET',
+    region: 'S3_REGION',
+  });
+
   /** @type {AwsClient} */ #_client;
   /** @type {Config} */ #_config;
-  /** @type {string} */ #_url;
-
-  /**
-   * 
-   * @param {Config} options 
-   */
-  #compute_url(options) {
-    const url = new URL(options.endpoint);
-    if(options.forcePathStyle) {
-      url.pathname = options.bucket;
-    } else {
-      url.host = `${options.bucket}.${url.host}`;
-    }
-    return url.toString();
-  }
-
 
   /**
    * 
@@ -60,17 +52,20 @@ export class S3CompatibleStorage {
    */
   constructor(config) {
     this.#_config = config;
-    this.#_client = new AwsClient({
-      accessKeyId: config.accessKeyId, secretAccessKey: config.secretAccessKey, 
-      region: config.region ?? 'auto', service: 's3'
-    });
-
-    this.#_url = this.#compute_url(config);
   }
 
-  get url() { return this.#_url; }
-  get client() { return this.#_client; }
   get config() { return this.#_config; }
+  get client() { 
+    this.#_client = this.#_client ?? new AwsClient(
+      {
+        accessKeyId: this.config.accessKeyId, 
+        secretAccessKey: this.config.secretAccessKey, 
+        region: this.config.region ?? 'auto', 
+        service: 's3'
+      }
+    );
+    return this.#_client; 
+  }
 
   features() {
     /** @type {StorageFeatures} */
@@ -85,7 +80,14 @@ export class S3CompatibleStorage {
    * 
    * @type {storage_driver["init"]}
    */
-  async init(app) { return this; }
+  async init(app) { 
+    this.config.accessKeyId ??= app.platform.env[S3CompatibleStorage.EnvConfig.accessKeyId];
+    this.config.secretAccessKey ??= app.platform.env[S3CompatibleStorage.EnvConfig.secretAccessKey];
+    this.config.bucket ??= app.platform.env[S3CompatibleStorage.EnvConfig.bucket];
+    // @ts-ignore
+    this.config.region ??= app.platform.env[S3CompatibleStorage.EnvConfig.region];
+    return this; 
+  }
 
   // puts
 
@@ -170,9 +172,19 @@ export class S3CompatibleStorage {
 
   // gets
 
+  get url() {
+    const url = new URL(this.config.endpoint);
+    if(this.config.forcePathStyle) {
+      url.pathname = this.config.bucket;
+    } else {
+      url.host = `${this.config.bucket}.${url.host}`;
+    }
+    return url.toString();
+  }
+
   /** @param {string} key  */
   get_file_url(key) {
-    return `${this.#_url}/${key}`;
+    return `${this.url}/${key}`;
   }
 
   /** @param {string} key  */
@@ -269,58 +281,117 @@ export class S3CompatibleStorage {
  */
 export class R2 extends S3CompatibleStorage {
 
+  /** @satisfies {ENV<R2Config>} */
+  static R2EnvConfig = /** @type{const} */ ({
+    accessKeyId: 'S3_ACCESS_KEY_ID',
+    secretAccessKey: 'S3_SECRET_ACCESS_KEY',
+    bucket: 'S3_BUCKET',
+    account_id: 'CF_ACCOUNT_ID',
+  });
+
   /**
    * @param {R2Config} config
    */
-  constructor({bucket, account_id, accessKeyId, secretAccessKey}) {
+  constructor(config={}) {
     super(
       {
-        endpoint: `https://${account_id}.r2.cloudflarestorage.com`,
-        accessKeyId, secretAccessKey, bucket, 
-        forcePathStyle: true, region: 'auto'
+        endpoint: config.account_id ? 
+          `https://${config.account_id}.r2.cloudflarestorage.com` : 
+          undefined,
+        accessKeyId: config.accessKeyId, 
+        secretAccessKey:config.secretAccessKey, 
+        bucket: config.bucket, 
+        forcePathStyle: true, 
+        region: 'auto'
       }
-    )
+    );
+    this.r2_config = config;
   }
 
+  /** @type {S3CompatibleStorage["init"]} */
+  init = async (app) => {
+    await super.init(app);
+    this.r2_config.account_id ??= app.platform.env[R2.R2EnvConfig.account_id];
+    this.config.endpoint ??= `https://${this.r2_config.account_id}.r2.cloudflarestorage.com`;
+    return this;
+  }
+  
 }
+
 
 /**
  * Amazon S3
  */
 export class S3 extends S3CompatibleStorage {
 
+  /** @satisfies {ENV<AwsS3Config>} */
+  static AWSS3EnvConfig = /** @type{const} */ ({
+    ...S3CompatibleStorage.EnvConfig
+  });
+
   /**
-   * @param {AwsS3Config} config
+   * @param {Partial<AwsS3Config>} config
    */
-  constructor({bucket, region, accessKeyId, secretAccessKey, forcePathStyle=false}) {
+  constructor(config = {}) {
     super(
       {
-        endpoint: `https://s3${region ? ('.'+region) : ''}.amazonaws.com`,
-        accessKeyId, secretAccessKey, 
-        bucket, forcePathStyle, region
+        endpoint: config.region ? `https://s3.${config.region}.amazonaws.com` : undefined,
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey, 
+        bucket: config.bucket, 
+        forcePathStyle: config.forcePathStyle ?? false, 
+        region: config.region
       }
     )
   }
 
+  /** @type {S3CompatibleStorage["init"]} */
+  init = async (app) => {
+    await super.init(app);
+    this.config.endpoint = `https://s3${this.config.region ? 
+      ('.'+this.config.region) : ''}.amazonaws.com`;
+    return this;
+  }
+
 }
+
 
 /**
  * Digital Ocean spaces
  */
 export class DigitalOceanSpaces extends S3CompatibleStorage {
 
+  /** @satisfies {ENV<AwsS3Config>} */
+  static DOEnvConfig = /** @type{const} */ ({
+    ...S3CompatibleStorage.EnvConfig
+  });
+
   /**
-   * @param {Omit<Config, 'endpoint' | 'forcePathStyle'>} config
+   * @param {Partial<Omit<Config, 'endpoint' | 'forcePathStyle'>>} config
    */
-  constructor({bucket, region, accessKeyId, secretAccessKey}) {
+  constructor(config = {}) {
     super(
       {
-        endpoint: `https://${region}.digitaloceanspaces.com`,
-        accessKeyId, secretAccessKey, 
-        bucket, forcePathStyle: false, region: 'auto'
+        endpoint: config.region ? 
+          `https://${config.region}.digitaloceanspaces.com` : undefined,
+        accessKeyId: config.accessKeyId, 
+        secretAccessKey: config.secretAccessKey, 
+        bucket: config.bucket, 
+        forcePathStyle: false, region: 'auto'
       }
     )
   }
+
+  /** @type {S3CompatibleStorage["init"]} */
+  init = async (app) => {
+    await super.init(app);
+    this.config.endpoint = this.config.region ? 
+      `https://${this.config.region}.digitaloceanspaces.com` : 
+      undefined;
+
+    return this;
+  }
+
 
 }
 

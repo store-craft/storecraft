@@ -16,9 +16,9 @@ await migrateToLatest(app.db, true);
 `
 }
 
+
 const d1_migrate = () => {
-  return `
-#!/usr/bin/env node
+  return `#!/usr/bin/env node
 
 import 'dotenv/config';
 import { D1_HTTP } from '@storecraft/database-cloudflare-d1';
@@ -27,9 +27,9 @@ import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
 export const migrate = async () => {
   const d1_over_http = new D1_HTTP(
     {
-      account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
-      api_token: process.env.CLOUDFLARE_D1_API_TOKEN,
-      database_id: process.env.CLOUDFLARE_D1_DATABASE_ID
+      account_id: process.env.CF_ACCOUNT_ID,
+      api_token: process.env.D1_API_TOKEN,
+      database_id: process.env.D1_DATABASE_ID
     }
   )
   
@@ -48,10 +48,10 @@ export const compile_migrate = (meta) => {
   const database = infer_database(meta.database);
 
   switch(meta.database.id) {
-    case 'd1': {
-      return d1_migrate();
-    }
+    case 'd1-http': 
+    case 'd1-worker': 
     case 'sqlite':
+    case 'libsql-local':
     case 'postgres':
     case 'mysql':
     case 'mongo_db':

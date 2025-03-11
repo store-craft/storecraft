@@ -9,3 +9,17 @@
 
 export type { StorecraftConfig } from './api/types.api.d.ts';
 export { App } from './index.js';
+
+
+/**
+ * @description A small utility type to rewrite any record type
+ * recursively with string values. Will be used to map env variables
+ * names
+ */
+export type ENV<T> = Partial<
+  {
+    readonly [K in keyof T]: T[K] extends (number | string | boolean | Function | any[]) ? string : ENV<T[K]>
+    // readonly [K in keyof T]: T[K] extends (any[] | Function) ? string : T[K] extends Record<string, any> ? ENV<T[K]> : (string)
+  }
+>;
+  

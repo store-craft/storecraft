@@ -1,3 +1,8 @@
+/**
+ * @import { db_posts as db_col } from '@storecraft/core/database'
+ * @import { WithRelations } from './utils.relations.js'
+ */
+
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular } from './con.shared.js'
@@ -18,7 +23,7 @@ import {
  * @param {MongoDB} d 
  * 
  * 
- * @returns {Collection<import('./utils.relations.js').WithRelations<db_col["$type_get"]>>}
+ * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('posts');
 

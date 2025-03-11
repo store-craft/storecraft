@@ -1,4 +1,9 @@
-// @ts-ignore
+/**
+ * @import { db_crud } from '@storecraft/core/database'
+ * @import { Database } from '../types.sql.tables.js'
+ * @import { ExpressionBuilder, InsertObject } from 'kysely'
+ * @import { SqlDialectType } from '../types.public.js'
+ */
 import { ExpressionWrapper, InsertQueryBuilder, Kysely, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';
@@ -43,7 +48,7 @@ export const safe_trx = (k) => {
  * @param {SQL} driver 
  * @param {keyof Database} table_name 
  * 
- * @returns {import('@storecraft/core/database').db_crud["count"]}
+ * @returns {db_crud["count"]}
  */
 export const count_regular = (driver, table_name) => {
   return async (query) => {
@@ -70,7 +75,7 @@ export const count_regular = (driver, table_name) => {
  */
 export const where_id_or_handle_entity = (id_or_handle) => {
   /**
-   * @param {import('kysely').ExpressionBuilder<Database>} eb 
+   * @param {ExpressionBuilder<Database>} eb 
    */
   return (eb) => eb.or(
     [
@@ -86,7 +91,7 @@ export const where_id_or_handle_entity = (id_or_handle) => {
  */
 export const where_id_or_handle_table = (id_or_handle) => {
   /**
-   * @param {import('kysely').ExpressionBuilder<Database>} eb 
+   * @param {ExpressionBuilder<Database>} eb 
    */
   return (eb) => eb.or(
     [
@@ -139,7 +144,7 @@ export const delete_entity_values_of_by_entity_id_or_handle =
 (entity_table_name) => {
   /**
    * 
-   * @param {Kysely<import('../index.js').Database>} trx 
+   * @param {Kysely<Database>} trx 
    * @param {string} entity_id delete by id
    * @param {string} [entity_handle=entity_id] delete by handle
    */
@@ -262,17 +267,13 @@ export const delete_tags_of = delete_entity_values_of_by_entity_id_or_handle('en
 export const delete_search_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_search_terms');
 export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle('entity_to_media');
 
-/**
- * @typedef {import('../index.js').Database} Database
- */
-
 
 /**
  * @template {keyof Database} T
  * 
  * @param {Kysely<Database>} trx 
  * @param {T} table_name 
- * @param {import('kysely').InsertObject<Database, T> & {id: string, handle: string}} item values of the entity
+ * @param {InsertObject<Database, T> & {id: string, handle: string}} item values of the entity
  * 
  */
 export const regular_upsert_me = async (trx, table_name, item) => {
@@ -308,9 +309,9 @@ export const delete_me = async (trx, table_name, id_or_handle) => {
 
 /**
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const with_tags = (eb, id_or_handle, sql_type) => {
   return stringArrayFrom(
@@ -322,9 +323,9 @@ export const with_tags = (eb, id_or_handle, sql_type) => {
 
 /**
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const with_search = (eb, id_or_handle, sql_type) => {
   return stringArrayFrom(
@@ -336,9 +337,9 @@ export const with_search = (eb, id_or_handle, sql_type) => {
 
 /**
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const with_media = (eb, id_or_handle, sql_type) => {
   return stringArrayFrom(
@@ -352,9 +353,9 @@ export const with_media = (eb, id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const products_with_collections = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -383,9 +384,9 @@ export const products_with_collections = (eb, product_id_or_handle, sql_type) =>
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -417,9 +418,9 @@ export const products_with_discounts = (eb, product_id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -455,9 +456,9 @@ export const products_with_variants = (eb, product_id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database, 'products'>} eb 
+ * @param {ExpressionBuilder<Database, 'products'>} eb 
  * @param {string | ExpressionWrapper<Database>} product_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const products_with_related_products = (eb, product_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -494,9 +495,9 @@ export const products_with_related_products = (eb, product_id_or_handle, sql_typ
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database, 'storefronts'>} eb 
+ * @param {ExpressionBuilder<Database, 'storefronts'>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const storefront_with_collections = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -525,9 +526,9 @@ export const storefront_with_collections = (eb, sf_id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const storefront_with_products = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -563,9 +564,9 @@ export const storefront_with_products = (eb, sf_id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const storefront_with_discounts = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -597,9 +598,9 @@ export const storefront_with_discounts = (eb, sf_id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const storefront_with_posts = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -628,9 +629,9 @@ export const storefront_with_posts = (eb, sf_id_or_handle, sql_type) => {
 /**
  * select as json array collections of a product
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {string | ExpressionWrapper<Database>} sf_id_or_handle 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SqlDialectType} sql_type 
  */
 export const storefront_with_shipping = (eb, sf_id_or_handle, sql_type) => {
   return jsonArrayFrom(
@@ -659,7 +660,7 @@ export const storefront_with_shipping = (eb, sf_id_or_handle, sql_type) => {
 /**
  * select all the entity values by entity id or handle
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} entity_id_or_handle 
  */
@@ -681,7 +682,7 @@ export const select_values_of_entity_by_entity_id_or_handle =
 /**
  * select the entity ids which are constrained by value or reporter
  * 
- * @param {import('kysely').ExpressionBuilder<Database>} eb 
+ * @param {ExpressionBuilder<Database>} eb 
  * @param {EntityTableKeys} entity_junction_table 
  * @param {string | ExpressionWrapper<Database>} value 
  * @param {string | ExpressionWrapper<Database>} [reporter] 

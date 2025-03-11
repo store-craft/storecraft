@@ -1,3 +1,11 @@
+/**
+ * @import { NeonHttpConfig } from './types.public.js';
+ * @import { 
+ *  Dialect, Driver, DatabaseConnection, 
+ *  TransactionSettings,QueryResult 
+ * } from 'kysely';
+ * @import { NeonQueryFunction } from '@neondatabase/serverless';
+ */
 import {
   CompiledQuery,
   PostgresIntrospector,
@@ -5,14 +13,6 @@ import {
 } from "kysely"
 import { neon } from "@neondatabase/serverless"
 import { NeonHttpAdapter } from "./kysely.neon-http.adapter.js";
-
-
-/**
- * @typedef {import("./types.public.d.ts").NeonHttpConfig} NeonHttpConfig
- * @typedef {import("kysely").Dialect} Dialect
- * @typedef {import("kysely").Driver} Driver
- * @typedef {import("kysely").DatabaseConnection} DatabaseConnection
- */
 
 
 /**
@@ -59,7 +59,7 @@ class NeonHTTPDriver {
   /**
    * 
    * @param {NeonHttpConnection} connection 
-   * @param {import("kysely").TransactionSettings} settings 
+   * @param {TransactionSettings} settings 
    */
   async beginTransaction(connection, settings) {
     await connection.beginTransaction();
@@ -102,7 +102,7 @@ export class NeonHttpConnection {
 
   /**
    * 
-   * @param {import("@neondatabase/serverless").NeonQueryFunction} client 
+   * @param {NeonQueryFunction} client 
    * @param {NeonHttpConfig} config 
    */
   constructor(client, config) {
@@ -114,7 +114,7 @@ export class NeonHttpConnection {
    * 
    * @param {CompiledQuery[]} compiledQueries 
    * 
-   * @returns {Promise<import('kysely').QueryResult<Record<string, any>>>}
+   * @returns {Promise<QueryResult<Record<string, any>>>}
    */
   async #internal_executeQuery(compiledQueries) {
     const stmts = compiledQueries.map(
@@ -132,8 +132,8 @@ export class NeonHttpConnection {
     )
 
     // console.log('q', JSON.stringify({sql, params}, null, 2))
-    console.log('stmts', JSON.stringify(stmts, null, 2))
-    console.log('result', JSON.stringify(results, null, 2))
+    // console.log('stmts', JSON.stringify(stmts, null, 2))
+    // console.log('result', JSON.stringify(results, null, 2))
 
 
     const last_result = results?.at(-1);
@@ -163,10 +163,10 @@ export class NeonHttpConnection {
    * 
    * @param {CompiledQuery} compiledQuery 
    * 
-   * @returns {Promise<import('kysely').QueryResult>}
+   * @returns {Promise<QueryResult>}
    */
   async executeQuery(compiledQuery) {
-    console.log('this.isBatch', this.isBatch)
+    // console.log('this.isBatch', this.isBatch)
     if(this.isBatch) {
       this.batch.push(compiledQuery);
       return Promise.resolve(
@@ -186,7 +186,7 @@ export class NeonHttpConnection {
   }
 
   async commitTransaction() {
-    console.log('commitTransaction')
+    // console.log('commitTransaction')
     if(this.isBatch) {
       // console.trace()
       await this.#internal_executeQuery(this.batch);
@@ -211,7 +211,7 @@ export class NeonHttpConnection {
    * @param {CompiledQuery} compiledQuery 
    * @param {number} chunkSize 
    * 
-   * @returns {AsyncIterableIterator<import('kysely').QueryResult<R>>}
+   * @returns {AsyncIterableIterator<QueryResult<R>>}
    */
   async *streamQuery(compiledQuery, chunkSize) {
     throw new Error("Driver does not support streaming yet");

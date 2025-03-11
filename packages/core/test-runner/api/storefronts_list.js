@@ -3,6 +3,8 @@
  * @import { idable_concrete } from '../../database/types.public.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
+ * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { Test } from 'uvu';
  * 
  */
 import { suite } from 'uvu';
@@ -46,7 +48,7 @@ const items = get_static_ids('sf').map(
  */
 export const create = app => {
 
-  /** @type {import('uvu').Test<import('./api.utils.crud.js').ListTestContext<>>} */
+  /** @type {Test<ListTestContext<StorefrontType>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
@@ -54,7 +56,6 @@ export const create = app => {
       resource: 'storefronts', events: { list_event: 'storefronts/list' }
     }
   );
-
 
   s.before(
     async (ctx) => { 

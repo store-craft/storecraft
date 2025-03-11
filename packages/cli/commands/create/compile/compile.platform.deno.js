@@ -18,13 +18,14 @@ export const compile_deno = async (meta) => {
   await pkgr.installDeps(compiled_app.deps);
   await pkgr.installDevDeps([ "dotenv", "@types/node"]);
   const package_json = await pkgr.package_json();
+  await pkgr.write_env_file(compiled_app.env);
   await pkgr.write_package_json(
     { 
       ...package_json, 
       "type": "module",
       "scripts": {
-        "start": "deno run --env --watch -A ./index.ts",
-        "migrate": "deno run --env -A ./migrate.ts"
+        "start": "deno run --env-file --allow-env --watch -A ./index.ts",
+        "migrate": "deno run --env-file --allow-env -A ./migrate.ts"
       }
     }
   );
@@ -50,7 +51,7 @@ export const compile_deno = async (meta) => {
 
 
 const index_js = `
-import { app } from './app.ts';
+import { app } from './app.js';
 
 await app.init(false);
 

@@ -19,14 +19,15 @@ import { Stripe } from '@storecraft/payments-stripe';
 import { Stripe as StripeCls } from 'stripe';
 
 const config = {
-  //`stripe` publishable key
-  publishable_key: 'pk_....',
+  //`stripe` publishable key. if missing, it will be inferred from env variable
+  publishable_key: env.process.STRIPE_PUBLISHABLE_KEY // 'pk_....',
 
-  // `stripe` private secret
-  secret: 'sk_.....',
+  // `stripe` private secret. if missing, it will be inferred from env variable
+  secret: process.env.STRIPE_SECRET_KEY //'sk_.....',
 
-  // (Optional) `stripe` private `webhook` secret
-  webhook_endpoint_secret: 'whsec_.....',
+  // (Optional) `stripe` private `webhook` secret.
+  // if missing, it will be inferred from env variable
+  webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET // 'whsec_.....',
   
   // config options for `stripe`
   stripe_config: {
@@ -49,6 +50,12 @@ const config = {
 }
 
 new Stripe(config);
+
+// or, env variables will be inferred by 
+// - `STRIPE_PUBLISHABLE_KEY`
+// - `STRIPE_SECRET_KEY`
+// - `STRIPE_WEBHOOK_SECRET`
+new Stripe();
 ```
 
 ## In Storecraft App
@@ -66,13 +73,7 @@ const app = new App(config)
 .withStorage(new GoogleStorage())
 .withPaymentGateways(
   {
-    'stripe': new Stripe(
-      { 
-        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret_key: process.env.STRIPE_SECRET_KEY, 
-        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
-      }
-    ),
+    'stripe': new Stripe() // config can be inferred from env variables
   }
 );
 

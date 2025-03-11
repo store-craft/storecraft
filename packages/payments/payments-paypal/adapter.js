@@ -1,5 +1,6 @@
 /**
  * @import { Config } from './types.public.js'
+ * @import { ENV } from '@storecraft/core';
  * @import { OrderData, PaymentGatewayStatus } from '@storecraft/core/api'
  * @import { payment_gateway } from '@storecraft/core/payments'
  * @import { paypal_order, paypal_order_request } from './types.private.js'
@@ -16,6 +17,7 @@ import html_buy_ui from './adapter.html.js';
  * @typedef {payment_gateway<Config, CreateResult>} Impl
  */
 
+
 /**
  * @description **Paypal Payment** gateway (https://developer.paypal.com/docs/checkout/)
  * 
@@ -23,29 +25,46 @@ import html_buy_ui from './adapter.html.js';
 */
 export class Paypal {
   
+  /** @satisfies {ENV<Config>} */
+  static EnvConfigProd = /** @type{const} */ ({
+    client_id: `PAYPAL_CLIENT_ID_PROD`,
+    secret: 'PAYPAL_SECRET_PROD',
+  });
+
+  /** @satisfies {ENV<Config>} */
+  static EnvConfigTest = /** @type{const} */ ({
+    client_id: `PAYPAL_CLIENT_ID_TEST`,
+    secret: 'PAYPAL_SECRET_TEST',
+  });
+
   /** @type {Config} */ #_config;
 
   /**
    * 
    * @param {Config} config 
    */
-  constructor(config) {
-    this.#_config = this.#validate_and_resolve_config(config);
-  }
-
-  /**
-   * 
-   * @param {Config} config 
-   */
-  #validate_and_resolve_config(config) {
-    config = {
+  constructor(config={}) {
+    // this.#_config = this.#validate_and_resolve_config(config);
+    this.#_config = {
       default_currency_code: 'USD',
       env: 'prod',
       intent_on_checkout: 'AUTHORIZE',
       ...config,
     }
+  }
 
-    const is_valid = config.client_id && config.secret;
+  /** @type {Impl["onInit"]} */
+  onInit = (app) => {
+    const is_prod = Boolean(this.config.env==='prod');
+    this.config.client_id ??= app.platform.env[
+      is_prod ? Paypal.EnvConfigProd.client_id : Paypal.EnvConfigTest.client_id
+    ] ?? 'PAYPAL_CLIENT_ID';
+
+    this.config.secret ??= app.platform.env[
+      is_prod ? Paypal.EnvConfigProd.secret : Paypal.EnvConfigTest.secret
+    ] ?? 'PAYPAL_SECRET';
+
+    const is_valid = this.config.client_id && this.config.secret;
 
     if(!is_valid) {
       throw new StorecraftError(
@@ -53,8 +72,6 @@ export class Paypal {
         Missing client_id or secret`
       )
     }
-
-    return config;
   }
 
   get info() {

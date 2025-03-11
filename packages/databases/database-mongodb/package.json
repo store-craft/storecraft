@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mongodb",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Storecraft database driver for mongodb on node / bun / deno platform",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -24,6 +24,10 @@
       "import": "./index.js",
       "types": "./types.public.d.ts"
     },
+    "./vector-store": {
+      "import": "./vector-store/index.js",
+      "types": "./vector-store/types.d.ts"
+    },
     "./*": {
       "import": "./*"
     }
@@ -37,7 +41,7 @@
   "dependencies": {
     "@storecraft/core": "^1.0.0",
     "migrate-mongo": "^11.0.0",
-    "mongodb": "^6.3.0"
+    "mongodb": "^6.14.0"
   },
   "devDependencies": {
     "@types/migrate-mongo": "^10.0.4",

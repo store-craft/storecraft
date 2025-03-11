@@ -50,7 +50,7 @@ export const list_collection_products = (app) =>
   /**
    * 
    * @param {HandleOrId} handle_or_id 
-   * @param {ApiQuery<ProductType} [q] 
+   * @param {ApiQuery<ProductType>} [q] 
    */
   (handle_or_id, q={}) => {
     return db(app).list_collection_products(handle_or_id, q);

@@ -1,3 +1,5 @@
+import { App } from "../types.public.js";
+
 export type Attachment = {
   filename?: string,
   content: string | ArrayBuffer | ReadableStream,
@@ -49,6 +51,12 @@ export interface mailer<Config extends any, T=any> {
    * @description config of the mailer 
    */
   get config(): Config;
+
+  /**
+   * @description Your chance to read `env` variable for the config
+   * @param app `storecraft` app instance
+   */
+  onInit?: (app: App) => any | void;
 
   /**
    * @description Email something

@@ -15,7 +15,7 @@ export type Config = {
    *
    * https://node-postgres.com/apis/pool
    */
-  pool_config: PoolConfig;
+  pool_config?: PoolConfig;
   
   /**
    * @description https://github.com/brianc/node-postgres/tree/master/packages/pg-cursor

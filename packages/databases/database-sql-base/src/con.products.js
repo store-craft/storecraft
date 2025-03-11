@@ -1,3 +1,9 @@
+/**
+ * @import { ProductType, VariantType } from '@storecraft/core/api'
+ * @import { db_products as db_col } from '@storecraft/core/database'
+ * @import { Database } from '../types.sql.tables.js'
+ */
+
 import { enums } from '@storecraft/core/api'
 import { SQL } from '../index.js'
 import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
@@ -19,9 +25,6 @@ import { report_document_media } from './con.images.js'
 import { union } from '@storecraft/core/api/utils.func.js'
 
 
-/**
- * @typedef {import('@storecraft/core/database').db_products} db_col
- */
 export const table_name = 'products'
 
 /**
@@ -263,10 +266,8 @@ const getBulk = (driver) => {
  */
 const remove_internal = (driver) => {
   /**
-   * @param {import('@storecraft/core/api').ProductType | 
-   *  import('@storecraft/core/api').VariantType
-   * } product
-   * @param {Transaction<import('../index.js').Database>} trx
+   * @param {ProductType | VariantType} product
+   * @param {Transaction<Database>} trx
    */
   return async (product, trx) => {
     // entities

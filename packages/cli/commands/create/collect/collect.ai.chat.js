@@ -16,6 +16,10 @@ import { required, withCancel } from './collect.utils.js';
 /** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
+    name: 'OpenAI',
+    value: 'openai'
+  },
+  {
     name: 'Anthropic',
     value: 'anthropic'
   },
@@ -34,10 +38,6 @@ export const choices = /** @type {const} */ ([
   {
     name: 'Gemini',
     value: 'gemini'
-  },
-  {
-    name: 'OpenAI',
-    value: 'openai'
   },
   {
     name: 'xAI',

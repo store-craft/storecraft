@@ -100,4 +100,12 @@ export interface VectorStore<
     namespaces?: string[],
   ): Promise<VectorStoreSimilaritySearchQueryResult<Metadata>[]>;
 
+  /**
+   * @description Create the vector index
+   * @param params input
+   * @param delete_index_if_exists_before 
+   */
+  async createVectorIndex(
+    params: any, delete_index_if_exists_before?: boolean = false
+  ): Promise<any>
 }

@@ -21,12 +21,12 @@ export const choices = /** @type {const} */ ([
     value: 'libsql-local'
   },
   {
-    name: 'LibSQL Turso Cloud (cloud sqlite with vectors)',
-    value: 'libsql-cloud'
-  },
-  {
     name: 'MongoDB',
     value: 'mongodb'
+  },
+  {
+    name: 'LibSQL Turso Cloud (cloud sqlite with vectors)',
+    value: 'libsql-cloud'
   },
   {
     name: 'Cloudflare Vectorize',

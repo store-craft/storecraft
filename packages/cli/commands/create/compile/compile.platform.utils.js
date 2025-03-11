@@ -170,6 +170,7 @@ export class Packager {
     const content = `
 {
   "compilerOptions": {
+    "noEmit": true,
     "checkJs": true,
     "allowJs": true,
     "maxNodeModuleJsDepth": 10,

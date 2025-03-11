@@ -1,7 +1,10 @@
 /**
+ * an older demo for extending storecraft with vector search.
+ * DO NOT USE this. Use the our official `MongoVectorSearch` insteas
+ * 
  * @import {extension} from '@storecraft/core/extensions'
  */
-import { MongoDB } from './index.js';
+import { MongoDB } from '../index.js';
 /**
  * 
  * @typedef {object} Config

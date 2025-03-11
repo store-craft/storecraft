@@ -12,6 +12,8 @@ const _m = {
   stack : [],
   
   tokenize : function(text='') {
+    text = text.replace(/[ \t]*{{!--(.|\n|\r)*--}}[ \t]*[\n]?/g, '');
+    text = text.replace(/[ \t]*{{!(.|\n|\r)*}}[ \t]*[\n]?/g, '');
     var tokens = [];
     for(var i = 0; i < text.length; i++) {
       var tkPos = text.indexOf('{{', i);
@@ -22,35 +24,43 @@ const _m = {
       } 
       else {
         {
-          if(text.substr(tkPos, 5) === '{{!--') {
-            var tkEnd = text.indexOf('--}}', tkPos);
-            tokens.push({ type : 'text', val : text.slice(i, tkPos) });
-            i = tkEnd+4;
-            continue;
-          } else if(text.substr(tkPos, 3) === '{{!') {
-            var tkEnd = text.indexOf('}}', tkPos);
-            tokens.push({ type : 'text', val : text.slice(i, tkPos) });
-            i = tkEnd+2;
-            continue;
-          }
+          // if(text.substring(tkPos, tkPos + 5) === '{{!--') {
+          //   const tkEnd = text.indexOf('--}}', tkPos);
+          //   tokens.push({ type : 'text', val : text.slice(i, tkPos), __debug: {i, tkEnd, tkPos} });
+          //   if(tkEnd >= 0) {
+          //     i = tkEnd + 4 - 1;
+          //     continue;
+          //   }
+          //   // console.log(tokens.at(-1))
+          // } else if(text.substring(tkPos, tkPos + 3) === '{{!') {
+          //   const tkEnd = text.indexOf('}}', tkPos);
+          //   tokens.push({ type : 'text', val : text.slice(i, tkPos) });
+          //   if(tkEnd >= 0) {
+          //     i = tkEnd + 2 - 1;
+          //     continue;
+          //   }
+          // }
 
         }
-        var rawField = text.substr(tkPos, 3) === '{{{';
+        var rawField = text.substring(tkPos, tkPos+3) === '{{{';
         var closeBy = '}}' + (rawField ? '}' : '');
         var tkEnd = text.indexOf(closeBy, tkPos);
         if(tkEnd === -1) {
           tokens.push({ type : 'text', val : text.slice(i) });
+          // console.log(tokens.at(-1))
           i = text.length;
         } else {
-          if(i < tkPos)
-            tokens.push({ type : 'text', val : text.slice(i, tkPos) });
-            
+          if(i < tkPos) {
+            tokens.push({ type : 'text', val : text.slice(i, tkPos), __debug: {i, tkPos} });
+            // console.log(tokens.at(-1))
+          }
+
           var token = { 
             type : 'field', 
             raw : rawField, 
             val : text.slice(tkPos+closeBy.length, tkEnd), 
             };
-            
+
           var delimHS = token.val.indexOf(' ');
           if(delimHS !== -1) {
             token.params = token.val.slice(delimHS+1);
@@ -62,7 +72,7 @@ const _m = {
             }
           }
 
-          var prefix = token.val.substr(0, 1);
+          var prefix = token.val.substring(0, 1);
           if(prefix === '#') {
             token.block = 'start';
             token.val = token.val.slice(1);
@@ -73,6 +83,7 @@ const _m = {
           }
           
           tokens.push(token);
+          // console.log(tokens.at(-1))
           i = tkEnd + closeBy.length - 1;
         }
       }
@@ -271,15 +282,22 @@ const _m = {
         code.push(handler(t, opt));
     });
     
-    return(code.join("\n"));
+    return(code.join(";"));
   },
   
+  /**
+   * 
+   * @param {string} text 
+   * @param {*} opt 
+   * @returns 
+   */
   compile: function(text, opt) {
     if (!opt) opt = {};
     _m.opt = opt;
     _m.stack = [];
     _m.scope = 'data';
     var tokens = _m.tokenize((text || '').trim());
+    // console.log(tokens)
     var code = _m.tokensToCode(tokens, opt);
     // console.log('code', code);
     if (_m.stack.length != 0) {

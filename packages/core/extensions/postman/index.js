@@ -17,7 +17,6 @@ import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
  * - `auth/forgot-password-token-generated` via `forgot-password` template, uses `{email: string, token: string}`
  * - `auth/confirm-email-token-generated` via `confirm-email` template (currently not present), uses `{email: string, token: string}`
  * 
- * **NOTE:** You are required to install `handlebars` (`npm i handlebars`)
  * 
  * @implements {extension}
  */

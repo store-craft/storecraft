@@ -40,13 +40,7 @@ conat app = new App(
 
 ## Usage
 
-First, install `handlebars`
-
-```bash
-npm i handlebars
-```
-
-Then, in your `storecraft` app
+in your `storecraft` app
 
 ```ts
 import { PostmanExtension } from "@storecraft/core/extensions/postman";

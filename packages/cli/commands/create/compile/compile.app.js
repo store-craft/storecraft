@@ -1098,7 +1098,6 @@ ${compose_instance_with_config(
       mailer.deps, 
       payments.map(p => p.deps),
       '@storecraft/core',
-      'handlebars'
     ]),
     env: dedup_object_array([
       ai_chat.env, 

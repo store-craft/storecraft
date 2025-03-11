@@ -4,7 +4,7 @@
  * @import { MailObject } from '../mailer/types.mailer.js'
  */
 import { App } from "../index.js";
-import Handlebars from 'handlebars';
+import { Minibars } from '../mailer/minibars.js';
 
 /**
  * @description compile a template into `html` and `text` if possible
@@ -15,12 +15,12 @@ import Handlebars from 'handlebars';
 const compileTemplate = (template, data) => {
   let html, text;
   if(template.template_html) {
-    const handlebarsTemplateHTML = Handlebars.compile(template.template_html);
+    const handlebarsTemplateHTML = Minibars.compile(template.template_html);
     html = handlebarsTemplateHTML(data);
   }
 
   if(template.template_text) {
-    const handlebarsTemplateTEXT = Handlebars.compile(template.template_text);
+    const handlebarsTemplateTEXT = Minibars.compile(template.template_text);
     text = handlebarsTemplateTEXT(data);
   }
 
@@ -28,6 +28,7 @@ const compileTemplate = (template, data) => {
     text, html
   }
 }
+
 
 /**
  * @description Send Email with `template` and typed parameters (great developer experience)

@@ -1038,11 +1038,16 @@ const register_ai = (registry) => {
 
   registry.registerPath({
     method: 'post',
-    path: `/ai/agent/stream`,
+    path: `/ai/agents/{agent_handle}/stream`,
     description: 'Speak with `Storecraft` AI agent in stream (Server-Sent Events)',
     summary: 'Speak with AI agent (stream)',
     tags: ['ai'],
     request: {
+      params: z.object(
+        {
+          agent_handle: z.string().openapi({description: 'agent identifier', example: 'store'})
+        }
+      ),
       body: {
         content: {
           "application/json": {
@@ -1090,11 +1095,16 @@ const register_ai = (registry) => {
 
   registry.registerPath({
     method: 'post',
-    path: `/ai/agent/run`,
+    path: `/ai/agents/{agent_handle}/run`,
     description: 'Speak with `Storecraft` AI agent synchronously',
     summary: 'Speak with AI agent (sync)',
     tags: ['ai'],
     request: {
+      params: z.object(
+        {
+          agent_handle: z.string().openapi({description: 'agent identifier', example: 'store'})
+        }
+      ),
       body: {
         content: {
           "application/json": {

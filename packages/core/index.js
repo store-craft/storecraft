@@ -459,7 +459,7 @@ export class App {
   }
 
   /** 
-   * @description Update new payment gateways and rewrite types 
+   * @description Update **AI** chat provider, some of the builtins
    * 
    * @template {ChatAI} P
    * 
@@ -471,7 +471,6 @@ export class App {
   withAI(ai) {
     // @ts-ignore
     this.#ai_chat_provider = ai;
-    // this.#ai = new StoreAgent({ ai });
 
     // @ts-ignore
     return this;

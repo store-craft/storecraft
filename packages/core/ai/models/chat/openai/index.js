@@ -44,9 +44,9 @@ export class OpenAI {
   }
 
   /**
-   * @param {config} config 
+   * @param {config} [config] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
       model: config.model ?? 'gpt-4o',

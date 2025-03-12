@@ -1,12 +1,5 @@
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
-import { MongoDB } from '@storecraft/database-mongodb'
 import { LibSQLVectorStore, Turso } from '@storecraft/database-turso'
-import { SQLite } from '@storecraft/database-sqlite'
-import { R2 } from '@storecraft/storage-s3-compatible'
-import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { Stripe } from '@storecraft/payments-stripe'
@@ -33,7 +26,6 @@ export const app = new App(
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token',
     auth_admins_emails: ['tomer.shalev@gmail.com'],
-    storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games',
@@ -46,7 +38,7 @@ export const app = new App(
 .withDatabase(new Turso())
 // .withDatabase(new Turso({ url: 'file:data.db' }))
 .withStorage(new NodeLocalStorage("storage"))
-.withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
+.withMailer(new Resend())
 .withPaymentGateways(
   {
     'paypal': new Paypal({ env: 'test' }),
@@ -60,19 +52,12 @@ export const app = new App(
   }
 )
 .withAI(
-  new XAI()
+  new OpenAI()
 )
-// .withVectorStore(
-//   new LibSQLVectorStore(
-//     {
-//       embedder: new CloudflareEmbedder(),
-//     }
-//   )
-// )
 .withVectorStore(
-  new Pinecone(
+  new LibSQLVectorStore(
     {
-      embedder: new PineconeEmbedder({model: {name:'llama-text-embed-v2' }}),
+      embedder: new OpenAIEmbedder(),
     }
   )
 )

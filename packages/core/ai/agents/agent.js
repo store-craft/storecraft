@@ -36,6 +36,7 @@ export class StoreAgent {
    */
   init = (app) => {
     this.#app = app;
+    this.provider.onInit(app);
   }
 
   get provider() {

@@ -134,6 +134,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         );
   
         const response = await sdk.ai.speak(
+          'store',
           {
             prompt, 
             thread_id: threadId
@@ -198,6 +199,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           threadId: thread_id,
           generator
         } = await sdk.ai.streamSpeak(
+          'store',
           {
             prompt, 
             thread_id: threadId

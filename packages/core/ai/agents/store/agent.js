@@ -1,18 +1,21 @@
 /**
  * @import { 
- *  AgentConfig, AgentRunParameters, AgentRunResponse, 
- *  AgentRunStreamResponse } from './types.js'
- * @import { ChatAI } from '../core/types.private.js'
+ *  Agent, AgentConfig, AgentRunParameters, AgentRunResponse, 
+ *  AgentRunStreamResponse 
+ * } from '../types.js'
+ * @import { ChatAI } from '../../core/types.private.js'
  */
 
-import { App } from "../../index.js";
-import { StorageHistoryProvider } from "../core/history.js";
+import { App } from "../../../index.js";
+import { StorageHistoryProvider } from "../../core/history.js";
 import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
-import { id } from '../../crypto/object-id.js'
+import { id } from '../../../crypto/object-id.js'
 
 /**
+ * @description The main customer facing `store` agent
  * @template {ChatAI} [AI_PROVIDER=ChatAI]
+ * @implements {Agent}
  */
 export class StoreAgent {
   /** @type {App} */
@@ -23,16 +26,15 @@ export class StoreAgent {
 
   /**
    * 
-   * @param {AgentConfig<AI_PROVIDER>} config 
+   * @param {AgentConfig<AI_PROVIDER>} [config] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.#config = config;
     this.history_provider = new StorageHistoryProvider();
   }
 
   /**
-   * 
-   * @param {App} app 
+   * @type {Agent["init"]}
    */
   init = (app) => {
     this.#app = app;
@@ -40,13 +42,12 @@ export class StoreAgent {
   }
 
   get provider() {
-    return this.#config.ai;
+    return this.#config.chat_ai_provider ?? this.#app.ai_chat_provider;
   }
 
   /**
    * 
-   * @param {AgentRunParameters} params 
-   * @returns {Promise<AgentRunStreamResponse>}
+   * @type {Agent["runStream"]}
    */
   runStream = async (params) => {
 
@@ -91,8 +92,7 @@ export class StoreAgent {
 
   /**
    * 
-   * @param {AgentRunParameters} params 
-   * @returns {Promise<AgentRunResponse>}
+   * @type {Agent["run"]}
    */
   run = async (params) => {
 

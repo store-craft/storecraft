@@ -14,10 +14,17 @@ export const create_routes = (app) => {
   const polka = new Polka();
 
   polka.post(
-    'agent/run',
+    '/agents/:handle/run',
     async (req, res) => {
 
-      const r = await app.ai.run(
+      const handle = req?.params?.handle;
+
+      assert(
+        app.agents?.[handle],
+        `Agent ${handle} not found !`
+      );
+
+      const r = await app.agents?.[handle].run(
         req.parsedBody
       );
 
@@ -30,10 +37,17 @@ export const create_routes = (app) => {
   );
 
   polka.post(
-    'agent/stream',
+    '/agents/:handle/stream',
     async (req, res) => {
 
-      const r = await app.ai.runStream(
+      const handle = req?.params?.handle;
+
+      assert(
+        app.agents?.[handle],
+        `Agent ${handle} not found !`
+      );
+
+      const r = await app.agents?.[handle].runStream(
         req.parsedBody
       );
 

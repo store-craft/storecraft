@@ -26,12 +26,13 @@ export default class AI {
   /**
    * @description Speak with the main `storecraft` agent sync. It is
    * recommended to use the streamed version {@link streamSpeak}
+   * @param {string} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunResponse>}
    */
-  speak = async (params) => {
+  speak = async (agent_handle, params) => {
     const response = await fetch(
-      url(this.sdk.config, 'ai/agent/run'),
+      url(this.sdk.config, `ai/agents/${agent_handle}/run`),
       {
         method: 'post',
         body: JSON.stringify(params),
@@ -46,11 +47,12 @@ export default class AI {
 
   /**
    * @description Stream Speak with the main `storecraft` agent via Server-Sent Events
+   * @param {string} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    */
-  streamSpeak = async function(params) {
+  streamSpeak = async function(agent_handle, params) {
     const response = await fetch(
-      url(this.sdk.config, 'ai/agent/stream'),
+      url(this.sdk.config, `ai/agents/${agent_handle}/stream`),
       {
         method: 'post',
         body: JSON.stringify(params),

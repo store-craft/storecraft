@@ -14,6 +14,7 @@
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
  * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
+ * @import { Agent } from "./ai/agents/types.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';
@@ -24,7 +25,7 @@ import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
 import pkg from './package.json' with { type: "json" }
 import { NotificationsExtension } from './extensions/notifications/index.js';
-import { StoreAgent } from './ai/agents/agent.js';
+import { StoreAgent } from './ai/agents/index.js';
 import { 
   save_collection, save_discount, save_product, save_shipping_method 
 } from './ai/models/vector-stores/index.js';
@@ -33,6 +34,12 @@ import {
  * @typedef {{
  *  'notifications': NotificationsExtension
  * }} BaseExtensions
+ */
+
+/**
+ * @typedef {{
+ *  'store': StoreAgent<any>
+ * }} BaseAgents
  */
 
 let ms_init_start = 0;
@@ -51,6 +58,7 @@ let ms_init_start = 0;
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
+ * @template {Record<string, Agent> & BaseAgents} [AgentsMap=(BaseAgents)]
  */
 export class App {
 
@@ -76,9 +84,14 @@ export class App {
   #platform;
 
   /** 
-   * @type {StoreAgent<AiProvider>} 
+   * @type {AgentsMap} 
    */
-  #ai;
+  #agents;
+
+  /** 
+   * @type {AiProvider} 
+   */
+  #ai_chat_provider;
 
   /** 
    * @type {VectorStoreProvider} 
@@ -341,9 +354,23 @@ export class App {
         gateway?.onInit?.(app);
       }
 
-      // settle ai agent
-      if(this.#ai) {
-        this.#ai.init(app);
+      // settle ai provider
+      if(this.#ai_chat_provider) {
+        this.#ai_chat_provider.onInit(app);
+      }
+
+      // settle base agents
+      if(this.#ai_chat_provider) {
+        // @ts-ignore
+        this.withAgents({
+          store: new StoreAgent({chat_ai_provider: this.#ai_chat_provider})
+        });
+
+        for(const handle in this.#agents) {
+          const ag = this.#agents[handle];
+          ag?.init?.(app);
+        }
+  
       }
 
       // settle vector store events
@@ -412,7 +439,7 @@ export class App {
    * 
    * @param {P} platform 
    * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap>}
    * 
    */
   withPlatform(platform) {
@@ -438,12 +465,13 @@ export class App {
    * 
    * @param {P} ai 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider, AgentsMap>}
    * 
    */
   withAI(ai) {
     // @ts-ignore
-    this.#ai = new StoreAgent({ ai });
+    this.#ai_chat_provider = ai;
+    // this.#ai = new StoreAgent({ ai });
 
     // @ts-ignore
     return this;
@@ -453,8 +481,38 @@ export class App {
    * 
    * @description Get the AI provider
    */
-  get ai() { 
-    return this.#ai; 
+  get ai_chat_provider() { 
+    return this.#ai_chat_provider; 
+  }
+  
+  
+  /** 
+   * @description Update `agents`
+   * 
+   * @template {Record<string, Agent>} P
+   * 
+   * @param {P} agents 
+   * 
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, P & BaseAgents>}
+   * 
+   */
+  withAgents(agents) {
+    // @ts-ignore
+    this.#agents = {
+      ...(this.#agents ?? {}),
+      ...agents
+    };
+
+    // @ts-ignore
+    return this;
+  } 
+  
+  /** 
+   * 
+   * @description Get the `agents`
+   */
+  get agents() {
+    return this.#agents; 
   }
 
   /** 
@@ -464,7 +522,7 @@ export class App {
    * 
    * @param {P} store 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P, AgentsMap>}
    * 
    */
   withVectorStore(store) {
@@ -490,7 +548,7 @@ export class App {
    * 
    * @param {D} database 
    * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap>}
    */
   withDatabase(database) {
     // @ts-ignore
@@ -515,7 +573,7 @@ export class App {
    * 
    * @param {S} storage 
    * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap>}
    */
   withStorage(storage) {
     // @ts-ignore
@@ -540,7 +598,7 @@ export class App {
    * 
    * @param {M} mailer 
    * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap>}
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -565,7 +623,7 @@ export class App {
    * 
    * @param {T} taxes 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider, AgentsMap>}
    */
   withTaxes(taxes) {
     // @ts-ignore
@@ -590,7 +648,7 @@ export class App {
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -615,7 +673,7 @@ export class App {
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider, AgentsMap>}
    */
   withExtensions(extensions) { 
     // @ts-ignore

@@ -1,8 +1,9 @@
 import { ChatAI, content, LLMHistoryProvider } from "../core/types.private.js"
 
-export type AgentConfig<MessageType extends any = any> = {
-  ai: ChatAI<MessageType>
+export type AgentConfig<ChatAIProvider extends ChatAI = ChatAI> = {
+  chat_ai_provider?: ChatAIProvider
 }
+
 
 /**
  * @description Parameters for the `storecraft` agent
@@ -52,4 +53,25 @@ export type AgentRunResponse = {
    * @description The `thread` / `conversation` identifier
    */
   thread_id?: string;
+}
+
+/**
+ * @description A general **AI** `agent` interface
+ */
+export interface Agent {
+
+  init: (app: App) => any | void;
+
+  /**
+   * @description Run agent in stream mode
+   * @param params agent params
+   */
+  runStream: (params: AgentRunParameters) => Promise<AgentRunStreamResponse>;
+
+  /**
+   * @description Run agent in non-stream mode
+   * @param params agent params
+   */
+  run: (params: AgentRunParameters) => Promise<AgentRunResponse>;
+
 }

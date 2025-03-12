@@ -20,6 +20,7 @@ import { PineconeEmbedder } from "@storecraft/core/ai/models/embedders/pinecone"
 import { VoyageAIEmbedder } from "@storecraft/core/ai/models/embedders/voyage-ai";
 import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 import { GeminiEmbedder } from "@storecraft/core/ai/models/embedders/gemini";
+import { StoreAgent } from "@storecraft/core/ai/agents/index.js";
 
 export const app = new App(
   {
@@ -36,7 +37,6 @@ export const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new Turso())
-// .withDatabase(new Turso({ url: 'file:data.db' }))
 .withStorage(new NodeLocalStorage("storage"))
 .withMailer(new Resend())
 .withPaymentGateways(
@@ -48,7 +48,7 @@ export const app = new App(
 )
 .withExtensions(
   {
-    'postman': new PostmanExtension()
+    'postman': new PostmanExtension(),
   }
 )
 .withAI(

@@ -184,9 +184,9 @@ export class OpenAI {
     //   console.log(new TextDecoder().decode(c))
     // }
 
-    console.log(this.#chat_completion_url)
-    console.log(body)
-    console.log(result.ok)
+    // console.log(this.#chat_completion_url)
+    // console.log(body)
+    // console.log(result.ok)
     // throw 'stop'
     if(!result.ok) 
       throw (await result.text());
@@ -203,7 +203,7 @@ export class OpenAI {
     const stream = await this.#text_complete(params, true)
   
     for await (const frame of SSEGenerator(stream.body)) {
-      console.log(frame);
+      // console.log(frame);
 
       if(!frame.data)
         continue;
@@ -286,7 +286,7 @@ export class OpenAI {
           JSON.parse(tool_call.function.arguments)
         );
 
-        console.log('tool result', tool_result)
+        // console.log('tool result', tool_result)
         yield {
           type: 'tool_result',
           content: {

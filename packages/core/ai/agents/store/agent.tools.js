@@ -1,10 +1,10 @@
 import { z } from "zod"
-import { tool } from "../core/tools.js"
+import { tool } from "../../core/tools.js"
 import { 
   collectionTypeSchema,
   productTypeSchema, shippingMethodTypeSchema 
 } from '@storecraft/core/api/types.autogen.zod.api.js'
-import { App } from "../../index.js"
+import { App } from "../../../index.js"
 
 export const sleep = (ms=100) => {
   return new Promise(

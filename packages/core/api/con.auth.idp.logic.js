@@ -664,25 +664,35 @@ export const sign_with_identity_provider = (app) =>
             {
               key: ATTRIBUTE_PICTURE,
               value: picture
-            }
+            },
+            {
+              key: 'firstname',
+              value: firstname?.slice(0, 20)
+            },
+            {
+              key: 'lastname',
+              value: lastname?.slice(0, 20)
+            },
           ]
         }
 
-        await upsert_auth_user(app)(
+        const success = await upsert_auth_user(app)(
           user
         );
 
-        // optional, but we set up a customer record directly into database
-        // to avoid confusions
-        await app.api.customers.upsert(
-          {
-            email: user.email,
-            auth_id: user.id,
-            id: 'cus_' + user.id.split('_')?.at(-1),
-            firstname: firstname,
-            lastname: lastname
-          }
-        );
+        if(success) {
+          // optional, but we set up a customer record directly into database
+          // to avoid confusions
+          await app.api.customers.upsert(
+            {
+              email: user.email,
+              auth_id: user.id,
+              id: 'cus_' + user.id.split('_')?.at(-1),
+              firstname: firstname,
+              lastname: lastname
+            }
+          );
+        }
       }
 
       // issue tokens

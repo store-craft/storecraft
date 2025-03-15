@@ -104,7 +104,15 @@ async (body) => {
       {
         key: CONFIRM_EMAIL_TOKEN,
         value: confirm_email_token.token
-      }
+      },
+      {
+        key: 'firstname',
+        value: firstname?.slice(0, 20)
+      },
+      {
+        key: 'lastname',
+        value: lastname?.slice(0, 20)
+      },
     ]
   }
 
@@ -595,7 +603,7 @@ export const upsert_auth_user = (app) =>
 
     const final = apply_dates(item);
 
-    await app.db.resources.auth_users.upsert(
+    const success = await app.db.resources.auth_users.upsert(
       final,
       create_search_terms(final)
     );
@@ -603,6 +611,8 @@ export const upsert_auth_user = (app) =>
     await app.pubsub.dispatch(
       'auth/upsert', sanitize_auth_user(final)
     );
+
+    return success;
   }
   
 

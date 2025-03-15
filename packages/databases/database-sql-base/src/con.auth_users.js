@@ -36,12 +36,11 @@ const upsert = (driver) => {
             updated_at: item.updated_at,
             id: item.id,
             roles: JSON.stringify(item.roles),
-            firstname: item.firstname,
-            lastname: item.lastname
+            // firstname: item.firstname,
+            // lastname: item.lastname
           });
         }
       );
-      return t.numInsertedOrUpdatedRows>0;
     } catch(e) {
       console.log(e);
       return false;

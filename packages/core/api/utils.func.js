@@ -46,7 +46,7 @@ export const ID = (prefix='') => {
  * @param {any} message 
  * @param {number} code 
  */
-export const assert = async (c, message, code=400) => {
+export const assert = (c, message, code=400) => {
   if(!Boolean(c)) {
 
     throw new StorecraftError(

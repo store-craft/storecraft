@@ -46,7 +46,7 @@ export const app = new App(
 .withPlatform(new NodePlatform())
 .withDatabase(new Turso())
 .withStorage(new NodeLocalStorage("storage"))
-.withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
+.withMailer(new Resend())
 .withPaymentGateways(
   {
     'paypal': new Paypal({ env: 'test' }),

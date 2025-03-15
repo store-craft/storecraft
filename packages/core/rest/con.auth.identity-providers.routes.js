@@ -34,7 +34,7 @@ export const create_routes = (app) => {
     '/authorization_uri',
     async (req, res) => {
       // console.log({req})
-      const result = await app.api.auth.identity_provider_create_auth_uri_for_webapps(
+      const result = await app.api.auth.identity_provider_create_auth_uri(
         req.parsedBody
       );
       res.sendJson(result);

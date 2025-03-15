@@ -16,7 +16,9 @@ import {
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../crypto/base64.js'
 import { isDef } from './utils.index.js'
-import { create_idp_auth_uri_for_webapps, identity_providers, sign_with_identity_provider } from './con.auth.idp.logic.js'
+import { 
+  create_auth_uri, identity_providers, sign_with_identity_provider 
+} from './con.auth.idp.logic.js'
 
 
 export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
@@ -296,7 +298,7 @@ async (body, fail_if_not_admin=false) => {
   }
 
   assert(isAdmin || !fail_if_not_admin, 'auth/error', 401)
-  assert(existingUser, 'auth/error', 401)
+  assert(existingUser && existingUser.password, 'auth/error', 401)
 
   // verify the password
   const verified = await app.platform.crypto.verify(
@@ -817,7 +819,7 @@ export const inter = app => {
     forgot_password_request: forgot_password_request(app),
     forgot_password_request_confirm: forgot_password_request_confirm(app),
 
-    identity_provider_create_auth_uri_for_webapps: create_idp_auth_uri_for_webapps(app),
+    identity_provider_create_auth_uri: create_auth_uri(app),
     identity_provider_sign_with: sign_with_identity_provider(app),
     identity_providers_list: identity_providers(app)
 

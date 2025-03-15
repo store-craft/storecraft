@@ -205,6 +205,25 @@
     },
     "./ai/*": {
       "import": "./ai/*"
+    },
+    "./auth/providers/google": {
+      "import": "./auth/providers/google/index.js",
+      "types": "./auth/providers/google/types.public.d.ts"
+    },
+    "./auth/providers/facebook": {
+      "import": "./auth/providers/facebook/index.js",
+      "types": "./auth/providers/facebook/types.public.d.ts"
+    },
+    "./auth/providers/github": {
+      "import": "./auth/providers/github/index.js",
+      "types": "./auth/providers/github/types.public.d.ts"
+    },
+    "./auth/providers/x": {
+      "import": "./auth/providers/x/index.js",
+      "types": "./auth/providers/x/types.public.d.ts"
+    },
+    "./auth/*": {
+      "import": "./auth/*"
     }
   },
   "scripts": {

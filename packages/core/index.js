@@ -14,6 +14,7 @@
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
  * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
+ * @import { AuthProvider } from "./auth/types.js";
  * 
  */
 import { STATUS_CODES } from './polka/codes.js';
@@ -51,6 +52,7 @@ let ms_init_start = 0;
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
+ * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {
 
@@ -79,6 +81,11 @@ export class App {
    * @type {StoreAgent<AiProvider>} 
    */
   #ai;
+
+  /**
+   * @type {AuthProvidersMap}
+   */
+  #auth_providers;
 
   /** 
    * @type {VectorStoreProvider} 
@@ -341,6 +348,12 @@ export class App {
         gateway?.onInit?.(app);
       }
 
+      // settle payment gateways
+      for(const handle in this.auth_providers) {
+        const ap = this.auth_providers[handle];
+        ap?.init?.(app);
+      }
+
       // settle ai agent
       if(this.#ai) {
         this.#ai.init(app);
@@ -412,7 +425,7 @@ export class App {
    * 
    * @param {P} platform 
    * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    * 
    */
   withPlatform(platform) {
@@ -438,7 +451,7 @@ export class App {
    * 
    * @param {P} ai 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider, AuthProvidersMap>}
    * 
    */
   withAI(ai) {
@@ -464,7 +477,7 @@ export class App {
    * 
    * @param {P} store 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P, AuthProvidersMap>}
    * 
    */
   withVectorStore(store) {
@@ -490,7 +503,7 @@ export class App {
    * 
    * @param {D} database 
    * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    */
   withDatabase(database) {
     // @ts-ignore
@@ -515,7 +528,7 @@ export class App {
    * 
    * @param {S} storage 
    * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    */
   withStorage(storage) {
     // @ts-ignore
@@ -540,7 +553,7 @@ export class App {
    * 
    * @param {M} mailer 
    * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -565,7 +578,7 @@ export class App {
    * 
    * @param {T} taxes 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    */
   withTaxes(taxes) {
     // @ts-ignore
@@ -584,13 +597,13 @@ export class App {
   }
 
   /** 
-   * @description Update new payment gateways and rewrite types 
+   * @description Add payment gateways
    * 
    * @template {Record<string, payment_gateway>} N
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -609,13 +622,13 @@ export class App {
   }
 
   /** 
-   * @description Update new payment gateways and rewrite types 
+   * @description Add custom extensions
    * 
    * @template {Record<string, extension<any, this & App>>} E
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
    */
   withExtensions(extensions) { 
     // @ts-ignore
@@ -634,6 +647,31 @@ export class App {
    */
   get extensions() { 
     return this.#extensions; 
+  }
+
+  /** 
+   * @description Add Auth Providers for social login
+   * 
+   * @template {Record<string, AuthProvider>} A
+   * 
+   * @param {A} providers 
+   * 
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, A>}
+   */
+  withAuthProviders(providers) { 
+    // @ts-ignore
+    this.#auth_providers = providers;
+
+    // @ts-ignore
+    return this;
+  }
+
+  /** 
+   * 
+   * @description extensions
+   */
+  get auth_providers() { 
+    return this.#auth_providers; 
   }
 
   /** 

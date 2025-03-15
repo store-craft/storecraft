@@ -1,6 +1,3 @@
-import { join } from "node:path";
-import { homedir } from "node:os";
-
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
 import { MongoDB } from '@storecraft/database-mongodb'
 import { LibSQLVectorStore, Turso } from '@storecraft/database-turso'
@@ -27,6 +24,10 @@ import { PineconeEmbedder } from "@storecraft/core/ai/models/embedders/pinecone"
 import { VoyageAIEmbedder } from "@storecraft/core/ai/models/embedders/voyage-ai";
 import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 import { GeminiEmbedder } from "@storecraft/core/ai/models/embedders/gemini";
+import { GoogleAuth } from "@storecraft/core/auth/providers/google";
+import { GithubAuth } from "@storecraft/core/auth/providers/github";
+import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
+import { XAuth } from "@storecraft/core/auth/providers/x";
 
 export const app = new App(
   {
@@ -44,7 +45,6 @@ export const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new Turso())
-// .withDatabase(new Turso({ url: 'file:data.db' }))
 .withStorage(new NodeLocalStorage("storage"))
 .withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
 .withPaymentGateways(
@@ -62,17 +62,18 @@ export const app = new App(
 .withAI(
   new XAI()
 )
-// .withVectorStore(
-//   new LibSQLVectorStore(
-//     {
-//       embedder: new CloudflareEmbedder(),
-//     }
-//   )
-// )
 .withVectorStore(
-  new Pinecone(
+  new LibSQLVectorStore(
     {
-      embedder: new PineconeEmbedder({model: {name:'llama-text-embed-v2' }}),
+      embedder: new OpenAIEmbedder(),
     }
   )
+)
+.withAuthProviders(
+  {
+    google: new GoogleAuth(),
+    github: new GithubAuth(),
+    facebook: new FacebookAuth(),
+    x: new XAuth(),
+  }
 )

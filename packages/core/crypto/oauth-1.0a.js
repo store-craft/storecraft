@@ -11,13 +11,13 @@
  * 
  * @type {OAuthClass}  
  */
-export class OAuth {
+export class OAuthV1 {
 
   /** @param {import("./oauth-1.0a.types.js").OAuthNamespace.Options} opts  */
   constructor(opts) {
   
-    if(!(this instanceof OAuth)) {
-        return new OAuth(opts);
+    if(!(this instanceof OAuthV1)) {
+        return new OAuthV1(opts);
     }
 
     if(!opts) {
@@ -271,7 +271,7 @@ export class OAuth {
     var result = '';
 
     for(var i = 0; i < this.nonce_length; i++) {
-        result += word_characters[parseInt(Math.random() * word_characters.length, 10)];
+        result += word_characters[parseInt(String(Math.random() * word_characters.length), 10)];
     }
 
     return result;
@@ -279,7 +279,7 @@ export class OAuth {
 
   /** @type {OAuthClass["getTimeStamp"]} */
   getTimeStamp = () => {
-    return parseInt(new Date().getTime()/1000, 10);
+    return parseInt(String(new Date().getTime()/1000), 10);
   };
 
   // ////////////////////// HELPER FUNCTIONS //////////////////////

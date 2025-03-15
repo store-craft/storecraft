@@ -16,6 +16,7 @@ import {
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../crypto/base64.js'
 import { isDef } from './utils.index.js'
+import { create_idp_auth_uri_for_webapps, identity_providers, sign_with_identity_provider } from './con.auth.idp.logic.js'
 
 
 export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
@@ -25,7 +26,7 @@ export const FORGOT_PASSWORD_IDENTITY_TOKEN = 'forgot-password-identity-token';
  * 
  * @param {AuthUserType} au 
  */
-const sanitize_auth_user = (au) => {
+export const sanitize_auth_user = (au) => {
   const sanitized = { ...au };
   delete sanitized.password;
   return sanitized;
@@ -49,7 +50,7 @@ export const removeByEmail = (app) =>
  * @param {App} app 
  * @param {string} email 
  */  
-const isAdminEmail = (app, email) => {
+export const isAdminEmail = (app, email) => {
   return app.config.auth_admins_emails.includes(email);
 }
 
@@ -805,6 +806,11 @@ export const inter = app => {
     confirm_email: confirm_email(app),
     forgot_password_request: forgot_password_request(app),
     forgot_password_request_confirm: forgot_password_request_confirm(app),
+
+    identity_provider_create_auth_uri_for_webapps: create_idp_auth_uri_for_webapps(app),
+    identity_provider_sign_with: sign_with_identity_provider(app),
+    identity_providers_list: identity_providers(app)
+
   }
 
 }

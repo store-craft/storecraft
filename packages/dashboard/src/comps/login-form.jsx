@@ -1,6 +1,8 @@
 import { BiErrorCircle } from "react-icons/bi/index.js"
 import { Bling, HR } from "./common-ui.jsx"
 import ShowIf from "./show-if.jsx"
+import { useStorecraft } from "@storecraft/sdk-react-hooks"
+import { useCallback, useEffect, useState } from "react"
 
 /**
  * 
@@ -157,10 +159,106 @@ const LoginForm = (
           onChange={onChange} autoComplete='on' 
           name='endpoint' />
      </ShowIf>
+     <SocialLogin/>
    </form>
  </Bling>    
 </div>    
  )
+}
+
+const redirects = {
+  google: 'http://localhost:5174/?provider=google',
+  facebook: 'http://localhost:5174/?provider=facebook',
+  github: 'http://localhost:5174/?provider=github',
+  x: 'http://localhost:5174?provider=x',
+  // x: 'http://127.0.0.1:5174?provider=x',
+  // x: 'https://storecreaft.app',
+}
+
+export const SocialLogin = (
+  {
+
+  }
+) => {
+  const { sdk } = useStorecraft();
+  const [providers, setProviders] = /** @type {ReturnType<typeof useState<import('@storecraft/core/api').OAuthProvider[]>>} */ (useState([]));
+
+  useEffect(
+    () => {
+      async function init() {
+        sdk.auth.identity_providers_list().then(setProviders);
+
+        if(window.location.search) {
+          const auth_response = Object.fromEntries(
+            new URLSearchParams(window.location.search)
+          );
+
+          const response = await sdk.auth.identity_provider_sign(
+            {
+              provider: auth_response.provider,
+              redirect_uri: redirects[auth_response.provider],
+              authorization_response: auth_response      
+            }
+          );
+          window.history.pushState(null, '', '/');
+          // console.log('auth_response', auth_response)
+          // console.log('response', response)
+        }
+      }
+      init();
+    }, [sdk]
+  );
+
+  // https://x.com/i/oauth2/authorize?client_id=ci1sTW5MZXFOX1NWSFZ2YUNJd0Y6MTpjaQ&redirect_uri=https%253A%252F%252Fstorecreaft.app&response_type=code&scope=users.read&code_challenge_method=s256&code_challenge=j1dwnjlO0XxOZGZiG0eaWfn9_yddisrWhZng_ARMgi8&state=f0d4f988-3759-4685-85c5-233d5a5b2f78
+  const onClick = useCallback(
+    /** @param {import("@storecraft/core/api").OAuthProvider} provider */
+    async (provider) => {
+      const response = await sdk.auth.identity_provider_get_authorization_uri(
+        {
+          provider: provider.provider,
+          redirect_uri: redirects[provider.provider]        
+        }
+      );
+      console.log({response})
+      if(typeof response.uri === 'string')
+        window.location.href = response.uri;
+    }, []
+  );
+
+  return (
+    <div className='flex flex-row items-center gap-3'>
+      {
+        providers?.map(
+          (provider, ix) => (
+            <img 
+              onClick={() => onClick(provider)}
+              className='h-7 cursor-pointer'
+              key={provider.provider} 
+              src={img_with_src_data(provider.logo_url)} 
+              alt={provider.description ?? provider.name} />
+          )
+        )
+      }
+    </div>
+  )
+}
+
+const img_with_src_data = (url='') => {
+  try {
+    if(url.startsWith('data:')) {
+      // data:image/svg+xml;charset=utf-8,
+      const [info_part, ...data_part] = url.split(',');
+      const type = info_part.split(';').at(0).split('data:').at(-1);
+      console.log({info_part, data_part, type})
+      return URL.createObjectURL(
+        new Blob([data_part.join(',')], { type })
+      ); 
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  return url
 }
 
 export default LoginForm;

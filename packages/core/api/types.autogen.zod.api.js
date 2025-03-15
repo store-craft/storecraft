@@ -124,6 +124,16 @@ export const apiAuthResultSchema = z.object({
   refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
 });
 
+export const oAuthProviderCreateURIParamsSchema = z.object({
+  provider: z.string().describe("**OAuth** provider identifier/handle"),
+  redirect_uri: z
+    .string()
+    .describe(
+      "URI that you registered at the provider website\nto redirect into",
+    ),
+  extra_parameters: z.record(z.string()).optional(),
+});
+
 export const baseTypeSchema = idableConcreteSchema
   .extend(timestampsSchema.shape)
   .extend({

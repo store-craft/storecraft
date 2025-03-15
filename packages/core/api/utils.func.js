@@ -43,7 +43,7 @@ export const ID = (prefix='') => {
 /**
  * 
  * @param {any | boolean} c 
- * @param {string} message 
+ * @param {any} message 
  * @param {number} code 
  */
 export const assert = (c, message, code=400) => {

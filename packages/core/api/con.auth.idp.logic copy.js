@@ -10,7 +10,7 @@
  * @import { OAuth } from '../crypto/oauth-1.0a.js'
  */
 import * as jwt from '../crypto/jwt.js'
-import { ID, apply_dates, assert, assert_async, union } from './utils.func.js'
+import { ID, apply_dates, assert, union } from './utils.func.js'
 import { assert_zod } from './middle.zod-validate.js'
 import { 
   apiAuthChangePasswordTypeSchema, apiAuthRefreshTypeSchema, 
@@ -161,7 +161,7 @@ const providers = app => {
           redirect_uri: params.redirect_uri,
         };
     
-        // console.log({data});
+        console.log({data});
     
         // exchange authorization code for access token & id_token
         const search_params = new URLSearchParams(data).toString();
@@ -237,7 +237,7 @@ const providers = app => {
           redirect_uri: params.redirect_uri,
         };
     
-        // console.log({data});
+        console.log({data});
     
         // exchange authorization code for access token & id_token
         const search_params = new URLSearchParams(data).toString();
@@ -283,13 +283,13 @@ const providers = app => {
     // https://docs.x.com/resources/fundamentals/authentication/guides/log-in-with-x#implementing-log-in-with-x
     // https://docs.x.com/resources/fundamentals/authentication/oauth-2-0/user-access-token
     x: {
-      consumer_api_key: String(app.platform.env.IDP_X_CONSUMER_API_KEY),
-      consumer_api_secret: String(app.platform.env.IDP_X_CONSUMER_API_SECRET),
+      client_id: String(app.platform.env.IDP_X_CLIENT_ID),
+      client_secret: String(app.platform.env.IDP_X_CLIENT_SECRET),
       scopes: [
-        // 'users.read',
-        // 'tweet.read'
-        'read:user',
-        'user:email',
+        'users.read',
+        'tweet.read'
+        // 'read:user',
+        // 'user:email',
       ],
       authorization_url: 'https://x.com/i/oauth2/authorize',
       token_url: 'https://api.x.com/2/oauth2/token',
@@ -297,268 +297,169 @@ const providers = app => {
       logo_url: `data:image/svg+xml;charset=utf-8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" ><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg>`,
       description: undefined,
       async webapp_consent_uri(redirect_uri='', extra=undefined) {
-        const strictUriEncode = string => encodeURIComponent(string).replaceAll(/[!'()*]/g, x => `%${x.charCodeAt(0).toString(16).toUpperCase()}`);
+        const strictUriEncode = string => encodeURIComponent(string);//.replaceAll(/[!'()*]/g, x => `%${x.charCodeAt(0).toString(16).toUpperCase()}`);
 
-        // const { code_challenge, code_verifier } = await pkceChallenge();
-        // // https://x.com/i/oauth2/authorize?response_type=code&client_id=M1M5R3BMVy13QmpScXkzTUt5OE46MTpjaQ&redirect_uri=https://www.example.com&scope=tweet.read%20users.read%20follows.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain
-        // // const params = new URLSearchParams(
+        const { code_challenge, code_verifier } = await pkceChallenge();
+        // https://x.com/i/oauth2/authorize?response_type=code&client_id=M1M5R3BMVy13QmpScXkzTUt5OE46MTpjaQ&redirect_uri=https://www.example.com&scope=tweet.read%20users.read%20follows.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain
         // const params = new URLSearchParams(
-        //   {
-        //     client_id: this.client_id,
-        //     redirect_uri: redirect_uri,
-        //     response_type: 'code',
-        //     scope: this.scopes.join(' ').trim(),
-        //     code_challenge_method: 's256',
-        //     code_challenge: code_challenge,
-        //     state: code_verifier 
+        const params = new URLSearchParams(
+          {
+            client_id: this.client_id,
+            redirect_uri: redirect_uri,
+            response_type: 'code',
+            scope: this.scopes.join(' ').trim(),
+            code_challenge_method: 's256',
+            code_challenge: code_challenge,
+            state: code_verifier 
+          }
+        ).toString();
+        return `${this.authorization_url}?${params}`;
+        // const oauth = new OAuth({
+        //   consumer: {
+        //     key: this.app_id,
+        //     secret: this.app_secret
+        //   },
+        //   signature_method: 'HMAC-SHA1',
+        //   async hash_function(baseString, key) {
+        //     // encoder to convert string to Uint8Array
+        //     var enc = new TextEncoder();
+        
+        //     const cryptKey = await crypto.subtle.importKey(
+        //       'raw',
+        //       enc.encode(key),
+        //       { name: 'HMAC', hash: 'SHA-1' },
+        //       false,
+        //       ['sign', 'verify'],
+        //     )
+        
+        //     const signature = await crypto.subtle.sign(
+        //       { name: 'HMAC', hash: 'SHA-1' },
+        //       cryptKey,
+        //       enc.encode(baseString)
+        //     )
+        
+        //     let b = new Uint8Array(signature);
+        //     // base64 digest
+        //     return base64.fromUint8Array(b);
         //   }
-        // ).toString();
-        // return `${this.authorization_url}?${params}`;
-        const oauth = new OAuth({
-          consumer: {
-            key: this.consumer_api_key,
-            secret: this.consumer_api_secret
-          },
-          signature_method: 'HMAC-SHA1',
-          async hash_function(baseString, key) {
-            // encoder to convert string to Uint8Array
-            var enc = new TextEncoder();
+        // })
         
-            const cryptKey = await crypto.subtle.importKey(
-              'raw',
-              enc.encode(key),
-              { name: 'HMAC', hash: 'SHA-1' },
-              false,
-              ['sign', 'verify'],
-            )
-        
-            const signature = await crypto.subtle.sign(
-              { name: 'HMAC', hash: 'SHA-1' },
-              cryptKey,
-              enc.encode(baseString)
-            )
-        
-            let b = new Uint8Array(signature);
-            // base64 digest
-            return base64.fromUint8Array(b);
-          }
-        })
-        
-        const auth = await oauth.authorize(
-          {
-            method: 'POST',
-            url: 'https://api.x.com/oauth/request_token',
-            data: {
-              oauth_callback: redirect_uri
-            }
-          },
-          // {
-          //   key: this.options.accessToken,
-          //   secret: this.options.tokenSecret
-          // }
-        );
+        // const auth = await oauth.authorize(
+        //   {
+        //     method: 'POST',
+        //     url: 'https://api.x.com/oauth/request_token',
+        //     data: {
+        //       oauth_callback: encodeURIComponent(redirect_uri)
+        //     }
+        //   },
+        //   // {
+        //   //   key: this.options.accessToken,
+        //   //   secret: this.options.tokenSecret
+        //   // }
+        // );
 
-        const auth_header = oauth.toHeader(auth);
-        console.log({auth_header});
+        // const auth_header = oauth.toHeader(auth);
+        // console.log({auth_header});
 
-        const response = await fetch(
-          'https://api.x.com/oauth/request_token',
-          {
-            method: 'POST',
-            headers: {
-              ...auth_header
-            }
-          }
-        );
-        
-        await assert_async(
-          response.ok,
-          () => response.json()
-        );
+        // const response = await fetch(
+        //   'https://api.x.com/oauth/request_token',
+        //   {
+        //     method: 'POST',
+        //     headers: {
+        //       ...auth_header
+        //     }
+        //   }
+        // );
 
-        // console.log({response})
-
-        const obj_text = await response.text();
-        /** @type {{oauth_token: string, oauth_callback_confirmed: string, oauth_token_secret: string}} */
-        const obj = Object.fromEntries(new URLSearchParams(obj_text));
-
-        assert(
-          obj.oauth_callback_confirmed,
-          obj
-        );
-
-        return `https://api.x.com/oauth/authorize?oauth_token=${obj.oauth_token}`
+        // console.log( { response })
+        // // console.log( JSON.stringify({ json: await response.json() }))
+        // console.log({ json: await response.text() })
       },
       /**
        * 
        * @param {SignWithOAuthProviderParams} params 
        */
       async sign_with_authorization_response(params) {
-        // const strictUriEncode = string => encodeURIComponent(string).replaceAll(/[!'()*]/g, x => `%${x.charCodeAt(0).toString(16).toUpperCase()}`);
+        assert(
+          params?.authorization_response?.code,
+          `sign_with_authorization_response:: No \`code\` property found for provider ${params.provider}`
+        )
         const data = {
-          oauth_verifier: params.authorization_response.oauth_verifier,
-          oauth_token: params.authorization_response.oauth_token,
+          // ...params.authorization_response,
+          code: params.authorization_response.code,
+          client_id: this.client_id,
+          client_secret: this.client_secret,
+          redirect_uri: params.redirect_uri,
+          grant_type: 'authorization_code',
+          code_verifier: params.authorization_response.state
         };
     
-        const oauth = new OAuth({
-          consumer: {
-            key: this.consumer_api_key,
-            secret: this.consumer_api_secret
-          },
-          signature_method: 'HMAC-SHA1',
-          async hash_function(baseString, key) {
-            // encoder to convert string to Uint8Array
-            var enc = new TextEncoder();
         
-            const cryptKey = await crypto.subtle.importKey(
-              'raw',
-              enc.encode(key),
-              { name: 'HMAC', hash: 'SHA-1' },
-              false,
-              ['sign', 'verify'],
-            )
-        
-            const signature = await crypto.subtle.sign(
-              { name: 'HMAC', hash: 'SHA-1' },
-              cryptKey,
-              enc.encode(baseString)
-            )
-        
-            let b = new Uint8Array(signature);
-            // base64 digest
-            return base64.fromUint8Array(b);
-          }
-        })
-        
-        const auth = await oauth.authorize(
-          {
-            method: 'POST',
-            url: 'https://api.x.com/oauth/access_token',
-            data: {
-              // oauth_token: data.oauth_token,
-              oauth_verifier: data.oauth_verifier,
-            }
-          }, {
-            key: data.oauth_token,
-            secret: undefined
-          }
-        );
-
-
-        const auth_header = oauth.toHeader(auth);
-        // console.log({auth_header});
-
+        // exchange authorization code for access token & id_token
+        const search_params = new URLSearchParams(data).toString();
+        console.log({data, search_params});
         const response = await fetch(
-          'https://api.x.com/oauth/access_token',
+          this.token_url, 
           {
-            method: 'POST',
+            method: 'post',
+            body: search_params,
             headers: {
-              ...auth_header,
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: (new URLSearchParams(
-              {
-                oauth_verifier: data.oauth_verifier,
-                // oauth_token: data.oauth_token,
-                // oauth_consumer_key: this.consumer_app_key
-              }
-            )).toString()
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Authorization': 'Basic ' + base64.encode(this.client_id+":"+this.client_secret)
+            }
           }
         );
 
-        await assert_async(
+        /** @type {{access_token: string}} */
+        const json = await response.json();
+
+        console.log({json})
+
+        {
+
+          const response = await fetch(
+            'https://api.twitter.com/2/users/me',
+            {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + json.access_token
+              }
+            }
+          );
+
+          const json2 = await response.json();
+
+          console.log({json2})
+
+        }
+
+        return;
+        /** @type {{name: string, email: string, avatar_url: string}} */
+        const user = await fetch(
+          'https://api.github.com/user',
+          {
+            headers: {
+              'Authorization': 'Bearer ' + obj.access_token
+            }
+          }
+        ).then(res => res.json());
+        
+        assert(
           response.ok,
-          () => response.text()
+          obj
         );
 
-        const response_text = await response.text();
-        /** @type {{oauth_token: string, oauth_token_secret: string}} */
-        const response_obj = Object.fromEntries(new URLSearchParams(response_text));
-
-        // console.log({response_obj})
-        {
-          // now get the credentials with v1
-          // /1.1/account/verify_credentials.json
-          const oauth = new OAuth({
-            consumer: {
-              key: this.consumer_api_key,
-              secret: this.consumer_api_secret
-            },
-            signature_method: 'HMAC-SHA1',
-            async hash_function(baseString, key) {
-              // encoder to convert string to Uint8Array
-              var enc = new TextEncoder();
-          
-              const cryptKey = await crypto.subtle.importKey(
-                'raw',
-                enc.encode(key),
-                { name: 'HMAC', hash: 'SHA-1' },
-                false,
-                ['sign', 'verify'],
-              )
-          
-              const signature = await crypto.subtle.sign(
-                { name: 'HMAC', hash: 'SHA-1' },
-                cryptKey,
-                enc.encode(baseString)
-              )
-          
-              let b = new Uint8Array(signature);
-              // base64 digest
-              return base64.fromUint8Array(b);
-            }
-          });
-
-          const auth = await oauth.authorize(
-            {
-              method: 'GET',
-              url: 'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true',
-              // data: {
-              //   // oauth_token: response_obj.oauth_token,
-              //   // oauth_token_secret: response_obj.oauth_token_secret
-              // }
-            }, {
-              key: response_obj.oauth_token,
-              secret: response_obj.oauth_token_secret,
-            }
-          );
-
-          const auth_header = oauth.toHeader(auth);
-          console.log({auth_header})
-
-          // https://developer.x.com/en/docs/x-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
-          const response = await fetch(
-            'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true',
-            {
-              method: 'GET',
-              headers: {
-                ...auth_header,
-              },
-            }
-          );
-
-          // console.log({response})
-
-          await assert_async(
-            response.ok,
-            () => response.json()
-          );
-
-          /** @type {{name: string, email: string, profile_image_url: string}} */
-          const user = await response.json();
-
-          console.log({user})
+        { 
+          // console.log({json})
 
           return {
             email: user.email,
             firstname: user.name.split(' ').at(0).trim(),
-            lastname: user.name.split(' ').at(1)?.trim() ?? '',
-            picture: user.profile_image_url,
+            lastname: user.name.split(' ').at(1).trim(),
+            picture: user.avatar_url,
           }
         }
-
       }
-
     },
     
 
@@ -589,7 +490,7 @@ export const create_idp_auth_uri_for_webapps = (app) =>
     const uri = await provider.webapp_consent_uri(
       params.redirect_uri, params.extra_parameters
     );
-    // console.log({uri})
+    console.log({uri})
     assert(
       uri,
       `Identity Provider ${params.provider} does not have a web consent uri`

@@ -1,3 +1,5 @@
+// here we have types that are auto transformed into zod objects
+
 /**
  * 
  * @description Basic config for `storecraft`
@@ -265,7 +267,11 @@ interface JWTClaims {
   /**
    * @description User roles and authorizations
    */
-  roles: string[]
+  roles: string[],
+  email?: string, 
+  firstname?: string, 
+  lastname?: string, 
+  picture?: string
 }
 
 /**
@@ -401,6 +407,62 @@ export interface ApiAuthResult  {
    */
   refresh_token: ApiTokenWithClaims;
 }
+
+/**
+ * @description Parameters for inferring a URI to redirect users
+ * when doing a social login. This is a helper method and completely optional
+ */
+export interface OAuthProviderCreateURIParams {
+  /**
+   * @description **OAuth** provider identifier/handle
+   */
+  provider: string,
+  /**
+   * @description URI that you registered at the provider website
+   * to redirect into
+   */
+  redirect_uri: string,
+  extra_parameters?: Record<string, string>
+}
+
+/**
+ */
+export interface OAuthProviderCreateURIResponse {
+  /**
+   * @description **OAuth** provider identifier/handle
+   */
+  provider: string,
+
+  /**
+   * @description The uri of consent screen for authorization
+   */
+  uri: string
+}
+
+/**
+ * @description Signin / Signup with an OAuth provider
+ */
+export interface SignWithOAuthProviderParams {
+  /**
+   * @description **OAuth** provider identifier/handle
+   */
+  provider: string,
+
+  /**
+   * @description The URI for which the Idp redirects the user that you 
+   * registered at the provider website to redirect into
+   */
+  redirect_uri: string,
+  
+  /**
+   * @description The Response from the authorization response with the
+   * **OAuth** provider. Usually this is communicated to the website as search params
+   * with `code` key after the redirect accomplishes
+   */
+  authorization_response?: Record<string, string>
+}
+
+
 
 /**
  * @description Auth user interface

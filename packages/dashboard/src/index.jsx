@@ -3,7 +3,7 @@ import { HashRouter as Router } from 'react-router-dom'
 import ShowIf from './comps/show-if.jsx'
 import Login from './login.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.scss'
 
@@ -51,34 +51,23 @@ export const Dashboard = (
     }
   } = useStorecraft();
 
-  const isGood = isAuthenticated;
-
-  // return 'hello';
-  
-//   return (
-// <div style={{zoom:0.5}}>
-//   <div className='w-full h-full bg-red-400'>
-//     hello
-//   </div>    
-// </div>    
-//   )
-
   return (
 <div className='bg-gray-800 w-screen ' style={{height: '100dvh'}} >
   <div className='w-full h-full' style={{zoom: 0.9}} >
-
-  <Router>
-    <ShowIf show={isGood}>
-      <Main />
-    </ShowIf>    
-    <ShowIf show={!isGood}>
-      <Login 
-          trigger={trigger} 
-          is_backend_endpoint_editable={is_backend_endpoint_editable} />
-    </ShowIf>    
-  </Router>
-
+    <Router>
+      
+      { isAuthenticated && <Main /> }
+      { 
+        !isAuthenticated && 
+        (
+          <Login 
+              trigger={trigger} 
+              is_backend_endpoint_editable={is_backend_endpoint_editable} />
+        )
+      }
+    </Router>
   </div>
 </div>
   )
 }
+

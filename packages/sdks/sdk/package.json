@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/sdk",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Official storecraft Universal Javascript SDK",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

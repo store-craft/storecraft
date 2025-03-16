@@ -43,7 +43,7 @@ export const ID = (prefix='') => {
 /**
  * 
  * @param {any | boolean} c 
- * @param {string} message 
+ * @param {any} message 
  * @param {number} code 
  */
 export const assert = (c, message, code=400) => {
@@ -54,6 +54,25 @@ export const assert = (c, message, code=400) => {
     );
   };
 }
+
+/**
+ * 
+ * @param {any | boolean} c 
+ * @param {any} message 
+ * @param {number} code 
+ */
+export const assert_async = async (c, message, code=400) => {
+  if(!Boolean(c)) {
+    if(typeof message === 'function') {
+      message = await message();
+    }
+
+    throw new StorecraftError(
+      [{message}], code
+    );
+  };
+}
+
 
 export const parse_json_safely = (v='') => {
   try {

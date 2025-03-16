@@ -55,6 +55,12 @@
  * @import { LibSQLVectorStore } from '@storecraft/database-turso/vector-store';
  * @import { MongoVectorStore } from '@storecraft/database-mongodb/vector-store';
  * 
+ * // auth-provider
+ * @import { FacebookAuth } from '@storecraft/core/auth/providers/facebook'
+ * @import { GithubAuth } from '@storecraft/core/auth/providers/github'
+ * @import { GoogleAuth } from '@storecraft/core/auth/providers/google'
+ * @import { XAuth } from '@storecraft/core/auth/providers/x'
+ * 
  */
 import { o2s } from '../../utils.js'
 import { collect_config } from '../collect/collect.config.js'
@@ -66,6 +72,7 @@ import { collect_storage } from '../collect/collect.storage.js'
 import { collect_ai_chat } from '../collect/collect.ai.chat.js'
 import { collect_ai_vector_store } from '../collect/collect.ai.vector-store.js'
 import { collect_ai_embedder } from '../collect/collect.ai.embedder.js'
+import { collect_auth_providers } from '../collect/collect.auth-providers.js'
 import { dedup_object_array, dedup_value_array, extract_env_variables } from './compile.utils.js'
 
 
@@ -80,6 +87,7 @@ import { dedup_object_array, dedup_value_array, extract_env_variables } from './
  * @prop {Awaited<ReturnType<typeof collect_ai_chat>>} ai_chat
  * @prop {Awaited<ReturnType<typeof collect_ai_embedder>>} ai_embedder
  * @prop {Awaited<ReturnType<typeof collect_ai_vector_store>>} ai_vector_store
+ * @prop {Awaited<ReturnType<typeof collect_auth_providers>>} auth_providers
  */
 
 
@@ -971,6 +979,103 @@ export const infer_payments = info => {
 
 
 /**
+ * @param {Awaited<ReturnType<collect_auth_providers>>} info 
+ */
+export const infer_auth_providers = info => {
+  return info?.map(
+    (info, idx) => {
+      switch (info.id) {
+        case 'facebook': {
+          return {
+            cls: `FacebookAuth`,
+            imports: [
+              `import { FacebookAuth } from '@storecraft/core/auth/providers/facebook';`
+            ],
+            deps: [
+              '@storecraft/core'
+            ],
+            env: extract_env_variables(
+              info.config, 
+              /** @satisfies {typeof FacebookAuth.EnvConfig} */ (
+                {
+                  app_id: 'IDP_FACEBOOK_APP_ID',
+                  app_secret: 'IDP_FACEBOOK_APP_SECRET'
+                }
+              )
+            )
+          }
+        }
+
+        case 'github': {
+          return {
+            cls: `GithubAuth`,
+            imports: [
+              `import { GithubAuth } from '@storecraft/core/auth/providers/github';`
+            ],
+            deps: [
+              '@storecraft/core'
+            ],
+            env: extract_env_variables(
+              info.config, 
+              /** @satisfies {typeof GithubAuth.EnvConfig} */ (
+                {
+                  client_id: 'IDP_GITHUB_CLIENT_ID',
+                  client_secret: 'IDP_GITHUB_CLIENT_SECRET'
+                }
+              )
+            )
+          }
+        }
+        
+        case 'google': {
+          return {
+            cls: `GoogleAuth`,
+            imports: [
+              `import { GoogleAuth } from '@storecraft/core/auth/providers/google';`
+            ],
+            deps: [
+              '@storecraft/core'
+            ],
+            env: extract_env_variables(
+              info.config, 
+              /** @satisfies {typeof GoogleAuth.EnvConfig} */ (
+                {
+                  client_id: 'IDP_GOOGLE_CLIENT_ID',
+                  client_secret: 'IDP_GOOGLE_CLIENT_SECRET'
+                }
+              )
+            )
+          }
+        }
+        
+        case 'x': {
+          return {
+            cls: `XAuth`,
+            imports: [
+              `import { XAuth } from '@storecraft/core/auth/providers/x';`
+            ],
+            deps: [
+              '@storecraft/core'
+            ],
+            env: extract_env_variables(
+              info.config, 
+              /** @satisfies {typeof XAuth.EnvConfig} */ (
+                {
+                  consumer_api_key: 'IDP_X_CONSUMER_API_KEY',
+                  consumer_api_secret: 'IDP_X_CONSUMER_API_SECRET'
+                }
+              )
+            )
+          }
+        }
+
+      }
+    }
+  ) ?? [];
+}
+
+
+/**
  * 
  * @param {string} cls_name 
  * @param {any} config 
@@ -1022,6 +1127,7 @@ export const compile_app = (meta) => {
   const ai_chat = infer_ai_chat(meta.ai_chat);
   const ai_embedder = infer_ai_embedder(meta.ai_embedder);
   const ai_vector_store = infer_ai_vector_store(meta.ai_vector_store);
+  const auth_providers = infer_auth_providers(meta.auth_providers);
 
   let code = `new App(
 ${o2s(meta.config.config)}
@@ -1070,9 +1176,22 @@ ${compose_instance_with_config(ai_chat.cls, meta.ai_chat.config)}
 ${compose_instance_with_config(
   ai_vector_store.cls, meta.ai_vector_store.config, {embedder: embedder_inst}
 )}
-)
-`;    
+)`;    
   }
+
+  if(auth_providers.length) {
+    code += `
+.withAuthProviders({
+${
+  meta.auth_providers.map(
+    (m, idx) => {
+      return `'${m.id}': ${compose_instance_with_config(auth_providers[idx].cls, m.config)},`
+    }
+  ).join('\n')
+}
+})`;    
+  }
+
 
   return {
     code,
@@ -1085,6 +1204,7 @@ ${compose_instance_with_config(
       storage.imports, 
       mailer.imports, 
       payments.map(p => p.imports),
+      (auth_providers ?? []).map(p => p.imports),
       `import { App } from '@storecraft/core'`,
       `import { PostmanExtension } from '@storecraft/core/extensions/postman'`,
     ]),
@@ -1097,6 +1217,7 @@ ${compose_instance_with_config(
       storage.deps, 
       mailer.deps, 
       payments.map(p => p.deps),
+      (auth_providers ?? []).map(p => p.deps),
       '@storecraft/core',
     ]),
     env: dedup_object_array([
@@ -1108,6 +1229,7 @@ ${compose_instance_with_config(
       storage.env, 
       mailer.env,
       ...payments.map(p => p.env),
+      ...(auth_providers ?? []).map(p => p.env),
       meta.config.env  
     ])
   }

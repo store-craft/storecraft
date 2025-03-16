@@ -31,17 +31,16 @@ const upsert = (driver) => {
             confirmed_mail: item.confirmed_mail ? 1 : 0,
             email: item.email,
             handle: item.email,
-            password: item.password,
+            password: item.password ?? null,
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
             roles: JSON.stringify(item.roles),
-            firstname: item.firstname,
-            lastname: item.lastname
+            // firstname: item.firstname,
+            // lastname: item.lastname
           });
         }
       );
-      return t.numInsertedOrUpdatedRows>0;
     } catch(e) {
       console.log(e);
       return false;

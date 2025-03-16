@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/dashboard",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Storecraft Official Dashboard",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -26,6 +26,7 @@
     }
   },
   "scripts": {
+    "test": "npm run dashboard:build",
     "start": "npm run dashboard:dev",
     "dashboard:dev": "vite --host",
     "dashboard:build": "vite build && npm run dashboard:lib:build",

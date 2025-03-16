@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-sqlite",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Official SQLite Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

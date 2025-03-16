@@ -1,4 +1,7 @@
 /**
+ * @import { VPolkaRequest, VPolkaResponse, Middleware, PolkaOptions, IPolka } from './public.js'
+ */
+/**
  * This middleware was taken from the `hono` project
  */
 
@@ -44,8 +47,8 @@ export const cors = (options) => {
   })(opts.origin);
 
   /**
-   * @param {import("../rest/types.public.d.ts").ApiRequest} req
-   * @param {import("../rest/types.public.d.ts").ApiResponse} res
+   * @param {VPolkaRequest} req
+   * @param {VPolkaResponse} res
    */
   return async function cors(req, res) {
 

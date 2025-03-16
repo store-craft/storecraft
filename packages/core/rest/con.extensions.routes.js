@@ -1,6 +1,6 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { App } from '../index.js';
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
 
 

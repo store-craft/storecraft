@@ -1,4 +1,4 @@
-export const STATUS_CODES = {
+export const STATUS_CODES = /** @type {const} */ ({
   '200': 'OK',
   '201': 'Created',
   '202': 'Accepted',
@@ -40,4 +40,4 @@ export const STATUS_CODES = {
   '503': 'Service Unavailable',
   '504': 'Gateway Timeout',
   '505': 'HTTP Version Not Supported',
-};
+});

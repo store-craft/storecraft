@@ -1,7 +1,7 @@
 /** 
  * @import { ApiPolka } from './types.public.js' 
  */
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { App } from '../index.js'

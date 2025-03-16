@@ -1,5 +1,5 @@
 /** @import { ApiPolka } from './types.public.js' */
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { parse_auth_user, is_admin } from './con.auth.middle.js'
 import { App } from '../index.js';

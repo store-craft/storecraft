@@ -17,7 +17,7 @@
  * @import { AuthProvider } from "./auth/types.js";
  * 
  */
-import { STATUS_CODES } from './polka/codes.js';
+import { STATUS_CODES } from './rest/polka/codes.js';
 import { create_rest_api } from './rest/index.js';
 import { create_api, enums } from './api/index.js'
 import { PubSub } from './pubsub/index.js';

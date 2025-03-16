@@ -31,6 +31,8 @@ import {
   imageTypeUpsertSchema,
   notificationTypeSchema,
   notificationTypeUpsertSchema,
+  oAuthProviderCreateURIParamsSchema,
+  oAuthProviderCreateURIResponseSchema,
   orderDataSchema,
   orderDataUpsertSchema,
   paymentGatewayItemGetSchema,
@@ -45,6 +47,7 @@ import {
   quickSearchResultSchema,
   shippingMethodTypeSchema,
   shippingMethodTypeUpsertSchema,
+  signWithOAuthProviderParamsSchema,
   similaritySearchResultSchema,
   storecraftConfigSchema,
   storefrontTypeSchema,
@@ -1254,6 +1257,7 @@ const register_auth = registry => {
   const _apiAuthResultSchema = registry.register(`ApiAuthResult`, apiAuthResultSchema);
   const _apiKeyResultSchema = registry.register(`ApiKey`, apiKeyResultSchema);
   const _authUserTypeSchema = registry.register(`AuthUserType`, authUserTypeSchema);
+
   const example = {
     "token_type": "Bearer",
     "user_id": "au_65f98390d6a34550cdc651a1",
@@ -1572,7 +1576,116 @@ const register_auth = registry => {
     }
   );  
     
+
+  // auth providers
+
+  const _authProvider = registry.register(
+    `AuthProvider`, 
+    z.object(
+      {
+        provider: z.string().openapi({description: 'handle of provider', examples: ['google', 'facebook', 'github', 'x']}),
+        name: z.string().openapi({description: 'Readable name of provider', examples: ['Google', 'Facebook', 'Github', 'X']}),
+        logo_url: z.string().openapi({description: 'image url / image data url / svg data url', examples: ['data:image/png,...', 'data:image/svg+xml,...', 'https://example.com/image.jpeg']}),
+        description: z.string().openapi({description: 'Description of provider'})
+      }
+    )
+  );
+
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/identity-providers`,
+      description: 'Get the list of registered identity providers',
+      summary: 'List Auth Providers',
+      tags,
+      responses: {
+        200: {
+          description: 'List of auth providers',
+          content: {
+            "application/json": {
+              schema: _authProvider
+            },
+          },
+        },
+        ...error() 
+      },
+    }
+  );  
   
+  const _oAuthProviderCreateURIParamsSchema = registry.register(
+    'OAuthProviderCreateURIParams',
+    oAuthProviderCreateURIParamsSchema
+  );
+
+  const _oAuthProviderCreateURIResponseSchema = registry.register(
+    'OAuthProviderCreateURIResponse',
+    oAuthProviderCreateURIResponseSchema
+  );
+
+  registry.registerPath(
+    {
+      method: 'post',
+      path: `/auth/identity-providers/create_authorization_uri`,
+      description: 'Create Authorization URI from the provider',
+      summary: 'Create Authorization URI',
+      tags,
+      request:{
+        body: {
+          content: {
+            "application/json": {
+              schema: _oAuthProviderCreateURIParamsSchema
+            }
+          }
+        }
+      },
+      responses: {
+        200: {
+          description: 'URI to redirect your user',
+          content: {
+            "application/json": {
+              schema: _oAuthProviderCreateURIResponseSchema
+            },
+          },
+        },
+        ...error() 
+      },
+    }
+  );    
+
+  const _signWithOAuthProviderParamsSchema = registry.register(
+    'SignWithOAuthProviderParams',
+    signWithOAuthProviderParamsSchema
+  );
+
+  registry.registerPath(
+    {
+      method: 'post',
+      path: `/auth/identity-providers/sign`,
+      description: 'Signin / Signup with Identity Provider',
+      summary: 'Signin with Identity Provider',
+      tags,
+      request:{
+        body: {
+          content: {
+            "application/json": {
+              schema: _signWithOAuthProviderParamsSchema
+            }
+          }
+        }
+      },
+      responses: {
+        200: {
+          description: 'Access Tokens for `storecraft`',
+          content: {
+            "application/json": {
+              schema: _apiAuthResultSchema
+            },
+          },
+        },
+        ...error() 
+      },
+    }
+  );    
 }
 
 const error = () => {

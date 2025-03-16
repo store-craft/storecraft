@@ -10,7 +10,6 @@ import { authorize_admin } from './con.auth.middle.js';
  * @param {App} app
  */
 export const create_routes = (app) => {
-  const middle_authorize_admin = authorize_admin(app);
 
   /** @type {ApiPolka} */
   const polka = new Polka();
@@ -28,7 +27,7 @@ export const create_routes = (app) => {
   
   // signin
   polka.post(
-    '/authorization_uri',
+    '/create_authorization_uri',
     async (req, res) => {
       // console.log({req})
       const result = await app.api.auth.identity_provider_create_auth_uri(

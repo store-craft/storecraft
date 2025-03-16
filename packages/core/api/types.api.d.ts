@@ -267,7 +267,11 @@ interface JWTClaims {
   /**
    * @description User roles and authorizations
    */
-  roles: string[]
+  roles: string[],
+  email?: string, 
+  firstname?: string, 
+  lastname?: string, 
+  picture?: string
 }
 
 /**
@@ -364,7 +368,7 @@ export interface ApiTokenWithClaims  {
   /**
    * @description Claims the `JSON Web Token` holds
    */
-  claims: Partial<JWTClaims & { email?: string, firstname?: string, lastname?: string, picture?: string }>;
+  claims: Partial<JWTClaims>;
 }
 
 /**

@@ -1,14 +1,16 @@
 /**
- * @import { templates_input_types, templates_keys } from './con.email.types.js'
  * @import { TemplateType } from './types.api.js'
- * @import { MailObject } from '../mailer/types.mailer.js'
+ * @import { 
+ *  templates_input_types, templates_keys, SendMailParams, 
+ *  SendMailWithTemplateParams 
+ * } from '../mailer/types.mailer.js'
  */
 import { App } from "../index.js";
 import { Minibars } from '../mailer/minibars.js';
+import { assert } from "./utils.func.js";
 
 /**
  * @description compile a template into `html` and `text` if possible
- * 
  * @param {TemplateType} template 
  * @param {object} data 
  */
@@ -31,23 +33,20 @@ const compileTemplate = (template, data) => {
 
 
 /**
- * @description Send Email with `template` and typed parameters (great developer experience)
- * 
  * @param {App} app 
  */
 export const sendMailWithTemplate = (app) => 
   /**
-   * 
+   * @description Send Email with `template` and typed parameters (great developer experience)
    * @template {templates_keys | string} [HANDLE=keyof templates_input_types]
-   * @param {App} app 
-   * @param {string[]} emails 
-   * @param {HANDLE} template_handle the template `handle` or `id` in the database
-   * @param {string} subject 
-   * @param {HANDLE extends templates_keys ? templates_input_types[HANDLE] : any} data 
+   * @param {SendMailWithTemplateParams<HANDLE>} data 
    */
-  async (app, emails, template_handle, subject, data) => {
-    if(!app.mailer)
-      return;
+  async ({emails, template_handle, subject, data}) => {
+    
+    assert(
+      app.mailer,
+      'Mailer not found'
+    );
     
     const template = await app.api.templates.get(template_handle);
 
@@ -77,17 +76,22 @@ export const sendMailWithTemplate = (app) =>
   }
 
 /**
- * @description send email and dispatch events
  * @param {App} app 
  */
 export const sendMail = (app) => 
   /**
-   * @param {MailObject} mail 
+   * @description send email and dispatch events
+   * @param {SendMailParams} mail 
    */
   async (mail) => {
     await app.pubsub.dispatch(
       'email/before-send',
       mail
+    );
+
+    assert(
+      app.mailer,
+      'Mailer not found'
     );
 
     const r = await app.mailer.email(mail);

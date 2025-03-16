@@ -2,18 +2,11 @@
 import { App } from '../index.js';
 import { Polka } from '../polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
-import { 
-  get_payment_gateway, invoke_payment_action_on_order, 
-  list_payment_gateways, payment_buy_ui, payment_status_of_order, 
-  webhook
-} from '../payments/con.payment-gateways.logic.js'
 import { assert } from '../api/utils.func.js';
 
 
 /**
- * 
  * @param {App} app
- * 
  */
 export const create_routes = (app) => {
 
@@ -26,8 +19,8 @@ export const create_routes = (app) => {
     authorize_admin(app),
     async (req, res) => {
       const { gateway_handle } = req.params;
-      const r = get_payment_gateway(
-        app, gateway_handle
+      const r = app.api.payments.get(
+        gateway_handle
       );
       res.sendJson(r);
     }
@@ -37,8 +30,8 @@ export const create_routes = (app) => {
     '/gateways/:gateway_handle/webhook',
     async (req, res) => {
       const { gateway_handle } = req.params;
-      const r = await webhook(
-        app, gateway_handle, req, res
+      const r = await app.api.payments.webhook(
+        gateway_handle, req, res
       );
 
       // We expect the webhook handler in the gateway to finish the
@@ -56,9 +49,7 @@ export const create_routes = (app) => {
     '/gateways',
     authorize_admin(app),
     async (req, res) => {
-      const r = list_payment_gateways(
-        app
-      );
+      const r = app.api.payments.list();
       res.sendJson(r);
     }
   );
@@ -70,8 +61,8 @@ export const create_routes = (app) => {
     authorize_admin(app),
     async (req, res) => {
       const { order_id } = req.params;
-      const r = await payment_status_of_order(
-        app, order_id
+      const r = await app.api.payments.status_of_order(
+        order_id
       );
       res.sendJson(r);
     }
@@ -83,8 +74,8 @@ export const create_routes = (app) => {
     authorize_admin(app),
     async (req, res) => {
       const { action_handle, order_id } = req.params;
-      const r = await invoke_payment_action_on_order(
-        app, order_id, action_handle, req.parsedBody
+      const r = await app.api.payments.invoke_action(
+        order_id, action_handle, req.parsedBody
       );
       
       res.sendJson(r);
@@ -95,8 +86,8 @@ export const create_routes = (app) => {
     '/buy_ui/:order_id',
     async (req, res) => {
       const { order_id } = req.params;
-      const r = await payment_buy_ui(
-        app, order_id
+      const r = await app.api.payments.buy_ui(
+        order_id
       );
       
       res.sendHtml(r);

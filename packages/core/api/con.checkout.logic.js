@@ -19,7 +19,6 @@ import { assert } from "./utils.func.js";
 
 
 /**
- * 
  * @param {App} app
  */
 export const validate_checkout = app =>
@@ -111,8 +110,6 @@ async (checkout) => {
 
 
 /**
- * @description calculate pricing with `discounts`, `shipping`, `coupons`
- * 
  * @param {App} app 
  */
 export const eval_pricing = (app) => 
@@ -168,7 +165,6 @@ async (order) => {
 
 
 /**
- * 
  * @param {App} app 
  */
 export const create_checkout = app =>
@@ -185,8 +181,6 @@ export const create_checkout = app =>
  * 
  * @param {CheckoutCreateType} order_checkout
  * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
- * 
- * 
  * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
@@ -257,7 +251,7 @@ async (order_checkout, gateway_handle) => {
 
 
 /**
- * 
+ * @description Reserve stock of an order
  * @param {App} app 
  * @param {OrderDataUpsert} order 
  */
@@ -288,7 +282,7 @@ const reserve_stock_of_order = async (app, order) => {
 export const complete_checkout = app =>
 /**
  * 
- * @description Complete a `checkout`:
+ * @description Complete a `checkout` syncronously:
  * 1. find the payment gateway and corresponding order.
  * 2. invoke `onCheckoutComplete` hook of the gateway
  * 3. update the `order` payment and checkout `status`
@@ -341,7 +335,6 @@ async (checkoutId, client_payload) => {
 
 
 /**
- * 
  * @param {App} app 
  */
 export const inter = app => {

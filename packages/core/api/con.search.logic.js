@@ -1,9 +1,6 @@
 /**
  * @import { ApiQuery } from './types.api.query.js'
  * @import { SimilaritySearchInput, SimilaritySearchResult } from './types.api.js'
- * @import { 
- *  StorecraftVectorMetaData, VectorStoreSimilaritySearchQueryResult 
- * } from '../ai/models/vector-stores/types.js'
  */
 
 import { App } from '../index.js';
@@ -15,12 +12,11 @@ import { assert, parse_json_safely } from './utils.func.js';
 export const db = app => app.db.resources.search;
 
 /**
- * 
  * @param {App} app
  */
 export const quicksearch = (app) => 
 /**
- * 
+ * @description quicksearch for resources in the app db.
  * @param {ApiQuery} query
  */
 (query) => {
@@ -38,12 +34,11 @@ export const allowed_similarity_search_namspaces = [
 ]
 
 /**
- * 
  * @param {App} app
  */
 export const similarity = (app) => 
   /**
-   * 
+   * @description semantic search for resources in the app db.
    * @param {SimilaritySearchInput} query
    */
   async (query) => {
@@ -85,7 +80,6 @@ export const similarity = (app) =>
   
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

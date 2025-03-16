@@ -17,7 +17,7 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.collections;
 
 /**
- * 
+ * @description `upsert` a `collection`
  * @param {App} app
  */
 export const upsert = (app) => 
@@ -40,14 +40,12 @@ export const upsert = (app) =>
 
 
 /**
- * @description given a collection handle and query, 
- * return products of that collection
- * 
- * 
  * @param {App} app
  */
 export const list_collection_products = (app) => 
   /**
+   * @description given a collection handle and query, 
+   * return products of that collection
    * 
    * @param {HandleOrId} handle_or_id 
    * @param {ApiQuery<ProductType>} [q] 
@@ -58,16 +56,14 @@ export const list_collection_products = (app) =>
 
 
 /**
- * @description Export a colletion of `products` into the `storage`. This is
- * beneficial for `collections`, that hardly change and therefore can be 
- * efficiently stored in a cost-effective `storage` and **CDN** network.
- * 
- * 
  * @param {App} app
  */
 export const export_collection = (app) => {
   
   /**
+   * @description Export a colletion of `products` into the `storage`. This is
+   * beneficial for `collections`, that hardly change and therefore can be 
+   * efficiently stored in a cost-effective `storage` and **CDN** network.
    * 
    * @param {HandleOrId} handle_or_id 
    * 

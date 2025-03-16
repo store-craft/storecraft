@@ -478,7 +478,7 @@ export default class Auth {
     /** @type {OAuthProviderCreateURIResponse} */
     const result = await fetchApiWithAuth(
       this.#sdk,
-      '/auth/identity-providers/create_authorization_uri',
+      '/auth/identity-providers/create-authorization-uri',
       {
         method: 'post',
         body: JSON.stringify(params),

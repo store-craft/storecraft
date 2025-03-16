@@ -29,6 +29,7 @@ export function is_string_a_number(str='') {
 }
 
 /**
+ * @description Parse a value part of a tuple, where the value
  * part may be:
  * 1. direct-string: 'string1' | "string2"
  * 2. boolean: true | false
@@ -128,7 +129,7 @@ export const parse_tuples = (str="") => {
 }
 
 /**
- * 
+ * @description Parse a string query parameter into a list of fields to expand
  * @param {URLSearchParams} s 
  * @param {ExpandQuery} [def=['*']] default value 
  * @return {ExpandQuery}
@@ -138,7 +139,7 @@ export const parse_expand = (s, def = ['*']) => {
 }
 
 /**
- * 
+ * @description Parse a string query parameter into a list of fields to sort by
  * @param {string} [s] 
  * @returns {SortCursor}
  */
@@ -149,7 +150,7 @@ export const parse_sortby = (s) => {
 }
 
 /**
- * 
+ * @description Parse a string query parameter into a SortOrder
  * @param {string} [s] 
  * @returns {SortOrder}
  */
@@ -296,7 +297,7 @@ export const parse_query = (s) => {
 
 
 /**
- * 
+ * @description Convert a string array into a string
  * @param {string[]} array 
  * @param {string} [defaultValue] 
  */
@@ -309,7 +310,7 @@ export const string_array_to_string = (array, defaultValue) => {
 }
 
 /**
- * 
+ * @description Convert a cursor into a string
  * @param {Cursor} c 
  */
 const cursor_to_string = c => {
@@ -327,7 +328,7 @@ const cursor_to_string = c => {
 }
 
 /**
- * 
+ * @description Convert an `ApiQuery` into a `URLSearchParams`
  * @param {ApiQuery<any>} q 
  */
 export const api_query_to_searchparams = q => {
@@ -370,7 +371,7 @@ export const api_query_to_searchparams = q => {
 
 
 /**
- * 
+ * @description Convert an object into a `URLSearchParams`
  * @param {Record<string, string | number | boolean>} o 
  */
 export const object_to_search_params = o => {

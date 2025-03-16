@@ -56,7 +56,7 @@ export const assert = (c, message, code=400) => {
 }
 
 /**
- * 
+ * @description Assert a condition and throw an error if not met asynchronously.
  * @param {any | boolean} c 
  * @param {any} message 
  * @param {number} code 
@@ -83,6 +83,7 @@ export const parse_json_safely = (v='') => {
 }
 
 /**
+ * @description Remove all undefined and null values from object
  * @template {any} T
  * @param {T & Partial<{ created_at: string, updated_at: string}>} d 
  * @returns {T & { created_at: string, updated_at: string}} 
@@ -98,7 +99,7 @@ export const apply_dates = d => {
 
 
 /**
- * Select specific fields from an object
+ * @description Select specific fields from an object
  * @param  {...any} fields 
  */
 export const select_fields = (...fields) => {
@@ -109,7 +110,7 @@ export const select_fields = (...fields) => {
 }
 
 /**
- * 
+ * @description Filter specific fields from an object
  * @param  {...any} fields 
  * @returns 
  */
@@ -122,7 +123,7 @@ export const filter_fields = (...fields) => {
 
 
 /**
- * 
+ * @description Delete specific keys from an object
  * @param  {...string} keys 
  */
 export const delete_keys = (...keys) => {
@@ -157,7 +158,7 @@ export const STOP_WORDS = [
 ];
 
 /**
- * 
+ * @description Convert text to tokens
  * @param {string} text 
  * @returns {string[] | undefined}
  */
@@ -174,6 +175,7 @@ export const to_tokens = (text) => {
 }
 
 /**
+ * @description union of arrays
  * @template T
  * @param  {...(T | T[] | T[][])} args 
  */
@@ -182,7 +184,7 @@ export const union = (...args) => [...new Set(args.flat(10))].filter(Boolean);
 export const isEmpty = (str) => (!str?.trim().length);
 
 /**
- * URL friendly handle
+ * @description URL friendly handle
  * @param {string} title 
  * @returns {string | undefined}
  */

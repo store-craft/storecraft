@@ -31,10 +31,9 @@ import {
 
 
 /**
- * 
+ * @description test a product filter against a product
  * @param {Filter} filter 
  * @param {ProductLike} product 
- * 
  * @returns {boolean}
  */
 export const test_product_filter_against_product = 
@@ -135,10 +134,9 @@ export const test_product_filter_against_product =
 
 
 /**
- * 
+ * @description test a list of product filters against a product
  * @param {Filter[]} filters 
  * @param {ProductLike} product 
- * 
  * @return {boolean}
  */
 export const test_product_filters_against_product = 
@@ -157,10 +155,9 @@ export const test_product_filters_against_product =
 }
 
 /**
- * 
+ * @description test an order filter against an order
  * @param {Filter} filter 
  * @param {PricingData} context 
- * 
  * @returns {boolean}
  */
 const test_order_filter = 
@@ -244,10 +241,9 @@ const test_order_filter =
 }
 
 /**
- * 
+ * @description test a list of order filters against an order
  * @param {Filter[]} filters 
  * @param {PricingData} context 
- * 
  * @return {boolean}
  */
 const test_order_filters = 
@@ -277,7 +273,7 @@ const clamp = (v, a, b) => {
 }
 
 /**
- * 
+ * @description apply discount to a quantity of items
  * @param {number} quantity integer >=0
  * @param {number} price 
  * @param {number} percent_off a number between [0..100]

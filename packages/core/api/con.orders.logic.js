@@ -14,9 +14,8 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.orders;
 
 /**
+ * @description create search index for order
  * @param {OrderDataUpsert} data
- * 
- * 
  */
 const create_search_index = (data) => {
   return union(
@@ -57,12 +56,11 @@ const default_pricing = {
 }
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `order`
  * @param {OrderDataUpsert} item
  */
 (item) => regular_upsert(

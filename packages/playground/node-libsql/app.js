@@ -56,7 +56,7 @@ export const app = new App(
 )
 .withExtensions(
   {
-    'postman': new PostmanExtension()
+    'postman': new PostmanExtension(),
   }
 )
 .withAI(
@@ -77,3 +77,5 @@ export const app = new App(
     x: new XAuth(),
   }
 )
+
+

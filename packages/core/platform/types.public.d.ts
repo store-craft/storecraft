@@ -41,7 +41,9 @@ export declare interface PlatformAdapter<
    * 
    * @returns {Promise<PlatformNativeResponse>} 
    */
-  handleResponse: (web_response: Response, context: PlatformContext) => Promise<PlatformNativeResponse>;
+  handleResponse: (
+    web_response: Response, context: PlatformContext
+  ) => Promise<PlatformNativeResponse>;
 
   /**
    * @description (Optional) crypto implementation for hashing and verifying passwords

@@ -401,6 +401,7 @@ const create_all = () => {
   register_payments(registry);
   register_extensions(registry);
   register_quick_search(registry);
+  register_emails(registry);
   register_tags(registry);
   register_templates(registry);
   register_collections(registry);
@@ -926,6 +927,124 @@ const register_checkout = (registry) => {
     },
   });
 }
+
+
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_emails = (registry) => {
+
+  const mailAttachment = z.object(
+    {
+      filename: z.string().optional(),
+      content: z.string(),
+      content_type: z.string().optional(),
+      content_id: z.string().optional(),
+      disposition: z.union([z.literal('attachment'), z.literal('inline')]).optional()
+    }
+  ).describe('Mail attachment');
+
+  const mailAddress = z.object(
+    {
+      name: z.string().optional().describe('name of addressee'),
+      address: z.string().optional().describe('the email address'),
+    }
+  ).describe('Mail address');
+
+  const mailObject = z.object(
+    {
+      from: mailAddress,
+      to: z.array(mailAddress),
+      subject: z.string(),
+      html: z.string(),
+      text: z.string(),
+      attachments: z.array(mailAttachment).optional()
+    }
+  ).describe('Mail object');
+
+  registry.register('MailObject', mailObject);
+  registry.register('MailAddress', mailAddress);
+  registry.register('MailAttachment', mailAttachment);
+
+  registry.registerPath({
+    method: 'post',
+    path: `/emails/send`,
+    description: 'Send an email',
+    summary: 'Send an email to multiple recipients',
+    tags: ['emails'],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: mailObject,
+            example: {
+              from: { name: 'StoreCraft', address: '  [email protected] ' },
+              to: [{ name: 'Customer', address: '  [email protected] ' }],
+              subject: 'Order Confirmation',
+              html: '<h1>Order Confirmation</h1><p>Your order has been confirmed</p>',
+              text: 'Order Confirmation\nYour order has been confirmed',
+              attachments: [
+                { filename: 'invoice.pdf', content: 'base64...', content_type: 'application/pdf' }
+              ]
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: "ok",
+      },
+      ...error(),
+    },
+    ...apply_security()
+  });
+
+  const sendMailWithTemplateParams = z.object(
+    {
+      emails: z.array(z.string()).describe('The email addresses to send the email to'),
+      template_handle: z.string().describe('The template `handle` or `id` in the database'),
+      subject: z.string().describe('Subject of the email'),
+      data: z.any().describe('Key-value data to be used in the template')
+    }
+  ).describe('Parameters for sending mail with a template');
+
+  registry.register('SendMailWithTemplateParams', sendMailWithTemplateParams);
+
+  registry.registerPath({
+    method: 'post',
+    path: `/emails/send-with-template`,
+    description: 'Send an email with a template',
+    summary: 'Send an email to multiple recipients with a template',
+    tags: ['emails'],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: sendMailWithTemplateParams,
+            example: {
+              emails: ['  [email protected] '],
+              template_handle: 'order-confirmation',
+              subject: 'Order Confirmation',
+              data: { order_id: '12345' }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: "ok",
+      },
+      ...error(),
+    },
+    ...apply_security()
+  });
+
+
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 
@@ -1625,7 +1744,7 @@ const register_auth = registry => {
   registry.registerPath(
     {
       method: 'post',
-      path: `/auth/identity-providers/create_authorization_uri`,
+      path: `/auth/identity-providers/create-authorization-uri`,
       description: 'Create Authorization URI from the provider',
       summary: 'Create Authorization URI',
       tags,

@@ -134,8 +134,9 @@ export declare interface payment_gateway<
    * @param extra_client_payload `anything` the client might send
    * 
    */
-  onCheckoutComplete: (checkout_create_result: CheckoutCreateResult, extra_client_payload: any) => 
-                  Promise<OnCheckoutCompleteResult>;
+  onCheckoutComplete: (
+    checkout_create_result: CheckoutCreateResult, extra_client_payload: any
+  ) => Promise<OnCheckoutCompleteResult>;
 
 
   /**
@@ -171,5 +172,7 @@ export declare interface payment_gateway<
    * @param response HTTP `Response` object
    * 
    */
-  webhook?: (request: ApiRequest, response: ApiResponse) => Promise<OnWebHookResult | undefined | null>;
+  webhook?: (
+    request: ApiRequest, response: ApiResponse
+  ) => Promise<OnWebHookResult | undefined | null>;
 }

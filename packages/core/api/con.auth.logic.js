@@ -16,6 +16,9 @@ import {
 import { App } from '../index.js'
 import { decode, encode, fromUint8Array } from '../crypto/base64.js'
 import { isDef } from './utils.index.js'
+import { 
+  create_auth_uri, identity_providers, sign_with_identity_provider 
+} from './con.auth.idp.logic.js'
 
 
 export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
@@ -25,7 +28,7 @@ export const FORGOT_PASSWORD_IDENTITY_TOKEN = 'forgot-password-identity-token';
  * 
  * @param {AuthUserType} au 
  */
-const sanitize_auth_user = (au) => {
+export const sanitize_auth_user = (au) => {
   const sanitized = { ...au };
   delete sanitized.password;
   return sanitized;
@@ -49,7 +52,7 @@ export const removeByEmail = (app) =>
  * @param {App} app 
  * @param {string} email 
  */  
-const isAdminEmail = (app, email) => {
+export const isAdminEmail = (app, email) => {
   return app.config.auth_admins_emails.includes(email);
 }
 
@@ -103,7 +106,15 @@ async (body) => {
       {
         key: CONFIRM_EMAIL_TOKEN,
         value: confirm_email_token.token
-      }
+      },
+      {
+        key: 'firstname',
+        value: firstname?.slice(0, 20)
+      },
+      {
+        key: 'lastname',
+        value: lastname?.slice(0, 20)
+      },
     ]
   }
 
@@ -287,7 +298,7 @@ async (body, fail_if_not_admin=false) => {
   }
 
   assert(isAdmin || !fail_if_not_admin, 'auth/error', 401)
-  assert(existingUser, 'auth/error', 401)
+  assert(existingUser && existingUser.password, 'auth/error', 401)
 
   // verify the password
   const verified = await app.platform.crypto.verify(
@@ -594,7 +605,7 @@ export const upsert_auth_user = (app) =>
 
     const final = apply_dates(item);
 
-    await app.db.resources.auth_users.upsert(
+    const success = await app.db.resources.auth_users.upsert(
       final,
       create_search_terms(final)
     );
@@ -602,6 +613,8 @@ export const upsert_auth_user = (app) =>
     await app.pubsub.dispatch(
       'auth/upsert', sanitize_auth_user(final)
     );
+
+    return success;
   }
   
 
@@ -805,6 +818,11 @@ export const inter = app => {
     confirm_email: confirm_email(app),
     forgot_password_request: forgot_password_request(app),
     forgot_password_request_confirm: forgot_password_request_confirm(app),
+
+    identity_provider_create_auth_uri: create_auth_uri(app),
+    identity_provider_sign_with: sign_with_identity_provider(app),
+    identity_providers_list: identity_providers(app)
+
   }
 
 }

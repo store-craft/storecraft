@@ -18,6 +18,7 @@ import { exit } from "node:process";
 import { collect_ai_chat } from "./collect/collect.ai.chat.js";
 import { collect_ai_vector_store } from "./collect/collect.ai.vector-store.js";
 import { collect_ai_embedder } from "./collect/collect.ai.embedder.js";
+import { collect_auth_providers } from "./collect/collect.auth-providers.js";
 
 /**
  * @type {CommandModule}
@@ -31,6 +32,7 @@ export const command_create = {
 
       intro("Let's go");
   
+      /** @type {import("./compile/compile.app.js").Meta} */
       const meta = {
         config: await collect_config(), 
         platform: await collect_platform(),
@@ -40,7 +42,8 @@ export const command_create = {
         ai_vector_store: await collect_ai_vector_store(),
         ai_embedder: await collect_ai_embedder(),
         mailer: await collect_mailer(),
-        payments: await collect_payments()    
+        payments: await collect_payments(),
+        auth_providers: await collect_auth_providers()
       }
   
       // await spinner(compile_all(meta), 'Setting Up, hold on')();

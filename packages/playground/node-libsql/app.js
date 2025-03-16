@@ -21,6 +21,10 @@ import { VoyageAIEmbedder } from "@storecraft/core/ai/models/embedders/voyage-ai
 import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 import { GeminiEmbedder } from "@storecraft/core/ai/models/embedders/gemini";
 import { StoreAgent } from "@storecraft/core/ai/agents/index.js";
+import { GoogleAuth } from "@storecraft/core/auth/providers/google";
+import { GithubAuth } from "@storecraft/core/auth/providers/github";
+import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
+import { XAuth } from "@storecraft/core/auth/providers/x";
 
 export const app = new App(
   {
@@ -60,4 +64,12 @@ export const app = new App(
       embedder: new OpenAIEmbedder(),
     }
   )
+)
+.withAuthProviders(
+  {
+    google: new GoogleAuth(),
+    github: new GithubAuth(),
+    facebook: new FacebookAuth(),
+    x: new XAuth(),
+  }
 )

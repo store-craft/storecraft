@@ -1,7 +1,12 @@
 /**
  * @import {
  *  ApiAuthChangePasswordType, ApiAuthResult, ApiAuthSigninType, ApiAuthSignupType, 
- *  ApiKeyResult, ApiQuery, AuthUserType, error
+ *  ApiKeyResult, ApiQuery, AuthUserType, error,
+ OAuthProvider,
+ OAuthProviderCreateURIParams,
+ OAuthProviderCreateURIResponse,
+ OAuthProvidersList,
+ SignWithOAuthProviderParams
  * } from '@storecraft/core/api'
  * @import { SdkConfigAuth } from '../types.js';
  */
@@ -452,4 +457,61 @@ export default class Auth {
     return items;
   }
 
+  identity_providers_list = async () => {
+      /** @type {OAuthProvider[]} */
+      const items = await fetchApiWithAuth(
+        this.#sdk,
+        '/auth/identity-providers',
+        {
+          method: 'get'
+        }
+      );
+      return items;
+  }
+
+  /**
+   * 
+   * @param {OAuthProviderCreateURIParams} params 
+   * @returns {Promise<OAuthProviderCreateURIResponse>}
+   */
+  identity_provider_get_authorization_uri = async (params) => {
+    /** @type {OAuthProviderCreateURIResponse} */
+    const result = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/identity-providers/create_authorization_uri',
+      {
+        method: 'post',
+        body: JSON.stringify(params),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    return result;
+  }
+
+  /**
+   * @description Signup / Signin with an OAuth Identity Provider
+   * @param {SignWithOAuthProviderParams} params 
+   * @returns {Promise<ApiAuthResult>}
+   */
+  identity_provider_sign = async (params) => {
+
+    /** @type {ApiAuthResult} */
+    const result = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/identity-providers/sign',
+      {
+        method: 'post',
+        body: JSON.stringify(params),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    this.#_update_and_notify_subscribers(result);
+
+    return result;
+  }  
 }

@@ -62,6 +62,10 @@ const jWTClaimsSchema = z.object({
   iat: z.number(),
   jti: z.string(),
   roles: z.array(z.string()).describe("User roles and authorizations"),
+  email: z.string().optional(),
+  firstname: z.string().optional(),
+  lastname: z.string().optional(),
+  picture: z.string().optional(),
 });
 
 export const authBaseTypeSchema = z.object({
@@ -122,6 +126,42 @@ export const apiAuthResultSchema = z.object({
   user_id: z.string().describe("the `ID` of user, example `au_....`"),
   access_token: apiTokenWithClaimsSchema.describe("The access token"),
   refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
+});
+
+export const oAuthProviderCreateURIParamsSchema = z.object({
+  provider: z.string().describe("**OAuth** provider identifier/handle"),
+  redirect_uri: z
+    .string()
+    .describe(
+      "URI that you registered at the provider website\nto redirect into",
+    ),
+  extra_parameters: z.record(z.string()).optional(),
+});
+
+export const oAuthProviderCreateURIResponseSchema = z.object({
+  provider: z.string().describe("**OAuth** provider identifier/handle"),
+  uri: z.string().describe("The uri of consent screen for authorization"),
+});
+
+export const signWithOAuthProviderParamsSchema = z.object({
+  provider: z.string().describe("**OAuth** provider identifier/handle"),
+  redirect_uri: z
+    .string()
+    .describe(
+      "The URI for which the Idp redirects the user that you\nregistered at the provider website to redirect into",
+    ),
+  authorization_response: z
+    .record(
+      z
+        .string()
+        .describe(
+          "The Response from the authorization response with the\n**OAuth** provider. Usually this is communicated to the website as search params\nwith `code` key after the redirect accomplishes",
+        ),
+    )
+    .optional()
+    .describe(
+      "The Response from the authorization response with the\n**OAuth** provider. Usually this is communicated to the website as search params\nwith `code` key after the redirect accomplishes",
+    ),
 });
 
 export const baseTypeSchema = idableConcreteSchema

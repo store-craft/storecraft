@@ -1,6 +1,5 @@
 /**
  * @import { StorageFeatures, StorageSignedOperation } from '@storecraft/core/storage'
- * @import { error } from '@storecraft/core/api'
  */
 
 import { StorecraftSDK } from '../index.js'

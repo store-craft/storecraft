@@ -13,7 +13,7 @@ export const LoadingImage = (
   const [extra, setExtra] = useState('opacity-0');
   const onLoad = useCallback(
     async () => {
-      await sleep(4000);
+      // await sleep(4000);
       setReady(true);
       requestAnimationFrame(
         () => {

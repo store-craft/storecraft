@@ -2,16 +2,21 @@
  * @import { 
  *  AgentRunParameters, AgentRunResponse 
  * } from '@storecraft/core/ai/agents/types.js'
+ * @import {
+ *  HEADER_STORECRAFT_THREAD_ID_LITERAL
+ * } from '@storecraft/core/rest/con.ai.routes.js'
  * @import { content } from '@storecraft/core/ai/types.public.js'
  */
 
-import { HEADER_STORECRAFT_THREAD_ID } from '@storecraft/core/rest/con.ai.routes.js';
 import { StorecraftSDK } from '../index.js'
 import { url } from './utils.api.fetch.js';
 
+const HEADER_STORECRAFT_THREAD_ID = /** @satisfies {HEADER_STORECRAFT_THREAD_ID_LITERAL} */ (
+  'X-STORECRAFT-THREAD-ID'
+);
+
 /**
  * @description **AI**
- * 
  */
 export default class AI {
 
@@ -62,7 +67,9 @@ export default class AI {
       }
     );
 
-    const threadId = response.headers.get(HEADER_STORECRAFT_THREAD_ID ?? 'X-Storecraft-Thread-Id');
+    const threadId = response.headers.get(
+      HEADER_STORECRAFT_THREAD_ID ?? 'X-Storecraft-Thread-Id'
+    );
 
     if(!threadId) {
       throw new Error(
@@ -95,7 +102,6 @@ const sleep = (ms=100) => {
  */
 const StreamSpeakGenerator = async function *(stream) {
   for await (const sse of SSEGenerator(stream)) {
-    await sleep(50);
     yield ( /** @type {content} */ (JSON.parse(sse.data)));
   }
 }

@@ -3,7 +3,13 @@ import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { App } from '../index.js';
 
-export const HEADER_STORECRAFT_THREAD_ID = 'X-STORECRAFT-THREAD-ID';
+/**
+ * @typedef {'X-STORECRAFT-THREAD-ID'} HEADER_STORECRAFT_THREAD_ID_LITERAL
+ */
+
+export const HEADER_STORECRAFT_THREAD_ID = /** @satisfies {HEADER_STORECRAFT_THREAD_ID_LITERAL} */ (
+  'X-STORECRAFT-THREAD-ID'
+);
 
 /**
  * @param {App} app

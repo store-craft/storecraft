@@ -6,7 +6,6 @@
 import { 
   api_query_to_searchparams 
 } from '@storecraft/core/api/utils.query.js';
-import { assert } from './utils.functional.js';
 
 
 /**
@@ -43,7 +42,9 @@ export const url = (config, path, query) => {
  * 
  * @returns {Promise<Response>}
  */ 
-export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}, query=undefined) => {
+export const fetchOnlyApiResponseWithAuth = async (
+  sdk, path, init={}, query=undefined
+) => {
 
   const auth_token = await sdk.auth.working_auth_token();
   const auth_header_value = (
@@ -63,12 +64,6 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}, query=und
   );
 
   return response;
-
-  // const auth_problem = response.status >= 400 && response.status < 500;
-
-  // if(auth_problem) {
-
-  // }
 }
 
 
@@ -91,7 +86,9 @@ export const fetchOnlyApiResponseWithAuth = async (sdk, path, init={}, query=und
  * 
  * @returns {Promise<R>}
  */ 
-export const fetchApiWithAuth = async (sdk, path, init={}, query=undefined) => {
+export const fetchApiWithAuth = async (
+  sdk, path, init={}, query=undefined
+) => {
 
   const response = await fetchOnlyApiResponseWithAuth(
     sdk, path, init, query

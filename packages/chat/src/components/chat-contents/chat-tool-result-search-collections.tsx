@@ -37,12 +37,12 @@ export const ItemView = (
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
                   blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/40' />
-        <LoadingImage src={item.media?.at(0) ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQACepP6q4rvLK966nBCun2zXWrCV6w1u_Vw&s' }
-            className='rounded-md object-contain h-full w-full 
-                  --blur-xs --opacity-40' >
-          <div className='w-full h-full bg-slate-600/40 animate-pulse rounded-md'>
-            <FaShippingFast className='w-full h-full p-10 opacity-50' />
-          </div>
+        <LoadingImage 
+            src={
+              item.media?.at(0) ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQACepP6q4rvLK966nBCun2zXWrCV6w1u_Vw&s' 
+            }
+            className='rounded-md object-contain h-full w-full' >
+          <div className='w-full h-full bg-slate-600/40 animate-pulse rounded-md'/>
         </LoadingImage>
       </div>
 

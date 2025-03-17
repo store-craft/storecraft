@@ -3,7 +3,6 @@
  */
 import { StorecraftSDK } from '../index.js'
 import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
-import { filter_fields, filter_unused } from './utils.functional.js';
 
 /**
  * @description Base `collections` **CRUD**

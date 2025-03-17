@@ -1,11 +1,10 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
 import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
-import { FaShippingFast } from "react-icons/fa";
 import { LoadingImage } from "../loading-image.js";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
@@ -42,18 +41,13 @@ export const ItemView = (
         <LoadingImage src={item.media?.at(0) ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQACepP6q4rvLK966nBCun2zXWrCV6w1u_Vw&s' }
             className='rounded-md object-cover h-full w-full 
                   --blur-xs --opacity-40' >
-          <div className='w-full h-full bg-slate-600/40 animate-pulse rounded-md'>
-            <FaShippingFast className='w-full h-full p-10 opacity-50' />
-          </div>
+          <div className='w-full h-full bg-slate-600/40 animate-pulse rounded-md'/>
         </LoadingImage>
       </div>
 
       <p children={item.title} 
         className='whitespace-nowrap truncate font-medium capitalize 
             text-base  w-full --max-w-20' />
-      {/* <p children={item.price + '$'} 
-        className='whitespace-nowrap font-bold text-2xl 
-              text-green-600 font-mono' /> */}
       <button children='use' 
         className='uppercase tracking-widest font-bold w-full 
             dark:bg-pink-500 bg-black text-white

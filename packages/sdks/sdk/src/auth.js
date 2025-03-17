@@ -1,12 +1,9 @@
 /**
  * @import {
- *  ApiAuthChangePasswordType, ApiAuthResult, ApiAuthSigninType, ApiAuthSignupType, 
- *  ApiKeyResult, ApiQuery, AuthUserType, error,
- OAuthProvider,
- OAuthProviderCreateURIParams,
- OAuthProviderCreateURIResponse,
- OAuthProvidersList,
- SignWithOAuthProviderParams
+ *  ApiAuthChangePasswordType, ApiAuthResult, ApiAuthSigninType, 
+ *  ApiAuthSignupType, ApiKeyResult, ApiQuery, AuthUserType, error, 
+ *  OAuthProvider, OAuthProviderCreateURIParams, 
+ *  OAuthProviderCreateURIResponse, SignWithOAuthProviderParams
  * } from '@storecraft/core/api'
  * @import { SdkConfigAuth } from '../types.js';
  */
@@ -381,7 +378,7 @@ export default class Auth {
       this.#sdk,
       '/auth/apikeys',
       {
-        method: 'post'
+        method: 'post',
       }
     );
 
@@ -458,15 +455,15 @@ export default class Auth {
   }
 
   identity_providers_list = async () => {
-      /** @type {OAuthProvider[]} */
-      const items = await fetchApiWithAuth(
-        this.#sdk,
-        '/auth/identity-providers',
-        {
-          method: 'get'
-        }
-      );
-      return items;
+    /** @type {OAuthProvider[]} */
+    const items = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/identity-providers',
+      {
+        method: 'get'
+      }
+    );
+    return items;
   }
 
   /**

@@ -2,8 +2,8 @@
  * @import { 
  *  ApiAuthResult,
  *  OAuthProviderCreateURIParams, SignWithOAuthProviderParams, 
- *  OAuthProviderCreateURIResponse
- * } from './types.api.js';
+ *  OAuthProviderCreateURIResponse, OAuthProvider
+ * } from './types.public.js';
  * @import { JWTClaims } from '../crypto/jwt.js'
  */
 import * as jwt from '../crypto/jwt.js'
@@ -198,6 +198,7 @@ export const sign_with_identity_provider = (app) =>
 export const identity_providers = (app) => 
   /**
    * @description get identity providers
+   * @return {OAuthProvider[]}
    */
   () => {
     return Object.entries(app.auth_providers ?? {}).map(

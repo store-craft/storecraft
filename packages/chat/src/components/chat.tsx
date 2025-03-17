@@ -58,7 +58,6 @@ export const Chat = () => {
     }
   } = useChat();
 
-
   const onSend = useCallback(
     async (contents: content[]) => {
       ref_sticky.current = true;

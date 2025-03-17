@@ -16,12 +16,11 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.notifications;
 
 /**
- * 
  * @param {App} app
  */
 export const addBulk = (app) => 
 /**
- * 
+ * @description `upsert` a `notification` bulk mode
  * @param {NotificationTypeUpsert | NotificationTypeUpsert[]} items
  * @return {Promise<IDType[]>}
  */

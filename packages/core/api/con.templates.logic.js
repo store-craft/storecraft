@@ -27,12 +27,11 @@ const decode_if_base64 = val => {
 }
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `template`
  * @param {TemplateTypeUpsert} item
  */
 (item) => regular_upsert(
@@ -57,7 +56,6 @@ export const upsert = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

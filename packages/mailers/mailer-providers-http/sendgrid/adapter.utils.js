@@ -5,7 +5,7 @@ import { base64 } from '@storecraft/core/crypto'
 
 /**
  * 
- * @param {MailObject["attachments"][0]["content"]} c 
+ * @param {MailObject["attachments"][number]["content"]} c 
  */
 export const convert_to_base64 = async (c) => {
   if(c instanceof ArrayBuffer)

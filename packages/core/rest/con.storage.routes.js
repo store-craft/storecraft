@@ -1,6 +1,6 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { App } from '../index.js';
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { does_prefer_signed } from '../api/con.storage.logic.js';
 import { StorecraftError } from '../api/utils.func.js';

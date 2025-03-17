@@ -20,7 +20,7 @@ export const db = app => app.db.resources.images;
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `image`
  * @param {ImageTypeUpsert} item
  */
 async (item) => {
@@ -58,12 +58,11 @@ async (item) => {
 
 
 /**
- * 
  * @param {App} app
  */
 export const remove = (app) => 
 /**
- * 
+ * @description `remove` a `image`
  * @param {string} id
  */
 async (id) => {
@@ -92,20 +91,20 @@ async (id) => {
 }
 
 /**
- * url to name
+ * @description url to name
  * @param {string} url 
  */
 export const image_url_to_name = url => 
   decodeURIComponent(String(url)).split('/').pop().split('?')[0];
 
 /**
- * url to handle
+ * @description url to handle
  * @param {string} url 
  */
 export const image_url_to_handle = url => to_handle(image_url_to_name(url));
 
 /**
- * report media usages
+ * @description report media usages
  * @param {App} app
  * @param {BaseType} data data being reported
  */
@@ -115,7 +114,6 @@ export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
 
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

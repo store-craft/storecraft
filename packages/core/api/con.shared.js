@@ -35,8 +35,6 @@ import { App } from '../index.js';
  * hook into final state, returns extra search terms
  * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
- * 
- * 
  */
 export const regular_upsert = (
   app, db, id_prefix, schema, 
@@ -98,15 +96,11 @@ export const regular_upsert = (
 
 /**
  * @description a regular document fetch
- * 
  * @template {Partial<BaseType>} G
  * @template {Partial<BaseType>} U
- * 
- * 
  * @param {App} app
  * @param {db_crud<U, G>} db db instance
  * @param {PubSubEvent} [event] keep `undefined` to avoid event processing
- * 
  */
 export const regular_get = (app, db, event) => 
 /**
@@ -138,12 +132,10 @@ export const regular_get = (app, db, event) =>
  * @template {Partial<BaseType>} G
  * @template {Partial<BaseType>} U
  * 
- * 
  * @param {App} app
  * @param {db_crud<U, G>} db db instance
  * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
- * 
  */
 export const regular_remove = (app, db, event) => 
   /**
@@ -179,16 +171,13 @@ export const regular_remove = (app, db, event) =>
 /**
  * @description a regular document list with query operation
  * 
- * 
  * @template  G
  * @template  U
- * 
  * 
  * @param {App} app
  * @param {db_crud<U, G>} db db instance
  * @param {PubSubEvent} [event] keep 
  * `undefined` to avoid event processing
- * 
  */
 export const regular_list = (app, db, event) => 
   /**

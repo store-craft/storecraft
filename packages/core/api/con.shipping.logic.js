@@ -13,12 +13,11 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.shipping_methods;
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `shipping method`
  * @param {ShippingMethodTypeUpsert} item
  */
 (item) => regular_upsert(

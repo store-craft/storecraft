@@ -1,5 +1,5 @@
 import { App } from '../index.js';
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 
 const html = `
 <!doctype html>

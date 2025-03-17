@@ -118,7 +118,7 @@ export const create = app => {
         `status error`
       );
 
-      // payment
+      // pricing
       assert.ok(
         draft_order?.pricing?.total,
         'pricing was not set'
@@ -179,6 +179,11 @@ export const create = app => {
                   enums.PaymentOptionsEnum.captured.id
       );
   
+      assert.ok(
+        order?.payment_gateway.on_checkout_complete,
+        'payment_gateway.on_checkout_complete was not set'
+      );
+
       assert.ok(
         order.status.payment.id===expected_payment_status,
         `payment status error`

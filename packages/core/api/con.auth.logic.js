@@ -25,7 +25,7 @@ export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
 export const FORGOT_PASSWORD_IDENTITY_TOKEN = 'forgot-password-identity-token';
 
 /**
- * 
+ * @description Sanitize the `auth_user` object
  * @param {AuthUserType} au 
  */
 export const sanitize_auth_user = (au) => {
@@ -35,12 +35,11 @@ export const sanitize_auth_user = (au) => {
 }
 
 /**
- * 
  * @param {App} app 
  */  
 export const removeByEmail = (app) => 
 /**
- * 
+ * @description Remove an auth user by `email`
  * @param {string} email
  */
 (email) => {
@@ -48,7 +47,7 @@ export const removeByEmail = (app) =>
 }
 
 /**
- * 
+ * @description Check if the email is an admin email
  * @param {App} app 
  * @param {string} email 
  */  
@@ -57,15 +56,12 @@ export const isAdminEmail = (app, email) => {
 }
 
 /**
- * 
  * @param {App} app 
- * 
  */  
 export const signup = (app) => 
 /**
- * 
+ * @description Signup a new user with `email`, `password`, `firstname`, `lastname`
  * @param {ApiAuthSignupType} body 
- * 
  * @returns {Promise<ApiAuthResult>}
  */
 async (body) => {
@@ -182,14 +178,12 @@ async (body) => {
 
 
 /**
- * 
  * @param {App} app 
  */  
 export const change_password = (app) => 
 /**
- * 
+ * @description Change the password of a user
  * @param {ApiAuthChangePasswordType} body 
- * 
  * @returns {Promise<ApiAuthResult>}
  */
 async (body) => {
@@ -271,16 +265,13 @@ async (body) => {
 
 
 /**
- * 
  * @param {App} app 
  */  
 export const signin = (app) => 
 /**
- * 
+ * @description Signin a user with `email` and `password`
  * @param {ApiAuthSigninType} body 
  * @param {boolean} [fail_if_not_admin=false] 
- * 
- * 
  * @returns {Promise<ApiAuthResult>}
  */
 async (body, fail_if_not_admin=false) => {
@@ -343,14 +334,12 @@ async (body, fail_if_not_admin=false) => {
 }
 
 /**
- * 
  * @param {App} app 
  */  
 export const refresh = (app) => 
 /**
- * 
+ * @description Refresh the `access_token` with the `refresh_token`
  * @param {ApiAuthRefreshType} body 
- * 
  * @returns {Promise<ApiAuthResult>}
  */
 async (body) => {
@@ -392,9 +381,7 @@ async (body) => {
 
 
 /**
- * 
- * Compute the search terms of an `auth_user`
- * 
+ * @description Compute the search terms of an `auth_user`
  * @param {AuthUserType} item 
  */
 export const create_search_terms = item => {
@@ -410,12 +397,11 @@ export const create_search_terms = item => {
 }
 
 /**
- * 
  * @param {App} app 
  */  
 export const create_api_key = (app) => 
 /**
- * 
+ * @description Create a new `apikey` and dispatch `auth/apikey-created` event
  * @returns {Promise<ApiKeyResult>}
  */
 async () => {
@@ -467,7 +453,7 @@ async () => {
 }
 
 /**
- * 
+ * @description Parse the `apikey` into `email` and `password`
  * @param {ApiKeyResult} body 
  */
 export const parse_api_key = (body) => {
@@ -484,81 +470,72 @@ export const parse_api_key = (body) => {
 
 
 /**
- * 
- * Verifying `apikey` is slow, because we need to consult
- * with the database every time.
- * 
  * @param {App} app 
  */  
 export const verify_api_key = (app) => 
-/**
- * 
- * @param {ApiKeyResult} body 
- * 
- * @returns {Promise<AuthUserType>}
- */
-async (body) => {
+ /**
+  * @description Verifying `apikey` is slow, because we need to consult
+  * with the database every time.
+  * @param {ApiKeyResult} body 
+  * @returns {Promise<AuthUserType>}
+  */
+  async (body) => {
 
-  const {
-    email, password
-  } = parse_api_key(body);
+    const {
+      email, password
+    } = parse_api_key(body);
 
-  const apikey_user = await app.db.resources.auth_users.getByEmail(
-    email
-  );
+    const apikey_user = await app.db.resources.auth_users.getByEmail(
+      email
+    );
 
-  assert(
-    apikey_user, 'auth/error'
-  );
+    assert(
+      apikey_user, 'auth/error'
+    );
 
-  // verify the password
-  const verified = await app.platform.crypto.verify(
-    apikey_user.password, password
-  );
+    // verify the password
+    const verified = await app.platform.crypto.verify(
+      apikey_user.password, password
+    );
 
-  assert(
-    verified, 'auth/error'
-  )
+    assert(
+      verified, 'auth/error'
+    )
 
-  return sanitize_auth_user(apikey_user);
-}
-
-/**
- * 
- * List all of the api keys
- * 
- * 
- * @param {App} app 
- * 
- */  
-export const list_all_api_keys_info = (app) => 
-async () => {
-
-  const apikeys = await app.db.resources.auth_users.list(
-    {
-      vql: 'tag:apikey',
-      limit: 1000,
-      expand: ['*']
-    }
-  );
-
-  for(const item of apikeys) {
-    delete item['password'];
+    return sanitize_auth_user(apikey_user);
   }
 
-  return apikeys
-}
+/**
+ * @param {App} app 
+ */  
+export const list_all_api_keys_info = (app) => 
+  /**
+   * @description List all of the api keys
+   */
+  async () => {
+
+    const apikeys = await app.db.resources.auth_users.list(
+      {
+        vql: 'tag:apikey',
+        limit: 1000,
+        expand: ['*']
+      }
+    );
+
+    for(const item of apikeys) {
+      delete item['password'];
+    }
+
+    return apikeys
+  }
 
 
 /**
- * 
- * Query auth users.
- * 
- * 
  * @param {App} app 
  */  
 export const list_auth_users = (app) => 
 /**
+ * @description List and query auth users
  * @param {ApiQuery<AuthUserType>} [query={}] 
  */
 async (query={}) => {
@@ -575,12 +552,11 @@ async (query={}) => {
 }
 
 /**
- * 
  * @param {App} app 
  */  
 export const get_auth_user = (app) => 
 /**
- * 
+ * @description Get an auth user by `id` or `email`
  * @param {string} id_or_email 
  */
 async (id_or_email) => {
@@ -592,12 +568,11 @@ async (id_or_email) => {
 
 
 /**
- * @description `upsert` an auth user and dispatch `auth/upsert` event
- * 
  * @param {App} app 
  */  
 export const upsert_auth_user = (app) => 
   /**
+   * @description `upsert` an auth user and dispatch `auth/upsert` event
    * 
    * @param {AuthUserType} item 
    */
@@ -619,12 +594,11 @@ export const upsert_auth_user = (app) =>
   
 
 /**
- * 
  * @param {App} app 
  */  
 export const remove_auth_user = (app) => 
 /**
- * 
+ * @description remove an auth user and dispatch `auth/remove` event
  * @param {string} id_or_email 
  */
 async (id_or_email) => {
@@ -654,12 +628,11 @@ async (id_or_email) => {
 /////
 
 /**
- * @description confirm `email` of authenticated user
- * 
  * @param {App} app 
  */  
 export const confirm_email = (app) => 
   /**
+   * @description confirm `email` of authenticated user
    * 
    * @param {string} token confirm email token
    */
@@ -690,21 +663,20 @@ export const confirm_email = (app) =>
   
 
 /**
- * @description request a `forgot-password` workflow:
- * - generate a special `token`
- * - emit a `auth/forgot-password-token-generated` with the `token` payload.
- * - the app will need to respons to the vent and send a private email with the token
- * or a link with the token
- * - customers clicks the link from his email to confirm, that it was him
- * - this hit another endpoint which verifies/confirms
- * - password is changed to a random password.
- * - the app sends a private email with the random password to the customer.
- * - now, the customer can login and update to another password
- * 
  * @param {App} app 
  */  
 export const forgot_password_request = (app) => 
   /**
+   * @description request a `forgot-password` workflow:
+   * - generate a special `token`
+   * - emit a `auth/forgot-password-token-generated` with the `token` payload.
+   * - the app will need to respons to the vent and send a private email with the token
+   * or a link with the token
+   * - customers clicks the link from his email to confirm, that it was him
+   * - this hit another endpoint which verifies/confirms
+   * - password is changed to a random password.
+   * - the app sends a private email with the random password to the customer.
+   * - now, the customer can login and update to another password
    * 
    * @param {string} email confirm email token
    */
@@ -733,15 +705,13 @@ export const forgot_password_request = (app) =>
   }
   
 /**
- * @description User has supplied the `token` generated by the {@link forgot_password_request},
- * - a new random password will be generated and setup for him
- * - we will inform the user
- * 
  * @param {App} app 
  */  
 export const forgot_password_request_confirm = (app) => 
   /**
-   * 
+   * @description User has supplied the `token` generated by the {@link forgot_password_request},
+   * - a new random password will be generated and setup for him
+   * - we will inform the user
    * @param {string} token forgot password identity token
    */
   async (token) => {
@@ -822,7 +792,6 @@ export const inter = app => {
     identity_provider_create_auth_uri: create_auth_uri(app),
     identity_provider_sign_with: sign_with_identity_provider(app),
     identity_providers_list: identity_providers(app)
-
   }
 
 }

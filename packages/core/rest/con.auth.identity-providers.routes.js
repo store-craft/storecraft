@@ -2,7 +2,7 @@
  * @import { ApiPolka } from './types.public.js' 
  */
 import { App } from '../index.js';
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { authorize_admin } from './con.auth.middle.js';
 
 /**
@@ -19,7 +19,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.sendJson(
-        app.api.auth.identity_providers_list ?? []
+        app.api.auth.identity_providers_list() ?? []
       );
     }
   );
@@ -27,7 +27,7 @@ export const create_routes = (app) => {
   
   // signin
   polka.post(
-    '/create_authorization_uri',
+    '/create-authorization-uri',
     async (req, res) => {
       // console.log({req})
       const result = await app.api.auth.identity_provider_create_auth_uri(

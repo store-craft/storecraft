@@ -1,10 +1,7 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { App } from '../index.js';
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
-import { 
-  get_extension, invoke_extension_action, list_extensions 
-} from '../extensions/con.extensions.logic.js';
 
 
 /**
@@ -23,8 +20,8 @@ export const create_routes = (app) => {
     authorize_admin(app),
     async (req, res) => {
       const { extension_handle } = req.params;
-      const r = get_extension(
-        app, extension_handle
+      const r = app.api.extensions.get(
+        extension_handle
       );
       res.sendJson(r);
     }
@@ -36,9 +33,7 @@ export const create_routes = (app) => {
     '/',
     authorize_admin(app),
     async (req, res) => {
-      const r = list_extensions(
-        app
-      );
+      const r = app.api.extensions.list();
       res.sendJson(r);
     }
   );
@@ -49,8 +44,8 @@ export const create_routes = (app) => {
     '/:extension_handle/:action_handle',
     async (req, res) => {
       const { extension_handle, action_handle } = req.params;
-      const r = await invoke_extension_action(
-        app, extension_handle, action_handle, req.parsedBody
+      const r = await app.api.extensions.invoke_action(
+        extension_handle, action_handle, req.parsedBody
       );
       
       res.sendJson(r);

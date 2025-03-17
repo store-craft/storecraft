@@ -11,14 +11,13 @@ export const does_prefer_signed = search_params => {
 
 
 /**
- * @description Recursively go over object keys, locate `media` keys, iterate
- * them if they are `arrays` and replace `storage://` values with 
- * **CDN** rewrites.
- * 
  * @param {App} app 
  */
 export const rewrite_media_from_storage = (app) =>
 /**
+ * @description Recursively go over object keys, locate `media` keys, iterate
+ * them if they are `arrays` and replace `storage://` values with 
+ * **CDN** rewrites.
  * 
  * @param {any} o 
  */
@@ -44,14 +43,13 @@ export const rewrite_media_from_storage = (app) =>
 }
 
 /**
- * @description Recursively go over object keys, locate `media` keys, iterate
- * them if they are `arrays` and replace `app.config.storage_rewrite_urls`
- * into `storage://` 
- * 
  * @param {App} app 
  */
 export const rewrite_media_to_storage = (app) =>
 /**
+ * @description Recursively go over object keys, locate `media` keys, iterate
+ * them if they are `arrays` and replace `app.config.storage_rewrite_urls`
+ * into `storage://` 
  * 
  * @param {any} o 
  */
@@ -78,7 +76,7 @@ export const rewrite_media_to_storage = (app) =>
 
 
 /**
- * 
+ * @description Rewrite media array with `rewrite_from` to `rewrite_to`
  * @param {string[]} media 
  * @param {string} rewrite_from 
  * @param {string} rewrite_to 
@@ -99,7 +97,7 @@ const rewrite_media_array = (media, rewrite_from, rewrite_to) => {
 
 
 /**
- * 
+ * @description Rewrite object keys with `rewrite_from` to `rewrite_to`
  * @param {object} item 
  * @param {string} rewrite_from 
  * @param {string} rewrite_to 

@@ -21,7 +21,6 @@ export class NodePlatform {
   #crypto;
 
   /**
-   * 
    * @param {NodePlatformConfig} [config={}] 
    */
   constructor(config={}) {
@@ -70,7 +69,6 @@ export class NodePlatform {
   }
 
   /**
-   * 
    * @type {NodePlatformAdapter["handleResponse"]}
    */
   async handleResponse(web_response, context) {

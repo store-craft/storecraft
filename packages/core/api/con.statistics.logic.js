@@ -9,8 +9,7 @@ import {
 import { assert } from './utils.func.js';
 
 /**
- * Get the start of a day
- * 
+ * @description Get the start of a day
  * @param  {ConstructorParameters<typeof Date>["0"]} date 
  */
 const startOfDay = (date=Date.now()) => {
@@ -20,7 +19,7 @@ const startOfDay = (date=Date.now()) => {
 }
 
 /**
- * Get the end of a day
+ * @description Get the end of a day
  * 
  * @param  {ConstructorParameters<typeof Date>["0"]} date 
  */
@@ -31,7 +30,7 @@ const endOfDay = (date=Date.now()) => {
 }
 
 /**
- * 
+ * @description Get the number of days between `from` and `to`
  * @param {string | number | Date} from 
  * @param {string | number | Date} to 
  */
@@ -46,13 +45,11 @@ const HOUR = 3600000
 const DAY = 86400000
 
 /**
- * 
- * 
  * @param {App} app
  */
 export const compute_statistics = app => 
 /**
- * Compute the `statistics` of `sales` / `orders` a period of time per day.
+ * @description Compute the `statistics` of `sales` / `orders` a period of time per day.
  * 
  * @param {string} [from_day] `ISO` / `UTC` / `timestamp` date
  * @param {string} [to_day] `ISO` / `UTC` / `timestamp` date
@@ -246,34 +243,31 @@ const tables = [
 ]
 
 /**
- * 
- * @description Compute the count `statistics` of a table with `query`
- *  
  * @param {App} app
  */
 export const compute_count_of_query = app => 
+ /**
+  * 
+  * @description Compute the count `statistics` of a table with `query`
+  * @param {Exclude<keyof App["db"]["resources"], 'search'>} [table] which `table` to get count of query
+  * @param {ApiQuery} [query] The `query` used for counting
+  * 
+  * @returns {Promise<number>}
+  */
+  (table, query) => {
+    assert(
+      tables.includes(table),
+      `Table ${String(table)} is not allowed for counting !`
+    );
+
+    /** @type {import('../database/types.public.d.ts').db_crud} */
+    const db = app.db?.resources?.[table];
+
+    return db.count(query);
+  }
+
+
 /**
- * 
- * @param {Exclude<keyof App["db"]["resources"], 'search'>} [table] which `table` to get count of query
- * @param {ApiQuery} [query] The `query` used for counting
- * 
- * @returns {Promise<number>}
- */
-(table, query) => {
-  assert(
-    tables.includes(table),
-    `Table ${String(table)} is not allowed for counting !`
-  );
-
-  /** @type {import('../database/types.public.d.ts').db_crud} */
-  const db = app.db?.resources?.[table];
-
-  return db.count(query);
-}
-
-
-/**
- * 
  * @param {App} app 
  */
 export const inter = app => {

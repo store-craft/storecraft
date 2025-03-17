@@ -115,8 +115,15 @@ export type events = {
 
 
   /** email, before sending */
-  'email/before-send': Partial<MailObject>
-  'email/after-send': { mail_object: Partial<MailObject>, mail_response: Partial<MailResponse> }
+  'email/before-send': { mail_object: Partial<MailObject>, context?: any },
+  'email/after-send': { 
+    mail_object: Partial<MailObject>, 
+    mail_response: Partial<MailResponse>, 
+    context?: any 
+  },
+
+  /** all events */
+  '*': events[keyof events]
 }
 
 

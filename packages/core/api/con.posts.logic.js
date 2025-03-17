@@ -18,7 +18,7 @@ export const db = app => app.db.resources.posts;
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `post`
  * @param {PostTypeUpsert} item
  */
 (item) => regular_upsert(

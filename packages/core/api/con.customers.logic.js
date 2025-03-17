@@ -19,12 +19,11 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.customers;
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 
   /**
-   * 
+   * @description `upsert` a `customer`
    * @param {CustomerTypeUpsert} item
    */
   async (item) => {
@@ -73,12 +72,11 @@ export const upsert = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */
 export const getByEmail = (app) => 
 /**
- * 
+ * @description get a customer by email
  * @param {string} email
  * @param {RegularGetOptions} [options]
  */
@@ -89,14 +87,12 @@ export const getByEmail = (app) =>
 
 
 /**
- * given a discount handle and query, return products of that discount
- * 
- * 
  * @param {App} app
  */
 export const list_customer_orders = (app) => 
 /**
- * 
+ * @description given a customer id and query,
+ * return orders of that customer
  * @param {IDType} customer_id 
  * @param {ApiQuery<OrderData>} q 
  */

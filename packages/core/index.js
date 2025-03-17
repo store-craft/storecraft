@@ -18,10 +18,10 @@
  * @import { AuthProvider } from "./auth/types.js";
  * 
  */
-import { STATUS_CODES } from './polka/codes.js';
+import { STATUS_CODES } from './rest/polka/codes.js';
 import { create_rest_api } from './rest/index.js';
 import { create_api, enums } from './api/index.js'
-import { PubSub } from './pubsub/public.js';
+import { PubSub } from './pubsub/index.js';
 import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
 import pkg from './package.json' with { type: "json" }
@@ -33,7 +33,8 @@ import {
 
 /**
  * @typedef {{
- *  'notifications': NotificationsExtension
+ *  'notifications': NotificationsExtension,
+ *  [h: string]: extension
  * }} BaseExtensions
  */
 
@@ -54,7 +55,7 @@ let ms_init_start = 0;
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {Record<string, extension> & BaseExtensions} [ExtensionsMap=(BaseExtensions)]
+ * @template {BaseExtensions} [ExtensionsMap=BaseExtensions]
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
@@ -680,7 +681,7 @@ export class App {
   /** 
    * @description Add custom extensions
    * 
-   * @template {Record<string, extension<any, this & App>>} E
+   * @template {Record<string, extension>} E
    * 
    * @param {E} extensions 
    * 

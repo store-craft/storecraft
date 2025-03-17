@@ -17,12 +17,11 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.discounts;
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `discount`
  * @param {DiscountTypeUpsert} item
  */
 (item) => regular_upsert(
@@ -48,14 +47,12 @@ export const upsert = (app) =>
 
 
 /**
- * given a discount handle and query, return products of that discount
- * 
- * 
  * @param {App} app
  */
 export const list_discounts_products = (app) => 
 /**
- * 
+ * @description given a discount handle and query,
+ * return products of that discount
  * @param {HandleOrId} handle_or_id 
  * @param {ApiQuery<ProductType>} [q] 
  */

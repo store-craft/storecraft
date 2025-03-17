@@ -5,7 +5,7 @@ import { marked } from 'marked'
  * @prop {string} [value]
  * 
  * @typedef {InternalMDViewParams & 
- *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
+ *  Omit<React.ComponentProps<'div'>, 'value'>
  * } MDViewParams
  * 
  * @param {MDViewParams} param
@@ -23,7 +23,9 @@ export const MDView = (
       {
         __html : marked.parse(
           value ?? '', { 
-            mangle: false, headerIds: false, 
+            // @ts-ignore
+            mangle: false, 
+            headerIds: false, 
             sanitize:false
           }
         )

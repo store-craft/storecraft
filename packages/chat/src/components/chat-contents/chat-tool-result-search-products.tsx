@@ -1,5 +1,5 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/agent.tools.js";
+import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
@@ -83,7 +83,7 @@ export const ToolResultContent_Products = (
   return (
     <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
                   overflow-x-auto h-fit pr-40 pb-5'
-      style={{'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
+      style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
       {
         items.slice(0,4).map(
           (item, ix) => (

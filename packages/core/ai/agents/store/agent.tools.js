@@ -36,7 +36,7 @@ export const TOOLS = (context) => {
         ),
         schema_result: z.array(productTypeSchema.partial()),
         use: async function (input) {
-          await sleep(3000);
+          // await sleep(3000);
   
           return [
             {
@@ -100,14 +100,14 @@ export const TOOLS = (context) => {
         schema: z.object({}),
         schema_result: z.array(collectionTypeSchema.partial()),
         use: async function (input) {
-          const shipping_methods = await context.app.api.collections.list(
+          const items = await context.app.api.collections.list(
             {
               equals: [['active', false]],
               limit: 10
             }
           );
 
-          return shipping_methods;
+          return items;
         }
       }
     ),
@@ -119,14 +119,14 @@ export const TOOLS = (context) => {
         schema: z.object({}),
         schema_result: z.array(collectionTypeSchema.partial()),
         use: async function (input) {
-          const shipping_methods = await context.app.api.discounts.list(
+          const items = await context.app.api.discounts.list(
             {
               equals: [['active', false]],
               limit: 10
             }
           );
 
-          return shipping_methods;
+          return items;
         }
       }
     ),

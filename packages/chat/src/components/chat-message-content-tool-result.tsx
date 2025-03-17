@@ -1,5 +1,5 @@
 import { content_tool_result } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/agent.tools.js";
+import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import type { withDiv } from "./common.types";
 import { ToolResultContent_Products } from "./chat-contents/chat-tool-result-search-products";
 import { ToolResultContent_ShippingMethods } from "./chat-contents/chat-tool-result-search-shipping";

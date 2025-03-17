@@ -1,4 +1,5 @@
 import { App } from './index.js';
+import { DummyMailer } from './mailer/dummy-mailer.js';
 import { NodePlatform } from './platform/node/index.js';
 import  { api } from './test-runner/index.js';
 import { SQLite } from '@storecraft/database-sqlite';
@@ -15,6 +16,9 @@ export const create_app = async () => {
   .withPlatform(new NodePlatform())
   .withDatabase(
     new SQLite({ filepath: ':memory:' })
+  )
+  .withMailer(
+    new DummyMailer()
   );
  
   await app.init();

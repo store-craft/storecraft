@@ -13,12 +13,11 @@ import { regular_get, regular_list,
 export const db = app => app.db.resources.tags;
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `tag`
  * @param {TagTypeUpsert} item
  */
 (item) => regular_upsert(
@@ -43,7 +42,6 @@ export const upsert = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

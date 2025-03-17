@@ -14,7 +14,7 @@ import { assert_zod } from './middle.zod-validate.js';
 
 
 /**
- * 
+ * @description check if an item is a variant
  * @param {any} item 
  */
 export const isVariant = item => {
@@ -38,7 +38,7 @@ export const db = app => app.db.resources.products;
  */
 export const upsert = (app) => 
 /**
- * 
+ * @description `upsert` a `product` or `variant`
  * @param {ProductTypeUpsert | VariantTypeUpsert} item
  */
 (item) => regular_upsert(
@@ -73,18 +73,17 @@ export const upsert = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */
 export const add_product_to_collection = (app) => 
-/**
- * 
- * @param {string} product handle or id
- * @param {string} collection handle or id
- */
-(product, collection) => {
-  return db(app).add_product_to_collection(product, collection);
-}
+  /**
+   * @description add a product to a collection
+   * @param {string} product handle or id
+   * @param {string} collection handle or id
+   */
+  (product, collection) => {
+    return db(app).add_product_to_collection(product, collection);
+  }
 
 /**
  * 
@@ -92,7 +91,7 @@ export const add_product_to_collection = (app) =>
  */
 export const remove_product_from_collection = (app) => 
 /**
- * 
+ * @description remove a product from a collection
  * @param {string} product handle or id
  * @param {string} collection handle or id
  */
@@ -101,12 +100,11 @@ export const remove_product_from_collection = (app) =>
 }
 
 /**
- * 
  * @param {App} app
  */
 export const list_product_collections = (app) => 
 /**
- * 
+ * @description list collections of a product
  * @param {string} handle_or_id handle or id
  */
 (handle_or_id) => {
@@ -114,12 +112,11 @@ export const list_product_collections = (app) =>
 }
 
 /**
- * 
  * @param {App} app
  */
 export const list_product_variants = (app) => 
   /**
-   * 
+   * @description list variants of a product
    * @param {string} product handle or id
    */
   (product) => {
@@ -128,12 +125,11 @@ export const list_product_variants = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */
 export const list_related_products = (app) => 
 /**
- * 
+ * @description list related products of a product
  * @param {string} product handle or id
  */
 (product) => {
@@ -142,12 +138,11 @@ export const list_related_products = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */
 export const list_product_discounts = (app) => 
 /**
- * 
+ * @description list discounts of a product
  * @param {string} product handle or id
  */
 (product) => {
@@ -156,7 +151,6 @@ export const list_product_discounts = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

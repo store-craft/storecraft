@@ -1,3 +1,6 @@
+/**
+ * @import { storage_driver } from '../../storage/types.storage.js';
+ */
 import 'dotenv/config';
 import { suite, test } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -82,13 +85,13 @@ const areBlobsEqual = async (lhs, rhs) => {
  * @param {ArrayBuffer} rhs
  */
 const areArrayBuffersEqual = (lhs, rhs) => {
-  return Buffer.from(lhs).compare(Buffer.from(rhs))==0;
+  return Buffer.from(new Uint8Array(lhs)).compare(new Uint8Array(rhs)) == 0;
 };
 
 
 /**
  * 
- * @param {import('../../storage/types.storage.js').storage_driver} storage 
+ * @param {storage_driver} storage 
  * @param {string} [name]
  */
 export const create = (storage, name) => {

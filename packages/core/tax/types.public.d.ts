@@ -16,5 +16,7 @@ export declare interface tax_provider {
    * @param shipping_address `shipping` address
    * @param pricing `pricing` data
    */
-  compute: (shipping_address: AddressType, pricing: PricingDataWithoutTaxes) => Promise<TaxRecord[]>
+  compute: (
+    shipping_address: AddressType, pricing: PricingDataWithoutTaxes
+  ) => Promise<TaxRecord[]>
 }

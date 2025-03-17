@@ -1,5 +1,5 @@
 /** @import { ApiPolka } from './types.public.js' */
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { App } from '../index.js';
 
@@ -16,7 +16,7 @@ export const create_routes = (app) => {
   polka.post(
     'agent/run',
     async (req, res) => {
-
+    
       const r = await app.ai.run(
         req.parsedBody
       );

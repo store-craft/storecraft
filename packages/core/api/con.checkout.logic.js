@@ -19,24 +19,17 @@ import { assert } from "./utils.func.js";
 
 
 /**
- * 
  * @param {App} app
  */
 export const validate_checkout = app =>
 /**
- * 
  * @description `validate` a `checkout`:
  * 1. re-fetch latest `product` prices and `shipping`
  * 2. soft-test for quantities
  * 3. re-merge latest `products` data inside the `line-items`
  * 
- * 
  * @template {CheckoutCreateType} T
- * 
- * 
  * @param {T} checkout
- * 
- * 
  * @returns {Promise<T & 
  *  { 
  *    validation: OrderData["validation"],
@@ -111,8 +104,6 @@ async (checkout) => {
 
 
 /**
- * @description calculate pricing with `discounts`, `shipping`, `coupons`
- * 
  * @param {App} app 
  */
 export const eval_pricing = (app) => 
@@ -124,11 +115,7 @@ export const eval_pricing = (app) =>
  * 4. return the `order` with `pricing` information
  * 
  * @template {CheckoutCreateType} T
- * 
- * 
  * @param {T} order 
- * 
- * 
  * @returns {Promise<T & { pricing: OrderData["pricing"] } >}
  */
 async (order) => {
@@ -168,7 +155,6 @@ async (order) => {
 
 
 /**
- * 
  * @param {App} app 
  */
 export const create_checkout = app =>
@@ -182,11 +168,8 @@ export const create_checkout = app =>
  * 4. invoke the `onCheckoutCreate` hook on the `payment-gateway`
  * 5. `upsert` the draft `order` into the database.
  * 
- * 
  * @param {CheckoutCreateType} order_checkout
  * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
- * 
- * 
  * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
@@ -257,7 +240,7 @@ async (order_checkout, gateway_handle) => {
 
 
 /**
- * 
+ * @description Reserve stock of an order
  * @param {App} app 
  * @param {OrderDataUpsert} order 
  */
@@ -288,13 +271,12 @@ const reserve_stock_of_order = async (app, order) => {
 export const complete_checkout = app =>
 /**
  * 
- * @description Complete a `checkout`:
+ * @description Complete a `checkout` syncronously:
  * 1. find the payment gateway and corresponding order.
  * 2. invoke `onCheckoutComplete` hook of the gateway
  * 3. update the `order` payment and checkout `status`
  * 4. change stock automatically if configured so
  * 5. `upsert` the order with the new `status`
- * 
  * 
  * @param {string} checkoutId 
  * @param {object} client_payload 
@@ -315,6 +297,21 @@ async (checkoutId, client_payload) => {
     order.payment_gateway?.on_checkout_create, client_payload
   );
 
+  { // we need to validate status is in correct format
+    if(on_checkout_complete?.status?.checkout) {
+      assert(
+        (typeof on_checkout_complete.status.checkout.id)==='number', 
+        '`on_checkout_complete.status.checkout.id` is not a number'
+      )
+    }
+    if(on_checkout_complete?.status?.checkout) {
+      assert(
+        (typeof on_checkout_complete.status.payment.id)==='number', 
+        '`on_checkout_complete.status.payment.id` is not a number'
+      )
+    }
+  }
+
   order.status = {
     ...order.status,
     ...on_checkout_complete.status
@@ -330,7 +327,6 @@ async (checkoutId, client_payload) => {
       (order.status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&
       (app.config.checkout_reserve_stock_on==='checkout_complete')
   ) {
-
     await reserve_stock_of_order(app, order);
   }
   
@@ -341,7 +337,6 @@ async (checkoutId, client_payload) => {
 
 
 /**
- * 
  * @param {App} app 
  */
 export const inter = app => {

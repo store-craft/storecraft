@@ -4,7 +4,7 @@
  * @import { OrderData } from '../api/types.api.js' 
  */
 import { App } from '../index.js';
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { assert_generic_auth, authorize_admin, 
   is_admin, parse_auth_user } from './con.auth.middle.js'

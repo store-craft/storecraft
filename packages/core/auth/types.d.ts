@@ -20,7 +20,7 @@ export interface AuthProvider<Config extends any = any> {
   config: Config
 
   /**
-   * Generate an authentication URI
+   * @description Generate an authentication URI
    * @param redirect_uri The url you registered at the provider
    * @param extra extra params, impl specific
    * @returns auth uri
@@ -28,7 +28,7 @@ export interface AuthProvider<Config extends any = any> {
   generateAuthUri: (redirect_uri: string, extra: any) => Promise<string>;
 
   /**
-   * Get a user based on the auth response that was carried out externally
+   * @description Get a user based on the auth response that was carried out externally
    * @param params essentialy the `redirect_uri` and the previous `authorization-response`
    * @returns a user
    */
@@ -37,7 +37,8 @@ export interface AuthProvider<Config extends any = any> {
   ) => Promise<OAuthProviderUser>
 
   /**
-   * Your chance to read platform specific env-vars for lazy and more secure config
+   * @description Your chance to read platform specific env-vars 
+   * for lazy and more secure config
    * @param app app instance
    */
   init?: (app: App) => (any | void)

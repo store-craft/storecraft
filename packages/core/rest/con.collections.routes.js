@@ -3,7 +3,7 @@
  * @import { ApiQuery } from '../api/types.api.query.js' 
  * @import { CollectionType, ProductType } from '../api/types.api.js' 
  */
-import { Polka } from '../polka/index.js'
+import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_by_roles } from './con.auth.middle.js'
 import { parse_query } from '../api/utils.query.js'

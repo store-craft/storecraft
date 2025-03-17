@@ -48,13 +48,14 @@ export class PostmanExtension {
           return;
 
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.current.contact.email ],
-          'checkout-complete',
-          'Your Order',
           {
-            order: event.payload.current,
-            info: get_info(app),
+            emails: [ event.payload.current.contact.email ],
+            template_handle: 'checkout-complete',
+            subject: 'Your Order',
+            data: {
+              order: event.payload.current,
+              info: get_info(app),
+            }
           }
         );
       }
@@ -68,13 +69,14 @@ export class PostmanExtension {
           return;
 
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.current.contact.email ],
-          'order-shipped',
-          'Your Order Shipped',
           {
-            order: event.payload.current,
-            info: get_info(app),
+            emails: [ event.payload.current.contact.email ],
+            template_handle: 'order-shipped',
+            subject: 'Your Order Shipped',
+            data: {
+              order: event.payload.current,
+              info: get_info(app),
+            }
           }
         );
       }
@@ -88,13 +90,14 @@ export class PostmanExtension {
           return;
 
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.current.contact.email ],
-          'order-cancelled',
-          'Your Order Cancelled',
           {
-            order: event.payload.current,
-            info: get_info(app),
+            emails: [ event.payload.current.contact.email ],
+            template_handle: 'order-cancelled',
+            subject: 'Your Order Cancelled',
+            data: {
+              order: event.payload.current,
+              info: get_info(app),
+            }
           }
         );
       }
@@ -106,14 +109,15 @@ export class PostmanExtension {
       'auth/signup',
       async (event) => {
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.email ],
-          'welcome-customer',
-          'Welcome',
           {
-            customer: event.payload,
-            info: get_info(app),
-            token: event.payload.attributes?.find(it => it.key===CONFIRM_EMAIL_TOKEN)?.value
+            emails: [ event.payload.email ],
+            template_handle: 'welcome-customer',
+            subject: 'Welcome',
+            data: {
+              customer: event.payload,
+              info: get_info(app),
+              token: event.payload.attributes?.find(it => it.key===CONFIRM_EMAIL_TOKEN)?.value
+            }
           }
         );
       }
@@ -123,14 +127,15 @@ export class PostmanExtension {
       'auth/change-password',
       async (event) => {
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.email ],
-          'general-message',
-          'Your Password was changed',
           {
-            info: get_info(app),
-            message: 'Your password has been changed. If it wasn\'t you, please reply to this email',
-            firstname: event.payload.firstname ?? ''
+            emails: [ event.payload.email ],
+            template_handle: 'general-message',
+            subject: 'Your Password was changed',
+            data: {
+              info: get_info(app),
+              message: 'Your password has been changed. If it wasn\'t you, please reply to this email',
+              firstname: event.payload.firstname ?? ''
+            }
           }
         );
       }
@@ -140,15 +145,16 @@ export class PostmanExtension {
       'auth/confirm-email-token-generated',
       async (event) => {
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.auth_user.email ],
-          'confirm-email',
-          'Confirm Email',
           {
-            info: get_info(app),
-            message: {
-              token: event.payload.token,
-              firstname: event.payload.auth_user.firstname
+            emails: [ event.payload.auth_user.email ],
+            template_handle: 'confirm-email',
+            subject: 'Confirm Email',
+            data: {
+              info: get_info(app),
+              message: {
+                token: event.payload.token,
+                firstname: event.payload.auth_user.firstname
+              }
             }
           }
         );
@@ -159,13 +165,14 @@ export class PostmanExtension {
       'auth/forgot-password-token-generated',
       async (event) => {
         await app.api.email.sendMailWithTemplate(
-          event.app,
-          [ event.payload.auth_user.email ],
-          'forgot-password',
-          'Confirm Forgot Password Request',
           {
-            info: get_info(app),
-            token: event.payload.token
+            emails: [ event.payload.auth_user.email ],
+            template_handle: 'forgot-password',
+            subject: 'Confirm Forgot Password Request',
+            data: {
+              info: get_info(app),
+              token: event.payload.token
+            }
           }
         );
       }

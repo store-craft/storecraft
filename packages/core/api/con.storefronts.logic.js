@@ -100,15 +100,13 @@ export const list_storefront_posts = (app) =>
 
 
 /**
- * @description Export a storefront into the `storage`. This is
- * beneficial for things`, that hardly change and therefore can be 
- * efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.
- * 
- * 
  * @param {App} app
  */
 export const export_storefront = (app) => {
   /**
+   * @description Export a storefront into the `storage`. This is
+   * beneficial for things`, that hardly change and therefore can be 
+   * efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.
    * 
    * @param {HandleOrId} handle_or_id 
    * 
@@ -119,7 +117,12 @@ export const export_storefront = (app) => {
 
     assert(
       sf,
-      'export failed'
+      'storefront not found'
+    );
+
+    assert(
+      app.storage,
+      'storage not available'
     );
 
     const encoder = new TextEncoder();
@@ -151,7 +154,6 @@ export const export_storefront = (app) => {
 
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

@@ -103,36 +103,59 @@ export const assert_partial_minus_relations = () => {
  * @param {Object | Object[]} actual 
  * @param {Object | Object[]} expected 
  * @param {string} prefix 
+ * @param {string} [prefix_msg=''] prefix message before actual error message
  */
-export const assert_partial = (actual, expected, prefix='', _original=undefined) => {
+export const assert_partial = (actual, expected, prefix='', _original=undefined, prefix_msg='') => {
   // console.log('actual ', actual)
   // console.log('expected ', expected)
   _original = _original ?? {actual, expected};
-  if(Array.isArray(actual) && Array.isArray(expected)) {
-    assert.ok(
-      actual.length==expected.length, 
-      `assert_partial:: actual ${prefix} is not same shape as expected !!!\n` + 
-      `actual${prefix}=${JSON.stringify(actual, null, 2)}\n` + 
-      `expected${prefix}=${JSON.stringify(expected, null, 2)}\n`
-    );
-    for(let ix=0; ix < expected.length; ix++) {
-      assert_partial(actual?.[ix], expected[ix], `${prefix}[${ix}]`, _original);
+  // if(Array.isArray(actual) && Array.isArray(expected)) {
+  //   assert.ok(
+  //     actual.length==expected.length, 
+  //     `assert_partial:: actual ${prefix} is not same shape as expected !!!\n` + 
+  //     `actual${prefix}=${JSON.stringify(actual, null, 2)}\n` + 
+  //     `expected${prefix}=${JSON.stringify(expected, null, 2)}\n`
+  //   );
+  //   for(let ix=0; ix < expected.length; ix++) {
+  //     assert_partial(actual?.[ix], expected[ix], `${prefix}[${ix}]`, _original, prefix_msg);
+  //   }
+  // } else 
+  if(typeof expected === 'object') {
+    if(Array.isArray(expected)) {
+      const msg = '\n' + prefix_msg + '\n' + `expected${prefix}=${expected}` +'\n' +
+      `actual${prefix}=${actual}`;
+
+      assert.ok(
+        Array.isArray(actual),
+        `expected array but got typeof ${prefix} = ${typeof actual}`
+      )
     }
-  } else if(typeof expected === 'object') {
+
     for(const k of Object.keys(expected)) {
-      // console.log(k, expected[k])
-      assert_partial(actual?.[k], expected[k], `${prefix}[${k}]`, _original);
+      assert_partial(actual?.[k], expected[k], `${prefix}[${k}]`, _original, prefix_msg);
     }
     // assert.equal(filter_actual_keys_by_expected(actual, expected), expected);
   } else {
     // console.log(actual, expected)
     if(expected!==actual) {
-      const msg = '\n' + `expected${prefix}=${expected}` +'\n' +
+      const msg = '\n' + prefix_msg + '\n' + `expected${prefix}=${expected}` +'\n' +
         `actual${prefix}=${actual}`;
-      // just for the nice diff view
-      assert.equal(_original.actual, _original.expected, msg);
+      // just for the nice diff view of `uvu`
+      // console.log({_original, actual, expected})
+      assert.equal(actual, expected, msg);
+      // assert.equal(_original?.actual, _original?.expected, msg);
     }
   }
+}
+
+/**
+ * 
+ * @param {object} actual 
+ * @param {object} expected 
+ * @param {string} [msg] 
+ */
+export const assert_partial_v2 = (actual, expected, msg='') => {
+  assert_partial(actual, expected, '', undefined, msg);
 }
 
 /**

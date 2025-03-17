@@ -50,7 +50,7 @@ export interface mailer<Config extends any, T=any> {
   /** 
    * @description config of the mailer 
    */
-  get config(): Config;
+  config?: Config;
 
   /**
    * @description Your chance to read `env` variable for the config
@@ -66,7 +66,7 @@ export interface mailer<Config extends any, T=any> {
   email: (o: MailObject) => Promise<MailResponse<T>>
 }
 
-import { type AuthUserType, type OrderData } from "./types.api.js"
+import { type AuthUserType, type OrderData } from "./../api/types.api.js"
 
 
 export type general_store_info = {

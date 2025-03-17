@@ -309,6 +309,21 @@ async (checkoutId, client_payload) => {
     order.payment_gateway?.on_checkout_create, client_payload
   );
 
+  { // we need to validate status is in correct format
+    if(on_checkout_complete?.status?.checkout) {
+      assert(
+        (typeof on_checkout_complete.status.checkout.id)==='number', 
+        '`on_checkout_complete.status.checkout.id` is not a number'
+      )
+    }
+    if(on_checkout_complete?.status?.checkout) {
+      assert(
+        (typeof on_checkout_complete.status.payment.id)==='number', 
+        '`on_checkout_complete.status.payment.id` is not a number'
+      )
+    }
+  }
+
   order.status = {
     ...order.status,
     ...on_checkout_complete.status
@@ -324,7 +339,6 @@ async (checkoutId, client_payload) => {
       (order.status.checkout.id===enums.CheckoutStatusEnum.complete.id) &&
       (app.config.checkout_reserve_stock_on==='checkout_complete')
   ) {
-
     await reserve_stock_of_order(app, order);
   }
   

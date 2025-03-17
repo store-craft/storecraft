@@ -67,12 +67,23 @@ export class PubSub {
         }
       }
 
-      const subs = this.#subscribers[event] ?? [];
-      for(let ix=subs.length-1; ix>=0; --ix) {
-        if(is_event_stopped)
-          break;
-        
-        await subs.at(ix)(event_payload);
+      { // dispatch event
+        const subs = this.#subscribers[event] ?? [];
+        for(let ix=subs.length-1; ix>=0; --ix) {
+          if(is_event_stopped)
+            break;
+          
+          await subs.at(ix)(event_payload);
+        }
+      }
+      { // dispatch to subscribers who are listening to all events
+        const subs = this.#subscribers['*'] ?? [];
+        for(let ix=subs.length-1; ix>=0; --ix) {
+          if(is_event_stopped)
+            break;
+          
+          await subs.at(ix)(event_payload);
+        }
       }
     } catch(e) {
       console.log(e)

@@ -14,7 +14,7 @@ import { assert } from "./utils.func.js";
  * @param {TemplateType} template 
  * @param {object} data 
  */
-const compileTemplate = (template, data) => {
+export const compileTemplate = (template, data) => {
   let html, text;
   if(template.template_html) {
     const handlebarsTemplateHTML = Minibars.compile(template.template_html);
@@ -86,7 +86,7 @@ export const sendMail = (app) =>
   async (mail) => {
     await app.pubsub.dispatch(
       'email/before-send',
-      mail
+      { mail_object: mail }
     );
 
     assert(

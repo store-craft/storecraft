@@ -23,19 +23,13 @@ import { assert } from "./utils.func.js";
  */
 export const validate_checkout = app =>
 /**
- * 
  * @description `validate` a `checkout`:
  * 1. re-fetch latest `product` prices and `shipping`
  * 2. soft-test for quantities
  * 3. re-merge latest `products` data inside the `line-items`
  * 
- * 
  * @template {CheckoutCreateType} T
- * 
- * 
  * @param {T} checkout
- * 
- * 
  * @returns {Promise<T & 
  *  { 
  *    validation: OrderData["validation"],
@@ -121,11 +115,7 @@ export const eval_pricing = (app) =>
  * 4. return the `order` with `pricing` information
  * 
  * @template {CheckoutCreateType} T
- * 
- * 
  * @param {T} order 
- * 
- * 
  * @returns {Promise<T & { pricing: OrderData["pricing"] } >}
  */
 async (order) => {
@@ -177,7 +167,6 @@ export const create_checkout = app =>
  * 3. update appropriate `status`
  * 4. invoke the `onCheckoutCreate` hook on the `payment-gateway`
  * 5. `upsert` the draft `order` into the database.
- * 
  * 
  * @param {CheckoutCreateType} order_checkout
  * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
@@ -288,7 +277,6 @@ export const complete_checkout = app =>
  * 3. update the `order` payment and checkout `status`
  * 4. change stock automatically if configured so
  * 5. `upsert` the order with the new `status`
- * 
  * 
  * @param {string} checkoutId 
  * @param {object} client_payload 

@@ -79,7 +79,8 @@ export const similarity = (app) =>
     return {
       items: items_result,
       context: {
-        metric: app.vectorstore.embedder.config.metric
+        metric: app.vectorstore.metric,
+        dimensions: app.vectorstore.dimensions
       }
     };
   }

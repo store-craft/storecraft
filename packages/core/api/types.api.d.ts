@@ -2625,7 +2625,11 @@ export interface SimilaritySearchResultItem {
   namespace: SimilaritySearchAllowedNamespaces
 
   /**
-   * @description The content
+   * @description The content:
+   * - ProductType for 'products'
+   * - DiscountType for 'discounts'
+   * - CollectionType for 'collections'
+   * - ShippingMethodType for 'shipping'
    */
   content: ProductType | DiscountType | CollectionType | ShippingMethodType
 }
@@ -2638,11 +2642,15 @@ export interface SimilaritySearchResult  {
   /**
    * @description The context of the search
    */
-  context: {
+  context?: {
     /**
      * @description The metric used for similarity so you can interpret the results
      */
-    metric: 'cosine' | 'euclidean' | 'dotproduct'
+    metric?: 'cosine' | 'euclidean' | 'dotproduct'
+    /**
+     * @description The embedding dimensions of the vector store
+     */
+    dimensions?: number
   },
 
   /**

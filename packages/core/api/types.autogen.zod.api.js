@@ -1645,7 +1645,7 @@ export const evoEntrySchema = z.object({
     .describe("The line items, that were discounted"),
 });
 
-export const similaritySearchResultSchema = z.object({
+export const similaritySearchResultItemSchema = z.object({
   score: z.number().describe("The score of similarity, lower is better"),
   namespace: similaritySearchAllowedNamespacesSchema.describe(
     "The namespace of the content",
@@ -1657,7 +1657,34 @@ export const similaritySearchResultSchema = z.object({
       collectionTypeSchema,
       shippingMethodTypeSchema,
     ])
-    .describe("The content"),
+    .describe(
+      "The content:\n- ProductType for 'products'\n- DiscountType for 'discounts'\n- CollectionType for 'collections'\n- ShippingMethodType for 'shipping'",
+    ),
+});
+
+export const similaritySearchResultSchema = z.object({
+  context: z
+    .object({
+      metric: z
+        .union([
+          z.literal("cosine"),
+          z.literal("euclidean"),
+          z.literal("dotproduct"),
+        ])
+        .optional()
+        .describe(
+          "The metric used for similarity so you can interpret the results",
+        ),
+      dimensions: z
+        .number()
+        .optional()
+        .describe("The embedding dimensions of the vector store"),
+    })
+    .optional()
+    .describe("The context of the search"),
+  items: z
+    .array(similaritySearchResultItemSchema)
+    .describe("The queried items"),
 });
 
 export const variantCombinationSchema = z.object({

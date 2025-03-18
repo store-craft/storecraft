@@ -259,7 +259,10 @@ export class LibSQLVectorStore {
             metadata: parse_json_safely(row.metadata),
             namespace: String(row.namespace),
           },
-          score: Number(row.score)
+          // `libsql` score is (1 - Cosine Similarity) which yields a distance
+          // between [0, 2] where 0 is the most similar.
+          // This is not in accordance with other apis, so we invert it to [-1, 1]
+          score: (this.metric==='cosine') ? (1.0 - Number(row.score)) : Number(row.score)
         }
       )
     );

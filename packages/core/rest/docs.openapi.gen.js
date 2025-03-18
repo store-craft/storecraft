@@ -1309,19 +1309,25 @@ const register_similarity_search = (registry) => {
         description: "A list of similar entities",
         content: {
           'application/json': {
-            schema: z.array(similaritySearchResultSchema),
-            example: [
-              {
-                score: 0.0032,
-                namespace: 'products',
-                content: {
-                  id: 'pr_sdsduhd77238dsjisjd9',
-                  handle: 'super-mario-world',
-                  price: 49,
-                  description: '...',
+            schema: similaritySearchResultSchema,
+            example: {
+              context: {
+                metric: 'cosine',
+                dimensions: 1536
+              },
+              items: [
+                {
+                  score: 0.0032,
+                  namespace: 'products',
+                  content: {
+                    id: 'pr_sdsduhd77238dsjisjd9',
+                    handle: 'super-mario-world',
+                    price: 49,
+                    description: '...',
+                  }
                 }
-              }
-            ]
+              ]
+            }
           },
         },
       },

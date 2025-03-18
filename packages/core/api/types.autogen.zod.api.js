@@ -128,6 +128,40 @@ export const apiAuthResultSchema = z.object({
   refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
 });
 
+export const baseTypeSchema = idableConcreteSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    media: z.array(z.string()).optional().describe("List of images urls"),
+    attributes: z
+      .array(attributeTypeSchema)
+      .optional()
+      .describe("List of attributes"),
+    tags: z
+      .array(z.string())
+      .optional()
+      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
+    description: z.string().optional().describe("Rich description"),
+    active: z.boolean().optional().describe("Is the entity active ?"),
+    search: z.array(z.string()).optional().describe("search terms"),
+  });
+
+export const oAuthProviderSchema = z
+  .object({
+    provider: z.string().describe("The unique `handle` of the provider"),
+    name: z.string().describe("The readable name of the provider"),
+    logo_url: z
+      .string()
+      .optional()
+      .describe(
+        "The URL to the logo of the provider, can be a data URL\nwith `data:image/svg+xml;utf8,`",
+      ),
+    description: z
+      .string()
+      .optional()
+      .describe("The description of the provider"),
+  })
+  .describe("The OAuth Identity Provider");
+
 export const oAuthProviderCreateURIParamsSchema = z.object({
   provider: z.string().describe("**OAuth** provider identifier/handle"),
   redirect_uri: z
@@ -163,23 +197,6 @@ export const signWithOAuthProviderParamsSchema = z.object({
       "The Response from the authorization response with the\n**OAuth** provider. Usually this is communicated to the website as search params\nwith `code` key after the redirect accomplishes",
     ),
 });
-
-export const baseTypeSchema = idableConcreteSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    media: z.array(z.string()).optional().describe("List of images urls"),
-    attributes: z
-      .array(attributeTypeSchema)
-      .optional()
-      .describe("List of attributes"),
-    tags: z
-      .array(z.string())
-      .optional()
-      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
-    description: z.string().optional().describe("Rich description"),
-    active: z.boolean().optional().describe("Is the entity active ?"),
-    search: z.array(z.string()).optional().describe("search terms"),
-  });
 
 export const tagTypeSchema = baseTypeSchema.extend({
   handle: z.string().describe("The key name"),

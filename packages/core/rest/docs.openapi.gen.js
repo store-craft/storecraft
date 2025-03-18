@@ -33,6 +33,7 @@ import {
   notificationTypeUpsertSchema,
   oAuthProviderCreateURIParamsSchema,
   oAuthProviderCreateURIResponseSchema,
+  oAuthProviderSchema,
   orderDataSchema,
   orderDataUpsertSchema,
   paymentGatewayItemGetSchema,
@@ -1704,16 +1705,9 @@ const register_auth = registry => {
 
   // auth providers
 
-  const _authProvider = registry.register(
+  const AuthProviderSchema = registry.register(
     `AuthProvider`, 
-    z.object(
-      {
-        provider: z.string().openapi({description: 'handle of provider', examples: ['google', 'facebook', 'github', 'x']}),
-        name: z.string().openapi({description: 'Readable name of provider', examples: ['Google', 'Facebook', 'Github', 'X']}),
-        logo_url: z.string().openapi({description: 'image url / image data url / svg data url', examples: ['data:image/png,...', 'data:image/svg+xml,...', 'https://example.com/image.jpeg']}),
-        description: z.string().openapi({description: 'Description of provider'})
-      }
-    )
+    oAuthProviderSchema
   );
 
   registry.registerPath(
@@ -1728,7 +1722,7 @@ const register_auth = registry => {
           description: 'List of auth providers',
           content: {
             "application/json": {
-              schema: _authProvider
+              schema: z.array(AuthProviderSchema).openapi({description: 'List of auth providers', example: [{ name: 'Google', provider: 'google', logo_url: 'data:image/png;...', description: 'Google OAuth2' }]}), 
             },
           },
         },

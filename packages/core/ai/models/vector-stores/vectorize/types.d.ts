@@ -22,6 +22,13 @@ export type Config = {
   dimension?: number,
 
   /**
+   * @description The similiarity metric used to build the index 
+   * and calculate similarity between vectors.
+   * @default 'cosine'
+   */
+  metric?: 'cosine' | 'euclidean' | 'dotproduct';
+
+  /**
    * @description Embedding model provider
    */
   embedder: AIEmbedder

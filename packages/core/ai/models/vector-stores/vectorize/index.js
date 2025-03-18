@@ -40,9 +40,18 @@ export class Vectorize {
     this.#config = {
       index_name: 'vector_index',
       dimension: 1536,
+      metric: 'cosine',
       ...config,
     }
   }
+
+  get metric() {
+    return this.#config.metric;
+  };
+
+  get dimensions() {
+    return this.#config.dimension;
+  };
 
   get config() {
     return this.#config;
@@ -205,7 +214,7 @@ export class Vectorize {
 
   /**
    * 
-   * @param {{ description?: string, metric?: create_vector_index_params["config"]["metric"] }} [params={}] 
+   * @param {{ description?: string }} [params={}] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<cf_response_wrapper<create_vector_index_result>>}
    */
@@ -228,8 +237,8 @@ export class Vectorize {
             name: this.config.index_name,
             description: params.description,
             config: {
-              dimensions: this.config.dimension,
-              metric: params.metric ?? 'cosine'
+              dimensions: this.dimensions,
+              metric: this.metric
             }
           })
         )

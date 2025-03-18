@@ -71,6 +71,14 @@ export class LibSQLVectorStore {
     };
   }
 
+  get metric() {
+    return this.config.similarity;
+  };
+
+  get dimensions() {
+    return this.config.dimensions;
+  };
+
   get client() {
     if(!this.config.url) {
       throw new Error('LibSQLVectorStore::client() - missing url');

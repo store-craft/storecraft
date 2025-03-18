@@ -2610,11 +2610,10 @@ export interface SimilaritySearchInput  {
   limit?: number
 }
 
-
 /**
- * @description Similiarity / semantic search result
+ * @description Similiarity / semantic search result item
  */
-export interface SimilaritySearchResult  {
+export interface SimilaritySearchResultItem {
   /**
    * @description The score of similarity, lower is better
    */
@@ -2623,11 +2622,33 @@ export interface SimilaritySearchResult  {
   /**
    * @description The namespace of the content
    */
-  namespace: SimilaritySearchAllowedNamespaces;
+  namespace: SimilaritySearchAllowedNamespaces
 
   /**
    * @description The content
    */
   content: ProductType | DiscountType | CollectionType | ShippingMethodType
+}
+
+/**
+ * @description Similiarity / semantic search result
+ */
+export interface SimilaritySearchResult  {
+
+  /**
+   * @description The context of the search
+   */
+  context: {
+    /**
+     * @description The metric used for similarity so you can interpret the results
+     */
+    metric: 'cosine' | 'euclidean' | 'dotproduct'
+  },
+
+  /**
+   * @description The queried items
+   */
+  items: SimilaritySearchResultItem[]
+  
 }
 

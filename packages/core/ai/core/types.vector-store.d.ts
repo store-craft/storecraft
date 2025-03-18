@@ -1,8 +1,10 @@
 import { App } from "../../types.public.js";
 import { AIEmbedder } from "./types.embedder.js";
 
+export type RegularValue = string | number | boolean;
+
 export interface VectorStoreDocumentInterface<
-  Metadata extends Record<string, string | number | boolean> = Record<string, string | number | boolean>
+  Metadata extends Record<string, RegularValue> = Record<string, RegularValue>
 > {
   pageContent: string;
   metadata?: Metadata;
@@ -22,7 +24,7 @@ export interface VectorStoreDocumentInterface<
 }
 
 export type VectorStoreSimilaritySearchQueryResult<
-  Metadata extends Record<string, string | number | boolean> = Record<string, string | number | boolean>
+  Metadata extends Record<string, RegularValue> = Record<string, RegularValue>
 > = {
   document: VectorStoreDocumentInterface<Metadata>,
   score: number
@@ -44,6 +46,18 @@ export interface VectorStore<
    * @param app `storecraft` app instance
    */
   onInit?: (app: App) => any | void;
+
+  /**
+   * @description The metric used to 
+   * - build an index.
+   * - calculate similarity between vectors.
+   */
+  metric: 'cosine' | 'euclidean' | 'dotproduct';
+
+  /**
+   * @description The dimensions of the vectors to be inserted in the index.
+   */
+  dimensions: number;
 
   /**
    * Adds precomputed vectors and corresponding documents to the vector store.
@@ -93,7 +107,7 @@ export interface VectorStore<
    * `DocumentInterface` instances representing similar documents.
    */
   async similaritySearch<
-    Metadata extends Record<string, string | number | boolean> = Record<string, string | number | boolean>
+    Metadata extends Record<string, RegularValue> = Record<string, RegularValue>
   >(
     query: string,
     k = 4,

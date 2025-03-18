@@ -190,10 +190,11 @@ export class LibSQLVectorStore {
     );
   }
 
+  aa;
   /** @type {VectorStore["similaritySearch"]} */
   similaritySearch = async (query, k, namespaces) => {
-
-    const embedding_result = await this.embedder.generateEmbeddings(
+    console.log({query,k,namespaces})
+    const embedding_result = this.aa = this.aa ? this.aa : await this.embedder.generateEmbeddings(
       {
         content: [
           {
@@ -217,10 +218,12 @@ export class LibSQLVectorStore {
     /** @type {InArgs} */
     let args = [];
     let sql = `
-    SELECT id, metadata, pageContent, updated_at, namespace, ${distance_fn}(embedding, vector(?)) AS score
-    FROM vector_top_k('${index_name}', vector(?), ?) as top_k_view
-    JOIN ${table} ON ${table}.rowid = top_k_view.id
+    SELECT ${table}.id, metadata, pageContent, updated_at, namespace, ${distance_fn}(embedding, vector(?)) AS score
+    FROM vector_top_k('${index_name}', vector(?), CAST(? AS INTEGER)) as top_k_view
+    JOIN ${table} ON ${table}.rowid = top_k_view.rowid
     `;
+
+    // console.log(typeof k)
     args.push(vector_sql_value, vector_sql_value, k);
 
     if(Array.isArray(namespaces) && namespaces.length) {
@@ -235,8 +238,9 @@ export class LibSQLVectorStore {
     `
     args.push(vector_sql_value);
 
-
     const result = await this.client.execute({ sql, args });
+
+    // console.log({result})
 
     return result.rows.map(
       (row) => (

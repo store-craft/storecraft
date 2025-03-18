@@ -190,11 +190,11 @@ export class LibSQLVectorStore {
     );
   }
 
-  aa;
   /** @type {VectorStore["similaritySearch"]} */
   similaritySearch = async (query, k, namespaces) => {
-    console.log({query,k,namespaces})
-    const embedding_result = this.aa = this.aa ? this.aa : await this.embedder.generateEmbeddings(
+    // console.log({query,k,namespaces})
+    
+    const embedding_result = await this.embedder.generateEmbeddings(
       {
         content: [
           {

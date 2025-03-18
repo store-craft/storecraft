@@ -12,8 +12,13 @@ export const LoadingImage = (
   const [ready, setReady] = useState(false);
   const [extra, setExtra] = useState('opacity-0');
   const onLoad = useCallback(
-    async () => {
+    async (e) => {
       // await sleep(4000);
+      if ('naturalHeight' in e) {
+        if (e.naturalHeight + e.naturalWidth === 0) {
+            return;
+        }
+    }
       setReady(true);
       requestAnimationFrame(
         () => {

@@ -1,11 +1,13 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
 import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 import { LoadingImage } from "../loading-image.js";
+import { RiDiscountPercentLine } from "react-icons/ri";
+import { MdDiscount } from "react-icons/md";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
 type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["fetch_discounts"]>;
@@ -30,28 +32,40 @@ export const ItemView = (
       sleep((index + 1) * 300).then(() => {setReady(true)})
     }, []
   );
+  const onClick = useCallback(
+    () => {
+      pubsub.dispatch(
+        {
+          event: 'request-retry',
+          payload: {
+            prompt: [
+              {
+                content: `I want to know more about the \`${item.title}\` discount`,
+                type: 'text'
+              }
+            ]
+          }
+        }
+      )
+    }, []
+  );
 
   return (
     <div className={
-      'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 \
+      'flex flex-col justify-between gap-3 items-center p-3 w-fit h-fit duration-300 \
       transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
-      <div className='w-full h-32 relative'>
-        <div className='absolute inset-0 rounded-md object-cover h-full w-full 
-                  blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/40' />
-        <LoadingImage src={item.media?.at(0) ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQACepP6q4rvLK966nBCun2zXWrCV6w1u_Vw&s' }
-            className='rounded-md object-cover h-full w-full 
-                  --blur-xs --opacity-40' >
-          <div className='w-full h-full bg-slate-600/40 animate-pulse rounded-md'/>
-        </LoadingImage>
-      </div>
-
-      <p children={item.title} 
-        className='whitespace-nowrap truncate font-medium capitalize 
-            text-base  w-full --max-w-20' />
-      <button children='use' 
-        className='uppercase tracking-widest font-bold w-full 
-            dark:bg-pink-500 bg-black text-white
-                  p-2 chat-card border rounded-md text-xs' />
+      <p 
+        className='whitespace-nowrap truncate capitalize 
+            text-base font-bold  --bg-red-300 font-mono max-w-xl
+             --w-fit --max-w-20 text-teal-600 flex flex-row items-center gap-2' >
+        <MdDiscount className='inline-flex w-fit text-teal-400 animate-pulse'/> 
+        <span children={item.title} className='--whitespace-nowrap' />
+      </p>
+      <button children='ask' 
+        onClick={onClick}
+        className='uppercase tracking-widest font-bold w-full --hidden
+            dark:bg-pink-500 bg-black text-white animate-pulse
+              p-2 chat-card border rounded-md text-xs cursor-pointer' />
     </div>
   )
 }

@@ -56,7 +56,11 @@ export const app = new App(
   }
 )
 .withAI(
-  new OpenAI()
+  new OpenAI(
+    {
+      model: 'gpt-4-turbo'
+    }
+  )
 )
 .withVectorStore(
   new LibSQLVectorStore(

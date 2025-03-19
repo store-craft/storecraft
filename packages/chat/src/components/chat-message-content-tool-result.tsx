@@ -5,6 +5,7 @@ import { ToolResultContent_Products } from "./chat-contents/chat-tool-result-sea
 import { ToolResultContent_ShippingMethods } from "./chat-contents/chat-tool-result-fetch-shipping";
 import { ToolResultContent_Collections } from "./chat-contents/chat-tool-result-fetch-collections";
 import { ToolResultContent_Discounts } from "./chat-contents/chat-tool-result-discounts";
+import { ToolResultContent_SimilaritySearch } from "./chat-contents/chat-tool-result-similarity-search";
 
 
 
@@ -32,7 +33,9 @@ export const content_to_view = (
       return (<ToolResultContent_Collections chat={{content}}  />)
     case 'fetch_discounts':
       return (<ToolResultContent_Discounts chat={{content}}  />)
-    
+    case 'search_with_similarity':
+      return (<ToolResultContent_SimilaritySearch chat={{content}}  />)
+      
     default:
       return null;
   }

@@ -2,7 +2,8 @@ import { z } from "zod"
 import { tool } from "../../core/tools.js"
 import { 
   collectionTypeSchema,
-  productTypeSchema, shippingMethodTypeSchema 
+  productTypeSchema, shippingMethodTypeSchema, 
+  similaritySearchInputSchema
 } from '@storecraft/core/api/types.autogen.zod.api.js'
 import { App } from "../../../index.js"
 
@@ -34,9 +35,9 @@ export const TOOLS = (context) => {
             count: z.number().describe('how many search results to query, default to 5')
           }
         ),
-        schema_result: z.array(productTypeSchema.partial()),
+        schema_result_zod: z.array(productTypeSchema.partial()),
         use: async function (input) {
-          // await sleep(3000);
+
           const items = await context.app.api.products.list(
             {
               vql: input.query,
@@ -81,13 +82,33 @@ export const TOOLS = (context) => {
       }
     ),
 
+    search_with_similarity: tool(
+      {
+        title: '**similarity searching**',
+        description: 'Search with semantic similarity for products, collections, shipping methods and discounts',
+        schema: z.object({
+          q: z.string().describe("The human query, example 'I am looking for a red dress', `I am looking for a discount on a red dress`"),
+          namespaces: z.array(z.enum(["products", "collections", "shipping", "discounts", "all"])).describe("The namespaces to search in order to refine the search. Always use this to limit the search to a specific namespace"),
+          limit: z.number().describe("Limit the top-k search results, default 5")
+        }),
+        use: async function (input) {
+          const result = await context.app.api.search.similarity(
+            input
+          );
+
+          return result.items;
+
+        }
+      }
+    ),
+
     
     fetch_shipping_methods: tool(
       {
         title: '**fetching** `shipping methods`',
         description: 'Fetch all active shipping methods offered by the store',
         schema: z.object({}),
-        schema_result: z.array(shippingMethodTypeSchema.partial()),
+        schema_result_zod: z.array(shippingMethodTypeSchema.partial()),
         use: async function (input) {
           const shipping_methods = await context.app.api.shipping_methods.list(
             {
@@ -106,7 +127,7 @@ export const TOOLS = (context) => {
         title: '**fetching** `collections`',
         description: 'Fetch all active product collections offered by the store',
         schema: z.object({}),
-        schema_result: z.array(collectionTypeSchema.partial()),
+        schema_result_zod: z.array(collectionTypeSchema.partial()),
         use: async function (input) {
           const items = await context.app.api.collections.list(
             {
@@ -125,7 +146,7 @@ export const TOOLS = (context) => {
         title: '**fetching** `discounts`',
         description: 'Fetch all active automatic discounts offered by the store',
         schema: z.object({}),
-        schema_result: z.array(collectionTypeSchema.partial()),
+        schema_result_zod: z.array(collectionTypeSchema.partial()),
         use: async function (input) {
           const items = await context.app.api.discounts.list(
             {

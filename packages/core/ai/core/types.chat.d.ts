@@ -3,14 +3,15 @@ import { tool } from './index.js';
 import { App } from '../../types.public.js';
 
 export type InferToolInputSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<I> : never;
-export type InferToolReturnSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<O> : never;
+export type InferToolReturnSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? (O extends z.ZodTypeAny ? z.infer<O> : O) : never;
 
 /**
  * @description General Tool specification
  */
 export type Tool<
-  ToolInput extends z.ZodTypeAny=any,
-  ToolResult extends z.ZodTypeAny = any,
+  ToolInput extends z.ZodTypeAny = any,
+  ToolResult extends any = any,
+  // ToolResult extends z.ZodTypeAny = any,
   > = {
     __TOOL_INPUT_SCHEMA_TYPE?: ToolInput,
     __TOOL_RESULT_SCHEMA_TYPE?: ToolResult,
@@ -31,9 +32,10 @@ export type Tool<
     schema: ToolInput,
 
     /**
-     * @description Optional result type of tool
+     * @description Optional result type of tool in `zod` schema to confine
+     * and guide the output of {@link use} method
      */
-    schema_result?:  ToolResult,
+    schema_result_zod?: ToolResult,
 
     /**
      * @description Invoke / Use the tool
@@ -41,7 +43,7 @@ export type Tool<
      * @param input `zod` schema
      * @returns 
      */
-    use: (input: z.infer<ToolInput>) => Promise<Partial<z.infer<ToolResult>>>;
+    use: (input: z.infer<ToolInput>) => Promise<ToolResult extends z.ZodTypeAny ? z.infer<ToolResult> : ToolResult>;
   }
 
 

@@ -6,6 +6,7 @@ import {
   similaritySearchInputSchema
 } from '@storecraft/core/api/types.autogen.zod.api.js'
 import { App } from "../../../index.js"
+import { assert } from "../../../api/utils.func.js"
 
 export const sleep = (ms=100) => {
   return new Promise(
@@ -92,8 +93,13 @@ export const TOOLS = (context) => {
           limit: z.number().describe("Limit the top-k search results, default 5")
         }),
         use: async function (input) {
+
           const result = await context.app.api.search.similarity(
-            input
+            {
+              namespaces: ['all'],
+              q: undefined,
+              ...input
+            }
           );
 
           return result.items;

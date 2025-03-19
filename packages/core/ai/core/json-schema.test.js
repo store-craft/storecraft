@@ -47,7 +47,7 @@ test(
   () => {    
     for(const test_case of test_cases) {
       const json_schema = zod_to_json_schema(test_case.zod);
-      console.log(JSON.stringify(json_schema, null, 2));
+      // console.log(JSON.stringify(json_schema, null, 2));
       assert.equal(
         JSON.stringify(json_schema, null, 2),
         JSON.stringify(test_case.expected, null, 2),

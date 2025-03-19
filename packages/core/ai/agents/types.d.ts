@@ -1,7 +1,16 @@
 import { ChatAI, content, LLMHistoryProvider } from "../core/types.private.js"
 
 export type AgentConfig<ChatAIProvider extends ChatAI = ChatAI> = {
-  chat_ai_provider?: ChatAIProvider
+  /**
+   * @description AI chat provider
+   */
+  chat_ai_provider?: ChatAIProvider;
+  /**
+   * @description Maximal amount of history messages to use. This 
+   * can be beneficial for optimizaing usage cost and context window.
+   * @default 5
+   */
+  maxLatestHistoryToUse?: number;
 }
 
 
@@ -13,6 +22,13 @@ export type AgentRunParameters = {
    * @description The `thread` / `conversation` identifier
    */
   thread_id?: string;
+  /**
+   * @description Maximal amount of history messages to use during this run. This 
+   * can be beneficial for optimizaing usage cost and context window. This overrides
+   * the general {@link AgentConfig.maxLatestHistoryToUse}
+   * @default 5
+   */
+  maxLatestHistoryToUse?: number;
   /**
    * @description Current customer prompt
    */

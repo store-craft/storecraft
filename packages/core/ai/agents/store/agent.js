@@ -22,14 +22,17 @@ export class StoreAgent {
   #app;
 
   /** @type {AgentConfig<AI_PROVIDER>} */
-  #config;
+  config;
 
   /**
    * 
    * @param {AgentConfig<AI_PROVIDER>} [config] 
    */
   constructor(config={}) {
-    this.#config = config;
+    this.config = {
+      maxLatestHistoryToUse: 1, 
+      ...config
+    };
     this.history_provider = new StorageHistoryProvider();
   }
 
@@ -42,7 +45,7 @@ export class StoreAgent {
   }
 
   get provider() {
-    return this.#config.chat_ai_provider ?? this.#app.ai_chat_provider;
+    return this.config.chat_ai_provider ?? this.#app.ai_chat_provider;
   }
 
   /**
@@ -54,7 +57,7 @@ export class StoreAgent {
     console.log(params);
 
     try {
-
+      params.maxLatestHistoryToUse ??= this.config.maxLatestHistoryToUse;
       params.thread_id = params.thread_id ?? ('thread_' + id());
 
       const history = await this.history_provider.load(
@@ -63,7 +66,7 @@ export class StoreAgent {
 
       const { stream } = await this.provider.streamText(
         {
-          history: history.toArray() ?? [],
+          history: history?.toArray()?.slice(-params.maxLatestHistoryToUse) ?? [],
           prompt: params.prompt,
           system: SYSTEM,
           tools: TOOLS({ app: this.#app}),
@@ -99,6 +102,7 @@ export class StoreAgent {
     console.log(params);
 
     try {
+      params.maxLatestHistoryToUse ??= this.config.maxLatestHistoryToUse;
       params.thread_id = params.thread_id ?? ('thread_' + id());
 
       const history = await this.history_provider.load(
@@ -109,7 +113,7 @@ export class StoreAgent {
         contents, delta_messages 
       } = await this.provider.generateText(
         {
-          history: history.toArray() ?? [],
+          history: history?.toArray()?.slice(-params.maxLatestHistoryToUse) ?? [],
           prompt: params.prompt,
           system: SYSTEM,
           tools: TOOLS({ app: this.#app}),

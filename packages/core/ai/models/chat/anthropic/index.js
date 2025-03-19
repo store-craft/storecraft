@@ -189,6 +189,7 @@ export class Anthropic {
         ).map(
           tc => ({
             name: tc.name,
+            arguments: tc.input,
             id: tc.id,
             title: params.tools?.[tc.name].title
           })

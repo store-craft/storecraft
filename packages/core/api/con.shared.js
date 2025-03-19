@@ -186,6 +186,10 @@ export const regular_list = (app, db, event) =>
   async (q={}) => {
     // console.log('query', q);
 
+    if(q.equals) { 
+      q.startAt = q.endAt = q.equals;
+    }
+
     const items = await db.list(
       {
         ...q,

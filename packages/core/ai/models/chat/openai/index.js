@@ -267,6 +267,7 @@ export class OpenAI {
           tc => ({
             name: tc.function.name,
             id: tc.id,
+            arguments: tc.function.arguments,
             title: params.tools?.[tc.function.name].title
           })
         )

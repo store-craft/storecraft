@@ -5,8 +5,6 @@ import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
-import { LoadingImage } from "../loading-image.js";
-import { RiDiscountPercentLine } from "react-icons/ri";
 import { MdDiscount } from "react-icons/md";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
@@ -52,7 +50,7 @@ export const ItemView = (
 
   return (
     <div className={
-      'flex flex-col justify-between gap-3 items-center p-3 w-fit h-fit duration-300 \
+      'flex flex-row gap-3 items-center p-1 w-fit h-fit duration-300 \
       transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <p 
         className='whitespace-nowrap truncate capitalize 
@@ -63,11 +61,12 @@ export const ItemView = (
       </p>
       <button children='ask' 
         onClick={onClick}
-        className='uppercase tracking-widest font-bold w-full --hidden
+        className='uppercase tracking-widest font-bold w-fit --hidden
             dark:bg-pink-500 bg-black text-white animate-pulse
               p-2 chat-card border rounded-md text-xs cursor-pointer' />
     </div>
   )
+
 }
 
 export const ToolResultContent_Discounts = (

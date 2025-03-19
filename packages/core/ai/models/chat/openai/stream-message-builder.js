@@ -1,6 +1,6 @@
 /**
  * @import { chat_completion_chunk_result, chat_completion_result, 
- * } from "./types.js";
+ * } from "./types.private.js";
  */
 
 

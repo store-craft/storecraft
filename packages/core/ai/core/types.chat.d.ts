@@ -47,7 +47,7 @@ export type Tool<
 
 export type content_text = { type: 'text', content: string };
 export type content_delta_text = { type: 'delta_text' | 'delta_text', content: string };
-export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string }[] };
+export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string, arguments?: any }[] };
 export type content_tool_result<T extends any = any> = { 
   type: 'tool_result', 
   content: { 

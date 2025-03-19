@@ -138,6 +138,8 @@ export const query_vql_to_eb = (eb, root, table_name) => {
  * @returns {[k: string, v: any]}  
  */
 const transform_boolean_to_0_or_1 = (kv) => {
+
+  // console.log('transform_boolean_to_0_or_1', kv)
   if(typeof kv[1] === 'boolean') {
     return [
       kv[0],

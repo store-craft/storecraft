@@ -1,6 +1,6 @@
 /**
  * @import { claude_completion_response, stream_event, text_content, tool_use_content
- * } from "./types.js";
+ * } from "./types.private.js";
  */
 
 

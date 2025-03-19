@@ -30,14 +30,22 @@ export const TOOLS = (context) => {
         description: 'Search products of the store for info like pricing, discounts and collections',
         schema: z.object(
           {
-            query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion'),
+            query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion such as "tag:action | tag:survival" "'),
             count: z.number().describe('how many search results to query, default to 5')
           }
         ),
         schema_result: z.array(productTypeSchema.partial()),
         use: async function (input) {
           // await sleep(3000);
-  
+          const items = await context.app.api.products.list(
+            {
+              vql: input.query,
+              limit: input.count
+            }
+          );
+
+          return items;
+
           return [
             {
               title: 'super mario NES',
@@ -121,7 +129,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const items = await context.app.api.discounts.list(
             {
-              equals: [['active', false]],
+              equals: [['active', true]],
               limit: 10
             }
           );

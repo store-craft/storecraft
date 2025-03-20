@@ -6,7 +6,15 @@ export type RegularValue = string | number | boolean;
 export interface VectorStoreDocumentInterface<
   Metadata extends Record<string, RegularValue> = Record<string, RegularValue>
 > {
+  /**
+   * @description The Text that was embedded.
+   */
   pageContent: string;
+
+  /**
+   * @description The metadata associated with the document. You can store JSONs for
+   * example or TAGS
+   */
   metadata?: Metadata;
 
   /**

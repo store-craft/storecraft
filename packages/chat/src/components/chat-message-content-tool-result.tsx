@@ -7,10 +7,7 @@ import { ToolResultContent_Collections } from "./chat-contents/chat-tool-result-
 import { ToolResultContent_Discounts } from "./chat-contents/chat-tool-result-discounts";
 import { ToolResultContent_SimilaritySearch } from "./chat-contents/chat-tool-result-similarity-search";
 
-
-
 export type tool_names = keyof ReturnType<typeof TOOLS>;
-
 export type Params = withDiv<
   {
     chat: {
@@ -26,6 +23,8 @@ export const content_to_view = (
     case 'login_frontend':
       return 'login frontend view';
     case 'search_products':
+      return (<ToolResultContent_Products chat={{content}}  />)
+    case 'search_products_in_collection':
       return (<ToolResultContent_Products chat={{content}}  />)
     case 'fetch_shipping_methods':
       return (<ToolResultContent_ShippingMethods chat={{content}}  />)
@@ -58,7 +57,6 @@ export const ChatMessageToolResultContent = (
         view
       }
     </div>
-    
   )
 }
 

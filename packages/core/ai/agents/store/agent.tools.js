@@ -83,6 +83,35 @@ export const TOOLS = (context) => {
       }
     ),
 
+    
+    search_products_in_collection: tool(
+      {
+        title: '**searching** for `products` in a collection',
+        description: 'Search for products inside a specific collection for info like pricing, discounts etc..',
+        schema: z.object(
+          {
+            query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion such as "tag:action | tag:survival" "'),
+            collection_handle: z.string().describe('The handle or unique id of the collection in which to search the products'),
+            count: z.number().describe('how many search results to query, default to 5')
+          }
+        ),
+        schema_result_zod: z.array(productTypeSchema.partial()),
+        use: async function (input) {
+
+          const items = await context.app.api.collections.list_collection_products(
+            input.collection_handle,
+            {
+              vql: input.query,
+              limit: input.count
+            }
+          );
+
+          return items;
+        }
+      }
+    ),
+
+
     search_with_similarity: tool(
       {
         title: '**similarity searching**',
@@ -128,6 +157,7 @@ export const TOOLS = (context) => {
       }
     ),
 
+
     fetch_collections: tool(
       {
         title: '**fetching** `collections`',
@@ -146,6 +176,7 @@ export const TOOLS = (context) => {
         }
       }
     ),
+
 
     fetch_discounts: tool(
       {

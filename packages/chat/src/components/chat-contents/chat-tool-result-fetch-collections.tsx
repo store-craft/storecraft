@@ -20,7 +20,7 @@ export type Params = withDiv<
   }
 >;
 
-export const ItemView = (
+export const CollectionCardView = (
   {
     item, index
   }: withDiv<{item: ItemType, index: number}>
@@ -33,14 +33,13 @@ export const ItemView = (
   );
 
   return (
-    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
+    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit \
+        duration-300 transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
                   blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/40' />
         <LoadingImage 
-            src={
-              item.media?.at(0) ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQACepP6q4rvLK966nBCun2zXWrCV6w1u_Vw&s' 
-            }
+            src={item.media?.at(0)}
             className='rounded-md object-contain h-full w-full' >
           <div className='w-full h-full bg-slate-600/40 animate-pulse rounded-md'/>
         </LoadingImage>
@@ -49,9 +48,6 @@ export const ItemView = (
       <p children={item.title} 
         className='whitespace-nowrap truncate font-medium capitalize 
             text-base  w-full --max-w-20' />
-      {/* <p children={item.price + '$'} 
-        className='whitespace-nowrap font-bold text-2xl 
-              text-green-600 font-mono' /> */}
       <button children='use' 
         className='uppercase tracking-widest font-bold w-full 
             dark:bg-pink-500 bg-black text-white
@@ -94,7 +90,7 @@ export const ToolResultContent_Collections = (
         items.map(
           (item, ix) => (
             <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ItemView key={ix} item={item} index={ix} />
+              <CollectionCardView key={ix} item={item} index={ix} />
             </Card>
           )
         )

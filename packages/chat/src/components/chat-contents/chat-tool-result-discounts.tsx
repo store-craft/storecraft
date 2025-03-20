@@ -19,7 +19,7 @@ export type Params = withDiv<
   }
 >;
 
-export const ItemView = (
+export const DiscountCardView = (
   {
     item, index
   }: withDiv<{item: ItemType, index: number}>
@@ -103,7 +103,7 @@ export const ToolResultContent_Discounts = (
         items.map(
           (item, ix) => (
             <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ItemView key={ix} item={item} index={ix} />
+              <DiscountCardView key={ix} item={item} index={ix} />
             </Card>
           )
         )

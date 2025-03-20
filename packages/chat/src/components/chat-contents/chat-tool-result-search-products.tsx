@@ -19,7 +19,7 @@ export type Params = withDiv<
   }
 >;
 
-export const ItemView = (
+export const ProductCardView = (
   {
     item, index
   }: withDiv<{item: ItemType, index: number}>
@@ -32,7 +32,8 @@ export const ItemView = (
   );
 
   return (
-    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
+    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 \
+          transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
                   blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
@@ -88,7 +89,7 @@ export const ToolResultContent_Products = (
         items.slice(0,4).map(
           (item, ix) => (
             <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ItemView key={ix} item={item} index={ix} />
+              <ProductCardView key={ix} item={item} index={ix} />
             </Card>
           )
         )

@@ -75,13 +75,14 @@ export const TOC = (
       
   return (
   <div {...rest} >
-    <div className='px-4 flex flex-col font-normal antialiased gap-3 
+    <div className='px-4 flex flex-col font-semibold antialiased gap-3 
+          
           overflow-y-scroll overflow-x-clip text-sm w-full h-fit max-h-full border-l 
-          border-gray-400/40 pb-10'>
+          border-gray-400/10 pb-10'>
       <div 
           children='On this page' 
-          className='text-kf-600 dark:text-white font-medium
-                prose prose-slate --font-bold text-sm mb-2'/>        
+          className='text-kf-600 dark:text-white font-semibold
+                prose prose-slate --font-bold text-base/8 mb-2'/>        
 
       {
         headings_with_handles.map(
@@ -90,9 +91,9 @@ export const TOC = (
                 key={ix}
                 href={'#' + h.handle} 
                 className={
-                  `opacity-70 text-ellipsis  hover:text-kf-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500 ' : '')
+                  `opacity-70 text-ellipsis --dark:hover:text-white hover:text-pink-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500 ' : '')
                 }>
-                <MDView value={(h.level>1 ? '' : '') + h.text??chop_words(h.text, 10)} />
+                <MDView value={(h.level>1 ? '' : '') + (h.text??chop_words(h.text, 10))} />
               </Link>
           )
         )

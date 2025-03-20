@@ -2,9 +2,8 @@
  * @import { 
  *  ApiAuthResult,
  *  OAuthProviderCreateURIParams, SignWithOAuthProviderParams, 
- *  OAuthProviderCreateURIResponse, OAuthProvider
+ *  OAuthProviderCreateURIResponse, OAuthProvider, JWTClaims
  * } from './types.public.js';
- * @import { JWTClaims } from '../crypto/jwt.js'
  */
 import * as jwt from '../crypto/jwt.js'
 import { ID, assert } from './utils.func.js'
@@ -144,7 +143,6 @@ export const sign_with_identity_provider = (app) =>
       /** @type {Partial<JWTClaims>} */
       const claims = {
         sub: user.id, 
-        // @ts-ignore
         roles,
         firstname: firstname,
         lastname: lastname,

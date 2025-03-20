@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, useMonaco} from "@monaco-editor/react";
-import useDarkMode from '../hooks/useDarkMode.js';
+import useDarkMode from '@/hooks/use-dark-mode.js'
 import CapsulesView from './capsules-view.jsx';
 
 

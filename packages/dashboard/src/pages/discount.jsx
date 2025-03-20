@@ -22,7 +22,7 @@ import Attributes from '@/comps/attributes.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import MDEditor from '@/comps/md-editor.jsx'
 import { DiscountApplicationEnum } from '@storecraft/core/api/types.api.enums.js'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
 import DiscountPerformance from '../comps/discount-performance.jsx'
 
 /**
@@ -220,7 +220,7 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
 
 /**
  * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ *  mode: import('@/hooks/use-document-actions.js').DocumentActionsMode 
  * }} params
  */
 export default (
@@ -232,7 +232,7 @@ export default (
   const { id : documentId, base } = useParams();
 
   /** 
-  * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+  * @type {import('@/hooks/use-document-actions.js').HookReturnType<
   *  import('@storecraft/core/api').DiscountType>
   * } 
   */

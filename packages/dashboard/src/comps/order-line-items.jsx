@@ -6,7 +6,7 @@ import { BrowseProducts } from './resource-browse.jsx'
 import { Overlay } from './overlay.jsx'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
 import { BlingButton } from './common-button.jsx'
-import { LinkWithState } from '@/hooks/useNavigateWithState.jsx'
+import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 /**

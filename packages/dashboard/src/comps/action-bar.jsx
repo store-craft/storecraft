@@ -7,7 +7,7 @@ import ShowIf from './show-if.jsx'
 import Notifications from './notifications.jsx'
 import NotificationButton from './notifications-button.jsx'
 import DarkMode from './dark-mode.jsx'
-import useOnClickOutside from '../hooks/useOnClickOutside.js'
+import useOnClickOutside from '@/hooks/use-on-click-outside.js'
 import { QuickSearchButton } from './quick-search-browser.jsx'
 
 
@@ -60,11 +60,6 @@ const ActionBar = (
     }, []
   );
 
-  const user_name = useMemo(
-    () => auth?.firstname ? (', ' + auth?.firstname) : '',
-    [auth]
-  );
-
   // console.log(openNotifications)
   
   return (
@@ -82,8 +77,8 @@ const ActionBar = (
         }
         onClick={onMenuClick} />
     <div>
-      <span children={`Hi`}/>
-      <span children={user_name} 
+      <span children={`Hi `}/>
+      <span children={auth?.access_token?.claims?.firstname} 
             className='font-semibold '/>
     </div>        
     <div className='flex flex-row gap-3 items-center'>

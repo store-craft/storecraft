@@ -12,7 +12,7 @@ import { BlingButton } from './common-button.jsx'
 import { FilterMetaEnum } from '@storecraft/core/api/types.api.enums.js'
 import { SelectTags } from './tags-edit.jsx'
 import { extract_contact_field } from '../pages/customers.jsx'
-import useNavigateWithState from '../hooks/useNavigateWithState.jsx'
+import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
  
 /**
  * 

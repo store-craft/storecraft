@@ -3,7 +3,7 @@ import { Bling } from '@/comps/common-ui.jsx'
 import main_png from './main.png';
 import svg from './favicon.svg'
 import { LogoGradient, LogoText } from './logo-text.jsx'
-import useDarkMode from '@/hooks/useDarkMode.js'
+import useDarkMode from '@/hooks/use-dark-mode.js'
 
 export const StorecraftText = (
   {

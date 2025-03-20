@@ -103,6 +103,13 @@ export interface StorecraftConfig  {
 
   /** 
    * 
+   * @description forgot password token signing secret, if absent will be infered at 
+   * init by `platform.env.SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN` environment  
+   */
+  auth_secret_forgot_password_token?: string;
+
+  /** 
+   * 
    * @description (Optional) automatically reserve stock, we recommend to use `never`.
    * Depending on your needs you can alter this setting.
    * if absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` 

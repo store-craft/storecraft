@@ -3,7 +3,7 @@ import { Bling } from '@/comps/common-ui.jsx'
 import ShowIf from '@/comps/show-if.jsx'
 import ImageGrid from './gallery-image-grid.jsx'
 import SearchBar from './gallery-searchbar.jsx'
-import useCollectionsActions from '@/hooks/useCollectionsActions.js'
+import useCollectionsActions from '@/hooks/use-collections-actions.js'
 
 /**
  * A `gallery` component. if contstrained on height, then image-grid
@@ -43,7 +43,7 @@ const Gallery = (
 ) => {
 
 /**
-  * @type {import('@/hooks/useCollectionsActions.js').HookReturnType<
+  * @type {import('@/hooks/use-collections-actions.js').HookReturnType<
   *  import('@storecraft/core/api').ImageType>
   * }
   */

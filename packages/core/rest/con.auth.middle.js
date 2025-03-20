@@ -57,8 +57,6 @@ export const parse_bearer_auth = (app) => {
       app.config.auth_secret_access_token, token, true
     );
 
-    // console.log('jwt', jwt)
-
     if(jwt.verified) 
       req.user = jwt.claims;
   }

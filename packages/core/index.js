@@ -70,6 +70,7 @@ export class App {
     auth_admins_emails: 'SC_AUTH_ADMIN_EMAILS',
     auth_secret_access_token: 'SC_AUTH_SECRET_ACCESS_TOKEN',
     auth_secret_refresh_token: 'SC_AUTH_SECRET_REFRESH_TOKEN',
+    auth_secret_forgot_password_token: 'SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN',
     checkout_reserve_stock_on: 'SC_CHECKOUT_RESERVE_STOCK_ON',
     general_confirm_email_base_url: 'SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL',
     general_forgot_password_confirm_base_url: 'SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL',

@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useState } from 'react'
 import { GradientFillIcon } from './common-button.jsx'
 import { IoIosNotifications } from 'react-icons/io/index.js'
-import useInterval from '../hooks/useInterval.js'
+import useInterval from '../hooks/use-interval.js'
 import ShowIf from './show-if.jsx'
 import { MINUTE } from '@/utils/time.js'
 import { useCollection } from '@storecraft/sdk-react-hooks'

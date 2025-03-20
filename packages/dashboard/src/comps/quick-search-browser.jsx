@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BiSearchAlt } from "react-icons/bi/index.js"
 import { CiSearch } from "react-icons/ci/index.js";
 import { MdKeyboardCommandKey } from "react-icons/md/index.js";
-import { createKeyboardMatchHook } from '../hooks/useKeyboardMatch.js'
+import { createKeyboardMatchHook } from '../hooks/use-keyboard-match.js'
 import { Overlay } from './overlay.jsx'
 import { MainPortal } from '../layout.jsx'
 import { IoIosReturnLeft } from "react-icons/io/index.js";

@@ -6,7 +6,7 @@ import { AiOutlineCloseCircle } from 'react-icons/ai/index.js'
 import { RiDashboardFill } from 'react-icons/ri/index.js'
 import { FiSettings } from 'react-icons/fi/index.js'
 import { Logo } from './logo.jsx'
-import { useBreakpointValue } from '../hooks/useMediaQuery.js'
+import { useBreakpointValue } from '../hooks/use-media-query.js'
 
 /**
  * 

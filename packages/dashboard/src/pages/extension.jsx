@@ -5,8 +5,9 @@ import { withCard } from '@/comps/common-fields.jsx'
 import ErrorMessage from '@/comps/error-message.jsx'
 import JsonView from '@/comps/json.jsx'
 import { Div, HR } from '@/comps/common-ui.jsx'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
 import MDView from '../comps/md-view.jsx'
+// @ts-ignore
 import svg from '@/comps/favicon.svg';
 
 const root_left_schema = {
@@ -103,7 +104,7 @@ export default (
  const { id : documentId } = useParams();
 
  /** 
-  * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+  * @type {import('@/hooks/use-document-actions.js').HookReturnType<
   *  import('./extensions.jsx').ExtensionItemGet>
   * } 
   */

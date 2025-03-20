@@ -10,7 +10,7 @@ import ShowIf from './show-if.jsx'
 import { IoMdAdd } from 'react-icons/io/index.js'
 import { Overlay } from './overlay.jsx'
 import { BrowseProducts } from './resource-browse.jsx'
-import useTrigger from '../hooks/useTrigger.js'
+import useTrigger from '@/hooks/use-trigger.js'
 import { TableSchemaView } from './table-schema-view.jsx'
 
 /**

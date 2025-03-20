@@ -5,7 +5,7 @@ import {
 import { 
   forwardRef, useEffect, useImperativeHandle, useMemo, useRef 
 } from 'react'
-import useTrigger from '../hooks/useTrigger.js'
+import useTrigger from '@/hooks/use-trigger.js'
 import { TableSchemaView } from './table-schema-view.jsx'
 
 

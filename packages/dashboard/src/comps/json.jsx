@@ -2,7 +2,7 @@ import { Inspector } from 'react-inspector'
 import { chromeLight, chromeDark } from 'react-inspector'
 import { Card } from './common-ui.jsx'
 import { useMemo } from 'react'
-import useDarkMode from '@/hooks/useDarkMode.js'
+import useDarkMode from '@/hooks/use-dark-mode.js'
 import { ClipBoardCopy } from './common-fields.jsx'
 
 /**

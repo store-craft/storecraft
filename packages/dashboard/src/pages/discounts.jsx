@@ -5,7 +5,7 @@ import DiscountsQuickSearchActions from '@/comps/discounts-quick-search-actions.
 import DiscountType from '@/comps/discounts-table-type.jsx'
 import Code from '@/comps/discounts-table-code.jsx'
 import { Title } from '@/comps/common-ui.jsx'
-import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import useCollectionsActions from '../hooks/use-collections-actions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
 
@@ -33,7 +33,7 @@ const schema_fields = [
 export default ({}) => {
 
   /**
-   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
+   * @type {import('../hooks/use-collections-actions.js').HookReturnType<
    *  import('@storecraft/core/api').DiscountType>
    * }
    */ 

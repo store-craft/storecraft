@@ -12,8 +12,8 @@ import SideMenu from './comps/side-menu.jsx'
 import ActionBar from './comps/action-bar.jsx'
 import { Bling } from './comps/common-ui.jsx'
 import { Outlet } from 'react-router-dom'
-import useDarkMode from './hooks/useDarkMode.js'
-import { useScrollDelta } from './hooks/useScrollDelta.js'
+import useDarkMode from './hooks/use-dark-mode.js'
+import { useScrollDelta } from '@/hooks/use-scroll-delta.js'
 import { CgTemplate } from "react-icons/cg/index.js";
 import { createPortal } from './comps/portal-creator.jsx'
 
@@ -136,6 +136,7 @@ const Layout = (
                   shelf-body-bg
                   w-full h-full sm:h-full ${className}
                   `} {...rest}
+      // @ts-ignore
       ssstyle={{height: '100dvh'}}>
 
     <MainPortal.Portal />        

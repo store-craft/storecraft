@@ -1,10 +1,9 @@
 /**
  * @import { 
  *  ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
- *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult
+ *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult, JWTClaims
  * } from './types.api.js';
  * @import { ApiQuery } from './types.api.query.js'
- * @import { JWTClaims } from '../crypto/jwt.js'
  */
 import * as jwt from '../crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
@@ -19,7 +18,6 @@ import { isDef } from './utils.index.js'
 import { 
   create_auth_uri, identity_providers, sign_with_identity_provider 
 } from './con.auth.idp.logic.js'
-
 
 export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
 export const FORGOT_PASSWORD_IDENTITY_TOKEN = 'forgot-password-identity-token';
@@ -131,8 +129,10 @@ async (body) => {
   /** @type {Partial<JWTClaims>} */
   const claims = {
     sub: id, 
-    // @ts-ignore
-    roles
+    roles,
+    email,
+    firstname, 
+    lastname  
   };
 
   const access_token = await jwt.create(
@@ -234,7 +234,10 @@ async (body) => {
    */
   const claims = {
     sub: existingUser.id,
-    roles: existingUser.roles
+    roles: existingUser.roles,
+    email: existingUser.email,
+    firstname: existingUser.firstname,
+    lastname: existingUser.lastname
   }
 
   const access_token = await jwt.create(
@@ -299,12 +302,14 @@ async (body, fail_if_not_admin=false) => {
   assert(verified, 'auth/error', 401);
 
   /** 
-   * @type {Partial<Partial<JWTClaims> & 
-   * Pick<AuthUserType, 'roles'>> } 
+   * @type {Partial<JWTClaims>} 
    */
   const claims = {
     sub: existingUser.id,
-    roles: existingUser.roles
+    roles: existingUser.roles,
+    email,
+    firstname: existingUser.firstname,
+    lastname: existingUser.lastname
   }
 
   const access_token = await jwt.create(
@@ -363,8 +368,7 @@ async (body) => {
   const access_token = await jwt.create(
     app.config.auth_secret_access_token, 
     { 
-      // @ts-ignore
-      sub: claims.sub, roles: claims.roles 
+      ...claims,
     }, jwt.JWT_TIMES.HOUR
   );
 
@@ -685,7 +689,7 @@ export const forgot_password_request = (app) =>
     // we do not verify the email in database, so it will not
     // become a heavy DDos event
     const token = await jwt.create(
-      app.config.auth_secret_access_token, 
+      app.config.auth_secret_forgot_password_token, 
       { sub: email, aud: FORGOT_PASSWORD_IDENTITY_TOKEN },
       jwt.JWT_TIMES.HOUR
     );
@@ -718,7 +722,7 @@ export const forgot_password_request_confirm = (app) =>
   
     const  { 
       verified, claims
-    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    } = await jwt.verify(app.config.auth_secret_forgot_password_token, token);
     
     assert(verified, 'auth/error');
     assert(claims.aud===FORGOT_PASSWORD_IDENTITY_TOKEN, 'auth/error');

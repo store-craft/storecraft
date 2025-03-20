@@ -1,4 +1,4 @@
-import { LinkWithState } from '../hooks/useNavigateWithState.jsx'
+import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
 
 
 /**

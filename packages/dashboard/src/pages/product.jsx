@@ -18,7 +18,7 @@ import RelatedProducts from '@/comps/product-related-products.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
 import ProductVariants from '@/comps/products-variants.jsx'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
 import ProductDiscounts from '../comps/product-discounts.jsx'
 
 const test = {
@@ -213,7 +213,7 @@ const root_schema = {
 
 /**
  * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ *  mode: import('@/hooks/use-document-actions.js').DocumentActionsMode 
  * }} params
  */
 export default (
@@ -225,7 +225,7 @@ export default (
   const { id : documentId, base } = useParams();
 
   /** 
-   * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+   * @type {import('@/hooks/use-document-actions.js').HookReturnType<
    *  import('@storecraft/core/api').ProductType &
    *  import('@storecraft/core/api').VariantType>
    * } 

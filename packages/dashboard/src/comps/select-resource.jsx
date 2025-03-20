@@ -6,7 +6,7 @@ import ShowIf from './show-if.jsx'
 import { Bling } from './common-ui.jsx'
 import CapsulesView from './capsules-view.jsx'
 import { HR } from './common-ui.jsx'
-import useNavigateWithState from '@/hooks/useNavigateWithState.jsx'
+import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
 import { App } from '@storecraft/core'
 
 /**

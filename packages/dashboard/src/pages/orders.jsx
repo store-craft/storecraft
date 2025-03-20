@@ -4,7 +4,7 @@ import { Span, TimeStampView, RecordActions } from '@/comps/common-fields.jsx'
 import { LabelCapsule } from '@/comps/capsule.jsx'
 import OrdersQuickSearchActions, { id2ColorFulfill } 
        from '@/comps/orders-quick-search-actions.jsx'
-import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import useCollectionsActions from '../hooks/use-collections-actions.js'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import MDView from '../comps/md-view.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
@@ -59,7 +59,7 @@ const schema_fields = [
 export default ({}) => {
 
   /**
-   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
+   * @type {import('../hooks/use-collections-actions.js').HookReturnType<
    *  import('@storecraft/core/api').OrderData>
    * }
    */ 

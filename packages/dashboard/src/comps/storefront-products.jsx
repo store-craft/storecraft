@@ -4,7 +4,7 @@ import CapsulesView from './capsules-view.jsx'
 import { Overlay } from './overlay.jsx'
 import { BlingButton } from './common-button.jsx'
 import { HR } from './common-ui.jsx'
-import useNavigateWithState from '@/hooks/useNavigateWithState.jsx'
+import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
 
 /**
  * `StorefrontProducts` is located at the `storefront.jsx` page.

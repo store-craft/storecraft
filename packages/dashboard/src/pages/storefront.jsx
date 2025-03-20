@@ -18,7 +18,7 @@ import { SelectResourceWithTags } from '@/comps/select-resource.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
 import { DiscountApplicationEnum } from '@storecraft/core/api/types.api.enums.js'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
 
 const test = {
   title: 'storefront 1',
@@ -222,7 +222,7 @@ const Actions = (
 
 /**
  * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ *  mode: import('@/hooks/use-document-actions.js').DocumentActionsMode 
  * }} params
  */
 export default (
@@ -234,7 +234,7 @@ export default (
   const { id : documentId, base } = useParams();
 
   /** 
-    * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+    * @type {import('@/hooks/use-document-actions.js').HookReturnType<
     *  import('@storecraft/core/api').StorefrontType>
     * } 
     */

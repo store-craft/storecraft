@@ -5,7 +5,6 @@ import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
-import { LoadingImage } from "../loading-image.js";
 import { ProductCardView } from "./chat-tool-result-search-products.js";
 import { CollectionCardView } from "./chat-tool-result-fetch-collections.js";
 import { DiscountCardView } from "./chat-tool-result-discounts.js";

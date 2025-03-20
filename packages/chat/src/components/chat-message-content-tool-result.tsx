@@ -6,6 +6,7 @@ import { ToolResultContent_ShippingMethods } from "./chat-contents/chat-tool-res
 import { ToolResultContent_Collections } from "./chat-contents/chat-tool-result-fetch-collections";
 import { ToolResultContent_Discounts } from "./chat-contents/chat-tool-result-discounts";
 import { ToolResultContent_SimilaritySearch } from "./chat-contents/chat-tool-result-similarity-search";
+import { ToolResultContent_BrowseCollection } from "./chat-contents/chat-tool-result-browse-collection";
 
 export type tool_names = keyof ReturnType<typeof TOOLS>;
 export type Params = withDiv<
@@ -30,6 +31,8 @@ export const content_to_view = (
       return (<ToolResultContent_ShippingMethods chat={{content}}  />)
     case 'fetch_collections':
       return (<ToolResultContent_Collections chat={{content}}  />)
+    case 'browse_collection':
+      return (<ToolResultContent_BrowseCollection chat={{content}}  />)
     case 'fetch_discounts':
       return (<ToolResultContent_Discounts chat={{content}}  />)
     case 'search_with_similarity':

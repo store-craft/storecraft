@@ -30,7 +30,7 @@ export class StoreAgent {
    */
   constructor(config={}) {
     this.config = {
-      maxLatestHistoryToUse: 1, 
+      maxLatestHistoryToUse: 100, 
       ...config
     };
     this.history_provider = new StorageHistoryProvider();

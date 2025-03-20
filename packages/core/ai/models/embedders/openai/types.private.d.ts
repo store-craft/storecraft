@@ -32,3 +32,11 @@ export type RequestResult = {
   model: string,
   usage: object
 };
+
+export type RequestErrorResult = {
+  error: {
+    code: number,
+    message: string,
+    type: string
+  }
+};

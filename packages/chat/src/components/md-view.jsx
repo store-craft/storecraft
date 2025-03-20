@@ -1,4 +1,6 @@
 import { marked } from 'marked'
+import { useMemo } from 'react'
+import Markdown from 'markdown-to-jsx'
 
 /**
  * @typedef {object} InternalMDViewParams
@@ -15,23 +17,37 @@ export const MDView = (
     value, ...rest
   }
 ) => {
-  
+  const Comp = useMemo(
+    () => () => (
+      <Markdown
+        options={{
+          overrides: {
+            Price: {
+              component: () => <div children="Price"/>,
+              props: {
+                className: 'foo',
+              },
+            },
+          },
+        }}
+        children={value}/>
+    ), [value]
+  );
+
   return (
-<div {...rest}>
-  <p className='--mdx md-view overflow-auto' 
-    dangerouslySetInnerHTML={
-      {
-        __html : marked.parse(
-          value ?? '', { 
-            // @ts-ignore
-            mangle: false, 
-            headerIds: false, 
-            sanitize:false
-          }
-        )
-      }
-    }
-  />     
-</div>    
+    <div {...rest}>
+      <Markdown
+        options={{
+          overrides: {
+            Price: {
+              component: () => <div children="Price"/>,
+              props: {
+                className: 'foo',
+              },
+            },
+          },
+        }}
+        children={value}/>
+    </div>    
   )
 }

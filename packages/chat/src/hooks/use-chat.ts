@@ -304,6 +304,19 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
     }, [streamSpeak]
   );
 
+  const mm = new Array(20).fill(
+    {
+      role: 'user',
+      contents: [
+        {
+          type: 'text',
+          content: 'Hello, how can I help you today?'
+        }
+      ]
+    }
+  )
+  
+
   return {
     messages, threadId, loading, error, pubsub,
     actions: {

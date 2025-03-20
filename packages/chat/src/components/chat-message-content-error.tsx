@@ -20,7 +20,10 @@ export const ChatMessageErrorContent = (
   }: Params
 ) => {
   const content = chat.content.content;
-  const text = (typeof content === 'string') ? content : (content.message ?? 'Something went wrong');
+  const text = (typeof content === 'string') ? 
+    content : (
+      content ? JSON.stringify(content, null, 2) : 'Something went wrong'
+    );
   const [open, setOpen] = useState(false);
 
   return (

@@ -90,7 +90,7 @@ export const TOOLS = (context) => {
         description: 'Search for products inside a specific collection for info like pricing, discounts etc..',
         schema: z.object(
           {
-            query: z.string().describe('search keywords, can also use boolean notation for inclusion and exlusion such as "tag:action | tag:survival" "'),
+            query: z.string().optional().describe('Optional search keywords, can also use boolean notation for inclusion and exlusion such as "tag:action | tag:survival" "'),
             collection_handle: z.string().describe('The handle or unique id of the collection in which to search the products'),
             count: z.number().describe('how many search results to query, default to 5')
           }
@@ -147,7 +147,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const shipping_methods = await context.app.api.shipping_methods.list(
             {
-              equals: [['active', false]],
+              equals: [['active', true]],
               limit: 10
             }
           );
@@ -167,7 +167,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const items = await context.app.api.collections.list(
             {
-              equals: [['active', false]],
+              equals: [['active', true]],
               limit: 10
             }
           );
@@ -176,6 +176,27 @@ export const TOOLS = (context) => {
         }
       }
     ),
+
+
+    browse_collection: tool(
+      {
+        title: '**showing** `collection`',
+        description: 'Send a command to the frontend to render a collection browser in the frontend',
+        schema: z.object(
+          {
+            handle: z.string().describe('The handle or unique id of the collection to fetch'),
+          }
+        ),
+        use: async function (input) {
+          return {
+            command: 'browse_collection',
+            params: {
+              handle: input.handle 
+            }
+          };
+        }
+      }
+    ),    
 
 
     fetch_discounts: tool(
@@ -197,7 +218,7 @@ export const TOOLS = (context) => {
       }
     ),
 
-
+    
     login_frontend: tool(
       {
         title: 'Sending login form',
@@ -209,8 +230,10 @@ export const TOOLS = (context) => {
         ),
         use: async function (input) {
           return {
-            message: input.message,
-            form_type: 'login'
+            command: 'show_login_form',
+            params: {
+              message: input.message,
+            }
           }
         }
       }

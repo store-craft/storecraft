@@ -1,11 +1,10 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
 import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
-import { FaShippingFast } from "react-icons/fa";
 import { LoadingImage } from "../loading-image.js";
 
 type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;

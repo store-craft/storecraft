@@ -41,7 +41,7 @@ export const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new Turso())
-.withStorage(new NodeLocalStorage("storage"))
+.withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
 .withPaymentGateways(
   {
@@ -56,11 +56,7 @@ export const app = new App(
   }
 )
 .withAI(
-  new OpenAI(
-    {
-      model: 'gpt-4-turbo'
-    }
-  )
+  new XAI()
 )
 .withVectorStore(
   new LibSQLVectorStore(

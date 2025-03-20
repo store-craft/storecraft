@@ -3,7 +3,7 @@
  *  config
  * } from "./types.js";
  * @import { 
- *  RequestBody, RequestResult
+ *  RequestBody, RequestErrorResult, RequestResult
  * } from "./types.private.js";
  * @import { 
  *  GenerateEmbeddingsParams, GenerateEmbeddingsResult, AIEmbedder
@@ -97,9 +97,12 @@ export class OpenAIEmbedder {
 
     /** @type {RequestResult} */
     const json = await r.json();
-
+    
     if(!r.ok) {
-      throw new Error(JSON.stringify(json, null, 2));
+      if('error' in json) {
+        throw json.error;
+      }
+      throw json;
     }
 
     return {

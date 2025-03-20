@@ -56,7 +56,8 @@ export const app = new App(
   }
 )
 .withAI(
-  new XAI()
+  // new XAI(),
+  new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
   new LibSQLVectorStore(

@@ -31,7 +31,8 @@ export const ChatMessageErrorContent = (
               border-red-400/30 rounded-md text-red-400 ` + (open ? '' : '-skew-x-6')}>
       <button 
         onClick={() => {setOpen(x => !x)}}
-        className={'h-fit cursor-pointer flex flex-row justify-between gap-10 items-center ' + (open ? 'w-full' : 'w-fit')}>
+        className={'h-fit cursor-pointer flex flex-row justify-between \
+            gap-10 items-center ' + (open ? 'w-full' : 'w-fit')}>
         <p children='🤖 something went wrong' className='--p-3' />
         <LuExpand 
           className='cursor-pointer' />
@@ -42,13 +43,13 @@ export const ChatMessageErrorContent = (
           <MDView 
             value={"\`\`\`json \n" + text + " \n\`\`\`"} 
             className='max-w-full flex-1 prose dark:prose-invert
-                        prose-headings:mt-0 prose-headings:mb-0 
-                        prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
-                        prose-ol:my-0 prose-pre:m-0 prose-pre:p-0
-                        text-red-600 prose-pre:bg-transparent
-                      prose-pre:text-red-600 dark:prose-pre:text-gray-300
-                      prose-code:text-red-600 dark:prose-code:text-gray-300
-                        ' />
+              prose-headings:mt-0 prose-headings:mb-0 
+              prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
+              prose-ol:my-0 prose-pre:m-0 prose-pre:p-0
+              text-red-600 prose-pre:bg-transparent
+            prose-pre:text-red-600 dark:prose-pre:text-gray-300
+            prose-code:text-red-600 dark:prose-code:text-gray-300
+              ' />
           <CopyClipboard copy_text={text} 
             className='absolute top-0 right-0 dark:text-white text-gray-700' />
         </div>    

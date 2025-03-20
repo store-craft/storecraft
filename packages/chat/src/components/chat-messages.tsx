@@ -1,6 +1,11 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
+import { 
+  forwardRef, useCallback, useEffect, 
+  useImperativeHandle, useRef 
+} from "react";
 import type { ChatMessage, withDiv } from "./common.types";
-import { ChatMessagesViewImperativeInterface, ChatMessageView } from "./chat-message";
+import { 
+  ChatMessagesViewImperativeInterface, ChatMessageView 
+} from "./chat-message";
 
 export type MessagesParams = withDiv<
   {
@@ -34,7 +39,10 @@ export const ChatMessagesView = forwardRef<
           scroll: () => {
             ref_div.current?.scroll(
               {
-                top: ref_div.current.scrollHeight - ref_div.current.clientHeight,
+                top: (
+                  ref_div.current.scrollHeight - 
+                  ref_div.current.clientHeight
+                ),
                 behavior: "smooth"
               }
             )
@@ -55,8 +63,8 @@ export const ChatMessagesView = forwardRef<
         if (!ref_resize_observer_div.current) return;
         const resizeObserver = new ResizeObserver(
           (entries) => {
-            console.log('resize', ref_resize_observer_div.current.clientHeight)
-            console.log('ref_div.current.scrollHeight', ref_div.current.scrollHeight)
+            // console.log('resize', ref_resize_observer_div.current.clientHeight)
+            // console.log('ref_div.current.scrollHeight', ref_div.current.scrollHeight)
             onChatWindowResize?.(ref_resize_observer_div.current);
           }
         );

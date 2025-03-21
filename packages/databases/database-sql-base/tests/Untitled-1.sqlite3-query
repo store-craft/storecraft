@@ -6,8 +6,8 @@ SELECT
   -- products.id, 
   -- products.handle, 
   -- products_to_collections.reporter as collection,
-  products.*,
-  products_to_collections.*,
+  -- products.*,
+  -- products_to_collections.*,
   entity_to_tags_projections.value as tag 
 FROM products 
 INNER JOIN 

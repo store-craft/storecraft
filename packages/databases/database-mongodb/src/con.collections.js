@@ -27,8 +27,6 @@ const transactionOptions = {
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('collections');
@@ -169,8 +167,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["list_collection_products"]}
  */
 const list_collection_products = (driver) => {
@@ -213,6 +209,37 @@ const list_collection_products = (driver) => {
   }
 }
 
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_collection_products_tags"]}
+ */
+const list_collection_products_tags = (driver) => {
+  return async (handle_or_id) => {
+    const items = await driver.resources.products._col.find(
+      {
+        '_relations.search': `col:${handle_or_id}`
+      },
+      {
+        projection: {
+          tags: 1
+        }
+      }
+    ).toArray();
+
+    const set = (items ?? []).reduce(
+      (p, c) => {
+        c.tags.forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, new Set()
+    )
+    // return array from set
+    return Array.from(set);
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -228,6 +255,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_collection_products: list_collection_products(driver) 
+    list_collection_products: list_collection_products(driver),
+    list_collection_products_tags: list_collection_products_tags(driver),
   }
 }

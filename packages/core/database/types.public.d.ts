@@ -140,6 +140,17 @@ export interface db_collections extends db_crud<
     handle_or_id: HandleOrId, query: ApiQuery<ProductType>
   ) => Promise<Partial<ProductType>[]>
 
+  /**
+   * List all the tags of products in a collection, This is helpful for building
+   * a filter system in the frontend if you know in advance all the tags of the products
+   * in a collection
+   * @param handle_or_id collection handle or id
+   * @param query query
+   */
+  list_collection_products_tags: (
+    handle_or_id: HandleOrId
+  ) => Promise<string[]>
+
 }
 
 /** @description `ProductType` crud */

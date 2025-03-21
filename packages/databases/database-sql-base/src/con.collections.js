@@ -157,10 +157,12 @@ const list_collection_products = (driver) => {
         'products.id'
       )
       .selectAll('products')
-      .select(eb => [
+      .select(
+        eb => [
           with_media(eb, eb.ref('products.id'), driver.dialectType),
           with_tags(eb, eb.ref('products.id'), driver.dialectType),
-        ])
+        ]
+      )
       .where(
         (eb) => eb.and(
           [
@@ -184,6 +186,55 @@ const list_collection_products = (driver) => {
     if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
+  }
+}
+
+
+// SELECT 
+//   entity_to_tags_projections.value as tag 
+// FROM products 
+// INNER JOIN 
+//   products_to_collections ON products.id = products_to_collections.entity_id
+// INNER JOIN 
+//   entity_to_tags_projections ON products.id = entity_to_tags_projections.entity_id
+// WHERE products_to_collections.reporter = 'playstation-4-games'
+// GROUP BY tag
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_collection_products_tags"]}
+ */
+const list_collection_products_tags = (driver) => {
+  return async (handle_or_id) => {
+
+    const items = await driver.client
+      .selectFrom('products')
+      .innerJoin(
+        'products_to_collections', 
+        'products_to_collections.entity_id', 
+        'products.id'
+      )
+      .innerJoin(
+        'entity_to_tags_projections', 
+        'entity_to_tags_projections.entity_id', 
+        'products.id'
+      )
+      .select('entity_to_tags_projections.value as tag')
+      .where(
+        (eb) => eb.or(
+          [
+            eb('products_to_collections.reporter', '=', handle_or_id),
+            eb('products_to_collections.value', '=', handle_or_id)
+          ]
+        )
+      )
+      .groupBy('tag')
+      .execute();
+
+      // .compile();
+      // console.log(items[0])
+
+    return items.map(e => e.tag);
   }
 }
 
@@ -238,6 +289,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     list_collection_products: list_collection_products(driver),
+    list_collection_products_tags: list_collection_products_tags(driver),
     count: count_regular(driver, table_name),
 
   }

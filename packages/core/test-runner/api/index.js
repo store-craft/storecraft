@@ -8,6 +8,7 @@ export * as pricing from './pricing.js'
 export * as collections_crud from './collections_crud.js'
 export * as collections_list from './collections_list.js'
 export * as collections_products from './collections_products.js'
+export * as collections_products_tags from './collections_products_tags.js'
 
 export * as customers_crud from './customers_crud.js'
 export * as customers_list from './customers_list.js'

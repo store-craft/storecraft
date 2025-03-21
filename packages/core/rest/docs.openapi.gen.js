@@ -2070,21 +2070,21 @@ const register_collections = registry => {
   const name = 'collection'
   const slug_base = 'collections'
   const tags = [`${name}s`];
-  const example_id = 'col_65f2ae568bf30e6cd0ca95ea';
+  const examples = ['col_65f2ae568bf30e6cd0ca95ea', 'playstation-games'];
   const _typeSchema = registry.register(name, collectionTypeSchema);
   const _typeUpsertSchema = registry.register(
     `${name}Upsert`, collectionTypeUpsertSchema
     );
 
   register_base_get(
-    registry, slug_base, name, tags, example_id, 
+    registry, slug_base, name, tags, examples[0], 
     _typeSchema, example_collection
     );
   register_base_upsert(
-    registry, slug_base, name, tags, example_id, 
+    registry, slug_base, name, tags, examples[0], 
     _typeUpsertSchema, example_collection
     );
-  register_base_delete(registry, slug_base, name, tags, example_id);
+  register_base_delete(registry, slug_base, name, tags, examples[0]);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, 
     example_collection
@@ -2101,7 +2101,7 @@ const register_collections = registry => {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: example_id,
+            examples,
             description: '`id` or `handle`'
           }
         ),
@@ -2116,6 +2116,39 @@ const register_collections = registry => {
             schema: z.array(variantTypeSchema),
             example: [
               example_product, example_product
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/tags`,
+    description: 'List all the tags of products in a collection, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection',
+    summary: 'List collection\'s products tags',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of all of the tags of the products in the collection`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
             ]
           },
         },

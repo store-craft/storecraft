@@ -7,7 +7,6 @@ import {
   delete_entity_values_by_value_or_reporter, delete_me, 
   delete_media_of, delete_search_of, delete_tags_of, 
   insert_media_of, insert_search_of, insert_tags_of, 
-  select_entity_ids_by_value_or_reporter, 
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
   count_regular,
@@ -152,7 +151,11 @@ const list_collection_products = (driver) => {
 
     const items = await driver.client
       .selectFrom('products')
-      .innerJoin('products_to_collections', 'products_to_collections.entity_id', 'products.id')
+      .innerJoin(
+        'products_to_collections', 
+        'products_to_collections.entity_id', 
+        'products.id'
+      )
       .selectAll('products')
       .select(eb => [
           with_media(eb, eb.ref('products.id'), driver.dialectType),
@@ -185,6 +188,7 @@ const list_collection_products = (driver) => {
 }
 
 
+/*
 const list_collection_products_OLD = (driver) => {
   return async (handle_or_id, query={}) => {
 
@@ -217,7 +221,7 @@ const list_collection_products_OLD = (driver) => {
     return sanitize_array(items);
   }
 }
-
+*/
 
 /** 
  * @param {SQL} driver

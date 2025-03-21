@@ -1,17 +1,15 @@
-import { AttributeType, AuthUserType, Role, TagType, 
+import { 
+  AttributeType, AuthUserType, Role, TagType, 
   CollectionType, ProductType, ShippingMethodType,
   VariantOption, PostType, CustomerType,
   VariantOptionSelection, OrderData, StorefrontType,
-  AddressType, ImageType,
-  OrderContact,
-  LineItem,
-  OrderStatus, DiscountType,
-  PricingData,
-  ValidationEntry,
+  AddressType, ImageType, OrderContact,
+  LineItem, OrderStatus, DiscountType,
+  PricingData, ValidationEntry,
   OrderPaymentGatewayData, NotificationType,
-  NotificationAction,
-  DiscountInfo,
-  DiscountApplicationEnum} from '@storecraft/core/api'
+  NotificationAction, DiscountInfo,
+  DiscountApplicationEnum
+} from '@storecraft/core/api'
 import {
   ColumnType,
   Generated,
@@ -61,13 +59,21 @@ export interface entity_to_value {
 }
 
 export interface entity_to_media extends entity_to_value {}
-export interface entity_to_tags_projections extends entity_to_value {}
 export interface entity_to_search_terms extends entity_to_value {}
 
 /**
+ * Here:
+ * - context = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...
+ * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
+ * - (value) = tag-name_tag-value, for example 'color_red', 'size_large'
+ * - (reporter) = the entity that reported the tag, if null then the entity itself reported the tag
+ */
+export interface entity_to_tags_projections extends entity_to_value {}
+
+/**
  * here:
- * - entity_id, entity_handle = product id, product handle
- * - value, reporter = collection id,  collection handle
+ * - (entity_id, entity_handle) = (product id, product handle)
+ * - (value, reporter) = (collection id, collection handle)
  */
 export interface products_to_collections extends entity_to_value {}
 

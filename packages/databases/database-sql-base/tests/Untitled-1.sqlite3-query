@@ -1,0 +1,19 @@
+-- database: ../../../playground/node-libsql/data.db
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+SELECT 
+  -- products.id, 
+  -- products.handle, 
+  -- products_to_collections.reporter as collection,
+  products.*,
+  products_to_collections.*,
+  entity_to_tags_projections.value as tag 
+FROM products 
+INNER JOIN 
+  products_to_collections ON products.id = products_to_collections.entity_id
+INNER JOIN 
+  entity_to_tags_projections ON products.id = entity_to_tags_projections.entity_id
+WHERE products_to_collections.reporter = 'playstation-4-games'
+GROUP BY tag
+

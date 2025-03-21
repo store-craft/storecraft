@@ -3,17 +3,18 @@
  */
 import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
-import { delete_entity_values_by_value_or_reporter, delete_me, 
+import { 
+  delete_entity_values_by_value_or_reporter, delete_me, 
   delete_media_of, delete_search_of, delete_tags_of, 
   insert_media_of, insert_search_of, insert_tags_of, 
   select_entity_ids_by_value_or_reporter, 
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
   count_regular,
-  with_search} from './con.shared.js'
+  with_search
+} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
-
 
 export const table_name = 'collections'
 
@@ -151,6 +152,44 @@ const list_collection_products = (driver) => {
 
     const items = await driver.client
       .selectFrom('products')
+      .innerJoin('products_to_collections', 'products_to_collections.entity_id', 'products.id')
+      .selectAll('products')
+      .select(eb => [
+          with_media(eb, eb.ref('products.id'), driver.dialectType),
+          with_tags(eb, eb.ref('products.id'), driver.dialectType),
+        ])
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, 'products'),
+            eb.or(
+              [
+                eb('products_to_collections.reporter', '=', handle_or_id),
+                eb('products_to_collections.value', '=', handle_or_id)
+              ]
+            )
+          ].filter(Boolean)
+        )
+      )
+      .orderBy(query_to_sort(query, 'products'))
+      .limit(query.limitToLast ?? query.limit ?? 10)
+      .execute();
+
+      // .compile();
+      // console.log(items[0])
+
+    if(query.limitToLast) items.reverse();
+
+    return sanitize_array(items);
+  }
+}
+
+
+const list_collection_products_OLD = (driver) => {
+  return async (handle_or_id, query={}) => {
+
+    const items = await driver.client
+      .selectFrom('products')
       .selectAll()
       .select(eb => [
         with_media(eb, eb.ref('products.id'), driver.dialectType),
@@ -161,7 +200,8 @@ const list_collection_products = (driver) => {
           [
             query_to_eb(eb, query, 'products'),
             eb('products.id', 'in', 
-              eb => select_entity_ids_by_value_or_reporter( // select all the product ids by collection id
+              // select all the product ids by collection id
+              eb => select_entity_ids_by_value_or_reporter( 
                 eb, 'products_to_collections', handle_or_id
               )
             )
@@ -177,6 +217,7 @@ const list_collection_products = (driver) => {
     return sanitize_array(items);
   }
 }
+
 
 /** 
  * @param {SQL} driver

@@ -145,7 +145,6 @@ export interface db_collections extends db_crud<
    * a filter system in the frontend if you know in advance all the tags of the products
    * in a collection
    * @param handle_or_id collection handle or id
-   * @param query query
    */
   list_collection_products_tags: (
     handle_or_id: HandleOrId
@@ -214,6 +213,13 @@ export interface db_products extends db_crud<
    * @param collection_handle_or_id collection handle or id
    */
   remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
+
+  /**
+   * List all of the tags of all the products deduped, This is helpful for building
+   * a filter system in the frontend if you know in advance all the tags of the products
+   * in a collection, also see the collection confined version {@link db_collections.list_collection_products_tags}
+   */
+  list_all_products_tags: () => Promise<string[]>
 
 }
 

@@ -51,6 +51,13 @@ export const create_routes = (app) => {
     }
   );
 
+  polka.get(
+    '/all_tags',
+    async (req, res) => {
+      const items = await app.api.products.list_all_products_tags();
+      res.sendJson(items);
+    }
+  );
 
   // get item
   polka.get(
@@ -69,18 +76,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // delete item
-  polka.delete(
-    '/:handle',
-    middle_authorize_admin,
-    async (req, res) => {
-      const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.products.remove(handle_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
-    }
-  );
-
   // list
   polka.get(
     '/',
@@ -93,6 +88,19 @@ export const create_routes = (app) => {
       res.sendJson(items);
     }
   );
+  
+  // delete item
+  polka.delete(
+    '/:handle',
+    middle_authorize_admin,
+    async (req, res) => {
+      const handle_or_id = req?.params?.handle;
+      const removed = handle_or_id && await app.api.products.remove(handle_or_id);
+
+      res.setStatus(removed ? 200 : 404).end();
+    }
+  );
+
 
   // add to collection
   polka.post(

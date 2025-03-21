@@ -149,7 +149,21 @@ export const list_product_discounts = (app) =>
   return db(app).list_product_discounts(product);
 }
 
+/**
+ * @param {App} app
+ */
+export const list_all_products_tags = (app) => 
+  /**
+   * @description List all of the tags of all the products deduped, 
+   * This is helpful for building a filter system in the frontend if 
+   * you know in advance all the tags of the products in a collection, 
+   * also see the collection confined version db_collections.list_collection_products_tags
+   */
+  () => {
+    return db(app).list_all_products_tags();
+  }
 
+  
 /**
  * @param {App} app
  */  
@@ -164,6 +178,7 @@ export const inter = app => {
     list_product_discounts: list_product_discounts(app),
     list_product_variants: list_product_variants(app),
     list_related_products: list_related_products(app),
+    list_all_products_tags: list_all_products_tags(app),
     changeStockOfBy: db(app).changeStockOfBy
   }
 }

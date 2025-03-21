@@ -295,7 +295,10 @@ export const list_regular = (driver, col) => {
     if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
-    const items_expended = expand(items, query?.expand);
+    const items_expended = expand(
+      items, 
+      /** @type {ExpandQuery<WithId<G>>} */ (query?.expand)
+    );
     
     const sanitized = sanitize_array(items_expended);
 

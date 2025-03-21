@@ -504,6 +504,36 @@ const changeStockOfBy = (driver) => {
 }
 
 
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_all_products_tags"]}
+ */
+const list_all_products_tags = (driver) => {
+  return async () => {
+    const items = await driver.resources.products._col.find(
+      {
+      },
+      {
+        projection: {
+          tags: 1
+        }
+      }
+    ).toArray();
+
+    const set = (items ?? []).reduce(
+      (p, c) => {
+        c.tags.forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, new Set()
+    )
+    // return array from set
+    return Array.from(set);
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -526,6 +556,7 @@ export const impl = (driver) => {
     list_product_variants: list_product_variants(driver),
     list_related_products: list_related_products(driver),
     list_product_discounts: list_product_discounts(driver),
+    list_all_products_tags: list_all_products_tags(driver),
     count: count(driver)
   }
 }

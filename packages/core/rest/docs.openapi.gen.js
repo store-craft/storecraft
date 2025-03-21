@@ -3858,6 +3858,30 @@ const register_products = registry => {
     },
   });
 
+
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/all_tags`,
+    description: 'List all of the tags of all the products deduped, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection, also see the collection confined version db_collections.list_collection_products_tags',
+    summary: 'List all of the tags of all products',
+    tags,
+    responses: {
+      200: {
+        description: `List of all of the tags of all the products`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+
   // list variants
   registry.registerPath({
     method: 'get',

@@ -1,6 +1,7 @@
 /**
  * @import { OrdersStatisticsType, OrdersStatisticsDay } from './types.api.js'
  * @import { ApiQuery } from './types.api.query.js'
+ * @import { db_crud } from '../database/types.public.js'
  */
 import { App } from '../index.js';
 import { 
@@ -260,7 +261,7 @@ export const compute_count_of_query = app =>
       `Table ${String(table)} is not allowed for counting !`
     );
 
-    /** @type {import('../database/types.public.d.ts').db_crud} */
+    /** @type {db_crud} */
     const db = app.db?.resources?.[table];
 
     return db.count(query);

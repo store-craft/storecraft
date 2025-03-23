@@ -22,7 +22,6 @@ export function create(screens) {
         if (!(isBrowser && 'matchMedia' in window)) return undefined
   
         function track(e) {
-          // @ts-expect-error accessing index with uncertain `screens` type
           const value = screens[breakpoint] ?? '999999px'
           const query = window.matchMedia(`(min-width: ${value})`)
           matchRef.current = query.matches

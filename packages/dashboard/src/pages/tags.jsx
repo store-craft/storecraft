@@ -32,11 +32,11 @@ const schema_fields = [
 
 export default ({}) => {
 
-  /**
-   * @type {import('../hooks/use-collections-actions.js').HookReturnType<
-   *  import('@storecraft/core/api').TagType>
-   * }
-   */ 
+  // /**
+  //  * @type {import('../hooks/use-collections-actions.js').HookReturnType<
+  //  *  import('@storecraft/core/api').TagType>
+  //  * }
+  //  */ 
   const { 
     query_api, context, ref_actions, page, loading, 
     error, queryCount, hasLoaded, resource,

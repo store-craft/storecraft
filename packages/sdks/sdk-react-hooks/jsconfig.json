@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "checkJs": true,
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 100,
     "resolveJsonModule": true,
     "target": "ESNext",
     "module": "NodeNext",

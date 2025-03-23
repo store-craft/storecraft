@@ -6,15 +6,15 @@ import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 import { LoadingImage } from "../loading-image.js";
+import type { ProductType } from "@storecraft/core/api";
+import { useCollection } from "@storecraft/sdk-react-hooks";
 
-type ExtractArrayType<T extends any[]> = T extends (infer H)[] ? H : unknown;
 type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection"]>;
-type ItemType = ExtractArrayType<ToolResult>;
 
 export type Params = withDiv<
   {
     chat: {
-      content: content_tool_result<ItemType[]>,
+      content: content_tool_result<ToolResult>,
     };
   }
 >;
@@ -22,7 +22,7 @@ export type Params = withDiv<
 export const ProductCardView = (
   {
     item, index
-  }: withDiv<{item: ItemType, index: number}>
+  }: withDiv<{item: ProductType, index: number}>
 ) => {
   const [ready, setReady] = useState(false);
   useEffect(
@@ -61,7 +61,13 @@ export const ToolResultContent_BrowseCollection = (
   }: Params
 ) => {
   const [loading, setLoading] = useState(true);
-
+  const {
+    loading: page_loading, error, page, 
+    actions: {
+      next, prev, query
+    }
+  } = useCollection('');
+  
   useEffect(
     () => {
       return pubsub.add(
@@ -78,7 +84,7 @@ export const ToolResultContent_BrowseCollection = (
   // return;
   if('error' in data) 
     return null;
-
+return null;
   const items = data.result;
 
   return (

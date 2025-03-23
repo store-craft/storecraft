@@ -188,12 +188,14 @@ export const TOOLS = (context) => {
           }
         ),
         use: async function (input) {
-          return {
-            command: 'browse_collection',
-            params: {
-              handle: input.handle 
+          return (
+            {
+              command: /** @type {const} */ ('browse_collection'),
+              params: {
+                handle: input.handle 
+              }
             }
-          };
+          )
         }
       }
     ),    

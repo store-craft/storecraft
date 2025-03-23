@@ -42,11 +42,11 @@ const Gallery = (
   }
 ) => {
 
-/**
-  * @type {import('@/hooks/use-collections-actions.js').HookReturnType<
-  *  import('@storecraft/core/api').ImageType>
-  * }
-  */
+// /**
+//   * @type {import('@/hooks/use-collections-actions.js').HookReturnType<
+//   *  import('@storecraft/core/api').ImageType>
+//   * }
+//   */
   const { 
     query_api, context, ref_actions, 
     page, pages, loading, 

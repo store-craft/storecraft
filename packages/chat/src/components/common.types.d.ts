@@ -8,8 +8,8 @@ export type content_multiple_text_deltas = {
 }
 
 export type ChatMessage<
-  T extends (content | content_multiple_text_deltas)[] = ((content | content_multiple_text_deltas)[])
+  T extends (content | content_multiple_text_deltas) = (content | content_multiple_text_deltas)
 > = {
   role: 'assistant' | 'user';
-  contents?: T;
+  contents?: T[];
 }

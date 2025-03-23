@@ -1,5 +1,5 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
+import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
@@ -86,7 +86,7 @@ export const ToolResultContent_Products = (
                   overflow-x-auto h-fit pr-40 pb-5'
       style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
       {
-        items.slice(0,4).map(
+        items.map(
           (item, ix) => (
             <Card key={ix} card={{loading: loading}} className='w-fit' >
               <ProductCardView key={ix} item={item} index={ix} />

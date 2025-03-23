@@ -22,7 +22,7 @@ export type Params = withDiv<
   }
 >;
 
-export const ItemView = (
+export const SimilaritySearchItemView = (
   {
     item, index
   }: withDiv<{item: ItemType, index: number}>
@@ -77,7 +77,7 @@ export const ToolResultContent_SimilaritySearch = (
         items.map(
           (item, ix) => (
             <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ItemView key={ix} item={item} index={ix} />
+              <SimilaritySearchItemView key={ix} item={item} index={ix} />
             </Card>
           )
         )

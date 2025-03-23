@@ -79,11 +79,11 @@ const schema_fields = [
 
 export default ({}) => {
 
-  /**
-   * @type {import('../hooks/use-collections-actions.js').HookReturnType<
-   *  PaymentGatewayItemGet>
-   * }
-   */ 
+  // /**
+  //  * @type {import('../hooks/use-collections-actions.js').HookReturnType<
+  //  *  PaymentGatewayItemGet>
+  //  * }
+  //  */ 
   const { 
     context, page, loading, 
     error, queryCount, hasLoaded, resource,

@@ -1,6 +1,7 @@
 /**
  * @import { ApiQuery, BaseType, Cursor } from '@storecraft/core/api'
  * @import { inferDocumentCache, inferUseQueryCache } from './use-storecraft-cache.js'
+ * @import { InferQueryableType, queryable_resources } from './use-collection.types.js'
  */
 import { 
   useCallback, useEffect, useRef, useState 
@@ -99,18 +100,6 @@ const paginate_helper = (sdk, query, resource) => {
   return next;
 }
 
-/**
- * @template T The type of the item
- * 
- * @typedef {Omit<ReturnType<typeof useCollection<T>>, 'page' | 'pages'> & 
- *  {
- *    page: T[]  
- *    pages: T[][]  
- *  }
- * } useCollectionHookReturnType This `type` will give you the return type of the hook
- * 
- */
-
 
 /** @type {ApiQuery} */
 export const q_initial = {
@@ -119,10 +108,12 @@ export const q_initial = {
   limit: 5
 }
 
+
 /**
- * @template {Partial<BaseType>} T The type of the item
+ * @template {string | queryable_resources} [RESOURCE=(queryable_resources)]
+ * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]
  * 
- * @param {keyof App["db"]["resources"]} resource the base path of the resource 
+ * @param {RESOURCE} resource the base path of the resource 
  * @param {ApiQuery} q query
  * @param {boolean} autoLoad 
  */

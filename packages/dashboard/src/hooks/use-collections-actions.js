@@ -1,3 +1,7 @@
+/**
+ * @import { queryable_resources, InferQueryableType } from '@storecraft/sdk-react-hooks'
+ */
+
 import { 
   q_initial, useCollection 
 } from '@storecraft/sdk-react-hooks';
@@ -32,9 +36,10 @@ import { useNavigate, useParams } from 'react-router-dom'
  * 
  * This hook wraps `useCollection` hook
  * 
- * @template {Partial<import('@storecraft/core/api').BaseType> | any} [T=any]
+ * @template {string | queryable_resources} [RESOURCE=(queryable_resources)]
+ * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]
  * 
- * @param {((keyof App["db"]["resources"]) | 'payments/gateways' | 'extensions')} resource the collection id in backend 
+ * @param {RESOURCE} resource the collection id in backend 
  * @param {string} [slug] front end slug
  * @param {boolean} [autoLoad=true] 
  * @param {import('@storecraft/core/api').ApiQuery} [autoLoadQuery=q_initial] 
@@ -64,9 +69,9 @@ const useCollectionsActions = (
   const ref_actions = useRef();
   const ref_use_cache = useRef(true);
 
-  /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
-   */
+  // /**
+  //  * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
+  //  */
   const { 
     pages, page, loading, hasLoaded, error, sdk, queryCount, 
     resource_is_probably_empty,

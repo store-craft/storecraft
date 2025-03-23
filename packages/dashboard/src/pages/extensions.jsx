@@ -85,11 +85,11 @@ const schema_fields = [
 
 export default ({}) => {
 
-  /**
-   * @type {import('../hooks/use-collections-actions.js').HookReturnType<
-   *  ExtensionItemGet>
-   * }
-   */ 
+  // /**
+  //  * @type {import('../hooks/use-collections-actions.js').HookReturnType<
+  //  *  ExtensionItemGet>
+  //  * }
+  //  */ 
   const { 
     context, page, loading, 
     error, queryCount, hasLoaded, resource,

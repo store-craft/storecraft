@@ -29,7 +29,8 @@ export const rest_resource_to_db_resource_table = resource => {
 }
 
 /**
- * @param {ApiQuery} query_api
+ * @template T
+ * @param {ApiQuery<T>} query_api
  * @param {number} [page_count=0]
  * @param {boolean} [hasLoaded=false]
  * @param {boolean} [loading=false]
@@ -57,26 +58,25 @@ export const resource_is_probably_empty = (
  * However, this is still used in `products-in-collection-view` for
  * example.
  * 
- * @template {any} G
- * 
- * 
+ * @template G
  * @param {StorecraftSDK} sdk
- * @param {ApiQuery} query 
+ * @param {ApiQuery<G>} query 
  * @param {string} resource
  * 
  * 
  */
 const paginate_helper = (sdk, query, resource) => {
 
-  query.sortBy = query.sortBy ?? ['updated_at', 'id'];
+  const query_cast = /** @type {ApiQuery} */ (query);
 
-  /** @type {Cursor} */
-  let startAfter = query.startAfter;
+  query_cast.sortBy = query_cast.sortBy ?? (/** @type {const} */(['updated_at', 'id']));
+
+  let startAfter = query_cast.startAfter;
 
   const next = async () => {
-    /** @type {typeof query} */
+    /** @type {typeof query_cast} */
     const current = { 
-      ...query,
+      ...query_cast,
       startAfter
     }
 
@@ -101,12 +101,12 @@ const paginate_helper = (sdk, query, resource) => {
 }
 
 
-/** @type {ApiQuery} */
-export const q_initial = {
+/** @satisfies {ApiQuery} */
+export const q_initial = ({
   sortBy: ['updated_at', 'id'],
   order: 'desc',
   limit: 5
-}
+})
 
 
 /**
@@ -114,11 +114,17 @@ export const q_initial = {
  * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]
  * 
  * @param {RESOURCE} resource the base path of the resource 
- * @param {ApiQuery} q query
- * @param {boolean} autoLoad 
+ * @param {ApiQuery<T>} [q=q_initial] query
+ * @param {boolean} [autoLoad=true] 
  */
 export const useCollection = (
-  resource, q=q_initial, autoLoad=true
+  resource, 
+  q=(/** @type {ApiQuery<T>} */({
+    sortBy: ['updated_at', 'id'],
+    order: 'desc',
+    limit: 5,
+  })), 
+  autoLoad=true
 ) => {
 
   /** @type {inferUseQueryCache<T>} */
@@ -242,12 +248,13 @@ export const useCollection = (
 
   const query = useCallback(
     /**
-     * @param {ApiQuery} [q=q_initial] query object
+     * @param {ApiQuery<T>} [q=q_initial] query object
      * @param {boolean} [from_cache] 
      */
     async (q=_q.current, from_cache=true) => {
+      /** @type {ApiQuery<T>} */
       let q_modified = {
-        ...q_initial,
+        ...(/** @type {ApiQuery<T>} */(q_initial)),
         ...q
       }
 
@@ -285,6 +292,7 @@ export const useCollection = (
 
       // statistics in the background
       {
+
         const { 
           limit, limitToLast, startAfter, startAt, endAt, endBefore, 
           ...q_minus_filters
@@ -293,7 +301,7 @@ export const useCollection = (
 
         sdk.statistics.countOf(
           rest_resource_to_db_resource_table(resource), 
-          q_minus_filters
+          /** @type {ApiQuery} */(q_minus_filters)
         ).then(setQueryCount).catch(console.log);
       }
 

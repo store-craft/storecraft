@@ -154,7 +154,7 @@ export const useQueryCache = () => {
   const get = useCallback(
     /**
      * @param {string} resource the `table` / `resource` name
-     * @param {ApiQuery} query 
+     * @param {ApiQuery<T>} query 
      * 
      */
     (resource, query) => {
@@ -167,7 +167,7 @@ export const useQueryCache = () => {
   const put = useCallback(
     /**
      * @param {string} resource the `table` / `resource` name
-     * @param {ApiQuery} query 
+     * @param {ApiQuery<T>} query 
      * @param {T[]} items 
      * 
      */
@@ -181,7 +181,7 @@ export const useQueryCache = () => {
   const remove = useCallback(
     /**
      * @param {string} resource the `table` / `resource` name
-     * @param {ApiQuery} query 
+     * @param {ApiQuery<T>} query 
      * 
      */
     (resource, query) => {

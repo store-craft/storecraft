@@ -33,7 +33,7 @@ export const create_routes = (app) => {
     '/',
     authorize_admin(app),
     async (req, res) => {
-      const r = app.api.extensions.list();
+      const r = app.api.extensions.list_all();
       res.sendJson(r);
     }
   );

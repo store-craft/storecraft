@@ -85,7 +85,7 @@ export const inter = app => {
 
   return {
     get: get_extension(app),
-    list: list_extensions(app),
+    list_all: list_extensions(app),
     invoke_action: invoke_extension_action(app),
   }
 }

@@ -74,4 +74,3 @@ export const app = new App(
     x: new XAuth(),
   }
 )
-

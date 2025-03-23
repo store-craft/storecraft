@@ -1,5 +1,5 @@
 /**
- * @import { PostType, PostTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, PostType, PostTypeUpsert } from './types.public.js'
  */
 import { assert, to_handle } from './utils.func.js'
 import { postTypeUpsertSchema } from './types.autogen.zod.api.js'
@@ -42,6 +42,19 @@ export const upsert = (app) =>
   'posts/upsert'
 )(item);
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<PostType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
 
 /**
  * 
@@ -54,6 +67,7 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'posts/remove'),
     list: regular_list(app, db(app), 'posts/list'),
+    count: count(app),
   }
 }
 

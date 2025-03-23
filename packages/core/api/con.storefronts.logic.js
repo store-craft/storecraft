@@ -1,5 +1,5 @@
 /**
- * @import { StorefrontType, StorefrontTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, StorefrontType, StorefrontTypeUpsert } from './types.public.js'
  * @import { HandleOrId, ID as IDType } from '../database/types.public.js'
  */
 import { App } from "../index.js";
@@ -152,6 +152,19 @@ export const export_storefront = (app) => {
   }
 }  
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<StorefrontType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
 
 /**
  * @param {App} app
@@ -169,5 +182,6 @@ export const inter = app => {
     list_storefront_posts: list_storefront_posts(app),
     list_storefront_shipping_methods: list_storefront_shipping_methods(app),
     export_storefront: export_storefront(app),
+    count: count(app)
   }
 }

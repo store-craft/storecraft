@@ -40,6 +40,26 @@ export default class Collections extends collection_base {
     return result
   }
 
+  /**
+   * @description List all the tags of products in a collection, This is helpful 
+   * for building a filter system in the frontend if you know in advance all 
+   * the tags of the products in a collection
+   * 
+   * @param {string} id_or_handle Collection `id` or `handle`
+   * @return {Promise<string[]>} List of tags
+   */
+  list_all_products_tags = async (id_or_handle) => {
+    const result = await fetchApiWithAuth(
+      this.sdk,
+      `collections/${id_or_handle}/products/tags`,
+      {
+        method: 'get'
+      }
+    );
+
+    return result
+  }
+
   // /**
   //  * Add tags in bulk to products in collection
   //  * @param {string} colId 

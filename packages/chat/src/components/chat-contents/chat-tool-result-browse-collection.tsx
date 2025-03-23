@@ -7,7 +7,9 @@ import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 import { LoadingImage } from "../loading-image.js";
 import type { ProductType } from "@storecraft/core/api";
-import { useCollection } from "@storecraft/sdk-react-hooks";
+import { useCollection, useStorecraft } from "@storecraft/sdk-react-hooks";
+import { MdNavigateNext } from "react-icons/md";
+import { FiltersView } from "./products-filter-view.js";
 
 type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection"]>;
 
@@ -60,14 +62,18 @@ export const ToolResultContent_BrowseCollection = (
     chat,
   }: Params
 ) => {
+  const collection_handle = chat.content.content.data?.result.params.handle;
   const [loading, setLoading] = useState(true);
   const {
-    loading: page_loading, error, page, 
+    sdk, loading: page_loading, error, page, 
+    queryCount,
     actions: {
       next, prev, query
     }
-  } = useCollection('');
-  
+  } = useCollection(
+    `collections/${collection_handle}/products`
+  );
+
   useEffect(
     () => {
       return pubsub.add(
@@ -84,24 +90,46 @@ export const ToolResultContent_BrowseCollection = (
   // return;
   if('error' in data) 
     return null;
-return null;
-  const items = data.result;
 
   return (
-    <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
-                  overflow-x-auto h-fit pr-40 pb-5'
-      style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
-      {
-        items.slice(0,4).map(
-          (item, ix) => (
-            <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ProductCardView key={ix} item={item} index={ix} />
-            </Card>
+    <div className='w-full h-fit'>
+
+      {/* Carousel */}
+      <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
+                    overflow-x-auto h-fit pr-40 pb-5'
+        style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
+        {
+          page.map(
+            (item, ix) => (
+              <Card key={ix} card={{loading: loading}} className='w-fit' >
+                <ProductCardView key={ix} item={item} index={ix} />
+              </Card>
+            )
           )
-        )
-      }
+        }
+      </div>
+
+      <div children={queryCount} />
+
+      {/* Navigator */}
+      <div className='w-full h-fit justify-between flex flex-row gap-2'>
+        <MdNavigateNext 
+          onClick={prev} title='previous' 
+          className='text-3xl rotate-180 cursor-pointer' />
+        <MdNavigateNext 
+          onClick={next} title='next' 
+          className='text-3xl cursor-pointer' />
+      </div>
+      
+      {/* Filter view */}
+      <FiltersView chat={
+        {
+          handle: collection_handle,
+          onSelection: (_, vql) => {
+            query({ vql });
+          }
+        }
+        } />
     </div>
   )
 }
-
-

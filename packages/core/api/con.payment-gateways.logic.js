@@ -209,7 +209,7 @@ export const inter = app => {
 
   return {
     get: get_payment_gateway(app),
-    list: list_payment_gateways(app),
+    list_all: list_payment_gateways(app),
     webhook: webhook(app),
     status_of_order: payment_status_of_order(app),
     buy_ui: payment_buy_ui(app),

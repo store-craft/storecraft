@@ -104,7 +104,7 @@ export const create = app => {
 
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const related_products = await app.api.products.list_related_products(
+    const related_products = await app.api.products.list_all_related_products(
       pr_upsert.handle
     );
 
@@ -128,7 +128,7 @@ export const create = app => {
     );
     
     // now query the product's discounts to see if discount was applied to 1st product
-    const related_products = await app.api.products.list_related_products(
+    const related_products = await app.api.products.list_all_related_products(
       pr_upsert.handle
     ) ?? [];
 

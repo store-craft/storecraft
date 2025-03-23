@@ -1,7 +1,7 @@
 /** 
  * @import { ApiPolka } from './types.public.js' 
  * @import { ApiQuery } from '../api/types.api.query.js' 
- * @import { ProductType } from '../api/types.api.js' 
+ * @import { ProductType, VariantType } from '../api/types.api.js' 
  * @import { RegularGetOptions } from '../database/types.public.js' 
  */
 import { App } from '../index.js';
@@ -56,6 +56,17 @@ export const create_routes = (app) => {
     async (req, res) => {
       const items = await app.api.products.list_all_products_tags();
       res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<ProductType | VariantType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.products.count(q)
+      res.sendJson({ count });
     }
   );
 
@@ -128,7 +139,7 @@ export const create_routes = (app) => {
     '/:product/collections',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_product_collections(product);
+      const items = await app.api.products.list_all_product_collections(product);
       res.sendJson(items);
     }
   );
@@ -137,7 +148,7 @@ export const create_routes = (app) => {
     '/:product/variants',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_product_variants(product);
+      const items = await app.api.products.list_all_product_variants(product);
       res.sendJson(items);
     }
   );
@@ -146,7 +157,7 @@ export const create_routes = (app) => {
     '/:product/discounts',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_product_discounts(product);
+      const items = await app.api.products.list_all_product_discounts(product);
       res.sendJson(items);
     }
   );
@@ -155,7 +166,7 @@ export const create_routes = (app) => {
     '/:product/related',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_related_products(product);
+      const items = await app.api.products.list_all_related_products(product);
       res.sendJson(items);
     }
   );

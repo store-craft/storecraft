@@ -189,6 +189,45 @@ const list_collection_products = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["count_collection_products"]}
+ */
+const count_collection_products = (driver) => {
+  return async (handle_or_id, query={}) => {
+
+    const result = await driver.client
+      .selectFrom('products')
+      // .select('products.id')
+      .select(
+        (eb) => eb.fn.count('products.id').as('count')
+      )
+      .innerJoin(
+        'products_to_collections', 
+        'products_to_collections.entity_id', 
+        'products.id'
+      )
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, 'products'),
+            eb.or(
+              [
+                eb('products_to_collections.reporter', '=', handle_or_id),
+                eb('products_to_collections.value', '=', handle_or_id)
+              ]
+            )
+          ].filter(Boolean)
+        )
+      )
+      .executeTakeFirst();
+
+    // console.log({result})
+    
+    return Number(result.count);
+  }
+}
+
 
 // SELECT 
 //   entity_to_tags_projections.value as tag 
@@ -202,7 +241,7 @@ const list_collection_products = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_collection_products_tags"]}
+ * @returns {db_col["list_all_collection_products_tags"]}
  */
 const list_collection_products_tags = (driver) => {
   return async (handle_or_id) => {
@@ -289,7 +328,8 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     list_collection_products: list_collection_products(driver),
-    list_collection_products_tags: list_collection_products_tags(driver),
+    count_collection_products: count_collection_products(driver),
+    list_all_collection_products_tags: list_collection_products_tags(driver),
     count: count_regular(driver, table_name),
 
   }

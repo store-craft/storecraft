@@ -196,8 +196,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["list_discount_products"]}
  */
 const list_discount_products = (driver) => {
@@ -235,6 +233,35 @@ const list_discount_products = (driver) => {
   }
 }
 
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["count_discount_products"]}
+ */
+const count_discount_products = (driver) => {
+  return async (handle_or_id, query) => {
+
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
+
+    /** @type {Filter<WithRelations<ProductType | VariantType>>} */
+    const filter = {
+      $and: [
+        { '_relations.search': `discount:${handle_or_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const count = await driver.resources.products._col.countDocuments(
+      filter
+    );
+
+    return count;
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -251,6 +278,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_discount_products: list_discount_products(driver)
+    list_discount_products: list_discount_products(driver),
+    count_discount_products: count_discount_products(driver)
   }
 }

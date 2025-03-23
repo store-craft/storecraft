@@ -110,6 +110,13 @@ export const q_initial = ({
 
 
 /**
+ * @description A hook to fetch and query a resource. such as 
+ * - concrete tables: `products`, 'collections', `orders`, `customers`, `shipping_methods`, etc.
+ * - extra resources: 'payment/gateways', 'extension'
+ * - nested resources: 
+ *  - `collections/{handle-name}/products`
+ *  - `product/{handle-name}/discounts`
+ * 
  * @template {string | queryable_resources} [RESOURCE=(queryable_resources)]
  * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]
  * 

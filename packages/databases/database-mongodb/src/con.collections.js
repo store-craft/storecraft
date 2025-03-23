@@ -209,9 +209,44 @@ const list_collection_products = (driver) => {
   }
 }
 
+
 /**
  * @param {MongoDB} driver 
- * @returns {db_col["list_collection_products_tags"]}
+ * @returns {db_col["count_collection_products"]}
+ */
+const count_collection_products = (driver) => {
+  return async (handle_or_id, query) => {
+
+    const { 
+      filter: filter_query, sort, reverse_sign 
+    } = query_to_mongo(query);
+
+    /**
+     * @type {Filter<WithRelations<ProductType | VariantType>>
+     * }
+     */
+    const filter = {
+      $and: [
+        { '_relations.search': `col:${handle_or_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const count = await driver.resources.products._col.countDocuments(
+      filter
+    );
+
+    return count;
+  }
+}
+
+
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_all_collection_products_tags"]}
  */
 const list_collection_products_tags = (driver) => {
   return async (handle_or_id) => {
@@ -256,6 +291,7 @@ export const impl = (driver) => {
     list: list(driver),
     count: count(driver),
     list_collection_products: list_collection_products(driver),
-    list_collection_products_tags: list_collection_products_tags(driver),
+    count_collection_products: count_collection_products(driver),
+    list_all_collection_products_tags: list_collection_products_tags(driver),
   }
 }

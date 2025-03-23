@@ -37,10 +37,8 @@ export const create_routes = (app) => {
     '/count/:table',
     middle_authorize_admin,
     async (req, res) => {
-
       let q = parse_query(req.query);
       const table = req?.params?.table;
-
       const count = await app.api.statistics.compute_count_of_query(
         table, q
       );

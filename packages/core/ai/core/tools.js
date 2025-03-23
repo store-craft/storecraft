@@ -69,7 +69,6 @@ export const tool = (tool) => {
  * 
  * @param {Tool} tool
  * @param {object} input 
- * @returns {Promise<{ result: any} | { error: any}>}
  */
 export const invoke_tool_safely = async (tool, input) => {
   try {

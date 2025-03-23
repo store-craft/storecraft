@@ -77,7 +77,7 @@ export const create_routes = (app) => {
       const q = (/** @type {ApiQuery<ProductType>} */ (
         parse_query(req.query))
       );
-      const items = await app.api.discounts.list_discounts_products(discount, q);
+      const items = await app.api.discounts.list_discount_products(discount, q);
 
       res.sendJson(items);
     }

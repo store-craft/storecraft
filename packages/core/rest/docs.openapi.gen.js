@@ -60,6 +60,7 @@ import {
 import * as path from 'node:path';
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
+import { count } from 'node:console';
 //
 // This file creates an OpenAPI file
 //
@@ -608,7 +609,7 @@ const register_base_list = (
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}`,
-    summary: `List and filter ${name} items`,
+    summary: `Query ${name} items`,
     description: `List and filter items \n ${aug_description}`,
     tags,
     request: {
@@ -2095,7 +2096,7 @@ const register_collections = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/products`,
     description: 'Each `collection` is linked to `products`, you can query and filter these `products` by collection',
-    summary: 'List and filter collection\'s products',
+    summary: 'Query collection\'s products',
     tags,
     request: {
       params: z.object({
@@ -2124,12 +2125,41 @@ const register_collections = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/count_query`,
+    description: 'Each `collection` is linked to `products`, you can count the query of these `products` by collection',
+    summary: 'Count collection\'s products query',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `count`,
+        content: {
+          'application/json': {
+            schema: z.object({count: z.number()}),
+          },
+        },
+      },
+      ...error() 
+    },
+  });
 
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/products/tags`,
     description: 'List all the tags of products in a collection, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection',
-    summary: 'List collection\'s products tags',
+    summary: 'List All collection\'s products tags',
     tags,
     request: {
       params: z.object({

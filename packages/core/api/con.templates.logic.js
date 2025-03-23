@@ -1,5 +1,5 @@
 /**
- * @import { TemplateType, TemplateTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, TemplateType, TemplateTypeUpsert } from './types.public.js'
  */
 import { assert, to_handle } from './utils.func.js'
 import { templateTypeUpsertSchema } from './types.autogen.zod.api.js'
@@ -57,6 +57,20 @@ export const upsert = (app) =>
 
 /**
  * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<TemplateType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
+
+/**
+ * @param {App} app
  */  
 export const inter = app => {
 
@@ -65,6 +79,7 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'templates/remove'),
     list: regular_list(app, db(app), 'templates/list'),
+    count: count(app)
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * @import { DiscountType, DiscountTypeUpsert, ProductType } from './types.api.js'
+ * @import { DiscountType, DiscountTypeUpsert, ProductType, VariantType } from './types.api.js'
  * @import { HandleOrId, RegularGetOptions, ID as IDType } from '../database/types.public.js'
  * @import { ApiQuery } from './types.api.query.js'
  */
@@ -49,7 +49,7 @@ export const upsert = (app) =>
 /**
  * @param {App} app
  */
-export const list_discounts_products = (app) => 
+export const list_discount_products = (app) => 
 /**
  * @description given a discount handle and query,
  * return products of that discount
@@ -59,6 +59,33 @@ export const list_discounts_products = (app) =>
 (handle_or_id, q) => {
   return db(app).list_discount_products(handle_or_id, q);
 }
+
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<DiscountType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
+/**
+ * @param {App} app
+ */
+export const count_collection_products_query = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {string} id_or_handle id or handle of the discount
+   * @param {ApiQuery<ProductType | VariantType>} query query object for products
+   */
+  (id_or_handle, query) => {
+    return db(app).count_discount_products(id_or_handle, query);
+  }  
 
 
 /**
@@ -72,6 +99,8 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'discounts/remove'),
     list: regular_list(app, db(app), 'discounts/list'),
-    list_discounts_products: list_discounts_products(app)
+    list_discount_products: list_discount_products(app),
+    count_collection_products_query: count_collection_products_query(app),
+    count: count(app)
   }
 }

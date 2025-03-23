@@ -256,6 +256,43 @@ const list_discount_products = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["count_discount_products"]}
+ */
+const count_discount_products = (driver) => {
+  return async (handle_or_id, query={}) => {
+
+    const result = await driver.client
+      .selectFrom('products')
+      .innerJoin(
+        'products_to_discounts', 
+        'products_to_discounts.entity_id', 
+        'products.id'
+      )
+      .select(
+        (eb) => eb.fn.countAll().as('count')
+      )
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, 'products'),
+            eb.or(
+              [
+                eb('products_to_discounts.reporter', '=', handle_or_id),
+                eb('products_to_discounts.value', '=', handle_or_id)
+              ]
+            )
+          ].filter(Boolean)        
+        )
+      )
+      .executeTakeFirst();
+
+    return Number(result.count);
+  }
+}
+
+
 /** 
  * @param {SQL} driver
  * @return {db_col}}
@@ -268,6 +305,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     list_discount_products: list_discount_products(driver),
+    count_discount_products: count_discount_products(driver),
     count: count_regular(driver, table_name),
   }
 }

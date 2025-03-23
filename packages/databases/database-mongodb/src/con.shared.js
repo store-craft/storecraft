@@ -326,7 +326,6 @@ export const count_regular = (driver, col) => {
 
     // console.log('query', query);
     // console.log('filter', JSON.stringify(filter, null, 2));
-
     const count = await col.countDocuments(
       filter
     );

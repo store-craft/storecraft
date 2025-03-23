@@ -75,7 +75,7 @@ export const fetchOnlyApiResponseWithAuth = async (
  * - Throws a `json` representation of the `error`, 
  * if the request is `bad`
  * 
- * @template {any} R
+ * @template {any} [R=any]
  * 
  * @param {StorecraftSDK} sdk
  * @param {string} path relative path in api

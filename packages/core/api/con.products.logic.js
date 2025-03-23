@@ -1,5 +1,7 @@
 /**
- * @import { ProductType, ProductTypeUpsert, VariantTypeUpsert } from './types.api.js'
+ * @import { 
+ *  ApiQuery, ProductType, ProductTypeUpsert, VariantType, VariantTypeUpsert 
+ * } from './types.public.js'
  */
 import { assert, to_handle, union } from './utils.func.js'
 import { 
@@ -163,6 +165,18 @@ export const list_all_products_tags = (app) =>
     return db(app).list_all_products_tags();
   }
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<ProductType | VariantType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
   
 /**
  * @param {App} app
@@ -174,12 +188,13 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'products/remove'),
     list: regular_list(app, db(app), 'products/list'),
-    list_product_collections: list_product_collections(app),
-    list_product_discounts: list_product_discounts(app),
-    list_product_variants: list_product_variants(app),
-    list_related_products: list_related_products(app),
+    list_all_product_collections: list_product_collections(app),
+    list_all_product_discounts: list_product_discounts(app),
+    list_all_product_variants: list_product_variants(app),
+    list_all_related_products: list_related_products(app),
     list_all_products_tags: list_all_products_tags(app),
-    changeStockOfBy: db(app).changeStockOfBy
+    changeStockOfBy: db(app).changeStockOfBy,
+    count: count(app),
   }
 }
 

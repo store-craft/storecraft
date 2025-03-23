@@ -101,7 +101,6 @@ export declare interface db_crud<U, G=U> {
    * Count items with `query`
    */
   count?: (query: ApiQuery<G>) => Promise<number>;
-
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -141,12 +140,21 @@ export interface db_collections extends db_crud<
   ) => Promise<Partial<ProductType>[]>
 
   /**
+   * Count a collection's products items with a `query`
+   * @param handle_or_id collection handle or id
+   * @param query query
+   */
+  count_collection_products: (
+    handle_or_id: HandleOrId, query: ApiQuery<ProductType>
+  ) => Promise<number>;
+
+  /**
    * List all the tags of products in a collection, This is helpful for building
    * a filter system in the frontend if you know in advance all the tags of the products
    * in a collection
    * @param handle_or_id collection handle or id
    */
-  list_collection_products_tags: (
+  list_all_collection_products_tags: (
     handle_or_id: HandleOrId
   ) => Promise<string[]>
 
@@ -217,7 +225,7 @@ export interface db_products extends db_crud<
   /**
    * List all of the tags of all the products deduped, This is helpful for building
    * a filter system in the frontend if you know in advance all the tags of the products
-   * in a collection, also see the collection confined version {@link db_collections.list_collection_products_tags}
+   * in a collection, also see the collection confined version {@link db_collections.list_all_collection_products_tags}
    */
   list_all_products_tags: () => Promise<string[]>
 
@@ -341,6 +349,15 @@ export interface db_discounts extends db_crud<
   list_discount_products: (
     handle_or_id: HandleOrId, query: ApiQuery<ProductType>
   ) => Promise<ProductType[]>
+
+  /**
+   * Count a discount's products items with a `query`
+   * @param handle_or_id discount `handle` or `id`
+   * @param query query
+   */
+  count_discount_products: (
+    handle_or_id: HandleOrId, query: ApiQuery<ProductType>
+  ) => Promise<number>;
 }
 
 /** @description `OrderData` crud */

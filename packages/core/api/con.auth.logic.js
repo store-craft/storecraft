@@ -765,6 +765,19 @@ export const forgot_password_request_confirm = (app) =>
   
   }
     
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<AuthUserType>} query 
+   */
+  (query) => {
+    return app.db.resources.auth_users.count(query);
+  }
+  
 
 /**
  * 
@@ -788,6 +801,7 @@ export const inter = app => {
     remove_auth_user: remove_auth_user(app),
     removeByEmail: removeByEmail(app),
     list_auth_users: list_auth_users(app),
+    count: count(app),
 
     confirm_email: confirm_email(app),
     forgot_password_request: forgot_password_request(app),

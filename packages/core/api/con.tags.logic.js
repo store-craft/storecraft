@@ -1,5 +1,5 @@
 /**
- * @import { TagType, TagTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, TagType, TagTypeUpsert } from './types.public.js'
  */
 import { App } from "../index.js";
 import { assert, to_handle } from './utils.func.js';
@@ -40,6 +40,19 @@ export const upsert = (app) =>
   'tags/upsert'
 )(item);
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<TagType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
 
 /**
  * @param {App} app
@@ -51,5 +64,6 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'tags/remove'),
     list: regular_list(app, db(app), 'tags/list'),
+    count: count(app)
   }
 }

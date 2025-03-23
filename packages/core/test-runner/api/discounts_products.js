@@ -65,7 +65,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -123,7 +123,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -181,7 +181,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -239,7 +239,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -309,7 +309,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -375,7 +375,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -432,7 +432,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],

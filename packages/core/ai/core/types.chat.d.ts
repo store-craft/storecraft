@@ -53,7 +53,7 @@ export type content_tool_use = { type: 'tool_use', content: { name?: string, tit
 export type content_tool_result<T extends any = any> = { 
   type: 'tool_result', 
   content: { 
-    data: { result: T} | { error: any }, 
+    data: { result?: T, error?: any }, 
     id?: string, 
     name: string 
   } 

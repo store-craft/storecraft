@@ -1,7 +1,7 @@
 /** 
  * @import { ApiPolka } from './types.public.js' 
  * @import { ApiQuery } from '../api/types.api.query.js' 
- * @import { CollectionType, ProductType } from '../api/types.api.js' 
+ * @import { CollectionType, ProductType, VariantType } from '../api/types.api.js' 
  */
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
@@ -57,6 +57,17 @@ export const create_routes = (app) => {
 
   // list
   polka.get(
+    '/count_query',
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<CollectionType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.collections.count(q);
+      res.sendJson({ count });
+    }
+  );
+
+  polka.get(
     '/',
     async (req, res) => {
       
@@ -74,13 +85,25 @@ export const create_routes = (app) => {
     '/:collection/products/tags',
     async (req, res) => {
       const { collection } = req.params;
-      const items = await app.api.collections.list_collection_products_tags(collection);
+      const items = await app.api.collections.list_all_collection_products_tags(collection);
       res.sendJson(items);
+    }
+  ); 
+
+  polka.get(
+    '/:collection/products/count_query',
+    async (req, res) => {
+      const { collection } = req.params;
+      const q = (/** @type {ApiQuery<ProductType | VariantType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.collections.count_collection_products_query(collection, q);
+      res.sendJson({ count });
     }
   ); 
   
   
-  // list a specific collection's products
+  // query a specific collection's products
   polka.get(
     '/:collection/products',
     async (req, res) => {

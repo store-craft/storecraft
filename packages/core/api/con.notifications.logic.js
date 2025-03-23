@@ -1,5 +1,5 @@
 /**
- * @import { NotificationType, NotificationTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, NotificationType, NotificationTypeUpsert } from './types.public.js'
  * @import { ID as IDType } from '../database/types.public.js'
  */
 import { ID, apply_dates } from './utils.func.js'
@@ -55,6 +55,19 @@ async (items) => {
   return items_with_id.map(it => it.id);
 }
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<NotificationType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
 
 /**
  * 
@@ -66,6 +79,7 @@ export const inter = app => {
     get: regular_get(app, db(app)),
     remove: regular_remove(app, db(app)),
     list: regular_list(app, db(app)),
-    addBulk: addBulk(app)
+    addBulk: addBulk(app),
+    count: count(app)
   }
 }

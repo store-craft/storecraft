@@ -287,10 +287,6 @@ export class OpenAI {
           JSON.parse(tool_call.function.arguments)
         );
 
-        if ('error' in tool_result) {
-          throw tool_result.error;
-        }
-
         // console.log('tool result', tool_result)
         yield {
           type: 'tool_result',

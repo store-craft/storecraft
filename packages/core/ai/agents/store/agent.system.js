@@ -24,6 +24,7 @@ You have access to tools. This will be used to accomplish tasks for the customer
 - For Example: 'tag:genre-action', which you can use in your search
 - If the user request is abstract, please use 'similarity_search' tool instead
 - use this tool with empty query to show latest products
+- IF you don't get any results, use 'similarity_search' tool
 
 12 'search_products_in_collection' tool
 - use this tool with empty query to show latest products in the collection
@@ -40,21 +41,7 @@ can use similarity search with a query "a game about nordic god"
 </tools_logic>
 
 <examples>
-<example>
-
-How much does a Lenovo Laptop costs?
-Let me look it up
-</example>
-
-<example>
-
-How are you ?
-Hi, thank you, hope you are doing well
-
-</example>
-
 </examples>
-
 `
 
 export const SYSTEM2 = `

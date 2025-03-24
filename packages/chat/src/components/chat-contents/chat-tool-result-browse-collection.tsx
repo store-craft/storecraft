@@ -7,7 +7,7 @@ import { withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 import { LoadingImage } from "../loading-image.js";
 import type { ProductType } from "@storecraft/core/api";
-import { useCollection, useStorecraft } from "@storecraft/sdk-react-hooks";
+import { useCollection } from "@storecraft/sdk-react-hooks";
 import { MdNavigateNext } from "react-icons/md";
 import { FiltersView } from "./products-filter-view.js";
 
@@ -92,11 +92,11 @@ export const ToolResultContent_BrowseCollection = (
     return null;
 
   return (
-    <div className='w-full h-fit'>
+    <div className='w-full h-fit flex flex-col gap-3'>
 
       {/* Carousel */}
       <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
-                    overflow-x-auto h-fit pr-40 pb-5'
+                    overflow-x-auto h-fit pr-40 --pb-5'
         style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
         {
           page.map(
@@ -109,13 +109,18 @@ export const ToolResultContent_BrowseCollection = (
         }
       </div>
 
-      <div children={queryCount} />
-
       {/* Navigator */}
-      <div className='w-full h-fit justify-between flex flex-row gap-2'>
+      <div className='w-full h-fit justify-between flex flex-row 
+              gap-2 items-center opacity-50'>
         <MdNavigateNext 
           onClick={prev} title='previous' 
           className='text-3xl rotate-180 cursor-pointer' />
+        {
+          queryCount && 
+          <span 
+            children={`(${queryCount} products)`} 
+            className='font-mono text-sm ' />
+        }
         <MdNavigateNext 
           onClick={next} title='next' 
           className='text-3xl cursor-pointer' />

@@ -215,10 +215,6 @@ export class Anthropic {
           tool_call.input
         );
 
-        if ('error' in tool_result) {
-          throw tool_result.error;
-        }
-
         yield {
           type: 'tool_result',
           content: {

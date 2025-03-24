@@ -1,22 +1,30 @@
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { withDiv } from "../common.types";
 import { useCallback, useEffect, useState } from "react";
+import { BsFilterRight } from "react-icons/bs";
 
 export const selection_to_vql = (selections: FilterSelectionsType) => {
-  return Object.entries(selections).map(
-    ([name, values]) => {
-      return values.map(
-        value => `tag:${name}_${value}`
-      ).join(' | ')
-    }
-  ).join(' & ')
+  return Object.entries(selections)
+    .filter(
+      ([_, values]) => values?.length
+    ).map(
+      ([name, values]) => {
+        return values.map(
+          value => `tag:${name}_${value}`
+        ).join(' | ')
+      }
+    )
+    .map(
+      vql => `(${vql})`
+    ).join(' & ')
 }
 
 export type FiltersViewProps = withDiv<
   {
     chat: {
       /**
-       * @description Handle of the collection. if not provided, it will list all products tags
+       * @description Handle of the collection. if not provided, 
+       * it will list all products tags
        */
       handle?: string,
 
@@ -129,15 +137,24 @@ const FilterGroupView = (
 ) => {
 
   return (
-    <div className='w-full h-fit flex flex-row flex-wrap gap-2 items-baseline'>
-      <div children={props.chat.filter_name} className='' />
+    <div 
+      className='w-full h-fit flex flex-row flex-wrap 
+        gap-2 items-baseline'>
+      <BsFilterRight className='translate-y-0.5' />
+      <div children={props.chat.filter_name} 
+        className='tracking-wider underline decoration-0 
+          decoration-dashed font-thin font-inter' />
       {
         props.chat.filter_values.map(
           (value, ix) => (
             <div 
               key={ix} 
               children={value} 
-              onClick={() => props.chat.onSelection(props.chat.filter_name, value)}
+              onClick={
+                () => props.chat.onSelection(
+                  props.chat.filter_name, value
+                )
+              }
               className={
                 'px-2 rounded-full cursor-pointer \
                 border chat-border-overlay hover:scale-110 \

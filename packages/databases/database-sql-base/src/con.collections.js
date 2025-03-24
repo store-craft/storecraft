@@ -200,7 +200,7 @@ const count_collection_products = (driver) => {
       .selectFrom('products')
       // .select('products.id')
       .select(
-        (eb) => eb.fn.count('products.id').as('count')
+        (eb) => eb.fn.countAll().as('count')
       )
       .innerJoin(
         'products_to_collections', 
@@ -223,7 +223,7 @@ const count_collection_products = (driver) => {
       .executeTakeFirst();
 
     // console.log({result})
-    
+
     return Number(result.count);
   }
 }

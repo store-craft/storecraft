@@ -179,7 +179,7 @@ export interface db_products extends db_crud<
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_collections: (product: HandleOrId) => Promise<CollectionType[]>;
+  list_all_product_collections: (product: HandleOrId) => Promise<CollectionType[]>;
 
   /**
    * list all of the product related discounts, returns eveything, this is not query based,
@@ -187,7 +187,7 @@ export interface db_products extends db_crud<
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_discounts: (product: HandleOrId) => Promise<DiscountType[]>;
+  list_all_product_discounts: (product: HandleOrId) => Promise<DiscountType[]>;
 
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -196,7 +196,7 @@ export interface db_products extends db_crud<
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
+  list_all_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
   
   /**
    * list all of the product related collections, returns eveything, this is not query based,
@@ -205,7 +205,7 @@ export interface db_products extends db_crud<
    * @param product handle or id
    * @param options options like expand
    */
-  list_related_products: (product: HandleOrId) => Promise<BaseProductType[]>;
+  list_all_related_products: (product: HandleOrId) => Promise<BaseProductType[]>;
   
   
   /**
@@ -244,6 +244,16 @@ export interface db_customers extends OmitGetByHandle<db_crud<
   list_customer_orders: (
     customer_id: ID, query: ApiQuery<OrderData>
   ) => Promise<OrderData[]>;
+
+  /**
+   * Count a customer's orders items with a `query`
+   * @param handle_or_id customer `email` or `id`
+   * @param query query
+   */
+  count_customer_orders: (
+    handle_or_id: HandleOrId, query: ApiQuery<OrderData>
+  ) => Promise<number>;
+
 }
 
 /** @description `StorefrontType` crud */
@@ -257,35 +267,35 @@ export interface db_storefronts extends db_crud<
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_products: (handle_or_id: HandleOrId) => Promise<ProductType[]>;
+  list_all_storefront_products: (handle_or_id: HandleOrId) => Promise<ProductType[]>;
   /**
    * list all of the collections related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<CollectionType[]>;
+  list_all_storefront_collections: (handle_or_id: HandleOrId) => Promise<CollectionType[]>;
   /**
    * list all of the discounts related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<DiscountType[]>;
+  list_all_storefront_discounts: (handle_or_id: HandleOrId) => Promise<DiscountType[]>;
   /**
    * list all of the shipping methods related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<ShippingMethodType[]>;
+  list_all_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<ShippingMethodType[]>;
   /**
    * list all of the posts related to storefront, returns eveything, this is not query based,
    * we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
+  list_all_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
 
 }
 

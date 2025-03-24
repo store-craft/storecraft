@@ -110,7 +110,7 @@ export const list_product_collections = (app) =>
  * @param {string} handle_or_id handle or id
  */
 (handle_or_id) => {
-  return db(app).list_product_collections(handle_or_id);
+  return db(app).list_all_product_collections(handle_or_id);
 }
 
 /**
@@ -122,7 +122,7 @@ export const list_product_variants = (app) =>
    * @param {string} product handle or id
    */
   (product) => {
-    return db(app).list_product_variants(product);
+    return db(app).list_all_product_variants(product);
   }
 
 
@@ -135,7 +135,7 @@ export const list_related_products = (app) =>
  * @param {string} product handle or id
  */
 (product) => {
-  return db(app).list_related_products(product);
+  return db(app).list_all_related_products(product);
 }
 
 
@@ -148,7 +148,7 @@ export const list_product_discounts = (app) =>
  * @param {string} product handle or id
  */
 (product) => {
-  return db(app).list_product_discounts(product);
+  return db(app).list_all_product_discounts(product);
 }
 
 /**

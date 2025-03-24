@@ -29,7 +29,19 @@ export const create_routes = (app) => {
 
       res.sendJson(final);
     }
-  )
+  );
+
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      let q = (/** @type {ApiQuery<PostType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.posts.count(q);
+
+      res.sendJson({ count });
+    }
+  );
 
   // get item
   polka.get(

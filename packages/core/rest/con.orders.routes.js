@@ -32,6 +32,19 @@ export const create_routes = (app) => {
     }
   )
 
+  polka.get(
+    '/count_query',
+    middle_authorize_admin,
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<OrderData>} */ (
+        parse_query(req.query))
+      );
+      
+      const count = await app.api.orders.count(q);
+      res.sendJson({ count });
+    }
+  );
+
   // 
   // get order is public because ids are cryptographic:
   // - but, if you are not admin, payment gateway is partially hidden

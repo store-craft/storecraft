@@ -31,6 +31,19 @@ export const create_routes = (app) => {
     }
   )
 
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      let q = (/** @type {ApiQuery<DiscountType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.discounts.count(q);
+
+      res.sendJson({ count });
+    }
+  );
+
+
   // get item
   polka.get(
     '/:handle',
@@ -71,13 +84,30 @@ export const create_routes = (app) => {
 
   // query the eligibile products of a discount
   polka.get(
+    '/:discount/products/count_query',
+    async (req, res) => {
+      const { discount } = req?.params;
+      const q = (/** @type {ApiQuery<ProductType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.discounts.count_collection_products_query(
+        discount, q
+      );
+
+      res.sendJson({ count });
+    }
+  );
+
+  polka.get(
     '/:discount/products',
     async (req, res) => {
       const { discount } = req?.params;
       const q = (/** @type {ApiQuery<ProductType>} */ (
         parse_query(req.query))
       );
-      const items = await app.api.discounts.list_discount_products(discount, q);
+      const items = await app.api.discounts.list_discount_products(
+        discount, q
+      );
 
       res.sendJson(items);
     }

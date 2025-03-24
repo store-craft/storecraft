@@ -399,7 +399,7 @@ const list = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_product_collections"]}
+ * @returns {db_col["list_all_product_collections"]}
  */
 const list_product_collections = (driver) => {
   return async (product_id_or_handle) => {
@@ -414,7 +414,7 @@ const list_product_collections = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_product_discounts"]}
+ * @returns {db_col["list_all_product_discounts"]}
  */
 const list_product_discounts = (driver) => {
   return async (product_id_or_handle) => {
@@ -430,7 +430,7 @@ const list_product_discounts = (driver) => {
 /**
  * @param {SQL} driver 
  * 
- * @returns {db_col["list_product_variants"]}
+ * @returns {db_col["list_all_product_variants"]}
  */
 const list_product_variants = (driver) => {
   return async (product_id_or_handle) => {
@@ -450,7 +450,7 @@ const list_product_variants = (driver) => {
 /**
  * @param {SQL} driver 
  * 
- * @returns {db_col["list_related_products"]}
+ * @returns {db_col["list_all_related_products"]}
  */
 const list_related_products = (driver) => {
   return async (product_id_or_handle) => {
@@ -546,10 +546,10 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    list_product_collections: list_product_collections(driver),
-    list_product_discounts: list_product_discounts(driver),
-    list_product_variants: list_product_variants(driver),
-    list_related_products: list_related_products(driver),
+    list_all_product_collections: list_product_collections(driver),
+    list_all_product_discounts: list_product_discounts(driver),
+    list_all_product_variants: list_product_variants(driver),
+    list_all_related_products: list_related_products(driver),
     list_all_products_tags: list_all_products_tags(driver),
     count: count_regular(driver, table_name),
   }

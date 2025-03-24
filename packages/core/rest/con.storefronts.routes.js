@@ -30,6 +30,19 @@ export const create_routes = (app) => {
     }
   )
 
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<StorefrontType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.storefronts.count(q);
+
+      res.sendJson({ count });
+    }
+  );
+  
+  
   // get item
   polka.get(
     '/:handle',
@@ -43,6 +56,7 @@ export const create_routes = (app) => {
     }
   );
 
+  
   // delete item
   polka.delete(
     '/:handle',

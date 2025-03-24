@@ -103,6 +103,20 @@ export const list_customer_orders = (app) =>
 /**
  * @param {App} app
  */
+export const count_customer_orders = (app) => 
+  /**
+   * @description count a customer orders query
+   * @param {IDType} customer_id 
+   * @param {ApiQuery<OrderData>} q 
+   */
+  (customer_id, q) => {
+    return db(app).count_customer_orders(customer_id, q);
+  }
+
+  
+/**
+ * @param {App} app
+ */
 export const count = (app) => 
   /**
    * @description Count query results
@@ -127,6 +141,7 @@ export const inter = app => {
     remove: regular_remove(app, db(app), 'customers/remove'),
     list: regular_list(app, db(app), 'customers/list'),
     list_customer_orders: list_customer_orders(app),
+    count_customer_orders: count_customer_orders(app),
     count: count(app)
   }
 }

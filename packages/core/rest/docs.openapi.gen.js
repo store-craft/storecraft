@@ -602,9 +602,12 @@ const register_base_delete = (registry, slug_base, name, tags, example_id, descr
  * @param {z.infer<ZodSchema>} example 
  * @param {any} [extra] 
  * @param {string} [aug_description] 
+ * @param {boolean} [with_count_query=true] 
  */
 const register_base_list = (
-  registry, slug_base, name, tags, zod_schema, example, extra={}, aug_description='') => {
+  registry, slug_base, name, tags, zod_schema, example, 
+  extra={}, aug_description='', with_count_query=true
+) => {
   
   registry.registerPath({
     method: 'get',
@@ -614,17 +617,6 @@ const register_base_list = (
     tags,
     request: {
       query: create_query(),
-      aquery: z.object({
-        expand: z.string().openapi(
-          { 
-            examples: ['(collections,search)', '*'],
-            description: `Expand connections of item, 
-            a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
-            default: '`*`'
-          }
-        ),
-      }),
-
     },
     responses: {
       200: {
@@ -640,6 +632,31 @@ const register_base_list = (
     },
     ...extra
   });
+
+  if(with_count_query) {
+    registry.registerPath({
+      method: 'get',
+      path: `/${slug_base}/count_query`,
+      summary: `Count Query of ${name} items`,
+      description: `Count the query of filtered items \n ${aug_description}`,
+      tags,
+      request: {
+        query: create_query(),
+      },
+      responses: {
+        200: {
+          description: `Count of items satisfying the query of \`${name}s\``,
+          content: {
+            'application/json': {
+              schema: z.object({count: z.number()}),
+            },
+          },
+        },
+        ...error() 
+      },
+      ...extra
+    });
+  }
 
 }
 
@@ -1630,6 +1647,32 @@ const register_auth = registry => {
     }
   );  
 
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/users/count_query`,
+      description: 'Count users query',
+      summary: 'Count the auth users Query / Filter',
+      tags,
+      request: {
+        query: create_query()
+      },
+      responses: {
+        200: {
+          description: 'count',
+          content: {
+            "application/json": {
+              schema: z.object({ count: z.number() }),
+            },
+          },
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
+
+
   // confirmations
 
   registry.registerPath(
@@ -2318,7 +2361,7 @@ const register_customers = registry => {
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}/{id_or_email}/orders`,
-    description: 'List and filter customer orders, this is only available \
+    description: 'Query customer orders, this is only available \
     to `admin` and the `customer` (with auth token)',
     summary: 'Query customer orders',
     tags,
@@ -2349,6 +2392,36 @@ const register_customers = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_email}/orders/count_query`,
+    description: 'Count customer orders query, this is only available \
+    to `admin` and the `customer` (with auth token)',
+    summary: 'Count customer orders query',
+    tags,
+    request: {
+      params: z.object({
+        id_or_email: z.string().openapi(
+          { 
+            example: 'a@a.com',
+            description: '`id` or `email`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `count of query`,
+        content: {
+          'application/json': {
+            schema: z.object({count: z.number()}),
+          },
+        },
+      },
+      ...error() 
+    },
+  });  
 }
 
 
@@ -2388,7 +2461,7 @@ const register_discounts = registry => {
     path: `/${slug_base}/{id_or_handle}/products`,
     description: 'Each `discount` has eligible `products`, \
       you can query and filter these `products` by discount',
-    summary: 'List and filter discount\'s eligible products',
+    summary: 'Query discount\'s eligible products',
     tags,
     request: {
       params: z.object({
@@ -2415,6 +2488,36 @@ const register_discounts = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/count_query`,
+    description: 'Each `discount` has eligible `products`, \
+      you can count the query `products` by discount',
+    summary: 'Count discount\'s eligible products query',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: example_id,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `Filtered product\'s of a discount`,
+        content: {
+          'application/json': {
+            schema: z.object({count: z.number()}),
+          },
+        },
+      },
+      ...error() 
+    },
+  });  
 }
 
 /**

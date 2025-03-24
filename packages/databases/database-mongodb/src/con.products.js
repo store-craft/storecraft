@@ -300,7 +300,7 @@ const count = (driver) => count_regular(driver, col(driver));
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_product_collections"]}
+ * @returns {db_col["list_all_product_collections"]}
  */
 const list_product_collections = (driver) => {
   return async (product) => {
@@ -325,7 +325,7 @@ const list_product_collections = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_product_variants"]}
+ * @returns {db_col["list_all_product_variants"]}
  */
 const list_product_variants = (driver) => {
   return async (product) => {
@@ -355,7 +355,7 @@ const list_product_variants = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_related_products"]}
+ * @returns {db_col["list_all_related_products"]}
  */
 const list_related_products = (driver) => {
   return async (product) => {
@@ -376,7 +376,7 @@ const list_related_products = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_product_discounts"]}
+ * @returns {db_col["list_all_product_discounts"]}
  */
 const list_product_discounts = (driver) => {
   return async (product) => {
@@ -552,10 +552,10 @@ export const impl = (driver) => {
     list: list(driver),
     add_product_to_collection: add_product_to_collection(driver),
     remove_product_from_collection: remove_product_from_collection(driver),
-    list_product_collections: list_product_collections(driver),
-    list_product_variants: list_product_variants(driver),
-    list_related_products: list_related_products(driver),
-    list_product_discounts: list_product_discounts(driver),
+    list_all_product_collections: list_product_collections(driver),
+    list_all_product_variants: list_product_variants(driver),
+    list_all_related_products: list_related_products(driver),
+    list_all_product_discounts: list_product_discounts(driver),
     list_all_products_tags: list_all_products_tags(driver),
     count: count(driver)
   }

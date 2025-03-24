@@ -31,7 +31,20 @@ export const create_routes = (app) => {
       const final = await app.api.customers.upsert(req.parsedBody);
       res.sendJson(final);
     }
-  )
+  );
+
+  polka.get(
+    '/count_query',
+    middle_authorize_admin,
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<CustomerType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.customers.count(q);
+
+      res.sendJson({ count });
+    }
+  );
 
   // get item
   polka.get(
@@ -75,6 +88,21 @@ export const create_routes = (app) => {
 
   // list orders of customer
   polka.get(
+    '/:email_or_id/orders/count_query',
+    owner_or_admin_guard,
+    async (req, res) => {
+      const { email_or_id } = req.params;
+      const q = (/** @type {ApiQuery<OrderData>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.customers.count_customer_orders(email_or_id, q);
+      
+      res.sendJson({ count });
+    }
+  );
+
+  
+  polka.get(
     '/:email_or_id/orders',
     owner_or_admin_guard,
     async (req, res) => {
@@ -87,6 +115,7 @@ export const create_routes = (app) => {
       res.sendJson(items);
     }
   );
+
 
   return polka;
 }

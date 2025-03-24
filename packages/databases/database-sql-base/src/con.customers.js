@@ -150,8 +150,6 @@ const list = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
@@ -187,6 +185,37 @@ const list_customer_orders = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["count_customer_orders"]}
+ */
+const count_customer_orders = (driver) => {
+  return async (id, query) => {
+
+    const result = await driver.client
+      .selectFrom('orders')
+      .select(
+        (eb) => eb.fn.countAll().as('count')
+      )
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, table_name),
+            eb.or(
+              [
+                eb('_customer_id', '=', id),
+                eb('_customer_email', '=', id),
+              ]
+            )
+          ].filter(Boolean)
+        )
+      )
+      .executeTakeFirst();
+
+    return Number(result.count);
+  }
+}
+
 /** 
  * @param {SQL} driver
  * @return {db_col}}
@@ -200,6 +229,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     list_customer_orders: list_customer_orders(driver),
+    count_customer_orders: count_customer_orders(driver),
     count: count_regular(driver, table_name),
   }
 }

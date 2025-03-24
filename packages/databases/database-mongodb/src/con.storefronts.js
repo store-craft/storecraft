@@ -108,7 +108,7 @@ const count = (driver) => count_regular(driver, col(driver));
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_storefront_products"]}
+ * @returns {db_col["list_all_storefront_products"]}
  */
 const list_storefront_products = (driver) => {
   return async (product) => {
@@ -127,7 +127,7 @@ const list_storefront_products = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_storefront_collections"]}
+ * @returns {db_col["list_all_storefront_collections"]}
  */
 const list_storefront_collections = (driver) => {
   return async (product) => {
@@ -146,7 +146,7 @@ const list_storefront_collections = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_storefront_discounts"]}
+ * @returns {db_col["list_all_storefront_discounts"]}
  */
 const list_storefront_discounts = (driver) => {
   return async (product) => {
@@ -164,7 +164,7 @@ const list_storefront_discounts = (driver) => {
 /**
  * @param {MongoDB} driver 
  * 
- * @returns {db_col["list_storefront_shipping_methods"]}
+ * @returns {db_col["list_all_storefront_shipping_methods"]}
  */
 const list_storefront_shipping_methods = (driver) => {
   return async (product) => {
@@ -183,7 +183,7 @@ const list_storefront_shipping_methods = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_storefront_posts"]}
+ * @returns {db_col["list_all_storefront_posts"]}
  */
 const list_storefront_posts = (driver) => {
   return async (product) => {
@@ -213,10 +213,10 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_storefront_products: list_storefront_products(driver),
-    list_storefront_collections: list_storefront_collections(driver),
-    list_storefront_discounts: list_storefront_discounts(driver),
-    list_storefront_shipping_methods: list_storefront_shipping_methods(driver),
-    list_storefront_posts: list_storefront_posts(driver),
+    list_all_storefront_products: list_storefront_products(driver),
+    list_all_storefront_collections: list_storefront_collections(driver),
+    list_all_storefront_discounts: list_storefront_discounts(driver),
+    list_all_storefront_shipping_methods: list_storefront_shipping_methods(driver),
+    list_all_storefront_posts: list_storefront_posts(driver),
   }
 }

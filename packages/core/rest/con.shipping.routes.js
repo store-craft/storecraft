@@ -30,6 +30,19 @@ export const create_routes = (app) => {
     }
   )
 
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<ShippingMethodType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.shipping_methods.count(q);
+
+      res.sendJson({ count });
+    }
+  );
+
+
   // get item
   polka.get(
     '/:handle',

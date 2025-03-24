@@ -30,6 +30,17 @@ export const create_routes = (app) => {
     }
   )
 
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<CollectionType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.collections.count(q);
+      res.sendJson({ count });
+    }
+  );
+
   // get item
   polka.get(
     '/:handle',
@@ -56,16 +67,6 @@ export const create_routes = (app) => {
   );
 
   // list
-  polka.get(
-    '/count_query',
-    async (req, res) => {
-      const q = (/** @type {ApiQuery<CollectionType>} */ (
-        parse_query(req.query))
-      );
-      const count = await app.api.collections.count(q);
-      res.sendJson({ count });
-    }
-  );
 
   polka.get(
     '/',

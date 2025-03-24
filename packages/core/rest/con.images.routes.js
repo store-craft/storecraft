@@ -31,6 +31,18 @@ export const create_routes = (app) => {
     }
   )
 
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      let q = (/** @type {ApiQuery<ImageType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.images.count(q);
+
+      res.sendJson({ count });
+    }
+  );
+
   // get item
   polka.get(
     '/:handle',

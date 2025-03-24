@@ -189,30 +189,35 @@ export default class Storage {
    * - Else. it is assumed to be a public `url`, and will 
    * return the given url.
    * 
+   * @template {false | true} [IS_IMAGE=true]
    * @param {string} url 
-   * @param {boolean} isImage 
+   * @param {IS_IMAGE} [isImage=true]
+   * @returns {Promise<IS_IMAGE extends true ? string : any>}
    */
-  getSource = async (url, isImage=true) => {
+  getSource = async (url, isImage=(/** @type {IS_IMAGE} */ (true))) => {
     try {
 
       const is_storage = url.startsWith('storage://');
 
       // if we havent found a driver, rturn the url
       if(!is_storage)
-        return url;
+        return /** @type {IS_IMAGE extends true ? string : any} */(url);
 
       const key = url.split('storage://').at(-1);
       const blob = await this.getBlob(key);
 
-      if(isImage)
-        return URL.createObjectURL(blob)
+      if(isImage) {
+        return /** @type {IS_IMAGE extends true ? string : any} */ (
+          URL.createObjectURL(blob)
+        )
+      }
       else
         return blob.text().then(JSON.parse)    
     } catch(e) {
       console.log(e)
     }
 
-    return url;
+    return /** @type {IS_IMAGE extends true ? string : any} */ (url);
   }
 
 

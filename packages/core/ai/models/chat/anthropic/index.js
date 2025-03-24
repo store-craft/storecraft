@@ -215,15 +215,6 @@ export class Anthropic {
           tool_call.input
         );
 
-        yield {
-          type: 'tool_result',
-          content: {
-            data: tool_result,
-            id: tool_call.id,
-            name: tool_call.name
-          }
-        }
-
         params.history.push(
           {
             role: 'user',
@@ -236,6 +227,15 @@ export class Anthropic {
             ]
           }
         );
+
+        yield {
+          type: 'tool_result',
+          content: {
+            data: tool_result,
+            id: tool_call.id,
+            name: tool_call.name
+          }
+        }
       }
 
       // again

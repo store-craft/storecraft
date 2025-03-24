@@ -39,8 +39,9 @@ export const ProductCardView = (
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
                   blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
-        <LoadingImage src={item.media?.at(0) ?? 'placeholder'}
-            className=' rounded-md object-contain h-full w-full' />
+        <LoadingImage 
+          src={item.media?.at(0) ?? 'placeholder'}
+          className=' rounded-md object-contain h-full w-full' />
       </div>
 
       <p children={item.title} 
@@ -94,21 +95,6 @@ export const ToolResultContent_BrowseCollection = (
   return (
     <div className='w-full h-fit flex flex-col gap-3'>
 
-      {/* Carousel */}
-      <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
-                    overflow-x-auto h-fit pr-40 --pb-5'
-        style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
-        {
-          page.map(
-            (item, ix) => (
-              <Card key={ix} card={{loading: loading}} className='w-fit' >
-                <ProductCardView key={ix} item={item} index={ix} />
-              </Card>
-            )
-          )
-        }
-      </div>
-
       {/* Navigator */}
       <div className='w-full h-fit justify-between flex flex-row 
               gap-2 items-center opacity-50'>
@@ -125,16 +111,35 @@ export const ToolResultContent_BrowseCollection = (
           onClick={next} title='next' 
           className='text-3xl cursor-pointer' />
       </div>
+
       
-      {/* Filter view */}
-      <FiltersView chat={
+      {/* Carousel */}
+      <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
+                    overflow-x-auto h-fit pr-40 --pb-5'
+        style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
         {
-          handle: collection_handle,
-          onSelection: (_, vql) => {
-            query({ vql });
-          }
+          page.map(
+            (item, ix) => (
+              <Card key={item.handle} card={{loading: loading}} className='w-fit' >
+                <ProductCardView key={ix} item={item} index={ix} />
+              </Card>
+            )
+          )
         }
-        } />
+      </div>
+
+      {/* Filter view */}
+      <FiltersView 
+        chat={
+          {
+            handle: collection_handle,
+            onSelection: (_, vql) => {
+              query({ vql });
+            }
+          }
+        } 
+      />
+
     </div>
   )
 }

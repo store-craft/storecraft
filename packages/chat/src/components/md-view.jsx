@@ -1,6 +1,17 @@
-import { marked } from 'marked'
 import { useMemo } from 'react'
 import Markdown from 'markdown-to-jsx'
+import { LoadingImage } from './loading-image'
+
+const options = {
+  overrides: {
+    img: {
+      component: (props) => <LoadingImage {...props}  />,
+      props: {
+        className: 'h-40 w-full rounded-lg border chat-border-overlay',
+      },
+    },
+  }
+}
 
 /**
  * @typedef {object} InternalMDViewParams
@@ -18,36 +29,14 @@ export const MDView = (
   }
 ) => {
   const Comp = useMemo(
-    () => () => (
-      <Markdown
-        options={{
-          overrides: {
-            Price: {
-              component: () => <div children="Price"/>,
-              props: {
-                className: 'foo',
-              },
-            },
-          },
-        }}
-        children={value}/>
-    ), [value]
+    () => (
+      <div {...rest}>
+        <Markdown
+          options={options}
+          children={value}/>
+      </div>
+    ), [value, rest.className]
   );
 
-  return (
-    <div {...rest}>
-      <Markdown
-        options={{
-          overrides: {
-            Price: {
-              component: () => <div children="Price"/>,
-              props: {
-                className: 'foo',
-              },
-            },
-          },
-        }}
-        children={value}/>
-    </div>    
-  )
+  return Comp;
 }

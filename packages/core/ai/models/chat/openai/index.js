@@ -287,16 +287,6 @@ export class OpenAI {
           JSON.parse(tool_call.function.arguments)
         );
 
-        // console.log('tool result', tool_result)
-        yield {
-          type: 'tool_result',
-          content: {
-            data: tool_result,
-            id: tool_call.id,
-            name: tool_call.function.name
-          }
-        }
-
         params.history.push(
           {
             role: 'tool',
@@ -306,6 +296,16 @@ export class OpenAI {
             )
           }
         );
+
+        // console.log('tool result', tool_result)
+        yield {
+          type: 'tool_result',
+          content: {
+            data: tool_result,
+            id: tool_call.id,
+            name: tool_call.function.name
+          }
+        }        
       }
 
       // again

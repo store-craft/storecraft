@@ -1,8 +1,8 @@
 /**
- * @import { CollectionType, CollectionTypeUpsert } from '@storecraft/core/api'
+ * @import { ApiQuery, CollectionType, CollectionTypeUpsert, ProductType, VariantType } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
-import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
+import { collection_base, count_query_of_resource, fetchApiWithAuth, list_from_collection_resource } from './utils.api.fetch.js';
 
 /**
  * @description Base `collections` **CRUD**
@@ -59,6 +59,38 @@ export default class Collections extends collection_base {
 
     return result
   }
+
+  /**
+   * @description Query the `products` in a collection
+   * 
+   * @param {string} id_or_handle Collection `id` or `handle`
+   * @param {ApiQuery<(ProductType | VariantType)>} query query
+   * @return {Promise<(ProductType | VariantType)[]>} List of products in collection
+   */
+  query_collection_products = async (id_or_handle, query) => {
+    const result = list_from_collection_resource(
+      this.sdk,
+      `collections/${id_or_handle}/products`,
+      query
+    );
+    return result
+  }
+
+  /**
+   * @description Count the number of `products` in a collection by a query
+   * 
+   * @param {string} id_or_handle Collection `id` or `handle`
+   * @param {ApiQuery<(ProductType | VariantType)>} query query
+   * @return {Promise<number>} count
+   */
+  count_collection_products_query = async (id_or_handle, query) => {
+    return count_query_of_resource(
+      this.sdk,
+      `collections/${id_or_handle}/products`,
+      query
+    );
+  }
+
 
   // /**
   //  * Add tags in bulk to products in collection

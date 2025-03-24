@@ -160,6 +160,24 @@ export async function upsert_to_collection_resource(sdk, resource, item) {
   );
 }
 
+/**
+ * @description Count the number of items in a query
+ * @template G
+ * @param {StorecraftSDK} sdk
+ * @param {string} resource base path of resource
+ * @param {ApiQuery<G>} [query] the query
+ * @returns {Promise<number>} count
+ */
+export async function count_query_of_resource(sdk, resource, query) {
+  const sq = api_query_to_searchparams(query);
+  return fetchApiWithAuth(
+    sdk, 
+    `${resource}/count_query?${sq.toString()}`,
+    {
+      method: 'get',
+    }
+  ).then((result) => Number(result.count));
+}
 
 /**
  * 
@@ -227,7 +245,7 @@ export class collection_base {
   /**
    * 
    * @param {StorecraftSDK} sdk storecraft sdk
-   * @param {string} base_name base name of resource type
+   * @param {string} base_name base path of resource type
    */
   constructor(sdk, base_name) {
     this.#sdk = sdk;
@@ -269,14 +287,19 @@ export class collection_base {
   }
 
   /**
-   * 
    * @param {ApiQuery<G>} query Query object
-   * 
-   * 
    * @returns {Promise<G[]>}
    */
   async list(query) {
     return list_from_collection_resource(this.sdk, this.base_name, query);
+  }
+
+  /**
+   * @description Count the number of items in a query
+   * @param {ApiQuery<G>} query Query object
+   */
+  async count_query(query) {
+    return count_query_of_resource(this.sdk, this.base_name, query);
   }
 
   get base_name() {

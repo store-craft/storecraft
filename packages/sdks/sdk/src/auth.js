@@ -10,7 +10,7 @@
 
 import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js';
 import { StorecraftSDK } from '../index.js';
-import { fetchApiWithAuth, url } from './utils.api.fetch.js';
+import { count_query_of_resource, fetchApiWithAuth, url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
 
 
@@ -421,10 +421,7 @@ export default class Auth {
   }
 
   /**
-   * 
-   * 
    * @param {ApiQuery<AuthUserType>} query
-   * 
    */
   list_auth_users = async (query) => {
     const sq = api_query_to_searchparams(query);
@@ -437,6 +434,18 @@ export default class Auth {
       }
     );
     return items;
+  }
+
+  /**
+   * @param {ApiQuery<AuthUserType>} query
+   */
+  count_auth_users_query = async (query) => {
+    const sq = api_query_to_searchparams(query);
+    return count_query_of_resource(
+      this.#sdk,
+      `/auth/users`,
+      query
+    )
   }
 
 

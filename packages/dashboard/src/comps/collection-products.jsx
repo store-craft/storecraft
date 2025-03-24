@@ -52,11 +52,11 @@ const CollectionBase = forwardRef(
 
   const { sdk } = useStorecraft();
     
-  /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/api').ProductType>
-   * }
-   */
+  // /**
+  //  * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
+  //  *  import('@storecraft/core/api').ProductType>
+  //  * }
+  //  */
   const { 
     pages, page, loading, error, queryCount,
     actions: {
@@ -64,7 +64,8 @@ const CollectionBase = forwardRef(
     }
   } = useCollection(
     `collections/${collection_handle_or_id}/products`, 
-    q_initial, false
+    /** @type {ApiQuery<ProductType | VariantType>} */(q_initial), 
+    false
   );
 
   const trigger = useTrigger();
@@ -191,7 +192,7 @@ const CollectionProducts = (
 
   return (
 <Card 
-    name={'🎁 Products in collection ' + (count>=0 ? count : '') }
+    name={'🎁 Products in collection ' + (count>=0 ? `(${count})` : '') }
     className='w-full --lg:w-[30rem] h-fit' 
     border={true}
     error={error}>

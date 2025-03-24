@@ -15,6 +15,7 @@ import { StorecraftSDK } from '@storecraft/sdk'
 import { 
   remove_from_collection_resource as sdk_remove 
 } from "@storecraft/sdk/src/utils.api.fetch.js";
+import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js'
 
 /**
  * 
@@ -305,11 +306,17 @@ export const useCollection = (
           ...q_minus_filters
         } = q_modified;
 
-
-        sdk.statistics.countOf(
-          rest_resource_to_db_resource_table(resource), 
-          /** @type {ApiQuery} */(q_minus_filters)
-        ).then(setQueryCount).catch(console.log);
+        // every queryable resource has a `count_query` endpoint
+        sdk.fetchApiWithAuth(
+          `${resource}/count_query`, { method: 'get' },
+          api_query_to_searchparams(
+            /** @type {ApiQuery} */(q_minus_filters)
+          )
+        ).then(r => r.count).then(setQueryCount).catch(console.log);
+        // sdk.statistics.countOf(
+        //   rest_resource_to_db_resource_table(resource), 
+        //   /** @type {ApiQuery} */(q_minus_filters)
+        // ).then(setQueryCount).catch(console.log);
       }
 
       return items;

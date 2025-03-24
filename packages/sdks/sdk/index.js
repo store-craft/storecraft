@@ -21,6 +21,7 @@ import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
 import Search from './src/search.js'
+import { fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './src/utils.api.fetch.js'
 
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
@@ -56,6 +57,48 @@ export class StorecraftSDK {
     this.checkout = new Checkout(this);
     this.settings = new Settings(this);
     this.notifications = new Notifications(this);
+  }
+
+  /**
+   * @description 
+   * - Prepends `backend` endpoint. 
+   * - Fetches with `authentication` middleware. 
+   * - Refreshed `auth` if needed. 
+   * - Throws a `json` representation of the `error`, 
+   * if the request is `bad`
+   * 
+   * @template {any} [R=any]
+   * 
+   * @param {string} path relative path in api
+   * @param {RequestInit} [init] request `init` type
+   * @param {URLSearchParams} [query] url search params
+   * 
+   * @throws {error}
+   * 
+   * @returns {Promise<R>}
+   */   
+  fetchApiWithAuth = (path, init, query) => {
+    return fetchApiWithAuth(
+      this, path, init, query
+    )
+  }
+
+  /**
+   * @description 
+   * - Prepends `backend` endpoint. 
+   * - Fetches with `authentication` middleware. 
+   * - Refreshed `auth` if needed. 
+   * 
+   * @param {string} path relative path in api
+   * @param {RequestInit} [init] request `init` type
+   * @param {URLSearchParams} [query] url search params
+   * 
+   * @returns {Promise<Response>}
+   */   
+  fetchOnlyApiResponseWithAuth = (path, init, query) => {
+    return fetchOnlyApiResponseWithAuth(
+      this, path, init, query
+    )
   }
 
   /**

@@ -1,5 +1,6 @@
 /**
  * @import { queryable_resources, InferQueryableType } from '@storecraft/sdk-react-hooks'
+ * @import { ApiQuery } from '@storecraft/core/api'
  */
 
 import { 
@@ -11,20 +12,6 @@ import {
 } from '@storecraft/core/api/utils.query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
-
-
-/**
- * @template T the `document` type
- * 
- * @typedef {Omit<ReturnType<typeof useCollectionsActions<T>>, 'page' | 'pages'> & 
- *  {
- *    page: T[],  
- *    pages: T[][]
- *  }
- * } HookReturnType This `type` will give you the return type of the hook
- * 
- */
-
 
 
 /**
@@ -42,16 +29,19 @@ import { useNavigate, useParams } from 'react-router-dom'
  * @param {RESOURCE} resource the collection id in backend 
  * @param {string} [slug] front end slug
  * @param {boolean} [autoLoad=true] 
- * @param {import('@storecraft/core/api').ApiQuery} [autoLoadQuery=q_initial] 
+ * @param {ApiQuery<T>} [autoLoadQuery=q_initial] 
  */
 const useCollectionsActions = (
-  resource, slug=resource, autoLoad=false, autoLoadQuery=q_initial
+  resource, slug=resource, autoLoad=false, 
+  autoLoadQuery=(/** @type {ApiQuery<T>} */(q_initial))
 ) => {
 
   const { query_params } = useParams()
+
+ 
   const query_api = useMemo(
     () => {
-      const query_api = parse_query(query_params);
+      const query_api =  /** @type {ApiQuery<T>} */ (parse_query(query_params));
       return query_api;
     },
     [query_params]
@@ -72,6 +62,8 @@ const useCollectionsActions = (
   // /**
   //  * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
   //  */
+
+  
   const { 
     pages, page, loading, hasLoaded, error, sdk, queryCount, 
     resource_is_probably_empty,
@@ -80,6 +72,7 @@ const useCollectionsActions = (
     }
   } = useCollection(resource, autoLoadQuery, autoLoad);
 
+  
   useEffect(
     () => {
       ref_actions.current?.setSearch(
@@ -105,11 +98,12 @@ const useCollectionsActions = (
       const search = ref_actions.current.getSearch();
       ref_use_cache.current = false;
 
-      const q = {
+     
+      const q =  /** @type {ApiQuery<T>} */ ({
         ...rest,
         limit: 5,
         vql: search
-      }
+      })
 
       if(perform_navigation) {
         nav(
@@ -137,12 +131,12 @@ const useCollectionsActions = (
         limit, limitToLast, ...rest 
       } = query_api
 
-      /** @type {import('@storecraft/core/api').ApiQuery} */
-      const q = {
+      
+      const q = /** @type {ApiQuery<T>} */ ({
         ...query_api,
         limit: limit ? $limit : undefined,
         limitToLast: limitToLast ? $limit : undefined
-      }
+      })
 
       if(perform_navigation) {
         nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
@@ -168,14 +162,15 @@ const useCollectionsActions = (
         startAt, limit, limitToLast, ...rest 
       } = query_api
       
-      /** @type {import('@storecraft/core/api').ApiQuery} */
-      const q = {
+      
+      const q = /** @type {ApiQuery<T>} */ ({
         ...rest,
         startAfter: [
-          ['updated_at', item.updated_at], ['id', item.id]
+          ['updated_at', item.updated_at], 
+          ['id', item.id]
         ],
         limit: limit ? limit : limitToLast
-      }
+      })
 
       // console.log('q', q)
       if(perform_navigation) {
@@ -201,14 +196,13 @@ const useCollectionsActions = (
         startAt, limit, limitToLast, ...rest 
       } = query_api
       
-      /** @type {import('@storecraft/core/api').ApiQuery} */
-      const q = {
+      const q = /** @type {ApiQuery<T>} */ ({
         ...rest,
         endBefore: [
           ['updated_at', item.updated_at], ['id', item.id]
         ],
         limitToLast: limitToLast ? limitToLast : limit
-      }
+      })
 
       if(perform_navigation) {
         nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);

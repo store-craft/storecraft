@@ -2230,6 +2230,37 @@ const register_collections = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'post',
+    path: `/${slug_base}/{id_or_handle}/export`,
+    description: 'Export a colletion of `products` into the `storage`. This is beneficial for `collections`, that hardly change and therefore can be efficiently stored in a cost-effective `storage` and **CDN** network.',
+    summary: 'Export collection to storage json',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples,
+            description: '`id` or `handle` of the collection'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `json url`,
+        content: {
+          'application/json': {
+            schema: z.string().describe('storage path of the exported collection'),
+            example: ['storage://collections/col_65dc619ac40344c9a1dd6755.json', 'storage://collections/playstation-games.json']
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()    
+  });
+    
 }
 
 /**
@@ -3140,6 +3171,38 @@ const register_storefronts = registry => {
     registry, slug_base, name, tags, _typeUpsertSchema, example
     );
 
+  registry.registerPath({
+    method: 'post',
+    path: `/${slug_base}/{id_or_handle}/export`,
+    description: 'Export a storefront into the `storage`. This is beneficial for things`, that hardly change and therefore can be efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.',
+    summary: 'Export storefront to storage json',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: example_id,
+            description: '`id` or `handle` of the storefront'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `json url`,
+        content: {
+          'application/json': {
+            schema: z.string().describe('storage path of the exported storefront'),
+            example: ['storage://storefronts/sf_65dc619ac40344c9a1dd6755.json', 'storage://storefronts/weekday-storefront.json']
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()    
+  });
+  
+  
   // list linked products
   registry.registerPath({
     method: 'get',

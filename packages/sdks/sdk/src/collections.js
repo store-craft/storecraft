@@ -1,8 +1,13 @@
 /**
- * @import { ApiQuery, CollectionType, CollectionTypeUpsert, ProductType, VariantType } from '@storecraft/core/api'
+ * @import { 
+ *  ApiQuery, CollectionType, CollectionTypeUpsert, ProductType, VariantType 
+ * } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
-import { collection_base, count_query_of_resource, fetchApiWithAuth, list_from_collection_resource } from './utils.api.fetch.js';
+import { 
+  collection_base, count_query_of_resource, 
+  fetchApiWithAuth, list_from_collection_resource 
+} from './utils.api.fetch.js';
 
 /**
  * @description Base `collections` **CRUD**
@@ -90,36 +95,5 @@ export default class Collections extends collection_base {
       query
     );
   }
-
-
-  // /**
-  //  * Add tags in bulk to products in collection
-  //  * @param {string} colId 
-  //  * @param {string[]} tags 
-  //  * @param {boolean} add true for add false for remove 
-  //  */
-  // bulkAddRemoveTags = async (colId, tags, add=true) => {
-
-  //   // first get all products in collection
-  //   const tag_all = tags ?? []
-  //   const tag_all_prefixed = tag_all.map(t => `tag:${t}`)
-  //   const tag_vs = tag_all.map(it => it.split('_').pop())
-
-  //   var products = await this.context.products.list([`col:${colId}`], 10000)
-  //   // console.log('products ', products)
-  //   // console.log('colId ', colId)
-  //   const batch = writeBatch(this.context.firebase.db)
-  //   products.forEach(it => {
-  //     const ref = doc(this.context.firebase.db, 'products', it[0])
-  //     batch.update(ref, { 
-  //       tags : add ? arrayUnion(...tags) : arrayRemove(...tags),
-  //       search : add ? arrayUnion(...tag_all, ...tag_all_prefixed, ...tag_vs) : 
-  //                      arrayRemove(...tag_all, ...tag_all_prefixed, ...tag_vs),
-  //       updatedAt : Date.now()
-  //     })
-  //   })
-  //   await batch.commit()
-
-  // }
 
 }

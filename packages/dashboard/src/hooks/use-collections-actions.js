@@ -12,6 +12,7 @@ import {
 } from '@storecraft/core/api/utils.query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
+import { count_query_of_resource } from '@storecraft/sdk/src/utils.api.fetch.js';
 
 
 /**
@@ -37,7 +38,6 @@ const useCollectionsActions = (
 ) => {
 
   const { query_params } = useParams()
-
  
   const query_api = useMemo(
     () => {
@@ -67,6 +67,7 @@ const useCollectionsActions = (
   const { 
     pages, page, loading, hasLoaded, error, sdk, queryCount, 
     resource_is_probably_empty,
+    resource_has_more_pages,
     actions: {
       removeDocument, query
     }
@@ -155,6 +156,8 @@ const useCollectionsActions = (
      * navigation with `search` params to enable query.
      */
     async (perform_navigation=true) => {
+      // if(!resource_has_more_pages)
+      //   return;
 
       const item = page?.at(-1);
       const { 
@@ -170,10 +173,18 @@ const useCollectionsActions = (
           ['id', item.id]
         ],
         limit: limit ? limit : limitToLast
-      })
+      });
 
-      // console.log('q', q)
       if(perform_navigation) {
+        { // when using query with navigation
+          // we perform a different check for empty resources
+          // as opposed to the regular `query` function,
+          // becuase we are in stateless mode.
+          const count = await count_query_of_resource(
+            sdk, resource, q
+          );
+          if(count==0) return;
+        }
         nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
       } else {
         await query(q);
@@ -181,7 +192,7 @@ const useCollectionsActions = (
 
       return q;
 
-    }, [nav, query, page, query_api, slug]
+    }, [nav, query, page, query_api, slug, resource]
   );
 
   const prev = useCallback(
@@ -202,9 +213,18 @@ const useCollectionsActions = (
           ['updated_at', item.updated_at], ['id', item.id]
         ],
         limitToLast: limitToLast ? limitToLast : limit
-      })
+      });
 
       if(perform_navigation) {
+        { // when using query with navigation
+          // we perform a different check for empty resources
+          // as opposed to the regular `query` function,
+          // becuase we are in stateless mode.
+          const count = await count_query_of_resource(
+            sdk, resource, q
+          );
+          if(count==0) return;
+        }
         nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
       } else {
         await query(q);

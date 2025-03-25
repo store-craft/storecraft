@@ -150,7 +150,7 @@ const transform_boolean_to_0_or_1 = (kv, table_name) => {
 }
 
 /**
- * Convert an API Query into mongo dialect, also sanitize.
+ * Convert an API Query into dialect, also sanitize.
  * 
  * @template {any} [T=any]
  * 

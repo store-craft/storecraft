@@ -102,7 +102,7 @@ export const ToolResultContent_BrowseCollection = (
           onClick={prev} title='previous' 
           className='text-3xl rotate-180 cursor-pointer' />
         {
-          queryCount && 
+          queryCount>=0 && 
           <span 
             children={`(${queryCount} products)`} 
             className='font-mono text-sm ' />
@@ -112,7 +112,7 @@ export const ToolResultContent_BrowseCollection = (
           className='text-3xl cursor-pointer' />
       </div>
 
-      
+
       {/* Carousel */}
       <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
                     overflow-x-auto h-fit pr-40 --pb-5'

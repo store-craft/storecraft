@@ -7,7 +7,7 @@ import {
   useCallback, useEffect, useRef, useState 
 } from 'react'
 import useTrigger from './use-trigger.js'
-import { list_from_collection_resource } from '@storecraft/sdk/src/utils.api.fetch.js'
+import { count_query_of_resource, list_from_collection_resource } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 import { useStorecraft } from './use-storecraft.js'
 import { useDocumentCache, useQueryCache } from './use-storecraft-cache.js'
@@ -168,6 +168,16 @@ export const useCollection = (
   const [loading, setIsLoading] = useState(autoLoad);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [queryCount, setQueryCount] = useState(-1);
+  const resource_has_more_pages = (
+    (queryCount==-1) || 
+    (
+      queryCount>0 && 
+      pages.reduce((a, c) => a + c.length, 0) < queryCount
+    )
+  );
+
+  // console.log({resource_has_more_pages, queryCount, items_lem: pages.length, index})
+
   const trigger = useTrigger();
   
   useEffect(
@@ -228,19 +238,26 @@ export const useCollection = (
 
       const hm = up ? 1 : -1;
 
+      // guard underflow
       if(index + hm < 0) 
         return Promise.resolve();
 
+      // use cached pages
       if(index+hm < pages.length) {
         setIndex(index+hm);
 
-        return Promise.resolve();
+        return Promise.resolve(pages[index+hm]);
+      }
+
+      // guard overflow
+      if(!resource_has_more_pages) {
+        return Promise.resolve()
       }
 
       // else let's fetch
       return _internal_fetch_next();
 
-    }, [pages, index, _internal_fetch_next]
+    }, [pages, index, _internal_fetch_next, resource_has_more_pages]
   )
 
   const next = useCallback(
@@ -307,12 +324,16 @@ export const useCollection = (
         } = q_modified;
 
         // every queryable resource has a `count_query` endpoint
-        sdk.fetchApiWithAuth(
-          `${resource}/count_query`, { method: 'get' },
-          api_query_to_searchparams(
-            /** @type {ApiQuery} */(q_minus_filters)
-          )
-        ).then(r => r.count).then(setQueryCount).catch(console.log);
+        count_query_of_resource(
+          sdk, resource,
+          /** @type {ApiQuery} */(q_minus_filters)
+        ).then(setQueryCount).catch(console.log);
+        // sdk.fetchApiWithAuth(
+        //   `${resource}/count_query`, { method: 'get' },
+        //   api_query_to_searchparams(
+        //     /** @type {ApiQuery} */(q_minus_filters)
+        //   )
+        // ).then(r => r.count).then(setQueryCount).catch(console.log);
         // sdk.statistics.countOf(
         //   rest_resource_to_db_resource_table(resource), 
         //   /** @type {ApiQuery} */(q_minus_filters)
@@ -434,6 +455,7 @@ export const useCollection = (
     loading, 
     hasLoaded,
     resource_is_probably_empty: resource_is_probably_empty(_q.current, hasLoaded, loading, page.length),
+    resource_has_more_pages,
     error, 
     sdk,
     queryCount, 

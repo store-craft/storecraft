@@ -54,16 +54,16 @@ export const count_regular = (driver, table_name) => {
   return async (query) => {
 
     const result = await driver.client
-      .selectFrom(table_name)
-      .select(
-        (eb) => eb.fn.countAll().as('count')
-      )
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .executeTakeFirst();
+    .selectFrom(table_name)
+    .select(
+      (eb) => eb.fn.countAll().as('count')
+    )
+    .where(
+      (eb) => {
+        return query_to_eb(eb, query, table_name);
+      }
+    )
+    .executeTakeFirst();
 
     return Number(result.count);
   }

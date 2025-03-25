@@ -54,6 +54,14 @@ export const zod_to_json_schema = (schema) => {
       ),
       "type": "object"
     }
+    const required = entries.filter(
+      ([key, value]) => !zod_is_optional(value)
+    ).map(
+      ([key, value]) => key
+    );
+
+    if(required.length > 0)
+      obj.required = required;
     // console.log(JSON.stringify({obj}, null, 2));
     return obj
   }
@@ -81,3 +89,17 @@ export const zod_to_json_schema = (schema) => {
     type: "unsupported"
   };
 };
+
+/**
+ * @template {z.ZodTypeAny} T 
+ * @param {T} schema 
+ */
+export const zod_is_optional = (schema) => {
+  if(schema instanceof z.ZodOptional)
+    return true;
+  if (schema instanceof z.ZodNullable) 
+    return zod_is_optional(schema.unwrap());
+  if (schema instanceof z.ZodDefault) 
+    return zod_is_optional(schema.removeDefault());
+  return false;
+}

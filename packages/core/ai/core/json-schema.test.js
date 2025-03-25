@@ -38,7 +38,11 @@ const test_cases = [
           "description": "Limit the results"
         }
       },
-      "type": "object"
+      "type": "object",
+      "required": [
+        "q",
+        "namespaces"
+      ]
     }
   }
 ]
@@ -50,8 +54,8 @@ test(
       const json_schema = zod_to_json_schema(test_case.zod);
       // console.log(JSON.stringify(json_schema, null, 2));
       assert.equal(
-        JSON.stringify(json_schema, null, 2),
-        JSON.stringify(test_case.expected, null, 2),
+        json_schema,
+        test_case.expected,
         'zod_to_json_schema did not return the expected result'
       )
     }

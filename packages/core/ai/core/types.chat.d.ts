@@ -69,6 +69,13 @@ export type content = | content_text | content_delta_text
                       | content_image | content_json | content_object
                       | content_error;
 
+/**
+ * @description Unified message type translatable to and from LLM native message
+ */                      
+export type UnifiedMessage = {
+  role: 'user' | 'assistant' | string,
+  content: content[];
+}
 
 
 /**
@@ -196,10 +203,10 @@ export interface ChatAI<
   user_content_to_llm_user_message: (prompt: content[]) => LLMMessageType;
 
   /**
-   * @description Translate a specific LLM Assistant message into simple user content
-   * @param message llm message
+   * @description Translate a generic user prompt into an LLM `user` message
+   * @param prompt user prompt
    */
-  llm_assistant_message_to_user_content: (message: LLMMessageType) => content[];
+  assistant_content_to_llm_assistant_message?: (content: content) => LLMMessageType;
 
 }
 

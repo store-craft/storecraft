@@ -366,39 +366,6 @@ export class Anthropic {
     }
   };
 
-  /** @type {Impl["llm_assistant_message_to_user_content"]} */
-  llm_assistant_message_to_user_content = (message) => {
-    if(message.role!=='assistant') {
-      throw new Error(
-        "llm_assistant_message_to_user_content:: message.role!=='assistant'"
-      );
-    }
-
-    if(typeof message.content === 'string') {
-      return [
-        {
-          content: message.content,
-          type: 'text'
-        }
-      ];
-    }
-  
-    if(Array.isArray(message.content)) {
-      return message.content.filter(p => p.type==='text').map(
-        (part) => (
-          {
-            type: 'text',
-            content: part.text
-          }
-        )
-      )
-    }
-    
-    throw new Error(
-      "llm_assistant_message_to_user_content:: invalid data"
-    );  
-  };
-
   models = async () => {
     const r = await fetch(
       this.#chat_models_url,

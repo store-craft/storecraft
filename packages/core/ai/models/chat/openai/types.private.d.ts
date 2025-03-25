@@ -56,8 +56,8 @@ export type user_message = {
 
 /** Messages sent by the model in response to user messages. */
 export type assistant_message = {
-  /** An array of content parts with a defined type. Can be one or more of type text, or exactly one of type refusal */
-  content: string | (
+  /** The contents of the assistant message. Required unless tool_calls or function_call is specified. */
+  content?: string | (
     {
       type: string;
       /** The text content. */
@@ -91,6 +91,7 @@ export type assistant_message = {
   }
 }
 
+/** Result of tool call */
 export type tool_message = {
   content: string | string[];
   role: 'tool';

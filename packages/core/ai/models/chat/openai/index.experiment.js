@@ -66,6 +66,49 @@ export class OpenAI {
   }
 
 
+  /** @type {Impl["assistant_content_to_llm_assistant_message"]} */
+  assistant_content_to_llm_assistant_message = (content) => {
+    switch(content.type) {
+      case 'text':
+        return {
+          role: 'assistant',
+          content: [
+            {
+              type: 'text',
+              text: content.content
+            }
+          ]
+        }
+      case 'tool_use': {
+        return {
+          role: 'assistant',
+          tool_calls: content.content.map(
+            (tc) => ({
+              id: tc.id,
+              type: 'function',
+              function: {
+                name: tc.name,
+                arguments: JSON.stringify(tc.arguments),
+              }
+            })
+          )
+        }
+      }
+      case 'tool_result': {
+        return {
+          role: 'tool',
+          tool_call_id: content.content.id,
+          content: JSON.stringify(content.content?.data ?? null)
+        }
+      }      
+      default: {
+        console.log(`unsupported content type ${content.type}`);
+        return undefined;
+      }
+    }
+  }
+
+
   /** @type {Impl["user_content_to_llm_user_message"]} */
   user_content_to_llm_user_message = (prompts) => {
     const prompts_filtered = prompts.filter(
@@ -90,6 +133,7 @@ export class OpenAI {
       )
     }
   };
+
 
 
   /**

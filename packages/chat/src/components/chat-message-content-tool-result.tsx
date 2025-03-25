@@ -26,8 +26,6 @@ export const content_to_view = (
       return 'login frontend view';
     case 'search_products':
       return (<ToolResultContent_Products chat={{content}}  />)
-    case 'search_products_in_collection':
-      return (<ToolResultContent_Products chat={{content}}  />)
     case 'fetch_shipping_methods':
       return (<ToolResultContent_ShippingMethods chat={{content}}  />)
     case 'fetch_collections':

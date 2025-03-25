@@ -71,13 +71,16 @@ export const ToolResultContent_SimilaritySearch = (
 
   return (
     <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
-                  overflow-x-auto h-fit pr-40 pb-5'
+                  overflow-x-auto h-full max-h-96 pr-40 pb-5'
       style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
       {
         items.map(
           (item, ix) => (
-            <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <SimilaritySearchItemView key={ix} item={item} index={ix} />
+            <Card key={ix} card={{loading: loading}} className='w-fit h-full max-h-96' >
+              <SimilaritySearchItemView 
+                key={item.content?.id ?? ix} 
+                item={item} 
+                index={ix} />
             </Card>
           )
         )

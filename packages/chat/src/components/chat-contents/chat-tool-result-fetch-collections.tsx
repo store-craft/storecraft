@@ -1,6 +1,6 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
 import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { withDiv } from "../common.types.js";
@@ -31,8 +31,26 @@ export const CollectionCardView = (
     }, []
   );
 
+  const onClick = useCallback(
+    () => {
+      pubsub.dispatch(
+        {
+          event: 'request-retry',
+          payload: {
+            prompt: [
+              {
+                content: `I want to know browse the \`${item.title}\` collection`,
+                type: 'text'
+              }
+            ]
+          }
+        }
+      )
+    }, []
+  );
+
   return (
-    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit \
+    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-full justify-between \
         duration-300 transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
@@ -47,9 +65,11 @@ export const CollectionCardView = (
       <p children={item.title} 
         className='whitespace-nowrap truncate font-medium capitalize 
             text-base  w-full --max-w-20' />
-      <button children='use' 
+      <button 
+        onClick={onClick}
+        children='browse' 
         className='uppercase tracking-widest font-bold w-full 
-            dark:bg-pink-500 bg-black text-white
+            dark:bg-pink-500 bg-black text-white cursor-pointer
                   p-2 chat-card border rounded-md text-xs' />
     </div>
   )

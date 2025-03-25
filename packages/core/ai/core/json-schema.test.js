@@ -2,6 +2,7 @@ import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { zod_to_json_schema } from './json-schema.js';
 import { z } from 'zod';
+import { TOOLS } from '../agents/store/agent.tools.js';
 
 const test_cases = [
   {
@@ -22,7 +23,7 @@ const test_cases = [
           "type": "array",
           "items": {
             "type": "string",
-            "enums": [
+            "enum": [
               "products",
               "collections",
               "shipping",

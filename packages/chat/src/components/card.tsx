@@ -28,7 +28,7 @@ export const Card = (
           )
         }
       
-        <div className='relative w-full chat-card rounded-md'>
+        <div className='relative w-full h-full chat-card rounded-md'>
           {
             children
           }

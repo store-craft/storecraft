@@ -72,7 +72,7 @@ export const zod_to_json_schema = (schema) => {
     return with_description(
       { 
         type: 'string', 
-        enums: schema.options
+        enum: schema.options
       }, schema
     );
 

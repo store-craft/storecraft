@@ -117,6 +117,7 @@ export const q_initial = ({
  * - nested resources: 
  *  - `collections/{handle-name}/products`
  *  - `product/{handle-name}/discounts`
+ *  - `customers/{handle-name}/orders`
  * 
  * @template {string | queryable_resources} [RESOURCE=(queryable_resources)]
  * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]

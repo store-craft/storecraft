@@ -82,6 +82,15 @@ export const create_routes = (app) => {
     }
   );
 
+  polka.get(
+    '/:discount/products/tags',
+    async (req, res) => {
+      const { discount } = req.params;
+      const items = await app.api.discounts.list_all_discount_products_tags(discount);
+      res.sendJson(items);
+    }
+  ); 
+
   // query the eligibile products of a discount
   polka.get(
     '/:discount/products/count_query',

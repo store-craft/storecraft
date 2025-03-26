@@ -168,6 +168,29 @@ export const TOOLS = (context) => {
     ),
 
     
+    browse_discount_products: tool(
+      {
+        title: '**browsing** `discount` products',
+        description: 'Send a command to the frontend to render products of a discount browser in the frontend',
+        schema: z.object(
+          {
+            handle: z.string().describe('The handle or unique id of the discount to fetch'),
+          }
+        ),
+        use: async function (input) {
+          return (
+            {
+              command: /** @type {const} */ ('browse_discount_products'),
+              params: {
+                handle: input.handle 
+              }
+            }
+          )
+        }
+      }
+    ), 
+
+
     login_frontend: tool(
       {
         title: 'Sending login form',

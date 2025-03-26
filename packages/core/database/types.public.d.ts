@@ -368,6 +368,17 @@ export interface db_discounts extends db_crud<
   count_discount_products: (
     handle_or_id: HandleOrId, query: ApiQuery<ProductType>
   ) => Promise<number>;
+
+  /**
+   * List all the tags of all the products, that belong to a discount. This is helpful for building
+   * a filter system in the frontend if you know in advance all the tags of the products
+   * in a collection
+   * @param handle_or_id discount `handle` or `id`
+   */
+  list_all_discount_products_tags: (
+    handle_or_id: HandleOrId
+  ) => Promise<string[]>
+
 }
 
 /** @description `OrderData` crud */

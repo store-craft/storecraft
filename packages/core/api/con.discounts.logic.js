@@ -87,6 +87,21 @@ export const count_collection_products_query = (app) =>
     return db(app).count_discount_products(id_or_handle, query);
   }  
 
+/**
+ * @param {App} app
+ */
+export const list_all_discount_products_tags = (app) => 
+  /**
+   * @description List all the tags of all the products, that belong to a discount. 
+   * This is helpful for building a filter system in the frontend if you know 
+   * in advance all the tags of the products in a collection
+   * 
+   * @param {string} id_or_handle id or handle of the discount
+   */
+  (id_or_handle) => {
+    return db(app).list_all_discount_products_tags(id_or_handle);
+  }  
+
 
 /**
  * 
@@ -100,6 +115,7 @@ export const inter = app => {
     remove: regular_remove(app, db(app), 'discounts/remove'),
     list: regular_list(app, db(app), 'discounts/list'),
     list_discount_products: list_discount_products(app),
+    list_all_discount_products_tags: list_all_discount_products_tags(app),
     count_collection_products_query: count_collection_products_query(app),
     count: count(app)
   }

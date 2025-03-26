@@ -236,6 +236,38 @@ const list_discount_products = (driver) => {
 
 /**
  * @param {MongoDB} driver 
+ * @returns {db_col["list_all_discount_products_tags"]}
+ */
+const list_all_discount_products_tags = (driver) => {
+  return async (handle_or_id) => {
+    const items = await driver.resources.products._col.find(
+      {
+        '_relations.search': `discount:${handle_or_id}`
+      },
+      {
+        projection: {
+          tags: 1
+        }
+      }
+    ).toArray();
+
+    const set = (items ?? []).reduce(
+      (p, c) => {
+        c.tags.forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, new Set()
+    );
+    
+    // return array from set
+    return Array.from(set);
+  }
+}
+
+
+/**
+ * @param {MongoDB} driver 
  * @returns {db_col["count_discount_products"]}
  */
 const count_discount_products = (driver) => {
@@ -279,6 +311,7 @@ export const impl = (driver) => {
     list: list(driver),
     count: count(driver),
     list_discount_products: list_discount_products(driver),
+    list_all_discount_products_tags: list_all_discount_products_tags(driver),
     count_discount_products: count_discount_products(driver)
   }
 }

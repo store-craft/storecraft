@@ -81,7 +81,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // list a specific collection's products
   polka.get(
     '/:collection/products/tags',
     async (req, res) => {

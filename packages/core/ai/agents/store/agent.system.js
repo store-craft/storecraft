@@ -1,7 +1,5 @@
 /**
- * 
- * @param {Record<string, any>} kvs 
- * @returns 
+ * @param {Record<string, any>} [kvs] 
  */
 export const SYSTEM = (kvs) => `
 <who_are_you>
@@ -9,6 +7,7 @@ You are the best shopping assistant.
 </who_are_you>
 
 ${
+kvs &&
 Object.entries(kvs).filter(([k, v]) => Boolean(v)).map(
   ([key, value]) => `
 <${key}>

@@ -49,7 +49,6 @@ export class StoreAgent {
   }
 
   /**
-   * 
    * @type {Agent["runStream"]}
    */
   runStream = async (params) => {
@@ -104,7 +103,6 @@ export class StoreAgent {
   }
 
   /**
-   * 
    * @type {Agent["run"]}
    */
   run = async (params) => {
@@ -125,7 +123,7 @@ export class StoreAgent {
         {
           history: history?.toArray()?.slice(-params.maxLatestHistoryToUse) ?? [],
           prompt: params.prompt,
-          system: SYSTEM(store_info(this.#app)),
+          system: SYSTEM(),
           tools: TOOLS({ app: this.#app}),
           maxSteps: params.maxSteps,
           maxTokens: params.maxTokens
@@ -156,9 +154,13 @@ export class StoreAgent {
 const store_info = (app) => {
   const c = app.config;
   return [
-    c.general_store_name && `- The store name is **${c.general_store_name}**`,
-    c.general_store_description && `- The store description is **${c.general_store_description}**`,
-    c.general_store_website && `- The store url is **${c.general_store_website}**`,
-    c.general_store_support_email && `- The store website url is **${c.general_store_support_email}**`,
+    c.general_store_name && 
+    `- The store name is **${c.general_store_name}**`,
+    c.general_store_description && 
+    `- The store description is **${c.general_store_description}**`,
+    c.general_store_website && 
+    `- The store url is **${c.general_store_website}**`,
+    c.general_store_support_email && 
+    `- The store website url is **${c.general_store_support_email}**`,
   ].filter(Boolean).join('\n')
 }

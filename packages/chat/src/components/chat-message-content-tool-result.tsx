@@ -32,6 +32,8 @@ export const content_to_view = (
       return (<ToolResultContent_Collections chat={{content}}  />)
     case 'browse_collection':
       return (<ToolResultContent_BrowseCollection chat={{content}}  />)
+    case 'browse_discount_products':
+      return (<ToolResultContent_BrowseCollection chat={{content}}  />)
     case 'fetch_discounts':
       return (<ToolResultContent_Discounts chat={{content}}  />)
     case 'search_with_similarity':

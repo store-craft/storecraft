@@ -2548,6 +2548,38 @@ const register_discounts = registry => {
       },
       ...error() 
     },
+  }); 
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/tags`,
+    description: 'List all the tags of products in a discount, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a discount',
+    summary: 'List All collection\'s products tags',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples: ['dis_65f2ae888bf30e6cd0ca9600', 'discount-10'],
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of all of the tags of the products in the discount`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
   });  
 }
 

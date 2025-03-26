@@ -256,6 +256,47 @@ const list_discount_products = (driver) => {
   }
 }
 
+
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_all_discount_products_tags"]}
+ */
+const list_all_discount_products_tags = (driver) => {
+  return async (handle_or_id) => {
+
+    const items = await driver.client
+      .selectFrom('products')
+      .innerJoin(
+        'products_to_discounts', 
+        'products_to_discounts.entity_id', 
+        'products.id'
+      )
+      .innerJoin(
+        'entity_to_tags_projections', 
+        'entity_to_tags_projections.entity_id', 
+        'products.id'
+      )
+      .select('entity_to_tags_projections.value as tag')
+      .where(
+        (eb) => eb.or(
+          [
+            eb('products_to_discounts.reporter', '=', handle_or_id),
+            eb('products_to_discounts.value', '=', handle_or_id)
+          ]
+        )
+      )
+      .groupBy('tag')
+      .execute();
+
+      // .compile();
+      // console.log(items[0])
+
+    return items.map(e => e.tag);
+  }
+}
+
+
 /**
  * @param {SQL} driver 
  * @returns {db_col["count_discount_products"]}
@@ -306,6 +347,7 @@ export const impl = (driver) => {
     list: list(driver),
     list_discount_products: list_discount_products(driver),
     count_discount_products: count_discount_products(driver),
+    list_all_discount_products_tags: list_all_discount_products_tags(driver),
     count: count_regular(driver, table_name),
   }
 }

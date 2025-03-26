@@ -166,7 +166,8 @@ const FilterGroupView = (
                     'chat-bg-overlay' : 
                     ''
                 )
-              } />
+              } 
+            />
           )
         )
       }

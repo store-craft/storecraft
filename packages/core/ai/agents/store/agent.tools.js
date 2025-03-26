@@ -63,7 +63,7 @@ export const TOOLS = (context) => {
       {
         title: '**browsing** `all` products',
         description: 'Send a command to the frontend to render ALL products browser in the frontend',
-        schema: undefined,
+        schema: z.object({}),
         use: async function (input) {
           return (
             {

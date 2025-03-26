@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'react'
 import Markdown from 'markdown-to-jsx'
 import { LoadingImage } from './loading-image'

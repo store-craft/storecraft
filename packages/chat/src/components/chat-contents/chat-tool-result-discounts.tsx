@@ -38,7 +38,7 @@ export const DiscountCardView = (
           payload: {
             prompt: [
               {
-                content: `I want to know more about the \`${item.title}\` discount`,
+                content: `I want to browse the products of discount \`${item.title}\``,
                 type: 'text'
               }
             ]
@@ -50,16 +50,16 @@ export const DiscountCardView = (
 
   return (
     <div className={
-      'flex flex-row gap-3 items-center p-1 w-fit h-fit duration-300 \
+      'flex flex-col gap-3 items-center p-1 w-fit h-fit duration-300 \
       transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
-      <p 
+      <div
         className='whitespace-nowrap truncate capitalize 
             text-base font-bold  --bg-red-300 font-mono max-w-xl
              --w-fit --max-w-20 text-teal-600 flex flex-row items-center gap-2' >
         <MdDiscount className='inline-flex w-fit text-teal-400 animate-pulse'/> 
         <span children={item.title} className='--whitespace-nowrap' />
-      </p>
-      <button children='ask' 
+      </div>
+      <button children='browse discount products' 
         onClick={onClick}
         className='uppercase tracking-widest font-bold w-fit --hidden
             dark:bg-pink-500 bg-black text-white animate-pulse

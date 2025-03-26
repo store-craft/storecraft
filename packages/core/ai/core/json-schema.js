@@ -52,7 +52,8 @@ export const zod_to_json_schema = (schema) => {
           }
         )
       ),
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false
     }
     const required = entries.filter(
       ([key, value]) => !zod_is_optional(value)

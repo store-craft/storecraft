@@ -47,45 +47,17 @@ export const TOOLS = (context) => {
                 vql: input.query,
                 limit: input.count
               }
-            );
+            ).then(sanitize_search);
           }
           return context.app.api.products.list(
             {
               vql: input.query,
               limit: input.count
             }
-          );
+          ).then(sanitize_search);
         }
       }
     ),
-
-    
-    // search_products_in_collection: tool(
-    //   {
-    //     title: '**searching** for `products` in a collection',
-    //     description: 'Search for products inside a specific collection for info like pricing, discounts etc..',
-    //     schema: z.object(
-    //       {
-    //         query: z.string().optional().describe('Optional search keywords, can also use boolean notation for inclusion and exlusion such as "tag:action | tag:survival" "'),
-    //         collection_handle: z.string().describe('The handle or unique id of the collection in which to search the products'),
-    //         count: z.number().describe('how many search results to query, default to 5')
-    //       }
-    //     ),
-    //     schema_result_zod: z.array(productTypeSchema.partial()),
-    //     use: async function (input) {
-
-    //       const items = await context.app.api.collections.list_collection_products(
-    //         input.collection_handle,
-    //         {
-    //           vql: input.query,
-    //           limit: input.count
-    //         }
-    //       );
-
-    //       return items;
-    //     }
-    //   }
-    // ),
 
 
     search_with_similarity: tool(
@@ -107,8 +79,7 @@ export const TOOLS = (context) => {
             }
           );
 
-          return result.items;
-
+          return sanitize_search(result.items);
         }
       }
     ),
@@ -128,7 +99,7 @@ export const TOOLS = (context) => {
             }
           );
 
-          return shipping_methods;
+          return sanitize_search(shipping_methods);
         }
       }
     ),
@@ -148,7 +119,7 @@ export const TOOLS = (context) => {
             }
           );
 
-          return items;
+          return sanitize_search(items);
         }
       }
     ),
@@ -191,7 +162,7 @@ export const TOOLS = (context) => {
             }
           );
 
-          return items;
+          return sanitize_search(items);
         }
       }
     ),
@@ -217,4 +188,35 @@ export const TOOLS = (context) => {
       }
     )
   }
+}
+
+
+/**
+ * @template T
+ * @param {T} obj 
+ * @param {string[]} keys 
+ * @returns {T}
+ */
+export const sanitize = (obj, keys) => {
+  // throw 'hola'
+  if(!Boolean(obj)) 
+    return;
+
+  if(typeof obj === 'object') {
+    for(const k of Object.keys(obj))  {
+      if(keys.includes(k)) {
+        delete obj[k];
+      }
+      else sanitize(obj[k], keys);
+    }
+  }
+  return obj;
+}
+
+/**
+ * @template T
+ * @param {T} obj 
+ */
+export const sanitize_search = (obj) => {
+  return sanitize(obj, ['search']);
 }

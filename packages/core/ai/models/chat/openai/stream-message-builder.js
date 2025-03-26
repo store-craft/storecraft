@@ -14,56 +14,72 @@ export const stream_message_builder = () => {
   let final;
 
   return {
-    /** @param {chat_completion_chunk_result} delta */
-    add_delta: (delta) => {
-      if(!Boolean(delta))
+    /** @param {chat_completion_chunk_result} chunk */
+    add_chunk: (chunk) => {
+      if(!Boolean(chunk))
         return;
 
       if(!Boolean(final)) {
         final = {
-          created: delta.created,
-          id: delta.id,
-          model: delta.model,
-          system_fingerprint: delta.system_fingerprint,
+          created: chunk.created,
+          id: chunk.id,
+          model: chunk.model,
+          system_fingerprint: chunk.system_fingerprint,
           object: 'chat.completion',
-          usage: delta.usage,
+          usage: chunk.usage,
           choices: [
-            {
-              finish_reason: delta.choices[0].finish_reason,
-              index: delta.choices[0].index,
-              logprobs: delta.choices[0].logprobs,
-              message: delta.choices[0].delta
-            }
           ], 
         };
-
-        return;
       }
 
-      const d_choice = delta.choices?.[0];
+      // apply higher choises
+      chunk.choices?.forEach(
+        (choice) => {
+          // @ts-ignore
+          // initial choice
+          final.choices[choice.index] ??= {};
 
-      if(d_choice?.finish_reason)
-        final.choices[0].finish_reason = d_choice.finish_reason;
+          const target_choice = final.choices[choice.index];
 
-      if(d_choice?.delta?.content) {
-        final.choices[0].message.content = (final.choices[0].message.content ?? '') + 
-        d_choice.delta.content;
-      }
-      
-      if(d_choice?.delta?.refusal)
-        final.choices[0].message.refusal = d_choice.delta.refusal;
+          // always override these
+          target_choice.finish_reason = choice.finish_reason;
+          target_choice.logprobs = choice.logprobs;
+          target_choice.index = choice.index;
 
-      if(d_choice?.delta?.tool_calls) {
-        if(!final.choices[0].message.tool_calls) {
-          final.choices[0].message.tool_calls = d_choice.delta.tool_calls;
-        } else {
-          final.choices[0].message.tool_calls.forEach(
-            (tc, ix) => {
-              tc.function.arguments += d_choice.delta.tool_calls[ix].function.arguments;
+          if(choice.delta) {
+            // initial message in choice
+            if(!target_choice.message) {
+              target_choice.message = choice.delta;
+            } 
+            
+            if(choice.delta.content) {
+              target_choice.message.content ??= '';
+              target_choice.message.content += choice.delta.content;
             }
-          );
+
+            if(choice.delta.refusal)
+              target_choice.message.refusal = choice.delta.refusal;
+  
+            const tools_delta = choice.delta.tool_calls;
+
+            if(tools_delta) {
+              target_choice.message.tool_calls ??= []; 
+              const target_tools = target_choice.message.tool_calls; 
+              
+              tools_delta.forEach(
+                (tc, ix) => {
+                  if(!target_tools[tc.index]) {
+                    target_tools[tc.index] = tc;
+                  } else {
+                    target_tools[tc.index].function.arguments += tc.function.arguments;
+                  }
+                }
+              )
+            }
+          }
+
         }
-      }
+      );
 
     },
     done: () => final

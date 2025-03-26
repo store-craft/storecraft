@@ -160,7 +160,7 @@ export class Anthropic {
     const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
-      builder.add_delta(chunk);
+      builder.add_chunk(chunk);
 
       if(
         (chunk.type==='content_block_delta') &&
@@ -244,7 +244,7 @@ export class Anthropic {
       const builder = stream_message_builder();
     
       for await (const chunk of current_stream) {
-        builder.add_delta(chunk);
+        builder.add_chunk(chunk);
   
         if(
           (chunk.type==='content_block_delta') &&

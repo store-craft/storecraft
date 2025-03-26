@@ -28,7 +28,9 @@ export type FiltersViewProps = withDiv<
        */
       handle?: string,
 
-      onSelection: (selections: FilterSelectionsType, vql_string: string) => void
+      onSelection: (
+        selections: FilterSelectionsType, vql_string: string
+      ) => void
     }
   }
 >;
@@ -142,8 +144,8 @@ const FilterGroupView = (
         gap-2 items-baseline'>
       <BsFilterRight className='translate-y-0.5' />
       <div children={props.chat.filter_name} 
-        className='tracking-wider underline decoration-0 
-          decoration-dashed font-thin font-inter' />
+        className='tracking-wider underline underline-offset-4 
+          decoration-0 decoration-dashed font-thin font-inter' />
       {
         props.chat.filter_values.map(
           (value, ix) => (

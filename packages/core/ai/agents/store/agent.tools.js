@@ -156,7 +156,7 @@ export const TOOLS = (context) => {
 
     browse_collection: tool(
       {
-        title: '**showing** `collection`',
+        title: '**browsing** `collection`',
         description: 'Send a command to the frontend to render a collection browser in the frontend',
         schema: z.object(
           {

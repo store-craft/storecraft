@@ -200,7 +200,8 @@ export class OpenAI {
     const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
-      builder.add_delta(chunk);
+      // console.log({chunk: JSON.stringify(chunk, null, 2)});
+      builder.add_chunk(chunk);
 
       if(chunk?.choices?.[0].delta.content) {
         yield {
@@ -275,7 +276,7 @@ export class OpenAI {
       const builder = stream_message_builder();
     
       for await (const chunk of current_stream) {
-        builder.add_delta(chunk);
+        builder.add_chunk(chunk);
   
         if(chunk?.choices[0].delta.content) {
           yield {

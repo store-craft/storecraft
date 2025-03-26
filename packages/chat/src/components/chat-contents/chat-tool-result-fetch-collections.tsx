@@ -39,7 +39,7 @@ export const CollectionCardView = (
           payload: {
             prompt: [
               {
-                content: `I want to know browse the \`${item.title}\` collection`,
+                content: `I want to browse the \`${item.title}\` collection`,
                 type: 'text'
               }
             ]

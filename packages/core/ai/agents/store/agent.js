@@ -64,11 +64,21 @@ export class StoreAgent {
         params.thread_id, this.#app
       );
 
+      const sf = await this.#app.api.storefronts.get('default');
+      const kvs = {
+        store_info: store_info(this.#app),
+        storefront_collections: sf.collections && sf.collections.map(c => ({title: c.title, handle: c.handle, description: c.description})),
+        storefront_discounts: sf.discounts && sf.discounts.map(c => ({title: c.title, handle: c.handle, description: c.description})),
+        storefront_shipping_methods: sf.shipping_methods && sf.shipping_methods.map(c => ({price:c.price, title: c.title, handle: c.handle, description: c.description})),
+        storefront_description: sf.description,
+        search_tags_for_products: (await this.#app.api.products.list_all_products_tags()).map(t => `tag:${t}`),
+      }
+
       const { stream } = await this.provider.streamText(
         {
           history: history?.toArray()?.slice(-params.maxLatestHistoryToUse) ?? [],
           prompt: params.prompt,
-          system: SYSTEM,
+          system: SYSTEM(kvs),
           tools: TOOLS({ app: this.#app}),
           maxSteps: params.maxSteps,
           maxTokens: params.maxTokens
@@ -115,7 +125,7 @@ export class StoreAgent {
         {
           history: history?.toArray()?.slice(-params.maxLatestHistoryToUse) ?? [],
           prompt: params.prompt,
-          system: SYSTEM,
+          system: SYSTEM(store_info(this.#app)),
           tools: TOOLS({ app: this.#app}),
           maxSteps: params.maxSteps,
           maxTokens: params.maxTokens
@@ -137,4 +147,18 @@ export class StoreAgent {
 
   }
 
+}
+
+/**
+ * 
+ * @param {App} app 
+ */
+const store_info = (app) => {
+  const c = app.config;
+  return [
+    c.general_store_name && `- The store name is **${c.general_store_name}**`,
+    c.general_store_description && `- The store description is **${c.general_store_description}**`,
+    c.general_store_website && `- The store url is **${c.general_store_website}**`,
+    c.general_store_support_email && `- The store website url is **${c.general_store_support_email}**`,
+  ].filter(Boolean).join('\n')
 }

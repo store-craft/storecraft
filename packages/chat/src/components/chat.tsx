@@ -25,7 +25,7 @@ export const Chat = () => {
       if(!div)
         return;
 
-      console.log('div.clientHeight', div.clientHeight)
+      // console.log('div.clientHeight', div.clientHeight)
       // ref_chat_messages.current?.scroll();
       setTimeout(
         () => ref_chat_messages.current?.scroll(),

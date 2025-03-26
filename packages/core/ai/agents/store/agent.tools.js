@@ -59,6 +59,21 @@ export const TOOLS = (context) => {
       }
     ),
 
+    browse_all_products: tool(
+      {
+        title: '**browsing** `all` products',
+        description: 'Send a command to the frontend to render ALL products browser in the frontend',
+        schema: undefined,
+        use: async function (input) {
+          return (
+            {
+              command: /** @type {const} */ ('browse_all_products'),
+            }
+          )
+        }
+      }
+    ), 
+
 
     search_with_similarity: tool(
       {
@@ -125,9 +140,9 @@ export const TOOLS = (context) => {
     ),
 
 
-    browse_collection: tool(
+    browse_collection_products: tool(
       {
-        title: '**browsing** `collection`',
+        title: '**browsing** `collection` products',
         description: 'Send a command to the frontend to render a collection browser in the frontend',
         schema: z.object(
           {
@@ -174,7 +189,7 @@ export const TOOLS = (context) => {
         description: 'Send a command to the frontend to render products of a discount browser in the frontend',
         schema: z.object(
           {
-            handle: z.string().describe('The handle or unique id of the discount to fetch'),
+            handle: z.string().describe('The handle or unique id of the discount to browse'),
           }
         ),
         use: async function (input) {

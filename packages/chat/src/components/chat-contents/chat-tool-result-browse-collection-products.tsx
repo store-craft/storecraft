@@ -4,7 +4,7 @@ import { withDiv } from "../common.types.js";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { ProductsBrowserView } from "./products-browser-view.js";
 
-type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_discount_products"]>;
+type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection_products"]>;
 
 export type Params = withDiv<
   {
@@ -14,7 +14,7 @@ export type Params = withDiv<
   }
 >;
 
-export const ToolResultContent_BrowseDiscountProducts = (
+export const ToolResultContent_BrowseCollectionProducts = (
   {
     chat,
   }: Params
@@ -25,17 +25,17 @@ export const ToolResultContent_BrowseDiscountProducts = (
   if('error' in data) 
     return null;
   
-  const discount_handle = chat.content.content.data?.result.params.handle;
+  const collection_handle = chat.content.content.data?.result.params.handle;
 
-  if(!Boolean(discount_handle))
+  if(!Boolean(collection_handle))
     return null;
 
   return (
     <ProductsBrowserView 
       chat={
         {
-          products_resource_endpoint: `discounts/${discount_handle}/products`,
-          tags_fetcher: () => sdk.discounts.list_all_discount_products_tags(discount_handle)
+          products_resource_endpoint: `collections/${collection_handle}/products`,
+          tags_fetcher: () => sdk.collections.list_all_products_tags(collection_handle)
         }
       }
     />

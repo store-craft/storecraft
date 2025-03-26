@@ -1,5 +1,3 @@
-import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
@@ -11,12 +9,20 @@ import { useCollection } from "@storecraft/sdk-react-hooks";
 import { MdNavigateNext } from "react-icons/md";
 import { FiltersView } from "./products-filter-view.js";
 
-type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection"]>;
-
 export type Params = withDiv<
   {
     chat: {
-      content: content_tool_result<ToolResult>,
+      /**
+       * @description The resource endpoint for product
+       * - 'products' for all products
+       * - 'collections/:handle/products' for products in a collection
+       * - 'discounts/:handle/products' for products in a discount
+       */
+      products_resource_endpoint: `${string}/products` | 'products',
+      /**
+       * @description Products tags fetcher for a products resource
+       */
+      tags_fetcher: () => Promise<string[]>,
     };
   }
 >;
@@ -27,6 +33,7 @@ export const ProductCardView = (
   }: withDiv<{item: ProductType, index: number}>
 ) => {
   const [ready, setReady] = useState(false);
+
   useEffect(
     () => {
       sleep((index + 1) * 300).then(() => {setReady(true)})
@@ -58,21 +65,30 @@ export const ProductCardView = (
   )
 }
 
-export const ToolResultContent_BrowseCollection = (
+export const ProductsBrowserView = (
   {
-    chat,
+    chat: {
+      products_resource_endpoint, 
+      tags_fetcher
+    },
   }: Params
 ) => {
-  const collection_handle = chat.content.content.data?.result.params.handle;
   const [loading, setLoading] = useState(true);
+  const [tags, setTags] = useState<string[]>([]);
   const {
-    sdk, loading: page_loading, error, page, 
+    loading: page_loading, error, page, 
     queryCount,
     actions: {
       next, prev, query
     }
   } = useCollection(
-    `collections/${collection_handle}/products`
+    products_resource_endpoint
+  );
+
+  useEffect(
+    () => {
+      tags_fetcher().then(setTags);
+    }, []
   );
 
   useEffect(
@@ -86,11 +102,11 @@ export const ToolResultContent_BrowseCollection = (
     }, []
   );
 
-  const data = chat.content.content.data;
-  // console.log(data)
-  // return;
-  if('error' in data) 
-    return null;
+  // const data = chat.content.content.data;
+  // // console.log(data)
+  // // return;
+  // if('error' in data) 
+  //   return null;
 
   return (
     <div className='w-full h-fit flex flex-col gap-3'>
@@ -114,14 +130,20 @@ export const ToolResultContent_BrowseCollection = (
 
 
       {/* Carousel */}
-      <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
-                    overflow-x-auto h-fit pr-40 --pb-5'
+      <div className='flex flex-row w-full gap-2
+                    overflow-x-auto h-fit pr-40'
         style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
         {
           page.map(
             (item, ix) => (
-              <Card key={item.handle} card={{loading: loading}} className='w-fit' >
-                <ProductCardView key={ix} item={item} index={ix} />
+              <Card 
+                key={item.handle} 
+                card={{loading: loading}} 
+                className='w-fit' >
+                <ProductCardView 
+                  key={ix} 
+                  item={item} 
+                  index={ix} />
               </Card>
             )
           )
@@ -132,7 +154,7 @@ export const ToolResultContent_BrowseCollection = (
       <FiltersView 
         chat={
           {
-            handle: collection_handle,
+            tags,
             onSelection: (_, vql) => {
               query({ vql });
             }

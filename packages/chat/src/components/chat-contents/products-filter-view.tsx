@@ -1,6 +1,5 @@
-import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { withDiv } from "../common.types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { BsFilterRight } from "react-icons/bs";
 
 export const selection_to_vql = (selections: FilterSelectionsType) => {
@@ -22,12 +21,7 @@ export const selection_to_vql = (selections: FilterSelectionsType) => {
 export type FiltersViewProps = withDiv<
   {
     chat: {
-      /**
-       * @description Handle of the collection. if not provided, 
-       * it will list all products tags
-       */
-      handle?: string,
-
+      tags?: string[],
       onSelection: (
         selections: FilterSelectionsType, vql_string: string
       ) => void
@@ -42,40 +36,21 @@ export const FiltersView = (
   props: FiltersViewProps
 ) => {
 
-  const { sdk } = useStorecraft();
-  const [groups, setGroups] = useState<FilterGroupType[]>([]);
   const [selections, setSelections] = useState<FilterSelectionsType>({});
-
-  useEffect(
-    () => {
-      async function fetch_all_tags() {
-        let tags: string[] = [];
-
-        if (props.chat.handle) {
-          tags = await sdk.collections.list_all_products_tags(
-            props.chat.handle
-          );
-        } else {
-          tags = await sdk.products.list_all_tags();
-        }
-
-        setGroups(
-          Object.entries(
-            tags.reduce(
-              (acc, tag) => {
-                const [group, value] = tag.split('_');
-                if(!acc[group]) acc[group] = [];
-                acc[group].push(value);
-                return acc;
-              }, {} as { [key: string]: string[] }
-            ) ?? {}
-          ).filter(
-            ([_, values]) => values.length > 1
-          )
-        )
-      }
-      fetch_all_tags();
-    }, [props.chat.handle, sdk]
+  const groups: FilterGroupType[] = useMemo(
+    () => Object.entries(
+      (props.chat.tags ?? []).reduce(
+        (acc, tag) => {
+          const [group, value] = tag.split('_');
+          if(!acc[group]) acc[group] = [];
+          acc[group].push(value);
+          return acc;
+        }, {} as { [key: string]: string[] }
+      ) ?? {}
+    ).filter(
+      ([_, values]) => values.length > 1
+    ), 
+    [props.chat.tags]
   );
 
   const onSelection = useCallback(
@@ -98,6 +73,9 @@ export const FiltersView = (
 
     }, [selections, props.chat.onSelection]
   );
+
+  if(!groups?.length) 
+    return null;
 
   return (
     <div className='w-full h-fit flex flex-col gap-3'>

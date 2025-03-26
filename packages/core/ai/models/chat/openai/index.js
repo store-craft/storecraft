@@ -106,7 +106,8 @@ export class OpenAI {
           function: {
             description: tool.description,
             name: name,
-            parameters: zod_to_json_schema(tool.schema)
+            parameters: tool.schema && zod_to_json_schema(tool.schema),
+            strict: true
           } 
         }
       )

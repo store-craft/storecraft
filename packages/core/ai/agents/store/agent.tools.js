@@ -59,15 +59,21 @@ export const TOOLS = (context) => {
       }
     ),
 
+
     browse_all_products: tool(
       {
         title: '**browsing** `all` products',
         description: 'Send a command to the frontend to render ALL products browser in the frontend',
-        schema: z.object({}),
-        use: async function (input) {
+        schema: z.object(
+          {
+            title: z.string().describe('Title to show in the frontend for this browser')
+          }
+        ),
+        use: async function (params) {
           return (
             {
               command: /** @type {const} */ ('browse_all_products'),
+              params
             }
           )
         }
@@ -147,15 +153,14 @@ export const TOOLS = (context) => {
         schema: z.object(
           {
             handle: z.string().describe('The handle or unique id of the collection to fetch'),
+            title: z.string().describe('Title to show in the frontend for this browser')
           }
         ),
-        use: async function (input) {
+        use: async function (params) {
           return (
             {
               command: /** @type {const} */ ('browse_collection'),
-              params: {
-                handle: input.handle 
-              }
+              params
             }
           )
         }
@@ -190,15 +195,14 @@ export const TOOLS = (context) => {
         schema: z.object(
           {
             handle: z.string().describe('The handle or unique id of the discount to browse'),
+            title: z.string().describe('Title to show in the frontend for this browser')
           }
         ),
-        use: async function (input) {
+        use: async function (params) {
           return (
             {
               command: /** @type {const} */ ('browse_discount_products'),
-              params: {
-                handle: input.handle 
-              }
+              params
             }
           )
         }

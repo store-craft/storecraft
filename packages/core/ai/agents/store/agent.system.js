@@ -34,10 +34,10 @@ ${typeof value==='string' ? value : JSON.stringify(value)}
 - For Example: 'tag:genre-action', which you can use in your search
 - If the user request is abstract, please use 'similarity_search' tool instead
 - use this tool with empty query to show latest products
-- IF you don't get any results, use 'similarity_search' tool
+- IF you don't get any results, USE 'search_with_similarity' tool
 
-2. 'similarity_search' tool
-- If you have a 'similarity_search' tool at your disposal, it can help a lot with user requests
+2. 'search_with_similarity' tool
+- If you have a 'search_with_similarity' tool at your disposal, it can help a lot with user requests
 - Example: Customer is asking about a product with specific or abstract features
 - Example: Customer asks "I am looking for a video game about a nordic god", then you
 can use similarity search with a query "a game about nordic god"
@@ -45,6 +45,33 @@ can use similarity search with a query "a game about nordic god"
 3. 'browse_collection_products' tool
 - Use 'browse_collection_products' tool whenever the customer wants to browse and see all products in a collection
 - The tool will send a command to the frontend to show the collection by querying the backend by itself.
+
+3. 'browse_all_products' tool
+- Use 'browse_all_products' tool whenever the customer wants to browse and see all products in the store
+- The tool will send a command to the frontend to show the collection by querying the backend by itself.
+
+3. 'browse_discount_products' tool
+- INVOKE ONLY ONCE when asked about discounts
+- Use 'browse_discount_products' tool whenever the customer wants to browse and see all products of a discount
+- The tool will send a command to the frontend to show the collection by querying the backend by itself.
 </tools_logic>
 
+<examples>
+<example>
+Customer: "I am looking for a game with a nordic god"
+- Use 'search_with_similarity' tool with query "a game about nordic god"
+<example>
+
+<example>
+Customer: "Show me some products on sale"
+- Choose one discount and Use 'browse_discount_products' tool ONLY ONCE EVEN if there are multiple discounts
+<example>
+
+<example>
+Customer: "I am looking for super mario games"
+- You use 'search_products' tool with query "super mario"
+- If you don't get any results, use 'search_with_similarity' tool with query "super mario"
+<example>
+
+<examples>
 `

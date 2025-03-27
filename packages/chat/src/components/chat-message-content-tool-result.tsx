@@ -8,7 +8,7 @@ import { ToolResultContent_Discounts } from "./chat-contents/chat-tool-result-di
 import { ToolResultContent_SimilaritySearch } from "./chat-contents/chat-tool-result-similarity-search";
 import { ToolResultContent_BrowseCollectionProducts } from "./chat-contents/chat-tool-result-browse-collection-products";
 import { ToolResultContent_BrowseDiscountProducts } from "./chat-contents/chat-tool-result-browse-discount-products";
-import { ToolResultContent_BrowseAllProducts } from "./chat-contents/chat-tool-result-browse-products";
+import { ToolResultContent_BrowseAllProducts } from "./chat-contents/chat-tool-result-browse-all-products";
 
 export type tool_names = keyof ReturnType<typeof TOOLS>;
 export type Params = withDiv<

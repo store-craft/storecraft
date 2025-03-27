@@ -76,7 +76,7 @@ export const ToolResultContent_SimilaritySearch = (
       {
         items.map(
           (item, ix) => (
-            <Card key={ix} card={{loading: loading}} className='w-fit h-full max-h-96' >
+            <Card key={ix} card={{loading: loading, border: true}} className='w-fit h-full max-h-96' >
               <SimilaritySearchItemView 
                 key={item.content?.id ?? ix} 
                 item={item} 

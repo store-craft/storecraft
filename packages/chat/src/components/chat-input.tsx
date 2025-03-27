@@ -80,7 +80,7 @@ export const ChatInputView = (
   return (
     <div {...rest}>
       <Card className={'w-full h-fit shadow-2xl '}
-            card={{loading: chat.loading}}>
+            card={{loading: chat.loading, border: true}}>
 
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>
           <textarea rows={1}

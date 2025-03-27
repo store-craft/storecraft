@@ -138,7 +138,7 @@ export const ProductsBrowserView = (
             (item, ix) => (
               <Card 
                 key={item.handle} 
-                card={{loading: loading}} 
+                card={{loading: loading, border: true}} 
                 className='w-fit' >
                 <ProductCardView 
                   key={ix} 

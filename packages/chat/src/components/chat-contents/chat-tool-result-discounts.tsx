@@ -102,7 +102,7 @@ export const ToolResultContent_Discounts = (
       {
         items.map(
           (item, ix) => (
-            <Card key={ix} card={{loading: loading}} className='w-fit' >
+            <Card key={ix} card={{loading: loading, border: true}} className='w-fit' >
               <DiscountCardView key={ix} item={item} index={ix} />
             </Card>
           )

@@ -3,11 +3,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @plugin "@tailwindcss/typography";
 
+/* width */
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #00000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0.0, 0.0, 0.0, 0.0);
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0.0, 0.0, 0.0, 0.5);
+}
+
 @theme {
   --font-inter: Inter, sans-serif;
   --animate-wiggle: wiggle 1s ease-in-out infinite;
   --animate-rotate-bg: rotate-bg 8s linear infinite;
-  
+
+
   @keyframes wiggle {
     0%,
     100% {

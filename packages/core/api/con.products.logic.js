@@ -59,12 +59,22 @@ export const upsert = (app) =>
       item
     );
 
+    // auto tag the product with the collection handle
+    if(Array.isArray(before?.collections)) {
+      before.tags = union(
+        item.tags,
+        item.collections.map(c => `collection_${c.handle}`),
+      );
+    }
+
     return before;
   },
   (final) => {
     return union(
       final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
       final?.collections?.map(c => `col:${c?.id}`),
+      final?.collections?.map(c => c?.handle && `collection:${c?.handle}`),
+      final?.collections?.map(c => `collection:${c?.id}`),
       item.isbn && `isbn:${item.isbn}`,
       item.isbn,
       `qty:${item.qty}`

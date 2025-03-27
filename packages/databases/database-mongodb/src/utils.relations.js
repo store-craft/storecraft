@@ -259,12 +259,13 @@ export const update_specific_connection_of_relation = (
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {ClientSession} [session] client `session` for atomicity purposes
  * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
+ * @param {string[]} [tags_to_remove=[]] Extra `tags` terms to remove
  * from all the connections
  * 
  */
 export const remove_entry_from_all_connection_of_relation = (
   driver, collection, relation_name, entry_objid, session,
-  search_terms_to_remove=[]
+  search_terms_to_remove=[], tags_to_remove=[]
 ) => {
   return driver.collection(collection).updateMany(
     { 
@@ -273,7 +274,8 @@ export const remove_entry_from_all_connection_of_relation = (
     { 
       $pull: {
         [`_relations.${relation_name}.ids`] : entry_objid,
-        '_relations.search': { $in : search_terms_to_remove }
+        '_relations.search': { $in : search_terms_to_remove },
+        'tags': { $in : tags_to_remove },
       },
       $unset: { 
         [`_relations.${relation_name}.entries.${entry_objid.toString()}`]: '' 

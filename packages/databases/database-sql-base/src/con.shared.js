@@ -140,6 +140,32 @@ export const delete_entity_values_by_value_or_reporter = (entity_table_name) => 
  * 
  * @param {EntityTableKeys} entity_table_name 
  */
+export const delete_entity_values_by_reporter_or_context = (entity_table_name) => {
+  /**
+   * 
+   * @param {Kysely<Database>} trx 
+   * @param {string} reporter delete by entity value
+   * @param {string} [context] delete by reporter
+   */
+  return (trx, reporter=undefined, context=undefined) => {
+
+    return trx.deleteFrom(entity_table_name).where(
+      eb => eb.or(
+        [
+          reporter && eb('reporter', '=', reporter),
+          context && eb('context', '=', context),
+        ].filter(Boolean)
+      )
+    ).executeTakeFirst();
+  }
+}
+
+
+/**
+ * helper to generate entity values delete
+ * 
+ * @param {EntityTableKeys} entity_table_name 
+ */
 export const delete_entity_values_of_by_entity_id_or_handle = 
 (entity_table_name) => {
   /**
@@ -184,11 +210,11 @@ export const insert_entity_array_values_of = (entity_table_name) => {
       if(reporter) {
         await delete_entity_values_by_value_or_reporter(entity_table_name)(
           trx, undefined, reporter
-          );
+        );
       } else {
         await delete_entity_values_of_by_entity_id_or_handle(entity_table_name)(
           trx, item_id, item_handle
-          );
+        );
       }
     }
 

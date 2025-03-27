@@ -59,14 +59,26 @@ export interface entity_to_value {
 }
 
 export interface entity_to_media extends entity_to_value {}
+
+/**
+ * Here:
+ * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
+ * - (value) = search term , for example 'game', 'shoes'
+ * - if `reporter==null`, then
+ *    - (reporter, context) = (null, the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * - else if `reporter!=null` 
+ *    - (reporter, context) = (reporter id, reporter handle), which means the tag was reported by another entity for example a discount.
+ */
 export interface entity_to_search_terms extends entity_to_value {}
 
 /**
  * Here:
- * - context = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...
  * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
  * - (value) = tag-name_tag-value, for example 'color_red', 'size_large'
- * - (reporter) = the entity that reported the tag, if null then the entity itself reported the tag
+ * - if `reporter==null`, then
+ *    - (reporter, context) = (null, the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * - else if `reporter!=null` 
+ *    - (reporter, context) = (reporter id, reporter handle), which means the tag was reported by another entity for example a discount.
  */
 export interface entity_to_tags_projections extends entity_to_value {}
 

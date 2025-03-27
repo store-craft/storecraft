@@ -42,7 +42,8 @@ const test_cases = [
       "required": [
         "q",
         "namespaces"
-      ]
+      ],
+      "additionalProperties": false
     }
   }
 ]

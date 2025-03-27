@@ -114,9 +114,13 @@ export const create = app => {
 
       // console.log('tags', tags)
       
-      assert.equal(
-        new Set(tags),
-        new Set(['genre_action', 'genre_comedy', 'color_red', 'color_white']),
+      // we test inclusion
+      const contains = ['genre_action', 'genre_comedy', 'color_red', 'color_white'].every(
+        tag => tags.includes(tag)
+      )
+
+      assert.ok(
+        contains,
         `failed list_collection_products_tags for collection handle ${col_upsert[0].handle}`
       );
     }

@@ -1,6 +1,6 @@
 /**
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { db_products as db_col } from '@storecraft/core/database'
+ * @import { db_products as db_col, RegularGetOptions } from '@storecraft/core/database'
  * @import { Database } from '../types.sql.tables.js'
  */
 
@@ -65,7 +65,18 @@ const upsert = (driver) => {
       ).execute();
 
       const eligible_discounts = discounts.filter(
-        d => driver.app.api.pricing.test_product_filters_against_product(d.info.filters, item)
+        d => driver.app.api.pricing.test_product_filters_against_product(
+          d.info.filters, item
+        )
+      );
+
+      item.tags = union(
+        [
+          // remove old discount tags
+          item.tags?.filter(t => !t.startsWith('discount_')),
+          // add new discount tags
+          eligible_discounts.map(d => `discount_${d.handle}`),
+        ]
       );
 
       search_terms = union(
@@ -73,6 +84,7 @@ const upsert = (driver) => {
           search_terms, 
           eligible_discounts.map(d => `discount:${d.handle}`),
           eligible_discounts.map(d => `discount:${d.id}`),
+          eligible_discounts.map(d => `tag:discount_${d.handle}`),
         ]
       );
 
@@ -186,7 +198,8 @@ const get = (driver) => {
     const expand = options?.expand ?? ['*'];
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
-    const expand_variants = expand.includes('*') || expand.includes('variants');
+    const expand_variants = expand.includes('*') || 
+      (/** @type {RegularGetOptions<ProductType>["expand"]} */(expand)).includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
 
@@ -224,7 +237,8 @@ const getBulk = (driver) => {
     const expand = options?.expand ?? ['*'];
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
-    const expand_variants = expand.includes('*') || expand.includes('variants');
+    const expand_variants = expand.includes('*') || 
+      (/** @type {RegularGetOptions<ProductType>["expand"]} */(expand)).includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
 

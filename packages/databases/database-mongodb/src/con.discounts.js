@@ -54,7 +54,6 @@ const upsert = (driver) => {
           // SEARCH
           add_search_terms_relation_on(data, search_terms);
 
-          
           ////
           // PRODUCT --> DISCOUNTS RELATION
           ////
@@ -63,7 +62,11 @@ const upsert = (driver) => {
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
             [
-              `discount:${data.handle}`, `discount:${data.id}`
+              `discount:${data.handle}`, `discount:${data.id}`,
+              `tag:discount_${data.handle}`
+            ],
+            [
+              `discount_${data.handle}`
             ]
           );
           
@@ -77,8 +80,9 @@ const upsert = (driver) => {
                 $addToSet: { 
                   '_relations.discounts.ids': objid,
                   '_relations.search': { 
-                    $each : [ `discount:${data.handle}`, `discount:${data.id}` ]
-                  } 
+                    $each : [ `discount:${data.handle}`, `discount:${data.id}`, `tag:discount_${data.handle}` ]
+                  },
+                  'tags': `discount_${data.handle}`
                 },
                 
               },
@@ -145,13 +149,18 @@ const remove = (driver) => {
     try {
       await session.withTransaction(
         async () => {
+
           ////
           // PRODUCT -> DISCOUNTS RELATION
           ////
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
             [
-              `discount:${item.handle}`, `discount:${item.id}`
+              `discount:${item.handle}`, `discount:${item.id}`,
+              `tag:discount_${item.id}`
+            ],
+            [
+              `discount_${item.handle}`
             ]
           );
 

@@ -62,7 +62,9 @@ export const upsert = (app) =>
     // auto tag the product with the collection handle
     if(Array.isArray(before?.collections)) {
       before.tags = union(
-        item.tags,
+        // remove old collection tags
+        item.tags?.filter(t => !t.startsWith('collection_')),
+        // add new collection tags
         item.collections.map(c => `collection_${c.handle}`),
       );
     }

@@ -8,7 +8,7 @@
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
-  count_regular, expand, get_bulk, get_regular, list_regular, 
+  count_regular, get_bulk, get_regular, list_regular, 
   zeroed_relations
 } from './con.shared.js'
 import { 
@@ -104,6 +104,15 @@ const upsert = (driver) => {
             )
           }
 
+          replacement.tags = union(
+            [
+              // remove old discount tags
+              replacement.tags?.filter(t => !t.startsWith('discount_')),
+              // add new discount tags
+              eligible_discounts.map(d => `discount_${d.handle}`),
+            ]
+          );
+
           // SEARCH
           add_search_terms_relation_on(
             replacement, union(
@@ -111,6 +120,7 @@ const upsert = (driver) => {
                 search_terms, 
                 eligible_discounts.map(d => `discount:${d.handle}`),
                 eligible_discounts.map(d => `discount:${d.id}`),
+                eligible_discounts.map(d => `tag:discount_${d.handle}`),
               ]
             )
           );

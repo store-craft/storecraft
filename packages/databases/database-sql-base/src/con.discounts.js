@@ -9,8 +9,8 @@ import {
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags, count_regular,
-  with_search
+  with_media, with_tags, count_regular, with_search,
+  delete_entity_values_by_reporter_or_context
 } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -44,7 +44,11 @@ const upsert = (driver) => {
             trx, `discount:${item.id}`);
           await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
             trx, `discount:${item.handle}`);
-
+          await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
+            trx, `tag:discount_${item.handle}`);
+          await delete_entity_values_by_value_or_reporter('entity_to_tags_projections')(
+            trx, `discount_${item.handle}`);
+  
           if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
             // make connections
             await trx
@@ -66,13 +70,15 @@ const upsert = (driver) => {
 
             await trx
             .insertInto('entity_to_search_terms')
-            .columns(['entity_handle', 'entity_id', 'value'])
+            .columns(['entity_handle', 'entity_id', 'value', 'reporter', 'context'])
             .expression(eb => 
               eb.selectFrom('products')
                 .select(eb => [
                     'handle as entity_handle',
                     'id as entity_id',
                     eb.val(`discount:${item.id}`).as('value'),
+                    eb.val(item.id).as('reporter'),
+                    eb.val(item.handle).as('context'),
                   ]
                 )
                 .where(
@@ -82,19 +88,57 @@ const upsert = (driver) => {
 
             await trx
             .insertInto('entity_to_search_terms')
-            .columns(['entity_handle', 'entity_id', 'value'])
+            .columns(['entity_handle', 'entity_id', 'value', 'reporter', 'context'])
             .expression(eb => 
               eb.selectFrom('products')
                 .select(eb => [
                     'handle as entity_handle',
                     'id as entity_id',
                     eb.val(`discount:${item.handle}`).as('value'),
+                    eb.val(item.id).as('reporter'),
+                    eb.val(item.handle).as('context'),
                   ]
                 )
                 .where(
                   eb => eb.and(discount_to_conjunctions(eb, item))
                 )
-            ).execute();                     
+            ).execute();     
+
+            await trx
+            .insertInto('entity_to_search_terms')
+            .columns(['entity_handle', 'entity_id', 'value', 'reporter', 'context'])
+            .expression(eb => 
+              eb.selectFrom('products')
+                .select(eb => [
+                    'handle as entity_handle',
+                    'id as entity_id',
+                    eb.val(`tag:discount_${item.handle}`).as('value'),
+                    eb.val(item.id).as('reporter'),
+                    eb.val(item.handle).as('context'),
+                  ]
+                )
+                .where(
+                  eb => eb.and(discount_to_conjunctions(eb, item))
+                )
+            ).execute();      
+            
+            await trx
+            .insertInto('entity_to_tags_projections')
+            .columns(['entity_handle', 'entity_id', 'value', 'reporter', 'context'])
+            .expression(eb => 
+              eb.selectFrom('products')
+                .select(eb => [
+                    'handle as entity_handle',
+                    'id as entity_id',
+                    eb.val(`discount_${item.handle}`).as('value'),
+                    eb.val(item.id).as('reporter'),
+                    eb.val(item.handle).as('context'),
+                  ]
+                )
+                .where(
+                  eb => eb.and(discount_to_conjunctions(eb, item))
+                )
+            ).execute();                      
           }
 
           ///
@@ -165,6 +209,12 @@ const remove = (driver) => {
           // delete products -> discounts
           // PRODUCTS => DISCOUNTS
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+            trx, id_or_handle, id_or_handle);
+          // discount might have published search terms for other products, so let's remove
+          await delete_entity_values_by_reporter_or_context('entity_to_search_terms')(
+            trx, id_or_handle, id_or_handle);
+          // discount might have published tags for other products, so let's remove
+          await delete_entity_values_by_reporter_or_context('entity_to_tags_projections')(
             trx, id_or_handle, id_or_handle);
           // STOREFRONT => DISCOUNTS
           await delete_entity_values_by_value_or_reporter('storefronts_to_other')(

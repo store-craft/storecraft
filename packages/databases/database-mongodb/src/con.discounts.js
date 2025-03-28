@@ -61,11 +61,11 @@ const upsert = (driver) => {
           // first remove discount from anywhere
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
-            [
+            [ // remove search terms
               `discount:${data.handle}`, `discount:${data.id}`,
               `tag:discount_${data.handle}`
             ],
-            [
+            [ // remove tags
               `discount_${data.handle}`
             ]
           );
@@ -80,7 +80,11 @@ const upsert = (driver) => {
                 $addToSet: { 
                   '_relations.discounts.ids': objid,
                   '_relations.search': { 
-                    $each : [ `discount:${data.handle}`, `discount:${data.id}`, `tag:discount_${data.handle}` ]
+                    $each : [ 
+                      `discount:${data.handle}`, 
+                      `discount:${data.id}`, 
+                      `tag:discount_${data.handle}` 
+                    ]
                   },
                   'tags': `discount_${data.handle}`
                 },

@@ -67,12 +67,14 @@ import {
  */
 export function sqlite_jsonArrayFrom(expr) {
 
-  return sql`(select coalesce(json_group_array(json_object(${sql.join(
-    getSqliteJsonObjectArgs(
-      /** @type {SelectQueryNode} */(expr.toOperationNode()), 
-      'agg'
+  return sql`(select coalesce(json_group_array(json_object(${
+    sql.join(
+      getSqliteJsonObjectArgs(
+        /** @type {SelectQueryNode} */(expr.toOperationNode()), 
+        'agg'
+      )
     )
-  )})), '[]') from ${expr} as agg)`
+  })), '[]') from ${expr} as agg)`
 }
 
 
@@ -129,7 +131,9 @@ export function sqlite_jsonArrayFrom(expr) {
  */
 export function sqlite_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');
-  return sql`(select coalesce(json_group_array(${sql.join([arg])}), '[]') from ${expr} as agg)`
+  return sql`(select coalesce(json_group_array(${
+    sql.join([arg])
+  }), '[]') from ${expr} as agg)`
 }
 
 /**
@@ -192,12 +196,14 @@ export function sqlite_stringArrayFrom(expr) {
  * @returns {RawBuilder<Simplify<O> | null>}
  */
 export function sqlite_jsonObjectFrom(expr) {
-  return sql`(select json_object(${sql.join(
-    getSqliteJsonObjectArgs(
-      /** @type {SelectQueryNode} */(expr.toOperationNode()), 
-      'obj'
-    ),
-  )}) from ${expr} as obj)`
+  return sql`(select json_object(${
+    sql.join(
+      getSqliteJsonObjectArgs(
+        /** @type {SelectQueryNode} */(expr.toOperationNode()), 
+        'obj'
+      ),
+    )
+  }) from ${expr} as obj)`
 }
 
 /**

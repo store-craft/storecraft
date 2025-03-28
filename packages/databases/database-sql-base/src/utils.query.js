@@ -2,7 +2,7 @@
  * @import { ApiQuery, Cursor } from '@storecraft/core/api'
  * @import { VQL } from '@storecraft/core/vql'
  * @import { Database } from '../types.sql.tables.js'
- * @import { ExpressionBuilder } from 'kysely'
+ * @import { BinaryOperator, ExpressionBuilder } from 'kysely'
  */
 
 import { parse } from "@storecraft/core/vql";
@@ -22,7 +22,9 @@ import { parse } from "@storecraft/core/vql";
  */
 export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
+  /** @type {BinaryOperator} */
   let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
+  /** @type {BinaryOperator} */
   let rel_key_2; // relation in last conjunction term in last disjunction
 
   if (relation==='>' || relation==='>=') {
@@ -73,9 +75,8 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
   // return result;
 }
 
-
 /**
- * @template {keyof Database} T
+ * @template {QueryableTables} T
  * @param {ExpressionBuilder<Database>} eb 
  * @param {VQL.Node} node 
  * @param {T} table_name 
@@ -125,7 +126,7 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
 /**
  * @param {ExpressionBuilder<Database>} eb 
  * @param {VQL.Node} root 
- * @param {keyof Database} table_name 
+ * @param {QueryableTables} table_name 
  */
 export const query_vql_to_eb = (eb, root, table_name) => {
   return root ? query_vql_node_to_eb(eb, root, table_name) : undefined;
@@ -156,7 +157,7 @@ const transform_boolean_to_0_or_1 = (kv, table_name) => {
  * 
  * @param {ExpressionBuilder<Database>} eb 
  * @param {ApiQuery<T>} q 
- * @param {keyof Database} table_name 
+ * @param {QueryableTables} table_name 
  * 
  */
 export const query_to_eb = (eb, q={}, table_name) => {
@@ -200,7 +201,7 @@ const SIGN = {
 // export type DirectedOrderByStringReference<DB, TB extends keyof DB, O> = `${StringReference<DB, TB> | (keyof O & string)} ${OrderByDirection}`;
 
 /**
- * @import {DirectedOrderByStringReference} from './utils.types.js'
+ * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
  */
 // OE extends OrderByExpression<DB, TB, O>
 /**
@@ -226,5 +227,5 @@ export const query_to_sort = (q={}, table) => {
   )
   // it's too complicated to map each ket to table column.
   // kysely was designed to do this in place
-  return sort;
+  return (/** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (sort));
 }

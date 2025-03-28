@@ -278,41 +278,6 @@ const list_collection_products_tags = (driver) => {
 }
 
 
-/*
-const list_collection_products_OLD = (driver) => {
-  return async (handle_or_id, query={}) => {
-
-    const items = await driver.client
-      .selectFrom('products')
-      .selectAll()
-      .select(eb => [
-        with_media(eb, eb.ref('products.id'), driver.dialectType),
-        with_tags(eb, eb.ref('products.id'), driver.dialectType),
-      ])
-      .where(
-        (eb) => eb.and(
-          [
-            query_to_eb(eb, query, 'products'),
-            eb('products.id', 'in', 
-              // select all the product ids by collection id
-              eb => select_entity_ids_by_value_or_reporter( 
-                eb, 'products_to_collections', handle_or_id
-              )
-            )
-          ].filter(Boolean)
-        )
-      )
-      .orderBy(query_to_sort(query, 'products'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
-
-    if(query.limitToLast) items.reverse();
-
-    return sanitize_array(items);
-  }
-}
-*/
-
 /** 
  * @param {SQL} driver
  * 

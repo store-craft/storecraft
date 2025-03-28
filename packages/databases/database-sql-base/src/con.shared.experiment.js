@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ExpressionWrapper, Kysely } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { SQL } from '../index.js';

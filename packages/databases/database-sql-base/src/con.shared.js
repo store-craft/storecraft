@@ -3,6 +3,7 @@
  * @import { Database } from '../types.sql.tables.js'
  * @import { ExpressionBuilder, InsertObject } from 'kysely'
  * @import { SqlDialectType } from '../types.public.js'
+ * @import { QueryableTables } from './utils.types.js'
  */
 import { ExpressionWrapper, InsertQueryBuilder, Kysely, Transaction } from 'kysely'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
@@ -46,7 +47,7 @@ export const safe_trx = (k) => {
 
 /**
  * @param {SQL} driver 
- * @param {keyof Database} table_name 
+ * @param {QueryableTables} table_name 
  * 
  * @returns {db_crud["count"]}
  */

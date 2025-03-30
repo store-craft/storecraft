@@ -348,8 +348,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc'])
-          .limit(limit),
+          .orderBy(['updated_at asc']),
           driver.dialectType
         ).as('collections'),
   
@@ -369,7 +368,7 @@ const get_default_auto_generated_storefront = (driver) => {
           )
           .where('active', '=', 1)
           .orderBy(['updated_at asc'])
-          .limit(limit),
+          .limit(10),
           dialectType
         ).as('products'),
   
@@ -384,8 +383,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc'])
-          .limit(limit),
+          .orderBy(['updated_at asc']),
           dialectType
         ).as('discounts'),
   
@@ -400,8 +398,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc'])
-          .limit(limit),
+          .orderBy(['updated_at asc']),
           dialectType
         ).as('shipping_methods'),
   
@@ -417,7 +414,7 @@ const get_default_auto_generated_storefront = (driver) => {
           )
           .where('active', '=', 1)
           .orderBy(['updated_at asc'])
-          .limit(limit),
+          .limit(3),
           dialectType
         ).as('posts'),
   
@@ -444,6 +441,7 @@ const get_default_auto_generated_storefront = (driver) => {
     const sanitized = sanitize(
       {
         active: true,
+        created_at: new Date().toISOString(),
         handle: 'default-auto-generated-storefront',
         id: 'default',
         title: 'Default Auto Generated Storefront',

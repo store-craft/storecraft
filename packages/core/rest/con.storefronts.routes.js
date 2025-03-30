@@ -45,6 +45,18 @@ export const create_routes = (app) => {
   
   // get item
   polka.get(
+    '/auto-generated',
+    async (req, res) => {
+      const item = await app.api.storefronts.get_default_auto_generated_storefront();
+
+      assert(item, 'not-found', 404);
+      
+      res.sendJson(item);
+    }
+  );
+
+
+  polka.get(
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;

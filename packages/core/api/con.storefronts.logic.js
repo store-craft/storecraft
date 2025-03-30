@@ -158,11 +158,22 @@ export const export_storefront = (app) => {
 export const count = (app) => 
   /**
    * @description Count query results
-   * 
    * @param {ApiQuery<StorefrontType>} query 
    */
   (query) => {
     return db(app).count(query);
+  }
+
+/**
+ * @param {App} app
+ */
+export const get_default_auto_generated_storefront = (app) => 
+  /**
+   * @description Storecraft can generate a default automatcally 
+   * generated storefront for you.
+   */
+  (query) => {
+    return db(app).get_default_auto_generated_storefront();
   }
 
 
@@ -181,6 +192,7 @@ export const inter = app => {
     list_storefront_discounts: list_storefront_discounts(app),
     list_storefront_posts: list_storefront_posts(app),
     list_storefront_shipping_methods: list_storefront_shipping_methods(app),
+    get_default_auto_generated_storefront: get_default_auto_generated_storefront(app),
     export_storefront: export_storefront(app),
     count: count(app)
   }

@@ -3204,6 +3204,28 @@ const register_storefronts = registry => {
     );
 
   registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/auto-generated`,
+    description: 'You can fetch the default auto-generated storefront. This will fetch all active `collections`, \
+    `discounts`, `shipping methods`, `posts` (latest 5) and `products`(latest 10) that are linked to the storefront. \
+    Also, all the products tags aggregated so you can build a filter system in the frontend',
+    summary: 'Get Default Auto Generated Storefront',
+    tags,
+    responses: {
+      200: {
+        description: `The default storefront`,
+        content: {
+          'application/json': {
+            schema: storefrontTypeSchema,
+            example
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+  registry.registerPath({
     method: 'post',
     path: `/${slug_base}/{id_or_handle}/export`,
     description: 'Export a storefront into the `storage`. This is beneficial for things`, that hardly change and therefore can be efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.',

@@ -297,6 +297,11 @@ export interface db_storefronts extends db_crud<
    */
   list_all_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
 
+  /**
+   * Storecraft can generate a default automatcally generated storefront for you
+   * @returns the default auto generated storefront
+   */
+  get_default_auto_generated_storefront: () => Promise<StorefrontType>;
 }
 
 /** 

@@ -120,7 +120,8 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client.selectFrom(table_name)
+    const items = await driver.client
+      .selectFrom(table_name)
       .selectAll()
       .select(eb => [
         with_tags(eb, eb.ref('collections.id'), driver.dialectType),
@@ -287,7 +288,6 @@ const list_collection_products_tags = (driver) => {
 export const impl = (driver) => {
 
   return {
-
     get: get(driver),
     upsert: upsert(driver),
     remove: remove(driver),
@@ -296,6 +296,5 @@ export const impl = (driver) => {
     count_collection_products: count_collection_products(driver),
     list_all_collection_products_tags: list_collection_products_tags(driver),
     count: count_regular(driver, table_name),
-
   }
 }

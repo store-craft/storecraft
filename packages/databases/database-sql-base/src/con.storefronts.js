@@ -1,7 +1,9 @@
 /**
  * @import { db_storefronts as db_col } from '@storecraft/core/database'
+ * @import { Database } from '../types.sql.tables.js';
  */
 import { SQL } from '../index.js'
+import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { report_document_media } from './con.images.js'
 import { delete_entity_values_of_by_entity_id_or_handle, 
   delete_me, delete_media_of, delete_search_of, 
@@ -12,7 +14,11 @@ import { delete_entity_values_of_by_entity_id_or_handle,
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
   count_regular,
-  with_search} from './con.shared.js'
+  with_search,
+  products_with_collections,
+  products_with_discounts,
+  products_with_variants,
+  products_with_related_products} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -115,11 +121,21 @@ const get = (driver) => {
       with_media(eb, id_or_handle, driver.dialectType),
       with_tags(eb, id_or_handle, driver.dialectType),
       with_search(eb, id_or_handle, driver.dialectType),
-      expand_collections && storefront_with_collections(eb, id_or_handle, driver.dialectType),
-      expand_products && storefront_with_products(eb, id_or_handle, driver.dialectType),
-      expand_discounts && storefront_with_discounts(eb, id_or_handle, driver.dialectType),
-      expand_shipping && storefront_with_shipping(eb, id_or_handle, driver.dialectType),
-      expand_posts && storefront_with_posts(eb, id_or_handle, driver.dialectType),
+      expand_collections && storefront_with_collections(
+        eb, id_or_handle, driver.dialectType
+      ),
+      expand_products && storefront_with_products(
+        eb, id_or_handle, driver.dialectType
+      ),
+      expand_discounts && storefront_with_discounts(
+        eb, id_or_handle, driver.dialectType
+      ),
+      expand_shipping && storefront_with_shipping(
+        eb, id_or_handle, driver.dialectType
+      ),
+      expand_posts && storefront_with_posts(
+        eb, id_or_handle, driver.dialectType
+      ),
     ]
     .filter(Boolean))
     .where(where_id_or_handle_table(id_or_handle))
@@ -183,11 +199,21 @@ const list = (driver) => {
           with_media(eb, eb.ref('storefronts.id'), driver.dialectType),
           with_tags(eb, eb.ref('storefronts.id'), driver.dialectType),
           with_search(eb, eb.ref('storefronts.id'), driver.dialectType),
-          expand_collections && storefront_with_collections(eb, eb.ref('storefronts.id'), driver.dialectType),
-          expand_products && storefront_with_products(eb, eb.ref('storefronts.id'), driver.dialectType),
-          expand_discounts && storefront_with_discounts(eb, eb.ref('storefronts.id'), driver.dialectType),
-          expand_shipping && storefront_with_shipping(eb, eb.ref('storefronts.id'), driver.dialectType),
-          expand_posts && storefront_with_posts(eb, eb.ref('storefronts.id'), driver.dialectType),
+          expand_collections && storefront_with_collections(
+            eb, eb.ref('storefronts.id'), driver.dialectType
+          ),
+          expand_products && storefront_with_products(
+            eb, eb.ref('storefronts.id'), driver.dialectType
+          ),
+          expand_discounts && storefront_with_discounts(
+            eb, eb.ref('storefronts.id'), driver.dialectType
+          ),
+          expand_shipping && storefront_with_shipping(
+            eb, eb.ref('storefronts.id'), driver.dialectType
+          ),
+          expand_posts && storefront_with_posts(
+            eb, eb.ref('storefronts.id'), driver.dialectType
+          ),
         ].filter(Boolean)
       )
       .where(
@@ -285,6 +311,151 @@ const list_storefront_shipping_methods = (driver) => {
   }
 }
 
+
+/**
+ * @type {{[K in keyof Database]?: (keyof Database[K])[]}}
+ */
+const resource_to_props = (
+  {
+    'collections': ['active', 'attributes', 'created_at', 'description', 'handle', 'id', 'published', 'title', 'updated_at'],
+    'discounts': ['active', 'application', 'attributes', 'created_at', 'description', 'handle', 'id', 'info', 'priority', 'published', 'title', 'updated_at'],
+    'products': ['active', 'attributes', 'compare_at_price', 'created_at', 'description', 'handle', 'id', 'isbn', 'parent_handle', 'parent_id', 'price', 'qty', 'title', 'updated_at', 'variant_hint', 'variants_options', 'video'],
+    'shipping_methods': ['active', 'attributes', 'created_at', 'description', 'handle', 'id', 'price', 'title', 'updated_at'],
+    'posts': ['active', 'attributes', 'created_at', 'description', 'handle', 'id', 'text', 'title', 'updated_at'],
+  }
+);
+
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["get_default_auto_generated_storefront"]}
+ */
+const get_default_auto_generated_storefront = (driver) => {
+  return async () => {
+    const client = driver.client;
+    const dialectType = driver.dialectType;
+    const limit = -1;
+    const sf = await client.selectNoFrom(
+      eb => [
+        jsonArrayFrom(
+          eb
+          .selectFrom('collections')
+          .select(resource_to_props.collections)
+          .select(
+            eb => [
+              with_tags(eb, eb.ref('collections.id'), dialectType),
+              with_media(eb, eb.ref('collections.id'), dialectType),
+            ]
+          )
+          .where('active', '=', 1)
+          .orderBy(['updated_at asc'])
+          .limit(limit),
+          driver.dialectType
+        ).as('collections'),
+  
+        jsonArrayFrom(
+          eb
+          .selectFrom('products')
+          .select(resource_to_props.products)
+          .select(
+            eb => [
+              with_tags(eb, eb.ref('products.id'), dialectType),
+              with_media(eb, eb.ref('products.id'), dialectType),
+              products_with_collections(eb, eb.ref('products.id'), dialectType),
+              products_with_discounts(eb, eb.ref('products.id'), dialectType),
+              products_with_variants(eb, eb.ref('products.id'), dialectType),
+              products_with_related_products(eb, eb.ref('products.id'), dialectType),
+            ]
+          )
+          .where('active', '=', 1)
+          .orderBy(['updated_at asc'])
+          .limit(limit),
+          dialectType
+        ).as('products'),
+  
+        jsonArrayFrom(
+          eb
+          .selectFrom('discounts')
+          .select(resource_to_props.discounts)
+          .select(
+            eb => [
+              with_tags(eb, eb.ref('discounts.id'), dialectType),
+              with_media(eb, eb.ref('discounts.id'), dialectType),
+            ]
+          )
+          .where('active', '=', 1)
+          .orderBy(['updated_at asc'])
+          .limit(limit),
+          dialectType
+        ).as('discounts'),
+  
+        jsonArrayFrom(
+          eb
+          .selectFrom('shipping_methods')
+          .select(resource_to_props.shipping_methods)
+          .select(
+            eb => [
+              with_tags(eb, eb.ref('shipping_methods.id'), dialectType),
+              with_media(eb, eb.ref('shipping_methods.id'), dialectType),
+            ]
+          )
+          .where('active', '=', 1)
+          .orderBy(['updated_at asc'])
+          .limit(limit),
+          dialectType
+        ).as('shipping_methods'),
+  
+        jsonArrayFrom(
+          eb
+          .selectFrom('posts')
+          .select(resource_to_props.posts)
+          .select(
+            eb => [
+              with_tags(eb, eb.ref('posts.id'), dialectType),
+              with_media(eb, eb.ref('posts.id'), dialectType),
+            ]
+          )
+          .where('active', '=', 1)
+          .orderBy(['updated_at asc'])
+          .limit(limit),
+          dialectType
+        ).as('posts'),
+  
+        stringArrayFrom(
+          eb.selectFrom('products')
+          .innerJoin(
+            'products_to_collections', 
+            'products_to_collections.entity_id', 
+            'products.id'
+          )
+          .innerJoin(
+            'entity_to_tags_projections', 
+            'entity_to_tags_projections.entity_id', 
+            'products.id'
+          )
+          .select('entity_to_tags_projections.value as tag')
+          .groupBy('tag'),
+          dialectType
+        ).as('all_products_tags')
+      ]
+    )
+    .executeTakeFirst();
+  
+    const sanitized = sanitize(
+      {
+        active: true,
+        handle: 'default-auto-generated-storefront',
+        id: 'default',
+        title: 'Default Auto Generated Storefront',
+        description: 'Default Auto Generated Storefront',
+        ...sf
+      }
+    );
+
+    return sanitized;
+  }
+}
+
 /** 
  * @param {SQL} driver
  * @return {db_col}}
@@ -301,6 +472,7 @@ export const impl = (driver) => {
     list_all_storefront_discounts: list_storefront_discounts(driver),
     list_all_storefront_posts: list_storefront_posts(driver),
     list_all_storefront_shipping_methods: list_storefront_shipping_methods(driver),
+    get_default_auto_generated_storefront: get_default_auto_generated_storefront(driver),
     count: count_regular(driver, table_name),
   }
 }

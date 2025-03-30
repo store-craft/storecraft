@@ -1413,6 +1413,13 @@ export interface StorefrontType extends BaseType {
    * @description Posts related to this storefront 
    */
   posts?: PostType[];
+
+  /**
+   * @description List of all tags found in the products of this storefront,
+   * This is useful for searching and filtering products in the frontend.
+   * @example ['genere_action', 'rated_M', ...]
+   */
+  all_products_tags?: string[];
 }
 
 

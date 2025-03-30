@@ -59,13 +59,13 @@ export const app = new App(
   // new XAI(),
   new OpenAI({ model: 'gpt-4o-mini'})
 )
-// .withVectorStore(
-//   new LibSQLVectorStore(
-//     {
-//       embedder: new OpenAIEmbedder(),
-//     }
-//   )
-// )
+.withVectorStore(
+  new LibSQLVectorStore(
+    {
+      embedder: new OpenAIEmbedder(),
+    }
+  )
+)
 .withAuthProviders(
   {
     google: new GoogleAuth(),

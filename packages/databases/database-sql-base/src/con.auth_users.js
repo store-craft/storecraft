@@ -147,8 +147,8 @@ const list = (driver) => {
 
 /** 
  * @param {SQL} driver
- * @return {db_col}}
- * */
+ * @return {db_col}
+ */
 export const impl = (driver) => {
 
   return {

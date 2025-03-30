@@ -40,35 +40,35 @@ const assert = (b, msg) => {
 export class SQL {
 
   /** @type {boolean} */ 
-  #_is_ready;
+  #is_ready;
 
   /** @type {App<any, any, any>} */ 
-  #_app;
+  #app;
 
   /** @type {ConfigType} */ 
-  #_config;
+  #config;
 
   /** @type {Kysely<Database>} */ 
-  #_client;
+  #client;
   
   /** @type {db_driver["resources"]} */ 
-  #_resources;
+  #resources;
 
   /**
    * 
    * @param {ConfigType} [config] config 
    */
   constructor(config) {
-    this.#_is_ready = false;
-    this.#_config = config;
+    this.#is_ready = false;
+    this.#config = config;
 
     assert(
-      this.#_config.dialect, 
+      this.#config.dialect, 
       'No Dialect found !'
     );
 
     assert(
-      this.#_config.dialect_type, 
+      this.#config.dialect_type, 
       'No Dialect Type specified !'
     );
   }
@@ -87,9 +87,9 @@ export class SQL {
     if(this.isReady)
       return this;
 
-    this.#_app = app;
+    this.#app = app;
     
-    this.#_resources = {
+    this.#resources = {
       auth_users: auth_users(this),
       collections: collections(this),
       customers: customers(this),
@@ -106,7 +106,7 @@ export class SQL {
       search: search(this),
     }
     
-    this.#_is_ready = true; 
+    this.#is_ready = true; 
 
     return this;
   }
@@ -118,9 +118,10 @@ export class SQL {
 
   /**
    * `database` resources
+   * @type {db_driver["resources"]}
    */
   get resources () {
-    return this.#_resources;
+    return this.#resources;
   }
   
   get name() { 
@@ -128,11 +129,11 @@ export class SQL {
   }
 
   get app() { 
-    return this.#_app; 
+    return this.#app; 
   }
 
   get client() { 
-    this.#_client = this.#_client ?? new Kysely(
+    this.#client = this.#client ?? new Kysely(
       {
         dialect: this.config.dialect, 
         plugins: [
@@ -142,19 +143,19 @@ export class SQL {
       }
     );
 
-    return this.#_client; 
+    return this.#client; 
   }
 
   get config() { 
-    return this.#_config; 
+    return this.#config; 
   }
 
   get isReady() { 
-    return this.#_is_ready; 
+    return this.#is_ready; 
   }
 
   get dialectType() { 
-    return this.#_config.dialect_type; 
+    return this.#config.dialect_type; 
   }
 
   get isSqlite() { 

@@ -1183,6 +1183,12 @@ export const storecraftConfigSchema = z.object({
     .describe(
       "refresh token signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment",
     ),
+  auth_secret_forgot_password_token: z
+    .string()
+    .optional()
+    .describe(
+      "forgot password token signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN` environment",
+    ),
   checkout_reserve_stock_on: z
     .union([
       z.literal("checkout_create"),
@@ -1525,6 +1531,12 @@ export const storefrontTypeSchema = baseTypeSchema.extend({
     .array(postTypeSchema)
     .optional()
     .describe("Posts related to this storefront"),
+  all_products_tags: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "List of all tags found in the products of this storefront,\nThis is useful for searching and filtering products in the frontend.",
+    ),
 });
 
 export const storefrontTypeUpsertSchema = storefrontTypeSchema

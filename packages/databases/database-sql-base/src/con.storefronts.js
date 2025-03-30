@@ -433,7 +433,7 @@ const get_default_auto_generated_storefront = (driver) => {
           .select('entity_to_tags_projections.value as tag')
           .groupBy('tag'),
           dialectType
-        ).as('all_products_tags')
+        ).as('all_used_products_tags')
       ]
     )
     .executeTakeFirst();

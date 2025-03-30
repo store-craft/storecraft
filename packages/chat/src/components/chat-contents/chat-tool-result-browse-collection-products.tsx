@@ -43,7 +43,7 @@ export const ToolResultContent_BrowseCollectionProducts = (
         chat={
           {
             products_resource_endpoint: `collections/${collection_handle}/products`,
-            tags_fetcher: () => sdk.collections.list_all_products_tags(collection_handle)
+            tags_fetcher: () => sdk.collections.list_used_products_tags(collection_handle)
           }
         }
       />

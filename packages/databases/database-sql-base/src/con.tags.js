@@ -2,10 +2,11 @@
  * @import { db_tags as db_col } from '@storecraft/core/database'
  */
 import { SQL } from '../index.js'
-import { count_regular, delete_me, delete_search_of, insert_search_of, 
+import { 
+  count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, where_id_or_handle_table, 
-  with_media,
-  with_search} from './con.shared.js'
+  with_media, with_search
+} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -27,7 +28,7 @@ const upsert = (driver) => {
             updated_at: item.updated_at,
             id: item.id,
             handle: item.handle,
-            values: JSON.stringify(item.values)
+            values: JSON.stringify(item.values),
           });
         }
       );

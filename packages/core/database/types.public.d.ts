@@ -163,7 +163,7 @@ export interface db_collections extends db_crud<
    * 
    * @param handle_or_id collection handle or id
    */
-  list_all_collection_products_tags: (
+  list_used_products_tags: (
     handle_or_id: HandleOrId
   ) => Promise<string[]>
 
@@ -260,9 +260,9 @@ export interface db_products extends db_crud<
    * all the tags of the products in a collection, also see the collection 
    * confined version 
    * 
-   * {@link db_collections.list_all_collection_products_tags}
+   * {@link db_collections.list_used_products_tags}
    */
-  list_all_products_tags: () => Promise<string[]>
+  list_used_products_tags: () => Promise<string[]>
 
 }
 

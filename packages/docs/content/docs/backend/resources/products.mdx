@@ -164,7 +164,7 @@ a filter system in the frontend if you know in advance all the tags of the produ
 There is also a version confining the tags to be of products of a [specific collection](backend/resources/collections#list-all-the-tags-of-products-in-collection)
 
 ```js
-const tags: string[] = await app.api.products.list_all_products_tags();
+const tags: string[] = await app.api.products.list_used_tags();
 
 console.log(tags);
 // ['genre_action', 'genre_platformer', 'genre_sports', 'region_pal', 'region_ntsc']

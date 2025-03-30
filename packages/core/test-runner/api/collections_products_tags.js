@@ -108,7 +108,7 @@ export const create = app => {
     }
 
     { // test collection->products->tags feature
-      const tags = await app.api.collections.list_all_collection_products_tags(
+      const tags = await app.api.collections.list_used_products_tags(
         col_upsert[0].handle
       );
 

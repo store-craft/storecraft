@@ -40,7 +40,7 @@ export const ToolResultContent_BrowseAllProducts = (
         chat={
           {
             products_resource_endpoint: `products`,
-            tags_fetcher: () => sdk.products.list_all_tags()
+            tags_fetcher: () => sdk.products.list_used_tags()
           }
         }
       />

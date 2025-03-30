@@ -53,10 +53,10 @@ export default class Collections extends collection_base {
    * @param {string} id_or_handle Collection `id` or `handle`
    * @return {Promise<string[]>} List of tags
    */
-  list_all_products_tags = async (id_or_handle) => {
+  list_used_products_tags = async (id_or_handle) => {
     const result = await fetchApiWithAuth(
       this.sdk,
-      `collections/${id_or_handle}/products/tags`,
+      `collections/${id_or_handle}/products/used_tags`,
       {
         method: 'get'
       }

@@ -2200,9 +2200,9 @@ const register_collections = registry => {
 
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}/{id_or_handle}/products/tags`,
-    description: 'List all the tags of products in a collection, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection',
-    summary: 'List All collection\'s products tags',
+    path: `/${slug_base}/{id_or_handle}/products/used_tags`,
+    description: 'List all of the used tags of products in a collection, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection',
+    summary: 'List All Used Collection\'s Products Tags',
     tags,
     request: {
       params: z.object({
@@ -4077,12 +4077,35 @@ const register_products = registry => {
     _typeUpsertSchema, example
     );
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/used_tags`,
+    description: 'List all of the used tags of all the products, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection, also see the collection confined version db_collections.list_collection_products_tags',
+    summary: 'List all used tags',
+    tags,
+    responses: {
+      200: {
+        description: `List of all of the tags of all the products`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+  
+  
   // list collections
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/collections`,
     description: 'Each `products` has linked collections, you can list all these `collections`',
-    summary: 'List all product\'s collections',
+    summary: 'List collections of product',
     tags,
     request: {
       params: z.object({
@@ -4109,27 +4132,7 @@ const register_products = registry => {
   });
 
 
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/all_tags`,
-    description: 'List all of the tags of all the products deduped, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection, also see the collection confined version db_collections.list_collection_products_tags',
-    summary: 'List all of the tags of all products',
-    tags,
-    responses: {
-      200: {
-        description: `List of all of the tags of all the products`,
-        content: {
-          'application/json': {
-            schema: z.array(z.string()),
-            example: [
-              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
-            ]
-          },
-        },
-      },
-      ...error() 
-    },
-  });
+
 
 
   // list variants
@@ -4137,7 +4140,7 @@ const register_products = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/variants`,
     description: 'Each `products` may have linked product variants, you can list all these `variants`',
-    summary: 'List all product\'s variants',
+    summary: 'List variants of product',
     tags,
     request: {
       params: z.object({
@@ -4202,7 +4205,7 @@ const register_products = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/discounts`,
     description: 'Each `products` may have linked `discounts`, you can list all these `discounts`',
-    summary: 'List all product\'s discounts',
+    summary: 'List discounts of product',
     tags,
     request: {
       params: z.object({
@@ -4233,7 +4236,7 @@ const register_products = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/related`,
     description: 'Each `products` may have related `products`, you can list all these `products`',
-    summary: 'List all related products',
+    summary: 'List related products of product',
     tags,
     request: {
       params: z.object({

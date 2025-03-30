@@ -242,9 +242,9 @@ const count_collection_products = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_all_collection_products_tags"]}
+ * @returns {db_col["list_used_products_tags"]}
  */
-const list_collection_products_tags = (driver) => {
+const list_used_products_tags = (driver) => {
   return async (handle_or_id) => {
 
     const items = await driver.client
@@ -294,7 +294,7 @@ export const impl = (driver) => {
     list: list(driver),
     list_collection_products: list_collection_products(driver),
     count_collection_products: count_collection_products(driver),
-    list_all_collection_products_tags: list_collection_products_tags(driver),
+    list_used_products_tags: list_used_products_tags(driver),
     count: count_regular(driver, table_name),
   }
 }

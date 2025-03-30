@@ -82,10 +82,10 @@ export const create_routes = (app) => {
   );
 
   polka.get(
-    '/:collection/products/tags',
+    '/:collection/products/used_tags',
     async (req, res) => {
       const { collection } = req.params;
-      const items = await app.api.collections.list_all_collection_products_tags(collection);
+      const items = await app.api.collections.list_used_products_tags(collection);
       res.sendJson(items);
     }
   ); 

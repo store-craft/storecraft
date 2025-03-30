@@ -29,10 +29,10 @@ export default class Products extends collection_base {
    * 
    * @return {Promise<string[]>} List of tags
    */
-  list_all_tags = async () => {
+  list_used_tags = async () => {
     const result = await fetchApiWithAuth(
       this.sdk,
-      `products/all_tags`,
+      `products/used_tags`,
       {
         method: 'get'
       }

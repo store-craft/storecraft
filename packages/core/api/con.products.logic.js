@@ -166,7 +166,7 @@ export const list_product_discounts = (app) =>
 /**
  * @param {App} app
  */
-export const list_all_products_tags = (app) => 
+export const list_used_products_tags = (app) => 
   /**
    * @description List all of the tags of all the products deduped, 
    * This is helpful for building a filter system in the frontend if 
@@ -174,7 +174,7 @@ export const list_all_products_tags = (app) =>
    * also see the collection confined version db_collections.list_collection_products_tags
    */
   () => {
-    return db(app).list_all_products_tags();
+    return db(app).list_used_products_tags();
   }
 
 /**
@@ -204,7 +204,7 @@ export const inter = app => {
     list_all_product_discounts: list_product_discounts(app),
     list_all_product_variants: list_product_variants(app),
     list_all_related_products: list_related_products(app),
-    list_all_products_tags: list_all_products_tags(app),
+    list_used_products_tags: list_used_products_tags(app),
     changeStockOfBy: db(app).changeStockOfBy,
     count: count(app),
   }

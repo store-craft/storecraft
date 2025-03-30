@@ -58,7 +58,7 @@ export const list_collection_products = (app) =>
 /**
  * @param {App} app
  */
-export const list_collection_products_tags = (app) => 
+export const list_used_products_tags = (app) => 
   /**
    * @description List all the tags of products in a collection, This is helpful 
    * for building a filter system in the frontend if you know in advance all 
@@ -67,7 +67,7 @@ export const list_collection_products_tags = (app) =>
    * @param {HandleOrId} handle_or_id 
    */
   (handle_or_id) => {
-    return db(app).list_all_collection_products_tags(handle_or_id);
+    return db(app).list_used_products_tags(handle_or_id);
   }
 
 /**
@@ -167,7 +167,7 @@ export const inter = app => {
     list: regular_list(app, db(app), 'collections/list'),
     list_collection_products: list_collection_products(app),
     count_collection_products_query: count_collection_products_query(app),
-    list_all_collection_products_tags: list_collection_products_tags(app),
+    list_used_products_tags: list_used_products_tags(app),
     export_collection: export_collection(app),
     count: count(app),
   }

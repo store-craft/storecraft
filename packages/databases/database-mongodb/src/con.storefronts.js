@@ -265,10 +265,10 @@ const get_default_auto_generated_storefront = (driver) => {
           $lookup: {
             from: "products",
             pipeline: [
-              { $match: { active: true } },
+              { $match: { active: true, tags: { $exists: true } } },
               { $project: { tags: 1 }}
             ],
-            as: "all_products_tags"
+            as: "all_used_products_tags"
           }
         },
 
@@ -276,9 +276,9 @@ const get_default_auto_generated_storefront = (driver) => {
     ).toArray();
 
     const pre_all_tags = /** @type {{tags?: string[]}[]} */(
-      items[0].all_products_tags ?? []
+      items[0].all_used_products_tags ?? []
     );
-    const all_products_tags = pre_all_tags.reduce(
+    const all_used_products_tags = pre_all_tags.reduce(
       (p, c) => {
         (c?.tags ?? []).forEach(
           (tag) => p.add(tag)
@@ -288,6 +288,7 @@ const get_default_auto_generated_storefront = (driver) => {
       /** @type {Set<string>} */ (new Set())
     );
 
+    /** @type {StorefrontType} */
     let sf = {
       ...items[0],
       active: true,
@@ -296,7 +297,7 @@ const get_default_auto_generated_storefront = (driver) => {
       id: 'default',
       title: 'Default Auto Generated Storefront',
       description: 'Default Auto Generated Storefront',
-      all_products_tags: Array.from(all_products_tags)
+      all_used_products_tags: Array.from(all_used_products_tags)
     }
 
     expand(

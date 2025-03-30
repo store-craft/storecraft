@@ -512,9 +512,9 @@ const changeStockOfBy = (driver) => {
 
 /**
  * @param {MongoDB} driver 
- * @returns {db_col["list_all_products_tags"]}
+ * @returns {db_col["list_used_products_tags"]}
  */
-const list_all_products_tags = (driver) => {
+const list_used_products_tags = (driver) => {
   return async () => {
     const items = await driver.resources.products._col.find(
       {
@@ -560,7 +560,7 @@ export const impl = (driver) => {
     list_all_product_variants: list_product_variants(driver),
     list_all_related_products: list_related_products(driver),
     list_all_product_discounts: list_product_discounts(driver),
-    list_all_products_tags: list_all_products_tags(driver),
+    list_used_products_tags: list_used_products_tags(driver),
     count: count(driver)
   }
 }

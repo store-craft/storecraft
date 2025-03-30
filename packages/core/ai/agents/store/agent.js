@@ -70,7 +70,7 @@ export class StoreAgent {
         storefront_discounts: sf.discounts && sf.discounts.map(c => ({title: c.title, handle: c.handle, description: c.description})),
         storefront_shipping_methods: sf.shipping_methods && sf.shipping_methods.map(c => ({price:c.price, title: c.title, handle: c.handle, description: c.description})),
         storefront_description: sf.description,
-        search_tags_for_products: (await this.#app.api.products.list_all_products_tags()).map(t => `tag:${t}`),
+        search_tags_for_products: (await this.#app.api.products.list_used_products_tags()).map(t => `tag:${t}`),
       }
 
       const { stream } = await this.provider.streamText(

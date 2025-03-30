@@ -1419,7 +1419,7 @@ export interface StorefrontType extends BaseType {
    * This is useful for searching and filtering products in the frontend.
    * @example ['genere_action', 'rated_M', ...]
    */
-  all_products_tags?: string[];
+  all_used_products_tags?: string[];
 }
 
 

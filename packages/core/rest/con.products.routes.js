@@ -52,9 +52,9 @@ export const create_routes = (app) => {
   );
 
   polka.get(
-    '/all_tags',
+    '/used_tags',
     async (req, res) => {
-      const items = await app.api.products.list_all_products_tags();
+      const items = await app.api.products.list_used_products_tags();
       res.sendJson(items);
     }
   );

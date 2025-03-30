@@ -74,10 +74,12 @@ export const quicksearch = (driver) => {
 
     const { filter, sort, reverse_sign } = query_to_mongo(query);
     const expand = query.expand ?? ['*']; 
-    const tables_filtered = tables.filter(t => expand.includes('*') || expand.includes(t));
+    const tables_filtered = tables.filter(
+      t => expand.includes('*') || expand.includes(t)
+    );
 
     if(tables_filtered.length==0)
-        return {};
+      return {};
 
     const pipeline = [
       {
@@ -101,8 +103,6 @@ export const quicksearch = (driver) => {
     ];
 
     const db = driver.mongo_client.db(driver.name);
-    
-    
     const items = /** @type {QuickSearchResource[]} */ (
       await db.collection(tables_filtered[0]).aggregate(
         [

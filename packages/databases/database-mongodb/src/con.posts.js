@@ -1,6 +1,6 @@
 /**
  * @import { db_posts as db_col } from '@storecraft/core/database'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  */
 
 import { Collection } from 'mongodb'

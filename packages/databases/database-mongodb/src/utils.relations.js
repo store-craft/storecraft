@@ -1,7 +1,7 @@
 /**
  * @import { ID } from '@storecraft/core/database'
  * @import { BaseType } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { Relation, WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
 
@@ -9,20 +9,6 @@ import { ClientSession, ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../index.js';
 import { zeroed_relations } from './con.shared.js';
-
-/**
- * @template {any} T
- * 
- * @typedef {Object} Relation
- * @property {ObjectId[]} [ids]
- * @property {Record<ID, T>} [entries]
- */
-
-/**
- * @template {any} T
- * 
- * @typedef {T & { _relations? : Record<string, Relation<any>> }} WithRelations
- */
 
 /**
  * 

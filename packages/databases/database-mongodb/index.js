@@ -162,6 +162,10 @@ export class MongoDB {
     return this.#mongo_client;
   }
 
+  get db() {
+    return this.mongo_client.db(this.name);
+  }
+
   /**
    * 
    * @description Get the config object

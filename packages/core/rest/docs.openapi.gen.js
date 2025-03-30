@@ -3179,6 +3179,28 @@ const register_storefronts = registry => {
     ]
   }
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/auto-generated`,
+    description: 'You can fetch the default auto-generated storefront. This will fetch all active `collections`, \
+    `discounts`, `shipping methods`, `posts` (latest 5) and `products`(latest 10) that are linked to the storefront. \
+    Also, all the products tags aggregated so you can build a filter system in the frontend',
+    summary: 'Get Default Auto Generated Storefront',
+    tags,
+    responses: {
+      200: {
+        description: `The default storefront`,
+        content: {
+          'application/json': {
+            schema: storefrontTypeSchema,
+            example
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+    
   register_base_get(
     registry, slug_base, name, tags, example_id, 
     _typeSchema, example,
@@ -3202,28 +3224,6 @@ const register_storefronts = registry => {
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, example
     );
-
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/auto-generated`,
-    description: 'You can fetch the default auto-generated storefront. This will fetch all active `collections`, \
-    `discounts`, `shipping methods`, `posts` (latest 5) and `products`(latest 10) that are linked to the storefront. \
-    Also, all the products tags aggregated so you can build a filter system in the frontend',
-    summary: 'Get Default Auto Generated Storefront',
-    tags,
-    responses: {
-      200: {
-        description: `The default storefront`,
-        content: {
-          'application/json': {
-            schema: storefrontTypeSchema,
-            example
-          },
-        },
-      },
-      ...error() 
-    },
-  });
 
   registry.registerPath({
     method: 'post',

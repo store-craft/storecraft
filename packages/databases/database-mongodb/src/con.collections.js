@@ -1,7 +1,7 @@
 /**
  * @import { db_collections as db_col } from '@storecraft/core/database'
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
 

@@ -1,7 +1,7 @@
 /**
  * @import { db_products as db_col, RegularGetOptions } from '@storecraft/core/database'
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { Filter, AnyBulkWriteOperation } from 'mongodb'
  */
 
@@ -305,11 +305,7 @@ const count = (driver) => count_regular(driver, col(driver));
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
- * 
- * 
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["list_all_product_collections"]}
  */
 const list_product_collections = (driver) => {
@@ -321,7 +317,7 @@ const list_product_collections = (driver) => {
 
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
-
+    
     return sanitize_array(item?.collections ?? []);
   }
 }
@@ -546,9 +542,7 @@ const list_all_products_tags = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
- * @return {db_col & { _col: ReturnType<col> }}
+ * @return {db_col & { _col: ReturnType<typeof col> }}
  */
 export const impl = (driver) => {
 

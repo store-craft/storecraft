@@ -16,7 +16,9 @@ import type {
   QuickSearchResult,
   timestamps, 
 } from "../api/types.api.d.ts";
-import type { ExpandQuery, ApiQuery } from "../api/types.api.query.d.ts";
+import type { 
+  ExpandQuery, ApiQuery 
+} from "../api/types.api.query.d.ts";
 import type { App } from '../types.public.d.ts'
 
 export type ID = string;
@@ -44,12 +46,14 @@ export type Aug = {
 
 type idable = { id: string }
 export type withConcreteId<T> = Omit<T, 'id'> & idable;
-export type withConcreteIdAndHandle<T> = Omit<T, 'id' | 'handle'> & { id: string, handle: string};
+export type withConcreteIdAndHandle<T> = Omit<T, 'id' | 'handle'> & { 
+  id: string, 
+  handle: string
+};
 
 /**
  * @description Basic collection or table
  */
-// export declare interface db_crud<U extends idable, G extends idable=U> {
 export declare interface db_crud<U, G=U> {
   /** upsert type */
   $type_upsert?: U;
@@ -61,7 +65,9 @@ export declare interface db_crud<U, G=U> {
    * @param id_or_handle 
    * @param options 
    */
-  get: (id_or_handle: HandleOrId, options?: RegularGetOptions<G>) => Promise<G>;
+  get: (
+    id_or_handle: HandleOrId, options?: RegularGetOptions<G>
+  ) => Promise<G>;
   /**
    * get bulk of items, ordered, if something is missing, `undefined`
    * should be instead
@@ -121,7 +127,9 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
 }
 
 /** @description `TagType` crud */
-export interface db_tags extends db_crud<withConcreteIdAndHandle<TagTypeUpsert>, TagType> {
+export interface db_tags extends db_crud<
+  withConcreteIdAndHandle<TagTypeUpsert>, TagType
+  > {
 }
 
 /** @description `CollectionType` crud */
@@ -149,9 +157,10 @@ export interface db_collections extends db_crud<
   ) => Promise<number>;
 
   /**
-   * List all the tags of products in a collection, This is helpful for building
-   * a filter system in the frontend if you know in advance all the tags of the products
-   * in a collection
+   * List all the tags of products in a collection, This is helpful 
+   * for building a filter system in the frontend if you know in advance 
+   * all the tags of the products in a collection
+   * 
    * @param handle_or_id collection handle or id
    */
   list_all_collection_products_tags: (
@@ -162,50 +171,69 @@ export interface db_collections extends db_crud<
 
 /** @description `ProductType` crud */
 export interface db_products extends db_crud<
-  withConcreteIdAndHandle<ProductTypeUpsert> | withConcreteIdAndHandle<VariantTypeUpsert>, 
-  ProductType | VariantType> {
+  withConcreteIdAndHandle<ProductTypeUpsert> | 
+  withConcreteIdAndHandle<VariantTypeUpsert>, 
+  ProductType | VariantType
+  > {
 
   /**
    * increment / decrement stock of multiple products
    * 
    * @param product_id_or_handles array of `id` or `handle`
-   * @param deltas corresponding array of non-zero `positive` or `negative` integer
+   * @param deltas corresponding array of non-zero `positive` or 
+   * `negative` integer
    */
-  changeStockOfBy: (product_id_or_handles: HandleOrId[], deltas: number[]) => Promise<void>;
+  changeStockOfBy: (
+    product_id_or_handles: HandleOrId[], deltas: number[]
+  ) => Promise<void>;
 
   /**
-   * list all of the product related collections, returns eveything, this is not query based,
-   * we assume, there are a handful of collection per product
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_all_product_collections: (product: HandleOrId) => Promise<CollectionType[]>;
-
-  /**
-   * list all of the product related discounts, returns eveything, this is not query based,
-   * we assume, there are a handful of discounts per product
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_all_product_discounts: (product: HandleOrId) => Promise<DiscountType[]>;
-
-  /**
-   * list all of the product related collections, returns eveything, this is not query based,
-   * we assume, there are a handful of collection per product
+   * list all of the product related collections, returns eveything, 
+   * this is not query based, we assume, there are a handful of collection 
+   * per product
    * 
    * @param product handle or id
    * @param options options like expand
    */
-  list_all_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
+  list_all_product_collections: (
+    product: HandleOrId
+  ) => Promise<CollectionType[]>;
+
+  /**
+   * list all of the product related discounts, returns eveything, 
+   * this is not query based, we assume, there are a handful of discounts 
+   * per product
+   * 
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_all_product_discounts: (
+    product: HandleOrId
+  ) => Promise<DiscountType[]>;
+
+  /**
+   * list all of the product related collections, returns eveything, 
+   * this is not query based, we assume, there are a handful of collection 
+   * per product
+   * 
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_all_product_variants: (
+    product: HandleOrId
+  ) => Promise<VariantType[]>;
   
   /**
-   * list all of the product related collections, returns eveything, this is not query based,
-   * we assume, there are a handful of collection per product
+   * list all of the product related collections, returns eveything, 
+   * this is not query based, we assume, there are a handful of 
+   * collection per product
    * 
    * @param product handle or id
    * @param options options like expand
    */
-  list_all_related_products: (product: HandleOrId) => Promise<BaseProductType[]>;
+  list_all_related_products: (
+    product: HandleOrId
+  ) => Promise<BaseProductType[]>;
   
   
   /**
@@ -213,19 +241,26 @@ export interface db_products extends db_crud<
    * @param product handle or id
    * @param collection_handle_or_id collection handle or id
    */
-  add_product_to_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
+  add_product_to_collection?: (
+    product: HandleOrId, collection_handle_or_id: HandleOrId
+  ) => Promise<void>;
 
   /**
    * remove product from collection
    * @param product handle or id
    * @param collection_handle_or_id collection handle or id
    */
-  remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
+  remove_product_from_collection?: (
+    product: HandleOrId, collection_handle_or_id: HandleOrId
+  ) => Promise<void>;
 
   /**
-   * List all of the tags of all the products deduped, This is helpful for building
-   * a filter system in the frontend if you know in advance all the tags of the products
-   * in a collection, also see the collection confined version {@link db_collections.list_all_collection_products_tags}
+   * List all of the tags of all the products deduped, This is helpful 
+   * for building a filter system in the frontend if you know in advance 
+   * all the tags of the products in a collection, also see the collection 
+   * confined version 
+   * 
+   * {@link db_collections.list_all_collection_products_tags}
    */
   list_all_products_tags: () => Promise<string[]>
 
@@ -262,43 +297,57 @@ export interface db_storefronts extends db_crud<
   StorefrontType
   > {
   /**
-   * list all of the product related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
+   * list all of the product related to storefront, returns eveything, 
+   * this is not query based, we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_all_storefront_products: (handle_or_id: HandleOrId) => Promise<ProductType[]>;
+  list_all_storefront_products: (
+    handle_or_id: HandleOrId
+  ) => Promise<ProductType[]>;
   /**
-   * list all of the collections related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
+   * list all of the collections related to storefront, returns eveything, 
+   * this is not query based, we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_all_storefront_collections: (handle_or_id: HandleOrId) => Promise<CollectionType[]>;
+  list_all_storefront_collections: (
+    handle_or_id: HandleOrId
+  ) => Promise<CollectionType[]>;
   /**
-   * list all of the discounts related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
+   * list all of the discounts related to storefront, returns eveything, 
+   * this is not query based, we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_all_storefront_discounts: (handle_or_id: HandleOrId) => Promise<DiscountType[]>;
+  list_all_storefront_discounts: (
+    handle_or_id: HandleOrId
+  ) => Promise<DiscountType[]>;
   /**
-   * list all of the shipping methods related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
+   * list all of the shipping methods related to storefront, 
+   * returns eveything, this is not query based, we assume, there 
+   * are a handful.
+   * 
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_all_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<ShippingMethodType[]>;
+  list_all_storefront_shipping_methods: (
+    handle_or_id: HandleOrId
+  ) => Promise<ShippingMethodType[]>;
   /**
-   * list all of the posts related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
+   * list all of the posts related to storefront, returns eveything, 
+   * this is not query based, we assume, there are a handful.
    * @param handle_or_id handle or id
    * @param options options like expand
    */
-  list_all_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
+  list_all_storefront_posts: (
+    handle_or_id: HandleOrId
+  ) => Promise<PostType[]>;
 
   /**
-   * Storecraft can generate a default automatcally generated storefront for you
+   * Storecraft can generate a default automatcally generated storefront 
+   * for you.
+   * 
    * @returns the default auto generated storefront
    */
   get_default_auto_generated_storefront: () => Promise<StorefrontType>;
@@ -375,9 +424,10 @@ export interface db_discounts extends db_crud<
   ) => Promise<number>;
 
   /**
-   * List all the tags of all the products, that belong to a discount. This is helpful for building
-   * a filter system in the frontend if you know in advance all the tags of the products
-   * in a collection
+   * List all the tags of all the products, that belong to a discount. 
+   * This is helpful for building a filter system in the frontend if 
+   * you know in advance all the tags of the products in a collection
+   * 
    * @param handle_or_id discount `handle` or `id`
    */
   list_all_discount_products_tags: (

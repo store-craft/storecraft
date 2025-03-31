@@ -107,7 +107,7 @@ export const parse_basic_auth_or_apikey = (app) => {
  */
 export const has_role = (roles=[], user) => {
   return roles.length==0 || roles.some(
-    r => (user.roles ?? []).includes(r)
+    r => (user?.roles ?? []).includes(r)
   );
 }
 

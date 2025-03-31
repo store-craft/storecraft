@@ -36,6 +36,7 @@ import {
   oAuthProviderSchema,
   orderDataSchema,
   orderDataUpsertSchema,
+  ordersStatisticsTypeSchema,
   paymentGatewayItemGetSchema,
   paymentGatewayStatusSchema,
   paymentOptionsEnumSchema,
@@ -403,6 +404,7 @@ const create_all = () => {
   register_payments(registry);
   register_extensions(registry);
   register_quick_search(registry);
+  register_statistics(registry)
   register_emails(registry);
   register_tags(registry);
   register_templates(registry);
@@ -2107,6 +2109,7 @@ const register_storage = registry => {
   });    
 }
 
+
 /**
  * @param {OpenAPIRegistry} registry 
  */
@@ -2262,6 +2265,59 @@ const register_collections = registry => {
   });
     
 }
+
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_statistics = registry => {
+  const name = 'statistics'
+  const slug_base = 'statistics'
+  const tags = [`${name}`];
+  const ordersStatisticsType = registry.register(
+    `OrdersStatisticsType`, ordersStatisticsTypeSchema.describe('`orders` / `sales` statistics')
+    );
+
+  // list and filter collection products
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/orders`,
+    description: 'Compute the `statistics` of `sales` / `orders` a period of time per day.',
+    summary: 'Compute Sales Statistics',
+    tags,
+    request: {
+      query: z.object({
+        fromDay: z.string().openapi(
+          { 
+            examples: ['2023-01-01T00:00:00Z', '0290902930923'],
+            description: '`ISO` / `UTC` / `timestamp` date'
+          }
+        ),
+        toDay: z.string().openapi(
+          { 
+            examples: ['2023-01-01T00:00:00Z', '0290902930923'],
+            description: '`ISO` / `UTC` / `timestamp` date'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Filtered product\'s of a collection`,
+        content: {
+          'application/json': {
+            schema: ordersStatisticsType,
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+
+}
+
+
 
 /**
  * @param {OpenAPIRegistry} registry 

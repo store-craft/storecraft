@@ -6,6 +6,8 @@ export function sleep(ms=1000) {
   });
 }
 
+export const withTimestamp = (o='') => `${o}-${Date.now()}`;
+
 /**
  * 
  * @param  {...string} keys 

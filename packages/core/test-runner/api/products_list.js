@@ -1,9 +1,7 @@
 /**
  * @import { 
- * CollectionTypeUpsert, ProductType, ProductTypeUpsert 
+ *  CollectionTypeUpsert, ProductType, ProductTypeUpsert 
  * } from '../../api/types.api.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
  * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */

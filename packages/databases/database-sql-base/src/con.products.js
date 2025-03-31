@@ -488,11 +488,6 @@ const list_used_products_tags = (driver) => {
     const items = await driver.client
       .selectFrom('products')
       .innerJoin(
-        'products_to_collections', 
-        'products_to_collections.entity_id', 
-        'products.id'
-      )
-      .innerJoin(
         'entity_to_tags_projections', 
         'entity_to_tags_projections.entity_id', 
         'products.id'

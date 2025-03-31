@@ -1,8 +1,5 @@
 /**
- * @import { BaseType, ShippingMethodTypeUpsert, ProductTypeUpsert } from '../../api/types.api.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { ShippingMethodTypeUpsert, ProductTypeUpsert } from '../../api/types.api.js'
  */
 
 import { suite } from 'uvu';

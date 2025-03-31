@@ -340,8 +340,6 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
         try {
           for(const p of ctx.items) {
             await ctx.ops.remove(p.id);
-            // we bypass the api and upsert straight
-            // to the db because we control the time-stamps
             const id = await ctx.ops.upsert(p);
             // throw id
             // if(ctx.resource==='notifications') {

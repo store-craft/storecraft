@@ -1,8 +1,6 @@
 /**
- * @import { BaseType, CollectionType, CollectionTypeUpsert } from '../../api/types.api.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext, CrudTestContext } from './api.utils.crud.js';
+ * @import { CollectionType, CollectionTypeUpsert } from '../../api/types.api.js'
+ * @import { CrudTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 

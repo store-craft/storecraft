@@ -1,9 +1,6 @@
 /**
  * @import { ProductTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete, withConcreteIdAndHandle } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { withConcreteIdAndHandle } from '../../database/types.public.js'
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';

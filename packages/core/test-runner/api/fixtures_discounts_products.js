@@ -1,14 +1,10 @@
 /**
  * @import { 
- * Filter, DiscountTypeUpsert, RegularDiscountExtra, ProductTypeUpsert, 
- * FilterValue_p_in_products, FilterValue_p_not_in_products, FilterValue_p_in_tags, 
- * FilterValue_p_not_in_tags, CollectionTypeUpsert, FilterValue_p_in_collections, 
- * FilterValue_p_not_in_collections, FilterValue_p_all
+ *  Filter, DiscountTypeUpsert, RegularDiscountExtra, ProductTypeUpsert, 
+ *  FilterValue_p_in_products, FilterValue_p_not_in_products, FilterValue_p_in_tags, 
+ *  FilterValue_p_not_in_tags, CollectionTypeUpsert, FilterValue_p_in_collections, 
+ *  FilterValue_p_not_in_collections, FilterValue_p_all
  * } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
  */
 import { enums } from '../../api/index.js';
 import { create_handle, create_title_gen, get_static_ids } from './api.utils.crud.js';

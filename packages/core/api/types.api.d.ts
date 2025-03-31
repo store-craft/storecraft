@@ -1807,9 +1807,10 @@ export interface BaseCheckoutCreateType {
   notes?: string; 
 
   /** 
-   * @description Shipping method info 
+   * @description Shipping method `handle` or `id`
    */
-  shipping_method: Partial<ShippingMethodType>; 
+  shipping_method: Partial<HandleAndID>; 
+  // shipping_method: Partial<ShippingMethodType>; 
 }
 
 
@@ -1823,12 +1824,27 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
   coupons?: DiscountType[]; 
 }
 
-interface CheckoutCreateTypeWithoutID extends Omit<CheckoutCreateType, 'id'> {};
+/**
+ * @description Checkout Create interface
+ */
+export interface CheckoutCreateTypeAfterValidation extends Omit<CheckoutCreateType, 'shipping_method'> {
+  /** 
+   * @description Shipping method after validation
+   */
+  shipping_method: ShippingMethodType; 
+  /** 
+   * @description In case the order went through validation  
+   */
+  validation?: ValidationEntry[];
+}
+
+// interface CheckoutCreateTypeWithoutID extends Omit<CheckoutCreateType, 'id' | 'shipping_method'> {
+// };
 
 /**
  * @description Order interface
  */
-export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
+export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>, BaseType {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -1839,10 +1855,6 @@ export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
    */
   pricing: PricingData;
 
-  /** 
-   * @description In case the order went through validation  
-   */
-  validation?: ValidationEntry[];
 
   /** 
    * @description Payment gateway info and status 

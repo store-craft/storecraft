@@ -38,68 +38,6 @@ export const upsert = (app) =>
 
 
 /**
- * 
- * @param {App} app
- */
-export const list_storefront_products = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_all_storefront_products(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_collections = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_all_storefront_collections(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_discounts = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_all_storefront_discounts(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_shipping_methods = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_all_storefront_shipping_methods(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_posts = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_all_storefront_posts(handle_or_id);
-}
-
-
-/**
  * @param {App} app
  */
 export const export_storefront = (app) => {
@@ -187,13 +125,8 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'storefronts/remove'),
     list: regular_list(app, db(app), 'storefronts/list'),
-    list_storefront_products: list_storefront_products(app),
-    list_storefront_collections: list_storefront_collections(app),
-    list_storefront_discounts: list_storefront_discounts(app),
-    list_storefront_posts: list_storefront_posts(app),
-    list_storefront_shipping_methods: list_storefront_shipping_methods(app),
-    get_default_auto_generated_storefront: get_default_auto_generated_storefront(app),
+    count: count(app),
     export_storefront: export_storefront(app),
-    count: count(app)
+    get_default_auto_generated_storefront: get_default_auto_generated_storefront(app),
   }
 }

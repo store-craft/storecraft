@@ -12,6 +12,7 @@ export * as collections_products_used_tags from './collections_products_used_tag
 
 export * as customers_crud from './customers_crud.js'
 export * as customers_list from './customers_list.js'
+export * as customers_orders from './customers_orders.js'
 
 export * as discounts_crud from './discounts_crud.js'
 export * as discounts_list from './discounts_list.js'

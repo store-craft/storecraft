@@ -106,101 +106,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_storefront_products"]}
- */
-const list_storefront_products = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['products']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.products ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_storefront_collections"]}
- */
-const list_storefront_collections = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['collections']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.collections ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_storefront_discounts"]}
- */
-const list_storefront_discounts = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['discounts']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.discounts ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * @returns {db_col["list_all_storefront_shipping_methods"]}
- */
-const list_storefront_shipping_methods = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['shipping_methods']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.shipping_methods ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_storefront_posts"]}
- */
-const list_storefront_posts = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['posts']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.posts ?? []);
-  }
-}
-
-
-/**
- * @param {MongoDB} driver 
  * @returns {db_col["get_default_auto_generated_storefront"]}
  */
 const get_default_auto_generated_storefront = (driver) => {
@@ -331,11 +236,6 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_all_storefront_products: list_storefront_products(driver),
-    list_all_storefront_collections: list_storefront_collections(driver),
-    list_all_storefront_discounts: list_storefront_discounts(driver),
-    list_all_storefront_shipping_methods: list_storefront_shipping_methods(driver),
-    list_all_storefront_posts: list_storefront_posts(driver),
     get_default_auto_generated_storefront: get_default_auto_generated_storefront(driver),
   }
 }

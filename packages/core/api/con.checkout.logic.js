@@ -1,9 +1,10 @@
 /**
  * @import { 
  *  OrderData, DiscountType, CheckoutCreateType, 
- *  OrderDataUpsert, ValidationEntry
+ *  OrderDataUpsert, ValidationEntry, 
+ *  CheckoutCreateTypeAfterValidation
  * } from './types.api.js';
- * @import { payment_gateway } from '../payments/types.payments.d.ts';
+ * @import { type payment_gateway } from '../payments/types.payments.d.ts';
  */
 import { 
   App, CheckoutStatusEnum, DiscountApplicationEnum, 
@@ -30,16 +31,13 @@ export const validate_checkout = app =>
  * 
  * @template {CheckoutCreateType} T
  * @param {T} checkout
- * @returns {Promise<T & 
- *  { 
- *    validation: OrderData["validation"],
- *  }>
+ * @returns {Promise<CheckoutCreateTypeAfterValidation>
  * }
  */
 async (checkout) => {
 
   const shipping_id = checkout.shipping_method.id ?? checkout.shipping_method.handle;
-  const snap_shipping = await app.db.resources.shipping_methods.get(
+  const shipping_method = await app.db.resources.shipping_methods.get(
     shipping_id
   );
 
@@ -62,11 +60,8 @@ async (checkout) => {
   }
 
   // assert shipping is valid
-  if(!snap_shipping)
+  if(!shipping_method)
     errorWith(shipping_id, 'shipping-method-not-found')
-  else { // else patch the latest
-    checkout.shipping_method = snap_shipping;
-  }
 
   // assert stock
   snaps_products.forEach(
@@ -97,6 +92,7 @@ async (checkout) => {
 
   return {
     ...checkout, 
+    shipping_method,
     validation: errors 
   }
 

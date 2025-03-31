@@ -1288,9 +1288,11 @@ const baseNotificationTypeSchema = z.object({
   id: z.string().describe("`id` of notification"),
 });
 
-export const notificationTypeUpsertSchema = baseNotificationTypeSchema.omit({
-  id: true,
-});
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema
+  .omit({ id: true })
+  .extend({
+    id: z.string().optional().describe("Optional `id` of notification"),
+  });
 
 export const orderStatusSchema = z.object({
   checkout: z
@@ -1531,7 +1533,7 @@ export const storefrontTypeSchema = baseTypeSchema.extend({
     .array(postTypeSchema)
     .optional()
     .describe("Posts related to this storefront"),
-  all_products_tags: z
+  all_used_products_tags: z
     .array(z.string())
     .optional()
     .describe(
@@ -1604,9 +1606,9 @@ export const baseCheckoutCreateTypeSchema = z.object({
     .array(lineItemSchema)
     .describe("Line items is a list of the purchased products"),
   notes: z.string().optional().describe("Notes for the order"),
-  shipping_method: shippingMethodTypeSchema
+  shipping_method: handleAndIDSchema
     .partial()
-    .describe("Shipping method info"),
+    .describe("Shipping method `handle` or `id`"),
 });
 
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
@@ -1616,9 +1618,17 @@ export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
     .describe("A list of manual coupons handles"),
 });
 
-const checkoutCreateTypeWithoutIDSchema = checkoutCreateTypeSchema.omit({
-  id: true,
-});
+export const checkoutCreateTypeAfterValidationSchema = checkoutCreateTypeSchema
+  .omit({ shipping_method: true })
+  .extend({
+    shipping_method: shippingMethodTypeSchema.describe(
+      "Shipping method after validation",
+    ),
+    validation: z
+      .array(validationEntrySchema)
+      .optional()
+      .describe("In case the order went through validation"),
+  });
 
 export const evoEntrySchema = z.object({
   discount_code: z.string().optional().describe("The discount code `handle`"),
@@ -1763,17 +1773,14 @@ export const pricingDataSchema = z.object({
   errors: z.array(discountErrorSchema).optional().describe("Errors"),
 });
 
-export const orderDataSchema = checkoutCreateTypeWithoutIDSchema
+export const orderDataSchema = checkoutCreateTypeAfterValidationSchema
+  .omit({ id: true })
   .extend(baseTypeSchema.shape)
   .extend({
     status: orderStatusSchema.describe(
       "Status of `checkout`, `fulfillment` and `payment`",
     ),
     pricing: pricingDataSchema.describe("Pricing information"),
-    validation: z
-      .array(validationEntrySchema)
-      .optional()
-      .describe("In case the order went through validation"),
     payment_gateway: orderPaymentGatewayDataSchema
       .optional()
       .describe("Payment gateway info and status"),

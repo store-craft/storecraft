@@ -94,9 +94,9 @@ export const list_customer_orders = (app) =>
  * @description given a customer id and query,
  * return orders of that customer
  * @param {IDType} customer_id 
- * @param {ApiQuery<OrderData>} q 
+ * @param {ApiQuery<OrderData>} [q={}] 
  */
-(customer_id, q) => {
+(customer_id, q={}) => {
   return db(app).list_customer_orders(customer_id, q);
 }
 
@@ -107,9 +107,9 @@ export const count_customer_orders = (app) =>
   /**
    * @description count a customer orders query
    * @param {IDType} customer_id 
-   * @param {ApiQuery<OrderData>} q 
+   * @param {ApiQuery<OrderData>} [q={}] 
    */
-  (customer_id, q) => {
+  (customer_id, q={}) => {
     return db(app).count_customer_orders(customer_id, q);
   }
 

@@ -135,7 +135,8 @@ const order_base = {
     }
   ],
   shipping_method: {
-    handle: 'i-dont-exist'
+    handle: 'i-dont-exist', id: 'i-dont-exist',
+    title: 'i-dont-exist', price: 50
   },
   status: {
     checkout: enums.CheckoutStatusEnum.created,

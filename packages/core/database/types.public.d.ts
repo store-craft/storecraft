@@ -277,7 +277,7 @@ export interface db_customers extends OmitGetByHandle<db_crud<
    * @param query query object
    */
   list_customer_orders: (
-    customer_id: ID, query: ApiQuery<OrderData>
+    customer_id: ID, query?: ApiQuery<OrderData>
   ) => Promise<OrderData[]>;
 
   /**
@@ -286,7 +286,7 @@ export interface db_customers extends OmitGetByHandle<db_crud<
    * @param query query
    */
   count_customer_orders: (
-    handle_or_id: HandleOrId, query: ApiQuery<OrderData>
+    handle_or_id: HandleOrId, query?: ApiQuery<OrderData>
   ) => Promise<number>;
 
 }
@@ -296,53 +296,6 @@ export interface db_storefronts extends db_crud<
   withConcreteIdAndHandle<StorefrontTypeUpsert>, 
   StorefrontType
   > {
-  /**
-   * list all of the product related to storefront, returns eveything, 
-   * this is not query based, we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_all_storefront_products: (
-    handle_or_id: HandleOrId
-  ) => Promise<ProductType[]>;
-  /**
-   * list all of the collections related to storefront, returns eveything, 
-   * this is not query based, we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_all_storefront_collections: (
-    handle_or_id: HandleOrId
-  ) => Promise<CollectionType[]>;
-  /**
-   * list all of the discounts related to storefront, returns eveything, 
-   * this is not query based, we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_all_storefront_discounts: (
-    handle_or_id: HandleOrId
-  ) => Promise<DiscountType[]>;
-  /**
-   * list all of the shipping methods related to storefront, 
-   * returns eveything, this is not query based, we assume, there 
-   * are a handful.
-   * 
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_all_storefront_shipping_methods: (
-    handle_or_id: HandleOrId
-  ) => Promise<ShippingMethodType[]>;
-  /**
-   * list all of the posts related to storefront, returns eveything, 
-   * this is not query based, we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_all_storefront_posts: (
-    handle_or_id: HandleOrId
-  ) => Promise<PostType[]>;
 
   /**
    * Storecraft can generate a default automatcally generated storefront 

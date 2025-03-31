@@ -30,6 +30,7 @@ const upsert = (driver) => {
           await insert_tags_of(trx, item.tags, item.id, item.id, table_name);
           await report_document_media(driver)(item, trx);
           await regular_upsert_me(trx, table_name, {
+            active: 1,
             attributes: JSON.stringify(item.attributes),
             description: item.description,
             created_at: item.created_at,

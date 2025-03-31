@@ -42,6 +42,7 @@ export const upsert = (client) => {
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
+            active: item.active ? 1 : 0,
             title: item.title,
             handle: item.handle,
             template_html: decode_if_base64(item.template_html),

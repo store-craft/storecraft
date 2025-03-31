@@ -52,6 +52,11 @@ export const regular_upsert = (
     /** @type {DB_GET_TYPE} */
     let previous_item;
 
+    // active by default
+    if(item && !('active' in item)) {
+      item.active = true;
+    }
+
     item = pre_hook(item);
     
     schema && assert_zod(

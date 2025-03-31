@@ -267,7 +267,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc']),
+          .orderBy(['updated_at desc']),
           driver.dialectType
         ).as('collections'),
   
@@ -286,7 +286,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc'])
+          .orderBy(['updated_at desc'])
           .limit(10),
           dialectType
         ).as('products'),
@@ -302,7 +302,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc']),
+          .orderBy(['updated_at desc']),
           dialectType
         ).as('discounts'),
   
@@ -317,7 +317,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc']),
+          .orderBy(['updated_at desc']),
           dialectType
         ).as('shipping_methods'),
   
@@ -332,18 +332,13 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at asc'])
+          .orderBy(['updated_at desc'])
           .limit(3),
           dialectType
         ).as('posts'),
   
         stringArrayFrom(
           eb.selectFrom('products')
-          .innerJoin(
-            'products_to_collections', 
-            'products_to_collections.entity_id', 
-            'products.id'
-          )
           .innerJoin(
             'entity_to_tags_projections', 
             'entity_to_tags_projections.entity_id', 

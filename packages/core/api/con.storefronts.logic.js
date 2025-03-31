@@ -109,6 +109,7 @@ export const get_default_auto_generated_storefront = (app) =>
   /**
    * @description Storecraft can generate a default automatcally 
    * generated storefront for you.
+   * @param {*} [query] 
    */
   (query) => {
     return db(app).get_default_auto_generated_storefront();

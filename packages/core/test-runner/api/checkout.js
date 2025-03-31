@@ -354,8 +354,6 @@ export const create = app => {
         ],
         shipping_method: {
           handle: 'shipping does not exist',
-          price: 30,
-          title: 'i dont exist',
           id: ''
         },
         contact: {

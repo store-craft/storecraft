@@ -44,6 +44,7 @@ export * as shipping_list from './shipping_list.js'
 export * as storefronts_all_connections from './storefronts_all_connections.js'
 export * as storefronts_crud from './storefronts_crud.js'
 export * as storefronts_list from './storefronts_list.js'
+export * as storefronts_auto_generated from './storefronts_auto_generated.js'
 
 export * as tags_crud from './tags_crud.js'
 export * as tags_list from './tags_list.js'

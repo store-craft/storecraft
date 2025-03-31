@@ -39,6 +39,10 @@ export const sanitize = o => {
       delete o[key];
       continue;
     }
+    if(key.startsWith('_')) {
+      delete o[key];
+      continue;
+    }
     if(key==='active') {
       // @ts-ignore
       o[key] = Boolean(value);

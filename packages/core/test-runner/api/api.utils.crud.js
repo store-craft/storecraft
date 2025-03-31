@@ -10,7 +10,7 @@ import * as assert from 'uvu/assert';
 import { basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { App } from '../../index.js'
-import { assert_async_throws, assert_partial } from './utils.js';
+import { assert_async_throws, assert_partial, assert_partial_v2 } from './utils.js';
 import { to_handle } from '../../api/utils.func.js';
 import { 
   image_url_to_handle, image_url_to_name 
@@ -37,11 +37,7 @@ export const file_name = (meta_url) => {
 /**
  * Execute a bunch of functions, that create promises sequentially.
  * All tests promises run in serial to avoid transactions locks.
- * 
- * 
  * @template T
- * 
- * 
  * @param {(() => Promise<T>)[]} items 
  */
 export const promises_sequence = async (items) => {
@@ -135,8 +131,7 @@ export const add_sanity_crud_to_test_suite = s => {
         ctx.events.upsert_event,
         v => {
           try {
-            
-            assert_partial(v.payload.current, one);
+            assert_partial_v2(v.payload.current, one, 'test upsert event');
             is_event_ok = true;
           } catch (e) {}
         }
@@ -157,7 +152,7 @@ export const add_sanity_crud_to_test_suite = s => {
         ctx.events.get_event,
         v => {
           try {
-            assert_partial(v.payload.current, one);
+            assert_partial_v2(v.payload.current, one, 'test get event');
             is_event_ok = true;
           } catch (e) {}
         }
@@ -165,7 +160,7 @@ export const add_sanity_crud_to_test_suite = s => {
 
       const item_get = await ctx.ops.get(id);
   
-      assert_partial(item_get, {...one, id});
+      assert_partial_v2(item_get, {...one, id}, 'test get');
       assert.ok(is_event_ok, 'event error (test get)');
 
       unsub();
@@ -179,9 +174,9 @@ export const add_sanity_crud_to_test_suite = s => {
         ctx.events.upsert_event,
         async v => {
           try {
-            assert_partial(v.payload.current, one);
+            assert_partial_v2(v.payload.current, one, 'test update event');
             if(v.payload.previous) {
-              assert_partial(v.payload.previous, one);
+              assert_partial_v2(v.payload.previous, one, 'test update event 2');
             }
             is_event_ok = true;
           } catch (e) {
@@ -208,7 +203,7 @@ export const add_sanity_crud_to_test_suite = s => {
         ctx.events.remove_event,
         v => {
           try {
-            assert_partial(v.payload.previous, one);
+            assert_partial_v2(v.payload.previous, one, 'test remove event');
             is_event_ok = true;
           } catch (e) {}
         }

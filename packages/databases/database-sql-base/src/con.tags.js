@@ -24,6 +24,8 @@ const upsert = (driver) => {
         async (trx) => {
           await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
           await regular_upsert_me(trx, table_name, {
+            active: item.active ? 1 : 0,
+            description: item.description,
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,

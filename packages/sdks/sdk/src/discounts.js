@@ -1,6 +1,8 @@
 /**
  * @import { 
- *  ApiQuery, DiscountType, DiscountTypeUpsert 
+ *  ApiQuery, DiscountType, DiscountTypeUpsert, 
+ ProductType,
+ VariantType
  * } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
@@ -30,16 +32,16 @@ export default class Discounts extends collection_base {
    * you can query and filter these products by discount
    * 
    * @param {string} id_or_handle discount `id` or `handle`
-   * @param {ApiQuery<DiscountType>} query query
-   * @return {Promise<DiscountType[]>} List of discounts
+   * @param {ApiQuery<ProductType | VariantType>} query query
+   * @return {Promise<(ProductType | VariantType)[]>} List of discounts
    */
-  query_customer_orders = async (id_or_handle, query) => {
+  query_discount_products = async (id_or_handle, query) => {
     const result = list_from_collection_resource(
       this.sdk,
       `discounts/${id_or_handle}/products`,
       query
     );
-    return result
+    return result;
   }
 
   /**
@@ -47,10 +49,10 @@ export default class Discounts extends collection_base {
    * you can count the query products by discount
    * 
    * @param {string} id_or_handle discount `id` or `handle`
-   * @param {ApiQuery<DiscountType>} query query
+   * @param {ApiQuery<ProductType | VariantType>} query query
    * @return {Promise<number>} count
    */
-  count_customer_orders_query = async (id_or_handle, query) => {
+  count_discount_products_query = async (id_or_handle, query) => {
     return count_query_of_resource(
       this.sdk,
       `discounts/${id_or_handle}/products`,
@@ -66,10 +68,10 @@ export default class Discounts extends collection_base {
    * @param {string} id_or_handle Discount `id` or `handle`
    * @return {Promise<string[]>} List of tags
    */
-  list_all_discount_products_tags = async (id_or_handle) => {
+  list_used_discount_products_tags = async (id_or_handle) => {
     const result = await fetchApiWithAuth(
       this.sdk,
-      `discounts/${id_or_handle}/products/tags`,
+      `discounts/${id_or_handle}/products/used_tags`,
       {
         method: 'get'
       }

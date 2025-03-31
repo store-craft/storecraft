@@ -147,7 +147,7 @@ export const count_collection_products_query = (app) =>
    * @description Count query results
    * 
    * @param {string} id_or_handle id or handle of the collection
-   * @param {ApiQuery<ProductType | VariantType>} query query object for products
+   * @param {ApiQuery<ProductType | VariantType>} [query] query object for products
    */
   (id_or_handle, query) => {
     return db(app).count_collection_products(id_or_handle, query);

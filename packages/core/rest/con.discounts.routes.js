@@ -83,10 +83,10 @@ export const create_routes = (app) => {
   );
 
   polka.get(
-    '/:discount/products/tags',
+    '/:discount/products/used_tags',
     async (req, res) => {
       const { discount } = req.params;
-      const items = await app.api.discounts.list_all_discount_products_tags(discount);
+      const items = await app.api.discounts.list_used_discount_products_tags(discount);
       res.sendJson(items);
     }
   ); 
@@ -99,7 +99,7 @@ export const create_routes = (app) => {
       const q = (/** @type {ApiQuery<ProductType>} */ (
         parse_query(req.query))
       );
-      const count = await app.api.discounts.count_collection_products_query(
+      const count = await app.api.discounts.count_discount_products_query(
         discount, q
       );
 

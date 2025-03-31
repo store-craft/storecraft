@@ -90,7 +90,7 @@ export const count_collection_products_query = (app) =>
 /**
  * @param {App} app
  */
-export const list_all_discount_products_tags = (app) => 
+export const list_used_discount_products_tags = (app) => 
   /**
    * @description List all the tags of all the products, that belong to a discount. 
    * This is helpful for building a filter system in the frontend if you know 
@@ -115,8 +115,8 @@ export const inter = app => {
     remove: regular_remove(app, db(app), 'discounts/remove'),
     list: regular_list(app, db(app), 'discounts/list'),
     list_discount_products: list_discount_products(app),
-    list_all_discount_products_tags: list_all_discount_products_tags(app),
-    count_collection_products_query: count_collection_products_query(app),
+    list_used_discount_products_tags: list_used_discount_products_tags(app),
+    count_discount_products_query: count_collection_products_query(app),
     count: count(app)
   }
 }

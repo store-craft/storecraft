@@ -1,15 +1,16 @@
 /**
- * @import { CollectionType, ProductType } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
+ * @import { 
+ * CollectionTypeUpsert, ProductType, ProductTypeUpsert 
+ * } from '../../api/types.api.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 import { ID } from '../../api/utils.func.js';
@@ -23,7 +24,7 @@ const handle_pr = create_handle('pr', file_name(import.meta.url));
 // virtual api of storecraft for insertion
 
 
-/** @type {(ProductType & idable_concrete)[]} */
+/** @type {ProductTypeUpsert[]} */
 const items = Array.from({length: 10}).map(
   (_, ix, arr) => {
     // 5 last items will have the same timestamps
@@ -37,12 +38,11 @@ const items = Array.from({length: 10}).map(
       id: ID('pr'),
       tags: [`tag_${ix}`],
       created_at: iso(jx + 1),
-      updated_at: iso(jx + 1)
     }
   }
 );
 
-/** @type {(CollectionType & idable_concrete)[]} */
+/** @type {(CollectionTypeUpsert)[]} */
 const collections_upsert = [
   {
     active: true,
@@ -67,12 +67,15 @@ const collections_upsert = [
  */
 export const create = app => {
 
-  /** @type {Test<ListTestContext<ProductType>>} */
+  /** @type {Test<QueryTestContext<ProductType, ProductTypeUpsert>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.products,
-      resource: 'products', events: { list_event: 'products/list' }
+      items: items, 
+      app, 
+      ops: app.api.products,
+      resource: 'products', 
+      events: { list_event: 'products/list' }
     }
   );
 
@@ -83,16 +86,17 @@ export const create = app => {
       try {
         for(const p of collections_upsert) {
           await app.api.collections.remove(p.handle);
-          await app.db.resources.collections.upsert(p);
+          await app.api.collections.upsert(p);
         }
 
         for(const p of items) {
           await app.api.products.remove(p.handle);
           // add collections
+          // @ts-ignore
           p.collections = collections_upsert;
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.resources.products.upsert(p);
+          await app.api.products.upsert(p);
         }
       } catch(e) {
         console.log(e)
@@ -101,7 +105,7 @@ export const create = app => {
     }
   );
 
-  add_list_integrity_tests(s);
+  add_query_list_integrity_tests(s, true);
 
   return s;
 }

@@ -3,12 +3,12 @@
  * @import { idable_concrete } from '../../database/types.public.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name, iso, add_list_integrity_tests,
+import { file_name, iso, add_query_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
 import { enums } from '../../api/index.js';
 import esMain from './utils.esmain.js';
@@ -20,7 +20,7 @@ import { App } from '../../index.js';
 // virtual api of storecraft for insertion
 
 /** 
- * @type {OrderData[]} 
+ * @type {OrderDataUpsert[]} 
  */
 const items = get_static_ids('order').map(
   (id, ix, arr) => {
@@ -29,7 +29,6 @@ const items = get_static_ids('order').map(
     return {
       id: id,
       created_at: iso(jx + 1),
-      updated_at: iso(jx + 1),
       status: {
         checkout: enums.CheckoutStatusEnum.created,
         payment: enums.PaymentOptionsEnum.authorized,
@@ -58,34 +57,19 @@ const items = get_static_ids('order').map(
  */
 export const create = app => {
 
-  /** @type {Test<ListTestContext<OrderData>>} */
+  /** @type {Test<QueryTestContext<OrderData, OrderDataUpsert>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.orders,
-      resource: 'orders', events: { list_event: 'orders/list' }
+      items: items, 
+      app, 
+      ops: app.api.orders,
+      resource: 'orders', 
+      events: { list_event: 'orders/list' }
     }
   );
 
-
-  s.before(
-    async (a) => { 
-      assert.ok(app.ready) 
-      try {
-        for(const p of items) {
-          await app.api.orders.remove(p.id);
-          // we bypass the api and upsert straight
-          // to the db because we control the time-stamps
-            await app.db.resources.orders.upsert(p);
-        }
-      } catch(e) {
-        console.log(e)
-        throw e;
-      }
-    }
-  );
-
-  add_list_integrity_tests(s);
+  add_query_list_integrity_tests(s);
 
   return s;
 }

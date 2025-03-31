@@ -2608,7 +2608,7 @@ const register_discounts = registry => {
   
   registry.registerPath({
     method: 'get',
-    path: `/${slug_base}/{id_or_handle}/products/tags`,
+    path: `/${slug_base}/{id_or_handle}/products/used_tags`,
     description: 'List all the tags of products in a discount, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a discount',
     summary: 'List All collection\'s products tags',
     tags,

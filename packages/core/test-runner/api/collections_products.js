@@ -72,9 +72,7 @@ export const create = app => {
     }
   );
 
-  // return s;
-
-  s('create', async () => {
+  s('collections->products', async () => {
 
     // upsert collections
     const cols = await promises_sequence(
@@ -120,6 +118,17 @@ export const create = app => {
     assert.ok(
       products_queried?.[0]?.handle===prs[0].handle,
       `failed list_collection_products for collection handle ${col_upsert[0].handle}`
+    );
+
+  });
+
+  s('collections->products', async () => {
+    const count = await app.api.collections.count_collection_products_query(
+      col_upsert[0].handle, {}
+    );
+    assert.ok(
+      count>=col_upsert.length, 
+      'count_collection_products_query failed'
     );
 
   });

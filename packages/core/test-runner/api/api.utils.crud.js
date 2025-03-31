@@ -2,7 +2,8 @@
  * @import { BaseType } from '../../api/types.api.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
  * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { Test } from 'uvu'
+ * @import { QueryTestContext, CrudTestContext, PartialBase } from './api.utils.types.js'
  */
 
 import * as assert from 'uvu/assert';
@@ -116,34 +117,10 @@ export const pick_random = items => {
 }
 
 /**
- * @typedef {Partial<BaseType>} PartialBase
- */
-
-/**
- * @template {PartialBase} [G=PartialBase]
- * @template {PartialBase} [U=PartialBase]
- * 
- * @typedef {object} CrudTestContext
- * @prop {Partial<U>[]} items
- * @prop {object} ops
- * @prop {(item: Partial<U>) => Promise<string>} [ops.upsert]
- * @prop {(id: string) => Promise<G>} [ops.get]
- * @prop {(id: string) => Promise<boolean>} [ops.remove]
- * @prop {object} events
- * @prop {PubSubEvent} events.upsert_event
- * @prop {PubSubEvent} events.get_event
- * @prop {PubSubEvent} events.remove_event
- * @prop {App} app
- * 
- */
-
-
-/**
  * A simple CRUD sanity
  * @template {PartialBase} [G=PartialBase]
  * @template {PartialBase} [U=PartialBase]
- * 
- * @param {import('uvu').uvu.Test<CrudTestContext<G, U>>} s 
+ * @param {Test<CrudTestContext<G, U>>} s 
  */
 export const add_sanity_crud_to_test_suite = s => {
     
@@ -277,11 +254,9 @@ const compare_tuples = (vec1, vec2) => {
 /**
  * @description Basic testing to see if a query result is satisfied:
  * - Test `limit` is correct
- * - Test `sortBy` by comapring consecutive items
+ * - Test `sortBy` by comparing consecutive items
  * - Test `start` / `end` ranges are respected
- * 
  * @template {PartialBase} T
- * 
  * @param {T[]} list the result of the query
  * @param {ApiQuery<any>} q the query used
  */
@@ -343,42 +318,48 @@ export const assert_query_list_integrity = (list, q) => {
 }
 
 /**
- * @template {PartialBase} [G=PartialBase]
- * @template {PartialBase} [U=PartialBase]
- * 
- * @typedef {object} ListTestContext
- * @prop {Partial<G>[]} items
- * @prop {keyof Omit<App["db"]["resources"], 'search'>} resource
- * @prop {object} ops
- * @prop {(item: G) => Promise<string>} [ops.upsert]
- * @prop {(id: string) => Promise<G>} [ops.get]
- * @prop {(id: string) => Promise<boolean>} [ops.remove]
- * @prop {(q: ApiQuery<G>) => Promise<G[]>} [ops.list]
- * @prop {object} [events]
- * @prop {PubSubEvent} events.list_event
- * @prop {App} app
- * 
+ * @import { withConcreteIdAndHandle } from '../../database/types.public.js'
  */
-
-
 /**
  * @description A simple CRUD sanity, we use it to test integrity of lists.
- * 
  * However, we have some assumptions:
- * 
  * 1. `items` were upserted before the test
  * 2. We have at least 10 items
  * 3. `updated_at` is an ISO of a timestamp starting from number `1`
- * 
- * 
- * 
- * @template {PartialBase} [G=PartialBase]
- * @template {PartialBase} [U=PartialBase]
- * 
- * @param {import('uvu').uvu.Test<ListTestContext<G, U>>} s 
+ * 4. the last 3 items have the same `created_at` timestamp
+ * @template {BaseType} G
+ * @template {Partial<BaseType>} U
+ * @param {Test<QueryTestContext<G, U>>} s 
+ * @param {boolean} [avoid_setup=false] 
  */
-export const add_list_integrity_tests = s => {
-  s('basic count() test',
+export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
+  if(!avoid_setup) {
+    s.before(
+      async (ctx) => { 
+        assert.ok(ctx.app.ready) 
+        try {
+          for(const p of ctx.items) {
+            await ctx.ops.remove(p.id);
+            // we bypass the api and upsert straight
+            // to the db because we control the time-stamps
+            const id = await ctx.ops.upsert(p);
+            // throw id
+            // if(ctx.resource==='notifications') {
+            //   throw {
+            //     id,
+            //     p
+            //   };
+            // }
+          }
+        } catch(e) {
+          console.log(e)
+          throw e;
+        }
+      }
+    );
+  }
+
+  s('basic statistics count() test',
     async (ctx) => {
       const count = await ctx.app.api.statistics.compute_count_of_query(
         ctx.resource, {}
@@ -391,7 +372,20 @@ export const add_list_integrity_tests = s => {
     }
   );
 
-  s('query startAt=(updated_at:iso(5)), sortBy=(updated_at), order=asc|desc, limit=3', 
+  s('basic collection count() test',
+    async (ctx) => {
+      const count = await ctx.ops.count(
+        {}
+      );
+
+      assert.ok(
+        count>=ctx.items.length,
+        'count < items.length'
+      )
+    }
+  );
+
+  s('query startAt=(created_at:iso(5)), sortBy=(created_at), order=asc|desc, limit=3', 
     async (ctx) => {
       let is_event_ok = false || !Boolean(ctx.events?.list_event);
       const limit = 3;
@@ -431,8 +425,11 @@ export const add_list_integrity_tests = s => {
         for(const p of list_asc) {
           const original_item = ctx.items.find(it => it.id===p.id);
           if(!original_item) {
-            console.log(`\nWarning: Did not find original item of inserted item !! likely due
-              to other competing items in the query, no big deal, but make sure to remove these old timestamps`);
+            console.log(
+              `\nWarning: Did not find original item of inserted item !! 
+              likely due to other competing items in the query, no big deal, 
+              but make sure to remove these old timestamps`
+            );
             continue;
           }
 
@@ -452,12 +449,12 @@ export const add_list_integrity_tests = s => {
   );
 
   
-  s('query startAt=(end_at:iso(5)), sortBy=(updated_at), order=asc|desc, limitToLast=2', 
+  s('query endAt=(created_at:iso(5)), sortBy=(created_at), order=asc|desc, limitToLast=2', 
     async (ctx) => {
       /** @type {ApiQuery<any>} */
       const q_asc = {
-        endAt: [['updated_at', iso(5)]],
-        sortBy: ['updated_at'],
+        endAt: [['created_at', iso(5)]],
+        sortBy: ['created_at'],
         order: 'asc',
         limitToLast: 2,
         expand: ['*']
@@ -506,8 +503,8 @@ export const add_list_integrity_tests = s => {
       const item = ctx.items.at(-2);
       /** @type {ApiQuery<any>} */
       const q = {
-        startAt: [['updated_at', item.updated_at], ['id', item.id]],
-        sortBy: ['updated_at', 'id'],
+        startAt: [['created_at', item.created_at], ['id', item.id]],
+        sortBy: ['created_at', 'id'],
         order: 'asc',
         limit: 2,
         expand: ['*']
@@ -528,8 +525,60 @@ export const add_list_integrity_tests = s => {
           const original_item = ctx.items.find(it => it.id===p.id);
 
           if(!original_item) {
-            console.log(`\nWarning: Did not find original item of inserted item !! likely due
-              to other competing items in the query, no big deal, but make sure to remove these old timestamps`);
+            console.log(
+              `\nWarning: Did not find original item of inserted item !! likely due
+              to other competing items in the query, no big deal, but make sure to 
+              remove these old timestamps`
+            );
+            continue;
+          }
+
+          assert.ok(
+            original_item, 'Did not find original item of inserted item !!'
+          );
+
+          assert_partial(p, original_item);
+        }
+
+      }
+
+    }
+
+  );
+
+  s('refined query, equals=(created_at:iso(9))', 
+    async (ctx) => {
+      // last 3 items have the same timestamps, so we refine by ID
+      // let's pick one before the last
+      const item = ctx.items.at(-2);
+      /** @type {ApiQuery<any>} */
+      const q = {
+        equals: [['created_at', item.created_at]],
+        sortBy: ['created_at', 'id'],
+        order: 'asc',
+        expand: ['*']
+      }
+
+      const list = await ctx.ops.list(q);
+
+      // console.log(list)
+      // console.log(items)
+
+      assert_query_list_integrity(list, q);
+      assert.ok(list.length>=3, 'should be >= 3');
+
+      { 
+        // for each list item find it's original seed item and make sure
+        // all of it's properties are getting back
+        for(const p of list) {
+          const original_item = ctx.items.find(it => it.id===p.id);
+
+          if(!original_item) {
+            console.log(
+              `\nWarning: Did not find original item of inserted item !! likely due
+              to other competing items in the query, no big deal, but make sure to 
+              remove these old timestamps`
+            );
             continue;
           }
 

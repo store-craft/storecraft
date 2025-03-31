@@ -1711,6 +1711,10 @@ export interface NotificationType extends BaseNotificationType, timestamps {
  * @description Notification upsert interface
  */
 export interface NotificationTypeUpsert extends Omit<BaseNotificationType, 'id'> {
+  /** 
+   * @description Optional `id` of notification
+   */
+  id?: string;
 }
 
 /** 

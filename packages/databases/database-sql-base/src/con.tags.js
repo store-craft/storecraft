@@ -28,6 +28,7 @@ const upsert = (driver) => {
             updated_at: item.updated_at,
             id: item.id,
             handle: item.handle,
+            attributes: JSON.stringify(item.attributes),
             values: JSON.stringify(item.values),
           });
         }

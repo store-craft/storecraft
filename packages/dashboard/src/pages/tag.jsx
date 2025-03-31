@@ -11,6 +11,7 @@ import MDEditor from '@/comps/md-editor.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
 import { useDocumentActions } from '@/hooks/use-document-actions.js'
+import Attributes from '@/comps/attributes.jsx'
 
 const root_schema = {
   name:'Root', comp: Div, 
@@ -35,6 +36,13 @@ const root_schema = {
       validator: values_validator ,
       comp: withCard(TagValues), 
       comp_params: { className: 'w-full' } 
+    },
+    {
+      key: 'attributes', name: 'Attributes', validate: false, 
+      editable: true, 
+      desc: 'Attributes can contain richer text values than tags',
+      comp: withCard(Attributes),  
+      comp_params: {className: 'w-full'} 
     },
     { 
       key: 'description', name: '📝 Description', type: 'text', validate: false, 

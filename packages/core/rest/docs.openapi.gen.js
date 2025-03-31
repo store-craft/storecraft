@@ -2977,7 +2977,6 @@ const register_quick_search = registry => {
       },
       ...error() 
     },
-    ...apply_security()
   });
 }
 

@@ -23,6 +23,7 @@ export const collect_config = async () => {
     auth_secret_access_token: crypto.randomBytes(64).toString('base64'),
     auth_secret_refresh_token: crypto.randomBytes(64).toString('base64'),
     auth_secret_forgot_password_token: crypto.randomBytes(64).toString('base64'),
+    auth_secret_confirm_email_token: crypto.randomBytes(64).toString('base64'),
     general_store_name: await withCancel(
       text(
         { 
@@ -53,7 +54,7 @@ export const collect_config = async () => {
           placeholder: 'support@storecraft.app',
         },
       )
-    )
+    ),
   }
 
   return {
@@ -67,6 +68,7 @@ export const collect_config = async () => {
           auth_secret_access_token: 'SC_AUTH_SECRET_ACCESS_TOKEN',
           auth_secret_refresh_token: 'SC_AUTH_SECRET_REFRESH_TOKEN',
           auth_secret_forgot_password_token: 'SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN',
+          auth_secret_confirm_email_token: 'SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN',
           checkout_reserve_stock_on: 'SC_CHECKOUT_RESERVE_STOCK_ON',
           general_confirm_email_base_url: 'SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL',
           general_forgot_password_confirm_base_url: 'SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL',

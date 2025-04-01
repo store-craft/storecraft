@@ -7,6 +7,9 @@ import { file_name } from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 import { verify_api_auth_result } from './auth.utils.js';
+import { jwt } from '../../crypto/public.js';
+import { CONFIRM_EMAIL_TOKEN, FORGOT_PASSWORD_IDENTITY_TOKEN } from '../../api/con.auth.logic.js';
+import { assert_partial_v2 } from './utils.js';
 
 
 export const admin_email = 'admin@sc.com';
@@ -23,7 +26,7 @@ export const create = app => {
   
   s.before(async () => { assert.ok(app.ready) });
   
-  s('remove and signup admin', async () => {
+  s('signup admin', async () => {
 
     await app.api.auth.removeByEmail(admin_email);
     await app.api.customers.remove(admin_email);
@@ -157,7 +160,248 @@ export const create = app => {
     unsub();
   });
 
-  s('apikey create, validate, list and remove', async () => {
+  s('change password admin', async () => {
+
+    /** @type {Partial<events>} */
+    const events  = {}
+    // record all events for later check
+    const unsub = app.pubsub.on(
+      '*',
+      (v) => {
+        events[v.event] = v.payload;
+      }
+    );
+
+    const auth_result = await app.api.auth.change_password(
+      {
+        user_id_or_email: admin_email,
+        current_password: admin_password,
+        new_password: 'new_password',
+        confirm_new_password: 'new_password'
+      }
+    );
+  
+    { // check auth result
+      const has_admin_role = auth_result.access_token.claims?.roles?.includes('admin')
+      assert.ok(has_admin_role, 'no admin role');
+      verify_api_auth_result(
+        app, auth_result, admin_email
+      );
+    }
+
+    { // try signin with old password
+      try {
+        await app.api.auth.signin({
+          email: admin_email,
+          password: admin_password
+        });
+        assert.unreachable('old password should not work');
+      } catch (e) {
+      }
+
+    }
+
+    { // try signin with new password
+      const api_auth_result = await app.api.auth.signin({
+        email: admin_email,
+        password: 'new_password'
+      });
+      verify_api_auth_result(
+        app, api_auth_result, admin_email
+      );
+    }
+
+    { // check auth/change-password event
+      const event = events['auth/change-password'];
+      assert.ok(event, 'event `auth/change-password` not found');
+      assert.equal(
+        event.email, admin_email, '`auth/change-password` email mismatch'
+      );
+    }
+
+    unsub();
+  });
+
+  s('forgot password request and confirm', async () => {
+
+    /** @type {Partial<events>} */
+    const events  = {}
+    // record all events for later check
+    const unsub = app.pubsub.on(
+      '*',
+      (v) => {
+        events[v.event] = v.payload;
+      }
+    );
+
+    await app.api.auth.forgot_password_request(
+      admin_email,
+    );
+
+    const event_forgot_password_token_generated = events['auth/forgot-password-token-generated'];
+
+    // console.log({events})
+  
+    { // check `auth/forgot-password-token-generated` event
+      assert.ok(
+        event_forgot_password_token_generated, 
+        'event `auth/forgot-password-token-generated` not found'
+      );
+      assert.equal(
+        event_forgot_password_token_generated.auth_user.email, admin_email, 
+        '`auth/forgot-password-token-generated` email mismatch'
+      );
+      // now verify the token
+      const verification_result = await jwt.verify(
+        app.config.auth_secret_forgot_password_token, 
+        event_forgot_password_token_generated.token, 
+        true
+      );
+      assert.ok(
+        verification_result.verified, 
+        'forgot password token not verified'
+      );
+      assert.ok(
+        verification_result.claims?.sub === admin_email, 
+        'forgot password claim failed \
+        `verification_result.claims?.sub === admin_email`'
+      );
+      assert.ok(
+        verification_result.claims?.aud === FORGOT_PASSWORD_IDENTITY_TOKEN, 
+        'forgot password claim failed \
+        `verification_result.claims?.aud === FORGOT_PASSWORD_IDENTITY_TOKEN`'
+      );
+    }
+
+    // now confirm the request
+    const confirm_result = await app.api.auth.forgot_password_request_confirm(
+      event_forgot_password_token_generated.token
+    )
+
+    { // test the confirmation result
+      assert.equal(
+        confirm_result.email,
+        admin_email,
+        'confirm result email mismatch'
+      )
+  
+      assert.ok(
+        confirm_result.password,
+        'confirm result password missing'
+      )
+    }
+
+    { // check `auth/forgot-password-token-confirm` event
+      const event = events['auth/forgot-password-token-confirmed'];
+      // console.log({event})
+      assert.ok(
+        event, 
+        'event `auth/forgot-password-token-confirmed` not found'
+      );
+      assert.equal(
+        event.email, 
+        confirm_result.email, 
+        '`auth/forgot-password-token-confirmed` email !== confirm result'
+      );
+    }
+
+    { // try signin with new password
+      const api_auth_result = await app.api.auth.signin({
+        email: admin_email,
+        password: confirm_result.password
+      });
+      verify_api_auth_result(
+        app, api_auth_result, admin_email
+      );
+    }
+
+    unsub();
+  });
+
+  s('confirm email and confirm', async () => {
+
+    /** @type {Partial<events>} */
+    const events  = {}
+    // record all events for later check
+    const unsub = app.pubsub.on(
+      '*',
+      (v) => {
+        events[v.event] = v.payload;
+      }
+    );
+
+    // first let's signup a new user
+    const email = 'confirm-email-tester@example.com';
+    const auth_user = await app.api.auth.signup(
+      {
+        email,
+        password: 'password'
+      }
+    );
+
+    const event_confirm_email_token_generated = events['auth/confirm-email-token-generated'];
+
+    { // check `auth/confirm-email-token-generated` event
+      assert.ok(
+        event_confirm_email_token_generated, 
+        'event `auth/confirm-email-token-generated` not found'
+      );
+      assert.equal(
+        event_confirm_email_token_generated.auth_user.email, 
+        email, 
+        '`auth/confirm-email-token-generated` email mismatch'
+      );
+      // now verify the token
+      const verification_result = await jwt.verify(
+        app.config.auth_secret_confirm_email_token, 
+        event_confirm_email_token_generated.token, 
+        true
+      );
+      assert.ok(
+        verification_result.verified, 
+        'forgot password token not verified'
+      );
+      assert.ok(
+        verification_result.claims?.sub === auth_user.user_id, 
+        'forgot password claim failed \
+        `verification_result.claims?.sub === auth_user.user_id`'
+      );
+      assert.ok(
+        verification_result.claims?.aud === CONFIRM_EMAIL_TOKEN, 
+        'forgot password claim failed \
+        `verification_result.claims?.aud === CONFIRM_EMAIL_TOKEN`'
+      );
+    }
+
+    // now confirm the token
+    await app.api.auth.confirm_email(
+      event_confirm_email_token_generated.token
+    )
+
+    // console.log({events})
+
+    { // check `auth/confirm-email-token-confirmed` event
+      const event = events['auth/confirm-email-token-confirmed'];
+      assert.ok(
+        event, 
+        'event `auth/confirm-email-token-confirmed` not found'
+      );
+      assert.ok(
+        event.confirmed_mail, 
+        'auth user not confirmed'
+      );
+      assert.equal(
+        event.email, 
+        email, 
+        '`auth/confirm-email-token-confirmed` email !== user email'
+      );
+    }
+
+    unsub();
+  });
+
+
+  s('apikeys create, validate, list and remove', async () => {
   
     /** @type {Partial<events>} */
     const events  = {}
@@ -197,7 +441,7 @@ export const create = app => {
           'auth/upsert email mismatch'
         );
       }
-      
+
     }
 
     { // test list only api keys

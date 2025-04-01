@@ -81,7 +81,7 @@ async (body) => {
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
   const confirm_email_token = await jwt.create(
-    app.config.auth_secret_access_token, 
+    app.config.auth_secret_confirm_email_token, 
     { sub: id, aud: CONFIRM_EMAIL_TOKEN },
     jwt.JWT_TIMES.WEEK
   );
@@ -657,7 +657,10 @@ export const confirm_email = (app) =>
   
     const  { 
       verified, claims
-    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    } = await jwt.verify(
+      app.config.auth_secret_confirm_email_token, 
+      token, true
+    );
     
     assert(verified, 'auth/error');
     assert(claims.aud===CONFIRM_EMAIL_TOKEN, 'auth/error');

@@ -100,6 +100,7 @@ export type events = {
   'auth/remove': Partial<AuthUserType>
   'auth/upsert': Partial<AuthUserType>
   'auth/apikey-created': Partial<AuthUserType>
+  'auth/change-password': Partial<AuthUserType> 
   'auth/confirm-email-token-generated': {
     auth_user: Partial<AuthUserType>,
     /** confirm email token */
@@ -112,7 +113,6 @@ export type events = {
     token: string
   }
   'auth/forgot-password-token-confirmed': Partial<AuthUserType>
-  'auth/change-password': Partial<AuthUserType> 
 
 
   /** email, before sending */

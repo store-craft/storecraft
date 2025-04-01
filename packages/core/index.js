@@ -71,6 +71,7 @@ export class App {
     auth_secret_access_token: 'SC_AUTH_SECRET_ACCESS_TOKEN',
     auth_secret_refresh_token: 'SC_AUTH_SECRET_REFRESH_TOKEN',
     auth_secret_forgot_password_token: 'SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN',
+    auth_secret_confirm_email_token: 'SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN',
     checkout_reserve_stock_on: 'SC_CHECKOUT_RESERVE_STOCK_ON',
     general_confirm_email_base_url: 'SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL',
     general_forgot_password_confirm_base_url: 'SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL',
@@ -284,6 +285,8 @@ export class App {
     this.#config = {
       auth_secret_access_token: env[App.EnvConfig.auth_secret_access_token],
       auth_secret_refresh_token: env[App.EnvConfig.auth_secret_refresh_token],
+      auth_secret_confirm_email_token: env[App.EnvConfig.auth_secret_confirm_email_token],
+      auth_secret_forgot_password_token: env[App.EnvConfig.auth_secret_forgot_password_token],
       auth_admins_emails: env[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
       // @ts-ignore

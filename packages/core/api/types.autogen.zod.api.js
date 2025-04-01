@@ -70,7 +70,7 @@ const jWTClaimsSchema = z.object({
 
 export const authBaseTypeSchema = z.object({
   email: z.string().email().describe("Email of user"),
-  password: z.string().min(4).max(20).describe("password"),
+  password: z.string().min(4).max(256).describe("password"),
 });
 
 export const roleSchema = z

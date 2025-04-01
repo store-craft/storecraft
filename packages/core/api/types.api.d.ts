@@ -10,14 +10,12 @@
 export interface StorecraftConfig  {
 
   /**
-   *  
    * @description The store name
    * `platform.env.SC_GENERAL_STORE_NAME` environment
    */
   general_store_name?: string;
 
   /**
-   *  
    * @description The store `website`
    * `platform.env.SC_GENERAL_STORE_WEBSITE` environment
    */
@@ -25,7 +23,6 @@ export interface StorecraftConfig  {
 
 
   /**
-   *  
    * @description The store `logo` url
    * `platform.env.SC_GENERAL_STORE_LOGO_URL` environment
    */
@@ -33,21 +30,18 @@ export interface StorecraftConfig  {
 
 
   /**
-   *  
    * @description The store `description`
    * `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
    */
   general_store_description?: string;
 
   /**
-   *  
    * @description The store support email
    * `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
    */
   general_store_support_email?: string;
 
   /**
-   *  
    * @description The store `email-confirm` base url into which a template
    * action button will link into including a `token` as a query parameter.
    * 
@@ -64,7 +58,6 @@ export interface StorecraftConfig  {
   general_confirm_email_base_url?: string;
 
   /**
-   *  
    * @description The store `forgot-password` base url, into which template action
    * button will link into including a `token` as a query parameter.
    * 
@@ -81,35 +74,36 @@ export interface StorecraftConfig  {
   general_forgot_password_confirm_base_url?: string;
   
   /**
-   *  
    * @description Seed admin emails, if absent will be infered at init by 
    * `platform.env.SC_AUTH_ADMIN_EMAILS` environment as CSV of emails 
    */
   auth_admins_emails?: string[];
 
   /** 
-   * 
    * @description access token signing secret, if absent will be infered 
    * at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  
    */
   auth_secret_access_token?: string;
 
   /** 
-   * 
    * @description refresh token signing secret, if absent will be infered at 
    * init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment  
    */
   auth_secret_refresh_token?: string;
 
   /** 
-   * 
    * @description forgot password token signing secret, if absent will be infered at 
    * init by `platform.env.SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN` environment  
    */
   auth_secret_forgot_password_token?: string;
 
   /** 
-   * 
+   * @description Confirm email signing secret, if absent will be infered at 
+   * init by `platform.env.SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN` environment  
+   */
+  auth_secret_confirm_email_token?: string;
+
+  /** 
    * @description (Optional) automatically reserve stock, we recommend to use `never`.
    * Depending on your needs you can alter this setting.
    * if absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` 
@@ -119,7 +113,6 @@ export interface StorecraftConfig  {
   checkout_reserve_stock_on?: 'checkout_create' | 'checkout_complete' | 'never'
 
   /** 
-   * 
    * @description (Optional) Once object `storage` is used, you may have connected a 
    * **CDN** to buckets to take advantage of faster assets serving instead of serving 
    * from your server / the storage service directly. If you are using an cloud based 
@@ -299,7 +292,7 @@ export interface AuthBaseType  {
    * 
    * @description password
    * @minLength 4
-   * @maxLength 20   
+   * @maxLength 256   
    */
   password: string;
 }

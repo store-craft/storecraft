@@ -35,6 +35,9 @@ const upsert = (driver) => {
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
+            attributes: JSON.stringify(item.attributes),
+            description: item.description,
+            active: item.active ? 1 : 0,
             roles: JSON.stringify(item.roles),
             // firstname: item.firstname,
             // lastname: item.lastname

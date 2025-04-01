@@ -1,4 +1,5 @@
 export * as auth from './auth.js'
+export * as auth_providers from './auth_providers.js'
 
 export * as quick_search from './quick_search.js'
 

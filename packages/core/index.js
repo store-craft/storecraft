@@ -334,38 +334,41 @@ export class App {
       return Promise.resolve(this);
     
     /** @type {App} */
-    const app = (/** @type {never} */ (this));
+    const app_casted = (/** @type {never} */ (this));
 
     try{
       // first let's settle config
       this.#settle_config_after_init();
 
       // settle database
-      this.db?.init?.(app);
+      this.db?.init?.(app_casted);
 
       // settle storage
-      this.storage?.init?.(app);
+      this.storage?.init?.(app_casted);
 
       // settle programmatic API
-      this.api = create_api(app);
+      // we do not cast the app here, because we need to pass the original
+      // object to the API for some typescript tricks later.
+      this.api = create_api(this);
+
       // settle REST-API
-      this.#rest_controller = create_rest_api(app, this.config);
+      this.#rest_controller = create_rest_api(app_casted, this.config);
   
       // settle extensions
       for(const ext_handle in this.extensions) {
         const ext = this.extension(ext_handle);
-        ext?.onInit?.(app);
+        ext?.onInit?.(app_casted);
       }
 
       // settle payment gateways
       for(const handle in this.gateways) {
         const gateway = this.gateway(handle);
-        gateway?.onInit?.(app);
+        gateway?.onInit?.(app_casted);
       }
 
       // settle ai provider
       if(this.#ai_chat_provider) {
-        this.#ai_chat_provider.onInit(app);
+        this.#ai_chat_provider.onInit(app_casted);
       }
 
       // settle base agents
@@ -377,20 +380,20 @@ export class App {
 
         for(const handle in this.#agents) {
           const ag = this.#agents[handle];
-          ag?.init?.(app);
+          ag?.init?.(app_casted);
         }
       }
   
       // settle payment gateways
       for(const handle in this.auth_providers) {
         const ap = this.auth_providers[handle];
-        ap?.init?.(app);
+        ap?.init?.(app_casted);
       }
 
       // settle vector store events
       if(this.vectorstore) {
-        this.vectorstore.onInit(app);
-        this.vectorstore?.embedder?.onInit(app);
+        this.vectorstore.onInit(app_casted);
+        this.vectorstore?.embedder?.onInit(app_casted);
         this.pubsub.on(
           'products/upsert',
           async (evt) => {
@@ -422,7 +425,7 @@ export class App {
       }
 
       // settle mailer
-      this.mailer?.onInit?.(app);
+      this.mailer?.onInit?.(app_casted);
   
       this.#is_ready = true;
 

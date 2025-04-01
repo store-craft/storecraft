@@ -222,6 +222,10 @@
       "import": "./auth/providers/x/index.js",
       "types": "./auth/providers/x/types.public.d.ts"
     },
+    "./auth/providers/dummy": {
+      "import": "./auth/providers/dummy/index.js",
+      "types": "./auth/providers/dummy/types.public.d.ts"
+    },
     "./auth/*": {
       "import": "./auth/*"
     }

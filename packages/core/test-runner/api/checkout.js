@@ -54,7 +54,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { }
+    {}
   );
 
   s.before(

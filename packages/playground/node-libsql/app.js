@@ -25,6 +25,7 @@ import { GoogleAuth } from "@storecraft/core/auth/providers/google";
 import { GithubAuth } from "@storecraft/core/auth/providers/github";
 import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
 import { XAuth } from "@storecraft/core/auth/providers/x";
+import { DummyAuth } from "@storecraft/core/auth/providers/dummy";
 
 export const app = new App(
   {
@@ -71,6 +72,7 @@ export const app = new App(
     google: new GoogleAuth(),
     github: new GithubAuth(),
     facebook: new FacebookAuth(),
+    dummy: new DummyAuth(),
     x: new XAuth(),
   }
 )

@@ -37,7 +37,10 @@ export class PubSub {
    * @param {E} event 
    */
   has(event) {
-    return this.#subscribersOf(event).length > 0;
+    return (
+      (this.#subscribersOf(event).length > 0) ||
+      (this.#subscribersOf('*').length > 0)
+    );
   }
 
   /**

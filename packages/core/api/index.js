@@ -26,9 +26,9 @@ export * as enums from './types.api.enums.js'
 import { App } from '../index.js';
 
 /**
- * 
- * @param {App} app 
- */
+ * @template {App} T
+ * @param {T} app 
+*/  
 export const create_api = app => {
   
   return {

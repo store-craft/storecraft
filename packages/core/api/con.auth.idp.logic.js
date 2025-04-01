@@ -16,21 +16,23 @@ export const ATTRIBUTE_OAUTH_PROVIDER = 'OAUTH_PROVIDER'
 export const ATTRIBUTE_PICTURE = 'PICTURE'
 
 /**
- * @param {App} app 
- */  
+ * @template {App} T
+ * @param {T} app 
+*/  
 export const create_auth_uri = (app) => 
   /**
    * @description Get Identity provider's URI for web apps
-   * @param {OAuthProviderCreateURIParams} params 
+   * @param {Omit<OAuthProviderCreateURIParams, 'provider'> & { provider: keyof T["auth_providers"] }} params 
    * @returns {Promise<OAuthProviderCreateURIResponse>}
    */
   async (params) => {
 
-    const provider = app.auth_providers?.[params?.provider];
+    const handle = String(params?.provider);
+    const provider = app.auth_providers?.[handle];
 
     assert(
       provider,
-      `Identity Provider ${params.provider} not found`
+      `Identity Provider ${handle} not found`
     );
 
     const uri = await provider.generateAuthUri(
@@ -39,34 +41,34 @@ export const create_auth_uri = (app) =>
     // console.log({uri})
     assert(
       uri,
-      `Identity Provider ${params.provider} does not have a web consent uri`
+      `Identity Provider ${handle} does not have a web consent uri`
     );
 
     return {
       uri,
-      provider: params.provider
+      provider: handle
     }
   
   }
     
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
  */  
 export const sign_with_identity_provider = (app) => 
   /**
    * @description Signin / Signup with Identity Provider
-   * 
-   * @param {SignWithOAuthProviderParams} params 
-   * 
+   * @param {Omit<SignWithOAuthProviderParams, 'provider'> & { provider: keyof T["auth_providers"] }} params 
    * @returns {Promise<ApiAuthResult>}
    */
   async (params) => {
 
-    const provider = app.auth_providers?.[params?.provider];
+    const handle = String(params?.provider);
+    const provider = app.auth_providers?.[handle];
     
     assert(
       provider,
-      `Identity Provider ${params.provider} not found`
+      `Identity Provider ${handle} not found`
     );
 
     const response = await provider.signWithAuthorizationResponse(
@@ -102,7 +104,7 @@ export const sign_with_identity_provider = (app) =>
           attributes: [
             {
               key: ATTRIBUTE_OAUTH_PROVIDER,
-              value: params.provider
+              value: handle
             },
             {
               key: ATTRIBUTE_PICTURE,
@@ -191,7 +193,8 @@ export const sign_with_identity_provider = (app) =>
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
 */  
 export const identity_providers = (app) => 
   /**

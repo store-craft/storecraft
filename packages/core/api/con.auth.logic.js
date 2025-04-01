@@ -780,9 +780,9 @@ export const count = (app) =>
   
 
 /**
- * 
- * @param {App} app 
- */
+ * @template {App} T
+ * @param {T} app 
+*/  
 export const inter = app => {
 
   return {

@@ -39,8 +39,8 @@ const upsert = (driver) => {
             description: item.description,
             active: item.active ? 1 : 0,
             roles: JSON.stringify(item.roles),
-            // firstname: item.firstname,
-            // lastname: item.lastname
+            firstname: item.firstname,
+            lastname: item.lastname
           });
         }
       );

@@ -2,7 +2,7 @@ import type { Trouter } from './trouter/index.js';
 
 export type PartialURL = Partial<URL>;
 
-export type VPolkaRequest = Request & {
+export type VPolkaRequest = Partial<Request> & {
   // path params
   params?: Record<string, any>
   // query search params
@@ -21,29 +21,29 @@ export type VPolkaRequest = Request & {
 type ResponseBody = ReadableStream | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | string | undefined;
 
 export interface VPolkaResponse {
-  headers: Headers;
-  status: number;
-  statusText: string;
-  body: ResponseBody;
-  finished: boolean;
+  headers?: Headers;
+  status?: number;
+  statusText?: string;
+  body?: ResponseBody;
+  finished?: boolean;
 
   /**
    * finish and create a Response out of it
    * @param body 
    * @returns {Response}
    */
-  send: (body?: ResponseBody) => VPolkaResponse
-  end: () => VPolkaResponse
-  sendJson: (o: Object) => VPolkaResponse
-  sendHtml: (o: string) => VPolkaResponse
-  sendText: (o: string) => VPolkaResponse
-  sendBlob: (o: Blob) => VPolkaResponse
-  sendReadableStream: (o: ReadableStream) => VPolkaResponse
-  sendArrayBuffer: (o: ArrayBuffer) => VPolkaResponse
-  sendSearchParams: (o: URLSearchParams) => VPolkaResponse
-  sendFormData: (o: FormData) => VPolkaResponse
-  sendServerSentEvents: (o: ReadableStream) => VPolkaResponse
-  setStatus: (code: number, text?: string) => VPolkaResponse
+  send?: (body?: ResponseBody) => VPolkaResponse
+  end?: () => VPolkaResponse
+  sendJson?: (o: Object) => VPolkaResponse
+  sendHtml?: (o: string) => VPolkaResponse
+  sendText?: (o: string) => VPolkaResponse
+  sendBlob?: (o: Blob) => VPolkaResponse
+  sendReadableStream?: (o: ReadableStream) => VPolkaResponse
+  sendArrayBuffer?: (o: ArrayBuffer) => VPolkaResponse
+  sendSearchParams?: (o: URLSearchParams) => VPolkaResponse
+  sendFormData?: (o: FormData) => VPolkaResponse
+  sendServerSentEvents?: (o: ReadableStream) => VPolkaResponse
+  setStatus?: (code: number, text?: string) => VPolkaResponse
 }
 
 export interface IError extends Error {

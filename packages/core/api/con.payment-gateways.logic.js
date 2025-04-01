@@ -65,7 +65,7 @@ export const webhook = (app) =>
   /**
    * @description `Get` payment gateway `info` and `config` by it's `handle`
    * @param {string} gateway_handle 
-   * @param {Request} request
+   * @param {Partial<Request>} request
    * @param {ApiRequest} request
    * @param {ApiResponse} response
    */

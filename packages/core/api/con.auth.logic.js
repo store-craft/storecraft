@@ -469,6 +469,11 @@ async () => {
   }
 }
 
+export const email_password_to_basic = (email='', password='') => {
+  const a = `${email}:${password}`;
+  return encode(a, true);
+}
+
 /**
  * @description Parse the `apikey` into `email` and `password`
  * @param {ApiKeyResult} body 

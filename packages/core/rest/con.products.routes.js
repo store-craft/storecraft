@@ -7,7 +7,7 @@
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
-import { authorize_by_roles } from './con.auth.middle.js'
+import { authorize_admin } from './con.auth.middle.js'
 import { parse_expand, parse_query } from '../api/utils.query.js'
 
 /**
@@ -19,7 +19,7 @@ export const create_routes = (app) => {
   /** @type {ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
+  const middle_authorize_admin = authorize_admin(app);
 
   // save 
   polka.post(

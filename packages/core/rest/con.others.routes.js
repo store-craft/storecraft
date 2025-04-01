@@ -1,7 +1,7 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
-import { authorize_by_roles } from './con.auth.middle.js';
+import { authorize_admin } from './con.auth.middle.js';
 import openapi_html from './docs.openapi.scalar.html.js'
 import openapi_json from './openapi.json' with { type: 'json' }
 
@@ -30,7 +30,7 @@ export const create_routes = (app) => {
 
   polka.get(
     '/settings',
-    authorize_by_roles(app, ['admin']),
+    authorize_admin(app),
     async (req, res) => {
       res.sendJson(app.config);
     }

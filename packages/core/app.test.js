@@ -1,12 +1,12 @@
 import { App } from './index.js';
 import { DummyMailer } from './mailer/dummy-mailer.js';
 import { NodePlatform } from './platform/node/index.js';
-import  { api } from './test-runner/index.js';
+import  { api, rest } from './test-runner/index.js';
 import { SQLite } from '@storecraft/database-sqlite';
 import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js';
 import { admin_email } from './test-runner/api/auth.js';
 
-export const create_app = async () => {
+export const create_app = async (print_banner=true) => {
   const app = new App(
     {
       auth_admins_emails: [admin_email],
@@ -24,7 +24,7 @@ export const create_app = async () => {
     new DummyMailer()
   );
  
-  await app.init();
+  await app.init(print_banner);
   await migrateToLatest(app.db, false);
   
   return app;
@@ -33,14 +33,27 @@ export const create_app = async () => {
 async function test() {
   const app = await create_app();
 
-  Object.entries(api).slice(0, -1).forEach(
-    ([name, runner]) => {
-      runner.create(app).run();
-    }
-  );
-  const last_test = Object.values(api).at(-1).create(app);
-  last_test.after(async () => { await app.db.disconnect() });
-  last_test.run();
+  { // test api
+    // Object.entries(api).slice(0, -1).forEach(
+    //   ([name, runner]) => {
+    //     runner.create(app).run();
+    //   }
+    // );
+    // const last_test = Object.values(api).at(-1).create(app);
+    // last_test.run();
+  }
+
+  { // test rest
+    Object.entries(rest).slice(0, -1).forEach(
+      ([name, runner]) => {
+        runner.create(app).run();
+      }
+    );
+    const last_test = Object.values(rest).at(-1).create(app);
+    last_test.after(async () => { await app.db.disconnect() });
+    last_test.run();
+  }
+
 }
 
 test();

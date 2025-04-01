@@ -7,7 +7,7 @@
  */
 
 import * as assert from 'uvu/assert';
-import { basename } from "node:path";
+import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { App } from '../../index.js'
 import { assert_async_throws, assert_partial, assert_partial_v2 } from './utils.js';
@@ -30,7 +30,7 @@ export const iso = number => {
  * @param {string | URL} meta_url 
  */
 export const file_name = (meta_url) => {
-  return basename(fileURLToPath(meta_url));
+  return basename(dirname(fileURLToPath(meta_url))) + '/' + basename(fileURLToPath(meta_url));
 }
 
 

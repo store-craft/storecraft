@@ -34,13 +34,13 @@ async function test() {
   const app = await create_app();
 
   { // test api
-    // Object.entries(api).slice(0, -1).forEach(
-    //   ([name, runner]) => {
-    //     runner.create(app).run();
-    //   }
-    // );
-    // const last_test = Object.values(api).at(-1).create(app);
-    // last_test.run();
+    Object.entries(api).slice(0, -1).forEach(
+      ([name, runner]) => {
+        runner.create(app).run();
+      }
+    );
+    const last_test = Object.values(api).at(-1).create(app);
+    last_test.run();
   }
 
   { // test rest

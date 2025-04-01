@@ -159,6 +159,16 @@ export const create = app => {
 
   s('apikey create, validate, list and remove', async () => {
   
+    /** @type {Partial<events>} */
+    const events  = {}
+    // record all events for later check
+    const unsub = app.pubsub.on(
+      '*',
+      (v) => {
+        events[v.event] = v.payload;
+      }
+    );
+    
     const apikey_created = await app.api.auth.create_api_key();
     const isvalid = await app.api.auth.verify_api_key({
       apikey: apikey_created.apikey
@@ -167,8 +177,30 @@ export const create = app => {
     assert.ok(isvalid, 'apikey is invalid');
     
     const apikey_created_decoded_email = atob(apikey_created.apikey).split(':').at(0);
-    
-    { // now list only api keys
+
+    { // check `auth/apikey-created` and `auth/upsert` events after apikey creation
+
+      { // check auth/apikey-created
+        const event = events['auth/apikey-created'];
+        assert.ok(event, 'event not found');
+        assert.equal(
+          event.email, apikey_created_decoded_email, 
+          'auth/apikey-created email mismatch'
+        );
+      }
+  
+      { // check auth/upsert
+        const event = events['auth/upsert'];
+        assert.ok(event, 'event not found');
+        assert.equal(
+          event.email, apikey_created_decoded_email, 
+          'auth/upsert email mismatch'
+        );
+      }
+      
+    }
+
+    { // test list only api keys
       const apikeys = await app.api.auth.list_all_api_keys_info();
       let is_apikey_created_present = false;
 
@@ -179,25 +211,20 @@ export const create = app => {
           is_apikey_created_present = true;
         }
 
-        assert.ok(apikey.tags.includes('apikey'), 'invalid tag for api key');
+        assert.ok(
+          apikey.tags.includes('apikey'), 
+          'invalid tag for api key'
+        );
       }
 
-      assert.ok(is_apikey_created_present, 'created api key was not found !');
-
-      // now find the `apikey_created` in the list
+      assert.ok(
+        is_apikey_created_present, 
+        'created api key was not found !'
+      );
 
     }
 
-    { 
-      let is_event_ok = false;
-      const unsub = app.pubsub.on(
-        'auth/remove',
-        (v) => {
-          is_event_ok=v.payload.email===apikey_created_decoded_email;
-        }
-      );
-  
-      // now remove
+    { // test auth remove
       await app.api.auth.remove_auth_user(apikey_created_decoded_email);
 
       const apikeys = await app.api.auth.list_all_api_keys_info();
@@ -207,12 +234,19 @@ export const create = app => {
         'apikey could not be removed'
       );
 
-      assert.ok(is_event_ok, 'event error');
+      { // check auth/remove event
+        const event = events['auth/remove'];
+        assert.ok(event, 'event not found');
+        assert.equal(
+          event.email, apikey_created_decoded_email, 
+          'auth/remove email mismatch'
+        );
+      }
 
-      unsub();
-  
+      
     }
-
+    
+    unsub();
   });
   
   return s;

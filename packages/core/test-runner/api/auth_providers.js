@@ -11,10 +11,7 @@ import { GithubAuth } from '../../auth/providers/github/index.js';
 import { FacebookAuth } from '../../auth/providers/facebook/index.js';
 import { XAuth } from '../../auth/providers/x/index.js';
 import { DummyAuth } from '../../auth/providers/dummy/index.js';
-
-
-export const admin_email = 'admin@sc.com';
-export const admin_password = 'password';
+import { verify_api_auth_result } from './auth.utils.js';
 
 /**
  * 
@@ -102,19 +99,15 @@ export const create = app => {
           {
             provider: 'dummy', 
             authorization_response,
-            redirect_uri: 'https://example.com/auth/google/callback',
+            redirect_uri: 'https://example.com/auth/dummy/callback',
           }
         );
 
         // sanity
-        assert.ok(api_auth_result, 'no result');
-        assert.ok(api_auth_result.access_token, 'no access_token');
-        assert.ok(api_auth_result.refresh_token, 'no refresh_token');
-        assert.ok(api_auth_result.user_id, 'no user_id');
-        assert.ok(api_auth_result.token_type, 'no token_type');
-        assert.ok(api_auth_result.user_id, 'no user_id');
-        assert.ok(api_auth_result.access_token.claims, 'no claims');
-
+        verify_api_auth_result(
+          app, api_auth_result
+        );
+  
         // console.log({api_auth_result});
         // console.log({events});
 
@@ -125,7 +118,6 @@ export const create = app => {
             event.email===api_auth_result.access_token.claims.email, 
             'emails not matching'
           );
-
         }
               
         { // test `auth/upsert` event
@@ -145,7 +137,6 @@ export const create = app => {
             'emails not matching'
           );
         }
-
       }
 
       { // now let's sign a second time user, this should trigger a signin
@@ -153,18 +144,14 @@ export const create = app => {
           {
             provider: 'dummy', 
             authorization_response,
-            redirect_uri: 'https://example.com/auth/google/callback',
+            redirect_uri: 'https://example.com/auth/dummy/callback',
           }
         );
 
         // sanity
-        assert.ok(api_auth_result, 'no result');
-        assert.ok(api_auth_result.access_token, 'no access_token');
-        assert.ok(api_auth_result.refresh_token, 'no refresh_token');
-        assert.ok(api_auth_result.user_id, 'no user_id');
-        assert.ok(api_auth_result.token_type, 'no token_type');
-        assert.ok(api_auth_result.user_id, 'no user_id');
-        assert.ok(api_auth_result.access_token.claims, 'no claims');
+        verify_api_auth_result(
+          app, api_auth_result
+        );
 
         // console.log({api_auth_result});
         // console.log({events: JSON.stringify(events, null, 2)});

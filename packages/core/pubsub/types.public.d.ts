@@ -1,5 +1,6 @@
 import type { App } from '../types.public.js';
 import type { 
+  ApiAuthResult,
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
   StorefrontType, StorefrontTypeUpsert, TagType, TemplateType 
@@ -95,7 +96,7 @@ export type events = {
 
   'auth/signup': Partial<AuthUserType>
   'auth/signin': Partial<AuthUserType>
-  'auth/refresh': Partial<AuthUserType>
+  'auth/refresh': Partial<ApiAuthResult>
   'auth/remove': Partial<AuthUserType>
   'auth/upsert': Partial<AuthUserType>
   'auth/apikey-created': Partial<AuthUserType>

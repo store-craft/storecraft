@@ -372,7 +372,7 @@ async (body) => {
     }, jwt.JWT_TIMES.HOUR
   );
 
-  return {
+  const api_auth_result =  {
     token_type: 'Bearer',
     user_id: access_token.claims.sub,
     access_token, 
@@ -381,6 +381,17 @@ async (body) => {
       claims: claims
     }
   }
+
+  { // dispatch event
+    if(app.pubsub.has('auth/refresh')) {
+      await app.pubsub.dispatch(
+        'auth/refresh',
+        api_auth_result
+      );
+    }
+  }
+
+  return api_auth_result;
 }
 
 
@@ -620,7 +631,7 @@ async (id_or_email) => {
     }
   }
 
-  await app.db.resources.auth_users.remove(
+  return await app.db.resources.auth_users.remove(
     id_or_email
   );
 

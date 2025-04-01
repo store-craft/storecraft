@@ -4,11 +4,12 @@ import { NodePlatform } from './platform/node/index.js';
 import  { api } from './test-runner/index.js';
 import { SQLite } from '@storecraft/database-sqlite';
 import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js';
+import { admin_email } from './test-runner/api/auth.js';
 
 export const create_app = async () => {
   const app = new App(
     {
-      auth_admins_emails: ['admin@sc.com'],
+      auth_admins_emails: [admin_email],
       auth_secret_access_token: 'auth_secret_access_token',
       auth_secret_refresh_token: 'auth_secret_refresh_token'
     }

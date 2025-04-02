@@ -112,13 +112,33 @@ export const where_id_or_handle_table = (id_or_handle) => {
  */
 
 /**
- * helper to delete entity values
+ * helper to delete entity values from conjunction table.
+ * 
+ * Usually in entity tables, the (`value`, `reporter`) pair maps to 
+ * (`secondary_entity_id`, `secondary_entity_handle`).
+ * 
+ * 1. This is true for all entity tables except of `entity_to_tags_projections`, 
+ * `entity_to_search_terms`, `entity_to_media`.
+ * 2. In those other entity tables, usually:
+ *  - `value` identifies an entity
+ *  - `reporter` handle identifies an entity in tables `products_to_collections`, 
+ * `products_to_discounts`, `products_to_variants`, `products_to_related_products`
+ *  - `reporter` does not identify an entity in `storefronts_to_other` because it 
+ * hosts many resource types (for example, a post has the same handle as a product)
+ *    - `reporter` + `context` identifies a secondary identity in `storefronts_to_other`
+ * 
+ * Please consult the full documentation about interpretation of the entity 
+ * tables in `../types.sql.tables.jd.ts`.
+ * 
  * Consult {@link '../types.sql.tables.jd.ts'} for the list of meaningful entity tables
- * and their interpretations.
+ * and their interpretations. and take a look at the database, it is actually
+ * quite simple
  * 
  * @param {EntityTableKeys} entity_table_name 
  */
-export const delete_entity_values_by_value_or_reporter_and_context = (entity_table_name) => {
+export const delete_entity_values_by_value_or_reporter_and_context = (
+  entity_table_name
+) => {
   /**
    * 
    * @param {Kysely<Database>} trx 
@@ -148,12 +168,20 @@ export const delete_entity_values_by_value_or_reporter_and_context = (entity_tab
 
 /**
  * helper to delete entity values
+ * 
  * 1. either by `entity_id` which always identifies an entity.
- * 2. or by `entity_handle` which identifies an entity for some entity tables such as `products_to_collections`, `products_to_discounts`, `products_to_variants`, `products_to_related_products`, `storefronts_to_other`
- * 3. or by `entity_handle` + `context` which identifies an entity for some entity tables such as `entity_to_tags_projections`, `entity_to_search_terms`, `entity_to_media`
- * - `entity_handle` by itself does not always identify an entity, but `entity_handle` + `context` does.
- * for example, we may have a product and a collection with the same `entity_handle` in the `entity_to_tags_projections` table, 
- * but they are different entities. Therefore, if we naively delete by `entity_handle`, we may delete more entities than intended.
+ * 2. or by `entity_handle` which identifies an entity for some entity tables 
+ * such as `products_to_collections`, `products_to_discounts`, `products_to_variants`, 
+ * `products_to_related_products`, `storefronts_to_other`
+ * 3. or by `entity_handle` + `context` which identifies an entity for some entity tables 
+ * such as `entity_to_tags_projections`, `entity_to_search_terms`, `entity_to_media`
+ * 
+ * - `entity_handle` by itself does not always identify an entity, 
+ * but `entity_handle` + `context` does.
+ * 
+ * for example, we may have a product and a collection with the same `entity_handle` 
+ * in the `entity_to_tags_projections` table, but they are different entities. 
+ * Therefore, if we naively delete by `entity_handle`, we may delete more entities than intended.
  * 
  * @param {EntityTableKeys} entity_table_name 
  */

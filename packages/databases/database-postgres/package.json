@@ -29,6 +29,7 @@
     }
   },
   "scripts": {
+    "database-postgres:docker-compose-up": "docker compose -f ./tests/docker-compose.yml up -d ",
     "database-postgres:test": "node ./tests/runner.test.js",
     "test": "npm run database-postgres:test",
     "prepublishOnly": "npm version patch --force"

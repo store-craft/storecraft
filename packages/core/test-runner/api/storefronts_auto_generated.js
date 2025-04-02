@@ -1,6 +1,6 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, PostTypeUpsert, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, FilterValue_p_in_products, PostTypeUpsert, 
  *  ProductTypeUpsert, ShippingMethodTypeUpsert, 
  * } from '../../api/types.public.js'
  */
@@ -76,7 +76,14 @@ const discounts_upsert = [
       filters: [
         {
           meta: enums.FilterMetaEnum.p_in_products,
-          value: ['pr-non-existing-handle']
+          value: /** @type {FilterValue_p_in_products} */ (
+            [
+              {
+                handle: 'pr-non-existing-handle',
+                id: 'pr-non-existing-id',
+              }
+            ]
+          )
         }
       ]
     }
@@ -95,7 +102,14 @@ const discounts_upsert = [
       filters: [
         {
           meta: enums.FilterMetaEnum.p_in_products,
-          value: ['pr-non-existing-handle']
+          value: /** @type {FilterValue_p_in_products} */ (
+            [
+              {
+                handle: 'pr-non-existing-handle',
+                id: 'pr-non-existing-id',
+              }
+            ]
+          )
         }
       ]
     }

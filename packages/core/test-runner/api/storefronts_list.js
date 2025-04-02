@@ -48,8 +48,13 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.storefronts,
-      resource: 'storefronts', events: { list_event: 'storefronts/list' }
+      items: items, 
+      app, 
+      ops: app.api.storefronts,
+      resource: 'storefronts', 
+      events: { 
+        list_event: 'storefronts/list' 
+      }
     }
   );
 

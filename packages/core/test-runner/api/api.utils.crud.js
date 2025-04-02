@@ -313,16 +313,13 @@ export const assert_query_list_integrity = (list, q) => {
 }
 
 /**
- * @import { withConcreteIdAndHandle } from '../../database/types.public.js'
- */
-/**
  * @description A simple CRUD sanity, we use it to test integrity of lists.
  * However, we have some assumptions:
  * 1. `items` were upserted before the test
  * 2. We have at least 10 items
  * 3. `updated_at` is an ISO of a timestamp starting from number `1`
  * 4. the last 3 items have the same `created_at` timestamp
- * @template {BaseType} G
+ * @template {Partial<BaseType>} G
  * @template {Partial<BaseType>} U
  * @param {Test<QueryTestContext<G, U>>} s 
  * @param {boolean} [avoid_setup=false] 
@@ -336,21 +333,28 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
           for(const p of ctx.items) {
             await ctx.ops.remove(p.id);
             const id = await ctx.ops.upsert(p);
-            // throw id
-            // if(ctx.resource==='notifications') {
-            //   throw {
-            //     id,
-            //     p
-            //   };
-            // }
           }
         } catch(e) {
           console.log(e)
-          throw e;
+          assert.unreachable('failed to upsert items');
         }
       }
     );
   }
+
+  s.after(
+    async (ctx) => {
+      assert.ok(ctx.app.ready) 
+      try {
+        for(const p of ctx.items) {
+          await ctx.ops.remove(p.id);
+        }
+      } catch(e) {
+        console.log(e)
+        assert.unreachable('failed to remove items');
+      }
+    }
+  )
 
   s('basic statistics count() test',
     async (ctx) => {

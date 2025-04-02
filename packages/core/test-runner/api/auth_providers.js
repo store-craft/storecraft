@@ -41,7 +41,7 @@ export const create = app => {
   
   s('list providers integrity', async () => {
 
-    const list = app.api.auth.identity_providers_list();
+    const list = app2.api.auth.identity_providers_list();
     
     for(const handle of Object.keys(app2.auth_providers)) {
 
@@ -80,6 +80,8 @@ export const create = app => {
         }
       );
 
+      // reset the codes to users
+      app2.auth_providers.dummy.codes_to_users = {}
       const r = await app2.api.auth.identity_provider_create_auth_uri(
         {
           provider: 'dummy',
@@ -89,7 +91,7 @@ export const create = app => {
       
       // suppose we redirected and got the code
       const authorization_response = {
-        code: '1234567890'
+        code: String(Date.now()),
       }
 
       assert.ok(r.provider==='dummy', 'provider not set');

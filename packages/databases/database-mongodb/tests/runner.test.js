@@ -31,18 +31,18 @@ async function test() {
   const app = await create_app();
 
   await migrateToLatest(app.db, false);
-
-  // api.tags_list.create(app).run();
-
-  // return;
+ 
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();
     }
   );
+  
   const last_test = Object.values(api).at(-1).create(app);
   last_test.after(async ()=>{app.db.disconnect()});
   last_test.run();
 }
 
+// twice
+test();
 test();

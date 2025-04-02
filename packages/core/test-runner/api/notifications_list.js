@@ -17,9 +17,9 @@ import esMain from './utils.esmain.js';
 // virtual api of storecraft for insertion
 
 /** 
- * @type {NotificationTypeUpsert[]} 
+ * @type {() => NotificationTypeUpsert[]} 
  */
-const items = get_static_ids('not').map(
+const items = () => get_static_ids('not').map(
   (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
@@ -53,7 +53,7 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, 
+      items: items(), 
       app, 
       ops: app.api.notifications,
       resource: 'notifications'

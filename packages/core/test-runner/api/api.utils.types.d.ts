@@ -19,7 +19,7 @@ export type CrudTestContext<G = PartialBase, U = PartialBase> = {
 }
 
 
-export type QueryTestContext<G extends BaseType, U extends Partial<BaseType>> = {
+export type QueryTestContext<G extends Partial<BaseType>, U extends Partial<BaseType>> = {
   items: U[]
   resource: keyof Omit<App["db"]["resources"], 'search'>
   ops: {

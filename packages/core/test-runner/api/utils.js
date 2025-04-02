@@ -7,6 +7,21 @@ export function sleep(ms=1000) {
 }
 
 export const withTimestamp = (o='') => `${o}-${Date.now()}`;
+// Function to generate a random 5-character string
+const generateRandomString = (length=10) => {
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * charactersLength)
+      );
+  }
+  return result;
+}
+
+export const withRandom = (o='', length=10) => o + '-' + generateRandomString(length)
 
 /**
  * 

@@ -54,23 +54,30 @@ export const create = app => {
     async () => { 
       assert.ok(app.ready);
 
-      // upsert collection
-      const col_id = await app.api.collections.upsert(col_upsert);
+      try {
 
-      for(const p of pr_upsert) {
-        await app.api.products.remove(p.handle);
-        // upsert product and link to collection
-        await app.api.products.upsert(
-          {
-            ...p,
-            collections: [
-              {
-                handle: col_upsert.handle,
-                id: col_id,
-              }
-            ]
-          }
-        );
+        // upsert collection
+        await app.api.collections.remove(col_upsert.handle);
+        const col_id = await app.api.collections.upsert(col_upsert);
+        
+        for(const p of pr_upsert) {
+          await app.api.products.remove(p.handle);
+          // upsert product and link to collection
+          await app.api.products.upsert(
+            {
+              ...p,
+              collections: [
+                {
+                  handle: col_upsert.handle,
+                  id: col_id,
+                }
+              ]
+            }
+          );
+        }
+      } catch(e) {
+        console.log(e);
+        assert.unreachable('failed to create app');
       }
     }
   );

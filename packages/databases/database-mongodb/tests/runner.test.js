@@ -32,6 +32,9 @@ async function test() {
 
   await migrateToLatest(app.db, false);
 
+  // api.tags_list.create(app).run();
+
+  // return;
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();

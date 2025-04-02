@@ -43,19 +43,48 @@ export const upsert_regular = (driver, col) => {
             ]
           );
 
-          const res = await col.replaceOne(
+          // if(!data.handle) {
+          //   throw new Error('Handle is required');
+          // }
+
+          await col.deleteMany(
             // @ts-ignore
-            { 
+            {
               $or: [
-                {_id: to_objid(data.id)},
-                { handle: data.handle }
-              ]
-            }, 
-            data,
-            { 
-              session, upsert: true 
+                data.id && { _id: to_objid(data.id) },
+                data.handle && { handle: data.handle }
+              ].filter(Boolean)
+            },
+            {
+              session
             }
           );
+
+          await col.insertOne(
+            // @ts-ignore
+            {
+              ...data,
+              _id: data.id ? to_objid(data.id) : undefined,
+            },
+            { 
+              session,
+            }
+
+          );
+
+          // const res = await col.replaceOne(
+          //   // @ts-ignore
+          //   { 
+          //     $or: [
+          //       data.id && { _id: to_objid(data.id) },
+          //       data.handle && { handle: data.handle }
+          //     ].filter(Boolean)
+          //   }, 
+          //   data,
+          //   { 
+          //     session, upsert: true 
+          //   }
+          // );
 
           ////
           // REPORT IMAGES USAGE

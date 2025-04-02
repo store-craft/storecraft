@@ -88,9 +88,9 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_tags_of(trx, id_or_handle);
-          await delete_search_of(trx, id_or_handle);
-          await delete_media_of(trx, id_or_handle);
+          await delete_tags_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_media_of(trx, id_or_handle, id_or_handle, table_name);
           // PRODUCTS -> COLLECTIONS
           await delete_entity_values_by_value_or_reporter('products_to_collections')(
             trx, id_or_handle, id_or_handle

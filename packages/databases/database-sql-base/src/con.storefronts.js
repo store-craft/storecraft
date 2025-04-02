@@ -5,7 +5,7 @@
 import { SQL } from '../index.js'
 import { jsonArrayFrom, stringArrayFrom } from './con.helpers.json.js'
 import { report_document_media } from './con.images.js'
-import { delete_entity_values_of_by_entity_id_or_handle, 
+import { delete_entity_values_of_by_entity_id_or_handle_and_context, 
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_entity_values_of, insert_media_of, 
   insert_search_of, insert_tags_of, storefront_with_collections, 
@@ -41,8 +41,8 @@ const upsert = (driver) => {
           await report_document_media(driver)(item, trx);
           // Explicit STOREFRONTS => PRODUCTS / COLLECTIONS / DISCOUNTS / SHIPPING / POSTS
           // remove all the past connections of this storefront at once
-          await delete_entity_values_of_by_entity_id_or_handle('storefronts_to_other')(
-            trx, item.id, item.handle
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('storefronts_to_other')(
+            trx, item.id
           );
           if(item.collections) { // add this storefront's new collections connections
             await insert_entity_values_of('storefronts_to_other')(
@@ -156,11 +156,12 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_search_of(trx, id_or_handle);
-          await delete_tags_of(trx, id_or_handle);
-          await delete_media_of(trx, id_or_handle);
+          await delete_tags_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_media_of(trx, id_or_handle, id_or_handle, table_name);
           // delete storefront => other
-          await delete_entity_values_of_by_entity_id_or_handle('storefronts_to_other')(
+          // this is correct, since `id` or `handle` are both unique for this table
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('storefronts_to_other')(
             trx, id_or_handle, id_or_handle
           );
           // delete me

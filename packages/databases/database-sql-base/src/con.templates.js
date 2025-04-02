@@ -96,7 +96,8 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_search_of(trx, id_or_handle);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
+
           // delete me
           await delete_me(trx, table_name, id_or_handle);
         }

@@ -64,21 +64,25 @@ export interface entity_to_media extends entity_to_value {}
  * Here:
  * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
  * - (value) = search term , for example 'game', 'shoes'
- * - if `reporter==null`, then
- *    - (reporter, context) = (null, the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
- * - else if `reporter!=null` 
- *    - (reporter, context) = (reporter id, reporter handle), which means the tag was reported by another entity for example a discount.
+ * - (context) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * 
+ * Note:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is NOT UNIQUE (imagine a product and collection with same handle)
+ * - `entity_handle` + `context` is ALWAYS UNIQUE
  */
 export interface entity_to_search_terms extends entity_to_value {}
 
 /**
  * Here:
  * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
- * - (value) = tag-name_tag-value, for example 'color_red', 'size_large'
- * - if `reporter==null`, then
- *    - (reporter, context) = (null, the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
- * - else if `reporter!=null` 
- *    - (reporter, context) = (reporter id, reporter handle), which means the tag was reported by another entity for example a discount.
+ * - (value) = search term , for example 'game', 'shoes'
+ * - (context) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * 
+ * Note:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is NOT UNIQUE (imagine a product and collection with same handle)
+ * - `entity_handle` + `context` is ALWAYS UNIQUE
  */
 export interface entity_to_tags_projections extends entity_to_value {}
 
@@ -86,13 +90,26 @@ export interface entity_to_tags_projections extends entity_to_value {}
  * here:
  * - (entity_id, entity_handle) = (product id, product handle)
  * - (value, reporter) = (collection id, collection handle)
+ * - (context) = NULL
+ * 
+ * NOTE:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is ALWAYS UNIQUE
+ * - `value` is NOT UNIQUE (many products can be related to the same collection)
+ * - `reporter` is NOT UNIQUE (many products can be related to the same collection)
  */
 export interface products_to_collections extends entity_to_value {}
 
 /**
  * here:
- * - entity_id, entity_handle = product id, product handle
- * - value, reporter = discount id,  discount handle
+ * - (entity_id, entity_handle) = (product id, product handle)
+ * - (value, reporter) = (discount id,  discount handle)
+ * 
+ * NOTE:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is ALWAYS UNIQUE
+ * - `value` is NOT UNIQUE (many products can be related to the same discount)
+ * - `reporter` is NOT UNIQUE (many products can be related to the same discount)
  */
 export interface products_to_discounts extends entity_to_value {}
 
@@ -100,6 +117,10 @@ export interface products_to_discounts extends entity_to_value {}
  * here:
  * - (entity_id, entity_handle) = (parent product id, parent product handle)
  * - (value, reporter) = (variant product id,  variant product handle)
+ * 
+ * NOTE:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is ALWAYS UNIQUE
  */
 export interface products_to_variants extends entity_to_value {}
 
@@ -107,20 +128,33 @@ export interface products_to_variants extends entity_to_value {}
  * here:
  * - (entity_id, entity_handle) = (parent product id, parent product handle)
  * - (value, reporter) = (related product id,  related product handle)
+ * 
+ * NOTE:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is ALWAYS UNIQUE
+ * - `value` is NOT UNIQUE (many products can be related to the same product)
+ * - `reporter` is NOT UNIQUE (many products can be related to the same product)
  */
 export interface products_to_related_products extends entity_to_value {}
 
 /**
  * storefronts to products/collections/posts/discounts/shipping
  * here:
- * - entity_id, entity_handle = storefront id, storefront handle
- * - value, reporter = other entity id,  other entity handle, i.e(product_id, product_handle)
- * - context = `products` / `collections` / `posts` / `discounts` / `shipping`
+ * - (entity_id, entity_handle) = (storefront id, storefront handle)
+ * - (value, reporter) = (other entity id,  other entity handle), i.e(product_id, product_handle)
+ * - (context) = `products` / `collections` / `posts` / `discounts` / `shipping`
  * 
  * This will probably be a small table hence everything is recorded in the same table.
  * Usually, a user will have:
  * - small number of storefronts
  * - small number of attached products/collections/posts/discounts/shipping per storefront
+ * 
+ * NOTE:
+ * - `entity_id` is ALWAYS UNIQUE
+ * - `entity_handle` is ALWAYS UNIQUE
+ * - `value` is ALWAYS UNIQUE
+ * - `reporter` is NOT UNIQUE (for example a product and collection with same handle name)
+ * - `reporter` + `context` is UNIQUE
  */
 export interface storefronts_to_other extends entity_to_value {}
 

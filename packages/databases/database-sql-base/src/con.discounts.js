@@ -14,7 +14,6 @@ import {
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, count_regular, with_search,
-  delete_entity_values_by_reporter_or_context
 } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
@@ -180,9 +179,9 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_search_of(trx, id_or_handle);
-          await delete_media_of(trx, id_or_handle);
-          await delete_tags_of(trx, id_or_handle);
+          await delete_tags_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_media_of(trx, id_or_handle, id_or_handle, table_name);
           // delete products -> discounts
           // PRODUCTS => DISCOUNTS
           await delete_entity_values_by_value_or_reporter('products_to_discounts')(

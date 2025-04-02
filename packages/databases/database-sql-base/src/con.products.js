@@ -6,7 +6,9 @@
 
 import { enums } from '@storecraft/core/api'
 import { SQL } from '../index.js'
-import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
+import { 
+  delete_entity_values_of_by_entity_id_or_handle_and_context, 
+  delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, 
@@ -141,8 +143,8 @@ const upsert = (driver) => {
           // Explicit PRODUCTS => COLLECTIONS
           //
           // remove this product's old collections connections
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-            trx, item.id, item.handle
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_collections')(
+            trx, item.id
           );
           if(item.collections) {
             // add this product's new collections connections
@@ -156,8 +158,8 @@ const upsert = (driver) => {
           // Explicit PRODUCTS => Related Products
           //
           // remove this product's old collections connections
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_related_products')(
-            trx, item.id, item.handle
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_related_products')(
+            trx, item.id
           );
           if(item.related_products) {
             // add this product's new `related_products` connections
@@ -170,8 +172,8 @@ const upsert = (driver) => {
 
           // PRODUCTS => DISCOUNTS
           // remove this product's older connections to discounts
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
-            trx, item.id, item.handle, 
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_discounts')(
+            trx, item.id
           );
           if(eligible_discounts) {
             // insert new connections to discounts
@@ -295,12 +297,12 @@ const remove_internal = (driver) => {
     await delete_search_of(trx, product.id);
     await delete_media_of(trx, product.id);
     // PRODUCTS => COLLECTIONS
-    await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-      trx, product.id, product.handle
+    await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_collections')(
+      trx, product.id
     );
     // PRODUCTS => DISCOUNTS
-    await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
-      trx, product.id, product.handle
+    await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_discounts')(
+      trx, product.id
     );
     // STOREFRONT => PRODUCT
     await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
@@ -323,8 +325,8 @@ const remove_internal = (driver) => {
           (product.variants ?? []).map(v => remove_internal(driver)(v, trx))
         );
         // if I am a parent product, delete my relations to all previous variants
-        await delete_entity_values_of_by_entity_id_or_handle('products_to_variants')(
-          trx, product.id, product.handle
+        await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_variants')(
+          trx, product.id
         );
       }
     }

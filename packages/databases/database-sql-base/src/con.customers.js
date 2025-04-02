@@ -94,9 +94,9 @@ export const remove = (driver) => {
         async (trx) => {
 
           // entities
-          await delete_search_of(trx, handle_or_id);
-          await delete_media_of(trx, handle_or_id);
-          await delete_tags_of(trx, handle_or_id);
+          await delete_tags_of(trx, handle_or_id, handle_or_id, table_name);
+          await delete_search_of(trx, handle_or_id, handle_or_id, table_name);
+          await delete_media_of(trx, handle_or_id, handle_or_id, table_name);
           
           { // delete related auth user
             // customers and auth_users have the same object-id and handle

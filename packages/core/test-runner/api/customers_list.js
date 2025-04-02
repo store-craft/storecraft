@@ -7,10 +7,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
@@ -20,20 +20,20 @@ import { ID } from '../../api/utils.func.js';
 /** 
  * @type {CustomerTypeUpsert[]} 
  */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('cus').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
       email: `user_${ix}@sc.com`, firstname: `first name ${ix}`, 
       lastname: `last name ${ix}`,
-      id: ID('cus'),
+      id,
       created_at: iso(jx + 1),
     }
   }
 );
 
-
+items[0].handle
 /**
  * 
  * @param {App} app 

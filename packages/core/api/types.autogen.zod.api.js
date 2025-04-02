@@ -61,7 +61,10 @@ const jWTClaimsSchema = z.object({
   nbf: z.number(),
   iat: z.number(),
   jti: z.string(),
-  roles: z.array(z.string()).describe("User roles and authorizations"),
+  roles: z
+    .array(z.string())
+    .optional()
+    .describe("User roles and authorizations"),
   email: z.string().optional(),
   firstname: z.string().optional(),
   lastname: z.string().optional(),
@@ -131,6 +134,7 @@ export const apiAuthResultSchema = z.object({
 export const baseTypeSchema = idableConcreteSchema
   .extend(timestampsSchema.shape)
   .extend({
+    handle: z.string().describe("The key name"),
     media: z.array(z.string()).optional().describe("List of images urls"),
     attributes: z
       .array(attributeTypeSchema)
@@ -199,7 +203,6 @@ export const signWithOAuthProviderParamsSchema = z.object({
 });
 
 export const tagTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The key name"),
   values: z.array(z.string()).describe("List of values, related to the key"),
 });
 
@@ -208,7 +211,6 @@ export const tagTypeUpsertSchema = tagTypeSchema
   .extend(withOptionalHandleOrIDSchema.shape);
 
 export const collectionTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The `handle` of the entity"),
   title: z
     .string()
     .min(3, "Title should be longer than 3")
@@ -597,11 +599,9 @@ export const shippingMethodTypeSchema = baseTypeSchema.extend({
     .string()
     .min(3, "Title should be longer than 3")
     .describe("Name of shipping method"),
-  handle: z.string().describe("Readable `handle` of shipping"),
 });
 
 export const postTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("Unique `handle`"),
   title: z
     .string()
     .min(3, "Title should be longer than 3")
@@ -654,11 +654,10 @@ export const customerTypeSchema = baseTypeSchema.extend({
 });
 
 export const customerTypeUpsertSchema = customerTypeSchema
-  .omit({ id: true })
-  .extend(withOptionalIDSchema.shape);
+  .omit({ id: true, handle: true })
+  .extend(withOptionalHandleOrIDSchema.shape);
 
 export const imageTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("Unique handle"),
   name: z
     .string()
     .min(1, "Should be longer than 1 characters")
@@ -1048,7 +1047,6 @@ export const paymentGatewayItemGetSchema = z.object({
 });
 
 export const templateTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("`handle`"),
   title: z.string().describe("`title` of `template`"),
   template_html: z
     .string()
@@ -1188,6 +1186,12 @@ export const storecraftConfigSchema = z.object({
     .optional()
     .describe(
       "forgot password token signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN` environment",
+    ),
+  auth_secret_confirm_email_token: z
+    .string()
+    .optional()
+    .describe(
+      "Confirm email signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN` environment",
     ),
   checkout_reserve_stock_on: z
     .union([
@@ -1388,7 +1392,6 @@ export const discountTypeSchema = baseTypeSchema.extend({
     .string()
     .min(3, "Title should be longer than 3")
     .describe("Title of discount"),
-  handle: z.string().describe("Discount `code` / `handle`"),
   priority: z
     .number()
     .describe("The order in which to apply the discounts\nstack (priority)"),
@@ -1408,7 +1411,6 @@ export const discountTypeSchema = baseTypeSchema.extend({
 });
 
 export const baseProductTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The readable unique product `handle`"),
   isbn: z
     .string()
     .optional()
@@ -1504,7 +1506,6 @@ export const discountTypeUpsertSchema = discountTypeSchema
 
 export const storefrontTypeSchema = baseTypeSchema.extend({
   active: z.boolean().describe("Is the entity active ?"),
-  handle: z.string().describe("Readable `handle`"),
   title: z.string().min(3, "Title should be longer than 3").describe("Title"),
   video: z.string().optional().describe("Video url"),
   published: z
@@ -1775,7 +1776,7 @@ export const pricingDataSchema = z.object({
 
 export const orderDataSchema = checkoutCreateTypeAfterValidationSchema
   .omit({ id: true })
-  .extend(baseTypeSchema.shape)
+  .extend(baseTypeSchema.omit({ handle: true }).shape)
   .extend({
     status: orderStatusSchema.describe(
       "Status of `checkout`, `fulfillment` and `payment`",

@@ -223,6 +223,11 @@ export interface withOptionalHandleOrID {
  */
 export interface BaseType extends idable_concrete, timestamps {
   /** 
+   * @description The key name 
+   */
+  handle: string;
+
+  /** 
    * @description List of images urls 
    */
   media?: string[];
@@ -549,11 +554,6 @@ export interface AttributeType  {
  */
 export interface TagType extends BaseType {
   /** 
-   * @description The key name 
-   */
-  handle: string;
-
-  /** 
    * @description List of values, related to the key
    */
   values: string[];
@@ -571,11 +571,6 @@ export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptio
  * @description Collection type
  */
 export interface CollectionType extends BaseType {
-
-  /** 
-   * @description The `handle` of the entity
-   */
-  handle: string;
 
   /** 
    * @description Title of collection 
@@ -705,10 +700,6 @@ export interface VariantType extends BaseProductType {
  * @description Base product interface
  */
 export interface BaseProductType extends BaseType {
-  /** 
-   * @description The readable unique product `handle`
-   */
-  handle: string;
 
   /** 
    * @description The International Standard Book Number (`ISBN`)
@@ -859,11 +850,6 @@ export interface DiscountType extends BaseType {
    * @minLength 3 Title should be longer than 3
    */
   title: string;
-
-  /** 
-   * @description Discount `code` / `handle` 
-   */
-  handle: string;
 
   /** 
    * @description The order in which to apply the discounts 
@@ -1361,11 +1347,6 @@ export interface StorefrontType extends BaseType {
   active: boolean;
   
   /** 
-   * @description Readable `handle` 
-   */
-  handle: string;
-
-  /** 
    * @description Title 
    * @minLength 3 Title should be longer than 3
    */
@@ -1556,7 +1537,7 @@ export interface CustomerType extends BaseType {
 /**
  * @description Customer upsert interface
  */
-export interface CustomerTypeUpsert extends Omit<CustomerType, 'id'>, withOptionalID{};
+export interface CustomerTypeUpsert extends Omit<CustomerType, 'id' | 'handle'>, withOptionalHandleOrID {};
 
 // image
 
@@ -1564,10 +1545,6 @@ export interface CustomerTypeUpsert extends Omit<CustomerType, 'id'>, withOption
  * @description Image interface
  */
 export interface ImageType extends BaseType {
-  /** 
-   * @description Unique handle 
-   */
-  handle: string;
 
   /** 
    * @description Name 
@@ -1611,10 +1588,6 @@ export interface ShippingMethodType extends BaseType {
    */
   title: string;
 
-  /**
-   * @description Readable `handle` of shipping
-   */
-  handle: string;
 }
 
 /**
@@ -1628,10 +1601,6 @@ export interface ShippingMethodTypeUpsert extends Omit<ShippingMethodType, 'id' 
  * Post interface
  */
 export interface PostType extends BaseType {
-  /** 
-   * @description Unique `handle` 
-   */
-  handle: string;
 
   /** 
    * @description Title of post 
@@ -1837,7 +1806,7 @@ export interface CheckoutCreateTypeAfterValidation extends Omit<CheckoutCreateTy
 /**
  * @description Order interface
  */
-export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>, BaseType {
+export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>, Omit<BaseType, 'handle'> {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -2552,11 +2521,6 @@ export interface PaymentGatewayItemGet  {
  * @description `Email Template` interface
  */
 export interface TemplateType extends BaseType {
-
-  /**
-   * @description `handle`
-   */
-  handle: string;
 
   /**
    * @description `title` of `template`

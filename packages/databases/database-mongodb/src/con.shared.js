@@ -46,7 +46,10 @@ export const upsert_regular = (driver, col) => {
           const res = await col.replaceOne(
             // @ts-ignore
             { 
-              _id: to_objid(data.id) 
+              $or: [
+                {_id: to_objid(data.id)},
+                { handle: data.handle }
+              ]
             }, 
             data,
             { 

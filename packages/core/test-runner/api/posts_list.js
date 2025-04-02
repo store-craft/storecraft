@@ -6,10 +6,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 const handle = create_handle('post', file_name(import.meta.url));
 
@@ -21,14 +21,14 @@ const handle = create_handle('post', file_name(import.meta.url));
 /** 
  * @type {PostTypeUpsert[]} 
  */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('post').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
       title: `post ${ix}`, text: `text ${ix}`,
       handle: handle(),
-      id: ID('post'),
+      id,
       created_at: iso(jx + 1),
     }
   }

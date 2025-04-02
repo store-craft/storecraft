@@ -23,7 +23,10 @@ import {
   save_me, 
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js'
-
+import {
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+} from '@storecraft/core/database'
 
 /**
  * @param {MongoDB} d 
@@ -57,16 +60,24 @@ const upsert = (driver) => {
           ////
           // PRODUCT --> DISCOUNTS RELATION
           ////
+          const extra_search_for_products = 
+            helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db(
+              data
+            );
+
+          const extra_tags_for_products = 
+            helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(
+              data
+            );
 
           // first remove discount from anywhere
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
             [ // remove search terms
-              `discount:${data.handle}`, `discount:${data.id}`,
-              `tag:discount_${data.handle}`
+              ...extra_search_for_products
             ],
             [ // remove tags
-              `discount_${data.handle}`
+              ...extra_tags_for_products
             ]
           );
           
@@ -80,13 +91,11 @@ const upsert = (driver) => {
                 $addToSet: { 
                   '_relations.discounts.ids': objid,
                   '_relations.search': { 
-                    $each : [ 
-                      `discount:${data.handle}`, 
-                      `discount:${data.id}`, 
-                      `tag:discount_${data.handle}` 
-                    ]
+                    $each : extra_search_for_products
                   },
-                  'tags': `discount_${data.handle}`
+                  'tags': {
+                    $each : extra_tags_for_products
+                  }
                 },
                 
               },
@@ -154,17 +163,26 @@ const remove = (driver) => {
       await session.withTransaction(
         async () => {
 
+        const extra_search_for_products = 
+          helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db(
+            item
+          );
+
+        const extra_tags_for_products = 
+          helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(
+            item
+          );
+
           ////
           // PRODUCT -> DISCOUNTS RELATION
           ////
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
             [
-              `discount:${item.handle}`, `discount:${item.id}`,
-              `tag:discount_${item.id}`
+              ...extra_search_for_products
             ],
             [
-              `discount_${item.handle}`
+              ...extra_tags_for_products
             ]
           );
 

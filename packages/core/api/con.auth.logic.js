@@ -90,6 +90,7 @@ async (body) => {
   const au = {
     id: id,
     email, 
+    handle: email,
     password: hashedPassword,
     confirmed_mail: false,
     roles,
@@ -119,6 +120,7 @@ async (body) => {
   await app.api.customers.upsert(
     {
       email: au.email,
+      handle: au.email,
       auth_id: au.id,
       id: 'cus_' + au.id.split('_')?.at(-1),
       firstname: firstname,
@@ -447,7 +449,8 @@ async () => {
   /** @type {AuthUserType} */
   const au = {
     id,
-    email, 
+    email,
+    handle: email,
     password: hashedPassword,
     confirmed_mail: false,
     roles: ['admin'],

@@ -332,6 +332,7 @@ export const create = app => {
 
     // first let's signup a new user
     const email = 'confirm-email-tester@example.com';
+    await app.api.auth.removeByEmail(email);
     const auth_user = await app.api.auth.signup(
       {
         email,

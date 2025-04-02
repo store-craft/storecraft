@@ -6,10 +6,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 const handle_tag = create_handle('tag', file_name(import.meta.url));
 
@@ -18,17 +18,33 @@ const handle_tag = create_handle('tag', file_name(import.meta.url));
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
 
+// /** 
+//  * @type {TagTypeUpsert[]} 
+//  */
+// const items = Array.from({length: 10}).map(
+//   (_, ix, arr) => {
+//     // 5 last items will have the same timestamps
+//     ix = Math.min(ix, arr.length - 3);
+//     return {
+//       handle: handle_tag(),
+//       values: ['a'],
+//       id: ID('tag'),
+//       created_at: iso(ix + 1),
+//     }
+//   }
+// );
+
 /** 
  * @type {TagTypeUpsert[]} 
  */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('tag').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     ix = Math.min(ix, arr.length - 3);
     return {
       handle: handle_tag(),
       values: ['a'],
-      id: ID('tag'),
+      id,
       created_at: iso(ix + 1),
     }
   }
@@ -45,8 +61,11 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.tags,
-      resource: 'tags', events: { list_event: 'tags/list' }
+      items: items, 
+      app, 
+      ops: app.api.tags,
+      resource: 'tags', 
+      events: { list_event: 'tags/list' }
     }
   );
 

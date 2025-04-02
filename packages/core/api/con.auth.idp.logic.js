@@ -95,6 +95,7 @@ export const sign_with_identity_provider = (app) =>
         user = {
           id: ID('au'),
           email, 
+          handle: email, 
           active: true,
           password: undefined,
           confirmed_mail: true,

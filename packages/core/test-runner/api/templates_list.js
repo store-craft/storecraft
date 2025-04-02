@@ -6,10 +6,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 const handle_tag = create_handle('template', file_name(import.meta.url));
 
@@ -21,8 +21,8 @@ const handle_tag = create_handle('template', file_name(import.meta.url));
 /** 
  * @type {TemplateTypeUpsert[]} 
  */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('template').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     const jx = Math.min(ix, arr.length - 3);
     return {
@@ -31,7 +31,7 @@ const items = Array.from({length: 10}).map(
       reference_example_input: { key: 'value' },
       template_html: '<html><body>Hello</body></html>',
       template_text: 'Hello',  
-      id: ID('template'),
+      id,
       created_at: iso(jx + 1),
     }
   }

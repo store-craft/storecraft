@@ -20,6 +20,7 @@ import type {
   ExpandQuery, ApiQuery 
 } from "../api/types.api.query.d.ts";
 import type { App } from '../types.public.d.ts'
+export * from './public.js';
 
 export type ID = string;
 export type Handle = string;
@@ -268,7 +269,7 @@ export interface db_products extends db_crud<
 
 /** @description `CustomerType` crud */
 export interface db_customers extends OmitGetByHandle<db_crud<
-  withConcreteId<CustomerTypeUpsert>, 
+  withConcreteIdAndHandle<CustomerTypeUpsert>, 
   CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
   /**
@@ -391,7 +392,7 @@ export interface db_discounts extends db_crud<
 
 /** @description `OrderData` crud */
 export interface db_orders extends OmitGetByHandle<db_crud<
-  withConcreteId<OrderDataUpsert>, 
+  withConcreteIdAndHandle<OrderDataUpsert>, 
   OrderData>
   > {
 }

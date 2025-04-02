@@ -31,6 +31,10 @@ import { union } from '@storecraft/core/api/utils.func.js'
 import { 
   test_product_filters_against_product 
 } from '@storecraft/core/api/con.pricing.logic.js'
+import {
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+} from '@storecraft/core/database'
 
 /**
  * @param {MongoDB} d 
@@ -109,7 +113,9 @@ const upsert = (driver) => {
               // remove old discount tags
               replacement.tags?.filter(t => !t.startsWith('discount_')),
               // add new discount tags
-              eligible_discounts.map(d => `discount_${d.handle}`),
+              eligible_discounts.map(
+                helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+              ),
             ]
           );
 
@@ -118,9 +124,9 @@ const upsert = (driver) => {
             replacement, union(
               [
                 search_terms, 
-                eligible_discounts.map(d => `discount:${d.handle}`),
-                eligible_discounts.map(d => `discount:${d.id}`),
-                eligible_discounts.map(d => `tag:discount_${d.handle}`),
+                eligible_discounts.map(
+                  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db
+                ),
               ]
             )
           );

@@ -9,7 +9,7 @@ import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
-import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
+import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**
@@ -62,8 +62,6 @@ export const email_or_id = (email_or_id) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -74,7 +72,7 @@ const remove = (driver) => {
       await session.withTransaction(
         async () => {
           const res = await col(driver).findOneAndDelete(
-            email_or_id(id),
+            handle_or_id(id),
             { session }
           );
       

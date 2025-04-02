@@ -1,5 +1,6 @@
 /**
  * @import { WithRelations } from './utils.types.js';
+ * @import { Filter } from 'mongodb';
  */
 import { ObjectId } from 'mongodb';
 
@@ -108,19 +109,20 @@ export const to_objid_safe = id => {
 }
 
 /**
+ * Create a `filter` for `object-id` or `handle`
  * @template {{handle?: string}} G
  * @param {string} handle_or_id 
- * @returns {import('mongodb').Filter<G>}
+ * @returns {Filter<G>}
  */
 export const handle_or_id = (handle_or_id) => {
-  return objid_or_else_filter(handle_or_id);
+  return objid_or_else_filter(handle_or_id, 'handle');
 }
 
 
 /**
  * @template {{handle?: string}} G
  * @param {string} id_or_else 
- * @returns {import('mongodb').Filter<G>}
+ * @returns {Filter<G>}
  */
 export const objid_or_else_filter = (id_or_else, else_key='handle') => {
   try {

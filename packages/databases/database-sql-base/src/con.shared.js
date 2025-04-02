@@ -167,15 +167,17 @@ export const delete_entity_values_by_reporter_or_context = (entity_table_name) =
  * 
  * @param {EntityTableKeys} entity_table_name 
  */
-export const delete_entity_values_of_by_entity_id_or_handle = 
-(entity_table_name) => {
+export const delete_entity_values_of_by_entity_id_or_handle = (
+  entity_table_name
+) => {
   /**
    * 
    * @param {Kysely<Database>} trx 
    * @param {string} entity_id delete by id
    * @param {string} [entity_handle=entity_id] delete by handle
+   * @param {string} [context=undefined] the context (another segment technique)
    */
-  return (trx, entity_id, entity_handle=undefined) => {
+  return (trx, entity_id, entity_handle=undefined, context=undefined) => {
     return trx.deleteFrom(entity_table_name).where(
       eb => eb.or(
         [
@@ -214,7 +216,7 @@ export const insert_entity_array_values_of = (entity_table_name) => {
         );
       } else {
         await delete_entity_values_of_by_entity_id_or_handle(entity_table_name)(
-          trx, item_id, item_handle
+          trx, item_id, item_handle, context
         );
       }
     }

@@ -7,10 +7,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests } from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests, 
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 const handle = create_handle('ship', file_name(import.meta.url));
 
@@ -22,14 +22,14 @@ const handle = create_handle('ship', file_name(import.meta.url));
 /** 
  * @type {ShippingMethodTypeUpsert[]} 
  */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('ship').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
       title: `shipping ${ix}`, price: 50 + ix,
       handle: handle(),
-      id: ID('ship'),
+      id,
       created_at: iso(jx + 1),
     }
   }

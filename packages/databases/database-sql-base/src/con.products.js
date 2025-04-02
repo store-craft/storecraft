@@ -23,6 +23,10 @@ import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { report_document_media } from './con.images.js'
 import { union } from '@storecraft/core/api/utils.func.js'
+import { 
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db
+ } from '@storecraft/core/database'
 
 
 export const table_name = 'products'
@@ -69,22 +73,24 @@ const upsert = (driver) => {
           d.info.filters, item
         )
       );
-
+      
       item.tags = union(
         [
           // remove old discount tags
           item.tags?.filter(t => !t.startsWith('discount_')),
           // add new discount tags
-          eligible_discounts.map(d => `discount_${d.handle}`),
+          eligible_discounts.map(
+            helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+          ),
         ]
       );
 
       search_terms = union(
         [
           search_terms, 
-          eligible_discounts.map(d => `discount:${d.handle}`),
-          eligible_discounts.map(d => `discount:${d.id}`),
-          eligible_discounts.map(d => `tag:discount_${d.handle}`),
+          eligible_discounts.map(
+            helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db
+          ),
         ]
       );
 

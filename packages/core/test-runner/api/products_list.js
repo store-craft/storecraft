@@ -8,10 +8,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -23,8 +23,8 @@ const handle_pr = create_handle('pr', file_name(import.meta.url));
 
 
 /** @type {ProductTypeUpsert[]} */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('pr').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
@@ -33,7 +33,7 @@ const items = Array.from({length: 10}).map(
       active: true,
       qty: 1,
       handle: handle_pr(),
-      id: ID('pr'),
+      id,
       tags: [`tag_${ix}`],
       created_at: iso(jx + 1),
     }
@@ -45,14 +45,14 @@ const collections_upsert = [
   {
     active: true,
     handle: handle_col(),
-    id: ID('col'),
+    id: get_static_ids('col')[0],
     title: 'col 1',
     tags: ['tag-1_a', 'tag-1_b']
   },
   {
     active: true,
     handle: handle_col(),
-    id: ID('col'),
+    id: get_static_ids('col')[1],
     title: 'col 2',
     tags: ['tag-1_a', 'tag-1_b']
   },

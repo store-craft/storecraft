@@ -49,7 +49,8 @@ export const upsert = (app) =>
     // apply dates and index
     const final = apply_dates(
       { 
-        ...item, id
+        ...item, id,
+        handle: item.email,
       }
     );
 

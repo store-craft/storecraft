@@ -97,7 +97,7 @@ export type events = {
   'auth/signup': Partial<AuthUserType>
   'auth/signin': Partial<AuthUserType>
   'auth/refresh': Partial<ApiAuthResult>
-  'auth/remove': Partial<AuthUserType>
+  'auth/remove': PayloadForRemove<Partial<AuthUserType>>
   'auth/upsert': Partial<AuthUserType>
   'auth/apikey-created': Partial<AuthUserType>
   'auth/change-password': Partial<AuthUserType> 
@@ -162,7 +162,7 @@ export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =(PubS
  */
 export type PayloadForGet<T=any> = { current: T };
 export type PayloadForUpsert<T=any> = { previous: T, current: T };
-export type PayloadForRemove<T=any> = { previous: T, success: boolean };
+export type PayloadForRemove<T=any> = { previous: T };
 
 
 /**

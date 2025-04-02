@@ -121,13 +121,30 @@ export const count_customer_orders = (app) =>
 export const count = (app) => 
   /**
    * @description Count query results
-   * 
    * @param {ApiQuery<CustomerType>} query 
    */
   (query) => {
     return db(app).count(query);
   }
 
+/**
+ * @param {App} app
+ */
+export const remove = (app) => 
+  /**
+   * @param {string} id_or_handle 
+   */
+  async (id_or_handle) => {
+    // we will use the `auth` route for removal as it also
+    // removes the customer from the auth system
+    let au_id_or_handle = id_or_handle;
+
+    if(au_id_or_handle.startsWith('cus_')) {
+      au_id_or_handle = id_or_handle.replace('cus_', 'au_');
+    }
+
+    return app.api.auth.remove_auth_user(au_id_or_handle);
+  }
 
 /**
  * 
@@ -139,7 +156,7 @@ export const inter = app => {
     get: regular_get(app, db(app), 'customers/get'),
     getByEmail: getByEmail(app),
     upsert: upsert(app),
-    remove: regular_remove(app, db(app), 'customers/remove'),
+    remove: remove(app),
     list: regular_list(app, db(app), 'customers/list'),
     list_customer_orders: list_customer_orders(app),
     count_customer_orders: count_customer_orders(app),

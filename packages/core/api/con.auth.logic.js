@@ -1,7 +1,8 @@
 /**
  * @import { 
  *  ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
- *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult, JWTClaims
+ *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult, JWTClaims,
+ CustomerType
  * } from './types.api.js';
  * @import { ApiQuery } from './types.api.query.js'
  */
@@ -627,24 +628,50 @@ export const remove_auth_user = (app) =>
  * @param {string} id_or_email 
  */
 async (id_or_email) => {
+  /** @type {CustomerType} */
+  let customer_for_remove_event;
+  /** @type {AuthUserType} */
+  let user_for_remove_event;
 
   { // dispatch event
     if(app.pubsub.has('auth/remove')) {
-      const user_to_remove = await app.db.resources.auth_users.get(
+      user_for_remove_event = await app.db.resources.auth_users.get(
         id_or_email
       );
+    }
+    if(app.pubsub.has('customers/remove')) {
+      let cus_id_or_email = id_or_email;
 
-      await app.pubsub.dispatch(
-        'auth/remove',
-        sanitize_auth_user(user_to_remove)
+      if(id_or_email.startsWith('au_'))
+        cus_id_or_email = id_or_email.replace('au_', 'cus_');
+
+      customer_for_remove_event = await app.db.resources.customers.get(
+        cus_id_or_email
       );
     }
   }
 
-  return await app.db.resources.auth_users.remove(
+  // we remove the customer as well in the database in a transaction
+  const success =  await app.db.resources.auth_users.remove(
     id_or_email
   );
 
+  if(success) {
+    await app.pubsub.dispatch(
+      'auth/remove',
+      {
+        previous: sanitize_auth_user(user_for_remove_event)
+      }
+    );
+    await app.pubsub.dispatch(
+      'customers/remove',
+      {
+        previous: customer_for_remove_event
+      }
+    );
+  }
+
+  return success;
 }
 
 

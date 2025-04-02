@@ -9,7 +9,7 @@ import esMain from './utils.esmain.js';
 import { verify_api_auth_result } from './auth.utils.js';
 import { jwt } from '../../crypto/public.js';
 import { CONFIRM_EMAIL_TOKEN, FORGOT_PASSWORD_IDENTITY_TOKEN } from '../../api/con.auth.logic.js';
-import { assert_partial_v2 } from './utils.js';
+import { assert_partial_v2, withRandom } from './utils.js';
 
 
 export const admin_email = 'admin@sc.com';
@@ -26,7 +26,7 @@ export const create = app => {
   
   s.before(async () => { assert.ok(app.ready) });
   
-  s('signup admin', async () => {
+  s('signup admin + events', async () => {
 
     await app.api.auth.removeByEmail(admin_email);
     await app.api.customers.remove(admin_email);
@@ -49,6 +49,23 @@ export const create = app => {
     );
 
     // console.log({auth_result})
+    { // assert auth-user was created
+      const auth_user = await app.api.auth.get_auth_user(admin_email);
+      assert.ok(auth_user, 'auth user not found');
+      assert.equal(
+        auth_user.email, admin_email, 
+        'auth user email mismatch'
+      );
+    }
+
+    { // assert customer was created
+      const customer = await app.api.customers.get(admin_email);
+      assert.ok(customer, 'customer not found');
+      assert.equal(
+        customer.email, admin_email, 
+        'customer email mismatch'
+      );
+    }
 
     { // check auth result
       const has_admin_role = auth_result.access_token.claims?.roles?.includes('admin')
@@ -160,6 +177,72 @@ export const create = app => {
     unsub();
   });
 
+  s('remove auth-user -> removes customer', async () => {
+    /** @type {Partial<events>} */
+    const events  = {}
+    // record all events for later check
+    const unsub = app.pubsub.on(
+      '*',
+      (v) => {
+        events[v.event] = v.payload;
+      }
+    );
+
+    const email = withRandom('tester') + '@example.com';
+
+    const api_auth_result = await app.api.auth.signup({
+      email,
+      password: 'password'
+    });
+
+    { // assert customer was created
+      const customer = await app.api.customers.get(email);
+      assert.ok(customer, 'customer not found');
+      assert.equal(
+        customer.email, email, 'customer email mismatch'
+      );
+    }
+
+    // remove the user
+    const success = await app.api.auth.remove_auth_user(
+      api_auth_result.user_id
+    );
+  
+    assert.ok(success, 'remove auth user failed');
+
+    { // assert auth-user was removed
+      const au = await app.api.auth.get_auth_user(email);
+      assert.ok(!au, 'auth user not removed');
+    }
+
+    { // assert customer was removed
+      const au = await app.api.customers.get(email);
+      assert.ok(!au, 'customer not removed');
+    }
+
+    // console.log({events})
+
+    { // check `auth/remove` event
+      const event = events['auth/remove'];
+      assert.ok(event?.previous, 'event not found');
+      assert.equal(
+        event.previous.email, email, 
+        'auth/remove email mismatch'
+      );
+    }
+
+    { // check `auth/remove` event
+      const event = events['customers/remove'];
+      assert.ok(event?.previous, 'event not found');
+      assert.equal(
+        event.previous.email, email, 
+        'auth/remove email mismatch'
+      );
+    }
+
+    unsub();
+  });
+
   s('change password admin', async () => {
 
     /** @type {Partial<events>} */
@@ -198,7 +281,6 @@ export const create = app => {
         assert.unreachable('old password should not work');
       } catch (e) {
       }
-
     }
 
     { // try signin with new password
@@ -401,7 +483,6 @@ export const create = app => {
     unsub();
   });
 
-
   s('apikeys create, validate, list and remove', async () => {
   
     /** @type {Partial<events>} */
@@ -483,7 +564,7 @@ export const create = app => {
         const event = events['auth/remove'];
         assert.ok(event, 'event not found');
         assert.equal(
-          event.email, apikey_created_decoded_email, 
+          event.previous.email, apikey_created_decoded_email, 
           'auth/remove email mismatch'
         );
       }

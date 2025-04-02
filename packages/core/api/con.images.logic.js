@@ -79,13 +79,14 @@ async (id) => {
   // db remove image side-effect
   const success = await app.db.resources.images.remove(img.id);
 
-  await app.pubsub.dispatch(
-    'images/remove',
-    {
-      previous: img, 
-      success
-    }
-  );
+  if(success) {
+    await app.pubsub.dispatch(
+      'images/remove',
+      {
+        previous: img, 
+      }
+    );
+  }
 
   return success;
 }

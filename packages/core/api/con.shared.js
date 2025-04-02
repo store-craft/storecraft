@@ -144,7 +144,6 @@ export const regular_get = (app, db, event) =>
  */
 export const regular_remove = (app, db, event) => 
   /**
-   * 
    * @param {string} id_or_handle 
    */
   async (id_or_handle) => {
@@ -160,12 +159,11 @@ export const regular_remove = (app, db, event) =>
 
     const success = await db.remove(id_or_handle);
 
-    if(requires_event_processing) {
+    if(success && requires_event_processing) {
       await app.pubsub.dispatch(
         String(event),
         {
           previous,
-          success
         }
       )
     }

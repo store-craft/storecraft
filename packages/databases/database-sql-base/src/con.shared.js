@@ -112,63 +112,47 @@ export const where_id_or_handle_table = (id_or_handle) => {
  */
 
 /**
- * helper to generate entity values delete
+ * helper to delete entity values
+ * Consult {@link '../types.sql.tables.jd.ts'} for the list of meaningful entity tables
+ * and their interpretations.
  * 
  * @param {EntityTableKeys} entity_table_name 
  */
-export const delete_entity_values_by_value_or_reporter = (entity_table_name) => {
+export const delete_entity_values_by_value_or_reporter_and_context = (entity_table_name) => {
   /**
    * 
    * @param {Kysely<Database>} trx 
    * @param {string} value delete by entity value
    * @param {string} [reporter] delete by reporter
+   * @param {string} [context] delete by reporter + context
    */
-  return (trx, value, reporter=undefined) => {
+  return (trx, value, reporter, context) => {
 
     return trx.deleteFrom(entity_table_name).where(
       eb => eb.or(
         [
           value && eb('value', '=', value),
-          reporter && eb('reporter', '=', reporter),
+          reporter && context && eb.and(
+            [
+              eb('reporter', '=', reporter),
+              eb('context', '=', context),
+            ]
+          ),
+          reporter && !(context) && eb('reporter', '=', reporter),
         ].filter(Boolean)
       )
     ).executeTakeFirst();
   }
 }
 
-// /**
-//  * helper to generate entity values delete
-//  * 
-//  * @param {EntityTableKeys} entity_table_name 
-//  */
-// export const delete_entity_values_by_reporter_or_context = (entity_table_name) => {
-//   /**
-//    * 
-//    * @param {Kysely<Database>} trx 
-//    * @param {string} reporter delete by entity value
-//    * @param {string} [context] delete by reporter
-//    */
-//   return (trx, reporter=undefined, context=undefined) => {
-
-//     return trx.deleteFrom(entity_table_name).where(
-//       eb => eb.or(
-//         [
-//           reporter && eb('reporter', '=', reporter),
-//           context && eb('context', '=', context),
-//         ].filter(Boolean)
-//       )
-//     ).executeTakeFirst();
-//   }
-// }
-
 
 /**
  * helper to delete entity values
- * 1. either by `entity_id` which is unique and always produces correct results.
- * 2. or by `entity_handle` which is unique for some entity tables such as `products_to_collections`, `products_to_discounts`, `products_to_variants`, `products_to_related_products`, `storefronts_to_other`
- * 3. or by `entity_handle` and `context` which is unique as well for some entity tables such as `entity_to_tags_projections`, `entity_to_search_terms`, `entity_to_media`
- * - `entity_handle` by itself is not unique, but `entity_handle` + `context` is unique.
- * for example, we may have a product and a collection with the same handle in the `entity_to_tags_projections` table, 
+ * 1. either by `entity_id` which always identifies an entity.
+ * 2. or by `entity_handle` which identifies an entity for some entity tables such as `products_to_collections`, `products_to_discounts`, `products_to_variants`, `products_to_related_products`, `storefronts_to_other`
+ * 3. or by `entity_handle` + `context` which identifies an entity for some entity tables such as `entity_to_tags_projections`, `entity_to_search_terms`, `entity_to_media`
+ * - `entity_handle` by itself does not always identify an entity, but `entity_handle` + `context` does.
+ * for example, we may have a product and a collection with the same `entity_handle` in the `entity_to_tags_projections` table, 
  * but they are different entities. Therefore, if we naively delete by `entity_handle`, we may delete more entities than intended.
  * 
  * @param {EntityTableKeys} entity_table_name 

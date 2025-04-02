@@ -4,7 +4,7 @@
 import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
 import { 
-  delete_entity_values_by_value_or_reporter, delete_me, 
+  delete_entity_values_by_value_or_reporter_and_context, delete_me, 
   delete_media_of, delete_search_of, delete_tags_of, 
   insert_media_of, insert_search_of, insert_tags_of, 
   regular_upsert_me, where_id_or_handle_table, 
@@ -92,12 +92,12 @@ const remove = (driver) => {
           await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
           await delete_media_of(trx, id_or_handle, id_or_handle, table_name);
           // PRODUCTS -> COLLECTIONS
-          await delete_entity_values_by_value_or_reporter('products_to_collections')(
+          await delete_entity_values_by_value_or_reporter_and_context('products_to_collections')(
             trx, id_or_handle, id_or_handle
           );
           // STOREFRONT => COLLECTIONS
-          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
-            trx, id_or_handle, id_or_handle
+          await delete_entity_values_by_value_or_reporter_and_context('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle, table_name
           );
 
           // delete me

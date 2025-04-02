@@ -9,7 +9,7 @@ import {
 import { SQL } from '../index.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
 import { 
-  delete_entity_values_by_value_or_reporter, 
+  delete_entity_values_by_value_or_reporter_and_context, 
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
@@ -40,7 +40,7 @@ const upsert = (driver) => {
           // PRODUCTS => DISCOUNTS
           //
           // remove all products relation to this discount
-          await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+          await delete_entity_values_by_value_or_reporter_and_context('products_to_discounts')(
             trx, item.id, item.handle);
           
           const extra_search_for_products = 
@@ -49,12 +49,13 @@ const upsert = (driver) => {
           const extra_tags_for_products = 
             helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(item);
           
+            // maybe i should confine these to `context`=`products`
           for(const extra_search of extra_search_for_products) {
-            await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_search_terms')(
               trx, extra_search);
           }
           for(const extra_tag of extra_tags_for_products) {
-            await delete_entity_values_by_value_or_reporter('entity_to_tags_projections')(
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_tags_projections')(
               trx, extra_tag);
           }
   
@@ -184,11 +185,11 @@ const remove = (driver) => {
           await delete_media_of(trx, id_or_handle, id_or_handle, table_name);
           // delete products -> discounts
           // PRODUCTS => DISCOUNTS
-          await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+          await delete_entity_values_by_value_or_reporter_and_context('products_to_discounts')(
             trx, id_or_handle, id_or_handle);
           // STOREFRONT => DISCOUNTS
-          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
-            trx, id_or_handle, id_or_handle
+          await delete_entity_values_by_value_or_reporter_and_context('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle, table_name
           );
           // discount might have published search terms and tags for other products, 
           // so let's remove
@@ -214,11 +215,11 @@ const remove = (driver) => {
             );
 
           for(const extra_search of extra_search_for_products) {
-            await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_search_terms')(
               trx, extra_search);
           }
           for(const extra_tag of extra_tags_for_products) {
-            await delete_entity_values_by_value_or_reporter('entity_to_tags_projections')(
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_tags_projections')(
               trx, extra_tag);
           } 
 

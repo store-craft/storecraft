@@ -14,7 +14,7 @@ import {
   insert_tags_of, regular_upsert_me, 
   where_id_or_handle_table, products_with_collections, 
   with_tags, with_media, 
-  delete_entity_values_by_value_or_reporter,
+  delete_entity_values_by_value_or_reporter_and_context,
   products_with_discounts,
   products_with_variants,
   count_regular,
@@ -129,7 +129,7 @@ const upsert = (driver) => {
           // PRODUCTS => VARIANTS
           if(item && ('variant_hint' in item) && is_variant(item)) {
             // remove previous
-            await delete_entity_values_by_value_or_reporter('products_to_variants')(
+            await delete_entity_values_by_value_or_reporter_and_context('products_to_variants')(
               trx, item.id, item.handle
             );
             // add 
@@ -305,11 +305,12 @@ const remove_internal = (driver) => {
       trx, product.id
     );
     // STOREFRONT => PRODUCT
-    await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
-      trx, product.id, product.handle
+    // TODO: this is problematic
+    await delete_entity_values_by_value_or_reporter_and_context('storefronts_to_other')(
+      trx, product.id, product.handle, table_name
     );
     // PRODUCTS => RELATED PRODUCT
-    await delete_entity_values_by_value_or_reporter('products_to_related_products')(
+    await delete_entity_values_by_value_or_reporter_and_context('products_to_related_products')(
       trx, product.id, product.handle
     );
     // PRODUCT => VARIANTS
@@ -317,7 +318,7 @@ const remove_internal = (driver) => {
     {
       if(is_variant(product)) {
         // delete my reported connections
-        await delete_entity_values_by_value_or_reporter('products_to_variants')(
+        await delete_entity_values_by_value_or_reporter_and_context('products_to_variants')(
           trx, product.id, product.handle
         );
       } else if(product && 'variants' in product) { // parent

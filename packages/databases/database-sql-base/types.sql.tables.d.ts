@@ -61,79 +61,81 @@ export interface entity_to_value {
 export interface entity_to_media extends entity_to_value {}
 
 /**
- * Here:
- * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
- * - (value) = search term , for example 'game', 'shoes'
- * - (context) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * **Here**:
+ * - (`entity_id`, `entity_handle`) = (entity id, entity handle) of the resource for example (product id, product handle)
+ * - (`value`) = search term , for example 'game', 'shoes'
+ * - (`context`) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
  * 
- * Note:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is NOT UNIQUE (imagine a product and collection with same handle)
- * - `entity_handle` + `context` is ALWAYS UNIQUE
+ * **Note**:
+ * - `entity_id` ALWAYS IDENTIFIES THE ENTITY
+ * - `entity_handle` DOES NOT IDENTIFY (imagine a product and collection with same handle)
+ * - `entity_handle` + `context` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface entity_to_search_terms extends entity_to_value {}
 
 /**
  * Here:
- * - (entity_id, entity_handle) = (entity id, entity handle) of the resource for example (product id, product handle)
- * - (value) = search term , for example 'game', 'shoes'
- * - (context) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * - (`entity_id`, `entity_handle`) = (entity id, entity handle) of the resource for example (product id, product handle)
+ * - (`value`) = search term , for example 'game', 'shoes'
+ * - (`context`) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
  * 
  * Note:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is NOT UNIQUE (imagine a product and collection with same handle)
- * - `entity_handle` + `context` is ALWAYS UNIQUE
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` DOES NOT IDENTIFY AN ENTITY (imagine a product and collection with same handle)
+ * - `entity_handle` + `context` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface entity_to_tags_projections extends entity_to_value {}
 
 /**
  * here:
- * - (entity_id, entity_handle) = (product id, product handle)
- * - (value, reporter) = (collection id, collection handle)
- * - (context) = NULL
+ * - (`entity_id`, `entity_handle`) = (product id, product handle)
+ * - (`value`, `reporter`) = (collection id, collection handle)
+ * - (`context`) = NULL
  * 
  * NOTE:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is ALWAYS UNIQUE
- * - `value` is NOT UNIQUE (many products can be related to the same collection)
- * - `reporter` is NOT UNIQUE (many products can be related to the same collection)
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_collections extends entity_to_value {}
 
 /**
  * here:
- * - (entity_id, entity_handle) = (product id, product handle)
- * - (value, reporter) = (discount id,  discount handle)
+ * - (`entity_id`, `entity_handle`) = (product id, product handle)
+ * - (`value`, `reporter`) = (discount id,  discount handle)
  * 
  * NOTE:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is ALWAYS UNIQUE
- * - `value` is NOT UNIQUE (many products can be related to the same discount)
- * - `reporter` is NOT UNIQUE (many products can be related to the same discount)
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_discounts extends entity_to_value {}
 
 /**
  * here:
- * - (entity_id, entity_handle) = (parent product id, parent product handle)
- * - (value, reporter) = (variant product id,  variant product handle)
+ * - (`entity_id`, `entity_handle`) = (parent product id, parent product handle)
+ * - (`value`, `reporter`) = (variant product id,  variant product handle)
  * 
  * NOTE:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is ALWAYS UNIQUE
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_variants extends entity_to_value {}
 
 /**
  * here:
- * - (entity_id, entity_handle) = (parent product id, parent product handle)
- * - (value, reporter) = (related product id,  related product handle)
+ * - (`entity_id`, `entity_handle`) = (parent product id, parent product handle)
+ * - (`value`, `reporter`) = (related product id, related product handle)
  * 
  * NOTE:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is ALWAYS UNIQUE
- * - `value` is NOT UNIQUE (many products can be related to the same product)
- * - `reporter` is NOT UNIQUE (many products can be related to the same product)
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_related_products extends entity_to_value {}
 
@@ -150,11 +152,11 @@ export interface products_to_related_products extends entity_to_value {}
  * - small number of attached products/collections/posts/discounts/shipping per storefront
  * 
  * NOTE:
- * - `entity_id` is ALWAYS UNIQUE
- * - `entity_handle` is ALWAYS UNIQUE
- * - `value` is ALWAYS UNIQUE
- * - `reporter` is NOT UNIQUE (for example a product and collection with same handle name)
- * - `reporter` + `context` is UNIQUE
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` DOES NOT IDENTIFY AN ENTITY (because you can have a product and a collection with the same handle for example)
+ * - `reporter` + `context` ALWAYS IDENTIFIES AN ENTITY (in case you need to delete)
  */
 export interface storefronts_to_other extends entity_to_value {}
 

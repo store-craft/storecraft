@@ -34,6 +34,8 @@ import type { StorecraftConfig } from '@storecraft/core';
       ['auth_admins_emails', 'string[]'],
       ['auth_secret_access_token', 'string'],
       ['auth_secret_refresh_token', 'string'],
+      ['auth_secret_confirm_email_token', 'string'],
+      ['auth_secret_forgot_password_token', 'string'],
       ['checkout_reserve_stock_on', `'checkout_create' | 'checkout_complete' | 'never'`],
       ['storage_rewrite_urls', 'string'],
       ['general_store_name', `string`],
@@ -43,6 +45,7 @@ import type { StorecraftConfig } from '@storecraft/core';
       ['general_store_support_email', `string`],
       ['general_confirm_email_base_url', `string`],
       ['general_forgot_password_confirm_base_url', `string`],
+      ['cors', `object`],
     ]
   }
   />

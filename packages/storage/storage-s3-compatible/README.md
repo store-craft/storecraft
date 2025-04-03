@@ -22,60 +22,137 @@ Features:
 npm i @storecraft/storage-s3-compatible
 ```
 
-## usage
-
-```js
-import { R2, S3, DigitalOceanSpaces, S3CompatibleStorage } from '@storecraft/storage-s3-compatible'
-
-const storage = new R2({
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  account_id: process.env.CF_ACCOUNT_ID,
-  bucket: process.env.S3_BUCKET,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-});
-
-// write
-await storage.putBlob(
-  'folder1/tomer.txt', 
-  new Blob(['this is some text from tomer :)'])
-);
-
-// read
-const { value } = await storage.getBlob('folder1/tomer.txt');
-const url = await storage.getSigned('folder1/tomer.txt');
-console.log('presign GET url ', url);
-
-```
-
-## In Storecraft App
+## AWS S3
 
 ```js
 import { App } from '@storecraft/core';
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
-import { NodePlatform } from '@storecraft/core/platform/node';
-import { R2 } from '@storecraft/storage-s3-compatible'
+import { S3 } from '@storecraft/storage-s3-compatible'
 
-const app = new App(
-  {
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    auth_secret_access_token: process.env.auth_secret_access_token,
-    auth_secret_refresh_token: process.env.auth_secret_refresh_token
-    auth_admins_emails: ['jonny@begood.com']
-  }
-)
+const app = new App()
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(
-  new R2() // config will be inferred by env variables
+  new S3(
+    {
+      forcePathStyle: FORCE_PATH_STYLE,
+      bucket: process.env.S3_BUCKET,
+      region: process.env.S3_REGION,
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_KEY
+    }
+  )
 );
 
 await app.init();
-await migrateToLatest(app.db, false);
-
 ```
+
+## config
+
+Storecraft will search the following `env` variables
+
+```bash
+S3_BUCKET=...
+S3_REGION=...
+S3_ACCESS_KEY_ID=...
+S3_SECRET_KEY=...
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withStorage(
+  new S3()
+)
+```
+
+
+## Cloudflare R2
+
+```js
+import { App } from '@storecraft/core';
+import { R2 } from '@storecraft/storage-s3-compatible'
+
+const app = new App()
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(
+  new R2(
+    {
+      account_id: process.env.CF_ACCOUNT_ID,
+      bucket: process.env.S3_BUCKET,
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+    }
+  )
+);
+
+await app.init();
+```
+
+## config
+
+Storecraft will search the following `env` variables
+
+```bash
+CF_ACCOUNT_ID=...
+S3_BUCKET=...
+S3_ACCESS_KEY_ID=...
+S3_SECRET_ACCESS_KEY=...
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withStorage(
+  new R2()
+)
+```
+
+### Any S3 compatible storage (minio for example)
+
+```js
+import { App } from '@storecraft/core';
+import { S3CompatibleStorage } from '@storecraft/storage-s3-compatible'
+
+const app = new App()
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(
+  new S3CompatibleStorage(
+    {
+      endpoint: process.env.S3_ENDPOINT,
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      bucket: process.env.S3_BUCKET,
+      region: process.env.S3_REGION
+      forcePathStyle: true,
+    }
+  )
+);
+
+await app.init();
+```
+
+## config
+
+Storecraft will search the following `env` variables
+
+```bash
+S3_ENDPOINT=...
+S3_BUCKET=...
+S3_REGION=...
+S3_ACCESS_KEY_ID=...
+S3_SECRET_KEY=...
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withStorage(
+  new S3CompatibleStorage()
+)
+```
+
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

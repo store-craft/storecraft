@@ -41,6 +41,7 @@ export class S3CompatibleStorage {
     secretAccessKey: 'S3_SECRET_ACCESS_KEY',
     bucket: 'S3_BUCKET',
     region: 'S3_REGION',
+    endpoint: 'S3_ENDPOINT',
   });
 
   /** @type {AwsClient} */ #_client;
@@ -86,6 +87,7 @@ export class S3CompatibleStorage {
     this.config.bucket ??= app.platform.env[S3CompatibleStorage.EnvConfig.bucket];
     // @ts-ignore
     this.config.region ??= app.platform.env[S3CompatibleStorage.EnvConfig.region];
+    this.config.endpoint ??= app.platform.env[S3CompatibleStorage.EnvConfig.endpoint];
     return this; 
   }
 

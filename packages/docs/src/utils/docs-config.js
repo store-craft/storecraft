@@ -130,9 +130,19 @@ export default {
               path: 'content/docs/backend/storage/storage-local.mdx'
             },
             {
-              title: 'S3 Compatible',
+              title: 'AWS S3',
               route: 'backend/storage/s3',
               path: 'content/docs/backend/storage/s3.mdx'
+            },
+            {
+              title: 'Cloudflare R2',
+              route: 'backend/storage/r2',
+              path: 'content/docs/backend/storage/r2.mdx'
+            },
+            {
+              title: 'Any S3 Compatible',
+              route: 'backend/storage/s3-compatible',
+              path: 'content/docs/backend/storage/s3-compatible.mdx'
             },
             {
               title: 'Google Storage',

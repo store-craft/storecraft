@@ -288,7 +288,29 @@ export default {
         {
           title: '🔑 Auth',
           route: 'backend/auth',
-          path: 'content/docs/backend/auth/overview.mdx'
+          empty: true,
+          groups: [
+            {
+              title: 'JWT',
+              route: 'backend/auth/jwt',
+              path: 'content/docs/backend/auth/jwt.mdx'
+            },
+            {
+              title: 'Basic Auth',
+              route: 'backend/auth/basic',
+              path: 'content/docs/backend/auth/basic.mdx'
+            },
+            {
+              title: 'API Keys',
+              route: 'backend/auth/api-keys',
+              path: 'content/docs/backend/auth/api-keys.mdx'
+            },
+            {
+              title: 'Social Auth',
+              route: 'backend/auth/social-auth',
+              path: 'content/docs/backend/auth/social-auth.mdx'
+            },
+          ]
         },
         {
           title: '🧪 Extensions',

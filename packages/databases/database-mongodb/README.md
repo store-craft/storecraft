@@ -31,8 +31,8 @@ const app = new App()
 .withDatabase(
   new MongoDB(
     {
-      url: 'connection-string',
-      db_name: 'main',
+      url: process.env.MONGODB_URL,
+      db_name: process.env.MONGODB_NAME,
     }
   )
 )
@@ -40,8 +40,8 @@ const app = new App()
   new MongoVectorStore(
     { 
       embedder: new OpenAIEmbedder(),
-      url: 'connection-string',
-      db_name: 'main',
+      url: process.env.MONGODB_VECTOR_STORE_URL ?? process.env.MONGODB_URL,
+      db_name: process.env.MONGODB_VECTOR_STORE_DB_NAME ?? process.env.MONGODB_NAME,
     }
   )
 )

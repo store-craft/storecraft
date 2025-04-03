@@ -12,8 +12,6 @@ Supports wellknown http-based `serverless` friendly `email` providers,
 - [Mailchimp](https://mailchimp.com/developer/transactional/api/messages/send-new-message/)
 - [Mailgun](https://documentation.mailgun.com/en/latest/api-sending.html#examples)
 
-> TODO: confirm tests
-
 ```bash
 npm i @storecraft/mailer-providers-http
 ```
@@ -27,7 +25,7 @@ import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 
 const mailer = new SendGrid(
   {
-      apikey: process.env.SEND_GRID_SECRET
+    apikey: process.env.SEND_GRID_SECRET
   }
 );
 
@@ -48,7 +46,7 @@ import { Resend } from '@storecraft/mailer-providers-http/resend';
 
 const mailer = new Resend(
   {
-      apikey: process.env.RESEND_API_KEY
+    apikey: process.env.RESEND_API_KEY
   }
 );
 
@@ -70,7 +68,7 @@ import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';
 
 const mailer = new MailChimp(
   {
-      apikey: process.env.MAILCHIMP_API_KEY
+    apikey: process.env.MAILCHIMP_API_KEY
   }
 );
 
@@ -92,7 +90,7 @@ import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';
 
 const mailer = new Mailgun(
   {
-      apikey: process.env.MAILGUN_API_KEY
+    apikey: process.env.MAILGUN_API_KEY
   }
 );
 
@@ -106,6 +104,72 @@ let { success, native_response } = await mailer.email(
   }
 );
 
+```
+
+## In Storecraft App
+
+```js
+import { App } from '@storecraft/core';
+import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
+import { NodePlatform } from '@storecraft/core/platform/node';
+import { GoogleStorage } from '@storecraft/storage-google';
+import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
+
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(
+  new SendGrid(
+    {
+      apikey: process.env.SEND_GRID_SECRET
+    }
+  )
+)
+
+await app.init();
+await migrateToLatest(app.db, false);
+
+```
+
+Storecraft will search the following `env` variables
+
+```bash
+MAILCHIMP_API_KEY=<key>
+MAILGUN_API_KEY=<key>
+RESEND_API_KEY=<key>
+SENDGRID_API_KEY=<key>
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withMailer(
+  new SendGrid()
+)
+```
+
+or, 
+
+```ts
+.withMailer(
+  new Resend()
+)
+```
+or, 
+
+```ts
+.withMailer(
+  new MailChimp()
+)
+```
+
+or,
+
+```ts
+.withMailer(
+  new Mailgun()
+)
 ```
 
 

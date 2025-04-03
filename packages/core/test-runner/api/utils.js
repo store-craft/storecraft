@@ -163,7 +163,7 @@ export const assert_partial_v2 = (actual, expected, msg='') => {
  * 
  * @param {() => Promise<any>} fn 
  */
-export const assert_async_throws = async (fn) => {
+export const assert_async_throws = async (fn, message='function should have thrown !!!') => {
   try {
     await fn();
   } catch (e) {
@@ -171,5 +171,5 @@ export const assert_async_throws = async (fn) => {
     return;
   }
 
-  assert.ok(false, 'function should have thrown !!!')
+  assert.unreachable(message);
 }

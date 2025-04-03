@@ -1,5 +1,6 @@
 /**
  * @import { events } from '../../pubsub/types.public.js'
+ * @import { StorecraftConfig } from '../../types.public.js'
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -9,7 +10,7 @@ import esMain from './utils.esmain.js';
 import { verify_api_auth_result } from './auth.utils.js';
 import { jwt } from '../../crypto/public.js';
 import { CONFIRM_EMAIL_TOKEN, FORGOT_PASSWORD_IDENTITY_TOKEN } from '../../api/con.auth.logic.js';
-import { assert_partial_v2, withRandom } from './utils.js';
+import { assert_async_throws, assert_partial_v2, withRandom } from './utils.js';
 
 
 export const admin_email = 'admin@sc.com';
@@ -578,6 +579,37 @@ export const create = app => {
     }
     
     unsub();
+  });
+
+  s('app should not init without auth secrets', async () => {
+    /** @type {StorecraftConfig} */
+    const base_config = {
+      auth_admins_emails: [admin_email],
+      auth_secret_access_token: 'auth_secret_access_token',
+      auth_secret_refresh_token: 'auth_secret_refresh_token',
+      auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
+      auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+    };
+
+    for(const k of [
+        'auth_secret_access_token',
+        'auth_secret_refresh_token',
+        'auth_secret_forgot_password_token',
+        'auth_secret_confirm_email_token',
+        'auth_admins_emails'
+      ]
+    ) { 
+      const config = {...base_config};
+      delete config[k];
+
+      await assert_async_throws(
+        () => new App(config)
+        .withPlatform(app.platform)
+        .init(false),
+        `missing ${k}`
+      );
+    }
+
   });
   
   return s;

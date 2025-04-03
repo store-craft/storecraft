@@ -109,12 +109,12 @@ with
 
 ```json
 {
-  provider: "google",
-  redirect_uri: "http://your-app.com/auth/google",
-  authorization_response: {
-  code: "4/0AY0e-g5v1xk2g3j",
-  state: "xyz"
-}
+  "provider": "google",
+  "redirect_uri": "http://your-app.com/auth/google",
+  "authorization_response": {
+    "code": "4/0AY0e-g5v1xk2g3j",
+    "state": "xyz"
+  }
 }
 ```
 

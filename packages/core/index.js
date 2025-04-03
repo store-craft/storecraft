@@ -30,6 +30,7 @@ import { StoreAgent } from './ai/agents/index.js';
 import { 
   save_collection, save_discount, save_product, save_shipping_method 
 } from './ai/models/vector-stores/index.js';
+import { assert } from './api/utils.func.js';
 
 /**
  * @typedef {{
@@ -303,6 +304,28 @@ export class App {
       ],
       ...this.config,
     }
+
+    assert(
+      this.#config.auth_secret_access_token,
+      'Storecraft:: Missing `auth_secret_access_token`'
+    );
+    assert(
+      this.#config.auth_secret_refresh_token,
+      'Storecraft:: Missing `auth_secret_refresh_token`'
+    );
+    assert(
+      this.#config.auth_secret_confirm_email_token,
+      'Storecraft:: Missing `auth_secret_confirm_email_token`'
+    );
+    assert(
+      this.#config.auth_secret_forgot_password_token,
+      'Storecraft:: Missing `auth_secret_forgot_password_token`'
+    );
+    assert(
+      this.#config.auth_admins_emails?.length,
+      'Storecraft:: Missing admin emails'
+    );
+
   } 
 
   print_banner(host='', version=(pkg.version ?? '1.0.0')) {
@@ -435,7 +458,7 @@ export class App {
     } catch (e) {
       this.#is_ready = false;
 
-      console.log(e);
+      // console.log(e);
       
       throw e;
     } finally {

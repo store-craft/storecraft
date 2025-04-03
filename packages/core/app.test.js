@@ -1,7 +1,7 @@
 import { App } from './index.js';
 import { DummyMailer } from './mailer/dummy-mailer.js';
 import { NodePlatform } from './platform/node/index.js';
-import  { api, rest } from './test-runner/index.js';
+import { api, rest } from './test-runner/index.js';
 import { SQLite } from '@storecraft/database-sqlite';
 import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js';
 import { admin_email } from './test-runner/api/auth.js';

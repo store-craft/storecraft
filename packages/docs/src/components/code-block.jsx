@@ -94,17 +94,23 @@ theme_light.plain.backgroundColor = 'transparent';
  */
 export const CodeBlock = (
   { 
-    className, outerClassName='w-full', children='', showLinesNumbers=true
+    className, outerClassName='w-full', children='', showLinesNumbers=false
   }
 ) => {
 
   return (
-    <div className={`
-            rounded-lg border
-            font-light overflow-auto text-[13px] 
-            dark:border-kf-600/30 border-kf-600/10 
-            dark:bg-kf-600/20 bg-slate-50 p-3 ${outerClassName}`}>
-      <CodeBlockCore children={children} className={className} showLinesNumbers={showLinesNumbers} />
+    <div 
+      className={`
+        rounded-lg border
+        font-light overflow-auto text-[14px] 
+        dark:border-kf-600/30 border-kf-600/10 
+        dark:bg-kf-600/5 bg-slate-50 p-5 ${outerClassName}`
+      }>
+      <CodeBlockCore 
+        children={children} 
+        className={className} 
+        showLinesNumbers={showLinesNumbers} 
+      />
 		</div>
 	)
 }

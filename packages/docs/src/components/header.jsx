@@ -110,7 +110,8 @@ const Slug = (
  */
 const Header = (
   { 
-    slug, onMenuClick, show_docs_decoration=true, show_start_here=false, className, ...rest
+    slug, onMenuClick, show_docs_decoration=true, 
+    show_start_here=false, className, ...rest
   }
 ) => {
 
@@ -119,7 +120,7 @@ const Header = (
 
 
 <div className={`flex flex-col h-fit  w-full gap-2 border-b border-gray-400/20  ${className}`}>
-  <div className={`flex flex-row justify-between items-center py-2  w-full`}>
+  <div className={`flex flex-row justify-between items-center py-3 md:py-5  w-full`}>
 
     <div className='flex flex-row w-fit h-fit items-center gap-3'>
       <Link href='/'>

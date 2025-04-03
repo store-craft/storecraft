@@ -88,7 +88,7 @@ const Header = (
                        group-hover:from-kf-500 group-hover:to-pink-500/20 
                        group-hover:dark:to-kf-500/20 group-hover:dark:from-pink-500 
                        group-hover:text-white group-hover:dark:text-white/70 `;
-  const clsUnSelected = 'text-kf-400 border-kf-500/20 group-hover:dark:border-pink-500/40';
+  const clsUnSelected = 'text-kf-500 border-kf-500/20 group-hover:dark:border-pink-500/40';
 
   return (
 <div {...rest}>    
@@ -102,8 +102,10 @@ const Header = (
       <Icon {...icon} />
     </div>                
     <div 
-      className={`--text-xs opacity-95 font-semibold 
-              w-full tracking-wide ${selected ? 'text-kf-700 dark:text-pink-500' : ''}`}
+      className={
+        `--text-xs opacity-95 font-semibold 
+         w-full tracking-wide ${selected ? 'text-kf-700 dark:text-pink-500' : ''}`
+      }
       children={title.toUpperCase()} />
 
   </div>    
@@ -133,8 +135,8 @@ const Link2 = (
   <div className={
     'flex flex-row items-center gap-0 w-full ' + 
     itemClass + 
-    ' text-sm font-medium px-2 py-1 rounded-md ' +
-    (selected ? ' bg-kf-50 dark:bg-kf-500 text-kf-700 dark:text-gray-50' : 
+    ' text-sm font-normal px-2 py-1 rounded-md ' +
+    (selected ? ' bg-kf-50 dark:bg-kf-600/20 text-kf-700 dark:text-gray-50' : 
         ' dark:hover:bg-kf-500/20 hover:bg-kf-50')
       }>
     <p children={title} />
@@ -169,7 +171,7 @@ const SideGroups = (
 
   return (
     <div {...rest}>
-      <div className='flex flex-col w-full gap-2'>
+      <div className='flex flex-col w-full gap-2 '>
         { 
           groups.map(
             (item, ix) => (
@@ -305,9 +307,12 @@ const SideBar = (
                 target={group.external ? '_blank' : ''}
                 alt={group.title}>
               <Header 
-                  group={group} 
-                  selected={selected_group==index}
-                  onClick={()=>onClickMenuItem && onClickMenuItem(null)} />  
+                group={group} 
+                selected={selected_group==index}
+                onClick={
+                  ()=>onClickMenuItem && onClickMenuItem(null)
+                } 
+              />  
             </Link>
 
           )

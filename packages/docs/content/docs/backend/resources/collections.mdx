@@ -1,6 +1,6 @@
 # Collections
 
-Manage collections through the API.
+Manage collections through the API.  
 
 First, make sure you have a running app.
 
@@ -98,3 +98,20 @@ const id = await app.api.collections.list_collection_products(
 );
 
 ```
+
+## List All the tags of Products in collection
+
+List all the tags used in all of the products in a collection, This is helpful for building 
+a filter system in the frontend if you know in advance all the tags of the products in a collection
+
+```js
+const tags: string[] = await app.api.collections.list_collection_products_tags(
+  'nintendo-games-collection', 
+);
+
+console.log(tags);
+// ['genre_action', 'genre_platformer', 'genre_sports', 'region_pal', 'region_ntsc']
+
+```
+
+With these tags you can create a filtering side-bar in the frontend side.

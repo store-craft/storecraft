@@ -3,7 +3,7 @@ import ShowIf from '@/comps/show-if.jsx'
 import { BottomActions, TopActions } from '@/comps/collection-actions.jsx'
 import { RecordActions, Span, SpanArray, 
   TimeStampView } from '@/comps/common-fields.jsx'
-import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import useCollectionsActions from '../hooks/use-collections-actions.js'
 import { ResourceTitle } from '../comps/resource-title.jsx'
 
 const test = {
@@ -57,12 +57,12 @@ const schema_fields = [
 
 export default ({}) => {
 
-  /**
-   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  import('@storecraft/core/api').ProductType | 
-   *  import('@storecraft/core/api').VariantType>
-   * }
-   */
+  // /**
+  //  * @type {import('../hooks/use-collections-actions.js').HookReturnType<
+  //  *  import('@storecraft/core/api').ProductType | 
+  //  *  import('@storecraft/core/api').VariantType>
+  //  * }
+  //  */
   const { 
     query_api, context, ref_actions, page, loading, 
     error, queryCount, hasLoaded, resource,

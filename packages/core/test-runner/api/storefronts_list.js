@@ -1,16 +1,13 @@
 /**
- * @import { StorefrontType } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { StorefrontType, StorefrontTypeUpsert } from '../../api/types.api.js'
+ * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  * 
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_list_integrity_tests,
+  iso, add_query_list_integrity_tests,
   get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
@@ -23,7 +20,7 @@ const handle = create_handle('sf', file_name(import.meta.url));
 // virtual api of storecraft for insertion
 
 /** 
- * @type {(StorefrontType & idable_concrete)[]} 
+ * @type {StorefrontTypeUpsert[]} 
  */
 const items = get_static_ids('sf').map(
   (id, ix, arr) => {
@@ -34,7 +31,6 @@ const items = get_static_ids('sf').map(
       handle: handle(),
       id,
       created_at: iso(jx + 1),
-      updated_at: iso(jx + 1),
       active: true,
       tags: [`tag-sf_${ix}`]
     }
@@ -48,33 +44,21 @@ const items = get_static_ids('sf').map(
  */
 export const create = app => {
 
-  /** @type {Test<ListTestContext<StorefrontType>>} */
+  /** @type {Test<QueryTestContext<StorefrontType, StorefrontTypeUpsert>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.storefronts,
-      resource: 'storefronts', events: { list_event: 'storefronts/list' }
-    }
-  );
-
-  s.before(
-    async (ctx) => { 
-      assert.ok(app.ready) 
-      try {
-        for(const p of items) {
-          await app.api.storefronts.remove(p.id);
-          // we bypass the api and upsert straight
-          // to the db because we control the time-stamps
-          await app.db.resources.storefronts.upsert(p);
-        }
-      } catch(e) {
-        console.log(e)
-        throw e;
+      items: items, 
+      app, 
+      ops: app.api.storefronts,
+      resource: 'storefronts', 
+      events: { 
+        list_event: 'storefronts/list' 
       }
     }
   );
 
-  add_list_integrity_tests(s);
+  add_query_list_integrity_tests(s);
 
   return s;
 }

@@ -1,5 +1,5 @@
 /**
- * @import { StorefrontType, StorefrontTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, StorefrontType, StorefrontTypeUpsert } from './types.public.js'
  * @import { HandleOrId, ID as IDType } from '../database/types.public.js'
  */
 import { App } from "../index.js";
@@ -35,68 +35,6 @@ export const upsert = (app) =>
   },
   'storefronts/upsert'
 )(item);
-
-
-/**
- * 
- * @param {App} app
- */
-export const list_storefront_products = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_storefront_products(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_collections = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_storefront_collections(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_discounts = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_storefront_discounts(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_shipping_methods = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_storefront_shipping_methods(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_storefront_posts = (app) => 
-/**
- * 
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_storefront_posts(handle_or_id);
-}
 
 
 /**
@@ -152,6 +90,31 @@ export const export_storefront = (app) => {
   }
 }  
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * @param {ApiQuery<StorefrontType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
+/**
+ * @param {App} app
+ */
+export const get_default_auto_generated_storefront = (app) => 
+  /**
+   * @description Storecraft can generate a default automatcally 
+   * generated storefront for you.
+   * @param {*} [query] 
+   */
+  (query) => {
+    return db(app).get_default_auto_generated_storefront();
+  }
+
 
 /**
  * @param {App} app
@@ -163,11 +126,8 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'storefronts/remove'),
     list: regular_list(app, db(app), 'storefronts/list'),
-    list_storefront_products: list_storefront_products(app),
-    list_storefront_collections: list_storefront_collections(app),
-    list_storefront_discounts: list_storefront_discounts(app),
-    list_storefront_posts: list_storefront_posts(app),
-    list_storefront_shipping_methods: list_storefront_shipping_methods(app),
+    count: count(app),
     export_storefront: export_storefront(app),
+    get_default_auto_generated_storefront: get_default_auto_generated_storefront(app),
   }
 }

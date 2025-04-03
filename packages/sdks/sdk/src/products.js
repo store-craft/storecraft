@@ -3,7 +3,7 @@
  */
 import { StorecraftSDK } from '../index.js'
 import { 
-  collection_base, fetchOnlyApiResponseWithAuth 
+  collection_base, fetchApiWithAuth, fetchOnlyApiResponseWithAuth 
 } from './utils.api.fetch.js';
 
 /**
@@ -19,6 +19,26 @@ export default class Products extends collection_base {
    */
   constructor(sdk) {
     super(sdk, 'products');
+  }
+
+  /**
+   * @description List all of the tags of all the products deduped, 
+   * This is helpful for building a filter system in the frontend if 
+   * you know in advance all the tags of the products in a collection, 
+   * also see the collection confined version db_collections.list_collection_products_tags
+   * 
+   * @return {Promise<string[]>} List of tags
+   */
+  list_used_tags = async () => {
+    const result = await fetchApiWithAuth(
+      this.sdk,
+      `products/used_tags`,
+      {
+        method: 'get'
+      }
+    );
+
+    return result
   }
 
   /**

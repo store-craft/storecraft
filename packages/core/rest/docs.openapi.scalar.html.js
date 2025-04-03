@@ -22,7 +22,7 @@ export default
     'bluePlanet' | 'saturn' | 'kepler' | 'mars' | 'deepSpace' | 'none' */ -->
     <script>
       var configuration = {
-        theme: 'solarized',
+        theme: 'default',
         layout: 'modern',
         servers: [
           {

@@ -1,19 +1,16 @@
 /**
- * @import { CustomerType } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { CustomerType, CustomerTypeUpsert } from '../../api/types.api.js'
+ * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  * 
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,
@@ -21,58 +18,41 @@ import { ID } from '../../api/utils.func.js';
 // virtual api of storecraft for insertion
 
 /** 
- * @type {(CustomerType & idable_concrete)[]} 
+ * @type {CustomerTypeUpsert[]} 
  */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+const items = get_static_ids('cus').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
       email: `user_${ix}@sc.com`, firstname: `first name ${ix}`, 
       lastname: `last name ${ix}`,
-      id: ID('cus'),
+      id,
       created_at: iso(jx + 1),
-      updated_at: iso(jx + 1)
     }
   }
 );
 
-
+items[0].handle
 /**
  * 
  * @param {App} app 
  */
 export const create = app => {
 
-  /** @type {Test<ListTestContext<CustomerType>>} */
+  /** @type {Test<QueryTestContext<CustomerType, CustomerTypeUpsert>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.customers,
-      resource: 'customers', events: { list_event: 'customers/list' }
-    }
-  );
-  
-
-  s.before(
-    async (a) => { 
-      assert.ok(app.ready) 
-      try {
-        for(const p of items) {
-          const success = await app.api.customers.remove(p.email);
-
-          // we bypass the api and upsert straight
-          // to the db because we control the time-stamps
-          await app.db.resources.customers.upsert(p);
-        }
-      } catch(e) {
-        console.log(e)
-        throw e;
-      }
+      items: items, 
+      app, 
+      ops: app.api.customers,
+      resource: 'customers', 
+      events: { list_event: 'customers/list' }
     }
   );
 
-  add_list_integrity_tests(s);
+  add_query_list_integrity_tests(s);
 
   return s;
 }

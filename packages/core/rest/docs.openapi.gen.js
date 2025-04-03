@@ -33,8 +33,10 @@ import {
   notificationTypeUpsertSchema,
   oAuthProviderCreateURIParamsSchema,
   oAuthProviderCreateURIResponseSchema,
+  oAuthProviderSchema,
   orderDataSchema,
   orderDataUpsertSchema,
+  ordersStatisticsTypeSchema,
   paymentGatewayItemGetSchema,
   paymentGatewayStatusSchema,
   paymentOptionsEnumSchema,
@@ -59,6 +61,7 @@ import {
 import * as path from 'node:path';
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
+import { count } from 'node:console';
 //
 // This file creates an OpenAPI file
 //
@@ -401,6 +404,7 @@ const create_all = () => {
   register_payments(registry);
   register_extensions(registry);
   register_quick_search(registry);
+  register_statistics(registry)
   register_emails(registry);
   register_tags(registry);
   register_templates(registry);
@@ -600,29 +604,21 @@ const register_base_delete = (registry, slug_base, name, tags, example_id, descr
  * @param {z.infer<ZodSchema>} example 
  * @param {any} [extra] 
  * @param {string} [aug_description] 
+ * @param {boolean} [with_count_query=true] 
  */
 const register_base_list = (
-  registry, slug_base, name, tags, zod_schema, example, extra={}, aug_description='') => {
+  registry, slug_base, name, tags, zod_schema, example, 
+  extra={}, aug_description='', with_count_query=true
+) => {
   
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}`,
-    summary: `List and filter ${name} items`,
+    summary: `Query ${name} items`,
     description: `List and filter items \n ${aug_description}`,
     tags,
     request: {
       query: create_query(),
-      aquery: z.object({
-        expand: z.string().openapi(
-          { 
-            examples: ['(collections,search)', '*'],
-            description: `Expand connections of item, 
-            a **CSV** of connection names, example \`(search, discounts)\` (Use \`*\` for all)`,
-            default: '`*`'
-          }
-        ),
-      }),
-
     },
     responses: {
       200: {
@@ -638,6 +634,31 @@ const register_base_list = (
     },
     ...extra
   });
+
+  if(with_count_query) {
+    registry.registerPath({
+      method: 'get',
+      path: `/${slug_base}/count_query`,
+      summary: `Count Query of ${name} items`,
+      description: `Count the query of filtered items \n ${aug_description}`,
+      tags,
+      request: {
+        query: create_query(),
+      },
+      responses: {
+        200: {
+          description: `Count of items satisfying the query of \`${name}s\``,
+          content: {
+            'application/json': {
+              schema: z.object({count: z.number()}),
+            },
+          },
+        },
+        ...error() 
+      },
+      ...extra
+    });
+  }
 
 }
 
@@ -1160,11 +1181,16 @@ const register_ai = (registry) => {
 
   registry.registerPath({
     method: 'post',
-    path: `/ai/agent/stream`,
+    path: `/ai/agents/{agent_handle}/stream`,
     description: 'Speak with `Storecraft` AI agent in stream (Server-Sent Events)',
     summary: 'Speak with AI agent (stream)',
     tags: ['ai'],
     request: {
+      params: z.object(
+        {
+          agent_handle: z.string().openapi({description: 'agent identifier', example: 'store'})
+        }
+      ),
       body: {
         content: {
           "application/json": {
@@ -1174,11 +1200,7 @@ const register_ai = (registry) => {
                 {
                   type: 'text',
                   content: 'What is the price of Super Mario for the NES console ?'
-                },
-                {
-                  type: 'image',
-                  content: 'base64_......'
-                },
+                }
               ]
             }
           }
@@ -1212,11 +1234,16 @@ const register_ai = (registry) => {
 
   registry.registerPath({
     method: 'post',
-    path: `/ai/agent/run`,
+    path: `/ai/agents/{agent_handle}/run`,
     description: 'Speak with `Storecraft` AI agent synchronously',
     summary: 'Speak with AI agent (sync)',
     tags: ['ai'],
     request: {
+      params: z.object(
+        {
+          agent_handle: z.string().openapi({description: 'agent identifier', example: 'store'})
+        }
+      ),
       body: {
         content: {
           "application/json": {
@@ -1302,19 +1329,25 @@ const register_similarity_search = (registry) => {
         description: "A list of similar entities",
         content: {
           'application/json': {
-            schema: z.array(similaritySearchResultSchema),
-            example: [
-              {
-                score: 0.0032,
-                namespace: 'products',
-                content: {
-                  id: 'pr_sdsduhd77238dsjisjd9',
-                  handle: 'super-mario-world',
-                  price: 49,
-                  description: '...',
+            schema: similaritySearchResultSchema,
+            example: {
+              context: {
+                metric: 'cosine',
+                dimensions: 1536
+              },
+              items: [
+                {
+                  score: 0.0032,
+                  namespace: 'products',
+                  content: {
+                    id: 'pr_sdsduhd77238dsjisjd9',
+                    handle: 'super-mario-world',
+                    price: 49,
+                    description: '...',
+                  }
                 }
-              }
-            ]
+              ]
+            }
           },
         },
       },
@@ -1616,6 +1649,32 @@ const register_auth = registry => {
     }
   );  
 
+  registry.registerPath(
+    {
+      method: 'get',
+      path: `/auth/users/count_query`,
+      description: 'Count users query',
+      summary: 'Count the auth users Query / Filter',
+      tags,
+      request: {
+        query: create_query()
+      },
+      responses: {
+        200: {
+          description: 'count',
+          content: {
+            "application/json": {
+              schema: z.object({ count: z.number() }),
+            },
+          },
+        },
+        ...error() 
+      },
+      ...apply_security()
+    }
+  );  
+
+
   // confirmations
 
   registry.registerPath(
@@ -1698,16 +1757,9 @@ const register_auth = registry => {
 
   // auth providers
 
-  const _authProvider = registry.register(
+  const AuthProviderSchema = registry.register(
     `AuthProvider`, 
-    z.object(
-      {
-        provider: z.string().openapi({description: 'handle of provider', examples: ['google', 'facebook', 'github', 'x']}),
-        name: z.string().openapi({description: 'Readable name of provider', examples: ['Google', 'Facebook', 'Github', 'X']}),
-        logo_url: z.string().openapi({description: 'image url / image data url / svg data url', examples: ['data:image/png,...', 'data:image/svg+xml,...', 'https://example.com/image.jpeg']}),
-        description: z.string().openapi({description: 'Description of provider'})
-      }
-    )
+    oAuthProviderSchema
   );
 
   registry.registerPath(
@@ -1722,7 +1774,7 @@ const register_auth = registry => {
           description: 'List of auth providers',
           content: {
             "application/json": {
-              schema: _authProvider
+              schema: z.array(AuthProviderSchema).openapi({description: 'List of auth providers', example: [{ name: 'Google', provider: 'google', logo_url: 'data:image/png;...', description: 'Google OAuth2' }]}), 
             },
           },
         },
@@ -2057,6 +2109,7 @@ const register_storage = registry => {
   });    
 }
 
+
 /**
  * @param {OpenAPIRegistry} registry 
  */
@@ -2064,21 +2117,21 @@ const register_collections = registry => {
   const name = 'collection'
   const slug_base = 'collections'
   const tags = [`${name}s`];
-  const example_id = 'col_65f2ae568bf30e6cd0ca95ea';
+  const examples = ['col_65f2ae568bf30e6cd0ca95ea', 'playstation-games'];
   const _typeSchema = registry.register(name, collectionTypeSchema);
   const _typeUpsertSchema = registry.register(
     `${name}Upsert`, collectionTypeUpsertSchema
     );
 
   register_base_get(
-    registry, slug_base, name, tags, example_id, 
+    registry, slug_base, name, tags, examples[0], 
     _typeSchema, example_collection
     );
   register_base_upsert(
-    registry, slug_base, name, tags, example_id, 
+    registry, slug_base, name, tags, examples[0], 
     _typeUpsertSchema, example_collection
     );
-  register_base_delete(registry, slug_base, name, tags, example_id);
+  register_base_delete(registry, slug_base, name, tags, examples[0]);
   register_base_list(
     registry, slug_base, name, tags, _typeUpsertSchema, 
     example_collection
@@ -2089,13 +2142,13 @@ const register_collections = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/products`,
     description: 'Each `collection` is linked to `products`, you can query and filter these `products` by collection',
-    summary: 'List and filter collection\'s products',
+    summary: 'Query collection\'s products',
     tags,
     request: {
       params: z.object({
         id_or_handle: z.string().openapi(
           { 
-            example: example_id,
+            examples,
             description: '`id` or `handle`'
           }
         ),
@@ -2118,7 +2171,153 @@ const register_collections = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/count_query`,
+    description: 'Each `collection` is linked to `products`, you can count the query of these `products` by collection',
+    summary: 'Count collection\'s products query',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `count`,
+        content: {
+          'application/json': {
+            schema: z.object({count: z.number()}),
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/used_tags`,
+    description: 'List all of the used tags of products in a collection, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection',
+    summary: 'List All Used Collection\'s Products Tags',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of all of the tags of the products in the collection`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+  registry.registerPath({
+    method: 'post',
+    path: `/${slug_base}/{id_or_handle}/export`,
+    description: 'Export a colletion of `products` into the `storage`. This is beneficial for `collections`, that hardly change and therefore can be efficiently stored in a cost-effective `storage` and **CDN** network.',
+    summary: 'Export collection to storage json',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples,
+            description: '`id` or `handle` of the collection'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `json url`,
+        content: {
+          'application/json': {
+            schema: z.string().describe('storage path of the exported collection'),
+            example: ['storage://collections/col_65dc619ac40344c9a1dd6755.json', 'storage://collections/playstation-games.json']
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()    
+  });
+    
 }
+
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_statistics = registry => {
+  const name = 'statistics'
+  const slug_base = 'statistics'
+  const tags = [`${name}`];
+  const ordersStatisticsType = registry.register(
+    `OrdersStatisticsType`, ordersStatisticsTypeSchema.describe('`orders` / `sales` statistics')
+    );
+
+  // list and filter collection products
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/orders`,
+    description: 'Compute the `statistics` of `sales` / `orders` a period of time per day.',
+    summary: 'Compute Sales Statistics',
+    tags,
+    request: {
+      query: z.object({
+        fromDay: z.string().openapi(
+          { 
+            examples: ['2023-01-01T00:00:00Z', '0290902930923'],
+            description: '`ISO` / `UTC` / `timestamp` date'
+          }
+        ),
+        toDay: z.string().openapi(
+          { 
+            examples: ['2023-01-01T00:00:00Z', '0290902930923'],
+            description: '`ISO` / `UTC` / `timestamp` date'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Filtered product\'s of a collection`,
+        content: {
+          'application/json': {
+            schema: ordersStatisticsType,
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });
+
+}
+
+
 
 /**
  * @param {OpenAPIRegistry} registry 
@@ -2249,7 +2448,7 @@ const register_customers = registry => {
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}/{id_or_email}/orders`,
-    description: 'List and filter customer orders, this is only available \
+    description: 'Query customer orders, this is only available \
     to `admin` and the `customer` (with auth token)',
     summary: 'Query customer orders',
     tags,
@@ -2280,6 +2479,36 @@ const register_customers = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_email}/orders/count_query`,
+    description: 'Count customer orders query, this is only available \
+    to `admin` and the `customer` (with auth token)',
+    summary: 'Count customer orders query',
+    tags,
+    request: {
+      params: z.object({
+        id_or_email: z.string().openapi(
+          { 
+            example: 'a@a.com',
+            description: '`id` or `email`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `count of query`,
+        content: {
+          'application/json': {
+            schema: z.object({count: z.number()}),
+          },
+        },
+      },
+      ...error() 
+    },
+  });  
 }
 
 
@@ -2319,7 +2548,7 @@ const register_discounts = registry => {
     path: `/${slug_base}/{id_or_handle}/products`,
     description: 'Each `discount` has eligible `products`, \
       you can query and filter these `products` by discount',
-    summary: 'List and filter discount\'s eligible products',
+    summary: 'Query discount\'s eligible products',
     tags,
     request: {
       params: z.object({
@@ -2346,6 +2575,68 @@ const register_discounts = registry => {
     },
   });
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/count_query`,
+    description: 'Each `discount` has eligible `products`, \
+      you can count the query `products` by discount',
+    summary: 'Count discount\'s eligible products query',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            example: example_id,
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+      query: create_query()
+    },
+    responses: {
+      200: {
+        description: `Filtered product\'s of a discount`,
+        content: {
+          'application/json': {
+            schema: z.object({count: z.number()}),
+          },
+        },
+      },
+      ...error() 
+    },
+  }); 
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/{id_or_handle}/products/used_tags`,
+    description: 'List all the tags of products in a discount, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a discount',
+    summary: 'List All collection\'s products tags',
+    tags,
+    request: {
+      params: z.object({
+        id_or_handle: z.string().openapi(
+          { 
+            examples: ['dis_65f2ae888bf30e6cd0ca9600', 'discount-10'],
+            description: '`id` or `handle`'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `List of all of the tags of the products in the discount`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });  
 }
 
 /**
@@ -2686,7 +2977,6 @@ const register_quick_search = registry => {
       },
       ...error() 
     },
-    ...apply_security()
   });
 }
 
@@ -2944,6 +3234,28 @@ const register_storefronts = registry => {
     ]
   }
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/auto-generated`,
+    description: 'You can fetch the default auto-generated storefront. This will fetch all active `collections`, \
+    `discounts`, `shipping methods`, `posts` (latest 5) and `products`(latest 10) that are linked to the storefront. \
+    Also, all the products tags aggregated so you can build a filter system in the frontend',
+    summary: 'Get Default Auto Generated Storefront',
+    tags,
+    responses: {
+      200: {
+        description: `The default storefront`,
+        content: {
+          'application/json': {
+            schema: storefrontTypeSchema,
+            example
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+    
   register_base_get(
     registry, slug_base, name, tags, example_id, 
     _typeSchema, example,
@@ -2968,12 +3280,11 @@ const register_storefronts = registry => {
     registry, slug_base, name, tags, _typeUpsertSchema, example
     );
 
-  // list linked products
   registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/products`,
-    description: 'Each `storefront` has linked products, you can list these `products`',
-    summary: 'List storefront products',
+    method: 'post',
+    path: `/${slug_base}/{id_or_handle}/export`,
+    description: 'Export a storefront into the `storage`. This is beneficial for things`, that hardly change and therefore can be efficiently stored and retrieved from a cost-effective `storage` and **CDN** network.',
+    summary: 'Export storefront to storage json',
     tags,
     request: {
       params: z.object({
@@ -2987,142 +3298,19 @@ const register_storefronts = registry => {
     },
     responses: {
       200: {
-        description: `List of products`,
+        description: `json url`,
         content: {
           'application/json': {
-            schema: z.array(productTypeSchema.or(variantTypeSchema)),
-            example: [example_product, example_product]
+            schema: z.string().describe('storage path of the exported storefront'),
+            example: ['storage://storefronts/sf_65dc619ac40344c9a1dd6755.json', 'storage://storefronts/weekday-storefront.json']
           },
         },
       },
       ...error() 
     },
-  });
-
-  // list linked discounts
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/discounts`,
-    description: 'Each `storefront` has linked discounts, you can list these `discounts`',
-    summary: 'List storefront discounts',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle` of the storefront'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List of discounts`,
-        content: {
-          'application/json': {
-            schema: z.array(discountTypeSchema),
-            example: [example_discount]
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
-  // list linked shipping methods
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/shipping`,
-    description: 'Each `storefront` has linked shipping methods, you can list these `shipping methods`',
-    summary: 'List storefront shipping methods',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle` of the storefront'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List of shipping methods`,
-        content: {
-          'application/json': {
-            schema: z.array(shippingMethodTypeSchema),
-            example: [example_shipping]
-          },
-        },
-      },
-      ...error() 
-    },
+    ...apply_security()    
   });
   
-  // list linked collections
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/collections`,
-    description: 'Each `storefront` has linked collections, you can list these `collections`',
-    summary: 'List storefront collections',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle` of the storefront'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List of collections`,
-        content: {
-          'application/json': {
-            schema: z.array(collectionTypeSchema),
-            example: [example_collection]
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
-  // list linked posts
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/posts`,
-    description: 'Each `storefront` has linked posts, you can list these `posts`',
-    summary: 'List storefront posts',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle` of the storefront'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List of posts`,
-        content: {
-          'application/json': {
-            schema: z.array(postTypeSchema),
-            example: [example_post]
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
 }
 
 
@@ -3788,12 +3976,35 @@ const register_products = registry => {
     _typeUpsertSchema, example
     );
 
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/used_tags`,
+    description: 'List all of the used tags of all the products, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a collection, also see the collection confined version db_collections.list_collection_products_tags',
+    summary: 'List all used tags',
+    tags,
+    responses: {
+      200: {
+        description: `List of all of the tags of all the products`,
+        content: {
+          'application/json': {
+            schema: z.array(z.string()),
+            example: [
+              'genre-action', 'genre-comedy', 'console-ps4', 'color-red', 'color-blue' 
+            ]
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+  
+  
   // list collections
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/collections`,
     description: 'Each `products` has linked collections, you can list all these `collections`',
-    summary: 'List all product\'s collections',
+    summary: 'List collections of product',
     tags,
     request: {
       params: z.object({
@@ -3819,12 +4030,16 @@ const register_products = registry => {
     },
   });
 
+
+
+
+
   // list variants
   registry.registerPath({
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/variants`,
     description: 'Each `products` may have linked product variants, you can list all these `variants`',
-    summary: 'List all product\'s variants',
+    summary: 'List variants of product',
     tags,
     request: {
       params: z.object({
@@ -3889,7 +4104,7 @@ const register_products = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/discounts`,
     description: 'Each `products` may have linked `discounts`, you can list all these `discounts`',
-    summary: 'List all product\'s discounts',
+    summary: 'List discounts of product',
     tags,
     request: {
       params: z.object({
@@ -3920,7 +4135,7 @@ const register_products = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/related`,
     description: 'Each `products` may have related `products`, you can list all these `products`',
-    summary: 'List all related products',
+    summary: 'List related products of product',
     tags,
     request: {
       params: z.object({

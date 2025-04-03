@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-turso",
-  "version": "1.0.11",
+  "version": "1.0.14",
   "description": "`Storecraft` database driver for `Turso` (cloud sqlite)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -35,7 +35,8 @@
   "scripts": {
     "database-turso:test": "node ./tests/runner.test.js",
     "test": "npm run database-turso:test",
-    "prepublishOnly": "npm version patch --force"
+    "prepublishOnly": "npm version patch --force",
+    "sc-publish": "npm publish --access public"
   },
   "peerDependencies": {
     "kysely": "*"

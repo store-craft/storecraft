@@ -1,18 +1,20 @@
 /**
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { db_products as db_col } from '@storecraft/core/database'
+ * @import { db_products as db_col, RegularGetOptions } from '@storecraft/core/database'
  * @import { Database } from '../types.sql.tables.js'
  */
 
 import { enums } from '@storecraft/core/api'
 import { SQL } from '../index.js'
-import { delete_entity_values_of_by_entity_id_or_handle, delete_me, delete_media_of, 
+import { 
+  delete_entity_values_of_by_entity_id_or_handle_and_context, 
+  delete_me, delete_media_of, 
   delete_search_of, delete_tags_of, 
   insert_entity_values_of, insert_media_of, insert_search_of, 
   insert_tags_of, regular_upsert_me, 
   where_id_or_handle_table, products_with_collections, 
   with_tags, with_media, 
-  delete_entity_values_by_value_or_reporter,
+  delete_entity_values_by_value_or_reporter_and_context,
   products_with_discounts,
   products_with_variants,
   count_regular,
@@ -23,6 +25,10 @@ import { query_to_eb, query_to_sort } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { report_document_media } from './con.images.js'
 import { union } from '@storecraft/core/api/utils.func.js'
+import { 
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db
+ } from '@storecraft/core/database'
 
 
 export const table_name = 'products'
@@ -65,14 +71,28 @@ const upsert = (driver) => {
       ).execute();
 
       const eligible_discounts = discounts.filter(
-        d => driver.app.api.pricing.test_product_filters_against_product(d.info.filters, item)
+        d => driver.app.api.pricing.test_product_filters_against_product(
+          d.info.filters, item
+        )
+      );
+      
+      item.tags = union(
+        [
+          // remove old discount tags
+          item.tags?.filter(t => !t.startsWith('discount_')),
+          // add new discount tags
+          eligible_discounts.map(
+            helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+          ),
+        ]
       );
 
       search_terms = union(
         [
           search_terms, 
-          eligible_discounts.map(d => `discount:${d.handle}`),
-          eligible_discounts.map(d => `discount:${d.id}`),
+          eligible_discounts.map(
+            helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db
+          ),
         ]
       );
 
@@ -109,7 +129,7 @@ const upsert = (driver) => {
           // PRODUCTS => VARIANTS
           if(item && ('variant_hint' in item) && is_variant(item)) {
             // remove previous
-            await delete_entity_values_by_value_or_reporter('products_to_variants')(
+            await delete_entity_values_by_value_or_reporter_and_context('products_to_variants')(
               trx, item.id, item.handle
             );
             // add 
@@ -123,8 +143,8 @@ const upsert = (driver) => {
           // Explicit PRODUCTS => COLLECTIONS
           //
           // remove this product's old collections connections
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-            trx, item.id, item.handle
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_collections')(
+            trx, item.id
           );
           if(item.collections) {
             // add this product's new collections connections
@@ -138,8 +158,8 @@ const upsert = (driver) => {
           // Explicit PRODUCTS => Related Products
           //
           // remove this product's old collections connections
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_related_products')(
-            trx, item.id, item.handle
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_related_products')(
+            trx, item.id
           );
           if(item.related_products) {
             // add this product's new `related_products` connections
@@ -152,8 +172,8 @@ const upsert = (driver) => {
 
           // PRODUCTS => DISCOUNTS
           // remove this product's older connections to discounts
-          await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
-            trx, item.id, item.handle, 
+          await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_discounts')(
+            trx, item.id
           );
           if(eligible_discounts) {
             // insert new connections to discounts
@@ -186,7 +206,8 @@ const get = (driver) => {
     const expand = options?.expand ?? ['*'];
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
-    const expand_variants = expand.includes('*') || expand.includes('variants');
+    const expand_variants = expand.includes('*') || 
+      (/** @type {RegularGetOptions<ProductType>["expand"]} */(expand)).includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
 
@@ -224,7 +245,8 @@ const getBulk = (driver) => {
     const expand = options?.expand ?? ['*'];
     const expand_collections = expand.includes('*') || expand.includes('collections');
     const expand_discounts = expand.includes('*') || expand.includes('discounts');
-    const expand_variants = expand.includes('*') || expand.includes('variants');
+    const expand_variants = expand.includes('*') || 
+      (/** @type {RegularGetOptions<ProductType>["expand"]} */(expand)).includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
     const dtype = driver.config.dialect_type;
 
@@ -275,19 +297,20 @@ const remove_internal = (driver) => {
     await delete_search_of(trx, product.id);
     await delete_media_of(trx, product.id);
     // PRODUCTS => COLLECTIONS
-    await delete_entity_values_of_by_entity_id_or_handle('products_to_collections')(
-      trx, product.id, product.handle
+    await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_collections')(
+      trx, product.id
     );
     // PRODUCTS => DISCOUNTS
-    await delete_entity_values_of_by_entity_id_or_handle('products_to_discounts')(
-      trx, product.id, product.handle
+    await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_discounts')(
+      trx, product.id
     );
     // STOREFRONT => PRODUCT
-    await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
-      trx, product.id, product.handle
+    // TODO: this is problematic
+    await delete_entity_values_by_value_or_reporter_and_context('storefronts_to_other')(
+      trx, product.id, product.handle, table_name
     );
     // PRODUCTS => RELATED PRODUCT
-    await delete_entity_values_by_value_or_reporter('products_to_related_products')(
+    await delete_entity_values_by_value_or_reporter_and_context('products_to_related_products')(
       trx, product.id, product.handle
     );
     // PRODUCT => VARIANTS
@@ -295,7 +318,7 @@ const remove_internal = (driver) => {
     {
       if(is_variant(product)) {
         // delete my reported connections
-        await delete_entity_values_by_value_or_reporter('products_to_variants')(
+        await delete_entity_values_by_value_or_reporter_and_context('products_to_variants')(
           trx, product.id, product.handle
         );
       } else if(product && 'variants' in product) { // parent
@@ -303,8 +326,8 @@ const remove_internal = (driver) => {
           (product.variants ?? []).map(v => remove_internal(driver)(v, trx))
         );
         // if I am a parent product, delete my relations to all previous variants
-        await delete_entity_values_of_by_entity_id_or_handle('products_to_variants')(
-          trx, product.id, product.handle
+        await delete_entity_values_of_by_entity_id_or_handle_and_context('products_to_variants')(
+          trx, product.id
         );
       }
     }
@@ -399,7 +422,7 @@ const list = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_product_collections"]}
+ * @returns {db_col["list_all_product_collections"]}
  */
 const list_product_collections = (driver) => {
   return async (product_id_or_handle) => {
@@ -414,7 +437,7 @@ const list_product_collections = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_product_discounts"]}
+ * @returns {db_col["list_all_product_discounts"]}
  */
 const list_product_discounts = (driver) => {
   return async (product_id_or_handle) => {
@@ -430,7 +453,7 @@ const list_product_discounts = (driver) => {
 /**
  * @param {SQL} driver 
  * 
- * @returns {db_col["list_product_variants"]}
+ * @returns {db_col["list_all_product_variants"]}
  */
 const list_product_variants = (driver) => {
   return async (product_id_or_handle) => {
@@ -450,7 +473,7 @@ const list_product_variants = (driver) => {
 /**
  * @param {SQL} driver 
  * 
- * @returns {db_col["list_related_products"]}
+ * @returns {db_col["list_all_related_products"]}
  */
 const list_related_products = (driver) => {
   return async (product_id_or_handle) => {
@@ -461,6 +484,31 @@ const list_related_products = (driver) => {
     );
 
     return item?.related_products ?? [];
+  }
+}
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_used_products_tags"]}
+ */
+const list_used_products_tags = (driver) => {
+  return async () => {
+
+    const items = await driver.client
+      .selectFrom('products')
+      .innerJoin(
+        'entity_to_tags_projections', 
+        'entity_to_tags_projections.entity_id', 
+        'products.id'
+      )
+      .select('entity_to_tags_projections.value as tag')
+      .groupBy('tag')
+      .execute();
+
+      // .compile();
+      // console.log(items[0])
+
+    return items.map(e => e.tag);
   }
 }
 
@@ -516,10 +564,11 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    list_product_collections: list_product_collections(driver),
-    list_product_discounts: list_product_discounts(driver),
-    list_product_variants: list_product_variants(driver),
-    list_related_products: list_related_products(driver),
+    list_all_product_collections: list_product_collections(driver),
+    list_all_product_discounts: list_product_discounts(driver),
+    list_all_product_variants: list_product_variants(driver),
+    list_all_related_products: list_related_products(driver),
+    list_used_products_tags: list_used_products_tags(driver),
     count: count_regular(driver, table_name),
   }
 }

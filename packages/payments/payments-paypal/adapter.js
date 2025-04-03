@@ -58,11 +58,11 @@ export class Paypal {
     const is_prod = Boolean(this.config.env==='prod');
     this.config.client_id ??= app.platform.env[
       is_prod ? Paypal.EnvConfigProd.client_id : Paypal.EnvConfigTest.client_id
-    ] ?? 'PAYPAL_CLIENT_ID';
+    ] ?? app.platform.env['PAYPAL_CLIENT_ID'];
 
     this.config.secret ??= app.platform.env[
       is_prod ? Paypal.EnvConfigProd.secret : Paypal.EnvConfigTest.secret
-    ] ?? 'PAYPAL_SECRET';
+    ] ?? app.platform.env['PAYPAL_SECRET'];
 
     const is_valid = this.config.client_id && this.config.secret;
 

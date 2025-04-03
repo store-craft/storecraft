@@ -1,11 +1,8 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, PostTypeUpsert, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, FilterValue_p_in_products, PostTypeUpsert, 
  *  ProductTypeUpsert, ShippingMethodTypeUpsert, StorefrontTypeUpsert 
  * } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
  * 
  */
 import { suite } from 'uvu';
@@ -85,7 +82,14 @@ const discounts_upsert = [
       filters: [
         {
           meta: enums.FilterMetaEnum.p_in_products,
-          value: ['pr-non-existing-handle']
+          value: /** @type {FilterValue_p_in_products} */ (
+            [
+              {
+                handle: 'pr-non-existing-handle',
+                id: 'pr-non-existing-id',
+              }
+            ]
+          )
         }
       ]
     }
@@ -104,7 +108,14 @@ const discounts_upsert = [
       filters: [
         {
           meta: enums.FilterMetaEnum.p_in_products,
-          value: ['pr-non-existing-handle']
+          value: /** @type {FilterValue_p_in_products} */ (
+            [
+              {
+                handle: 'pr-non-existing-handle',
+                id: 'pr-non-existing-id',
+              }
+            ]
+          )
         }
       ]
     }
@@ -212,66 +223,55 @@ export const create = app => {
       }
     );
 
-    // now verify
-    { // verify initial collections
-      const queried = await app.api.storefronts.list_storefront_collections(
+
+    { // now verify
+      const queried = await app.api.storefronts.get(
         storefront_upsert.handle
       );
-
-      const verified = collections_upsert.every(
-        c => queried.some(q => q.handle===c.handle)
-      )
-      assert.ok(verified, 
-        'list collections does not include original collections !')
+  
+      { // verify initial collections
+  
+        const verified = collections_upsert.every(
+          c => queried.collections.some(q => q.handle===c.handle)
+        )
+        assert.ok(verified, 
+          'list collections does not include original collections !')
+      }
+  
+      { // verify products
+        const verified = products_upsert.every(
+          c => queried.products.some(q => q.handle===c.handle)
+        )
+        assert.ok(verified, 
+          'list products does not include original items !')
+      }
+  
+      { // verify discounts
+        const verified = discounts_upsert.every(
+          c => queried.discounts.some(q => q.handle===c.handle)
+        )
+        assert.ok(verified, 
+          'list discounts does not include original items !')
+      }
+  
+      { // verify shipping
+        const verified = shipping_upsert.every(
+          c => queried.shipping_methods.some(q => q.handle===c.handle)
+        )
+        assert.ok(verified, 
+          'list shipping does not include original items !')
+      }
+  
+      { // verify posts
+        const verified = posts_upsert.every(
+          c => queried.posts.some(q => q.handle===c.handle)
+        )
+        assert.ok(verified, 
+          'list posts does not include original items !')
+      }
     }
+    
 
-    { // verify products
-      const queried = await app.api.storefronts.list_storefront_products(
-        storefront_upsert.handle
-      );
-
-      const verified = products_upsert.every(
-        c => queried.some(q => q.handle===c.handle)
-      )
-      assert.ok(verified, 
-        'list products does not include original items !')
-    }
-
-    { // verify discounts
-      const queried = await app.api.storefronts.list_storefront_discounts(
-        storefront_upsert.handle
-      );
-
-      const verified = discounts_upsert.every(
-        c => queried.some(q => q.handle===c.handle)
-      )
-      assert.ok(verified, 
-        'list discounts does not include original items !')
-    }
-
-    { // verify shipping
-      const queried = await app.api.storefronts.list_storefront_shipping_methods(
-        storefront_upsert.handle
-      );
-
-      const verified = shipping_upsert.every(
-        c => queried.some(q => q.handle===c.handle)
-      )
-      assert.ok(verified, 
-        'list shipping does not include original items !')
-    }
-
-    { // verify posts
-      const queried = await app.api.storefronts.list_storefront_posts(
-        storefront_upsert.handle
-      );
-
-      const verified = posts_upsert.every(
-        c => queried.some(q => q.handle===c.handle)
-      )
-      assert.ok(verified, 
-        'list posts does not include original items !')
-    }
 
     // AFTER DELETE OF CONNECTIONS
     // strategy:
@@ -291,53 +291,41 @@ export const create = app => {
       await app.api.shipping_methods.remove(shipping_id_to_remove);
       await app.api.posts.remove(post_id_to_remove);
 
+      let queried = await app.api.storefronts.get(
+        storefront_upsert.handle
+      );
+
       {
-        let queried = await app.api.storefronts.list_storefront_collections(
-          storefront_upsert.handle
-        );
         assert.not(
-          queried.find(q => q.id===collection_id_to_remove), 
+          queried.collections.find(q => q.id===collection_id_to_remove), 
           'list collections does not include original collections !'
         );
       }
       //
       {
-        let queried = await app.api.storefronts.list_storefront_discounts(
-          storefront_upsert.handle
-        );
-
         assert.not(
-          queried.find(q => q.id===discount_id_to_remove), 
+          queried.discounts.find(q => q.id===discount_id_to_remove), 
           'list discounts does not include original collections !'
         );
       }
       //
       {
-        let queried = await app.api.storefronts.list_storefront_posts(
-          storefront_upsert.handle
-        );
         assert.not(
-          queried.find(q => q.id===post_id_to_remove), 
+          queried.posts.find(q => q.id===post_id_to_remove), 
           'list posts does not include original collections !'
         );
       }
       //
       {
-        let queried = await app.api.storefronts.list_storefront_products(
-          storefront_upsert.handle
-        );
         assert.not(
-          queried.find(q => q.id===product_id_to_remove), 
+          queried.products.find(q => q.id===product_id_to_remove), 
           'list products does not include original collections !'
         );
       }
       //
       {
-        let queried = await app.api.storefronts.list_storefront_shipping_methods(
-          storefront_upsert.handle
-        );
         assert.not(
-          queried.find(q => q.id===shipping_id_to_remove), 
+          queried.shipping_methods.find(q => q.id===shipping_id_to_remove), 
           'list shipping does not include original collections !'
         );
       }

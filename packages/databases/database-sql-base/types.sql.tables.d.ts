@@ -1,17 +1,15 @@
-import { AttributeType, AuthUserType, Role, TagType, 
+import { 
+  AttributeType, AuthUserType, Role, TagType, 
   CollectionType, ProductType, ShippingMethodType,
   VariantOption, PostType, CustomerType,
   VariantOptionSelection, OrderData, StorefrontType,
-  AddressType, ImageType,
-  OrderContact,
-  LineItem,
-  OrderStatus, DiscountType,
-  PricingData,
-  ValidationEntry,
+  AddressType, ImageType, OrderContact,
+  LineItem, OrderStatus, DiscountType,
+  PricingData, ValidationEntry,
   OrderPaymentGatewayData, NotificationType,
-  NotificationAction,
-  DiscountInfo,
-  DiscountApplicationEnum} from '@storecraft/core/api'
+  NotificationAction, DiscountInfo,
+  DiscountApplicationEnum
+} from '@storecraft/core/api'
 import {
   ColumnType,
   Generated,
@@ -61,48 +59,104 @@ export interface entity_to_value {
 }
 
 export interface entity_to_media extends entity_to_value {}
-export interface entity_to_tags_projections extends entity_to_value {}
+
+/**
+ * **Here**:
+ * - (`entity_id`, `entity_handle`) = (entity id, entity handle) of the resource for example (product id, product handle)
+ * - (`value`) = search term , for example 'game', 'shoes'
+ * - (`context`) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * 
+ * **Note**:
+ * - `entity_id` ALWAYS IDENTIFIES THE ENTITY
+ * - `entity_handle` DOES NOT IDENTIFY (imagine a product and collection with same handle)
+ * - `entity_handle` + `context` ALWAYS IDENTIFIES AN ENTITY
+ */
 export interface entity_to_search_terms extends entity_to_value {}
 
 /**
+ * Here:
+ * - (`entity_id`, `entity_handle`) = (entity id, entity handle) of the resource for example (product id, product handle)
+ * - (`value`) = search term , for example 'game', 'shoes'
+ * - (`context`) = the resource name `tags` / `collections` / `products` / `posts` / `discounts` / `shipping` / `storefronts` / `notifications` / 'auth_users' etc...)
+ * 
+ * Note:
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` DOES NOT IDENTIFY AN ENTITY (imagine a product and collection with same handle)
+ * - `entity_handle` + `context` ALWAYS IDENTIFIES AN ENTITY
+ */
+export interface entity_to_tags_projections extends entity_to_value {}
+
+/**
  * here:
- * - entity_id, entity_handle = product id, product handle
- * - value, reporter = collection id,  collection handle
+ * - (`entity_id`, `entity_handle`) = (product id, product handle)
+ * - (`value`, `reporter`) = (collection id, collection handle)
+ * - (`context`) = NULL
+ * 
+ * NOTE:
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_collections extends entity_to_value {}
 
 /**
  * here:
- * - entity_id, entity_handle = product id, product handle
- * - value, reporter = discount id,  discount handle
+ * - (`entity_id`, `entity_handle`) = (product id, product handle)
+ * - (`value`, `reporter`) = (discount id,  discount handle)
+ * 
+ * NOTE:
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_discounts extends entity_to_value {}
 
 /**
  * here:
- * - (entity_id, entity_handle) = (parent product id, parent product handle)
- * - (value, reporter) = (variant product id,  variant product handle)
+ * - (`entity_id`, `entity_handle`) = (parent product id, parent product handle)
+ * - (`value`, `reporter`) = (variant product id,  variant product handle)
+ * 
+ * NOTE:
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_variants extends entity_to_value {}
 
 /**
  * here:
- * - (entity_id, entity_handle) = (parent product id, parent product handle)
- * - (value, reporter) = (related product id,  related product handle)
+ * - (`entity_id`, `entity_handle`) = (parent product id, parent product handle)
+ * - (`value`, `reporter`) = (related product id, related product handle)
+ * 
+ * NOTE:
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` ALWAYS IDENTIFIES AN ENTITY
  */
 export interface products_to_related_products extends entity_to_value {}
 
 /**
  * storefronts to products/collections/posts/discounts/shipping
  * here:
- * - entity_id, entity_handle = storefront id, storefront handle
- * - value, reporter = other entity id,  other entity handle, i.e(product_id, product_handle)
- * - context = `products` / `collections` / `posts` / `discounts` / `shipping`
+ * - (entity_id, entity_handle) = (storefront id, storefront handle)
+ * - (value, reporter) = (other entity id,  other entity handle), i.e(product_id, product_handle)
+ * - (context) = `products` / `collections` / `posts` / `discounts` / `shipping`
  * 
  * This will probably be a small table hence everything is recorded in the same table.
  * Usually, a user will have:
  * - small number of storefronts
  * - small number of attached products/collections/posts/discounts/shipping per storefront
+ * 
+ * NOTE:
+ * - `entity_id` ALWAYS IDENTIFIES AN ENTITY
+ * - `entity_handle` ALWAYS IDENTIFIES AN ENTITY
+ * - `value` ALWAYS IDENTIFIES AN ENTITY
+ * - `reporter` DOES NOT IDENTIFY AN ENTITY (because you can have a product and a collection with the same handle for example)
+ * - `reporter` + `context` ALWAYS IDENTIFIES AN ENTITY (in case you need to delete)
  */
 export interface storefronts_to_other extends entity_to_value {}
 

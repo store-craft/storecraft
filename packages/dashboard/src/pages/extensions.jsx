@@ -1,11 +1,12 @@
 import ShowIf from '@/comps/show-if.jsx'
 import { RecordActions, Span } from '@/comps/common-fields.jsx'
 import { Title } from '@/comps/common-ui.jsx'
-import useCollectionsActions from '../hooks/useCollectionsActions.js'
+import useCollectionsActions from '../hooks/use-collections-actions.js'
 import { useMemo } from 'react'
 import { TableSchemaView } from '../comps/table-schema-view.jsx'
 import { ResourceTitle } from '../comps/resource-title.jsx'
 import { Favicon } from '@/comps/asset-favicon.jsx'
+// @ts-ignore
 import svg from '@/comps/favicon.svg';
 /**
  * 
@@ -84,11 +85,11 @@ const schema_fields = [
 
 export default ({}) => {
 
-  /**
-   * @type {import('../hooks/useCollectionsActions.js').HookReturnType<
-   *  ExtensionItemGet>
-   * }
-   */ 
+  // /**
+  //  * @type {import('../hooks/use-collections-actions.js').HookReturnType<
+  //  *  ExtensionItemGet>
+  //  * }
+  //  */ 
   const { 
     context, page, loading, 
     error, queryCount, hasLoaded, resource,

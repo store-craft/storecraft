@@ -44,9 +44,9 @@ export class OpenAI {
   }
 
   /**
-   * @param {config} config 
+   * @param {config} [config] 
    */
-  constructor(config) {
+  constructor(config={}) {
     this.config = {
       ...config,
       model: config.model ?? 'gpt-4o',
@@ -89,45 +89,6 @@ export class OpenAI {
         )
       )
     }
-
-  };
-
-  /** @type {Impl["llm_assistant_message_to_user_content"]} */
-  llm_assistant_message_to_user_content = (message) => {
-
-    if(message.role!=='assistant')
-      throw new Error("message.role !== 'assistant'");
-
-    if(typeof message.content === 'string') {
-      return [
-        {
-          content: message.content,
-          type: 'text'
-        }
-      ];
-    }
-  
-    if(Array.isArray(message.content)) {
-      return message.content.map(
-        (part) => {
-          if('refusal' in part) {
-            return {
-              type:'error',
-              content: {
-                message: part.refusal
-              },
-            }
-          } else {
-            return {
-              content: part.text,
-              type: 'text'
-            }
-          }
-        }
-      )
-    }
-    
-    return undefined;
   };
 
 
@@ -145,7 +106,8 @@ export class OpenAI {
           function: {
             description: tool.description,
             name: name,
-            parameters: zod_to_json_schema(tool.schema)
+            parameters: tool.schema && zod_to_json_schema(tool.schema),
+            strict: true
           } 
         }
       )
@@ -184,9 +146,9 @@ export class OpenAI {
     //   console.log(new TextDecoder().decode(c))
     // }
 
-    console.log(this.#chat_completion_url)
-    console.log(body)
-    console.log(result.ok)
+    // console.log(this.#chat_completion_url)
+    // console.log(body)
+    // console.log(result.ok)
     // throw 'stop'
     if(!result.ok) 
       throw (await result.text());
@@ -203,7 +165,7 @@ export class OpenAI {
     const stream = await this.#text_complete(params, true)
   
     for await (const frame of SSEGenerator(stream.body)) {
-      console.log(frame);
+      // console.log(frame);
 
       if(!frame.data)
         continue;
@@ -239,7 +201,8 @@ export class OpenAI {
     const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
-      builder.add_delta(chunk);
+      // console.log({chunk: JSON.stringify(chunk, null, 2)});
+      builder.add_chunk(chunk);
 
       if(chunk?.choices?.[0].delta.content) {
         yield {
@@ -267,6 +230,7 @@ export class OpenAI {
           tc => ({
             name: tc.function.name,
             id: tc.id,
+            arguments: tc.function.arguments,
             title: params.tools?.[tc.function.name].title
           })
         )
@@ -286,16 +250,6 @@ export class OpenAI {
           JSON.parse(tool_call.function.arguments)
         );
 
-        console.log('tool result', tool_result)
-        yield {
-          type: 'tool_result',
-          content: {
-            data: tool_result,
-            id: tool_call.id,
-            name: tool_call.function.name
-          }
-        }
-
         params.history.push(
           {
             role: 'tool',
@@ -305,6 +259,16 @@ export class OpenAI {
             )
           }
         );
+
+        // console.log('tool result', tool_result)
+        yield {
+          type: 'tool_result',
+          content: {
+            data: tool_result,
+            id: tool_call.id,
+            name: tool_call.function.name
+          }
+        }        
       }
 
       // again
@@ -313,7 +277,7 @@ export class OpenAI {
       const builder = stream_message_builder();
     
       for await (const chunk of current_stream) {
-        builder.add_delta(chunk);
+        builder.add_chunk(chunk);
   
         if(chunk?.choices[0].delta.content) {
           yield {

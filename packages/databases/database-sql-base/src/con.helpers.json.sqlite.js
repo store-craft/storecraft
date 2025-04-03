@@ -1,5 +1,13 @@
+/**
+ * @import { AliasableExpression, Expression} from 'kysely'
+ * @import { SelectQueryBuilderExpression } from './con.helpers.json.js'
+ * @import { SqlDialectType } from '../types.public.js'
+ * @import { RawBuilder, Simplify } from 'kysely'
+ */
 import { SelectQueryNode, sql} from 'kysely'
-import { extract_first_selection, getJsonObjectArgs } from './con.helpers.json.js';
+import { 
+  extract_first_selection, getJsonObjectArgs 
+} from './con.helpers.json.js';
 
 /**
  * A SQLite helper for aggregating a subquery into a JSON array.
@@ -54,14 +62,19 @@ import { extract_first_selection, getJsonObjectArgs } from './con.helpers.json.j
  * from "person"
  * ```
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<Simplify<O>[]>}
  */
 export function sqlite_jsonArrayFrom(expr) {
 
-  return sql`(select coalesce(json_group_array(json_object(${sql.join(
-    getSqliteJsonObjectArgs(expr.toOperationNode(), 'agg')
-  )})), '[]') from ${expr} as agg)`
+  return sql`(select coalesce(json_group_array(json_object(${
+    sql.join(
+      getSqliteJsonObjectArgs(
+        /** @type {SelectQueryNode} */(expr.toOperationNode()), 
+        'agg'
+      )
+    )
+  })), '[]') from ${expr} as agg)`
 }
 
 
@@ -113,12 +126,14 @@ export function sqlite_jsonArrayFrom(expr) {
  * from "person"
  * ```
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<string[]>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<string[]>}
  */
 export function sqlite_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');
-  return sql`(select coalesce(json_group_array(${sql.join([arg])}), '[]') from ${expr} as agg)`
+  return sql`(select coalesce(json_group_array(${
+    sql.join([arg])
+  }), '[]') from ${expr} as agg)`
 }
 
 /**
@@ -177,13 +192,18 @@ export function sqlite_stringArrayFrom(expr) {
  * ```
  * 
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O> | null>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<Simplify<O> | null>}
  */
 export function sqlite_jsonObjectFrom(expr) {
-  return sql`(select json_object(${sql.join(
-    getSqliteJsonObjectArgs(expr.toOperationNode(), 'obj'),
-  )}) from ${expr} as obj)`
+  return sql`(select json_object(${
+    sql.join(
+      getSqliteJsonObjectArgs(
+        /** @type {SelectQueryNode} */(expr.toOperationNode()), 
+        'obj'
+      ),
+    )
+  }) from ${expr} as obj)`
 }
 
 /**
@@ -250,7 +270,7 @@ export function sqlite_jsonObjectFrom(expr) {
  * 
  * @param {SelectQueryNode} node 
  * @param {string} table 
- * @returns {import('kysely').Expression<unknown>[]}
+ * @returns {Expression<unknown>[]}
  */
 function getSqliteJsonObjectArgs(node, table) {
   try {

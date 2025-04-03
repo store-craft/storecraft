@@ -1,14 +1,25 @@
+/**
+ * @import { AliasableExpression, Expression} from 'kysely'
+ * @import { SelectQueryBuilderExpression } from './con.helpers.json.js'
+ * @import { SqlDialectType } from '../types.public.js'
+ * @import { RawBuilder, Simplify } from 'kysely'
+ */
+
 import {
   AliasNode, ColumnNode, ExpressionWrapper, IdentifierNode, 
   ReferenceNode, SelectQueryNode, TableNode, ValueNode } from 'kysely'
-import { sqlite_jsonArrayFrom, sqlite_jsonObjectFrom, 
-  sqlite_stringArrayFrom } from './con.helpers.json.sqlite.js'
-import { pg_jsonArrayFrom, pg_jsonObjectFrom, 
-  pg_stringArrayFrom } from './con.helpers.json.postgres.js'
-import { mysql_jsonArrayFrom, mysql_jsonObjectFrom, 
-  mysql_stringArrayFrom } from './con.helpers.json.mysql.js'
-import { mssql_jsonArrayFrom, mssql_jsonObjectFrom, 
-  mssql_stringArrayFrom } from './con.helpers.json.mssql.js'
+import { 
+  sqlite_jsonArrayFrom, sqlite_jsonObjectFrom, 
+  sqlite_stringArrayFrom 
+} from './con.helpers.json.sqlite.js'
+import { 
+  pg_jsonArrayFrom, pg_jsonObjectFrom, 
+  pg_stringArrayFrom 
+} from './con.helpers.json.postgres.js'
+import { 
+  mysql_jsonArrayFrom, mysql_jsonObjectFrom, 
+  mysql_stringArrayFrom 
+} from './con.helpers.json.mysql.js'
 
   
 /**
@@ -20,7 +31,7 @@ import { mssql_jsonArrayFrom, mssql_jsonObjectFrom,
 
 /**
  * @template O
- * @typedef {import('kysely').AliasableExpression<O> & _SelectQueryBuilderExpression<O>} SelectQueryBuilderExpression
+ * @typedef {AliasableExpression<O> & _SelectQueryBuilderExpression<O>} SelectQueryBuilderExpression
  * @property {boolean} isSelectQueryBuilder
  * @property {(): SelectQueryNode} toOperationNode
  */
@@ -30,10 +41,10 @@ import { mssql_jsonArrayFrom, mssql_jsonObjectFrom,
  * 
  * @param {SelectQueryNode} node 
  * @param {string} table 
- * @returns {import('kysely').Expression<unknown>[] }
+ * @returns {Expression<unknown>[] }
  */
 export function getJsonObjectArgs(node, table) {
-  /** @type {import('kysely').Expression<unknown>[] } */
+  /** @type {Expression<unknown>[] } */
   const args = []
 
   for (const { selection: s } of node.selections ?? []) {
@@ -58,7 +69,7 @@ export function getJsonObjectArgs(node, table) {
 /**
  * 
  * @param {string} col 
- * @returns {import('kysely').Expression<unknown> }
+ * @returns {Expression<unknown> }
  */
 function colName(col) {
   return new ExpressionWrapper(ValueNode.createImmediate(col))
@@ -68,7 +79,7 @@ function colName(col) {
  * 
  * @param {string} table 
  * @param {string} col 
- * @returns {import('kysely').Expression<unknown> }
+ * @returns {Expression<unknown> }
  */
 function colRef(table, col) {
   return new ExpressionWrapper(
@@ -80,7 +91,7 @@ function colRef(table, col) {
  * @template O
  * @param {SelectQueryBuilderExpression<O>} expr 
  * @param {string} table 
- * @returns {import('kysely').Expression<unknown>}
+ * @returns {Expression<unknown>}
  */
 export const extract_first_selection = (expr, table) => {
   /** @type {any} */
@@ -88,7 +99,7 @@ export const extract_first_selection = (expr, table) => {
   /** @type {SelectQueryNode} */
   const s__ = s_;
   const s = s__.selections[0].selection;
-  /** @type {import('kysely').Expression<unknown>} */
+  /** @type {Expression<unknown>} */
   let arg;
   if (ReferenceNode.is(s) && ColumnNode.is(s.column)) {
     // console.log('arg ', s)
@@ -126,11 +137,10 @@ export const extract_first_selection = (expr, table) => {
  * result[0].pets[0].pet_id
  * result[0].pets[0].name
  * ```
- * 
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @param {SqlDialectType} sql_type 
+ * @returns {RawBuilder<Simplify<O>[]>}
  */
 export function jsonArrayFrom(expr, sql_type) {
   switch(sql_type) {
@@ -140,8 +150,6 @@ export function jsonArrayFrom(expr, sql_type) {
       return pg_jsonArrayFrom(expr);
     case 'MYSQL':
       return mysql_jsonArrayFrom(expr);
-    // case 'MSSQL':
-    //   return mssql_jsonArrayFrom(expr);
     default:
       throw new Error(`sql_type=${sql_type} NOT SUPPORTED !`);
   }  
@@ -169,8 +177,8 @@ export function jsonArrayFrom(expr, sql_type) {
  * result[0].pets = ['name1', 'name2', ....]
  * ```
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @param {SqlDialectType} sql_type 
  */
 export function stringArrayFrom(expr, sql_type) {
   switch(sql_type) {
@@ -180,8 +188,6 @@ export function stringArrayFrom(expr, sql_type) {
       return pg_stringArrayFrom(expr);
     case 'MYSQL':
       return mysql_stringArrayFrom(expr);
-    // case 'MSSQL':
-    //   return mssql_stringArrayFrom(expr);
     default:
       throw new Error(`sql_type=${sql_type} NOT SUPPORTED !`);
   }  
@@ -211,9 +217,9 @@ export function stringArrayFrom(expr, sql_type) {
  * ```
  *   
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @param {import('../types.public.d.ts').SqlDialectType} sql_type 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O> | null>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @param {SqlDialectType} sql_type 
+ * @returns {RawBuilder<Simplify<O> | null>}
  */
 export function jsonObjectFrom(expr, sql_type) {
   switch(sql_type) {
@@ -223,8 +229,6 @@ export function jsonObjectFrom(expr, sql_type) {
       return pg_jsonObjectFrom(expr);
     case 'MYSQL':
       return mysql_jsonObjectFrom(expr);
-    // case 'MSSQL':
-    //   return mssql_jsonObjectFrom(expr);
     default:
       throw new Error(`sql_type=${sql_type} NOT SUPPORTED !`);
   }

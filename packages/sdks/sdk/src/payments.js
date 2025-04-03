@@ -3,7 +3,8 @@
  */
 import { StorecraftSDK } from '../index.js'
 import { 
-  fetchApiWithAuth, get_from_collection_resource, list_from_collection_resource 
+  fetchApiWithAuth, get_from_collection_resource, 
+  list_from_collection_resource 
 } from './utils.api.fetch.js';
 
 /**

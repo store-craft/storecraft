@@ -7,10 +7,10 @@ import MDView from './md-view.jsx'
 import { MINUTE, timeSince } from '../utils/time.js'
 import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
 import { PromisableLoadingButton } from './common-button.jsx'
-import useInterval from '@/hooks/useInterval.js'
+import useInterval from '@/hooks/use-interval.js'
 import { useNavigate } from 'react-router-dom'
 
-/**@type {import('@storecraft/core/api').NotificationType} */
+/**@type {import('@storecraft/core/api').NotificationTypeUpsert} */
 const tn = {
   message: 'New `order` *was* **created** New order was created New order was created',
   updated_at: new Date().toISOString(),
@@ -28,7 +28,7 @@ const tn = {
   ]
 }
 
-/**@type {import('@storecraft/core/api').NotificationType} */
+/**@type {import('@storecraft/core/api').NotificationTypeUpsert} */
 const tn2 = {
   message: `* 🚀 a \n* b`,
   updated_at: new Date().toISOString(),
@@ -46,17 +46,11 @@ const tn2 = {
   ]
 }
 
-/**@type {import('@storecraft/core/api').NotificationType[]} */
+/**@type {import('@storecraft/core/api').NotificationTypeUpsert[]} */
 const test = [
   tn2, tn, tn, tn, {...tn, search: ['email']},
 ]
 
-const message = `
-💰 **Checkout update**\n 
-* \`${'tomerre' ?? ''}\` has completed checkout.
-* 💳 Order total is \`${1543 ?? '-'}\`.
-* 📧 Email was sent to ${'tomerernnciw@GrMail.com' ?? 'no-email'}
-`
       
 /**
  * 
@@ -81,16 +75,15 @@ const Notification = (
       if(action)  {
         switch(action.type) {
           case 'route':
-            /** @type {import('@storecraft/core/api').NotificationActionRouteParams} */
-            let casted_params = params;
+            
+            let casted_params = /** @type {import('@storecraft/core/api').NotificationActionRouteParams} */ (params);
 
             nav(
               `/pages/${casted_params.collection}/${casted_params.document}`
             );
             break;
           case 'url':
-            /** @type {import('@storecraft/core/api').NotificationActionUrlParams} */
-            let casted_params_2 = params;
+            let casted_params_2 = /** @type {import('@storecraft/core/api').NotificationActionUrlParams} */(params);
 
             window.open(
               casted_params_2.url, casted_params_2.new_window ? '_blank' : '_self'

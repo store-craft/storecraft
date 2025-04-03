@@ -1,11 +1,25 @@
-import { marked } from 'marked'
+// @ts-nocheck
+import { useMemo } from 'react'
+import Markdown from 'markdown-to-jsx'
+import { LoadingImage } from './loading-image'
+
+const options = {
+  overrides: {
+    img: {
+      component: (props) => <LoadingImage {...props}  />,
+      props: {
+        className: 'h-40 w-full rounded-lg border chat-border-overlay',
+      },
+    },
+  }
+}
 
 /**
  * @typedef {object} InternalMDViewParams
  * @prop {string} [value]
  * 
  * @typedef {InternalMDViewParams & 
- *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
+ *  Omit<React.ComponentProps<'div'>, 'value'>
  * } MDViewParams
  * 
  * @param {MDViewParams} param
@@ -15,21 +29,15 @@ export const MDView = (
     value, ...rest
   }
 ) => {
-  
-  return (
-<div {...rest}>
-  <p className='--mdx md-view overflow-auto' 
-    dangerouslySetInnerHTML={
-      {
-        __html : marked.parse(
-          value ?? '', { 
-            mangle: false, headerIds: false, 
-            sanitize:false
-          }
-        )
-      }
-    }
-  />     
-</div>    
-  )
+  const Comp = useMemo(
+    () => (
+      <div {...rest}>
+        <Markdown
+          options={options}
+          children={value}/>
+      </div>
+    ), [value, rest.className]
+  );
+
+  return Comp;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.36",
+  "version": "1.0.40",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -221,6 +221,10 @@
     "./auth/providers/x": {
       "import": "./auth/providers/x/index.js",
       "types": "./auth/providers/x/types.public.d.ts"
+    },
+    "./auth/providers/dummy": {
+      "import": "./auth/providers/dummy/index.js",
+      "types": "./auth/providers/dummy/types.public.d.ts"
     },
     "./auth/*": {
       "import": "./auth/*"

@@ -176,10 +176,10 @@ export const to_tokens = (text) => {
 
 /**
  * @description union of arrays
- * @template T
- * @param  {...(T | T[] | T[][])} args 
+ * @param  {...any} args 
+ * @returns {string[]}
  */
-export const union = (...args) => [...new Set(args.flat(10))].filter(Boolean);
+export const union = (...args) => [...new Set(args.flat(Infinity))].filter(Boolean).map(x => String(x));
 
 export const isEmpty = (str) => (!str?.trim().length);
 

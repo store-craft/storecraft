@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import useInterval from "../hooks/useInterval.js";
+import useInterval from "../hooks/use-interval.js";
 
 /**
  * Lazy ass `carousel`
@@ -43,12 +43,12 @@ const LazyCarousel = (
   <div className='relative w-full h-full'>
     <div className='absolute left-0 top-0 w-full h-full animate-fadeout' 
       key={key_prev}
-      style={{'animation-fill-mode': 'forwards'}}>
+      style={{'animationFillMode': 'forwards'}}>
       {children_[key_prev]}
     </div>
     <div className='absolute left-0 top-0 w-full h-full animate-fadein' 
           key={key_next}
-          style={{'animation-fill-mode': 'forwards'}}>
+          style={{'animationFillMode': 'forwards'}}>
       {children_[key_next]}
     </div>
   </div>

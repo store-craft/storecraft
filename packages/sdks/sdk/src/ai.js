@@ -2,16 +2,21 @@
  * @import { 
  *  AgentRunParameters, AgentRunResponse 
  * } from '@storecraft/core/ai/agents/types.js'
+ * @import {
+ *  HEADER_STORECRAFT_THREAD_ID_LITERAL
+ * } from '@storecraft/core/rest/con.ai.routes.js'
  * @import { content } from '@storecraft/core/ai/types.public.js'
  */
 
-import { HEADER_STORECRAFT_THREAD_ID } from '@storecraft/core/rest/con.ai.routes.js';
 import { StorecraftSDK } from '../index.js'
 import { url } from './utils.api.fetch.js';
 
+const HEADER_STORECRAFT_THREAD_ID = /** @satisfies {HEADER_STORECRAFT_THREAD_ID_LITERAL} */ (
+  'X-STORECRAFT-THREAD-ID'
+);
+
 /**
  * @description **AI**
- * 
  */
 export default class AI {
 
@@ -26,12 +31,13 @@ export default class AI {
   /**
    * @description Speak with the main `storecraft` agent sync. It is
    * recommended to use the streamed version {@link streamSpeak}
+   * @param {string} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunResponse>}
    */
-  speak = async (params) => {
+  speak = async (agent_handle, params) => {
     const response = await fetch(
-      url(this.sdk.config, 'ai/agent/run'),
+      url(this.sdk.config, `ai/agents/${agent_handle}/run`),
       {
         method: 'post',
         body: JSON.stringify(params),
@@ -46,11 +52,12 @@ export default class AI {
 
   /**
    * @description Stream Speak with the main `storecraft` agent via Server-Sent Events
+   * @param {string} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    */
-  streamSpeak = async function(params) {
+  streamSpeak = async function(agent_handle, params) {
     const response = await fetch(
-      url(this.sdk.config, 'ai/agent/stream'),
+      url(this.sdk.config, `ai/agents/${agent_handle}/stream`),
       {
         method: 'post',
         body: JSON.stringify(params),
@@ -60,7 +67,9 @@ export default class AI {
       }
     );
 
-    const threadId = response.headers.get(HEADER_STORECRAFT_THREAD_ID ?? 'X-Storecraft-Thread-Id');
+    const threadId = response.headers.get(
+      HEADER_STORECRAFT_THREAD_ID ?? 'X-Storecraft-Thread-Id'
+    );
 
     if(!threadId) {
       throw new Error(
@@ -93,7 +102,6 @@ const sleep = (ms=100) => {
  */
 const StreamSpeakGenerator = async function *(stream) {
   for await (const sse of SSEGenerator(stream)) {
-    await sleep(50);
     yield ( /** @type {content} */ (JSON.parse(sse.data)));
   }
 }

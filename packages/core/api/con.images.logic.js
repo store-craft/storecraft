@@ -1,5 +1,5 @@
 /**
- * @import { BaseType, ImageType, ImageTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, BaseType, ImageType, ImageTypeUpsert } from './types.public.js'
  */
 import { ID, apply_dates, to_handle } from './utils.func.js'
 import { imageTypeUpsertSchema } from './types.autogen.zod.api.js'
@@ -79,13 +79,14 @@ async (id) => {
   // db remove image side-effect
   const success = await app.db.resources.images.remove(img.id);
 
-  await app.pubsub.dispatch(
-    'images/remove',
-    {
-      previous: img, 
-      success
-    }
-  );
+  if(success) {
+    await app.pubsub.dispatch(
+      'images/remove',
+      {
+        previous: img, 
+      }
+    );
+  }
 
   return success;
 }
@@ -112,6 +113,19 @@ export const reportSearchAndUsageFromRegularDoc = async (app, data) => {
   await db(app).report_document_media(data)
 }
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<ImageType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
 
 /**
  * @param {App} app
@@ -123,5 +137,6 @@ export const inter = app => {
     upsert: upsert(app),
     remove: remove(app),
     list: regular_list(app, db(app), 'images/list'),
+    count: count(app),
   }
 }

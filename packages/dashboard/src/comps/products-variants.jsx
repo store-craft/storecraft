@@ -11,7 +11,7 @@ import { MdClose } from 'react-icons/md/index.js'
 import { AiFillCheckCircle } from 'react-icons/ai/index.js'
 import { IoAppsOutline } from 'react-icons/io5/index.js'
 import useNavigateWithState, { 
-  LinkWithState } from '@/hooks/useNavigateWithState.jsx'
+  LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
 
 /**
  * 

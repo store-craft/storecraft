@@ -16,30 +16,13 @@ import type { ApiQuery } from '@storecraft/core/api'
 Which, approximately have the following shape
 
 ```ts
-// Query types
-import type { VQL } from '../vql/types.js';
-export type ApiQuerySortOrder = 'asc' | 'desc';
-export type Tuple<T extends string> = [key: string, value: T];
-export type Cursor = Tuple<string>[];
-export type SortCursor = string[];
-export type SortOrder = 'asc' | 'desc';
-
-/** 
- * @description Expend several relations 
- */
-export type ExpandQuery = string[];
-
-/**
- * @description Query base type for most collections
- * 
- */
-export type ApiQuery = {
+type ApiQuery<T extends any = undefined> = {
   /**
    * @description Expand connections of items returned from Query
-   * @example ['products', 'tags']
+   * @example ['products', 'tags', 'none']
    * @default ['*']
    */
-  expand?: ExpandQuery;
+  expand?: ExpandQuery<T>;
 
   /**
    * @description boolean `DSL` for querying using terms
@@ -47,6 +30,7 @@ export type ApiQuery = {
    * `(whatever-indexed tag:a -(tag:b | tag:c | "couple of words") handle:product*)`
    */
   vql?: string;
+  
   /**
    * @description internal usage Abstract Syntx Tree (AST)
    */
@@ -58,7 +42,7 @@ export type ApiQuery = {
    * ['updated_at']
    * ['updated_at', 'id']
    */
-  sortBy?: SortCursor;
+  sortBy?: SortCursor<T>;
 
   /**
    * @description `asc` | `desc`
@@ -80,8 +64,8 @@ export type ApiQuery = {
    * [['updated_at', '2012-09']]
    * [['updated_at', '2012-09'], ['id', 'id_wiwq09j2023j']]
    */
-  startAt?: Cursor;
-  startAfter?: Cursor;
+  startAt?: Cursor<T>;
+  startAfter?: Cursor<T>;
 
   /**
    * @description Upper Bound Filter Cursors on the properties of the items
@@ -89,10 +73,17 @@ export type ApiQuery = {
    * [['updated_at', '2015-09']]
    * [['updated_at', '2015-09'], ['id', 'id_wiwq09j2023j']]
    */
-  endAt?: Cursor;
-  endBefore?: Cursor;
-}
+  endAt?: Cursor<T>;
+  endBefore?: Cursor<T>;
 
+  /**
+   * @description A shortcut for using `endAt` and `startAt` to query an
+   * exact value. For example getting all the items which have `active=true`
+   * @example 
+   * [['active', false]]
+   */
+  equals?: Cursor<T>
+}
 ```
 
 ## VQL

@@ -61,7 +61,10 @@ const jWTClaimsSchema = z.object({
   nbf: z.number(),
   iat: z.number(),
   jti: z.string(),
-  roles: z.array(z.string()).describe("User roles and authorizations"),
+  roles: z
+    .array(z.string())
+    .optional()
+    .describe("User roles and authorizations"),
   email: z.string().optional(),
   firstname: z.string().optional(),
   lastname: z.string().optional(),
@@ -70,7 +73,7 @@ const jWTClaimsSchema = z.object({
 
 export const authBaseTypeSchema = z.object({
   email: z.string().email().describe("Email of user"),
-  password: z.string().min(4).max(20).describe("password"),
+  password: z.string().min(4).max(256).describe("password"),
 });
 
 export const roleSchema = z
@@ -128,6 +131,41 @@ export const apiAuthResultSchema = z.object({
   refresh_token: apiTokenWithClaimsSchema.describe("The refresh token"),
 });
 
+export const baseTypeSchema = idableConcreteSchema
+  .extend(timestampsSchema.shape)
+  .extend({
+    handle: z.string().describe("The key name"),
+    media: z.array(z.string()).optional().describe("List of images urls"),
+    attributes: z
+      .array(attributeTypeSchema)
+      .optional()
+      .describe("List of attributes"),
+    tags: z
+      .array(z.string())
+      .optional()
+      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
+    description: z.string().optional().describe("Rich description"),
+    active: z.boolean().optional().describe("Is the entity active ?"),
+    search: z.array(z.string()).optional().describe("search terms"),
+  });
+
+export const oAuthProviderSchema = z
+  .object({
+    provider: z.string().describe("The unique `handle` of the provider"),
+    name: z.string().describe("The readable name of the provider"),
+    logo_url: z
+      .string()
+      .optional()
+      .describe(
+        "The URL to the logo of the provider, can be a data URL\nwith `data:image/svg+xml;utf8,`",
+      ),
+    description: z
+      .string()
+      .optional()
+      .describe("The description of the provider"),
+  })
+  .describe("The OAuth Identity Provider");
+
 export const oAuthProviderCreateURIParamsSchema = z.object({
   provider: z.string().describe("**OAuth** provider identifier/handle"),
   redirect_uri: z
@@ -164,25 +202,7 @@ export const signWithOAuthProviderParamsSchema = z.object({
     ),
 });
 
-export const baseTypeSchema = idableConcreteSchema
-  .extend(timestampsSchema.shape)
-  .extend({
-    media: z.array(z.string()).optional().describe("List of images urls"),
-    attributes: z
-      .array(attributeTypeSchema)
-      .optional()
-      .describe("List of attributes"),
-    tags: z
-      .array(z.string())
-      .optional()
-      .describe("List of tags , example ['genere_action', 'rated_M', ...]"),
-    description: z.string().optional().describe("Rich description"),
-    active: z.boolean().optional().describe("Is the entity active ?"),
-    search: z.array(z.string()).optional().describe("search terms"),
-  });
-
 export const tagTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The key name"),
   values: z.array(z.string()).describe("List of values, related to the key"),
 });
 
@@ -191,7 +211,6 @@ export const tagTypeUpsertSchema = tagTypeSchema
   .extend(withOptionalHandleOrIDSchema.shape);
 
 export const collectionTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The `handle` of the entity"),
   title: z
     .string()
     .min(3, "Title should be longer than 3")
@@ -580,11 +599,9 @@ export const shippingMethodTypeSchema = baseTypeSchema.extend({
     .string()
     .min(3, "Title should be longer than 3")
     .describe("Name of shipping method"),
-  handle: z.string().describe("Readable `handle` of shipping"),
 });
 
 export const postTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("Unique `handle`"),
   title: z
     .string()
     .min(3, "Title should be longer than 3")
@@ -637,11 +654,10 @@ export const customerTypeSchema = baseTypeSchema.extend({
 });
 
 export const customerTypeUpsertSchema = customerTypeSchema
-  .omit({ id: true })
-  .extend(withOptionalIDSchema.shape);
+  .omit({ id: true, handle: true })
+  .extend(withOptionalHandleOrIDSchema.shape);
 
 export const imageTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("Unique handle"),
   name: z
     .string()
     .min(1, "Should be longer than 1 characters")
@@ -1031,7 +1047,6 @@ export const paymentGatewayItemGetSchema = z.object({
 });
 
 export const templateTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("`handle`"),
   title: z.string().describe("`title` of `template`"),
   template_html: z
     .string()
@@ -1166,6 +1181,18 @@ export const storecraftConfigSchema = z.object({
     .describe(
       "refresh token signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment",
     ),
+  auth_secret_forgot_password_token: z
+    .string()
+    .optional()
+    .describe(
+      "forgot password token signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN` environment",
+    ),
+  auth_secret_confirm_email_token: z
+    .string()
+    .optional()
+    .describe(
+      "Confirm email signing secret, if absent will be infered at\ninit by `platform.env.SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN` environment",
+    ),
   checkout_reserve_stock_on: z
     .union([
       z.literal("checkout_create"),
@@ -1265,9 +1292,11 @@ const baseNotificationTypeSchema = z.object({
   id: z.string().describe("`id` of notification"),
 });
 
-export const notificationTypeUpsertSchema = baseNotificationTypeSchema.omit({
-  id: true,
-});
+export const notificationTypeUpsertSchema = baseNotificationTypeSchema
+  .omit({ id: true })
+  .extend({
+    id: z.string().optional().describe("Optional `id` of notification"),
+  });
 
 export const orderStatusSchema = z.object({
   checkout: z
@@ -1363,7 +1392,6 @@ export const discountTypeSchema = baseTypeSchema.extend({
     .string()
     .min(3, "Title should be longer than 3")
     .describe("Title of discount"),
-  handle: z.string().describe("Discount `code` / `handle`"),
   priority: z
     .number()
     .describe("The order in which to apply the discounts\nstack (priority)"),
@@ -1383,7 +1411,6 @@ export const discountTypeSchema = baseTypeSchema.extend({
 });
 
 export const baseProductTypeSchema = baseTypeSchema.extend({
-  handle: z.string().describe("The readable unique product `handle`"),
   isbn: z
     .string()
     .optional()
@@ -1479,7 +1506,6 @@ export const discountTypeUpsertSchema = discountTypeSchema
 
 export const storefrontTypeSchema = baseTypeSchema.extend({
   active: z.boolean().describe("Is the entity active ?"),
-  handle: z.string().describe("Readable `handle`"),
   title: z.string().min(3, "Title should be longer than 3").describe("Title"),
   video: z.string().optional().describe("Video url"),
   published: z
@@ -1508,6 +1534,12 @@ export const storefrontTypeSchema = baseTypeSchema.extend({
     .array(postTypeSchema)
     .optional()
     .describe("Posts related to this storefront"),
+  all_used_products_tags: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "List of all tags found in the products of this storefront,\nThis is useful for searching and filtering products in the frontend.",
+    ),
 });
 
 export const storefrontTypeUpsertSchema = storefrontTypeSchema
@@ -1575,9 +1607,9 @@ export const baseCheckoutCreateTypeSchema = z.object({
     .array(lineItemSchema)
     .describe("Line items is a list of the purchased products"),
   notes: z.string().optional().describe("Notes for the order"),
-  shipping_method: shippingMethodTypeSchema
+  shipping_method: handleAndIDSchema
     .partial()
-    .describe("Shipping method info"),
+    .describe("Shipping method `handle` or `id`"),
 });
 
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
@@ -1587,9 +1619,17 @@ export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
     .describe("A list of manual coupons handles"),
 });
 
-const checkoutCreateTypeWithoutIDSchema = checkoutCreateTypeSchema.omit({
-  id: true,
-});
+export const checkoutCreateTypeAfterValidationSchema = checkoutCreateTypeSchema
+  .omit({ shipping_method: true })
+  .extend({
+    shipping_method: shippingMethodTypeSchema.describe(
+      "Shipping method after validation",
+    ),
+    validation: z
+      .array(validationEntrySchema)
+      .optional()
+      .describe("In case the order went through validation"),
+  });
 
 export const evoEntrySchema = z.object({
   discount_code: z.string().optional().describe("The discount code `handle`"),
@@ -1628,7 +1668,7 @@ export const evoEntrySchema = z.object({
     .describe("The line items, that were discounted"),
 });
 
-export const similaritySearchResultSchema = z.object({
+export const similaritySearchResultItemSchema = z.object({
   score: z.number().describe("The score of similarity, lower is better"),
   namespace: similaritySearchAllowedNamespacesSchema.describe(
     "The namespace of the content",
@@ -1640,7 +1680,34 @@ export const similaritySearchResultSchema = z.object({
       collectionTypeSchema,
       shippingMethodTypeSchema,
     ])
-    .describe("The content"),
+    .describe(
+      "The content:\n- ProductType for 'products'\n- DiscountType for 'discounts'\n- CollectionType for 'collections'\n- ShippingMethodType for 'shipping'",
+    ),
+});
+
+export const similaritySearchResultSchema = z.object({
+  context: z
+    .object({
+      metric: z
+        .union([
+          z.literal("cosine"),
+          z.literal("euclidean"),
+          z.literal("dotproduct"),
+        ])
+        .optional()
+        .describe(
+          "The metric used for similarity so you can interpret the results",
+        ),
+      dimensions: z
+        .number()
+        .optional()
+        .describe("The embedding dimensions of the vector store"),
+    })
+    .optional()
+    .describe("The context of the search"),
+  items: z
+    .array(similaritySearchResultItemSchema)
+    .describe("The queried items"),
 });
 
 export const variantCombinationSchema = z.object({
@@ -1707,17 +1774,14 @@ export const pricingDataSchema = z.object({
   errors: z.array(discountErrorSchema).optional().describe("Errors"),
 });
 
-export const orderDataSchema = checkoutCreateTypeWithoutIDSchema
-  .extend(baseTypeSchema.shape)
+export const orderDataSchema = checkoutCreateTypeAfterValidationSchema
+  .omit({ id: true })
+  .extend(baseTypeSchema.omit({ handle: true }).shape)
   .extend({
     status: orderStatusSchema.describe(
       "Status of `checkout`, `fulfillment` and `payment`",
     ),
     pricing: pricingDataSchema.describe("Pricing information"),
-    validation: z
-      .array(validationEntrySchema)
-      .optional()
-      .describe("In case the order went through validation"),
     payment_gateway: orderPaymentGatewayDataSchema
       .optional()
       .describe("Payment gateway info and status"),

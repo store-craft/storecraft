@@ -14,6 +14,7 @@
  * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
  * @import { ApiResponse } from "./rest/types.public.js";
  * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
+ * @import { Agent } from "./ai/agents/types.js";
  * @import { AuthProvider } from "./auth/types.js";
  * 
  */
@@ -25,7 +26,7 @@ import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
 import pkg from './package.json' with { type: "json" }
 import { NotificationsExtension } from './extensions/notifications/index.js';
-import { StoreAgent } from './ai/agents/agent.js';
+import { StoreAgent } from './ai/agents/index.js';
 import { 
   save_collection, save_discount, save_product, save_shipping_method 
 } from './ai/models/vector-stores/index.js';
@@ -35,6 +36,12 @@ import {
  *  'notifications': NotificationsExtension,
  *  [h: string]: extension
  * }} BaseExtensions
+ */
+
+/**
+ * @typedef {{
+ *  'store': StoreAgent<any>
+ * }} BaseAgents
  */
 
 let ms_init_start = 0;
@@ -53,6 +60,7 @@ let ms_init_start = 0;
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
+ * @template {Record<string, Agent> & BaseAgents} [AgentsMap=(BaseAgents)]
  * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {
@@ -62,6 +70,8 @@ export class App {
     auth_admins_emails: 'SC_AUTH_ADMIN_EMAILS',
     auth_secret_access_token: 'SC_AUTH_SECRET_ACCESS_TOKEN',
     auth_secret_refresh_token: 'SC_AUTH_SECRET_REFRESH_TOKEN',
+    auth_secret_forgot_password_token: 'SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN',
+    auth_secret_confirm_email_token: 'SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN',
     checkout_reserve_stock_on: 'SC_CHECKOUT_RESERVE_STOCK_ON',
     general_confirm_email_base_url: 'SC_GENERAL_STORE_CONFIRM_EMAIL_BASE_URL',
     general_forgot_password_confirm_base_url: 'SC_GENERAL_STORE_FORGOT_PASSWORD_CONFIRM_BASE_URL',
@@ -79,9 +89,14 @@ export class App {
   #platform;
 
   /** 
-   * @type {StoreAgent<AiProvider>} 
+   * @type {AgentsMap} 
    */
-  #ai;
+  #agents;
+
+  /** 
+   * @type {AiProvider} 
+   */
+  #ai_chat_provider;
 
   /**
    * @type {AuthProvidersMap}
@@ -270,6 +285,8 @@ export class App {
     this.#config = {
       auth_secret_access_token: env[App.EnvConfig.auth_secret_access_token],
       auth_secret_refresh_token: env[App.EnvConfig.auth_secret_refresh_token],
+      auth_secret_confirm_email_token: env[App.EnvConfig.auth_secret_confirm_email_token],
+      auth_secret_forgot_password_token: env[App.EnvConfig.auth_secret_forgot_password_token],
       auth_admins_emails: env[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
       // @ts-ignore
@@ -320,50 +337,66 @@ export class App {
       return Promise.resolve(this);
     
     /** @type {App} */
-    const app = (/** @type {never} */ (this));
+    const app_casted = (/** @type {never} */ (this));
 
     try{
       // first let's settle config
       this.#settle_config_after_init();
 
       // settle database
-      this.db?.init?.(app);
+      this.db?.init?.(app_casted);
 
       // settle storage
-      this.storage?.init?.(app);
+      this.storage?.init?.(app_casted);
 
       // settle programmatic API
-      this.api = create_api(app);
+      // we do not cast the app here, because we need to pass the original
+      // object to the API for some typescript tricks later.
+      this.api = create_api(this);
+
       // settle REST-API
-      this.#rest_controller = create_rest_api(app, this.config);
+      this.#rest_controller = create_rest_api(app_casted, this.config);
   
       // settle extensions
       for(const ext_handle in this.extensions) {
         const ext = this.extension(ext_handle);
-        ext?.onInit?.(app);
+        ext?.onInit?.(app_casted);
       }
 
       // settle payment gateways
       for(const handle in this.gateways) {
         const gateway = this.gateway(handle);
-        gateway?.onInit?.(app);
+        gateway?.onInit?.(app_casted);
       }
 
+      // settle ai provider
+      if(this.#ai_chat_provider) {
+        this.#ai_chat_provider.onInit(app_casted);
+      }
+
+      // settle base agents
+      if(this.#ai_chat_provider) {
+        // @ts-ignore
+        this.withAgents({
+          store: new StoreAgent({chat_ai_provider: this.#ai_chat_provider})
+        });
+
+        for(const handle in this.#agents) {
+          const ag = this.#agents[handle];
+          ag?.init?.(app_casted);
+        }
+      }
+  
       // settle payment gateways
       for(const handle in this.auth_providers) {
         const ap = this.auth_providers[handle];
-        ap?.init?.(app);
-      }
-
-      // settle ai agent
-      if(this.#ai) {
-        this.#ai.init(app);
+        ap?.init?.(app_casted);
       }
 
       // settle vector store events
       if(this.vectorstore) {
-        this.vectorstore.onInit(app);
-        this.vectorstore?.embedder?.onInit(app);
+        this.vectorstore.onInit(app_casted);
+        this.vectorstore?.embedder?.onInit(app_casted);
         this.pubsub.on(
           'products/upsert',
           async (evt) => {
@@ -395,7 +428,7 @@ export class App {
       }
 
       // settle mailer
-      this.mailer?.onInit?.(app);
+      this.mailer?.onInit?.(app_casted);
   
       this.#is_ready = true;
 
@@ -426,7 +459,7 @@ export class App {
    * 
    * @param {P} platform 
    * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    * 
    */
   withPlatform(platform) {
@@ -446,18 +479,18 @@ export class App {
   }
 
   /** 
-   * @description Update new payment gateways and rewrite types 
+   * @description Update **AI** chat provider, some of the builtins
    * 
    * @template {ChatAI} P
    * 
    * @param {P} ai 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    * 
    */
   withAI(ai) {
     // @ts-ignore
-    this.#ai = new StoreAgent({ ai });
+    this.#ai_chat_provider = ai;
 
     // @ts-ignore
     return this;
@@ -467,8 +500,38 @@ export class App {
    * 
    * @description Get the AI provider
    */
-  get ai() { 
-    return this.#ai; 
+  get ai_chat_provider() { 
+    return this.#ai_chat_provider; 
+  }
+  
+  
+  /** 
+   * @description Update `agents`
+   * 
+   * @template {Record<string, Agent>} P
+   * 
+   * @param {P} agents 
+   * 
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, P & BaseAgents>}
+   * 
+   */
+  withAgents(agents) {
+    // @ts-ignore
+    this.#agents = {
+      ...(this.#agents ?? {}),
+      ...agents
+    };
+
+    // @ts-ignore
+    return this;
+  } 
+  
+  /** 
+   * 
+   * @description Get the `agents`
+   */
+  get agents() {
+    return this.#agents; 
   }
 
   /** 
@@ -478,7 +541,7 @@ export class App {
    * 
    * @param {P} store 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P, AuthProvidersMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P, AgentsMap, AuthProvidersMap>}
    * 
    */
   withVectorStore(store) {
@@ -504,7 +567,7 @@ export class App {
    * 
    * @param {D} database 
    * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    */
   withDatabase(database) {
     // @ts-ignore
@@ -529,7 +592,7 @@ export class App {
    * 
    * @param {S} storage 
    * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    */
   withStorage(storage) {
     // @ts-ignore
@@ -554,7 +617,7 @@ export class App {
    * 
    * @param {M} mailer 
    * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -579,7 +642,7 @@ export class App {
    * 
    * @param {T} taxes 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    */
   withTaxes(taxes) {
     // @ts-ignore
@@ -604,7 +667,7 @@ export class App {
    * 
    * @param {N} gateways 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -629,7 +692,7 @@ export class App {
    * 
    * @param {E} extensions 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider, AuthProvidersMap>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
    */
   withExtensions(extensions) { 
     // @ts-ignore
@@ -657,7 +720,7 @@ export class App {
    * 
    * @param {A} providers 
    * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, A>}
+   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, A>}
    */
   withAuthProviders(providers) { 
     // @ts-ignore

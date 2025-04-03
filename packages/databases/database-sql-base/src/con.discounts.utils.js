@@ -25,25 +25,26 @@ const extract_abs_number = v => {
 /**
  * @param {ExpressionBuilder<Database, 'products'>} eb 
  * @param {keyof Pick<Database, 'entity_to_tags_projections' | 'products_to_collections'>} table 
- * @param {BinaryOperator} op 
  * @param {string[]} value 
  */
-const eb_in = (eb, table, op, value) => {
+const eb_in = (eb, table, value) => {
   return eb.exists(
     eb => eb
-      .selectFrom(table)
-      .select('id')
-      .where(
-        eb => eb.and([
+    .selectFrom(table)
+    .select('id')
+    .where(
+      eb => eb.and(
+        [
           eb.or(
             [
               eb(`${table}.entity_id`, '=', eb.ref('products.id')),
               eb(`${table}.entity_handle`, '=', eb.ref('products.handle')),
             ]
           ),
-          eb(`${table}.value`, op, value)
-        ])
+          eb(`${table}.value`, 'in', value)
+        ]
       )
+    )
   )
 }
 
@@ -111,7 +112,7 @@ export const discount_to_conjunctions = (eb, d) => {
           
           conjunctions.push(
             eb_in(
-              eb, 'entity_to_tags_projections', 'in', 
+              eb, 'entity_to_tags_projections',
               cast
             )
           );
@@ -126,7 +127,7 @@ export const discount_to_conjunctions = (eb, d) => {
           conjunctions.push(
             eb.not(
               eb_in(
-                eb, 'entity_to_tags_projections', 'in', 
+                eb, 'entity_to_tags_projections',
                 cast
               )
             )
@@ -142,7 +143,7 @@ export const discount_to_conjunctions = (eb, d) => {
           // PROBLEM: we only have ids, but use handles in the filters
           conjunctions.push(
             eb_in(
-              eb, 'products_to_collections', 'in', 
+              eb, 'products_to_collections',
               cast.map(c => c.id)
             )
           );
@@ -157,7 +158,7 @@ export const discount_to_conjunctions = (eb, d) => {
           conjunctions.push(
             eb.not(
               eb_in(
-                eb, 'products_to_collections', 'in', 
+                eb, 'products_to_collections',
                 cast.map(c => c.id)
               )
             )

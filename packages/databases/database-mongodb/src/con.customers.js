@@ -1,7 +1,7 @@
 /**
  * @import { db_customers as db_col } from '@storecraft/core/database'
  * @import { OrderData } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
 
@@ -9,7 +9,7 @@ import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular, 
   upsert_regular } from './con.shared.js'
-import { isDef, sanitize_array, to_objid } from './utils.funcs.js'
+import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**
@@ -62,8 +62,6 @@ export const email_or_id = (email_or_id) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -74,7 +72,7 @@ const remove = (driver) => {
       await session.withTransaction(
         async () => {
           const res = await col(driver).findOneAndDelete(
-            email_or_id(id),
+            handle_or_id(id),
             { session }
           );
       
@@ -120,10 +118,10 @@ const list_customer_orders = (driver) => {
 
     const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
 
-    console.log('query', query)
-    console.log('filter', JSON.stringify(filter_query, null, 2))
-    console.log('sort', sort)
-    console.log('expand', query?.expand)
+    // console.log('query', query)
+    // console.log('filter', JSON.stringify(filter_query, null, 2))
+    // console.log('sort', sort)
+    // console.log('expand', query?.expand)
     
     /** @type {Filter<WithRelations<OrderData>>} */
     const filter = {
@@ -147,6 +145,34 @@ const list_customer_orders = (driver) => {
   }
 }
 
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["count_customer_orders"]}
+ */
+const count_customer_orders = (driver) => {
+  return async (customer_id, query) => {
+
+    const { filter: filter_query } = query_to_mongo(query);
+
+    /** @type {Filter<WithRelations<OrderData>>} */
+    const filter = {
+      $and: [
+        {'_relations.search': `customer:${customer_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const count = await driver.resources.orders._col.countDocuments(
+      filter
+    );
+
+    return count;
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -163,6 +189,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_customer_orders: list_customer_orders(driver) 
+    list_customer_orders: list_customer_orders(driver),
+    count_customer_orders: count_customer_orders(driver),
   }
 }

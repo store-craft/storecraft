@@ -77,7 +77,7 @@ const Layout = (
 
         <div ref={main_ref} 
              className={`flex-1 w-full items-stretch h-full 
-                       overflow-y-auto ` + (headings?.length ? 'lg:pr-[19rem]' : '')}>
+                       overflow-y-auto ` + (headings?.length ? 'xl:pr-[19rem]' : '')}>
           <GradStroke className='w-full h-[550px] absolute right-10 top-0 
                     opacity-20 dark:opacity-30 z-0 pointer-events-none' />
           {/* <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
@@ -87,12 +87,13 @@ const Layout = (
                       opacity-10 md:opacity-10 md:dark:opacity-0 pointer-events-none'
                       via='via-pink-400' /> */}
 
-          <div className='relative w-full h-fit flex flex-col'>
+          <div className={`relative w-full ${slug==='rest-api/api' ? 'w-full' : 'max-w-3xl'} h-fit mx-auto flex flex-col`}>
             <div 
                 className={`--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
                           pt-[130px] md:pt-[90px] prose prose-base
                           prose-slate text-[16px] font-light
-                        --text-base max-w-none h-full
+                          prose-h1:text-3xl prose-h1:font-medium
+                          text-base max-w-none h-full
                           dark:prose-invert decoration-from-font 
                           subpixel-antialiased z-10 
                           text-slate-800 dark:text-slate-300`}
@@ -105,7 +106,7 @@ const Layout = (
             <TOC
                 headings={headings} 
                 className='pt-[100px] h-full w-[19rem]  --bg-red-300 
-                        hidden lg:flex flex-none top-0 right-0 fixed '/>
+                        hidden xl:flex flex-none top-0 right-0 fixed '/>
             
           }
 

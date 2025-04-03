@@ -4,7 +4,7 @@ import { Polka } from './polka/index.js';
 import type { VPolkaRequest, VPolkaResponse } from './polka/public.d.ts';
 
 export type ApiRequest = VPolkaRequest & {
-  user?: Partial<JWTClaims> & Pick<AuthUserType, 'roles'>;
+  user?: Partial<JWTClaims> & Partial<Pick<AuthUserType, 'roles' | 'email' | 'firstname' | 'lastname'>>;
 }
 
 export type ApiResponse = VPolkaResponse & {

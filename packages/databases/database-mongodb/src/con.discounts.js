@@ -1,7 +1,7 @@
 /**
  * @import { db_discounts as db_col } from '@storecraft/core/database'
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
 
@@ -23,7 +23,10 @@ import {
   save_me, 
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js'
-
+import {
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+} from '@storecraft/core/database'
 
 /**
  * @param {MongoDB} d 
@@ -54,16 +57,27 @@ const upsert = (driver) => {
           // SEARCH
           add_search_terms_relation_on(data, search_terms);
 
-          
           ////
           // PRODUCT --> DISCOUNTS RELATION
           ////
+          const extra_search_for_products = 
+            helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db(
+              data
+            );
+
+          const extra_tags_for_products = 
+            helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(
+              data
+            );
 
           // first remove discount from anywhere
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
-            [
-              `discount:${data.handle}`, `discount:${data.id}`
+            [ // remove search terms
+              ...extra_search_for_products
+            ],
+            [ // remove tags
+              ...extra_tags_for_products
             ]
           );
           
@@ -77,8 +91,11 @@ const upsert = (driver) => {
                 $addToSet: { 
                   '_relations.discounts.ids': objid,
                   '_relations.search': { 
-                    $each : [ `discount:${data.handle}`, `discount:${data.id}` ]
-                  } 
+                    $each : extra_search_for_products
+                  },
+                  'tags': {
+                    $each : extra_tags_for_products
+                  }
                 },
                 
               },
@@ -145,13 +162,27 @@ const remove = (driver) => {
     try {
       await session.withTransaction(
         async () => {
+
+        const extra_search_for_products = 
+          helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db(
+            item
+          );
+
+        const extra_tags_for_products = 
+          helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(
+            item
+          );
+
           ////
           // PRODUCT -> DISCOUNTS RELATION
           ////
           await remove_entry_from_all_connection_of_relation(
             driver, 'products', 'discounts', objid, session,
             [
-              `discount:${item.handle}`, `discount:${item.id}`
+              ...extra_search_for_products
+            ],
+            [
+              ...extra_tags_for_products
             ]
           );
 
@@ -196,8 +227,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["list_discount_products"]}
  */
 const list_discount_products = (driver) => {
@@ -235,6 +264,67 @@ const list_discount_products = (driver) => {
   }
 }
 
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_all_discount_products_tags"]}
+ */
+const list_all_discount_products_tags = (driver) => {
+  return async (handle_or_id) => {
+    const items = await driver.resources.products._col.find(
+      {
+        '_relations.search': `discount:${handle_or_id}`
+      },
+      {
+        projection: {
+          tags: 1
+        }
+      }
+    ).toArray();
+
+    const set = (items ?? []).reduce(
+      (p, c) => {
+        c.tags.forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, new Set()
+    );
+    
+    // return array from set
+    return Array.from(set);
+  }
+}
+
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["count_discount_products"]}
+ */
+const count_discount_products = (driver) => {
+  return async (handle_or_id, query) => {
+
+    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
+
+    /** @type {Filter<WithRelations<ProductType | VariantType>>} */
+    const filter = {
+      $and: [
+        { '_relations.search': `discount:${handle_or_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const count = await driver.resources.products._col.countDocuments(
+      filter
+    );
+
+    return count;
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -251,6 +341,8 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_discount_products: list_discount_products(driver)
+    list_discount_products: list_discount_products(driver),
+    list_all_discount_products_tags: list_all_discount_products_tags(driver),
+    count_discount_products: count_discount_products(driver)
   }
 }

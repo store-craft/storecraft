@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-sql-base",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Official SQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

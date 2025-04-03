@@ -1,8 +1,5 @@
 /**
- * @import { BaseType, ShippingMethodTypeUpsert, ProductTypeUpsert } from '../../api/types.api.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
+ * @import { ShippingMethodTypeUpsert, ProductTypeUpsert } from '../../api/types.api.js'
  */
 
 import { suite } from 'uvu';
@@ -57,7 +54,7 @@ export const create = app => {
 
   const s = suite(
     file_name(import.meta.url), 
-    { }
+    {}
   );
 
   s.before(
@@ -357,8 +354,6 @@ export const create = app => {
         ],
         shipping_method: {
           handle: 'shipping does not exist',
-          price: 30,
-          title: 'i dont exist',
           id: ''
         },
         contact: {

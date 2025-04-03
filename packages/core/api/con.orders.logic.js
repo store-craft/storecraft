@@ -1,5 +1,5 @@
 /**
- * @import { OrderData, OrderDataUpsert, PricingData } from './types.api.js'
+ * @import { ApiQuery, OrderData, OrderDataUpsert, PricingData } from './types.public.js'
  */
 import { orderDataUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
@@ -80,6 +80,20 @@ export const upsert = (app) =>
 
 
 /**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<OrderData>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
+
+/**
  * 
  * @param {App} app
  */  
@@ -90,6 +104,7 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'orders/remove'),
     list: regular_list(app, db(app), 'orders/list'),
+    count: count(app),
   }
 }
 

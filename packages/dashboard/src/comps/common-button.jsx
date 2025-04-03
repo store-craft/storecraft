@@ -75,7 +75,7 @@ const cls_default = `h-fit px-2 py-1 rounded-lg border
 
 /**
  * @typedef {object} InternalLoadingButtonParams
- * @property {React.ReactNode} [Icon]
+ * @property {React.ReactNode | JSX.Element} [Icon]
  * @property {string} [text]
  * @property {boolean} [keep_text_on_load]
  * @property {string} [className]
@@ -162,7 +162,7 @@ export const PromisableLoadingButton = (
 }
 
 /**
- * @typedef {object} InternalPromisableLoadingBlingButton
+ * @typedef {object} InternalPromisableLoadingBlingButtonParams
  * @prop {() => Promise<any>} onClick
  * @prop {boolean} [show]
  * @prop {boolean} [loading]
@@ -172,11 +172,11 @@ export const PromisableLoadingButton = (
  * @prop {string} [to]
  * 
  * 
- * @typedef {InternalPromisableLoadingBlingButton & 
- * Omit<LoadingButtonParams, 'onClick'>} PromisableLoadingBlingButton
+ * @typedef {InternalPromisableLoadingBlingButtonParams & 
+ * Omit<LoadingButtonParams, 'onClick'>} PromisableLoadingBlingButtonParams
  * 
  * 
- * @param {PromisableLoadingBlingButton} param0 
+ * @param {PromisableLoadingBlingButtonParams} param0 
  */
 export const PromisableLoadingBlingButton = (
   {

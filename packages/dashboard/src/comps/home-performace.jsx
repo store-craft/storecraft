@@ -8,7 +8,7 @@ import TimeFrame from './home-time-frame.jsx'
 import ShowIf from './show-if.jsx'
 import { BiTrendingUp } from 'react-icons/bi/index.js'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
-import { useDocumentCache, useMiscCache } from '@storecraft/sdk-react-hooks/src/useStorecraftCache.js'
+import { useDocumentCache, useMiscCache } from '@storecraft/sdk-react-hooks'
 
 const DAY = 86400000
 

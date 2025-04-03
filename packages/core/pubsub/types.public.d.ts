@@ -1,5 +1,6 @@
 import type { App } from '../types.public.js';
 import type { 
+  ApiAuthResult,
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
   StorefrontType, StorefrontTypeUpsert, TagType, TemplateType 
@@ -95,10 +96,11 @@ export type events = {
 
   'auth/signup': Partial<AuthUserType>
   'auth/signin': Partial<AuthUserType>
-  'auth/refresh': Partial<AuthUserType>
-  'auth/remove': Partial<AuthUserType>
+  'auth/refresh': Partial<ApiAuthResult>
+  'auth/remove': PayloadForRemove<Partial<AuthUserType>>
   'auth/upsert': Partial<AuthUserType>
   'auth/apikey-created': Partial<AuthUserType>
+  'auth/change-password': Partial<AuthUserType> 
   'auth/confirm-email-token-generated': {
     auth_user: Partial<AuthUserType>,
     /** confirm email token */
@@ -111,7 +113,6 @@ export type events = {
     token: string
   }
   'auth/forgot-password-token-confirmed': Partial<AuthUserType>
-  'auth/change-password': Partial<AuthUserType> 
 
 
   /** email, before sending */
@@ -161,7 +162,7 @@ export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =(PubS
  */
 export type PayloadForGet<T=any> = { current: T };
 export type PayloadForUpsert<T=any> = { previous: T, current: T };
-export type PayloadForRemove<T=any> = { previous: T, success: boolean };
+export type PayloadForRemove<T=any> = { previous: T };
 
 
 /**

@@ -1,6 +1,5 @@
 /**
- * @import { BaseType } from '../../api/types.api.js'
- * @import { events, PubSubEvent } from '../../pubsub/types.public.js'
+ * @import { events } from '../../pubsub/types.public.js'
  * @import { SendMailParams, SendMailWithTemplateParams } from '../../mailer/types.mailer.js'
  * 
  */

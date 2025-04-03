@@ -8,7 +8,7 @@ import { RxCopy } from 'react-icons/rx/index.js'
 import { read_clipboard, write_clipboard } from '../utils/index.js'
 import { to_handle } from '@storecraft/sdk/src/utils.functional.js'
 import { Bling, Card, Input } from './common-ui.jsx'
-import { LinkWithState } from '../hooks/useNavigateWithState.jsx'
+import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
 import { Link } from 'react-router-dom'
 import { MainPortal } from '@/layout.jsx'
 

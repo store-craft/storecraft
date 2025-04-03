@@ -38,7 +38,7 @@ export const SSEGenerator = async function *(stream) {
 
   for await(const chunk of stream) {
     let text = (new TextDecoder()).decode(chunk); 
-    console.log('text \n', text)
+    // console.log('text \n', text)
 
     if(residual_line) {
       text = residual_line + text;

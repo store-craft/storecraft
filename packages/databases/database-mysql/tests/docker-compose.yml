@@ -1,0 +1,24 @@
+services:
+  db:
+    image: mysql
+    container_name: test-mysql
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      MYSQL_DATABASE: main
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - mysqldata_config:/etc/mysql/conf.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+    ports:
+      - 3306:3306
+
+
+volumes:
+  mysqldata:
+  mysqldata_config:

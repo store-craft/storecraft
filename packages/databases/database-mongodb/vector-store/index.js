@@ -53,20 +53,32 @@ export class MongoVectorStore {
    */
   constructor(config) {
     this.config = {
-      ...config,
-      index_name: config.index_name ?? 'vector_store',
-      similarity: config.similarity ?? 'cosine',
-      dimensions: config.dimensions ?? 1536,
-      options: config.options ?? {
+      index_name: DEFAULT_INDEX_NAME,
+      similarity: 'cosine',
+      dimensions: 1536,
+      options: {
         ignoreUndefined: true,
         serverApi: {
           version: ServerApiVersion.v1,
           strict: false,
           deprecationErrors: true,
         }
-      }
+      },
+      ...config,
     };
   }
+
+  get metric() {
+    switch(this.config.similarity) {
+      case 'cosine': return 'cosine';
+      case 'dotProduct': return 'dotproduct';
+      case 'euclidean': return 'euclidean';
+    }
+  };
+
+  get dimensions() {
+    return this.config.dimensions;
+  };
 
   get client() {
     if(!this.config.db_name || !this.config.url) {
@@ -81,8 +93,10 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url ?? 'MONGODB_URL']; 
-    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name ?? 'MONGODB_DB_NAME'] ?? 'main'; 
+    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url] 
+      ?? app.platform.env['MONGODB_URL']; 
+    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name] 
+      ?? app.platform.env['MONGODB_DB_NAME'] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */

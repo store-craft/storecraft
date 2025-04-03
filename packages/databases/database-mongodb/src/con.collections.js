@@ -1,7 +1,7 @@
 /**
  * @import { db_collections as db_col } from '@storecraft/core/database'
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
 
@@ -27,8 +27,6 @@ const transactionOptions = {
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('collections');
@@ -169,8 +167,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["list_collection_products"]}
  */
 const list_collection_products = (driver) => {
@@ -213,6 +209,72 @@ const list_collection_products = (driver) => {
   }
 }
 
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["count_collection_products"]}
+ */
+const count_collection_products = (driver) => {
+  return async (handle_or_id, query) => {
+
+    const { 
+      filter: filter_query, sort, reverse_sign 
+    } = query_to_mongo(query);
+
+    /**
+     * @type {Filter<WithRelations<ProductType | VariantType>>
+     * }
+     */
+    const filter = {
+      $and: [
+        { '_relations.search': `col:${handle_or_id}` },
+      ]
+    };
+
+    // add the query filter
+    isDef(filter_query) && filter.$and.push(filter_query);
+
+    const count = await driver.resources.products._col.countDocuments(
+      filter
+    );
+
+    return count;
+  }
+}
+
+
+
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_used_products_tags"]}
+ */
+const list_used_products_tags = (driver) => {
+  return async (handle_or_id) => {
+    const items = await driver.resources.products._col.find(
+      {
+        '_relations.search': `col:${handle_or_id}`
+      },
+      {
+        projection: {
+          tags: 1
+        }
+      }
+    ).toArray();
+
+    const set = (items ?? []).reduce(
+      (p, c) => {
+        c.tags.forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, new Set()
+    )
+    // return array from set
+    return Array.from(set);
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
  * 
@@ -228,6 +290,8 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_collection_products: list_collection_products(driver) 
+    list_collection_products: list_collection_products(driver),
+    count_collection_products: count_collection_products(driver),
+    list_used_products_tags: list_used_products_tags(driver),
   }
 }

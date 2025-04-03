@@ -1,4 +1,7 @@
 // here we have types that are auto transformed into zod objects
+// i use it mainly for resources types of database tables.
+// other types can be found in `types.public.d.ts` to not
+// create to much code with zod objects
 
 /**
  * 
@@ -7,14 +10,12 @@
 export interface StorecraftConfig  {
 
   /**
-   *  
    * @description The store name
    * `platform.env.SC_GENERAL_STORE_NAME` environment
    */
   general_store_name?: string;
 
   /**
-   *  
    * @description The store `website`
    * `platform.env.SC_GENERAL_STORE_WEBSITE` environment
    */
@@ -22,7 +23,6 @@ export interface StorecraftConfig  {
 
 
   /**
-   *  
    * @description The store `logo` url
    * `platform.env.SC_GENERAL_STORE_LOGO_URL` environment
    */
@@ -30,21 +30,18 @@ export interface StorecraftConfig  {
 
 
   /**
-   *  
    * @description The store `description`
    * `platform.env.SC_GENERAL_STORE_DESCRIPTION` environment
    */
   general_store_description?: string;
 
   /**
-   *  
    * @description The store support email
    * `platform.env.SC_GENERAL_STORE_SUPPORT_EMAIL` environment
    */
   general_store_support_email?: string;
 
   /**
-   *  
    * @description The store `email-confirm` base url into which a template
    * action button will link into including a `token` as a query parameter.
    * 
@@ -61,7 +58,6 @@ export interface StorecraftConfig  {
   general_confirm_email_base_url?: string;
 
   /**
-   *  
    * @description The store `forgot-password` base url, into which template action
    * button will link into including a `token` as a query parameter.
    * 
@@ -78,28 +74,36 @@ export interface StorecraftConfig  {
   general_forgot_password_confirm_base_url?: string;
   
   /**
-   *  
    * @description Seed admin emails, if absent will be infered at init by 
    * `platform.env.SC_AUTH_ADMIN_EMAILS` environment as CSV of emails 
    */
   auth_admins_emails?: string[];
 
   /** 
-   * 
    * @description access token signing secret, if absent will be infered 
    * at init by `platform.env.SC_AUTH_SECRET_ACCESS_TOKEN` environment  
    */
   auth_secret_access_token?: string;
 
   /** 
-   * 
    * @description refresh token signing secret, if absent will be infered at 
    * init by `platform.env.SC_AUTH_SECRET_REFRESH_TOKEN` environment  
    */
   auth_secret_refresh_token?: string;
 
   /** 
-   * 
+   * @description forgot password token signing secret, if absent will be infered at 
+   * init by `platform.env.SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN` environment  
+   */
+  auth_secret_forgot_password_token?: string;
+
+  /** 
+   * @description Confirm email signing secret, if absent will be infered at 
+   * init by `platform.env.SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN` environment  
+   */
+  auth_secret_confirm_email_token?: string;
+
+  /** 
    * @description (Optional) automatically reserve stock, we recommend to use `never`.
    * Depending on your needs you can alter this setting.
    * if absent will be infered at init by `platform.env.SC_CHECKOUT_RESERVE_STOCK_ON` 
@@ -109,7 +113,6 @@ export interface StorecraftConfig  {
   checkout_reserve_stock_on?: 'checkout_create' | 'checkout_complete' | 'never'
 
   /** 
-   * 
    * @description (Optional) Once object `storage` is used, you may have connected a 
    * **CDN** to buckets to take advantage of faster assets serving instead of serving 
    * from your server / the storage service directly. If you are using an cloud based 
@@ -220,6 +223,11 @@ export interface withOptionalHandleOrID {
  */
 export interface BaseType extends idable_concrete, timestamps {
   /** 
+   * @description The key name 
+   */
+  handle: string;
+
+  /** 
    * @description List of images urls 
    */
   media?: string[];
@@ -267,7 +275,7 @@ interface JWTClaims {
   /**
    * @description User roles and authorizations
    */
-  roles: string[],
+  roles?: string[],
   email?: string, 
   firstname?: string, 
   lastname?: string, 
@@ -289,7 +297,7 @@ export interface AuthBaseType  {
    * 
    * @description password
    * @minLength 4
-   * @maxLength 20   
+   * @maxLength 256   
    */
   password: string;
 }
@@ -409,6 +417,65 @@ export interface ApiAuthResult  {
 }
 
 /**
+ * @description Auth user interface
+ */
+export interface AuthUserType extends Omit<BaseType, 'id'>, AuthBaseType {
+  /** 
+   * @description ID 
+   */
+  id: string;
+
+  /**
+   * @description Is the email confirmed ?
+   */
+  confirmed_mail?: boolean
+
+  /**
+   * @description list of roles and authorizations of the user
+   */
+  roles?: Role[];
+
+  /**
+   * @description tags
+   */
+  tags?: string[];
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  firstname?: string 
+
+  /**
+   * @description (optional) readable `name` of `customer`
+   */
+  lastname?: string 
+}
+
+
+/**
+ * @description The OAuth Identity Provider
+ */
+export type OAuthProvider = {
+  /**
+   * @description The unique `handle` of the provider
+   */
+  provider: string,
+  /**
+   * @description The readable name of the provider
+   */
+  name: string,
+  /**
+   * @description The URL to the logo of the provider, can be a data URL
+   * with `data:image/svg+xml;utf8,`
+   */
+  logo_url?: string,
+  /**
+   * @description The description of the provider
+   */
+  description?: string
+}
+
+/**
  * @description Parameters for inferring a URI to redirect users
  * when doing a social login. This is a helper method and completely optional
  */
@@ -462,43 +529,6 @@ export interface SignWithOAuthProviderParams {
   authorization_response?: Record<string, string>
 }
 
-
-
-/**
- * @description Auth user interface
- */
-export interface AuthUserType extends Omit<BaseType, 'id'>, AuthBaseType {
-  /** 
-   * @description ID 
-   */
-  id: string;
-
-  /**
-   * @description Is the email confirmed ?
-   */
-  confirmed_mail?: boolean
-
-  /**
-   * @description list of roles and authorizations of the user
-   */
-  roles?: Role[];
-
-  /**
-   * @description tags
-   */
-  tags?: string[];
-
-  /**
-   * @description (optional) readable `name` of `customer`
-   */
-  firstname?: string 
-
-  /**
-   * @description (optional) readable `name` of `customer`
-   */
-  lastname?: string 
-}
-
 // attributes
 
 /**
@@ -524,11 +554,6 @@ export interface AttributeType  {
  */
 export interface TagType extends BaseType {
   /** 
-   * @description The key name 
-   */
-  handle: string;
-
-  /** 
    * @description List of values, related to the key
    */
   values: string[];
@@ -546,11 +571,6 @@ export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptio
  * @description Collection type
  */
 export interface CollectionType extends BaseType {
-
-  /** 
-   * @description The `handle` of the entity
-   */
-  handle: string;
 
   /** 
    * @description Title of collection 
@@ -680,10 +700,6 @@ export interface VariantType extends BaseProductType {
  * @description Base product interface
  */
 export interface BaseProductType extends BaseType {
-  /** 
-   * @description The readable unique product `handle`
-   */
-  handle: string;
 
   /** 
    * @description The International Standard Book Number (`ISBN`)
@@ -834,11 +850,6 @@ export interface DiscountType extends BaseType {
    * @minLength 3 Title should be longer than 3
    */
   title: string;
-
-  /** 
-   * @description Discount `code` / `handle` 
-   */
-  handle: string;
 
   /** 
    * @description The order in which to apply the discounts 
@@ -1336,11 +1347,6 @@ export interface StorefrontType extends BaseType {
   active: boolean;
   
   /** 
-   * @description Readable `handle` 
-   */
-  handle: string;
-
-  /** 
    * @description Title 
    * @minLength 3 Title should be longer than 3
    */
@@ -1381,6 +1387,13 @@ export interface StorefrontType extends BaseType {
    * @description Posts related to this storefront 
    */
   posts?: PostType[];
+
+  /**
+   * @description List of all tags found in the products of this storefront,
+   * This is useful for searching and filtering products in the frontend.
+   * @example ['genere_action', 'rated_M', ...]
+   */
+  all_used_products_tags?: string[];
 }
 
 
@@ -1524,7 +1537,7 @@ export interface CustomerType extends BaseType {
 /**
  * @description Customer upsert interface
  */
-export interface CustomerTypeUpsert extends Omit<CustomerType, 'id'>, withOptionalID{};
+export interface CustomerTypeUpsert extends Omit<CustomerType, 'id' | 'handle'>, withOptionalHandleOrID {};
 
 // image
 
@@ -1532,10 +1545,6 @@ export interface CustomerTypeUpsert extends Omit<CustomerType, 'id'>, withOption
  * @description Image interface
  */
 export interface ImageType extends BaseType {
-  /** 
-   * @description Unique handle 
-   */
-  handle: string;
 
   /** 
    * @description Name 
@@ -1579,10 +1588,6 @@ export interface ShippingMethodType extends BaseType {
    */
   title: string;
 
-  /**
-   * @description Readable `handle` of shipping
-   */
-  handle: string;
 }
 
 /**
@@ -1596,10 +1601,6 @@ export interface ShippingMethodTypeUpsert extends Omit<ShippingMethodType, 'id' 
  * Post interface
  */
 export interface PostType extends BaseType {
-  /** 
-   * @description Unique `handle` 
-   */
-  handle: string;
 
   /** 
    * @description Title of post 
@@ -1672,6 +1673,10 @@ export interface NotificationType extends BaseNotificationType, timestamps {
  * @description Notification upsert interface
  */
 export interface NotificationTypeUpsert extends Omit<BaseNotificationType, 'id'> {
+  /** 
+   * @description Optional `id` of notification
+   */
+  id?: string;
 }
 
 /** 
@@ -1764,9 +1769,10 @@ export interface BaseCheckoutCreateType {
   notes?: string; 
 
   /** 
-   * @description Shipping method info 
+   * @description Shipping method `handle` or `id`
    */
-  shipping_method: Partial<ShippingMethodType>; 
+  shipping_method: Partial<HandleAndID>; 
+  // shipping_method: Partial<ShippingMethodType>; 
 }
 
 
@@ -1780,12 +1786,27 @@ export interface CheckoutCreateType extends BaseCheckoutCreateType {
   coupons?: DiscountType[]; 
 }
 
-interface CheckoutCreateTypeWithoutID extends Omit<CheckoutCreateType, 'id'> {};
+/**
+ * @description Checkout Create interface
+ */
+export interface CheckoutCreateTypeAfterValidation extends Omit<CheckoutCreateType, 'shipping_method'> {
+  /** 
+   * @description Shipping method after validation
+   */
+  shipping_method: ShippingMethodType; 
+  /** 
+   * @description In case the order went through validation  
+   */
+  validation?: ValidationEntry[];
+}
+
+// interface CheckoutCreateTypeWithoutID extends Omit<CheckoutCreateType, 'id' | 'shipping_method'> {
+// };
 
 /**
  * @description Order interface
  */
-export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
+export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>, Omit<BaseType, 'handle'> {
   /** 
    * @description Status of `checkout`, `fulfillment` and `payment` 
    */
@@ -1796,10 +1817,6 @@ export interface OrderData extends CheckoutCreateTypeWithoutID, BaseType {
    */
   pricing: PricingData;
 
-  /** 
-   * @description In case the order went through validation  
-   */
-  validation?: ValidationEntry[];
 
   /** 
    * @description Payment gateway info and status 
@@ -2506,11 +2523,6 @@ export interface PaymentGatewayItemGet  {
 export interface TemplateType extends BaseType {
 
   /**
-   * @description `handle`
-   */
-  handle: string;
-
-  /**
    * @description `title` of `template`
    */
   title: string;
@@ -2585,11 +2597,10 @@ export interface SimilaritySearchInput  {
   limit?: number
 }
 
-
 /**
- * @description Similiarity / semantic search result
+ * @description Similiarity / semantic search result item
  */
-export interface SimilaritySearchResult  {
+export interface SimilaritySearchResultItem {
   /**
    * @description The score of similarity, lower is better
    */
@@ -2598,11 +2609,41 @@ export interface SimilaritySearchResult  {
   /**
    * @description The namespace of the content
    */
-  namespace: SimilaritySearchAllowedNamespaces;
+  namespace: SimilaritySearchAllowedNamespaces
 
   /**
-   * @description The content
+   * @description The content:
+   * - ProductType for 'products'
+   * - DiscountType for 'discounts'
+   * - CollectionType for 'collections'
+   * - ShippingMethodType for 'shipping'
    */
   content: ProductType | DiscountType | CollectionType | ShippingMethodType
+}
+
+/**
+ * @description Similiarity / semantic search result
+ */
+export interface SimilaritySearchResult  {
+
+  /**
+   * @description The context of the search
+   */
+  context?: {
+    /**
+     * @description The metric used for similarity so you can interpret the results
+     */
+    metric?: 'cosine' | 'euclidean' | 'dotproduct'
+    /**
+     * @description The embedding dimensions of the vector store
+     */
+    dimensions?: number
+  },
+
+  /**
+   * @description The queried items
+   */
+  items: SimilaritySearchResultItem[]
+  
 }
 

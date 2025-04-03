@@ -1,11 +1,17 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
+import { 
+  forwardRef, useCallback, useEffect, 
+  useImperativeHandle, useRef 
+} from "react";
 import type { ChatMessage, withDiv } from "./common.types";
-import { ChatMessagesViewImperativeInterface, ChatMessageView } from "./chat-message";
+import { 
+  ChatMessagesViewImperativeInterface, ChatMessageView 
+} from "./chat-message";
 
 export type MessagesParams = withDiv<
   {
     messages: ChatMessage[];
     onChatWindowScroll?: (el?: HTMLDivElement) => void
+    onChatWindowResize?: (el?: HTMLDivElement) => void
   }
 >;
 
@@ -14,13 +20,14 @@ export const ChatMessagesView = forwardRef<
 >(
   (
     {
-      messages, onChatWindowScroll,
+      messages, onChatWindowScroll, onChatWindowResize,
       ...rest
     }: MessagesParams,
     ref
   ) => {
       
     const ref_div = useRef<HTMLDivElement>(undefined);
+    const ref_resize_observer_div = useRef<HTMLDivElement>(undefined);
 
     useImperativeHandle<
       ChatMessagesViewImperativeInterface, 
@@ -32,22 +39,42 @@ export const ChatMessagesView = forwardRef<
           scroll: () => {
             ref_div.current?.scroll(
               {
-                top: ref_div.current.scrollHeight - ref_div.current.clientHeight,
+                top: (
+                  ref_div.current.scrollHeight - 
+                  ref_div.current.clientHeight
+                ),
                 behavior: "smooth"
               }
             )
           }
         }
-      )
+      ), []
     );
 
 
     const internal_onScroll: React.UIEventHandler<HTMLDivElement> = useCallback(
       (e) => {
-
         onChatWindowScroll?.(e.currentTarget);
       }, [onChatWindowScroll]
     );
+
+    useEffect(
+      () => {
+        if (!ref_resize_observer_div.current) return;
+        const resizeObserver = new ResizeObserver(
+          (entries) => {
+            // console.log('resize', ref_resize_observer_div.current.clientHeight)
+            // console.log('ref_div.current.scrollHeight', ref_div.current.scrollHeight)
+            onChatWindowResize?.(ref_resize_observer_div.current);
+          }
+        );
+
+        resizeObserver.observe(ref_resize_observer_div.current);
+
+        return () => resizeObserver.disconnect();
+      }, [onChatWindowResize]
+    );
+    
 
     useEffect(
       () => {
@@ -61,16 +88,19 @@ export const ChatMessagesView = forwardRef<
               gap-0 pt-5 --pr-5 overflow-y-scroll'
             onScroll={internal_onScroll}
             ref={ref_div}>
-          {
-            messages?.map(
-              (m, ix) => (
-                <ChatMessageView 
+          <div id='__resize_observer' className='w-full h-fit'
+              ref={ref_resize_observer_div} >
+            {
+              messages?.map(
+                (m, ix) => (
+                  <ChatMessageView 
                     message_index={ix}
                     key={ix} message={m} 
                     avatar_icon={undefined} />
+                )
               )
-            )
-          }
+            }
+          </div>    
         </div>
       </div>
     )

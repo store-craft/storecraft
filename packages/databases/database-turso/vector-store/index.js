@@ -71,6 +71,14 @@ export class LibSQLVectorStore {
     };
   }
 
+  get metric() {
+    return this.config.similarity;
+  };
+
+  get dimensions() {
+    return this.config.dimensions;
+  };
+
   get client() {
     if(!this.config.url) {
       throw new Error('LibSQLVectorStore::client() - missing url');
@@ -92,12 +100,11 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.authToken ??= app.platform.env[
-      LibSQLVectorStore.EnvConfig.authToken ?? 'LIBSQL_AUTH_TOKEN'
-    ];
-    this.config.url ??= app.platform.env[
-      LibSQLVectorStore.EnvConfig.url ?? 'LIBSQL_URL'
-    ];
+    this.config.authToken ??= app.platform.env[LibSQLVectorStore.EnvConfig.authToken] 
+        ?? app.platform.env['LIBSQL_AUTH_TOKEN'];
+
+    this.config.url ??= app.platform.env[LibSQLVectorStore.EnvConfig.url] 
+        ?? app.platform.env['LIBSQL_URL'];
   }
 
   /** @type {VectorStore["embedder"]} */
@@ -193,7 +200,8 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["similaritySearch"]} */
   similaritySearch = async (query, k, namespaces) => {
-
+    // console.log({query,k,namespaces})
+    
     const embedding_result = await this.embedder.generateEmbeddings(
       {
         content: [
@@ -218,10 +226,12 @@ export class LibSQLVectorStore {
     /** @type {InArgs} */
     let args = [];
     let sql = `
-    SELECT id, metadata, pageContent, updated_at, namespace, ${distance_fn}(embedding, vector(?)) AS score
-    FROM vector_top_k('${index_name}', vector(?), ?) as top_k_view
-    JOIN ${table} ON ${table}.rowid = top_k_view.id
+    SELECT ${table}.id, metadata, pageContent, updated_at, namespace, ${distance_fn}(embedding, vector(?)) AS score
+    FROM vector_top_k('${index_name}', vector(?), CAST(? AS INTEGER)) as top_k_view
+    JOIN ${table} ON ${table}.rowid = top_k_view.rowid
     `;
+
+    // console.log(typeof k)
     args.push(vector_sql_value, vector_sql_value, k);
 
     if(Array.isArray(namespaces) && namespaces.length) {
@@ -236,8 +246,9 @@ export class LibSQLVectorStore {
     `
     args.push(vector_sql_value);
 
-
     const result = await this.client.execute({ sql, args });
+
+    // console.log({result})
 
     return result.rows.map(
       (row) => (
@@ -248,7 +259,10 @@ export class LibSQLVectorStore {
             metadata: parse_json_safely(row.metadata),
             namespace: String(row.namespace),
           },
-          score: Number(row.score)
+          // `libsql` score is (1 - Cosine Similarity) which yields a distance
+          // between [0, 2] where 0 is the most similar.
+          // This is not in accordance with other apis, so we invert it to [-1, 1]
+          score: (this.metric==='cosine') ? (1.0 - Number(row.score)) : Number(row.score)
         }
       )
     );

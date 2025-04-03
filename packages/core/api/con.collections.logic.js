@@ -1,5 +1,5 @@
 /**
- * @import { CollectionType, CollectionTypeUpsert, ProductType } from './types.api.js'
+ * @import { CollectionType, CollectionTypeUpsert, ProductType, VariantType } from './types.api.js'
  * @import { HandleOrId, RegularGetOptions, ID as IDType } from '../database/types.public.js'
  * @import { ApiQuery } from './types.api.query.js'
  */
@@ -58,6 +58,21 @@ export const list_collection_products = (app) =>
 /**
  * @param {App} app
  */
+export const list_used_products_tags = (app) => 
+  /**
+   * @description List all the tags of products in a collection, This is helpful 
+   * for building a filter system in the frontend if you know in advance all 
+   * the tags of the products in a collection
+   * 
+   * @param {HandleOrId} handle_or_id 
+   */
+  (handle_or_id) => {
+    return db(app).list_used_products_tags(handle_or_id);
+  }
+
+/**
+ * @param {App} app
+ */
 export const export_collection = (app) => {
   
   /**
@@ -111,6 +126,35 @@ export const export_collection = (app) => {
 }  
 
 /**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<CollectionType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+  
+
+/**
+ * @param {App} app
+ */
+export const count_collection_products_query = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {string} id_or_handle id or handle of the collection
+   * @param {ApiQuery<ProductType | VariantType>} [query] query object for products
+   */
+  (id_or_handle, query) => {
+    return db(app).count_collection_products(id_or_handle, query);
+  }  
+  
+
+/**
  * 
  * @param {App} app
  */  
@@ -122,7 +166,10 @@ export const inter = app => {
     remove: regular_remove(app, db(app), 'collections/remove'),
     list: regular_list(app, db(app), 'collections/list'),
     list_collection_products: list_collection_products(app),
-    export_collection: export_collection(app)
+    count_collection_products_query: count_collection_products_query(app),
+    list_used_products_tags: list_used_products_tags(app),
+    export_collection: export_collection(app),
+    count: count(app),
   }
 }
 

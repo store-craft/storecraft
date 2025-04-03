@@ -1,9 +1,6 @@
 /**
- * @import { DiscountType } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
+ * @import { ProductType } from '../../api/types.api.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -21,7 +18,6 @@ import {
 } from './fixtures_discounts_products.js';
 
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {
@@ -29,7 +25,6 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
   );
-
 
   s.before(
     async () => { 
@@ -65,20 +60,35 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    /** @type {ApiQuery<ProductType>} */
+    const query = {
+      startAt: [['updated_at', now]],
+      sortBy: ['updated_at'],
+      order: 'asc',
+      limit: 1000
+    };
+
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
-      {
-        startAt: [['updated_at', now]],
-        sortBy: ['updated_at'],
-        order: 'asc',
-        limit: 1000
-      }
+      query
     );
 
     assert.ok(
       products_queried.length >= products_positive.length,
       'pre-condition has failed'
     );
+
+    { // test discount->products query count on the way
+      const products_queried_count = await app.api.discounts.count_discount_products_query(
+        discount.handle,
+        query
+      );
+
+      assert.ok(
+        products_queried_count == products_positive.length,
+        'count_discount_products_query returned wrong count'
+      )
+    }
 
     assert.ok(
       products_positive.every(
@@ -123,7 +133,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -181,7 +191,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -239,7 +249,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -309,7 +319,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -375,7 +385,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],
@@ -432,7 +442,7 @@ export const create = app => {
     // upsert discount
     await app.api.discounts.upsert(discount);
 
-    const products_queried = await app.api.discounts.list_discounts_products(
+    const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
         startAt: [['updated_at', now]],

@@ -1,4 +1,34 @@
+import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
 import { ChatMessage } from "./common.types";
+import type { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
+
+type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection"]>;
+
+export const fixture_chat_2: ChatMessage[] = [
+  {
+    role: "user",
+    contents: [{type: 'text', content: 'show me the nintendo switch collection'}]
+  },
+  {
+    role: "assistant",
+    contents: [
+      {
+        type: 'tool_result',
+        content: {
+          name: 'browse_collection',
+          data: {
+            result: {
+              command: 'browse_collection',
+              params: {
+                handle: 'nintendo-switch-games'
+              }
+            }
+          }
+        }
+      }
+    ]
+  } satisfies ChatMessage<content_tool_result<ToolResult>>,
+]
 
 export const fixture_chat_1: ChatMessage[] = [
   {

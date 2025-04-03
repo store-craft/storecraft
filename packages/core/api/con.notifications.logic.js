@@ -1,12 +1,17 @@
 /**
- * @import { NotificationType, NotificationTypeUpsert } from './types.api.js'
+ * @import { 
+ *  ApiQuery, NotificationType, NotificationTypeUpsert 
+ * } from './types.public.js'
  * @import { ID as IDType } from '../database/types.public.js'
  */
 import { ID, apply_dates } from './utils.func.js'
-import { notificationTypeUpsertSchema } from './types.autogen.zod.api.js'
+import { 
+  notificationTypeUpsertSchema 
+} from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
-  regular_remove } from './con.shared.js'
+  regular_remove 
+} from './con.shared.js'
 import { assert_zod } from './middle.zod-validate.js';
 import { App } from '../index.js';
 
@@ -21,7 +26,7 @@ export const db = app => app.db.resources.notifications;
 export const addBulk = (app) => 
 /**
  * @description `upsert` a `notification` bulk mode
- * @param {NotificationTypeUpsert | NotificationTypeUpsert[]} items
+ * @param {NotificationTypeUpsert[]} items
  * @return {Promise<IDType[]>}
  */
 async (items) => {
@@ -36,7 +41,7 @@ async (items) => {
       const item_with_id = apply_dates(
         {
           ...item,
-          id: ID('not'),
+          id: item?.id ?? ID('not'),
           author: item.author ? String(item.author) : 'unknown',
           search: item.search ?? []
         }
@@ -55,6 +60,31 @@ async (items) => {
   return items_with_id.map(it => it.id);
 }
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<NotificationType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
+
+/**
+ * @param {App} app
+ */
+export const upsert = (app) => 
+  /**
+   * @description Upsert a `notification`
+   * @param {NotificationTypeUpsert} item
+   */
+  (item) => {
+    return addBulk(app)([item]).then(ids => ids[0]);
+  }
 
 /**
  * 
@@ -66,6 +96,8 @@ export const inter = app => {
     get: regular_get(app, db(app)),
     remove: regular_remove(app, db(app)),
     list: regular_list(app, db(app)),
-    addBulk: addBulk(app)
+    addBulk: addBulk(app),
+    upsert: upsert(app),
+    count: count(app)
   }
 }

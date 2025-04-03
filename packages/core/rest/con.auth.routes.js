@@ -105,6 +105,18 @@ export const create_routes = (app) => {
   );
 
   polka.get(
+    '/users/count_query',
+    middle_authorize_admin,
+    async (req, res) => {
+      let q = (/** @type {ApiQuery<AuthUserType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.auth.count(q);
+      res.sendJson({ count });
+    }
+  );
+
+  polka.get(
     '/users/:email',
     middle_authorize_admin,
     async (req, res) => {
@@ -113,7 +125,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // delete existing `auth user`
   polka.get(
     '/users',
     middle_authorize_admin,

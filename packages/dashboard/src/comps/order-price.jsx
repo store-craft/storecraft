@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { BlingInput, HR } from './common-ui.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
-import { LinkWithState } from '@/hooks/useNavigateWithState.jsx'
+import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
 
 
 /**

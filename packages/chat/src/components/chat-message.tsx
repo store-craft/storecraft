@@ -3,15 +3,12 @@ import type { ChatMessage, content_multiple_text_deltas, withDiv } from "./commo
 import svg from './favicon.svg';
 import { ChatMessageTextContent } from "./chat-message-content-text";
 import { ChatMessageTextDeltasContent } from "./chat-message-content-text-deltas";
-import ShowIf, { ShowBinarySwitch } from "./show-if";
+import { ShowBinarySwitch } from "./show-if";
 import { ChatPubSubEvent_State, pubsub } from "@/hooks/use-chat";
 import { useCallback, useEffect, useState } from "react";
-import { BiRefresh } from "react-icons/bi";
 import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
 import { ChatMessageToolResultContent } from "./chat-message-content-tool-result";
-import { sleep } from "@/hooks/sleep";
 import { ChatMessageErrorContent } from "./chat-message-content-error";
-import { FiRefreshCcw } from "react-icons/fi";
 import { HiRefresh } from "react-icons/hi";
 
 

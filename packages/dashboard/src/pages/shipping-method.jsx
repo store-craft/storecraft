@@ -14,7 +14,7 @@ import { RegularDocumentActions } from '@/comps/document-actions.jsx'
 import Attributes from '@/comps/attributes.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { CreateDate, Div, HR, withBling } from '@/comps/common-ui.jsx'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
 import { useCallback } from 'react'
 
 const root_left_schema = {
@@ -106,11 +106,6 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
       onClickDuplicate={onClickDuplicate}
       onClickReload={onClickReload}
       onClickSave={onClickSave}>
-    <PromisableLoadingBlingButton 
-        Icon={MdPublish} 
-        text='publish' 
-        show={Boolean(onClickPublish)}
-        onClick={onClickPublish} className='' />
   </RegularDocumentActions>  
   )
 }
@@ -130,7 +125,7 @@ const Actions = ({ onClickSave=undefined, onClickCreate=undefined,
 
 /**
  * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ *  mode: import('@/hooks/use-document-actions.js').DocumentActionsMode 
  * }} params
  */
 export default (
@@ -142,7 +137,7 @@ export default (
   const { id : documentId, base } = useParams();
 
   /** 
-    * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+    * @type {import('@/hooks/use-document-actions.js').HookReturnType<
     *  import('@storecraft/core/api').ShippingMethodType>
     * } 
     */

@@ -156,3 +156,19 @@ Simply,
 const products = await app.api.products.list_related_products(HANDLE_OR_ID)
 ```
 
+## List All the tags of all products
+
+
+List all the tags used in all of the products, This is helpful for building 
+a filter system in the frontend if you know in advance all the tags of the products.
+There is also a version confining the tags to be of products of a [specific collection](backend/resources/collections#list-all-the-tags-of-products-in-collection)
+
+```js
+const tags: string[] = await app.api.products.list_used_tags();
+
+console.log(tags);
+// ['genre_action', 'genre_platformer', 'genre_sports', 'region_pal', 'region_ntsc']
+
+```
+
+With these tags you can create a filtering side-bar in the frontend side.

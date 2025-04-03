@@ -1,9 +1,6 @@
 /**
  * @import { CustomerType, CustomerTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext, CrudTestContext } from './api.utils.crud.js';
+ * @import { CrudTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 
@@ -15,6 +12,7 @@ import {
 } from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { withRandom } from './utils.js';
 
 /** @type {CustomerTypeUpsert[]} */
 const items_upsert = [
@@ -39,7 +37,9 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items_upsert, app, ops: app.api.customers,
+      items: items_upsert, 
+      app, 
+      ops: app.api.customers,
       events: {
         get_event: 'customers/get',
         upsert_event: 'customers/upsert',
@@ -59,13 +59,61 @@ export const create = app => {
         }
       } catch(e) {
         console.log(e)
-        throw e;
+        assert.unreachable('failed to remove items');
       }
 
     }
   );
 
   add_sanity_crud_to_test_suite(s);
+
+  s('remove customer -> removes auth-user + events', async () => {
+    /** @type {Partial<events>} */
+    const events  = {}
+    // record all events for later check
+    const unsub = app.pubsub.on(
+      '*',
+      (v) => {
+        events[v.event] = v.payload;
+      }
+    );
+
+    const email = withRandom('tester') + '@example.com';
+
+    await app.api.auth.signup({
+      email,
+      password: 'password'
+    });
+
+    const au = await app.api.auth.get_auth_user(email);
+
+    // remove the customer
+    const success = await app.api.customers.remove(email);
+
+    assert.ok(success, 'remove customer failed');
+
+
+    { // check `auth/remove` event
+      const event = events['auth/remove'];
+      assert.ok(event?.previous, '`auth/remove` event not found');
+      assert.equal(
+        event.previous.email, email, 
+        'auth/remove email mismatch'
+      );
+    }
+
+    { // check `auth/remove` event
+      const event = events['customers/remove'];
+      assert.ok(event?.previous, '`customers/remove` event not found');
+      assert.equal(
+        event.previous.email, email, 
+        'auth/remove email mismatch'
+      );
+    }
+
+    unsub();
+  });
+
 
   return s;
 }

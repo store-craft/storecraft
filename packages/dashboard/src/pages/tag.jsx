@@ -10,7 +10,8 @@ import DocumentDetails from '@/comps/document-details.jsx'
 import MDEditor from '@/comps/md-editor.jsx'
 import { JsonViewCard } from '@/comps/json.jsx'
 import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
+import Attributes from '@/comps/attributes.jsx'
 
 const root_schema = {
   name:'Root', comp: Div, 
@@ -35,6 +36,13 @@ const root_schema = {
       validator: values_validator ,
       comp: withCard(TagValues), 
       comp_params: { className: 'w-full' } 
+    },
+    {
+      key: 'attributes', name: 'Attributes', validate: false, 
+      editable: true, 
+      desc: 'Attributes can contain richer text values than tags',
+      comp: withCard(Attributes),  
+      comp_params: {className: 'w-full'} 
     },
     { 
       key: 'description', name: '📝 Description', type: 'text', validate: false, 
@@ -65,7 +73,7 @@ const root_schema = {
 
 /**
  * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ *  mode: import('@/hooks/use-document-actions.js').DocumentActionsMode 
  * }} params
  */
 export default (
@@ -77,7 +85,7 @@ export default (
  const { id : documentId, base } = useParams();
 
  /** 
-  * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+  * @type {import('@/hooks/use-document-actions.js').HookReturnType<
   *  import('@storecraft/core/api').TagType>
   * } 
   */

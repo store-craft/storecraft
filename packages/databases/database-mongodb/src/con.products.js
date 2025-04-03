@@ -1,14 +1,14 @@
 /**
  * @import { db_products as db_col, RegularGetOptions } from '@storecraft/core/database'
  * @import { ProductType, VariantType } from '@storecraft/core/api'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { Filter, AnyBulkWriteOperation } from 'mongodb'
  */
 
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
-  count_regular, expand, get_bulk, get_regular, list_regular, 
+  count_regular, get_bulk, get_regular, list_regular, 
   zeroed_relations
 } from './con.shared.js'
 import { 
@@ -31,6 +31,10 @@ import { union } from '@storecraft/core/api/utils.func.js'
 import { 
   test_product_filters_against_product 
 } from '@storecraft/core/api/con.pricing.logic.js'
+import {
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+} from '@storecraft/core/database'
 
 /**
  * @param {MongoDB} d 
@@ -104,13 +108,25 @@ const upsert = (driver) => {
             )
           }
 
+          replacement.tags = union(
+            [
+              // remove old discount tags
+              replacement.tags?.filter(t => !t.startsWith('discount_')),
+              // add new discount tags
+              eligible_discounts.map(
+                helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+              ),
+            ]
+          );
+
           // SEARCH
           add_search_terms_relation_on(
             replacement, union(
               [
                 search_terms, 
-                eligible_discounts.map(d => `discount:${d.handle}`),
-                eligible_discounts.map(d => `discount:${d.id}`),
+                eligible_discounts.map(
+                  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db
+                ),
               ]
             )
           );
@@ -295,12 +311,8 @@ const count = (driver) => count_regular(driver, col(driver));
  * For now and because each product is related to very few
  * collections, I will not expose the query api, and use aggregate
  * instead.
- * 
- * 
  * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_product_collections"]}
+ * @returns {db_col["list_all_product_collections"]}
  */
 const list_product_collections = (driver) => {
   return async (product) => {
@@ -311,7 +323,7 @@ const list_product_collections = (driver) => {
 
     // We have collections embedded in products, so let's use it
     const item = await get_regular(driver, col(driver))(product, options);
-
+    
     return sanitize_array(item?.collections ?? []);
   }
 }
@@ -325,7 +337,7 @@ const list_product_collections = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_product_variants"]}
+ * @returns {db_col["list_all_product_variants"]}
  */
 const list_product_variants = (driver) => {
   return async (product) => {
@@ -355,7 +367,7 @@ const list_product_variants = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_related_products"]}
+ * @returns {db_col["list_all_related_products"]}
  */
 const list_related_products = (driver) => {
   return async (product) => {
@@ -376,7 +388,7 @@ const list_related_products = (driver) => {
  * @param {MongoDB} driver 
  * 
  * 
- * @returns {db_col["list_product_discounts"]}
+ * @returns {db_col["list_all_product_discounts"]}
  */
 const list_product_discounts = (driver) => {
   return async (product) => {
@@ -504,11 +516,39 @@ const changeStockOfBy = (driver) => {
 }
 
 
+/**
+ * @param {MongoDB} driver 
+ * @returns {db_col["list_used_products_tags"]}
+ */
+const list_used_products_tags = (driver) => {
+  return async () => {
+    const items = await driver.resources.products._col.find(
+      {
+      },
+      {
+        projection: {
+          tags: 1
+        }
+      }
+    ).toArray();
+
+    const set = (items ?? []).reduce(
+      (p, c) => {
+        c.tags.forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, new Set()
+    )
+    // return array from set
+    return Array.from(set);
+  }
+}
+
+
 /** 
  * @param {MongoDB} driver
- * 
- * 
- * @return {db_col & { _col: ReturnType<col> }}
+ * @return {db_col & { _col: ReturnType<typeof col> }}
  */
 export const impl = (driver) => {
 
@@ -522,10 +562,11 @@ export const impl = (driver) => {
     list: list(driver),
     add_product_to_collection: add_product_to_collection(driver),
     remove_product_from_collection: remove_product_from_collection(driver),
-    list_product_collections: list_product_collections(driver),
-    list_product_variants: list_product_variants(driver),
-    list_related_products: list_related_products(driver),
-    list_product_discounts: list_product_discounts(driver),
+    list_all_product_collections: list_product_collections(driver),
+    list_all_product_variants: list_product_variants(driver),
+    list_all_related_products: list_related_products(driver),
+    list_all_product_discounts: list_product_discounts(driver),
+    list_used_products_tags: list_used_products_tags(driver),
     count: count(driver)
   }
 }

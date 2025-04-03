@@ -1,18 +1,17 @@
 /**
- * @import { CollectionType, ProductType } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { 
+ *  CollectionTypeUpsert, ProductType, ProductTypeUpsert 
+ * } from '../../api/types.api.js'
+ * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { create_handle, file_name, 
-  iso, add_list_integrity_tests} from './api.utils.crud.js';
+  iso, add_query_list_integrity_tests,
+  get_static_ids} from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { ID } from '../../api/utils.func.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));
@@ -23,9 +22,9 @@ const handle_pr = create_handle('pr', file_name(import.meta.url));
 // virtual api of storecraft for insertion
 
 
-/** @type {(ProductType & idable_concrete)[]} */
-const items = Array.from({length: 10}).map(
-  (_, ix, arr) => {
+/** @type {ProductTypeUpsert[]} */
+const items = get_static_ids('pr').map(
+  (id, ix, arr) => {
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
@@ -34,27 +33,26 @@ const items = Array.from({length: 10}).map(
       active: true,
       qty: 1,
       handle: handle_pr(),
-      id: ID('pr'),
+      id,
       tags: [`tag_${ix}`],
       created_at: iso(jx + 1),
-      updated_at: iso(jx + 1)
     }
   }
 );
 
-/** @type {(CollectionType & idable_concrete)[]} */
+/** @type {(CollectionTypeUpsert)[]} */
 const collections_upsert = [
   {
     active: true,
     handle: handle_col(),
-    id: ID('col'),
+    id: get_static_ids('col')[0],
     title: 'col 1',
     tags: ['tag-1_a', 'tag-1_b']
   },
   {
     active: true,
     handle: handle_col(),
-    id: ID('col'),
+    id: get_static_ids('col')[1],
     title: 'col 2',
     tags: ['tag-1_a', 'tag-1_b']
   },
@@ -67,12 +65,15 @@ const collections_upsert = [
  */
 export const create = app => {
 
-  /** @type {Test<ListTestContext<ProductType>>} */
+  /** @type {Test<QueryTestContext<ProductType, ProductTypeUpsert>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.products,
-      resource: 'products', events: { list_event: 'products/list' }
+      items: items, 
+      app, 
+      ops: app.api.products,
+      resource: 'products', 
+      events: { list_event: 'products/list' }
     }
   );
 
@@ -83,16 +84,17 @@ export const create = app => {
       try {
         for(const p of collections_upsert) {
           await app.api.collections.remove(p.handle);
-          await app.db.resources.collections.upsert(p);
+          await app.api.collections.upsert(p);
         }
 
         for(const p of items) {
           await app.api.products.remove(p.handle);
           // add collections
+          // @ts-ignore
           p.collections = collections_upsert;
           // we bypass the api and upsert straight
           // to the db because we control the time-stamps
-          await app.db.resources.products.upsert(p);
+          await app.api.products.upsert(p);
         }
       } catch(e) {
         console.log(e)
@@ -101,7 +103,7 @@ export const create = app => {
     }
   );
 
-  add_list_integrity_tests(s);
+  add_query_list_integrity_tests(s, true);
 
   return s;
 }

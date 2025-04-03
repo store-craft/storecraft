@@ -68,6 +68,7 @@ export class MongoDB {
   constructor(config) {
     this.#is_ready = false;
     this.#config = {
+      db_name: 'main',
       options: {
         ignoreUndefined: true,
         serverApi: {
@@ -159,6 +160,10 @@ export class MongoDB {
     );
   
     return this.#mongo_client;
+  }
+
+  get db() {
+    return this.mongo_client.db(this.name);
   }
 
   /**

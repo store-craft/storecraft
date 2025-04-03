@@ -1,5 +1,13 @@
+/**
+ * @import { AliasableExpression, Expression} from 'kysely'
+ * @import { SelectQueryBuilderExpression } from './con.helpers.json.js'
+ * @import { SqlDialectType } from '../types.public.js'
+ * @import { RawBuilder, Simplify } from 'kysely'
+ */
 import { SelectQueryNode, sql } from "kysely"
-import { extract_first_selection, getJsonObjectArgs } from "./con.helpers.json.js"
+import { 
+  extract_first_selection, getJsonObjectArgs 
+} from "./con.helpers.json.js"
 
 /**
  * A MySQL helper for aggregating a subquery into a JSON array.
@@ -48,13 +56,18 @@ import { extract_first_selection, getJsonObjectArgs } from "./con.helpers.json.j
  * ```
  * 
  * @template O
- * @param {import("./con.helpers.json.js").SelectQueryBuilderExpression<O>} expr 
- * @returns {import("kysely").RawBuilder<import("kysely").Simplify<O>[]>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<Simplify<O>[]>}
  */
 export function mysql_jsonArrayFrom(expr) {
-  return sql`(select cast(coalesce(json_arrayagg(json_object(${sql.join(
-    getMysqlJsonObjectArgs(expr.toOperationNode(), 'agg'),
-  )})), '[]') as json) from ${expr} as agg)`
+  return sql`(select cast(coalesce(json_arrayagg(json_object(${
+    sql.join(
+      getMysqlJsonObjectArgs(
+        /** @type {SelectQueryNode} */(expr.toOperationNode()), 
+        'agg'
+      ),
+    )
+  })), '[]') as json) from ${expr} as agg)`
 }
 
 /**
@@ -105,8 +118,8 @@ export function mysql_jsonArrayFrom(expr) {
  * from "person"
  * ```
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<string[]>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<string[]>}
  */
 export function mysql_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');
@@ -163,13 +176,18 @@ export function mysql_stringArrayFrom(expr) {
  * ```
  * 
  * @template O
- * @param {import("./con.helpers.json.js").SelectQueryBuilderExpression<O>} expr 
- * @returns {import("kysely").RawBuilder<import("kysely").Simplify<O> | null>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<Simplify<O> | null>}
  */
 export function mysql_jsonObjectFrom(expr) {
-  return sql`(select json_object(${sql.join(
-    getMysqlJsonObjectArgs(expr.toOperationNode(), 'obj'),
-  )}) from ${expr} as obj)`
+  return sql`(select json_object(${
+    sql.join(
+      getMysqlJsonObjectArgs(
+        /** @type {SelectQueryNode} */(expr.toOperationNode()), 
+        'obj'
+      ),
+    )
+  }) from ${expr} as obj)`
 }
 
 /**
@@ -212,21 +230,23 @@ export function mysql_jsonObjectFrom(expr) {
  * from "person"
  * ```
  * 
- * @template {Record<string, import("kysely").Expression<unknown>>} O
+ * @template {Record<string, Expression<unknown>>} O
  * @param {O} obj 
- * @returns {import("kysely").RawBuilder<import("kysely").Simplify<{[K in keyof O]: O[K] extends Expression<infer V> ? V : never}>>}
+ * @returns {RawBuilder<Simplify<{[K in keyof O]: O[K] extends Expression<infer V> ? V : never}>>}
  */
 export function mysql_jsonBuildObject(obj) {
-  return sql`json_object(${sql.join(
-    Object.keys(obj).flatMap((k) => [sql.lit(k), obj[k]]),
-  )})`
+  return sql`json_object(${
+    sql.join(
+      Object.keys(obj).flatMap((k) => [sql.lit(k), obj[k]]),
+    )
+  })`
 }
 
 /**
  * 
  * @param {SelectQueryNode} node 
  * @param {string} table 
- * @returns {import("kysely").Expression<unknown>[]}
+ * @returns {Expression<unknown>[]}
  */
 function getMysqlJsonObjectArgs(node, table) {
   try {

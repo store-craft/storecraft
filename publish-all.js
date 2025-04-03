@@ -1,12 +1,23 @@
 import { chdir, cwd } from 'node:process';
-import { execSync } from 'node:child_process';
+import { exec, execSync } from 'node:child_process';
 import { join } from 'node:path';
 
-export const publish_folder = (path='', throw_on_error=true) => {
+export const publish_folder = (
+  path='', throw_on_error=true, verbose_output=true
+) => {
+
   const current_working_dir = cwd();
+
   try {
     chdir(path);
-    execSync('npm publish');
+    const ex = execSync('npm publish');
+    if(verbose_output) {
+      if(ex) {
+        console.log(
+          new TextDecoder('utf-8').decode(ex)
+        );
+      }
+    }
   } catch(e) {
     console.log(`Failed with ${path}`);
     console.log(e);
@@ -30,8 +41,8 @@ export const publish_folder = (path='', throw_on_error=true) => {
 }
 
 [
-  '/cli',
   '/core',
+  '/cli',
   '/dashboard',
 
   '/databases/database-cloudflare-d1',
@@ -62,4 +73,28 @@ export const publish_folder = (path='', throw_on_error=true) => {
 )
 .map(
   p => publish_folder(p, true)
+);
+
+
+
+
+
+
+
+
+const exec_promise = (command='', verbose_output=true) => new Promise(
+  (resolve, reject) => {
+    try {
+      var child = exec(command);
+      if(verbose_output) {
+        child.stdout.pipe(process.stdout)
+        child.stderr.pipe(process.stderr)
+      }
+      child.on('exit', function() {
+        resolve(child.stdout);
+      })              
+    } catch(e) {
+      reject(e)
+    }
+  }
 );

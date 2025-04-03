@@ -61,15 +61,12 @@ const server = http.createServer(app.handler).listen(
 
 ## Testing Locally
 
-1. First setup a `mysql` server
+1. First start a `mysql` server
+First, make sure you have `docker` installed,
+Then, run
 
-```zsh
-docker pull mysql
-docker run --name mysql \
-           -v $(pwd):/etc/mysql/conf.d \
-           -v /my/own/datadir:/var/lib/mysql \
-           -e MYSQL_DATABASE=main -e MYSQL_ROOT_PASSWORD=password \
-           -p 3306:3306 -d mysql
+```bash
+npm run database-mysql:docker-compose-up
 ```
 
 2. create Environment

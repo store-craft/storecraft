@@ -12,30 +12,55 @@ import { withDiv } from "./common.types"
 import { HiDuplicate } from "react-icons/hi"
 import { sleep } from "@/hooks/sleep"
 
-
-
 export const Chat = () => {
 
   const [showScroller, setShowScroller] = useState(false);
   const ref_sticky = useRef(true);
   const ref_current_scroll_pos = useRef({scrollLeft: 0, scrollTop: 0});
+  const onChatMessagesWindowResize = useCallback(
+    (div?: HTMLDivElement) => {
+      if(!ref_sticky.current)
+        return;
+
+      if(!div)
+        return;
+
+      // console.log('div.clientHeight', div.clientHeight)
+      // ref_chat_messages.current?.scroll();
+      setTimeout(
+        () => ref_chat_messages.current?.scroll(),
+        100
+      )
+      requestAnimationFrame(
+        () => {ref_chat_messages.current?.scroll();}
+      );
+
+    }, []
+  );
+
   const onChatMessagesScroll = useCallback(
     (div?: HTMLDivElement) => {
       if(!div)
         return;
 
       const is_scrolling_up = (
-        div.scrollTop - ref_current_scroll_pos.current.scrollTop
+        div.scrollTop - 
+        ref_current_scroll_pos.current.scrollTop
       ) < 0;
+      
       ref_current_scroll_pos.current = {
-        scrollLeft: div.scrollLeft, scrollTop: div.scrollTop
+        scrollLeft: div.scrollLeft, 
+        scrollTop: div.scrollTop
       }
 
       if(is_scrolling_up) {
         ref_sticky.current = false;
       }
 
-      setShowScroller(delta_to_scroll_end(div) > 100);
+      setShowScroller(
+        delta_to_scroll_end(div) > 100
+      );
+
     }, []
   );
   const ref_chat_messages = useRef<ChatMessagesViewImperativeInterface>(null);
@@ -47,7 +72,9 @@ export const Chat = () => {
   );
   useEffect(
     () => {
-      ref_chat_messages.current?.scroll();
+      requestAnimationFrame(
+        () => {ref_chat_messages.current?.scroll();}
+      )
     }, []
   );
   const { darkMode } = useDarkMode();
@@ -58,7 +85,6 @@ export const Chat = () => {
     }
   } = useChat();
 
-
   const onSend = useCallback(
     async (contents: content[]) => {
       ref_sticky.current = true;
@@ -68,16 +94,20 @@ export const Chat = () => {
     }, [speak]
   );
 
-  useEffect(
-    () => {
-      if(!ref_sticky.current)
-        return;
-
-      requestAnimationFrame(
-        () => {ref_chat_messages.current?.scroll()}
-      );
-    }, [messages]
-  );
+  // useEffect(
+  //   () => {
+  //     if(!ref_sticky.current)
+  //       return;
+  //     setTimeout(
+  //       () => ref_chat_messages.current?.scroll(),
+  //       2000
+  //     )
+  //     // ref_chat_messages.current?.scroll()
+  //     // requestAnimationFrame(
+  //     //   () => {ref_chat_messages.current?.scroll()}
+  //     // );
+  //   }, [messages]
+  // );
 
  useEffect(
     () => {
@@ -100,8 +130,10 @@ export const Chat = () => {
       <div className='max-w-[800px] w-full h-full relative --bg-red-100 
               flex flex-col gap-0 items-center'>
 
-        <ChatMessagesView messages={messages} 
+        <ChatMessagesView 
+          messages={messages} 
           onChatWindowScroll={onChatMessagesScroll}
+          onChatWindowResize={onChatMessagesWindowResize}
           className='w-full h-full '
           ref={ref_chat_messages}/>
 

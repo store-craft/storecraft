@@ -1,10 +1,10 @@
 /**
  * @import { 
  *  ApiAuthSignupType, ApiAuthResult, AuthUserType, ApiAuthChangePasswordType, 
- *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult
+ *  ApiAuthSigninType, ApiAuthRefreshType, ApiKeyResult, JWTClaims,
+ CustomerType
  * } from './types.api.js';
  * @import { ApiQuery } from './types.api.query.js'
- * @import { JWTClaims } from '../crypto/jwt.js'
  */
 import * as jwt from '../crypto/jwt.js'
 import { ID, apply_dates, assert, union } from './utils.func.js'
@@ -19,7 +19,6 @@ import { isDef } from './utils.index.js'
 import { 
   create_auth_uri, identity_providers, sign_with_identity_provider 
 } from './con.auth.idp.logic.js'
-
 
 export const CONFIRM_EMAIL_TOKEN = 'confirm-email-token';
 export const FORGOT_PASSWORD_IDENTITY_TOKEN = 'forgot-password-identity-token';
@@ -83,7 +82,7 @@ async (body) => {
   const id = ID('au');
   const roles = isAdminEmail(app, email) ? ['admin'] : ['user'];
   const confirm_email_token = await jwt.create(
-    app.config.auth_secret_access_token, 
+    app.config.auth_secret_confirm_email_token, 
     { sub: id, aud: CONFIRM_EMAIL_TOKEN },
     jwt.JWT_TIMES.WEEK
   );
@@ -92,6 +91,7 @@ async (body) => {
   const au = {
     id: id,
     email, 
+    handle: email,
     password: hashedPassword,
     confirmed_mail: false,
     roles,
@@ -121,6 +121,7 @@ async (body) => {
   await app.api.customers.upsert(
     {
       email: au.email,
+      handle: au.email,
       auth_id: au.id,
       id: 'cus_' + au.id.split('_')?.at(-1),
       firstname: firstname,
@@ -131,8 +132,10 @@ async (body) => {
   /** @type {Partial<JWTClaims>} */
   const claims = {
     sub: id, 
-    // @ts-ignore
-    roles
+    roles,
+    email,
+    firstname, 
+    lastname  
   };
 
   const access_token = await jwt.create(
@@ -234,7 +237,10 @@ async (body) => {
    */
   const claims = {
     sub: existingUser.id,
-    roles: existingUser.roles
+    roles: existingUser.roles,
+    email: existingUser.email,
+    firstname: existingUser.firstname,
+    lastname: existingUser.lastname
   }
 
   const access_token = await jwt.create(
@@ -299,12 +305,14 @@ async (body, fail_if_not_admin=false) => {
   assert(verified, 'auth/error', 401);
 
   /** 
-   * @type {Partial<Partial<JWTClaims> & 
-   * Pick<AuthUserType, 'roles'>> } 
+   * @type {Partial<JWTClaims>} 
    */
   const claims = {
     sub: existingUser.id,
-    roles: existingUser.roles
+    roles: existingUser.roles,
+    email,
+    firstname: existingUser.firstname,
+    lastname: existingUser.lastname
   }
 
   const access_token = await jwt.create(
@@ -363,12 +371,11 @@ async (body) => {
   const access_token = await jwt.create(
     app.config.auth_secret_access_token, 
     { 
-      // @ts-ignore
-      sub: claims.sub, roles: claims.roles 
+      ...claims,
     }, jwt.JWT_TIMES.HOUR
   );
 
-  return {
+  const api_auth_result =  {
     token_type: 'Bearer',
     user_id: access_token.claims.sub,
     access_token, 
@@ -377,6 +384,17 @@ async (body) => {
       claims: claims
     }
   }
+
+  { // dispatch event
+    if(app.pubsub.has('auth/refresh')) {
+      await app.pubsub.dispatch(
+        'auth/refresh',
+        api_auth_result
+      );
+    }
+  }
+
+  return api_auth_result;
 }
 
 
@@ -432,7 +450,8 @@ async () => {
   /** @type {AuthUserType} */
   const au = {
     id,
-    email, 
+    email,
+    handle: email,
     password: hashedPassword,
     confirmed_mail: false,
     roles: ['admin'],
@@ -445,11 +464,18 @@ async () => {
 
   const apikey = encode(`${email}:${password}`, true);
 
-  await app.pubsub.dispatch('auth/apikey-created', au);
+  await app.pubsub.dispatch(
+    'auth/apikey-created', au
+  );
 
   return {
     apikey
   }
+}
+
+export const email_password_to_basic = (email='', password='') => {
+  const a = `${email}:${password}`;
+  return encode(a, true);
 }
 
 /**
@@ -602,24 +628,50 @@ export const remove_auth_user = (app) =>
  * @param {string} id_or_email 
  */
 async (id_or_email) => {
+  /** @type {CustomerType} */
+  let customer_for_remove_event;
+  /** @type {AuthUserType} */
+  let user_for_remove_event;
 
   { // dispatch event
     if(app.pubsub.has('auth/remove')) {
-      const user_to_remove = await app.db.resources.auth_users.get(
+      user_for_remove_event = await app.db.resources.auth_users.get(
         id_or_email
       );
+    }
+    if(app.pubsub.has('customers/remove')) {
+      let cus_id_or_email = id_or_email;
 
-      await app.pubsub.dispatch(
-        'auth/remove',
-        sanitize_auth_user(user_to_remove)
+      if(id_or_email.startsWith('au_'))
+        cus_id_or_email = id_or_email.replace('au_', 'cus_');
+
+      customer_for_remove_event = await app.db.resources.customers.get(
+        cus_id_or_email
       );
     }
   }
 
-  await app.db.resources.auth_users.remove(
+  // we remove the customer as well in the database in a transaction
+  const success =  await app.db.resources.auth_users.remove(
     id_or_email
   );
 
+  if(success) {
+    await app.pubsub.dispatch(
+      'auth/remove',
+      {
+        previous: sanitize_auth_user(user_for_remove_event)
+      }
+    );
+    await app.pubsub.dispatch(
+      'customers/remove',
+      {
+        previous: customer_for_remove_event
+      }
+    );
+  }
+
+  return success;
 }
 
 
@@ -640,7 +692,10 @@ export const confirm_email = (app) =>
   
     const  { 
       verified, claims
-    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    } = await jwt.verify(
+      app.config.auth_secret_confirm_email_token, 
+      token, true
+    );
     
     assert(verified, 'auth/error');
     assert(claims.aud===CONFIRM_EMAIL_TOKEN, 'auth/error');
@@ -685,7 +740,7 @@ export const forgot_password_request = (app) =>
     // we do not verify the email in database, so it will not
     // become a heavy DDos event
     const token = await jwt.create(
-      app.config.auth_secret_access_token, 
+      app.config.auth_secret_forgot_password_token, 
       { sub: email, aud: FORGOT_PASSWORD_IDENTITY_TOKEN },
       jwt.JWT_TIMES.HOUR
     );
@@ -718,7 +773,7 @@ export const forgot_password_request_confirm = (app) =>
   
     const  { 
       verified, claims
-    } = await jwt.verify(app.config.auth_secret_access_token, token);
+    } = await jwt.verify(app.config.auth_secret_forgot_password_token, token);
     
     assert(verified, 'auth/error');
     assert(claims.aud===FORGOT_PASSWORD_IDENTITY_TOKEN, 'auth/error');
@@ -761,11 +816,24 @@ export const forgot_password_request_confirm = (app) =>
   
   }
     
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<AuthUserType>} query 
+   */
+  (query) => {
+    return app.db.resources.auth_users.count(query);
+  }
+  
 
 /**
- * 
- * @param {App} app 
- */
+ * @template {App} T
+ * @param {T} app 
+*/  
 export const inter = app => {
 
   return {
@@ -784,6 +852,7 @@ export const inter = app => {
     remove_auth_user: remove_auth_user(app),
     removeByEmail: removeByEmail(app),
     list_auth_users: list_auth_users(app),
+    count: count(app),
 
     confirm_email: confirm_email(app),
     forgot_password_request: forgot_password_request(app),

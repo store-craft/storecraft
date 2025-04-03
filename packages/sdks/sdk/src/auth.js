@@ -1,19 +1,16 @@
 /**
  * @import {
- *  ApiAuthChangePasswordType, ApiAuthResult, ApiAuthSigninType, ApiAuthSignupType, 
- *  ApiKeyResult, ApiQuery, AuthUserType, error,
- OAuthProvider,
- OAuthProviderCreateURIParams,
- OAuthProviderCreateURIResponse,
- OAuthProvidersList,
- SignWithOAuthProviderParams
+ *  ApiAuthChangePasswordType, ApiAuthResult, ApiAuthSigninType, 
+ *  ApiAuthSignupType, ApiKeyResult, ApiQuery, AuthUserType, error, 
+ *  OAuthProvider, OAuthProviderCreateURIParams, 
+ *  OAuthProviderCreateURIResponse, SignWithOAuthProviderParams
  * } from '@storecraft/core/api'
  * @import { SdkConfigAuth } from '../types.js';
  */
 
 import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js';
 import { StorecraftSDK } from '../index.js';
-import { fetchApiWithAuth, url } from './utils.api.fetch.js';
+import { count_query_of_resource, fetchApiWithAuth, url } from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
 
 
@@ -381,7 +378,7 @@ export default class Auth {
       this.#sdk,
       '/auth/apikeys',
       {
-        method: 'post'
+        method: 'post',
       }
     );
 
@@ -424,10 +421,7 @@ export default class Auth {
   }
 
   /**
-   * 
-   * 
    * @param {ApiQuery<AuthUserType>} query
-   * 
    */
   list_auth_users = async (query) => {
     const sq = api_query_to_searchparams(query);
@@ -440,6 +434,18 @@ export default class Auth {
       }
     );
     return items;
+  }
+
+  /**
+   * @param {ApiQuery<AuthUserType>} query
+   */
+  count_auth_users_query = async (query) => {
+    const sq = api_query_to_searchparams(query);
+    return count_query_of_resource(
+      this.#sdk,
+      `/auth/users`,
+      query
+    )
   }
 
 
@@ -458,15 +464,15 @@ export default class Auth {
   }
 
   identity_providers_list = async () => {
-      /** @type {OAuthProvider[]} */
-      const items = await fetchApiWithAuth(
-        this.#sdk,
-        '/auth/identity-providers',
-        {
-          method: 'get'
-        }
-      );
-      return items;
+    /** @type {OAuthProvider[]} */
+    const items = await fetchApiWithAuth(
+      this.#sdk,
+      '/auth/identity-providers',
+      {
+        method: 'get'
+      }
+    );
+    return items;
   }
 
   /**

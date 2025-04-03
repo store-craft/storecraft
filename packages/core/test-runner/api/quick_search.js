@@ -1,12 +1,10 @@
 /**
  * @import { 
- * CollectionTypeUpsert, DiscountTypeUpsert, FilterValue_p_in_products, 
- * OrderDataUpsert, OrderDiscountExtra, PostTypeUpsert, ProductTypeUpsert, 
- * QuickSearchResult, ShippingMethodTypeUpsert, StorefrontTypeUpsert, 
- * TagTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
+ *  CollectionTypeUpsert, DiscountTypeUpsert, FilterValue_p_in_products, 
+ *  OrderDataUpsert, OrderDiscountExtra, PostTypeUpsert, ProductTypeUpsert, 
+ *  QuickSearchResult, ShippingMethodTypeUpsert, StorefrontTypeUpsert, 
+ *  TagTypeUpsert 
+ * } from '../../api/types.public.js'
  * 
  */
 import { suite } from 'uvu';
@@ -137,7 +135,8 @@ const order_base = {
     }
   ],
   shipping_method: {
-    handle: 'i-dont-exist'
+    handle: 'i-dont-exist', id: 'i-dont-exist',
+    title: 'i-dont-exist', price: 50
   },
   status: {
     checkout: enums.CheckoutStatusEnum.created,

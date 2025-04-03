@@ -2,7 +2,7 @@
  * @import { ApiQuery, Cursor } from '@storecraft/core/api'
  * @import { VQL } from '@storecraft/core/vql'
  * @import { Database } from '../types.sql.tables.js'
- * @import { ExpressionBuilder } from 'kysely'
+ * @import { BinaryOperator, ExpressionBuilder } from 'kysely'
  */
 
 import { parse } from "@storecraft/core/vql";
@@ -22,7 +22,9 @@ import { parse } from "@storecraft/core/vql";
  */
 export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
+  /** @type {BinaryOperator} */
   let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
+  /** @type {BinaryOperator} */
   let rel_key_2; // relation in last conjunction term in last disjunction
 
   if (relation==='>' || relation==='>=') {
@@ -73,9 +75,8 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
   // return result;
 }
 
-
 /**
- * @template {keyof Database} T
+ * @template {QueryableTables} T
  * @param {ExpressionBuilder<Database>} eb 
  * @param {VQL.Node} node 
  * @param {T} table_name 
@@ -125,7 +126,7 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
 /**
  * @param {ExpressionBuilder<Database>} eb 
  * @param {VQL.Node} root 
- * @param {keyof Database} table_name 
+ * @param {QueryableTables} table_name 
  */
 export const query_vql_to_eb = (eb, root, table_name) => {
   return root ? query_vql_node_to_eb(eb, root, table_name) : undefined;
@@ -135,26 +136,28 @@ export const query_vql_to_eb = (eb, root, table_name) => {
 /**
  * 
  * @param {[k: string, v: any]} kv 
+ * @param {keyof Database} table_name 
  * @returns {[k: string, v: any]}  
  */
-const transform_boolean_to_0_or_1 = (kv) => {
-  if(typeof kv[1] === 'boolean') {
-    return [
-      kv[0],
-      kv[1] ? 1 : 0
-    ]
-  }
+const transform_boolean_to_0_or_1 = (kv, table_name) => {
+
+  // console.log('transform_boolean_to_0_or_1', kv)
+  kv = [
+    table_name ? `${table_name}.${kv[0]}` : kv[0],
+    typeof kv[1] === 'boolean' ? (kv[1] ? 1 : 0) : kv[1]
+  ];
+
   return kv;
 }
 
 /**
- * Convert an API Query into mongo dialect, also sanitize.
+ * Convert an API Query into dialect, also sanitize.
  * 
  * @template {any} [T=any]
  * 
  * @param {ExpressionBuilder<Database>} eb 
  * @param {ApiQuery<T>} q 
- * @param {keyof Database} table_name 
+ * @param {QueryableTables} table_name 
  * 
  */
 export const query_to_eb = (eb, q={}, table_name) => {
@@ -162,18 +165,19 @@ export const query_to_eb = (eb, q={}, table_name) => {
 
   const sort_sign = q.order === 'asc' ? 1 : -1;
   const asc = sort_sign==1;
+  const transformer = (x) => transform_boolean_to_0_or_1(x, table_name);
 
   // compute index clauses
   if(q.startAt) {
-    clauses.push(query_cursor_to_eb(eb, q.startAt, asc ? '>=' : '<=', transform_boolean_to_0_or_1));
+    clauses.push(query_cursor_to_eb(eb, q.startAt, asc ? '>=' : '<=', transformer));
   } else if(q.startAfter) {
-    clauses.push(query_cursor_to_eb(eb, q.startAfter, asc ? '>' : '<', transform_boolean_to_0_or_1));
+    clauses.push(query_cursor_to_eb(eb, q.startAfter, asc ? '>' : '<', transformer));
   }
 
   if(q.endAt) {
-    clauses.push(query_cursor_to_eb(eb, q.endAt, asc ? '<=' : '>=', transform_boolean_to_0_or_1));
+    clauses.push(query_cursor_to_eb(eb, q.endAt, asc ? '<=' : '>=', transformer));
   } else if(q.endBefore) {
-    clauses.push(query_cursor_to_eb(eb, q.endBefore, asc ? '<' : '>', transform_boolean_to_0_or_1));
+    clauses.push(query_cursor_to_eb(eb, q.endBefore, asc ? '<' : '>', transformer));
   }
 
   // compute VQL clauses 
@@ -197,7 +201,7 @@ const SIGN = {
 // export type DirectedOrderByStringReference<DB, TB extends keyof DB, O> = `${StringReference<DB, TB> | (keyof O & string)} ${OrderByDirection}`;
 
 /**
- * @import {DirectedOrderByStringReference} from './utils.types.js'
+ * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
  */
 // OE extends OrderByExpression<DB, TB, O>
 /**
@@ -219,9 +223,9 @@ export const query_to_sort = (q={}, table) => {
   // compute sort fields and order
   const keys = q.sortBy?.length ? q.sortBy :  ['updated_at', 'id'];
   const sort = keys.map(
-    s => `${s} ${SIGN[sort_sign]}`
+    s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
   )
   // it's too complicated to map each ket to table column.
   // kysely was designed to do this in place
-  return sort;
+  return (/** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (sort));
 }

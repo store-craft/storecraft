@@ -16,8 +16,11 @@ import type {
   QuickSearchResult,
   timestamps, 
 } from "../api/types.api.d.ts";
-import type { ExpandQuery, ApiQuery } from "../api/types.api.query.d.ts";
+import type { 
+  ExpandQuery, ApiQuery 
+} from "../api/types.api.query.d.ts";
 import type { App } from '../types.public.d.ts'
+export * from './public.js';
 
 export type ID = string;
 export type Handle = string;
@@ -44,12 +47,14 @@ export type Aug = {
 
 type idable = { id: string }
 export type withConcreteId<T> = Omit<T, 'id'> & idable;
-export type withConcreteIdAndHandle<T> = Omit<T, 'id' | 'handle'> & { id: string, handle: string};
+export type withConcreteIdAndHandle<T> = Omit<T, 'id' | 'handle'> & { 
+  id: string, 
+  handle: string
+};
 
 /**
  * @description Basic collection or table
  */
-// export declare interface db_crud<U extends idable, G extends idable=U> {
 export declare interface db_crud<U, G=U> {
   /** upsert type */
   $type_upsert?: U;
@@ -61,7 +66,9 @@ export declare interface db_crud<U, G=U> {
    * @param id_or_handle 
    * @param options 
    */
-  get: (id_or_handle: HandleOrId, options?: RegularGetOptions<G>) => Promise<G>;
+  get: (
+    id_or_handle: HandleOrId, options?: RegularGetOptions<G>
+  ) => Promise<G>;
   /**
    * get bulk of items, ordered, if something is missing, `undefined`
    * should be instead
@@ -101,7 +108,6 @@ export declare interface db_crud<U, G=U> {
    * Count items with `query`
    */
   count?: (query: ApiQuery<G>) => Promise<number>;
-
 }
 
 export type OmitGetByHandle<T> = Omit<T, 'getByHandle'>;
@@ -122,7 +128,9 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
 }
 
 /** @description `TagType` crud */
-export interface db_tags extends db_crud<withConcreteIdAndHandle<TagTypeUpsert>, TagType> {
+export interface db_tags extends db_crud<
+  withConcreteIdAndHandle<TagTypeUpsert>, TagType
+  > {
 }
 
 /** @description `CollectionType` crud */
@@ -140,54 +148,93 @@ export interface db_collections extends db_crud<
     handle_or_id: HandleOrId, query: ApiQuery<ProductType>
   ) => Promise<Partial<ProductType>[]>
 
+  /**
+   * Count a collection's products items with a `query`
+   * @param handle_or_id collection handle or id
+   * @param query query
+   */
+  count_collection_products: (
+    handle_or_id: HandleOrId, query: ApiQuery<ProductType>
+  ) => Promise<number>;
+
+  /**
+   * List all the tags of products in a collection, This is helpful 
+   * for building a filter system in the frontend if you know in advance 
+   * all the tags of the products in a collection
+   * 
+   * @param handle_or_id collection handle or id
+   */
+  list_used_products_tags: (
+    handle_or_id: HandleOrId
+  ) => Promise<string[]>
+
 }
 
 /** @description `ProductType` crud */
 export interface db_products extends db_crud<
-  withConcreteIdAndHandle<ProductTypeUpsert> | withConcreteIdAndHandle<VariantTypeUpsert>, 
-  ProductType | VariantType> {
+  withConcreteIdAndHandle<ProductTypeUpsert> | 
+  withConcreteIdAndHandle<VariantTypeUpsert>, 
+  ProductType | VariantType
+  > {
 
   /**
    * increment / decrement stock of multiple products
    * 
    * @param product_id_or_handles array of `id` or `handle`
-   * @param deltas corresponding array of non-zero `positive` or `negative` integer
+   * @param deltas corresponding array of non-zero `positive` or 
+   * `negative` integer
    */
-  changeStockOfBy: (product_id_or_handles: HandleOrId[], deltas: number[]) => Promise<void>;
+  changeStockOfBy: (
+    product_id_or_handles: HandleOrId[], deltas: number[]
+  ) => Promise<void>;
 
   /**
-   * list all of the product related collections, returns eveything, this is not query based,
-   * we assume, there are a handful of collection per product
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_product_collections: (product: HandleOrId) => Promise<CollectionType[]>;
-
-  /**
-   * list all of the product related discounts, returns eveything, this is not query based,
-   * we assume, there are a handful of discounts per product
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_product_discounts: (product: HandleOrId) => Promise<DiscountType[]>;
-
-  /**
-   * list all of the product related collections, returns eveything, this is not query based,
-   * we assume, there are a handful of collection per product
+   * list all of the product related collections, returns eveything, 
+   * this is not query based, we assume, there are a handful of collection 
+   * per product
    * 
    * @param product handle or id
    * @param options options like expand
    */
-  list_product_variants: (product: HandleOrId) => Promise<VariantType[]>;
+  list_all_product_collections: (
+    product: HandleOrId
+  ) => Promise<CollectionType[]>;
+
+  /**
+   * list all of the product related discounts, returns eveything, 
+   * this is not query based, we assume, there are a handful of discounts 
+   * per product
+   * 
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_all_product_discounts: (
+    product: HandleOrId
+  ) => Promise<DiscountType[]>;
+
+  /**
+   * list all of the product related collections, returns eveything, 
+   * this is not query based, we assume, there are a handful of collection 
+   * per product
+   * 
+   * @param product handle or id
+   * @param options options like expand
+   */
+  list_all_product_variants: (
+    product: HandleOrId
+  ) => Promise<VariantType[]>;
   
   /**
-   * list all of the product related collections, returns eveything, this is not query based,
-   * we assume, there are a handful of collection per product
+   * list all of the product related collections, returns eveything, 
+   * this is not query based, we assume, there are a handful of 
+   * collection per product
    * 
    * @param product handle or id
    * @param options options like expand
    */
-  list_related_products: (product: HandleOrId) => Promise<BaseProductType[]>;
+  list_all_related_products: (
+    product: HandleOrId
+  ) => Promise<BaseProductType[]>;
   
   
   /**
@@ -195,20 +242,34 @@ export interface db_products extends db_crud<
    * @param product handle or id
    * @param collection_handle_or_id collection handle or id
    */
-  add_product_to_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
+  add_product_to_collection?: (
+    product: HandleOrId, collection_handle_or_id: HandleOrId
+  ) => Promise<void>;
 
   /**
    * remove product from collection
    * @param product handle or id
    * @param collection_handle_or_id collection handle or id
    */
-  remove_product_from_collection?: (product: HandleOrId, collection_handle_or_id: HandleOrId) => Promise<void>;
+  remove_product_from_collection?: (
+    product: HandleOrId, collection_handle_or_id: HandleOrId
+  ) => Promise<void>;
+
+  /**
+   * List all of the tags of all the products deduped, This is helpful 
+   * for building a filter system in the frontend if you know in advance 
+   * all the tags of the products in a collection, also see the collection 
+   * confined version 
+   * 
+   * {@link db_collections.list_used_products_tags}
+   */
+  list_used_products_tags: () => Promise<string[]>
 
 }
 
 /** @description `CustomerType` crud */
 export interface db_customers extends OmitGetByHandle<db_crud<
-  withConcreteId<CustomerTypeUpsert>, 
+  withConcreteIdAndHandle<CustomerTypeUpsert>, 
   CustomerType>> {
   getByEmail: (email: string) => Promise<CustomerType>;
   /**
@@ -217,8 +278,18 @@ export interface db_customers extends OmitGetByHandle<db_crud<
    * @param query query object
    */
   list_customer_orders: (
-    customer_id: ID, query: ApiQuery<OrderData>
+    customer_id: ID, query?: ApiQuery<OrderData>
   ) => Promise<OrderData[]>;
+
+  /**
+   * Count a customer's orders items with a `query`
+   * @param handle_or_id customer `email` or `id`
+   * @param query query
+   */
+  count_customer_orders: (
+    handle_or_id: HandleOrId, query?: ApiQuery<OrderData>
+  ) => Promise<number>;
+
 }
 
 /** @description `StorefrontType` crud */
@@ -226,42 +297,14 @@ export interface db_storefronts extends db_crud<
   withConcreteIdAndHandle<StorefrontTypeUpsert>, 
   StorefrontType
   > {
-  /**
-   * list all of the product related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_storefront_products: (handle_or_id: HandleOrId) => Promise<ProductType[]>;
-  /**
-   * list all of the collections related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_storefront_collections: (handle_or_id: HandleOrId) => Promise<CollectionType[]>;
-  /**
-   * list all of the discounts related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_storefront_discounts: (handle_or_id: HandleOrId) => Promise<DiscountType[]>;
-  /**
-   * list all of the shipping methods related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_storefront_shipping_methods: (handle_or_id: HandleOrId) => Promise<ShippingMethodType[]>;
-  /**
-   * list all of the posts related to storefront, returns eveything, this is not query based,
-   * we assume, there are a handful.
-   * @param handle_or_id handle or id
-   * @param options options like expand
-   */
-  list_storefront_posts: (handle_or_id: HandleOrId) => Promise<PostType[]>;
 
+  /**
+   * Storecraft can generate a default automatcally generated storefront 
+   * for you.
+   * 
+   * @returns the default auto generated storefront
+   */
+  get_default_auto_generated_storefront: () => Promise<StorefrontType>;
 }
 
 /** 
@@ -324,11 +367,32 @@ export interface db_discounts extends db_crud<
   list_discount_products: (
     handle_or_id: HandleOrId, query: ApiQuery<ProductType>
   ) => Promise<ProductType[]>
+
+  /**
+   * Count a discount's products items with a `query`
+   * @param handle_or_id discount `handle` or `id`
+   * @param query query
+   */
+  count_discount_products: (
+    handle_or_id: HandleOrId, query: ApiQuery<ProductType>
+  ) => Promise<number>;
+
+  /**
+   * List all the tags of all the products, that belong to a discount. 
+   * This is helpful for building a filter system in the frontend if 
+   * you know in advance all the tags of the products in a collection
+   * 
+   * @param handle_or_id discount `handle` or `id`
+   */
+  list_all_discount_products_tags: (
+    handle_or_id: HandleOrId
+  ) => Promise<string[]>
+
 }
 
 /** @description `OrderData` crud */
 export interface db_orders extends OmitGetByHandle<db_crud<
-  withConcreteId<OrderDataUpsert>, 
+  withConcreteIdAndHandle<OrderDataUpsert>, 
   OrderData>
   > {
 }

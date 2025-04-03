@@ -1,5 +1,5 @@
 /**
- * @import { ShippingMethodType, ShippingMethodTypeUpsert } from './types.api.js'
+ * @import { ApiQuery, ShippingMethodType, ShippingMethodTypeUpsert } from './types.public.js'
  */
 import { shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { regular_get, regular_list, 
@@ -36,6 +36,20 @@ export const upsert = (app) =>
 
 
 /**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<ShippingMethodType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+
+
+/**
  * 
  * @param {App} app
  */  
@@ -46,5 +60,6 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'shipping/remove'),
     list: regular_list(app, db(app), 'shipping/list'),
+    count: count(app)
   }
 }

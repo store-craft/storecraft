@@ -1,5 +1,7 @@
 /**
- * @import { ProductType, ProductTypeUpsert, VariantTypeUpsert } from './types.api.js'
+ * @import { 
+ *  ApiQuery, ProductType, ProductTypeUpsert, VariantType, VariantTypeUpsert 
+ * } from './types.public.js'
  */
 import { assert, to_handle, union } from './utils.func.js'
 import { 
@@ -57,12 +59,24 @@ export const upsert = (app) =>
       item
     );
 
+    // auto tag the product with the collection handle
+    if(Array.isArray(before?.collections)) {
+      before.tags = union(
+        // remove old collection tags
+        item.tags?.filter(t => !t.startsWith('collection_')),
+        // add new collection tags
+        item.collections.map(c => `collection_${c.handle}`),
+      );
+    }
+
     return before;
   },
   (final) => {
     return union(
       final?.collections?.map(c => c?.handle && `col:${c?.handle}`),
       final?.collections?.map(c => `col:${c?.id}`),
+      final?.collections?.map(c => c?.handle && `collection:${c?.handle}`),
+      final?.collections?.map(c => `collection:${c?.id}`),
       item.isbn && `isbn:${item.isbn}`,
       item.isbn,
       `qty:${item.qty}`
@@ -108,7 +122,7 @@ export const list_product_collections = (app) =>
  * @param {string} handle_or_id handle or id
  */
 (handle_or_id) => {
-  return db(app).list_product_collections(handle_or_id);
+  return db(app).list_all_product_collections(handle_or_id);
 }
 
 /**
@@ -120,7 +134,7 @@ export const list_product_variants = (app) =>
    * @param {string} product handle or id
    */
   (product) => {
-    return db(app).list_product_variants(product);
+    return db(app).list_all_product_variants(product);
   }
 
 
@@ -133,7 +147,7 @@ export const list_related_products = (app) =>
  * @param {string} product handle or id
  */
 (product) => {
-  return db(app).list_related_products(product);
+  return db(app).list_all_related_products(product);
 }
 
 
@@ -146,10 +160,36 @@ export const list_product_discounts = (app) =>
  * @param {string} product handle or id
  */
 (product) => {
-  return db(app).list_product_discounts(product);
+  return db(app).list_all_product_discounts(product);
 }
 
+/**
+ * @param {App} app
+ */
+export const list_used_products_tags = (app) => 
+  /**
+   * @description List all of the tags of all the products deduped, 
+   * This is helpful for building a filter system in the frontend if 
+   * you know in advance all the tags of the products in a collection, 
+   * also see the collection confined version db_collections.list_collection_products_tags
+   */
+  () => {
+    return db(app).list_used_products_tags();
+  }
 
+/**
+ * @param {App} app
+ */
+export const count = (app) => 
+  /**
+   * @description Count query results
+   * 
+   * @param {ApiQuery<ProductType | VariantType>} query 
+   */
+  (query) => {
+    return db(app).count(query);
+  }
+  
 /**
  * @param {App} app
  */  
@@ -160,11 +200,13 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'products/remove'),
     list: regular_list(app, db(app), 'products/list'),
-    list_product_collections: list_product_collections(app),
-    list_product_discounts: list_product_discounts(app),
-    list_product_variants: list_product_variants(app),
-    list_related_products: list_related_products(app),
-    changeStockOfBy: db(app).changeStockOfBy
+    list_all_product_collections: list_product_collections(app),
+    list_all_product_discounts: list_product_discounts(app),
+    list_all_product_variants: list_product_variants(app),
+    list_all_related_products: list_related_products(app),
+    list_used_products_tags: list_used_products_tags(app),
+    changeStockOfBy: db(app).changeStockOfBy,
+    count: count(app),
   }
 }
 

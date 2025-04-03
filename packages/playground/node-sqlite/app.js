@@ -15,13 +15,14 @@ import { Gemini } from "@storecraft/core/ai/models/chat/gemini";
 import { Mistral } from "@storecraft/core/ai/models/chat/mistral";
 import { XAI } from "@storecraft/core/ai/models/chat/xai";
 import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
+import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize";
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare";
 
 export const app = new App(
   {
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token',
     auth_admins_emails: ['tomer.shalev@gmail.com'],
-    storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games',
@@ -53,4 +54,11 @@ export const app = new App(
 )
 .withAI(
   new XAI()
+)
+.withVectorStore(
+  new Vectorize(
+    {
+      embedder: new CloudflareEmbedder()
+    }
+  )
 )

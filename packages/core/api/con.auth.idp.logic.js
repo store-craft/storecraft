@@ -2,9 +2,8 @@
  * @import { 
  *  ApiAuthResult,
  *  OAuthProviderCreateURIParams, SignWithOAuthProviderParams, 
- *  OAuthProviderCreateURIResponse
- * } from './types.api.js';
- * @import { JWTClaims } from '../crypto/jwt.js'
+ *  OAuthProviderCreateURIResponse, OAuthProvider, JWTClaims
+ * } from './types.public.js';
  */
 import * as jwt from '../crypto/jwt.js'
 import { ID, assert } from './utils.func.js'
@@ -17,21 +16,23 @@ export const ATTRIBUTE_OAUTH_PROVIDER = 'OAUTH_PROVIDER'
 export const ATTRIBUTE_PICTURE = 'PICTURE'
 
 /**
- * @param {App} app 
- */  
+ * @template {App} T
+ * @param {T} app 
+*/  
 export const create_auth_uri = (app) => 
   /**
    * @description Get Identity provider's URI for web apps
-   * @param {OAuthProviderCreateURIParams} params 
+   * @param {Omit<OAuthProviderCreateURIParams, 'provider'> & { provider: keyof T["auth_providers"] }} params 
    * @returns {Promise<OAuthProviderCreateURIResponse>}
    */
   async (params) => {
 
-    const provider = app.auth_providers?.[params?.provider];
+    const handle = String(params?.provider);
+    const provider = app.auth_providers?.[handle];
 
     assert(
       provider,
-      `Identity Provider ${params.provider} not found`
+      `Identity Provider ${handle} not found`
     );
 
     const uri = await provider.generateAuthUri(
@@ -40,34 +41,34 @@ export const create_auth_uri = (app) =>
     // console.log({uri})
     assert(
       uri,
-      `Identity Provider ${params.provider} does not have a web consent uri`
+      `Identity Provider ${handle} does not have a web consent uri`
     );
 
     return {
       uri,
-      provider: params.provider
+      provider: handle
     }
   
   }
     
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
  */  
 export const sign_with_identity_provider = (app) => 
   /**
    * @description Signin / Signup with Identity Provider
-   * 
-   * @param {SignWithOAuthProviderParams} params 
-   * 
+   * @param {Omit<SignWithOAuthProviderParams, 'provider'> & { provider: keyof T["auth_providers"] }} params 
    * @returns {Promise<ApiAuthResult>}
    */
   async (params) => {
 
-    const provider = app.auth_providers?.[params?.provider];
+    const handle = String(params?.provider);
+    const provider = app.auth_providers?.[handle];
     
     assert(
       provider,
-      `Identity Provider ${params.provider} not found`
+      `Identity Provider ${handle} not found`
     );
 
     const response = await provider.signWithAuthorizationResponse(
@@ -94,6 +95,7 @@ export const sign_with_identity_provider = (app) =>
         user = {
           id: ID('au'),
           email, 
+          handle: email, 
           active: true,
           password: undefined,
           confirmed_mail: true,
@@ -103,7 +105,7 @@ export const sign_with_identity_provider = (app) =>
           attributes: [
             {
               key: ATTRIBUTE_OAUTH_PROVIDER,
-              value: params.provider
+              value: handle
             },
             {
               key: ATTRIBUTE_PICTURE,
@@ -144,7 +146,6 @@ export const sign_with_identity_provider = (app) =>
       /** @type {Partial<JWTClaims>} */
       const claims = {
         sub: user.id, 
-        // @ts-ignore
         roles,
         firstname: firstname,
         lastname: lastname,
@@ -193,11 +194,13 @@ export const sign_with_identity_provider = (app) =>
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
 */  
 export const identity_providers = (app) => 
   /**
    * @description get identity providers
+   * @return {OAuthProvider[]}
    */
   () => {
     return Object.entries(app.auth_providers ?? {}).map(

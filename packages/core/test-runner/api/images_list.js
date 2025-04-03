@@ -1,15 +1,12 @@
 /**
  * @import { ImageType, ImageTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext } from './api.utils.crud.js';
+ * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name, 
-  iso, add_list_integrity_tests,
+  iso, add_query_list_integrity_tests,
   get_static_ids,
   image_mock_url_handle_name} from './api.utils.crud.js';
 import { App } from '../../index.js';
@@ -25,7 +22,7 @@ const url_handle_name = image_mock_url_handle_name(
 // virtual api of storecraft for insertion
 
 /** 
- * @type {(ImageType & idable_concrete)[]} 
+ * @type {ImageTypeUpsert[]} 
  */
 const items = get_static_ids('img').map(
   (id, ix, arr) => {
@@ -34,7 +31,6 @@ const items = get_static_ids('img').map(
     return {
       id,
       created_at: iso(jx + 1),
-      updated_at: iso(jx + 1),
       ...url_handle_name()
     }
   }
@@ -47,34 +43,19 @@ const items = get_static_ids('img').map(
  */
 export const create = app => {
 
-  /** @type {Test<ListTestContext<ImageType>>} */
+  /** @type {Test<QueryTestContext<ImageType, ImageTypeUpsert>>} */
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.images,
-      resource: 'images', events: { list_event: 'images/list' }
+      items: items, 
+      app, 
+      ops: app.api.images,
+      resource: 'images', 
+      events: { list_event: 'images/list' }
     }
   );
   
-
-  s.before(
-    async (a) => { 
-      assert.ok(app.ready) 
-      try {
-        for(const p of items) {
-          await app.api.images.remove(p.handle);
-          // we bypass the api and upsert straight
-          // to the db because we control the time-stamps
-          await app.db.resources.images.upsert(p);
-        }
-      } catch(e) {
-        console.log(e)
-        throw e;
-      }
-    }
-  );
-
-  add_list_integrity_tests(s);
+  add_query_list_integrity_tests(s);
 
   return s;
 }

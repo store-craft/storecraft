@@ -52,6 +52,11 @@ export const regular_upsert = (
     /** @type {DB_GET_TYPE} */
     let previous_item;
 
+    // active by default
+    if(item && !('active' in item)) {
+      item.active = true;
+    }
+
     item = pre_hook(item);
     
     schema && assert_zod(
@@ -139,10 +144,9 @@ export const regular_get = (app, db, event) =>
  */
 export const regular_remove = (app, db, event) => 
   /**
-   * 
-   * @param {string} id 
+   * @param {string} id_or_handle 
    */
-  async (id) => {
+  async (id_or_handle) => {
     const requires_event_processing = Boolean(event) && app.pubsub.has(event);
 
     /** @type {G} */
@@ -150,17 +154,16 @@ export const regular_remove = (app, db, event) =>
 
     // fetch item before removal
     if(requires_event_processing) {
-      previous = await db.get(id);
+      previous = await db.get(id_or_handle);
     }
 
-    const success = await db.remove(id);
+    const success = await db.remove(id_or_handle);
 
-    if(requires_event_processing) {
+    if(success && requires_event_processing) {
       await app.pubsub.dispatch(
         String(event),
         {
           previous,
-          success
         }
       )
     }
@@ -185,6 +188,10 @@ export const regular_list = (app, db, event) =>
    */
   async (q={}) => {
     // console.log('query', q);
+
+    if(q.equals) { 
+      q.startAt = q.endAt = q.equals;
+    }
 
     const items = await db.list(
       {

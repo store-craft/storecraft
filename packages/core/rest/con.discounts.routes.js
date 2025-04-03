@@ -6,7 +6,7 @@
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
-import { authorize_by_roles } from './con.auth.middle.js'
+import { authorize_admin } from './con.auth.middle.js'
 import { parse_query } from '../api/utils.query.js'
 
 /**
@@ -18,7 +18,7 @@ export const create_routes = (app) => {
   /** @type {ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
+  const middle_authorize_admin = authorize_admin(app)
 
   // save tag
   polka.post(
@@ -30,6 +30,19 @@ export const create_routes = (app) => {
       res.sendJson(final);
     }
   )
+
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      let q = (/** @type {ApiQuery<DiscountType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.discounts.count(q);
+
+      res.sendJson({ count });
+    }
+  );
+
 
   // get item
   polka.get(
@@ -69,7 +82,31 @@ export const create_routes = (app) => {
     }
   );
 
+  polka.get(
+    '/:discount/products/used_tags',
+    async (req, res) => {
+      const { discount } = req.params;
+      const items = await app.api.discounts.list_used_discount_products_tags(discount);
+      res.sendJson(items);
+    }
+  ); 
+
   // query the eligibile products of a discount
+  polka.get(
+    '/:discount/products/count_query',
+    async (req, res) => {
+      const { discount } = req?.params;
+      const q = (/** @type {ApiQuery<ProductType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.discounts.count_discount_products_query(
+        discount, q
+      );
+
+      res.sendJson({ count });
+    }
+  );
+
   polka.get(
     '/:discount/products',
     async (req, res) => {
@@ -77,7 +114,9 @@ export const create_routes = (app) => {
       const q = (/** @type {ApiQuery<ProductType>} */ (
         parse_query(req.query))
       );
-      const items = await app.api.discounts.list_discounts_products(discount, q);
+      const items = await app.api.discounts.list_discount_products(
+        discount, q
+      );
 
       res.sendJson(items);
     }

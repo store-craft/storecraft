@@ -6,6 +6,7 @@
 import { MongoDB } from '../index.js'
 import { Collection } from 'mongodb'
 import { 
+  handle_or_id,
   objid_or_else_filter, sanitize_one, to_objid_safe 
 } from './utils.funcs.js'
 import { 
@@ -62,32 +63,37 @@ const getByEmail = (driver) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
-  return async (id) => {
+  return async (id_or_handle) => {
 
-    let filter;
+    const session = driver.mongo_client.startSession();
+    try {
+      await session.withTransaction(
+        async () => {
+          const filter = handle_or_id(id_or_handle);
+          await col(driver).deleteOne(
+            filter,
+            { session }
+          );
+          // customer and auth_user have the same object-id and handle
+          // so we can use the same filter
+          await driver.resources.customers._col.deleteOne(
+            filter,
+            { session }
+          );
 
-    {
-      if(to_objid_safe(id)) { 
-        filter = {
-          _id: to_objid_safe(id)
         }
-      } else {
-        filter = {
-          email: id
-        }
-      }
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    } finally {
+      await session.endSession();
     }
 
-    const res = await col(driver).deleteOne(
-      filter
-    );
-
-    return Boolean(res.deletedCount)
+    return true;
   }
 }
 

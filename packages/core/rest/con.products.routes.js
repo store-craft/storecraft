@@ -1,13 +1,13 @@
 /** 
  * @import { ApiPolka } from './types.public.js' 
  * @import { ApiQuery } from '../api/types.api.query.js' 
- * @import { ProductType } from '../api/types.api.js' 
+ * @import { ProductType, VariantType } from '../api/types.api.js' 
  * @import { RegularGetOptions } from '../database/types.public.js' 
  */
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
-import { authorize_by_roles } from './con.auth.middle.js'
+import { authorize_admin } from './con.auth.middle.js'
 import { parse_expand, parse_query } from '../api/utils.query.js'
 
 /**
@@ -19,7 +19,7 @@ export const create_routes = (app) => {
   /** @type {ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
+  const middle_authorize_admin = authorize_admin(app);
 
   // save 
   polka.post(
@@ -51,6 +51,24 @@ export const create_routes = (app) => {
     }
   );
 
+  polka.get(
+    '/used_tags',
+    async (req, res) => {
+      const items = await app.api.products.list_used_products_tags();
+      res.sendJson(items);
+    }
+  );
+
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      const q = (/** @type {ApiQuery<ProductType | VariantType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.products.count(q)
+      res.sendJson({ count });
+    }
+  );
 
   // get item
   polka.get(
@@ -69,18 +87,6 @@ export const create_routes = (app) => {
     }
   );
 
-  // delete item
-  polka.delete(
-    '/:handle',
-    middle_authorize_admin,
-    async (req, res) => {
-      const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.products.remove(handle_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
-    }
-  );
-
   // list
   polka.get(
     '/',
@@ -93,6 +99,19 @@ export const create_routes = (app) => {
       res.sendJson(items);
     }
   );
+  
+  // delete item
+  polka.delete(
+    '/:handle',
+    middle_authorize_admin,
+    async (req, res) => {
+      const handle_or_id = req?.params?.handle;
+      const removed = handle_or_id && await app.api.products.remove(handle_or_id);
+
+      res.setStatus(removed ? 200 : 404).end();
+    }
+  );
+
 
   // add to collection
   polka.post(
@@ -120,7 +139,7 @@ export const create_routes = (app) => {
     '/:product/collections',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_product_collections(product);
+      const items = await app.api.products.list_all_product_collections(product);
       res.sendJson(items);
     }
   );
@@ -129,7 +148,7 @@ export const create_routes = (app) => {
     '/:product/variants',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_product_variants(product);
+      const items = await app.api.products.list_all_product_variants(product);
       res.sendJson(items);
     }
   );
@@ -138,7 +157,7 @@ export const create_routes = (app) => {
     '/:product/discounts',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_product_discounts(product);
+      const items = await app.api.products.list_all_product_discounts(product);
       res.sendJson(items);
     }
   );
@@ -147,7 +166,7 @@ export const create_routes = (app) => {
     '/:product/related',
     async (req, res) => {
       const { product } = req?.params;
-      const items = await app.api.products.list_related_products(product);
+      const items = await app.api.products.list_all_related_products(product);
       res.sendJson(items);
     }
   );

@@ -4,6 +4,7 @@ import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
 import { useIndexDB } from "./use-index-db";
 import { create_local_storage_hook } from "./use-local-storage";
+import { fixture_chat_1, fixture_chat_2 } from "@/components/chat.fixture";
 
 export type ChatHookConfig = {
   threadId?: string;
@@ -134,6 +135,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         );
   
         const response = await sdk.ai.speak(
+          'store',
           {
             prompt, 
             thread_id: threadId
@@ -198,6 +200,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           threadId: thread_id,
           generator
         } = await sdk.ai.streamSpeak(
+          'store',
           {
             prompt, 
             thread_id: threadId
@@ -301,6 +304,19 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
       );
     }, [streamSpeak]
   );
+
+  const mm = new Array(20).fill(
+    {
+      role: 'user',
+      contents: [
+        {
+          type: 'text',
+          content: 'Hello, how can I help you today?'
+        }
+      ]
+    }
+  )
+  
 
   return {
     messages, threadId, loading, error, pubsub,

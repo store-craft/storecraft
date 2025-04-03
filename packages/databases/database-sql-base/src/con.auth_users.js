@@ -8,6 +8,7 @@ import {
   regular_upsert_me, where_id_or_handle_table, with_media, with_tags
 } from './con.shared.js'
 import { query_to_eb, query_to_sort } from './utils.query.js';
+import { remove as remove_customer_and_auth_user } from './con.customers.js';
 
 
 export const table_name = 'auth_users';
@@ -35,9 +36,12 @@ const upsert = (driver) => {
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
+            attributes: JSON.stringify(item.attributes),
+            description: item.description,
+            active: item.active ? 1 : 0,
             roles: JSON.stringify(item.roles),
-            // firstname: item.firstname,
-            // lastname: item.lastname
+            firstname: item.firstname,
+            lastname: item.lastname
           });
         }
       );
@@ -73,7 +77,8 @@ const getByEmail = (driver) => {
   return async (email) => {
     return driver.client
       .selectFrom('auth_users')
-      .selectAll().where('email', '=', email)
+      .selectAll()
+      .where('email', '=', email)
       .executeTakeFirst()
       .then(sanitize);
   }
@@ -84,21 +89,18 @@ const getByEmail = (driver) => {
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
-  return async (id_or_email) => {
-    try {
-      await driver.client.transaction().execute(
-        async (trx) => {
-            
-          // entities
-          // delete me
-          await delete_me(trx, table_name, id_or_email);
-        }
-      );
-    } catch(e) {
-      console.log(e);
-      return false;
-    }
-    return true;
+  return async (handle_or_id) => {
+    // delete related auth user
+    // customers and auth_users have the same object-id and handle
+    let customer_handle_or_id = handle_or_id;
+    if(handle_or_id.startsWith('au_')) {
+      // found an id
+      const object_id = handle_or_id.split('_').at(-1);
+      customer_handle_or_id = 'cus_' + object_id;
+    } 
+    return remove_customer_and_auth_user(driver)(
+      customer_handle_or_id
+    );
   }
 }
 /**
@@ -147,8 +149,8 @@ const list = (driver) => {
 
 /** 
  * @param {SQL} driver
- * @return {db_col}}
- * */
+ * @return {db_col}
+ */
 export const impl = (driver) => {
 
   return {

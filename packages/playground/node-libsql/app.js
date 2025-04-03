@@ -1,9 +1,5 @@
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
-import { MongoDB } from '@storecraft/database-mongodb'
 import { LibSQLVectorStore, Turso } from '@storecraft/database-turso'
-import { SQLite } from '@storecraft/database-sqlite'
-import { R2 } from '@storecraft/storage-s3-compatible'
-import { GoogleStorage } from '@storecraft/storage-google'
 import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { Stripe } from '@storecraft/payments-stripe'
@@ -24,17 +20,20 @@ import { PineconeEmbedder } from "@storecraft/core/ai/models/embedders/pinecone"
 import { VoyageAIEmbedder } from "@storecraft/core/ai/models/embedders/voyage-ai";
 import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 import { GeminiEmbedder } from "@storecraft/core/ai/models/embedders/gemini";
+import { StoreAgent } from "@storecraft/core/ai/agents/index.js";
 import { GoogleAuth } from "@storecraft/core/auth/providers/google";
 import { GithubAuth } from "@storecraft/core/auth/providers/github";
 import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
 import { XAuth } from "@storecraft/core/auth/providers/x";
+import { DummyAuth } from "@storecraft/core/auth/providers/dummy";
 
 export const app = new App(
   {
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token',
+    auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+    auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
     auth_admins_emails: ['tomer.shalev@gmail.com'],
-    storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
     general_store_website: 'https://wush.games',
@@ -45,7 +44,7 @@ export const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(new Turso())
-.withStorage(new NodeLocalStorage("storage"))
+.withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
 .withPaymentGateways(
   {
@@ -60,7 +59,8 @@ export const app = new App(
   }
 )
 .withAI(
-  new XAI()
+  // new XAI(),
+  new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
   new LibSQLVectorStore(
@@ -74,7 +74,7 @@ export const app = new App(
     google: new GoogleAuth(),
     github: new GithubAuth(),
     facebook: new FacebookAuth(),
+    dummy: new DummyAuth(),
     x: new XAuth(),
   }
 )
-

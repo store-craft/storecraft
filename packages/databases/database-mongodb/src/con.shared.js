@@ -2,7 +2,7 @@
  * @import { db_crud, RegularGetOptions } from '@storecraft/core/database'
  * @import { ApiQuery, BaseType, Cursor, ExpandQuery, QuickSearchResource, QuickSearchResult, Tuple, withOptionalID } from '@storecraft/core/api'
  * @import { VQL } from '@storecraft/core/vql'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { WithRelations } from './utils.types.js'
  * @import { WithId } from 'mongodb'
  */
 
@@ -43,16 +43,48 @@ export const upsert_regular = (driver, col) => {
             ]
           );
 
-          const res = await col.replaceOne(
+          // if(!data.handle) {
+          //   throw new Error('Handle is required');
+          // }
+
+          await col.deleteMany(
             // @ts-ignore
-            { 
-              _id: to_objid(data.id) 
-            }, 
-            data,
-            { 
-              session, upsert: true 
+            {
+              $or: [
+                data.id && { _id: to_objid(data.id) },
+                data.handle && { handle: data.handle }
+              ].filter(Boolean)
+            },
+            {
+              session
             }
           );
+
+          await col.insertOne(
+            // @ts-ignore
+            {
+              ...data,
+              _id: data.id ? to_objid(data.id) : undefined,
+            },
+            { 
+              session,
+            }
+
+          );
+
+          // const res = await col.replaceOne(
+          //   // @ts-ignore
+          //   { 
+          //     $or: [
+          //       data.id && { _id: to_objid(data.id) },
+          //       data.handle && { handle: data.handle }
+          //     ].filter(Boolean)
+          //   }, 
+          //   data,
+          //   { 
+          //     session, upsert: true 
+          //   }
+          // );
 
           ////
           // REPORT IMAGES USAGE
@@ -74,11 +106,7 @@ export const upsert_regular = (driver, col) => {
 
 /**
  * Extract relations names from item
- * 
- * 
- * @template {import('./utils.relations.js').WithRelations<{}>} T
- * 
- * 
+ * @template {WithRelations<{}>} T
  * @param {T} item
  */
 export const get_relations_names = item => {
@@ -165,10 +193,8 @@ export const expand_to_mongo_projection = (expand) => {
 
 /**
  * @template T, G
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
- * 
  * @returns {db_crud<T, G>["get"]}
  */
 export const get_regular = (driver, col) => {
@@ -184,25 +210,26 @@ export const get_regular = (driver, col) => {
     );
 
     // try to expand relations
-    expand([res], options?.expand);
+    expand(
+      [res], 
+      /** @type {ExpandQuery<WithId<G>>} */(
+        options?.expand
+      )
+    );
 
-    return sanitize_one(res);
+    return /** @type {G} */(
+      sanitize_one(res)
+    );
   }
 }
 
 /**
  * get bulk of items, ordered, if something is missing, `undefined`
  * should be instead
- * 
- * 
  * @template {withOptionalID} T
  * @template {withOptionalID} G
- * 
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
- * 
- * 
  * @returns {db_crud<T, G>["getBulk"]}
  */
 export const get_bulk = (driver, col) => {
@@ -213,27 +240,40 @@ export const get_bulk = (driver, col) => {
 
 
 
-    const res = await col.find(
-      // @ts-ignore
-      { 
-        $or: [
-          {
-            _id: { $in: objids } 
-          },
-          {
-            handle: { $in: ids } 
-          }
-        ]
-      }
-    ).toArray();
+    const res = /** @type {(WithRelations<WithId<G>>)[]} */ (
+      await col.find(
+        // @ts-ignore
+        { 
+          $or: [
+            {
+              _id: { $in: objids } 
+            },
+            {
+              handle: { $in: ids } 
+            }
+          ]
+        }
+      ).toArray()
+    );
 
     // try to expand relations
-    expand(res, options?.expand);
-    const sanitized = sanitize_array(res);
-// console.log('res', sanitized)
+    expand(
+      res, 
+      /** @type {ExpandQuery<WithId<G>>} */ (
+        options?.expand
+      )
+    );
+    
+    
+    const sanitized = /** @type {G[]} */(
+      /** @type {unknown} */(
+        sanitize_array(res)
+      )
+    );
+
     // now let's order them
     return ids.map(
-      id => sanitized.find(s => s.id===id || s?.handle===id)
+      id => sanitized.find(s => s.id===id || s?.['handle']===id)
     );
     
   }
@@ -264,12 +304,8 @@ export const remove_regular = (driver, col) => {
 /**
  * @template T
  * @template G
- * 
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
- * 
- * 
  * @returns {db_crud<T, G>["list"]}
  */
 export const list_regular = (driver, col) => {
@@ -295,13 +331,18 @@ export const list_regular = (driver, col) => {
     if(reverse_sign==-1) items.reverse();
 
     // try expand relations, that were asked
-    const items_expended = expand(items, query?.expand);
+    const items_expended = expand(
+      items, 
+      /** @type {ExpandQuery<WithId<G>>} */ (
+        query?.expand
+      )
+    );
     
     const sanitized = sanitize_array(items_expended);
 
     // console.log('sanitized', sanitized)
 
-    return sanitized;
+    return /** @type {G[]} */(sanitized);
   }
 }
 
@@ -323,7 +364,6 @@ export const count_regular = (driver, col) => {
 
     // console.log('query', query);
     // console.log('filter', JSON.stringify(filter, null, 2));
-
     const count = await col.countDocuments(
       filter
     );

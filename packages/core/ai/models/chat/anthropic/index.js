@@ -160,7 +160,7 @@ export class Anthropic {
     const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
-      builder.add_delta(chunk);
+      builder.add_chunk(chunk);
 
       if(
         (chunk.type==='content_block_delta') &&
@@ -189,6 +189,7 @@ export class Anthropic {
         ).map(
           tc => ({
             name: tc.name,
+            arguments: tc.input,
             id: tc.id,
             title: params.tools?.[tc.name].title
           })
@@ -214,15 +215,6 @@ export class Anthropic {
           tool_call.input
         );
 
-        yield {
-          type: 'tool_result',
-          content: {
-            data: tool_result,
-            id: tool_call.id,
-            name: tool_call.name
-          }
-        }
-
         params.history.push(
           {
             role: 'user',
@@ -235,6 +227,15 @@ export class Anthropic {
             ]
           }
         );
+
+        yield {
+          type: 'tool_result',
+          content: {
+            data: tool_result,
+            id: tool_call.id,
+            name: tool_call.name
+          }
+        }
       }
 
       // again
@@ -243,7 +244,7 @@ export class Anthropic {
       const builder = stream_message_builder();
     
       for await (const chunk of current_stream) {
-        builder.add_delta(chunk);
+        builder.add_chunk(chunk);
   
         if(
           (chunk.type==='content_block_delta') &&
@@ -363,39 +364,6 @@ export class Anthropic {
         }
       )
     }
-  };
-
-  /** @type {Impl["llm_assistant_message_to_user_content"]} */
-  llm_assistant_message_to_user_content = (message) => {
-    if(message.role!=='assistant') {
-      throw new Error(
-        "llm_assistant_message_to_user_content:: message.role!=='assistant'"
-      );
-    }
-
-    if(typeof message.content === 'string') {
-      return [
-        {
-          content: message.content,
-          type: 'text'
-        }
-      ];
-    }
-  
-    if(Array.isArray(message.content)) {
-      return message.content.filter(p => p.type==='text').map(
-        (part) => (
-          {
-            type: 'text',
-            content: part.text
-          }
-        )
-      )
-    }
-    
-    throw new Error(
-      "llm_assistant_message_to_user_content:: invalid data"
-    );  
   };
 
   models = async () => {

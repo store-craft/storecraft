@@ -1,6 +1,8 @@
 /**
- * @import { claude_completion_response, stream_event, text_content, tool_use_content
- * } from "./types.js";
+ * @import { 
+ *  claude_completion_response, stream_event, 
+ *  text_content, tool_use_content
+ * } from "./types.private.js";
  */
 
 
@@ -12,33 +14,33 @@ export const stream_message_builder = () => {
   let final;
 
   return {
-    /** @param {stream_event} delta */
-    add_delta: (delta) => {
-      if(delta.type==='message_start') {
-        final = {...delta.message};
-      } else if(delta.type==='message_delta') {
-        final = {...final, ...delta.delta};
-      } else if(delta.type==='error') {
-        console.log('Anthropic::add_delta ', delta);
-        throw delta.error;
-      } else if(delta.type==='content_block_start') {
-        final.content[delta.index] = delta.content_block;
-      } else if(delta.type==='content_block_delta') {
-        if(delta.delta.type==='text_delta') {
-          const c = (/** @type {text_content} */ (final.content[delta.index]));
-          final.content[delta.index] = {
+    /** @param {stream_event} chunk */
+    add_chunk: (chunk) => {
+      if(chunk.type==='message_start') {
+        final = {...chunk.message};
+      } else if(chunk.type==='message_delta') {
+        final = {...final, ...chunk.delta};
+      } else if(chunk.type==='error') {
+        console.log('Anthropic::add_delta ', chunk);
+        throw chunk.error;
+      } else if(chunk.type==='content_block_start') {
+        final.content[chunk.index] = chunk.content_block;
+      } else if(chunk.type==='content_block_delta') {
+        if(chunk.delta.type==='text_delta') {
+          const c = (/** @type {text_content} */ (final.content[chunk.index]));
+          final.content[chunk.index] = {
             ...c,
-            text: c.text + delta.delta.text
+            text: c.text + chunk.delta.text
           } ;
-        } else if(delta.delta.type==='input_json_delta') {
-          const c = (/** @type {tool_use_content} */ (final.content[delta.index]));
-          final.content[delta.index] = {
+        } else if(chunk.delta.type==='input_json_delta') {
+          const c = (/** @type {tool_use_content} */ (final.content[chunk.index]));
+          final.content[chunk.index] = {
             ...c,
-            __partial_json: (c.__partial_json ?? '') + delta.delta.partial_json,
+            __partial_json: (c.__partial_json ?? '') + chunk.delta.partial_json,
           } ;
         }
-      } else if(delta.type==='content_block_stop') {
-        const c = final.content[delta.index];
+      } else if(chunk.type==='content_block_stop') {
+        const c = final.content[chunk.index];
         // Parse accumulated JSON string into object to conform with
         // the type
         if(c.type==='tool_use') {

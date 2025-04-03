@@ -6,6 +6,23 @@ export function sleep(ms=1000) {
   });
 }
 
+export const withTimestamp = (o='') => `${o}-${Date.now()}`;
+// Function to generate a random 5-character string
+const generateRandomString = (length=10) => {
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * charactersLength)
+      );
+  }
+  return result;
+}
+
+export const withRandom = (o='', length=10) => o + '-' + generateRandomString(length)
+
 /**
  * 
  * @param  {...string} keys 
@@ -105,26 +122,12 @@ export const assert_partial_minus_relations = () => {
  * @param {string} prefix 
  * @param {string} [prefix_msg=''] prefix message before actual error message
  */
-export const assert_partial = (actual, expected, prefix='', _original=undefined, prefix_msg='') => {
-  // console.log('actual ', actual)
-  // console.log('expected ', expected)
+export const assert_partial = (
+  actual, expected, prefix='', _original=undefined, prefix_msg=''
+) => {
   _original = _original ?? {actual, expected};
-  // if(Array.isArray(actual) && Array.isArray(expected)) {
-  //   assert.ok(
-  //     actual.length==expected.length, 
-  //     `assert_partial:: actual ${prefix} is not same shape as expected !!!\n` + 
-  //     `actual${prefix}=${JSON.stringify(actual, null, 2)}\n` + 
-  //     `expected${prefix}=${JSON.stringify(expected, null, 2)}\n`
-  //   );
-  //   for(let ix=0; ix < expected.length; ix++) {
-  //     assert_partial(actual?.[ix], expected[ix], `${prefix}[${ix}]`, _original, prefix_msg);
-  //   }
-  // } else 
   if(typeof expected === 'object') {
     if(Array.isArray(expected)) {
-      const msg = '\n' + prefix_msg + '\n' + `expected${prefix}=${expected}` +'\n' +
-      `actual${prefix}=${actual}`;
-
       assert.ok(
         Array.isArray(actual),
         `expected array but got typeof ${prefix} = ${typeof actual}`
@@ -134,9 +137,7 @@ export const assert_partial = (actual, expected, prefix='', _original=undefined,
     for(const k of Object.keys(expected)) {
       assert_partial(actual?.[k], expected[k], `${prefix}[${k}]`, _original, prefix_msg);
     }
-    // assert.equal(filter_actual_keys_by_expected(actual, expected), expected);
   } else {
-    // console.log(actual, expected)
     if(expected!==actual) {
       const msg = '\n' + prefix_msg + '\n' + `expected${prefix}=${expected}` +'\n' +
         `actual${prefix}=${actual}`;

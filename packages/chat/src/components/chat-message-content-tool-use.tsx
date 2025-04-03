@@ -4,6 +4,7 @@ import { MDView } from "./md-view";
 import { Card } from "./card";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
+import { sleep } from "@/hooks/sleep";
 
 export type Params = withDiv<
   {
@@ -30,8 +31,7 @@ export const ChatMessageToolUseContent = (
             );
 
             if(filtered?.length) {
-              // await sleep(1000);
-              setLoading(false);            
+              sleep(1000).then(() => setLoading(false));
             }
           }
         }
@@ -44,7 +44,7 @@ export const ChatMessageToolUseContent = (
       {
         chat.content.content.map(
           (c, ix) => (
-            <Card card={{loading}} key={ix} >
+            <Card card={{loading, border: true}} key={ix} >
               <MDView 
                 value={c.title ?? 'Performing Action'} 
                 className='max-w-full flex-1 prose dark:prose-invert px-2

@@ -3,14 +3,15 @@ import { tool } from './index.js';
 import { App } from '../../types.public.js';
 
 export type InferToolInputSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<I> : never;
-export type InferToolReturnSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<O> : never;
+export type InferToolReturnSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? (O extends z.ZodTypeAny ? z.infer<O> : O) : never;
 
 /**
  * @description General Tool specification
  */
 export type Tool<
-  ToolInput extends z.ZodTypeAny=any,
-  ToolResult extends z.ZodTypeAny = any,
+  ToolInput extends z.ZodTypeAny = any,
+  ToolResult extends any = any,
+  // ToolResult extends z.ZodTypeAny = any,
   > = {
     __TOOL_INPUT_SCHEMA_TYPE?: ToolInput,
     __TOOL_RESULT_SCHEMA_TYPE?: ToolResult,
@@ -31,9 +32,10 @@ export type Tool<
     schema: ToolInput,
 
     /**
-     * @description Optional result type of tool
+     * @description Optional result type of tool in `zod` schema to confine
+     * and guide the output of {@link use} method
      */
-    schema_result?:  ToolResult,
+    schema_result_zod?: ToolResult,
 
     /**
      * @description Invoke / Use the tool
@@ -41,17 +43,17 @@ export type Tool<
      * @param input `zod` schema
      * @returns 
      */
-    use: (input: z.infer<ToolInput>) => Promise<Partial<z.infer<ToolResult>>>;
+    use: (input: z.infer<ToolInput>) => Promise<ToolResult extends z.ZodTypeAny ? z.infer<ToolResult> : ToolResult>;
   }
 
 
 export type content_text = { type: 'text', content: string };
 export type content_delta_text = { type: 'delta_text' | 'delta_text', content: string };
-export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string }[] };
+export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string, arguments?: any }[] };
 export type content_tool_result<T extends any = any> = { 
   type: 'tool_result', 
   content: { 
-    data: { result: T} | { error: any }, 
+    data: { result?: T, error?: any }, 
     id?: string, 
     name: string 
   } 
@@ -67,6 +69,13 @@ export type content = | content_text | content_delta_text
                       | content_image | content_json | content_object
                       | content_error;
 
+/**
+ * @description Unified message type translatable to and from LLM native message
+ */                      
+export type UnifiedMessage = {
+  role: 'user' | 'assistant' | string,
+  content: content[];
+}
 
 
 /**
@@ -194,10 +203,10 @@ export interface ChatAI<
   user_content_to_llm_user_message: (prompt: content[]) => LLMMessageType;
 
   /**
-   * @description Translate a specific LLM Assistant message into simple user content
-   * @param message llm message
+   * @description Translate a generic user prompt into an LLM `user` message
+   * @param prompt user prompt
    */
-  llm_assistant_message_to_user_content: (message: LLMMessageType) => content[];
+  assistant_content_to_llm_assistant_message?: (content: content) => LLMMessageType;
 
 }
 

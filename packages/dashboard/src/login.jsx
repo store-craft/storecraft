@@ -5,9 +5,10 @@ import LoginMarquee from './comps/login-marquee.jsx'
 import LoginForm from './comps/login-form.jsx'
 import LoginCopyright from './comps/login-copyright.jsx'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
-import useDarkMode from './hooks/useDarkMode.js'
+import useDarkMode from '@/hooks/use-dark-mode.js'
 import LoginLatestUpdates from './comps/login-latest-updates.jsx'
 
+/** @param {import('@storecraft/sdk').StorecraftSDKConfig} c */
 const createConfig = c => {
   
   return {
@@ -118,6 +119,7 @@ const Login = (
                       w-full max-w-[22rem] h-fit 
                       rounded-md 
                       '
+          // @ts-ignore
           sstyle={{transformOrigin: 'top center'}}>
         <LoginForm 
             is_backend_endpoint_editable={is_backend_endpoint_editable}

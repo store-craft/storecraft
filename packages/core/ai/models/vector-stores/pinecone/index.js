@@ -36,10 +36,18 @@ export class Pinecone {
   constructor(config) {
     this.#config = {
       dimension: 1536,
+      metric: 'cosine',
       index_name: 'vector-index',
       ...config,
     };
   }
+  get metric() {
+    return this.#config.metric;
+  };
+
+  get dimensions() {
+    return this.#config.dimension;
+  };
 
   get config() {
     return this.#config;
@@ -207,12 +215,12 @@ export class Pinecone {
   }
 
 
-  /** @type {Omit<create_vector_index_params, 'name' | 'dimension'>} */
-  #default_create_index_params = { metric: 'cosine', spec: { serverless : {cloud: 'aws', region: 'us-east-1' }}} 
+  /** @type {Omit<create_vector_index_params, 'name' | 'dimension' | 'metric'>} */
+  #default_create_index_params = { spec: { serverless : {cloud: 'aws', region: 'us-east-1' }}} 
 
   /**
    * 
-   * @param {Omit<create_vector_index_params, 'name' | 'dimension'>} [params] 
+   * @param {Omit<create_vector_index_params, 'name' | 'dimension' | 'metric'>} [params] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<create_vector_index_result>}
    */
@@ -238,7 +246,8 @@ export class Pinecone {
           /** @type {create_vector_index_params} */({
             ...params,
             name: this.config.index_name,
-            dimension: this.config.dimension
+            dimension: this.config.dimension,
+            metric: this.config.metric
           })
         )
       }

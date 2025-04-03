@@ -2,14 +2,15 @@
  * @import { 
  *  db_storefronts as db_col, RegularGetOptions 
  * } from '@storecraft/core/database'
- * @import { WithRelations } from './utils.relations.js'
+ * @import { StorefrontType } from '@storecraft/core/api'
+ * @import { WithRelations } from './utils.types.js'
  */
 
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { count_regular, get_regular, list_regular, 
+import { count_regular, expand, get_regular, list_regular, 
   remove_regular } from './con.shared.js'
-import { sanitize_array, to_objid } from './utils.funcs.js'
+import { sanitize_array, sanitize_recursively, to_objid } from './utils.funcs.js'
 import { 
   add_search_terms_relation_on, create_explicit_relation, save_me 
 } from './utils.relations.js';
@@ -17,7 +18,6 @@ import { report_document_media } from './con.images.js';
 
 /**
  * @param {MongoDB} d 
- * 
  * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('storefronts');
@@ -106,95 +106,118 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_storefront_products"]}
+ * @returns {db_col["get_default_auto_generated_storefront"]}
  */
-const list_storefront_products = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['products']
-    };
+const get_default_auto_generated_storefront = (driver) => {
+  return async () => {
+    /** @type {Partial<StorefrontType>[]} */
+    const items = await driver.db.aggregate(
+      [
+        { $documents: [{}] },
+        {
+          $lookup: {
+            from: "products",
+            pipeline: [
+              { $match: { active: true } },
+              { $sort: { updated_at: -1} },
+              { $limit: 10 },
+            ],
+            as: "products"
+          }
+        },
+        {
+          $lookup: {
+            from: "collections",
+            pipeline: [
+              { $match: { active: true } },
+              { $sort: { updated_at: -1} },
+            ],
+            as: "collections"
+          }
+        },
+        {
+          $lookup: {
+            from: "discounts",
+            pipeline: [
+              { $match: { active: true } },
+              { $sort: { updated_at: -1} },
+            ],
+            as: "discounts"
+          }
+        },
+        {
+          $lookup: {
+            from: "shipping_methods",
+            pipeline: [
+              { $match: { active: true } },
+              { $sort: { updated_at: -1} },
+            ],
+            as: "shipping_methods"
+          }
+        },
+        {
+          $lookup: {
+            from: "posts",
+            pipeline: [
+              { $match: { active: true } },
+              { $sort: { updated_at: -1} },
+              { $limit: 5 },
+            ],
+            as: "posts"
+          }
+        },
+        {
+          $lookup: {
+            from: "products",
+            pipeline: [
+              { $match: { active: true, tags: { $exists: true } } },
+              { $project: { tags: 1 }}
+            ],
+            as: "all_used_products_tags"
+          }
+        },
 
-    const item = await get_regular(driver, col(driver))(product, options);
+      ]
+    ).toArray();
 
-    return sanitize_array(item?.products ?? []);
-  }
-}
+    const pre_all_tags = /** @type {{tags?: string[]}[]} */(
+      items[0].all_used_products_tags ?? []
+    );
+    const all_used_products_tags = pre_all_tags.reduce(
+      (p, c) => {
+        (c?.tags ?? []).forEach(
+          (tag) => p.add(tag)
+        );
+        return p;
+      }, 
+      /** @type {Set<string>} */ (new Set())
+    );
 
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_storefront_collections"]}
- */
-const list_storefront_collections = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['collections']
-    };
+    /** @type {StorefrontType} */
+    let sf = {
+      ...items[0],
+      active: true,
+      created_at: new Date().toISOString(),
+      handle: 'default-auto-generated-storefront',
+      id: 'default',
+      title: 'Default Auto Generated Storefront',
+      description: 'Default Auto Generated Storefront',
+      all_used_products_tags: Array.from(all_used_products_tags)
+    }
 
-    const item = await get_regular(driver, col(driver))(product, options);
+    expand(
+      sf.products,
+      [
+        'discounts', 'collections', 
+        'related_products', 'variants'
+      ],
+    );
 
-    return sanitize_array(item?.collections ?? []);
-  }
-}
+    sanitize_recursively(
+      sf
+    );
 
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_storefront_discounts"]}
- */
-const list_storefront_discounts = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['discounts']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.discounts ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * @returns {db_col["list_storefront_shipping_methods"]}
- */
-const list_storefront_shipping_methods = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['shipping_methods']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.shipping_methods ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_storefront_posts"]}
- */
-const list_storefront_posts = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['posts']
-    };
-
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.posts ?? []);
+    return sf;
   }
 }
 
@@ -213,10 +236,6 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     count: count(driver),
-    list_storefront_products: list_storefront_products(driver),
-    list_storefront_collections: list_storefront_collections(driver),
-    list_storefront_discounts: list_storefront_discounts(driver),
-    list_storefront_shipping_methods: list_storefront_shipping_methods(driver),
-    list_storefront_posts: list_storefront_posts(driver),
+    get_default_auto_generated_storefront: get_default_auto_generated_storefront(driver),
   }
 }

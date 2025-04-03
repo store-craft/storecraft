@@ -49,7 +49,7 @@ export const create_routes = (app) => {
     '/gateways',
     authorize_admin(app),
     async (req, res) => {
-      const r = app.api.payments.list();
+      const r = app.api.payments.list_all();
       res.sendJson(r);
     }
   );

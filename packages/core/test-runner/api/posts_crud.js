@@ -1,9 +1,6 @@
 /**
- * @import { OrderData, OrderDataUpsert, PostType, PostTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * @import { ListTestContext, CrudTestContext } from './api.utils.crud.js';
+ * @import { PostType, PostTypeUpsert } from '../../api/types.api.js'
+ * @import { CrudTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';

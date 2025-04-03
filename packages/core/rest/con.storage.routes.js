@@ -1,7 +1,7 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
-import { authorize_by_roles } from './con.auth.middle.js'
+import { authorize_admin } from './con.auth.middle.js'
 import { does_prefer_signed } from '../api/con.storage.logic.js';
 import { StorecraftError } from '../api/utils.func.js';
 
@@ -18,7 +18,7 @@ export const create_routes = (app) => {
   const features = app.storage.features() ?? { supports_signed_urls: false };
   const supports_signed = features.supports_signed_urls;
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
+  const middle_authorize_admin = authorize_admin(app);
 
   // get features
   polka.get(

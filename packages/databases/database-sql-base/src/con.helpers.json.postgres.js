@@ -1,3 +1,9 @@
+/**
+ * @import { AliasableExpression, Expression} from 'kysely'
+ * @import { SelectQueryBuilderExpression } from './con.helpers.json.js'
+ * @import { SqlDialectType } from '../types.public.js'
+ * @import { RawBuilder, Simplify } from 'kysely'
+ */
 import { sql} from 'kysely'
 import { extract_first_selection } from './con.helpers.json.js';
 
@@ -50,8 +56,8 @@ import { extract_first_selection } from './con.helpers.json.js';
  * from "person"
  * ```
  * @template O
- * @param {import('./con.helpers.json.js').SelectQueryBuilderExpression<O>} expr 
- * @returns {import('kysely').RawBuilder<string[]>}
+ * @param {SelectQueryBuilderExpression<O>} expr 
+ * @returns {RawBuilder<string[]>}
  */
 export function pg_stringArrayFrom(expr) {
   const arg = extract_first_selection(expr, 'agg');
@@ -107,8 +113,8 @@ export function pg_stringArrayFrom(expr) {
  * from "person"
  * ```
  * @template O
- * @param {import('kysely').Expression<O>} expr 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O>[]>}
+ * @param {Expression<O>} expr 
+ * @returns {RawBuilder<Simplify<O>[]>}
  */
 export function pg_jsonArrayFrom(expr) {
   return sql`(select coalesce(json_agg(agg), '[]') from ${expr} as agg)`
@@ -165,8 +171,8 @@ export function pg_jsonArrayFrom(expr) {
  * from "person"
  * ```
  * @template O
- * @param {import('kysely').Expression<O>} expr 
- * @returns {import('kysely').RawBuilder<import('kysely').Simplify<O> | null>}
+ * @param {Expression<O>} expr 
+ * @returns {RawBuilder<Simplify<O> | null>}
  */
 export function pg_jsonObjectFrom(expr) {
   return sql`(select to_json(obj) from ${expr} as obj)`
@@ -211,9 +217,9 @@ export function pg_jsonObjectFrom(expr) {
  * ) as "name"
  * from "person"
  * ```
- * @template {Record<string, import('kysely').Expression<unknown>>} O
+ * @template {Record<string, Expression<unknown>>} O
  * @param {O} obj 
- * @returns { import('kysely').RawBuilder<import('kysely').Simplify<{[K in keyof O]: O[K] extends Expression<infer V> ? V : never}>>}
+ * @returns {RawBuilder<Simplify<{[K in keyof O]: O[K] extends Expression<infer V> ? V : never}>>}
 >}
  */
 export function pg_jsonBuildObject(obj) {

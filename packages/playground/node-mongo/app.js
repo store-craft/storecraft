@@ -18,6 +18,7 @@ import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
 import { MongoVectorStore } from "@storecraft/database-mongodb";
 import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize/index.js";
 import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare/index.js";
+import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 
 export const app = new App(
   {
@@ -50,12 +51,12 @@ export const app = new App(
   }
 )
 .withAI(
-  new XAI()
+  new OpenAI()
 )
 .withVectorStore(
   new MongoVectorStore(
     {
-      embedder: new CloudflareEmbedder(),
+      embedder: new OpenAIEmbedder(),
     }
   )
 )

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
 import { BlingButton } from './common-button.jsx'
 import { HR, Label } from './common-ui.jsx'
-import useNavigateWithState from '@/hooks/useNavigateWithState.jsx'
+import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
 
 
 /**

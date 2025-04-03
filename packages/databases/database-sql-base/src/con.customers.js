@@ -87,26 +87,31 @@ const getByEmail = (driver) => {
  * @param {SQL} driver 
  * @returns {db_col["remove"]}
  */
-const remove = (driver) => {
-  return async (id) => {
+export const remove = (driver) => {
+  return async (handle_or_id) => {
     try {
       await driver.client.transaction().execute(
         async (trx) => {
 
-          const valid_auth_id = `au_${id.split('_').at(-1)}`
           // entities
-          await delete_search_of(trx, id);
-          await delete_media_of(trx, id);
-          await delete_tags_of(trx, id);
+          await delete_tags_of(trx, handle_or_id, handle_or_id, table_name);
+          await delete_search_of(trx, handle_or_id, handle_or_id, table_name);
+          await delete_media_of(trx, handle_or_id, handle_or_id, table_name);
+          
+          { // delete related auth user
+            // customers and auth_users have the same object-id and handle
+            let auth_user_handle_or_id = handle_or_id;
+            if(handle_or_id.startsWith('cus_')) {
+              // found an id
+              const object_id = handle_or_id.split('_').at(-1);
+              auth_user_handle_or_id = 'au_' + object_id;
+            } 
 
-          // delete related auth user
-          await trx
-          .deleteFrom('auth_users')
-          .where('auth_users.id', '=', valid_auth_id)
-          .executeTakeFirst();
+            await delete_me(trx, 'auth_users', auth_user_handle_or_id);
+          }
              
-          // delete me
-          await delete_me(trx, table_name, id);
+          // delete customer
+          await delete_me(trx, table_name, handle_or_id);
         }
       );
     } catch(e) {
@@ -150,8 +155,6 @@ const list = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
@@ -187,6 +190,37 @@ const list_customer_orders = (driver) => {
   }
 }
 
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["count_customer_orders"]}
+ */
+const count_customer_orders = (driver) => {
+  return async (id, query) => {
+
+    const result = await driver.client
+      .selectFrom('orders')
+      .select(
+        (eb) => eb.fn.countAll().as('count')
+      )
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, table_name),
+            eb.or(
+              [
+                eb('_customer_id', '=', id),
+                eb('_customer_email', '=', id),
+              ]
+            )
+          ].filter(Boolean)
+        )
+      )
+      .executeTakeFirst();
+
+    return Number(result.count);
+  }
+}
+
 /** 
  * @param {SQL} driver
  * @return {db_col}}
@@ -200,6 +234,7 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     list_customer_orders: list_customer_orders(driver),
+    count_customer_orders: count_customer_orders(driver),
     count: count_regular(driver, table_name),
   }
 }

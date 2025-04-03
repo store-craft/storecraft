@@ -62,11 +62,11 @@ const ChoosePaymentGateway = (
   }
 ) => {
   
-  /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/api').PaymentGatewayItemGet>
-   * }
-   */
+  // /**
+  //  * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
+  //  *  import('@storecraft/core/api').PaymentGatewayItemGet>
+  //  * }
+  //  */
   const { 
     page, error, hasLoaded
   } = useCollection('payments/gateways');

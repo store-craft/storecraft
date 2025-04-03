@@ -1,5 +1,5 @@
 import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/agent.tools.js";
+import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
@@ -19,7 +19,7 @@ export type Params = withDiv<
   }
 >;
 
-export const ItemView = (
+export const ProductCardView = (
   {
     item, index
   }: withDiv<{item: ItemType, index: number}>
@@ -32,7 +32,8 @@ export const ItemView = (
   );
 
   return (
-    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
+    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 \
+          transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
         <div className='absolute inset-0 rounded-md object-cover h-full w-full 
                   blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
@@ -83,12 +84,12 @@ export const ToolResultContent_Products = (
   return (
     <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
                   overflow-x-auto h-fit pr-40 pb-5'
-      style={{'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
+      style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
       {
-        items.slice(0,4).map(
+        items.map(
           (item, ix) => (
-            <Card key={ix} card={{loading: loading}} className='w-fit' >
-              <ItemView key={ix} item={item} index={ix} />
+            <Card key={ix} card={{loading: loading, border: true}} className='w-fit' >
+              <ProductCardView key={ix} item={item} index={ix} />
             </Card>
           )
         )

@@ -22,4 +22,5 @@ export type ENV<T> = Partial<
     // readonly [K in keyof T]: T[K] extends (any[] | Function) ? string : T[K] extends Record<string, any> ? ENV<T[K]> : (string)
   }
 >;
+
   

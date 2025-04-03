@@ -61,9 +61,7 @@ const resource_to_props = {
 }
 
 /**
- * 
  * @param {string} id 
- * 
  * @returns {keyof db_driver["resources"]}
  */
 export const id_to_resource = id => {
@@ -80,8 +78,6 @@ export const id_to_resource = id => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["quicksearch"]}
  */
 export const quicksearch = (driver) => {
@@ -138,10 +134,8 @@ export const quicksearch = (driver) => {
 
 /** 
  * @param {SQL} driver
- * 
- * 
  * @return {db_col}
- * */
+ */
 export const impl = (driver) => {
 
   return {

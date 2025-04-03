@@ -1,9 +1,5 @@
 /**
  * @import { ProductType, VariantTypeUpsert } from '../../api/types.api.js'
- * @import { idable_concrete } from '../../database/types.public.js'
- * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
- * 
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -107,7 +103,7 @@ export const create = app => {
     )
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const product_variants = await app.api.products.list_product_variants(
+    const product_variants = await app.api.products.list_all_product_variants(
       pr_upsert.handle
     );
 
@@ -121,7 +117,7 @@ export const create = app => {
     await app.db.resources.products.upsert(pr_upsert);
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const product_variants = await app.api.products.list_product_variants(
+    const product_variants = await app.api.products.list_all_product_variants(
       pr_upsert.handle
     );
 
@@ -136,7 +132,7 @@ export const create = app => {
     await app.api.products.remove(var_upsert[0].handle);
     // now query the product's discounts to see if 
     // discount was applied to 1st product
-    const product_variants = await app.api.products.list_product_variants(
+    const product_variants = await app.api.products.list_all_product_variants(
       pr_upsert.handle
     );
 
@@ -152,7 +148,7 @@ export const create = app => {
     await app.api.products.remove(pr_upsert.handle);
     // now query the product's discounts to see if 
     // discount was applied to 1st product
-    const product_variants = await app.api.products.list_product_variants(
+    const product_variants = await app.api.products.list_all_product_variants(
       pr_upsert.handle
     );
     assert.ok(product_variants.length==0, 

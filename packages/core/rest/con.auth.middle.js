@@ -7,10 +7,10 @@ import { verify } from "../crypto/jwt.js";
 import { assert } from "../api/utils.func.js";
 import { verify_api_key } from "../api/con.auth.logic.js";
 
-const Authorization = 'Authorization'
-const Bearer = 'Bearer'
-const Basic = 'Basic'
-const API_KEY_HEADER = 'X-API-KEY'
+export const Authorization = 'Authorization';
+export const Bearer = 'Bearer';
+export const Basic = 'Basic';
+export const API_KEY_HEADER = 'X-API-KEY';
 
 /** @param {any} o */
 export const assert_generic_auth = (o) => {
@@ -25,9 +25,9 @@ export const parse_auth_user = (app) => {
   /**
    * 
    * @param {ApiRequest} req 
-   * @param {ApiResponse} res 
+   * @param {ApiResponse} [res={}] 
    */
-  return async (req, res) => {
+  return async (req, res={}) => {
     await parse_bearer_auth(app)(req, res);
     await parse_basic_auth_or_apikey(app)(req, res);
   }
@@ -40,24 +40,26 @@ export const parse_auth_user = (app) => {
 export const parse_bearer_auth = (app) => {
   /**
    * 
-   * @param {ApiRequest} req 
-   * @param {ApiResponse} res 
+   * @param {Partial<ApiRequest>} req 
+   * @param {Partial<ApiResponse>} [res={}] 
    */
-  return async (req, res) => {
+  return async (req, res={}) => {
     if(req.user)
       return;
 
-    const a = req.headers.get(Authorization);
+    const a = req?.headers?.get(Authorization);
     const token = a?.split(Bearer)?.at(-1).trim();
 
     if(!token)
       return;
     
     const jwt = await verify(
-      app.config.auth_secret_access_token, token, true
+      app.config.auth_secret_access_token, 
+      token, 
+      true
     );
 
-    // console.log('jwt', jwt)
+    // console.log({jwt});
 
     if(jwt.verified) 
       req.user = jwt.claims;
@@ -72,14 +74,14 @@ export const parse_basic_auth_or_apikey = (app) => {
   /**
    * 
    * @param {ApiRequest} req 
-   * @param {ApiResponse} res 
+   * @param {ApiResponse} [res={}] 
    */
-  return async (req, res) => {
+  return async (req, res={}) => {
     if(req.user)
       return;
 
-    const apikey_1 = req.headers.get(Authorization)?.split(Basic)?.at(-1).trim();
-    const apikey_2 = req.headers.get(API_KEY_HEADER);
+    const apikey_1 = req?.headers?.get(Authorization)?.split(Basic)?.at(-1).trim();
+    const apikey_2 = req?.headers?.get(API_KEY_HEADER);
     const apikey = apikey_1 ?? apikey_2;
 
     if(!apikey)
@@ -90,7 +92,9 @@ export const parse_basic_auth_or_apikey = (app) => {
       if(auth_user) {
         req.user = {
           sub: auth_user.id,
-          aud: auth_user.email,
+          email: auth_user.email,
+          firstname: auth_user.firstname,
+          lastname: auth_user.lastname,
           roles: auth_user.roles
         };
       }
@@ -109,7 +113,7 @@ export const parse_basic_auth_or_apikey = (app) => {
  */
 export const has_role = (roles=[], user) => {
   return roles.length==0 || roles.some(
-    r => (user.roles ?? []).includes(r)
+    r => (user?.roles ?? []).includes(r)
   );
 }
 
@@ -128,13 +132,14 @@ export const is_admin = (user) => {
 export const roles_guard = (roles=[]) => {
   /**
    * @param {ApiRequest} req 
-   * @param {ApiResponse} res 
+   * @param {ApiResponse} [res={}] 
    */
-  return async (req, res) => {
+  return async (req, res={}) => {
     assert_generic_auth(req.user);
 
     const user_has_required_role = has_role(roles, req.user);
-    if(!user_has_required_role) assert_generic_auth(false);
+    if(!user_has_required_role) 
+      assert_generic_auth(false);
   }  
 }
 
@@ -148,9 +153,9 @@ export const authorize_by_roles = (app, roles=[]) => {
 
   /**
    * @param {ApiRequest} req 
-   * @param {ApiResponse} res 
+   * @param {ApiResponse} [res={}] 
    */  
-  return async (req, res) => {
+  return async (req, res={}) => {
     await parse_auth_user(app)(req, res);
     await roles_guard(roles)(req, res);
   }    

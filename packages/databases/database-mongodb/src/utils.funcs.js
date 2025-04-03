@@ -1,3 +1,7 @@
+/**
+ * @import { WithRelations } from './utils.types.js';
+ * @import { Filter } from 'mongodb';
+ */
 import { ObjectId } from 'mongodb';
 
 /** @param {any} v */
@@ -14,11 +18,7 @@ export const delete_keys = (...keys) => {
 
   /**
    * @template T
-   * 
-   * 
    * @param {T} o
-   * 
-   * 
    * @returns {T}
    */
   return (o) => {
@@ -30,16 +30,9 @@ export const delete_keys = (...keys) => {
 
 /**
  * Sanitize hidden properties in-place
- * 
- * 
  * @template {object} T
- * 
- * 
  * @param {T} o 
- * 
- * 
  * @return {Omit<T, '_id' | '_relations'>}
- * 
  */
 export const sanitize_hidden = o => {
   if(!isDef(o))
@@ -53,27 +46,26 @@ export const sanitize_hidden = o => {
 }
 
 /**
- * 
- * @template T
- * 
- * 
+ * Sanitize hidden properties in-place recursively
+ * @template {object} T
  * @param {T} o 
- * 
- * 
- * @returns {T}
+ * @return {Omit<T, '_id' | '_relations'>}
  */
-export const delete_id = o => {
-  return delete_keys('_id')(o)
+export const sanitize_recursively = o => {
+  for(const k of Object.keys(o)) {
+    if(k.startsWith('_')) {
+      delete o[k];
+    } else if(typeof o[k] === 'object') {
+      sanitize_recursively(o[k]);
+    }
+  }
+  return o;
 }
 
 /**
- * 
  * Sanitize the mongo document before sending to client
- * 
  * @template T
- * 
- * 
- * @param {T} o 
+ * @param {WithRelations<T>} o 
  */
 export const sanitize_one = o => {
   return sanitize_hidden(o)
@@ -81,30 +73,31 @@ export const sanitize_one = o => {
 
 /**
  * Sanitize the mongo document before sending to client
- * 
  * @template T
- * 
- * 
- * @param {T[]} o 
- * 
+ * @param {WithRelations<T>[]} o 
  */
 export const sanitize_array = o => {
   return o?.map(sanitize_hidden);
 }
 
 /**
- * 
+ * @template T
+ * @param {T} o 
+ * @returns {T}
+ */
+export const delete_id = o => {
+  return delete_keys('_id')(o)
+}
+
+/**
  * @param {string} id 
- * 
  */
 export const to_objid = id => {
   return new ObjectId(id.split('_').at(-1))
 }
 
 /**
- * 
  * @param {string} id 
- * 
  */
 export const to_objid_safe = id => {
   try {
@@ -116,27 +109,20 @@ export const to_objid_safe = id => {
 }
 
 /**
+ * Create a `filter` for `object-id` or `handle`
  * @template {{handle?: string}} G
- * 
- * 
  * @param {string} handle_or_id 
- * 
- * 
- * @returns {import('mongodb').Filter<G>}
+ * @returns {Filter<G>}
  */
 export const handle_or_id = (handle_or_id) => {
-  return objid_or_else_filter(handle_or_id);
+  return objid_or_else_filter(handle_or_id, 'handle');
 }
 
 
 /**
  * @template {{handle?: string}} G
- * 
- * 
  * @param {string} id_or_else 
- * 
- * 
- * @returns {import('mongodb').Filter<G>}
+ * @returns {Filter<G>}
  */
 export const objid_or_else_filter = (id_or_else, else_key='handle') => {
   try {

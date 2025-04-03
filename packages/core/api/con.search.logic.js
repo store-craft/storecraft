@@ -1,6 +1,6 @@
 /**
  * @import { ApiQuery } from './types.api.query.js'
- * @import { SimilaritySearchInput, SimilaritySearchResult } from './types.api.js'
+ * @import { SimilaritySearchInput, SimilaritySearchResult, SimilaritySearchResultItem } from './types.api.js'
  */
 
 import { App } from '../index.js';
@@ -40,6 +40,7 @@ export const similarity = (app) =>
   /**
    * @description semantic search for resources in the app db.
    * @param {SimilaritySearchInput} query
+   * @return {Promise<SimilaritySearchResult>} 
    */
   async (query) => {
     assert(
@@ -60,7 +61,7 @@ export const similarity = (app) =>
       query.q, query.limit ?? 5, namespaces
     );
 
-    /** @type {SimilaritySearchResult[]} */
+    /** @type {SimilaritySearchResultItem[]} */
     const items_result = items.map(
       item => (
         {
@@ -68,14 +69,20 @@ export const similarity = (app) =>
           content: parse_json_safely(
             String(item?.document?.metadata?.json)
           ),
-          namespace: /** @type {SimilaritySearchResult["namespace"]} */(
+          namespace: /** @type {SimilaritySearchResultItem["namespace"]} */(
             item.document.namespace
           )
         }
       )
     );
 
-    return items_result;
+    return {
+      items: items_result,
+      context: {
+        metric: app.vectorstore.metric,
+        dimensions: app.vectorstore.dimensions
+      }
+    };
   }
   
 

@@ -21,9 +21,10 @@ const upsert = (driver) => {
       const t = await c.transaction().execute(
         async (trx) => {
           await insert_search_of(
-            trx, [...item.search, ...search_terms], 
+            trx, 
+            [...item.search, ...search_terms], 
             item.id, item.id, table_name
-            );
+          );
           await regular_upsert_me(trx, table_name, {
             handle: null,
             created_at: item.created_at,
@@ -51,10 +52,13 @@ const upsertBulk = (driver) => {
   return async (items, search_terms) => {
     const results = [];
     // for (const it of items)
-    for(let ix = 0; ix < items.length; ix++)
-      results.push(await upsert(driver)(
-        items[ix], search_terms?.[ix])
-        );
+    for(let ix = 0; ix < items.length; ix++) {
+      results.push(
+        await upsert(driver)(
+          items[ix], search_terms?.[ix]
+        )
+      );
+    }
 
     return results.every(b => b);
   }

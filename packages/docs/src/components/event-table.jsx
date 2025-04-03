@@ -35,7 +35,7 @@ const data = [
     events: [
       { event: 'auth/signup', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/signin', dispatches: 'Partial<AuthUserType>' },
-      { event: 'auth/refresh', dispatches: 'Partial<AuthUserType>' },
+      { event: 'auth/refresh', dispatches: 'Partial<ApiAuthResult>' },
       { event: 'auth/remove', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/upsert', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/apikey-created', dispatches: 'Partial<AuthUserType>' },

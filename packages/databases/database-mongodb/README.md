@@ -47,6 +47,31 @@ const server = http.createServer(app.handler).listen(
 
 ```
 
+## Testing Locally (I recommend to use `Atlas`)
+
+1. First start a `mongo-db` server
+First, make sure you have `docker` installed,
+Then, run
+
+```bash
+npm run database-mongodb:docker-compose-up
+```
+
+2. create Environment
+
+create `.env` file with
+
+```bash
+MONGODB_URL="mongodb://127.0.0.1:27017/?replicaSet=rs0"
+MONGODB_NAME="main"
+```
+
+3. Run `tests/runner.test.js`
+
+```bash
+npm run database-mongodb:test
+```
+
 
 ```text
 Author: Tomer Shalev <tomer.shalev@gmail.com>

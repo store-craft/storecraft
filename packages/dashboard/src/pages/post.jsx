@@ -11,7 +11,7 @@ import TagsEdit from '@/comps/tags-edit.jsx'
 import Media from '@/comps/media.jsx'
 import Attributes from '@/comps/attributes.jsx'
 import { withBling, CreateDate, Div } from '@/comps/common-ui.jsx'
-import { useDocumentActions } from '../hooks/useDocumentActions.js'
+import { useDocumentActions } from '@/hooks/use-document-actions.js'
 import { useCallback } from 'react'
 
 const root_left_schema = {
@@ -124,7 +124,7 @@ const root_schema22 = {
 
 /**
  * @param {{ 
- *  mode: import('../hooks/useDocumentActions.js').DocumentActionsMode 
+ *  mode: import('@/hooks/use-document-actions.js').DocumentActionsMode 
  * }} params
  */
 export default (
@@ -136,7 +136,7 @@ export default (
   const { id : documentId, base } = useParams();
 
   /** 
-    * @type {import('../hooks/useDocumentActions.js').HookReturnType<
+    * @type {import('@/hooks/use-document-actions.js').HookReturnType<
     *  import('@storecraft/core/api').PostType>
     * } 
     */

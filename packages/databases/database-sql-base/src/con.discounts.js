@@ -2,15 +2,19 @@
  * @import { db_discounts as db_col } from '@storecraft/core/database'
  */
 import { enums } from '@storecraft/core/api'
+import { 
+  helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db,
+  helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
+ } from '@storecraft/core/database'
 import { SQL } from '../index.js'
 import { discount_to_conjunctions } from './con.discounts.utils.js'
-import { delete_entity_values_by_value_or_reporter, 
+import { 
+  delete_entity_values_by_value_or_reporter_and_context, 
   delete_me, delete_media_of, delete_search_of, 
   delete_tags_of, insert_media_of, insert_search_of, 
-  insert_tags_of, select_entity_ids_by_value_or_reporter, regular_upsert_me, where_id_or_handle_table, 
-  with_media, with_tags,
-  count_regular,
-  with_search} from './con.shared.js'
+  insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
+  with_media, with_tags, count_regular, with_search,
+} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
@@ -36,14 +40,25 @@ const upsert = (driver) => {
           // PRODUCTS => DISCOUNTS
           //
           // remove all products relation to this discount
-          await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+          await delete_entity_values_by_value_or_reporter_and_context('products_to_discounts')(
             trx, item.id, item.handle);
+          
+          const extra_search_for_products = 
+            helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db(item);
 
-          await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
-            trx, `discount:${item.id}`);
-          await delete_entity_values_by_value_or_reporter('entity_to_search_terms')(
-            trx, `discount:${item.handle}`);
-
+          const extra_tags_for_products = 
+            helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(item);
+          
+            // maybe i should confine these to `context`=`products`
+          for(const extra_search of extra_search_for_products) {
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_search_terms')(
+              trx, extra_search);
+          }
+          for(const extra_tag of extra_tags_for_products) {
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_tags_projections')(
+              trx, extra_tag);
+          }
+  
           if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
             // make connections
             await trx
@@ -63,37 +78,44 @@ const upsert = (driver) => {
                 )
             ).execute();
 
-            await trx
-            .insertInto('entity_to_search_terms')
-            .columns(['entity_handle', 'entity_id', 'value'])
-            .expression(eb => 
-              eb.selectFrom('products')
-                .select(eb => [
-                    'handle as entity_handle',
-                    'id as entity_id',
-                    eb.val(`discount:${item.id}`).as('value'),
-                  ]
-                )
-                .where(
-                  eb => eb.and(discount_to_conjunctions(eb, item))
-                )
-            ).execute();      
-
-            await trx
-            .insertInto('entity_to_search_terms')
-            .columns(['entity_handle', 'entity_id', 'value'])
-            .expression(eb => 
-              eb.selectFrom('products')
-                .select(eb => [
-                    'handle as entity_handle',
-                    'id as entity_id',
-                    eb.val(`discount:${item.handle}`).as('value'),
-                  ]
-                )
-                .where(
-                  eb => eb.and(discount_to_conjunctions(eb, item))
-                )
-            ).execute();                     
+            for(const extra_search of extra_search_for_products) {
+              await trx
+              .insertInto('entity_to_search_terms')
+              .columns(['entity_handle', 'entity_id', 'value', 'reporter', 'context'])
+              .expression(eb => 
+                eb.selectFrom('products')
+                  .select(eb => [
+                      'handle as entity_handle',
+                      'id as entity_id',
+                      eb.val(extra_search).as('value'),
+                      eb.val(item.id).as('reporter'),
+                      eb.val('products').as('context'),
+                    ]
+                  )
+                  .where(
+                    eb => eb.and(discount_to_conjunctions(eb, item))
+                  )
+              ).execute();      
+            }
+            for(const extra_tag of extra_tags_for_products) {
+              await trx
+              .insertInto('entity_to_tags_projections')
+              .columns(['entity_handle', 'entity_id', 'value', 'reporter', 'context'])
+              .expression(eb => 
+                eb.selectFrom('products')
+                  .select(eb => [
+                      'handle as entity_handle',
+                      'id as entity_id',
+                      eb.val(extra_tag).as('value'),
+                      eb.val(item.id).as('reporter'),
+                      eb.val('products').as('context'),
+                    ]
+                  )
+                  .where(
+                    eb => eb.and(discount_to_conjunctions(eb, item))
+                  )
+              ).execute();  
+            }                    
           }
 
           ///
@@ -158,17 +180,48 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_search_of(trx, id_or_handle);
-          await delete_media_of(trx, id_or_handle);
-          await delete_tags_of(trx, id_or_handle);
+          await delete_tags_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
+          await delete_media_of(trx, id_or_handle, id_or_handle, table_name);
           // delete products -> discounts
           // PRODUCTS => DISCOUNTS
-          await delete_entity_values_by_value_or_reporter('products_to_discounts')(
+          await delete_entity_values_by_value_or_reporter_and_context('products_to_discounts')(
             trx, id_or_handle, id_or_handle);
           // STOREFRONT => DISCOUNTS
-          await delete_entity_values_by_value_or_reporter('storefronts_to_other')(
-            trx, id_or_handle, id_or_handle
+          await delete_entity_values_by_value_or_reporter_and_context('storefronts_to_other')(
+            trx, id_or_handle, id_or_handle, table_name
           );
+          // discount might have published search terms and tags for other products, 
+          // so let's remove
+          const discount_handle_and_id = await trx
+          .selectFrom('discounts')
+          .select(['handle', 'id'])
+          .where(
+            (eb) => eb.or([
+              eb('discounts.handle', '=', id_or_handle),
+              eb('discounts.id', '=', id_or_handle)
+            ])
+          )
+          .executeTakeFirst();
+
+          const extra_search_for_products = 
+            helper_compute_product_extra_search_keywords_because_of_discount_side_effect_for_db(
+              discount_handle_and_id
+            );
+
+          const extra_tags_for_products = 
+            helper_compute_product_extra_tags_because_of_discount_side_effect_for_db(
+              discount_handle_and_id
+            );
+
+          for(const extra_search of extra_search_for_products) {
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_search_terms')(
+              trx, extra_search);
+          }
+          for(const extra_tag of extra_tags_for_products) {
+            await delete_entity_values_by_value_or_reporter_and_context('entity_to_tags_projections')(
+              trx, extra_tag);
+          } 
 
           // delete me
           await delete_me(trx, table_name, id_or_handle);
@@ -220,13 +273,14 @@ const list = (driver) => {
 const list_discount_products = (driver) => {
   return async (handle_or_id, query={}) => {
 
-    // TODO: try to rewrite this with JOIN to products_to_discounts ON products.id=entity_id
-    // TODO: and then filter by value==handle_or_id_of_discount
-    // TODO: I think it will be better and more memory efficient for the database
-    // TODO: becausee right now it loads all the eligible products ids in advance
     const items = await driver.client
       .selectFrom('products')
-      .selectAll()
+      .innerJoin(
+        'products_to_discounts', 
+        'products_to_discounts.entity_id', 
+        'products.id'
+      )
+      .selectAll('products')
       .select(eb => [
         with_media(eb, eb.ref('products.id'), driver.dialectType),
         with_tags(eb, eb.ref('products.id'), driver.dialectType),
@@ -235,12 +289,13 @@ const list_discount_products = (driver) => {
         (eb) => eb.and(
           [
             query_to_eb(eb, query, 'products'),
-            eb('products.id', 'in', 
-              eb => select_entity_ids_by_value_or_reporter( // select all the product ids by discount id
-                eb, 'products_to_discounts', handle_or_id
-              )
+            eb.or(
+              [
+                eb('products_to_discounts.reporter', '=', handle_or_id),
+                eb('products_to_discounts.value', '=', handle_or_id)
+              ]
             )
-          ].filter(Boolean)
+          ].filter(Boolean)        
         )
       )
       .orderBy(query_to_sort(query, 'products'))
@@ -252,6 +307,84 @@ const list_discount_products = (driver) => {
     return sanitize_array(items);
   }
 }
+
+
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["list_all_discount_products_tags"]}
+ */
+const list_all_discount_products_tags = (driver) => {
+  return async (handle_or_id) => {
+
+    const items = await driver.client
+      .selectFrom('products')
+      .innerJoin(
+        'products_to_discounts', 
+        'products_to_discounts.entity_id', 
+        'products.id'
+      )
+      .innerJoin(
+        'entity_to_tags_projections', 
+        'entity_to_tags_projections.entity_id', 
+        'products.id'
+      )
+      .select('entity_to_tags_projections.value as tag')
+      .where(
+        (eb) => eb.or(
+          [
+            eb('products_to_discounts.reporter', '=', handle_or_id),
+            eb('products_to_discounts.value', '=', handle_or_id)
+          ]
+        )
+      )
+      .groupBy('tag')
+      .execute();
+
+      // .compile();
+      // console.log(items[0])
+
+    return items.map(e => e.tag);
+  }
+}
+
+
+/**
+ * @param {SQL} driver 
+ * @returns {db_col["count_discount_products"]}
+ */
+const count_discount_products = (driver) => {
+  return async (handle_or_id, query={}) => {
+
+    const result = await driver.client
+      .selectFrom('products')
+      .innerJoin(
+        'products_to_discounts', 
+        'products_to_discounts.entity_id', 
+        'products.id'
+      )
+      .select(
+        (eb) => eb.fn.countAll().as('count')
+      )
+      .where(
+        (eb) => eb.and(
+          [
+            query_to_eb(eb, query, 'products'),
+            eb.or(
+              [
+                eb('products_to_discounts.reporter', '=', handle_or_id),
+                eb('products_to_discounts.value', '=', handle_or_id)
+              ]
+            )
+          ].filter(Boolean)        
+        )
+      )
+      .executeTakeFirst();
+
+    return Number(result.count);
+  }
+}
+
 
 /** 
  * @param {SQL} driver
@@ -265,6 +398,8 @@ export const impl = (driver) => {
     remove: remove(driver),
     list: list(driver),
     list_discount_products: list_discount_products(driver),
+    count_discount_products: count_discount_products(driver),
+    list_all_discount_products_tags: list_all_discount_products_tags(driver),
     count: count_regular(driver, table_name),
   }
 }

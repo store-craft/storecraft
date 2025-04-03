@@ -22,7 +22,10 @@ export const zod_to_json_schema = (schema) => {
 
   // check if schema is nullable or optional
   if (schema instanceof z.ZodNullable || schema instanceof z.ZodOptional) 
-    return zod_to_json_schema(schema.unwrap());
+    return zod_to_json_schema(schema.unwrap().describe(schema.description));
+
+  if (schema instanceof z.ZodDefault) 
+    return zod_to_json_schema(schema.removeDefault().describe(schema.description));
 
   // check if schema is an array
   if (schema instanceof z.ZodArray) {
@@ -39,7 +42,7 @@ export const zod_to_json_schema = (schema) => {
     // get key/value pairs from schema
     const entries = Object.entries(schema.shape);
     // loop through key/value pairs
-    return {
+    const obj = {
       "properties": Object.fromEntries(
         entries.map(
           ([key, value]) => {
@@ -49,18 +52,37 @@ export const zod_to_json_schema = (schema) => {
           }
         )
       ),
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false
     }
+    const required = entries.filter(
+      ([key, value]) => !zod_is_optional(value)
+    ).map(
+      ([key, value]) => key
+    );
+
+    if(required.length > 0)
+      obj.required = required;
+    // console.log(JSON.stringify({obj}, null, 2));
+    return obj
   }
 
   if (schema instanceof z.ZodNumber) 
     return with_description(
-      { type: 'number', description: schema.description}, schema
+      { type: 'number' }, schema
     );
 
   if (schema instanceof z.ZodString) 
     return with_description(
-      { type: 'string', description: schema.description}, schema
+      { type: 'string' }, schema
+    );
+
+  if (schema instanceof z.ZodEnum) 
+    return with_description(
+      { 
+        type: 'string', 
+        enum: schema.options
+      }, schema
     );
 
   // return empty array
@@ -68,3 +90,17 @@ export const zod_to_json_schema = (schema) => {
     type: "unsupported"
   };
 };
+
+/**
+ * @template {z.ZodTypeAny} T 
+ * @param {T} schema 
+ */
+export const zod_is_optional = (schema) => {
+  if(schema instanceof z.ZodOptional)
+    return true;
+  if (schema instanceof z.ZodNullable) 
+    return zod_is_optional(schema.unwrap());
+  if (schema instanceof z.ZodDefault) 
+    return zod_is_optional(schema.removeDefault());
+  return false;
+}

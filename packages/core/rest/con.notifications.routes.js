@@ -6,7 +6,7 @@
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
-import { authorize_by_roles } from './con.auth.middle.js'
+import { authorize_admin } from './con.auth.middle.js'
 import { parse_query } from '../api/utils.query.js'
 
 /**
@@ -18,7 +18,7 @@ export const create_routes = (app) => {
   /** @type {ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_by_roles(app, ['admin'])
+  const middle_authorize_admin = authorize_admin(app);
 
   // save tag
   polka.post(
@@ -30,6 +30,18 @@ export const create_routes = (app) => {
       res.sendJson(final);
     }
   )
+
+  polka.get(
+    '/count_query',
+    async (req, res) => {
+      let q = (/** @type {ApiQuery<NotificationType>} */ (
+        parse_query(req.query))
+      );
+      const count = await app.api.notifications.count(q);
+
+      res.sendJson({ count });
+    }
+  );
 
   // get item
   polka.get(

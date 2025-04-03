@@ -2,10 +2,11 @@
  * @import { db_tags as db_col } from '@storecraft/core/database'
  */
 import { SQL } from '../index.js'
-import { count_regular, delete_me, delete_search_of, insert_search_of, 
+import { 
+  count_regular, delete_me, delete_search_of, insert_search_of, 
   regular_upsert_me, where_id_or_handle_table, 
-  with_media,
-  with_search} from './con.shared.js'
+  with_media, with_search
+} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -23,11 +24,14 @@ const upsert = (driver) => {
         async (trx) => {
           await insert_search_of(trx, search_terms, item.id, item.handle, table_name);
           await regular_upsert_me(trx, table_name, {
+            active: item.active ? 1 : 0,
+            description: item.description,
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
             handle: item.handle,
-            values: JSON.stringify(item.values)
+            attributes: JSON.stringify(item.attributes),
+            values: JSON.stringify(item.values),
           });
         }
       );
@@ -71,7 +75,7 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_search_of(trx, id_or_handle);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
           // delete me
           await delete_me(trx, table_name, id_or_handle);
         }

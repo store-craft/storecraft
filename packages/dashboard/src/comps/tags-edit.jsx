@@ -3,7 +3,7 @@ import { BlingButton } from "./common-button.jsx"
 import { BlingInput } from "./common-ui.jsx"
 import CapsulesView from "./capsules-view.jsx"
 import { HR } from "./common-ui.jsx"
-import useNavigateWithState from "@/hooks/useNavigateWithState.jsx"
+import useNavigateWithState from "@/hooks/use-navigate-with-state.jsx"
 import SelectResource from "./select-resource.jsx"
 
 /** @param {string} text */

@@ -42,6 +42,7 @@ export const upsert = (client) => {
             created_at: item.created_at,
             updated_at: item.updated_at,
             id: item.id,
+            active: item.active ? 1 : 0,
             title: item.title,
             handle: item.handle,
             template_html: decode_if_base64(item.template_html),
@@ -95,7 +96,8 @@ const remove = (driver) => {
         async (trx) => {
             
           // entities
-          await delete_search_of(trx, id_or_handle);
+          await delete_search_of(trx, id_or_handle, id_or_handle, table_name);
+
           // delete me
           await delete_me(trx, table_name, id_or_handle);
         }

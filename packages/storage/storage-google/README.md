@@ -5,16 +5,13 @@
        width='90%' />
 </div><hr/><br/>
 
-`fetch` ready support for an `GCP` **Storage**
+**Storecraft** supports the `Google Storage` services. The service is 
+serverless friendly. Through the `@storecraft/storage-google` package.
 
 Features:
 - Works in any `js` runtime and platform that supports `fetch`
 - Supports streaming `Get` / `Put` / `Delete`
 - Supports `presigned` `Get` / `Put` requests to offload to client
-
-```bash
-npm i @storecraft/storage-google
-```
 
 ## How-to
 1. Create a bucket at `GCP console` or even at `firebase`
@@ -26,59 +23,54 @@ Note:
 - You can use an empty constructor and upon `StoreCraft` init, the platform
 environment variables will be used by this storage if needed.
 
-```js
-import { GoogleStorage } from '@storecraft/storage-google';
 
-const storage = new GoogleStorage({
-  bucket: process.env.GS_BUCKET, 
-  client_email: process.env.GS_CLIENT_EMAIL, 
-  private_key: process.env.GS_PRIVATE_KEY, 
-  private_key_id: process.env.GS_PRIVATE_KEY_ID
-});
+## Usage
 
-// write
-await storage.putBlob(
-  'folder1/tomer.txt', 
-  new Blob(['this is some text from tomer :)'])
-);
-
-// read
-const { value } = await storage.getBlob('folder1/tomer.txt');
-const { url } = await storage.getSigned('folder1/tomer.txt');
-console.log('presign GET url ', url);
-
+```bash
+npm i @storecraft/storage-google
 ```
+  
+then,
 
-## In Storecraft App
-
-```js
+```ts
 import { App } from '@storecraft/core';
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
-import { NodePlatform } from '@storecraft/core/platform/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 
-const app = new App(
-  {
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    auth_secret_access_token: process.env.auth_secret_access_token,
-    auth_secret_refresh_token: process.env.auth_secret_refresh_token
-    auth_admins_emails: ['jonny@begood.com']
-  }
-)
+const app = new App()
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(
-  new GoogleStorage() // config inferred from env variables
+  new GoogleStorage(
+    {
+      bucket: process.env.GS_BUCKET, 
+      client_email: process.env.GS_CLIENT_EMAIL, 
+      private_key: process.env.GS_PRIVATE_KEY, 
+      private_key_id: process.env.GS_PRIVATE_KEY_ID
+    }
+  )
 );
   
 await app.init();
-await migrateToLatest(app.db, false);
-
 ```
 
+## config
+
+Storecraft will search the following `env` variables
+
+```bash
+GS_BUCKET=...
+GS_CLIENT_EMAIL=...
+GS_PRIVATE_KEY=...
+GS_PRIVATE_KEY_ID=...
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withStorage(
+  new GoogleStorage()
+)
+```
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -19,60 +19,19 @@ Note:
 environment variables will be used by this storage if needed.
 
 
-## Example
-Here is a sample of standalone `google-storage` integration
+## Usage
 
 ```bash
 npm i @storecraft/storage-google
 ```
+  
+then,
 
-### usage
-
-```js
-import { GoogleStorage } from '@storecraft/storage-google';
-
-const storage = new GoogleStorage(
-  {
-    bucket: process.env.GS_BUCKET, 
-    client_email: process.env.GS_CLIENT_EMAIL, 
-    private_key: process.env.GS_PRIVATE_KEY, 
-    private_key_id: process.env.GS_PRIVATE_KEY_ID
-  }
-);
-
-// write
-await storage.putBlob(
-  'folder1/tomer.txt', 
-  new Blob(['this is some text from tomer :)'])
-);
-
-// read
-const { value } = await storage.getBlob('folder1/tomer.txt');
-const { url } = await storage.getSigned('folder1/tomer.txt');
-
-console.log('presign GET url ', url);
-```
-
-
-## In Storecraft App
-
-```js
+```ts
 import { App } from '@storecraft/core';
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
-import { NodePlatform } from '@storecraft/core/platform/node';
 import { GoogleStorage } from '@storecraft/storage-google';
 
-const app = new App(
-  {
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    auth_secret_access_token: process.env.auth_secret_access_token,
-    auth_secret_refresh_token: process.env.auth_secret_refresh_token
-    auth_admins_emails: ['jonny@begood.com']
-  }
-)
+const app = new App()
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(
@@ -87,6 +46,24 @@ const app = new App(
 );
   
 await app.init();
-await migrateToLatest(app.db, false);
-
 ```
+
+## config
+
+Storecraft will search the following `env` variables
+
+```bash
+GS_BUCKET=...
+GS_CLIENT_EMAIL=...
+GS_PRIVATE_KEY=...
+GS_PRIVATE_KEY_ID=...
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withStorage(
+  new GoogleStorage()
+)
+```
+

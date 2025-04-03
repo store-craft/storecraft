@@ -462,6 +462,11 @@ export const create = app => {
     )
 
     // console.log({events})
+    { // confirm the auth-user has been confirmed
+      const au = await app.api.auth.get_auth_user(email);
+      assert.ok(au, 'auth user not found');
+      assert.ok(au.confirmed_mail, 'auth user not confirmed');
+    }
 
     { // check `auth/confirm-email-token-confirmed` event
       const event = events['auth/confirm-email-token-confirmed'];

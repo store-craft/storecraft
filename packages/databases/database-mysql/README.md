@@ -27,8 +27,6 @@ import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
 const app = new App(
   {
     auth_admins_emails: ['admin@sc.com'],
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
 )
 .withPlatform(new NodePlatform())
@@ -57,6 +55,23 @@ const server = http.createServer(app.handler).listen(
   }
 ); 
 
+```
+
+Storecraft will search the following `env` variables
+
+```bash
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=main
+MYSQL_PORT=3306
+MYSQL_HOST=localhost
+```
+
+So, you can instantiate with empty config
+```ts
+.withDatabase(
+  new MySQL()
+)
 ```
 
 ## Testing Locally

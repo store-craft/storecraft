@@ -1,5 +1,7 @@
 # Post**gres**
 
+[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)
+
 Official `Postgres` driver for `StoreCraft` using `pg` package.
 
 ```bash
@@ -13,15 +15,13 @@ import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { Postgres } from '@storecraft/database-postgres';
 import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
-import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const app = new App(
   {
     auth_admins_emails: ['admin@sc.com'],
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
 )
 .withPlatform(new NodePlatform())
@@ -49,16 +49,32 @@ const server = http.createServer(app.handler).listen(
 
 ```
 
+Storecraft will search the following `env` variables
+
+```bash
+POSTGRES_USER='admin'
+POSTGRES_PASSWORD='admin'
+POSTGRES_PORT=6432
+POSTGRES_HOST='localhost'
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withDatabase(
+  new Postgres()
+)
+```
+
+
 ## Testing Locally
 
-1. First setup a `postgres` server
+1. First start a `postgres` server
+First, make sure you have `docker` installed,
+Then, run
 
-```zsh
-docker pull postgres
-docker run --name some-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin \
-          -e PGDATA=/var/lib/postgresql/data/pgdata \
-	        -v $(pwd):/var/lib/postgresql/data \
-          -p 5432:5432 -d postgres
+```bash
+npm run database-postgres:docker-compose-up
 ```
 
 2. create Environment
@@ -66,8 +82,14 @@ docker run --name some-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admi
 create `.env` file with
 
 ```bash
-POSTGRES_USER='user'
-POSTGRES_PASSWORD='password'
-POSTGRES_PORT=5432
+POSTGRES_USER='admin'
+POSTGRES_PASSWORD='admin'
+POSTGRES_PORT=6432
 POSTGRES_HOST='localhost'
+```
+
+3. Run `tests/runner.test.js`
+
+```bash
+npm run database-postgres:test
 ```

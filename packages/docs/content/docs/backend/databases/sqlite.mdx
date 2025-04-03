@@ -1,5 +1,7 @@
 # SQL**ite**
 
+[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)
+
 Official `SQLite` driver for `StoreCraft` using `better-sqlite` package.
 
 ```bash
@@ -13,26 +15,24 @@ import 'dotenv/config';
 import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { SQLite } from '@storecraft/database-sqlite'
 import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js'
-import { NodeLocalStorage } from '@storecraft/core/storage/node'
 
 const app = new App(
   {
     auth_admins_emails: ['admin@sc.com'],
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
 )
 .withPlatform(new NodePlatform())
 .withDatabase(
   new SQLite(
     { 
-      filename: join(homedir(), 'db.sqlite') 
+      filepath: join(homedir(), 'db.sqlite') 
     }
   )
 )
-.withStorage(new NodeLocalStorage('storage'))
+.withStorage(new NodeLocalStorage())
 
 await app.init();
 await migrateToLatest(app.db, false);
@@ -44,4 +44,26 @@ const server = http.createServer(app.handler).listen(
   }
 ); 
 
+```
+
+Storecraft will search the following `env` variables
+
+```bash
+SQLITE_FILEPATH=./data.db
+```
+
+So, you can instantiate with empty config
+```ts
+.withDatabase(
+  new SQLite()
+)
+```
+
+
+## Testing Locally
+
+Simply run `tests/runner.test.js`
+
+```bash
+npm run database-sqlite:test
 ```

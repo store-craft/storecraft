@@ -1,22 +1,11 @@
-# Turso (libsql)
+# libSQL (sqlite)
 
-Official `libSql` / `Turso` driver for `StoreCraft` on any platform.
+Official `libSql` driver for `StoreCraft` on any platform.
 Includes a vector store.
 
 ```bash
 npm i @storecraft/database-turso
 ```
-
-## Setup
-You can run a local database,
-
-or,
-
-connect to a cloud `libsql` and `Turso` platform
-- First, login to your [turso](https://turso.tech) account.
-- Create a database.
-- Create an API Key.
-
 
 ## usage
 
@@ -38,10 +27,7 @@ const app = new App(
 .withDatabase(
   new Turso(
     { 
-      prefers_batch_over_transactions: true,
-      // all of these configurations can be inferred by env variables at init
-      url: process.env.LIBSQL_URL,
-      authToken: process.env.LIBSQL_API_TOKEN,
+      url: 'file:local.db',
     }
   )
 )
@@ -50,8 +36,7 @@ const app = new App(
   new LibSQLVectorStore(
     {
       embedder: new OpenAIEmbedder(),
-      url: process.env.LIBSQL_URL,
-      authToken: process.env.LIBSQL_API_TOKEN,
+      url: 'file:local-vector.db'
     }
   )
 )
@@ -69,11 +54,13 @@ const server = http.createServer(app.handler).listen(
 
 ```
 
+
 Storecraft will search the following `env` variables
 
 ```bash
-LIBSQL_URL=libsql://<your_database_name>.something.com
-LIBSQL_AUTH_TOKEN=your_api_key
+LIBSQL_URL=./data.db
+// optional, if absent will use the same as LIBSQL_URL
+LIBSQL_VECTOR_URL=./data-vector.db
 ```
 
 So, you can instantiate with empty config

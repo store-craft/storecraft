@@ -12,9 +12,9 @@ const areBlobsEqual = async (blob1, blob2) => {
 };
 
 const storage = new R2({
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
   account_id: process.env.CF_ACCOUNT_ID,
   bucket: process.env.S3_BUCKET,
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 });
 

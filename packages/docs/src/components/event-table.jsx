@@ -41,10 +41,28 @@ const data = [
       { event: 'auth/apikey-created', dispatches: 'Partial<AuthUserType>' },
       { event: 'auth/change-password', dispatches: 'Partial<AuthUserType>' },
 
-      { event: 'auth/confirm-email-token-generated', dispatches: '{ auth_user: Partial<AuthUserType>, token: string }' },
+      { 
+        event: 'auth/confirm-email-token-generated', 
+        dispatches: `
+  { 
+    auth_user: Partial<AuthUserType>, 
+    token: string 
+  }
+
+` 
+  },
       { event: 'auth/confirm-email-token-confirmed', dispatches: 'Partial<AuthUserType>' },
 
-      { event: 'auth/forgot-password-token-generated', dispatches: '{ auth_user: Partial<AuthUserType>, token: string }' },
+      { 
+        event: 'auth/forgot-password-token-generated', 
+        dispatches: `
+  { 
+    auth_user: Partial<AuthUserType>, 
+    token: string 
+  }
+    
+` 
+      },
       { event: 'auth/forgot-password-token-confirmed', dispatches: 'Partial<AuthUserType>' },
     ]
   },
@@ -52,7 +70,16 @@ const data = [
     name: 'email',
     events: [
       { event: 'email/before-send', dispatches: 'Partial<MailObject>' },
-      { event: 'email/after-send', dispatches: '{ mail_object: Partial<MailObject>, mail_response: Partial<MailResponse> }' },
+      { 
+        event: 'email/after-send', 
+        dispatches: `
+  {
+    mail_object: Partial<MailObject>, 
+    mail_response: Partial<MailResponse> 
+  }
+    
+` 
+      },
     ]
   },
   {
@@ -220,8 +247,9 @@ return (
                         text-kf-500 dark:text-kf-400' />
             <td
                 className='pl-5 tracking-widest font-semibold 
-                        text-pink-500 dark:text-pink-400 w-10
-                          --max-w-xs overflow-x-scroll' >
+                  text-pink-500 dark:text-pink-400 --w-10
+                  flex flex-row justify-end
+                    --max-w-xs overflow-x-scroll' >
               <pre children={it.dispatches} 
                   className='p-0 text-sm bg-slate-200/10 dark:bg-slate-500/10 
                         text-pink-500 dark:text-pink-400'/>

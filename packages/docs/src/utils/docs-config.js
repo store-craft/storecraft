@@ -68,6 +68,11 @@ export default {
           empty: true,
           groups: [
             {
+              title: 'SQLite (with libsql)',
+              route: 'backend/databases/libsql',
+              path: 'content/docs/backend/databases/libsql.mdx'
+            },
+            {
               title: 'SQLite',
               route: 'backend/databases/sqlite',
               path: 'content/docs/backend/databases/sqlite.mdx'
@@ -125,9 +130,19 @@ export default {
               path: 'content/docs/backend/storage/storage-local.mdx'
             },
             {
-              title: 'S3 Compatible',
+              title: 'AWS S3',
               route: 'backend/storage/s3',
               path: 'content/docs/backend/storage/s3.mdx'
+            },
+            {
+              title: 'Cloudflare R2',
+              route: 'backend/storage/r2',
+              path: 'content/docs/backend/storage/r2.mdx'
+            },
+            {
+              title: 'Any S3 Compatible',
+              route: 'backend/storage/s3-compatible',
+              path: 'content/docs/backend/storage/s3-compatible.mdx'
             },
             {
               title: 'Google Storage',
@@ -283,7 +298,29 @@ export default {
         {
           title: '🔑 Auth',
           route: 'backend/auth',
-          path: 'content/docs/backend/auth/overview.mdx'
+          empty: true,
+          groups: [
+            {
+              title: 'JWT',
+              route: 'backend/auth/jwt',
+              path: 'content/docs/backend/auth/jwt.mdx'
+            },
+            {
+              title: 'Basic Auth',
+              route: 'backend/auth/basic',
+              path: 'content/docs/backend/auth/basic.mdx'
+            },
+            {
+              title: 'API Keys',
+              route: 'backend/auth/api-keys',
+              path: 'content/docs/backend/auth/api-keys.mdx'
+            },
+            {
+              title: 'Social Auth',
+              route: 'backend/auth/social-auth',
+              path: 'content/docs/backend/auth/social-auth.mdx'
+            },
+          ]
         },
         {
           title: '🧪 Extensions',

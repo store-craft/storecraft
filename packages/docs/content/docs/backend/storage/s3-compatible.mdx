@@ -1,0 +1,66 @@
+# S3 Compatible **Storage**
+
+**Storecraft** supports the `S3` compatible storage services. 
+This includes serverless `http` based friendly integrations with:
+- `AWS S3`
+- `Cloudflare R2`
+- `Digital Ocean Spaces`
+- `MinIO`
+
+through the `@storecraft/storage-s3-compatible` package.
+
+## Features
+- Works in any `js` runtime and platform that supports `fetch`
+- Supports streaming `Get` / `Put` / `Delete`
+- Supports `presigned` `Get` / `Put` requests to offload to client
+- Configurable `endpoint` for custom `S3` compatible services such as `MinIO` images
+
+
+```bash
+npm i @storecraft/storage-s3-compatible
+```
+
+### usage
+
+```js
+import { App } from '@storecraft/core';
+import { S3CompatibleStorage } from '@storecraft/storage-s3-compatible'
+
+const app = new App()
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(
+  new S3CompatibleStorage(
+    {
+      endpoint: process.env.S3_ENDPOINT,
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      bucket: process.env.S3_BUCKET,
+      region: process.env.S3_REGION
+      forcePathStyle: true,
+    }
+  )
+);
+
+await app.init();
+```
+
+## config
+
+Storecraft will search the following `env` variables
+
+```bash
+S3_ENDPOINT=...
+S3_BUCKET=...
+S3_REGION=...
+S3_ACCESS_KEY_ID=...
+S3_SECRET_KEY=...
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withStorage(
+  new S3CompatibleStorage()
+)
+```

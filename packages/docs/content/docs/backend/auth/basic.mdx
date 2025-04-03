@@ -1,0 +1,39 @@
+# Basic Auth
+
+**Storecraft** **API** supports secured endpoints, via **Basic Auth**
+
+> Authentication is usually used via the **REST API**, be sure to check the relevant docs
+
+First,
+
+```ts
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+
+await app.init();
+
+```
+
+## Basic Auth
+
+Basic Auth is used for direct access to the API, via **email** and **password**.
+This is useful for testing or debugging purposes, but is inefficient for production use,
+because the backend will have to verify the credentials for each request against a hashed
+password in the database.
+
+### Example 
+
+Each Basic Auth is a `base64` encoded string of the format `{email}:{password}`
+
+```ts
+const KEY = base64(`${email}:${password}`)
+```
+
+Then, in http headers
+
+
+```txt
+Authorization: Basic {KEY}
+```

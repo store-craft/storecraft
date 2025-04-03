@@ -72,11 +72,9 @@ export const TOC = (
     , [headings]
   );
 
-      
   return (
   <div {...rest} >
-    <div className='px-4 flex flex-col font-semibold antialiased gap-3 
-          
+    <div className='px-4 flex flex-col font-semibold antialiased gap-5 
           overflow-y-scroll overflow-x-clip text-sm w-full h-fit max-h-full border-l 
           border-gray-400/10 pb-10'>
       <div 
@@ -85,16 +83,23 @@ export const TOC = (
                 prose prose-slate --font-bold text-base/8 mb-2'/>        
 
       {
-        headings_with_handles.map(
+        headings_with_handles.slice(1).map(
           (h, ix) => (
             <Link 
                 key={ix}
                 href={'#' + h.handle} 
                 className={
-                  `opacity-70 text-ellipsis --dark:hover:text-white hover:text-pink-400 ${lvl2pl[h.level-1]} ` + (h.handle===hash ? 'text-pink-500 ' : '')
+                  `opacity-80 font-normal text-ellipsis 
+                  --dark:hover:text-white hover:text-pink-400 
+                  --${lvl2pl[h.level-1]} ` 
+                  + (h.handle===hash ? 'text-pink-400 ' : '')
                 }>
-                <MDView value={(h.level>1 ? '' : '') + (h.text??chop_words(h.text, 10))} />
-              </Link>
+              <MDView 
+                value={
+                  (h.text.toLowerCase() ?? chop_words(h.text, 10))
+                } 
+                className='capitalize' />
+            </Link>
           )
         )
       }

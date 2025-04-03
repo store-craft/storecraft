@@ -1,0 +1,63 @@
+# Api Keys
+
+**Storecraft** **API** supports secured endpoints, via **API Keys**, given to third party servers.
+
+> Authentication is usually used via the **REST API**, be sure to check the relevant docs
+
+First,
+
+```ts
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+
+await app.init();
+
+```
+
+## API Keys
+
+**API** keys are typically issued for a 3rd party server or integration, that you trust and OWN.
+Each API key will create a new Authenticated User with credentials (username and password),
+embedded in the api key.
+
+> In the future, we will add roles for API Keys, so you can issue a key with limited access to certain resources.
+
+> A conveniant way to manage API Keys is in the Dashboard Settings Page
+
+### Example Create APIKey
+
+```ts
+import type { ApiKeyResult } = '@storecraft/core/api';
+
+const apikeyResult: ApiKeyResult = await app.api.auth.create_api_key();
+
+apikeyResult.apikey
+```
+
+Will produce,
+
+```json
+{
+  apikey: "YXVfNjY3OTRhNjBhN2NhMmQzZDdlNTZiZjRmQGFwaWtleS5zdG9yZWNyYWZ0LmFwaTpoUnNsMHFLcW1oQm0yQ0tKa0I1VTVnTnhnZElXcl95aWs3akI4amF6V0I3ckJ1YllyeEZRQ290QTh0QTRScEdWQkFLTzh5Um5HUHo3d0UtTDJGSTRQQQ"
+}
+```
+
+If you `base64` decode the `apikey` and split by `:` character, you will get
+
+```json
+// {user ID}@{Email}
+au_66794a60a7ca2d3d7e56bf4f@apikey.storecraft.api
+
+// password
+hRsl0qKqmhBm2CKJkB5U5gNxgdIWr_yik7jB8jazWB7rBubYrxFQCotA8tA4RpGVBAKO8yRnGPz7wE-L2FI4PA
+```
+
+> 3rd party services use this key with
+
+Then, in http headers
+
+```txt
+X-API-KEY: YXVfNjY3OTRhNjBhN2NhMmQzZDdlNTZiZjRmQGFwaWtleS5zdG9yZWNyYWZ0LmFwaTpoUnNsMHFLcW1oQm0yQ0tKa0I1VTVnTnhnZElXcl95aWs3akI4amF6V0I3ckJ1YllyeEZRQ290QTh0QTRScEdWQkFLTzh5Um5HUHo3d0UtTDJGSTRQQQ
+```

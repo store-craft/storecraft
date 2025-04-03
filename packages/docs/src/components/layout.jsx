@@ -1,3 +1,6 @@
+/**
+ * @import { PostPageProps } from '../../pages/docs/[[...slug]].js'
+ */
 import SideBar, { SideBarSmall } from './side-bar.jsx'
 import Header from './header.jsx'
 import Copyright from './copyright.jsx'
@@ -10,7 +13,7 @@ import TOC from './toc.jsx'
 
 /**
  * @typedef {object} LayoutParams
- * @prop {import('../../pages/docs/[[...slug]].js').PostPageProps["data"] & 
+ * @prop {PostPageProps["data"] & 
  *  { content_hydrated: JSX.Element }
  * } data
  * @prop {string} [className]
@@ -50,33 +53,34 @@ const Layout = (
 
   return (
   <div className={`${className} ${darkMode ? 'dark' : ''}`}>
-    <div className={`relative w-full h-screen flex flex-col 
-                     transition-colors overflow-clip font-inter
-                     bg-white dark:bg-gray-900
-                     text-gray-800 dark:text-gray-300`
-                    }>
+    <div className={
+      `relative w-full h-screen flex flex-col 
+      transition-colors overflow-clip font-inter
+      bg-white dark:bg-gray-900
+      text-gray-800 dark:text-gray-300`
+    }>
 
       <Header 
-          className='absolute inset-0 px-3
-                   bg-white/10 dark:bg-transparent backdrop-blur-sm 
-                     shadow-sm md:px-10 flex-shrink-0 
-                     w-full z-40 ' 
-          slug={slug} 
-          prefix={header_prefix}
-          onMenuClick={toggleMenu} 
-          github_link={github_link} />
+        className='absolute inset-0 px-3
+        bg-white/10 dark:bg-transparent backdrop-blur-sm 
+          shadow-sm md:px-4 flex-shrink-0 
+          w-full z-40 ' 
+        slug={slug} 
+        onMenuClick={toggleMenu} 
+      />
 
-      <main className='flex flex-row w-full h-full'>
+      <main className='flex flex-row w-full h-full --pt-[80px]'>
 
         <SideBar 
-            className='hidden md:block w-72 h-full overflow-auto text-xs
-                       flex-shrink-0 px-3 pt-[100px] pb-10 pl-10'
+            className='hidden md:block w-60 h-full overflow-auto text-xs
+                       flex-shrink-0 px-3 pt-[80px] pb-10 pl-2
+                       border-r border-gray-400/20 dark:border-gray-400/10'
             selectedSlug={slug}
             groups={groups} 
             />
 
         <div ref={main_ref} 
-             className={`flex-1 w-full items-stretch h-full 
+             className={`flex-1 w-full items-stretch h-full pt-[130px] md:pt-[80px]
                        overflow-y-auto ` + (headings?.length ? 'xl:pr-[19rem]' : '')}>
           <GradStroke className='w-full h-[550px] absolute right-10 top-0 
                     opacity-20 dark:opacity-30 z-0 pointer-events-none' />
@@ -87,26 +91,34 @@ const Layout = (
                       opacity-10 md:opacity-10 md:dark:opacity-0 pointer-events-none'
                       via='via-pink-400' /> */}
 
-          <div className={`relative w-full ${slug==='rest-api/api' ? 'w-full' : 'max-w-3xl'} h-fit mx-auto flex flex-col`}>
+          <div className={`relative w-full ${slug==='rest-api/api' ? 'w-full' : 'max-w-[692px]'} h-fit mx-auto flex flex-col`}>
             <div 
-                className={`--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
-                          pt-[130px] md:pt-[90px] prose prose-base
-                          prose-slate text-[16px] font-light
-                          prose-h1:text-3xl prose-h1:font-medium
-                          text-base max-w-none h-full
-                          dark:prose-invert decoration-from-font 
-                          subpixel-antialiased z-10 
-                          text-slate-800 dark:text-slate-300`}
-                children={content_hydrated} />
+                className={
+                  `--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
+                    --pt-[130px] --md:pt-[60px] prose prose-base
+                    prose-slate text-[16px] font-light
+                    prose-h1:text-3xl prose-h1:font-thin prose-h1:mb-12
+                    prose-h2:text-xl prose-h2:font-thin
+                    prose-h3:text-lg prose-h3:font-thin
+                    prose-code:before:hidden prose-code:after:hidden
+                    text-base max-w-none h-full
+                    dark:prose-invert decoration-from-font 
+                    subpixel-antialiased z-10 
+                    text-slate-800 dark:text-gray-400`
+                }
+                children={content_hydrated} 
+            />
             <Copyright />               
           </div>
 
           {
             headings?.length && 
             <TOC
-                headings={headings} 
-                className='pt-[100px] h-full w-[19rem]  --bg-red-300 
-                        hidden xl:flex flex-none top-0 right-0 fixed '/>
+              headings={headings} 
+              className='pt-[80px] h-full w-[19rem]  --bg-red-300 
+                hidden xl:flex flex-none top-0 right-0 fixed 
+                border-l border-gray-400/20 dark:border-gray-400/10'
+            />
             
           }
 

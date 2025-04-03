@@ -12,8 +12,6 @@ Supports wellknown http-based `serverless` friendly `email` providers,
 - [Mailchimp](https://mailchimp.com/developer/transactional/api/messages/send-new-message/)
 - [Mailgun](https://documentation.mailgun.com/en/latest/api-sending.html#examples)
 
-> TODO: confirm tests
-
 ```bash
 npm i @storecraft/mailer-providers-http
 ```
@@ -23,91 +21,141 @@ npm i @storecraft/mailer-providers-http
 ### Sendgrid
 
 ```js
+import { App } from '@storecraft/core';
 import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 
-const mailer = new SendGrid(
-  {
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(
+  new SendGrid(
+    {
       apikey: process.env.SEND_GRID_SECRET
-  }
+    }
+  )
 );
 
+await app.init();
+```
 
-let { success, native_response } = await mailer.email({
-  from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, // sender address
-  to: [ { address: process.env.TO_EMAIL } ], // list of receivers
-  subject: 'subject test', // Subject line
-  text: 'plain text test', // plain text body
-  html: '<p>html test</p>', // html body
-});
+Storecraft will search the following `env` variables
 
+```bash
+SENDGRID_API_KEY=<key>
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withMailer(
+  new SendGrid()
+)
 ```
 
 ### Resend
 ```js
+import { App } from '@storecraft/core';
 import { Resend } from '@storecraft/mailer-providers-http/resend';
 
-const mailer = new Resend(
-  {
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(
+  new Resend(
+    {
       apikey: process.env.RESEND_API_KEY
-  }
+    }
+  )
 );
 
-let { success, native_response } = await mailer.email({
-  from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, // sender address
-  to: [ { address: process.env.TO_EMAIL } ], // list of receivers
-  subject: 'subject test', // Subject line
-  text: 'plain text test', // plain text body
-  html: '<p>html test</p>', // html body
-});
-
+await app.init();
 ```
 
+Storecraft will search the following `env` variables
+
+```bash
+RESEND_API_KEY=<key>
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withMailer(
+  new Resend()
+)
+```
 
 ### Mailchimp
 
 ```js
+import { App } from '@storecraft/core';
 import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';
 
-const mailer = new MailChimp(
-  {
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(
+  new MailChimp(
+    {
       apikey: process.env.MAILCHIMP_API_KEY
-  }
+    }
+  )
 );
 
-let { success, native_response } = await mailer.email({
-  from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, // sender address
-  to: [ { address: process.env.TO_EMAIL } ], // list of receivers
-  subject: 'subject test', // Subject line
-  text: 'plain text test', // plain text body
-  html: '<p>html test</p>', // html body
-});
+await app.init();
+```
+Storecraft will search the following `env` variables
 
+```bash
+MAILCHIMP_API_KEY=<key>
 ```
 
+So, you can instantiate with empty config
+
+```ts
+.withMailer(
+  new MailChimp()
+)
+```
 
 ### Mailgun
 
 ```js
+
+import { App } from '@storecraft/core';
 import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';
 
-const mailer = new Mailgun(
-  {
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withMailer(
+  new Mailgun(
+    {
       apikey: process.env.MAILGUN_API_KEY
-  }
+    }
+  )
 );
 
-let { success, native_response } = await mailer.email(
-  {
-    from: {name: 'bob 👻', address: process.env.FROM_EMAIL }, // sender address
-    to: [ { address: process.env.TO_EMAIL } ], // list of receivers
-    subject: 'subject test', // Subject line
-    text: 'plain text test', // plain text body
-    html: '<p>html test</p>', // html body
-  }
-);
-
+await app.init();
 ```
 
+Storecraft will search the following `env` variables
+
+```bash
+MAILGUN_API_KEY=<key>
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withMailer(
+  new Mailgun()
+)
+```
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -1,0 +1,153 @@
+# Social Auth
+
+**Storecraft** **API** supports secured endpoints, via **Social Auth**.
+
+We support, out of the box:
+- Google Auth
+- Facebook Auth
+- X / Twitter Auth
+- Github Auth
+- You can roll your own
+
+First,
+
+```ts
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new GoogleStorage())
+.withAuthProviders(
+  {
+    google: new GoogleAuth(),
+    github: new GithubAuth(),
+    facebook: new FacebookAuth(),
+    x: new XAuth(),
+    dummy: new DummyAuth(),
+  }
+)
+
+await app.init();
+```
+
+Then, setup an application in the relevant provider, and set the redirect URL to
+the appropriate endpoint in your application.
+
+In addition, make sure to add redirect URL for yourself and the `storecraft` dashboard
+with the handle of the `provider`, for example
+```txt
+https://your-storecraft-app.com/api/dashboard?provider=google
+http://localhost:8000/api/dashboard?provider=google
+```
+
+Also, make sure to set the relevant environment variables for each provider
+
+```bash
+IDP_GOOGLE_CLIENT_ID=<key>
+IDP_GOOGLE_CLIENT_SECRET=<key>
+
+FACEBOOK_APP_ID=<key>
+FACEBOOK_APP_SECRET=<key>
+
+IDP_X_CONSUMER_API_KEY=<key>
+IDP_X_CONSUMER_API_SECRET=<key>
+
+IDP_GITHUB_CLIENT_ID=<key>
+IDP_GITHUB_CLIENT_SECRET=<key>
+```
+
+## USAGE
+
+You will want to invoke the `POST /auth/identity-providers/create-authorization-uri` endpoints
+
+```txt
+POST /auth/identity-providers/create-authorization-uri
+```
+
+with 
+
+```json
+{
+  "provider": "google",
+  "redirect_uri": "http://your-app.com/auth/google"
+}
+```
+
+Then, you recieve 
+```json
+{
+  "uri": "https://accounts.google.com/o/oauth2/v2/auth?client_id=1234567890-abc.apps.googleusercontent.com&redirect_uri=http://localhost:8000/api/dashboard?provider=google&response_type=code&scope=openid%20email%20profile&state=xyz"
+}
+```
+
+Then, you can redirect the user to the `uri`.
+When the user is redirected back to the redirect URL, you will receive query parameter such as `code` and `state` parameters.
+Aggregate all of the query parameters in `http://your-app.com/auth/google` 
+
+For exmaple,
+
+```txt
+http://your-app.com/auth/google?code=4/0AY0e-g5v1xk2g3j&state=xyz
+```
+
+So, 
+
+```js
+authorization_response = {
+  code: "4/0AY0e-g5v1xk2g3j",
+  state: "xyz"
+}
+```
+
+Then, you can invoke the auth provider signin/signup endpoint
+
+```txt
+POST
+/auth/identity-providers/sign
+```
+
+with 
+
+```json
+{
+  "provider": "google",
+  "redirect_uri": "http://your-app.com/auth/google",
+  "authorization_response": {
+    "code": "4/0AY0e-g5v1xk2g3j",
+    "state": "xyz"
+  }
+}
+```
+
+You get in response a **JWT** response
+
+```json
+{
+  "token_type": "Bearer",
+  "user_id": "au_663a48545a4aa016d5ab4f23",
+  "access_token": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhNDg1NDVhNGFhMDE2ZDVhYjRmMjMiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTkyMTgxOTAsImV4cCI6MTcxOTIyMTc5MH0.rWG1___wuq2liHfVhE5_RLlPy-vv9roU8YmwU9iSoGE",
+    "claims": {
+      "sub": "au_663a48545a4aa016d5ab4f23",
+      "roles": [
+        "admin"
+      ],
+      "iat": 1719218190,
+      "exp": 1719221790
+    }
+  },
+  "refresh_token": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdV82NjNhNDg1NDVhNGFhMDE2ZDVhYjRmMjMiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MTkyMTgxOTAsImV4cCI6MTcxOTgyMjk5MCwiYXVkIjoiL3JlZnJlc2gifQ.Li-c8IXT4POSV_a2fVlf33fxZUqIqs6ar2w4YrRUk6Q",
+    "claims": {
+      "sub": "au_663a48545a4aa016d5ab4f23",
+      "roles": [
+        "admin"
+      ],
+      "iat": 1719218190,
+      "exp": 1719822990,
+      "aud": "/refresh"
+    }
+  }
+}
+```
+
+That's it.

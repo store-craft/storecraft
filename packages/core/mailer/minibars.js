@@ -312,23 +312,23 @@ const _m = {
     }
   },
 
-  compile_OLD : function(text, opt) {
-    if(!opt) opt = {};
-    _m.opt = opt;
-    _m.stack = [];
-    _m.scope = 'data';
-    var tokens = _m.tokenize((text || '').trim());
-    var code = _m.tokensToCode(tokens, opt);
-    //console.log('code', code);
-    if(_m.stack.length != 0) {
-      var e = function() { return('template error: un-closed blocks'); };
-      e.error = e();
-      return(e);      
-    } else {
-      // straight-up string concat seems to be the fastest option
-      return(eval('(function(data) { "use strict"; if(!data) data = {}; var o = ""; '+code+' return(o); })'));
-    }
-  },
+  // compile_OLD : function(text, opt) {
+  //   if(!opt) opt = {};
+  //   _m.opt = opt;
+  //   _m.stack = [];
+  //   _m.scope = 'data';
+  //   var tokens = _m.tokenize((text || '').trim());
+  //   var code = _m.tokensToCode(tokens, opt);
+  //   //console.log('code', code);
+  //   if(_m.stack.length != 0) {
+  //     var e = function() { return('template error: un-closed blocks'); };
+  //     e.error = e();
+  //     return(e);      
+  //   } else {
+  //     // straight-up string concat seems to be the fastest option
+  //     return(eval('(function(data) { "use strict"; if(!data) data = {}; var o = ""; '+code+' return(o); })'));
+  //   }
+  // },
   
 }
 

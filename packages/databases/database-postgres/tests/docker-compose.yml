@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres
+    container_name: test-postgres
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"

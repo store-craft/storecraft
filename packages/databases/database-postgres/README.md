@@ -58,14 +58,12 @@ const server = http.createServer(app.handler).listen(
 
 ## Testing Locally
 
-1. First setup a `postgres` server
+1. First start a `postgres` server
+First, make sure you have `docker` installed,
+Then, run
 
-```zsh
-docker pull postgres
-docker run --name some-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin \
-          -e PGDATA=/var/lib/postgresql/data/pgdata \
-	        -v $(pwd):/var/lib/postgresql/data \
-          -p 5432:5432 -d postgres
+```bash
+npm run database-postgres:docker-compose-up
 ```
 
 2. create Environment
@@ -73,9 +71,9 @@ docker run --name some-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admi
 create `.env` file with
 
 ```bash
-POSTGRES_USER='user'
-POSTGRES_PASSWORD='password'
-POSTGRES_PORT=5432
+POSTGRES_USER='admin'
+POSTGRES_PASSWORD='admin'
+POSTGRES_PORT=6432
 POSTGRES_HOST='localhost'
 ```
 

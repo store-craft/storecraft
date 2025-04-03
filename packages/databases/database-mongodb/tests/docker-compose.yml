@@ -1,6 +1,7 @@
 services:
   mongo1:
     image: mongo:latest
+    container_name: test-mongodb
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     ports:
       - 27017:27017

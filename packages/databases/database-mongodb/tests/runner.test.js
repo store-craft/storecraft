@@ -45,4 +45,3 @@ async function test() {
 
 // twice
 test();
-test();

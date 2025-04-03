@@ -33,6 +33,7 @@
     }
   },
   "scripts": {
+    "database-mongodb:docker-compose-up": "docker compose -f ./tests/docker-compose.yml up -d ",
     "database-mongodb:test": "node ./tests/runner.test.js",
     "test": "npm run database-mongodb:test",
     "prepublishOnly": "npm version patch --force",

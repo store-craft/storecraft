@@ -68,6 +68,11 @@ export default {
           empty: true,
           groups: [
             {
+              title: 'SQLite (with libsql)',
+              route: 'backend/databases/libsql',
+              path: 'content/docs/backend/databases/libsql.mdx'
+            },
+            {
               title: 'SQLite',
               route: 'backend/databases/sqlite',
               path: 'content/docs/backend/databases/sqlite.mdx'

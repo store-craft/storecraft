@@ -1,4 +1,4 @@
-# Storecraft MongoDB driver for Node.js
+# Storecraft MongoDB driver for node / deno / bun
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
@@ -28,14 +28,27 @@ import { MongoVectorStore } from '@storecraft/database-mongodb/vector-store'
 
 const app = new App()
 .withPlatform(new NodePlatform())
-.withDatabase(new MongoDB({}))
+.withDatabase(
+  new MongoDB(
+    {
+      url: 'connection-string',
+      db_name: 'main',
+    }
+  )
+)
 .withVectorStore(
-  new MongoVectorStore({ embedder: new OpenAIEmbedder() })
+  new MongoVectorStore(
+    { 
+      embedder: new OpenAIEmbedder(),
+      url: 'connection-string',
+      db_name: 'main',
+    }
+  )
 )
 
 await app.init();
 await migrateToLatest(app.db, false);
-// cerate if not exists
+// create if not exists
 await app.vectorstore.createVectorIndex(false, false);
 
 const server = http.createServer(app.handler).listen(
@@ -46,6 +59,35 @@ const server = http.createServer(app.handler).listen(
 ); 
 
 ```
+
+
+Storecraft will search the following `env` variables
+
+```bash
+MONGODB_NAME=main
+MONGODB_URL='mongodb-connection-string'
+
+// also, this will default into `MONGODB_NAME`
+MONGODB_VECTOR_STORE_DB_NAME=vector-store
+// also, this will default into `MONGODB_URL`
+MONGODB_VECTOR_STORE_URL='mongodb-connection-string'
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withDatabase(
+  new MongoDB()
+)
+.withVectorStore(
+  new MongoVectorStore(
+    {
+      embedder: new OpenAIEmbedder(),
+    }
+  )
+)
+```
+
 
 ## Testing Locally (I recommend to use `Atlas`)
 

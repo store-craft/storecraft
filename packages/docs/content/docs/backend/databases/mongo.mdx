@@ -1,50 +1,50 @@
-# Mongo DB
+# Storecraft MongoDB driver for node / deno / bun
 
-**Storecraft** supports the `node.js` package of `mongodb`
-through the `@storecraft/database-mongodb` package.
+[![MongoDB](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml)
 
-> You can use your own or managed service such as **Mongo Atlas** service
+Official `mongodb` driver for `StoreCraft` on **Node.js** / **Deno** / **Bun** platforms.
+Also, official support for mongo-db as vector store.
 
-## Example
-Here is a sample of `mongodb` integration
-
-```text
-npm i @storecraft/core @storecraft/database-mongodb
+```bash
+npm i @storecraft/database-mongodb
 ```
 
+## usage
 
 ```js
-import { App } from '@storecraft/core';
-import { MongoDB } from '@storecraft/database-mongodb';
-import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
-import { MongoVectorSearch } from '@storecraft/database-mongodb/vector-search-extension.js'
+import 'dotenv/config';
+import http from "node:http";
+import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
+import { MongoDB } from '@storecraft/database-mongodb'
+import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js'
+import { NodeLocalStorage } from '@storecraft/core/storage/node'
+import { MongoVectorStore } from '@storecraft/database-mongodb/vector-store'
 
-const app = new App(
-  {
-    auth_admins_emails: ['admin@sc.com'],
-    auth_password_hash_rounds: 100,
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
-  }
-)
+const app = new App()
 .withPlatform(new NodePlatform())
 .withDatabase(
   new MongoDB(
-    { 
-      db_name: 'test', 
-      url: 'mongodb+srv://admin:admin@your-db.b12btx2.mongodb.net/?retryWrites=true&w=majority',
-      options: {}
+    {
+      url: 'connection-string',
+      db_name: 'main',
     }
   )
 )
-.withStorage(new GoogleStorage())
-.withExtensions(
-  'mongo-vector-search': new MongoVectorSearch({ openai_key: process.env.OPENAI })
+.withVectorStore(
+  new MongoVectorStore(
+    { 
+      embedder: new OpenAIEmbedder(),
+      url: 'connection-string',
+      db_name: 'main',
+    }
+  )
 )
 
 await app.init();
 await migrateToLatest(app.db, false);
+// create if not exists
+await app.vectorstore.createVectorIndex(false, false);
 
 const server = http.createServer(app.handler).listen(
   8000,
@@ -53,4 +53,58 @@ const server = http.createServer(app.handler).listen(
   }
 ); 
 
+```
+
+
+Storecraft will search the following `env` variables
+
+```bash
+MONGODB_NAME=main
+MONGODB_URL='mongodb-connection-string'
+
+// also, this will default into `MONGODB_NAME`
+MONGODB_VECTOR_STORE_DB_NAME=vector-store
+// also, this will default into `MONGODB_URL`
+MONGODB_VECTOR_STORE_URL='mongodb-connection-string'
+```
+
+So, you can instantiate with empty config
+
+```ts
+.withDatabase(
+  new MongoDB()
+)
+.withVectorStore(
+  new MongoVectorStore(
+    {
+      embedder: new OpenAIEmbedder(),
+    }
+  )
+)
+```
+
+
+## Testing Locally (I recommend to use `Atlas`)
+
+1. First start a `mongo-db` server
+First, make sure you have `docker` installed,
+Then, run
+
+```bash
+npm run database-mongodb:docker-compose-up
+```
+
+2. create Environment
+
+create `.env` file with
+
+```bash
+MONGODB_URL="mongodb://127.0.0.1:27017/?replicaSet=rs0"
+MONGODB_NAME="main"
+```
+
+3. Run `tests/runner.test.js`
+
+```bash
+npm run database-mongodb:test
 ```

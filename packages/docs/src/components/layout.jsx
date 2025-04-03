@@ -1,3 +1,6 @@
+/**
+ * @import { PostPageProps } from '../../pages/docs/[[...slug]].js'
+ */
 import SideBar, { SideBarSmall } from './side-bar.jsx'
 import Header from './header.jsx'
 import Copyright from './copyright.jsx'
@@ -10,7 +13,7 @@ import TOC from './toc.jsx'
 
 /**
  * @typedef {object} LayoutParams
- * @prop {import('../../pages/docs/[[...slug]].js').PostPageProps["data"] & 
+ * @prop {PostPageProps["data"] & 
  *  { content_hydrated: JSX.Element }
  * } data
  * @prop {string} [className]
@@ -62,9 +65,8 @@ const Layout = (
                      shadow-sm md:px-10 flex-shrink-0 
                      w-full z-40 ' 
           slug={slug} 
-          prefix={header_prefix}
           onMenuClick={toggleMenu} 
-          github_link={github_link} />
+      />
 
       <main className='flex flex-row w-full h-full'>
 

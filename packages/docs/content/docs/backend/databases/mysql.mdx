@@ -1,5 +1,7 @@
 # My**SQL**
 
+[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)
+
 Official `MySQL` driver for `StoreCraft` using `mysql2` package.
 
 ```bash
@@ -20,8 +22,6 @@ import { migrateToLatest } from '@storecraft/database-sql-base/migrate.js'
 const app = new App(
   {
     auth_admins_emails: ['admin@sc.com'],
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
 )
 .withPlatform(new NodePlatform())
@@ -29,7 +29,7 @@ const app = new App(
   new MySQL(
     {
       pool_options: {
-        database: process.env.MYSQL_DB_NAME,
+        database: process.env.MYSQL_DATABASE,
         host: process.env.MYSQL_HOST,
         port: parseInt(process.env.MYSQL_PORT),
         user: process.env.MYSQL_USER,
@@ -52,18 +52,32 @@ const server = http.createServer(app.handler).listen(
 
 ```
 
+Storecraft will search the following `env` variables
+
+```bash
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=main
+MYSQL_PORT=3306
+MYSQL_HOST=localhost
+```
+
+So, you can instantiate with empty config
+```ts
+.withDatabase(
+  new MySQL()
+)
+```
+
+
 ## Testing Locally
 
-1. First setup a `mysql` server
+1. First start a `mysql` server
+First, make sure you have `docker` installed,
+Then, run
 
-```zsh
-docker pull mysql
-docker run --name mysql \
-           -v $(pwd):/etc/mysql/conf.d \
-           -v /my/own/datadir:/var/lib/mysql \
-           -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_ROOT_HOST=localhost \
-           -e MYSQL_DATABASE=main -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin \
-           -p 8080:3306 -d mysql
+```bash
+npm run database-mysql:docker-compose-up
 ```
 
 2. create Environment
@@ -71,8 +85,15 @@ docker run --name mysql \
 create `.env` file with
 
 ```bash
-MYSQL_USER='root'
-MYSQL_ROOT_PASSWORD='password'
-MYSQL_PORT=8080
-MYSQL_HOST='localhost'
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=main
+MYSQL_PORT=3306
+MYSQL_HOST=localhost
+```
+
+3. Run `tests/runner.test.js`
+
+```bash
+npm run database-mysql:test
 ```

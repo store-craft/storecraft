@@ -27,8 +27,6 @@ import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js'
 const app = new App(
   {
     auth_admins_emails: ['admin@sc.com'],
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token'
   }
 )
 .withPlatform(new NodePlatform())
@@ -52,6 +50,20 @@ const server = http.createServer(app.handler).listen(
 ); 
 
 ```
+
+Storecraft will search the following `env` variables
+
+```bash
+SQLITE_FILEPATH=./data.db
+```
+
+So, you can instantiate with empty config
+```ts
+.withDatabase(
+  new SQLite()
+)
+```
+
 
 ## Testing Locally
 

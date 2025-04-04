@@ -1,6 +1,6 @@
 
 import type { AIEmbedder } from '@storecraft/core/ai';
-export * from './index.js';
+export { LibSQLVectorStore, DEFAULT_INDEX_NAME } from './index.js';
 
 export type Config = {
   /** 

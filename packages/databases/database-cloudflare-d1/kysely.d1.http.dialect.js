@@ -160,12 +160,21 @@ class D1Connection {
     );
 
     // console.log('q', JSON.stringify({sql, params}, null, 2))
-    console.log('result', JSON.stringify(results, null, 2))
+    // console.log('result', JSON.stringify(results, null, 2))
     if (!results?.success) {
       const is_auth_declined_error = params?.at(0)==='_cf_KV';
-      console.log('is_auth_declined_error', is_auth_declined_error)
-      if(!is_auth_declined_error)
+      if(!is_auth_declined_error) {
+        console.log(
+          'compiledQueries', 
+          JSON.stringify(
+            compiledQueries.map(c => ({sql: c.sql, params: c.parameters})), 
+            null, 
+            2
+          )
+        )
+  
         throw new Error(results?.errors?.join(', '));
+      }
     }
 
     const last_result = results?.result?.at(-1);
@@ -193,7 +202,7 @@ class D1Connection {
    * @returns {Promise<QueryResult<R>>}
    */
   async executeQuery(compiledQuery) {
-    console.log('this.isBatch', this.isBatch)
+    // console.log('this.isBatch', this.isBatch)
     if(this.isBatch) {
       this.batch.push(compiledQuery);
       return Promise.resolve(
@@ -207,15 +216,15 @@ class D1Connection {
   }
   
   async beginTransaction() {
-    console.log('beginTransaction')
-    console.trace()
+    // console.log('beginTransaction')
+    // console.trace()
     this.isBatch = true;
     this.batch = [];
   }
 
   async commitTransaction() {
-    console.log('commitTransaction')
-    console.trace()
+    // console.log('commitTransaction')
+    // console.trace()
     this.isBatch = false;
     await this._internal_execute(this.batch);
   }

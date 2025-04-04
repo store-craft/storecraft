@@ -1,6 +1,6 @@
 import type { AIEmbedder } from '../../../types.public.js';
 import { create_vector_index_params } from './types.private.vectorize.js';
-export * from './index.js';
+export { Vectorize } from './index.js';
 
 export type Config = {
   /** If absent, will be infered from environment variable `CF_ACCOUNT_ID` */

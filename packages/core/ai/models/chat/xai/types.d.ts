@@ -8,4 +8,4 @@ export type config = {
   api_key?: string
 }
 
-export * from './index.js';
+export { XAI } from './index.js';

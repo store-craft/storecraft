@@ -103,13 +103,13 @@ export class Client {
       // console.log('error: headers', response.headers.get('Content-Type'));
       // console.log('error: url ', url);
       // // console.log('error: body ', params);
-      console.log(response.statusText)
-      console.log('error: headers', response.headers.get('Content-Type'));
-      if(ctype.includes('text/plain')) {
-        console.log('error: response text ', await response.text());
+      // console.log(response.statusText)
+      // console.log('error: headers', response.headers.get('Content-Type'));
+      // if(ctype.includes('text/plain')) {
+      //   console.log('error: response text ', await response.text());
       
-        return undefined;
-      }
+      //   return undefined;
+      // }
     }
 
     if(ctype.includes('json'))

@@ -23,7 +23,7 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
   if(!db_driver?.client)
     throw new Error('No Kysely client found !!!');
 
-  console.log('Resolving migrations')
+  console.log('Resolving migrations. This may take 2 minutes ...')
 
   let db = db_driver.client;
 
@@ -63,7 +63,7 @@ export async function migrateToLatest(db_driver, destroy_db_upon_completion=true
 
   if (error) {
     console.error('failed to migrate')
-    console.error(error)
+    console.error(JSON.stringify(error, null, 2))
     process.exit(1)
   }
 

@@ -45,10 +45,12 @@ export class Vectorize {
     }
   }
 
+  /** @type {VectorStore["metric"]} */
   get metric() {
-    return this.#config.metric;
+    return this.#config.metric ?? 'cosine';
   };
 
+  /** @type {VectorStore["dimensions"]} */
   get dimensions() {
     return this.#config.dimension;
   };

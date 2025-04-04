@@ -18,12 +18,23 @@ export const table_name = 'templates'
  * otherwise, just return the original value.
  * @param {string} val 
  */
-const decode_if_base64 = val => {
+const encode_base64_if_needed = val => {
+  if(val.startsWith('base64_'))
+    return val;
+
+  return 'base64_' + base64.encode(val);
+}
+
+/**
+ * @description if `base64_` prefixed then decode the postfix and return it,
+ * otherwise, just return the original value.
+ * @param {string} val 
+ */
+const decode_base64_if_needed = val => {
   if(!val.startsWith('base64_'))
     return val;
 
-  const b64 = val.split('base64_').at(1) ?? '';
-  return base64.decode(b64);
+  return base64.decode(val.split('base64_').at(-1) ?? '');
 }
 
 /**
@@ -45,8 +56,8 @@ export const upsert = (client) => {
             active: item.active ? 1 : 0,
             title: item.title,
             handle: item.handle,
-            template_html: decode_if_base64(item.template_html),
-            template_text: decode_if_base64(item.template_text),
+            template_html: encode_base64_if_needed(item.template_html),
+            template_text: encode_base64_if_needed(item.template_text),
             reference_example_input: JSON.stringify(item.reference_example_input ?? {})
           });
         }
@@ -78,7 +89,17 @@ const get = (driver) => {
     )
     .where(where_id_or_handle_table(id_or_handle))
     .executeTakeFirst()
-    .then(sanitize);
+    .then(sanitize)
+    .then(
+      (item) => {
+        if(!item) return null;
+
+        item.template_html = decode_base64_if_needed(item.template_html);
+        item.template_text = decode_base64_if_needed(item.template_text);
+
+        return item;
+      }
+    )
   }
 }
 
@@ -134,7 +155,18 @@ const list = (driver) => {
       )
       .orderBy(query_to_sort(query, table_name))
       .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .execute()
+      .then(
+        (items) => {
+          return items.map(
+            (item) => {
+              item.template_html = decode_base64_if_needed(item.template_html);
+              item.template_text = decode_base64_if_needed(item.template_text);
+              return item;
+            }
+          )
+        }
+      );
 
     if(query.limitToLast) items.reverse();
     

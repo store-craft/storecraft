@@ -14,7 +14,7 @@
     "@types/node": "^20.11.0"
   }, 
   "dependencies": {
-    "@storecraft/core": "*",
-    "@storecraft/database-cloudflare-d1": "*"
+    "@storecraft/core": "^1.0.0",
+    "@storecraft/database-cloudflare-d1": "^1.0.0"
   }
 }

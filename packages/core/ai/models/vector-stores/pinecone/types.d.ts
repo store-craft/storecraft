@@ -1,5 +1,5 @@
 import { type AIEmbedder } from '../../../types.public.js';
-export * from './index.js';
+export { Pinecone } from './index.js';
 
 export type Config = {
   /** If absent, will be infered from environment variable `PINECONE_API_KEY` */

@@ -29,10 +29,13 @@ export class DummyVectorStore {
     this.embeddings = {};
     this.#embedder = new DummyEmbedder();
   }
+
+  /** @type {VectorStore["metric"]} */
   get metric() {
     return /** @type {const} */ ('cosine');
   };
 
+  /** @type {VectorStore["dimensions"]} */
   get dimensions() {
     return 1024;
   };

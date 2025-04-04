@@ -71,10 +71,12 @@ export class LibSQLVectorStore {
     };
   }
 
+  /** @type {VectorStore["metric"]} */
   get metric() {
     return this.config.similarity;
   };
 
+  /** @type {VectorStore["dimensions"]} */
   get dimensions() {
     return this.config.dimensions;
   };

@@ -37,8 +37,9 @@ export const get_migrations = async (dialect_type='SQLITE') => {
 
   for (const file of files) {
     if(file.endsWith('.js')) {
+      const file_name = file.split('.').slice(0, -1).join('.');
       const migration = await import(path.join(__dirname, folder, file));
-      migrations[file] = migration;
+      migrations[file_name] = migration;
     }
   }
 

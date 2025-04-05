@@ -4,7 +4,9 @@
  */
 
 import { App } from '../../index.js';
-import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
+import { 
+  CONFIRM_EMAIL_TOKEN 
+} from '@storecraft/core/api/con.auth.logic.js';
 
 
 /**
@@ -14,8 +16,10 @@ import { CONFIRM_EMAIL_TOKEN } from '@storecraft/core/api/con.auth.logic.js';
  * - `orders/fulfillment/cancelled` via `order-cancelled` template, uses {@link OrderData}
  * - `auth/signup` via `welcome-customer` template, uses {@link AuthUserType}
  * - `auth/change-password` via `general-message` template, uses {@link AuthUserType}  
- * - `auth/forgot-password-token-generated` via `forgot-password` template, uses `{email: string, token: string}`
- * - `auth/confirm-email-token-generated` via `confirm-email` template (currently not present), uses `{email: string, token: string}`
+ * - `auth/forgot-password-token-generated` via `forgot-password` template, 
+ * uses `{email: string, token: string}`
+ * - `auth/confirm-email-token-generated` via `confirm-email` 
+ * template (currently not present), uses `{email: string, token: string}`
  * 
  * 
  * @implements {extension}
@@ -116,7 +120,9 @@ export class PostmanExtension {
             data: {
               customer: event.payload,
               info: get_info(app),
-              token: event.payload.attributes?.find(it => it.key===CONFIRM_EMAIL_TOKEN)?.value
+              token: event.payload.attributes?.find(
+                it => it.key===CONFIRM_EMAIL_TOKEN
+              )?.value
             }
           }
         );
@@ -177,9 +183,7 @@ export class PostmanExtension {
         );
       }
     );
-
   }
-
 }
 
 

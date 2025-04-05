@@ -130,10 +130,8 @@ export const add_sanity_crud_to_test_suite = s => {
       const unsub = ctx.app.pubsub.on(
         ctx.events.upsert_event,
         v => {
-          try {
-            assert_partial_v2(v.payload.current, one, 'test upsert event');
-            is_event_ok = true;
-          } catch (e) {}
+          assert_partial_v2(v.payload.current, one, 'test upsert event');
+          is_event_ok = true;
         }
       );
   

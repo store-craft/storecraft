@@ -2573,10 +2573,10 @@ test(
 
 test.run();
 
-const r2 = Minibars.compile(
-  '{{!-- This comment may contain mustaches like }} --}}'
-  // '{{! This comment will not show up in the output}}'
-)({})
+// const r2 = Minibars.compile(
+//   '{{!-- This comment may contain mustaches like }} --}}'
+//   // '{{! This comment will not show up in the output}}'
+// )({})
 
 // console.log(r2)
 

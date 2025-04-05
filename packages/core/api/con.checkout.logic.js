@@ -221,7 +221,6 @@ async (order_checkout, gateway_handle) => {
     latest_status: await gateway.status(on_checkout_create)
   };
 
-  // @ts-ignore
   order.status.checkout = CheckoutStatusEnum.created;
 
   // console.log('order', order)

@@ -1,7 +1,8 @@
 /**
  * @import { events } from '../../pubsub/types.public.js'
- * @import { SendMailParams, SendMailWithTemplateParams } from '../../mailer/types.mailer.js'
- * 
+ * @import { 
+ *  SendMailParams, SendMailWithTemplateParams 
+ * } from '../../mailer/types.mailer.js'
  */
 
 import { suite } from 'uvu';
@@ -15,7 +16,6 @@ import { DummyMailer } from '../../mailer/dummy-mailer.js';
 
 
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {
@@ -41,7 +41,6 @@ export const create = app => {
     
     /** @type {Partial<events>} */
     const events_dispatched = {};
-    const unsubs = [];
 
     // catch all events
     const unsub =  app.pubsub.on(

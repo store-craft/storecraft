@@ -10,7 +10,7 @@ import {
   SqliteQueryCompiler,
 } from 'kysely';
 import { Client } from './d1-http-api/api.js';
-import { prepare_and_bind } from './kysely.d1.utils.js';
+import { prepare_and_bind } from '@storecraft/database-sql-base/migrate.js';
 
 
 /**
@@ -148,6 +148,7 @@ class D1Connection {
         cq => prepare_and_bind(cq.sql, cq.parameters)
       ).join(';');
       params = undefined;
+      console.log('sql', sql)
     } else {
       sql = compiledQueries?.at(0)?.sql;
       params = ( /** @type {string[]} */(compiledQueries?.at(0)?.parameters));
@@ -216,7 +217,7 @@ class D1Connection {
   }
   
   async beginTransaction() {
-    // console.log('beginTransaction')
+    console.log('beginTransaction')
     // console.trace()
     this.isBatch = true;
     this.batch = [];

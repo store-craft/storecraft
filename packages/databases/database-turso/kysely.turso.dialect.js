@@ -26,8 +26,12 @@ export class LibsqlDialect {
     return this.#config;
   }
 
-  createAdapter() { return new kysely.SqliteAdapter(); }
-  createQueryCompiler() { return new kysely.SqliteQueryCompiler(); }
+  createAdapter() { 
+    return new kysely.SqliteAdapter(); 
+  }
+  createQueryCompiler() { 
+    return new kysely.SqliteQueryCompiler(); 
+  }
   createDriver() {
 
     if (this.#config?.url===undefined) {
@@ -173,9 +177,7 @@ export class LibsqlConnection {
   } 
 
   /**
-   * 
    * @param {kysely.CompiledQuery} compiledQuery 
-   * 
    * @returns {Promise<QueryResult>}
    */
   async executeQuery(compiledQuery) {
@@ -193,6 +195,7 @@ export class LibsqlConnection {
   }
 
   async beginTransaction() {
+    // console.log('beginTransaction')
     if(this.config.prefers_batch_over_transactions) {
       this.isBatch = true;
       this.batch = [];

@@ -1,11 +1,10 @@
 import { SQL } from "@storecraft/database-sql-base";
 import { AggregateDialect } from "@storecraft/database-sql-base/kysely.aggregate.dialect.js";
-import { get_migrations } from "@storecraft/database-sql-base/migrate.js";
+import { get_migrations, prepare_and_bind } from "@storecraft/database-sql-base/migrate.js";
 import { Kysely, Migrator } from "kysely";
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from "node:url";
-import { prepare_and_bind } from "./kysely.d1.utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,7 +58,7 @@ export async function migrateToLatest(
 
     // now get the queries
     const queries_up = up_agg_dialect.queries;
-    const queries_down = up_agg_dialect.queries;
+    const queries_down = down_agg_dialect.queries;
     // prepare_and_bind
     rewritten_migrations[name] = {
       up: async (db) => {

@@ -16,7 +16,17 @@ import {
  */
 
 /**
- * @description Official Storecraft Cloudflare D1 adapter on Worker
+ * @description A special dialect that aggregates / records queries.
+ * This is useful for
+ * - testing / debugging
+ * - generating migration files for cloud based databases 
+ * such as `libsql` / `turso` / `d1`
+ * 
+ * NOTE: 
+ * - This dialect does not support transactions
+ * - This is only useful for non-interactive queries, which are
+ * basically transactions, that do not depend on results of previous queries.
+ * Which is the philosophy of `storecraft` and is quite common in migrations.
  * 
  * @implements {Dialect}
  */

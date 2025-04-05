@@ -10,7 +10,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 
 export const sqlite_dialect = new SqliteDialect({
-  database: async () => new SQLite(join(homedir(), 'db.sqlite')),
+  database: async () => new SQLite(':memory:'),
 });
 
 export const create_app = async () => {

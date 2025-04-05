@@ -1,4 +1,4 @@
-export * from './index.js';
+export { Anthropic } from './index.js';
 
 export type config = {
   model?: (

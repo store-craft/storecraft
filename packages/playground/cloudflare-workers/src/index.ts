@@ -1,6 +1,12 @@
 import { App } from "@storecraft/core"
 import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
 import { CloudflareWorkersPlatform } from "@storecraft/core/platform/cloudflare-workers"
+import {
+  type ExportedHandler,
+  type ExecutionContext,
+  type Request,
+  type Response,
+} from "@cloudflare/workers-types"
 
 
 export default {
@@ -18,6 +24,8 @@ export default {
       {
         auth_secret_access_token: 'auth_secret_access_token',
         auth_secret_refresh_token: 'auth_secret_refresh_token',
+        auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+        auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
         storage_rewrite_urls: undefined,
         general_store_name: 'Wush Wush Games',
         general_store_description: 'We sell cool retro video games',

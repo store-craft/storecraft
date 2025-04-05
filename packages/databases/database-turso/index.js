@@ -29,8 +29,8 @@ export class Turso extends SQL {
         dialect_type: 'SQLITE',
         dialect: new LibsqlDialect(
           {
+            prefers_batch_over_transactions: true,
             ...config,
-            prefers_batch_over_transactions: config.prefers_batch_over_transactions ?? true
           }
         ),
       }

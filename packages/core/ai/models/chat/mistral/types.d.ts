@@ -14,4 +14,4 @@ export type config = {
   api_key?: string
 }
 
-export * from './index.js';
+export { Mistral } from './index.js';

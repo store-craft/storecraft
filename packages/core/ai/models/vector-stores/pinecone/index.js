@@ -41,10 +41,13 @@ export class Pinecone {
       ...config,
     };
   }
+
+  /** @type {VectorStore["metric"]} */
   get metric() {
     return this.#config.metric;
   };
 
+  /** @type {VectorStore["dimensions"]} */
   get dimensions() {
     return this.#config.dimension;
   };

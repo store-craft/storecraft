@@ -1,7 +1,6 @@
 # Storecraft Cloudflare D1 Database support
 
-Two issues awaiting:
-1. make `seed_templates` migration work
+One issues awaiting:
 2. On CF side, they relaxed the FUNC_ARGS_LENGTH, so now json sql should work for me.
 
 Two variants,
@@ -22,7 +21,13 @@ npm i @storecraft/database-cloudflare-d1
 ## Setup
 
 - First, login to your cloudflare account.
-- Create a `D1` database.
+- Create a `D1` database:
+  - Through the dashboard, or
+  - Through the command line, using `wrangler`:
+    ```bash
+    npx wrangler d1 create <YOUR-DATABASE-NAME>
+    ```
+  - Record the `database_id` and `account_id` for later use.
 - Create an API Key at [here](https://dash.cloudflare.com/profile/api-tokens)
 
 

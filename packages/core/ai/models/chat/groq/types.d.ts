@@ -11,4 +11,4 @@ export type config = {
   api_key?: string
 }
 
-export * from './index.js';
+export { Groq } from './index.js';

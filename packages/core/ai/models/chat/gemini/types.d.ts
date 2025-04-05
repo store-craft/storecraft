@@ -9,4 +9,4 @@ export type config = {
   api_key?: string
 }
 
-export * from './index.js';
+export { Gemini } from './index.js';

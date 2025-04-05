@@ -1,4 +1,4 @@
-export * from './index.js';
+export { GeminiEmbedder } from './index.js';
 
 export type config = {
   model?: ('text-embedding-004' | 'text-embedding-001'),

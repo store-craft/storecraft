@@ -1,6 +1,6 @@
 /**
  * @import { Meta } from './compile.app.js'
- * @import { D1ConfigHTTP } from '@storecraft/database-cloudflare-d1'
+ * @import { D1_HTTP, D1ConfigHTTP } from '@storecraft/database-cloudflare-d1'
  */
 import { collect_database } from '../collect/collect.database.js';
 import { choices } from '../collect/collect.platform.js';
@@ -10,6 +10,7 @@ import {
   combine_and_pretty, object_to_env_file_string, Packager, 
   run_cmd
 } from './compile.platform.utils.js';
+import { assert } from './compile.utils.js';
 
 
 /**
@@ -140,7 +141,19 @@ export default {
  * @param {Record<string, string>} env_vars
  */
 const wrangler_toml = (meta, env_vars={}) => {
-  const uses_d1 = meta.database.id==='d1-http' || meta.database.id==='d1-worker' ;
+  const uses_d1 = meta.database.id==='d1-http' || meta.database.id==='d1-worker';
+  let d1_id;
+  if(uses_d1) {
+    d1_id = (/** @type {D1ConfigHTTP} */ (meta.database.config)).database_id ?? 
+      (
+        env_vars[/** @satisfies {typeof D1_HTTP.EnvConfig["database_id"]} */ ('D1_DATABASE_ID')]
+      );
+    
+    assert(
+      d1_id, 
+      'D1_DATABASE_ID not found in env vars or database config'
+    );
+  }
 
   return [
 `
@@ -154,9 +167,7 @@ ${object_to_env_file_string(env_vars)}
 
 `,
   uses_d1 ? 
-    wrangler_toml_with_d1(
-      (/** @type {D1ConfigHTTP} */ (meta.database.config)).database_id
-    ) :
+    wrangler_toml_with_d1(d1_id) :
     undefined
 ].filter(Boolean).join('\n\n');
 

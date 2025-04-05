@@ -1,4 +1,4 @@
-export * from './index.js';
+export { CloudflareEmbedder } from './index.js';
 
 export type config = {
   /**

@@ -40,8 +40,10 @@ export const upsert = (app) =>
     return {
       ...before,
       handle: before.handle ?? to_handle(before.title),
-      template_html: decode_if_base64(before.template_html),
-      template_text: decode_if_base64(before.template_text),
+      template_html: before.template_html,
+      template_text: before.template_text,
+      // template_html: decode_if_base64(before.template_html),
+      // template_text: decode_if_base64(before.template_text),
     }
   },
   (final) => {

@@ -68,6 +68,7 @@ export class MongoVectorStore {
     };
   }
 
+  /** @type {VectorStore["metric"]} */
   get metric() {
     switch(this.config.similarity) {
       case 'cosine': return 'cosine';
@@ -76,6 +77,7 @@ export class MongoVectorStore {
     }
   };
 
+  /** @type {VectorStore["dimensions"]} */
   get dimensions() {
     return this.config.dimensions;
   };

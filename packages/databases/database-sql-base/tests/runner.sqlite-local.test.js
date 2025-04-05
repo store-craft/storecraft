@@ -10,7 +10,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 
 export const sqlite_dialect = new SqliteDialect({
-  database: async () => new SQLite(join(homedir(), 'db.sqlite')),
+  database: async () => new SQLite(':memory:'),
 });
 
 export const create_app = async () => {
@@ -18,7 +18,9 @@ export const create_app = async () => {
     {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',
-      auth_secret_refresh_token: 'auth_secret_refresh_token'
+      auth_secret_refresh_token: 'auth_secret_refresh_token',
+      auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+      auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
     }
   )
   .withPlatform(new NodePlatform())

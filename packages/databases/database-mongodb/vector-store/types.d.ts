@@ -1,7 +1,9 @@
 
 import type { AIEmbedder } from '@storecraft/core/ai';
 import type { MongoClientOptions } from 'mongodb';
-export * from './index.js';
+export { 
+  MongoVectorStore, DEFAULT_INDEX_NAME, EMBEDDING_KEY_PATH, NAMESPACE_KEY 
+} from './index.js';
 
 export type Config = {
   /**

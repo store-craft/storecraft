@@ -104,11 +104,11 @@ class D1Connection {
   async _internal_execute(compiledQueries) {
 
     const db = this.config.db;
-    console.log(JSON.stringify(
-      {
-        sql: compiledQueries.at(0).sql,
-        params: compiledQueries.at(0).parameters,
-      }, null, 2))
+    // console.log(JSON.stringify(
+    //   {
+    //     sql: compiledQueries.at(0).sql,
+    //     params: compiledQueries.at(0).parameters,
+    //   }, null, 2))
     const results = await db.batch(
       compiledQueries.map(
         cq => db.prepare(cq.sql).bind(...cq.parameters)
@@ -149,7 +149,7 @@ class D1Connection {
    * @returns {Promise<QueryResult<R>>}
    */
   async executeQuery(compiledQuery) {
-    console.log('this.isBatch', this.isBatch);
+    // console.log('this.isBatch', this.isBatch);
 
     if(this.isBatch) {
       this.batch.push(compiledQuery);
@@ -164,14 +164,14 @@ class D1Connection {
   }
   
   async beginTransaction() {
-    console.log('beginTransaction')
+    // console.log('beginTransaction')
     // console.trace()
     this.isBatch = true;
     this.batch = [];
   }
 
   async commitTransaction() {
-    console.log('commitTransaction')
+    // console.log('commitTransaction')
     // console.trace()
     this.isBatch = false;
     await this._internal_execute(this.batch);

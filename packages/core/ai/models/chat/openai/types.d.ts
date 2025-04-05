@@ -1,4 +1,4 @@
-export {OpenAI} from './index.js';
+export { OpenAI } from './index.js';
 
 export type config = {
   model?: ('o1-mini' | 'gpt-4o' | 'gpt-4' | 'gpt-4o-mini' | 'gpt-4-turbo'),

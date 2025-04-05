@@ -1,9 +1,15 @@
+/**
+ * @import { Database } from './types.sql.tables.js';
+ * @import { SqlDialectType } from './types.public.js';
+ * @import { Migration } from 'kysely';
+ */
 import { fileURLToPath } from "node:url";
 import * as path from 'path'
 import { promises as fs } from 'fs'
 import {
   Migrator,
   FileMigrationProvider,
+  Kysely,
 } from 'kysely'
 import { SQL } from "./index.js";
 
@@ -13,6 +19,36 @@ const __dirname = path.dirname(__filename);
 export const current = {
   driver: undefined
 }
+
+export const read_files_in_folder = async (folder='') => {
+  const files = await fs.readdir(folder);
+  return files.filter(file => file.endsWith('.js'));
+}
+
+/**
+ * @param {SqlDialectType} dialect_type
+ */
+export const get_migrations = async (dialect_type='SQLITE') => {
+  const folder = 'migrations.' + dialect_type.toLowerCase();
+  const files = await fs.readdir(path.join(__dirname, folder));
+
+  /** @type {Record<string, Migration>} */
+  const migrations = {};
+
+  for (const file of files) {
+    if(file.endsWith('.js')) {
+      const migration = await import(path.join(__dirname, folder, file));
+      migrations[file] = migration;
+    }
+  }
+
+  return migrations;
+}
+
+console.log(
+  await get_migrations()
+)
+
 
 /**
  * 

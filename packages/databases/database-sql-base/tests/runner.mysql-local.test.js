@@ -22,7 +22,9 @@ export const create_app = async () => {
     {
       auth_admins_emails: ['admin@sc.com'],
       auth_secret_access_token: 'auth_secret_access_token',
-      auth_secret_refresh_token: 'auth_secret_refresh_token'
+      auth_secret_refresh_token: 'auth_secret_refresh_token',
+      auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+      auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
     }
   )
   .withPlatform(new NodePlatform())

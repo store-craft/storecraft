@@ -6,8 +6,8 @@
  */
 export const prepare_and_bind = (stmt='', params=[]) => {
   const params_object = Array.isArray(params) ? 
-      params.reduce((a, v, idx) => ({ ...a, [idx+1]: v}), {}) : 
-      params; 
+    params.reduce((a, v, idx) => ({ ...a, [idx+1]: v}), {}) : 
+    params; 
 
   let current = 0;
   let result = ''
@@ -17,8 +17,8 @@ export const prepare_and_bind = (stmt='', params=[]) => {
   
     const match_string = m[0];
     let index_access = match_string.length > 1 ? 
-          Number(match_string.slice(1)) : 
-          index_run;
+      Number(match_string.slice(1)) : 
+      index_run;
   
     result += "'" + params_object[index_access] + "'";
   
@@ -30,4 +30,5 @@ export const prepare_and_bind = (stmt='', params=[]) => {
 
   return result;
 }
+
 

@@ -55,7 +55,6 @@ export class PostmanExtension {
           {
             emails: [ event.payload.current.contact.email ],
             template_handle: 'checkout-complete',
-            subject: 'Your Order',
             data: {
               order: event.payload.current,
               info: get_info(app),
@@ -76,7 +75,6 @@ export class PostmanExtension {
           {
             emails: [ event.payload.current.contact.email ],
             template_handle: 'order-shipped',
-            subject: 'Your Order Shipped',
             data: {
               order: event.payload.current,
               info: get_info(app),
@@ -97,7 +95,6 @@ export class PostmanExtension {
           {
             emails: [ event.payload.current.contact.email ],
             template_handle: 'order-cancelled',
-            subject: 'Your Order Cancelled',
             data: {
               order: event.payload.current,
               info: get_info(app),
@@ -116,7 +113,6 @@ export class PostmanExtension {
           {
             emails: [ event.payload.email ],
             template_handle: 'welcome-customer',
-            subject: 'Welcome',
             data: {
               customer: event.payload,
               info: get_info(app),
@@ -136,7 +132,6 @@ export class PostmanExtension {
           {
             emails: [ event.payload.email ],
             template_handle: 'general-message',
-            subject: 'Your Password was changed',
             data: {
               info: get_info(app),
               message: 'Your password has been changed. If it wasn\'t you, please reply to this email',
@@ -154,12 +149,12 @@ export class PostmanExtension {
           {
             emails: [ event.payload.auth_user.email ],
             template_handle: 'confirm-email',
-            subject: 'Confirm Email',
             data: {
               info: get_info(app),
               message: {
                 token: event.payload.token,
-                firstname: event.payload.auth_user.firstname
+                firstname: event.payload.auth_user.firstname,
+                content: 'Please confirm your email address by clicking the link below'
               }
             }
           }
@@ -174,7 +169,6 @@ export class PostmanExtension {
           {
             emails: [ event.payload.auth_user.email ],
             template_handle: 'forgot-password',
-            subject: 'Confirm Forgot Password Request',
             data: {
               info: get_info(app),
               token: event.payload.token
@@ -191,7 +185,7 @@ export class PostmanExtension {
  * 
  * @param {App} app 
  */
-const get_info = app => {
+export const get_info = app => {
   return {
     general_store_website: app.config.general_store_website,
     general_store_name: app.config.general_store_name,

@@ -1,0 +1,1 @@
+export * from '../migrations.shared/00004_update_previous_templates_with_subject.js'

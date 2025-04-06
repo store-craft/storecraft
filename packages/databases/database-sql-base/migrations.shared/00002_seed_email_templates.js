@@ -1,10 +1,9 @@
+/**
+ * @import { Database }  from '../types.sql.tables.js'
+ */
 import { Kysely } from 'kysely'
 import { upsert } from '../src/con.templates.js'
 import { templates } from '@storecraft/core/assets/seed-templates-v2.js';
-
-/**
- * @typedef {import('../types.sql.tables.js').Database} Database
- */
 
 /**
  * 

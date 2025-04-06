@@ -2093,7 +2093,7 @@ export interface LineItem  {
    * @description (optional) the product data snapshot for 
    * future integrity
    */
-  data?: ProductType;
+  data?: Partial<ProductType>;
 }
 
 /**
@@ -2528,12 +2528,17 @@ export interface TemplateType extends BaseType {
   title: string;
 
   /**
-   * @description The **HTML** `template` `handlebars` string
+   * @description The **TEXT** `template` `handlebars` string for email `subject`
+   */
+  template_subject?: string;
+
+  /**
+   * @description The **HTML** `template` `handlebars` string for html email `body`
    */
   template_html?: string;
 
   /**
-   * @description The **TEXT** `template` `handlebars` string
+   * @description The **TEXT** `template` `handlebars` string for text email `body`
    */
   template_text?: string;
 

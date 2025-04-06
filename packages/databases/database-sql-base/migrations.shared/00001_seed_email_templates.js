@@ -3,7 +3,7 @@
  */
 import { Kysely } from 'kysely'
 import { upsert } from '../src/con.templates.js'
-import { templates } from '@storecraft/core/assets/seed-templates.js';
+import { templates } from '@storecraft/core/assets/seed-templates-v1.js';
 
 
 /**

@@ -128,7 +128,6 @@ export const create = app => {
     const params = {
       emails: ['support@storecraft.app'],
       template_handle: 'welcome-customer',
-      subject: 'Test Welcome Customer Email',
       data: {
         customer: {
           email: 'customer_name@example.com',
@@ -174,8 +173,7 @@ export const create = app => {
         '`email/after-send` event was not dispatched'
       );
 
-      // assert against real template
-      {
+      { // assert against real template
         const template = await app.api.templates.get(params.template_handle);
         const { text, html } = compileTemplate(template, params.data);
         assert.ok(

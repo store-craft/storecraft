@@ -19,7 +19,7 @@ export const table_name = 'templates'
  * @param {string} val 
  */
 const encode_base64_if_needed = val => {
-  if(val.startsWith('base64_'))
+  if(val?.startsWith('base64_'))
     return val;
 
   return 'base64_' + base64.encode(val);
@@ -31,7 +31,7 @@ const encode_base64_if_needed = val => {
  * @param {string} val 
  */
 const decode_base64_if_needed = val => {
-  if(!val.startsWith('base64_'))
+  if(!val?.startsWith('base64_'))
     return val;
 
   return base64.decode(val.split('base64_').at(-1) ?? '');
@@ -39,7 +39,6 @@ const decode_base64_if_needed = val => {
 
 /**
  * @param {Kysely<Database>} client 
- * 
  * @returns {db_col["upsert"]}
  */
 export const upsert = (client) => {
@@ -56,8 +55,9 @@ export const upsert = (client) => {
             active: item.active ? 1 : 0,
             title: item.title,
             handle: item.handle,
-            template_html: encode_base64_if_needed(item.template_html),
-            template_text: encode_base64_if_needed(item.template_text),
+            template_html: item.template_html && encode_base64_if_needed(item.template_html),
+            template_text: item.template_text && encode_base64_if_needed(item.template_text),
+            template_subject: item.template_subject && encode_base64_if_needed(item.template_subject),
             reference_example_input: JSON.stringify(item.reference_example_input ?? {})
           });
         }
@@ -74,11 +74,9 @@ export const upsert = (client) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["get"]}
  */
-const get = (driver) => {
+export const get = (driver) => {
   return (id_or_handle, options) => {
     return driver.client
     .selectFrom(table_name)
@@ -96,6 +94,7 @@ const get = (driver) => {
 
         item.template_html = decode_base64_if_needed(item.template_html);
         item.template_text = decode_base64_if_needed(item.template_text);
+        item.template_subject = decode_base64_if_needed(item.template_subject);
 
         return item;
       }
@@ -106,8 +105,6 @@ const get = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -162,6 +159,7 @@ const list = (driver) => {
             (item) => {
               item.template_html = decode_base64_if_needed(item.template_html);
               item.template_text = decode_base64_if_needed(item.template_text);
+              item.template_subject = decode_base64_if_needed(item.template_subject);
               return item;
             }
           )

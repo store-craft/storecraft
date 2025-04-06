@@ -210,8 +210,8 @@ export class App {
     this.pubsub.on(
       'orders/upsert',
       async (event) => {
-        const order_after = event.payload.current;
         const order_before = event.payload.previous;
+        const order_after = event.payload.current;
 
         // test if the checkout now has turned complete
         const has_checkout_updated = (
@@ -382,13 +382,13 @@ export class App {
   
       // settle extensions
       for(const ext_handle in this.extensions) {
-        const ext = this.extension(ext_handle);
+        const ext = this.extensions?.[ext_handle];
         ext?.onInit?.(app_casted);
       }
 
       // settle payment gateways
       for(const handle in this.gateways) {
-        const gateway = this.gateway(handle);
+        const gateway = this.gateways?.[handle];
         gateway?.onInit?.(app_casted);
       }
 
@@ -781,24 +781,6 @@ export class App {
    */
   get ready() { 
     return this.#is_ready; 
-  }
-
-  /**
-   * @description Get a `payment gateway` by `handle`
-   * 
-   * @param {keyof PaymentMap} handle 
-   */
-  gateway = (handle) => {
-    return this.gateways?.[handle];
-  }
-
-  /**
-   * @description Get an `extension` by `handle`
-   * 
-   * @param {keyof ExtensionsMap} handle 
-   */
-  extension = (handle) => {
-    return this.extensions?.[handle];
   }
 
   /**

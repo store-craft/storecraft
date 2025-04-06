@@ -176,7 +176,7 @@ async (order_checkout, gateway_handle) => {
   );
 
   // get gateway and verify
-  const gateway = app.gateway(gateway_handle);
+  const gateway = app.gateways?.[gateway_handle];
 
   assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
 
@@ -282,9 +282,9 @@ async (checkoutId, client_payload) => {
 
   assert(order, 'checkout-not-found', 400);
 
-  const gateway = app.gateway(
+  const gateway = app.gateways?.[
     order?.payment_gateway?.gateway_handle
-  );
+  ]
 
   assert(gateway, `gateway not found`, 400);
 

@@ -395,14 +395,14 @@ export const ClipBoardCopy = (
 }
 
 /**
- * 
- * @param {React.FC} Comp 
- * @param {any} [comp_params_inner] 
+ * @template P
+ * @param {React.FC<P>} Comp 
+ * @param {P} [comp_params_inner] 
  * @param {boolean} [border] 
  * @param {boolean} [copy] 
  */
 export const withCard = (
-  Comp, comp_params_inner = {}, border=true, copy=false
+  Comp, comp_params_inner, border=true, copy=false
 ) => {
 
   /**

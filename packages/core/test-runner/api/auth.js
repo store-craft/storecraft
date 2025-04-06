@@ -10,7 +10,7 @@ import esMain from './utils.esmain.js';
 import { verify_api_auth_result } from './auth.utils.js';
 import { jwt } from '../../crypto/public.js';
 import { CONFIRM_EMAIL_TOKEN, FORGOT_PASSWORD_IDENTITY_TOKEN } from '../../api/con.auth.logic.js';
-import { assert_async_throws, assert_partial_v2, withRandom } from './utils.js';
+import { assert_async_throws, withRandom } from './utils.js';
 
 
 export const admin_email = 'admin@sc.com';

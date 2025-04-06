@@ -165,10 +165,6 @@ export type SendMailWithTemplateParams<
   /** the template `handle` or `id` in the database */
   template_handle: HANDLE,
   /**
-   * @description subject of the email
-   */
-  subject: string,
-  /**
    * @description key-value data to be used in the template 
    */
   data: HANDLE extends templates_keys ? templates_input_types[HANDLE] : any

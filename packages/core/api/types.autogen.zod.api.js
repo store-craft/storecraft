@@ -1048,14 +1048,24 @@ export const paymentGatewayItemGetSchema = z.object({
 
 export const templateTypeSchema = baseTypeSchema.extend({
   title: z.string().describe("`title` of `template`"),
+  template_subject: z
+    .string()
+    .optional()
+    .describe(
+      "The **TEXT** `template` `handlebars` string for email `subject`",
+    ),
   template_html: z
     .string()
     .optional()
-    .describe("The **HTML** `template` `handlebars` string"),
+    .describe(
+      "The **HTML** `template` `handlebars` string for html email `body`",
+    ),
   template_text: z
     .string()
     .optional()
-    .describe("The **TEXT** `template` `handlebars` string"),
+    .describe(
+      "The **TEXT** `template` `handlebars` string for text email `body`",
+    ),
   reference_example_input: z
     .any()
     .optional()
@@ -1592,6 +1602,7 @@ export const lineItemSchema = z.object({
       "Used by order to indicate it has reserved stock\nand it's amount",
     ),
   data: productTypeSchema
+    .partial()
     .optional()
     .describe("(optional) the product data snapshot for\nfuture integrity"),
 });

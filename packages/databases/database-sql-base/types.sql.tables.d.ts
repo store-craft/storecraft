@@ -190,6 +190,7 @@ export interface CollectionsTable extends Base {
 }
 
 export interface TemplatesTable extends Base {
+  template_subject?: string;
   template_html?: string;
   template_text?: string;
   reference_example_input?: JSONColumnType<object>;

@@ -83,24 +83,31 @@ const DangerousHTMLView = (
 
 /**
  * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/api').TemplateType["template_html" | "template_text"]> 
+ *   import('@storecraft/core/api').TemplateType["template_html" | "template_text" | 'template_subject']> 
  * } TemplateTemplateParams
  * 
  * @param {TemplateTemplateParams & 
- *  Omit<
- *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 
- *    'onChange'
- *  >} params
+ *  Omit<React.ComponentProps<'div'>, 'onChange'> & {
+ *  editor?: {
+ *    width?: string,
+ *    height?: string,
+ *    options?: import('@monaco-editor/react').EditorProps["options"]
+ *  },
+ *  isHtml?: boolean,
+ *  defaultMode?: 0|1|2,
+ *  showLayoutSwitcher?: boolean 
+ * }} params
  */
 export const TemplateTemplate = (
   { 
-    field, context, setError, value, onChange, ...rest 
+    field, context, setError, value, onChange, 
+    isHtml=true, editor, defaultMode=0, showLayoutSwitcher=true,
+    ...rest 
   }
 ) => {
-  const { isHtml=true } = field.comp_params;
   const monaco = useMonaco();
   /** @type {ReturnType<typeof useState<0 | 1 | 2>>} */
-  const [mode, setMode] = useState(0);
+  const [mode, setMode] = useState(defaultMode);
   const [example, setExample] = useState({});
   const [template, setTemplate] = useState(value);
   const { darkMode } = useDarkMode();
@@ -115,7 +122,7 @@ export const TemplateTemplate = (
     }, [onChange]
   );
 
-  /** @type {Parameters<LayoutSwitch>["0"]["onChange"]} */
+  /** @type {Parameters<typeof LayoutSwitch>["0"]["onChange"]} */
   const layout_onChange = useCallback(
     (value) => {
       setMode(value);
@@ -438,50 +445,53 @@ export const TemplateTemplate = (
   return (
 <div {...rest} >
   <div className='flex flex-col w-full gap-5'>
-    <LayoutSwitch 
+    {
+      showLayoutSwitcher &&
+      <LayoutSwitch 
         onChange={layout_onChange} 
         mode={mode}
-         />
+      />
+    }
     
     { mode<2 &&
       <div className='w-full flex flex-col gap-5 relative'>
         <Editor
-            options={{tabSize: 2}}
-            width='100%'
-            height="500px"
-            className='rounded-md border shelf-border-color overflow-clip'
-            onChange={editor_onChange}
-            value={template}
-            theme={darkMode ? 'coblat' : 'light'}
-            defaultLanguage='handlebars'
-            // defaultValue="// some comment"
-            // onMount={handleEditorDidMount}
-          />
+          options={{tabSize: 2, minimap: {autohide: true}, ...editor?.options}}
+          width={editor?.width ?? '100%'}
+          height={editor?.height ?? '500px'}
+          className='rounded-md border shelf-border-color overflow-clip'
+          onChange={editor_onChange}
+          value={template}
+          theme={darkMode ? 'coblat' : 'light'}
+          defaultLanguage='handlebars'
+          // defaultValue="// some comment"
+          // onMount={handleEditorDidMount}
+        />
         <iframe 
-            srcDoc={preview_compiled} 
-            className={
-              `${mode==0 ? 'absolute translate-x-10 left-full top-0 w-full ' : ''} 
-              rounded-md border shelf-border-color resize overflow-auto bg-white`
-            }
-            height="500px" />
+          srcDoc={preview_compiled} 
+          className={
+            `${mode==0 ? 'absolute translate-x-10 left-full top-0 w-full ' : ''} 
+            rounded-md border shelf-border-color resize overflow-auto bg-white`
+          }
+          height={editor?.height ?? '500px'} />
       </div>
     }
     {
       mode==2 &&
       <Splitter className='z-[100] fixed left-0 top-0 w-full h-full'>
         <Editor
-            options={{tabSize: 2}}
-            width='100%'
-            height="100%"
-            className='--overflow-auto'
-            onChange={editor_onChange}
-            value={template}
-            theme={darkMode ? 'coblat' : 'light'}
-            // theme='vs-dark'
-            defaultLanguage='handlebars'
-            // defaultValue="// some comment"
-            // onMount={handleEditorDidMount}
-          />
+          options={{tabSize: 2}}
+          width={editor?.width ?? '100%'}
+          height={'100%'}
+          className='--overflow-auto'
+          onChange={editor_onChange}
+          value={template}
+          theme={darkMode ? 'coblat' : 'light'}
+          // theme='vs-dark'
+          defaultLanguage='handlebars'
+          // defaultValue="// some comment"
+          // onMount={handleEditorDidMount}
+        />
         <div className='w-full h-full flex-col items-center'>  
           <div className='flex flex-row items-center text-2xl 
                         shelf-plain-card-soft justify-between w-full p-3'>

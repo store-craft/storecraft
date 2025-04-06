@@ -1,10 +1,12 @@
 import { api, rest } from './test-runner/index.js';
 import { create_app } from './create-app.test.js';
+import { create_test as postman_test } from './extensions/postman/postman.test.js';
 
 async function test() {
   const app = await create_app();
 
-  // app.extensions.
+  // test postman extension
+  postman_test(app).run();
 
   // test twice on a hot database
   for(const i of [0, 1]) {

@@ -64,7 +64,7 @@ const root_schema = {
       comp_params: { className: 'w-full' } 
     },
     { 
-      key: 'reference_example_input', name: 'Example input for template', 
+      key: 'reference_example_input', name: 'Input for template', 
       defaultValue: {},
       desc: 'Play with various inputs for your `Handlebars` template',
       comp: withCard(TemplateExampleInput), 

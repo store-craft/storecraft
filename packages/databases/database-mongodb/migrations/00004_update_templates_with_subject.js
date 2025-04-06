@@ -1,6 +1,8 @@
 import { Db, MongoClient } from 'mongodb';
 import { MongoDB } from '../index.js'
-import { templates as templates_corrections } from '@storecraft/core/assets/seed-templates-v3-update-previous-templates-with-subject.js';
+import { 
+  templates as templates_corrections 
+} from '@storecraft/core/assets/seed-templates-v3-update-previous-templates-with-subject.js';
 
 /**
  * 

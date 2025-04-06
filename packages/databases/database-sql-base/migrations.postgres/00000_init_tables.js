@@ -1,8 +1,7 @@
-import { CreateTableBuilder, Kysely } from 'kysely'
-
 /**
- * @typedef {import('../types.sql.tables.js').Database} Database
+ * @import { Database } from '../types.sql.tables.js'
  */
+import { CreateTableBuilder, Kysely } from 'kysely'
 
 /**
  * @template {string} TB

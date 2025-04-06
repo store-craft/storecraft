@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-cloudflare-d1",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "`Storecraft` database driver for `cloudflare` D1 (cloud sqlite)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

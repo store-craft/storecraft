@@ -33,21 +33,38 @@ const root_schema = {
       comp_params: {className: 'w-full '} 
     },
     { 
-      key: 'template_html', name: 'HTML Template', 
+      key: 'template_subject', name: 'Email Subject Template', 
+      defaultValue: 'Hello {{name}}',
+      desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` Subject',
+      comp: withCard(
+        TemplateTemplate, { 
+          isHtml: false, className: 'w-full',
+          defaultMode: 1,
+          showLayoutSwitcher: false,
+          editor: {
+            width: '100%', height: '40px',
+            options: {lineNumbers: 'off', minimap: {enabled: false }, folding: false,}
+          } 
+        }
+      ), 
+      comp_params: { className: 'w-full' } 
+    },
+    { 
+      key: 'template_html', name: 'HTML Body Template', 
       defaultValue: '<html></html>',
       desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
       comp: withCard(TemplateTemplate, { isHtml: true }), 
       comp_params: { className: 'w-full' } 
     },
     { 
-      key: 'template_text', name: 'Text Template', 
+      key: 'template_text', name: 'Text Body Template', 
       defaultValue: 'Hello',
       desc: 'Use [Handlebars](https://handlebarsjs.com/) syntax to create a fabulous `email` template',
-      comp: withCard(TemplateTemplate, { isHtml: false }), 
+      comp: withCard(TemplateTemplate, { isHtml: false, editor: { options: {lineNumbers: 'off'} } }), 
       comp_params: { className: 'w-full' } 
     },
     { 
-      key: 'reference_example_input', name: 'Example input for template', 
+      key: 'reference_example_input', name: 'Input for template', 
       defaultValue: {},
       desc: 'Play with various inputs for your `Handlebars` template',
       comp: withCard(TemplateExampleInput), 

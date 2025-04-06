@@ -991,8 +991,8 @@ const register_emails = (registry) => {
   registry.registerPath({
     method: 'post',
     path: `/emails/send`,
-    description: 'Send an email',
-    summary: 'Send an email to multiple recipients',
+    summary: 'Send an email',
+    description: 'Send an email to multiple recipients',
     tags: ['emails'],
     request: {
       body: {
@@ -1026,8 +1026,7 @@ const register_emails = (registry) => {
     {
       emails: z.array(z.string()).describe('The email addresses to send the email to'),
       template_handle: z.string().describe('The template `handle` or `id` in the database'),
-      subject: z.string().describe('Subject of the email'),
-      data: z.any().describe('Key-value data to be used in the template')
+      data: z.any().describe('Key-value data to be used in the template\'s subject, html and text'),
     }
   ).describe('Parameters for sending mail with a template');
 
@@ -1036,8 +1035,8 @@ const register_emails = (registry) => {
   registry.registerPath({
     method: 'post',
     path: `/emails/send-with-template`,
-    description: 'Send an email with a template',
-    summary: 'Send an email to multiple recipients with a template',
+    summary: 'Send an email with a template',
+    description: 'Send an email to multiple recipients with a template. Each template has a `subject`, `html` and `text` body templates, that you can configure at the dashboard',
     tags: ['emails'],
     request: {
       body: {
@@ -1047,7 +1046,6 @@ const register_emails = (registry) => {
             example: {
               emails: ['  [email protected] '],
               template_handle: 'order-confirmation',
-              subject: 'Order Confirmation',
               data: { order_id: '12345' }
             }
           }

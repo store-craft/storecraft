@@ -130,7 +130,7 @@ export const assert_partial = (
     if(Array.isArray(expected)) {
       assert.ok(
         Array.isArray(actual),
-        `expected array but got typeof ${prefix} = ${typeof actual}`
+        `${prefix_msg} \nexpected array but got typeof ${prefix} = ${typeof actual}`
       )
     }
 

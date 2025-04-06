@@ -1,7 +1,8 @@
 /**
  * @import { events } from '../../pubsub/types.public.js'
- * @import { SendMailParams, SendMailWithTemplateParams } from '../../mailer/types.mailer.js'
- * 
+ * @import { 
+ *  SendMailParams, SendMailWithTemplateParams 
+ * } from '../../mailer/types.mailer.js'
  */
 
 import { suite } from 'uvu';
@@ -15,7 +16,6 @@ import { DummyMailer } from '../../mailer/dummy-mailer.js';
 
 
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {
@@ -41,7 +41,6 @@ export const create = app => {
     
     /** @type {Partial<events>} */
     const events_dispatched = {};
-    const unsubs = [];
 
     // catch all events
     const unsub =  app.pubsub.on(
@@ -129,7 +128,6 @@ export const create = app => {
     const params = {
       emails: ['support@storecraft.app'],
       template_handle: 'welcome-customer',
-      subject: 'Test Welcome Customer Email',
       data: {
         customer: {
           email: 'customer_name@example.com',
@@ -175,8 +173,7 @@ export const create = app => {
         '`email/after-send` event was not dispatched'
       );
 
-      // assert against real template
-      {
+      { // assert against real template
         const template = await app.api.templates.get(params.template_handle);
         const { text, html } = compileTemplate(template, params.data);
         assert.ok(

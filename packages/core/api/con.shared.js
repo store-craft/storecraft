@@ -2,7 +2,7 @@
  * @import {searchable, BaseType} from './types.api.js'
  * @import {RegularGetOptions, db_crud, withConcreteId} from '../database/types.public.js'
  * @import {PubSubEvent} from '../pubsub/types.public.js'
- * @import {ApiQuery} from './types.api.query.js'
+ * @import {ApiQuery, ExpandQuery} from './types.api.query.js'
  */
 
 import { ID, apply_dates, assert } from './utils.func.js'
@@ -66,8 +66,14 @@ export const regular_upsert = (
 
     // fetch previous item from the database
     if(requires_event_processing) {
-      if(item?.id)
-        previous_item = await db.get(item.id);
+      if(item?.id) {
+        previous_item = await db.get(
+          item.id, 
+          { 
+            expand: /** @type {ExpandQuery<DB_GET_TYPE>} */ (['*']) 
+          }
+        );
+      }
     }
 
     // Check if exists

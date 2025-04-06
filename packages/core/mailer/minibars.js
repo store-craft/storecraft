@@ -59,7 +59,9 @@ const _m = {
             type : 'field', 
             raw : rawField, 
             val : text.slice(tkPos+closeBy.length, tkEnd), 
-            };
+          };
+
+          // console.log({token})
 
           var delimHS = token.val.indexOf(' ');
           if(delimHS !== -1) {
@@ -127,7 +129,7 @@ const _m = {
       var acc = '';
       levels.forEach(function(fn) {
         if(fn[0] == '/') fn = fn.slice(1);
-        acc += '['+JSON.stringify(fn)+']';
+        acc += '?.['+JSON.stringify(fn)+']';
       });      
       return(scope+acc);
     },
@@ -207,7 +209,8 @@ const _m = {
         'var index='+iterVN+';'+
         'var key='+keyVN+'['+iterVN+'];'+
         'var '+scp+'='+container+'[key];'+
-        _m.gen.local_mapping(token, [scp, 'key']));
+        _m.gen.local_mapping(token, [scp, 'key'])
+      );
     },
     
     properties_end : function(token) {
@@ -289,7 +292,7 @@ const _m = {
    * 
    * @param {string} text 
    * @param {*} opt 
-   * @returns 
+   * @returns {(data: object) => string}
    */
   compile: function(text, opt) {
     if (!opt) opt = {};

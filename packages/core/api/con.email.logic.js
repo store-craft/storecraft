@@ -13,21 +13,27 @@ import { assert } from "./utils.func.js";
  * @description compile a template into `html` and `text` if possible
  * @param {TemplateType} template 
  * @param {object} data 
+ * @returns {{html?: string | undefined, text?: string, subject?: string}}
  */
 export const compileTemplate = (template, data) => {
-  let html, text;
+  let html='', text='', subject='';
   if(template.template_html) {
-    const handlebarsTemplateHTML = Minibars.compile(template.template_html);
-    html = handlebarsTemplateHTML(data);
+    const handlebars_compiled_template = Minibars.compile(template.template_html);
+    html = handlebars_compiled_template(data);
   }
 
   if(template.template_text) {
-    const handlebarsTemplateTEXT = Minibars.compile(template.template_text);
-    text = handlebarsTemplateTEXT(data);
+    const handlebars_compiled_template = Minibars.compile(template.template_text);
+    text = handlebars_compiled_template(data);
+  }
+
+  if(template.template_subject) {
+    const handlebars_compiled_template = Minibars.compile(template.template_subject);
+    subject = handlebars_compiled_template(data);
   }
 
   return {
-    text, html
+    text, html, subject
   }
 }
 
@@ -41,7 +47,7 @@ export const sendMailWithTemplate = (app) =>
    * @template {templates_keys | string} [HANDLE=keyof templates_input_types]
    * @param {SendMailWithTemplateParams<HANDLE>} data 
    */
-  async ({emails, template_handle, subject, data}) => {
+  async ({emails, template_handle, data}) => {
     
     assert(
       app.mailer,
@@ -56,7 +62,7 @@ export const sendMailWithTemplate = (app) =>
       )
     }
 
-    const { html, text } = compileTemplate(
+    const { html, text, subject } = compileTemplate(
       template, 
       data
     );
@@ -65,12 +71,12 @@ export const sendMailWithTemplate = (app) =>
       {
         html,
         text,
+        subject,
         from: {
           address: app.config.general_store_support_email ?? 'support@storecraft.app',
           name: 'Support'
         },
         to: emails.map(e => ({address: e})),
-        subject
       }
     );
   }
@@ -86,7 +92,9 @@ export const sendMail = (app) =>
   async (mail) => {
     await app.pubsub.dispatch(
       'email/before-send',
-      { mail_object: mail }
+      { 
+        mail_object: mail 
+      }
     );
 
     assert(

@@ -2,6 +2,7 @@
  * @import { OrderData, OrderDataUpsert } from '../../api/types.api.js'
  * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
+ * @import { events } from '../../pubsub/types.public.js';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';

@@ -159,6 +159,12 @@ export const create = app => {
 
     await app.api.orders.upsert(order_upsert_2);
 
+    // console.log(
+    //   {
+    //     order_get_1
+    //   }
+    // )
+
     { // test required order events dispatch after status change
       const events_required = /** @type {const} */(
         [
@@ -178,6 +184,7 @@ export const create = app => {
         //     ...events[event]
         //   }
         // )
+        
         assert.ok(event, `event ${event} not received`);
         assert_partial_v2(
           events[event].current,

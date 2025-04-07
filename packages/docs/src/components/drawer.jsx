@@ -31,7 +31,7 @@ const Drawer = (
   }
   <div 
       children={children} 
-      className={`--bg-red-200 transition-max-height duration-0
+      className={`--bg-red-200 transition-[max-height] duration-0
                   ${isOpen ? 'max-h-[40rem]' : 'max-h-0'}
                   overflow-hidden
                   `

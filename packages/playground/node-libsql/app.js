@@ -74,7 +74,6 @@ export const app = new App(
     google: new GoogleAuth(),
     github: new GithubAuth(),
     facebook: new FacebookAuth(),
-    dummy: new DummyAuth(),
     x: new XAuth(),
   }
 )

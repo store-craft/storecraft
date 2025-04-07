@@ -19,7 +19,7 @@ const Drawer = (
 
   const cls_ch = c(
     'overflow-hidden h-fit',
-    'transition-max-height',
+    'transition-[max-height]',
     'ease-linear',
     { 'max-h-[300px]': open},
     {'max-h-0': !open},

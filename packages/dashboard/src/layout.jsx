@@ -150,7 +150,7 @@ const Layout = (
     <div className={`absolute left-0 top-0 md:relative flex flex-shrink-0 
                       w-fit h-full overflow-x-clip overflow-hidden 
                       z-50 
-                      md:transition-max-width md:duration-500 ease-in-out
+                      md:transition-[max-width] md:duration-500 ease-in-out
                       ${menuOpen ? 'max-w-[72rem]' : 'max-w-0 '}`}>
 
       <Bling 

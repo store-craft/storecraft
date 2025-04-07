@@ -57,7 +57,7 @@ const ErrorMessage = (
 
   let cls_text = positive ? 'text-green-500' : 'text-red-700 dark:text-red-500'
   let cls = !visible ? 'max-h-0 mt-0 ' : 'max-h-[1000px] mt-0 '
-  cls += ' my-8 w-full h-fit transition-max-height duration-500 \
+  cls += ' my-8 w-full h-fit transition-[max-height] duration-500 \
           rounded-lg overflow-hidden ' + className
 
   return (

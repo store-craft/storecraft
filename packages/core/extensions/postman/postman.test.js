@@ -3,7 +3,6 @@
  * @import { Test } from 'uvu';
  * @import { events } from '../../pubsub/types.public.js';
  */
-import { create_app } from '../../create-app.test.js';
 import { test, suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../../test-runner/api/api.utils.crud.js';

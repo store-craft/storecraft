@@ -19,11 +19,11 @@ export const create_routes = (app) => {
   const polka = new Polka();
 
   const middle_authorize_admin = authorize_admin(app);
+  polka.use(middle_authorize_admin);
 
   // save tag
   polka.post(
     '/',
-    middle_authorize_admin,
     async (req, res) => {
       const final = await app.api.notifications.addBulk(req.parsedBody);
 
@@ -59,7 +59,6 @@ export const create_routes = (app) => {
   // delete item
   polka.delete(
     '/:handle',
-    middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const removed = handle_or_id && await app.api.notifications.remove(handle_or_id);

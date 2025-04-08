@@ -1,0 +1,72 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+    
+    "allowJs": true,
+    "checkJs": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+  },
+  "include": ["src"]
+}
+
+
+// {
+//   "compileOnSave": false,
+//   "compilerOptions": {
+//     "noEmit": true,
+//     "allowJs": true,
+//     "maxNodeModuleJsDepth": 20,
+//     "checkJs": true,
+//     "resolveJsonModule": true,
+//     "target": "ESNext",
+//     "module": "NodeNext",
+//     "moduleResolution": "NodeNext",
+//     "esModuleInterop": true,
+//     "lib": [
+//       "dom",
+//       "dom.iterable",
+//       "esnext"
+//     ],
+//     "skipLibCheck": true,
+//     "strict": false,
+//     "incremental": true,
+//     "isolatedModules": true,
+//     "jsx": "preserve",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     },
+//   },
+//   "include": [
+//     "*",
+//     "**/*"
+//   ],
+//   "exclude": [
+//     "**/*.json"
+//   ]
+// }

@@ -1,6 +1,9 @@
 /**
+ * @import { ApiQuery, BaseType, Cursor } from '@storecraft/core/api'
  * @import { inferDocumentCache, inferUseQueryCache } from './use-storecraft-cache.js'
+ * @import { InferQueryableType, queryable_resources } from './use-collection.types.js'
  */
+
 import { useCallback, useEffect, useRef, useState } from "react"
 import useTrigger from "./use-trigger.js"
 import { useStorecraft } from "./use-storecraft.js";
@@ -26,16 +29,18 @@ import {
  */
 
 /**
- * @template {any} T the document type
+ * @template {string | queryable_resources} [RESOURCE=(queryable_resources)]
+ * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]
  * 
- * @param {string} resource the table `identifier`
+ * @param {RESOURCE} resource the table `identifier`
  * @param {string} document the document `id` or `handle`
- * @param {boolean} autoLoad 
- * @param {boolean} try_cache_on_autoload 
+ * @param {boolean} [autoLoad=true] 
+ * @param {boolean} [try_cache_on_autoload=true] 
  * 
  */
 export function useDocument(
-  resource, document, 
+  resource, 
+  document, 
   autoLoad=true, 
   try_cache_on_autoload=true
 ) {

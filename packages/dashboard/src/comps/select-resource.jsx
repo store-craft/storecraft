@@ -43,7 +43,7 @@ export const default_transform_fn = window => window ?? []
  * @property {string} header
  * @property {boolean} [add_all] add all sentinal
  * @property {0 | 1} layout add all sentinal
- * @property {keyof App["db"]["resources"]} resource table identifier to query
+ * @property {import('@storecraft/sdk-react-hooks').queryable_resources} resource table identifier to query
  * @property {number} [limit] number of item to query
  * @property {string} [className] 
  * @property {string} [clsHeader] 

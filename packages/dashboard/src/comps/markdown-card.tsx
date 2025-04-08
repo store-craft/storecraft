@@ -1,25 +1,29 @@
-import { Bling, Card } from "./common-ui.jsx"
+import { Bling, Card } from "./common-ui.js"
 import MDView from "./md-view.jsx"
 
 /**
  * A card with `markdown content`
- * 
- * 
- * @typedef {object} MarkdownViewCardParams
- * @prop {string} value markdown text
- * @prop {string} title card title
- * @prop {string} [description] card description
- * 
- * 
- * @param {MarkdownViewCardParams & 
- *  Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'value'>
- * } params
- * 
  */
+export type MarkdownViewCardParams = {
+  /**
+   * markdown text
+   */
+  value: string;
+  /**
+   * card title
+   */
+  title: string;
+  /**
+   * card description
+   */
+  description?: string;
+} & Omit<React.ComponentProps<'div'>, 'value'>
+
+
 export const MarkdownViewCard = (
   { 
     value, title, description, ...rest
-  }
+  }: MarkdownViewCardParams
 ) => {
 
 return (

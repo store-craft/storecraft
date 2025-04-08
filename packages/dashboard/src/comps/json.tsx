@@ -1,22 +1,19 @@
 import { Inspector } from 'react-inspector'
 import { chromeLight, chromeDark } from 'react-inspector'
-import { Card } from './common-ui.jsx'
+import { Card } from './common-ui.js'
 import { useMemo } from 'react'
 import useDarkMode from '@/hooks/use-dark-mode.js'
-import { ClipBoardCopy } from './common-fields.jsx'
+import { ClipBoardCopy } from './common-fields.js'
+import { FieldLeafViewParams } from './fields-view.js'
 
-/**
- * @typedef {object} InnerJsonViewParams
- * @prop {any} value
- * 
- * @param {InnerJsonViewParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- */
+export type JsonViewParams = {
+  value: any
+} & React.ComponentProps<'div'>
+
 const JsonView = (
   { 
     value, ...rest 
-  }
+  }: JsonViewParams
 ) => {
 
   const { darkMode } = useDarkMode();
@@ -51,15 +48,12 @@ const copyContent = async (text) => {
   }
 }
 
-/**
- * @param {import('./fields-view.jsx').FieldLeafViewParams<object> & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- */
+export type JsonViewCardParams = FieldLeafViewParams<object> & React.ComponentProps<'div'>;
+
 export const JsonViewCard = (
   { 
     value, setError, ...rest 
-  }
+  }: JsonViewCardParams
 ) => {
 
   if(!value)

@@ -1,55 +1,137 @@
 import { AiFillCloseCircle, AiOutlineLoading3Quarters, 
   AiOutlineCamera } from 'react-icons/ai/index.js'
 import { BsClipboardPlus } from 'react-icons/bs/index.js'
-import ImageEditor from './image-editor.jsx'
+import ImageEditor from './image-editor.js'
 import { BsCloudUpload } from 'react-icons/bs/index.js'
 import { useCallback, useEffect, useRef, 
   useState } from 'react'
 import ShowIf from './show-if.jsx'
-import { BlingInput } from './common-ui.jsx'
+import { BlingInput } from './common-ui.js'
 import { RiGalleryLine } from 'react-icons/ri/index.js'
 import GallerySelect from '../apps/gallery/gallery-select.jsx'
 import { DragDropContainer, DropTarget } from 'react-drag-drop-container'
 import { hasTouchScreen, read_clipboard } from '../utils/index.js'
-import { BlingButton } from './common-button.jsx'
-import { HR } from './common-ui.jsx'
-import Img from './img.jsx'
+import { BlingButton } from './common-button.js'
+import { HR } from './common-ui.js'
+import Img from './img.js'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
+import { FieldLeafViewParams } from './fields-view.js'
+import { ImpInterface } from './overlay.js'
 
 /**
  * `CameraSource` will fetch image from local camera
- * 
- * @typedef {object} CameraSourceParams
- * @prop {(value: FileList) => void} onFile
- * @prop {string} className
- * 
- * @param {CameraSourceParams} params
+ */
+export type CameraSourceParams = {
+  onFile: (value: FileList) => void;
+  className: string;
+};
+
+/**
+ * `LocalSource` will fetch image from a local device
+ */
+export type LocalSourceParams = {
+  onFile: (value: FileList) => void;
+  className: string;
+};
+
+/**
+ * `GallerySource` will fetch file from the `images` database
+ */
+export type GallerySourceParams = {
+  onFinish: (url: string, requires_edit?: boolean) => void;
+  className: string;
+};
+
+/**
+ * `UrlSource` will fetch image from a simple `url`
+ */
+export type UrlSourceParams = {
+  onFinish: (url: string, requires_edit?: boolean) => void;
+  className: string;
+};
+
+/**
+ * `Media` wraps a few media fetching sources together.
+ */
+export type Upload = {
+  status: "working" | "failed";
+  id: string | number;
+  preview: string;
+  error_code?: string;
+};
+
+/**
+ * `Media` wraps a few media fetching sources together.
+ */
+export type MediaParams = {
+  className: string;
+} & FieldLeafViewParams<string[]>;
+
+
+/**
+ * drop `event` type of `react-drag-drop-container` lib
+ */
+export type ReactDropEvent = {
+  dragData: any;
+  dropElem: React.ReactNode;
+  dropData: any;
+};
+
+/**
+ * drop `event` type of `react-drag-drop-container` lib
+ */
+export type BaseReactDragDropEvent = {
+  dragData: any;
+  dragElem: HTMLDivElement;
+  containerElem: HTMLDivElement;
+  sourceElem: HTMLSpanElement;
+};
+
+/**
+ * `event` type of `react-drag-drop-container` lib
+ */
+export type DragLeaveEvent = BaseReactDragDropEvent;
+
+/**
+ * `event` type of `react-drag-drop-container` lib
+ */
+export type DragEnterEvent = BaseReactDragDropEvent;
+
+/**
+ * `Images` manages images thumbnails and uploads.
+ */
+export type ImagesParams = {
+  urls: string[];
+  uploads: Upload[];
+  onImageClick: (ix: number) => void;
+  onImageRemove: (ix: number) => void;
+  onImageOrder: (ix: number, ij: number) => void;
+} & React.ComponentProps<'div'>;
+
+
+////
+
+/**
+ * `CameraSource` will fetch image from local camera
  */
 const CameraSource = (
   {
     onFile, className, ...rest
-  }
+  }: CameraSourceParams
 ) => {
 
   const [isOver, setIsOver] = useState(false);
-  /** @type {useStateInfer<FileList>} */
-  const [files, setFiles] = useState();
+  const [files, setFiles] = useState<FileList>();
 
   const _notify = useCallback(
-    /**
-     * @param {FileList} fs 
-     */
-    (fs) => {
+    (fs: FileList) => {
       setIsOver(false)
       setFiles(fs)
       onFile(fs)
     }, [onFile]
   )
   const onFileSelect = useCallback(
-    /**
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-    e => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault()
       _notify(e.currentTarget.files)
     }, [_notify]
@@ -78,23 +160,16 @@ const CameraSource = (
 
 /**
  * `LocalSource` will fetch image from a local device
- * 
- * @typedef {object} LocalSourceParams
- * @prop {(value: FileList) => void} onFile
- * @prop {string} className
- * 
- * @param {LocalSourceParams} params
  */
 const LocalSource = (
   {
     onFile, className, ...rest
-  }
+  }: LocalSourceParams
 ) => {
 
   const [_hasTouchScreen, setHasTouchScreen] = useState(false)
   const [isOver, setIsOver] = useState(false)
-  /** @type {useStateInfer<FileList>} */
-  const [files, setFiles] = useState()
+  const [files, setFiles] = useState<FileList>()
 
   useEffect(
     () => {
@@ -102,10 +177,7 @@ const LocalSource = (
     }, []
   )
   const _notify = useCallback(
-    /**
-     * @param {FileList} fs 
-     */
-    (fs) => {
+    (fs: FileList) => {
       setIsOver(false)
       setFiles(fs)
       // onFile(URL.createObjectURL(fs[0]))
@@ -113,49 +185,34 @@ const LocalSource = (
     }, [onFile]
   )
   const onDrop = useCallback(
-    /**
-     * @param {React.DragEvent<HTMLLabelElement>} e 
-     */
-    (e) => {
+    (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
       _notify(e.dataTransfer.files)
     }, [_notify]
   );
 
   const onFileSelect = useCallback(
-    /**
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-    e => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault()
       _notify(e.currentTarget.files)
     }, [_notify]
   );
 
   const onDragEnter = useCallback(
-    /**
-     * @param {React.DragEvent<HTMLLabelElement>} e 
-     */
-    (e) => {
+    (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
     }, []
   );
 
   const onDragLeave = useCallback(
-    /**
-     * @param {React.DragEvent<HTMLLabelElement>} e 
-     */
-    (e) => {
+    (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
       setIsOver(false)
     }, []
   );
   
   const onDragOver = useCallback(
-    /**
-     * @param {React.DragEvent<HTMLLabelElement>} e 
-     */
-    (e) => {
+    (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault()
       setIsOver(true)
     }, []
@@ -187,39 +244,26 @@ const LocalSource = (
     </ShowIf>
   </div>
   <input 
-      id="dropzone-file" 
-      type="file" 
-      className="hidden" 
-      accept="image/*" 
-      multiple 
-      onChange={onFileSelect} />
+    id="dropzone-file" 
+    type="file" 
+    className="hidden" 
+    accept="image/*" 
+    multiple 
+    onChange={onFileSelect} />
 </label>
   )
 }
 
 /**
  * `GallerySource` will fetch file from the `images` database
- * 
- * @typedef {object} GallerySourceParams
- * @prop {(url: string, requires_edit?: boolean) => void} onFinish
- * @prop {string} className
- * 
- * @param {GallerySourceParams & 
- *  React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
- * } params
  */
 const GallerySource = (
   {
     onFinish, className, ...rest
-  }
+  }: GallerySourceParams
 ) => {
 
-  /**
-   * @type {React.MutableRefObject<
-   *  import('./overlay.jsx').ImpInterface>
-   * }
-   */
-  const ref_gallery = useRef();
+  const ref_gallery = useRef<ImpInterface>(undefined);
 
   return (
 <>
@@ -244,39 +288,24 @@ const GallerySource = (
   )
 }
 
-/**
- * @template T
- * @typedef {ReturnType<typeof useState<T>>} useStateInfer
- */
 
 const test_url = 'https://images-na.ssl-images-amazon.com/images/I/91iHBLGTsIL._SL1500_.jpg'
 
 /**
  * `UrlSource` will fetch image from a simple `url`
- * 
- * @typedef {object} UrlSourceParams
- * @prop {(url: string, requires_edit?: boolean) => void} onFinish
- * @prop {string} className
- * 
- * @param {UrlSourceParams & 
- *  React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
- * } params
  */
 const UrlSource = (
   {
     onFinish, className, ...rest
-  }
+  }: UrlSourceParams
 ) => {
 
   const [edit, setEdit] = useState(false)
-  /** @type {useStateInfer<string>} */
-  const [url, setUrl] = useState()
-  /** @type {useStateInfer<string>} */
-  const [error, setError] = useState(undefined)
+  const [url, setUrl] = useState<string>()
+  const [error, setError] = useState<string>(undefined)
 
   const onAdd = useCallback(
-    /** @param {string} $url */
-    ($url) => {
+    ($url: string) => {
       if($url===undefined)
         return
       let regEx = /\b(https?:\/\/.*?\.[a-z]{2,4}\/[^\s]*\b)/g;
@@ -347,37 +376,20 @@ const URLS = [
 
 /**
  * `Media` wraps a few media fetching sources together.
- * 
- * @typedef {object} InnerMediaParams
- * @prop {string} className
- * 
- * @typedef {object} Upload
- * @prop {'working' | 'failed'} status
- * @prop {string | number} id
- * @prop {string} preview
- * @prop {string} [error_code]
- * 
- * @typedef {InnerMediaParams & 
- *  import('./fields-view.jsx').FieldLeafViewParams<string[]>
- * } MediaParams
- * 
- * @param {MediaParams} params
  */
 const Media = (
   {
     field, value = [], onChange, className, ...rest
-  }
+  }: MediaParams
 ) => {
 
   const { sdk } = useStorecraft();
   const [_hasTouchScreen, setHasTouchScreen] = useState(false);
-  /** @type {useStateInfer<Upload[]>} */
-  const [uploads, setUploads] = useState([]);
+  const [uploads, setUploads] = useState<Upload[]>([]);
   const [urls, setUrls] = useState(value ?? []);
   
   // crop
-  /** @type {useStateInfer<string>} */
-  const [editSrc, setEditSrc] = useState()
+  const [editSrc, setEditSrc] = useState<string>()
   const [editSrcName, setEditSrcName] = useState('')
 
   // This effect will notify the edit node each time urls change
@@ -396,11 +408,7 @@ const Media = (
 
   //
   const setEditSourceWithRevoke = useCallback(
-    /**
-     * @param {string} src 
-     * @param {string} [name] 
-     */
-    (src, name) => {
+    (src: string, name?: string) => {
       // src can be url, blob, data-url
       setEditSrc(current => {
         try { // if the current is an object url, try to free it
@@ -413,8 +421,7 @@ const Media = (
   );
 
   // Sources handlers
-  /** @type {CameraSourceParams["onFile"]} */
-  const onFileSource = useCallback(
+  const onFileSource: CameraSourceParams["onFile"] = useCallback(
     (files) => {
       // need to store it for memory release revokeObjectURL(objectURL)
       const obj_url = URL.createObjectURL(files[0])
@@ -422,8 +429,7 @@ const Media = (
     }, [setEditSourceWithRevoke]
   )
 
-  /** @type {UrlSourceParams["onFinish"]} */
-  const onUrlSource = useCallback(
+  const onUrlSource: UrlSourceParams["onFinish"] = useCallback(
     (img_url, requires_edit=false) => {
       if(requires_edit){
         setEditSourceWithRevoke(img_url, img_url)
@@ -438,14 +444,10 @@ const Media = (
 
   // Editing is complete
   const onCompleteEditing = useCallback(
-    /**
-     * @param {Blob} blob 
-     * @param {'jpeg' | 'png' | 'webp'} type 
-     * @param {string} name 
-     * @param {number} width 
-     * @param {number} height
-     */
-    async (blob, type, name, width, height) => {
+    async (
+      blob: Blob, type: 'jpeg' | 'png' | 'webp', 
+      name: string, width: number, height: number
+    ) => {
       // upload indication
       setEditSourceWithRevoke(undefined)
       if(blob==undefined)
@@ -505,8 +507,7 @@ const Media = (
 
   // Images callbacks
   const onImageRemove = useCallback(
-    /** @param {number} ix  */
-    (ix) => {
+    (ix: number) => {
       console.log(ix, urls)
       const new_urls = [...urls]
       new_urls.splice(ix, 1)
@@ -516,18 +517,13 @@ const Media = (
   );
 
   const onImageClick = useCallback(
-    /** @param {number} ix  */
-    (ix) => {
+    (ix: number) => {
       setEditSourceWithRevoke(urls[ix], urls[ix])
     }, [urls, setEditSourceWithRevoke]
   );
 
   const onImageOrder = useCallback(
-    /**
-     * @param {number} ix 
-     * @param {number} jx 
-     */
-    (ix, jx) => {
+    (ix: number, jx: number) => {
       console.log(ix, '-', jx)
       const urls_c = [...urls]
       const temp = urls_c[jx]
@@ -578,54 +574,22 @@ const Media = (
 /**
  * `Images` manages images thumbnails and uploads.
  * 
- * @typedef {object} InnerImagesParams
- * @prop {string[]} urls
- * @prop {Upload[]} uploads
- * @prop {(ix: number) => void} onImageClick
- * @prop {(ix: number) => void} onImageRemove
- * @prop {(ix: number, ij: number) => void} onImageOrder
- * 
- * @typedef {{
- *  dragData: any,
- *  dropElem: React.ReactNode,
- *  dropData: any,
- * }} ReactDropEvent drop `event` type of `react-drag-drop-container` lib
- * 
- * @typedef {{
- *  dragData: any,
- *  dragElem: HTMLDivElement,
- *  containerElem: HTMLDivElement, 
- *  sourceElem: HTMLSpanElement
- * }} BaseReactDragDropEvent drop `event` type of `react-drag-drop-container` lib
- * 
- * @typedef {BaseReactDragDropEvent} DragLeaveEvent `event` type of `react-drag-drop-container` lib
- * @typedef {BaseReactDragDropEvent} DragEnterEvent `event` type of `react-drag-drop-container` lib
- * 
- * @typedef {InnerImagesParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } ImagesParams
- * 
- * @param {ImagesParams} params
+
  */
 const Images = (
   { 
     urls, uploads, onImageClick, onImageRemove, 
     onImageOrder, className, ...rest
-  }
+  }: ImagesParams
 ) => {
 
   /// DRAG PROTO
   const [draggedOver, setDraggedOver] = useState(-1)
   const [dragOrigin, setDragOrigin] = useState(-1);
-  /** @type {React.MutableRefObject<DragEnterEvent>} */
-  const e_drag = useRef();
+  const e_drag = useRef<DragEnterEvent>(undefined);
 
   const dragEnter = useCallback(
-    /**
-     * @param {number} ix 
-     * @param {DragEnterEvent} ev 
-     */
-    (ix, ev) => {
+    (ix: number, ev: DragEnterEvent) => {
       e_drag.current = ev
       ev.dragElem.style.display = 'block'
       setDraggedOver(ix)
@@ -633,34 +597,20 @@ const Images = (
   );
 
   const dragLeave = useCallback(
-    /**
-     * @param {number} ix 
-     * @param {DragLeaveEvent} ev 
-     */
-    (ix, ev) => {
+    (ix: number, ev: DragLeaveEvent) => {
       if(draggedOver == ix)
         setDraggedOver(-1)
     }, [draggedOver]
   );
 
   const onHit = useCallback(
-    /**
-     * @param {number} ix 
-     * @param {ReactDropEvent} e 
-     */
-    (ix, e) => {
+    (ix: number, e: ReactDropEvent) => {
       setDraggedOver(-1)
       onImageOrder(ix, parseInt(e.dragData))
     }, [onImageOrder]
   );
 
   const onDragEnd = useCallback(
-    /**
-     * @param {*} dragData 
-     * @param {*} container 
-     * @param {*} x 
-     * @param {*} y 
-     */
     (dragData, container, x, y) => {
       if(e_drag.current?.dragElem)
         e_drag.current.dragElem.style.display = 'none'

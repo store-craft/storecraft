@@ -2,20 +2,20 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import Editor from "@uiw/react-md-editor/nohighlight";
 import { useState } from "react";
+import { FieldData } from "./fields-view.jsx";
 
-/**
- * @typedef {object} InternalMDEditorParams
- * @prop {import("./fields-view.jsx").FieldData} [field]
- * @prop {string} [value]
- * @prop {(value: string) => void} [onChange]
- * 
- * @typedef {InternalMDEditorParams & 
-*  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-* } MDEditorParams
-* 
-* @param {MDEditorParams} param
-*/
-const MDEditor = ({field, value, onChange, ...rest}) => {
+
+export type MDEditorParams = {
+  field?: FieldData;
+  value?: string;
+  onChange?: (value: string) => void;
+} & React.ComponentProps<'div'>;
+
+const MDEditor = (
+  {
+    field, value, onChange, ...rest
+  }: MDEditorParams
+) => {
   const [md, setMd] = useState(value);
   const { key, name, comp_params } = field
 

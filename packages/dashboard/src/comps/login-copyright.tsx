@@ -1,11 +1,6 @@
+import React from "react";
 
-
-/**
- * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } props 
- */
-const LoginCopyright = (props) => {
+const LoginCopyright = (props: React.ComponentProps<'div'>) => {
   return (
     <div {...props}>
       <p className='w-full py-4 text-sm font-semibold text-center 

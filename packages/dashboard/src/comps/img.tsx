@@ -1,5 +1,5 @@
 import { useStorecraft } from '@storecraft/sdk-react-hooks';
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 
 const Img = forwardRef(
 
@@ -11,21 +11,16 @@ const Img = forwardRef(
    *   through a full download or signed urls.
    * - Fetch a regular `url`
    * 
-   * @typedef { React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
-   * } ImgParams
-   * 
-   * @param {ImgParams} params
-   * @param {*} ref 
-   * 
    */
   (
     { 
       src, ...rest 
-    }, ref
+    }: React.ComponentProps<'img'>, 
+    ref: React.Ref<HTMLImageElement>
   ) => {
 
-    const srcRef = useRef();
-    const [source, setSource] = useState();
+    const srcRef = useRef<React.ComponentProps<'img'>["src"]>(undefined);
+    const [source, setSource] = useState<React.ComponentProps<'img'>["src"]>();
     const { sdk } = useStorecraft();
 
     // console.log(src)

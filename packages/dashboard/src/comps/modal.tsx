@@ -1,58 +1,40 @@
 import { forwardRef, useCallback, 
   useImperativeHandle, useRef, useState } from 'react'
-import { Card } from './common-ui.jsx'
-import { Overlay } from './overlay.jsx'
-import { BlingButton } from './common-button.jsx'
-
+import { Card } from './common-ui.js'
+import { Overlay } from './overlay.js'
+import { BlingButton } from './common-button.js'
 
 /**
  * Imperative interface
- * 
- * @typedef {object} ImpInterface Imperative interface
- * @property {Function} show
- * @property {Function} hide
- * @property {(
- *  data: any, message: string, show?: boolean
- * ) => void} setDataAndMessage
- * 
  */
+export type ImpInterface = {
+  show: Function;
+  hide: Function;
+  setDataAndMessage: (data: any, message: string, show?: boolean) => void;
+};
+
+export type ModalParams = {
+  title?: React.ReactElement;
+  onApprove: (key: string, value: any) => void;
+} & Omit<React.ComponentProps<'div'>, "title">;
+
 
 const QP = {}
 const Modal = forwardRef(
-  /**
-   * 
-   * @typedef {object} InnerModalParams
-   * @prop {React.ReactElement} [title] 
-   * @prop {(key: string, value: any) => void} onApprove 
-   * 
-   * 
-   * @typedef {InnerModalParams & 
-   *  Omit<
-   *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
-   *    'title'
-   *  >
-   * } ModalParams
-   * 
-   * 
-   * @param {ModalParams} params 
-   * @param {any} ref 
-   * 
-   */
   (
     { 
       title=(<p children='NA' className='text-gray-500' />), 
       onApprove, ...rest
-    }, ref
+    }: ModalParams, 
+    ref: React.ForwardedRef<ImpInterface>
   ) => {
 
     const [dm, setDM] = useState({ data: undefined, message: 'NA'});
 
-    /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
-    const ref_overlay = useRef();
+    const ref_overlay = useRef<import('./overlay.jsx').ImpInterface>(undefined);
 
     useImperativeHandle(
       ref,
-      /** @returns {ImpInterface} */
       () => ({
         hide: () => ref_overlay.current.hide(),
         show: () => ref_overlay.current.show(),
@@ -66,11 +48,7 @@ const Modal = forwardRef(
     );
 
     const onSelectInternal = useCallback(
-      /**
-       * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e 
-       * @param {*} v 
-       */
-      (e, v) => { 
+      (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, v=undefined) => { 
         if(onApprove===undefined)
           return
 
@@ -78,7 +56,7 @@ const Modal = forwardRef(
         e.preventDefault();
         e.stopPropagation();
 
-        ref.current.hide();
+        ref_overlay.current.hide();
         onApprove(dm.data, v);
       }, [dm, onApprove]
     );
@@ -99,7 +77,7 @@ const Modal = forwardRef(
             btnClassName='rounded-none'
             rounded='rounded-none'
             children='No' 
-            onClick={() => ref.current.hide()} />
+            onClick={() => ref_overlay.current.hide()} />
         <BlingButton stroke='border-b-2' 
             btnClassName='rounded-none'
             rounded='rounded-none'

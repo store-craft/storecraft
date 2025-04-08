@@ -1,41 +1,37 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa/index.js";
 
-/**
- * 
- * @typedef {object} GithubCommit
- * @prop {string} sha
- * @prop {string} node_id
- * @prop {object} commit
- * @prop {object} commit.author
- * @prop {string} commit.author.name
- * @prop {string} commit.author.email
- * @prop {string} commit.author.date
- * @prop {string} commit.message
- * @prop {string} commit.url
- * @prop {string} url
- * @prop {string} html_url
- * @prop {object} author
- * @prop {string} author.login
- * @prop {string} author.id
- * @prop {string} author.avatar_url
- * @prop {string} author.url
- * @prop {string} author.html_url
- * 
- * @typedef {GithubCommit[]} GithubCommits
- */
+export type GithubCommit = {
+    sha: string;
+    node_id: string;
+    commit: {
+        author: {
+            name: string;
+            email: string;
+            date: string;
+        };
+        message: string;
+        url: string;
+    };
+    url: string;
+    html_url: string;
+    author: {
+        login: string;
+        id: string;
+        avatar_url: string;
+        url: string;
+        html_url: string;
+    };
+};
+export type GithubCommits = GithubCommit[];
+export type CommitViewParams = {
+    commit: GithubCommit;
+};
 
-
-/**
- * @typedef {object} CommitViewParams
- * @prop {GithubCommit} commit
- * 
- * @param {CommitViewParams} params 
- */
 const CommitView = (
   {
     commit
-  }
+  }: CommitViewParams
 ) => {
 
   return (
@@ -54,20 +50,13 @@ const CommitView = (
   )
 }
 
-/**
- * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params 
- */
 const LoginLatestUpdates = (
   {
     ...rest
-  }
+  }: React.ComponentProps<'div'>
 ) => {
 
-  /**
-   * @type {ReturnType<typeof useState<GithubCommits>>}
-   */
-  const [commits, setCommits] = useState([]);
+  const [commits, setCommits] = useState<GithubCommits>([]);
 
   useEffect(
     () => {

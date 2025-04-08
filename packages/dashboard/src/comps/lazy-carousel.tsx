@@ -3,19 +3,16 @@ import useInterval from "../hooks/use-interval.js";
 
 /**
  * Lazy ass `carousel`
- * 
- * @typedef {object} InnerCarouselParams
- * @prop {number} [millis=3000]
- * 
- * @param {InnerCarouselParams &
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- * 
  */
+export type LazyCarouselParams = {
+  millis?: number;
+} & React.ComponentProps<'div'>;
+
+
 const LazyCarousel = (
   { 
     millis=3000, children, ...rest
-  }
+  }: LazyCarouselParams
 ) => {
 
   const [c, setC] = useState(-1)

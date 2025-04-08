@@ -1,4 +1,4 @@
-import LazyCarousel from './lazy-carousel.jsx'
+import LazyCarousel from './lazy-carousel.js'
 
 
 
@@ -65,19 +65,16 @@ const LoginContent = (
 
 export default LoginContent;
 
-/**
- * 
- * @typedef {object} ImageItemParams
- * @prop {string} src
- * @prop {string} text
- * @prop {string} [className]
- * 
- * @param {ImageItemParams} params
- */
+export type ImageItemParams = {
+  src: string
+  text: string
+  className?: string
+}
+
 const ImageItem = (
   {
     src, text, className='max-w-[768px] md:w-[768px]'
-  }
+  }: ImageItemParams
 ) => {
 
   return (

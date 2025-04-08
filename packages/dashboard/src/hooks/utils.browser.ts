@@ -4,14 +4,10 @@ export const hasWindow = () => typeof window !== "undefined"
 
 /**
  * Use a `LocalStorage` or `SessionStorage`
- * @param {Storage} driver 
  */
-const storage = (driver) => {
+const storage = (driver: Storage) => {
   return {
-    /**
-     * @param {string} key 
-     */
-    get: (key) => {
+    get: (key: string) => {
       if (typeof window === "undefined")
         return null
       const item = driver.getItem(key)
@@ -21,11 +17,7 @@ const storage = (driver) => {
       return JSON.parse(item)
     },
 
-    /**
-     * @param {string} key 
-     * @param {any} value 
-     */
-    set: (key, value) => {
+    set: (key: string, value: any) => {
       if (typeof window === "undefined")
         return 
       
@@ -39,10 +31,7 @@ const storage = (driver) => {
       }
     },
 
-    /**
-     * @param {string} key 
-     */
-    remove: (key) => {
+    remove: (key: string) => {
       if (typeof window !== "undefined")
         driver.removeItem(key)
     }

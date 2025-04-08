@@ -1,19 +1,11 @@
 
 import { Base64 } from 'js-base64'
 
-/**
- * 
- * @param {string} val 
- */
-export const to_slug = (val) => {
+export const to_slug = (val: string) => {
   return val.toLowerCase().split(' ').join('-')
 }
 
-/**
- * 
- * @param {string} v 
- */
-export const capFirstLetter = v => {
+export const capFirstLetter = (v: string) => {
   return v.charAt(0).toUpperCase() + v.slice(1)
 }
 
@@ -29,11 +21,7 @@ export const read_clipboard = async () => {
   return text
 }
 
-/**
- * 
- * @param {string} text 
- */
-export const write_clipboard = async (text) => {
+export const write_clipboard = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text);
     console.log('Content copied to clipboard');
@@ -49,18 +37,10 @@ export const hasTouchScreen = () => {
   return false
 }
 
-/**
- * 
- * @param {object} o 
- */
-export const encode = o => encodeURIComponent(
+export const encode = (o: object) => encodeURIComponent(
   Base64.encode(JSON.stringify(o))
   )
 
-/**
- * 
- * @param {string} c 
- */
-export const decode = c => JSON.parse(
+export const decode = (c: string) => JSON.parse(
   Base64.decode(decodeURIComponent(c))
-  )
+)

@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 /**
- * 
- * @param {(count: number)=>void} cb 
- * @param {number} [millis=5000] 
- * @param {boolean} [autoStart=true]
- * @param {number} [runCount=Number.POSITIVE_INFINITY] 
  * can be a finite integer or `Number.POSITIVE_INFINITY`
  */
 const useInterval = (
-  cb, millis=5000, autoStart=true, 
+  cb: (count: number)=>void, 
+  millis=5000, 
+  autoStart=true, 
   runCount=Number.POSITIVE_INFINITY
 ) => {
 
-  /** @type {import('react').MutableRefObject<ReturnType<setInterval>>} */
-  const ref_id = useRef();
+  const ref_id = useRef<ReturnType<typeof setInterval>>(undefined);
   const ref_info = useRef(
     {
       count: 0

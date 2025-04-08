@@ -103,7 +103,7 @@ const paginate_helper = (sdk, query, resource) => {
 
 
 /** @satisfies {ApiQuery} */
-export const q_initial = /** @type {const} */ ({
+export const q_initial =  ({
   sortBy: ['updated_at', 'id'],
   order: 'desc',
   limit: 5

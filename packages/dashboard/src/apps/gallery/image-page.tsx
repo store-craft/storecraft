@@ -7,28 +7,22 @@ import { useDocument } from '@storecraft/sdk-react-hooks'
 import { Bling, Card } from '@/comps/common-ui.jsx'
 import DocumentTitle from '@/comps/document-title.jsx'
 import ShowIf from '@/comps/show-if.jsx'
-import Header from './image-header.jsx'
+import Header from './image-header.js'
 import Img from '@/comps/img.jsx'
 import Modal from '@/comps/modal.jsx'
 import { LoadingButton } from '@/comps/common-button.jsx'
 
-/**
- * 
- * @typedef {object} InnerLabelCapsuleParams
- * @prop {string} value
- * @prop {string | ((value: string) => string)} [label]
- * @prop {string | ((value: string) => string)} [bgColor]
- * 
- * @param {InnerLabelCapsuleParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- * 
- */
+export type LabelCapsuleParams = {
+  value: string;
+  label?: string | ((value: string) => string);
+  bgColor?: string | ((value: string) => string);
+} & React.ComponentProps<'div'>;
+
 const LabelCapsule = (
   { 
     value, className='', label=value,
     bgColor='bg-pink-500', ...rest 
-  }
+  }: LabelCapsuleParams
 ) => {
 
   const bg_color = (typeof bgColor === 'function') ? 
@@ -47,19 +41,14 @@ const LabelCapsule = (
   )
 }
 
-/**
- * 
- * @typedef {object} InnerTagsParams
- * @prop {string[]} search
- * 
- * @param {InnerTagsParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- */
+export type TagsParams = {
+  search: string[];
+} & React.ComponentProps<'div'>;
+
 const Tags = (
   { 
     search=[], className, ...rest 
-  }
+  }: TagsParams
 ) => {
 
   return (
@@ -73,18 +62,11 @@ const Tags = (
   )
 }
 
+export type UsageParams = {
+  usage: string[];
+} & React.ComponentProps<'div'>;
 
-/**
- * 
- * @typedef {object} InnerUsageParams
- * @prop {string[]} usage
- * 
- * @param {InnerUsageParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- * 
- */
-const Usage = ({ usage=[], ...rest }) => {
+const Usage = ({ usage=[], ...rest }: UsageParams) => {
 
   if(usage.length==0)
     return (
@@ -111,11 +93,6 @@ const ImagePage = ({}) => {
 
   const { handle } = useParams();
 
-  /** 
-   * @type {import('@storecraft/sdk-react-hooks').useDocumentHookReturnType<
-   *  import('@storecraft/core/api').ImageType>
-   * } 
-   */
   const { 
     doc, loading, hasLoaded, error, op,
     actions: { 
@@ -123,12 +100,7 @@ const ImagePage = ({}) => {
     }
   } = useDocument('images', handle);
 
-  /** 
-   * @type {React.MutableRefObject<
-   *  import('@/comps/modal.jsx').ImpInterface>
-   * } 
-   */
-  const ref_modal = useRef(); 
+  const ref_modal = useRef<import('@/comps/modal.jsx').ImpInterface>(undefined); 
   const [loadingDelete, setLoadingDelete] = useState(false);
   const nav = useNavigate();
 

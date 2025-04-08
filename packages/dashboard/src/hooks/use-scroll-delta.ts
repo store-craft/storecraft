@@ -8,23 +8,10 @@ import { useEffect, useRef, useState } from "react";
  * This can be used to `open` or `close` a switch, which can be
  * used for many things.
  * 
- * @param {number} [scroll_delta=100] 
- * @param {boolean} [default_open=true] 
- * 
  */
-export const useScrollDelta = (scroll_delta  = 100, default_open = true) => {
-  /** @type {React.LegacyRef<HTMLDivElement>} */
-  const ref_scroll_element = useRef();
-  /** 
-   * @type {React.LegacyRef<
-   *  { 
-   *    state?: 0 | 1,
-   *    latestPos?: number,
-   *    latestTurn?: number,
-   *  }
-   * >} 
-   */
-  const state = useRef({})
+export const useScrollDelta = (scroll_delta = 100, default_open = true) => {
+  const ref_scroll_element = useRef<HTMLDivElement>(null);
+  const state = useRef<{ state?: 0 | 1, latestPos?: number, latestTurn?: number }>({})
 
   const [open, setOpen] = useState(default_open);
 

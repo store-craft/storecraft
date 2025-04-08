@@ -15,13 +15,7 @@ const dates = [
   { millis: SECOND, adj: 'second' },
 ]
 
-/**
- * 
- * @param {number | string | Date} date 
- * 
- * @returns {string}
- */
-export const timeSince = (date) => {
+export const timeSince = (date: number | string | Date) => {
 
   const millis = Math.max(
     Date.now() - (new Date(date)).getTime(), 0

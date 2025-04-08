@@ -1,18 +1,16 @@
+import React from "react";
 
-/**
- * @typedef {object} InnerHeaderParams
- * @prop {string} label
- * @prop {React.FC<{ className: string }>} Icon
- * 
- * @param {InnerHeaderParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
- * } params 
- * 
- */
+export type HeaderParams = {
+  label: string;
+  Icon: React.FC<{
+      className: string;
+  }>;
+} & React.ComponentProps<'p'>;
+
 const Header = (
   {
     label='', Icon, className, ...rest
-  }
+  }: HeaderParams
 ) => {
 
     return (

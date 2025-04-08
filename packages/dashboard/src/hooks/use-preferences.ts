@@ -2,16 +2,12 @@ import {
   create_local_storage_hook 
 } from '@storecraft/sdk-react-hooks'
 
-/**
- * 
- * @typedef {object} StorecraftDashboardPreferences
- * @prop {boolean} [darkMode]
- * 
- */
+export type StorecraftDashboardPreferences = {
+  darkMode?: boolean
+}
 
 
-/** @type {StorecraftDashboardPreferences} */
-const default_value = {
+const default_value: StorecraftDashboardPreferences = {
   darkMode: true
 }
 

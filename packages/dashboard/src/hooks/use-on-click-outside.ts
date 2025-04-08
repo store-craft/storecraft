@@ -2,27 +2,21 @@ import { useEffect, useRef } from "react";
 
 /**
  * 
- * @param {(e: Event) => void} handler 
- * 
  */
-const useOnClickOutside = (handler) => {
+const useOnClickOutside = (handler: (e: Event) => void) => {
   
-  /** @type {import("react").Ref<HTMLDivElement>} */
-  const ref_element = useRef();
+  const ref_element = useRef<HTMLDivElement>(null);
 
   useEffect(
     () => {
-      /**
-       * @param {MouseEvent} event
-       */
-      const listener = (event) => {
+      const listener = (event: MouseEvent) => {
         // event.preventDefault();
         // event.stopPropagation();
         // event.stopImmediatePropagation();
 
         if (
           !ref_element.current || 
-          ref_element.current.contains(event.target)
+          ref_element.current.contains(event.target as Node)
         ) {
           return;
         }

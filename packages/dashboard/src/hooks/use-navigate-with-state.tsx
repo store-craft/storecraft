@@ -1,19 +1,18 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-/**
- * @typedef {object} Params
- * @property {import('react-router-dom').To} to 
- * @property {() => any | object} current_state object or function 
- * @property {() => any | object} [next_state] object or function 
- * @property {() => any} [onClick] callback
- * 
- * @param {Params & React.AnchorHTMLAttributes} params
- */
+export type LinkWithStateProps = {
+  to: import('react-router-dom').To
+  current_state: any | (() => any)
+  next_state?: any | (() => any)
+  onClick?: () => any
+} & React.AnchorHTMLAttributes<HTMLAnchorElement>
+
+
 export const LinkWithState = (
   { 
     to, current_state, next_state, onClick, ...rest 
-  }
+  }: LinkWithStateProps
 ) => {
 
   const {
@@ -44,12 +43,8 @@ const useNavigateWithState = () => {
   const nav = useNavigate()
 
   const navWithState = useCallback(
-    /**
-     * @param {import('react-router-dom').To} to 
-     * @param {(() => any) | any} [current_state] object or function 
-     * @param {(() => any) | any} [next_state] object or function 
-     */
-    (to, current_state, next_state) => {
+    
+    (to: import('react-router-dom').To, current_state: (() => any) | any, next_state: (() => any) | any) => {
       current_state = (typeof current_state === 'function') ? current_state() : current_state
       next_state = (typeof next_state === 'function') ? next_state() : next_state
       // rewrite the current route with the state

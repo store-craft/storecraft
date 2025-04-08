@@ -16,34 +16,6 @@ import { count_query_of_resource } from '@storecraft/sdk/src/utils.api.fetch.js'
 import { ApiQuery } from '@storecraft/core/api';
 
 
-// /**
-//  * `useCollectionsActions` is a hook designed for the collections pages,
-//  * for performing:
-//  * - Viewing of collections
-//  * - Pagination through querying or navigation
-//  * - Querying
-//  * 
-//  * This hook wraps `useCollection` hook
-//  * 
-//  * @template {string | queryable_resources} [RESOURCE=(queryable_resources)]
-//  * @template {InferQueryableType<RESOURCE>} [T=(InferQueryableType<RESOURCE>)]
-//  * 
-//  * @param {RESOURCE} resource the collection id in backend 
-//  * @param {string} [slug] front end slug
-//  * @param {boolean} [autoLoad=true] 
-//  * @param {ApiQuery<T>} [autoLoadQuery=q_initial] 
-//  */
-
-// export type useCollectionsActionsParams<
-//   RESOURCE extends (string | queryable_resources) = (queryable_resources),
-//   T extends InferQueryableType<RESOURCE> = InferQueryableType<RESOURCE>
-// > = {
-//   resource: (string | queryable_resources),
-//   slug?: string,
-//   autoLoad?: boolean,
-//   autoLoadQuery?: ApiQuery<T>
-// }
-
 /**
  * `useCollectionsActions` is a hook designed for the collections pages,
  * for performing:

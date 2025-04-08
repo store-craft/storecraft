@@ -13,7 +13,7 @@ export type ResourceTitleParams = {
 export const ResourceTitle = (
   {
     resource, should_onboard=false, hasLoaded=true, 
-    overallCollectionCount: overallCollectionCount
+    overallCollectionCount
   }: ResourceTitleParams
 ) => {
 

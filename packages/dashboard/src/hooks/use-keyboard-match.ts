@@ -1,20 +1,13 @@
 import { useEffect } from "react";
 
+export type KeyboardMatch = string[];
 
 /**
- * 
  * Create a `hook`, that matches any of the given keyboard matches.
- * 
- * @typedef {string[]} KeyboardMatch
- * 
- * @param  {...KeyboardMatch} matches 
  */
-export const createKeyboardMatchHook = (...matches) => {
+export const createKeyboardMatchHook = (...matches: KeyboardMatch[]) => {
 
-  /**
-   * @param {(match: KeyboardMatch) => void} onMatch
-   */
-  return (onMatch) => {
+  return (onMatch: (match: KeyboardMatch) => void) => {
 
     useEffect(
       () => {
@@ -38,8 +31,7 @@ export const createKeyboardMatchHook = (...matches) => {
           }
         }
   
-        /** @param {KeyboardEvent} e */
-        const onKeyDown = e => {
+        const onKeyDown = (e: KeyboardEvent) => {
           // e.preventDefault();
 
           magic[e.key] = true;
@@ -47,8 +39,7 @@ export const createKeyboardMatchHook = (...matches) => {
   
           fireIfMatch();
         }
-        /** @param {KeyboardEvent} e */
-        const onKeyUp = e => {
+        const onKeyUp = (e: KeyboardEvent) => {
           // console.log(magic)
           magic[e.key] = false;
         }

@@ -1,23 +1,26 @@
 import { useCallback } from 'react'
-import { Label } from './common-ui.jsx'
+import { Label } from './common-ui.js'
 import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
 import ShowIf from './show-if.jsx'
-import MDView from './md-view.jsx'
+import MDView from './md-view.js'
+import { DiscountType, ProductType } from '@storecraft/core/api'
+import { FieldLeafViewParams } from './fields-view.js'
 
+export type ItemParams = {
+  /**
+   * `discount`
+   */
+  value: DiscountType;
+  /**
+   * callback
+   */
+  onClick: (value: DiscountType) => void;
+};
 
-/**
- * 
- * @typedef {object} ItemParams
- * @prop {import('@storecraft/core/api').DiscountType} value `discount`
- * @prop {(value: import('@storecraft/core/api').DiscountType) => void} onClick callback
- * 
- * 
- * @param {ItemParams} params
- */
 const Item = (
   { 
     value, onClick 
-  }
+  }: ItemParams
 ) => {
 
   return (
@@ -37,31 +40,23 @@ const Item = (
   )
 }
 
-/**
- * 
- * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *    import('@storecraft/core/api').ProductType["discounts"],
- *    import('../pages/product.jsx').Context
- *  > &
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params 
- * 
- */
+
+export type ProductDiscountsParams = FieldLeafViewParams<
+  ProductType["discounts"],
+  import('../pages/product.jsx').Context
+> & React.ComponentProps<'div'>;
+
 const ProductDiscounts = (
   { 
     field, context, value=[], onChange, setError, ...rest 
-  }
+  }: ProductDiscountsParams
 ) => {
   const has_discounts = value.length>0;
 
   const { navWithState } = useNavigateWithState()
 
   const onClick = useCallback(
-    /**
-     * 
-     * @param {import('@storecraft/core/api').DiscountType} discount 
-     */
-    (discount) => {
+    (discount: DiscountType) => {
       // const all = context?.query.all.get(false)?.data
       const state = context?.getState();
       navWithState(`/pages/discounts/${discount.handle}`, state);

@@ -1,4 +1,4 @@
-import { Bling } from './common-ui.jsx'
+import { Bling } from './common-ui.js'
 import { useQuickSearch } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/comps/show-if.jsx'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -6,13 +6,15 @@ import { BiSearchAlt } from "react-icons/bi/index.js"
 import { CiSearch } from "react-icons/ci/index.js";
 import { MdKeyboardCommandKey } from "react-icons/md/index.js";
 import { createKeyboardMatchHook } from '../hooks/use-keyboard-match.js'
-import { Overlay } from './overlay.jsx'
-import { MainPortal } from '../layout.jsx'
+import { Overlay } from './overlay.js'
+import { MainPortal } from '../layout.js'
 import { IoIosReturnLeft } from "react-icons/io/index.js";
 import { BsArrowReturnLeft } from "react-icons/bs/index.js";
 import { IoIosArrowRoundUp } from "react-icons/io/index.js";
 import { useNavigate } from 'react-router-dom'
 import { LuSearchX } from "react-icons/lu/index.js";
+import { QuickSearchResource } from '@storecraft/core/api'
+import { db_driver } from '@storecraft/core/database'
 
 const useKeyboardHook_meta_k = createKeyboardMatchHook(
   ['Meta', 'K'], ['Meta', 'k']
@@ -22,10 +24,30 @@ const useKeyboardHook_ops = createKeyboardMatchHook(
   ['ArrowUp'], ['ArrowDown'], ['Enter'], ['Escape']
 );
 
+export type SearchGroupParams = {
+  name: string;
+  group: QuickSearchResource[];
+  /**
+   * The group index
+   */
+  index: number;
+  /**
+   * The item index
+   */
+  selectedItemIndex: number;
+  /**
+   * The item index
+   */
+  scrollIntoView?: boolean;
+  onHover: (groupindex: number, itemIndex: number) => any;
+  onClick: (groupindex: number, itemIndex: number) => any;
+};
+export type QuickSearchBrowserParams = {
+  onCancel?: () => any;
+  onSelect?: (name: string, value: QuickSearchResource) => any;
+};
 
-/**
- * @type {Record<keyof import('@storecraft/core/database').db_driver["resources"], string>}
- */
+
 const resource_to_base_url = {
   'collections': '/pages/collections',
   'customers': '/pages/customers',
@@ -38,17 +60,13 @@ const resource_to_base_url = {
   'posts' : '/pages/posts',
   'templates': '/apps/templates',
   'images': '/apps/gallery/img',
-}
+} as Record<keyof import('@storecraft/core/database').db_driver["resources"], string>;
 
 
-/**
- * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params
- */
 export const QuickSearchButton = (
   {
     onClick, ...rest
-  }
+  }: React.ComponentProps<'div'>
 ) => {
 
   const nav = useNavigate();
@@ -58,11 +76,9 @@ export const QuickSearchButton = (
     }
   );
 
-  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
-  const ref_overlay = useRef();
+  const ref_overlay = useRef<import('./overlay.jsx').ImpInterface>(undefined);
 
-  /** @type {Parameters<QuickSearchBrowser>["0"]["onSelect"]} */
-  const onSelect = useCallback(
+  const onSelect: QuickSearchBrowserParams["onSelect"] = useCallback(
     (resource_name, result) => {
       const url = resource_to_base_url[resource_name] + '/' + (result.handle ?? result?.id);
       ref_overlay.current.hide();
@@ -140,10 +156,7 @@ const Footer = () => {
 }
 
 
-/**
- * @type {Record<keyof import('@storecraft/core/database').db_driver["resources"], string>}
- */
-const to_title = {
+const to_title: Partial<Record<keyof db_driver["resources"], string>> = {
   'auth_users': 'auth_users',
   'collections': '🗂️ Collections',
   'customers': '💁🏻‍♀️ Customers',
@@ -160,28 +173,14 @@ const to_title = {
 }
 
 
-/**
- * 
- * @typedef {object} SearchGroupParams
- * @prop {string} name
- * @prop {import('@storecraft/core/api').QuickSearchResource[]} group
- * @prop {number} index The group index
- * @prop {number} selectedItemIndex The item index
- * @prop {boolean} [scrollIntoView=true] The item index
- * @prop {(groupindex: number, itemIndex: number) => any} onHover 
- * @prop {(groupindex: number, itemIndex: number) => any} onClick 
- * 
- * @param {SearchGroupParams} params
- */
 const SearchGroup = (
   {
     name, group, index, selectedItemIndex, onHover, onClick,
     scrollIntoView=true
-  }
+  }: SearchGroupParams
 ) => {
 
-  /** @type {React.LegacyRef<HTMLDivElement>} */
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(undefined);
   useEffect(
     () => {
       if(scrollIntoView && (selectedItemIndex >= 0)) {
@@ -233,17 +232,10 @@ const SearchGroup = (
 }
 
 
-/** 
- * @typedef {object} QuickSearchBrowserParams
- * @prop {() => any} [onCancel]
- * @prop {(name: string, value: import('@storecraft/core/api').QuickSearchResource) => any} [onSelect]
- * 
- * @param {QuickSearchBrowserParams} params
- */
 const QuickSearchBrowser = (
   { 
     onCancel, onSelect
-  }
+  }: QuickSearchBrowserParams
 ) => {
 
   const { 
@@ -319,8 +311,7 @@ const QuickSearchBrowser = (
     }
   );
 
-  /** @type {Parameters<SearchGroup>[0]["onHover"]} */
-  const onHover = useCallback(
+  const onHover: SearchGroupParams["onHover"] = useCallback(
     (groupIndex, itemIndex) => {
       setSelected(
         {
@@ -331,8 +322,7 @@ const QuickSearchBrowser = (
     }, []
   );
 
-  /** @type {Parameters<SearchGroup>[0]["onClick"]} */
-  const onItemClick = useCallback(
+  const onItemClick: SearchGroupParams["onClick"] = useCallback(
     (groupIndex, itemIndex) => {
       setSelected(
         {
@@ -346,12 +336,10 @@ const QuickSearchBrowser = (
     }, [onSelect, groups]
   );
 
-  /** @type {React.LegacyRef<HTMLInputElement>} */
-  const ref_input = useRef();
+  const ref_input = useRef<HTMLInputElement>(undefined);
 
-  /** @type {React.EventHandler<React.SyntheticEvent>} */
   const onSubmit = useCallback(
-    (e) => {
+    (e: React.SyntheticEvent) => {
       e?.preventDefault()
       const search_terms = ref_input.current.value;
 
@@ -371,25 +359,25 @@ const QuickSearchBrowser = (
     <div className='w-full h-fit flex flex-col gap-5 px-3 pt-3'>
 
       <form 
-          autoFocus
-          className='w-full h-fit' 
-          tabIndex={4344}>
+        autoFocus
+        className='w-full h-fit' 
+        tabIndex={4344}>
             
         <Bling rounded='rounded-xl' stroke='border' >
           <div className='flex flex-row justify-between items-center'>
             <input 
-                onChange={onSubmit} 
-                autoFocus
-                ref={ref_input} 
-                type='search' 
-                placeholder='search' 
-                className='w-full h-12 border shelf-input-color 
-                          shelf-border-color-soft px-3 text-xl font-medium 
-                          focus:outline-none rounded-xl'  />
+              onChange={onSubmit} 
+              autoFocus
+              ref={ref_input} 
+              type='search' 
+              placeholder='search' 
+              className='w-full h-12 border shelf-input-color 
+                        shelf-border-color-soft px-3 text-xl font-medium 
+                        focus:outline-none rounded-xl'  />
             <BiSearchAlt 
-                className='text-white text-4xl mx-1 sm:mx-5 
-                          cursor-pointer' 
-                onClick={onSubmit}/>
+              className='text-white text-4xl mx-1 sm:mx-5 
+                        cursor-pointer' 
+              onClick={onSubmit}/>
           </div>
         </Bling>
       </form>
@@ -408,14 +396,15 @@ const QuickSearchBrowser = (
               groups.map(
                 (it, ix) => (
                   <SearchGroup 
-                      key={it.name} 
-                      name={it.name} 
-                      group={it.group} 
-                      index={ix} 
-                      scrollIntoView={scrollIntoView}
-                      selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
-                      onHover={onHover} 
-                      onClick={onItemClick} />
+                    key={it.name} 
+                    name={it.name} 
+                    group={it.group} 
+                    index={ix} 
+                    scrollIntoView={scrollIntoView}
+                    selectedItemIndex={selected.groupIndex==ix ? selected.itemIndex : -1}
+                    onHover={onHover} 
+                    onClick={onItemClick} 
+                  />
                 )
               )
             }

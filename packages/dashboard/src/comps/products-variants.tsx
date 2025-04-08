@@ -1,49 +1,70 @@
 import { v4 as uuidv4 } from 'uuid'
-import CapsulesView from './capsules-view.jsx'
+import CapsulesView from './capsules-view.js'
 import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
 import { BlingButton, GradientFillIcon, 
-  PromisableLoadingButton } from './common-button.jsx'
+  PromisableLoadingButton } from './common-button.js'
 import { useCallback, useEffect, useMemo, 
   useRef, useState } from 'react'
-import { BlingInput, HR, Label } from './common-ui.jsx'
+import { BlingInput, HR, Label } from './common-ui.js'
 import ShowIf, { ShowBinarySwitch } from './show-if.jsx'
 import { MdClose } from 'react-icons/md/index.js'
 import { AiFillCheckCircle } from 'react-icons/ai/index.js'
 import { IoAppsOutline } from 'react-icons/io5/index.js'
 import useNavigateWithState, { 
   LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
+import { 
+  ProductType, TextEntity, VariantCombination, VariantOption, 
+  VariantOptionSelection, VariantType 
+} from '@storecraft/core/api'
+import { FieldContextData, FieldLeafViewParams } from './fields-view.js'
 
-/**
- * 
- * @typedef {object} ProductOptionParams
- * @property {import('@storecraft/core/api').VariantOption} option
- * @property {(option: import('@storecraft/core/api').VariantOption) => void} onRemove
- * @property {(option: import('@storecraft/core/api').VariantOption) => void} onChange
- * 
- * @param {ProductOptionParams} params
- */
+export type ProductOptionParams = {
+  option: VariantOption;
+  onRemove: (option: VariantOption) => void;
+  onChange: (option: VariantOption) => void;
+};
+
+export type ProductOptionsParams = {
+  options: VariantOption[];
+  onChange: (option: VariantOption[]) => void;
+};
+
+export type VariantParams = {
+  options: VariantOption[];
+  combination: VariantOptionSelection[];
+  context: Context;
+  setError: (error: string) => void;
+};
+
+export type VariantsViewParams = {
+  options: VariantOption[];
+  context: Context;
+  setError: (error: string) => void;
+};
+
+export type Context = FieldContextData<VariantType & ProductType> & 
+  import('../pages/product.js').Context;
+
+
 const ProductOption = (
   { 
     option, onRemove, onChange 
-  }
+  }: ProductOptionParams
 ) => {
 
   const [o, setO] = useState(option);
 
-  /** @type {React.LegacyRef<React.InputHTMLAttributes>} */
-  const ref_value = useRef()
+  const ref_value = useRef<HTMLInputElement>(undefined);
 
   const onChangeInternal = useCallback(
-    /** @param {import('@storecraft/core/api').VariantOption} option */
-    (option) => {
+    (option: VariantOption) => {
       setO(option)
       onChange && onChange(option)
     }, [onChange]
   )
 
   const onClickCapsule = useCallback(
-    /**@param {import('@storecraft/core/api').TextEntity} value */
-    value => {
+    (value: TextEntity) => {
       const mod = {
         ...o,
         values: [...o?.values?.filter(e => e?.id!==value?.id)]
@@ -56,7 +77,7 @@ const ProductOption = (
   const onOptionNameChange = useCallback(
     e => {
       const name = e.currentTarget.value
-      console.log('name', name)
+      // console.log('name', name)
       const mod = {
         ...o, name
         }
@@ -70,10 +91,9 @@ const ProductOption = (
       if(value?.trim()==='')
         return
 
-      /**@type {import('@storecraft/core/api').TextEntity} */
       const v = {
         id: uuidv4(), value
-      }
+      } as TextEntity;
 
       const present = o?.values?.some(
         val => val.value===v.value
@@ -95,33 +115,33 @@ const ProductOption = (
   <fieldset className='border shelf-border-color p-5 '>
     <legend className='text-base'>
       <BlingInput 
-          ref={ref_value} placeholder='Option Name' 
-          from='from-kf-400' to='to-pink-400/25'
-          inputClsName=' text-base px-1 shelf-input-color hover:ring-pink-400 hover:ring-2 rounded-md h-10' 
-          overrideClass={true}
-          onChange={onOptionNameChange}
-          value={o?.name}
-          type='text' 
-          rounded='rounded-md' /> 
+        ref={ref_value} placeholder='Option Name' 
+        from='from-kf-400' to='to-pink-400/25'
+        inputClsName=' text-base px-1 shelf-input-color hover:ring-pink-400 hover:ring-2 rounded-md h-10' 
+        overrideClass={true}
+        onChange={onOptionNameChange}
+        value={o?.name}
+        type='text' 
+        rounded='rounded-md' /> 
     </legend>
     <ShowIf show={(o?.values?.length??0) > 0}>
       <CapsulesView 
-          tags={o?.values} 
-          name_fn={e => e?.value} 
-          onRemove={onClickCapsule}
-          onClick={onClickCapsule} />
+        tags={o?.values} 
+        name_fn={e => e?.value} 
+        onRemove={onClickCapsule}
+        onClick={onClickCapsule} />
     </ShowIf>
     <div className='flex flex-row items-center h-fit w-full mt-5 gap-3'>
       <BlingInput 
-          ref={ref_value} 
-          placeholder='Add new option' 
-          inputClsName='text-base px-1 shelf-card w-full rounded-md h-10 hover:ring-pink-400 hover:ring-2' 
-          overrideClass={true}
-          type='text' className='mt-1 flex-1' 
-          rounded='rounded-md' stroke='border-b' /> 
+        ref={ref_value} 
+        placeholder='Add new option' 
+        inputClsName='text-base px-1 shelf-card w-full rounded-md h-10 hover:ring-pink-400 hover:ring-2' 
+        overrideClass={true}
+        type='text' className='mt-1 flex-1' 
+        rounded='rounded-md' stroke='border-b' /> 
       <BlingButton 
-          children='add' className='h-10 ' 
-          onClick={onClickAddOptionValue} />
+        children='add' className='h-10 ' 
+        onClick={onClickAddOptionValue} />
     </div>
 
   </fieldset>      
@@ -132,25 +152,16 @@ const ProductOption = (
   )
 }
 
-/**
- * 
- * @typedef {object} ProductOptionsParams
- * @property {import('@storecraft/core/api').VariantOption[]} options
- * @property {(option: import('@storecraft/core/api').VariantOption[]) => void} onChange
- * 
- * @param {ProductOptionsParams} params
- */
 const ProductOptions = (
   { 
     options=[], onChange 
-  }
+  }: ProductOptionsParams
 ) => {
 
   const [opts, setOptions] = useState(options)
 
   const onChangeOption = useCallback(
-    /** @param {import('@storecraft/core/api').VariantOption} option */
-    (option) => {
+    (option: VariantOption) => {
       const idx = opts?.findIndex(
         op => op.id===option.id
       )
@@ -165,8 +176,7 @@ const ProductOptions = (
   );
 
   const onRemoveOption = useCallback(
-    /** @param {import('@storecraft/core/api').VariantOption} option */
-    (option) => {
+    (option: VariantOption) => {
       let mod = [
         ...opts.filter(o => o.id!==option.id)
         ]
@@ -177,15 +187,15 @@ const ProductOptions = (
 
   const onAddOption = useCallback(
     () => {
-      /** @type {import('@storecraft/core/api').VariantOption} */
       const option = {
         id: uuidv4(), 
         name: '',
         values: []
-      }
+      } as VariantOption;
+
       const mod = [
         ...opts, option
-        ]
+      ];
       setOptions(mod)
       onChange && onChange(mod)
     }, [opts, onChange]
@@ -197,23 +207,25 @@ const ProductOptions = (
     options.map(
       o => (
         <ProductOption 
-            option={o} key={o?.id} 
-            onRemove={onRemoveOption} 
-            onChange={onChangeOption} />
+          option={o} key={o?.id} 
+          onRemove={onRemoveOption} 
+          onChange={onChangeOption} 
+        />
       )
     )
   }
   <GradientFillIcon 
-      onClick={onAddOption}
-      Icon={BiMessageSquareAdd} 
-      className='cursor-pointer text-6xl hover:scale-110 
-                  transition-transform' /> 
+    onClick={onAddOption}
+    Icon={BiMessageSquareAdd} 
+    className='cursor-pointer text-6xl hover:scale-110 
+                transition-transform' 
+  /> 
 
 </div>
   )
 }
 
-const compute_combinations = (idx, collection=[]) => {
+const compute_combinations = (idx: number, collection: VariantOptionSelection[][]=[]) => {
   let result = [];
 
   if(idx==collection.length)
@@ -239,13 +251,10 @@ const compute_combinations = (idx, collection=[]) => {
   return result
 }
 
-/**
- * 
- * @param {import('@storecraft/core/api').VariantOptionSelection[]} c1 
- * @param {import('@storecraft/core/api').VariantOptionSelection[]} c2 
- */
-const compareCombinations = (c1, c2) => {
-
+const compareCombinations = (
+  c1: VariantOptionSelection[], 
+  c2: VariantOptionSelection[]
+) => {
   return c1.every(
     s1 => c2.some(
       s2 => (
@@ -256,20 +265,10 @@ const compareCombinations = (c1, c2) => {
   )
 }
 
-/**
- * 
- * @typedef {object} VariantParams
- * @prop {import('@storecraft/core/api').VariantOption[]} options
- * @prop {import('@storecraft/core/api').VariantOptionSelection[]} combination
- * @prop {Context} context
- * @prop {(error: string) => void} setError
- * 
- * @param {VariantParams} params
- */
 const Variant = (
   { 
     combination, options, context, setError 
-  }
+  }: VariantParams
 ) => {
 
   // const nav = useNavigate()
@@ -294,7 +293,6 @@ const Variant = (
   )
 
   // TODO: requires testing
-  /**@type {Object.<string, import('@storecraft/core/api').VariantCombination>} */
   const variants_products = context?.data?.variants?.reduce(
     (p, it) => {
       p[it.handle] = {
@@ -303,7 +301,7 @@ const Variant = (
       }
       return p;
     }, {}
-  );
+  ) as Record<string, VariantCombination>;
 
   const match_handle = useMemo(
     () => {
@@ -348,7 +346,6 @@ const Variant = (
           ...state?.data,
         }
 
-        /**@type {import('../pages/product.jsx').State} */
         const state_next = { 
           data: { 
             ...base,
@@ -360,7 +357,7 @@ const Variant = (
             title: `${base.title} ${text}`
           },
           hasChanged: true
-        }
+        } as import('../pages/product.js').State;
         
         navWithState(`/pages/products/create`, state, state_next)
       } catch (e) {
@@ -386,32 +383,32 @@ const Variant = (
       <div className='flex flex-row gap-3 flex-shrink-0 items-center'>
         <Label>
           <PromisableLoadingButton 
-              Icon={undefined} 
-              text='remove' 
-              show={true} 
-              onClick={remove}
-              keep_text_on_load={true}
-              classNameLoading='text-xs'
-              className='w-fit underline '/>                  
+            Icon={undefined} 
+            text='remove' 
+            show={true} 
+            onClick={remove}
+            keep_text_on_load={true}
+            classNameLoading='text-xs'
+            className='w-fit underline '/>                  
         </Label>
         <span children='/' className='font-normal text-xl' />
         <Label>
           <span 
-              children={'view'} 
-              className='cursor-pointer'
-              onClick={view} />
+            children={'view'} 
+            className='cursor-pointer'
+            onClick={view} />
         </Label>
       </div>
 
       <Label>
         <PromisableLoadingButton 
-            Icon={undefined} 
-            text='create' 
-            show={true} 
-            onClick={create}
-            keep_text_on_load={true}
-            classNameLoading='text-xs'
-            className='w-fit underline '/>                  
+          Icon={undefined} 
+          text='create' 
+          show={true} 
+          onClick={create}
+          keep_text_on_load={true}
+          classNameLoading='text-xs'
+          className='w-fit underline '/>                  
       </Label>
     </ShowBinarySwitch>
 
@@ -419,25 +416,15 @@ const Variant = (
   )
 }
 
-/**
- * 
- * @typedef {object} VariantsViewParams
- * @prop {import('@storecraft/core/api').VariantOption[]} options
- * @prop {Context} context
- * @prop {(error: string) => void} setError 
- * 
- * @param {VariantsViewParams} params
- */
 const VariantsView = (
   { 
     options, context, setError 
-  }
+  }: VariantsViewParams
 ) => {
 
-  /**@type {import('@storecraft/core/api').VariantOptionSelection[][]} */
   const combinations = useMemo(
     () => {
-      const collections = options?.map(
+      const collections: VariantOptionSelection[][] = options?.map(
         o => o.values.map(
           v => (
             {
@@ -452,7 +439,7 @@ const VariantsView = (
       // console.log('combs', combs)
       return combs
     }, [options]
-  )
+  ) as VariantOptionSelection[][];
 
   return (
 <div className='w-full flex flex-col gap-2'>
@@ -460,11 +447,12 @@ const VariantsView = (
   combinations.map(
     c => (
       <Variant 
-          combination={c} 
-          context={context}
-          options={options} 
-          setError={setError}
-          key={c?.map(s=>s.value_id).join('_')} />
+        combination={c} 
+        context={context}
+        options={options} 
+        setError={setError}
+        key={c?.map(s=>s.value_id).join('_')} 
+      />
     )
   )
 }
@@ -474,12 +462,7 @@ const VariantsView = (
 
 const TEXT_INSTRUCT = `‼️ Create at least ONE Option with two values`;
 
-/**
- * 
- * @param {object} p
- * @param {Context} p.context 
- */
-const IamVariant = ({ context, ...rest }) => {
+const IamVariant = ({ context, ...rest }: { context: Context}) => {
   const data = context?.data
 
   return (
@@ -493,32 +476,20 @@ const IamVariant = ({ context, ...rest }) => {
   )
 }
 
-/**
- * @typedef {import('./fields-view.jsx').FieldContextData<
- *  import('@storecraft/core/api').VariantType & 
- *  import('@storecraft/core/api').ProductType> & 
- *  import('../pages/product.jsx').Context
- * } Context
- * 
- * 
- * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/api').VariantOption[], 
- *  Context> & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- * 
- */
+export type ProductVariantsParams = FieldLeafViewParams<
+  VariantOption[], Context
+> & React.ComponentProps<'div'>;
+
 const ProductVariants = (
   { 
     value, onChange, context, setError, ...rest 
-  }
+  }: ProductVariantsParams
 ) => {
 
   const [v, setV] = useState(value)
 
   const onChangeOptions = useCallback(
-    /** @param {import('@storecraft/core/api').VariantOption[]} options */
-    (options) => {
+    (options: VariantOption[]) => {
       setV(options)
       onChange && onChange(options)
     }, [v, onChange]
@@ -537,8 +508,8 @@ const ProductVariants = (
   <div className='flex flex-col gap-5 w-full items-center'>
     <p children='Product Options' className='text-xl w-full font-semibold' />
     <ProductOptions 
-        options={v} 
-        onChange={onChangeOptions} />
+      options={v} 
+      onChange={onChangeOptions} />
 
     <HR className='w-full ' dashed={true} />
     <div className='flex flex-row w-full items-center gap-1'>
@@ -547,11 +518,11 @@ const ProductVariants = (
     </div>
     <ShowBinarySwitch toggle={v?.length ?? false} className='w-full'>
       <VariantsView 
-          options={v} 
-          context={context} 
-          setError={setError} />
+        options={v} 
+        context={context} 
+        setError={setError} />
       <div className='w-full shelf-text-minor-light text-base' 
-          children={TEXT_INSTRUCT}/>
+        children={TEXT_INSTRUCT}/>
     </ShowBinarySwitch>
   </div>
 </div>

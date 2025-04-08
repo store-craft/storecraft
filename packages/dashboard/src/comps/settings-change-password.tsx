@@ -1,27 +1,17 @@
 import { useAuth } from "@storecraft/sdk-react-hooks"
-import { BlingInput, Card, HR } from "./common-ui.jsx"
+import { BlingInput, Card, HR } from "./common-ui.js"
 import { useCallback, useRef, useState } from "react";
 import { 
   PromisableLoadingBlingButton 
-} from "./common-button.jsx";
+} from "./common-button.js";
 import { IoCheckmarkCircle } from "react-icons/io5/index.js";
 import { ShowBinarySwitch } from "./show-if.jsx";
 import { RiLockPasswordLine } from "react-icons/ri/index.js";
 
-/**
- * 
- * 
- * @typedef {object} SettingsChangePasswordParams
- * 
- * 
- * @param { React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params
- * 
- */
 export const SettingsChangePassword = (
   {
     ...rest
-  }
+  }: React.ComponentProps<'div'>
 ) => {
 
   const {
@@ -31,14 +21,10 @@ export const SettingsChangePassword = (
     }
   } = useAuth();
 
-  /** @type {React.LegacyRef<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>} */
-  const ref_current_pass = useRef();
-  /** @type {React.LegacyRef<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>} */
-  const ref_new_pass = useRef();
-  /** @type {React.LegacyRef<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>} */
-  const ref_confirm_new_pass = useRef();
-  /** @type {ReturnType<typeof useState<import("@storecraft/core/api").error>>} */
-  const [error, setError] = useState();
+  const ref_current_pass = useRef<HTMLInputElement>(undefined);
+  const ref_new_pass = useRef<HTMLInputElement>(undefined);
+  const ref_confirm_new_pass = useRef<HTMLInputElement>(undefined);
+  const [error, setError] = useState<import("@storecraft/core/api").error>();
   const [success, setSuccess] = useState(false);
 
 
@@ -67,12 +53,12 @@ export const SettingsChangePassword = (
 
   return (
 <Card 
-   name='🔑 Change Password'
-   desc='Change Your Password'
-   border={true} 
-   error={error?.messages?.[0]?.message}
-   setError={setError}
-   {...rest}>
+  name='🔑 Change Password'
+  desc='Change Your Password'
+  border={true} 
+  error={error?.messages?.[0]?.message}
+  setError={setError}
+  {...rest}>
 
   <div className='flex flex-col gap-3 w-full max-h-56 overflow-y-scroll'>
 

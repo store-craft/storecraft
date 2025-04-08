@@ -1,33 +1,27 @@
 import React, { 
   useCallback, useEffect, useState } from 'react'
-import { GradientFillIcon } from './common-button.jsx'
+import { GradientFillIcon } from './common-button.js'
 import { IoIosNotifications } from 'react-icons/io/index.js'
 import useInterval from '../hooks/use-interval.js'
 import ShowIf from './show-if.jsx'
 import { MINUTE } from '@/utils/time.js'
 import { useCollection } from '@storecraft/sdk-react-hooks'
 
+export type BubbleParams = {
+  outerClass?: string;
+  innerClass?: string;
+} & React.ComponentProps<'div'>;
 
-/**
- * 
- * @typedef {object} InternalBubbleParams
- * @prop {string} [outerClass]
- * @prop {string} [innerClass]
- * 
- * 
- * @typedef {InternalBubbleParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } BubbleParams
- * 
- * 
- * @param {BubbleParams} params
- * 
- */
+export type NotificationButtonParams = {
+  isOpen?: boolean;
+  innerClass?: string;
+} & React.ComponentProps<'div'>;
+
 const Bubble = (
   { 
     outerClass='bg-white animate-bounce', 
     innerClass='bg-red-500', ...rest 
-  }
+  }: BubbleParams
 ) => {
 
   return (
@@ -40,25 +34,10 @@ const Bubble = (
 }
 
 
-/**
- * 
- * @typedef {object} InternalNotificationButtonParams
- * @prop {boolean} [isOpen=false]
- * @prop {string} [innerClass]
- * 
- * 
- * @typedef {InternalNotificationButtonParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } NotificationButtonParams
- * 
- * 
- * @param {NotificationButtonParams} params
- * 
- */
 const NotificationButton = (
   { 
     isOpen=false, onClick, ...rest 
-  }
+  }: NotificationButtonParams
 ) => {
 
   const [alert, setAlert] = useState(false)

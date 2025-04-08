@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
  */
 const useOnClickOutside = (handler) => {
   
-  /** @type {import("react").MutableRefObject<HTMLElement>} */
+  /** @type {import("react").Ref<HTMLDivElement>} */
   const ref_element = useRef();
 
   useEffect(

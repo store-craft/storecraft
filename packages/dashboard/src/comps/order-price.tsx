@@ -1,29 +1,34 @@
 import { useCallback, useState } from 'react'
-import { BlingInput, HR } from './common-ui.jsx'
+import { BlingInput, HR } from './common-ui.js'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
+import { FieldLeafViewParams } from './fields-view.js';
+import { OrderData, PricingData } from '@storecraft/core/api';
 
+export type EntryParams = {
+  title: string;
+  description?: string;
+  link?: string;
+  value: number;
+  context?: import('../pages/order.js').Context;
+};
 
-/**
- * 
- * @typedef {object} EntryParams
- * @prop {string} title
- * @prop {string} [description]
- * @prop {string} [link=undefined]
- * @prop {number} value
- * @prop {import('@/pages/order.jsx').Context} [context]
- * 
- * 
- * @param {EntryParams} params
- */
+export type OrderPriceParams = FieldLeafViewParams<
+  Partial<PricingData>, 
+  import('../pages/order.js').Context, 
+  OrderData
+> & React.ComponentProps<'div'>;
+
 const Entry = (
   {
     title, value, description='', link, context
-  }
+  }: EntryParams
 ) => {
 
   return (
-    <div className='flex flex-row justify-between items-center w-full' title={description ?? title}>
+    <div 
+      className='flex flex-row justify-between items-center w-full' 
+      title={description ?? title}>
       {
         link &&
         <LinkWithState 
@@ -51,25 +56,14 @@ const Entry = (
 }
 
 
-/**
- * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/api').PricingData,
- *  import('@/pages/order.jsx').Context,
- *  import('@storecraft/core/api').OrderData
- * > & 
- *   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } OrderPriceParams
- * 
- * @param {OrderPriceParams} param
- */
 const OrderPrice = (
   { 
     field, context, setError, value, onChange, ...rest 
-  }
+  }: OrderPriceParams
 ) => {
   
   const { sdk } = useStorecraft();
-  const [ pricing, setPricing ] = useState(
+  const [pricing, setPricing] = useState(
     value
   );
   const { key, comp_params } = field;
@@ -95,7 +89,7 @@ const OrderPrice = (
   
   const onCalculatePrice = useCallback(
     async (_) => {
-      const { pubsub, query } = context;
+      // const { pubsub, query } = context;
 
       try {
         setError(undefined);
@@ -161,7 +155,7 @@ const OrderPrice = (
   <BlingInput 
       className='mt-2 w-full' 
       onChange={onUpdatePrice} 
-      onWheel={(e) => e.target.blur()}
+      onWheel={(e) => (e.target as HTMLInputElement).blur()}
       value={pricing?.total ?? 0} 
       placeholder='Price' 
       type='number' 

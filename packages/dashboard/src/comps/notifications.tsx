@@ -3,17 +3,33 @@ import React, {
   useRef, useState 
 } from 'react'
 import { AiFillNotification } from 'react-icons/ai/index.js'
-import MDView from './md-view.jsx'
+import MDView from './md-view.js'
 import { MINUTE, timeSince } from '../utils/time.js'
 import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
-import { PromisableLoadingButton } from './common-button.jsx'
+import { PromisableLoadingButton } from './common-button.js'
 import useInterval from '@/hooks/use-interval.js'
 import { useNavigate } from 'react-router-dom'
+import { 
+  NotificationActionRouteParams, NotificationActionUrlParams, 
+  NotificationType, NotificationTypeUpsert 
+} from '@storecraft/core/api'
 
-/**@type {import('@storecraft/core/api').NotificationTypeUpsert} */
-const tn = {
+export type NotificationParams = {
+    notification: NotificationType;
+};
+export type FilterViewParams = {
+    notis: NotificationType[];
+    selected?: string;
+    onChange?: (filter: string) => void;
+};
+export type NotificationsViewParams = {
+    notis: NotificationType[];
+    onLoadMore: () => Promise<any>;
+};
+
+
+const tn: NotificationTypeUpsert = {
   message: 'New `order` *was* **created** New order was created New order was created',
-  updated_at: new Date().toISOString(),
   author: 'shelf-bot',
   search: ['orders'],
   actions: [
@@ -28,10 +44,8 @@ const tn = {
   ]
 }
 
-/**@type {import('@storecraft/core/api').NotificationTypeUpsert} */
-const tn2 = {
+const tn2: NotificationTypeUpsert = {
   message: `* 🚀 a \n* b`,
-  updated_at: new Date().toISOString(),
   author: 'shelf-bot',
   search: ['orders'],
   actions: [
@@ -46,25 +60,15 @@ const tn2 = {
   ]
 }
 
-/**@type {import('@storecraft/core/api').NotificationTypeUpsert[]} */
-const test = [
+const test: NotificationTypeUpsert[] = [
   tn2, tn, tn, tn, {...tn, search: ['email']},
 ]
 
       
-/**
- * 
- * @typedef {object} NotificationParams
- * @prop {import('@storecraft/core/api').NotificationType} notification
- * 
- * 
- * @param {NotificationParams} params
- * 
- */
 const Notification = (
   { 
     notification 
-  }
+  }: NotificationParams
 ) => {
 
   const nav = useNavigate();
@@ -76,14 +80,14 @@ const Notification = (
         switch(action.type) {
           case 'route':
             
-            let casted_params = /** @type {import('@storecraft/core/api').NotificationActionRouteParams} */ (params);
+            let casted_params = params as NotificationActionRouteParams;
 
             nav(
               `/pages/${casted_params.collection}/${casted_params.document}`
             );
             break;
           case 'url':
-            let casted_params_2 = /** @type {import('@storecraft/core/api').NotificationActionUrlParams} */(params);
+            let casted_params_2 = params as NotificationActionUrlParams;
 
             window.open(
               casted_params_2.url, casted_params_2.new_window ? '_blank' : '_self'
@@ -125,30 +129,15 @@ const Notification = (
   )
 }
 
-/**
- * 
- * @typedef {object} FilterViewParams
- * @prop {import('@storecraft/core/api').NotificationType[]} notis
- * @prop {string} [selected='All']
- * @prop {(filter: string) => void} [onChange]
- * 
- * 
- * @param {FilterViewParams} params
- * 
- */
 const FilterView = (
   { 
     notis=[], selected='All', onChange 
-  }
+  }: FilterViewParams
 ) => {
 
   const tags = useMemo(
     () => {
       const s = notis.reduce(
-        /**
-         * 
-         * @param {Set<string>} p 
-         */
         (p, c) => {
           // console.log(c.search)
 
@@ -158,7 +147,7 @@ const FilterView = (
             }
           )
           return p
-        }, new Set()
+        }, new Set<string>()
       )
      
       return ['All', ...Array.from(s)]
@@ -166,8 +155,7 @@ const FilterView = (
   );
 
   const onFilterClick = useCallback(
-    /** @param {string} t */
-    (t) => {
+    (t: string) => {
       onChange && onChange(t);
     }, [onChange]
   );
@@ -195,20 +183,10 @@ const FilterView = (
 }
 
 
-/**
- * 
- * @typedef {object} NotificationsViewParams
- * @prop {import('@storecraft/core/api').NotificationType[]} notis
- * @prop {() => Promise<any>} onLoadMore
- * 
- * 
- * @param {NotificationsViewParams} params
- * 
- */
 const NotificationsView = (
   { 
     notis, onLoadMore 
-  }
+  }: NotificationsViewParams
 ) => {
 
   return (
@@ -249,32 +227,28 @@ const Header = ({}) => {
 }
 
 const Notifications = forwardRef(
-  /**
-   * 
-   * @param {object} params 
-   * @param {*} ref 
-   */
-  ({ ...rest }, ref) => {
+  (
+    { 
+      ...rest 
+    }: React.ComponentProps<'div'>, 
+    ref: React.ForwardedRef<HTMLDivElement>
+  ) => {
 
     const [filter, setFilter] = useState('All')
     const notis = test;
 
-    /**
-     * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-     *  import('@storecraft/core/api').NotificationType
-     * >}
-     */
     const { 
       pages, page, loading, error, queryCount,
       actions: {
         removeDocument, prev, next, query
       }
-    } = useCollection('notifications', q_initial, false);
+    } = useCollection(
+      'notifications', q_initial, false
+    );
 
     // console.log('notifications', page);
 
-    /** @type {React.MutableRefObject<typeof query>} */
-    const ref_query = useRef(query);
+    const ref_query = useRef<typeof query>(query);
 
     const onInterval = useCallback(
       async () => {
@@ -309,7 +283,6 @@ const Notifications = forwardRef(
       }, [start]
     );
 
-    /**@type {import('@storecraft/core/api').NotificationType[]} */
     const flattened = useMemo(
       () => pages.flat(1), 
       [pages]
@@ -331,22 +304,22 @@ const Notifications = forwardRef(
 
     return (
     <div 
-        ref={ref} 
-        className='absolute w-[23rem] max-w-full top-full right-0 
-                  shelf-plain-card-fill h-[600px] rounded-b-xl --shadow-xl 
-                  border shadow-lg p-4
-                  overflow-y-auto flex flex-col gap-5'>
+      ref={ref} 
+      className='absolute w-[23rem] max-w-full top-full right-0 
+                shelf-plain-card-fill h-[600px] rounded-b-xl --shadow-xl 
+                border shadow-lg p-4
+                overflow-y-auto flex flex-col gap-5'>
 
       <Header />
 
       <FilterView 
-          notis={flattened} 
-          selected={filter} 
-          onChange={setFilter} />
+        notis={flattened} 
+        selected={filter} 
+        onChange={setFilter} />
 
       <NotificationsView 
-          notis={filtered} 
-          onLoadMore={next} />
+        notis={filtered} 
+        onLoadMore={next} />
 
       {/* <button children='add' className='absolute top-0 right-0' 
               onClick={async () => await getShelf().notifications.addBulk(test)}/> */}

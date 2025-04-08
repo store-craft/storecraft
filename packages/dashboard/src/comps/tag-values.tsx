@@ -1,35 +1,27 @@
 import { useCallback, useRef, useState } from "react"
-import CapsulesView from "./capsules-view.jsx"
-import { BlingInput } from "./common-ui.jsx"
-import { BlingButton } from "./common-button.jsx"
+import CapsulesView, { CapsulesViewParams } from "./capsules-view.js"
+import { BlingInput } from "./common-ui.js"
+import { BlingButton, BlingButtonParams } from "./common-button.js"
 import { to_handle } from "@storecraft/core/api/utils.func.js"
+import { FieldLeafViewParams } from "./fields-view.js"
 
-/**
- * @param {string} text 
- */
-const text2tokens = (text) => {
+const text2tokens = (text: string) => {
     return text?.match(/\S+/g)
 }
 
-/**
- * 
- * @param {import("./fields-view.jsx").FieldLeafViewParams<
- *  string[]>
- * } params 
- */
+export type TagValuesParams = FieldLeafViewParams<string[]>;
+
 const TagValues = (
   {
     field, value, onChange, ...rest
-  }
+  }: TagValuesParams
 ) => {
   
   const { key, name, comp_params } = field
   const [vs, setVs] = useState(value ?? [])
-  /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
-  const ref = useRef()
+  const ref = useRef<HTMLInputElement>(null)
 
-  /** @type {Parameters<BlingButton>["0"]["onClick"]} */
-  const onAdd = useCallback(
+  const onAdd: BlingButtonParams["onClick"] = useCallback(
     (e) => {
       const tokens = text2tokens(ref.current.value.toString()).map(t => to_handle(t));
 
@@ -47,8 +39,7 @@ const TagValues = (
     [vs, onChange]
   );
   
-  /** @type {import("./capsules-view.jsx").CapsulesViewParams<string>["onClick"]} */
-  const onRemove = useCallback(
+  const onRemove: CapsulesViewParams<string>["onClick"] = useCallback(
     (v) => {
       const idx = vs.indexOf(v);
 
@@ -69,22 +60,22 @@ const TagValues = (
   <div className='flex flex-row items-center h-9 w-full gap-3 '>
 
     <BlingInput 
-        placeholder='space separated values' 
-        className='flex-grow'
-        rounded='rounded-md'
-        ref={ref} type='text'/>
+      placeholder='space separated values' 
+      className='flex-grow'
+      rounded='rounded-md'
+      ref={ref} type='text'/>
 
     <BlingButton 
-        children='Add' 
-        stroke='border-2 h-10'
-        onClick={onAdd}/>
+      children='Add' 
+      stroke='border-2 h-10'
+      onClick={onAdd}/>
   </div>
   <CapsulesView 
-      tags={vs} 
-      onClick={onRemove} 
-      onRemove={onRemove}
-      clsCapsule='bg-pink-500' 
-      className='mt-3' />  
+    tags={vs} 
+    onClick={onRemove} 
+    onRemove={onRemove}
+    clsCapsule='bg-pink-500' 
+    className='mt-3' />  
 </div>
   )
 }

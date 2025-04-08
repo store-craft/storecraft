@@ -1,12 +1,32 @@
-import { BottomActions } from './collection-actions.jsx'
+import { BottomActions } from './collection-actions.js'
 import { 
   q_initial, useCollection, useStorecraft 
 } from '@storecraft/sdk-react-hooks'
 import { 
-  forwardRef, useEffect, useImperativeHandle, useMemo, useRef 
+  forwardRef, useEffect, useImperativeHandle, 
 } from 'react'
 import useTrigger from '@/hooks/use-trigger.js'
-import { TableSchemaView } from './table-schema-view.jsx'
+import { TableSchemaView } from './table-schema-view.js'
+
+export type ImpInterface = {
+  refresh: () => Promise<void>;
+};
+export type ResourceViewParams = {
+  /**
+   * `resource` at the backend endpoint, that supports
+   * querying
+   */
+  resource: string;
+  /**
+   * `limit` of query
+   */
+  limit?: number;
+  schema: any[];
+  /**
+   * context
+   */
+  context?: any;
+};
 
 
 /**
@@ -14,35 +34,15 @@ import { TableSchemaView } from './table-schema-view.jsx'
  * rendered in `TableSchemaView`
  */
 const ResourceView = forwardRef(
-  /**
-   * @typedef {object} ImpInterface
-   * @prop {() => Promise<void>} refresh
-   * 
-   * @typedef {object} ResourceViewParams
-   * @prop {string} resource `resource` at the backend endpoint, that supports
-   * querying
-   * @prop {number} [limit=5] `limit` of query
-   * @prop {import('./table-schema-view.jsx').TableSchemaViewField[]} schema 
-   * @prop {any} [context] context
-   * 
-   * 
-   * @param {ResourceViewParams} param
-   * @param {any} ref
-   * 
-   */
   (
     { 
       resource, limit=5, context, schema, ...rest
-    }, ref
+    }: ResourceViewParams, 
+    ref
   ) => {
 
   const { sdk } = useStorecraft();
     
-  /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-   *  import('@storecraft/core/api').ProductType>
-   * }
-   */
   const { 
     pages, page, loading, error, queryCount,
     actions: {
@@ -74,9 +74,9 @@ const ResourceView = forwardRef(
   return (
 <>
   <TableSchemaView 
-      context={context} 
-      data={page} 
-      fields={schema} />
+    context={context} 
+    data={page} 
+    fields={schema} />
   <BottomActions 
       prev={prev} 
       next={next} 

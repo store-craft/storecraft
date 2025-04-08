@@ -1,30 +1,27 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Editor, useMonaco} from "@monaco-editor/react";
+import { Editor, EditorProps, useMonaco} from "@monaco-editor/react";
 import useDarkMode from '@/hooks/use-dark-mode.js'
+import { TemplateType } from '@storecraft/core/api';
+import { FieldLeafViewParams } from './fields-view';
 
+export type TemplateExampleInputParams = FieldLeafViewParams<
+  TemplateType["reference_example_input"]
+> & Omit<
+  React.ComponentProps<'div'>, 
+  'onChange'
+>
 
-/**
- * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/api').TemplateType["reference_example_input"]> 
- * } TemplateTemplateParams
- * 
- * @param {TemplateTemplateParams & 
- *  Omit<
- *    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 
- *    'onChange'
- *  >} params
- */
 export const TemplateExampleInput = (
   { 
     field, context, setError, value={}, onChange, ...rest 
-  }
+  }: TemplateExampleInputParams
 ) => {
 
   const monaco = useMonaco();
   const [example, setExample] = useState(value);
   const { darkMode } = useDarkMode();
-  /** @type {Parameters<Editor>["0"]["onChange"]} */
-  const editor_onChange = useCallback(
+  
+  const editor_onChange: EditorProps["onChange"] = useCallback(
     (value, ev) => {
       setError(undefined);
 

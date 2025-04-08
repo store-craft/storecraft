@@ -1,23 +1,16 @@
 import { Children, useEffect, useRef, useState } from "react";
 
-/**
- * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>} params
- */
 export const Splitter = (
   {
     children, ...rest
-  }
+  }: React.ComponentProps<'div'>
 ) => {
 
   const [isMoving, setIsMoving] = useState(false);
 
-  /** @type {React.LegacyRef<HTMLDivElement>} */
-  const ref_sep = useRef();
-  /** @type {React.LegacyRef<HTMLDivElement>} */
-  const ref_left = useRef();
-  /** @type {React.LegacyRef<HTMLDivElement>} */
-  const ref_right = useRef();
+  const ref_sep = useRef<HTMLDivElement>(null);
+  const ref_left = useRef<HTMLDivElement>(null);
+  const ref_right = useRef<HTMLDivElement>(null);
 
   const chs = Children.toArray(children);
 
@@ -34,10 +27,8 @@ export const Splitter = (
     
       /**
        * A function that will be called whenever the down event of the mouse is raised
-       * 
-       * @param {MouseEvent} e 
        */
-      function dragMouseDown(e)
+      function dragMouseDown(e: MouseEvent)
       {
         drag.x = e.clientX;
         drag.y = e.clientY;
@@ -51,10 +42,8 @@ export const Splitter = (
     
       /**
        * A function that will be called whenever the up event of the mouse is raised
-       * 
-       * @param {MouseEvent} e 
        */
-      function onMouseMove( e )
+      function onMouseMove(e: MouseEvent)
       {
         setIsMoving(true);
 

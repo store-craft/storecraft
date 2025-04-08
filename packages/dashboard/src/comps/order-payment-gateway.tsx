@@ -2,41 +2,53 @@ import {
   useCallback, useEffect, 
   useRef, useState 
 } from 'react'
-import { PromisableLoadingButton } from './common-button.jsx'
-import MDView from './md-view.jsx'
-import { HR } from './common-ui.jsx'
+import { PromisableLoadingButton } from './common-button.js'
+import MDView from './md-view.js'
+import { HR } from './common-ui.js'
 import { useCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
-import { format_storecraft_errors } from './error-message.jsx'
-
+import { format_storecraft_errors } from './error-message.js'
+import { OrderData, OrderPaymentGatewayData, PaymentGatewayAction } from '@storecraft/core/api'
+import { FieldLeafViewParams } from './fields-view.js'
 
 /**
- * 
  * Action button for payment gateway
- * 
- * @typedef {object} ActionButtonParams
- * @prop {import('@storecraft/core/api').PaymentGatewayAction} action
- * @prop {(action: import('@storecraft/core/api').PaymentGatewayAction) => Promise<void>} onClick
- * 
- * 
- * @param {ActionButtonParams} params
+ */
+export type ActionButtonParams = {
+  action: PaymentGatewayAction;
+  onClick: (action: PaymentGatewayAction) => Promise<void>;
+};
+
+export type ChoosePaymentGatewayParams = {
+  full_order?: OrderData;
+  onCreate: (pg_handle: string) => Promise<any>;
+};
+
+export type OrderPaymentGatewayParams = FieldLeafViewParams<
+  OrderPaymentGatewayData, import('../pages/order.js').Context, 
+  import('@storecraft/core/api').OrderData
+> & Omit<React.ComponentProps<'div'>, "onChange">;
+
+/**
+ * Action button for payment gateway
  */
 const ActionButton = (
   { 
     action, onClick
-  }
+  }: ActionButtonParams
 ) => {
 
   return (
-<PromisableLoadingButton 
-    classNameLeft='w-fit'
-    title={action.description}
-    Icon={undefined} 
-    text={action.name} 
-    show={true} 
-    onClick={() => onClick(action)}
-    keep_text_on_load={true}
-    classNameLoading='text-xs'
-    className='w-fit text-base underline '/>    
+    <PromisableLoadingButton 
+      classNameLeft='w-fit'
+      title={action.description}
+      Icon={undefined} 
+      text={action.name} 
+      show={true} 
+      onClick={() => onClick(action)}
+      keep_text_on_load={true}
+      classNameLoading='text-xs'
+      className='w-fit text-base underline '
+    />    
   )
 }
 
@@ -47,31 +59,17 @@ const NoPaymentGatewayBlues = ({}) => {
   )
 }
 
-/**
- * 
- * @typedef {object} ChoosePaymentGatewayParams
- * @prop {import('@storecraft/core/api').OrderData} [full_order]
- * @prop {(pg_handle: string) => Promise<any>} onCreate
- * 
- * 
- * @param {ChoosePaymentGatewayParams} params 
- */
 const ChoosePaymentGateway = (
   {
     full_order, onCreate
-  }
+  }: ChoosePaymentGatewayParams
 ) => {
   
-  // /**
-  //  * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<
-  //  *  import('@storecraft/core/api').PaymentGatewayItemGet>
-  //  * }
-  //  */
   const { 
     page, error, hasLoaded
   } = useCollection('payments/gateways');
-  /** @type {React.LegacyRef<HTMLSelectElement>} */
-  const ref_select = useRef();
+
+  const ref_select = useRef<HTMLSelectElement>(undefined);
 
   if(!full_order?.id)
     return <PleaseSave/>
@@ -118,22 +116,10 @@ const PleaseSave = ({}) => {
   )
 }
 
-/**
- * 
- * @typedef {import('./fields-view.jsx').FieldLeafViewParams<
- *   import('@storecraft/core/api').OrderPaymentGatewayData,
- *   import('../pages/order.jsx').Context,
- *   import('@storecraft/core/api').OrderData  
- *  > & 
- *   Omit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'>
- * } OrderPaymentGatewayParams
- * 
- * @param {OrderPaymentGatewayParams} param
- */
 const OrderPaymentGateway = (
   {
     field, value, onChange, setError, context, ...rest
-  }
+  }: OrderPaymentGatewayParams
 ) => {
 
   const { sdk } = useStorecraft();
@@ -180,11 +166,7 @@ const OrderPaymentGateway = (
   );
 
   const invokeAction = useCallback(
-    /**
-     * 
-     * @param {import('@storecraft/core/api').PaymentGatewayAction} action 
-     */
-    async (action) => {
+    async (action: PaymentGatewayAction) => {
       try {
         const stat = await sdk.payments.invokeAction(
           action.handle, order.id
@@ -206,8 +188,7 @@ const OrderPaymentGateway = (
   );
 
   const onCreate = useCallback(
-    /** @param {string} pg_handle  */
-    async (pg_handle) => {
+    async (pg_handle: string) => {
       // onChange(
       //   {
       //     gateway_handle: pg_handle

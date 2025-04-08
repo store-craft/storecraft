@@ -10,17 +10,11 @@ import { Children, useEffect, useRef, useState } from "react";
  */
 export const createPortal = () => {
 
-  /** @type {Set<(value: React.ReactNode) => any>} */
-  const subs = new Set();
-  /** @type {Map<string, React.ReactNode>} */
-  const map = new Map();
+  const subs = new Set<(value: React.ReactNode) => any>();
+  const map = new Map<string, React.ReactNode>();
   let main_trigger;
 
-  /**
-   * 
-   * @type {React.FC<{}>}
-   */
-  const Portal = () => {
+  const Portal: React.FC = () => {
     const [children, setChildren] = useState(undefined);
     const trigger = useTrigger();
 
@@ -38,11 +32,7 @@ export const createPortal = () => {
     return Math.floor(Math.random() * max);
   }
   
-  /**
-   * 
-   * @type {React.FC<{children?: React.ReactNode}>}
-   */
-  const PortalChild = ({children}) => {
+  const PortalChild: React.FC<{children?: React.ReactNode}> = ({children}) => {
     const ref_key = useRef(getRandomInt());
 
     useEffect(

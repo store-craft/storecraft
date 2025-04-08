@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BrowseProducts } from './resource-browse.jsx'
-import { Overlay } from './overlay.jsx'
-import { Link } from 'react-router-dom'
+import { Overlay } from './overlay.js'
 import { IoCloseSharp } from 'react-icons/io5/index.js'
-import { BlingButton } from './common-button.jsx'
-import { HR, Label } from './common-ui.jsx'
+import { BlingButton } from './common-button.js'
+import { HR, Label } from './common-ui.js'
 import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
+import { FieldLeafViewParams } from './fields-view.js'
+import { ProductType } from '@storecraft/core/api'
 
+export type ItemParams = {
+  product: import('@storecraft/core/api').ProductType
+  context: RelatedProductsParams["context"]
+  onRemove: () => void
+}
 
-/**
- * @param {object} param 
- * @param {import('@storecraft/core/api').ProductType} param.product
- * @param {import('./fields-view.jsx').FieldContextData} param.context
- * @param {() => void} param.onRemove
- */
 const Item = (
   { 
     context, product, onRemove 
-  }
+  }: ItemParams
 ) => {
 
   const { navWithState } = useNavigateWithState()
@@ -49,29 +49,22 @@ const Item = (
   )
 }
 
-/**
- * 
- * @param {import('./fields-view.jsx').FieldLeafViewParams<
- *  import('@storecraft/core/api').ProductType[]> &
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } params 
- * 
- */
+export type RelatedProductsParams = FieldLeafViewParams<
+  ProductType[], import('../pages/product.jsx').Context
+> &
+  React.ComponentProps<'div'>;
+
 const RelatedProducts = (
   { 
     field, context, value=[], onChange, setError, ...rest 
-  }
+  }: RelatedProductsParams
 ) => {
 
   const [products, setProducts] = useState(value ?? []);
-  /** @type {React.MutableRefObject<import('./overlay.jsx').ImpInterface>} */
-  const ref_overlay = useRef();
+  const ref_overlay = useRef<import('./overlay.jsx').ImpInterface>(undefined);
 
   const onBrowseAdd = useCallback(
-    /**
-     * @param {import('@storecraft/core/api').ProductType[]} selected_items 
-     */
-    (selected_items) => {
+    (selected_items: ProductType[]) => {
       const ps = [
         ...selected_items.filter(
             m => products.find(
@@ -93,11 +86,10 @@ const RelatedProducts = (
   );
 
   const onRemoveItem = useCallback(
-    /**@param {string} handle  */
-    (handle) => {
+    (handle: string) => {
       const ps = products.filter(
         it => it.handle!==handle
-        );
+      );
 
       setProducts(ps)
       onChange && onChange(ps)
@@ -106,14 +98,15 @@ const RelatedProducts = (
   
   return (
 <div {...rest}>
-  <BlingButton children='Browse products'
-      stroke='border-2'
-      className='w-40 h-10 mx-auto'  
-      onClick={() => ref_overlay.current.show()} />
+  <BlingButton 
+    children='Browse products'
+    stroke='border-2'
+    className='w-40 h-10 mx-auto'  
+    onClick={() => ref_overlay.current.show()} />
   <Overlay ref={ref_overlay}>
     <BrowseProducts 
-        onSave={onBrowseAdd} 
-        onCancel={() => ref_overlay.current.hide()} />
+      onSave={onBrowseAdd} 
+      onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
   {
     products?.length>0 && 
@@ -124,10 +117,11 @@ const RelatedProducts = (
     products.map(
       (it) => (
         <Item 
-            key={it.handle} 
-            product={it} 
-            context={context}
-            onRemove={() => onRemoveItem(it.handle)} />
+          key={it.handle} 
+          product={it} 
+          context={context}
+          onRemove={() => onRemoveItem(it.handle)} 
+        />
       )
     )
   }

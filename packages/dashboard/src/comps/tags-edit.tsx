@@ -1,38 +1,32 @@
 import { useCallback, useRef, useState } from "react"
-import { BlingButton } from "./common-button.jsx"
-import { BlingInput } from "./common-ui.jsx"
-import CapsulesView from "./capsules-view.jsx"
-import { HR } from "./common-ui.jsx"
+import { BlingButton, BlingButtonParams } from "./common-button.js"
+import { BlingInput } from "./common-ui.js"
+import CapsulesView from "./capsules-view.js"
+import { HR } from "./common-ui.js"
 import useNavigateWithState from "@/hooks/use-navigate-with-state.jsx"
-import SelectResource from "./select-resource.jsx"
+import SelectResource, { SelectResourceParams } from "./select-resource.js"
+import { TagType } from "@storecraft/core/api"
+import { FieldLeafViewParams } from "./fields-view.js"
+import { BaseDocumentContext } from "@/pages/index.js"
 
-/** @param {string} text */
-const text2tokens = (text) => {
+const text2tokens = (text: string) => {
   return text?.match(/\S+/g)
 }
 
-/**
- * @typedef {object} InternalManualTagParams
- * @prop {(values: string[]) => void} onAdd 
- * 
- * @param {InternalManualTagParams & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param 
- * 
- */
+export type ManualTagParams = {
+  onAdd: (values: string[]) => void
+} & React.ComponentProps<'div'>;
+
 const ManualTag = (
   {
     onAdd, ...rest
-  }
+  }: ManualTagParams
 ) => {
 
-  /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
-  const ref_name = useRef();
-  /** @type {import("react").LegacyRef<import("react").InputHTMLAttributes>} */
-  const ref_value = useRef();
+  const ref_name = useRef<HTMLInputElement>(null);
+  const ref_value = useRef<HTMLInputElement>(null);
 
-  /** @type {Parameters<BlingButton>["0"]["onClick"]} */
-  const onClickAdd = useCallback(
+  const onClickAdd: BlingButtonParams["onClick"] = useCallback(
     (e) => {
       const tokens = text2tokens(
         ref_value.current.value.toString()
@@ -78,31 +72,19 @@ const ManualTag = (
   )
 }
 
-/**
- * 
- * @param {Omit<
- *  import('./select-resource.jsx').SelectResourceParams<
- *      import("@storecraft/core/api").TagType,
- *      string
- *    >, 
- *    'resource' | 'transform_fn' | 'name_fn'
- *  >
- * } params
- * 
- */
+export type SelectTagsParams = Omit<
+  SelectResourceParams<'tags', TagType, string>, 
+  'resource' | 'transform_fn' | 'name_fn'
+>
+
 export const SelectTags = (
  { 
    onSelect, header, limit=100, layout=0,
    className, clsHeader, clsReload, ...rest 
- }
+ }: SelectTagsParams
 ) => {
 
-  /**
-   * @type {import("./select-resource.jsx").SelectResourceParams<
-   *  import("@storecraft/core/api").TagType, string
-   * >["transform_fn"]}
-   */
- const transform_fn = useCallback(
+ const transform_fn: SelectResourceParams<'tags', TagType, string>["transform_fn"] = useCallback(
    (window) => {
      return window ? window.reduce(
        (p, value) => [...p, ...(value?.values ?? []).map(v => `${value.handle}_${v}`)]
@@ -111,40 +93,39 @@ export const SelectTags = (
  );
 
  return(
-   <SelectResource 
-       transform_fn={transform_fn} 
-       name_fn={v => v} 
-       onSelect={onSelect} 
-       header={header}
-       resource='tags' 
-       limit={limit} 
-       layout={layout} 
-       className={className} 
-       clsHeader={clsHeader} 
-       clsReload={clsReload} 
-       {...rest} />
+   <SelectResource<'tags', TagType, string>
+      transform_fn={transform_fn} 
+      name_fn={v => v} 
+      onSelect={onSelect} 
+      header={header}
+      resource='tags' 
+      limit={limit} 
+      layout={layout} 
+      className={className} 
+      clsHeader={clsHeader} 
+      clsReload={clsReload} 
+      {...rest} 
+    />
  )
 }
 
-/**
- * 
- * @param {import("./fields-view.jsx").FieldLeafViewParams<string[], 
- *  import("../pages/index.jsx").BaseDocumentContext> & 
- *  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param0 
- */
+export type TagsEditParams = FieldLeafViewParams<
+  string[], 
+  BaseDocumentContext
+> & React.ComponentProps<'div'>;
+
+
 const TagsEdit = (
   {
     field, context, value=[], onChange, setError, ...rest
-  }
+  }: TagsEditParams
 ) => {
 
   const [tags, setTags] = useState(value);
   const { navWithState } = useNavigateWithState();
 
   const onAdd = useCallback(
-    /** @param {typeof value} new_tags  */
-    (new_tags) => {
+    (new_tags: typeof value) => {
       let selected_tags = new_tags.filter(
         t => tags.indexOf(t)==-1
       );
@@ -175,8 +156,7 @@ const TagsEdit = (
   );
 
   const onClick = useCallback(
-    /** @param {string} v  */
-    (v) => {
+    (v: string) => {
       const where = v.split('_')[0];
 
       // const all = context?.query.all.get(false)?.data
@@ -193,10 +173,10 @@ const TagsEdit = (
   <HR className='mt-5' />
 
   <SelectTags 
-      onSelect={t => onAdd([t])} 
-      layout={1} 
-      className='mt-3' clsReload='text-pink-500 text-3xl' 
-      header='Select tags you used' />
+    onSelect={t => onAdd([t])} 
+    layout={1} 
+    className='mt-3' clsReload='text-pink-500 text-3xl' 
+    header='Select tags you used' />
   {
     tags?.length>0 && 
     <HR className='my-5' />

@@ -311,6 +311,7 @@ export type State = {
 export type InnerContext = {
   create_checkout: (gateay: string) => Promise<any>;
 };
+
 /**
  * Public `order` context
  */

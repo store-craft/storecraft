@@ -1,59 +1,66 @@
-import { Bling } from './common-ui.jsx'
-import { useCollection } from '@storecraft/sdk-react-hooks'
+import { Bling } from './common-ui.js'
+import { InferQueryableType, queryable_resources, useCollection } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/comps/show-if.jsx'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { IoCloseSharp } from "react-icons/io5/index.js"
-import { BlingButton, PromisableLoadingButton } from "./common-button.jsx"
+import { BlingButton, PromisableLoadingButton } from "./common-button.js"
 import { BiSearchAlt } from "react-icons/bi/index.js"
 import { App } from '@storecraft/core'
+import { BaseType, CustomerType, ProductType } from '@storecraft/core/api'
 
 /**
  * `BrowseCollection` is used to :
  * - **view** and **select** items in big collections
- * - Infinite pagination 
+ * - Infinite pagination
  * - query and filtering with `vql` search query
  * - designed to be used inside a popup modal.
- * 
- * @template {import('@storecraft/core/api').BaseType} [T=import('@storecraft/core/api').BaseType]
- * 
- * 
- * @typedef {object} BrowseCollectionParams
- * @prop {keyof App["db"]["resources"]} resource
- * @prop {string} [title]
- * @prop {React.FC<{data: object}>} [Comp]
- * @prop {(v: T[]) => void} onSave
- * @prop {() => void} onCancel
  */
+export type BrowseCollectionParams<
+  RESOURCE extends queryable_resources = queryable_resources, 
+  T extends InferQueryableType<RESOURCE> = InferQueryableType<RESOURCE>
+  > = {
+  // resource: keyof App["db"]["resources"];
+  resource: RESOURCE;
+  title?: string;
+  Comp?: React.FC<{ data: object }>;
+  onSave: (v: T[]) => void;
+  onCancel: () => void;
+};
 
-/** 
- * @template {import('@storecraft/core/api').BaseType} [T=import('@storecraft/core/api').BaseType]
- * 
- * @param {BrowseCollectionParams<T>} params
- */
-const BrowseCollection = (
+export type BrowseCustomersParams = {
+  onSave: (v: CustomerType[]) => void;
+  onCancel: () => void;
+};
+
+export type BrowseProductsParams = {
+  onSave: (v: ProductType[]) => void;
+  onCancel: () => void;
+};
+
+
+const BrowseCollection = <
+  R extends queryable_resources = queryable_resources,
+  T extends InferQueryableType<R> = InferQueryableType<R>
+  >(
   { 
-    resource, title='Browse products', Comp, onSave, onCancel 
-  }
+    resource, title='Browse products', 
+    Comp, onSave, onCancel 
+  }: BrowseCollectionParams<R>
 ) => {
 
   const [focus, setFocus] = useState(false)
-  /**@type {ReturnType<typeof useState<T[]>>} */
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<T[]>([]);
   const [limit, setLimit] = useState(5);
 
-  /**
-   * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
-   */
   const { 
     pages, page, loading, error, queryCount, 
     actions: {
       prev, next, query
     }
   } = useCollection(resource);
-
+  
   const onAdd = useCallback(
-    /** @param {T} item */
-    (item) => {
+    (item: T) => {
       setSelected(
         vs => [item, ...vs.filter(it => it.id!==item.id)]
       );
@@ -62,8 +69,7 @@ const BrowseCollection = (
   );
 
   const onRemove = useCallback(
-    /** @param {T} item */
-    (item) => {
+    (item: T) => {
       setSelected(vs => vs.filter(it => it.id!==item.id))
     }, []
   );
@@ -74,12 +80,10 @@ const BrowseCollection = (
     , [pages]
   );
 
-  /** @type {React.LegacyRef<HTMLInputElement>} */
-  const ref_input = useRef()
+  const ref_input = useRef<HTMLInputElement>(undefined)
 
-  /** @type {React.EventHandler<React.SyntheticEvent>} */
   const onSubmit = useCallback(
-    (e) => {
+    (e: React.SyntheticEvent) => {
       e?.preventDefault()
       const search_terms = ref_input.current.value;
 
@@ -104,22 +108,22 @@ const BrowseCollection = (
 
   <p children={title} className='pb-3 border-b shelf-border-color-soft' />
   <form 
-      onSubmit={onSubmit} className='w-full' 
-      onFocus={() => setFocus(true)} 
-      tabIndex={4344}>
+    onSubmit={onSubmit} className='w-full' 
+    onFocus={() => setFocus(true)} 
+    tabIndex={4344}>
         
     <Bling rounded='rounded-xl' stroke='border-2' >
       <div className='flex flex-row justify-between items-center'>
         <input 
-            ref={ref_input} type='search' 
-            placeholder='search' 
-            className='w-full h-12 border shelf-input-color 
-                      shelf-border-color-soft px-3 text-base 
-                      focus:outline-none rounded-xl'  />
+          ref={ref_input} type='search' 
+          placeholder='search' 
+          className='w-full h-12 border shelf-input-color 
+                    shelf-border-color-soft px-3 text-base 
+                    focus:outline-none rounded-xl'  />
         <BiSearchAlt 
-                className='text-white text-4xl mx-1 sm:mx-5 
-                           cursor-pointer' 
-                onClick={onSubmit}/>
+          className='text-white text-4xl mx-1 sm:mx-5 
+                      cursor-pointer' 
+          onClick={onSubmit}/>
       </div>
     </Bling>
   </form>
@@ -161,14 +165,14 @@ const BrowseCollection = (
       </div>
       <div className='self-end flex flex-row gap-5'>
         <BlingButton 
-            stroke='border-2' 
-            className='opacity-60' 
-            children='cancel' 
-            onClick={onCancel} />
+          stroke='border-2' 
+          className='opacity-60' 
+          children='cancel' 
+          onClick={onCancel} />
         <BlingButton 
-            stroke='border-2' 
-            children='save' 
-            onClick={() => onSave(selected)} />
+          stroke='border-2' 
+          children='save' 
+          onClick={() => onSave(selected)} />
       </div>
     </div>   
 
@@ -221,12 +225,7 @@ const BrowseCollection = (
   )
 }
 
-/**
- * 
- * @param {object} param
- * @param {import('@storecraft/core/api').CustomerType} param.data
- */
-const UserComp = ({ data }) => {
+const UserComp = ({ data }: {data: CustomerType }) => {
   return (
 <div className='w-full h-full flex flex-row justify-between 
                 items-center text-sm gap-3'>
@@ -243,12 +242,7 @@ const UserComp = ({ data }) => {
   )
 }
 
-/**
- * 
- * @param {object} param
- * @param {import('@storecraft/core/api').ProductType} param.data
- */
-const ProductComp = ({ data }) => {
+const ProductComp = ({ data }: { data: ProductType}) => {
   return (
 <div className='w-full h-full flex flex-row justify-between 
                 items-center gap-3 text-sm '>
@@ -263,36 +257,27 @@ const ProductComp = ({ data }) => {
   )
 }
 
-/**
- * @typedef {object} BrowseCustomersParams
- * @prop {(v: import('@storecraft/core/api').CustomerType[]) => void} onSave
- * @prop {() => void} onCancel
- * 
- * @param {BrowseCustomersParams} params 
- */
-export const BrowseCustomers = ({ onSave, onCancel }) => {
+export const BrowseCustomers = (
+  { 
+    onSave, onCancel 
+  }: BrowseCustomersParams
+) => {
 
   return (
-  <BrowseCollection 
+    <BrowseCollection 
       resource='customers' 
       Comp={UserComp} 
       onSave={onSave} 
       onCancel={onCancel} 
-      title='Browse Customers' />    
+      title='Browse Customers' 
+    />    
   )
 }
 
-/**
- * @typedef {object} BrowseProductsParams
- * @prop {(v: import('@storecraft/core/api').ProductType[]) => void} onSave
- * @prop {() => void} onCancel
- * 
- * @param {BrowseProductsParams} params
- */
 export const BrowseProducts = (
   { 
     onSave, onCancel 
-  }
+  }: BrowseProductsParams
 ) => {
 
   return (

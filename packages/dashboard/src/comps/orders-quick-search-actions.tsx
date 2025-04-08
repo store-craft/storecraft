@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom"
-import { FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '@storecraft/core/api/types.api.enums.js'
-import { LabelCapsule } from "./capsule.jsx"
+import { 
+  FulfillOptionsEnum, 
+  PaymentOptionsEnum 
+} from '@storecraft/core/api/types.api.enums.js'
+import { LabelCapsule } from "./capsule.js"
 
-export const id2ColorFulfill = id => {
+export const id2ColorFulfill = (id: number) => {
   switch (id) {
     case 0: return 'bg-gray-400 dark:bg-gray-400/40'
     case 1: return 'bg-red-500 dark:bg-red-500/40'
@@ -13,7 +15,7 @@ export const id2ColorFulfill = id => {
   }
 }
 
-export const id2ColorPayment = id => {
+export const id2ColorPayment = (id: number) => {
   switch (id) {
     case 0: return 'bg-gray-400 dark:bg-gray-400/40'
     case 1: return 'bg-green-500 dark:bg-green-500/40'
@@ -29,12 +31,7 @@ export const id2ColorPayment = id => {
   }
 }
 
-/**
- * 
- * @param {React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
- * } param
- */
-const OrdersQuickSearchActions = ({ ...rest }) => {
+const OrdersQuickSearchActions = ({ ...rest }: React.ComponentProps<'div'>) => {
 
     return (
   <div {...rest}>
@@ -49,13 +46,13 @@ const OrdersQuickSearchActions = ({ ...rest }) => {
         Object.values(FulfillOptionsEnum).map(
           it => (
           <Link 
-              key={it.id} 
-              draggable='false'
-              to={`/pages/orders/q/vql=fulfill:${it.id}`}>
+            key={it.id} 
+            draggable='false'
+            to={`/pages/orders/q/vql=fulfill:${it.id}`}>
             <LabelCapsule 
-                value={it.name2} 
-                className='border shelf-border-color'
-                bgColor={id2ColorFulfill(it.id)} />
+              value={it.name2} 
+              className='border shelf-border-color'
+              bgColor={id2ColorFulfill(it.id)} />
           </Link>
             )
         )
@@ -63,16 +60,16 @@ const OrdersQuickSearchActions = ({ ...rest }) => {
       {
         Object.values(PaymentOptionsEnum).map(
           it => (
-          <Link 
+            <Link 
               key={it.id} 
               draggable='false'
               to={`/pages/orders/q/vql=payment:${it.id}`}>
-            <LabelCapsule 
+              <LabelCapsule 
                 value={it.name} 
                 className='border shelf-border-color'
                 bgColor={id2ColorPayment(it.id)} />
-          </Link>
-            )
+            </Link>
+          )
         )
       }
     </div>    

@@ -210,7 +210,7 @@ export const PromisableLoadingBlingButton = (
   )
 }
 
-export type BlingButtonparams = InternalBlingParams & {
+export type BlingButtonParams = InternalBlingParams & {
   btnClassName?: string;
   text?: string;
 } & React.ComponentProps<'button'>;
@@ -220,7 +220,7 @@ export const BlingButton = (
     from, to, rounded='rounded-lg', stroke='border-2', 
     children, text='what', className='h-10', 
     btnClassName='', ...rest 
-  }: BlingButtonparams
+  }: BlingButtonParams
 ) => {
 
   return (

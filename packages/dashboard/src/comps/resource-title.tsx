@@ -1,24 +1,20 @@
-import { Title } from "./common-ui.jsx"
-import { GradientText } from "./gradient-text.jsx";
-import { ResourceOnboardSvg } from "./resource-onboard-svg.jsx"
+import { Title } from "./common-ui.js"
+import { GradientText } from "./gradient-text.js";
+import { ResourceOnboardSvg } from "./resource-onboard-svg.js"
 import ShowIf from "./show-if.jsx"
 
+export type ResourceTitleParams = {
+  resource: string;
+  should_onboard?: boolean;
+  hasLoaded?: boolean;
+  overallCollectionCount?: number;
+};
 
-
-/**
- * 
- * @typedef {object} ResourceTitleParams
- * @prop {string} resource
- * @prop {boolean} [should_onboard=false]
- * @prop {boolean} [hasLoaded=true]
- * @prop {number} [overallCollectionCount=undefined]
- * 
- * @param {ResourceTitleParams} params
- */
 export const ResourceTitle = (
   {
-    resource, should_onboard=false, hasLoaded=true, overallCollectionCount: overallCollectionCount
-  }
+    resource, should_onboard=false, hasLoaded=true, 
+    overallCollectionCount: overallCollectionCount
+  }: ResourceTitleParams
 ) => {
 
   return  (

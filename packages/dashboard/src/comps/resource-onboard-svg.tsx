@@ -1,11 +1,6 @@
 import * as React from "react"
 
-/**
- * 
- * @param {React.SVGProps<SVGSVGElement>} props 
- * @returns 
- */
-export const ResourceOnboardSvg = (props) => (
+export const ResourceOnboardSvg = (props: React.ComponentProps<'svg'>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"

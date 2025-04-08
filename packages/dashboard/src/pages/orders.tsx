@@ -3,7 +3,7 @@ import { BottomActions, TopActions } from '@/comps/collection-actions.jsx'
 import { Span, TimeStampView, RecordActions } from '@/comps/common-fields.jsx'
 import { LabelCapsule } from '@/comps/capsule.jsx'
 import OrdersQuickSearchActions, { id2ColorFulfill } 
-       from '@/comps/orders-quick-search-actions.jsx'
+       from '@/comps/orders-quick-search-actions.js'
 import useCollectionsActions from '../hooks/use-collections-actions.js'
 import { TableSchemaView, TableSchemaViewField } from '../comps/table-schema-view.js'
 import MDView from '../comps/md-view.jsx'

@@ -44,7 +44,7 @@ const CapsulesView = <T,>(
         children={name_fn(it)} 
         onClick={() => onClick(it)} 
         className='mx-1 max-w-full overflow-x-auto py-0
-                    hover:scrollbar-thin scrollbar-none
+                    hover:scrollbar-thin scrollbar-none cursor-pointer
                     whitespace-nowrap --underline --decoration-double 
                     decoration-white/60 
                     --underline-offset-[1px] --border-b --border-dashed  ' />

@@ -110,7 +110,7 @@ const Filter_ProductInCollections = (
 
   const [tags, setTags] = useState(value);
 
-  const onAdd: SelectResourceParams<CollectionType>["onSelect"] = useCallback(
+  const onAdd: SelectResourceParams<'collections'>["onSelect"] = useCallback(
     (tag) => {
       if(tags.indexOf(tag)!=-1)
         return;
@@ -144,7 +144,7 @@ const Filter_ProductInCollections = (
   const onClick: CapsulesViewParams<typeof value[0]>["onClick"] = useCallback(
     (v) => {
       const state = context?.getState && context?.getState();
-      const url = `/pages/products/${v.handle}`;
+      const url = `/pages/collections/${v.handle}`;
 
       navWithState(url, state);
 

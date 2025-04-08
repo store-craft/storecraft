@@ -1,10 +1,11 @@
 <div style="text-align:center">
   <div width="90%">
-    <img src='https://storecraft.app/storecraft-color.svg' 
+    <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' 
         width='100%' />
   </div>
   Commerce as Code
 </div><hr/><br/>
+
 
 [![Core](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
 [![MongoDB](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml)[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)
@@ -14,7 +15,7 @@
 [![](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&link=https%3A%2F%2Fwww.linkedin.com%2Fcompany%2Fstore-craft
 )](https://www.linkedin.com/company/store-craft)
 
-# The <img src='https://storecraft.app/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
+# The <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 
 Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
 

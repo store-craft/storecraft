@@ -30,10 +30,10 @@
     "start": "npm run dashboard:dev",
     "dashboard:dev": "vite --host",
     "dashboard:build": "vite build && npm run dashboard:lib:build",
-    "dashboard:lib:build": "vite build -c vite.lib.config.js",
+    "dashboard:lib:build": "vite build -c vite.lib.config.ts",
     "dashboard:lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "dashboard:preview": "vite preview",
-    "dashboard:analyze": "npx vite-bundle-visualizer -c vite.lib.config.js",
+    "dashboard:analyze": "npx vite-bundle-visualizer -c vite.lib.config.ts",
     "prepublishOnly": "npm version patch --force && npm run dashboard:build",
     "sc-publish": "npm publish"
   },

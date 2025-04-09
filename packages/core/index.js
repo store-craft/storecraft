@@ -110,84 +110,66 @@ export class App {
   #vector_store;
   
   /** 
-   * 
    * @description The private database driver
-   * 
-   * 
    * @type {Database} 
    */ 
   #db_driver;
 
   /** 
-   * 
    * @description The private storage driver
-   * 
    * @type {Storage} 
    */ 
   #storage;
 
   /** 
-   * 
    * @description The mailer driver
-   * 
    * @type {Mailer} 
    */ 
   #mailer;
 
   /** 
-   * 
    * @description The taxes driver
-   * 
    * @type {Taxes} 
    */ 
   #taxes;
 
   /** 
-   * 
    * @description The payment gateways
-   * 
    * @type {PaymentMap} 
    */ 
   #payment_gateways;
 
   /** 
-   * 
    * @description The extensions
-   * 
    * @type {ExtensionsMap} 
    */ 
   #extensions;
 
   /**
    * @description The app's pubsub system
-   * 
    * @type {PubSub<App>}
    */
   #pubsub;
 
   /** 
    * @description The Storecraft App Config
-   * 
    * @type {StorecraftConfig} 
    */ 
   #config;
 
   /** 
    * @description The REST API controller
-   * 
    * @type {ReturnType<typeof create_rest_api>} 
    */ 
   #rest_controller;
 
   /** 
    * @description Flag for app is ready 
-   * 
    * @type {boolean} 
    */ 
   #is_ready;
 
   /**
-   * 
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
@@ -290,8 +272,7 @@ export class App {
       auth_secret_forgot_password_token: env[App.EnvConfig.auth_secret_forgot_password_token],
       auth_admins_emails: env[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
-      // @ts-ignore
-      checkout_reserve_stock_on: env[App.EnvConfig.checkout_reserve_stock_on] ?? 'never',
+      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(env[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
       storage_rewrite_urls: env[App.EnvConfig.storage_rewrite_urls],
       general_store_name: env[App.EnvConfig.general_store_name],
       general_store_website: env[App.EnvConfig.general_store_website],
@@ -302,6 +283,7 @@ export class App {
       general_forgot_password_confirm_base_url: env[
         App.EnvConfig.general_forgot_password_confirm_base_url
       ],
+      dashboard_version: 'latest',
       ...this.config,
     }
 

@@ -1125,6 +1125,11 @@ export const similaritySearchInputSchema = z.object({
 });
 
 export const storecraftConfigSchema = z.object({
+  dashboard_version: z
+    .string()
+    .optional()
+    .describe("The `storecraft` dashboard default version")
+    .default("`latest`"),
   general_store_name: z
     .string()
     .optional()

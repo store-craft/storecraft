@@ -1,7 +1,11 @@
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 
-const html = `
+/**
+ * @param {string} version `npm` package versioning such as 'latest' | '1.0.26' | etc.. 
+ * {@link https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions}
+ */
+const html = (version='latest') => `
 <!doctype html>
 <html lang="en">
   <head>
@@ -12,7 +16,7 @@ const html = `
     <script 
     id='_storecraft_script_' 
     type="module">
-    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@latest/dist/lib/src/index.min.js';
+    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@${version}/dist/lib/src/index.min.js';
     mountStorecraftDashboard(
       document.getElementById('root'), false
     );
@@ -100,12 +104,29 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.headers.append('Cache-Control', 'stale-while-revalidate')
-      res.sendHtml(html);
+      res.sendHtml(html('latest'));
     }
   );
 
   polka.get(
     '/favicon.svg',
+    async (req, res) => {
+      res.headers.set("Content-Type", "image/svg+xml");
+      res.send(favicon);
+    }
+  );
+
+  polka.get(
+    '/:version',
+    async (req, res) => {
+      const version = req?.params?.version ?? 'latest';
+      res.headers.append('Cache-Control', 'stale-while-revalidate')
+      res.sendHtml(html(version));
+    }
+  );
+
+  polka.get(
+    '/:version/favicon.svg',
     async (req, res) => {
       res.headers.set("Content-Type", "image/svg+xml");
       res.send(favicon);

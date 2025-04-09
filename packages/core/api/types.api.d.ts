@@ -10,6 +10,12 @@
 export interface StorecraftConfig  {
 
   /**
+   * @description The `storecraft` dashboard default version
+   * @default `latest`
+   */
+  dashboard_version?: string;
+
+  /**
    * @description The store name
    * `platform.env.SC_GENERAL_STORE_NAME` environment
    */

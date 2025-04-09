@@ -31,6 +31,7 @@ import type { StorecraftConfig } from '@storecraft/core';
 <SimpleTable column_names={['property', 'type']}
   rows={
     [
+      ['dashboard_version', 'string'],
       ['auth_admins_emails', 'string[]'],
       ['auth_secret_access_token', 'string'],
       ['auth_secret_refresh_token', 'string'],
@@ -53,6 +54,9 @@ import type { StorecraftConfig } from '@storecraft/core';
 
 ## Properties
 
+### dashboard_version
+
+The `storecraft` dashboard default version, if absent will default to `latest` version.
 
 ### auth_admins_emails
 

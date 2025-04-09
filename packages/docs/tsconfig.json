@@ -5,6 +5,7 @@
     "allowJs": true,
     "checkJs": true,
     "maxNodeModuleJsDepth": 10,
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "target": "ESNext",
     "module": "NodeNext",

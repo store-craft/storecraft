@@ -8,7 +8,9 @@
     "docs:dev": "next dev",
     "docs:build": "next build",
     "docs:start": "next start",
-    "docs:lint": "next lint"
+    "docs:lint": "next lint",
+    "build:types": "tsc --declaration index.ts --emitDeclarationOnly --outDir ./dist2",
+    "build:types2": "tsc ./src/**/*.js* --declaration --allowJs --emitDeclarationOnly --outDir types-folder"
   },
   "dependencies": {
     "@scalar/api-reference-react": "^0.3.50",

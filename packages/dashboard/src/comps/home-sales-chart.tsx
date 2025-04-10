@@ -3,6 +3,7 @@ import BaseChartView, { BaseChartViewParams } from './base-chart-view.js'
 import useDarkMode from '@/hooks/use-dark-mode.js'
 import { Chart, ChartConfiguration } from 'chart.js'
 import { OrdersStatisticsDay, OrdersStatisticsType } from '@storecraft/core/api';
+import { ColorType } from 'lightweight-charts';
 
 const DAY = 86400000;
 
@@ -23,7 +24,7 @@ const SalesChart = (
   const [showIndex, setShowIndex] = useState(0)
   const { darkMode } = useDarkMode()
 
-  const config = useMemo<ChartConfiguration>(
+  const config = useMemo<BaseChartViewParams["config"]>(
     () => {
       let arr: OrdersStatisticsDay[] = Array.from({ length: data.count_days });
       Object.
@@ -43,8 +44,36 @@ const SalesChart = (
         (it, ix) => it?.metrics?.checkouts_created?.count ?? 0
       );
 
-      Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
-      Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';
+      return {
+        options: {
+          autoSize: true,
+          // height: 250,
+          layout: {
+            attributionLogo: false,
+            background: {
+              // color: darkMode ? '#1e293b' : '#ffffff',
+              color:'transparent',
+              type: ColorType.Solid,
+            },
+            textColor: darkMode ? '#d1d5db' : '#374151',
+          }
+        },
+        data: [
+          { time: '2018-12-22', value: 32.51 },
+          { time: '2018-12-23', value: 31.11 },
+          { time: '2018-12-24', value: 27.02 },
+          { time: '2018-12-25', value: 27.32 },
+          { time: '2018-12-26', value: 25.17 },
+          { time: '2018-12-27', value: 28.89 },
+          { time: '2018-12-28', value: 25.46 },
+          { time: '2018-12-29', value: 23.92 },
+          { time: '2018-12-30', value: 22.68 },
+          { time: '2018-12-31', value: 22.67 },
+        ]
+      }
+
+      // Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
+      // Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';
 
       // console.log('arr', arr)
       // console.log('data', data)

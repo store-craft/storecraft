@@ -84,6 +84,9 @@
       "import": "./mailer/public.js",
       "types": "./mailer/types.public.d.ts"
     },
+    "./mailer/*": {
+      "import": "./mailer/*"
+    },
     "./database": {
       "import": "./database/public.js",
       "types": "./database/types.public.d.ts"

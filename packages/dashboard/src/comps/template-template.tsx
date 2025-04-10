@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, EditorProps, useMonaco} from "@monaco-editor/react";
-import Handlebars from 'handlebars';
+import { Minibars } from '@storecraft/core/mailer/minibars.js'
 import useDarkMode from '@/hooks/use-dark-mode.js'
 import { VscLayoutSidebarLeftOff } from "react-icons/vsc/index.js";
 import { IoIosExpand } from "react-icons/io/index.js";
@@ -107,8 +107,8 @@ export const TemplateTemplate = (
   const preview_compiled = useMemo(
     () => {
       try {
-        const handlebarsTemplate = Handlebars.compile(template);
-
+        // const handlebarsTemplate = Handlebars.compile(template);
+        const handlebarsTemplate = Minibars.compile(template);
         let parsed = handlebarsTemplate(example ?? {});
 
         if(!isHtml) {

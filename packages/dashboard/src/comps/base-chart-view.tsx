@@ -1,31 +1,20 @@
-import { useEffect, useRef } from 'react'
-import {
-  Chart,
-  LineController,
-  BarController,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement,
-  BarElement,
-  Tooltip, Legend,
-  ChartConfiguration
-} from "chart.js";
-import { withDiv } from './types';
+import { AreaSeries, createChart, ColorType, SeriesDataItemTypeMap, AreaData, Time, WhitespaceData, DeepPartial, ChartOptions } from 'lightweight-charts';
+import React, { useEffect, useRef } from 'react';
+import { type withDiv } from './types';
 
-Chart.register(
-  LineController,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement, 
-  BarController,
-  BarElement, 
-  Tooltip, Legend
-);
 
 export type BaseChartViewParams = withDiv<{
-  config: ChartConfiguration;
+  config: {
+    data: SeriesDataItemTypeMap<Time>[keyof SeriesDataItemTypeMap<Time>][],
+    options?: DeepPartial<ChartOptions>,
+    colors?: {
+      backgroundColor?: string;
+      lineColor?: string;
+      textColor?: string;
+      areaTopColor?: string;
+      areaBottomColor?: string;
+    };
+  }
 }>;
 
 const BaseChartView = (
@@ -34,35 +23,82 @@ const BaseChartView = (
   }: BaseChartViewParams
 ) => {
 
-  const canvas_ref = useRef<HTMLCanvasElement>(undefined);
-  const chart = useRef<Chart>(undefined);
+  const {
+    data,
+    options = {},
+    colors: {
+      backgroundColor = 'white',
+      lineColor = 'black',
+      textColor = 'black',
+      areaTopColor = '#2962FF',
+      areaBottomColor = 'rgba(41, 98, 255, 0.28)',
+    } = {},
+  } = config;
+
+  const chartContainerRef = useRef<HTMLDivElement>(undefined);
 
   useEffect(
     () => {
-      if(chart.current)
-        chart.current.destroy();
+      const handleResize = () => {
+        chart.applyOptions(
+          { 
+            width: chartContainerRef.current.clientWidth 
+          }
+        );
+      };
 
-      // console.log('color ', Chart.defaults.borderColor)
-      
-      chart.current = new Chart(
-        canvas_ref.current, config
+      const chart = createChart(
+        chartContainerRef.current, 
+        {
+          grid: {
+            horzLines: {
+              color: 'rgba(0, 0, 0, 0.1)',
+            }
+          },
+          layout: {
+            background: { type: ColorType.Solid, color: backgroundColor },
+            textColor,
+          },
+          width: chartContainerRef.current.clientWidth,
+          height: 450,
+          ...options
+        }
       );
 
-      // chart.current.update()
+      chart.timeScale().fitContent();
+
+      const newSeries = chart.addSeries(
+        AreaSeries, 
+        { 
+          priceLineColor: 'green',
+          lineColor: 'red', topColor: 'green', 
+          bottomColor: areaBottomColor ,
+          crosshairMarkerBorderColor: 'red',
+          baseLineColor: 'red',
+          crosshairMarkerBackgroundColor: 'red',
+        }
+      );
+
+      newSeries.setData(data as (AreaData<Time> | WhitespaceData<Time>)[]);
+
+      window.addEventListener('resize', handleResize);
 
       return () => {
-        chart.current.destroy()
-      }
-    }
-    , [config]
+        window.removeEventListener('resize', handleResize);
+        chart.remove();
+      };
+    },
+    [
+      data, backgroundColor, lineColor, 
+      textColor, areaTopColor, areaBottomColor
+    ]
   );
 
-  
   return (
-<div {...rest} >
-  <canvas ref={canvas_ref} />
-</div>
-  )
+    <div {...rest}
+      ref={chartContainerRef}
+    />
+  );
 }
 
 export default BaseChartView

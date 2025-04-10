@@ -19,5 +19,8 @@
     "publishAll": "node ./publish-all.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lightweight-charts": "^5.0.5"
+  }
 }

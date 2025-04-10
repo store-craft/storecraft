@@ -44,12 +44,14 @@ export default defineConfig(
       emptyOutDir: true,
       commonjsOptions: {
         strictRequires: 'auto',
+        sourceMap: false,
       },
       outDir: 'dist/lib/src',
       // commonjsOptions: {
       //   include: [/node_modules/],
       // },
       cssCodeSplit: false,
+      
       lib: {
         entry: ['src/index.tsx'],
         // name: '@storecraft/dashboard',
@@ -61,6 +63,9 @@ export default defineConfig(
         ],
       },
       rollupOptions: {
+        output:{
+          sourcemapExcludeSources: false
+        },
         external: [
         ]
       }

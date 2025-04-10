@@ -4,8 +4,8 @@ import SelectResource, { SelectResourceParams } from './select-resource.jsx'
 import { Bling, BlingInput, HR } from './common-ui.js'
 import CapsulesView, { CapsulesViewParams } from './capsules-view.js'
 import { IoMdClose } from 'react-icons/io/index.js'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+// @ts-ignore
+import LocalEN from 'air-datepicker/locale/en.js'
 import { Overlay } from './overlay.js';
 import { 
   BrowseCustomers, BrowseCustomersParams, BrowseProducts, BrowseProductsParams 
@@ -21,6 +21,8 @@ import {
   FilterValue_o_subtotal_in_range, FilterValue_p_in_collections, FilterValue_p_in_price_range, 
   FilterValue_p_in_products, FilterValue_p_in_tags 
 } from '@storecraft/core/api'
+import { AirDatePicker } from './air-date-picker.js'
+import useDarkMode from '@/hooks/use-dark-mode.js'
  
 export type Filter_ProductInCollectionsParams = {
   value: FilterValue_p_in_collections;
@@ -514,6 +516,7 @@ const Filter_OrderItemCount = (
   )
 }
 
+
 const Filter_OrderDate = ( 
   { 
     onChange, 
@@ -522,6 +525,7 @@ const Filter_OrderDate = (
 ) => {
 
   const [v, setV] = useState(value);
+  const { darkMode } = useDarkMode();
   const onChangeInternal = useCallback(
     (who: string, date: Date) => {
       const vv = { 
@@ -540,27 +544,62 @@ const Filter_OrderDate = (
   ];
 
   return (
-<div className='w-full flex flex-row gap-5 flex-wrap'>
-  {
-    data.map(
-      ({ name, key}, ix) => (
-      <div className='flex flex-row --items-center flex-wrap gap-3' key={ix}>
-        <span children={name}/>
-        <DatePicker  
-          className='border p-3 shelf-card outline-none'
-          selected={new Date(v[key] ?? null)}
-          onChange={(date) => onChangeInternal(key, date)}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={60}
-          timeCaption="time"
-          dateFormat="MMMM d, yyyy h:mm aa" />
-      </div>
-      )
-    )
-  }
-</div>
+    <div className='w-full flex flex-row gap-5 flex-wrap'>
+      {
+        data.map(
+          ({ name, key}, ix) => (
+            <div className='flex flex-row --items-center flex-wrap gap-3' key={ix+String(darkMode)}>
+              <span children={name}/>
+              <AirDatePicker  
+                className='border p-3 shelf-card outline-none'
+                air_datepicker={{
+                  options: {
+                    classes: darkMode ? 'dark' : 'light',
+                    isMobile:true,
+                    inline: false,
+                    autoClose: true,
+                    timepicker: true,
+                    locale: LocalEN,
+                    minDate: new Date(0),
+                    maxDate: new Date(9999, 11, 31),
+                    dateFormat: 'MMMM d, yyyy h:mm aa',
+                    timeFormat: 'HH:mm',
+                    selectedDates: [new Date(v[key] ?? null)],
+                    onSelect: (d) => {
+                      onChangeInternal(key, d.date as Date);
+                    }
+                  }                
+                }}
+              />
+            </div>
+          )
+        )
+      }
+    </div>
   )
+
+//   return (
+// <div className='w-full flex flex-row gap-5 flex-wrap'>
+//   {
+//     data.map(
+//       ({ name, key}, ix) => (
+//       <div className='flex flex-row --items-center flex-wrap gap-3' key={ix}>
+//         <span children={name}/>
+//         <DatePicker  
+//           className='border p-3 shelf-card outline-none'
+//           selected={new Date(v[key] ?? null)}
+//           onChange={(date) => onChangeInternal(key, date)}
+//           showTimeSelect
+//           timeFormat="HH:mm"
+//           timeIntervals={60}
+//           timeCaption="time"
+//           dateFormat="MMMM d, yyyy h:mm aa" />
+//       </div>
+//       )
+//     )
+//   }
+// </div>
+//   )
 }
 
 const Filter_OrderHasCustomers = (

@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback } from 'react'
-import { ImpInterface, Overlay } from '@/comps/overlay.jsx';
-import Gallery, { InnerGalleryParams } from './gallery.jsx'
+import { ImpInterface, Overlay } from '@/comps/overlay';
+import Gallery, { InnerGalleryParams } from './gallery'
 import { ApiQuery, ImageType } from '@storecraft/core/api';
 
 export type GallerySelectParams = {

@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, 
   useImperativeHandle, useState } from "react"
-import { IoReloadSharp } from "react-icons/io5/index.js"
-import { BlingInput } from "@/comps/common-ui.jsx"
+import { IoReloadSharp } from "react-icons/io5"
+import { BlingInput } from "@/comps/common-ui"
 
 export type InnerSearchBarParams = {
   count: number;

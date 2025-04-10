@@ -1,11 +1,11 @@
 import { useCallback, useRef } from 'react'
-import { BrowseProducts } from './resource-browse.js'
-import CapsulesView from './capsules-view.js'
-import { Overlay } from './overlay.js'
-import { BlingButton } from './common-button.js'
-import { HR } from './common-ui.js'
-import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
-import { FieldLeafViewParams } from './fields-view.js'
+import { BrowseProducts } from './resource-browse'
+import CapsulesView from './capsules-view'
+import { Overlay } from './overlay'
+import { BlingButton } from './common-button'
+import { HR } from './common-ui'
+import useNavigateWithState from '@/hooks/use-navigate-with-state'
+import { FieldLeafViewParams } from './fields-view'
 import { ProductType } from '@storecraft/core/api'
 
 export type StorefrontProductsParams = FieldLeafViewParams<

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Bling } from "./common-ui.js";
-import { LogoGradient } from "./logo-text.jsx";
+import { Bling } from "./common-ui";
+import { LogoGradient } from "./logo-text";
 import React from 'react';
 
 const LoginMarquee = (

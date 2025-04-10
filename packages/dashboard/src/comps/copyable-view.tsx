@@ -1,5 +1,5 @@
-import { ClipBoardCopy } from "./common-fields.js";
-import MDView from "./md-view.jsx"
+import { ClipBoardCopy } from "./common-fields";
+import MDView from "./md-view"
 
 /**
  * A view with `markdown` context, that is `copyable`

@@ -1,11 +1,10 @@
 import { useCallback, useMemo, useRef } from 'react';
-import { decode } from '../utils/index.js';
-import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx';
+import { decode } from '../utils';
+import useNavigateWithState from '@/hooks/use-navigate-with-state';
 import { InferQueryableType, queryable_resources, useDocument } from '@storecraft/sdk-react-hooks';
-import { App } from '@storecraft/core';
-import { FieldViewImperativeInterface } from '@/comps/fields-view.js';
-import { BaseDocumentContext, BaseDocumentState } from '@/pages/index.jsx';
-import { CreateDateImperativeInterface } from '@/comps/common-ui.jsx';
+import { FieldViewImperativeInterface } from '@/comps/fields-view';
+import { BaseDocumentContext, BaseDocumentState } from '@/pages';
+import { CreateDateImperativeInterface } from '@/comps/common-ui';
 
 /**
  * @template T the `document` type

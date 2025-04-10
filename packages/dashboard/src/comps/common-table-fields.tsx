@@ -1,4 +1,4 @@
-import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
+import { LinkWithState } from '@/hooks/use-navigate-with-state'
 import { TableSchemaViewComponentParams } from './table-schema-view';
 
 /**

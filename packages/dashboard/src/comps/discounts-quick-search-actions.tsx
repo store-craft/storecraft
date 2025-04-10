@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { LabelCapsule } from './capsule.js'
-import { discount_types_to_color } from './discounts-table-type.jsx'
+import { LabelCapsule } from './capsule'
+import { discount_types_to_color } from './discounts-table-type'
 import { 
   DiscountMetaEnum, DiscountApplicationEnum 
 } from '@storecraft/core/api/types.api.enums.js'

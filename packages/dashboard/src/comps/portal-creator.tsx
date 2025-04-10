@@ -1,4 +1,4 @@
-import useTrigger from "@/hooks/use-trigger.js";
+import useTrigger from "@/hooks/use-trigger";
 import { Children, useEffect, useRef, useState } from "react";
 
 

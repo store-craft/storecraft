@@ -1,9 +1,9 @@
-import ShowIf from '@/comps/show-if.jsx'
-import { BottomActions, TopActions } from '@/comps/collection-actions.jsx'
-import { Span, TimeStampView, RecordActions } from '@/comps/common-fields.jsx'
-import useCollectionsActions from '../hooks/use-collections-actions.js'
-import { TableSchemaView } from '../comps/table-schema-view.js'
-import { ResourceTitle } from '../comps/resource-title.jsx'
+import ShowIf from '@/comps/show-if'
+import { BottomActions, TopActions } from '@/comps/collection-actions'
+import { Span, TimeStampView, RecordActions } from '@/comps/common-fields'
+import useCollectionsActions from '../hooks/use-collections-actions'
+import { TableSchemaView } from '../comps/table-schema-view'
+import { ResourceTitle } from '../comps/resource-title'
 import { CustomerType } from '@storecraft/core/api'
 
 export const extract_contact_field = (item: CustomerType) => {

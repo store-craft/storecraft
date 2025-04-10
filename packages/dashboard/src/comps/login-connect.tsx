@@ -1,4 +1,4 @@
-import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs/index.js'
+import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs'
 import React from "react"
 
 

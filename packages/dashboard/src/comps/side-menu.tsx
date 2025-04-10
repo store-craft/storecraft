@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
-import { Button } from './common-button.jsx'
-import { to_slug } from '../utils/index.js'
-import { AiOutlineCloseCircle } from 'react-icons/ai/index.js'
-import { RiDashboardFill } from 'react-icons/ri/index.js'
-import { FiSettings } from 'react-icons/fi/index.js'
-import { Logo } from './logo.jsx'
-import { useBreakpointValue } from '../hooks/use-media-query.js'
-import { type withDashDiv } from './types.js'
+import { Button } from './common-button'
+import { to_slug } from '../utils'
+import { AiOutlineCloseCircle } from 'react-icons/ai'
+import { RiDashboardFill } from 'react-icons/ri'
+import { FiSettings } from 'react-icons/fi'
+import { Logo } from './logo'
+import { useBreakpointValue } from '../hooks/use-media-query'
+import { type withDashDiv } from './types'
 
 
 export type MenuItemType = {

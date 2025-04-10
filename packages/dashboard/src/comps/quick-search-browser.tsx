@@ -1,18 +1,17 @@
-import { Bling } from './common-ui.js'
+import { Bling } from './common-ui'
 import { useQuickSearch } from '@storecraft/sdk-react-hooks'
-import ShowIf from '@/comps/show-if.jsx'
+import ShowIf from '@/comps/show-if'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BiSearchAlt } from "react-icons/bi/index.js"
-import { CiSearch } from "react-icons/ci/index.js";
-import { MdKeyboardCommandKey } from "react-icons/md/index.js";
-import { createKeyboardMatchHook } from '../hooks/use-keyboard-match.js'
-import { Overlay } from './overlay.js'
-import { MainPortal } from '../layout.js'
-import { IoIosReturnLeft } from "react-icons/io/index.js";
-import { BsArrowReturnLeft } from "react-icons/bs/index.js";
-import { IoIosArrowRoundUp } from "react-icons/io/index.js";
+import { BiSearchAlt } from "react-icons/bi"
+import { CiSearch } from "react-icons/ci";
+import { MdKeyboardCommandKey } from "react-icons/md";
+import { createKeyboardMatchHook } from '../hooks/use-keyboard-match'
+import { Overlay } from './overlay'
+import { MainPortal } from '../layout'
+import { BsArrowReturnLeft } from "react-icons/bs";
+import { IoIosArrowRoundUp } from "react-icons/io";
 import { useNavigate } from 'react-router-dom'
-import { LuSearchX } from "react-icons/lu/index.js";
+import { LuSearchX } from "react-icons/lu";
 import { QuickSearchResource } from '@storecraft/core/api'
 import { db_driver } from '@storecraft/core/database'
 

@@ -1,4 +1,4 @@
-import { AiFillCloseCircle } from 'react-icons/ai/index.js'
+import { AiFillCloseCircle } from 'react-icons/ai'
 
 /**
  * @param {any} v 

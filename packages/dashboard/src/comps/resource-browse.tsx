@@ -1,11 +1,10 @@
-import { Bling } from './common-ui.js'
+import { Bling } from './common-ui'
 import { InferQueryableType, queryable_resources, useCollection } from '@storecraft/sdk-react-hooks'
-import ShowIf from '@/comps/show-if.jsx'
+import ShowIf from '@/comps/show-if'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { IoCloseSharp } from "react-icons/io5/index.js"
-import { BlingButton, PromisableLoadingButton } from "./common-button.js"
-import { BiSearchAlt } from "react-icons/bi/index.js"
-import { App } from '@storecraft/core'
+import { IoCloseSharp } from "react-icons/io5"
+import { BlingButton, PromisableLoadingButton } from "./common-button"
+import { BiSearchAlt } from "react-icons/bi"
 import { BaseType, CustomerType, ProductType } from '@storecraft/core/api'
 
 /**

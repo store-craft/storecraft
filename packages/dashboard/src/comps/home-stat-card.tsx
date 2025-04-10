@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { MdNavigateNext } from 'react-icons/md/index.js'
+import { MdNavigateNext } from 'react-icons/md'
 import { Link } from 'react-router-dom'
-import { Bling } from './common-ui.jsx'
-import Statistics from '@storecraft/sdk/src/statistics.js'
+import { Bling } from './common-ui'
+import Statistics from '@storecraft/sdk/src/statistics'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 export type StatCardParams = {

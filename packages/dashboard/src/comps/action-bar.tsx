@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { AiOutlineMenuFold } from 'react-icons/ai/index.js'
-import { MdLogout } from 'react-icons/md/index.js'
+import { AiOutlineMenuFold } from 'react-icons/ai'
+import { MdLogout } from 'react-icons/md'
 import { useAuth } from '@storecraft/sdk-react-hooks'
-import { GradientFillIcon } from './common-button.jsx'
-import ShowIf from './show-if.jsx'
-import Notifications from './notifications.js'
-import NotificationButton from './notifications-button.jsx'
-import DarkMode from './dark-mode.jsx'
-import useOnClickOutside from '@/hooks/use-on-click-outside.js'
-import { QuickSearchButton } from './quick-search-browser.jsx'
+import { GradientFillIcon } from './common-button'
+import ShowIf from './show-if'
+import Notifications from './notifications'
+import NotificationButton from './notifications-button'
+import DarkMode from './dark-mode'
+import useOnClickOutside from '@/hooks/use-on-click-outside'
+import { QuickSearchButton } from './quick-search-browser'
 
 export type ActionBarParams = {
   menuOpen?: boolean;

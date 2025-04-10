@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Img from '@/comps/img.jsx'
+import Img from '@/comps/img'
 import { ImageType } from '@storecraft/core/api';
 
 export type ImageParams = {

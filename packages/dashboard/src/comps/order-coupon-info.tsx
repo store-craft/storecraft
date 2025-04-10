@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
-import CapsulesView from './capsules-view.js'
-import SelectResource from './select-resource.jsx'
+import CapsulesView from './capsules-view'
+import SelectResource from './select-resource'
 import { useNavigate } from 'react-router-dom'
-import { DiscountType, enums } from '@storecraft/core/api'
-import { FieldLeafViewParams } from './fields-view.js'
+import { type DiscountType, enums } from '@storecraft/core/api'
+import { FieldLeafViewParams } from './fields-view'
 
 export type MDEditorParams = FieldLeafViewParams<DiscountType[]> & 
   React.ComponentProps<'div'>;

@@ -12,6 +12,7 @@ import { resolve } from 'path'
  */
 export default defineConfig(
   {
+    
     plugins: [
       react(),
       tailwindcss()
@@ -21,7 +22,19 @@ export default defineConfig(
         { 
           find: "@", 
           replacement: resolve(__dirname, "./src") 
-        }
+        },
+        // {
+        //   find: 'react',
+        //   replacement: 'https://esm.sh/react',
+        // },
+        // {
+        //   find: 'react/jsx-runtime',
+        //   replacement: 'https://esm.sh/react/jsx-runtime',
+        // },
+        // {
+        //   find: 'react-dom',
+        //   replacement: 'https://esm.sh/react-dom'
+        // },
       ]
     },
     build: {
@@ -29,6 +42,16 @@ export default defineConfig(
       emptyOutDir: true,
       outDir: 'dist/website',
       cssCodeSplit: false,
+      
+      rollupOptions: {
+        treeshake: 'smallest',
+        // external: [
+        //   'react',
+        //   'react-dom',
+        //   'react/jsx-runtime',
+        //   'react/jsx-dev-runtime',
+        // ]
+      }
     }
   }
 );

@@ -1,11 +1,11 @@
 import { ComponentProps, useCallback, useEffect, useState } from 'react'
-import LoginConnect from './comps/login-connect.jsx'
-import LoginMarquee from './comps/login-marquee.jsx'
-import LoginForm, { LoginFormFieldsType } from './comps/login-form.jsx'
-import LoginCopyright from './comps/login-copyright.jsx'
+import LoginConnect from './comps/login-connect'
+import LoginMarquee from './comps/login-marquee'
+import LoginForm, { LoginFormFieldsType } from './comps/login-form'
+import LoginCopyright from './comps/login-copyright'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
-import useDarkMode from '@/hooks/use-dark-mode.js'
-import LoginLatestUpdates from './comps/login-latest-updates.jsx'
+import useDarkMode from '@/hooks/use-dark-mode'
+import LoginLatestUpdates from './comps/login-latest-updates'
 import { ApiAuthResult } from '@storecraft/core/api'
 
 const Login = (

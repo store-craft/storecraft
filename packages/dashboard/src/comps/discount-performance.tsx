@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import ShowIf from './show-if.jsx'
-import MDView from './md-view.jsx'
+import ShowIf from './show-if'
+import MDView from './md-view'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
-import { FieldLeafViewParams } from './fields-view.js'
+import { FieldLeafViewParams } from './fields-view'
 import { DiscountType } from '@storecraft/core/api'
 
 export type DiscountPerformanceParams = 

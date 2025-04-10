@@ -1,9 +1,9 @@
-import { BottomActions } from '@/comps/collection-actions.jsx'
-import { Bling } from '@/comps/common-ui.jsx'
-import ShowIf from '@/comps/show-if.jsx'
-import ImageGrid from './gallery-image-grid.js'
-import SearchBar from './gallery-searchbar.js'
-import useCollectionsActions from '@/hooks/use-collections-actions.js'
+import { BottomActions } from '@/comps/collection-actions'
+import { Bling } from '@/comps/common-ui'
+import ShowIf from '@/comps/show-if'
+import ImageGrid from './gallery-image-grid'
+import SearchBar from './gallery-searchbar'
+import useCollectionsActions from '@/hooks/use-collections-actions'
 import { ApiQuery, ImageType } from '@storecraft/core/api'
 
 export type InnerGalleryParams = {

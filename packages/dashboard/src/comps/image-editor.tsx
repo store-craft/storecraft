@@ -1,14 +1,14 @@
 import ReactCrop, { Crop, PercentCrop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
-import { BiRotateRight, BiMove, BiCrop } from 'react-icons/bi/index.js'
-import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai/index.js'
-import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi/index.js'
+import { BiRotateRight, BiMove, BiCrop } from 'react-icons/bi'
+import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai'
+import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi'
 import { forwardRef, useCallback, 
   useImperativeHandle, useRef, useState } from 'react'
-import { CgOptions } from 'react-icons/cg/index.js'
-import useToggle from '@/hooks/use-toggle.js'
-import Drawer from './drawer.js'
-import Img from './img.jsx'
+import { CgOptions } from 'react-icons/cg'
+import useToggle from '@/hooks/use-toggle'
+import Drawer from './drawer'
+import Img from './img'
 
 /**
  * A simple switch view for image editor

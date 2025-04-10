@@ -1,12 +1,12 @@
 import { useAuth } from "@storecraft/sdk-react-hooks"
-import { BlingInput, Card, HR } from "./common-ui.js"
+import { BlingInput, Card, HR } from "./common-ui"
 import { useCallback, useRef, useState } from "react";
 import { 
   PromisableLoadingBlingButton 
-} from "./common-button.js";
-import { IoCheckmarkCircle } from "react-icons/io5/index.js";
-import { ShowBinarySwitch } from "./show-if.jsx";
-import { RiLockPasswordLine } from "react-icons/ri/index.js";
+} from "./common-button";
+import { IoCheckmarkCircle } from "react-icons/io5";
+import { ShowBinarySwitch } from "./show-if";
+import { RiLockPasswordLine } from "react-icons/ri";
 
 export const SettingsChangePassword = (
   {

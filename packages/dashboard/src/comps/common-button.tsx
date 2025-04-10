@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai/index.js'
-import { Bling, InternalBlingParams } from './common-ui.jsx'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { Bling, InternalBlingParams } from './common-ui'
 
 export type ButtonParams = {
   text?: string;

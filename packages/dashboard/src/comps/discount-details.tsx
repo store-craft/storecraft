@@ -4,10 +4,10 @@ import {
   FilterMetaEnum
 // @ts-ignore
 } from '@storecraft/core/api/types.api.enums.js'
-import { BlingInput, HR } from './common-ui.js'
-import ShowIf from './show-if.jsx'
-import DiscountFilters from './discount-filters.jsx'
-import { TbMath } from 'react-icons/tb/index.js'
+import { BlingInput, HR } from './common-ui'
+import ShowIf from './show-if'
+import DiscountFilters from './discount-filters'
+import { TbMath } from 'react-icons/tb'
 import { 
   BulkDiscountExtra, BundleDiscountExtra, 
   BuyXGetYDiscountExtra, DiscountDetails, 
@@ -17,7 +17,7 @@ import {
   FilterValue_p_not_in_products, FilterValue_p_not_in_tags, 
   OrderDiscountExtra, RegularDiscountExtra 
 } from '@storecraft/core/api'
-import { FieldContextData, FieldLeafViewParams } from './fields-view.js'
+import { FieldContextData, FieldLeafViewParams } from './fields-view'
 
 export const discount_details_validator = v => {
   if(v===undefined)

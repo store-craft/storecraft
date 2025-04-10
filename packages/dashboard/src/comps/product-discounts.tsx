@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
-import { Label } from './common-ui.js'
-import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
-import ShowIf from './show-if.jsx'
-import MDView from './md-view.js'
+import { Label } from './common-ui'
+import useNavigateWithState from '@/hooks/use-navigate-with-state'
+import ShowIf from './show-if'
+import MDView from './md-view'
 import { DiscountType, ProductType } from '@storecraft/core/api'
-import { FieldLeafViewParams } from './fields-view.js'
+import { FieldLeafViewParams } from './fields-view'
 
 export type ItemParams = {
   /**

@@ -1,5 +1,5 @@
 import screens from "../screens.js"
-import create from './create-media-query-hook.js'
+import create from './create-media-query-hook'
 
 export const { 
   useBreakpoint,

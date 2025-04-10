@@ -1,18 +1,18 @@
-import { BottomActions } from './collection-actions.js'
+import { BottomActions } from './collection-actions'
 import { RecordActions, Span, 
-  TimeStampView } from './common-fields.jsx'
-import { Bling, Card } from './common-ui.jsx'
+  TimeStampView } from './common-fields'
+import { Bling, Card } from './common-ui'
 import { q_initial, useCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
 import { forwardRef, useCallback, useEffect, 
          useImperativeHandle, useMemo, 
          useRef, useState } from 'react'
 import ShowIf from './show-if.jsx'
-import { IoMdAdd } from 'react-icons/io/index.js'
-import { Overlay } from './overlay.js'
-import { BrowseProducts } from './resource-browse.jsx'
-import useTrigger from '@/hooks/use-trigger.js'
-import { TableSchemaView, TableSchemaViewField } from './table-schema-view.js'
-import { FieldContextData, FieldLeafViewParams } from './fields-view.js'
+import { IoMdAdd } from 'react-icons/io'
+import { Overlay } from './overlay'
+import { BrowseProducts } from './resource-browse'
+import useTrigger from '@/hooks/use-trigger'
+import { TableSchemaView, TableSchemaViewField } from './table-schema-view'
+import { FieldContextData, FieldLeafViewParams } from './fields-view'
 import { ApiQuery, CollectionType, ProductType, VariantType } from '@storecraft/core/api'
 
 export type ImpInterface = {

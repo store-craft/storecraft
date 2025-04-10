@@ -1,12 +1,12 @@
 import { useAuth } from "@storecraft/sdk-react-hooks"
-import { Card, HR } from "./common-ui.js"
+import { Card, HR } from "./common-ui"
 import { useCallback, useEffect, useState } from "react";
 import { 
   PromisableLoadingBlingButton, PromisableLoadingButton 
-} from "./common-button.js";
-import { CopyableView } from "./copyable-view.js";
-import ShowIf from "./show-if.jsx";
-import { CiBookmarkRemove } from "react-icons/ci/index.js";
+} from "./common-button";
+import { CopyableView } from "./copyable-view";
+import ShowIf from "./show-if";
+import { CiBookmarkRemove } from "react-icons/ci";
 import { AuthUserType } from "@storecraft/core/api";
 
 

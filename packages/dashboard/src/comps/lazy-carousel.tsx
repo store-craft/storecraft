@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import useInterval from "../hooks/use-interval.js";
+import useInterval from "../hooks/use-interval";
 
 /**
  * Lazy ass `carousel`

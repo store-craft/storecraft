@@ -1,28 +1,28 @@
 import { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import FieldsView from '../comps/fields-view.js'
-import ShowIf from '@/comps/show-if.jsx'
-import MDEditor from '@/comps/md-editor.jsx'
-import Media from '@/comps/media.jsx'
-import { MInput, withCard, Handle, Switch } from '@/comps/common-fields.jsx'
-import TagsEdit from '@/comps/tags-edit.jsx'
-import DocumentTitle from '@/comps/document-title.jsx'
-import ErrorMessage from '@/comps/error-message.jsx'
-import StorefrontProducts from '@/comps/storefront-products.jsx'
-import { PromisableLoadingBlingButton } from '@/comps/common-button.jsx'
-import { MdPublish } from 'react-icons/md/index.js'
-import DocumentDetails from '@/comps/document-details.jsx'
-import { RegularDocumentActions } from '@/comps/document-actions.jsx'
-import Attributes from '@/comps/attributes.jsx'
-import { SelectResourceWithTags } from '@/comps/select-resource.jsx'
-import { JsonViewCard } from '@/comps/json.jsx'
-import { CreateDate, Div, withBling } from '@/comps/common-ui.jsx'
+import FieldsView from '@/comps/fields-view'
+import ShowIf from '@/comps/show-if'
+import MDEditor from '@/comps/md-editor'
+import Media from '@/comps/media'
+import { MInput, withCard, Handle, Switch } from '@/comps/common-fields'
+import TagsEdit from '@/comps/tags-edit'
+import DocumentTitle from '@/comps/document-title'
+import ErrorMessage from '@/comps/error-message'
+import StorefrontProducts from '@/comps/storefront-products'
+import { PromisableLoadingBlingButton } from '@/comps/common-button'
+import { MdPublish } from 'react-icons/md'
+import DocumentDetails from '@/comps/document-details'
+import { RegularDocumentActions } from '@/comps/document-actions'
+import Attributes from '@/comps/attributes'
+import { SelectResourceWithTags } from '@/comps/select-resource'
+import { JsonViewCard } from '@/comps/json'
+import { CreateDate, Div, withBling } from '@/comps/common-ui'
 import { DiscountApplicationEnum } from '@storecraft/core/api/types.api.enums.js'
-import { DocumentActionsMode, useDocumentActions } from '@/hooks/use-document-actions.js'
+import { DocumentActionsMode, useDocumentActions } from '@/hooks/use-document-actions'
 import { 
   CollectionType, DiscountType, PostType, ShippingMethodType, StorefrontType 
 } from '@storecraft/core/api'
-import { BaseDocumentContext } from './index.jsx'
+import { BaseDocumentContext } from '.'
 
 const test = {
   title: 'storefront 1',
@@ -64,7 +64,7 @@ const root_left_schema = {
       key: 'collections', name: '🗂️ Collections', type: 'text', 
       validate: false, editable: true, 
       desc: 'Decide which collections meta data is used by the Store Front',
-      comp: withCard(SelectResourceWithTags<CollectionType>, 
+      comp: withCard(SelectResourceWithTags<'collections'>, 
         { 
           className:'w-full', add_all: true, resource: 'collections',
           name_fn: it => it.title, slug: '/pages/collections'
@@ -76,7 +76,7 @@ const root_left_schema = {
     {
       key: 'discounts', name: '🎟️ Discounts', type: 'text', validate: false, 
       editable: true, desc: 'Decide which discounts are used by the Store Front',
-      comp: withCard(SelectResourceWithTags<DiscountType>, 
+      comp: withCard(SelectResourceWithTags<'discounts'>, 
         { 
           className: 'w-full', add_all: true, resource: 'discounts',
           transform_fn: (w) => w.filter(
@@ -90,7 +90,7 @@ const root_left_schema = {
       key: 'shipping_methods', name: '🚚 Shipping Methods', type: 'text', 
       validate: false, editable: true, 
       desc: 'Decide which Shipping methods are used by the Store Front',
-      comp: withCard(SelectResourceWithTags<ShippingMethodType>, 
+      comp: withCard(SelectResourceWithTags<'shipping'>, 
         { 
           className: 'w-full', add_all: true, resource: 'shipping',
           name_fn: it => it.title, slug: '/pages/shipping-methods'
@@ -101,7 +101,7 @@ const root_left_schema = {
     {
       key: 'posts', name: '✍🏼 Posts', type: 'text', validate: false, 
       editable: true, desc: 'Decide which Notes / Posts are used by the Store Front',
-      comp: withCard(SelectResourceWithTags<PostType>, 
+      comp: withCard(SelectResourceWithTags<'posts'>, 
         { 
           className: 'w-full', add_all: true, resource: 'posts',
           name_fn: it => it.title, slug: '/pages/posts'

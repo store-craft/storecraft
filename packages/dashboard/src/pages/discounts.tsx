@@ -1,12 +1,12 @@
-import ShowIf from '@/comps/show-if.jsx'
-import { BottomActions, TopActions } from '@/comps/collection-actions.jsx'
-import { TimeStampView, RecordActions } from '@/comps/common-fields.jsx'
-import DiscountsQuickSearchActions from '@/comps/discounts-quick-search-actions.jsx'
-import DiscountType from '@/comps/discounts-table-type.jsx'
-import Code from '@/comps/discounts-table-code.jsx'
-import useCollectionsActions from '../hooks/use-collections-actions.js'
-import { TableSchemaView } from '../comps/table-schema-view.js'
-import { ResourceTitle } from '../comps/resource-title.jsx'
+import ShowIf from '@/comps/show-if'
+import { BottomActions, TopActions } from '@/comps/collection-actions'
+import { TimeStampView, RecordActions } from '@/comps/common-fields'
+import DiscountsQuickSearchActions from '@/comps/discounts-quick-search-actions'
+import DiscountType from '@/comps/discounts-table-type'
+import Code from '@/comps/discounts-table-code'
+import useCollectionsActions from '../hooks/use-collections-actions'
+import { TableSchemaView } from '../comps/table-schema-view'
+import { ResourceTitle } from '../comps/resource-title'
 
 const schema_fields = [
   { 

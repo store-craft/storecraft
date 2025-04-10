@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { MInput } from './common-fields.js'
-import { Bling } from './common-ui.js'
+import { MInput } from './common-fields'
+import { Bling } from './common-ui'
 import { Base64 } from 'js-base64'
-import { FieldLeafViewParams } from './fields-view.js'
+import { FieldLeafViewParams } from './fields-view'
 
 export type SecretViewParams = FieldLeafViewParams<string> & 
   React.ComponentProps<'div'>;

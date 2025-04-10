@@ -1,9 +1,9 @@
-import { BiErrorCircle } from "react-icons/bi/index.js"
-import { Bling, HR } from "./common-ui.jsx"
-import ShowIf from "./show-if.jsx"
+import { BiErrorCircle } from "react-icons/bi"
+import { Bling, HR } from "./common-ui"
+import ShowIf from "./show-if"
 import { useStorecraft } from "@storecraft/sdk-react-hooks"
 import { useCallback, useEffect, useState } from "react"
-import { withDash, withDashDiv } from "./types.js"
+import { withDash, withDashDiv } from "./types"
 import { OAuthProvider } from "@storecraft/core/api"
 
 export type LoginFormFieldsType = {

@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
-import { BlingInput, HR } from './common-ui.js'
+import { BlingInput, HR } from './common-ui'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
-import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
-import { FieldLeafViewParams } from './fields-view.js';
+import { LinkWithState } from '@/hooks/use-navigate-with-state'
+import { FieldLeafViewParams } from './fields-view';
 import { OrderData, PricingData } from '@storecraft/core/api';
 
 export type EntryParams = {

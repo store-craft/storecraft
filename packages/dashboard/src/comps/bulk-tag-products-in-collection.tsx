@@ -1,8 +1,8 @@
-import { Card } from './common-ui.jsx'
+import { Card } from './common-ui'
 import { useCallback, useState } from 'react'
-import TagsEdit from './tags-edit.jsx'
-import { PromisableLoadingBlingButton } from './common-button.jsx'
-import { HR } from './common-ui.jsx'
+import TagsEdit from './tags-edit'
+import { PromisableLoadingBlingButton } from './common-button'
+import { HR } from './common-ui'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 export type BulkTagProductsInCollectionProps = {

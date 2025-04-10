@@ -1,4 +1,4 @@
-import LazyCarousel from './lazy-carousel.js'
+import LazyCarousel from './lazy-carousel'
 
 
 

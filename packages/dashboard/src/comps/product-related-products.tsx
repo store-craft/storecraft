@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BrowseProducts } from './resource-browse.jsx'
-import { Overlay } from './overlay.js'
-import { IoCloseSharp } from 'react-icons/io5/index.js'
-import { BlingButton } from './common-button.js'
-import { HR, Label } from './common-ui.js'
-import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
-import { FieldLeafViewParams } from './fields-view.js'
+import { BrowseProducts } from './resource-browse'
+import { Overlay } from './overlay'
+import { IoCloseSharp } from 'react-icons/io5'
+import { BlingButton } from './common-button'
+import { HR, Label } from './common-ui'
+import useNavigateWithState from '@/hooks/use-navigate-with-state'
+import { FieldLeafViewParams } from './fields-view'
 import { ProductType } from '@storecraft/core/api'
 
 export type ItemParams = {

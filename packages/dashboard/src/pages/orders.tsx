@@ -1,13 +1,13 @@
-import ShowIf from '@/comps/show-if.jsx'
-import { BottomActions, TopActions } from '@/comps/collection-actions.jsx'
-import { Span, TimeStampView, RecordActions } from '@/comps/common-fields.jsx'
-import { LabelCapsule } from '@/comps/capsule.jsx'
+import ShowIf from '@/comps/show-if'
+import { BottomActions, TopActions } from '@/comps/collection-actions'
+import { Span, TimeStampView, RecordActions } from '@/comps/common-fields'
+import { LabelCapsule } from '@/comps/capsule'
 import OrdersQuickSearchActions, { id2ColorFulfill } 
-       from '@/comps/orders-quick-search-actions.js'
-import useCollectionsActions from '../hooks/use-collections-actions.js'
-import { TableSchemaView, TableSchemaViewField } from '../comps/table-schema-view.js'
-import MDView from '../comps/md-view.jsx'
-import { ResourceTitle } from '../comps/resource-title.jsx'
+       from '@/comps/orders-quick-search-actions'
+import useCollectionsActions from '../hooks/use-collections-actions'
+import { TableSchemaView, TableSchemaViewField } from '../comps/table-schema-view'
+import MDView from '../comps/md-view'
+import { ResourceTitle } from '../comps/resource-title'
 import { OrderData } from '@storecraft/core/api'
 
 const extract_contact_field = (item: OrderData) => {

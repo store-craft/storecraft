@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
-import { Bling, BlingInput } from './common-ui.jsx'
-import { MdClose } from 'react-icons/md/index.js'
-import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
-import { GradientFillIcon } from './common-button.jsx'
-import { FieldLeafViewParams } from './fields-view.jsx'
+import { Bling, BlingInput } from './common-ui'
+import { MdClose } from 'react-icons/md'
+import { BiMessageSquareAdd } from 'react-icons/bi'
+import { GradientFillIcon } from './common-button'
+import { FieldLeafViewParams } from './fields-view'
 import { AttributeType } from '@storecraft/core/api'
 
 export type AttributeParams = {

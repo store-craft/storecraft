@@ -1,6 +1,6 @@
-import Main from './routes.jsx'
+import Main from './routes'
 import { HashRouter as Router } from 'react-router-dom'
-import Login from './login.js'
+import Login from './login'
 import { useStorecraft } from '@storecraft/sdk-react-hooks';
 import ReactDOM from 'react-dom/client'
 import './index.css'

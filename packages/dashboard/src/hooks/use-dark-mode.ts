@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { usePreferences } from './use-preferences.js';
+import { usePreferences } from './use-preferences';
 
 
 /**

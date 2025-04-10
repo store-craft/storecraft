@@ -1,10 +1,10 @@
 import { Inspector } from 'react-inspector'
 import { chromeLight, chromeDark } from 'react-inspector'
-import { Card } from './common-ui.js'
+import { Card } from './common-ui'
 import { useMemo } from 'react'
-import useDarkMode from '@/hooks/use-dark-mode.js'
-import { ClipBoardCopy } from './common-fields.js'
-import { FieldLeafViewParams } from './fields-view.js'
+import useDarkMode from '@/hooks/use-dark-mode'
+import { ClipBoardCopy } from './common-fields'
+import { FieldLeafViewParams } from './fields-view'
 
 export type JsonViewParams = {
   value: any

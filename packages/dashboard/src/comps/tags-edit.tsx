@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from "react"
-import { BlingButton, BlingButtonParams } from "./common-button.js"
-import { BlingInput } from "./common-ui.js"
-import CapsulesView from "./capsules-view.js"
-import { HR } from "./common-ui.js"
-import useNavigateWithState from "@/hooks/use-navigate-with-state.jsx"
-import SelectResource, { SelectResourceParams } from "./select-resource.js"
+import { BlingButton, BlingButtonParams } from "./common-button"
+import { BlingInput } from "./common-ui"
+import CapsulesView from "./capsules-view"
+import { HR } from "./common-ui"
+import useNavigateWithState from "@/hooks/use-navigate-with-state"
+import SelectResource, { SelectResourceParams } from "./select-resource"
 import { TagType } from "@storecraft/core/api"
-import { FieldLeafViewParams } from "./fields-view.js"
-import { BaseDocumentContext } from "@/pages/index.js"
+import { FieldLeafViewParams } from "./fields-view"
+import { BaseDocumentContext } from "@/pages"
 
 const text2tokens = (text: string) => {
   return text?.match(/\S+/g)

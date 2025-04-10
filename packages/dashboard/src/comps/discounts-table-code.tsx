@@ -1,6 +1,6 @@
 import { DiscountType } from "@storecraft/core/api"
 import { DiscountApplicationEnum } from "@storecraft/core/api/types.api.enums.js"
-import { RiCoupon3Line } from "react-icons/ri/index.js"
+import { RiCoupon3Line } from "react-icons/ri"
 import { TableSchemaViewContext } from "./table-schema-view"
 
 export type CodeParams = {

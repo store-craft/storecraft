@@ -1,8 +1,8 @@
 import { forwardRef, useCallback, 
   useImperativeHandle, useRef, useState } from 'react'
-import { Card } from './common-ui.js'
-import { Overlay } from './overlay.js'
-import { BlingButton } from './common-button.js'
+import { Card } from './common-ui'
+import { Overlay } from './overlay'
+import { BlingButton } from './common-button'
 
 /**
  * Imperative interface

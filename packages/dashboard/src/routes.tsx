@@ -6,7 +6,7 @@ import {
   Navigate
 } from "react-router-dom"
 
-import Layout from './layout.js'
+import Layout from './layout'
 
 import { 
   Home, 

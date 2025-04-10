@@ -1,14 +1,14 @@
 import { InferQueryableType, q_initial, queryable_resources, useCollection } from '@storecraft/sdk-react-hooks'
-import { IoReloadCircle } from 'react-icons/io5/index.js'
+import { IoReloadCircle } from 'react-icons/io5'
 import { useCallback, useEffect, 
   useMemo, useState } from 'react'
-import ShowIf from './show-if.jsx'
-import { Bling } from './common-ui.js'
-import CapsulesView from './capsules-view.js'
-import { HR } from './common-ui.js'
-import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
-import { FieldLeafViewParams } from './fields-view.jsx'
-import { BaseDocumentContext } from '../pages/index.jsx'
+import ShowIf from './show-if'
+import { Bling } from './common-ui'
+import CapsulesView from './capsules-view'
+import { HR } from './common-ui'
+import useNavigateWithState from '@/hooks/use-navigate-with-state'
+import { FieldLeafViewParams } from './fields-view'
+import { BaseDocumentContext } from '../pages'
 import { ApiQuery, BaseType } from '@storecraft/core/api'
 
 /**

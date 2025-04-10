@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
-import { AiOutlineClose } from "react-icons/ai/index.js"
-import { Bling } from "./common-ui.js"
+import { AiOutlineClose } from "react-icons/ai"
+import { Bling } from "./common-ui"
 
 /**
  * error message view from document pages

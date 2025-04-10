@@ -1,7 +1,6 @@
-import { GradientFillIcon } from './common-button.js'
-import { MdLightMode, MdNightlight } from 'react-icons/md/index.js'
-import useDarkMode from '@/hooks/use-dark-mode.js'
-
+import { GradientFillIcon } from './common-button'
+import { MdLightMode, MdNightlight } from 'react-icons/md'
+import useDarkMode from '@/hooks/use-dark-mode'
 
 const DarkMode = ({ ...rest }: React.ComponentProps<'div'>) => {
   

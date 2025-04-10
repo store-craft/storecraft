@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, EditorProps, useMonaco} from "@monaco-editor/react";
-import useDarkMode from '@/hooks/use-dark-mode.js'
+import useDarkMode from '@/hooks/use-dark-mode'
 import { TemplateType } from '@storecraft/core/api';
 import { FieldLeafViewParams } from './fields-view';
 

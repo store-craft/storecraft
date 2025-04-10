@@ -1,15 +1,15 @@
 import { 
   useCallback, useEffect, useMemo, 
   useRef, useState } from 'react'
-import { Bling, BlingInput, HR } from './common-ui.js'
-import { BrowseProducts } from './resource-browse.jsx'
-import { Overlay } from './overlay.js'
-import { IoCloseSharp } from 'react-icons/io5/index.js'
-import { BlingButton } from './common-button.js'
-import { LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
+import { Bling, BlingInput, HR } from './common-ui'
+import { BrowseProducts } from './resource-browse'
+import { Overlay } from './overlay'
+import { IoCloseSharp } from 'react-icons/io5'
+import { BlingButton } from './common-button'
+import { LinkWithState } from '@/hooks/use-navigate-with-state'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import { LineItem, ProductType } from '@storecraft/core/api'
-import { FieldContextData, FieldLeafViewParams } from './fields-view.js'
+import { FieldContextData, FieldLeafViewParams } from './fields-view'
 
 export type Op = "change-qty" | "stock-change";
 export type LineitemsTableParams = {

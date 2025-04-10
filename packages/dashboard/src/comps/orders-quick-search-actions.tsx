@@ -3,7 +3,7 @@ import {
   FulfillOptionsEnum, 
   PaymentOptionsEnum 
 } from '@storecraft/core/api/types.api.enums.js'
-import { LabelCapsule } from "./capsule.js"
+import { LabelCapsule } from "./capsule"
 
 export const id2ColorFulfill = (id: number) => {
   switch (id) {

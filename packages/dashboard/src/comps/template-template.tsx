@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, EditorProps, useMonaco} from "@monaco-editor/react";
 import { Minibars } from '@storecraft/core/mailer/minibars.js'
-import useDarkMode from '@/hooks/use-dark-mode.js'
-import { VscLayoutSidebarLeftOff } from "react-icons/vsc/index.js";
-import { IoIosExpand } from "react-icons/io/index.js";
+import useDarkMode from '@/hooks/use-dark-mode'
+import { VscLayoutSidebarLeftOff } from "react-icons/vsc";
+import { IoIosExpand } from "react-icons/io";
 import { FaRegWindowClose } from "react-icons/fa";
-import { Splitter } from './splitter-view.jsx';
-import { FieldLeafViewParams } from './fields-view.js';
+import { Splitter } from './splitter-view';
+import { FieldLeafViewParams } from './fields-view';
 import { TemplateType } from '@storecraft/core/api';
 
 

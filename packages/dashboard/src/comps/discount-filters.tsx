@@ -1,28 +1,29 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react'
-import ShowIf from './show-if.jsx'
-import SelectResource, { SelectResourceParams } from './select-resource.jsx'
-import { Bling, BlingInput, HR } from './common-ui.js'
-import CapsulesView, { CapsulesViewParams } from './capsules-view.js'
-import { IoMdClose } from 'react-icons/io/index.js'
+import ShowIf from './show-if'
+import SelectResource, { SelectResourceParams } from './select-resource'
+import { Bling, BlingInput, HR } from './common-ui'
+import CapsulesView, { CapsulesViewParams } from './capsules-view'
+import { IoMdClose } from 'react-icons/io'
 // @ts-ignore
 import LocalEN from 'air-datepicker/locale/en.js'
-import { Overlay } from './overlay.js';
+import { Overlay } from './overlay';
 import { 
   BrowseCustomers, BrowseCustomersParams, BrowseProducts, BrowseProductsParams 
-} from './resource-browse.jsx'
-import { BlingButton } from './common-button.js'
+} from './resource-browse'
+import { BlingButton } from './common-button'
 import { FilterMetaEnum } from '@storecraft/core/api/types.api.enums.js'
-import { SelectTags } from './tags-edit.jsx'
-import { extract_contact_field } from '../pages/customers.js'
-import useNavigateWithState from '@/hooks/use-navigate-with-state.jsx'
+import { SelectTags } from './tags-edit'
+import { extract_contact_field } from '../pages/customers'
+import useNavigateWithState from '@/hooks/use-navigate-with-state'
 import { 
   CollectionType,
-  CustomerType, Filter, FilterValue_o_date_in_range, FilterValue_o_items_count_in_range, 
+  CustomerType, DiscountType, Filter, FilterValue_o_date_in_range, FilterValue_o_items_count_in_range, 
   FilterValue_o_subtotal_in_range, FilterValue_p_in_collections, FilterValue_p_in_price_range, 
   FilterValue_p_in_products, FilterValue_p_in_tags 
 } from '@storecraft/core/api'
-import { AirDatePicker } from './air-date-picker.js'
-import useDarkMode from '@/hooks/use-dark-mode.js'
+import { AirDatePicker } from './air-date-picker'
+import useDarkMode from '@/hooks/use-dark-mode'
+import { FieldLeafViewParams } from './fields-view.js'
  
 export type Filter_ProductInCollectionsParams = {
   value: FilterValue_p_in_collections;
@@ -75,21 +76,13 @@ export type AddFilterParams = {
   type: string;
   onAdd: (filter_id: string | number) => void;
 };
-export type DiscountFiltersParams = {
-  /**
-   * bunch of filters
-   */
-  value: Filter[];
-  /**
-   * bunch of filters
-   */
+export type DiscountFiltersParams = FieldLeafViewParams<
+  Filter[], 
+  import('../pages/discount.js').Context,
+  DiscountType
+> & React.ComponentProps<'div'> & {
   types: ("product" | "order")[];
-  /**
-   * bunch of filters
-   */
-  onChange: (filters: Filter[]) => void;
-  context: import('../pages/discount.js').Context;
-};
+}
 
 
 /////

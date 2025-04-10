@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaGithub } from "react-icons/fa/index.js";
+import { FaGithub } from "react-icons/fa";
 
 export type GithubCommit = {
     sha: string;

@@ -1,15 +1,15 @@
 import { useCallback, useRef, useState } from 'react'
 import { AiOutlineDelete, 
-         AiOutlineWarning } from 'react-icons/ai/index.js'
-import { BiAddToQueue } from 'react-icons/bi/index.js'
-import { HiOutlineDocumentDuplicate } from 'react-icons/hi/index.js'
-import { TbReload } from 'react-icons/tb/index.js'
-import { FiSave } from 'react-icons/fi/index.js'
+         AiOutlineWarning } from 'react-icons/ai'
+import { BiAddToQueue } from 'react-icons/bi'
+import { HiOutlineDocumentDuplicate } from 'react-icons/hi'
+import { TbReload } from 'react-icons/tb'
+import { FiSave } from 'react-icons/fi'
 import { LoadingButton, 
-  PromisableLoadingBlingButton } from './common-button.js'
-import { Bling } from './common-ui.js'
-import Modal from './modal.jsx'
-import ShowIf from './show-if.jsx'
+  PromisableLoadingBlingButton } from './common-button'
+import { Bling } from './common-ui'
+import Modal from './modal'
+import ShowIf from './show-if'
 
 export type RegularDocumentActionsParams = {
   onClickSave?: () => Promise<any>;

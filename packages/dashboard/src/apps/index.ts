@@ -1,2 +1,2 @@
-export { default as Gallery } from './gallery/gallery-page.jsx'
-export { default as ImagePage } from './gallery/image-page.jsx'
+export { default as Gallery } from './gallery/gallery-page'
+export { default as ImagePage } from './gallery/image-page'

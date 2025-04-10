@@ -1,9 +1,9 @@
-import ShowIf from '@/comps/show-if.jsx'
-import { RecordActions, Span } from '@/comps/common-fields.jsx'
-import useCollectionsActions from '../hooks/use-collections-actions.js'
+import ShowIf from '@/comps/show-if'
+import { RecordActions, Span } from '@/comps/common-fields'
+import useCollectionsActions from '../hooks/use-collections-actions'
 import { useMemo } from 'react'
-import { TableSchemaView, TableSchemaViewComponentParams } from '../comps/table-schema-view.js'
-import { ResourceTitle } from '../comps/resource-title.jsx'
+import { TableSchemaView, TableSchemaViewComponentParams } from '../comps/table-schema-view'
+import { ResourceTitle } from '../comps/resource-title'
 import svg from '@/comps/favicon.svg';
 import { ExtensionItemGet } from '@storecraft/core/api'
 

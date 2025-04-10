@@ -1,9 +1,9 @@
 import { useRef } from 'react'
-import MDView from './md-view.jsx'
-import ResourceView from './resource-view.jsx'
-import { Span, TimeStampView } from './common-fields.js'
-import { SimpleLink } from './common-table-fields.js'
-import { FieldLeafViewParams } from './fields-view.js'
+import MDView from './md-view'
+import ResourceView from './resource-view'
+import { Span, TimeStampView } from './common-fields'
+import { SimpleLink } from './common-table-fields'
+import { FieldLeafViewParams } from './fields-view'
 import { CustomerType } from '@storecraft/core/api'
 
 

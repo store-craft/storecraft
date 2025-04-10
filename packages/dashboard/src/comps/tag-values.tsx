@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from "react"
-import CapsulesView, { CapsulesViewParams } from "./capsules-view.js"
-import { BlingInput } from "./common-ui.js"
-import { BlingButton, BlingButtonParams } from "./common-button.js"
+import CapsulesView, { CapsulesViewParams } from "./capsules-view"
+import { BlingInput } from "./common-ui"
+import { BlingButton, BlingButtonParams } from "./common-button"
 import { to_handle } from "@storecraft/core/api/utils.func.js"
-import { FieldLeafViewParams } from "./fields-view.js"
+import { FieldLeafViewParams } from "./fields-view"
 
 const text2tokens = (text: string) => {
     return text?.match(/\S+/g)

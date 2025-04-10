@@ -1,6 +1,6 @@
-import { MdNavigateNext } from 'react-icons/md/index.js'
+import { MdNavigateNext } from 'react-icons/md'
 import { Link } from 'react-router-dom'
-import { Bling } from './common-ui.js'
+import { Bling } from './common-ui'
 
 export type InviteActionCardParams = {
   msg?: string;

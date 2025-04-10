@@ -2,12 +2,12 @@ import React, {
   forwardRef, useCallback, useEffect, useMemo, 
   useRef, useState 
 } from 'react'
-import { AiFillNotification } from 'react-icons/ai/index.js'
-import MDView from './md-view.js'
-import { MINUTE, timeSince } from '../utils/time.js'
+import { AiFillNotification } from 'react-icons/ai'
+import MDView from './md-view'
+import { MINUTE, timeSince } from '../utils/time'
 import { q_initial, useCollection } from '@storecraft/sdk-react-hooks'
-import { PromisableLoadingButton } from './common-button.js'
-import useInterval from '@/hooks/use-interval.js'
+import { PromisableLoadingButton } from './common-button'
+import useInterval from '@/hooks/use-interval'
 import { useNavigate } from 'react-router-dom'
 import { 
   NotificationActionRouteParams, NotificationActionUrlParams, 

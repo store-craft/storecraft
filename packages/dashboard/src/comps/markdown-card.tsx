@@ -1,5 +1,5 @@
-import { Bling, Card } from "./common-ui.js"
-import MDView from "./md-view.jsx"
+import { Bling, Card } from "./common-ui"
+import MDView from "./md-view"
 
 /**
  * A card with `markdown content`

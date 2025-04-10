@@ -1,4 +1,4 @@
-import { mountStorecraftDashboard } from './index.js'
+import { mountStorecraftDashboard } from '.'
 
 /**
  * @description Automatically `mount` the dashboard at a

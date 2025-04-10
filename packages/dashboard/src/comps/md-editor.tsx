@@ -4,8 +4,8 @@ import { marked } from 'marked'
 
 
 import { useEffect, useState } from "react";
-import { FieldData } from "./fields-view.jsx";
-import useDarkMode from '@/hooks/use-dark-mode.js';
+import { FieldData } from "./fields-view";
+import useDarkMode from '@/hooks/use-dark-mode';
 
 
 export type MDEditorParams = {

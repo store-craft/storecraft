@@ -1,7 +1,7 @@
 import React, { 
   useImperativeHandle, useState, 
   useCallback, useEffect } from 'react'
-import Transition from './transition.tsx'
+import Transition from './transition'
 import { useRef } from 'react'
 
 export type OverlayParams = React.ComponentProps<'div'>;

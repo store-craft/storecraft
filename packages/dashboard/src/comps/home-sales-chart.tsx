@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
-import BaseChartView, { BaseChartViewParams } from './base-chart-view.js'
-import useDarkMode from '@/hooks/use-dark-mode.js'
-import { Chart, ChartConfiguration } from 'chart.js'
+import BaseChartView, { BaseChartViewParams } from './base-chart-view'
+import useDarkMode from '@/hooks/use-dark-mode'
 import { OrdersStatisticsDay, OrdersStatisticsType } from '@storecraft/core/api';
 import { ColorType } from 'lightweight-charts';
 

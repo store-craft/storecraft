@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom'
-import FieldsView from '@/comps/fields-view.jsx'
-import ShowIf from '@/comps/show-if.jsx'
-import { withCard } from '@/comps/common-fields.jsx'
-import ErrorMessage from '@/comps/error-message.jsx'
-import JsonView from '@/comps/json.jsx'
-import { Div, HR } from '@/comps/common-ui.jsx'
-import { useDocumentActions } from '@/hooks/use-document-actions.js'
-import MDView from '../comps/md-view.jsx'
+import FieldsView from '@/comps/fields-view'
+import ShowIf from '@/comps/show-if'
+import { withCard } from '@/comps/common-fields'
+import ErrorMessage from '@/comps/error-message'
+import JsonView from '@/comps/json'
+import { Div, HR } from '@/comps/common-ui'
+import { useDocumentActions } from '@/hooks/use-document-actions'
+import MDView from '../comps/md-view'
 import svg from '@/comps/favicon.svg';
-import { BaseDocumentContext } from './index.jsx'
+import { BaseDocumentContext } from '.'
 
 const root_left_schema = {
   name:'Root', comp: Div, 

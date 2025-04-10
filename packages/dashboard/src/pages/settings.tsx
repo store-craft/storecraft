@@ -1,14 +1,14 @@
 import { useDocument } from '@storecraft/sdk-react-hooks'
-import ShowIf from '@/comps/show-if.jsx'
-import ErrorMessage from '@/comps/error-message.jsx'
-import { JsonViewCard } from '@/comps/json.jsx'
+import ShowIf from '@/comps/show-if'
+import ErrorMessage from '@/comps/error-message'
+import { JsonViewCard } from '@/comps/json'
 import { 
   HR
-} from '@/comps/common-ui.jsx'
-import { MarkdownViewCard } from '../comps/markdown-card.jsx'
-import { SettingsApiKeys } from '../comps/settings-api-keys.jsx'
-import { ResourceTitle } from '../comps/resource-title.jsx'
-import { SettingsChangePassword } from '@/comps/settings-change-password.jsx'
+} from '@/comps/common-ui'
+import { MarkdownViewCard } from '../comps/markdown-card'
+import { SettingsApiKeys } from '../comps/settings-api-keys'
+import { ResourceTitle } from '../comps/resource-title'
+import { SettingsChangePassword } from '@/comps/settings-change-password'
 import { StorecraftConfig } from '@storecraft/core'
 
 

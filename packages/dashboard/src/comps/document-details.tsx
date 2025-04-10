@@ -1,9 +1,9 @@
-import { Span } from './common-fields.js'
-import ShowIf from './show-if.jsx'
+import { Span } from './common-fields'
+import ShowIf from './show-if'
 import { Link } from 'react-router-dom'
-import { RxCopy } from 'react-icons/rx/index.js'
+import { RxCopy } from 'react-icons/rx'
 import { useCallback } from 'react'
-import { write_clipboard } from '../utils/index.js'
+import { write_clipboard } from '../utils'
 import { useState } from 'react'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 

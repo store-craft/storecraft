@@ -1,47 +1,30 @@
 
-export { default as Home } from './home.js'
-export { default as Orders } from './orders.js'
-export { default as Order } from './order.js'
-export { default as Customers } from './customers.js'
-export { default as Customer } from './customer.js'
-export { default as Tags } from './tags.js'
-export { default as Tag } from './tag.js'
-export { default as Templates } from './templates.js'
-export { default as Template } from './template.js'
-export { default as Products } from './products.jsx'
-export { default as Product } from './product.js'
-export { default as Collections } from './collections.js'
-export { default as Collection } from './collection.js'
-export { default as Discounts } from './discounts.jsx'
-export { default as Discount } from './discount.js'
-export { default as ShippingMethods } from './shipping-methods.js'
-export { default as ShippingMethod } from './shipping-method.js'
-export { default as Storefronts } from './storefronts.js'
-export { default as Storefront } from './storefront.js'
-export { default as Posts } from './posts.js'
-export { default as Post } from './post.js'
-export { default as PaymentGateways } from './payment-gateways.js'
-export { default as PaymentGateway } from './payment-gateway.js'
-export { default as Extensions } from './extensions.js'
-export { default as Extension } from './extension.js'
-export { default as Settings } from './settings.js'
-
-
-// /**
-//  * @template {any} [T=any]
-//  * 
-//  * @typedef {object} BaseDocumentState
-//  * @prop {boolean} [hasChanged] 
-//  * @prop {T} [data] 
-//  */
-
-
-// /**
-//  * @template {BaseDocumentState} [State=any]
-//  * 
-//  * @typedef {object} BaseDocumentContext
-//  * @prop {() => State} [getState] Get the values of the `fields-view` tree
-//  */
+export { default as Home } from './home'
+export { default as Orders } from './orders'
+export { default as Order } from './order'
+export { default as Customers } from './customers'
+export { default as Customer } from './customer'
+export { default as Tags } from './tags'
+export { default as Tag } from './tag'
+export { default as Templates } from './templates'
+export { default as Template } from './template'
+export { default as Products } from './products'
+export { default as Product } from './product'
+export { default as Collections } from './collections'
+export { default as Collection } from './collection'
+export { default as Discounts } from './discounts'
+export { default as Discount } from './discount'
+export { default as ShippingMethods } from './shipping-methods'
+export { default as ShippingMethod } from './shipping-method'
+export { default as Storefronts } from './storefronts'
+export { default as Storefront } from './storefront'
+export { default as Posts } from './posts'
+export { default as Post } from './post'
+export { default as PaymentGateways } from './payment-gateways'
+export { default as PaymentGateway } from './payment-gateway'
+export { default as Extensions } from './extensions'
+export { default as Extension } from './extension'
+export { default as Settings } from './settings'
 
 export type BaseDocumentState<T = any> = {
   hasChanged?: boolean

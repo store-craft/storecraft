@@ -1,21 +1,21 @@
 import React, { useCallback, useState } from 'react'
-import { FaBloggerB, FaOpencart } from 'react-icons/fa/index.js'
-import { AiOutlineUser, AiFillTag, AiOutlineAppstoreAdd } from 'react-icons/ai/index.js'
-import { TbDiscount2 } from 'react-icons/tb/index.js'
-import { BiImages, BiGame } from 'react-icons/bi/index.js'
+import { FaBloggerB, FaOpencart } from 'react-icons/fa'
+import { AiOutlineUser, AiFillTag, AiOutlineAppstoreAdd } from 'react-icons/ai'
+import { TbDiscount2 } from 'react-icons/tb'
+import { BiImages, BiGame } from 'react-icons/bi'
 import { 
   MdPayment, MdOutlineCollectionsBookmark, 
   MdOutlineGamepad, MdOutlineLocalShipping, 
   MdStorefront 
-} from 'react-icons/md/index.js'
-import SideMenu, { MenuType } from './comps/side-menu.jsx'
-import ActionBar from './comps/action-bar.jsx'
-import { Bling } from './comps/common-ui.jsx'
+} from 'react-icons/md'
+import SideMenu, { MenuType } from './comps/side-menu'
+import ActionBar from './comps/action-bar'
+import { Bling } from './comps/common-ui'
 import { Outlet } from 'react-router-dom'
-import useDarkMode from './hooks/use-dark-mode.js'
-import { useScrollDelta } from '@/hooks/use-scroll-delta.js'
-import { CgTemplate } from "react-icons/cg/index.js";
-import { createPortal } from './comps/portal-creator.jsx'
+import useDarkMode from './hooks/use-dark-mode'
+import { useScrollDelta } from '@/hooks/use-scroll-delta'
+import { CgTemplate } from "react-icons/cg";
+import { createPortal } from './comps/portal-creator'
 
 const menu: MenuType = {
   info: {

@@ -1,22 +1,22 @@
 import { v4 as uuidv4 } from 'uuid'
-import CapsulesView from './capsules-view.js'
-import { BiMessageSquareAdd } from 'react-icons/bi/index.js'
+import CapsulesView from './capsules-view'
+import { BiMessageSquareAdd } from 'react-icons/bi'
 import { BlingButton, GradientFillIcon, 
-  PromisableLoadingButton } from './common-button.js'
+  PromisableLoadingButton } from './common-button'
 import { useCallback, useEffect, useMemo, 
   useRef, useState } from 'react'
-import { BlingInput, HR, Label } from './common-ui.js'
-import ShowIf, { ShowBinarySwitch } from './show-if.jsx'
-import { MdClose } from 'react-icons/md/index.js'
-import { AiFillCheckCircle } from 'react-icons/ai/index.js'
-import { IoAppsOutline } from 'react-icons/io5/index.js'
+import { BlingInput, HR, Label } from './common-ui'
+import ShowIf, { ShowBinarySwitch } from './show-if'
+import { MdClose } from 'react-icons/md'
+import { AiFillCheckCircle } from 'react-icons/ai'
+import { IoAppsOutline } from 'react-icons/io5'
 import useNavigateWithState, { 
-  LinkWithState } from '@/hooks/use-navigate-with-state.jsx'
+  LinkWithState } from '@/hooks/use-navigate-with-state'
 import { 
   ProductType, TextEntity, VariantCombination, VariantOption, 
   VariantOptionSelection, VariantType 
 } from '@storecraft/core/api'
-import { FieldContextData, FieldLeafViewParams } from './fields-view.js'
+import { FieldContextData, FieldLeafViewParams } from './fields-view'
 
 export type ProductOptionParams = {
   option: VariantOption;

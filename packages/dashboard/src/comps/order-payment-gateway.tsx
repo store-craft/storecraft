@@ -2,13 +2,13 @@ import {
   useCallback, useEffect, 
   useRef, useState 
 } from 'react'
-import { PromisableLoadingButton } from './common-button.js'
-import MDView from './md-view.js'
-import { HR } from './common-ui.js'
+import { PromisableLoadingButton } from './common-button'
+import MDView from './md-view'
+import { HR } from './common-ui'
 import { useCollection, useStorecraft } from '@storecraft/sdk-react-hooks'
-import { format_storecraft_errors } from './error-message.js'
+import { format_storecraft_errors } from './error-message'
 import { OrderData, OrderPaymentGatewayData, PaymentGatewayAction } from '@storecraft/core/api'
-import { FieldLeafViewParams } from './fields-view.js'
+import { FieldLeafViewParams } from './fields-view'
 
 /**
  * Action button for payment gateway

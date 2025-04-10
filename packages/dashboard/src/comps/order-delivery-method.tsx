@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
-import { BlingInput, HR } from './common-ui.js'
-import SelectResource from './select-resource.jsx'
-import { FieldLeafViewParams } from './fields-view.js';
+import { BlingInput, HR } from './common-ui'
+import SelectResource from './select-resource'
+import { FieldLeafViewParams } from './fields-view';
 import { ShippingMethodType } from '@storecraft/core/api';
 
 export type OrderDeliveryMethodParams = FieldLeafViewParams<ShippingMethodType> & 

@@ -1,9 +1,9 @@
 import pkg from '../../package.json'
-import { Bling } from '@/comps/common-ui.jsx'
+import { Bling } from '@/comps/common-ui'
 import main_png from './main.png';
 import svg from './favicon.svg'
-import { LogoGradient, LogoText } from './logo-text.js'
-import useDarkMode from '@/hooks/use-dark-mode.js'
+import { LogoGradient, LogoText } from './logo-text'
+import useDarkMode from '@/hooks/use-dark-mode'
 
 export const StorecraftText = (
   {

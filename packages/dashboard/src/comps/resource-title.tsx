@@ -1,7 +1,7 @@
-import { Title } from "./common-ui.js"
-import { GradientText } from "./gradient-text.js";
-import { ResourceOnboardSvg } from "./resource-onboard-svg.js"
-import ShowIf from "./show-if.jsx"
+import { Title } from "./common-ui"
+import { GradientText } from "./gradient-text";
+import { ResourceOnboardSvg } from "./resource-onboard-svg"
+import ShowIf from "./show-if"
 
 export type ResourceTitleParams = {
   resource: string;

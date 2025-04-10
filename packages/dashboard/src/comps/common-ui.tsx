@@ -1,10 +1,10 @@
 import React, { forwardRef, useEffect, 
   useImperativeHandle, useState } from 'react'
-import ShowIf from './show-if.jsx'
-import { BiErrorCircle } from 'react-icons/bi/index.js'
-import { IoClose } from 'react-icons/io5/index.js'
-import { pubsub, EVENT_CHANGE, EVENT_REFRESH } from './fields-view.js'
-import MDView from './md-view.jsx'
+import ShowIf from './show-if'
+import { BiErrorCircle } from 'react-icons/bi'
+import { IoClose } from 'react-icons/io5'
+import { pubsub, EVENT_CHANGE, EVENT_REFRESH } from './fields-view'
+import MDView from './md-view'
 const SAVE_TEXT = "💡 changes made, don't forget to save"
 
 /////

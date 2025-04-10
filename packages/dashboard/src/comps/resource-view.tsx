@@ -1,12 +1,12 @@
-import { BottomActions } from './collection-actions.js'
+import { BottomActions } from './collection-actions'
 import { 
   q_initial, useCollection, useStorecraft 
 } from '@storecraft/sdk-react-hooks'
 import { 
   forwardRef, useEffect, useImperativeHandle, 
 } from 'react'
-import useTrigger from '@/hooks/use-trigger.js'
-import { TableSchemaView } from './table-schema-view.js'
+import useTrigger from '@/hooks/use-trigger'
+import { TableSchemaView } from './table-schema-view'
 
 export type ImpInterface = {
   refresh: () => Promise<void>;

@@ -1,16 +1,16 @@
 import { useCallback, useRef, useState } from 'react'
 import { AiOutlineDelete, AiOutlineLink, 
-  AiOutlineTags, AiOutlineWarning } from 'react-icons/ai/index.js'
-import { SlActionRedo } from 'react-icons/sl/index.js'
+  AiOutlineTags, AiOutlineWarning } from 'react-icons/ai'
+import { SlActionRedo } from 'react-icons/sl'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDocument } from '@storecraft/sdk-react-hooks'
-import { Bling, Card } from '@/comps/common-ui.jsx'
-import DocumentTitle from '@/comps/document-title.jsx'
-import ShowIf from '@/comps/show-if.jsx'
-import Header from './image-header.js'
-import Img from '@/comps/img.jsx'
-import Modal from '@/comps/modal.jsx'
-import { LoadingButton } from '@/comps/common-button.jsx'
+import { Bling, Card } from '@/comps/common-ui'
+import DocumentTitle from '@/comps/document-title'
+import ShowIf from '@/comps/show-if'
+import Header from './image-header'
+import Img from '@/comps/img'
+import Modal from '@/comps/modal'
+import { LoadingButton } from '@/comps/common-button'
 
 export type LabelCapsuleParams = {
   value: string;

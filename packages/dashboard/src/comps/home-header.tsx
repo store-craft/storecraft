@@ -1,4 +1,4 @@
-import { GradientText } from "./gradient-text.js"
+import { GradientText } from "./gradient-text"
 
 export type HeaderParams = {
   label?: string;

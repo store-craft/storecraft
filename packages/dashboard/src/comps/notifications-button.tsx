@@ -1,10 +1,10 @@
 import React, { 
   useCallback, useEffect, useState } from 'react'
-import { GradientFillIcon } from './common-button.js'
-import { IoIosNotifications } from 'react-icons/io/index.js'
-import useInterval from '../hooks/use-interval.js'
-import ShowIf from './show-if.jsx'
-import { MINUTE } from '@/utils/time.js'
+import { GradientFillIcon } from './common-button'
+import { IoIosNotifications } from 'react-icons/io'
+import useInterval from '../hooks/use-interval'
+import ShowIf from './show-if'
+import { MINUTE } from '@/utils/time'
 import { useCollection } from '@storecraft/sdk-react-hooks'
 
 export type BubbleParams = {

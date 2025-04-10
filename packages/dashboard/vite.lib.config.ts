@@ -35,17 +35,22 @@ export default defineConfig(
         { 
           find: "@", 
           replacement: resolve(__dirname, "./src") 
-        }
+        },
+        // {
+        //   find: 'react',
+        //   replacement: 'https://cdn.skypack.dev/react',
+        // },
+        // {
+        //   find: 'react-dom',
+        //   replacement: 'https://cdn.skypack.dev/react-dom'
+        // },
       ]
     },
     build: {
+      
       copyPublicDir: false,
       assetsInlineLimit: 1048576,
       emptyOutDir: true,
-      commonjsOptions: {
-        strictRequires: 'auto',
-        sourceMap: false,
-      },
       outDir: 'dist/lib/src',
       // commonjsOptions: {
       //   include: [/node_modules/],
@@ -63,11 +68,8 @@ export default defineConfig(
         ],
       },
       rollupOptions: {
-        output:{
-          sourcemapExcludeSources: false
-        },
-        external: [
-        ]
+        treeshake: 'smallest',
+        
       }
     }
   }

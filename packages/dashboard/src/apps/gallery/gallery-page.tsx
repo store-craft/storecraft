@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import Gallery from './gallery.jsx'
-import GallerySelect from './gallery-select.jsx';
-import { ResourceTitle } from '@/comps/resource-title.jsx';
+import Gallery from './gallery'
+import GallerySelect from './gallery-select';
+import { ResourceTitle } from '@/comps/resource-title';
 
 export default ({}) => {
   

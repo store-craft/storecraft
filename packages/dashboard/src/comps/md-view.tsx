@@ -17,8 +17,6 @@ const MDView = (
       {
         __html : marked.parse(
           value ?? '', { 
-            mangle: false, headerIds: false, 
-            sanitize:false
           }
         )
       }

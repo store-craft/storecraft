@@ -1,8 +1,11 @@
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
-import Editor from "@uiw/react-md-editor/nohighlight";
-import { useState } from "react";
+import MdEditor from 'react-markdown-editor-lite';
+import './md-editor.css';
+import { marked } from 'marked'
+
+
+import { useEffect, useState } from "react";
 import { FieldData } from "./fields-view.jsx";
+import useDarkMode from '@/hooks/use-dark-mode.js';
 
 
 export type MDEditorParams = {
@@ -18,15 +21,25 @@ const MDEditor = (
 ) => {
   const [md, setMd] = useState(value);
   const { key, name, comp_params } = field
+  const { darkMode } = useDarkMode();
 
-  function handleEditorChange(text) {
-    onChange(text)
-    setMd(text)
+  const handleEditorChange = (value: { text: string, html: string }) => {
+    console.log('value', value)
+    onChange(value.text)
+    setMd(value.text)
   }
 
   return (
 <div>
-  <Editor 
+  <MdEditor 
+    {...comp_params}
+    className={"h-[300px] " + (darkMode ? 'dark' : 'light')} 
+    value={md}
+    renderHTML={text => marked.parse(text)} 
+    onChange={handleEditorChange} 
+  />
+
+  {/* <Editor 
       preview='edit'  
       value={md} 
       onChange={handleEditorChange} 
@@ -36,7 +49,7 @@ const MDEditor = (
       style={{
         color: 'inherit',
         // background: '#1e293b40' 
-      }} />
+      }} /> */}
   {/* <MDEditor.Markdown source={md} style={{ whiteSpace: 'pre-wrap' }} {...comp_params} /> */}
 </div>
   );

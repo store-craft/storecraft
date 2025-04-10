@@ -54,7 +54,11 @@ export default defineConfig(
         entry: ['src/index.tsx'],
         // name: '@storecraft/dashboard',
         name: 'StorecraftDashboard',
-        formats: ['es', 'cjs', 'umd'],
+        formats: [
+          'es', 
+          // 'cjs', 
+          // 'umd'
+        ],
       },
       rollupOptions: {
         external: [

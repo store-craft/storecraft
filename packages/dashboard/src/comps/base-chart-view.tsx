@@ -34,7 +34,6 @@ const ToolTip = <T extends SeriesType>(
 }
 
 
-
 export type BaseChartViewParams<T extends SeriesType> = withDiv<{
   config: {
     series: {
@@ -43,6 +42,9 @@ export type BaseChartViewParams<T extends SeriesType> = withDiv<{
       definition: SeriesDefinition<T>;
     },
     chart_options?: DeepPartial<ChartOptions>,
+    tooltip?: {
+      component?: React.FC<ToolTipParams<T>>;
+    }
   }
 }>;
 
@@ -66,6 +68,7 @@ const BaseChartView = <T extends SeriesType>(
       options = {} as SeriesPartialOptionsMap[T],
     },
     chart_options = {},
+    tooltip
   } = config;
 
   const chartContainerRef = useRef<HTMLDivElement>(undefined);
@@ -218,21 +221,25 @@ const BaseChartView = <T extends SeriesType>(
             zIndex: 1,
           }}
         />
-        <div 
-          className='absolute block w-fit h-fit'
-          ref={toolTipContainerRef} 
-          style={{
-            left: toolTipContainerParams.left,
-            top: toolTipContainerParams.top,
-            display: toolTipContainerParams.show ? 'block' : 'none',
-            zIndex: 10,
-            'pointerEvents': 'none'
-          }}
-        >
-          <ToolTip 
-            chart={toolTipContainerParams.tooltip_params}
-          />
-        </div>
+        {
+          tooltip?.component && (
+            <div 
+              className='absolute block w-fit h-fit'
+              ref={toolTipContainerRef} 
+              style={{
+                left: toolTipContainerParams.left,
+                top: toolTipContainerParams.top,
+                display: toolTipContainerParams.show ? 'block' : 'none',
+                zIndex: 10,
+                'pointerEvents': 'none'
+              }}
+            >
+              <tooltip.component 
+                chart={toolTipContainerParams.tooltip_params}
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   );

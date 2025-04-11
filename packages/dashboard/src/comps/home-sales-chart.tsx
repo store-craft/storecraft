@@ -14,6 +14,21 @@ export type SalesChartParams = {
 
 const to_millis = (d: number | string | Date) => (new Date(d)).getTime()
 
+export const ChartToolTip: BaseChartViewParams<'Area'>["config"]["tooltip"]["component"] = (
+  {
+    chart
+  }
+) => {  
+  // console.log('chart', chart)
+  return (
+    <div className='--absolute flex flex-col gap-2 border shelf-plain-card-fill p-2 rounded-md w-fit h-fit'>
+      <div className='flex flex-row gap-2 '>
+        <div className='text-sm'>Total</div>
+        <div className='text-sm' children={chart?.data?.value}/>
+      </div>
+    </div>
+  )
+}
 
 const SalesChart = (
   { 
@@ -24,7 +39,7 @@ const SalesChart = (
   const [showIndex, setShowIndex] = useState(0)
   const { darkMode } = useDarkMode()
 
-  const config = useMemo(
+  const config = useMemo<BaseChartViewParams<'Area'>["config"]>(
     () => {
       let arr: OrdersStatisticsDay[] = Array.from({ length: data.count_days });
       Object.
@@ -71,7 +86,9 @@ const SalesChart = (
             
           }
         },
-
+        tooltip: {
+          component: ChartToolTip,
+        },
         series: {
           definition: AreaSeries,
           options: {
@@ -120,87 +137,87 @@ const SalesChart = (
       // console.log('ys1', ys1)
       // console.log('ys2', ys2)
 
-      return {
-        type: 'bar',
-        options: { 
-          plugins: {
-            legend: { 
-              labels: {
-                // usePointStyle: true,
-                boxWidth: 4,
-                pointStyleWidth: 2
-              },
-                display: true,
-                onClick: (ev, item, legend) => 
-                    setShowIndex(ind => (++ind)%2)
-            }
-          },
-          scales: {
-            x: {
-              grid: {
-                // ccolor: darkMode ? '#334155' : '#d1d5db'
-              },
-              beginAtZero:true,
-              ticks: {
-                // autoSkip: true
-              }
-            },
-            y: {
-              grid: {
-                // ccolor: darkMode ? '#334155' : '#d1d5db'
-              },
-              beginAtZero:true,
-              ticks: {
-                precision: 0
-              }
-            }
-          },
-          // spanGaps: true,
-          responsive: true,
-          maintainAspectRatio: false,
-          // aspectRatio:1
-        },
-        data: {
-          labels: xs,
-          datasets: [
-            {
-              label: 'Income per day',
-              // backgroundColor: '#f5f1ff',
-              // borderColor: 'rgb(236 72 153)',
-              backgroundColor: 'rgb(236 72 153)',
-              borderColor: '#000000',
-              // borderWidth: 1,
-              pointRadius:0,
-              tension: 0.1,
-              skipNull:true,
-              data: ys1,
-              fill:true,
-              hidden: Boolean(showIndex!=0),
-              // barThickness: 10,
-              stack: '1',
-            },
-            {
-              label: 'Orders per day',
-              hidden: Boolean(showIndex!=1),
-              // backgroundColor: '#ad74ff',
-              // borderColor: 'rgb(236 72 153)',
-              backgroundColor: '#973cff',
-              borderColor: '#000000',
+      // return {
+      //   type: 'bar',
+      //   options: { 
+      //     plugins: {
+      //       legend: { 
+      //         labels: {
+      //           // usePointStyle: true,
+      //           boxWidth: 4,
+      //           pointStyleWidth: 2
+      //         },
+      //           display: true,
+      //           onClick: (ev, item, legend) => 
+      //               setShowIndex(ind => (++ind)%2)
+      //       }
+      //     },
+      //     scales: {
+      //       x: {
+      //         grid: {
+      //           // ccolor: darkMode ? '#334155' : '#d1d5db'
+      //         },
+      //         beginAtZero:true,
+      //         ticks: {
+      //           // autoSkip: true
+      //         }
+      //       },
+      //       y: {
+      //         grid: {
+      //           // ccolor: darkMode ? '#334155' : '#d1d5db'
+      //         },
+      //         beginAtZero:true,
+      //         ticks: {
+      //           precision: 0
+      //         }
+      //       }
+      //     },
+      //     // spanGaps: true,
+      //     responsive: true,
+      //     maintainAspectRatio: false,
+      //     // aspectRatio:1
+      //   },
+      //   data: {
+      //     labels: xs,
+      //     datasets: [
+      //       {
+      //         label: 'Income per day',
+      //         // backgroundColor: '#f5f1ff',
+      //         // borderColor: 'rgb(236 72 153)',
+      //         backgroundColor: 'rgb(236 72 153)',
+      //         borderColor: '#000000',
+      //         // borderWidth: 1,
+      //         pointRadius:0,
+      //         tension: 0.1,
+      //         skipNull:true,
+      //         data: ys1,
+      //         fill:true,
+      //         hidden: Boolean(showIndex!=0),
+      //         // barThickness: 10,
+      //         stack: '1',
+      //       },
+      //       {
+      //         label: 'Orders per day',
+      //         hidden: Boolean(showIndex!=1),
+      //         // backgroundColor: '#ad74ff',
+      //         // borderColor: 'rgb(236 72 153)',
+      //         backgroundColor: '#973cff',
+      //         borderColor: '#000000',
               
-              pointRadius:0,
-              tension: 0.1,
-              data: ys2,
-              // barThickness: 4,
-              stack: '12',
-            }
-          ]
-        }
-      }
+      //         pointRadius:0,
+      //         tension: 0.1,
+      //         data: ys2,
+      //         // barThickness: 4,
+      //         stack: '12',
+      //       }
+      //     ]
+      //   }
+      // }
     }, [data, showIndex, darkMode]
   )
 
   return (
-  <BaseChartView 
+  <BaseChartView<'Area'>
     key={String(darkMode)} 
     config={config} 
     {...rest} 

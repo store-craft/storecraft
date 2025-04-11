@@ -7,75 +7,67 @@ import {
   ISeriesApi,
   Point,
   MouseEventHandler,
-  Time
+  Time,
+  HorzScaleOptions,
+  PriceScaleOptions
 } from 'lightweight-charts';
 import { useEffect, useRef, useState } from 'react';
 import { type withDiv } from './types';
 
-export type ToolTipParams<T extends SeriesType> = {
+export type ToolTipParams = {
   chart?: {
-    data?: SeriesDataItemTypeMap[T];
+    data?: SeriesDataItemTypeMap[SeriesType];
     point?: Point;
     event_params?: MouseEventParams;
   }
 }
 
-const ToolTip = <T extends SeriesType>(
-  {
-    chart
-  } : ToolTipParams<T> & React.ComponentProps<'div'>
-) => {
-
-  return (
-    <div className='absolute bg-white text-black p-2 rounded-md w-fit h-fit'>
-      <div className='text-sm'>Tooltip</div>
-    </div>
-  )
+export type SeriesConfig<T extends SeriesType> = {
+  definition: SeriesDefinition<T>;
+  data: SeriesDataItemTypeMap[T][];
+  options?: SeriesPartialOptionsMap[T];
+  priceScaleOptions?: DeepPartial<PriceScaleOptions>;
 }
 
-
-export type BaseChartViewParams<T extends SeriesType> = withDiv<{
+export type BaseChartViewParams = withDiv<{
   config: {
-    series: {
-      data: SeriesDataItemTypeMap[T][];
-      options: SeriesPartialOptionsMap[T];
-      definition: SeriesDefinition<T>;
+    series: SeriesConfig<SeriesType>[],
+    chart: {
+      options?: DeepPartial<ChartOptions>;
+      timeScaleOptions?: DeepPartial<HorzScaleOptions>;
+      priceScaleOptions?: DeepPartial<PriceScaleOptions>;
+      fitContent?: boolean;
     },
-    chart_options?: DeepPartial<ChartOptions>,
     tooltip?: {
-      component?: React.FC<ToolTipParams<T>>;
+      component?: React.FC<ToolTipParams>;
     }
   }
 }>;
 
-type ToolTipContainerParams<T extends SeriesType> = {
+type ToolTipContainerParams = {
   left?: string,
   top?: string,
   show?: boolean,
-  tooltip_params?: ToolTipParams<T>["chart"];
+  tooltip_params?: ToolTipParams["chart"];
 }
 
-const BaseChartView = <T extends SeriesType>(
+const BaseChartView = (
   { 
     config, ...rest 
-  }: BaseChartViewParams<T>
+  }: BaseChartViewParams
 ) => {
 
   const {
-    series: {
-      data = [] as SeriesDataItemTypeMap[T][],
-      definition = {} as SeriesDefinition<T>,
-      options = {} as SeriesPartialOptionsMap[T],
-    },
-    chart_options = {},
+    series,
+    chart: $chart = {},
     tooltip
   } = config;
 
   const chartContainerRef = useRef<HTMLDivElement>(undefined);
   const chartApiRef = useRef<IChartApi>(undefined);
-  const chartSeriesApiRef = useRef<ISeriesApi<T>>(undefined);
+  const chartSeriesApiRef = useRef<ISeriesApi<SeriesType>[]>([]);
   const toolTipContainerRef = useRef<HTMLDivElement>(undefined);
-  const [toolTipContainerParams, setToolTipContainerParams] = useState<ToolTipContainerParams<T>>({});
+  const [toolTipContainerParams, setToolTipContainerParams] = useState<ToolTipContainerParams>({});
 
   useEffect(
     () => {
@@ -87,9 +79,11 @@ const BaseChartView = <T extends SeriesType>(
         );
       };
 
+      // setup `chart`
       const chart = createChart(
         chartContainerRef.current, 
         {
+          autoSize: true,
           grid: {
             horzLines: {
               color: 'rgba(0, 0, 0, 0.1)',
@@ -97,21 +91,40 @@ const BaseChartView = <T extends SeriesType>(
           },
           width: chartContainerRef.current.clientWidth,
             height: 450,
-          ...chart_options
+          ...$chart.options
         }
       );
-      chartApiRef.current = chart;
 
-      chart.timeScale().fitContent();
-
-      const newSeries = chart.addSeries(
-        definition, 
-        options
+      chart.timeScale().applyOptions(
+        $chart.timeScaleOptions ?? {}
       );
 
-      chartSeriesApiRef.current = newSeries;
+      chart.priceScale('right').applyOptions(
+        $chart.priceScaleOptions ?? {}
+      );
 
-      newSeries.setData(data);
+      if($chart.fitContent) {
+        chart.timeScale().fitContent();
+      } 
+      chartApiRef.current = chart;
+
+      // setup `series`
+      let pane_index = 0;
+      for (const s of series) {
+        const { data, options, definition, priceScaleOptions } = s;
+        const api_series = chart.addSeries(
+          definition, 
+          options
+        );
+        api_series.setData(data);
+        if (priceScaleOptions) {
+          api_series.priceScale().applyOptions(priceScaleOptions);
+        }
+        chartSeriesApiRef.current.push(
+          api_series
+        );
+        pane_index+=1;
+      }
 
       window.addEventListener('resize', handleResize);
 
@@ -121,7 +134,7 @@ const BaseChartView = <T extends SeriesType>(
       };
     },
     [
-      data, options, definition, chart_options,
+      series, $chart,
     ]
   );
 
@@ -129,7 +142,7 @@ const BaseChartView = <T extends SeriesType>(
     () => {
       const chart = chartApiRef.current;
       const container = chartContainerRef.current;
-      const series = chartSeriesApiRef.current;
+      const series = chartSeriesApiRef.current?.at(0);
 
       const handler: MouseEventHandler<Time> = (param) => {
         if (
@@ -141,23 +154,11 @@ const BaseChartView = <T extends SeriesType>(
           param.point.y > container.clientHeight
         ) {
           setToolTipContainerParams({show: false});
-          // toolTip.style.display = 'none';
         } else {
-          // time will be in the same format that we supplied to setData.
-          // thus it will be YYYY-MM-DD
           const data = param.seriesData.get(series);
           
           if(!('value' in data))
             throw new Error('value not in data');
-          
-          // const dateStr = param.time;
-          // const price = data.value !== undefined ? data.value : data.close;
-          // toolTip.style.display = 'block';
-          // toolTip.innerHTML = `<div style="color: ${'#2962FF'}">Apple Inc.</div><div style="font-size: 24px; margin: 4px 0px; color: ${'black'}">
-          //     ${Math.round(100 * price) / 100}
-          //     </div><div style="color: ${'black'}">
-          //     ${dateStr}
-          //     </div>`;
   
           const coordinate = series.priceToCoordinate(data.value);
           let shiftedCoordinate = param.point.x - 0;
@@ -168,20 +169,26 @@ const BaseChartView = <T extends SeriesType>(
 
           shiftedCoordinate = Math.max(
             0,
-            Math.min(container.clientWidth - toolTipContainerRef.current.clientWidth, shiftedCoordinate)
+            Math.min(
+              container.clientWidth - 
+              toolTipContainerRef.current.clientWidth, 
+              shiftedCoordinate
+            )
           );
 
           const toolTipMargin = 5;
-          const coordinateY =
+          const coordinateY = (
             coordinate - toolTipContainerRef.current.clientHeight - toolTipMargin > 0
-              ? coordinate - toolTipContainerRef.current.clientHeight - toolTipMargin
-              : Math.max(
-                0,
-                Math.min(
-                  container.clientHeight - toolTipContainerRef.current.clientHeight - toolTipMargin,
-                  coordinate + toolTipMargin
-                )
-              );
+          ) ? (coordinate - toolTipContainerRef.current.clientHeight - toolTipMargin)
+            : Math.max(
+              0,
+              Math.min(
+                container.clientHeight - 
+                toolTipContainerRef.current.clientHeight - 
+                toolTipMargin,
+                coordinate + toolTipMargin
+              )
+            );
 
           setToolTipContainerParams(
             {
@@ -189,14 +196,12 @@ const BaseChartView = <T extends SeriesType>(
               left: shiftedCoordinate + 'px',
               top: coordinateY + 'px',
               tooltip_params: {
-                data: data,
+                // data: data,
                 point: param.point,
                 event_params: param,
               }
             }
           );
-          // toolTip.style.left = shiftedCoordinate + 'px';
-          // toolTip.style.top = coordinateY + 'px';
         }
       }
       chart.subscribeCrosshairMove(

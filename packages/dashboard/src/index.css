@@ -30,7 +30,8 @@
   --color-kf-900: #440381;
 
 
-  --color-test: rgb(246, 51, 154);
+  --color-test: #fb64b6;
+  --color-test2: oklch(52.5% 0.223 3.958);
 
   --color-malibu-50: #ebfeff;
   --color-malibu-100: #cdfaff

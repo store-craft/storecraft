@@ -2130,7 +2130,7 @@ export interface EvoEntry  {
   /** 
    * @description The `discount`
    */
-  discount?: DiscountType;
+  discount?: Partial<DiscountType>;
   
   /** 
    * @description The amount of money that was discounted 
@@ -2322,12 +2322,12 @@ export interface OrdersStatisticsType  {
   days?: Record<number | string, OrdersStatisticsDay>;
 
   /**
-   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   * @description The start of day in date in string `ISO` / `UTC` / `timestamp` format
    */
   from_day?: string | number;
 
   /**
-   * @description The date in string `ISO` / `UTC` / `timestamp` format
+   * @description The end of day in date in string `ISO` / `UTC` / `timestamp` format
    */
   to_day?: string | number;
 

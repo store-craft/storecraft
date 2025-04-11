@@ -90,7 +90,7 @@ export const parse_json_safely = (v='') => {
  */
 export const apply_dates = d => {
   const now_iso = new Date().toISOString();
-  d.created_at = d.created_at ?? now_iso;
+  d.created_at = new Date(d.created_at ?? now_iso).toISOString();
   d.updated_at = now_iso;
   // casting
   const c = /** @type {T & { created_at: string, updated_at: string}} */(d);

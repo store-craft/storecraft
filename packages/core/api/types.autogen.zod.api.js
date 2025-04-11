@@ -1649,7 +1649,7 @@ export const checkoutCreateTypeAfterValidationSchema = checkoutCreateTypeSchema
 
 export const evoEntrySchema = z.object({
   discount_code: z.string().optional().describe("The discount code `handle`"),
-  discount: discountTypeSchema.optional().describe("The `discount`"),
+  discount: discountTypeSchema.partial().optional().describe("The `discount`"),
   total_discount: z
     .number()
     .optional()

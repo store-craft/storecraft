@@ -13,7 +13,7 @@ import { assert } from './utils.func.js';
  * @description Get the start of a day
  * @param  {ConstructorParameters<typeof Date>["0"]} date 
  */
-const startOfDay = (date=Date.now()) => {
+export const startOfDay = (date=Date.now()) => {
   var d = new Date(date);
   d.setUTCHours(0, 0, 0, 0);
   return d;
@@ -24,7 +24,7 @@ const startOfDay = (date=Date.now()) => {
  * 
  * @param  {ConstructorParameters<typeof Date>["0"]} date 
  */
-const endOfDay = (date=Date.now()) => {
+export const endOfDay = (date=Date.now()) => {
   var d = new Date(date);
   d.setUTCHours(23, 59, 59, 999);
   return d;
@@ -50,10 +50,13 @@ const DAY = 86400000
  */
 export const compute_statistics = app => 
 /**
- * @description Compute the `statistics` of `sales` / `orders` a period of time per day.
+ * @description Compute the `statistics` of `sales` / `orders` over a sparse 
+ * period of time per day. sparse means, that days without sales are not reported.
+ * it is up to the caller to fill the gaps. This is done to reduce the amount of
+ * data to be transmitted.
  * 
- * @param {string} [from_day] `ISO` / `UTC` / `timestamp` date
- * @param {string} [to_day] `ISO` / `UTC` / `timestamp` date
+ * @param {number | string | Date} [from_day] `ISO` / `UTC` / `timestamp` date
+ * @param {number | string | Date} [to_day] `ISO` / `UTC` / `timestamp` date
  * 
  * @returns {Promise<OrdersStatisticsType>}
  */
@@ -167,11 +170,12 @@ async (from_day, to_day) => {
           const id = handle ?? id_pr;
 
           // `products`
-          day_d.products[id] = day_d.products[id] ?? {
-            handle: id, id: id_pr, title, count: 0, 
+          if(id) {
+            day_d.products[id] = day_d.products[id] ?? {
+              handle: id, id: id_pr, title, count: 0, 
+            }
+            day_d.products[id].count += qty;
           }
-
-          day_d.products[id].count += qty;
 
           // `collections`
           collections?.forEach(
@@ -208,7 +212,9 @@ async (from_day, to_day) => {
       )
       .forEach(
         (e) => {
-          const code = e?.discount_code
+          const code = e?.discount_code ?? e?.discount?.handle;
+          if(!code) 
+            return;
           day_d.discounts[code] = day_d.discounts[code] ?? {
             count: 0,
             handle: code, 

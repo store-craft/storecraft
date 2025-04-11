@@ -10,6 +10,7 @@ import { BiTrendingUp } from 'react-icons/bi'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import { useMiscCache } from '@storecraft/sdk-react-hooks'
 import { OrdersStatisticsEntity, OrdersStatisticsType } from '@storecraft/core/api'
+// import dummy_stats from  './home-performace-stats.json';
 
 const DAY = 86400000;
 
@@ -43,7 +44,8 @@ export type HomePerformanceParams = {
  */
 const compute_top_k_stats = (data: OrdersStatisticsType) => {
 
-  if(data===undefined) return undefined;
+  if(data===undefined) 
+    return undefined;
 
   type result_type = {
     tags: Record<string, OrdersStatisticsEntity>,
@@ -59,6 +61,7 @@ const compute_top_k_stats = (data: OrdersStatisticsType) => {
     discounts: {},
   };
 
+  // console.log('data.days', data.days);
   const reduced = Object
     .entries(data.days)
     .reduce(
@@ -72,29 +75,29 @@ const compute_top_k_stats = (data: OrdersStatisticsType) => {
       
       Object.entries(tags).forEach(
         ([k, v]) => {
-          p.tags[k] = (p.tags[k] ?? {...v});
-          p.tags[k].count += v.count ? v.count : 0;
+          p.tags[k] = (p.tags[k] ?? {...v, count: 0});
+          p.tags[k].count += (v.count ? v.count : 0);
         }
       );
 
       Object.entries(collections).forEach(
         ([k, v]) => {
-          p.collections[k] = (p.collections[k] ?? {...v});
-          p.collections[k].count += v.count ? v.count : 0;
+          p.collections[k] = (p.collections[k] ?? {...v, count: 0});
+          p.collections[k].count += (v.count ? v.count : 0);
         }
       );
 
       Object.entries(discounts).forEach(
         ([k, v]) => {
-          p.discounts[k] = (p.discounts[k] ?? {...v});
-          p.discounts[k].count += v.count ? v.count : 0;
+          p.discounts[k] = (p.discounts[k] ?? {...v, count: 0});
+          p.discounts[k].count += (v.count ? v.count : 0);
         }
       );
 
       Object.entries(products).forEach(
         ([k, v]) => {
-          p.products[k] = (p.products[k] ?? {...v});
-          p.products[k].count += v.count ? v.count : 0;
+          p.products[k] = (p.products[k] ?? {...v, count: 0});
+          p.products[k].count += (v.count ? v.count : 0);
         }
       );
 
@@ -115,7 +118,7 @@ const compute_top_k_stats = (data: OrdersStatisticsType) => {
     // convert o to array of kv tuples ->sort ->pick first K
     return Object.entries(o)
                   .sort(sort)
-                  .slice(0, 10);
+                  // .slice(0, 10);
   }
 
   //
@@ -136,22 +139,26 @@ const InfoCapsule = (
 ) => {
 
   return (
-<div className={`p-1 pl-2 px-1 rounded-full border shelf-border-color
-               cursor-pointer 
-               bg-kf-400 text-white 
-               dark:bg-kf-800/20 
-               w-fit max-w-full h-fit 
-               flex flex-row justify-between gap-3 text-sm shadow-lg
-               hover:scale-[1.04] duration-75 transition-transform`} {...rest}>
+<div 
+  className={
+    `p-1 pl-2 px-1 rounded-full border shelf-border-color
+    cursor-pointer 
+    bg-kf-400 text-white 
+    dark:bg-kf-800/20 
+    w-fit max-w-full h-fit 
+    flex flex-row justify-between gap-3 text-sm shadow-lg
+    hover:scale-[1.04] duration-75 transition-transform`
+  } {...rest}>
+
   <span 
-      children={label} 
-      className='whitespace-nowrap flex-0 max-w-[80%] 
-      overflow-clip hover:overflow-x-auto 
-                --max-w-[5rem] ' />        
-  <div 
-      children={value} 
-      className='rounded-full bg-white flex-shrink-0
-              text-pink-500 px-2 font-semibold'/>
+    children={label} 
+    className='whitespace-nowrap --flex-0 max-w-[80%] 
+      overflow-x-hidden hover:overflow-x-auto' />        
+  <span 
+    children={value} 
+    className='rounded-full bg-white --flex-shrink-0
+    text-pink-500 px-2 font-semibold'/>
+
 </div>        
   )
 }
@@ -167,29 +174,30 @@ const TopSoldCard = (
 
   return (
 <Bling 
-    rounded='rounded-xl' 
-    stroke='border-2'
-    className='shadow-md dark:shadow-xl'>
-  <div className='w-56 h-52 
-                shelf-plain-card-fill
-                rounded-xl px-3 pt-2
-                flex flex-col'>
+  rounded='rounded-xl' 
+  stroke='border-2'
+  className='shadow-md dark:shadow-xl'>
+  <div 
+    className='w-56 h-52 
+      shelf-plain-card-fill
+      rounded-xl px-3 pt-2
+      flex flex-col'>
     <div className='text-gray-500 text-base border-b shelf-border-color pb-2'>
       {/* <SpaceShip/> */}
       {/* <WhiteSpace n={2}/> */}
       {/* <span children={label_prefix} className='font-open_sans text-gray-400'  /> */}
       <BiTrendingUp 
-          className='inline text-2xl rounded-md
-                    text-kf-400  bg-white/50
-                    dark:text-kf-400 dark:bg-white/10
-                     border border-kf-500/25 p-px' />  
+        className='inline text-2xl rounded-md
+          text-kf-400  bg-white/50
+          dark:text-kf-400 dark:bg-white/10
+            border border-kf-500/25 p-px' />  
       <div 
-          children={label} 
-          className='p-1 tracking-wider font-mono 
-                  bg-pink-50 text-pink-500
-                  dark:bg-pink-50/10 dark:text-pink-500
-                    font-semibold h-20 mx-1
-                      rounded-md --border text-sm inline' />
+        children={label} 
+        className='p-1 tracking-wider font-mono 
+          bg-pink-50 text-pink-500
+          dark:bg-pink-50/10 dark:text-pink-500
+            font-semibold h-20 mx-1
+            rounded-md --border text-sm inline' />
 
     </div> 
     <ShowIf show={data.length}>
@@ -199,11 +207,11 @@ const TopSoldCard = (
         data.map(
           ([k, v], ix) => (
             <Link 
-                key={k} to={linkFn(k, v)} 
-                draggable='false' className='w-full'>
+              key={k} to={linkFn(k, v)} 
+              draggable='false' className='w-full'>
               <InfoCapsule 
-                  label={labelFn(k, v)} 
-                  value={String(valFn(k, v))} />
+                label={labelFn(k, v)} 
+                value={String(valFn(k, v))} />
             </Link>                     
           )
         )
@@ -261,9 +269,12 @@ const Performance = (
           setLoading(false);
         }
 
+        // const new_data = dummy_stats;
         const new_data = await sdk.statistics.orders(
           Date.now() - span * DAY, Date.now()
         );
+
+        // console.log({new_data});
 
         const hasNotChanged = (
           new_data?.from_day===working_data?.from_day &&
@@ -285,7 +296,7 @@ const Performance = (
       }
     }, [data]
   );
-  
+
   const onSpanChanged: TimeFrameParams["onChange"] = useCallback(
     (v) => {
       setSpan(v);
@@ -339,26 +350,30 @@ const Performance = (
       <div className='w-full h-fit flex flex-row justify-center 
                       lg:justify-start flex-wrap mt-5 gap-5'>
         <TopSoldCard 
-            data={days_reduced?.products} 
-            label='products' 
-            labelFn={(k, v)=>v.title??k} 
-            valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/products/${k}`} />
+          data={days_reduced?.products} 
+          label='products' 
+          labelFn={(k, v)=>v.title??k} 
+          valFn={(k, v)=>v.count ?? 0} 
+          linkFn={(k, v) => `/pages/products/${k}`} 
+        />
         <TopSoldCard 
-            data={days_reduced?.collections} 
-            label='collections' 
-            valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/collections/${k}`}/>
+          data={days_reduced?.collections} 
+          label='collections' 
+          valFn={(k, v)=>v.count ?? 0} 
+          linkFn={(k, v) => `/pages/collections/${k}`}
+        />
         <TopSoldCard 
-            data={days_reduced?.discounts} 
-            label='discounts' 
-            valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/discounts/${k}`}/>
+          data={days_reduced?.discounts} 
+          label='discounts' 
+          valFn={(k, v)=>v.count ?? 0} 
+          linkFn={(k, v) => `/pages/discounts/${k}`}
+        />
         <TopSoldCard 
-            data={days_reduced?.tags} 
-            label='tags' 
-            valFn={(k, v)=>v.count ?? 0} 
-            linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}`}/>
+          data={days_reduced?.tags} 
+          label='tags' 
+          valFn={(k, v)=>v.count ?? 0} 
+          linkFn={(k, v) => `/pages/tags/${k.split('_')[0]}`}
+        />
       </div>  
     </div>        
   </ShowIf>         

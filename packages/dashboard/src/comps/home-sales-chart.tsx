@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 import BaseChartView, { BaseChartViewParams, SeriesConfig } from './base-chart-view'
 import useDarkMode from '@/hooks/use-dark-mode'
 import { OrdersStatisticsDay, OrdersStatisticsType } from '@storecraft/core/api';
-import { AreaData, BarStyleOptions, ColorType, HistogramData, HistogramSeries } from 'lightweight-charts';
-import { AreaSeries, createChart } from 'lightweight-charts';
+import { AreaData, ColorType, HistogramData, HistogramSeries, UTCTimestamp } from 'lightweight-charts';
+import { AreaSeries } from 'lightweight-charts';
 
 const DAY = 86400000;
 
@@ -19,7 +19,6 @@ export const ChartToolTip: BaseChartViewParams["config"]["tooltip"]["component"]
     chart
   }
 ) => {  
-  console.log({chart});
 
   const { event_params } = chart || {};
   if(!event_params) 
@@ -30,17 +29,25 @@ export const ChartToolTip: BaseChartViewParams["config"]["tooltip"]["component"]
   const orders = series_points?.at(1) as HistogramData;
 
   return (
-    <div className='--absolute flex flex-col gap-2 border shelf-plain-card-fill p-2 rounded-md w-fit h-fit'>
-      <div className='flex flex-row gap-2 '>
-        <div className='text-sm font-extrabold'>Income</div>
-        <div className='text-sm dark:text-white text-black' 
-          children={income.value}/>
-      </div>
-      <div className='flex flex-row gap-2 '>
-        <div className='text-sm font-extrabold'>Orders</div>
-        <div className='text-sm dark:text-white text-black' 
-          children={orders.value}/>
-      </div>
+    <div 
+      className='flex flex-col gap-2 border 
+        shelf-plain-card-fill p-2 rounded-md w-fit h-fit'>
+      {
+        income && 
+        <div className='flex flex-row gap-2 '>
+          <div className='text-sm font-extrabold'>Income</div>
+          <div className='text-sm dark:text-white text-black' 
+            children={income?.value ?? 0}/>
+        </div>
+      }
+      {
+        orders && 
+        <div className='flex flex-row gap-2 '>
+          <div className='text-sm font-extrabold'>Orders</div>
+          <div className='text-sm dark:text-white text-black' 
+            children={orders?.value ?? 0}/>
+        </div>
+      }
     </div>
   )
 }
@@ -56,23 +63,38 @@ const SalesChart = (
 
   const config = useMemo<BaseChartViewParams["config"]>(
     () => {
-      let arr: OrdersStatisticsDay[] = Array.from({ length: data.count_days });
-      Object.
-        entries(data.days).
-        forEach(
-          ([k, v]) => {
-            arr[(to_millis(k)-to_millis(data.from_day))/DAY] = v
-          }
-        );
+      const first_day_millis = to_millis(data.from_day);
+      // fill the gaps in the data
+      let arr: Partial<OrdersStatisticsDay>[] = Array.from(
+        { 
+          length: data.count_days 
+        }
+      ).map(
+        (_, ix) => ({
+          day: new Date(
+            first_day_millis + (ix * DAY)
+          ).toISOString()
+        })
+      );
 
-      const xs = arr.map((it, ix) => it?.day ? 
-                new Date(it?.day).toLocaleDateString() : '')
-      const ys1 = arr.map(
-        (it, ix) => it?.metrics?.checkouts_created?.total_income ?? 0
+      // fill the data into the gaps
+      Object.
+      entries(data.days).
+      forEach(
+        ([k, v]) => {
+          arr[(to_millis(k)-first_day_millis)/DAY] = v
+        }
       );
-      const ys2 = arr.map(
-        (it, ix) => it?.metrics?.checkouts_created?.count ?? 0
-      );
+
+      // arr[30] = {
+      //   ...arr[30],
+      //   metrics: {
+      //     checkouts_completed: {
+      //       total_income: 100,
+      //       count: 10
+      //     }
+      //   }
+      // }
 
       return {
          chart: {
@@ -109,28 +131,12 @@ const SalesChart = (
         series: [
           {
             definition: AreaSeries,
-            data: [
-              { time: '2018-12-22', value: 32.5 },
-              { time: '2018-12-23', value: 311 },
-              { time: '2018-12-24', value: 272 },
-              { time: '2018-12-25', value: 272 },
-              { time: '2018-12-26', value: 257 },
-              { time: '2018-12-27', value: 289 },
-              { time: '2018-12-28', value: 256 },
-              { time: '2018-12-29', value: 232 },
-              { time: '2018-12-30', value: 228 },
-              { time: '2018-12-31', value: 227 },
-              { time: '2019-01-22', value: 32 },
-              { time: '2019-01-23', value: 31 },
-              { time: '2019-01-24', value: 22 },
-              { time: '2019-01-25', value: 22 },
-              { time: '2019-01-26', value: 27 },
-              { time: '2019-01-27', value: 29 },
-              { time: '2019-01-28', value: 26 },
-              { time: '2019-01-29', value: 22 },
-              { time: '2019-01-30', value: 28 },
-              { time: '2019-01-31', value: 227 },    
-            ],        
+            data: arr.map(
+              (it, ix) => ({
+                time: Math.floor(new Date(it?.day).getTime()/1000) as UTCTimestamp,
+                value: it?.metrics?.checkouts_completed?.total_income ?? 0,
+              })     
+            ),
             priceScaleOptions: {
               scaleMargins: {
                 top: 0.15, // highest point of the series will be 10% away from the top
@@ -175,128 +181,26 @@ const SalesChart = (
               priceScaleId: '',
               title: 'Orders',
             },
-            data: [
-              { time: '2018-12-22', value: 32, },
-              { time: '2018-12-23', value: 31 },
-              { time: '2018-12-24', value: 22 },
-              { time: '2018-12-25', value: 22 },
-              { time: '2018-12-26', value: 27 },
-              { time: '2018-12-27', value: 29 },
-              { time: '2018-12-28', value: 26 },
-              { time: '2018-12-29', value: 22 },
-              { time: '2018-12-30', value: 28 },
-              { time: '2018-12-31', value: 227 },
-              { time: '2019-01-22', value: 32 },
-              { time: '2019-01-23', value: 31 },
-              { time: '2019-01-24', value: 22 },
-              { time: '2019-01-25', value: 22 },
-              { time: '2019-01-26', value: 27 },
-              { time: '2019-01-27', value: 29 },
-              { time: '2019-01-28', value: 26 },
-              { time: '2019-01-29', value: 22 },
-              { time: '2019-01-30', value: 28 },
-              { time: '2019-01-31', value: 227 },            
-            ],
+            data: arr.map(
+              (it, ix) => ({
+                time: Math.floor(new Date(it?.day).getTime()/1000) as UTCTimestamp,
+                value: it?.metrics?.checkouts_completed?.count ?? 0,
+              })     
+            ),
           } as SeriesConfig<'Histogram'>,
-        ]
+        ].slice(0)
       } as BaseChartViewParams["config"]
 
-      // Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
-      // Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';
-
-      // console.log('arr', arr)
-      // console.log('data', data)
-      // console.log('data.info.days', data.days)
-      // console.log('xs', xs)
-      // console.log('ys1', ys1)
-      // console.log('ys2', ys2)
-
-      // return {
-      //   type: 'bar',
-      //   options: { 
-      //     plugins: {
-      //       legend: { 
-      //         labels: {
-      //           // usePointStyle: true,
-      //           boxWidth: 4,
-      //           pointStyleWidth: 2
-      //         },
-      //           display: true,
-      //           onClick: (ev, item, legend) => 
-      //               setShowIndex(ind => (++ind)%2)
-      //       }
-      //     },
-      //     scales: {
-      //       x: {
-      //         grid: {
-      //           // ccolor: darkMode ? '#334155' : '#d1d5db'
-      //         },
-      //         beginAtZero:true,
-      //         ticks: {
-      //           // autoSkip: true
-      //         }
-      //       },
-      //       y: {
-      //         grid: {
-      //           // ccolor: darkMode ? '#334155' : '#d1d5db'
-      //         },
-      //         beginAtZero:true,
-      //         ticks: {
-      //           precision: 0
-      //         }
-      //       }
-      //     },
-      //     // spanGaps: true,
-      //     responsive: true,
-      //     maintainAspectRatio: false,
-      //     // aspectRatio:1
-      //   },
-      //   data: {
-      //     labels: xs,
-      //     datasets: [
-      //       {
-      //         label: 'Income per day',
-      //         // backgroundColor: '#f5f1ff',
-      //         // borderColor: 'rgb(236 72 153)',
-      //         backgroundColor: 'rgb(236 72 153)',
-      //         borderColor: '#000000',
-      //         // borderWidth: 1,
-      //         pointRadius:0,
-      //         tension: 0.1,
-      //         skipNull:true,
-      //         data: ys1,
-      //         fill:true,
-      //         hidden: Boolean(showIndex!=0),
-      //         // barThickness: 10,
-      //         stack: '1',
-      //       },
-      //       {
-      //         label: 'Orders per day',
-      //         hidden: Boolean(showIndex!=1),
-      //         // backgroundColor: '#ad74ff',
-      //         // borderColor: 'rgb(236 72 153)',
-      //         backgroundColor: '#973cff',
-      //         borderColor: '#000000',
-              
-      //         pointRadius:0,
-      //         tension: 0.1,
-      //         data: ys2,
-      //         // barThickness: 4,
-      //         stack: '12',
-      //       }
-      //     ]
-      //   }
-      // }
     }, [data, showIndex, darkMode]
   )
 
   return (
-  <BaseChartView
-    className=' bg-pink-700'
-    key={String(darkMode)} 
-    config={config} 
-    {...rest} 
-  />   
+    <BaseChartView
+      className=' bg-pink-700'
+      key={String(darkMode)} 
+      config={config} 
+      {...rest} 
+    />   
   )
 }
 

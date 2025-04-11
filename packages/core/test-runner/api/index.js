@@ -54,3 +54,5 @@ export * as templates_crud from './templates_crud.js'
 export * as templates_list from './templates_list.js'
 
 export * as email from './email.js'
+
+export * as statistics_orders from './statistics_orders.js'

@@ -112,6 +112,9 @@ const BaseChartView = (
       let pane_index = 0;
       for (const s of series) {
         const { data, options, definition, priceScaleOptions } = s;
+
+        // console.log({data})
+        
         const api_series = chart.addSeries(
           definition, 
           options
@@ -214,12 +217,12 @@ const BaseChartView = (
     }, [chartApiRef.current]
   );
 
-  console.log({toolTipContainerParams});
+  // console.log({toolTipContainerParams});
 
   return (
     <div {...rest}>
       <div className='relative'>
-        <div cclassName='bg-pink-400'
+        <div 
           {...rest}
           ref={chartContainerRef}
           style={{

@@ -37,8 +37,8 @@ export const LogoGradient = (
     <LogoText className={'fill-[url(#a)] text-pink-500 ' + className}>
       <defs>
         <linearGradient id="a">
-          <stop offset="0%" stop-color="rgb(236 72 153)" />
-          <stop offset="100%" stop-color="rgb(151 60 255)" />
+          <stop offset="0%" stopColor="rgb(236 72 153)" />
+          <stop offset="100%" stopColor="rgb(151 60 255)" />
         </linearGradient>
       </defs>
     </LogoText>

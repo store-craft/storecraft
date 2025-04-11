@@ -299,10 +299,9 @@ export const Bling = (
     {...rest}
     style={
       {
-        // @ts-ignore
-        'background-clip': 'border-box',
-        'border-color': 'transparent',
-        'background-origin': 'border-box'
+        'backgroundClip': 'border-box',
+        'borderColor': 'transparent',
+        'backgroundOrigin': 'border-box'
       }
     }
     children={children}/>

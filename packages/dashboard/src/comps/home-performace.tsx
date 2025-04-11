@@ -330,11 +330,11 @@ const Performance = (
   <ShowIf show={days_reduced && data && !msg}>
     <div className='w-full h-fit'>
       <TimeFrame 
-          onChange={onSpanChanged} 
-          span={span} />
+        onChange={onSpanChanged} 
+        span={span} />
       <SalesChart 
-          data={data} 
-          className='w-full max-w-screen-md h-[200px] mt-5' /> 
+        data={data} 
+        className='w-full max-w-screen-md h-[200px] mt-5' /> 
       <HR className='my-5' />
       <div className='w-full h-fit flex flex-row justify-center 
                       lg:justify-start flex-wrap mt-5 gap-5'>

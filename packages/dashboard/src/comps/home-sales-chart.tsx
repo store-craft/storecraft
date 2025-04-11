@@ -3,12 +3,13 @@ import BaseChartView, { BaseChartViewParams } from './base-chart-view'
 import useDarkMode from '@/hooks/use-dark-mode'
 import { OrdersStatisticsDay, OrdersStatisticsType } from '@storecraft/core/api';
 import { ColorType } from 'lightweight-charts';
+import { AreaSeries, createChart } from 'lightweight-charts';
 
 const DAY = 86400000;
 
 export type SalesChartParams = {
   data: OrdersStatisticsType;
-} & Omit<BaseChartViewParams, "config">;
+} & React.ComponentProps<'div'>;
 
 
 const to_millis = (d: number | string | Date) => (new Date(d)).getTime()
@@ -23,7 +24,7 @@ const SalesChart = (
   const [showIndex, setShowIndex] = useState(0)
   const { darkMode } = useDarkMode()
 
-  const config = useMemo<BaseChartViewParams["config"]>(
+  const config = useMemo(
     () => {
       let arr: OrdersStatisticsDay[] = Array.from({ length: data.count_days });
       Object.
@@ -44,32 +45,70 @@ const SalesChart = (
       );
 
       return {
-        options: {
+         chart_options: {
+          
           autoSize: true,
           // height: 250,
+          grid: {
+            horzLines: {
+              color: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+            },
+            vertLines: {
+              color: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+            },
+
+          },
           layout: {
+
             attributionLogo: false,
             background: {
               // color: darkMode ? '#1e293b' : '#ffffff',
-              color:'transparent',
+              color: 'transparent',
               type: ColorType.Solid,
+
             },
             textColor: darkMode ? '#d1d5db' : '#374151',
+            
           }
         },
-        data: [
-          { time: '2018-12-22', value: 32.51 },
-          { time: '2018-12-23', value: 31.11 },
-          { time: '2018-12-24', value: 27.02 },
-          { time: '2018-12-25', value: 27.32 },
-          { time: '2018-12-26', value: 25.17 },
-          { time: '2018-12-27', value: 28.89 },
-          { time: '2018-12-28', value: 25.46 },
-          { time: '2018-12-29', value: 23.92 },
-          { time: '2018-12-30', value: 22.68 },
-          { time: '2018-12-31', value: 22.67 },
-        ]
-      }
+
+        series: {
+          definition: AreaSeries,
+          options: {
+            topColor: darkMode ? 'rgba(246, 51, 154, 0.8)' : 'rgb(151, 60, 255, 0.8)',
+            bottomColor: darkMode ? 'rgba(246, 51, 154, 0.13)' : 'rgb(151, 60, 255, 0.128)',
+            lineColor: darkMode ? 'rgba(246, 51, 154, 1.0)' : 'rgb(151, 60, 255, 1.0)',
+            lineWidth: 4,
+            crossHairMarkerVisible: true,
+            crossHairMarkerRadius: 4,
+            crossHairMarkerBorderWidth: 2,
+            crossHairMarkerBorderColor: darkMode ? '#ffffff' : '#000000',
+            crossHairMarkerBackgroundColor: darkMode ? '#1e293b' : '#ffffff',
+            crossHairMarkerTextColor: darkMode ? '#ffffff' : '#000000',
+            crossHairMarkerFontSize: 12,
+            crossHairMarkerFontFamily: 'Arial, Helvetica, sans-serif',
+            crossHairMarkerFontWeight: 'bold',
+            crossHairMarkerFontStyle: 'normal',
+            crossHairMarkerTextAlign: 'center',
+            crossHairMarkerTextBaseline: 'middle',
+            crossHairMarkerPadding: 4,
+            crossHairMarkerBorderRadius: 4,
+          },
+          data: [
+            { time: '2018-12-22', value: 32.51 },
+            { time: '2018-12-23', value: 31.11 },
+            { time: '2018-12-24', value: 27.02 },
+            { time: '2018-12-25', value: 27.32 },
+            { time: '2018-12-26', value: 25.17 },
+            { time: '2018-12-27', value: 28.89 },
+            { time: '2018-12-28', value: 25.46 },
+            { time: '2018-12-29', value: 23.92 },
+            { time: '2018-12-30', value: 22.68 },
+            { time: '2018-12-31', value: 22.67 },
+          ]
+
+        }
+      } as BaseChartViewParams<'Area'>["config"]
 
       // Chart.defaults.color = darkMode ? '#d1d5db' : '#6b7280';
       // Chart.defaults.borderColor = darkMode ? '#334155' : '#d1d5db';

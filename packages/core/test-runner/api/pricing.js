@@ -1494,8 +1494,6 @@ export const create = () => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    // const { create_app } = await import('./play.js');
-    // const app = await create_app();
     const s = create();
     s.run();
   } catch (e) {

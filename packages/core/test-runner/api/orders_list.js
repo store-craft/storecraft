@@ -33,6 +33,7 @@ const items = get_static_ids('order').map(
         fulfillment: enums.FulfillOptionsEnum.draft
       },
       pricing: {
+        
         quantity_discounted: 3, quantity_total: 5, subtotal: 100, 
         subtotal_discount: 30, subtotal_undiscounted: 70,
         total: 120
@@ -76,8 +77,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

@@ -116,7 +116,6 @@ async (from_day, to_day) => {
       }
 
       /**
-       * 
        * @param {keyof OrdersStatisticsDay["metrics"]} key 
        */
       const metric_adjust = key => {

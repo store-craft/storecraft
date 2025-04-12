@@ -16,7 +16,10 @@ export type StorecraftSDKConfig = {
   /** Endpoint of `backend` */
   endpoint?: string;
 
-  /** `auth` info, may be either `apikey` or `jwt` results */
+  /** 
+   * `auth` info, may be either `apikey` or `jwt` results.
+   * This will be setup automatically when performing `login` or `apikey` operations.
+   */
   auth?: SdkConfigAuth;
 }
 

@@ -15,6 +15,7 @@ import {
   email_password_to_basic, parse_api_key 
 } from '../../api/con.auth.logic.js';
 import { jwt } from '../../crypto/public.js';
+import esMain from '../api/utils.esmain.js';
 
 
 /**
@@ -326,3 +327,17 @@ export const create = app => {
   return s;
 }
 
+
+
+(async function inner_test() {
+  // helpful for direct inner tests
+  if(!esMain(import.meta)) return;
+  try {
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
+    const s = create(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
+  } catch (e) {
+  }
+})();

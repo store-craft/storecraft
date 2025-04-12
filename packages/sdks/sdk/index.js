@@ -41,9 +41,9 @@ export class StorecraftSDK {
    * Alternative `fetch` implementation. This is useful for testing purposes, 
    * or if you want to use a different `fetch` implementation
    */  
-  constructor(config, fetcher=fetch) {
+  constructor(config, fetcher) {
     this.#config = config;
-    this.#fetcher = fetcher ?? fetch;
+    this.#fetcher = fetcher ?? ((input, init) => fetch(input, init));
 
     this.ai = new AI(this);
     this.search = new Search(this);

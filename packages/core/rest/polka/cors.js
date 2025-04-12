@@ -1,5 +1,5 @@
 /**
- * @import { VPolkaRequest, VPolkaResponse, Middleware, PolkaOptions, IPolka } from './public.js'
+ * @import { VPolkaRequest, VPolkaResponseCreator, Middleware, PolkaOptions, IPolka } from './public.js'
  */
 /**
  * This middleware was taken from the `hono` project
@@ -48,7 +48,7 @@ export const cors = (options) => {
 
   /**
    * @param {VPolkaRequest} req
-   * @param {VPolkaResponse} res
+   * @param {VPolkaResponseCreator} res
    */
   return async function cors(req, res) {
 

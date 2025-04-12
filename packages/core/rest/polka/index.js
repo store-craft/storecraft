@@ -1,5 +1,5 @@
 /**
- * @import { VPolkaRequest, VPolkaResponse, Middleware, PolkaOptions, IPolka } from './public.js'
+ * @import { VPolkaRequest, VPolkaResponseCreator, Middleware, PolkaOptions, IPolka } from './public.js'
  */
 import { StorecraftError } from '../../api/utils.func.js';
 import { STATUS_CODES } from './codes.js';
@@ -14,7 +14,7 @@ const extract_code = e => {
  * a robust error handler
  * @param { StorecraftError | Error | string | { message: any, code: number } } error
  * @param {VPolkaRequest} req 
- * @param {VPolkaResponse} res 
+ * @param {VPolkaResponseCreator} res 
  */
 export const onError = async (error, req, res) => {
   let code = 500;
@@ -45,7 +45,7 @@ export const onError = async (error, req, res) => {
 
 /**
  * @template {VPolkaRequest} Req
- * @template {VPolkaResponse} Res
+ * @template {VPolkaResponseCreator} Res
  * @param {Middleware<Req, Res>} fn 
  * @returns {Middleware<Req, Res>}
  */
@@ -54,7 +54,7 @@ const mount = fn => fn instanceof Polka ? fn.attach : fn;
 /**
  * 
  * @template {VPolkaRequest} Req
- * @template {VPolkaResponse} Res
+ * @template {VPolkaResponseCreator} Res
  * @extends {Trouter<Middleware<Req, Res>>}
  * @implements {IPolka<Req, Res>}
  */

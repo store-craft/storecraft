@@ -31,6 +31,8 @@ import { create_routes as create_search_route } from "./con.search.routes.js";
 import { create_routes as create_ai_route } from "./con.ai.routes.js";
 import { create_routes as create_similarity_search_route } from "./con.similarity-search.routes.js";
 import { create_routes as create_emails_route } from "./con.emails.routes.js";
+import { STATUS_CODES } from './polka/codes.js';
+import { PolkaResponseCreator } from './polka/response-creator.js';
 
 
 /**
@@ -124,19 +126,75 @@ export const create_rest_api = (app, config) => {
   return {
     root: polka,
     /**
-     * 
-     * @param {ApiRequest} req 
-     * @param {ApiResponse} res 
+     * @param {Request} request 
      */
-    handler: async (req, res) => {
-
-      const pathname = new URL(req.url).pathname
+    handler: async (request) => {
+      const start_millis = Date.now();
+      const pathname = new URL(request.url).pathname;
 
       lazy_creator.load_route_lazily(pathname);
 
-      return polka.handler(req, res);
+      const response_creator = await polka.handler(
+        request, new PolkaResponseCreator()
+      );
+
+      const response = new Response(
+        response_creator.body,
+        {
+          status: response_creator.status,
+          statusText: response_creator.statusText,
+          headers: response_creator.headers
+        }
+      );
+
+      log_request(request, start_millis);
+
+      return response;
     }
   }
+}
+
+const c = {
+  red: '\x1b[1;31m',
+  green: '\x1b[1;32m',
+  cyan: '\x1b[36m',
+  magenta: `\x1b[1;35m`,
+  yellow: `\x1b[33m`,
+  reset: `\x1b[0m`,
+}
+
+const method_to_color = {
+  'get': `\x1b[1;43;37mGET\x1b[0m`,
+  'GET': `\x1b[1;43;37mGET\x1b[0m`,
+  'post': `\x1b[1;44;37mPOST\x1b[0m`,
+  'POST': `\x1b[1;44;37mPOST\x1b[0m`,
+  'put': `\x1b[1;44;37mPUT\x1b[0m`,
+  'PUT': `\x1b[1;44;37mPUT\x1b[0m`,
+  'patch': `\x1b[1;44;37mPATCH\x1b[0m`,
+  'PATCH': `\x1b[1;44;37mPATCH\x1b[0m`,
+  'delete': `\x1b[1;41;37mDELETE\x1b[0m`,
+  'DELETE': `\x1b[1;41;37mDELETE\x1b[0m`,
+  'options': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+  'OPTIONS': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+}
+
+/**
+ * log request
+ * @param {Request} request 
+ * @param {number} start_millis 
+ */
+const log_request = (request, start_millis) => {
+  const delta = Date.now() - start_millis;
+  const url = new URL(decodeURIComponent(request.url));
+  const line = method_to_color[request.method] + 
+    ' \x1b[33m' + 
+    url.pathname.slice(0, 250) + 
+    '\x1b[0m' + 
+    ` (${delta}ms)`;
+  const query = url.search;
+  console.log(line);
+  if(query)
+    console.log(c.cyan, query);
 }
 
 

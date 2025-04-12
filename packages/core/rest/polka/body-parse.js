@@ -1,5 +1,5 @@
 /**
- * @import { VPolkaRequest, VPolkaResponse, Middleware, PolkaOptions, IPolka } from './public.js'
+ * @import { VPolkaRequest, VPolkaResponseCreator, Middleware, PolkaOptions, IPolka } from './public.js'
  */
 const CONTENT_TYPE = 'content-type';
 const CONTENT_TYPE_JSON = 'application/json';
@@ -23,7 +23,7 @@ const is_type = (req, match_type) => {
 export const json = (keep_raw=true) => {
   /**
    * @param {VPolkaRequest} req
-   * @param {VPolkaResponse} res
+   * @param {VPolkaResponseCreator} res
    */
   return async (req, res) => {
     try {
@@ -41,7 +41,7 @@ export const json = (keep_raw=true) => {
 export const text = () => {
   /**
    * @param {VPolkaRequest} req
-   * @param {VPolkaResponse} res
+   * @param {VPolkaResponseCreator} res
    */
   return async (req, res) => {
     if(is_type(req, CONTENT_TYPE_TEXT)) {
@@ -56,7 +56,7 @@ export const text = () => {
 export const raw_blob = () => {
   /**
    * @param {VPolkaRequest} req
-   * @param {VPolkaResponse} res
+   * @param {VPolkaResponseCreator} res
    */
   return async (req, res) => {
     if(is_type(req, CONTENT_TYPE_OCTET_STREAM))
@@ -69,7 +69,7 @@ export const raw_blob = () => {
 export const raw_buffer = () => {
   /**
    * @param {VPolkaRequest} req
-   * @param {VPolkaResponse} res
+   * @param {VPolkaResponseCreator} res
    */
   return async (req, res) => {
     if(is_type(req, CONTENT_TYPE_OCTET_STREAM))
@@ -84,7 +84,7 @@ export const raw_buffer = () => {
 export const urlencoded = (parse_to_object=true) => {
   /**
    * @param {VPolkaRequest} req
-   * @param {VPolkaResponse} res
+   * @param {VPolkaResponseCreator} res
    */
   return async (req, res) => {
     if(is_type(req, CONTENT_TYPE_FORM_URL_ENCODED)) {

@@ -36,7 +36,7 @@ export default class AI {
    * @returns {Promise<AgentRunResponse>}
    */
   speak = async (agent_handle, params) => {
-    const response = await fetch(
+    const response = await this.sdk.fetcher(
       url(this.sdk.config, `ai/agents/${agent_handle}/run`),
       {
         method: 'post',
@@ -56,7 +56,7 @@ export default class AI {
    * @param {AgentRunParameters} params 
    */
   streamSpeak = async function(agent_handle, params) {
-    const response = await fetch(
+    const response = await this.sdk.fetcher(
       url(this.sdk.config, `ai/agents/${agent_handle}/stream`),
       {
         method: 'post',

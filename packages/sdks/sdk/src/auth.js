@@ -127,7 +127,7 @@ export default class Auth {
       return;
 
     if('access_token' in this.currentAuth) {
-      const auth_res = await fetch(
+      const auth_res = await this.#sdk.fetcher(
         url(this.#sdk.config, '/auth/refresh'),
         {
           method: 'post',
@@ -233,7 +233,7 @@ export default class Auth {
       email, password
     }
 
-    const res = await fetch(
+    const res = await this.#sdk.fetcher(
       url(this.#sdk.config, `/auth/signin`),
       { 
         method: 'post',
@@ -290,7 +290,7 @@ export default class Auth {
       firstname, lastname
     }
 
-    const res = await fetch(
+    const res = await this.#sdk.fetcher(
       url(this.#sdk.config, `/auth/signup`),
       { 
         method: 'post',
@@ -321,7 +321,7 @@ export default class Auth {
   
   changePassword = async (params) => {
 
-    const res = await fetch(
+    const res = await this.#sdk.fetcher(
       url(this.#sdk.config, `/auth/change-password`),
       { 
         method: 'post',

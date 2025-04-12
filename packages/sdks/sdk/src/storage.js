@@ -104,7 +104,7 @@ export default class Storage {
       /** @type {StorageSignedOperation} */
       const presigned_req = await r.json();
 
-      const presigned_res = await fetch(
+      const presigned_res = await this.sdk.fetcher(
         presigned_req.url, 
         {
           method: presigned_req.method,
@@ -248,7 +248,7 @@ export default class Storage {
     if(ctype === 'application/json') {
       /** @type {StorageSignedOperation} */
       const presigned_req = await r.json();
-      const presigned_res = await fetch(
+      const presigned_res = await this.sdk.fetcher(
         presigned_req.url, 
         {
           method: presigned_req.method,

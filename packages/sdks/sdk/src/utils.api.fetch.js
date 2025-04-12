@@ -52,7 +52,7 @@ export const fetchOnlyApiResponseWithAuth = async (
   ) + ` ${auth_token}`;
   
 
-  const response = await fetch(
+  const response = await sdk.fetcher(
     url(sdk.config, path, query),
     {
       ...init,

@@ -1,5 +1,5 @@
 /**
- * @import { StorecraftSDKConfig } from './types.js'
+ * @import { Fetcher, StorecraftSDKConfig } from './types.js'
  */
 import Auth from './src/auth.js'
 import Customers from './src/customers.js'
@@ -21,7 +21,9 @@ import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
 import Search from './src/search.js'
-import { fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './src/utils.api.fetch.js'
+import { 
+  fetchApiWithAuth, fetchOnlyApiResponseWithAuth 
+} from './src/utils.api.fetch.js'
 
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
@@ -29,13 +31,19 @@ import { fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './src/utils.api.
 export class StorecraftSDK {
 
   /**@type {StorecraftSDKConfig} */
-  #_config = undefined;
+  #config = undefined;
+  /**@type {Fetcher} */
+  #fetcher = undefined;
 
   /**
-   * @param {StorecraftSDKConfig} [config] 
+   * @param {StorecraftSDKConfig} [config] the `sdk` configuration
+   * @param {Fetcher} [fetcher] 
+   * Alternative `fetch` implementation. This is useful for testing purposes, 
+   * or if you want to use a different `fetch` implementation
    */  
-  constructor(config) {
-    this.#_config = config;
+  constructor(config, fetcher=fetch) {
+    this.#config = config;
+    this.#fetcher = fetcher ?? fetch;
 
     this.ai = new AI(this);
     this.search = new Search(this);
@@ -59,6 +67,10 @@ export class StorecraftSDK {
     this.notifications = new Notifications(this);
   }
 
+  get fetcher() {
+    return this.#fetcher
+  }
+  
   /**
    * @description 
    * - Prepends `backend` endpoint. 
@@ -105,11 +117,11 @@ export class StorecraftSDK {
    * @param {StorecraftSDKConfig} [config] 
    */  
   updateConfig(config) {
-    this.#_config = config;
+    this.#config = config;
   }
 
   get config() {
-    return this.#_config
+    return this.#config
   }
 
 }

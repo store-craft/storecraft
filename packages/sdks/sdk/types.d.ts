@@ -19,3 +19,5 @@ export type StorecraftSDKConfig = {
   /** `auth` info, may be either `apikey` or `jwt` results */
   auth?: SdkConfigAuth;
 }
+
+export type Fetcher = (input: RequestInfo, init?: RequestInit) => Promise<Response>

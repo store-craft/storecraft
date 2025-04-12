@@ -243,6 +243,7 @@ const ts_config = `
 		],
 		/* Enable importing .json files */
 		"resolveJsonModule": true,
+		"maxNodeModuleJsDepth": 100,
 
 		/* Allow JavaScript files to be a part of your program. Use the \`checkJS\` option to get errors from these files. */
 		"allowJs": true,

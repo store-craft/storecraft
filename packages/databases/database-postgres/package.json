@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-postgres",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Official Postgres Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -32,7 +32,8 @@
     "database-postgres:docker-compose-up": "docker compose -f ./tests/docker-compose.yml up -d ",
     "database-postgres:test": "node ./tests/runner.test.js",
     "test": "npm run database-postgres:test",
-    "prepublishOnly": "npm version patch --force"
+    "prepublishOnly": "npm version patch --force",
+    "sc-publish": "npm publish"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

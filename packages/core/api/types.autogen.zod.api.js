@@ -949,11 +949,15 @@ export const ordersStatisticsTypeSchema = z.object({
   from_day: z
     .union([z.string(), z.number()])
     .optional()
-    .describe("The date in string `ISO` / `UTC` / `timestamp` format"),
+    .describe(
+      "The start of day in date in string `ISO` / `UTC` / `timestamp` format",
+    ),
   to_day: z
     .union([z.string(), z.number()])
     .optional()
-    .describe("The date in string `ISO` / `UTC` / `timestamp` format"),
+    .describe(
+      "The end of day in date in string `ISO` / `UTC` / `timestamp` format",
+    ),
   count_days: z
     .number()
     .optional()

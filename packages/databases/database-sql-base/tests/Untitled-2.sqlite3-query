@@ -1,0 +1,38 @@
+-- database: ../../../playground/node-libsql/data.db
+
+with table_list as (
+    select name, sql, type from sqlite_master 
+    where 
+    type in ('table', 'view') 
+    and name not like 'sqlite_%' 
+    order by name
+) 
+select p.name from table_list as tl, pragma_table_info(tl.name) as p 
+order by tl.name, p.cid;
+
+
+with table_list as (
+    select name, sql, type from sqlite_master 
+    where 
+    type in ('table', 'view') 
+    and name not like 'sqlite_%' 
+    order by name
+) 
+select p.name, tl.name from table_list as tl, pragma_table_info(tl.name) as p 
+order by tl.name, p.cid;
+
+
+select name from pragma_table_info('auth_users')
+order by name;
+
+
+with table_list as (
+    select name, sql, type from sqlite_master 
+    where 
+    type in ('table', 'view') 
+    and name not like 'sqlite_%' 
+    order by name
+) 
+select p.name from pragma_table_info('auth_users') as p;
+
+

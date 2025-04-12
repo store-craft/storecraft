@@ -11,6 +11,7 @@ import {
 } from 'kysely';
 import { Client } from './d1-http-api/api.js';
 import { prepare_and_bind } from '@storecraft/database-sql-base/migrate.js';
+import { D1Introspector } from './kysely.d1.http.introspector.js';
 
 
 /**
@@ -40,7 +41,7 @@ export class D1_HTTP_Dialect {
    * @param {Kysely<any>} db 
    */
   createIntrospector(db){
-    return new SqliteIntrospector(db);
+    return new D1Introspector(db);
   }
 }
 

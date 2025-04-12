@@ -23,19 +23,17 @@ import { StorecraftSDK } from '@storecraft/sdk';
 /**
  * @param {App} app `storecraft` app instance
  */
-const setup_sdk = async (app) => {
+const setup_sdk = (app) => {
   
-  const ssk = new StorecraftSDK(
+  const sdk = new StorecraftSDK(
     {},
     (input, init) => {
-      return app.rest_controller.handler(
+      return app.handler.handler(
         new Request(input, init),
       )
     }
   );
 
-  const sdk = new SDK(app);
-  await sdk.init();
   return sdk;
 }
 

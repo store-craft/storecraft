@@ -126,6 +126,8 @@ export const create_rest_api = (app, config) => {
   return {
     root: polka,
     /**
+     * The `rest-api` controller of `storecraft`. Works with standard Web `Request`
+     * and `Response`
      * @param {Request} request 
      */
     handler: async (request) => {

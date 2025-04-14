@@ -200,9 +200,9 @@ export const sign_with_identity_provider = (app) =>
 export const identity_providers = (app) => 
   /**
    * @description get identity providers
-   * @return {OAuthProvider[]}
+   * @return {Promise<OAuthProvider[]>}
    */
-  () => {
+  async () => {
     return Object.entries(app.auth_providers ?? {}).map(
       ([handle, value]) => (
         {

@@ -266,21 +266,21 @@ export class App {
     const env = this.platform.env;
 
     this.#config = {
-      auth_secret_access_token: env[App.EnvConfig.auth_secret_access_token],
-      auth_secret_refresh_token: env[App.EnvConfig.auth_secret_refresh_token],
-      auth_secret_confirm_email_token: env[App.EnvConfig.auth_secret_confirm_email_token],
-      auth_secret_forgot_password_token: env[App.EnvConfig.auth_secret_forgot_password_token],
-      auth_admins_emails: env[App.EnvConfig.auth_admins_emails]?.split(',')
+      auth_secret_access_token: env?.[App.EnvConfig.auth_secret_access_token],
+      auth_secret_refresh_token: env?.[App.EnvConfig.auth_secret_refresh_token],
+      auth_secret_confirm_email_token: env?.[App.EnvConfig.auth_secret_confirm_email_token],
+      auth_secret_forgot_password_token: env?.[App.EnvConfig.auth_secret_forgot_password_token],
+      auth_admins_emails: env?.[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
-      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(env[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
-      storage_rewrite_urls: env[App.EnvConfig.storage_rewrite_urls],
-      general_store_name: env[App.EnvConfig.general_store_name],
-      general_store_website: env[App.EnvConfig.general_store_website],
-      general_store_description: env[App.EnvConfig.general_store_description],
-      general_store_support_email: env[App.EnvConfig.general_store_support_email],
-      general_store_logo_url: env[App.EnvConfig.general_store_logo_url],
-      general_confirm_email_base_url: env[App.EnvConfig.general_confirm_email_base_url],
-      general_forgot_password_confirm_base_url: env[
+      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(env?.[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
+      storage_rewrite_urls: env?.[App.EnvConfig.storage_rewrite_urls],
+      general_store_name: env?.[App.EnvConfig.general_store_name],
+      general_store_website: env?.[App.EnvConfig.general_store_website],
+      general_store_description: env?.[App.EnvConfig.general_store_description],
+      general_store_support_email: env?.[App.EnvConfig.general_store_support_email],
+      general_store_logo_url: env?.[App.EnvConfig.general_store_logo_url],
+      general_confirm_email_base_url: env?.[App.EnvConfig.general_confirm_email_base_url],
+      general_forgot_password_confirm_base_url: env?.[
         App.EnvConfig.general_forgot_password_confirm_base_url
       ],
       dashboard_version: 'latest',

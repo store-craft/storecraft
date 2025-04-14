@@ -9,7 +9,6 @@ import { PostmanExtension } from './extensions/postman/index.js';
 /**
  * Create an `App` instance for testing.
  * @param {boolean} [print_banner=true]
- * @returns 
  */
 export const create_app = async (print_banner=true) => {
   const app = new App(

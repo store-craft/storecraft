@@ -589,6 +589,11 @@ const register_base_delete = (registry, slug_base, name, tags, example_id, descr
     responses: {
       200: {
         description: 'Item was deleted',
+        content: {
+          "application/json": {
+            schema: z.boolean().describe('true if deleted'),
+          },
+        },
       },
       ...error() 
     },

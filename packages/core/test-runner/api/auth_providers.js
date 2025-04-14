@@ -41,7 +41,7 @@ export const create = app => {
   
   s('list providers integrity', async () => {
 
-    const list = app2.api.auth.identity_providers_list();
+    const list = await app2.api.auth.identity_providers_list();
     
     for(const handle of Object.keys(app2.auth_providers)) {
 

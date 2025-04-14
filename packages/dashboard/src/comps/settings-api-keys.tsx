@@ -95,7 +95,7 @@ export const SettingsApiKeys = (
     () => {
       return create().then(
         apikey => {
-          setLatestApiKey(apikey);
+          setLatestApiKey(apikey.apikey);
           fetchApiKeyUsers();
         }
       ).catch(setError);

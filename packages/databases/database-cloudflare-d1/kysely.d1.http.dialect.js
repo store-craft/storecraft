@@ -6,11 +6,10 @@ import {
   CompiledQuery,
   Kysely,
   SqliteAdapter,
-  SqliteIntrospector,
   SqliteQueryCompiler,
 } from 'kysely';
 import { Client } from './d1-http-api/api.js';
-import { prepare_and_bind } from '@storecraft/database-sql-base/migrate.js';
+import { prepare_and_bind } from '@storecraft/database-sql-base/utils.js';
 import { D1Introspector } from './kysely.d1.http.introspector.js';
 
 
@@ -137,8 +136,6 @@ class D1Connection {
    */
   async _internal_execute(compiledQueries) {
     // Transactions are not supported yet.
-    // if (this.#transactionClient) return this.#transactionClient.executeQuery(compiledQuery)
-
     /** @type {string} */
     let sql;
     /** @type {string[]} */

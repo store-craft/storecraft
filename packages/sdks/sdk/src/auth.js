@@ -95,17 +95,23 @@ export default class Auth {
    * 
    */
   async working_auth_token(force_reauth=false) {
-    if(this.currentAuth) {
-      if('apikey' in this.currentAuth) {
-        return this.currentAuth.apikey;
+    
+    // console.log({currentAuthStrategy: this.currentAuthStrategy})
+
+    switch(this.currentAuthStrategy) {
+      case 'apikey': {
+        const auth = /** @type {ApiKeyResult} */(this.currentAuth);
+        return auth?.apikey;
       }
-      else if('access_token' in this.currentAuth) {
+      case 'jwt': {
+        const auth = /** @type {ApiAuthResult} */(this.currentAuth);
         if(force_reauth || !this.isAuthenticated)
           await this.reAuthenticateIfNeeded(force_reauth);
-        return this.currentAuth.access_token.token;
+        return auth?.access_token?.token;
+      }
+      default: {
       }
     }
-
     return undefined;
   }
 
@@ -149,7 +155,7 @@ export default class Auth {
         payload = await auth_res.json();
       }
 
-      this.#_update_and_notify_subscribers(payload);
+      this.#update_and_notify_subscribers(payload);
 
       return payload;
     }
@@ -180,49 +186,50 @@ export default class Auth {
     }
   }
 
-  get authStrategy() {
-    if(this.currentAuth) {
+  get currentAuthStrategy() {
+    // console.log({currentAuthStrategy:this.currentAuth})
+
+    if(
+      this.currentAuth && 
+      (typeof this.currentAuth === 'object')
+    ) {
       if('apikey' in this.currentAuth)
         return 'apikey';
       else if('access_token' in this.currentAuth)
         return 'jwt';
     }
-
     return 'unknown';
   }
 
   get isAuthenticated() {
-    
-    if(this.currentAuth) {
-      if('apikey' in this.currentAuth) {
-        return Boolean(this.currentAuth.apikey);
+    switch(this.currentAuthStrategy) {
+      case 'apikey': {
+        const auth = /** @type {ApiKeyResult} */(this.currentAuth);
+        return Boolean(auth.apikey);
       }
-      else if('access_token' in this.currentAuth) {
-        const exp = this.currentAuth?.access_token?.claims?.exp;
-        
-        return exp && (Date.now() < (exp - 60)*1000);
+      case 'jwt': {
+        const auth = /** @type {ApiAuthResult} */(this.currentAuth);
+        const exp = auth?.access_token?.claims?.exp;
+        return exp && (Date.now() < (exp - 60)*1000);      
       }
+      default:
+        return false;
     }
-
-    return false;
   }
 
   /**
    * 
    * @param {ApiAuthResult} user 
    */
-  #_update_and_notify_subscribers = (user) => {
+  #update_and_notify_subscribers = (user) => {
     this.currentAuth = user
     this.notify_subscribers();
   }
 
 
   /**
-   * 
    * @param {string} email 
    * @param {string} password 
-   * 
-   * 
    * @returns {Promise<ApiAuthResult>}
    */
   signin = async (email, password) => {
@@ -260,18 +267,17 @@ export default class Auth {
       }
 
       throw error_payload;
-    }    
+    }
+
     // assert(res.ok, 'auth/error2');
 
     /** @type {ApiAuthResult} */
     const payload = await res.json();
-
-    // console.log('auth_result', payload)
-
-    this.#_update_and_notify_subscribers(
+    
+    this.#update_and_notify_subscribers(
       payload
     );
-
+    
     return payload;
   }
 
@@ -306,7 +312,7 @@ export default class Auth {
     /** @type {ApiAuthResult} */
     const payload = await res.json();
 
-    this.#_update_and_notify_subscribers(
+    this.#update_and_notify_subscribers(
       payload
     );
 
@@ -353,7 +359,7 @@ export default class Auth {
     /** @type {ApiAuthResult} */
     const payload = await res.json();
 
-    this.#_update_and_notify_subscribers(
+    this.#update_and_notify_subscribers(
       payload
     );
 
@@ -365,7 +371,7 @@ export default class Auth {
   signout = async () => {
     console.log('signout');
 
-    this.#_update_and_notify_subscribers(
+    this.#update_and_notify_subscribers(
       undefined
     );
 
@@ -382,7 +388,7 @@ export default class Auth {
       }
     );
 
-    return item.apikey;
+    return item;
   }
 
 
@@ -405,10 +411,8 @@ export default class Auth {
   }
 
   /**
-   * 
-   * 
    * @param {string} email_or_id
-   * 
+   * @returns {Promise<boolean>}
    */
   remove_auth_user = async (email_or_id) => {
     return fetchApiWithAuth(
@@ -516,7 +520,7 @@ export default class Auth {
       }
     );
 
-    this.#_update_and_notify_subscribers(result);
+    this.#update_and_notify_subscribers(result);
 
     return result;
   }  

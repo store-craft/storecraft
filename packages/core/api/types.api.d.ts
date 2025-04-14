@@ -332,7 +332,7 @@ export interface ApiAuthSignupType extends AuthBaseType {
      */
     lastname?: string 
   
-};
+}
 
 /**
  * @description Change Password Type
@@ -358,7 +358,7 @@ export interface ApiAuthChangePasswordType  {
    * @description Again New password for confirmation
    */
   confirm_new_password: string;
-};
+}
 
 /**
  * @description Refresh token input interface
@@ -776,8 +776,7 @@ export interface VariantTypeUpsert extends Omit<
    * this is an explicit connection, to form a better UX experience 
    */
   related_products?: Pick<BaseProductType, 'id' | 'handle'>[];
-};
-
+}
 
 /**
  * @description Product interface
@@ -838,7 +837,7 @@ export interface ProductTypeUpsert extends Omit<
    * this is an explicit connection, to form a better UX experience 
    */
   related_products?: HandleAndID[];
-};
+}
 
 // discounts
 
@@ -886,7 +885,7 @@ export interface DiscountType extends BaseType {
 /**
  * @description Discount upsert interface
  */
-export interface DiscountTypeUpsert extends Omit<DiscountType, 'id' | 'handle'>, withOptionalHandleOrID {};
+export interface DiscountTypeUpsert extends Omit<DiscountType, 'id' | 'handle'>, withOptionalHandleOrID {}
 
 /** 
  * @description details and filters of the discount 
@@ -1434,8 +1433,7 @@ export interface StorefrontTypeUpsert extends Omit<
    * @description Posts related to this storefront 
    */
   posts?: HandleAndID[];
-
-};
+}
 
 //
 
@@ -1543,7 +1541,7 @@ export interface CustomerType extends BaseType {
 /**
  * @description Customer upsert interface
  */
-export interface CustomerTypeUpsert extends Omit<CustomerType, 'id' | 'handle'>, withOptionalHandleOrID {};
+export interface CustomerTypeUpsert extends Omit<CustomerType, 'id' | 'handle'>, withOptionalHandleOrID {}
 
 // image
 
@@ -1573,7 +1571,7 @@ export interface ImageType extends BaseType {
 /**
  * @description Image upsert interface
  */
-export interface ImageTypeUpsert extends Omit<ImageType, 'id' | 'handle'>, withOptionalHandleOrID {};
+export interface ImageTypeUpsert extends Omit<ImageType, 'id' | 'handle'>, withOptionalHandleOrID {}
 
 // shipping
 
@@ -1599,7 +1597,7 @@ export interface ShippingMethodType extends BaseType {
 /**
  * @description Shipping upsert interface
  */
-export interface ShippingMethodTypeUpsert extends Omit<ShippingMethodType, 'id' | 'handle'>, withOptionalHandleOrID{};
+export interface ShippingMethodTypeUpsert extends Omit<ShippingMethodType, 'id' | 'handle'>, withOptionalHandleOrID{}
 
 // posts
 
@@ -1623,7 +1621,7 @@ export interface PostType extends BaseType {
 /**
  * @description Post upsert interface
  */
-export interface PostTypeUpsert extends Omit<PostType, 'id' | 'handle'>, withOptionalHandleOrID{};
+export interface PostTypeUpsert extends Omit<PostType, 'id' | 'handle'>, withOptionalHandleOrID{}
 
 // settings
 
@@ -1834,7 +1832,7 @@ export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>
 /**
  * @description Order upsert interface
  */
-export interface OrderDataUpsert extends Omit<OrderData, 'id'>, withOptionalHandleOrID {};
+export interface OrderDataUpsert extends Omit<OrderData, 'id'>, withOptionalHandleOrID {}
 
 
 
@@ -2099,7 +2097,7 @@ export interface LineItem  {
    * @description (optional) the product data snapshot for 
    * future integrity
    */
-  data?: Partial<ProductType>;
+  data?: Partial<ProductType> | ProductType;
 }
 
 /**
@@ -2557,7 +2555,7 @@ export interface TemplateType extends BaseType {
 /**
  * @description Upsert interface for email template
  */
-export interface TemplateTypeUpsert extends Omit<TemplateType, 'id' | 'handle'>, withOptionalHandleOrID{};
+export interface TemplateTypeUpsert extends Omit<TemplateType, 'id' | 'handle'>, withOptionalHandleOrID{}
 
 
 // quick search

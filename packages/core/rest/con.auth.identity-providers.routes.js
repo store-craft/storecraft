@@ -19,7 +19,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.sendJson(
-        app.api.auth.identity_providers_list() ?? []
+        (await app.api.auth.identity_providers_list()) ?? []
       );
     }
   );

@@ -1610,8 +1610,8 @@ export const lineItemSchema = z.object({
     .describe(
       "Used by order to indicate it has reserved stock\nand it's amount",
     ),
-  data: productTypeSchema
-    .partial()
+  data: z
+    .union([productTypeSchema.partial(), productTypeSchema])
     .optional()
     .describe("(optional) the product data snapshot for\nfuture integrity"),
 });

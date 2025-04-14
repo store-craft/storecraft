@@ -99,8 +99,10 @@ export const create_routes = (app) => {
     '/users/:email',
     middle_authorize_admin,
     async (req, res) => {
-      await app.api.auth.remove_auth_user(req.params?.email);
-      res.end();
+      const success = await app.api.auth.remove_auth_user(
+        req.params?.email
+      );
+      res.sendJson(success);
     }
   );
 

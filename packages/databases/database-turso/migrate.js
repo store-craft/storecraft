@@ -1,6 +1,6 @@
 import { SQL } from "@storecraft/database-sql-base";
 import { AggregateDialect } from "@storecraft/database-sql-base/kysely.aggregate.dialect.js";
-import { get_migrations, prepare_and_bind } from "@storecraft/database-sql-base/migrate.js";
+import { get_migrations } from "@storecraft/database-sql-base/migrate.js";
 import { Kysely, Migrator } from "kysely";
 import fs from 'node:fs';
 import path from 'node:path';

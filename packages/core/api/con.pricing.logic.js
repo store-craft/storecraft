@@ -341,7 +341,7 @@ export const calculate_line_items_discount_with_regular_discount = (
   const pass_mask = line_items.map(
     li => {
       return test_product_filters_against_product(
-        discount?.info?.filters, li.data
+        discount?.info?.filters, /** @type {ProductType} */(li.data)
       )
     }
   );
@@ -540,7 +540,7 @@ const compute_pass_mask = (line_items=[], filters=[]) => {
   return line_items.reduce(
     (p, c, ix) => {
       const pass = test_product_filters_against_product(
-        filters, c.data
+        filters, /** @type {ProductType} */(c.data)
       );
 
       p.pass_mask.push(pass);
@@ -716,7 +716,7 @@ export const calculate_line_items_discount_with_bundle_discount = (
       (p, f, ix) => {
         const loc = result.line_items_next.findIndex(
           l => test_product_filters_against_product(
-            [f], l.data
+            [f], /** @type {ProductType} */(l.data)
           ) && (l.qty > 0)
         );
 

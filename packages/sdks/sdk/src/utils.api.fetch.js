@@ -48,7 +48,7 @@ export const fetchOnlyApiResponseWithAuth = async (
 
   const auth_token = await sdk.auth.working_auth_token();
   const auth_header_value = (
-    sdk.auth.authStrategy==='apikey' ? 'Basic' : 'Bearer'
+    sdk.auth.currentAuthStrategy==='apikey' ? 'Basic' : 'Bearer'
   ) + ` ${auth_token}`;
   
 

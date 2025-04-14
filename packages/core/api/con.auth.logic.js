@@ -457,7 +457,7 @@ async () => {
     roles: ['admin'],
     tags: ['apikey'],
     active: true,
-    description: `This user is a created apikey with roles: [admin]`
+    description: `This user is an apikey with roles: [admin]`
   }
 
   await upsert_auth_user(app)(au);

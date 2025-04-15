@@ -75,6 +75,8 @@ const upsert = (driver) => {
           d.info.filters, item
         )
       );
+
+      
       
       item.tags = union(
         [
@@ -453,7 +455,6 @@ const list_used_products_tags = (driver) => {
  */
 const changeStockOfBy = (driver) => {
   return async (product_ids_or_handles, deltas) => {
-
     try {
       await driver.client.transaction().execute(
         async (trx) => {
@@ -461,7 +462,7 @@ const changeStockOfBy = (driver) => {
             const id = product_ids_or_handles[ix];
             const delta = deltas[ix];
   
-            return trx
+            await trx
             .updateTable('products')
             .set(
               eb => (

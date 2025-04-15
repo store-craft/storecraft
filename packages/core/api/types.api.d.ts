@@ -917,181 +917,256 @@ export interface DiscountApplicationEnum  {
 /**
  * @description Filter for product in collections
  */
-export type FilterValue_p_in_collections = { 
-  /**
-   * @description `p_in_collections` filter, `id` of collection
-   */
-  id?: string, 
+export type Filter_p_in_collections = {
+  op?: FilterMetaEnum['p_in_collections']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_in_collections'],
+  value: {
+    /**
+     * @description `p_in_collections` filter, `id` of collection
+     */
+    id?: string, 
 
-  /**
-   * @description `p_in_collections` filter, `title` of collection
-   */
-  title?: string, 
+    /**
+     * @description `p_in_collections` filter, `title` of collection
+     */
+    title?: string, 
 
-  /**
-   * @description `p_in_collections` filter, `handle` of the collection
-   */
-  handle?: string,
-}[];
+    /**
+     * @description `p_in_collections` filter, `handle` of the collection
+     */
+    handle?: string,
+  }[];
+}
 
 /**
  * @description Filter for product not in collections
  */
-export type FilterValue_p_not_in_collections = FilterValue_p_in_collections;
+export type Filter_p_not_in_collections = {
+  op?: FilterMetaEnum['p_not_in_collections']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_not_in_collections'],
+  value: {
+    /**
+     * @description `p_in_collections` filter, `id` of collection
+     */
+    id?: string, 
+
+    /**
+     * @description `p_in_collections` filter, `title` of collection
+     */
+    title?: string, 
+
+    /**
+     * @description `p_in_collections` filter, `handle` of the collection
+     */
+    handle?: string,
+  }[];
+};
 
 
 /**
  * @description Filter for product discount, product in handles
  */
-export type FilterValue_p_in_products = { 
-  /**
-   * @description `p_in_products` filter, `id` of `product`
-   */
-  id?: string, 
+export type Filter_p_in_products = {
+  op?: FilterMetaEnum['p_in_products']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_in_products'],
+  value: { 
+    /**
+     * @description `p_in_products` filter, `id` of `product`
+     */
+    id?: string, 
 
-  /**
-   * @description `p_in_products` filter, `title` of `product`
-   */
-  title?: string, 
+    /**
+     * @description `p_in_products` filter, `title` of `product`
+     */
+    title?: string, 
 
-  /**
-   * @description `p_in_products` filter, `handle` of the `product`
-   */
-  handle?: string 
-}[];
+    /**
+     * @description `p_in_products` filter, `handle` of the `product`
+     */
+    handle?: string 
+  }[];
+}
 
 
 /**
  * @description Filter for product discount, product not in handles
  */
-export type FilterValue_p_not_in_products = FilterValue_p_in_products;
+export type Filter_p_not_in_products = {
+  op?: FilterMetaEnum['p_not_in_products']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_not_in_products'],
+  value: { 
+    /**
+     * @description `p_in_products` filter, `id` of `product`
+     */
+    id?: string, 
+
+    /**
+     * @description `p_in_products` filter, `title` of `product`
+     */
+    title?: string, 
+
+    /**
+     * @description `p_in_products` filter, `handle` of the `product`
+     */
+    handle?: string 
+  }[];
+};
 
 /**
  * @description Filter for product discount, product has tags
  */
-export type FilterValue_p_in_tags = string[];
+export type Filter_p_in_tags = {
+  op?: FilterMetaEnum['p_in_tags']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_in_tags'],
+  value: string[];
+}
 
 /**
  * @description Filter for product discount, NOT has tags
  */
-export type FilterValue_p_not_in_tags = string[];
+export type Filter_p_not_in_tags = {
+  op?: FilterMetaEnum['p_not_in_tags']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_not_in_tags'],
+  value: string[];
+}
 
 /**
  * @description Filter for product discount, 
  * that chooses all products
  */
-export type FilterValue_p_all = {};
+export type Filter_p_all = {
+  op?: FilterMetaEnum['p_all']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_all'],
+};
 
 /**
  * @description Filter for product discount, product in price range
  */
-export type FilterValue_p_in_price_range = { 
-  /**
-   * @description `p_in_price_range` filter From price
-   */
-  from?: number, 
+export type Filter_p_in_price_range = {
+  op?: FilterMetaEnum['p_in_price_range']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['p_in_price_range'],
+  value: { 
+    /**
+     * @description `p_in_price_range` filter From price
+     */
+    from?: number, 
 
-  /**
-   * @description `p_in_price_range` filter To price
-   */
-  to: number 
-};
-
+    /**
+     * @description `p_in_price_range` filter To price
+     */
+    to: number 
+  };
+}
 /**
  * @description Filter for order discount, subtotal in range
  */
-export type FilterValue_o_subtotal_in_range = { 
-  /**
-   * @description `o_subtotal_in_range` filter From price
-   */
-  from?: number, 
+export type Filter_o_subtotal_in_range = {
+  op?: FilterMetaEnum['o_subtotal_in_range']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['o_subtotal_in_range'],
+  value: { 
+    /**
+     * @description `o_subtotal_in_range` filter From price
+     */
+    from?: number, 
 
-  /**
-   * @description `o_subtotal_in_range` filter To price
-   */
-  to?: number 
-};
+    /**
+     * @description `o_subtotal_in_range` filter To price
+     */
+    to?: number 
+  };
+}
 
 /**
  * @description Filter for order discount, items count in range
  */
-export type FilterValue_o_items_count_in_range = { 
-  /**
-   * @description `o_items_count_in_range` filter From count
-   */
-  from?: number, 
+export type Filter_o_items_count_in_range = {
+  op?: FilterMetaEnum['o_items_count_in_range']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['o_items_count_in_range'],
+  value: { 
+    /**
+     * @description `o_items_count_in_range` filter From count
+     */
+    from?: number, 
 
-  /**
-   * @description `o_items_count_in_range` filter To count
-   */
-  to?: number 
-};
+    /**
+     * @description `o_items_count_in_range` filter To count
+     */
+    to?: number 
+  };
+}
+
 
 /**
  * @description Filter for order discount, subtotal in range
  */
-export type FilterValue_o_date_in_range = { 
-  /**
-   * @description `o_date_in_range` filter From date `ISO` format
-   */
-  from?: string, 
+export type Filter_o_date_in_range = {
+  op?: FilterMetaEnum['o_date_in_range']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['o_date_in_range'],
+  value: { 
+    /**
+     * @description `o_date_in_range` filter From date `ISO` format
+     */
+    from?: string, 
 
-  /**
-   * @description `o_date_in_range` filter To date `ISO` format
-   */
-  to?: string 
-};
+    /**
+     * @description `o_date_in_range` filter To date `ISO` format
+     */
+    to?: string 
+  };
+}
 
 /**
  * @description Filter for order discount, order has customer id
  */
-export type FilterValue_o_has_customers = { 
-  /**
-   * @description `id` of `customer`
-   */
-  id: string, 
+export type Filter_o_has_customers = {
+  op?: FilterMetaEnum['o_has_customer']["op"],
+  /** @deprecated */
+  meta?: FilterMetaEnum['o_has_customer'],
+  value: { 
+    /**
+     * @description `id` of `customer`
+     */
+    id: string, 
 
-  /**
-   * @description (optional) `email` of `customer`
-   */
-  email?: string, 
+    /**
+     * @description (optional) `email` of `customer`
+     */
+    email?: string, 
 
-  /**
-   * @description (optional) readable `name` of `customer`
-   */
-  firstname?: string 
+    /**
+     * @description (optional) readable `name` of `customer`
+     */
+    firstname?: string 
 
-  /**
-   * @description (optional) readable `name` of `customer`
-   */
-  lastname?: string 
-}[];
+    /**
+     * @description (optional) readable `name` of `customer`
+     */
+    lastname?: string 
+  }[];
+}
 
 /** 
  * @description Discount filter schema
  */
-export interface Filter  {
-  /** 
-   * @description Meta data related to identifying the filter 
-   */
-  meta: FilterMetaEnum['p_all'] | FilterMetaEnum['p_in_collections'] |
-        FilterMetaEnum['p_not_in_collections'] | FilterMetaEnum['p_in_tags'] | 
-        FilterMetaEnum['p_not_in_tags'] | FilterMetaEnum['p_in_products'] |
-        FilterMetaEnum['p_not_in_products'] | FilterMetaEnum["p_in_price_range"] | 
-        FilterMetaEnum['o_date_in_range'] | FilterMetaEnum['o_has_customer'] | 
-        FilterMetaEnum['o_items_count_in_range'] | FilterMetaEnum['o_subtotal_in_range'] 
-        //| FilterMetaEnum["any"];
+export type Filter = | 
+  Filter_p_all | Filter_p_in_collections | Filter_p_not_in_collections | 
+  Filter_p_in_products | Filter_p_not_in_products | 
+  Filter_p_in_tags | Filter_p_not_in_tags | 
+  Filter_p_in_price_range | Filter_o_subtotal_in_range | 
+  Filter_o_items_count_in_range | Filter_o_date_in_range | 
+  Filter_o_has_customers;
 
-  /** 
-   * @description The filter params 
-   */
-  value?: FilterValue_p_in_collections | FilterValue_p_not_in_collections | 
-          FilterValue_p_in_products | FilterValue_p_not_in_products | 
-          FilterValue_p_in_tags | FilterValue_p_not_in_tags | 
-          FilterValue_p_in_price_range | 
-          FilterValue_o_subtotal_in_range | FilterValue_o_items_count_in_range |
-          FilterValue_o_date_in_range | FilterValue_o_has_customers;
-}
 
 /**
  * @description Built in filters meta info for identification
@@ -1164,27 +1239,85 @@ export interface FilterMetaEnum {
   },    
 }
 
+export type DiscountDetails = DiscountDetails_regular |
+DiscountDetails_bulk | DiscountDetails_bundle |
+DiscountDetails_buy_x_get_y | DiscountDetails_order;
+
 
 /** 
  * @description The details of how to apply a discount. 
  * The interface of discount and it's params 
  */
-export interface DiscountDetails  {
-  /** 
-   * @description metadata to identify the interface of discount 
-   */
-  meta: DiscountMetaEnum['regular'] | DiscountMetaEnum['bulk'] | 
-        DiscountMetaEnum['bundle'] | DiscountMetaEnum['buy_x_get_y'] | 
-        DiscountMetaEnum['order']// | DiscountMetaEnum['any'];
-
-
-  /** 
-   * @description Extra parameters of the specific discount interface 
-   */
-  extra: RegularDiscountExtra | OrderDiscountExtra 
-  | BulkDiscountExtra | BuyXGetYDiscountExtra 
-  | BundleDiscountExtra;
+export interface DiscountDetails_regular  {
+  /** Optional literal type, for quick type inference */
+  type?: DiscountMetaEnum['regular']["type"],
+  /** @description metadata to identify the interface of discount @deprecated */
+  meta?: DiscountMetaEnum['regular'];
+  /** @description Extra parameters of the specific discount interface */
+  extra: RegularDiscountExtra;
 }
+
+/** 
+ * @description The details of how to apply a discount. 
+ * The interface of discount and it's params 
+ */
+export interface DiscountDetails_bulk  {
+  /** Optional literal type, for quick type inference */
+  type?: DiscountMetaEnum['bulk']["type"],
+  /** @description metadata to identify the interface of discount @deprecated */
+  meta?: DiscountMetaEnum['bulk'];
+  /** @description Extra parameters of the specific discount interface */
+  extra: BulkDiscountExtra;
+}
+
+/** 
+ * @description The details of how to apply a discount.
+ */
+export interface DiscountDetails_bundle  {
+  /** Optional literal type, for quick type inference */
+  type?: DiscountMetaEnum['bundle']["type"],
+  /** @description metadata to identify the interface of discount @deprecated */
+  meta?: DiscountMetaEnum['bundle'];
+  /** @description Extra parameters of the specific discount interface */
+  extra: BundleDiscountExtra;
+}
+
+/** 
+ * @description The details of how to apply a discount.
+ */
+export interface DiscountDetails_buy_x_get_y  {
+  /** Optional literal type, for quick type inference */
+  type?: DiscountMetaEnum['buy_x_get_y']["type"],
+  /** @description metadata to identify the interface of discount @deprecated */
+  meta?: DiscountMetaEnum['buy_x_get_y'];
+  /** @description Extra parameters of the specific discount interface */
+  extra: BuyXGetYDiscountExtra;
+}
+
+/** 
+ * @description The details of how to apply a discount.
+ */
+export interface DiscountDetails_order  {
+  /** Optional literal type, for quick type inference */
+  type?: DiscountMetaEnum['order']["type"],
+  /** @description metadata to identify the interface of discount @deprecated */
+  meta?: DiscountMetaEnum['order'];
+  /** @description Extra parameters of the specific discount interface */
+  extra: OrderDiscountExtra;
+}
+
+/** 
+ * @description The details of how to apply a discount.
+ */
+export interface DiscountDetails_any  {
+  /** Optional literal type, for quick type inference */
+  type?: DiscountMetaEnum['any']["type"],
+  /** @description metadata to identify the interface of discount @deprecated */
+  meta?: DiscountMetaEnum['any'];
+  /** @description Extra parameters of the specific discount interface */
+  extra: any;
+}
+
 
 /** 
  * @description Discount meta data, 

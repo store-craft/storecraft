@@ -6,12 +6,12 @@
  *  DiscountType, DiscountDetails, LineItem, PricingData
  * } from './types.api.js';
  * @import { 
- *  Filter, FilterValue_o_date_in_range, FilterValue_o_has_customers, 
- *  FilterValue_o_items_count_in_range, FilterValue_o_subtotal_in_range,
- *  FilterValue_p_all, FilterValue_p_in_collections, 
- *  FilterValue_p_in_price_range, FilterValue_p_in_products, FilterValue_p_in_tags, 
- *  FilterValue_p_not_in_collections, FilterValue_p_not_in_products, 
- *  FilterValue_p_not_in_tags
+ *  Filter, Filter_o_date_in_range, Filter_o_has_customers, 
+ *  Filter_o_items_count_in_range, Filter_o_subtotal_in_range,
+ *  Filter_p_all, Filter_p_in_collections, 
+ *  Filter_p_in_price_range, Filter_p_in_products, Filter_p_in_tags, 
+ *  Filter_p_not_in_collections, Filter_p_not_in_products, 
+ *  Filter_p_not_in_tags
  * } from './types.api.js';
  * @import { tax_provider } from '../tax/types.public.js';
  * @import { 
@@ -26,7 +26,9 @@
 
 
 import { 
-  DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum 
+  DiscountApplicationEnum, DiscountMetaEnum, FilterMetaEnum, 
+  is_order_filter, 
+  is_product_filter
 } from './types.api.enums.js';
 
 
@@ -39,89 +41,104 @@ import {
 export const test_product_filter_against_product = 
   (filter, product) => {
 
-    
   // confirm `product` filter
   if(
     !filter && 
-    filter?.meta?.type!=='product'
+    !is_product_filter(filter)
   ) {
     return false;
   }
 
   try {
-    switch (filter?.meta?.op) {
+    switch (filter.op ?? filter?.meta?.op) {
       case FilterMetaEnum.p_all.op:
         return true;
 
       case FilterMetaEnum.p_in_price_range.op:
         {
-          /** @type {FilterValue_p_in_price_range} */
-          const cast = { 
+          const filter_cast = /** @type {Filter_p_in_price_range} */(
+            filter
+          );
+
+          /** @type {Filter_p_in_price_range["value"]} */
+          const value = { 
             from: 0, 
             to: Number.POSITIVE_INFINITY,
-            ...(
-              (/** @type {FilterValue_p_in_price_range} */ (filter?.value)) ?? {}
-            )
+            ...(filter_cast?.value) ?? {}
           };
 
           return Boolean(
-            (product.price >= cast.from) && 
-            (product.price <= cast.to)
+            (product.price >= value.from) && 
+            (product.price <= value.to)
           )
         }
 
       case FilterMetaEnum.p_in_collections.op:
         {
-          
-          const cast = (/** @type {FilterValue_p_in_collections} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_p_in_collections} */(
+            filter
+          );
+
+          const value = filter_cast?.value ?? [];
           
           return product?.collections?.some(
-            c => cast.map(v => v.id).includes(c.id)
+            c => value.map(v => v.id).includes(c.id)
           ) ?? false;
         }
 
       case FilterMetaEnum.p_not_in_collections.op:
         {
-          
-          const cast = (/** @type {FilterValue_p_not_in_collections} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_p_not_in_collections} */(
+            filter
+          );
+
+          const value = filter_cast?.value ?? [];
 
           return product?.collections?.every(
-              c => !cast.map(v => v.id).includes(c.id)
+              c => !value.map(v => v.id).includes(c.id)
           ) ?? true;
         }
 
       case FilterMetaEnum.p_in_products.op:
         {
-          
-          const cast = (/** @type {FilterValue_p_in_products} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_p_in_products} */(
+            filter
+          );
+          const value = filter_cast?.value ?? [];
 
-          return cast.map(it => it.handle).includes(product.handle);
+          return value.map(it => it.handle).includes(product.handle);
         }
 
       case FilterMetaEnum.p_not_in_products.op:
         {
-          
-          const cast = (/** @type {FilterValue_p_not_in_products} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_p_not_in_products} */(
+            filter
+          );
+          const value = filter_cast?.value ?? [];
 
-          return !cast.map(it => it.handle).includes(product.handle);
+          return !value.map(it => it.handle).includes(product.handle);
         }
 
       case FilterMetaEnum.p_in_tags.op:
         {
-          
-          const cast = (/** @type {FilterValue_p_in_tags} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_p_in_tags} */(
+            filter
+          );
+          const value = filter_cast?.value ?? [];
 
           return product?.tags?.some(
-            c => cast.includes(c)
+            c => value.includes(c)
           ) ?? false;
         }
       case FilterMetaEnum.p_not_in_tags.op:
         {
-          
-          const cast = (/** @type {FilterValue_p_not_in_tags} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_p_not_in_tags} */(
+            filter
+          );
+          const value = filter_cast?.value ?? [];
 
           return product?.tags?.every(
-            c => !cast.includes(c)
+            c => !value.includes(c)
           ) ?? true;
         }
     }
@@ -143,7 +160,7 @@ export const test_product_filters_against_product =
   (filters=[], product) => {
 
   filters = filters?.filter(
-    f => f?.meta?.type==='product'
+    is_product_filter
   );
 
   return filters.length>0 && 
@@ -167,66 +184,77 @@ const test_order_filter =
 
   if(
     !filter && 
-    filter?.meta?.type!=='order'
+    !is_order_filter(filter)
   ) {
     return false;
   }
 
   try {
-    switch (filter.meta.op) {
+    switch (filter.op ?? filter.meta.op) {
       case FilterMetaEnum.o_date_in_range.op:
         {
           const now = (new Date()).toISOString();
 
-          /** @type {FilterValue_o_date_in_range} */
-          const cast = {
+          const filter_cast = /** @type {Filter_o_date_in_range} */(
+            filter
+          );
+
+          /** @type {Filter_o_date_in_range["value"]} */
+          const value = {
             from: (new Date(0)).toISOString(),
             to: now,
             ...(
-              ( /** @type {FilterValue_o_date_in_range} */ (filter.value)) ?? {}
+              filter_cast.value ?? {}
             )
           };
 
           // console.log('cast', cast)
           return Boolean(
-            (now >= cast.from) && 
-            (now <= cast.to)
+            (now >= value.from) && 
+            (now <= value.to)
           );
         }
 
       case FilterMetaEnum.o_has_customer.op: 
         {
-          const cast = (/** @type {FilterValue_o_has_customers} */ (filter?.value)) ?? [];
+          const filter_cast = /** @type {Filter_o_has_customers} */(
+            filter
+          );
+          const value = filter_cast?.value ?? [];
           
           return Boolean(
-            cast.find(cus => cus.id===uid)
+            value.find(cus => cus.id===uid)
           );
         }
 
       case FilterMetaEnum.o_items_count_in_range.op:
         {
-          /** @type {FilterValue_o_items_count_in_range} */
-          const cast = { 
+          const filter_cast = /** @type {Filter_o_items_count_in_range} */(
+            filter
+          );
+
+          /** @type {Filter_o_items_count_in_range["value"]} */
+          const value = { 
             from: 0,
-            ...(
-              (/** @type {FilterValue_o_items_count_in_range} */ (filter?.value)) ?? {}
-            )
+            ...(filter_cast?.value ?? {})
           };
 
-          return Boolean(quantity_total >= cast.from);
+          return Boolean(quantity_total >= value.from);
         }
 
       case FilterMetaEnum.o_subtotal_in_range.op:
         {
-          /** @type {FilterValue_o_subtotal_in_range} */
-          const cast = { 
+          const filter_cast = /** @type {Filter_o_subtotal_in_range} */(
+            filter
+          );
+
+          /** @type {Filter_o_subtotal_in_range["value"]} */
+          const value = { 
             from: 0,
-            ...(
-              (/** @type {FilterValue_o_subtotal_in_range} */ (filter?.value)) ?? {}
-            )
+            ...(filter_cast?.value ?? {})
           };
 
-          return Boolean(subtotal >= cast.from)
+          return Boolean(subtotal >= value.from)
         }
         
       default:
@@ -250,8 +278,9 @@ const test_order_filters =
   (filters, context) => {
 
   filters = filters?.filter(
-    f => f.meta.type==='order'
-  )
+    is_order_filter
+  );
+
   return filters.length>0 && 
     filters.every(
       (filter) => test_order_filter(
@@ -332,8 +361,11 @@ export const calculate_line_items_discount_with_regular_discount = (
   line_items, discount, context
 ) => {
   
+  const discount_type = discount.info.details.type ?? 
+    discount.info.details.meta.type;
+
   assert(
-    discount.info.details.meta.type === DiscountMetaEnum.regular.type,
+    discount_type===DiscountMetaEnum.regular.type,
     'error:: tried to discount a non regular discount'
   )
 
@@ -406,14 +438,19 @@ export const calculate_line_items_discount_with_bulk_discount = (
   line_items, discount, context
 ) => {
   
+  const discount_type = discount.info.details.type ?? 
+    discount.info.details.meta.type;
+
   assert(
-    discount.info.details.meta.type === DiscountMetaEnum.bulk.type,
+    discount_type===DiscountMetaEnum.bulk.type,
     'error:: tried to discount a non bulk discount'
   )
 
   const discount_details = discount?.info?.details;
   
-  const discount_extra = /** @type {BulkDiscountExtra} */ (discount_details?.extra);
+  const discount_extra = /** @type {BulkDiscountExtra} */ (
+    discount_details?.extra
+  );
   
   const $percent = clamp(discount_extra?.percent, 0, 100) ?? 0;
   const $fixed = discount_extra?.fixed ?? 0;
@@ -581,14 +618,19 @@ const compute_pass_mask = (line_items=[], filters=[]) => {
 export const calculate_line_items_discount_with_buy_x_get_y_discount = 
   (line_items, discount, context) => {
   
+  const discount_type = discount.info.details.type ?? 
+    discount.info.details.meta.type;
+
   assert(
-    discount.info.details.meta.type === DiscountMetaEnum.buy_x_get_y.type,
+    discount_type===DiscountMetaEnum.buy_x_get_y.type,
     'error:: tried to discount a non buy_x_get_y discount'
   );
 
   const discount_details = discount?.info?.details
   
-  const discount_extra = /**@type {BuyXGetYDiscountExtra} */ (discount_details?.extra);
+  const discount_extra = /**@type {BuyXGetYDiscountExtra} */ (
+    discount_details?.extra
+  );
 
   const $percent = clamp(discount_extra?.percent, 0, 100) ?? 0;
   const $fixed = discount_extra?.fixed ?? 0;
@@ -682,8 +724,11 @@ export const calculate_line_items_discount_with_bundle_discount = (
   line_items, discount, context
 ) => {
   
+  const discount_type = discount.info.details.type ?? 
+    discount.info.details.meta.type;
+
   assert(
-    discount.info.details.meta.type === DiscountMetaEnum.bundle.type,
+    discount_type===DiscountMetaEnum.bundle.type,
     'error:: tried to discount a non bundle discount'
   );
 
@@ -753,7 +798,10 @@ export const calculate_line_items_discount_with_bundle_discount = (
     }
     
     const sum_price = locations.reduce(
-      (p, loc) => p + (result.line_items_next[loc].price ?? result.line_items_next[loc].data?.price), 0
+      (p, loc) => p + (
+        result.line_items_next[loc].price ?? 
+        result.line_items_next[loc].data?.price
+      ), 0
     );
 
     result.line_items_discounted.push(...temp_line_items_discounted);
@@ -784,10 +832,12 @@ export const calculate_line_items_discount_with_order_discount =
   (line_items, discount, context) => {
 
   const discount_details = discount.info.details;
+  const discount_type = discount.info.details.type ?? 
+    discount.info.details.meta.type;
 
   assert(
-    discount_details.meta.type === DiscountMetaEnum.order.type,
-    'error:: tried to discount a non bulk discount'
+    discount_type===DiscountMetaEnum.order.type,
+    'error:: tried to discount a non order discount'
   );
 
   const pass = test_order_filters(
@@ -828,15 +878,13 @@ export const calculate_line_items_discount_with_order_discount =
  * @param {LineItem[]} line_items available line items
  * @param {DiscountType} discount 
  * @param {PricingData} context context of discounts
- * 
- * 
  * @return {CalcDiscountResult}
- * 
  */
 export const calculate_line_items_for_discount = 
   (line_items, discount, context) => {
   
-  const discount_type = discount.info.details.meta.type
+  const discount_type = discount.info.details.type ?? 
+    discount.info.details.meta.type;
 
   switch(discount_type) {
     case DiscountMetaEnum.regular.type:
@@ -894,7 +942,8 @@ export const calculate_line_items_for_discount =
  * @returns {Promise<PricingData>}
  */
 export const calculate_pricing = async (
-  line_items, auto_discounts=[], coupons=[], shipping_method, shipping_address, uid=undefined,
+  line_items, auto_discounts=[], coupons=[], 
+  shipping_method, shipping_address, uid=undefined,
   tax_provider=undefined
 ) => {
 
@@ -920,8 +969,11 @@ export const calculate_pricing = async (
   ];
 
   // protections against strings
-  if(shipping_method)
-    shipping_method.price = parseFloat(String(shipping_method?.price ?? 0));
+  if(shipping_method) {
+    shipping_method.price = parseFloat(
+      String(shipping_method?.price ?? 0)
+    );
+  }
 
   line_items = line_items.map(
     li => (
@@ -943,7 +995,9 @@ export const calculate_pricing = async (
     (p, li) => p + li.qty , 0
   );
 
-  const initial_total = subtotal_undiscounted + (shipping_method?.price ?? 0);
+  const initial_total = subtotal_undiscounted + (
+    shipping_method?.price ?? 0
+  );
 
   /**@type {PricingData} */
   const context = {
@@ -987,7 +1041,9 @@ export const calculate_pricing = async (
         ctx.subtotal -= evo_entry.total_discount;
         ctx.total -= evo_entry.total_discount;
         ctx.total_without_taxes = ctx.total;
-        ctx.quantity_discounted = ctx.quantity_discounted + (evo_entry?.quantity_discounted ?? 0);
+        ctx.quantity_discounted = ctx.quantity_discounted + (
+          evo_entry?.quantity_discounted ?? 0
+        );
 
         // push the iteration result for future review
         ctx.evo.push(
@@ -1021,16 +1077,23 @@ export const calculate_pricing = async (
 
   {
     if(tax_provider) {
-      report.taxes = await tax_provider.compute(shipping_address, {...report});
-      report.total += report.taxes.reduce((p, c) => p + (c.value ?? 0), 0);
+      report.taxes = await tax_provider.compute(
+        shipping_address, {...report}
+      );
+      report.total += report.taxes.reduce(
+        (p, c) => p + (c.value ?? 0), 0
+      );
     }
   }
 
   report.total = parseFloat(report.total.toFixed(2));
-  report.total_without_taxes = parseFloat(report.total_without_taxes.toFixed(2));
+  report.total_without_taxes = parseFloat(
+    report.total_without_taxes.toFixed(2)
+  );
 
 
-  // now, let's clean all of the line items data field as it's not needed and redundant
+  // now, let's clean all of the line items data field 
+  // as it's not needed and redundant
   report.evo?.forEach(
     evo => {
       evo.line_items_next.forEach(

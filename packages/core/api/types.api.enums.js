@@ -8,6 +8,43 @@ export const DiscountApplicationEnum = {
 }
 
 /**
+ * @param {Filter} filter 
+ */
+export const is_product_filter = (filter) => {
+  const op = filter.op ?? filter?.meta?.op;
+
+  switch (op) {
+    case 'p-in-collections':
+    case 'p-not-in-collections':
+    case 'p-in-products':
+    case 'p-not-in-products':
+    case 'p-in-tags':
+    case 'p-not-in-tags':
+    case 'p-all':
+    case 'p-in-price-range':
+      return true;
+  }
+  return false;
+}
+
+/**
+ * @param {Filter} filter 
+ */
+export const is_order_filter = (filter) => {
+  const op = filter.op ?? filter?.meta?.op;
+
+  switch (op) {
+    case 'o-subtotal-in-range':
+    case 'o-items-count-in-range':
+    case 'o-date-in-range':
+    case 'o-has-customer':
+      return true;
+  }
+  return false;
+}
+
+
+/**
  * @satisfies {import('./types.api.d.ts').FilterMetaEnum} 
  */
 export const FilterMetaEnum = { 
@@ -79,20 +116,24 @@ export const FilterMetaEnum = {
   },    
 }
 
-/** 
- * @satisfies {import('./types.api.d.ts').DiscountMetaEnum} 
+/**
+ * @import { DiscountMetaEnum as DiscountMetaEnumType, Filter } from './types.api.d.ts'
  */
-export const DiscountMetaEnum = {
+
+/** 
+ * @type {DiscountMetaEnumType} 
+ */
+export const DiscountMetaEnum = /** @type {const} */({
   any: {
     id: undefined,
     type: undefined,
     name: undefined
   },
-  regular: { 
+  regular: /** @type {DiscountMetaEnumType["regular"]} */({ 
     id: 0, 
     type: 'regular',          
     name : 'Regular Discount', 
-  },
+  }),
   bulk: { 
     id: 1, type: 'bulk',          
     name : 'Bulk Discount', 
@@ -109,7 +150,7 @@ export const DiscountMetaEnum = {
     id: 4, type: 'bundle', 
     name : 'Bundle Discount',
   },
-}
+})
 
 /** 
  * @satisfies {import('./types.api.d.ts').CheckoutStatusEnum} 

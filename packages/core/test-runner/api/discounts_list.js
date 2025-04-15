@@ -37,13 +37,15 @@ const items = get_static_ids('dis').map(
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
         details: {
-          meta: enums.DiscountMetaEnum.bulk,
+          type: 'bulk',
+          // meta: enums.DiscountMetaEnum.bulk,
           extra: {
             qty: 3, fixed: 100, percent: 100
           }
         },
         filters: [
           {
+            op: 'p-all',
             meta: enums.FilterMetaEnum.p_all,
           }
         ]

@@ -1,6 +1,7 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, FilterValue_p_in_products, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, 
+ Filter_p_in_products, 
  *  OrderDataUpsert, OrderDiscountExtra, PostTypeUpsert, ProductTypeUpsert, 
  *  QuickSearchResult, ShippingMethodTypeUpsert, StorefrontTypeUpsert, 
  *  TagTypeUpsert 
@@ -175,8 +176,8 @@ const base_discount = {
   priority: 0,
   info: {
     details: {
+      type: 'order',
       meta: enums.DiscountMetaEnum.order,
-      /** @type {OrderDiscountExtra} */
       extra: {
         fixed: 0,
         percent: 10
@@ -184,8 +185,8 @@ const base_discount = {
     },
     filters: [
       {
+        op: 'p-in-products',
         meta: enums.FilterMetaEnum.p_in_products,
-        /** @type {FilterValue_p_in_products} */
         value: [
           {
             id: 'i-dont-exist-sajsiajsiasi'

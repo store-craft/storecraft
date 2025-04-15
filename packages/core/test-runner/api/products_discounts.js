@@ -65,8 +65,9 @@ export const create = app => {
     await app.api.discounts.upsert(discount);
 
     // upsert products after discount
-    for(const p of [...products_negative, ...products_positive])
+    for(const p of [...products_negative, ...products_positive]) {
       await app.api.products.upsert(p);
+    }
 
     // get all recent products
     const products_queried = await app.api.products.list(
@@ -109,6 +110,7 @@ export const create = app => {
   
   });
 
+  return s;
 
   s('test product has NO handles', async () => {
     const now = (new Date()).toISOString();

@@ -135,7 +135,7 @@ const upsert = (driver) => {
             application: JSON.stringify(item.application),
             info: JSON.stringify(item.info),
             _application_id: item.application.id,
-            _discount_type_id: item.info.details.meta.id
+            _discount_type_id: item?.info?.details?.meta?.id ?? -1,
           });
         }
       );

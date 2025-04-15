@@ -19,6 +19,7 @@ const items_upsert = [
     application: enums.DiscountApplicationEnum.Auto, 
     info: {
       details: {
+        type: 'bulk',
         meta: enums.DiscountMetaEnum.bulk,
         extra: {
           qty: 3, fixed: 100, percent: 100
@@ -26,6 +27,7 @@ const items_upsert = [
       },
       filters: [
         {
+          op: 'p-all',
           meta: enums.FilterMetaEnum.p_all,
         }
       ]
@@ -37,13 +39,14 @@ const items_upsert = [
     application: enums.DiscountApplicationEnum.Auto, 
     info: {
       details: {
-        meta: enums.DiscountMetaEnum.bulk,
+        type: 'bulk',
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
+          op: 'p-all',
           meta: enums.FilterMetaEnum.p_all,
         }
       ]
@@ -61,7 +64,9 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items_upsert, app, ops: app.api.discounts,
+      items: items_upsert, 
+      app, 
+      ops: app.api.discounts,
       events: {
         get_event: 'discounts/get',
         upsert_event: 'discounts/upsert',

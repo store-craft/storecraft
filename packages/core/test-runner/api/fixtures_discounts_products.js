@@ -1,13 +1,13 @@
 /**
  * @import { 
- *  Filter, DiscountTypeUpsert, RegularDiscountExtra, ProductTypeUpsert, 
- *  FilterValue_p_in_products, FilterValue_p_not_in_products, FilterValue_p_in_tags, 
- *  FilterValue_p_not_in_tags, CollectionTypeUpsert, FilterValue_p_in_collections, 
- *  FilterValue_p_not_in_collections, FilterValue_p_all
+ *  Filter, DiscountTypeUpsert, ProductTypeUpsert, 
+ *  CollectionTypeUpsert
  * } from '../../api/types.api.js'
  */
 import { enums } from '../../api/index.js';
-import { create_handle, create_title_gen, get_static_ids } from './api.utils.crud.js';
+import { 
+  create_handle, create_title_gen, get_static_ids 
+} from './api.utils.crud.js';
 import { to_handle } from '../../api/utils.func.js';
 
 /**
@@ -29,7 +29,6 @@ import { to_handle } from '../../api/utils.func.js';
  * 
  * @param {string} title 
  * @param {Filter[]} filters 
- * 
  * @return {DiscountTypeUpsert}
  */
 const create_regular_discount_with_filters = (title, filters) => {
@@ -41,8 +40,8 @@ const create_regular_discount_with_filters = (title, filters) => {
     application: enums.DiscountApplicationEnum.Auto, 
     info: {
       details: {
+        type: 'regular',
         meta: enums.DiscountMetaEnum.regular,
-        /** @type {RegularDiscountExtra} */
         extra: {
           fixed: 0, percent: 10
         }
@@ -96,8 +95,8 @@ export const setup_for_discount_filter_product_in_handles = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-in-products',
         meta: enums.FilterMetaEnum.p_in_products,
-        /** @type {FilterValue_p_in_products} */
         value: products_positive.map(
           pr => ({
             handle: pr.handle,
@@ -160,8 +159,8 @@ export const setup_for_discount_filter_product_NOT_in_handles = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-not-in-products',
         meta: enums.FilterMetaEnum.p_not_in_products,
-        /** @type {FilterValue_p_not_in_products} */
         value: products_negative.map(
           pr => ({
             handle: pr.handle,
@@ -228,8 +227,8 @@ export const setup_for_discount_filter_product_in_tags = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-in-tags',
         meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {FilterValue_p_in_tags} */
         value: tags
       }
     ]
@@ -289,8 +288,8 @@ export const setup_for_discount_filter_product_NOT_in_tags = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-not-in-tags',
         meta: enums.FilterMetaEnum.p_not_in_tags,
-        /** @type {FilterValue_p_not_in_tags} */
         value: tags
       }
     ]
@@ -366,8 +365,8 @@ export const setup_for_discount_filter_product_in_collections = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-in-collections',
         meta: enums.FilterMetaEnum.p_in_collections,
-        /** @type {FilterValue_p_in_collections} */
         value: collections
       }
     ]
@@ -445,8 +444,8 @@ export const setup_for_discount_filter_product_NOT_in_collections = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-not-in-collections',
         meta: enums.FilterMetaEnum.p_not_in_collections,
-        /** @type {FilterValue_p_not_in_collections} */
         value: collections
       }
     ]
@@ -487,9 +486,8 @@ export const setup_for_discount_filter_product_all = () => {
     'Discount ' + name, 
     [
       { // discount for a specific product handle
+        op: 'p-all',
         meta: enums.FilterMetaEnum.p_all,
-        /** @type {FilterValue_p_all} */
-        value: undefined
       }
     ]
   )

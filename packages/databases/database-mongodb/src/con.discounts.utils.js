@@ -1,8 +1,8 @@
 /**
  * @import { 
- *  DiscountType, FilterValue_p_in_price_range, FilterValue_p_not_in_collections, 
- *  FilterValue_p_in_collections, FilterValue_p_not_in_tags, FilterValue_p_in_tags, 
- *  FilterValue_p_in_products, FilterValue_p_not_in_products 
+ *  DiscountType, Filter_p_in_price_range, Filter_p_not_in_collections, 
+ *  Filter_p_in_collections, Filter_p_not_in_tags, Filter_p_in_tags, 
+ *  Filter_p_in_products, Filter_p_not_in_products 
  * } from '@storecraft/core/api'
  */
 
@@ -11,7 +11,11 @@ import { to_objid_safe } from "./utils.funcs.js";
 
 /** @param {DiscountType} d */
 const is_order_discount = d => {
-  return (d.info.details.meta.id===enums.DiscountMetaEnum.order.id);
+  return (
+    (d.info.details.type===enums.DiscountMetaEnum.order.type) ||
+    // @ts-ignore
+    (d.info.details.meta?.type===enums.DiscountMetaEnum.order.type)
+  );
 }
 
 /** @param {DiscountType} d */
@@ -40,7 +44,7 @@ export const discount_to_mongo_conjunctions = d => {
   const filters = d.info.filters;
 
   for(const filter of filters) {
-    const op = filter.meta.op;
+    const op = filter.op ?? filter.meta.op;
 
     switch (op) {
       case enums.FilterMetaEnum.p_all.op:
@@ -48,58 +52,64 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_in_products.op:
         {
-          const cast = /** @type {FilterValue_p_in_products} */ (
-            filter.value ?? []
+          const filter_cast = /** @type {Filter_p_in_products} */ (
+            filter
           );
+          const value = filter_cast?.value ?? [];
           
           conjunctions.push(
-            { handle: { $in: cast.map(it => it.handle) } }
+            { handle: { $in: value.map(it => it.handle) } }
           );
         }
         break;
       case enums.FilterMetaEnum.p_not_in_products.op:
         {
-          const cast = /** @type {FilterValue_p_not_in_products} */(
-            filter.value ?? []
+          const filter_cast = /** @type {Filter_p_not_in_products} */ (
+            filter
           );
+
+          const value = filter_cast?.value ?? [];
           
           conjunctions.push(
-            { handle: { $nin: cast.map(it => it.handle) } }
+            { handle: { $nin: value.map(it => it.handle) } }
           );
         }
         break;
       case enums.FilterMetaEnum.p_in_tags.op:
         {
-          const cast = /** @type {FilterValue_p_in_tags} */ (
-            filter.value ?? []
+          const filter_cast = /** @type {Filter_p_in_tags} */ (
+            filter
           );
+          const value = filter_cast?.value ?? [];
           
           conjunctions.push(
-            { tags: { $in: cast } }
+            { tags: { $in: value } }
           );
         }
         break;
       case enums.FilterMetaEnum.p_not_in_tags.op:
         {
-          const cast = /** @type {FilterValue_p_not_in_tags} */(
-            filter.value ?? []
+          const filter_cast = /** @type {Filter_p_not_in_tags} */ (
+            filter
           );
+          const value = filter_cast?.value ?? [];
 
           conjunctions.push(
-            { tags: { $nin: cast } }
+            { tags: { $nin: value } }
           );
         }
         break;
       case enums.FilterMetaEnum.p_in_collections.op:
         {
-          const cast = /** @type {FilterValue_p_in_collections} */ (
-            filter.value ?? []
+          const filter_cast = /** @type {Filter_p_in_collections} */ (
+            filter
           );
-
+          const value = filter_cast?.value ?? [];
+          
           conjunctions.push(
             { 
               '_relations.collections.ids': { 
-                $in: cast.map(c => to_objid_safe(c.id)).filter(Boolean) 
+                $in: value.map(c => to_objid_safe(c.id)).filter(Boolean) 
               } 
             }
           );
@@ -107,14 +117,15 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_not_in_collections.op:
         {
-          const cast = /** @type {FilterValue_p_not_in_collections} */ (
-            filter.value ?? []
+          const filter_cast = /** @type {Filter_p_not_in_collections} */ (
+            filter
           );
+          const value = filter_cast?.value ?? [];
 
           conjunctions.push(
             { 
               '_relations.collections.ids': { 
-                $nin: cast.map(c => to_objid_safe(c.id)).filter(Boolean) 
+                $nin: value.map(c => to_objid_safe(c.id)).filter(Boolean) 
               } 
             }
           );
@@ -122,16 +133,19 @@ export const discount_to_mongo_conjunctions = d => {
         break;
       case enums.FilterMetaEnum.p_in_price_range.op:
         {
-          const cast = /** @type {FilterValue_p_in_price_range} */ (
+          const filter_cast = /** @type {Filter_p_in_price_range} */ (
+            filter
+          );
+          const value = /** @type {Filter_p_in_price_range["value"]} */ (
             {
               from: 0,
               to: Number.POSITIVE_INFINITY,
-              ...(filter?.value ?? {})
+              ...(filter_cast?.value ?? {})
             }
           );
 
-          const from = extract_abs_number(cast.from);
-          const to = extract_abs_number(cast.to);
+          const from = extract_abs_number(value.from);
+          const to = extract_abs_number(value.to);
 
           const conj = { price: { $and: [] } };
 

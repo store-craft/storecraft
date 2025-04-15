@@ -119,7 +119,8 @@ export const create = app => {
     const actual_qtys = items_get.map(item => item.qty);
 
     assert.equal(
-      actual_qtys, expected_qtys, 'changed quantities do not match'
+      actual_qtys, expected_qtys, 
+      'changed quantities do not match'
     );
   });
 

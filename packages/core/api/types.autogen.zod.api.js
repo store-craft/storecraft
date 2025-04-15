@@ -61,10 +61,8 @@ const jWTClaimsSchema = z.object({
   nbf: z.number(),
   iat: z.number(),
   jti: z.string(),
-  roles: z
-    .array(z.string())
-    .optional()
-    .describe("User roles and authorizations"),
+  id: z.string().optional().describe("User roles and authorizations"),
+  roles: z.array(z.string()).optional(),
   email: z.string().optional(),
   firstname: z.string().optional(),
   lastname: z.string().optional(),
@@ -269,129 +267,6 @@ export const discountApplicationEnumSchema = z.object({
   }),
 });
 
-export const filterValuePInCollectionsSchema = z
-  .array(
-    z.object({
-      id: z
-        .string()
-        .optional()
-        .describe("`p_in_collections` filter, `id` of collection"),
-      title: z
-        .string()
-        .optional()
-        .describe("`p_in_collections` filter, `title` of collection"),
-      handle: z
-        .string()
-        .optional()
-        .describe("`p_in_collections` filter, `handle` of the collection"),
-    }),
-  )
-  .describe("Filter for product in collections");
-
-export const filterValuePNotInCollectionsSchema =
-  filterValuePInCollectionsSchema.describe(
-    "Filter for product not in collections",
-  );
-
-export const filterValuePInProductsSchema = z
-  .array(
-    z.object({
-      id: z
-        .string()
-        .optional()
-        .describe("`p_in_products` filter, `id` of `product`"),
-      title: z
-        .string()
-        .optional()
-        .describe("`p_in_products` filter, `title` of `product`"),
-      handle: z
-        .string()
-        .optional()
-        .describe("`p_in_products` filter, `handle` of the `product`"),
-    }),
-  )
-  .describe("Filter for product discount, product in handles");
-
-export const filterValuePNotInProductsSchema =
-  filterValuePInProductsSchema.describe(
-    "Filter for product discount, product not in handles",
-  );
-
-export const filterValuePInTagsSchema = z
-  .array(z.string())
-  .describe("Filter for product discount, product has tags");
-
-export const filterValuePNotInTagsSchema = z
-  .array(z.string())
-  .describe("Filter for product discount, NOT has tags");
-
-export const filterValuePAllSchema = z
-  .object({})
-  .describe("Filter for product discount,\nthat chooses all products");
-
-export const filterValuePInPriceRangeSchema = z
-  .object({
-    from: z
-      .number()
-      .optional()
-      .describe("`p_in_price_range` filter From price"),
-    to: z.number().describe("`p_in_price_range` filter To price"),
-  })
-  .describe("Filter for product discount, product in price range");
-
-export const filterValueOSubtotalInRangeSchema = z
-  .object({
-    from: z
-      .number()
-      .optional()
-      .describe("`o_subtotal_in_range` filter From price"),
-    to: z.number().optional().describe("`o_subtotal_in_range` filter To price"),
-  })
-  .describe("Filter for order discount, subtotal in range");
-
-export const filterValueOItemsCountInRangeSchema = z
-  .object({
-    from: z
-      .number()
-      .optional()
-      .describe("`o_items_count_in_range` filter From count"),
-    to: z
-      .number()
-      .optional()
-      .describe("`o_items_count_in_range` filter To count"),
-  })
-  .describe("Filter for order discount, items count in range");
-
-export const filterValueODateInRangeSchema = z
-  .object({
-    from: z
-      .string()
-      .optional()
-      .describe("`o_date_in_range` filter From date `ISO` format"),
-    to: z
-      .string()
-      .optional()
-      .describe("`o_date_in_range` filter To date `ISO` format"),
-  })
-  .describe("Filter for order discount, subtotal in range");
-
-export const filterValueOHasCustomersSchema = z
-  .array(
-    z.object({
-      id: z.string().describe("`id` of `customer`"),
-      email: z.string().optional().describe("(optional) `email` of `customer`"),
-      firstname: z
-        .string()
-        .optional()
-        .describe("(optional) readable `name` of `customer`"),
-      lastname: z
-        .string()
-        .optional()
-        .describe("(optional) readable `name` of `customer`"),
-    }),
-  )
-  .describe("Filter for order discount, order has customer id");
-
 export const filterMetaEnumSchema = z.object({
   any: z.object({
     id: z.number().optional(),
@@ -473,6 +348,210 @@ export const filterMetaEnumSchema = z.object({
   }),
 });
 
+export const filterPNotInCollectionsSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_not_in_collections.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_not_in_collections.optional(),
+    value: z.array(
+      z.object({
+        id: z
+          .string()
+          .optional()
+          .describe("`p_in_collections` filter, `id` of collection"),
+        title: z
+          .string()
+          .optional()
+          .describe("`p_in_collections` filter, `title` of collection"),
+        handle: z
+          .string()
+          .optional()
+          .describe("`p_in_collections` filter, `handle` of the collection"),
+      }),
+    ),
+  })
+  .describe("Filter for product not in collections");
+
+export const filterPInProductsSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_in_products.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_in_products.optional(),
+    value: z.array(
+      z.object({
+        id: z
+          .string()
+          .optional()
+          .describe("`p_in_products` filter, `id` of `product`"),
+        title: z
+          .string()
+          .optional()
+          .describe("`p_in_products` filter, `title` of `product`"),
+        handle: z
+          .string()
+          .optional()
+          .describe("`p_in_products` filter, `handle` of the `product`"),
+      }),
+    ),
+  })
+  .describe("Filter for product discount, product in handles");
+
+export const filterPNotInProductsSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_not_in_products.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_not_in_products.optional(),
+    value: z.array(
+      z.object({
+        id: z
+          .string()
+          .optional()
+          .describe("`p_in_products` filter, `id` of `product`"),
+        title: z
+          .string()
+          .optional()
+          .describe("`p_in_products` filter, `title` of `product`"),
+        handle: z
+          .string()
+          .optional()
+          .describe("`p_in_products` filter, `handle` of the `product`"),
+      }),
+    ),
+  })
+  .describe("Filter for product discount, product not in handles");
+
+export const filterPInTagsSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_in_tags.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_in_tags.optional(),
+    value: z.array(z.string()),
+  })
+  .describe("Filter for product discount, product has tags");
+
+export const filterPNotInTagsSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_not_in_tags.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_not_in_tags.optional(),
+    value: z.array(z.string()),
+  })
+  .describe("Filter for product discount, NOT has tags");
+
+export const filterPAllSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_all.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_all.optional(),
+  })
+  .describe("Filter for product discount,\nthat chooses all products");
+
+export const filterPInPriceRangeSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_in_price_range.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_in_price_range.optional(),
+    value: z.object({
+      from: z
+        .number()
+        .optional()
+        .describe("`p_in_price_range` filter From price"),
+      to: z.number().describe("`p_in_price_range` filter To price"),
+    }),
+  })
+  .describe("Filter for product discount, product in price range");
+
+export const filterOSubtotalInRangeSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.o_subtotal_in_range.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.o_subtotal_in_range.optional(),
+    value: z.object({
+      from: z
+        .number()
+        .optional()
+        .describe("`o_subtotal_in_range` filter From price"),
+      to: z
+        .number()
+        .optional()
+        .describe("`o_subtotal_in_range` filter To price"),
+    }),
+  })
+  .describe("Filter for order discount, subtotal in range");
+
+export const filterOItemsCountInRangeSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.o_items_count_in_range.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.o_items_count_in_range.optional(),
+    value: z.object({
+      from: z
+        .number()
+        .optional()
+        .describe("`o_items_count_in_range` filter From count"),
+      to: z
+        .number()
+        .optional()
+        .describe("`o_items_count_in_range` filter To count"),
+    }),
+  })
+  .describe("Filter for order discount, items count in range");
+
+export const filterODateInRangeSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.o_date_in_range.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.o_date_in_range.optional(),
+    value: z.object({
+      from: z
+        .string()
+        .optional()
+        .describe("`o_date_in_range` filter From date `ISO` format"),
+      to: z
+        .string()
+        .optional()
+        .describe("`o_date_in_range` filter To date `ISO` format"),
+    }),
+  })
+  .describe("Filter for order discount, subtotal in range");
+
+export const filterOHasCustomersSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.o_has_customer.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.o_has_customer.optional(),
+    value: z.array(
+      z.object({
+        id: z.string().describe("`id` of `customer`"),
+        email: z
+          .string()
+          .optional()
+          .describe("(optional) `email` of `customer`"),
+        firstname: z
+          .string()
+          .optional()
+          .describe("(optional) readable `name` of `customer`"),
+        lastname: z
+          .string()
+          .optional()
+          .describe("(optional) readable `name` of `customer`"),
+      }),
+    ),
+  })
+  .describe("Filter for order discount, order has customer id");
+
+export const filterPInCollectionsSchema = z
+  .object({
+    op: filterMetaEnumSchema.shape.p_in_collections.shape.op.optional(),
+    meta: filterMetaEnumSchema.shape.p_in_collections.optional(),
+    value: z.array(
+      z.object({
+        id: z
+          .string()
+          .optional()
+          .describe("`p_in_collections` filter, `id` of collection"),
+        title: z
+          .string()
+          .optional()
+          .describe("`p_in_collections` filter, `title` of collection"),
+        handle: z
+          .string()
+          .optional()
+          .describe("`p_in_collections` filter, `handle` of the collection"),
+      }),
+    ),
+  })
+  .describe("Filter for product in collections");
+
 export const discountMetaEnumSchema = z.object({
   regular: z.object({
     id: z.literal(0),
@@ -513,17 +592,6 @@ export const regularDiscountExtraSchema = z.object({
   percent: z.number().describe("`RegularDiscountExtra` params, Percents off"),
 });
 
-export const orderDiscountExtraSchema = z.object({
-  fixed: z
-    .number()
-    .describe("`OrderDiscountExtra` params, Fixed price addition"),
-  percent: z.number().describe("`OrderDiscountExtra` params, Percents off"),
-  free_shipping: z
-    .boolean()
-    .optional()
-    .describe("`OrderDiscountExtra` params, Do we have free shipping ?"),
-});
-
 export const bulkDiscountExtraSchema = z.object({
   fixed: z
     .number()
@@ -555,40 +623,43 @@ export const bundleDiscountExtraSchema = z.object({
     ),
 });
 
-export const filterSchema = z.object({
-  meta: z
-    .union([
-      filterMetaEnumSchema.shape.p_all,
-      filterMetaEnumSchema.shape.p_in_collections,
-      filterMetaEnumSchema.shape.p_not_in_collections,
-      filterMetaEnumSchema.shape.p_in_tags,
-      filterMetaEnumSchema.shape.p_not_in_tags,
-      filterMetaEnumSchema.shape.p_in_products,
-      filterMetaEnumSchema.shape.p_not_in_products,
-      filterMetaEnumSchema.shape.p_in_price_range,
-      filterMetaEnumSchema.shape.o_date_in_range,
-      filterMetaEnumSchema.shape.o_has_customer,
-      filterMetaEnumSchema.shape.o_items_count_in_range,
-      filterMetaEnumSchema.shape.o_subtotal_in_range,
-    ])
-    .describe("Meta data related to identifying the filter"),
-  value: z
-    .union([
-      filterValuePInCollectionsSchema,
-      filterValuePNotInCollectionsSchema,
-      filterValuePInProductsSchema,
-      filterValuePNotInProductsSchema,
-      filterValuePInTagsSchema,
-      filterValuePNotInTagsSchema,
-      filterValuePInPriceRangeSchema,
-      filterValueOSubtotalInRangeSchema,
-      filterValueOItemsCountInRangeSchema,
-      filterValueODateInRangeSchema,
-      filterValueOHasCustomersSchema,
-    ])
+export const orderDiscountExtraSchema = z.object({
+  fixed: z
+    .number()
+    .describe("`OrderDiscountExtra` params, Fixed price addition"),
+  percent: z.number().describe("`OrderDiscountExtra` params, Percents off"),
+  free_shipping: z
+    .boolean()
     .optional()
-    .describe("The filter params"),
+    .describe("`OrderDiscountExtra` params, Do we have free shipping ?"),
 });
+
+export const discountDetailsAnySchema = z.object({
+  type: discountMetaEnumSchema.shape.any.shape.type.optional(),
+  meta: discountMetaEnumSchema.shape.any
+    .optional()
+    .describe("metadata to identify the interface of discount"),
+  extra: z
+    .any()
+    .describe("Extra parameters of the specific discount interface"),
+});
+
+export const filterSchema = z
+  .union([
+    filterPAllSchema,
+    filterPInCollectionsSchema,
+    filterPNotInCollectionsSchema,
+    filterPInProductsSchema,
+    filterPNotInProductsSchema,
+    filterPInTagsSchema,
+    filterPNotInTagsSchema,
+    filterPInPriceRangeSchema,
+    filterOSubtotalInRangeSchema,
+    filterOItemsCountInRangeSchema,
+    filterODateInRangeSchema,
+    filterOHasCustomersSchema,
+  ])
+  .describe("Discount filter schema");
 
 export const shippingMethodTypeSchema = baseTypeSchema.extend({
   price: z
@@ -1258,6 +1329,46 @@ export const authUserTypeSchema = baseTypeSchema
       .describe("(optional) readable `name` of `customer`"),
   });
 
+export const discountDetailsRegularSchema = z.object({
+  type: discountMetaEnumSchema.shape.regular.shape.type.optional(),
+  meta: discountMetaEnumSchema.shape.regular
+    .optional()
+    .describe("metadata to identify the interface of discount"),
+  extra: regularDiscountExtraSchema.describe(
+    "Extra parameters of the specific discount interface",
+  ),
+});
+
+export const discountDetailsBulkSchema = z.object({
+  type: discountMetaEnumSchema.shape.bulk.shape.type.optional(),
+  meta: discountMetaEnumSchema.shape.bulk
+    .optional()
+    .describe("metadata to identify the interface of discount"),
+  extra: bulkDiscountExtraSchema.describe(
+    "Extra parameters of the specific discount interface",
+  ),
+});
+
+export const discountDetailsBundleSchema = z.object({
+  type: discountMetaEnumSchema.shape.bundle.shape.type.optional(),
+  meta: discountMetaEnumSchema.shape.bundle
+    .optional()
+    .describe("metadata to identify the interface of discount"),
+  extra: bundleDiscountExtraSchema.describe(
+    "Extra parameters of the specific discount interface",
+  ),
+});
+
+export const discountDetailsOrderSchema = z.object({
+  type: discountMetaEnumSchema.shape.order.shape.type.optional(),
+  meta: discountMetaEnumSchema.shape.order
+    .optional()
+    .describe("metadata to identify the interface of discount"),
+  extra: orderDiscountExtraSchema.describe(
+    "Extra parameters of the specific discount interface",
+  ),
+});
+
 export const buyXGetYDiscountExtraSchema = z.object({
   fixed: z
     .number()
@@ -1370,30 +1481,27 @@ export const orderPaymentGatewayDataSchema = z.object({
     .describe("Latest status of payment for caching"),
 });
 
-export const discountDetailsSchema = z.object({
-  meta: z
-    .union([
-      discountMetaEnumSchema.shape.regular,
-      discountMetaEnumSchema.shape.bulk,
-      discountMetaEnumSchema.shape.bundle,
-      discountMetaEnumSchema.shape.buy_x_get_y,
-      discountMetaEnumSchema.shape.order,
-    ])
+export const discountDetailsBuyXGetYSchema = z.object({
+  type: discountMetaEnumSchema.shape.buy_x_get_y.shape.type.optional(),
+  meta: discountMetaEnumSchema.shape.buy_x_get_y
+    .optional()
     .describe("metadata to identify the interface of discount"),
-  extra: z
-    .union([
-      regularDiscountExtraSchema,
-      orderDiscountExtraSchema,
-      bulkDiscountExtraSchema,
-      buyXGetYDiscountExtraSchema,
-      bundleDiscountExtraSchema,
-    ])
-    .describe("Extra parameters of the specific discount interface"),
+  extra: buyXGetYDiscountExtraSchema.describe(
+    "Extra parameters of the specific discount interface",
+  ),
 });
 
 export const notificationTypeSchema = baseNotificationTypeSchema.extend(
   timestampsSchema.shape,
 );
+
+export const discountDetailsSchema = z.union([
+  discountDetailsRegularSchema,
+  discountDetailsBulkSchema,
+  discountDetailsBundleSchema,
+  discountDetailsBuyXGetYSchema,
+  discountDetailsOrderSchema,
+]);
 
 export const discountInfoSchema = z.object({
   details: discountDetailsSchema.describe(

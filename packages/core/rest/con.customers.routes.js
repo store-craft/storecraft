@@ -28,7 +28,9 @@ export const create_routes = (app) => {
     '/',
     owner_or_admin_guard,
     async (req, res) => {
-      const final = await app.api.customers.upsert(req.parsedBody);
+      const final = await app.api.customers.upsert(
+        req.parsedBody
+      );
       res.sendJson(final);
     }
   );
@@ -41,8 +43,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.customers.count(q);
-
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -53,9 +54,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const { email_or_id } = req?.params;
       const item = await app.api.customers.get(email_or_id);
-
       assert(item, 'not-found', 404);
-
       res.sendJson(item);
     }
   );
@@ -67,8 +66,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const { email_or_id } = req?.params;
       const removed = email_or_id && await app.api.customers.remove(email_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
+      res.sendJson(removed);
     }
   );
 
@@ -81,7 +79,6 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const items = await app.api.customers.list(q);
-
       res.sendJson(items);
     }
   );
@@ -95,9 +92,10 @@ export const create_routes = (app) => {
       const q = (/** @type {ApiQuery<OrderData>} */ (
         parse_query(req.query))
       );
-      const count = await app.api.customers.count_customer_orders(email_or_id, q);
-      
-      res.sendJson({ count });
+      const count = await app.api.customers.count_customer_orders(
+        email_or_id, q
+      );
+      res.sendJson(count);
     }
   );
 
@@ -110,8 +108,9 @@ export const create_routes = (app) => {
       const q = (/** @type {ApiQuery<OrderData>} */ (
         parse_query(req.query))
       );
-      const items = await app.api.customers.list_customer_orders(email_or_id, q);
-      
+      const items = await app.api.customers.list_customer_orders(
+        email_or_id, q
+      );
       res.sendJson(items);
     }
   );

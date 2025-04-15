@@ -1,17 +1,9 @@
+/**
+ * @import { JWTClaims } from './jwt.types.js'
+ */
 import { fromUint8Array as bEnc, toUint8Array as bDec, 
   toUint8Array, encode, fromUint8Array } from './base64.js'
 import { base64 } from './public.js';
-
-/**
- * @typedef {Object} JWTClaims
- * @prop {string} iss (issuer): Issuer of the JWT
- * @prop {string} sub (subject): Subject of the JWT (the user)
- * @prop {string} aud (audience): Recipient for which the JWT is intended
- * @prop {number} exp (expiration time): Time after which the JWT expires
- * @prop {number} nbf (not before time): Time before which the JWT must not be accepted for processing
- * @prop {number} iat (issued at time): Time at which the JWT was issued; can be used to determine age of the JWT
- * @prop {string} jti (JWT ID): Unique identifier; can be used to prevent the JWT from being replayed (allows a token to be used only once)
- */
 
 /**
  * 

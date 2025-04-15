@@ -146,7 +146,8 @@ export const test_setup = async (app, setup) => {
       try {
         await test();
       } catch(e) {
-        console.log('test failed', e?.details ?? e);
+        // console.error('test failed, details', e?.details);
+        console.log('test failed', e);
         assert.unreachable(
           `Test failed for path ${path}: `
         );

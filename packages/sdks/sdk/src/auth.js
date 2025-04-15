@@ -444,7 +444,7 @@ export default class Auth {
    * @param {ApiQuery<AuthUserType>} query
    */
   count_auth_users_query = async (query) => {
-    const sq = api_query_to_searchparams(query);
+    // const sq = api_query_to_searchparams(query);
     return count_query_of_resource(
       this.#sdk,
       `/auth/users`,

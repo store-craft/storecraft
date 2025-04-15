@@ -281,6 +281,7 @@ interface JWTClaims {
   /**
    * @description User roles and authorizations
    */
+  id?: string,
   roles?: string[],
   email?: string, 
   firstname?: string, 

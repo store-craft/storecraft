@@ -176,7 +176,7 @@ export async function count_query_of_resource(sdk, resource, query) {
     {
       method: 'get',
     }
-  ).then((result) => Number(result.count));
+  );
 }
 
 /**

@@ -89,83 +89,6 @@ export const upsert = (app) =>
 /**
  * @param {App} app
  */
-export const add_product_to_collection = (app) => 
-  /**
-   * @description add a product to a collection
-   * @param {string} product handle or id
-   * @param {string} collection handle or id
-   */
-  (product, collection) => {
-    return db(app).add_product_to_collection(product, collection);
-  }
-
-/**
- * 
- * @param {App} app
- */
-export const remove_product_from_collection = (app) => 
-/**
- * @description remove a product from a collection
- * @param {string} product handle or id
- * @param {string} collection handle or id
- */
-(product, collection) => {
-  return db(app).remove_product_from_collection(product, collection);
-}
-
-/**
- * @param {App} app
- */
-export const list_product_collections = (app) => 
-/**
- * @description list collections of a product
- * @param {string} handle_or_id handle or id
- */
-(handle_or_id) => {
-  return db(app).list_all_product_collections(handle_or_id);
-}
-
-/**
- * @param {App} app
- */
-export const list_product_variants = (app) => 
-  /**
-   * @description list variants of a product
-   * @param {string} product handle or id
-   */
-  (product) => {
-    return db(app).list_all_product_variants(product);
-  }
-
-
-/**
- * @param {App} app
- */
-export const list_related_products = (app) => 
-/**
- * @description list related products of a product
- * @param {string} product handle or id
- */
-(product) => {
-  return db(app).list_all_related_products(product);
-}
-
-
-/**
- * @param {App} app
- */
-export const list_product_discounts = (app) => 
-/**
- * @description list discounts of a product
- * @param {string} product handle or id
- */
-(product) => {
-  return db(app).list_all_product_discounts(product);
-}
-
-/**
- * @param {App} app
- */
 export const list_used_products_tags = (app) => 
   /**
    * @description List all of the tags of all the products deduped, 
@@ -192,6 +115,22 @@ export const count = (app) =>
   
 /**
  * @param {App} app
+ */
+export const changeStockOfBy = (app) => 
+
+  /**
+   * increment / decrement stock of multiple products
+   * @param {string[]} product_id_or_handles array of `id` or `handle`
+   * @param {number[]} deltas corresponding array of non-zero `positive` or 
+   * `negative` integer
+   */
+  (product_id_or_handles, deltas) => {
+    return db(app).changeStockOfBy(product_id_or_handles, deltas);
+  }
+  
+  
+/**
+ * @param {App} app
  */  
 export const inter = app => {
 
@@ -200,12 +139,8 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'products/remove'),
     list: regular_list(app, db(app), 'products/list'),
-    list_all_product_collections: list_product_collections(app),
-    list_all_product_discounts: list_product_discounts(app),
-    list_all_product_variants: list_product_variants(app),
-    list_all_related_products: list_related_products(app),
     list_used_products_tags: list_used_products_tags(app),
-    changeStockOfBy: db(app).changeStockOfBy,
+    changeStockOfBy: changeStockOfBy(app),
     count: count(app),
   }
 }

@@ -59,7 +59,12 @@ type TypeOrFunction<T> = T | (() => T);
 
 export type PROOF_STRINGS_SETUP<T, NAME extends string=''> = {
   [K in keyof T]: T[K] extends AnyFunction ? 
-    { __tests: TypeOrFunction<TestSpec<DotPath<Extract<K, string>, NAME>, T[K]>>[]} : 
+    { 
+      /**
+       * @description Add multiple tests for storecraft `api`
+       */
+      __tests: TypeOrFunction<TestSpec<DotPath<Extract<K, string>, NAME>, T[K]>>[]
+    } : 
     PROOF_STRINGS_SETUP<T[K], DotPath<Extract<K, string>, NAME>>;
 }
 

@@ -27,27 +27,29 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const final = await app.api.products.upsert(req.parsedBody);
-
       res.sendJson(final);
     }
-  )
+  );
 
   // update item stock by a delta number
   polka.put(
     '/:handle',
+    middle_authorize_admin,
     async (req, res) => {
+      
       const handle_or_id = req?.params?.handle;
       const stockBy = parseInt(req?.query?.get('quantityBy'));
-
       if(stockBy) {
-        await app.api.products.changeStockOfBy(
+        const result = await app.api.products.changeStockOfBy(
           [handle_or_id], [stockBy]
+        );
+        res.sendJson(
+          result
         );
       } else {
         res.status = 400;
+        res.end();
       }
-
-      res.end();
     }
   );
 
@@ -66,7 +68,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.products.count(q)
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -108,66 +110,7 @@ export const create_routes = (app) => {
       const handle_or_id = req?.params?.handle;
       const removed = handle_or_id && await app.api.products.remove(handle_or_id);
 
-      res.setStatus(removed ? 200 : 404).end();
-    }
-  );
-
-
-  // add to collection
-  polka.post(
-    '/:product/collections/:collection',
-    middle_authorize_admin,
-    async (req, res) => {
-      const { product, collection } = req?.params;
-      await app.api.products.add_product_to_collection(product, collection);
-      res.end();
-    }
-  );
-
-  // remove from
-  polka.delete(
-    '/:product/collections/:collection',
-    middle_authorize_admin,
-    async (req, res) => {
-      const { product, collection } = req?.params;
-      await app.api.products.remove_product_from_collection(product, collection);
-      res.end();
-    }
-  );
-  
-  polka.get(
-    '/:product/collections',
-    async (req, res) => {
-      const { product } = req?.params;
-      const items = await app.api.products.list_all_product_collections(product);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:product/variants',
-    async (req, res) => {
-      const { product } = req?.params;
-      const items = await app.api.products.list_all_product_variants(product);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:product/discounts',
-    async (req, res) => {
-      const { product } = req?.params;
-      const items = await app.api.products.list_all_product_discounts(product);
-      res.sendJson(items);
-    }
-  );
-
-  polka.get(
-    '/:product/related',
-    async (req, res) => {
-      const { product } = req?.params;
-      const items = await app.api.products.list_all_related_products(product);
-      res.sendJson(items);
+      res.sendJson(removed);
     }
   );
 

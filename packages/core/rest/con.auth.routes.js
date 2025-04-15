@@ -114,7 +114,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.auth.count(q);
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 

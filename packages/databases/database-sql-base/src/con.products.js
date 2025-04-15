@@ -422,73 +422,6 @@ const list = (driver) => {
 
 /**
  * @param {SQL} driver 
- * @returns {db_col["list_all_product_collections"]}
- */
-const list_product_collections = (driver) => {
-  return async (product_id_or_handle) => {
-    // we don't expect many collections per products,
-    // therefore we use the simple `get` method instead of a query
-    const item = await get(driver)(
-      product_id_or_handle, { expand: ['collections'] }
-    );
-    return item?.collections ?? []
-  }
-}
-
-/**
- * @param {SQL} driver 
- * @returns {db_col["list_all_product_discounts"]}
- */
-const list_product_discounts = (driver) => {
-  return async (product_id_or_handle) => {
-    // we don't expect many discounts per products,
-    // therefore we use the simple `get` method instead of a query
-    const item = await get(driver)(
-      product_id_or_handle, { expand: ['discounts'] }
-    );
-    return item?.discounts ?? []
-  }
-}
-
-/**
- * @param {SQL} driver 
- * 
- * @returns {db_col["list_all_product_variants"]}
- */
-const list_product_variants = (driver) => {
-  return async (product_id_or_handle) => {
-    // we don't expect many discounts per products,
-    // therefore we use the simple `get` method instead of a query
-    const item = await get(driver)(
-      product_id_or_handle, { expand: ['variants'] }
-    );
-
-    if(item && (`variants` in item))
-      return item.variants ?? [];
-
-    return [];
-  }
-}
-
-/**
- * @param {SQL} driver 
- * 
- * @returns {db_col["list_all_related_products"]}
- */
-const list_related_products = (driver) => {
-  return async (product_id_or_handle) => {
-    // we don't expect many discounts per products,
-    // therefore we use the simple `get` method instead of a query
-    const item = await get(driver)(
-      product_id_or_handle, { expand: ['related_products'] }
-    );
-
-    return item?.related_products ?? [];
-  }
-}
-
-/**
- * @param {SQL} driver 
  * @returns {db_col["list_used_products_tags"]}
  */
 const list_used_products_tags = (driver) => {
@@ -521,32 +454,36 @@ const list_used_products_tags = (driver) => {
 const changeStockOfBy = (driver) => {
   return async (product_ids_or_handles, deltas) => {
 
-    await driver.client.transaction().execute(
-      async (trx) => {
-        for(let ix=0; ix < product_ids_or_handles.length; ix++ ) {
-          const id = product_ids_or_handles[ix];
-          const delta = deltas[ix];
-
-          await trx
-          .updateTable('products')
-          .set(
-            eb => (
-              {
-                qty: eb('qty', '+', delta)
-              }
-            )
-          )
-          .where(
-            where_id_or_handle_table(id)
-          )
-          .execute()
-
-        }
-      }
-    );
-
-  }
+    try {
+      await driver.client.transaction().execute(
+        async (trx) => {
+          for(let ix=0; ix < product_ids_or_handles.length; ix++ ) {
+            const id = product_ids_or_handles[ix];
+            const delta = deltas[ix];
   
+            return trx
+            .updateTable('products')
+            .set(
+              eb => (
+                {
+                  qty: eb('qty', '+', delta)
+                }
+              )
+            )
+            .where(
+              where_id_or_handle_table(id)
+            )
+            .execute()
+          }
+        }
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    }
+
+    return true;
+  }
 }
 
 
@@ -564,10 +501,6 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    list_all_product_collections: list_product_collections(driver),
-    list_all_product_discounts: list_product_discounts(driver),
-    list_all_product_variants: list_product_variants(driver),
-    list_all_related_products: list_related_products(driver),
     list_used_products_tags: list_used_products_tags(driver),
     count: count_regular(driver, table_name),
   }

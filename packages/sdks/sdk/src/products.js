@@ -42,15 +42,14 @@ export default class Products extends collection_base {
   }
 
   /**
-   * 
    * Change stock quantity of a `product` by a delta difference
    * number.
-   * 
    * @param {string} id_or_handle `id` ot `handle`
    * @param {number} howmuch a diff number by how much to update stock
+   * @return {Promise<boolean>} 
    */
   changeStockOfBy = async (id_or_handle, howmuch) => {
-    const response = await fetchOnlyApiResponseWithAuth(
+    const response = await fetchApiWithAuth(
       this.sdk,
       `products/${id_or_handle}?quantityBy=${howmuch}`,
       {
@@ -58,7 +57,7 @@ export default class Products extends collection_base {
       }
     );
 
-    return response.ok;
+    return response;
   }
 
   /**

@@ -114,9 +114,11 @@ const count = (driver) => count_regular(driver, col(driver));
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
-  return async (customer_id, query) => {
+  return async (customer_id_or_email, query) => {
 
-    const { filter: filter_query, sort, reverse_sign } = query_to_mongo(query);
+    const { 
+      filter: filter_query, sort, reverse_sign 
+    } = query_to_mongo(query);
 
     // console.log('query', query)
     // console.log('filter', JSON.stringify(filter_query, null, 2))
@@ -126,7 +128,7 @@ const list_customer_orders = (driver) => {
     /** @type {Filter<WithRelations<OrderData>>} */
     const filter = {
       $and: [
-        {'_relations.search': `customer:${customer_id}` },
+        {'_relations.search': `customer:${customer_id_or_email}` },
       ]
     };
 

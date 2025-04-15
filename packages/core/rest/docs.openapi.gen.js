@@ -3112,11 +3112,33 @@ const register_orders = registry => {
   register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example_order, apply_security(),
-    'List operates differently in the following cases: \n \
-    - If user is `admin`, orders of all customers will be returned \n \
-    - If user is not `admin`, then only his own orders will be returned '
-    );
+    _typeSchema, example_order, apply_security(),
+  );
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/me`,
+    summary: `Query my orders`,
+    description: `List and filter items of the current authenticated user. this is useful for logged in customers with JWT tokens to directly query their orders`,
+    tags,
+    request: {
+      query: create_query(),
+    },
+    responses: {
+      200: {
+        description: `List of \`${name}s\``,
+        content: {
+          'application/json': {
+            schema: z.array(_typeSchema),
+            example: [example_order]
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });  
+  
 }
 
 /**

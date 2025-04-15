@@ -110,8 +110,6 @@ export const create = app => {
   
   });
 
-  return s;
-
   s('test product has NO handles', async () => {
     const now = (new Date()).toISOString();
 

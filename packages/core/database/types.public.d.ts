@@ -205,11 +205,11 @@ export interface db_customers extends OmitGetByHandle<db_crud<
   getByEmail: (email: string) => Promise<CustomerType>;
   /**
    * 
-   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
+   * @param customer_id_or_email the id or email of the customer
    * @param query query object
    */
   list_customer_orders: (
-    customer_id: ID, query?: ApiQuery<OrderData>
+    customer_id_or_email: HandleOrId, query?: ApiQuery<OrderData>
   ) => Promise<OrderData[]>;
 
   /**

@@ -202,19 +202,15 @@ export async function remove_from_collection_resource(sdk, resource, handle_or_i
 /**
  * @description Invoke `api` endpoint that requires use of `query`
  * object. I named it `list` because it usually entails list op.
- * 
- * 
  * @template {any} G Get type
- * 
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {ApiQuery<G>} [query] 
- * 
- * 
  * @returns {Promise<G[]>}
  */
-export async function list_from_collection_resource(sdk, resource, query={}) {
+export async function list_from_collection_resource(
+  sdk, resource, query={}
+) {
   const sq = api_query_to_searchparams(query);
 
   // console.log('sq', sq.toString())
@@ -261,7 +257,9 @@ export class collection_base {
    * @returns {Promise<G>}
    */
   async get(handle_or_id) {
-    return get_from_collection_resource(this.sdk, this.base_name, handle_or_id);
+    return get_from_collection_resource(
+      this.sdk, this.base_name, handle_or_id
+    );
   }
 
   /**
@@ -272,7 +270,9 @@ export class collection_base {
    * @returns {Promise<string>} id
    */
   async upsert(item) {
-    return upsert_to_collection_resource(this.sdk, this.base_name, item);
+    return upsert_to_collection_resource(
+      this.sdk, this.base_name, item
+    );
   }
 
   /**
@@ -283,7 +283,9 @@ export class collection_base {
    * @returns {Promise<boolean>}
    */
   async remove(handle_or_id) {
-    return remove_from_collection_resource(this.sdk, this.base_name, handle_or_id);
+    return remove_from_collection_resource(
+      this.sdk, this.base_name, handle_or_id
+    );
   }
 
   /**
@@ -291,7 +293,9 @@ export class collection_base {
    * @returns {Promise<G[]>}
    */
   async list(query) {
-    return list_from_collection_resource(this.sdk, this.base_name, query);
+    return list_from_collection_resource(
+      this.sdk, this.base_name, query
+    );
   }
 
   /**
@@ -299,7 +303,9 @@ export class collection_base {
    * @param {ApiQuery<G>} query Query object
    */
   async count_query(query) {
-    return count_query_of_resource(this.sdk, this.base_name, query);
+    return count_query_of_resource(
+      this.sdk, this.base_name, query
+    );
   }
 
   get base_name() {

@@ -1,5 +1,5 @@
 /**
- * @import { CollectionType, CollectionTypeUpsert, DiscountTypeUpsert, ProductType, TagType, TagTypeUpsert, TemplateType, TemplateTypeUpsert
+ * @import { CollectionType, CollectionTypeUpsert, DiscountType, DiscountTypeUpsert, ProductType, TagType, TagTypeUpsert, TemplateType, TemplateTypeUpsert
  * } from '../../api/types.api.js'
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
  * @import { ApiQuery } from '../../api/types.public.js'
@@ -76,9 +76,21 @@ export const create = (app) => {
       info: {
         details: {
           type: 'order',
-
+          extra: {
+            fixed: 0,
+            percent: 0
+          }
         },
-        filters: []
+        filters: [
+          {
+            op: 'p-in-collections',
+            value: [
+              {
+                handle: 'd'
+              }
+            ]
+          }
+        ]
       }
     }
 
@@ -86,7 +98,7 @@ export const create = (app) => {
 
     /** @type {PROOF_MOCKUP_API_SETUP} */
     const setup = {
-      collections: {
+      discounts: {
 
         get: {
           __tests: [
@@ -94,13 +106,13 @@ export const create = (app) => {
               test: async () => {
                 { // secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.collections.get(id);
-                  assert.equal(proof, 'proof.collections.get');
+                  const proof = await sdk.discounts.get(id);
+                  assert.equal(proof, 'proof.discounts.get');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, id);
-                return 'proof.collections.get';
+                return 'proof.discounts.get';
               },
             }
           ]
@@ -113,20 +125,20 @@ export const create = (app) => {
               test: async () => {
                 { // secured
                   await sdk.auth.signin(user.email, user.password);
-                  const proof = await sdk.collections.remove(id);
-                  assert.equal(proof, 'proof.collections.remove');
+                  const proof = await sdk.discounts.remove(id);
+                  assert.equal(proof, 'proof.discounts.remove');
                 }
                 { // non secured
                   sdk.config.auth = undefined;
                   await assert_async_throws(
-                    () => sdk.collections.remove(id),
+                    () => sdk.discounts.remove(id),
                     'remove is not secured'
                   );
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, id);
-                return 'proof.collections.remove';
+                return 'proof.discounts.remove';
               },
             }
           ]
@@ -139,15 +151,15 @@ export const create = (app) => {
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.collections.list(
-                    /** @type {ApiQuery<CollectionType>} */ (legit_query)
+                  const proof = await sdk.discounts.list(
+                    /** @type {ApiQuery<DiscountType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.collections.list');
+                  assert.equal(proof, 'proof.discounts.list');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, legit_query);
-                return 'proof.collections.list';
+                return 'proof.discounts.list';
               },
             }
           ]
@@ -159,15 +171,15 @@ export const create = (app) => {
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.collections.count_query(
-                    /** @type {ApiQuery<CollectionType>} */ (legit_query)
+                  const proof = await sdk.discounts.count_query(
+                    /** @type {ApiQuery<DiscountType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.collections.count');
+                  assert.equal(proof, 'proof.discounts.count');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, legit_query);
-                return 'proof.collections.count';
+                return 'proof.discounts.count';
               },
             }
           ]
@@ -180,20 +192,20 @@ export const create = (app) => {
                 test: async () => {
                   { // secured
                     await sdk.auth.signin(user.email, user.password);
-                    const proof = await sdk.collections.upsert(item);
-                    assert.equal(proof, 'proof.collections.upsert');
+                    const proof = await sdk.discounts.upsert(item);
+                    assert.equal(proof, 'proof.discounts.upsert');
                   }
                   { // non secured
                     sdk.config.auth = undefined;
                     await assert_async_throws(
-                      () => sdk.collections.upsert(item),
+                      () => sdk.discounts.upsert(item),
                       'upsert is not secured'
                     );
                   }
                 },
                 intercept_backend_api: async (params) => {
                   assert.equal(params, item);
-                  return 'proof.collections.upsert';
+                  return 'proof.discounts.upsert';
                 },
               }
             }
@@ -202,97 +214,70 @@ export const create = (app) => {
         },  
         
         
-        count_collection_products_query: {
+        count_discount_products_query: {
           __tests: [
             { // asert secured endpoint
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.collections.count_collection_products_query(
+                  const proof = await sdk.discounts.count_discount_products_query(
                     id,
                     /** @type {ApiQuery<ProductType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.collections.count_collection_products_query');
+                  assert.equal(proof, 'proof.discounts.count_discount_products_query');
                 }
               },
               intercept_backend_api: async (id_or_handled, params) => {
                 assert.equal(id_or_handled, id);
                 assert.equal(params, legit_query);
-                return 'proof.collections.count_collection_products_query';
+                return 'proof.discounts.count_discount_products_query';
               },
             }
           ]
         },              
         
-        list_collection_products: {
+        list_discount_products: {
           __tests: [
             { // asert secured endpoint
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.collections.query_collection_products(
+                  const proof = await sdk.discounts.query_discount_products(
                     id,
                     /** @type {ApiQuery<ProductType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.collections.list_collection_products');
+                  assert.equal(proof, 'proof.discounts.list_discount_products');
                 }
               },
               intercept_backend_api: async (id_or_handled, params) => {
                 assert.equal(id_or_handled, id);
                 assert.equal(params, legit_query);
-                return 'proof.collections.list_collection_products';
+                return 'proof.discounts.list_discount_products';
               },
             }
           ]
         },
 
-        list_used_products_tags: {
+        list_used_discount_products_tags: {
           __tests: [
             { // asert secured endpoint
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.collections.list_used_products_tags(
+                  const proof = await sdk.discounts.list_used_discount_products_tags(
                     id,
                   );
-                  assert.equal(proof, 'proof.collections.list_used_products_tags');
+                  assert.equal(proof, 'proof.discounts.list_used_discount_products_tags');
                 }
               },
               intercept_backend_api: async (id_or_handled) => {
                 assert.equal(id_or_handled, id);
-                return 'proof.collections.list_used_products_tags';
+                return 'proof.discounts.list_used_discount_products_tags';
               },
             }
           ]
         },
 
-        export_collection: {
-          __tests: [
-            { // asert secured endpoint
-              test: async () => {
-                { // non secured
-                  sdk.config.auth = undefined;
-                  await assert_async_throws(
-                    () => sdk.collections.publish(id),
-                    'export_collection is not secured'
-                  );
-                }
-                { // secured
-                  await sdk.auth.signin(user.email, user.password);
-                  const proof = await sdk.collections.publish(
-                    id,
-                  );
-                  assert.equal(proof, 'proof.collections.export_collection');
-                }
-              },
-              intercept_backend_api: async (id_or_handled) => {
-                assert.equal(id_or_handled, id);
-                return 'proof.collections.export_collection';
-              },
-            }
-          ]
-        }
-        
 
       },
 

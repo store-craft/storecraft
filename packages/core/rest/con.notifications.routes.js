@@ -18,18 +18,17 @@ export const create_routes = (app) => {
   /** @type {ApiPolka} */
   const polka = new Polka();
 
-  const middle_authorize_admin = authorize_admin(app);
-  polka.use(middle_authorize_admin);
+  polka.use(authorize_admin(app));
 
-  // save tag
   polka.post(
     '/',
     async (req, res) => {
-      const final = await app.api.notifications.addBulk(req.parsedBody);
-
+      const final = await app.api.notifications.upsert(
+        req.parsedBody
+      );
       res.sendJson(final);
     }
-  )
+  );
 
   polka.get(
     '/count_query',
@@ -38,8 +37,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.notifications.count(q);
-
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -49,9 +47,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const item = await app.api.notifications.get(handle_or_id);
-
       assert(item, 'not-found', 404);
-
       res.sendJson(item);
     }
   );
@@ -61,9 +57,9 @@ export const create_routes = (app) => {
     '/:handle',
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.notifications.remove(handle_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
+      const removed = handle_or_id && 
+        await app.api.notifications.remove(handle_or_id);
+      res.sendJson(removed);
     }
   );
 
@@ -75,7 +71,6 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const items = await app.api.notifications.list(q);
-
       res.sendJson(items);
     }
   );

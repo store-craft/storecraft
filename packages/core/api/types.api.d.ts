@@ -898,7 +898,8 @@ export interface DiscountInfo  {
   details: DiscountDetails;
 
   /** 
-   * @description List of `discount` filters 
+   * @description List of `discount` filters, which determine the
+   * eligible `products` for the discount or the eligible `order`
    * @minLength 1 You should Specify at least 1 Filter
    */
   filters: Filter[]
@@ -921,6 +922,10 @@ export type Filter_p_in_collections = {
   op?: FilterMetaEnum['p_in_collections']["op"],
   /** @deprecated */
   meta?: FilterMetaEnum['p_in_collections'],
+  /**
+   * @description `p_in_collections` filter, supply array of collections
+   * `ids` and `handles`
+   */
   value: {
     /**
      * @description `p_in_collections` filter, `id` of collection

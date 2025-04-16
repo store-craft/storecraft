@@ -1,5 +1,5 @@
 /**
- * @import { TagType, TagTypeUpsert
+ * @import { PostType, PostTypeUpsert, TagType, TagTypeUpsert
  * } from '../../api/types.api.js'
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
  * @import { ApiQuery } from '../../api/types.public.js'
@@ -49,7 +49,7 @@ export const create = (app) => {
     }
   );
 
-  s('tags', async (ctx) => {
+  s('posts', async (ctx) => {
     const user = {
       email: admin_email,
       password: 'admin',
@@ -65,19 +65,19 @@ export const create = (app) => {
       })
     );
 
-    const id = ID('tag')
+    const id = ID('post')
 
-    /** @type {TagTypeUpsert} */
+    /** @type {PostTypeUpsert} */
     const item = {
-      values: ['rock', 'pop'],
-      handle: 'genre'
+      title: 'test',
+      text: 'test',
     }
     
     // console.log({aaaa})
 
     /** @type {PROOF_MOCKUP_API_SETUP} */
     const setup = {
-      tags: {
+      posts: {
 
         get: {
           __tests: [
@@ -85,13 +85,13 @@ export const create = (app) => {
               test: async () => {
                 { // secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.tags.get(id);
-                  assert.equal(proof, 'proof.tags.get');
+                  const proof = await sdk.posts.get(id);
+                  assert.equal(proof, 'proof.posts.get');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, id);
-                return 'proof.tags.get';
+                return 'proof.posts.get';
               },
             }
           ]
@@ -104,20 +104,20 @@ export const create = (app) => {
               test: async () => {
                 { // secured
                   await sdk.auth.signin(user.email, user.password);
-                  const proof = await sdk.tags.remove(id);
-                  assert.equal(proof, 'proof.tags.remove');
+                  const proof = await sdk.posts.remove(id);
+                  assert.equal(proof, 'proof.posts.remove');
                 }
                 { // non secured
                   sdk.config.auth = undefined;
                   await assert_async_throws(
-                    () => sdk.tags.remove(id),
+                    () => sdk.posts.remove(id),
                     'remove is not secured'
                   );
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, id);
-                return 'proof.tags.remove';
+                return 'proof.posts.remove';
               },
             }
           ]
@@ -130,15 +130,15 @@ export const create = (app) => {
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.tags.list(
-                    /** @type {ApiQuery<TagType>} */ (legit_query)
+                  const proof = await sdk.posts.list(
+                    /** @type {ApiQuery<PostType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.tags.list');
+                  assert.equal(proof, 'proof.posts.list');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, legit_query);
-                return 'proof.tags.list';
+                return 'proof.posts.list';
               },
             }
           ]
@@ -150,15 +150,15 @@ export const create = (app) => {
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.tags.count_query(
-                    /** @type {ApiQuery<TagType>} */ (legit_query)
+                  const proof = await sdk.posts.count_query(
+                    /** @type {ApiQuery<PostType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.tags.count');
+                  assert.equal(proof, 'proof.posts.count');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, legit_query);
-                return 'proof.tags.count';
+                return 'proof.posts.count';
               },
             }
           ]
@@ -171,20 +171,20 @@ export const create = (app) => {
                 test: async () => {
                   { // secured
                     await sdk.auth.signin(user.email, user.password);
-                    const proof = await sdk.tags.upsert(item);
-                    assert.equal(proof, 'proof.tags.upsert');
+                    const proof = await sdk.posts.upsert(item);
+                    assert.equal(proof, 'proof.posts.upsert');
                   }
                   { // non secured
                     sdk.config.auth = undefined;
                     await assert_async_throws(
-                      () => sdk.tags.upsert(item),
+                      () => sdk.posts.upsert(item),
                       'upsert is not secured'
                     );
                   }
                 },
                 intercept_backend_api: async (params) => {
                   assert.equal(params, item);
-                  return 'proof.tags.upsert';
+                  return 'proof.posts.upsert';
                 },
               }
             }

@@ -1,5 +1,5 @@
 /**
- * @import { TagType, TagTypeUpsert
+ * @import { StorefrontType, StorefrontTypeUpsert
  * } from '../../api/types.api.js'
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
  * @import { ApiQuery } from '../../api/types.public.js'
@@ -14,7 +14,9 @@ import { setup_sdk } from './utils.setup-sdk.js';
 import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
 import { assert_async_throws } from '../api/utils.js';
-import { api_query_to_searchparams, parse_query } from '../../api/utils.query.js';
+import { 
+  api_query_to_searchparams, parse_query 
+} from '../../api/utils.query.js';
 import { ID } from '../../api/utils.func.js';
 
 /**
@@ -49,7 +51,7 @@ export const create = (app) => {
     }
   );
 
-  s('tags', async (ctx) => {
+  s('storefronts', async (ctx) => {
     const user = {
       email: admin_email,
       password: 'admin',
@@ -65,19 +67,19 @@ export const create = (app) => {
       })
     );
 
-    const id = ID('tag')
+    const id = ID('sf')
 
-    /** @type {TagTypeUpsert} */
+    /** @type {StorefrontTypeUpsert} */
     const item = {
-      values: ['rock', 'pop'],
-      handle: 'genre'
+      active: true,
+      title: 'test',
     }
     
     // console.log({aaaa})
 
     /** @type {PROOF_MOCKUP_API_SETUP} */
     const setup = {
-      tags: {
+      storefronts: {
 
         get: {
           __tests: [
@@ -85,18 +87,38 @@ export const create = (app) => {
               test: async () => {
                 { // secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.tags.get(id);
-                  assert.equal(proof, 'proof.tags.get');
+                  const proof = await sdk.storefronts.get(id);
+                  assert.equal(proof, 'proof.storefronts.get');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, id);
-                return 'proof.tags.get';
+                return 'proof.storefronts.get';
               },
             }
           ]
-        },        
-                 
+        },     
+        
+        
+        get_default_auto_generated_storefront: {
+          __tests: [
+            { 
+              test: async () => {
+                { // secured
+                  sdk.config.auth = undefined;
+                  const proof = await sdk.storefronts.get_default_auto_generated_storefront();
+                  assert.equal(
+                    proof, 
+                    'proof.storefronts.get_default_auto_generated_storefront'
+                  );
+                }
+              },
+              intercept_backend_api: async (params) => {
+                return 'proof.storefronts.get_default_auto_generated_storefront';
+              },
+            }
+          ]
+        },                      
 
         remove: {
           __tests: [
@@ -104,20 +126,20 @@ export const create = (app) => {
               test: async () => {
                 { // secured
                   await sdk.auth.signin(user.email, user.password);
-                  const proof = await sdk.tags.remove(id);
-                  assert.equal(proof, 'proof.tags.remove');
+                  const proof = await sdk.storefronts.remove(id);
+                  assert.equal(proof, 'proof.storefronts.remove');
                 }
                 { // non secured
                   sdk.config.auth = undefined;
                   await assert_async_throws(
-                    () => sdk.tags.remove(id),
+                    () => sdk.storefronts.remove(id),
                     'remove is not secured'
                   );
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, id);
-                return 'proof.tags.remove';
+                return 'proof.storefronts.remove';
               },
             }
           ]
@@ -130,15 +152,15 @@ export const create = (app) => {
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.tags.list(
-                    /** @type {ApiQuery<TagType>} */ (legit_query)
+                  const proof = await sdk.storefronts.list(
+                    /** @type {ApiQuery<StorefrontType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.tags.list');
+                  assert.equal(proof, 'proof.storefronts.list');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, legit_query);
-                return 'proof.tags.list';
+                return 'proof.storefronts.list';
               },
             }
           ]
@@ -150,15 +172,15 @@ export const create = (app) => {
               test: async () => {
                 { // non secured
                   sdk.config.auth = undefined;
-                  const proof = await sdk.tags.count_query(
-                    /** @type {ApiQuery<TagType>} */ (legit_query)
+                  const proof = await sdk.storefronts.count_query(
+                    /** @type {ApiQuery<StorefrontType>} */ (legit_query)
                   );
-                  assert.equal(proof, 'proof.tags.count');
+                  assert.equal(proof, 'proof.storefronts.count');
                 }
               },
               intercept_backend_api: async (params) => {
                 assert.equal(params, legit_query);
-                return 'proof.tags.count';
+                return 'proof.storefronts.count';
               },
             }
           ]
@@ -171,26 +193,53 @@ export const create = (app) => {
                 test: async () => {
                   { // secured
                     await sdk.auth.signin(user.email, user.password);
-                    const proof = await sdk.tags.upsert(item);
-                    assert.equal(proof, 'proof.tags.upsert');
+                    const proof = await sdk.storefronts.upsert(item);
+                    assert.equal(proof, 'proof.storefronts.upsert');
                   }
                   { // non secured
                     sdk.config.auth = undefined;
                     await assert_async_throws(
-                      () => sdk.tags.upsert(item),
+                      () => sdk.storefronts.upsert(item),
                       'upsert is not secured'
                     );
                   }
                 },
                 intercept_backend_api: async (params) => {
                   assert.equal(params, item);
-                  return 'proof.tags.upsert';
+                  return 'proof.storefronts.upsert';
                 },
               }
             }
 
           ]
-        },             
+        },    
+        
+        export_storefront: {
+          __tests: [
+            () => {
+              return { // asert secured endpoint
+                test: async () => {
+                  { // secured
+                    await sdk.auth.signin(user.email, user.password);
+                    const proof = await sdk.storefronts.publish(id);
+                    assert.equal(proof, 'proof.storefronts.export_storefront');
+                  }
+                  { // non secured
+                    sdk.config.auth = undefined;
+                    await assert_async_throws(
+                      () => sdk.storefronts.publish(id),
+                      'upsert is not secured'
+                    );
+                  }
+                },
+                intercept_backend_api: async (_) => {
+                  return 'proof.storefronts.export_storefront';
+                },
+              }
+            }
+
+          ]
+        },            
 
       },
 

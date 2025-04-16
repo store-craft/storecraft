@@ -49,35 +49,19 @@ export const create = (app) => {
     }
   );
 
-  s('tags', async (ctx) => {
+  s('reference', async (ctx) => {
     const user = {
       email: admin_email,
       password: 'admin',
       firstname: 'John',
       lastname: 'Doe',
     }
-
-    const legit_query = parse_query(
-      api_query_to_searchparams({
-        limit: 10,
-        order: 'desc',
-        vql: 'active:true'
-      })
-    );
-
-    const id = ID('tag')
-
-    /** @type {TagTypeUpsert} */
-    const item = {
-      values: ['rock', 'pop'],
-      handle: 'genre'
-    }
     
     // console.log({aaaa})
 
     /** @type {PROOF_MOCKUP_API_SETUP} */
     const setup = {
-      tags: {
+      payments: {
 
         get: {
           __tests: [

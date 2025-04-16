@@ -40,4 +40,28 @@ export default class Storefronts extends collection_base {
     return result
   }
 
+  /**
+   * @description You can fetch the default auto-generated storefront. 
+   * This will fetch all active
+   * - collections
+   * - discounts 
+   * - shipping methods 
+   * - posts (latest 5) 
+   * - products(latest 10) 
+   * that are linked to the storefront. Also, all the products 
+   * tags aggregated so you can build a filter system in the frontend
+   * @returns {Promise<StorefrontType>}
+   */
+  get_default_auto_generated_storefront = async () => {
+    const result = await fetchApiWithAuth(
+      this.sdk,
+      `storefronts/auto-generated`,
+      {
+        method: 'get'
+      }
+    );
+
+    return result
+  }
+
 }

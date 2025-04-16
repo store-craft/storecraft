@@ -20,13 +20,13 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_admin(app);
 
-  // save tag
   polka.post(
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await app.api.posts.upsert(req.parsedBody);
-
+      const final = await app.api.posts.upsert(
+        req.parsedBody
+      );
       res.sendJson(final);
     }
   );
@@ -38,8 +38,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.posts.count(q);
-
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -49,9 +48,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const item = await app.api.posts.get(handle_or_id);
-
       assert(item, 'not-found', 404);
-
       res.sendJson(item);
     }
   );
@@ -62,9 +59,9 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.posts.remove(handle_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
+      const removed = handle_or_id && 
+        await app.api.posts.remove(handle_or_id);
+      res.sendJson(removed);
     }
   );
 
@@ -76,7 +73,6 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const items = await app.api.posts.list(q);
-
       res.sendJson(items);
     }
   );

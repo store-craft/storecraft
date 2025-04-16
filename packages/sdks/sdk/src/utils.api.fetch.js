@@ -98,9 +98,17 @@ export const fetchApiWithAuth = async (
 
   const isok = response.ok;
   let payload = undefined;
+  const ct = response?.headers?.get('content-type');
 
   try {
-    payload = await response.json();
+    if(ct?.includes('application/json'))
+      payload = await response.json();
+    else if(ct?.includes('text/plain'))
+      payload = await response.text();
+    else if(ct?.includes('text/html'))
+      payload = await response.text();
+    else
+      payload = await response.blob();
   } catch(e) {
     console.log('fetchApiWithAuth.json()', e)
   }

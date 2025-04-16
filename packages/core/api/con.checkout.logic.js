@@ -151,7 +151,8 @@ async (order) => {
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
  */
 export const create_checkout = app =>
 /**
@@ -165,7 +166,7 @@ export const create_checkout = app =>
  * 5. `upsert` the draft `order` into the database.
  * 
  * @param {CheckoutCreateType} order_checkout
- * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
+ * @param {keyof T["gateways"]} gateway_handle chosen payment gateway
  * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
@@ -332,7 +333,8 @@ async (checkoutId, client_payload) => {
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
  */
 export const inter = app => {
 

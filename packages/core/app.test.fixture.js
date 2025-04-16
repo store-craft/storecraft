@@ -5,6 +5,9 @@ import { SQLite } from '@storecraft/database-sqlite';
 import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js';
 import { admin_email } from './test-runner/api/auth.js';
 import { PostmanExtension } from './extensions/postman/index.js';
+import { DummyPayments } from './payments/dummy/index.js';
+import { DummyExtension } from './extensions/dummy/index.js';
+import { UniformTaxes } from './tax/public.js';
 
 /**
  * Create an `App` instance for testing.
@@ -30,8 +33,16 @@ export const create_app = async (print_banner=true) => {
   .withExtensions(
     {
       'postman': new PostmanExtension(),
+      dummy: new DummyExtension()
     }
-  );
+  )
+  .withPaymentGateways(
+    {
+      dummy: new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+      'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+    }
+  )
+  .withTaxes(new UniformTaxes(10))
  
   await app.init(print_banner);
   await migrateToLatest(app.db, false);

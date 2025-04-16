@@ -1,5 +1,5 @@
+import { type DummyPaymentData } from './types.private.js';
 export { DummyPayments } from './index.js';
-export type { DummyPaymentData } from './index.js';
 
 /**
  * @description config
@@ -15,4 +15,6 @@ export type Config = {
    * @default 'AUTHORIZE'
    */
   intent_on_checkout?: 'AUTHORIZE' | 'CAPTURE';
+
+  seed?: Record<string, DummyPaymentData>
 }

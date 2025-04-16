@@ -21,7 +21,7 @@ export const create_routes = (app) => {
       const gateway_handle = req.query?.get('gateway');
 
       assert(
-        app.gateway(gateway_handle), 
+        app.gateways?.[gateway_handle], 
         `gateway ${gateway_handle} not found`, 400
       );
 

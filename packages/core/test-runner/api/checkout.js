@@ -40,17 +40,21 @@ const products = [
 
 
 /**
- * 
  * @param {App} app 
  */
-export const create = app => {
+export const create = (app) => {
 
-  const app2 = app.withPaymentGateways(
-    {
-      'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
-    }
-  ).withTaxes(new UniformTaxes(10));
+  const create_aug_app = () => {
+    return app.withPaymentGateways(
+      {
+        ...(app.gateways ?? {}),
+        'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+      }
+    ).withTaxes(new UniformTaxes(10));
+  }
 
+  /** @type {ReturnType<typeof create_aug_app>} */
+  let app2;
 
   const s = suite(
     file_name(import.meta.url), 
@@ -60,7 +64,8 @@ export const create = app => {
   s.before(
     async () => { 
       assert.ok(app.ready);
-
+      app2 = create_aug_app();
+      
       await app2.api.shipping_methods.remove(shipping.handle);
       await app2.api.shipping_methods.upsert(shipping);
 
@@ -410,6 +415,7 @@ export const create = app => {
             contact: {
               email: 'a1@a.com'
             }
+          // @ts-ignore
           }, 'i do not exist'
         );
       }

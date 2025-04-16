@@ -28,7 +28,7 @@ import { App } from '../index.js';
 /**
  * @template {App} T
  * @param {T} app 
-*/  
+ */  
 export const create_api = app => {
   
   return {

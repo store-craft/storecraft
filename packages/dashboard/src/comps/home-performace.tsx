@@ -257,14 +257,10 @@ const Performance = (
         setLoading(true);
 
       try {
-
-        let working_data = data;
-
         const KEY = `statistics_orders_latest_span_${span}`;
-
-        working_data = await cache_get(KEY) as OrdersStatisticsType;
+        const working_data = await cache_get(KEY) as OrdersStatisticsType;
         
-        if(working_data?.from_day!==data?.from_day) {
+        if(working_data) {
           setData(working_data);
           setLoading(false);
         }
@@ -274,27 +270,14 @@ const Performance = (
           Date.now() - span * DAY, Date.now()
         );
 
-        // console.log({new_data});
-
-        const hasNotChanged = (
-          new_data?.from_day===working_data?.from_day &&
-          new_data?.to_day===working_data?.to_day
-        );
-
-        // console.log('hasChanged', !hasNotChanged);
-
-        if(hasNotChanged)
-          return;
-
         cache_put(KEY, new_data);
-
         setData(new_data);
       } catch (e) {
         setError(e)
       } finally {
         setLoading(false);
       }
-    }, [data]
+    }, []
   );
 
   const onSpanChanged: TimeFrameParams["onChange"] = useCallback(

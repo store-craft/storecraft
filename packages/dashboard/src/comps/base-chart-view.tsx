@@ -113,8 +113,6 @@ const BaseChartView = (
       for (const s of series) {
         const { data, options, definition, priceScaleOptions } = s;
 
-        // console.log({data})
-        
         const api_series = chart.addSeries(
           definition, 
           options

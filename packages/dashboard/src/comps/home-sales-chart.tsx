@@ -86,6 +86,7 @@ const SalesChart = (
         }
       );
 
+      console.log({arr})
       // arr[30] = {
       //   ...arr[30],
       //   metrics: {

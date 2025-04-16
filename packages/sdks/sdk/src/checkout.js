@@ -1,5 +1,5 @@
 /**
- * @import { CheckoutCreateType, OrderData, PricingData } from '@storecraft/core/api'
+ * @import { CheckoutCreateType, CheckoutCreateTypeAfterValidation, OrderData, PricingData } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
@@ -28,7 +28,6 @@ export default class Checkout {
    */
   create = async (input, gateway_handle) => {
 
-    console.log('input', input)
     const result = await fetchApiWithAuth(
       this.sdk,
       `checkout/create?gateway=${gateway_handle}`,
@@ -67,9 +66,7 @@ export default class Checkout {
   /**
    * @description calculate the pricing of an `order`. Using auto-discounts, 
    * coupons, shipping and line-items.
-   * 
-   * @param {Partial<OrderData>} order 
-   * 
+   * @param {CheckoutCreateTypeAfterValidation} order 
    * @returns {Promise<Partial<PricingData>>}
    */
   pricing = async (order) => {

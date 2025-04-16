@@ -1,10 +1,9 @@
 /**
  * @import { 
- *  OrderData, DiscountType, CheckoutCreateType, 
+ *  OrderData, CheckoutCreateType, 
  *  OrderDataUpsert, ValidationEntry, 
  *  CheckoutCreateTypeAfterValidation
  * } from './types.api.js';
- * @import { type payment_gateway } from '../payments/types.payments.d.ts';
  */
 import { 
   App, CheckoutStatusEnum, DiscountApplicationEnum, 
@@ -110,7 +109,7 @@ export const eval_pricing = (app) =>
  * 3. calculate `pricing`
  * 4. return the `order` with `pricing` information
  * 
- * @template {CheckoutCreateType} T
+ * @template {CheckoutCreateTypeAfterValidation} T
  * @param {T} order 
  * @returns {Promise<T & { pricing: OrderData["pricing"] } >}
  */
@@ -171,15 +170,16 @@ export const create_checkout = app =>
  */
 async (order_checkout, gateway_handle) => {
 
+  const handle = /** @type {string} */ (gateway_handle);
   assert_zod(
     checkoutCreateTypeSchema.transform(x => x ?? undefined), 
     order_checkout
   );
 
   // get gateway and verify
-  const gateway = app.gateways?.[gateway_handle];
+  const gateway = app.gateways?.[handle];
 
-  assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
+  assert(gateway, `gateway ${handle} not found`, 400);
 
   // fetch correct data from backend. we dont trust client
   const order_validated = await validate_checkout(app)(order_checkout);
@@ -218,7 +218,7 @@ async (order_checkout, gateway_handle) => {
   // save the creation payload
   order.payment_gateway = {
     on_checkout_create,
-    gateway_handle: String(gateway_handle),
+    gateway_handle: handle,
     latest_status: await gateway.status(on_checkout_create)
   };
 

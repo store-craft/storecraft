@@ -56,7 +56,7 @@ export const aggregate_test_api_setup = (setup) => {
     }
   );
 
-  console.log({test_api});
+  // console.log({test_api});
 
   return test_api;
 }

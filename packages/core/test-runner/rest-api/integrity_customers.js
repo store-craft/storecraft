@@ -1,5 +1,6 @@
 /**
- * @import { CollectionType, CollectionTypeUpsert, CustomerType, CustomerTypeUpsert, OrderData, ProductType, TagType, TagTypeUpsert, TemplateType, TemplateTypeUpsert
+ * @import { 
+ *  CustomerType, CustomerTypeUpsert, OrderData,
  * } from '../../api/types.api.js'
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
  * @import { ApiQuery } from '../../api/types.public.js'
@@ -22,7 +23,6 @@ import { ID } from '../../api/utils.func.js';
  */
 export const create = (app) => {
   const sdk = setup_sdk(app);
-  let api;
 
   const s = suite(
     file_name(import.meta.url), 
@@ -34,18 +34,12 @@ export const create = (app) => {
   s.before(
     async () => { 
       await app.init();
-      api = app.api;
-      // @ts-ignore
-      // app.api = mock_proof_api;
-    
       assert.ok(app.ready);
     }
   );
 
   s.after(
     async () => { 
-      // @ts-ignore
-      app.api = api;
     }
   );
 
@@ -255,7 +249,10 @@ export const create = (app) => {
                     const proof = await sdk.customers.upsert(
                       test_customer
                     );
-                    assert.equal(proof, 'proof.customers.upsert.customer-variant');
+                    assert.equal(
+                      proof, 
+                      'proof.customers.upsert.customer-variant'
+                    );
                   }
                 },
                 intercept_backend_api: async (params) => {
@@ -313,7 +310,10 @@ export const create = (app) => {
                       test_user.email,
                       /** @type {ApiQuery<OrderData>} */ (legit_query)
                     );
-                    assert.equal(proof, 'proof.customers.list_customer_orders.customer-variant');
+                    assert.equal(
+                      proof, 
+                      'proof.customers.list_customer_orders.customer-variant'
+                    );
                   }
                 },
                 intercept_backend_api: async (id_or_handled, params) => {
@@ -373,7 +373,10 @@ export const create = (app) => {
                       test_user.email,
                       /** @type {ApiQuery<OrderData>} */ (legit_query)
                     );
-                    assert.equal(proof, 'proof.customers.count_customer_orders_query.customer-variant');
+                    assert.equal(
+                      proof, 
+                      'proof.customers.count_customer_orders_query.customer-variant'
+                    );
                   }
                 },
                 intercept_backend_api: async (id_or_handled, params) => {

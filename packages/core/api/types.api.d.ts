@@ -805,7 +805,6 @@ export interface ProductType extends BaseProductType {
  * @description both `id` and `handle` of entity required
  */
 export interface HandleAndID  {
-
   /** 
    * @description The `id` of the entity
    */

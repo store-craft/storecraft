@@ -13,6 +13,7 @@ import {
   apiAuthSignupTypeSchema,
   apiKeyResultSchema,
   authUserTypeSchema,
+  checkoutCreateTypeAfterValidationSchema,
   checkoutCreateTypeSchema,
   checkoutStatusEnumSchema,
   collectionTypeSchema,
@@ -675,6 +676,7 @@ const register_base_list = (
 const register_checkout = (registry) => {
   registry.register('pricingData', pricingDataSchema);
   const _checkoutCreateTypeSchema = registry.register('checkoutCreateType', checkoutCreateTypeSchema);
+  const _checkoutCreateTypeAfterValidationSchema = registry.register('checkoutCreateTypeAfterValidationSchema', checkoutCreateTypeAfterValidationSchema);
 
   const example_checkout = {
     "line_items": [
@@ -798,15 +800,18 @@ const register_checkout = (registry) => {
   registry.registerPath({
     method: 'post',
     path: `/checkout/pricing`,
-    description: 'Get a pricing for an order. order should at least have the `line items`, `shipping` and `coupons`',
     summary: `Get a pricing for an order`,
+    description: 'Get a pricing for an order. order should at least have the `line items`, `shipping` and `coupons`.\
+    This is computed without validation, that products and shipping method exist, discounts\
+    on the other, are always fetched on the backend. ON checkout however, line items and shipping\
+    methods are validated.',
     tags: ['checkout'],
     request: {
       body: {
         description: 'draft `order` data ',
         content: {
           "application/json": {
-            schema: orderDataSchema,
+            schema: _checkoutCreateTypeAfterValidationSchema,
             example: {
               line_items: [
                 {
@@ -815,7 +820,10 @@ const register_checkout = (registry) => {
                 }
               ],
               shipping_method: {
-                id: 'ship_....'
+                id: 'ship_....',
+                price: 50,
+                handle: 'ship-api-storefronts-all-connections-test-js-2',
+                title: 'ship 2'
               },
               coupons: [
                 'special-100'

@@ -9,7 +9,6 @@ import {
 
 
 /**
- * 
  * @param {StorecraftSDKConfig} config 
  * @param {string} path 
  * @param {URLSearchParams} [query] url search params
@@ -34,12 +33,10 @@ export const url = (config, path, query) => {
  * - Prepends `backend` endpoint. 
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
- * 
  * @param {StorecraftSDK} sdk 
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * @param {URLSearchParams} [query] url search params
- * 
  * @returns {Promise<Response>}
  */ 
 export const fetchOnlyApiResponseWithAuth = async (
@@ -76,16 +73,12 @@ export const fetchOnlyApiResponseWithAuth = async (
  * if the request is `bad`
  * - returns the object according to the `content-type` header
  *  - json, text, html, blob
- * 
  * @template {any} [R=any]
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * @param {URLSearchParams} [query] url search params
- * 
  * @throws {error}
- * 
  * @returns {Promise<R>}
  */ 
 export const fetchApiWithAuth = async (
@@ -124,16 +117,14 @@ export const fetchApiWithAuth = async (
 
 /**
  * @template {any} G Get type
- * 
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} handle_or_id `handle` or `id`
  * @param {string} resource base path of resource
- * 
- * 
  * @returns {Promise<G>}
  */
-export async function get_from_collection_resource(sdk, resource, handle_or_id) {
+export async function get_from_collection_resource(
+  sdk, resource, handle_or_id
+) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}/${handle_or_id}`,
@@ -145,18 +136,15 @@ export async function get_from_collection_resource(sdk, resource, handle_or_id) 
 
 
 /**
- * 
  * @template {any} U the upsert type
- * 
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {U} item Item to upsert
- * 
- * 
  * @returns {Promise<string>} id
  */
-export async function upsert_to_collection_resource(sdk, resource, item) {
+export async function upsert_to_collection_resource(
+  sdk, resource, item
+) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}`,
@@ -190,15 +178,14 @@ export async function count_query_of_resource(sdk, resource, query) {
 }
 
 /**
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {string} handle_or_id `handle` or `id`
- * 
- * 
  * @returns {Promise<boolean>}
  */
-export async function remove_from_collection_resource(sdk, resource, handle_or_id) {
+export async function remove_from_collection_resource(
+  sdk, resource, handle_or_id
+) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}/${handle_or_id}`,
@@ -236,7 +223,6 @@ export async function list_from_collection_resource(
 
 /**
  * @description A simple resource base `class` with `CRUD` helpers
- * 
  * @template {any} U upsert type
  * @template {any} G get type
  */
@@ -249,7 +235,6 @@ export class collection_base {
   #base_name = undefined;
 
   /**
-   * 
    * @param {StorecraftSDK} sdk storecraft sdk
    * @param {string} base_name base path of resource type
    */
@@ -260,10 +245,7 @@ export class collection_base {
 
   
   /**
-   * 
    * @param {string} handle_or_id `handle` or `id`
-   * 
-   * 
    * @returns {Promise<G>}
    */
   async get(handle_or_id) {
@@ -273,10 +255,7 @@ export class collection_base {
   }
 
   /**
-   * 
    * @param {U} item Item to upsert
-   * 
-   * 
    * @returns {Promise<string>} id
    */
   async upsert(item) {
@@ -286,10 +265,7 @@ export class collection_base {
   }
 
   /**
-   * 
    * @param {string} handle_or_id `handle` or `id`
-   * 
-   * 
    * @returns {Promise<boolean>}
    */
   async remove(handle_or_id) {

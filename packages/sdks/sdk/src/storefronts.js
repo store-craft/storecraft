@@ -13,7 +13,6 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 export default class Storefronts extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -24,11 +23,9 @@ export default class Storefronts extends collection_base {
    * @description Export a storefront into the `storage`. This is
    * beneficial for `collections`, that hardly change and therefore can be 
    * efficiently stored in a cost-effective `storage` and **CDN** network.
-   * 
    * @param {HandleOrId} handle_or_id
    */
   publish = async (handle_or_id) => {
-
     const result = await fetchApiWithAuth(
       this.sdk,
       `storefronts/${handle_or_id}/export`,
@@ -36,7 +33,6 @@ export default class Storefronts extends collection_base {
         method: 'post'
       }
     );
-
     return result
   }
 

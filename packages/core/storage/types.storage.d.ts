@@ -77,15 +77,13 @@ export declare interface storage_driver {
 
   /**
    * Put a `blob` in the storage
-   * 
-   * 
    * @param key The put key
    * @param blob asset as `blob`
    * @param meta (Optional) meta data
    */
   putBlob: (key: string, blob: Blob, meta?: MetaData) => Promise<boolean>; 
   putArraybuffer: (key: string, buffer: ArrayBuffer, meta?: MetaData) => Promise<boolean>; 
-  putStream: (key: string, stream: ReadableStream<any>, meta?: MetaData, bytesLength: number) => Promise<boolean>; 
+  putStream: (key: string, stream: ReadableStream<any>, meta?: MetaData, bytesLength?: number) => Promise<boolean>; 
   putSigned?: (key: string) => Promise<StorageSignedOperation | undefined>; 
 
   /**

@@ -13,7 +13,6 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 export default class Orders extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {

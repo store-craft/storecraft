@@ -1,0 +1,9 @@
+.DS_STORE
+node_modules
+*.env
+.vscode
+deno.lock
+my-storecraft-app*
+my-*
+store-craft.code-workspace
+storage-test

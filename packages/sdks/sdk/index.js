@@ -38,9 +38,9 @@ export class StorecraftSDK {
 
   /**
    * @param {StorecraftSDKConfig} [config] the `sdk` configuration
-   * @param {Fetcher} [fetcher] 
-   * Alternative `fetch` implementation. This is useful for testing purposes, 
-   * or if you want to use a different `fetch` implementation
+   * @param {Fetcher} [fetcher] Alternative `fetch` implementation. 
+   * This is useful for testing purposes, or if you want to use a 
+   * different `fetch` implementation
    */  
   constructor(config, fetcher) {
     this.#config = config;
@@ -80,15 +80,11 @@ export class StorecraftSDK {
    * - Refreshed `auth` if needed. 
    * - Throws a `json` representation of the `error`, 
    * if the request is `bad`
-   * 
    * @template {any} [R=any]
-   * 
    * @param {string} path relative path in api
    * @param {RequestInit} [init] request `init` type
    * @param {URLSearchParams} [query] url search params
-   * 
    * @throws {error}
-   * 
    * @returns {Promise<R>}
    */   
   fetchApiWithAuth = (path, init, query) => {
@@ -102,11 +98,9 @@ export class StorecraftSDK {
    * - Prepends `backend` endpoint. 
    * - Fetches with `authentication` middleware. 
    * - Refreshed `auth` if needed. 
-   * 
    * @param {string} path relative path in api
    * @param {RequestInit} [init] request `init` type
    * @param {URLSearchParams} [query] url search params
-   * 
    * @returns {Promise<Response>}
    */   
   fetchOnlyApiResponseWithAuth = (path, init, query) => {
@@ -125,7 +119,6 @@ export class StorecraftSDK {
   get config() {
     return this.#config
   }
-
 }
 
 /**
@@ -140,7 +133,6 @@ export const validateConfig = (config) => {
  */  
 export const create = (config) => { 
   const sdk = new StorecraftSDK(config);
-  
   return sdk;
 }
 

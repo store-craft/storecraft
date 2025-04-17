@@ -17,7 +17,6 @@ import {
 export default class Collections extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -28,12 +27,10 @@ export default class Collections extends collection_base {
    * @description Export a collection of `products` into the `storage`. This is
    * beneficial for `collections`, that hardly change and therefore can be 
    * efficiently stored in a cost-effective `storage` and **CDN** network.
-   * 
    * @param {string} collection_handle 
    * @param {number} limit 
    */
   publish = async (collection_handle, limit=1000) => {
-
     const result = await fetchApiWithAuth(
       this.sdk,
       `collections/${collection_handle}/export`,
@@ -41,7 +38,6 @@ export default class Collections extends collection_base {
         method: 'post'
       }
     );
-
     return result
   }
 
@@ -49,7 +45,6 @@ export default class Collections extends collection_base {
    * @description List all the tags of products in a collection, This is helpful 
    * for building a filter system in the frontend if you know in advance all 
    * the tags of the products in a collection
-   * 
    * @param {string} id_or_handle Collection `id` or `handle`
    * @return {Promise<string[]>} List of tags
    */
@@ -67,7 +62,6 @@ export default class Collections extends collection_base {
 
   /**
    * @description Query the `products` in a collection
-   * 
    * @param {string} id_or_handle Collection `id` or `handle`
    * @param {ApiQuery<(ProductType | VariantType)>} query query
    * @return {Promise<(ProductType | VariantType)[]>} List of products in collection
@@ -83,7 +77,6 @@ export default class Collections extends collection_base {
 
   /**
    * @description Count the number of `products` in a collection by a query
-   * 
    * @param {string} id_or_handle Collection `id` or `handle`
    * @param {ApiQuery<(ProductType | VariantType)>} query query
    * @return {Promise<number>} count

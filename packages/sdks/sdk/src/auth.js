@@ -22,14 +22,12 @@ import { assert } from './utils.functional.js';
  * 
  * @typedef {(payload: SubscriberCallbackPayload) => void
  * } SubscriberCallback Subscribe to `auth` updates for `JWT` auth
- * 
  */
   
   
 /**
  * @description `Storecraft` authentication module:
  * - Supports `subscribtion` to `auth` events
- * 
  */
 export default class Auth {
 
@@ -48,13 +46,11 @@ export default class Auth {
   }
 
   /**
-   * 
    * @description Get the current `auth` config, which is one of:
-   * 
    * 1. `JWT` with `access_token`, `refresh_token`, `claims`
    * 2. `Api Key` with a single value, which can be used as is in:
-   *    - `Authorization: Basic <api-key>`, or
-   *    - `X-API-KEY: <api-key>`
+   *  - `Authorization: Basic <api-key>`, or
+   *  - `X-API-KEY: <api-key>`
    * 
    * Notes:
    * 
@@ -64,7 +60,6 @@ export default class Auth {
    * **Api Key** represents a user which always makes the `backend` to verify
    * the authentication and authorization and therefore may be slower, because
    * the `backend` will verify against the database.
-   * 
    */
   get currentAuth() {
     return this.#sdk?.config?.auth;
@@ -82,20 +77,14 @@ export default class Auth {
   }
 
   /**
-   * 
    * @description Get a working token, by the following strategy:
-   * 
    * - If you are in `JWT` strategy:
-   *    - If the current `access_token` will expire soon or is already expired
-   *    - then, use `refresh_token` to re-authenticate
-   * 
+   *  - If the current `access_token` will expire soon or is already expired
+   *  - then, use `refresh_token` to re-authenticate
    * - If you are in `Api Key` strategy, simply returns the `apikey`
-   * 
    * @param {boolean} [force_reauth=false] 
-   * 
    */
   async working_auth_token(force_reauth=false) {
-    
     // console.log({currentAuthStrategy: this.currentAuthStrategy})
 
     switch(this.currentAuthStrategy) {
@@ -117,13 +106,9 @@ export default class Auth {
 
 
   /**
-   * 
    * @description Perform re-authentication for `JWT` auth, which means:
-   * 
    * - use the `refresh_token` to gain a new `access_token`
-   * 
    * @param {boolean} [force=false] 
-   * 
    */
   async reAuthenticateIfNeeded(force=false) {
     if(!this.currentAuth)
@@ -218,7 +203,6 @@ export default class Auth {
   }
 
   /**
-   * 
    * @param {ApiAuthResult} user 
    */
   #update_and_notify_subscribers = (user) => {
@@ -283,7 +267,6 @@ export default class Auth {
 
 
   /**
-   * 
    * @param {string} email 
    * @param {string} password 
    * @param {string} [firstname] 
@@ -321,10 +304,8 @@ export default class Auth {
 
 
   /**
-   * 
    * @param {ApiAuthChangePasswordType} params 
    */
-  
   changePassword = async (params) => {
 
     const res = await this.#sdk.fetcher(
@@ -366,17 +347,13 @@ export default class Auth {
     return payload;
   }
 
-
-
   signout = async () => {
     console.log('signout');
 
     this.#update_and_notify_subscribers(
       undefined
     );
-
   }
-
 
   create_api_key = async () => {
     /** @type {ApiKeyResult} */
@@ -387,14 +364,10 @@ export default class Auth {
         method: 'post',
       }
     );
-
     return item;
   }
 
-
   /**
-   * 
-   * 
    * @param {string} email_or_id
    */
   get_auth_user = async (email_or_id) => {
@@ -406,7 +379,6 @@ export default class Auth {
         method: 'get'
       }
     );
-
     return item;
   }
 
@@ -452,9 +424,7 @@ export default class Auth {
     )
   }
 
-
   list_api_keys_auth_users = async () => {
-
     /** @type {AuthUserType[]} */
     const items = await fetchApiWithAuth(
       this.#sdk,
@@ -463,7 +433,6 @@ export default class Auth {
         method: 'get'
       }
     );
-
     return items;
   }
 
@@ -480,7 +449,6 @@ export default class Auth {
   }
 
   /**
-   * 
    * @param {OAuthProviderCreateURIParams} params 
    * @returns {Promise<OAuthProviderCreateURIResponse>}
    */

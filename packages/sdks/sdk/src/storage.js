@@ -1,19 +1,18 @@
 /**
- * @import { StorageFeatures, StorageSignedOperation } from '@storecraft/core/storage'
+ * @import { 
+ *  StorageFeatures, StorageSignedOperation 
+ * } from '@storecraft/core/storage'
  */
 
 import { StorecraftSDK } from '../index.js'
 import { fetchOnlyApiResponseWithAuth } from './utils.api.fetch.js'
 
 /**
- * 
  * @description `Storecraft` storage service.
- * 
  * Supports:
  * - direct `downloads` / `uploads`
  * - presigned-urls for `download` / `upload` (If supported)
  * - `delete` files
- * 
  */
 export default class Storage {
 
@@ -34,11 +33,8 @@ export default class Storage {
   }
 
   /**
-   * 
    * @description Retrieve the `features` of `storage`, which informs:
    * - Does `storage` supports `pre-signed` urls for `download` / `upload`
-   * 
-   * 
    * @returns {Promise<StorageFeatures>}
    */
   features = async () => {
@@ -75,12 +71,9 @@ export default class Storage {
   
   /**
    * @description Get a blob from `storage` driver with `presigned` urls
-   * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
-   * 
    * @return {Promise<Blob>}
-   * 
    * @throws {error}
    */
   getBlobSigned = async (key) => {
@@ -119,13 +112,11 @@ export default class Storage {
   }
 
   /**
-   * @description Get a blob from `storage` driver, straight download. (Not recommended)
-   * 
+   * @description Get a blob from `storage` driver, 
+   * straight download. (Not recommended)
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
-   * 
    * @return {Promise<Blob>}
-   * 
    * @throws {error}
    */
   getBlobUnsigned = async (key) => {
@@ -149,12 +140,9 @@ export default class Storage {
 
   /**
    * @description Get a blob from `storage` driver.
-   * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
-   * 
    * @return {Promise<Blob>}
-   * 
    * @throws {error}
    */
   getBlob = async (key) => {
@@ -169,32 +157,36 @@ export default class Storage {
 
   /** @param {string} path  */
   getText = (path) => 
-      this.getBlob(path).then(blob => blob.text());
+    this.getBlob(path).then(blob => blob.text());
 
   /** @param {string} path  */
   getJson = (path) => 
-      this.getBlob(path).then(blob => blob.text().then(JSON.parse));
+    this.getBlob(path).then(
+      blob => blob.text().then(JSON.parse)
+    );
 
   /** @param {string} path  */
   getImageObjectURL = (path) => 
-      this.getBlob(path).then(blob => URL.createObjectURL(blob));
+    this.getBlob(path).then(
+      blob => URL.createObjectURL(blob)
+    );
 
   /**
    * @description get file source by inspecting the url:
-   * 
    * - If it starts with `storage://`, then use `backend` 
    * storage service, to download and convert it to encoded 
    * `object-url` for `<img/>`
-   * 
    * - Else. it is assumed to be a public `url`, and will 
    * return the given url.
-   * 
    * @template {false | true} [IS_IMAGE=true]
    * @param {string} url 
    * @param {IS_IMAGE} [isImage=true]
    * @returns {Promise<IS_IMAGE extends true ? string : any>}
    */
-  getSource = async (url, isImage=(/** @type {IS_IMAGE} */ (true))) => {
+  getSource = async (
+    url, 
+    isImage=(/** @type {IS_IMAGE} */ (true))
+  ) => {
     try {
 
       const is_storage = url.startsWith('storage://');
@@ -222,12 +214,11 @@ export default class Storage {
 
 
   /**
-   * @description Put a blob into `storage` driver with `presigned` urls
-   * 
+   * @description Put a blob into `storage` driver 
+   * with `presigned` urls
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
    * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
-   * 
    */
   putBytesSigned = async (key, data) => {
 
@@ -264,12 +255,11 @@ export default class Storage {
   }
 
   /**
-   * @description Put a blob into `storage` driver with direct `upload` (Not Recommended)
-   * 
+   * @description Put a blob into `storage` driver with 
+   * direct `upload` (Not Recommended)
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
    * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
-   * 
    */
   putBytesUnsigned = async (key, data) => {
 
@@ -295,13 +285,10 @@ export default class Storage {
 
   /**
    * @description Put bytes into `storage` driver.
-   * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
    * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
-   * 
    * @return {Promise<boolean>}
-   * 
    * @throws {error}
    */
   putBytes = async (key, data) => {
@@ -316,7 +303,6 @@ export default class Storage {
 
   /**
    * @description Delete a `file` by key
-   * 
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
    */

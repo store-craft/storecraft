@@ -21,7 +21,6 @@ const HEADER_STORECRAFT_THREAD_ID = /** @satisfies {HEADER_STORECRAFT_THREAD_ID_
 export default class AI {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -162,7 +161,6 @@ export const SSEGenerator = async function *(stream) {
  */
 
 /**
- * 
  * @param {string[]} lines 
  * @returns {SSEFrame}
  */

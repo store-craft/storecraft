@@ -44,7 +44,7 @@ export const create = (app) => {
     }
   );
 
-  s('ai', async (ctx) => {
+  s('storage', async (ctx) => {
     const user = {
       email: admin_email,
       password: 'admin',
@@ -54,7 +54,7 @@ export const create = (app) => {
 
     /** @type {PROOF_MOCKUP_API_SETUP} */
     const setup = {
-      ai: {
+      storage: {
 
         speakWithAgentSync: {
           __tests: [

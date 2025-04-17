@@ -12,7 +12,6 @@ import { collection_base } from './utils.api.fetch.js';
 export default class Shipping extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {

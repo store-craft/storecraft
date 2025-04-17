@@ -27,7 +27,6 @@ export default class Customers extends collection_base {
   /**
    * @description Query customer orders, this is only available to admin and 
    * the customer (with auth token)
-   * 
    * @param {string} id_or_handle customer `id` or `handle` or `email`
    * @param {ApiQuery<OrderData>} query query
    * @return {Promise<OrderData[]>} List of orders of customer
@@ -44,7 +43,6 @@ export default class Customers extends collection_base {
   /**
    * @description Count the number of orders of a specific
    * customer with a query
-   * 
    * @param {string} id_or_handle customer `id` or `handle` or `email`
    * @param {ApiQuery<OrderData>} query query
    * @return {Promise<number>} count

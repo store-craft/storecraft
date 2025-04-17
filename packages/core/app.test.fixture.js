@@ -8,6 +8,7 @@ import { PostmanExtension } from './extensions/postman/index.js';
 import { DummyPayments } from './payments/dummy/index.js';
 import { DummyExtension } from './extensions/dummy/index.js';
 import { UniformTaxes } from './tax/public.js';
+import { NodeLocalStorage } from './storage/node/index.js';
 
 /**
  * Create an `App` instance for testing.
@@ -22,6 +23,9 @@ export const create_app = async (print_banner=true) => {
       auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
       auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
     }
+  )
+  .withStorage(
+    new NodeLocalStorage('storage-test')
   )
   .withPlatform(new NodePlatform())
   .withDatabase(

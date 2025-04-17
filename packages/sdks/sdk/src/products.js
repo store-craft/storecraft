@@ -14,7 +14,6 @@ import {
 export default class Products extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -26,7 +25,6 @@ export default class Products extends collection_base {
    * This is helpful for building a filter system in the frontend if 
    * you know in advance all the tags of the products in a collection, 
    * also see the collection confined version db_collections.list_collection_products_tags
-   * 
    * @return {Promise<string[]>} List of tags
    */
   list_used_tags = async () => {
@@ -62,7 +60,6 @@ export default class Products extends collection_base {
 
   /**
    * Add `products` to `collection`
-   * 
    * @param {ProductType[]} products 
    * @param {CollectionType} collection 
    */
@@ -77,7 +74,6 @@ export default class Products extends collection_base {
 
   /**
    * Remove `products` from `collection`
-   * 
    * @param {ProductType[]} products 
    * @param {CollectionType} collection 
    */

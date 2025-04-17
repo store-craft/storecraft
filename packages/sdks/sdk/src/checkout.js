@@ -1,5 +1,8 @@
 /**
- * @import { CheckoutCreateType, CheckoutCreateTypeAfterValidation, OrderData, PricingData } from '@storecraft/core/api'
+ * @import { 
+ *  CheckoutCreateType, CheckoutCreateTypeAfterValidation, 
+ *  OrderData, PricingData 
+ * } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
@@ -64,8 +67,8 @@ export default class Checkout {
   }
 
   /**
-   * @description calculate the pricing of an `order`. Using auto-discounts, 
-   * coupons, shipping and line-items.
+   * @description calculate the pricing of an `order`. 
+   * Using auto-discounts, coupons, shipping and line-items.
    * @param {CheckoutCreateTypeAfterValidation} order 
    * @returns {Promise<Partial<PricingData>>}
    */

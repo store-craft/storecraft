@@ -9,7 +9,6 @@ export const select_fields = (...fields) => {
 }
 
 /**
- * 
  * @param  {...any} fields 
  */
 export const filter_fields = (...fields) => {
@@ -20,7 +19,6 @@ export const filter_fields = (...fields) => {
 }
 
 /**
- * 
  * @param {object} o 
  */
 export const select_unused_fields = o => Object.keys(o).reduce((p, c) => { 
@@ -33,7 +31,6 @@ export const select_unused_fields = o => Object.keys(o).reduce((p, c) => {
 }, {});
 
 /**
- * 
  * @param {any[]} items 
  */
 export const filter_unused = items => 
@@ -55,7 +52,6 @@ export const delete_keys = (...keys) => {
 
 
 /**
- * 
  * @param {string} text 
  */
 export const text2tokens_unsafe = (text) => {
@@ -79,7 +75,6 @@ export const STOP_WORDS = [
 ]
 
 /**
- * 
  * @param {string} text 
  * @returns {string[] | undefined}
  */
@@ -101,7 +96,6 @@ export const text2tokens = (text) => {
 
 
 /**
- * 
  * @param {any[]} arrA 
  * @param {any[]} arrB 
  * @returns 

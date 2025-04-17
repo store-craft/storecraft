@@ -28,8 +28,10 @@ export default class Statistics  {
 
   /**
    * @description Load **Orders** `statistics`
-   * @param {string | number | Date} [from_day] `ISO` string | `UTC` | `timestamp` | `Date`
-   * @param {string | number | Date} [to_day] `ISO` string | `UTC` | `timestamp` | `Date`
+   * @param {string | number | Date} [from_day] 
+   * `ISO` string | `UTC` | `timestamp` | `Date`
+   * @param {string | number | Date} [to_day] 
+   * `ISO` string | `UTC` | `timestamp` | `Date`
    * @returns {Promise<OrdersStatisticsType>}
    */
   orders = async (from_day, to_day) => {

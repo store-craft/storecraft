@@ -1,5 +1,7 @@
 /**
- * @import { PaymentGatewayItemGet, PaymentGatewayStatus } from '@storecraft/core/api'
+ * @import { 
+ *  PaymentGatewayItemGet, PaymentGatewayStatus 
+ * } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
 import { 
@@ -16,7 +18,6 @@ export default class Payments {
   #sdk = undefined;
   
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {

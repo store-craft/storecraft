@@ -128,7 +128,7 @@ export const create_rest_api = (app, config) => {
     /**
      * The `rest-api` controller of `storecraft`. Works with standard Web `Request`
      * and `Response`
-     * @param {Request} request 
+     * @param {Partial<Request>} request 
      */
     handler: async (request) => {
       const start_millis = Date.now();
@@ -182,7 +182,7 @@ const method_to_color = {
 
 /**
  * log request
- * @param {Request} request 
+ * @param {Partial<Request>} request 
  * @param {number} start_millis 
  */
 const log_request = (request, start_millis) => {

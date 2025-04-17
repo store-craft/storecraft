@@ -2069,7 +2069,13 @@ const register_storage = registry => {
     },
     responses: {
       200: {
-        description: 'success'
+        description: 'success',
+        content: {
+          "application/json": {
+            schema: z.boolean().openapi({ description: 'success' }),
+            example: true
+          },
+        },
       },
       ...error() 
     },
@@ -2136,6 +2142,12 @@ const register_storage = registry => {
     responses: {
       200: {
         description: 'success',
+        content: {
+          "application/json": {
+            schema: z.boolean().openapi({ description: 'success' }),
+            example: true
+          },
+        },
       },
       ...error() 
     },

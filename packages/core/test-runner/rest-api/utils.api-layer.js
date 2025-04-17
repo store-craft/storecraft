@@ -52,7 +52,9 @@ export const aggregate_test_api_setup = (setup) => {
     setup,
     '',
     (path, spec) => {
-      test_api[path] = [...(test_api[path] ?? []), spec];
+      // spec can be undefined if user decided to not run the test
+      if(spec)
+        test_api[path] = [...(test_api[path] ?? []), spec];
     }
   );
 

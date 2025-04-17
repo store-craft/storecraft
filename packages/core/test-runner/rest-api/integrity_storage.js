@@ -1,9 +1,5 @@
 /**
- * @import { SimilaritySearchInput, TagType, TagTypeUpsert
- * } from '../../api/types.api.js'
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
- * @import { ApiQuery } from '../../api/types.public.js'
- * @import { AgentRunParameters } from '../../ai/agents/types.js';
  */
 
 import { suite } from 'uvu';
@@ -15,9 +11,7 @@ import { setup_sdk } from './utils.setup-sdk.js';
 import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
 import { assert_async_throws } from '../api/utils.js';
-import { 
-  api_query_to_searchparams, parse_query 
-} from '../../api/utils.query.js';
+import { readable_stream_to_string } from './utils.streams.js';
 
 
 /**
@@ -25,7 +19,6 @@ import {
  */
 export const create = (app) => {
   const sdk = setup_sdk(app);
-  let api;
 
   const s = suite(
     file_name(import.meta.url), 
@@ -56,104 +49,253 @@ export const create = (app) => {
     const setup = {
       storage: {
 
-        speakWithAgentSync: {
+        features: {
           __tests: [
             () => {
-              const agent_handle = 'test_agent';
-              /** @type {AgentRunParameters} */
-              const agent_params = {
-                maxLatestHistoryToUse: 5,
-                maxTokens: 100,
-                maxSteps: 5,
-                thread_id: 'test_thread_id',
-                prompt: [
-                  {
-                    type: 'text',
-                    content: 'hello world'
-                  }
-                ]
-              }
           
               return { 
                 test: async () => {
                   { // non-secured
                     sdk.config.auth = undefined;
-                    const proof = await sdk.ai.speak(agent_handle, agent_params);
-                    assert.equal(proof, 'proof.ai.speakWithAgentSync');
+                    const proof = await sdk.storage.features();
+                    assert.equal(proof, 'proof.storage.features');
                   }
                 },
-                intercept_backend_api: async ($agent_handle, $agent_params) => {
-                  assert.equal($agent_handle, agent_handle);
-                  assert.equal($agent_params, agent_params);
-                  return 'proof.ai.speakWithAgentSync';
+                intercept_backend_api: async () => {
+                  return 'proof.storage.features';
                 },
               }
             }
           ]
         },        
                 
-        
-        speakWithAgentStream: {
+        putStream: {
           __tests: [
             () => {
-              
-              const agent_handle = 'test_agent';
-              /** @type {AgentRunParameters} */
-              const agent_params = {
-                maxLatestHistoryToUse: 5,
-                maxTokens: 100,
-                maxSteps: 5,
-                thread_id: 'test_thread_id',
-                prompt: [
-                  {
-                    type: 'text',
-                    content: 'hello world'
-                  }
-                ]
-              }
+              const date = new Date().toISOString();
+              const file_key = 'test_' + date + '.txt';
+              const file_content = date;
+              let proof_secured = '';
 
-              let has_run = false;
-          
               return { 
                 test: async () => {
                   { // non-secured
                     sdk.config.auth = undefined;
-                    const result =  await sdk.ai.streamSpeak(
-                      agent_handle, agent_params
+                    await assert_async_throws(
+                      () => sdk.storage.putBytesUnsigned(file_key, file_content),  
+                      'putStream not secured'
+                    )
+                  }
+                  { // secured
+                    await sdk.auth.signin(user.email, user.password);
+                    await sdk.storage.putBytesUnsigned(
+                      file_key, file_content
                     );
                     assert.equal(
-                      result.threadId, agent_params.thread_id, 'thread-id doesnt match'
-                    );
-                    assert.ok(
-                      result.generator, 'missing generator'
+                      proof_secured, 'proof.storage.putStream',
+                      'proof not secured'
                     );
                   }
                 },
-                intercept_backend_api: async ($agent_handle, $agent_params) => {
-                  assert.equal($agent_handle, agent_handle);
-                  assert.equal($agent_params, agent_params);
-
-                  return {
-                    thread_id: $agent_params.thread_id,
-                    stream: new ReadableStream(
-                      {
-                        start: async (controller) => {
-                          controller.enqueue(
-                            {
-                              type: 'text',
-                              content: 'hello world'
-                            }
-                          )
-                          controller.close();
-                        }
-                      }
-                    ),
-                  }
+                intercept_backend_api: async ($file_key, $file_content_stream) => {
+                  const $file_content = await readable_stream_to_string($file_content_stream);
+                  assert.equal($file_content, file_content);
+                  assert.equal($file_key, file_key);
+                  proof_secured = 'proof.storage.putStream';
+                  return true;
                 },
               }
             }
           ]
-        },          
+        },        
+                        
+
+        putSigned: {
+          __tests: [
+            () => {
+              const date = new Date().toISOString();
+              const file_key = 'test_put_signed_' + date + '.txt';
+              const file_content = date;
+              let proof_secured = '';
+              
+              return { 
+                test: async () => {
+                  { // non-secured
+                    sdk.config.auth = undefined;
+                    await assert_async_throws(
+                      () => sdk.storage.putBytesSigned(file_key, file_content),  
+                      'putSigned not secured'
+                    )
+                  }
+                  { // secured
+                    const supports_signed = (await sdk.storage.features()).supports_signed_urls;
+                    if(supports_signed) {
+                      await sdk.auth.signin(user.email, user.password);
+                      await sdk.storage.putBytesSigned(
+                        file_key, file_content
+                      );
+                      assert.equal(
+                        proof_secured, 'proof.storage.putSigned',
+                        'proof not secured'
+                      );
+                    }
+                  }
+                },
+                intercept_backend_api: async ($file_key) => {
+                  assert.equal($file_key, file_key);
+                  proof_secured = 'proof.storage.putSigned';
+                  return {
+                    method: 'post',
+                    url: `http://localhost/api/storage/${file_key}?signed=false`,
+                  };
+                },
+              }
+            }
+          ]
+        },                
+        
+
+        getStream: {
+          __tests: [
+            () => {
+              const date = new Date().toISOString();
+              const file_key = 'test_getStream_' + date + '.txt';
+              const file_content = date;
+              let proof_secured = '';
+              
+              return { 
+                test: async () => {
+                  { // non-secured
+                    {
+                      await sdk.auth.signin(user.email, user.password);
+                      await sdk.storage.putBytes(
+                        file_key, file_content
+                      );
+                    }
+                    // signout
+                    sdk.config.auth = undefined;
+                    const blob = await sdk.storage.getBlobUnsigned(
+                      file_key
+                    );
+                    const blob_text = await blob.text();
+                    assert.equal(
+                      blob_text, file_content,
+                      'blob does not match'
+                    );
+
+                    assert.equal(
+                      proof_secured, 'proof.storage.getStream',
+                      'proof not secured'
+                    );
+                  }
+                },
+                intercept_backend_api: async ($file_key) => {
+                  assert.equal($file_key, file_key);
+                  proof_secured = 'proof.storage.getStream';
+                  return {
+                    value: new ReadableStream(
+                      {
+                        start: async (controller) => {
+                          controller.enqueue(
+                            (new TextEncoder).encode(file_content)
+                          );
+                          controller.close();
+                        }
+                      }
+                    ),
+                  };
+                },
+              }
+            }
+          ]
+        },     
+        
+        
+        getSigned: {
+          __tests: [
+            () => {
+              const date = new Date().toISOString();
+              const file_key = 'test_getSigned_' + date + '.txt';
+              const file_content = date;
+              let proof_secured = '';
+              
+              return { 
+                test: async () => {
+                  { // non-secured
+                    const supports_signed = (await sdk.storage.features()).supports_signed_urls;
+                    if(!supports_signed)
+                      return;
+
+                    sdk.config.auth = undefined;
+                    const blob = await sdk.storage.getBlobSigned(
+                      file_key
+                    );
+
+                    const blob_text = await blob.text();
+                    assert.equal(
+                      blob_text, file_content,
+                      'blob does not match'
+                    );
+
+                    assert.equal(
+                      proof_secured, 'proof.storage.getSigned',
+                      'proof does not match'
+                    );
+                  }
+                },
+                intercept_backend_api: async ($file_key) => {
+                  assert.equal($file_key, file_key);
+                  proof_secured = 'proof.storage.getSigned';
+                  return {
+                    method: 'get',
+                    url: `http://localhost/api/storage/${file_key}?signed=false`,
+                  };
+                },
+              }
+            }
+          ]
+        },     
+
+
+        remove: {
+          __tests: [
+            () => {
+              const date = new Date().toISOString();
+              const file_key = 'test_remove_' + date + '.txt';
+              const file_content = date;
+              let proof_secured = '';
+              
+              return { 
+                test: async () => {
+                  { // non-secured
+                    sdk.config.auth = undefined;
+                    await assert_async_throws(
+                      () => sdk.storage.delete(file_key),  
+                      'remove not secured'
+                    )
+                  }
+                  { // secured
+                    await sdk.auth.signin(user.email, user.password);
+                    await sdk.storage.putBytesUnsigned(
+                      file_key, file_content
+                    );
+                    const success = await sdk.storage.delete(file_key);
+                    assert.equal(success, true);
+                    assert.equal(
+                      proof_secured, 'proof.storage.remove',
+                      'proof doesnt match'
+                    );
+                  }
+                },
+                intercept_backend_api: async ($file_key) => {
+                  assert.equal($file_key, file_key);
+                  proof_secured = 'proof.storage.remove';
+                  return true;
+                },
+              }
+            }
+          ]
+        },                
                      
       }
 

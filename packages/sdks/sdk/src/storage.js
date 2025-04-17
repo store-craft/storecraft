@@ -128,10 +128,8 @@ export default class Storage {
     );
 
     const ctype = r.headers.get('Content-Type');
-
     if(!r.ok) {
       const error = await r.json();
-
       throw error;
     }
 
@@ -215,7 +213,9 @@ export default class Storage {
 
   /**
    * @description Put a blob into `storage` driver 
-   * with `presigned` urls
+   * with `presigned` urls if supported. this means the upload
+   * is offloaded from the backend to the client straight into 
+   * other services that supports it such as s3.
    * @param {string} key file path key, 
    * examples `image.png`, `collections/thumb.jpeg`
    * @param {string | Blob | Uint8Array | ArrayBuffer | File} data 
@@ -313,6 +313,11 @@ export default class Storage {
       { method: 'delete' }
     );
 
+    if(!r.ok) {
+      const error = await r.json();
+      throw error;
+    }
+    
     return r.ok;
   }
 

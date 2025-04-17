@@ -8,9 +8,13 @@
  * @import { SdkConfigAuth } from '../types.js';
  */
 
-import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js';
+import { 
+  api_query_to_searchparams 
+} from '@storecraft/core/api/utils.query.js';
 import { StorecraftSDK } from '../index.js';
-import { count_query_of_resource, fetchApiWithAuth, url } from './utils.api.fetch.js';
+import { 
+  count_query_of_resource, fetchApiWithAuth, url 
+} from './utils.api.fetch.js';
 import { assert } from './utils.functional.js';
 
 

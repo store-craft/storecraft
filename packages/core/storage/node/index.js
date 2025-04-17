@@ -165,12 +165,15 @@ export class NodeLocalStorage {
    * @type {storage_driver["putStream"]}
    */
   async putStream(key, stream) {
+    if(!stream || !stream.getReader) {
+      throw new Error('stream is not readable');
+    }
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w')
     await this.#ensure_folder();
     let ok = true;
 
-    // I found this to be better than async iterators in node.js
+    // I found this to be better than async iterators in older node.js versions
     const reader = stream.getReader();
     const read_more = async () => {
       const { done, value } = await reader.read();

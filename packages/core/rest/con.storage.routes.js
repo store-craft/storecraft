@@ -98,7 +98,7 @@ export const create_routes = (app) => {
       } else {
         const s = await app.api.storage.getStream(file_key);
 
-        // console.log(s)
+        // console.log({s})
 
         if(s?.value) {
           res.sendReadableStream(s.value);

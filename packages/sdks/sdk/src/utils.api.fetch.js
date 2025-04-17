@@ -74,6 +74,8 @@ export const fetchOnlyApiResponseWithAuth = async (
  * - Refreshed `auth` if needed. 
  * - Throws a `json` representation of the `error`, 
  * if the request is `bad`
+ * - returns the object according to the `content-type` header
+ *  - json, text, html, blob
  * 
  * @template {any} [R=any]
  * 

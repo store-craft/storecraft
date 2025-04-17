@@ -533,22 +533,26 @@ export const filterPInCollectionsSchema = z
   .object({
     op: filterMetaEnumSchema.shape.p_in_collections.shape.op.optional(),
     meta: filterMetaEnumSchema.shape.p_in_collections.optional(),
-    value: z.array(
-      z.object({
-        id: z
-          .string()
-          .optional()
-          .describe("`p_in_collections` filter, `id` of collection"),
-        title: z
-          .string()
-          .optional()
-          .describe("`p_in_collections` filter, `title` of collection"),
-        handle: z
-          .string()
-          .optional()
-          .describe("`p_in_collections` filter, `handle` of the collection"),
-      }),
-    ),
+    value: z
+      .array(
+        z.object({
+          id: z
+            .string()
+            .optional()
+            .describe("`p_in_collections` filter, `id` of collection"),
+          title: z
+            .string()
+            .optional()
+            .describe("`p_in_collections` filter, `title` of collection"),
+          handle: z
+            .string()
+            .optional()
+            .describe("`p_in_collections` filter, `handle` of the collection"),
+        }),
+      )
+      .describe(
+        "`p_in_collections` filter, supply array of collections\n`ids` and `handles`",
+      ),
   })
   .describe("Filter for product in collections");
 
@@ -1510,7 +1514,9 @@ export const discountInfoSchema = z.object({
   filters: z
     .array(filterSchema)
     .min(1, "You should Specify at least 1 Filter")
-    .describe("List of `discount` filters"),
+    .describe(
+      "List of `discount` filters, which determine the\neligible `products` for the discount or the eligible `order`",
+    ),
 });
 
 export const discountTypeSchema = baseTypeSchema.extend({

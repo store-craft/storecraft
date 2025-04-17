@@ -50,7 +50,7 @@ export type TestSpec<
    */
   intercept_backend_api?: (
     ...args: Parameters<ORIGINAL_FUNCTION>
-  ) => Promise<any>,
+  ) => ReturnType<ORIGINAL_FUNCTION> | Promise<string | void>,
 
   [x: string]: any,
 }

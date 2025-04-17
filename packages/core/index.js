@@ -42,8 +42,9 @@ import { assert } from './api/utils.func.js';
 
 /**
  * @typedef {{
- *  'store': StoreAgent<any>
- * }} BaseAgents
+ *  'store': StoreAgent<any>,
+*   [h: string]: Agent
+* }} BaseAgents
  */
 
 let ms_init_start = 0;
@@ -62,7 +63,7 @@ let ms_init_start = 0;
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
- * @template {Record<string, Agent> & BaseAgents} [AgentsMap=(BaseAgents)]
+ * @template {BaseAgents} [AgentsMap=(BaseAgents)]
  * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {

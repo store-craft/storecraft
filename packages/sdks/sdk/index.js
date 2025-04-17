@@ -24,6 +24,7 @@ import Search from './src/search.js'
 import { 
   fetchApiWithAuth, fetchOnlyApiResponseWithAuth 
 } from './src/utils.api.fetch.js'
+import Email from './src/email.js'
 
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
@@ -65,6 +66,7 @@ export class StorecraftSDK {
     this.checkout = new Checkout(this);
     this.settings = new Settings(this);
     this.notifications = new Notifications(this);
+    this.emails = new Email(this);
   }
 
   get fetcher() {

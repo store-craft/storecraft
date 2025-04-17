@@ -57,7 +57,6 @@ export const compute_statistics = app =>
  * 
  * @param {number | string | Date} [from_day] `ISO` / `UTC` / `timestamp` date
  * @param {number | string | Date} [to_day] `ISO` / `UTC` / `timestamp` date
- * 
  * @returns {Promise<OrdersStatisticsType>}
  */
 async (from_day, to_day) => {

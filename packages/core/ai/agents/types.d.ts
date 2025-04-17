@@ -1,3 +1,4 @@
+import { type App } from "../../types.public.js";
 import { ChatAI, content, LLMHistoryProvider } from "../core/types.private.js"
 
 export type AgentConfig<ChatAIProvider extends ChatAI = ChatAI> = {

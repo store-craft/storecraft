@@ -18,6 +18,7 @@ import { inter as search } from './con.search.logic.js';
 import { inter as email } from './con.email.logic.js';
 import { inter as extensions } from './con.extensions.logic.js';
 import { inter as payments } from './con.payment-gateways.logic.js';
+import { inter as ai } from './con.ai.logic.js';
 export * as func from './utils.func.js'
 export * as index from './utils.index.js'
 export * as query from './utils.query.js'
@@ -51,6 +52,7 @@ export const create_api = app => {
     email: email(app),
     extensions: extensions(app),
     payments: payments(app),
+    ai: ai(app),
     pricing,
     enums
   }

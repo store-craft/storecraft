@@ -43,7 +43,8 @@ export const compileTemplate = (template, data) => {
  */
 export const sendMailWithTemplate = (app) => 
   /**
-   * @description Send Email with `template` and typed parameters (great developer experience)
+   * @description Send Email with `template` and typed 
+   * parameters (great developer experience)
    * @template {templates_keys | string} [HANDLE=keyof templates_input_types]
    * @param {SendMailWithTemplateParams<HANDLE>} data 
    */
@@ -73,7 +74,8 @@ export const sendMailWithTemplate = (app) =>
         text,
         subject,
         from: {
-          address: app.config.general_store_support_email ?? 'support@storecraft.app',
+          address: app.config.general_store_support_email ?? 
+            'support@storecraft.app',
           name: 'Support'
         },
         to: emails.map(e => ({address: e})),

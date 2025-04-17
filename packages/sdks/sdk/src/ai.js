@@ -26,6 +26,7 @@ export default class AI {
    */
   constructor(sdk) {
     this.sdk = sdk;
+    
   }
 
   /**
@@ -55,7 +56,8 @@ export default class AI {
    * @param {string} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    */
-  streamSpeak = async function(agent_handle, params) {
+  streamSpeak = async (agent_handle, params) => {
+    
     const response = await this.sdk.fetcher(
       url(this.sdk.config, `ai/agents/${agent_handle}/stream`),
       {

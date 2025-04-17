@@ -1,6 +1,5 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { Polka } from './polka/index.js'
-import { assert } from '../api/utils.func.js'
 import { App } from '../index.js';
 
 /**
@@ -24,16 +23,10 @@ export const create_routes = (app) => {
     async (req, res) => {
 
       const handle = req?.params?.handle;
-
-      assert(
-        app.agents?.[handle],
-        `Agent ${handle} not found !`
-      );
-
-      const r = await app.agents?.[handle].run(
+      const r = await app.api.ai.speakWithAgentSync(
+        handle,
         req.parsedBody
       );
-
       res.headers.append(
         HEADER_STORECRAFT_THREAD_ID, 
         r.thread_id
@@ -45,18 +38,11 @@ export const create_routes = (app) => {
   polka.post(
     '/agents/:handle/stream',
     async (req, res) => {
-
       const handle = req?.params?.handle;
-
-      assert(
-        app.agents?.[handle],
-        `Agent ${handle} not found !`
-      );
-
-      const r = await app.agents?.[handle].runStream(
+      const r = await app.api.ai.speakWithAgentStream(
+        handle,
         req.parsedBody
       );
-
       res.headers.append(
         HEADER_STORECRAFT_THREAD_ID, 
         r.thread_id

@@ -1,7 +1,7 @@
 /**
  * @import { storage_driver } from "../types.public.js"
  */
-import { readFile, mkdir, open, unlink } from 'node:fs/promises';
+import { readFile, mkdir, open, unlink, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
 // import { Blob } from 'node:buffer';
@@ -258,7 +258,10 @@ export class NodeLocalStorage {
    */
   async getStream(key) {
     try { 
-      const s = createReadStream(this.to_file_path(key));
+      const path = this.to_file_path(key);
+      await stat(path);
+
+      const s = createReadStream(path);
       return {
         // @ts-ignore
         value: Readable.toWeb(s), 

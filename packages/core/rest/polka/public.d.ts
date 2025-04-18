@@ -1,3 +1,4 @@
+import { StorecraftError } from '../../api/utils.func.js';
 import type { Trouter } from './trouter/index.js';
 
 export type PartialURL = Partial<URL>;
@@ -69,6 +70,17 @@ export type PolkaOptions<Req extends VPolkaRequest, Res extends VPolkaResponseCr
   onNoMatch?: Middleware<Req, Res>;
   onError?: ErrorHandler;
   prefix?: string;
+}
+
+export type ErrorLike = StorecraftError | Error | string | { message: any, code: number };
+
+export type Logger = {
+  active: boolean
+  error: (
+    e: ErrorLike, req: VPolkaRequest, 
+    res: VPolkaResponseCreator, 
+    code: number, messages: any[]
+  ) => void;
 }
 
 export * from './index.js';

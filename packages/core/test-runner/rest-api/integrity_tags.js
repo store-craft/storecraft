@@ -34,18 +34,14 @@ export const create = (app) => {
   s.before(
     async () => { 
       await app.init();
-      api = app.api;
-      // @ts-ignore
-      // app.api = mock_proof_api;
-    
+      app.rest_controller.logger.active=false;
       assert.ok(app.ready);
     }
   );
 
   s.after(
     async () => { 
-      // @ts-ignore
-      app.api = api;
+      app.rest_controller.logger.active=true;
     }
   );
 
@@ -109,6 +105,7 @@ export const create = (app) => {
                 }
                 { // non secured
                   sdk.config.auth = undefined;
+                  // await sdk.tags.remove(id);
                   await assert_async_throws(
                     () => sdk.tags.remove(id),
                     'remove is not secured'

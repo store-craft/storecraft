@@ -2,12 +2,13 @@
  * @import { JWTClaims } from '../../api/types.api.js'
  * @import { ApiRequest } from '../../rest/types.public.js'
  */
-
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../api/api.utils.crud.js';
 import { App } from '../../index.js';
-import { assert_async_throws, assert_partial_v2, withRandom, withTimestamp } from '../api/utils.js';
+import { 
+  assert_async_throws, assert_partial_v2, withRandom 
+} from '../api/utils.js';
 import { 
   authorize_by_roles, parse_auth_user, parse_bearer_auth 
 } from '../../rest/con.auth.middle.js';
@@ -35,8 +36,6 @@ export const create = app => {
       firstname: 'John',
       lastname: 'Doe',
     }
-
-    // console.log({credentials});
 
   s.before(
     async () => { 

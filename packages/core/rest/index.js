@@ -1,5 +1,4 @@
 /** 
- * @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' 
  * @import { CORSOptions } from './polka/cors.js' 
  */
 import { App } from '../index.js';
@@ -31,8 +30,8 @@ import { create_routes as create_search_route } from "./con.search.routes.js";
 import { create_routes as create_ai_route } from "./con.ai.routes.js";
 import { create_routes as create_similarity_search_route } from "./con.similarity-search.routes.js";
 import { create_routes as create_emails_route } from "./con.emails.routes.js";
-import { STATUS_CODES } from './polka/codes.js';
 import { PolkaResponseCreator } from './polka/response-creator.js';
+import { assert } from '../api/utils.func.js';
 
 
 /**
@@ -44,7 +43,6 @@ import { PolkaResponseCreator } from './polka/response-creator.js';
 /**
  * @description Create the entire virtual API with lazy 
  * loading which is great for serverless
- * 
  * @param {App} app
  * @param {RestApiConfig} config
  */
@@ -88,13 +86,10 @@ export const create_rest_api = (app, config) => {
     }
 
     /** 
-     * 
      * @description This method will lazy load and register the `polka`
      * endpoints. This is done as optimization and avoiding running
      * all the code that registers the endpoints at once. This is desirable
      * as this code might run on `serverless` platforms.
-     * 
-     * 
      * @param {string} path 
      */
     load_route_lazily(path) {
@@ -125,9 +120,10 @@ export const create_rest_api = (app, config) => {
 
   return {
     root: polka,
+    logger: Polka.logger,
     /**
-     * The `rest-api` controller of `storecraft`. Works with standard Web `Request`
-     * and `Response`
+     * The `rest-api` controller of `storecraft`. 
+     * Works with standard Web `Request` and `Response`
      * @param {Partial<Request>} request 
      */
     handler: async (request) => {
@@ -139,6 +135,12 @@ export const create_rest_api = (app, config) => {
       const response_creator = await polka.handler(
         request, new PolkaResponseCreator()
       );
+
+      assert(
+        response_creator,
+        'No response creator found for path: ' + pathname + 
+        '. You probably didn\' stop the call chain on an error',
+      )
 
       const response = new Response(
         response_creator.body,

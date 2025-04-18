@@ -183,6 +183,11 @@ export const getStream = (app) =>
    * @param {string} file_key file path, example `/path/to/file.txt`
    */
   async (file_key) => {
+    assert(
+      file_key,
+      'file_key is required'
+    );
+    
     return app.storage.getStream(
       file_key
     );

@@ -6,7 +6,6 @@
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
  * @import { ApiQuery } from '../../api/types.public.js'
  */
-
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../api/api.utils.crud.js';
@@ -16,37 +15,31 @@ import { setup_sdk } from './utils.setup-sdk.js';
 import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
 import { assert_async_throws } from '../api/utils.js';
-import { api_query_to_searchparams, parse_query } from '../../api/utils.query.js';
+import { 
+  api_query_to_searchparams, parse_query 
+} from '../../api/utils.query.js';
 
 /**
  * @param {App} app `storecraft` app instance
  */
 export const create = (app) => {
   const sdk = setup_sdk(app);
-  let api;
-
   const s = suite(
     file_name(import.meta.url), 
     {}
   );
 
-    // console.log({credentials});
-
   s.before(
     async () => { 
       await app.init();
-      api = app.api;
-      // @ts-ignore
-      // app.api = mock_proof_api;
-    
       assert.ok(app.ready);
+      app.rest_controller.logger.active=false;
     }
   );
 
   s.after(
     async () => { 
-      // @ts-ignore
-      app.api = api;
+      app.rest_controller.logger.active=true;
     }
   );
 

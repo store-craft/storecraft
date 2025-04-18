@@ -108,8 +108,9 @@ export const fetchApiWithAuth = async (
     console.log('fetchApiWithAuth.json()', e)
   }
 
-  if(!isok)
+  if(!isok) {
     throw payload;
+  }
 
   return payload;
 }

@@ -5,7 +5,6 @@
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
  * @import { ApiQuery } from '../../api/types.public.js'
  */
-
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../api/api.utils.crud.js';
@@ -15,7 +14,9 @@ import { setup_sdk } from './utils.setup-sdk.js';
 import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
 import { assert_async_throws, withRandom } from '../api/utils.js';
-import { api_query_to_searchparams, parse_query } from '../../api/utils.query.js';
+import { 
+  api_query_to_searchparams, parse_query 
+} from '../../api/utils.query.js';
 import { ID } from '../../api/utils.func.js';
 
 /**
@@ -23,23 +24,22 @@ import { ID } from '../../api/utils.func.js';
  */
 export const create = (app) => {
   const sdk = setup_sdk(app);
-
   const s = suite(
     file_name(import.meta.url), 
     {}
   );
 
-    // console.log({credentials});
-
   s.before(
     async () => { 
       await app.init();
       assert.ok(app.ready);
+      app.rest_controller.logger.active=false;
     }
   );
 
   s.after(
     async () => { 
+      app.rest_controller.logger.active=true;
     }
   );
 

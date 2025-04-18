@@ -60,3 +60,5 @@ export * as statistics_orders from './statistics_orders.js'
 export * as payment_gateways_with_dummy from './payment_gateways_with_dummy.js'
 
 export * as extensions from './extensions.js'
+
+export * as storage from './storage.js'

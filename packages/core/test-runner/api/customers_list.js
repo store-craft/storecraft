@@ -33,9 +33,7 @@ const items = get_static_ids('cus').map(
   }
 );
 
-items[0].handle
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {

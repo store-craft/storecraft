@@ -2,9 +2,7 @@
  * @import { SimilaritySearchInput, TagType, TagTypeUpsert
  * } from '../../api/types.api.js'
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
- * @import { ApiQuery } from '../../api/types.public.js'
  */
-
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../api/api.utils.crud.js';
@@ -24,8 +22,6 @@ import {
  */
 export const create = (app) => {
   const sdk = setup_sdk(app);
-  let api;
-
   const s = suite(
     file_name(import.meta.url), 
     {}
@@ -35,11 +31,13 @@ export const create = (app) => {
     async () => { 
       await app.init();
       assert.ok(app.ready);
+      app.rest_controller.logger.active=false;
     }
   );
 
   s.after(
     async () => { 
+      app.rest_controller.logger.active=true;
     }
   );
 

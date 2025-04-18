@@ -13,11 +13,6 @@ import esMain from './utils.esmain.js';
 
 const handle = create_handle('post', file_name(import.meta.url));
 
-// In this test, we will test the query list function.
-// In order to create syntatic data with controlled dates,
-// we will write straight to the databse, bypassing the
-// virtual api of storecraft for insertion
-
 /** 
  * @type {PostTypeUpsert[]} 
  */
@@ -36,7 +31,6 @@ const items = get_static_ids('post').map(
 
 
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {
@@ -45,8 +39,11 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items, app, ops: app.api.posts,
-      resource: 'posts', events: { list_event: 'posts/list' }
+      items: items, 
+      app, 
+      ops: app.api.posts,
+      resource: 'posts', 
+      events: { list_event: 'posts/list' }
     }
   );
 

@@ -24,8 +24,6 @@ import { ID } from '../../api/utils.func.js';
  */
 export const create = (app) => {
   const sdk = setup_sdk(app);
-  let api;
-
   const s = suite(
     file_name(import.meta.url), 
     {}
@@ -36,18 +34,14 @@ export const create = (app) => {
   s.before(
     async () => { 
       await app.init();
-      api = app.api;
-      // @ts-ignore
-      // app.api = mock_proof_api;
-    
       assert.ok(app.ready);
+      app.rest_controller.logger.active=false;
     }
   );
 
   s.after(
     async () => { 
-      // @ts-ignore
-      app.api = api;
+      app.rest_controller.logger.active=true;
     }
   );
 

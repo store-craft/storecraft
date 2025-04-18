@@ -1,17 +1,15 @@
 import { useStorecraft } from '@storecraft/sdk-react-hooks';
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 
+/**
+ * `Img` wraps the regular `<img/>` tag and analyzes the `src`
+ * url to decide: 
+ * 
+ * - If to use `storecraft` backend to fetch the image
+ *   through a full download or signed urls.
+ * - Fetch a regular `url`
+ */
 const Img = forwardRef(
-
-  /**
-   * `Img` wraps the regular `<img/>` tag and analyzes the `src`
-   * url to decide: 
-   * 
-   * - If to use `storecraft` backend to fetch the image
-   *   through a full download or signed urls.
-   * - Fetch a regular `url`
-   * 
-   */
   (
     { 
       src, ...rest 
@@ -32,7 +30,7 @@ const Img = forwardRef(
           srcRef.current = s
           setSource(s)
         }
-        getSource()
+        getSource();
         return () => {
           srcRef.current && URL.revokeObjectURL(srcRef.current)
         }

@@ -1,17 +1,24 @@
 import { Link } from 'react-router-dom'
 import Img from '@/comps/img'
 import { ImageType } from '@storecraft/core/api';
+import { LoadingImage } from '@/comps/loading-image';
 
 export type ImageParams = {
   data: ImageType;
-  onClickImage: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: ImageType) => void;
+  onClickImage: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
+    data: ImageType
+  ) => void;
   className?: string;
 } & React.ComponentProps<'div'>;
 
 
 export type ImageGridParams = {
   images: ImageType[];
-  onClickImage: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: ImageType) => void;
+  onClickImage: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, 
+    data: ImageType
+  ) => void;
   className?: string;
 } & React.ComponentProps<'div'>;
 
@@ -25,29 +32,40 @@ export const Image = (
   const { url, handle } = data
 
   return (
-    <div className={`inline-block w-24 h-fit 
-                    --pb-2 sm:w-40 shadow-sm group transition-colors duration-300
-                    rounded-lg overflow-hidden ${className}`}
-                    {...rest}>
+    <div 
+      className={`inline-block w-24 h-fit 
+        --pb-2 sm:w-40 shadow-sm group transition-colors duration-300
+        rounded-lg overflow-hidden ${className}`}
+      {...rest}
+    >
       <Link 
         to={`/apps/gallery/img/${handle}`} 
         draggable='false'
         onClick={e => onClickImage(e, data)} >
         <div className='w-full h-24 sm:h-40 relative rounded-md overflow-hidden'>
-          <Img 
+          <LoadingImage 
             src={url} 
             crossOrigin='anonymous'
             draggable='false'
             className='object-cover w-[99%] mx-auto h-full -opacity-20 
-                      group-hover:opacity-100 transition-opacity duration-300 
-                      ease-linear' />
+              group-hover:opacity-100 transition-opacity duration-300 
+              ease-linear' />
+
+          {/* <Img 
+            src={url} 
+            crossOrigin='anonymous'
+            draggable='false'
+            className='object-cover w-[99%] mx-auto h-full -opacity-20 
+              group-hover:opacity-100 transition-opacity duration-300 
+              ease-linear' /> */}
+              
         </div>
       </Link>
       <div className='mx-px --my-2'>
         <input 
           value={url} readOnly
           className='w-full p-1 mt-0 whitespace-pre break-words 
-                    border bg-gray-200 text-gray-600 rounded-b-md'/>
+            border bg-gray-200 text-gray-600 rounded-b-md'/>
       </div>
     </div>
   )

@@ -116,12 +116,11 @@ const compute_top_k_stats = (data: OrdersStatisticsType) => {
 
   const pickK = (o: OrdersStatisticsEntity, sort: typeof sortFn) => {
     // convert o to array of kv tuples ->sort ->pick first K
-    return Object.entries(o)
-                  .sort(sort)
-                  // .slice(0, 10);
+    return Object
+    .entries(o)
+    .sort(sort)
+    // .slice(0, 10);
   }
-
-  //
 
   return {
     collections: pickK(reduced.collections, sortFn),
@@ -130,7 +129,6 @@ const compute_top_k_stats = (data: OrdersStatisticsType) => {
     products: pickK(reduced.products, sortFn)
   };
 }
-
 
 const InfoCapsule = (
   {
@@ -190,19 +188,21 @@ const TopSoldCard = (
         className='inline text-2xl rounded-md
           text-kf-400  bg-white/50
           dark:text-kf-400 dark:bg-white/10
-            border border-kf-500/25 p-px' />  
+          border border-kf-500/25 p-px' />  
       <div 
         children={label} 
         className='p-1 tracking-wider font-mono 
           bg-pink-50 text-pink-500
           dark:bg-pink-50/10 dark:text-pink-500
-            font-semibold h-20 mx-1
-            rounded-md --border text-sm inline' />
+          font-semibold h-20 mx-1
+          rounded-md --border text-sm inline' />
 
     </div> 
     <ShowIf show={data.length}>
-      <div className='w-full rounded-lg flex flex-row flex-wrap gap-1 py-3
-                      flex-1 overflow-clip hover:overflow-y-auto overflow-x-hidden content-start'>
+      <div 
+        className='w-full rounded-lg flex flex-row flex-wrap 
+          gap-1 py-3 flex-1 overflow-clip hover:overflow-y-auto 
+          overflow-x-hidden content-start'>
       {
         data.map(
           ([k, v], ix) => (
@@ -219,11 +219,12 @@ const TopSoldCard = (
       </div>
     </ShowIf>
     <ShowIf show={!data.length}>
-      <p className='w-full h-full flex flex-row items-center justify-center
-                    --text-gray-300 text-3xl text-center font-semibold 
-                    whitespace-pre-wrap text-transparent bg-clip-text 
-                    bg-gradient-to-b from-gray-200 to-gray-500'
-         children={`Not enough \ndata \n:-)`} />
+      <p 
+        className='w-full h-full flex flex-row items-center justify-center
+          --text-gray-300 text-3xl text-center font-semibold 
+          whitespace-pre-wrap text-transparent bg-clip-text 
+          bg-gradient-to-b from-gray-200 to-gray-500'
+        children={`Not enough \ndata \n:-)`} />
     </ShowIf>
   </div>    
 </Bling>
@@ -240,7 +241,7 @@ const Performance = (
   const { sdk } = useStorecraft();
   const ref_effect_ran = useRef(false);
   const [data, setData] = useState<OrdersStatisticsType>();
-  const [span, setSpan] = useState(30);
+  const [span, setSpan] = useState(7);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const { 
@@ -250,14 +251,17 @@ const Performance = (
   } = useMiscCache();
 
   const load = useCallback(
-    async (span: number) => {
+    async ($span: number) => {
       setError(undefined);
 
-      if(!data)
-        setLoading(true);
+      if($span===span && data)
+        return;
+
+      // if(!data)
+        // setLoading(true);
 
       try {
-        const KEY = `statistics_orders_latest_span_${span}`;
+        const KEY = `statistics_orders_latest_span_${$span}`;
         const working_data = await cache_get(KEY) as OrdersStatisticsType;
         
         if(working_data) {
@@ -267,7 +271,7 @@ const Performance = (
 
         // const new_data = dummy_stats;
         const new_data = await sdk.statistics.orders(
-          Date.now() - span * DAY, Date.now()
+          Date.now() - $span * DAY, Date.now()
         );
 
         cache_put(KEY, new_data);
@@ -277,7 +281,7 @@ const Performance = (
       } finally {
         setLoading(false);
       }
-    }, []
+    }, [data, sdk, cache_get, cache_put, span]
   );
 
   const onSpanChanged: TimeFrameParams["onChange"] = useCallback(
@@ -313,11 +317,12 @@ const Performance = (
   return (
 <div {...rest} >
   <ShowIf show={msg}>
-    <div className='w-full h-fit p-10 border-4 border-dashed 
-                shelf-border-color rounded-lg flex 
-                flex-row justify-center items-center
-                text-2xl text-gray-400 animate-pulse' 
-         children={msg}>
+    <div 
+      className='w-full h-fit p-10 border-4 border-dashed 
+        shelf-border-color rounded-lg flex 
+        flex-row justify-center items-center
+        text-2xl text-gray-400 animate-pulse' 
+      children={msg}>
     </div>
   </ShowIf>
   
@@ -328,7 +333,8 @@ const Performance = (
         span={span} />
       <SalesChart 
         data={data} 
-        className='w-full max-w-screen-md h-[200px] mt-5' /> 
+        className='w-full max-w-screen-md h-[200px] mt-5' 
+      /> 
       <HR className='my-5' />
       <div className='w-full h-fit flex flex-row justify-center 
                       lg:justify-start flex-wrap mt-5 gap-5'>

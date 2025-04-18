@@ -15,9 +15,6 @@ import { assert_zod } from "./middle.zod-validate.js";
 import { checkoutCreateTypeSchema } from "./types.autogen.zod.api.js";
 import { assert } from "./utils.func.js";
 
-
-
-
 /**
  * @param {App} app
  */

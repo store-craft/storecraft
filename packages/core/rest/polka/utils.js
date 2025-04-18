@@ -7,7 +7,7 @@ export const extractStack = (error) => {
 		return '';
 	}
 
-	const match = stack.match(stackRegex);
+	const match = stack?.match(stackRegex);
 
 	if (!match) {
 		return '';

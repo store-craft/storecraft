@@ -110,12 +110,16 @@ const BaseChartView = (
 
       // setup `series`
       let pane_index = 0;
+      chartSeriesApiRef.current = []
       for (const s of series) {
-        const { data, options, definition, priceScaleOptions } = s;
+        const { 
+          data, options, definition, priceScaleOptions 
+        } = s;
 
         const api_series = chart.addSeries(
           definition, 
-          options
+          options, 
+          0
         );
         api_series.setData(data);
         if (priceScaleOptions) {
@@ -156,9 +160,14 @@ const BaseChartView = (
         ) {
           setToolTipContainerParams({show: false});
         } else {
+          // const series = param.seriesData.values().next();
           const data = param.seriesData.get(series);
-          
-          if(!('value' in data))
+
+          // console.log({data})
+          // console.log({series})
+          // console.log({param})
+
+          if(!(data && ('value' in data)))
             throw new Error('value not in data');
   
           const coordinate = series.priceToCoordinate(data.value);
@@ -190,7 +199,7 @@ const BaseChartView = (
                 coordinate + toolTipMargin
               )
             );
-
+          
           setToolTipContainerParams(
             {
               show: true,
@@ -225,6 +234,7 @@ const BaseChartView = (
           ref={chartContainerRef}
           style={{
             zIndex: 1,
+            zoom: 1.1111
           }}
         />
         {

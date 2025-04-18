@@ -2,7 +2,10 @@ import { useMemo, useState } from 'react'
 import BaseChartView, { BaseChartViewParams, SeriesConfig } from './base-chart-view'
 import useDarkMode from '@/hooks/use-dark-mode'
 import { OrdersStatisticsDay, OrdersStatisticsType } from '@storecraft/core/api';
-import { AreaData, ColorType, HistogramData, HistogramSeries, UTCTimestamp } from 'lightweight-charts';
+import { 
+  AreaData, ColorType, CrosshairMode, HistogramData, 
+  HistogramSeries, UTCTimestamp 
+} from 'lightweight-charts';
 import { AreaSeries } from 'lightweight-charts';
 
 const DAY = 86400000;
@@ -19,7 +22,6 @@ export const ChartToolTip: BaseChartViewParams["config"]["tooltip"]["component"]
     chart
   }
 ) => {  
-
   const { event_params } = chart || {};
   if(!event_params) 
     return null;
@@ -101,6 +103,9 @@ const SalesChart = (
          chart: {
           fitContent: true,
           options: {
+            crosshair: {
+              mode: CrosshairMode.Normal
+            },
             autoSize: true,
             // height: 250,
             grid: {
@@ -113,16 +118,13 @@ const SalesChart = (
   
             },
             layout: {
-  
               attributionLogo: false,
               background: {
                 // color: darkMode ? '#1e293b' : '#ffffff',
                 color: 'transparent',
                 type: ColorType.Solid,
-  
               },
               textColor: darkMode ? '#d1d5db' : '#374151',
-              
             }
           }          
         },

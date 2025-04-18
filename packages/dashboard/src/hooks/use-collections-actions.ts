@@ -54,20 +54,9 @@ const useCollectionsActions = <
 
   const nav = useNavigate();
   
-  // /** 
-  //  * @type {React.MutableRefObject<
-  //  *  import('@/comps/collection-actions.jsx').ImperativeInterface>
-  //  * } 
-  //  **/
-
   const ref_actions = useRef<import('@/comps/collection-actions.jsx').ImperativeInterface>(undefined);
   const ref_use_cache = useRef(true);
 
-  // /**
-  //  * @type {import('@storecraft/sdk-react-hooks').useCollectionHookReturnType<T>}
-  //  */
-
-  
   const { 
     pages, page, loading, hasLoaded, error, sdk, queryCount, 
     resource_is_probably_empty,
@@ -76,7 +65,6 @@ const useCollectionsActions = <
       removeDocument, query
     }
   } = useCollection(resource, autoLoadQuery, autoLoad);
-
   
   useEffect(
     () => {

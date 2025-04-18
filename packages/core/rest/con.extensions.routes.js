@@ -5,9 +5,7 @@ import { authorize_admin } from './con.auth.middle.js'
 
 
 /**
- * 
  * @param {App} app
- * 
  */
 export const create_routes = (app) => {
 
@@ -20,7 +18,7 @@ export const create_routes = (app) => {
     authorize_admin(app),
     async (req, res) => {
       const { extension_handle } = req.params;
-      const r = app.api.extensions.get(
+      const r = await app.api.extensions.get(
         extension_handle
       );
       res.sendJson(r);
@@ -33,7 +31,7 @@ export const create_routes = (app) => {
     '/',
     authorize_admin(app),
     async (req, res) => {
-      const r = app.api.extensions.list_all();
+      const r = await app.api.extensions.list_all();
       res.sendJson(r);
     }
   );

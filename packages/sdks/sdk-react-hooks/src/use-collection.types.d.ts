@@ -1,5 +1,8 @@
 import type { App } from "@storecraft/core";
-import type { AuthUserType, ExtensionItemGet, PaymentGatewayItemGet, ShippingMethodType } from "@storecraft/core/api";
+import type { 
+  AuthUserType, ExtensionItemGet, 
+  PaymentGatewayItemGet, ShippingMethodType 
+} from "@storecraft/core/api";
 
 export type collections_resources = | 
   "collections" | "products" | "tags" | "customers" | 

@@ -29,7 +29,7 @@
     "test": "npm run dashboard:build",
     "start": "npm run dashboard:dev",
     "preview": "vite preview",
-    "preview:lib:esm": "npx serve ./index.esm.html",
+    "preview:lib:esm": "npx serve .",
     "preview:lib:umd": "vite preview",
     "dashboard:dev": "vite --host",
     "dashboard:build-website": "vite build",

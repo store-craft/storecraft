@@ -178,6 +178,7 @@ export type State = {
   data: CustomerType;
   hasChanged: boolean;
 };
+
 /**
 * Public `tag` context
 */

@@ -28,6 +28,9 @@
   "scripts": {
     "test": "npm run dashboard:build",
     "start": "npm run dashboard:dev",
+    "preview": "vite preview",
+    "preview:lib:esm": "npx serve ./index.esm.html",
+    "preview:lib:umd": "vite preview",
     "dashboard:dev": "vite --host",
     "dashboard:build-website": "vite build",
     "dashboard:build": "npm run dashboard:build-website && npm run dashboard:lib:build",

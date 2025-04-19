@@ -62,7 +62,8 @@ const format_error = (e: any) => {
   if(typeof e === 'string')
     return e;
 
-  let payload = e?.messages?.[0]?.message ?? 'unknown error';
+  let payload = e?.messages?.[0]?.message 
+    ?? 'unknown error';
 
   return payload;
 }
@@ -81,12 +82,31 @@ export type LoginFormProps = withDashDiv<
 const LoginForm = (
   {
     dash: {
-      onChange, onSubmit, error, 
-      credentials, is_backend_endpoint_editable=true,
+      onChange, 
+      onSubmit, 
+      error, 
+      credentials, 
+      is_backend_endpoint_editable=true,
     },
     ...rest
  }: LoginFormProps
 ) => {
+
+  const { sdk, actions: { updateConfig } } = useStorecraft();
+
+  // console.log({credentials})
+
+  const onEndpointChange = useCallback(
+    (id: string, value: string) => {
+      updateConfig(
+        {
+          ...sdk.config,
+          endpoint: value,
+        }
+      );
+      onChange(id, value);
+    }, [onChange, updateConfig]
+  );
 
  return (
 <div {...rest}>
@@ -96,7 +116,7 @@ const LoginForm = (
     to='to-kf-400 dark:to-kf-500 '>
   <form 
     className='w-full p-5 shelf-login-form-bg flex flex-col text-sm 
-        tracking-wider font-medium gap-5 rounded-md'
+      tracking-wider font-medium gap-5 rounded-md'
     onSubmit={onSubmit}>
     <Field 
       dash={
@@ -163,7 +183,8 @@ const LoginForm = (
         <Field 
           dash={
             {
-              id:'endpoint', label: 'Backend Endpoint', 
+              id:'endpoint', 
+              label: 'Backend Endpoint', 
               input_params: {
                 type: 'text',
                 autoComplete: 'on',
@@ -171,12 +192,18 @@ const LoginForm = (
               },
               desc: `The Storecraft Backend Endpoint`,
               value: credentials,
-              onChange: onChange  
+              onChange: onEndpointChange  
             }
           }
         />
       </ShowIf>
-      <SocialLogin/>
+      {
+        (
+          !is_backend_endpoint_editable || 
+          (is_backend_endpoint_editable && credentials.endpoint)
+        ) &&
+        <SocialLogin/>
+      }
     </form>
   </Bling>    
 </div>    
@@ -197,9 +224,9 @@ const to_redirect = (handle: string) => {
   const redirect = new URL(url.pathname, url.origin);
   redirect.searchParams.set('provider', handle);
 
-  // console.log(
-  //   {redirect}
-  // );
+  console.log(
+    {redirect}
+  );
 
   return redirect.toString();
 }
@@ -208,13 +235,25 @@ export const SocialLogin = (
   {
   }
 ) => {
-  const { sdk } = useStorecraft();
+  const { sdk, config } = useStorecraft();
   const [providers, setProviders] = useState<OAuthProvider[]>([]);
 
   useEffect(
     () => {
       async function init() {
-        sdk.auth.identity_providers_list().then(setProviders);
+        sdk.auth.identity_providers_list().then(
+          (ps) => {
+            if(Array.isArray(ps)) {
+              setProviders(ps);
+            }
+          }
+        )
+        .catch(
+          (e) => {
+            console.log('error', e);
+            setProviders([]);
+          }
+        );
 
         if(window.location.search) {
           const auth_response = Object.fromEntries(
@@ -235,7 +274,7 @@ export const SocialLogin = (
         }
       }
       init();
-    }, [sdk]
+    }, [sdk, config]
   );
 
   // https://x.com/i/oauth2/authorize?client_id=ci1sTW5MZXFOX1NWSFZ2YUNJd0Y6MTpjaQ&redirect_uri=https%253A%252F%252Fstorecreaft.app&response_type=code&scope=users.read&code_challenge_method=s256&code_challenge=j1dwnjlO0XxOZGZiG0eaWfn9_yddisrWhZng_ARMgi8&state=f0d4f988-3759-4685-85c5-233d5a5b2f78
@@ -254,7 +293,7 @@ export const SocialLogin = (
   );
 
   return (
-    <div className='flex flex-row items-center gap-3'>
+    <div className={'flex flex-row items-center gap-3 ' + (providers.length > 0 ? 'animate-fadein' : 'animate-fadeout')}>
       {
         providers?.map(
           (provider, ix) => (

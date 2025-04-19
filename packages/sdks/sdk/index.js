@@ -113,7 +113,9 @@ export class StorecraftSDK {
    * @param {StorecraftSDKConfig} [config] 
    */  
   updateConfig(config) {
-    this.#config = config;
+    this.#config = {
+      ...config
+    };
   }
 
   get config() {

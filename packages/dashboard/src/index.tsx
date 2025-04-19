@@ -4,6 +4,7 @@ import Login from './login'
 import { useStorecraft } from '@storecraft/sdk-react-hooks';
 import ReactDOM from 'react-dom/client'
 import './index.css'
+import { useEffect } from 'react';
 
 /**
  * 
@@ -44,12 +45,25 @@ export const Dashboard = (
     }
   } = useStorecraft();
 
+  useEffect(
+    () => {
+      if(!isAuthenticated) {
+        window.history.replaceState(null, null, '/');
+      }
+    }, [isAuthenticated]
+  );
+
+  console.log('isAuthenticated', isAuthenticated)
   return (
 <div className='bg-gray-800 w-screen ' style={{height: '100dvh'}} >
   <div className='w-full h-full' style={{zoom: 0.9}} >
-    <Router>
-    { 
-      isAuthenticated && <Main /> 
+    {
+      isAuthenticated &&
+      (
+        <Router>
+          <Main /> 
+        </Router>
+      )
     }
     { 
       !isAuthenticated && 
@@ -59,7 +73,6 @@ export const Dashboard = (
           is_backend_endpoint_editable={is_backend_endpoint_editable} />
       )
     }
-    </Router>
   </div>
 </div>
   )

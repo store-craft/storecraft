@@ -18,8 +18,7 @@ const Login = (
 ) => {
 
   const {
-    config, sdk,
-    actions: {
+    config, sdk, actions: {
       updateConfig
     }
   } = useStorecraft();
@@ -58,20 +57,19 @@ const Login = (
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {
-
       e.preventDefault();
 
       try {
+        updateConfig(
+          {
+            endpoint: credentials.endpoint,
+          }
+        );
         const auth = await sdk.auth.signin(
           credentials.email,    
           credentials.password
         );
-        updateConfig(
-          {
-            auth,
-            endpoint: credentials.endpoint,
-          }
-        )
+
       } catch (e) {
         setError(e)
       }

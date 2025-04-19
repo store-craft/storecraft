@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft - Next Gen Commerce-As-Code</title>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+    <script 
+      id='_storecraft_script_' 
+      src="/dist/lib/src/index.umd.cjs" >
+    </script>  
+    <script>
+      console.log({StorecraftDashboard})
+      StorecraftDashboard.mountStorecraftDashboard(
+        document.getElementById('root'), false
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft - Next Gen Commerce-As-Code</title>
+    <script 
+      id='_storecraft_script_' 
+      type="module"
+    >
+      import { mountStorecraftDashboard } from '/dist/lib/src/index.js';
+      mountStorecraftDashboard(
+        document.getElementById('root'), true
+      );
+  </script>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+  </body>
+</html>

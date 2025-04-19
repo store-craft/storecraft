@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite'
 /**
  * https://vitejs.dev/config/
  * 
- * @description This `build` generates a `umd`, `cjs`, `es` build targets
+ * @description This `build` generates a `umd`, `es` build targets
  * of the `Dashboard` at `dist/lib`, both as react functional component and
  * a mounting function, that can be used and wrapped in other 
  * frameworks such as `pure-html`, `vue`, `svelte` etc..
@@ -36,40 +36,24 @@ export default defineConfig(
           find: "@", 
           replacement: resolve(__dirname, "./src") 
         },
-        // {
-        //   find: 'react',
-        //   replacement: 'https://cdn.skypack.dev/react',
-        // },
-        // {
-        //   find: 'react-dom',
-        //   replacement: 'https://cdn.skypack.dev/react-dom'
-        // },
       ]
     },
     build: {
-      
       copyPublicDir: false,
       assetsInlineLimit: 1048576,
       emptyOutDir: true,
       outDir: 'dist/lib/src',
-      // commonjsOptions: {
-      //   include: [/node_modules/],
-      // },
       cssCodeSplit: false,
-      
       lib: {
         entry: ['src/index.tsx'],
-        // name: '@storecraft/dashboard',
         name: 'StorecraftDashboard',
         formats: [
           'es', 
-          // 'cjs', 
-          // 'umd'
+          'umd'
         ],
       },
       rollupOptions: {
         treeshake: 'smallest',
-        
       }
     }
   }

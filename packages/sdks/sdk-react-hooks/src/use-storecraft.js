@@ -62,7 +62,6 @@ export const useStorecraft = (config=getLatestConfig()) => {
      */
     (config) => {
       internal_updateConfig(config);
-      
       trigger();
     }, [trigger]
   );
@@ -71,7 +70,7 @@ export const useStorecraft = (config=getLatestConfig()) => {
   useEffect(
     () => {
       updateConfig(config);
-    }, [config]
+    }, []
   );
 
 

@@ -44,7 +44,10 @@ export type HomePerformanceParams = {
  */
 const compute_top_k_stats = (data: OrdersStatisticsType) => {
 
-  if(data===undefined) 
+  if(!Boolean(data)) 
+    return undefined;
+
+  if(!Boolean(data.days)) 
     return undefined;
 
   type result_type = {

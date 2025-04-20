@@ -101,8 +101,11 @@ export async function migrateToLatest(db_driver, release_db_upon_completion=true
   if (error) {
     console.error('failed to migrate')
     console.error(JSON.stringify(error, null, 2))
+    console.error(JSON.stringify(results, null, 2))
     process.exit(1)
   }
+
+  console.log('Resolving migrations COMPLETE.')
 
   if(release_db_upon_completion)
     await db.destroy();

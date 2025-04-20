@@ -9,6 +9,12 @@ import { Kysely } from 'kysely'
  */
 export async function up(db) {
 
+  // console.log(
+  //   db.schema.alterTable('auth_users')
+  //   .addColumn('firstname', 'text')
+  //   .compile()
+  // )
+
   await db.schema
   .alterTable('auth_users')
   .addColumn('firstname', 'text')

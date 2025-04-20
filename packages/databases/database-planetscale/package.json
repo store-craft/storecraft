@@ -34,9 +34,6 @@
     "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
-  "peerDependencies": {
-    "kysely": "*"
-  },
   "dependencies": {
     "@planetscale/database": "^1.18.0",
     "@storecraft/core": "^1.0.0",

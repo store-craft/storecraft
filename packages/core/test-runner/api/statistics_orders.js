@@ -4,7 +4,7 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name, promises_sequence } from './api.utils.crud.js';
 import { enums } from '../../api/index.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
@@ -86,7 +86,6 @@ const gen_order = (ix = 0) => {
 
 
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {
@@ -99,22 +98,20 @@ export const create = app => {
 
   s.before(async () => {
 
-    order_ids = await Promise.all(
+    order_ids = await promises_sequence(
       Array.from({ length: DAYS_COUNT }).map(
-        (_, ix) => {
-          return Promise.all(
-            [
-              app.api.orders.upsert(gen_order(ix)),
-              app.api.orders.upsert(gen_order(ix))
-            ]
-          )
-        }
-      )
-    ).then(arr => arr.flat()).catch(console.error);
+        (_, ix) => [
+          () => app.api.orders.upsert(gen_order(ix)),
+          () => app.api.orders.upsert(gen_order(ix))
+        ]
+      ).flat()
+    )
+    .catch(console.error);
 
     // console.log({order_ids})
   });
 
+  // return s;
   s.after(async () => {
     for (const id of order_ids) {
       await app.api.orders.remove(id).catch(console.error);
@@ -125,6 +122,8 @@ export const create = app => {
     const stats = await app.api.statistics.compute_statistics(
       gen_date(0), gen_date(DAYS_COUNT - 1)
     );
+
+    // console.log({stats})
 
     assert.ok(stats, 'stats');
     assert.equal(stats.count_days, DAYS_COUNT, 'days count');
@@ -141,6 +140,8 @@ export const create = app => {
     assert.equal(Object.keys(stats.days).length, DAYS_COUNT, 'days length');
 
     const entries = Object.entries(stats.days);
+
+    // console.dir({entries}, {depth: 5});
 
     // test that each item has a count of 2
     for (const [day, stat] of entries) {

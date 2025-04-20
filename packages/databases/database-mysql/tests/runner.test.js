@@ -15,7 +15,7 @@ export const create_app = async () => {
       auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
       auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
     }
-  )
+  ) 
   .withPlatform(new NodePlatform())
   .withDatabase(
     new MySQL(
@@ -39,7 +39,6 @@ export const create_app = async () => {
 
 async function test() {
   const app = await create_app();
-
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
       runner.create(app).run();

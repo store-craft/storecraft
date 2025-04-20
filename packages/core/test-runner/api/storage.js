@@ -45,12 +45,19 @@ export const create = (app) => {
     {}
   );
 
+
   s.before(
     async () => { 
-      await app.init();
-      assert.ok(app.ready);
+      assert.ok(app.ready, 'app not ready');
+      if(!app.storage) {
+        console.log('skipping storage tests');
+      }
     }
   );
+
+  if(!app.storage) {
+    return s;
+  }
 
   s.after(
     async () => { 

@@ -38,9 +38,6 @@
     "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish --access public"
   },
-  "peerDependencies": {
-    "kysely": "*"
-  },
   "dependencies": {
     "@libsql/client": "^0.9.0",
     "@storecraft/core": "^1.0.0",

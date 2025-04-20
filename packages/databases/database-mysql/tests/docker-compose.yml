@@ -8,11 +8,12 @@ services:
     environment:
       MYSQL_DATABASE: main
       MYSQL_ROOT_PASSWORD: password
+      DB_PASSWORD: password
     volumes:
       - mysqldata:/var/lib/mysql
       - mysqldata_config:/etc/mysql/conf.d
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      test: ["CMD", "mysqladmin", "ping"]
       retries: 3
       timeout: 5s
     ports:

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-turso",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "`Storecraft` database driver for `Turso` (cloud sqlite)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

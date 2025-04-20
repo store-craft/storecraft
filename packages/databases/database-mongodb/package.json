@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mongodb",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Storecraft database driver for mongodb on node / bun / deno platform",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

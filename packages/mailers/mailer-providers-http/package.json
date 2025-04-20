@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/mailer-providers-http",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Official Serverless Friendly e-mail adapters for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

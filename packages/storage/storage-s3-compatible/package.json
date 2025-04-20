@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/storage-s3-compatible",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Official S3-Compatible Storage adapter for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

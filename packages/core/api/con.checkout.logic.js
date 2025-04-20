@@ -289,7 +289,7 @@ async (checkoutId, client_payload) => {
   const on_checkout_complete = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create, client_payload
   );
-
+  
   { // we need to validate status is in correct format
     if(on_checkout_complete?.status?.checkout) {
       assert(

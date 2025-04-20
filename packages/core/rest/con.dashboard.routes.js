@@ -5,7 +5,41 @@ import { Polka } from './polka/index.js'
  * @param {string} version `npm` package versioning such as 'latest' | '1.0.26' | etc.. 
  * {@link https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions}
  */
-const html = (version='latest') => `
+const html_umd = (version='latest') => `
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link 
+      rel="icon" 
+      sizes="any" 
+      type="image/svg+xml" 
+      href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft - Next Gen Commerce-As-Code</title>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+    <script 
+      id='_storecraft_script_' 
+      type="application/javascript"
+      src="https://www.unpkg.com/@storecraft/dashboard@${version}/dist/lib/src/index.umd.cjs">
+    </script>
+    <script>
+      console.log({StorecraftDashboard})
+      StorecraftDashboard.mountStorecraftDashboard(
+        document.getElementById('root'), false
+      );
+    </script>
+  </body>
+</html>
+`
+
+/**
+ * @param {string} version `npm` package versioning such as 'latest' | '1.0.26' | etc.. 
+ * {@link https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions}
+ */
+const html_esm = (version='latest') => `
 <!doctype html>
 <html lang="en">
   <head>
@@ -104,7 +138,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.headers.append('Cache-Control', 'stale-while-revalidate')
-      res.sendHtml(html('latest'));
+      res.sendHtml(html_umd('latest'));
     }
   );
 
@@ -121,7 +155,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const version = req?.params?.version ?? 'latest';
       res.headers.append('Cache-Control', 'stale-while-revalidate')
-      res.sendHtml(html(version));
+      res.sendHtml(html_umd(version));
     }
   );
 

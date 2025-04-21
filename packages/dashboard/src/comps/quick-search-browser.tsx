@@ -87,11 +87,12 @@ export const QuickSearchButton = (
 
   return (
 <div 
-    onClick={() => {ref_overlay.current.show()}} 
-    {...rest}  >
-  <div className='rounded-md flex flex-row gap-2 p-1 items-center 
-                  border shelf-card shelf-text-minor text-sm
-                  cursor-pointer hover:ring-pink-400 hover:ring-2'>
+  onClick={() => {ref_overlay.current.show()}} 
+  {...rest}  >
+  <div 
+    className='rounded-md flex flex-row gap-2 p-1 items-center 
+      border shelf-card shelf-text-minor text-sm
+      cursor-pointer hover:ring-pink-400 hover:ring-2'>
     <CiSearch/> 
     <span children='Search' />
     <div className='rounded-md border flex flex-row 
@@ -103,8 +104,8 @@ export const QuickSearchButton = (
   <MainPortal.PortalChild>        
     <Overlay ref={ref_overlay} key='tomer'>
       <QuickSearchBrowser 
-          onCancel={() => ref_overlay.current.hide()} 
-          onSelect={onSelect}/>
+        onCancel={() => ref_overlay.current.hide()} 
+        onSelect={onSelect}/>
     </Overlay>
   </MainPortal.PortalChild>        
 </div>    
@@ -208,19 +209,25 @@ const SearchGroup = (
                 className={
                   `h-14 w-full rounded-md p-3 
                   shadow-sm scroll-auto
-                   font-medium text-sm flex flex-row items-center
-                   justify-between cursor-pointer
-                   ${selectedItemIndex==ix ? 
-                    'bg-kf-400 dark:bg-kf-400 text-white' : 
-                    'bg-slate-100 dark:bg-[rgb(41,52,69)]'}
+                  font-medium text-sm flex flex-row items-center
+                  justify-between cursor-pointer
+                  ${selectedItemIndex==ix ? 
+                  'bg-kf-400 dark:bg-kf-400 text-white' : 
+                  'bg-slate-100 dark:bg-[rgb(41,52,69)]'}
                   ` 
                 }
                 onClick={_ => {onClick && onClick(index, ix)}}
-                onMouseMove={(e) => { e.preventDefault(); onHover && onHover(index, ix) }}>
-
-                  <span children={it?.title ?? it?.handle ?? it?.id ?? 'nooop'}  />
+                onMouseMove={
+                  (e) => { e.preventDefault(); onHover && onHover(index, ix) }
+                  }
+                >
+                  <span 
+                    className='max-w-[80%] overflow-hidden text-ellipsis'
+                    children={it?.title ?? it?.handle ?? it?.id ?? 'nooop'}  
+                  />
                   <BsArrowReturnLeft 
-                      className={'text-xl ' + (selectedItemIndex==ix ? 'inline' : 'hidden')} />
+                    className={'text-xl ' + (selectedItemIndex==ix ? 'inline' : 'hidden')} 
+                  />
               </div>
             )
           )
@@ -339,13 +346,13 @@ const QuickSearchBrowser = (
 
   const onSubmit = useCallback(
     (e: React.SyntheticEvent) => {
-      e?.preventDefault()
+      e.stopPropagation();
+      e?.preventDefault();
       const search_terms = ref_input.current.value;
 
-      query({ limit: 5, vql: search_terms })
+      query({ limit: 5, vql: search_terms });
     }, [query]
   );
-
 
   return (
 <div className='w-full h-full relative'>
@@ -360,7 +367,8 @@ const QuickSearchBrowser = (
       <form 
         autoFocus
         className='w-full h-fit' 
-        tabIndex={4344}>
+        tabIndex={4344}
+        onSubmit={onSubmit}>
             
         <Bling rounded='rounded-xl' stroke='border' >
           <div className='flex flex-row justify-between items-center'>
@@ -371,11 +379,11 @@ const QuickSearchBrowser = (
               type='search' 
               placeholder='search' 
               className='w-full h-12 border shelf-input-color 
-                        shelf-border-color-soft px-3 text-xl font-medium 
-                        focus:outline-none rounded-xl'  />
+                shelf-border-color-soft px-3 text-xl font-medium 
+                focus:outline-none rounded-xl'  />
             <BiSearchAlt 
               className='text-white text-4xl mx-1 sm:mx-5 
-                        cursor-pointer' 
+                cursor-pointer' 
               onClick={onSubmit}/>
           </div>
         </Bling>

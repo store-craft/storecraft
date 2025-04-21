@@ -1,5 +1,5 @@
 // Query types
-import type { BOOLQL } from '../vql/bool-ql/types.d.ts';
+import type { VQL } from '../vql/types.d.ts';
 
 type legal_value_types = string | boolean | number;
 export type ApiQuerySortOrder = 'asc' | 'desc';
@@ -41,7 +41,7 @@ export type ApiQuery<T extends any = undefined> = {
   /**
    * @description internal usage Abstract Syntx Tree (AST)
    */
-  vqlParsed?: BOOLQL.AST;
+  vqlParsed?: VQL.AST;
 
   /**
    * @description Sort by cursor, should correlate with `startAt` / `endAt` cursors
@@ -112,6 +112,22 @@ type PickByValue<T, V> = Pick<T, {
 type PickKeysByValueType<T, V> = keyof PickByValue<T, V>
 
 
-type Entries3<T> = {
-  [K in keyof T]: [keyof PickByValue<T, T[K]>, T[K]]
-}[keyof T][];
+export type VQL<T extends any = any> = {
+  $and?: VQL<T>[],
+  $or?: VQL<T>[],
+  $not?: VQL<T>[],
+} & {
+  [K in PickKeysByValueType<T, legal_value_types>]?: {
+    $eq?: T[K],
+    $gt?: T[K],
+    $gte?: T[K],
+    $lt?: T[K],
+    $lte?: T[K],
+    $ne?: T[K],
+    $in?: T[K][],
+    $nin?: T[K][],
+    $like?: string,
+  } & {
+    search?: string
+  }
+}

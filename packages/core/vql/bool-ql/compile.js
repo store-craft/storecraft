@@ -20,9 +20,15 @@ const generate = async () => {
     }
   );
 
-  const file = path.resolve(__dirname, 'index.js');
+  const file = path.resolve(__dirname, 'generated.js');
 
   await writeFile(file, source);
 }
 
 generate()
+.then(
+  _ => console.log('generated bool-ql parser')
+)
+.catch(
+  e => console.error('failed to generate bool-ql parser', e)
+);

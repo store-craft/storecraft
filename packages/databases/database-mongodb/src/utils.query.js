@@ -1,6 +1,6 @@
 /**
  * @import { ApiQuery, Cursor, Tuple } from '@storecraft/core/api'
- * @import { VQL } from '@storecraft/core/vql'
+ * @import { BOOLQL } from '@storecraft/core/vql'
  */
 
 import { to_objid } from "./utils.funcs.js";

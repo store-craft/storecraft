@@ -1,7 +1,7 @@
 /**
  * @import { db_crud, RegularGetOptions } from '@storecraft/core/database'
  * @import { ApiQuery, BaseType, Cursor, ExpandQuery, QuickSearchResource, QuickSearchResult, Tuple, withOptionalID } from '@storecraft/core/api'
- * @import { VQL } from '@storecraft/core/vql'
+ * @import { BOOLQL } from '@storecraft/core/vql'
  * @import { WithRelations } from './utils.types.js'
  * @import { WithId } from 'mongodb'
  */

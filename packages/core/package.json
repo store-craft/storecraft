@@ -65,6 +65,10 @@
       "import": "./vql/index.js",
       "types": "./vql/types.d.ts"
     },
+    "./vql/bool-ql": {
+      "import": "./vql/bool-ql/index.js",
+      "types": "./vql/bool-ql/types.d.ts"
+    },
     "./payments": {
       "import": "./payments/public.js",
       "types": "./payments/types.public.d.ts"

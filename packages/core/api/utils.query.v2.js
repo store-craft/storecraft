@@ -3,7 +3,7 @@
  *  ApiQuery, Cursor, SortCursor, ExpandQuery, SortOrder, Tuple
  * } from './types.api.query.js';
  */
-import { parse } from "../vql/bool-ql/index.js";
+import { parse } from "../vql/index.js";
 import { assert } from "./utils.func.js";
 
 

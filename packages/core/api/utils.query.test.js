@@ -11,7 +11,7 @@ import {
   parse_sortby, parse_tuples, parse_tuples_old, parse_value_part 
 } from './utils.query.js';
 import { assert_partial } from '../test-runner/api/utils.js';
-import { parse } from '../vql/index.js';
+import { parse } from '../vql/bool-ql/index.js';
 
 
 const s = suite(

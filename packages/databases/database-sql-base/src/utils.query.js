@@ -1,12 +1,12 @@
 /**
  * @import { ApiQuery, Cursor } from '@storecraft/core/api'
- * @import { VQL } from '@storecraft/core/vql'
+ * @import { BOOLQL } from '@storecraft/core/vql/bool-ql'
  * @import { Database } from '../types.sql.tables.js'
  * @import { BinaryOperator, ExpressionBuilder } from 'kysely'
  * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
  */
 
-import { parse } from "@storecraft/core/vql";
+import { parse } from "@storecraft/core/vql/bool-ql";
 
 /**
  * Convert an API Query cursor into mongo dialect, also sanitize.
@@ -80,7 +80,7 @@ export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 /**
  * @template {QueryableTables} T
  * @param {ExpressionBuilder<Database>} eb 
- * @param {VQL.Node} node 
+ * @param {BOOLQL.Node} node 
  * @param {T} table_name 
  */
 export const query_vql_node_to_eb = (eb, node, table_name) => {
@@ -136,7 +136,7 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
 
 /**
  * @param {ExpressionBuilder<Database>} eb 
- * @param {VQL.Node} root 
+ * @param {BOOLQL.Node} root 
  * @param {QueryableTables} table_name 
  */
 export const query_vql_to_eb = (eb, root, table_name) => {
@@ -214,7 +214,9 @@ export const query_to_eb = (eb, q={}, table_name) => {
     if(q.vql && !q.vqlParsed) {
       q.vqlParsed = parse(q.vql)
     }
-  } catch(e) {}
+  } catch(e) {
+    console.error('VQL parse error', e);
+  }
 
   const vql_clause = query_vql_to_eb(
     eb, q.vqlParsed, table_name

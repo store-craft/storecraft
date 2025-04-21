@@ -49,7 +49,6 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
-
           await update_entry_on_all_connection_of_relation(
             driver, 'storefronts', 'posts', objid, data, session
           );

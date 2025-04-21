@@ -38,8 +38,15 @@ export const table_name = 'products'
  * @param {db_col["$type_upsert"]} item 
  */
 const is_variant = item => {
-  if(item && ('variant_hint' in item) && ('parent_handle' in item)&& ('parent_id' in item)) {
-    return item.parent_handle && item.parent_id && item.variant_hint;
+  if(
+    item && 
+    ('variant_hint' in item) && 
+    ('parent_handle' in item) && 
+    ('parent_id' in item)
+  ) {
+    return item.parent_handle && 
+      item.parent_id && 
+      item.variant_hint;
   }
 
   return false;

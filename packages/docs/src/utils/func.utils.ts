@@ -3,14 +3,14 @@
  */
 export const to_handle = (title: string) => {
   if(typeof title !== 'string')
-    return undefined
-  let trimmed = title.trim()
+    return undefined;
+
+  let trimmed : string = title.trim();
+
   if(trimmed === "")
     return undefined
   
-  trimmed = trimmed.toLowerCase().match(/[\p{L}\d]+/gu).join('-')
-  if(trimmed.length==0)
-      return undefined
-  
-  return trimmed
+  const handle = trimmed?.toLowerCase().match(/[\p{L}\d]+/gu)?.join('-')
+
+  return handle
 }

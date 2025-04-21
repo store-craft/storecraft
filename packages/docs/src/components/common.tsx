@@ -25,19 +25,20 @@ export const Bling = (
 ) => {
 
   return (
-<div 
-    className={`bg-gradient-to-r 
-    ${from} ${to} ${stroke} 
-    ${rounded} ${className}`} 
-    {...rest}
-    style={
-      {
-        'background-clip': 'border-box',
-        'border-color': 'transparent',
-        'background-origin': 'border-box'
+    <div 
+      className={`bg-gradient-to-r 
+      ${from} ${to} ${stroke} 
+      ${rounded} ${className}`} 
+      {...rest}
+      style={
+        {
+          'backgroundClip': 'border-box',
+          'borderColor': 'transparent',
+          'backgroundOrigin': 'border-box'
+        }
       }
-    }
-    children={children}/>
+      children={children}
+    />
   )
 
 }

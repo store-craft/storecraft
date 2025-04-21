@@ -1,5 +1,5 @@
 import pkg from '../../package.json' with { type: "json" }
-import { Bling } from '@/components/common.tsx'
+import { Bling } from '@/components/common'
 
 export const StorecraftText = (
   {

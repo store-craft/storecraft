@@ -1,4 +1,4 @@
-import Link from 'next/link.js'
+import Link from 'next/link'
 import { BsNewspaper } from 'react-icons/bs'
 import { AiOutlineDatabase } from 'react-icons/ai'
 import { MdAdminPanelSettings } from 'react-icons/md'
@@ -8,9 +8,9 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { FaTerminal } from "react-icons/fa6";
 import { MdNavigateNext } from "react-icons/md";
-import Drawer from './drawer.tsx'
+import Drawer from './drawer'
 import pkg from '@/../package.json' with { type: "json" };
-import { DocGroup } from '@/utils/docs-config.ts'
+import { DocGroup } from '@/utils/docs-config'
 import { IconBaseProps } from 'react-icons'
 
 export type HeaderParams = {
@@ -27,39 +27,39 @@ export type Link2Params = {
 
 export type SideGroupsParams = {
     group: DocGroup;
-    selectedSlug: string;
-    link_prefix: string;
+    selectedSlug?: string;
+    link_prefix?: string;
     itemClass?: string;
-    onClickMenuItem: (item: DocGroup) => any;
+    onClickMenuItem?: (item: DocGroup) => any;
 } & React.ComponentProps<'div'>;
 
 export type SideGroupParams = {
     group: DocGroup;
-    selectedSlug: string;
-    link_prefix: string;
+    selectedSlug?: string;
+    link_prefix?: string;
     itemClass?: string;
-    onClickMenuItem: (item: DocGroup) => any;
+    onClickMenuItem?: (item: DocGroup) => any;
 } & React.ComponentProps<'div'>;
 
 export type SideBarParams = {
     groups: DocGroup[];
     link_prefix?: string;
-    selectedSlug: string;
-    onClickMenuItem?: (item: DocGroup) => any;
+    selectedSlug?: string;
+    onClickMenuItem?: (item?: DocGroup) => any;
 } & React.ComponentProps<'div'>;
 
 export type SideBarSmallParams = {
   showMenu?: boolean;
   groups: DocGroup[];
-  selectedSlug: string;
+  selectedSlug?: string;
   link_prefix?: string;
-  onClickMenuItem?: (item: DocGroup) => any;
+  onClickMenuItem?: (item?: DocGroup) => any;
 } & React.ComponentProps<'div'>;
 
-export const find_next_route = (group: DocGroup) => {
+export const find_next_route = (group?: DocGroup): string | undefined => {
 
   if(!Boolean(group?.empty))
-    return group.route;
+    return group?.route;
 
   return find_next_route(group?.groups?.[0])
 }
@@ -69,7 +69,7 @@ const Icon = (
   { 
     name, ...rest 
   }: {
-    name: string,
+    name?: string,
   } & IconBaseProps
 ) => {
 
@@ -99,12 +99,12 @@ const Header = (
 
   const clsSelected = ` border-white/80 dark:border-white/10 
                        bg-gradient-to-br 
-                       from-kf-500 to-pink-500/20 
-                       dark:to-kf-500/20 dark:from-pink-500 
+                       from-kf-600 to-pink-500/40 
+                       dark:from-pink-500 dark:to-kf-500/20
                        text-white dark:text-white/70 `;
   const clsHover = ` group-hover:border-white/80 group-hover:dark:border-white/10 
                        group-hover:bg-gradient-to-br 
-                       group-hover:from-kf-500 group-hover:to-pink-500/20 
+                       group-hover:from-kf-600 group-hover:to-pink-500/40 
                        group-hover:dark:to-kf-500/20 group-hover:dark:from-pink-500 
                        group-hover:text-white group-hover:dark:text-white/70 `;
   const clsUnSelected = 'text-kf-500 border-kf-500/20 group-hover:dark:border-pink-500/40';
@@ -167,7 +167,7 @@ const SideGroups = (
     <div {...rest}>
       <div className='flex flex-col w-full gap-2 '>
         { 
-          groups.map(
+          groups?.map(
             (item, ix) => (
               <SideGroup
                 key={ix}
@@ -195,7 +195,7 @@ const SideGroup = (
 
   const isLeaf = !group.groups?.length;
   const [open, setopen] = useState(
-    selectedSlug.startsWith(group.route)
+    selectedSlug?.startsWith(group.route!)
   );
 
   // console.log(selectedSlug)
@@ -203,7 +203,7 @@ const SideGroup = (
   // console.log(selectedSlug.startsWith(group.route))
 
   const _onClick = useCallback(
-    (_) => {
+    (_: any) => {
       setopen(v=>!v);
 
       isLeaf && onClickMenuItem && onClickMenuItem(group);
@@ -214,24 +214,23 @@ const SideGroup = (
 
   return (
     <Link 
-        href={(link_prefix ? (link_prefix + '/') : '') + href} 
-        alt={group.title}
-        title={group.title}>
+      href={(link_prefix ? (link_prefix + '/') : '') + href} 
+      title={group.title}>
       <Link2 
-          itemClass={itemClass}
-          onClick={_onClick} 
-          selected={isLeaf && group.route===selectedSlug}
-          title={group.title} 
-          next={!isLeaf}/>
+        itemClass={itemClass}
+        onClick={_onClick} 
+        selected={isLeaf && group.route===selectedSlug}
+        title={group.title} 
+        next={!isLeaf}/>
       {
         !isLeaf &&
         <Drawer button={null} isOpen={open} className={open ? 'mt-2' : ''}>
           <SideGroups 
-              itemClass={'pl-5 text-gray-500 dark:text-gray-400'}
-              link_prefix={link_prefix}
-              group={group} 
-              onClickMenuItem={onClickMenuItem} 
-              selectedSlug={selectedSlug} />
+            itemClass={'pl-5 text-gray-500 dark:text-gray-400'}
+            link_prefix={link_prefix}
+            group={group} 
+            onClickMenuItem={onClickMenuItem} 
+            selectedSlug={selectedSlug} />
         </Drawer>
       }
     </Link>
@@ -251,7 +250,7 @@ const SideBar = (
     () => groups.findIndex(
       g => {
         return g?.groups?.find(
-          it => selectedSlug?.startsWith(it.route ?? it.groups[0].route)
+          it => selectedSlug?.startsWith(it.route! ?? it.groups![0].route)
         )!==undefined
       }
     ), [selectedSlug, groups]
@@ -268,16 +267,16 @@ const SideBar = (
           groups.map(
             (group, index) => 
             <Link 
-                key={index} 
-                href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group))} 
-                title={group.title}
-                target={group.external ? '_blank' : ''}
-                alt={group.title}>
+              key={index} 
+              href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group))} 
+              title={group.title}
+              target={group.external ? '_blank' : ''}
+                >
               <Header 
                 group={group} 
                 selected={selected_group==index}
                 onClick={
-                  ()=>onClickMenuItem && onClickMenuItem(null)
+                  ()=>onClickMenuItem && onClickMenuItem(undefined)
                 } 
               />  
             </Link>
@@ -292,7 +291,8 @@ const SideBar = (
           className='mt-10'
           group={groups[selected_group]} 
           onClickMenuItem={onClickMenuItem}
-          selectedSlug={selectedSlug} />
+          selectedSlug={selectedSlug} 
+        />
       }
 
     </nav>
@@ -309,16 +309,16 @@ export const SideBarSmall = (
  return (
 <div className=''>
   <div 
-      className={`z-[50] block md:hidden w-[300px] h-full fixed inset-0
-                  transition-transform duration-300
-                  ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
-                }>
+    className={`z-[50] block md:hidden w-[300px] h-full fixed inset-0
+                transition-transform duration-300
+                ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
+              }>
     <SideBar 
-        className={`absolute left-0 p-6 w-full 
-                    h-full overflow-y-auto  text-sm
-                    bg-white dark:bg-gray-900
-                    `
-                  }
+      className={`absolute left-0 p-6 w-full 
+                  h-full overflow-y-auto  text-sm
+                  bg-white dark:bg-gray-900
+                  `
+                }
       link_prefix={link_prefix}
       onClickMenuItem={onClickMenuItem}
       selectedSlug={selectedSlug}
@@ -333,12 +333,13 @@ export const SideBarSmall = (
     {
       showMenu && 
       <IoMdClose 
-          className='absolute right-5 top-5 z-[55] text-xl' 
-          onClick={_ => onClickMenuItem(undefined)} />
+        className='absolute right-5 top-5 z-[55] text-xl' 
+        onClick={_ => onClickMenuItem?.(undefined)} 
+      />
     }
   </div>
   <div 
-    onClick={_ => onClickMenuItem(undefined)}
+    onClick={_ => onClickMenuItem?.(undefined)}
     className={
       `
       fixed w-full h-screen top-0 left-0 z-40 cursor-pointer block md:hidden

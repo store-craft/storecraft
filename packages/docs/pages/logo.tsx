@@ -1,4 +1,4 @@
-import { Bling } from "@/components/common.jsx";
+import { Bling } from "@/components/common";
 
 export default function LogoPage() {
   return (

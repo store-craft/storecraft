@@ -3,7 +3,7 @@ import Link from 'next/link.js'
 export default function CustomLink(
   { 
     href, children, ...rest 
-  }
+  }: React.ComponentProps<typeof Link>
 ) {
   
   // console.log('children ', href)

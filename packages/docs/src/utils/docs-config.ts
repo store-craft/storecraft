@@ -427,8 +427,6 @@ export default {
       }, 
       padding_override: 'px-0',
       route: 'rest-api/api',
-      path: 'content/docs/rest-api/api.mdx'
-  // external: '/rest-api-reference'
     },
     {
       title: "CLI",

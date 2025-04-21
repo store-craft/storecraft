@@ -1,6 +1,103 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@plugin "@tailwindcss/typography";
+@plugin 'tailwind-scrollbar';
+
+@theme {
+  --font-inter: Inter, sans-serif;
+  --font-display: "Oswald", "sans-serif";
+  --font-display--font-feature-settings: "cv02", "cv03", "cv04", "cv11"; 
+  --font-display--font-variation-settings: "opsz" 32; 
+  
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 580px;
+  --breakpoint-md: 768px;
+  --breakpoint-md-lg: 914px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  --color-kf-50: #f5f1ff;
+  --color-kf-100: #ede5ff;
+  --color-kf-200: #deceff;
+  --color-kf-300: #c6a6ff;
+  --color-kf-400: #ad74ff;
+  --color-kf-500: #973cff;
+  --color-kf-600: #8f15ff;
+  --color-kf-700: #8403fe;
+  --color-kf-800: #6e02d5;
+  --color-kf-900: #440381;
+
+
+  --color-test: #fb64b6;
+  --color-test2: oklch(52.5% 0.223 3.958);
+
+  --color-malibu-50: #ebfeff;
+  --color-malibu-100: #cdfaff
+  --color-malibu-200: #a1f3ff;
+  --color-malibu-300: #51e5ff;
+  --color-malibu-400: #1ad2f6;
+  --color-malibu-500: #00b5dc;
+  --color-malibu-600: #018fb9;
+  --color-malibu-700: #097295;
+  --color-malibu-800: #115d79;
+  --color-malibu-900: #134c66;
+
+  @keyframes spin2 {
+    0%{ transform : rotate(-10.0deg) scale(2);}
+    20% { transform : rotate(20.0deg) translateY(-10px) scale(2.2);}
+    40% { transform : rotate(0.0deg) translateY(-4px) scale(2);}
+    60% { transform : rotate(-10.0deg) translateY(-5px) scale(1.4);}
+    100% { transform : rotate(0.0deg) translateY(-0px) scale(0.8);}
+  }
+
+  @keyframes fadein {
+    0% { opacity : 0;}
+    100% { opacity : 1;}
+  }
+
+  @keyframes  fadeout {
+    0% { opacity : 1;}
+    100% { opacity : 0;}
+  }
+
+  @keyframes move-bg {
+    0% { background-position: 0 0 ;}
+    100% { background-position: 100px 100px ;}
+  }
+
+  @keyframes wave {
+    0% { transform: rotate(0.0deg) ;}
+    10% { transform: rotate(14deg) ;}
+    20% { transform: rotate(-8deg) ;}
+    30% { transform: rotate(14deg) ;}
+    40% { transform: rotate(-4deg) ;}
+    50% { transform: rotate(10.0deg) ;}
+    60% { transform: rotate(0.0deg) ;}
+    100% { transform: rotate(0.0deg) ;}
+  }
+
+  @keyframes astro {
+    0% { transform: rotate(0.0deg) ;}
+    10% { transform: rotate(14deg) ;}
+    20% { transform: rotate(-8deg) ;}
+    30% { transform: rotate(14deg) ;}
+    40% { transform: rotate(-4deg) ;}
+    50% { transform: rotate(10.0deg) ;}
+    60% { transform: rotate(0.0deg) ;}
+    100% { transform: rotate(0.0deg) ;}
+  }
+
+  --animate-spin-slow: spin 0.3s linear;
+  --animate-fadein: fadein 0.5s linear;
+  --animate-fadeout: fadeout 0.6s linear;
+  --animate-ltr-linear-infinite: move-bg 10s linear infinite;
+  --animate-waving-hand: wave 2s linear infinite;
+  --animate-wave: spin2 2s ease-out infinite;
+
+}
+
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
@@ -50,7 +147,6 @@
   }
 
   .shelf-side-hover {
-    @apply sm:m:hover:bg-gray-200/90 dark:sm:m:hover:bg-gray-200/5;
   }
 
   .shelf-action-bar {
@@ -101,7 +197,7 @@
   }
 
   .shelf-card {
-    @apply shelf-border-color;
+    @apply border-gray-300 dark:border-slate-600;
     @apply bg-white dark:bg-[rgb(41,52,69)] ;
   }
 
@@ -239,5 +335,3 @@
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');

@@ -1,10 +1,12 @@
-import useDarkMode from "@/hooks/use-dark-mode.ts";
-import { Card } from "./landing-card.tsx"
-import Link from "next/link.js";
+import useDarkMode from "@/hooks/use-dark-mode";
+import { Card } from "./landing-card"
+import Link from "next/link";
 
 const LearnMoreFooter = (
   {
     href
+  } : {
+    href: string
   }
 ) => {
 

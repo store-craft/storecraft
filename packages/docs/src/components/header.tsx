@@ -3,11 +3,11 @@ import {
 } from 'react-icons/ai'
 import Link from 'next/link.js'
 import pkg from '../../package.json' with { type: 'json' }
-import { Connect } from './connect.tsx'
-import { LogoGradient, LogoText } from './logo-text.tsx'
+import { Connect } from './connect'
+import { LogoGradient, LogoText } from './logo-text'
 import { FaTerminal } from 'react-icons/fa'
-import { GradientText } from './gradient-text.tsx'
-import ShowIf from './show-if.tsx'
+import { GradientText } from './gradient-text'
+import ShowIf from './show-if'
 
 export const Logo2 = (
   { 
@@ -21,7 +21,7 @@ export const Logo2 = (
     draggable='false' 
     className='h-full'
     title='SHELF Admin' 
-    alt='SHELF Admin'>
+    >
 
   <div 
       className='relative w-full h-full flex flex-row 
@@ -52,11 +52,11 @@ export const Logo2 = (
 }
 
 export type SlugParams = {
-  slug: string;
+  slug?: string;
 } & React.ComponentProps<'div'>;
 
 export type HeaderParams = {
-  slug: string;
+  slug?: string;
   className: string;
   show_docs_decoration?: boolean;
   show_start_here?: boolean;
@@ -105,8 +105,6 @@ const Header = (
     <div className='flex flex-row w-fit h-fit items-center gap-3'>
       <Link href='/'>
         <div className='w- flex flex-row items-center gap-1 relative'>
-          {/* <LogoV2 className='h-10 w-10 object-contain rounded-xl bg-teal-400 
-                        scale-90 border-kf-600 --shadow-lg opacity-80' />                   */}
           <img src='/favicon.svg' className='w-7 h-7' />
           <LogoGradient className='h-6' />
           {
@@ -120,11 +118,11 @@ const Header = (
       </Link>
 
       <Slug 
-          slug={slug}
-          className='w-fit pb-1 pt-2 px-3
-                     border-l border-gray-400/40
-                     text-base font-extrabold italic
-                     hidden md:block'
+        slug={slug}
+        className='w-fit pb-1 pt-2 px-3
+          border-l border-gray-400/40
+          text-base font-extrabold italic
+          hidden md:block'
       />
     </div>                          
 
@@ -136,9 +134,9 @@ const Header = (
                 sm:text-xl font-bold h-fit'>
             <FaTerminal />
             <GradientText 
-                className='bg-gradient-to-r from-black dark:from-white  
-                    to-pink-500 dark:to-pink-500' 
-                children='start_here_' />
+              className='bg-gradient-to-r from-black dark:from-white  
+              to-pink-500 dark:to-pink-500' 
+              children='start_here_' />
           </div>
         </Link>
       </ShowIf>

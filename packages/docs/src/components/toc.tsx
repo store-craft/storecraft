@@ -1,7 +1,7 @@
-import { to_handle } from '@/utils/func.utils.ts'
+import { to_handle } from '@/utils/func.utils'
 import { useRouter } from 'next/router.js';
 import { useEffect, useMemo, useState } from 'react'
-import { MDView } from './md-view.tsx';
+import { MDView } from './md-view';
 import Link from 'next/link.js';
 
 const strip_tags = (s: string) => {
@@ -52,7 +52,7 @@ export const TOC = (
   );
 
   const headings_with_handles = useMemo(
-    () => headings.map(
+    () => headings?.map(
       it => (
         { 
           ...it, 
@@ -74,7 +74,7 @@ export const TOC = (
                 prose prose-slate --font-bold text-base/8 mb-2'/>        
 
       {
-        headings_with_handles.slice(1).map(
+        headings_with_handles?.slice(1).map(
           (h, ix) => (
             <Link 
                 key={ix}

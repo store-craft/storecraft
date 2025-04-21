@@ -1,16 +1,16 @@
-import { GradStroke } from '@/components/grad-stroke.tsx';
-import Header from '@/components/header.tsx';
-import useDarkMode from '@/hooks/use-dark-mode.ts';
-import docs from '@/utils/docs-config.ts'
-import { SideBarSmall } from '@/components/side-bar.tsx';
-import useToggle from '@/hooks/use-toggle.ts';
-import { Hero } from '@/components/landing-hero.tsx';
-import { LandingCards } from '@/components/landing-cards.tsx';
-import {CodeBlock} from '@/components/code-block.tsx';
-import { code, code_payment, NPX } from '@/components/landing-more.tsx';
-import { Segment } from '@/components/landing-segment.tsx';
-import { Bling } from '@/components/common.tsx';
-import { CommonGradientText } from '@/components/gradient-text.tsx';
+import { GradStroke, GradStrokeV2 } from '@/components/grad-stroke';
+import Header from '@/components/header';
+import useDarkMode from '@/hooks/use-dark-mode';
+import docs from '@/utils/docs-config'
+import { SideBarSmall } from '@/components/side-bar';
+import useToggle from '@/hooks/use-toggle';
+import { Hero } from '@/components/landing-hero';
+import { LandingCards } from '@/components/landing-cards';
+import {CodeBlock} from '@/components/code-block';
+import { code, code_payment, NPX } from '@/components/landing-more';
+import { Segment } from '@/components/landing-segment';
+import { Bling } from '@/components/common';
+import { CommonGradientText } from '@/components/gradient-text';
 import { IoTerminal } from "react-icons/io5";
 
 
@@ -20,24 +20,23 @@ export default () => {
 
   return (
     <div className={'w-screen h-screen relative ' + (darkMode ? 'dark' : '')}>
-      <GradStroke className='w-full h-[550px] absolute right-10 top-0 
-                    opacity-20 dark:opacity-30 z-50 pointer-events-none' />
+      <GradStrokeV2 
+        className='w-full h-[550px] absolute right-0 top-0 
+          opacity-20 dark:opacity-20 z-50 pointer-events-none' />
 
       <div className='w-full h-full transition-colors overflow-y-auto
-                      bg-slate-200 dark:bg-gray-900 relative
-                      text-gray-800 dark:text-gray-300
-                      px-3 md:px-10'>
+        bg-slate-200 dark:bg-gray-900 relative
+        text-gray-800 dark:text-gray-300
+        px-3 md:px-10'>
 
         <Header 
-            className='
-                    bg-white/10 dark:bg-transparent backdrop-blur-sm 
-                      shadow-sm  flex-shrink-0 
-                      w-full z-40 ' 
-            slug={undefined} 
-            show_docs_decoration={false}
-            show_start_here={true}
-            onMenuClick={toggleMenu} 
-            />
+          className='bg-white/10 dark:bg-transparent backdrop-blur-sm 
+            shadow-sm  flex-shrink-0 w-full z-40 ' 
+          slug={undefined} 
+          show_docs_decoration={false}
+          show_start_here={true}
+          onMenuClick={toggleMenu} 
+        />
 
         <div className='--w-full block  h-fit 
                      relative text-[17px] max-w-[1300px] mx-auto
@@ -138,11 +137,12 @@ export default () => {
               </Bling>
             </div>
           </div> 
-
         </div>
         
-        <span children={`All rights reserved to storecraft.app (${new Date().getFullYear()})`}
-              className='w-full h-fit p-10 flex flex-row justify-center' />
+        <span 
+          children={`All rights reserved to storecraft.app (${new Date().getFullYear()})`}
+          className='w-full h-fit p-10 flex flex-row justify-center' 
+        />
 
         {/* <div className='bg-red-400 z-50 fixed w-10 h-10 inset-0' /> */}
         <SideBarSmall 

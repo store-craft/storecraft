@@ -13,6 +13,7 @@ export type ClipBoardCopyButtonParams = {
    */
   process_before_copy?: (value: string) => string;
 };
+
 /**
 * A view with `markdown` context, that is `copyable`
 */
@@ -20,7 +21,7 @@ export type CopyableViewParams = {
   /**
    * markdown text
    */
-  value: import("react").ReactNode;
+  value: React.ReactNode;
   /**
    * markdown text
    */
@@ -29,7 +30,7 @@ export type CopyableViewParams = {
    * process the value
    * before copying
    */
-  process_before_copy: (value: string) => string;
+  process_before_copy?: (value: string) => string;
 } & Omit<React.ComponentProps<'div'>, 'value'>
 
 
@@ -91,15 +92,15 @@ export const CopyableView = (
 return (
   <div {...rest}>
     <div 
-        className='flex flex-row items-center justify-between px-3 gap-3 w-full'>
+      className='flex flex-row items-center 
+        justify-between px-3 gap-3 w-full'>
       <div
-          className=' overflow-x-scroll
-          p-1 align-middle
-             flex flex-row items-center' 
-          children={value} />
+        className=' overflow-x-scroll
+          p-1 align-middle flex flex-row items-center' 
+        children={value} />
       <ClipBoardCopy 
-          value={copyValue ?? String(value)} 
-          process_before_copy={process_before_copy} />
+        value={copyValue ?? String(value)} 
+        process_before_copy={process_before_copy} />
     </div>
   </div>
 )

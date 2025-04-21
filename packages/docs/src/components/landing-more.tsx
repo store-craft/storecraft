@@ -1,5 +1,4 @@
-import { IoTerminal } from "react-icons/io5";
-import { CopyableView } from "./copyable-view.tsx";
+import { CopyableView } from "./copyable-view";
 import { FaTerminal } from "react-icons/fa6";
 
 
@@ -75,19 +74,19 @@ export const NPX = (
 export const MainCard = (
   {
     children, ...rest
-  }
+  }: React.ComponentProps<'div'>
 ) => {
 
   return (
     <div {...rest}>
-      <div className='rounded-xl w-full h-full z-50
-                dark:bg-black bg-gray-100/50 border border-pink-700/10 
-                  relative 
-                  overflow-clip flex flex-col justify-between p-5 gap-5
-                  shadow-[0px_0px_0px] shadow-pink-500/50 dark:shadow-pink-500/90
-                
-                '
-          sstyle={{'box-shadow': '0 0 5px #999'}} children={children}>
+      <div 
+        className='rounded-xl w-full h-full z-50
+        dark:bg-black bg-gray-100/50 border border-pink-700/10 
+          relative 
+          overflow-clip flex flex-col justify-between p-5 gap-5
+          shadow-[0px_0px_0px] shadow-pink-500/50 dark:shadow-pink-500/90'
+        // sstyle={{'box-shadow': '0 0 5px #999'}} 
+        children={children}>
 
       </div>
     </div>

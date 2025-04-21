@@ -1,35 +1,22 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "noEmit": true,
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "checkJs": true,
-    "maxNodeModuleJsDepth": 10,
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
     "skipLibCheck": true,
-    "strict": false,
-    "incremental": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "incremental": true,
     "paths": {
       "@/*": ["./src/*"]
-    },
+    }
   },
-  "include": [
-    "*",
-    "**/*"
-  ],
-  "exclude": [
-    "**/*.json"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

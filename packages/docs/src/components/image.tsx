@@ -7,7 +7,12 @@ export const Image = (
 ) => {
 
   return (
-    <img className={className + ' rounded-xl overflow-clip border-4 border-pink-400/60'} {...rest} />
+    <img 
+      className={
+        className + ' rounded-xl overflow-clip border-4 border-pink-400/60'
+      } 
+      {...rest} 
+    />
   )
 }
 

@@ -1,4 +1,4 @@
-import useDarkMode from '@/hooks/use-dark-mode.ts'
+import useDarkMode from '@/hooks/use-dark-mode'
 import { BsDiscord, BsGithub, BsLinkedin } from 'react-icons/bs'
 import { HiOutlineLightBulb } from 'react-icons/hi'
 
@@ -13,8 +13,11 @@ export const Connect = (
   return (
     <div {...rest}>
       <div className='flex flex-row items-center gap-3'>
-        <button className='p-0' onClick={toggle}>
-          <HiOutlineLightBulb className='text-xl -translate-y-0.5 translate-x-1' />
+        <button 
+          className='p-0 cursor-pointer' 
+          onClick={toggle}>
+          <HiOutlineLightBulb 
+            className='text-xl -translate-y-0.5 translate-x-1' />
         </button>      
         <a href='' 
             title='Join our Discord'

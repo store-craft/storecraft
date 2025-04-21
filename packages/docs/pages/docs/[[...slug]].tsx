@@ -1,12 +1,11 @@
 "use client";
-import components from '@/components/mdx-components.tsx'
-import Layout from '@/components/layout.tsx'
-// @ts-ignore
+import components from '@/components/mdx-components'
+import Layout from '@/components/layout'
 import { MDXRemote } from 'next-mdx-remote'
 import { 
   _getStaticProps, _getStaticPaths 
-} from '@/utils/next-props.ts';
-import Head from 'next/head.js';
+} from '@/utils/next-props';
+import Head from 'next/head';
 
   export type PostPageProps = Awaited<ReturnType<typeof _getStaticProps>>["props"]
 
@@ -14,7 +13,12 @@ export default function PostPage(props: PostPageProps) {
   const { data } = props
   const data_ = { 
     ...data, 
-    content_hydrated : <MDXRemote {...data.content} components={components} /> 
+    content_hydrated : (
+      <MDXRemote 
+        {...data.content} 
+        components={components as any} 
+      />
+    ) 
   }
 
   return (
@@ -34,7 +38,11 @@ export default function PostPage(props: PostPageProps) {
   )
 }
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async (
+  { 
+    params 
+  }: Parameters<typeof _getStaticProps>[0]
+) => {
   // console.log('getStaticProps')
   return _getStaticProps(
     {

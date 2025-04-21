@@ -1,17 +1,15 @@
-import CustomLink from './md-href.tsx'
-import { CodeBlock } from './code-block.tsx'
-import BlockQuote from './block-quote.tsx'
-import Table from './table.tsx'
-import Drawer from './drawer.tsx'
-import { Image } from './image.tsx'
-import { Pink, Lime, Purple } from './labels.tsx'
-import { to_handle } from '@/utils/func.utils.ts'
-import { EventsTable } from './event-table.tsx'
-import RestApiReference from './rest-api-reference.tsx'
-import { useEffect } from 'react'
-import { SimpleTable } from './simple-table.tsx'
+import CustomLink from './md-href'
+import { CodeBlock } from './code-block'
+import BlockQuote from './block-quote'
+import Table from './table'
+import Drawer from './drawer'
+import { Image } from './image'
+import { Pink, Lime, Purple } from './labels'
+import { to_handle } from '@/utils/func.utils'
+import { EventsTable } from './event-table'
+import { SimpleTable } from './simple-table'
 
-const getNodeText = (node: React.ReactNode) => {
+const getNodeText = (node: React.ReactNode): string => {
   if (node == null) return '';
 
   switch (typeof node) {
@@ -66,16 +64,13 @@ const components = {
       {...props} />,
   blockquote: props => <BlockQuote {...props} />,
   a: CustomLink,
-  // TestComponent: dynamic(() => import('./TestComponent')),
   Table,
   Drawer,
   CodeBlock,
-  // JsDocTables,
   Image,
   Pink, Purple, Lime,
   EventsTable,
-  RestApiReference,
   SimpleTable
-} as Record<string, React.FC<{ className?: string, children?: React.ReactNode }>>
+} satisfies Record<string, React.FC<any>>
 
 export default components

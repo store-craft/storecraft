@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react'
-import useTrigger from './use-trigger.ts'
+import useTrigger from './use-trigger'
 
 let darkMode = true;
 type Subscriber = (v: boolean) => void;
@@ -18,8 +18,6 @@ const notify = () => {
     cb => cb(darkMode)
   )
 }
-
-
 
 export default function useDarkMode() {
   const trigger = useTrigger();

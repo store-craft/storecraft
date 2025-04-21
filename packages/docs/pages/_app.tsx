@@ -1,9 +1,12 @@
-import '../src/index.scss'
-import ClientOnly from '@/components/client-only.tsx'
+import '../src/index.css'
+import ClientOnly from '@/components/client-only'
 
 function MyApp(
   { 
     Component, pageProps 
+  }: {
+    Component: React.FC<any>;
+    pageProps: object;
   }
 ) {
 

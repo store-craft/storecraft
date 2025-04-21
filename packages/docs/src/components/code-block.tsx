@@ -2,7 +2,7 @@ import React from 'react'
 // import Highlight, { 
 //   defaultProps } from 'prism-react-renderer'
 import {Highlight, themes } from 'prism-react-renderer'
-import useDarkMode from '@/hooks/use-dark-mode.ts';
+import useDarkMode from '@/hooks/use-dark-mode';
   // import vsDark from 'prism-react-renderer/themes/vsDark'
 // import vsLight from 'prism-react-renderer/themes/dracula'
 // import vsLight from 'prism-react-renderer/themes/shadesOfPurple'
@@ -38,7 +38,7 @@ function parseRange(string: string) {
   return res;
 }
 
-const parse = (v: string) => {
+const parse = (v?: string) => {
   const r = (
     v?.replace(/language-/, '') ?? ''
     )
@@ -136,7 +136,9 @@ export const CodeBlockCore = (
               tokens.map(
                 (line, i) => {
                   const lineProps = getLineProps({ line, key: i });
-                  const isLineHighlighted = lines.includes(String(i+1)) || lines.includes(i+1);
+                  const isLineHighlighted = lines.includes(String(i+1)) || 
+                    lines.includes(i+1);
+
                   lineProps.className = `
                     ${lineProps.className} table-row ${isLineHighlighted ? 'bg-black/20 dark:bg-white/20' : 'bg-transparent'}
                   `;
@@ -147,9 +149,10 @@ export const CodeBlockCore = (
                     <div key={i} {...lineProps} >
                       { 
                         (showLinesNumbers || lines.length>0 ) && 
-                        <span children={i + 1} 
-                              className={`table-cell pr-4 text-right ${isLineHighlighted ? 
-                                'border-l-pink-500 border-l-2 ' : ''} `} /> 
+                        <span 
+                          children={i + 1} 
+                          className={`table-cell pr-4 text-right ${isLineHighlighted ? 
+                            'border-l-pink-500 border-l-2 ' : ''} `} /> 
                       }
                       {
                         line.map(

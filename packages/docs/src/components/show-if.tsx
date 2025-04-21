@@ -20,8 +20,12 @@ const ShowIf = (
   } : ShowIfParams
 ) => {
 
-  if(Boolean(show)) return (children)
-  return null
+  if(Boolean(show)) 
+    return (
+      <>{children}</>
+    );
+
+  return null;
 }
 
 export const ShowSwitch = (

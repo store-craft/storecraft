@@ -3,8 +3,8 @@ import fs from 'fs'
 import matter from 'gray-matter'
 // @ts-ignore
 import { serialize } from 'next-mdx-remote/serialize'
-import components from '../components/mdx-components.tsx'
-import doc, { DocGroup } from './docs-config.ts'
+// import components from '../components/mdx-components'
+import doc, { DocGroup } from './docs-config'
 
 
 /**
@@ -40,7 +40,7 @@ export function parseHeadings(source: string) {
 }
 
 const compute_map = () => {
-  const map = {};
+  const map: Record<string, string> = {};
 
   const recurse_g = (g: DocGroup) => {
 
@@ -62,7 +62,7 @@ const compute_map = () => {
 
 const doc_map = compute_map();
 
-console.log(doc_map);
+// console.log(doc_map);
 
 /**
  * 
@@ -73,17 +73,19 @@ const import_folder = function() {
     group => group.groups
   ).flat();
 
-  let __map = {};
+  let __map: Record<string, string> = {};
 
   paths.forEach(
     item => {
-      if(__map[item.route]!==undefined) {
+      if(__map[item?.route!]!==undefined) {
         console.log(
-          `processor warning:: route ${item.route} is overriden`
+          `processor warning:: route ${item?.route} is overriden`
         );
       }
 
-      __map[item.route] = item.path;
+      if (item) {
+        __map[item.route!] = item.path ?? '';
+      }
     }
   );
 
@@ -107,7 +109,7 @@ export const _getStaticProps = async (
   const route = slug?.reduce(
     (acc, curr) => path.join(acc, curr)
     , ''
-  ) ?? doc.groups[0].groups[0].route;
+  ) ?? doc?.groups?.[0]?.groups?.[0]?.route;
 
   const path_of_file = doc_map[route];
   const source = fs.readFileSync(path_of_file);
@@ -115,7 +117,7 @@ export const _getStaticProps = async (
   const headings = parseHeadings(source.toString());
   const mdxSource = await serialize(
     content, {
-      components,
+      // components,
       // Optionally pass remark/rehype plugins
       mdxOptions: {
         remarkPlugins: [],

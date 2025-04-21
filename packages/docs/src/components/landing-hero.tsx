@@ -1,4 +1,4 @@
-import { LogoGradient } from "./logo-text.tsx"
+import { LogoGradient } from "./logo-text"
 
 export const Hero = () => {
 

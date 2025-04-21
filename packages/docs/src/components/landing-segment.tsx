@@ -25,7 +25,7 @@ export const Segment = (
 export const SegmentHeader = (
   {
     children
-  }
+  } : React.ComponentProps<'p'>
 ) => {
 
   return (

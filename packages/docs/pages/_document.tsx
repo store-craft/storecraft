@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from 'next/document.js'
-import Link from 'next/link.js'
 
 export default function Document() {
   return (

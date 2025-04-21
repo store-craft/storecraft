@@ -1,13 +1,13 @@
-import SideBar, { SideBarSmall } from './side-bar.tsx'
-import Header from './header.tsx'
-import Copyright from './copyright.tsx'
-import useToggle from '../hooks/use-toggle.ts'
-import useDarkMode from '../hooks/use-dark-mode.ts'
+import SideBar, { SideBarSmall } from './side-bar'
+import Header from './header'
+import Copyright from './copyright'
+import useToggle from '../hooks/use-toggle'
+import useDarkMode from '../hooks/use-dark-mode'
 import { useEffect } from 'react'
 import { useRef } from 'react'
-import { GradStroke } from './grad-stroke.tsx'
-import TOC from './toc.tsx'
-import { type PostPageProps } from '../../pages/docs/[[...slug]].tsx'
+import { GradStroke, GradStrokeV2 } from './grad-stroke'
+import TOC from './toc'
+import { type PostPageProps } from '../../pages/docs/[[...slug]]'
 
 export type LayoutParams = {
       data: PostPageProps["data"] & {
@@ -33,11 +33,11 @@ const Layout = (
 
   console.log(data);
 
-  const main_ref = useRef<HTMLDivElement>();
+  const main_ref = useRef<HTMLDivElement>(null);
 
   useEffect(
     () => {
-      main_ref.current.scrollTo(
+      main_ref.current?.scrollTo(
         {
           top: 0,
           left: 0,
@@ -75,11 +75,16 @@ const Layout = (
           groups={groups} 
         />
 
-        <div ref={main_ref} 
-             className={`flex-1 w-full items-stretch h-full pt-[130px] md:pt-[80px]
-                       overflow-y-auto ` + (headings?.length ? 'xl:pr-[19rem]' : '')}>
-          <GradStroke className='w-full h-[550px] absolute right-10 top-0 
-                    opacity-20 dark:opacity-30 z-0 pointer-events-none' />
+        <div 
+          ref={main_ref} 
+          className={`flex-1 w-full items-stretch h-full pt-[130px] md:pt-[80px]
+            overflow-y-auto ` + (headings?.length ? 'xl:pr-[19rem]' : '')}>
+
+          <GradStrokeV2 
+            className='w-full h-[550px] fixed right-0 top-0 
+              opacity-20 dark:opacity-10 --z-50 pointer-events-none'
+          />
+
           {/* <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
                       opacity-10 md:opacity-10 md:dark:opacity-0  pointer-events-none'
                       via='via-kf-400' blur='blur-lg' />

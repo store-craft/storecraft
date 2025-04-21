@@ -65,8 +65,9 @@ export const create = app => {
     await app.api.discounts.upsert(discount);
 
     // upsert products after discount
-    for(const p of [...products_negative, ...products_positive])
+    for(const p of [...products_negative, ...products_positive]) {
       await app.api.products.upsert(p);
+    }
 
     // get all recent products
     const products_queried = await app.api.products.list(
@@ -108,7 +109,6 @@ export const create = app => {
     }
   
   });
-
 
   s('test product has NO handles', async () => {
     const now = (new Date()).toISOString();
@@ -548,8 +548,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

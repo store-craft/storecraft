@@ -1,5 +1,4 @@
 /** 
- * @import { ApiPolka, ApiRequest, ApiResponse } from './types.public.js' 
  * @import { CORSOptions } from './polka/cors.js' 
  */
 import { App } from '../index.js';
@@ -31,6 +30,8 @@ import { create_routes as create_search_route } from "./con.search.routes.js";
 import { create_routes as create_ai_route } from "./con.ai.routes.js";
 import { create_routes as create_similarity_search_route } from "./con.similarity-search.routes.js";
 import { create_routes as create_emails_route } from "./con.emails.routes.js";
+import { PolkaResponseCreator } from './polka/response-creator.js';
+import { assert } from '../api/utils.func.js';
 
 
 /**
@@ -42,7 +43,6 @@ import { create_routes as create_emails_route } from "./con.emails.routes.js";
 /**
  * @description Create the entire virtual API with lazy 
  * loading which is great for serverless
- * 
  * @param {App} app
  * @param {RestApiConfig} config
  */
@@ -86,13 +86,10 @@ export const create_rest_api = (app, config) => {
     }
 
     /** 
-     * 
      * @description This method will lazy load and register the `polka`
      * endpoints. This is done as optimization and avoiding running
      * all the code that registers the endpoints at once. This is desirable
      * as this code might run on `serverless` platforms.
-     * 
-     * 
      * @param {string} path 
      */
     load_route_lazily(path) {
@@ -123,20 +120,85 @@ export const create_rest_api = (app, config) => {
 
   return {
     root: polka,
+    logger: Polka.logger,
     /**
-     * 
-     * @param {ApiRequest} req 
-     * @param {ApiResponse} res 
+     * The `rest-api` controller of `storecraft`. 
+     * Works with standard Web `Request` and `Response`
+     * @param {Partial<Request>} request 
      */
-    handler: async (req, res) => {
-
-      const pathname = new URL(req.url).pathname
+    handler: async (request) => {
+      const start_millis = Date.now();
+      const pathname = new URL(request.url).pathname;
 
       lazy_creator.load_route_lazily(pathname);
 
-      return polka.handler(req, res);
+      const response_creator = await polka.handler(
+        request, new PolkaResponseCreator()
+      );
+
+      assert(
+        response_creator,
+        'No response creator found for path: ' + pathname + 
+        '. You probably didn\' stop the call chain on an error',
+      )
+
+      const response = new Response(
+        response_creator.body,
+        {
+          status: response_creator.status,
+          statusText: response_creator.statusText,
+          headers: response_creator.headers
+        }
+      );
+
+      log_request(request, start_millis);
+
+      return response;
     }
   }
+}
+
+const c = {
+  red: '\x1b[1;31m',
+  green: '\x1b[1;32m',
+  cyan: '\x1b[36m',
+  magenta: `\x1b[1;35m`,
+  yellow: `\x1b[33m`,
+  reset: `\x1b[0m`,
+}
+
+const method_to_color = {
+  'get': `\x1b[1;43;37mGET\x1b[0m`,
+  'GET': `\x1b[1;43;37mGET\x1b[0m`,
+  'post': `\x1b[1;44;37mPOST\x1b[0m`,
+  'POST': `\x1b[1;44;37mPOST\x1b[0m`,
+  'put': `\x1b[1;44;37mPUT\x1b[0m`,
+  'PUT': `\x1b[1;44;37mPUT\x1b[0m`,
+  'patch': `\x1b[1;44;37mPATCH\x1b[0m`,
+  'PATCH': `\x1b[1;44;37mPATCH\x1b[0m`,
+  'delete': `\x1b[1;41;37mDELETE\x1b[0m`,
+  'DELETE': `\x1b[1;41;37mDELETE\x1b[0m`,
+  'options': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+  'OPTIONS': `\x1b[1;45;37mOPTIONS\x1b[0m`,
+}
+
+/**
+ * log request
+ * @param {Partial<Request>} request 
+ * @param {number} start_millis 
+ */
+const log_request = (request, start_millis) => {
+  const delta = Date.now() - start_millis;
+  const url = new URL(decodeURIComponent(request.url));
+  const line = method_to_color[request.method] + 
+    ' \x1b[33m' + 
+    url.pathname.slice(0, 250) + 
+    '\x1b[0m' + 
+    ` (${delta}ms)`;
+  const query = url.search;
+  console.log(line);
+  if(query)
+    console.log(c.cyan, query);
 }
 
 

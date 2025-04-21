@@ -3,6 +3,7 @@
  * @import { VQL } from '@storecraft/core/vql'
  * @import { Database } from '../types.sql.tables.js'
  * @import { BinaryOperator, ExpressionBuilder } from 'kysely'
+ * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
  */
 
 import { parse } from "@storecraft/core/vql";
@@ -18,7 +19,8 @@ import { parse } from "@storecraft/core/vql";
  * @param {ExpressionBuilder<Database>} eb 
  * @param {Cursor} c 
  * @param {'>' | '>=' | '<' | '<='} relation 
- * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer Your chance to change key and value
+ * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer 
+ * Your chance to change key and value
  */
 export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
 
@@ -94,11 +96,20 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
           [
             eb.or(
               [
-                eb(`entity_to_search_terms.entity_id`, '=', eb.ref(`${table_name}.id`)),
-                eb(`entity_to_search_terms.entity_handle`, '=', eb.ref(`${table_name}.handle`)),
+                eb(
+                  `entity_to_search_terms.entity_id`, '=', 
+                  eb.ref(`${table_name}.id`)
+                ),
+                eb(
+                  `entity_to_search_terms.entity_handle`, '=', 
+                  eb.ref(`${table_name}.handle`)
+                ),
               ]
             ),
-            eb(`entity_to_search_terms.value`, 'like', node.value.toLowerCase())
+            eb(
+              `entity_to_search_terms.value`, 'like', 
+              node.value.toLowerCase()
+            )
           ]
         )
       )
@@ -129,7 +140,9 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
  * @param {QueryableTables} table_name 
  */
 export const query_vql_to_eb = (eb, root, table_name) => {
-  return root ? query_vql_node_to_eb(eb, root, table_name) : undefined;
+  return root ? 
+    query_vql_node_to_eb(eb, root, table_name) : 
+    undefined;
 }
 
 
@@ -169,15 +182,31 @@ export const query_to_eb = (eb, q={}, table_name) => {
 
   // compute index clauses
   if(q.startAt) {
-    clauses.push(query_cursor_to_eb(eb, q.startAt, asc ? '>=' : '<=', transformer));
+    clauses.push(
+      query_cursor_to_eb(
+        eb, q.startAt, asc ? '>=' : '<=', transformer
+      )
+    );
   } else if(q.startAfter) {
-    clauses.push(query_cursor_to_eb(eb, q.startAfter, asc ? '>' : '<', transformer));
+    clauses.push(
+      query_cursor_to_eb(
+        eb, q.startAfter, asc ? '>' : '<', transformer
+      )
+    );
   }
 
   if(q.endAt) {
-    clauses.push(query_cursor_to_eb(eb, q.endAt, asc ? '<=' : '>=', transformer));
+    clauses.push(
+      query_cursor_to_eb(
+        eb, q.endAt, asc ? '<=' : '>=', transformer
+      )
+    );
   } else if(q.endBefore) {
-    clauses.push(query_cursor_to_eb(eb, q.endBefore, asc ? '<' : '>', transformer));
+    clauses.push(
+      query_cursor_to_eb(
+        eb, q.endBefore, asc ? '<' : '>', transformer
+      )
+    );
   }
 
   // compute VQL clauses 
@@ -187,7 +216,10 @@ export const query_to_eb = (eb, q={}, table_name) => {
     }
   } catch(e) {}
 
-  const vql_clause = query_vql_to_eb(eb, q.vqlParsed, table_name)
+  const vql_clause = query_vql_to_eb(
+    eb, q.vqlParsed, table_name
+  );
+
   vql_clause && clauses.push(vql_clause);
 
   return eb.and(clauses);
@@ -198,12 +230,6 @@ const SIGN = {
   '-1': 'desc'
 }
 
-// export type DirectedOrderByStringReference<DB, TB extends keyof DB, O> = `${StringReference<DB, TB> | (keyof O & string)} ${OrderByDirection}`;
-
-/**
- * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
- */
-// OE extends OrderByExpression<DB, TB, O>
 /**
  * Convert an API Query into mongo dialect, also sanitize.
  * @template {Record<string, any>} [Type=Record<string, any>]
@@ -227,5 +253,9 @@ export const query_to_sort = (q={}, table) => {
   )
   // it's too complicated to map each ket to table column.
   // kysely was designed to do this in place
-  return (/** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (sort));
+  return (
+    /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
+      sort
+    )
+  );
 }

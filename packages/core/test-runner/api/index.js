@@ -54,3 +54,11 @@ export * as templates_crud from './templates_crud.js'
 export * as templates_list from './templates_list.js'
 
 export * as email from './email.js'
+
+export * as statistics_orders from './statistics_orders.js'
+
+export * as payment_gateways_with_dummy from './payment_gateways_with_dummy.js'
+
+export * as extensions from './extensions.js'
+
+export * as storage from './storage.js'

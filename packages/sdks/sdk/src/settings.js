@@ -9,11 +9,10 @@ import { collection_base } from './utils.api.fetch.js';
 export default class Settings extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
-    super(sdk, 'settings');
+    super(sdk, 'reference/settings');
   }
 
 }

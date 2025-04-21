@@ -99,7 +99,7 @@ export const create = app => {
 
     // test relation on the first product, we get what we put
     {
-      const cols_of_pr = await app.api.products.list_all_product_collections(prs[0].handle);
+      const cols_of_pr = await app.api.products.get(prs[0].handle).then(pr => pr.collections);
       // console.log(JSON.stringify(cols_of_pr,null,2))
       for (const expected of cols) {
         const actual = cols_of_pr.find(c => c.handle===expected.handle);
@@ -126,7 +126,7 @@ export const create = app => {
     // test collection delete, collection was deleted from product
     {
       await app.api.collections.remove(cols[0].id);
-      const cols_of_pr = await app.api.products.list_all_product_collections(prs[0].handle);
+      const cols_of_pr = await app.api.products.get(prs[0].handle).then(pr => pr.collections);
       assert_partial_minus_relations()(cols_of_pr, cols.slice(1));
     }
 
@@ -134,7 +134,7 @@ export const create = app => {
     {
       const update_second_col = { ...cols[1], title: `random title ${Math.random().toFixed(2)}` }
       await app.api.collections.upsert(update_second_col);
-      const cols_of_pr = await app.api.products.list_all_product_collections(prs[0].handle);
+      const cols_of_pr = await app.api.products.get(prs[0].handle).then(pr => pr.collections);
       assert.equal(cols_of_pr[0].title, update_second_col.title);
     }
 
@@ -148,8 +148,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

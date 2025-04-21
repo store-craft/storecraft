@@ -101,9 +101,9 @@ export const create = app => {
 
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const related_products = await app.api.products.list_all_related_products(
+    const related_products = await app.api.products.get(
       pr_upsert.handle
-    );
+    ).then(pr => pr.related_products);
 
     // console.log('related_products', related_products)
 
@@ -125,9 +125,9 @@ export const create = app => {
     );
     
     // now query the product's discounts to see if discount was applied to 1st product
-    const related_products = await app.api.products.list_all_related_products(
+    const related_products = await app.api.products.get(
       pr_upsert.handle
-    ) ?? [];
+    ).then(pr => pr.related_products ?? []);
 
     assert.ok(
       related_products.every((v, ix) => remove_handle!==v.handle ), 
@@ -144,8 +144,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

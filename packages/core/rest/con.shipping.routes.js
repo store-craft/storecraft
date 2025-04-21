@@ -38,7 +38,7 @@ export const create_routes = (app) => {
       );
       const count = await app.api.shipping_methods.count(q);
 
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -63,8 +63,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const removed = handle_or_id && await app.api.shipping_methods.remove(handle_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
+      res.sendJson(removed);
     }
   );
 

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mysql",
-  "version": "1.0.16",
+  "version": "1.0.18",
   "description": "Official MySQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -29,10 +29,11 @@
     }
   },
   "scripts": {
-    "database-mysql:docker-compose-up": "docker compose -f ./tests/docker-compose.yml up -d ",
+    "database-mysql:docker-compose-up": "docker compose -f ./tests/docker-compose.yml up ",
     "database-mysql:test": "node ./tests/runner.test.js",
     "test": "npm run database-mysql:test",
-    "prepublishOnly": "npm version patch --force"
+    "prepublishOnly": "npm version patch --force",
+    "sc-publish": "npm publish"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

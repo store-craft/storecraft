@@ -103,9 +103,9 @@ export const create = app => {
     )
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const product_variants = await app.api.products.list_all_product_variants(
+    const product_variants = await app.api.products.get(
       pr_upsert.handle
-    );
+    ).then(/** @param {ProductType} pr */(pr) => pr.variants ?? []);
 
     // console.log(product_variants)
 
@@ -117,9 +117,9 @@ export const create = app => {
     await app.db.resources.products.upsert(pr_upsert);
 
     // now query the product's discounts to see if discount was applied to 1st product
-    const product_variants = await app.api.products.list_all_product_variants(
+    const product_variants = await app.api.products.get(
       pr_upsert.handle
-    );
+    ).then(/** @param {ProductType} pr */(pr) => pr.variants ?? []);
 
     // console.log(product_variants)
 
@@ -132,9 +132,9 @@ export const create = app => {
     await app.api.products.remove(var_upsert[0].handle);
     // now query the product's discounts to see if 
     // discount was applied to 1st product
-    const product_variants = await app.api.products.list_all_product_variants(
+    const product_variants = await app.api.products.get(
       pr_upsert.handle
-    );
+    ).then(/** @param {ProductType} pr */(pr) => pr.variants ?? []);
 
     // console.log(product_variants)
     const first_variant_is_gone = product_variants.every(
@@ -148,9 +148,9 @@ export const create = app => {
     await app.api.products.remove(pr_upsert.handle);
     // now query the product's discounts to see if 
     // discount was applied to 1st product
-    const product_variants = await app.api.products.list_all_product_variants(
+    const product_variants = await app.api.products.get(
       pr_upsert.handle
-    );
+    ).then(/** @param {ProductType} pr */(pr) => pr?.variants ?? []);
     assert.ok(product_variants.length==0, 
       'product removed, but it\'s variants are in place');
 
@@ -171,8 +171,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

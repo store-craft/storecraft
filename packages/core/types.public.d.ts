@@ -7,7 +7,7 @@
 //   type App = App_;
 // }
 
-export type { StorecraftConfig } from './api/types.api.d.ts';
+export { type StorecraftConfig } from './api/types.api.js';
 export { App } from './index.js';
 
 

@@ -13,15 +13,12 @@ import { fetchApiWithAuth, url } from './utils.api.fetch.js';
 
 /**
  * @description **Search** API (two options):
- * 
  * - Quick Search across many resources
  * - Similarity search across `discount`, `products`, `collections`, `shipping`
- * 
  */
 export default class Search {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {

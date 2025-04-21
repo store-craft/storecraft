@@ -308,107 +308,7 @@ const count = (driver) => count_regular(driver, col(driver));
 
 
 /**
- * For now and because each product is related to very few
- * collections, I will not expose the query api, and use aggregate
- * instead.
  * @param {MongoDB} driver 
- * @returns {db_col["list_all_product_collections"]}
- */
-const list_product_collections = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['collections']
-    };
-
-    // We have collections embedded in products, so let's use it
-    const item = await get_regular(driver, col(driver))(product, options);
-    
-    return sanitize_array(item?.collections ?? []);
-  }
-}
-
-/**
- * For now and because each product is related to very few
- * collections, I will not expose the query api, and use aggregate
- * instead.
- * 
- * 
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_product_variants"]}
- */
-const list_product_variants = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['variants']
-    };
-
-    // We have collections embedded in products, so let's use it
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    if(item && ('variants' in item)) {
-      
-      return sanitize_array(item?.variants ?? []);
-    }
-
-    return [];
-  }
-}
-
-/**
- * For now and because each product is related to very few
- * collections, I will not expose the query api, and use aggregate
- * instead.
- * 
- * 
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_related_products"]}
- */
-const list_related_products = (driver) => {
-  return async (product) => {
-    /** @type {import('@storecraft/core/database').RegularGetOptions} */
-    const options = {
-      expand: ['related_products']
-    };
-
-    // We have collections embedded in products, so let's use it
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.related_products ?? []);
-  }
-}
-
-
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["list_all_product_discounts"]}
- */
-const list_product_discounts = (driver) => {
-  return async (product) => {
-    /** @type {RegularGetOptions} */
-    const options = {
-      expand: ['discounts']
-    };
-
-    // We have collections embedded in products, so let's use it
-    const item = await get_regular(driver, col(driver))(product, options);
-
-    return sanitize_array(item?.discounts ?? []);
-  }
-}
-
-/**
- * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["add_product_to_collection"]}
  */
 const add_product_to_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
@@ -437,9 +337,6 @@ const add_product_to_collection = (driver) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
- * @returns {db_col["remove_product_from_collection"]}
  */
 const remove_product_from_collection = (driver) => {
   return async (product_id_or_handle, collection_handle_or_id) => {
@@ -466,52 +363,56 @@ const remove_product_from_collection = (driver) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["changeStockOfBy"]}
  */
 const changeStockOfBy = (driver) => {
   return async (product_ids_or_handles, deltas) => {
 
-    /** 
-     * @type {AnyBulkWriteOperation<WithRelations<ProductType | VariantType>>[]}
-     */
-    let ops = []
-
-    product_ids_or_handles.forEach(
-      (id, ix) => {
-        ops.push(
-          {
-            updateOne: {
-              filter: handle_or_id(id),
-              update: {
-                $inc: { qty: Math.round(deltas[ix]) }
+    try {
+      /** 
+       * @type {AnyBulkWriteOperation<WithRelations<ProductType | VariantType>>[]}
+       */
+      let ops = []
+  
+      product_ids_or_handles.forEach(
+        (id, ix) => {
+          ops.push(
+            {
+              updateOne: {
+                filter: handle_or_id(id),
+                update: {
+                  $inc: { qty: Math.round(deltas[ix]) }
+                }
               }
             }
-          }
-        );
-
-        ops.push(
-          {
-            updateOne: {
-              filter: handle_or_id(id),
-              update: {
-                $max: { qty: 0 }
+          );
+  
+          ops.push(
+            {
+              updateOne: {
+                filter: handle_or_id(id),
+                update: {
+                  $max: { qty: 0 }
+                }
               }
             }
-          }
-        );
+          );
+  
+        }
+      );
+  
+      if(!ops.length)
+        return;
+  
+      await driver.resources.products._col.bulkWrite(
+        ops
+      );
+    } catch(e) {
+      console.log(e);
+      return false;
+    }
 
-      }
-    );
-
-    if(!ops.length)
-      return;
-
-    await driver.resources.products._col.bulkWrite(
-      ops
-    );
-
+    return true;
   }
 }
 
@@ -560,12 +461,6 @@ export const impl = (driver) => {
     upsert: upsert(driver),
     remove: remove(driver),
     list: list(driver),
-    add_product_to_collection: add_product_to_collection(driver),
-    remove_product_from_collection: remove_product_from_collection(driver),
-    list_all_product_collections: list_product_collections(driver),
-    list_all_product_variants: list_product_variants(driver),
-    list_all_related_products: list_related_products(driver),
-    list_all_product_discounts: list_product_discounts(driver),
     list_used_products_tags: list_used_products_tags(driver),
     count: count(driver)
   }

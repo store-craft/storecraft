@@ -1,14 +1,5 @@
 import { App } from "../index.js";
-
-/**
- * @description prefer signed url get by default
- * 
- * @param {URLSearchParams} search_params
- */
-export const does_prefer_signed = search_params => {
-  return (search_params?.get('signed')?.trim() ?? 'true') !== 'false'
-}
-
+import { assert } from "./utils.func.js";
 
 /**
  * @param {App} app 
@@ -110,10 +101,123 @@ const rewrite_object = (item, rewrite_from, rewrite_to) => {
 
     if(key==='media') {
       if(Array.isArray(value)) {
-        item[key] = rewrite_media_array(value, rewrite_from, rewrite_to);
+        item[key] = rewrite_media_array(
+          value, rewrite_from, rewrite_to
+        );
       }
     } else {
       rewrite_object(value, rewrite_from, rewrite_to);
     }
+  }
+}
+
+
+
+/**
+ * @param {App} app 
+ */
+export const features = (app) => 
+  /**
+   * @description Get the storage official Features
+   */
+  async () => {
+    return app.storage.features() ?? { 
+      supports_signed_urls: false 
+    }
+  }
+
+
+/** @param {App} app */
+export const putStream = (app) => 
+  /**
+   * @description Put a stream to the storage
+   * @param {string} file_key file path, example `/path/to/file.txt`
+   * @param {ReadableStream<any>} stream body
+   * @param {any} [meta={}] meta data
+   * @param {number} [content_length_bytes=0] content length in bytes
+   */
+  async (file_key, stream, meta={}, content_length_bytes=0) => {
+    return app.storage.putStream(
+      file_key, stream, meta, 
+      content_length_bytes
+    );
+  }
+
+/** @param {App} app */
+export const putSigned = (app) => 
+  /**
+   * @description Get the storage official Features
+   * @param {string} file_key file path, example `/path/to/file.txt`
+   */
+  async (file_key) => {
+    assert(
+      app.storage.features().supports_signed_urls,
+      'Storage driver does not support signed urls'
+    );
+    return app.storage.putSigned(
+      file_key
+    );
+  }
+
+
+/** @param {App} app */
+export const getSigned = (app) => 
+  /**
+   * @description Get signed url for a file for download
+   * @param {string} file_key file path, example `/path/to/file.txt`
+   */
+  async (file_key) => {
+    assert(
+      app.storage.features().supports_signed_urls,
+      'Storage driver does not support signed urls'
+    );
+    return app.storage.getSigned(
+      file_key
+    );
+  }
+
+/** @param {App} app */
+export const getStream = (app) => 
+  /**
+   * @description Get a file stream for download
+   * @param {string} file_key file path, example `/path/to/file.txt`
+   */
+  async (file_key) => {
+    assert(
+      file_key,
+      'file_key is required'
+    );
+    
+    return app.storage.getStream(
+      file_key
+    );
+  }
+
+
+/** @param {App} app */
+export const remove = (app) => 
+  /**
+   * @description Remove a file from `storage`
+   * @param {string} file_key file path, example `/path/to/file.txt`
+   */
+  async (file_key) => {
+    return app.storage.remove(
+      file_key
+    );
+  }
+  
+
+/**
+ * @param {App} app
+ */  
+export const inter = app => {
+
+  return {
+    features: features(app),
+    putStream: putStream(app),
+    putSigned: putSigned(app),
+    getSigned: getSigned(app),
+    getStream: getStream(app),
+    remove: remove(app),
   }
 }

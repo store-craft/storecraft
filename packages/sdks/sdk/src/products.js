@@ -14,7 +14,6 @@ import {
 export default class Products extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -26,7 +25,6 @@ export default class Products extends collection_base {
    * This is helpful for building a filter system in the frontend if 
    * you know in advance all the tags of the products in a collection, 
    * also see the collection confined version db_collections.list_collection_products_tags
-   * 
    * @return {Promise<string[]>} List of tags
    */
   list_used_tags = async () => {
@@ -42,15 +40,14 @@ export default class Products extends collection_base {
   }
 
   /**
-   * 
    * Change stock quantity of a `product` by a delta difference
    * number.
-   * 
    * @param {string} id_or_handle `id` ot `handle`
    * @param {number} howmuch a diff number by how much to update stock
+   * @return {Promise<boolean>} 
    */
   changeStockOfBy = async (id_or_handle, howmuch) => {
-    const response = await fetchOnlyApiResponseWithAuth(
+    const response = await fetchApiWithAuth(
       this.sdk,
       `products/${id_or_handle}?quantityBy=${howmuch}`,
       {
@@ -58,12 +55,11 @@ export default class Products extends collection_base {
       }
     );
 
-    return response.ok;
+    return response;
   }
 
   /**
    * Add `products` to `collection`
-   * 
    * @param {ProductType[]} products 
    * @param {CollectionType} collection 
    */
@@ -78,7 +74,6 @@ export default class Products extends collection_base {
 
   /**
    * Remove `products` from `collection`
-   * 
    * @param {ProductType[]} products 
    * @param {CollectionType} collection 
    */

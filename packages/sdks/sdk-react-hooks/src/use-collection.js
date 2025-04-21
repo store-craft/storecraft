@@ -70,7 +70,9 @@ const paginate_helper = (sdk, query, resource) => {
 
   const query_cast = /** @type {ApiQuery} */ (query);
 
-  query_cast.sortBy = query_cast.sortBy ?? (/** @type {const} */(['updated_at', 'id']));
+  query_cast.sortBy = query_cast.sortBy ?? (/** @type {const} */(
+    ['updated_at', 'id'])
+  );
 
   let startAfter = query_cast.startAfter;
 
@@ -103,7 +105,7 @@ const paginate_helper = (sdk, query, resource) => {
 
 
 /** @satisfies {ApiQuery} */
-export const q_initial = ({
+export const q_initial =  ({
   sortBy: ['updated_at', 'id'],
   order: 'desc',
   limit: 5
@@ -200,6 +202,10 @@ export const useCollection = (
       try {
         result = await _next.current();
 
+        if(!Array.isArray(result)) {
+          throw new Error('result is not an array');
+        }
+
         for(let item of result) {
           cache_document_put(item);
         }
@@ -294,7 +300,8 @@ export const useCollection = (
       if(from_cache) {
         items = await cache_query_get(resource, q_modified);
 
-        const found_in_cache = Boolean(items);
+        const found_in_cache = Boolean(items) 
+          && Array.isArray(items);
 
         if(found_in_cache) {
           setIndex(0);
@@ -302,18 +309,25 @@ export const useCollection = (
           // console.log('foundin cache')
           // in the background
           _internal_fetch_next(true).then(
-            new_items => {
-              cache_query_put(resource, q_modified, new_items);
+            (new_items) => {
+              if(Array.isArray(new_items)) {
+                cache_query_put(resource, q_modified, new_items);
+              }
             }
           );
-        } 
+        } else {
+          items = undefined;
+        }
       } 
       
       // fetch from server
       if(!items) {
         items = await _internal_fetch_next(true);
 
-        cache_query_put(resource, q_modified, items);
+        if(Array.isArray(items))
+          cache_query_put(resource, q_modified, items);
+        else
+          items = undefined;
       }
 
       // statistics in the background
@@ -329,16 +343,6 @@ export const useCollection = (
           sdk, resource,
           /** @type {ApiQuery} */(q_minus_filters)
         ).then(setQueryCount).catch(console.log);
-        // sdk.fetchApiWithAuth(
-        //   `${resource}/count_query`, { method: 'get' },
-        //   api_query_to_searchparams(
-        //     /** @type {ApiQuery} */(q_minus_filters)
-        //   )
-        // ).then(r => r.count).then(setQueryCount).catch(console.log);
-        // sdk.statistics.countOf(
-        //   rest_resource_to_db_resource_table(resource), 
-        //   /** @type {ApiQuery} */(q_minus_filters)
-        // ).then(setQueryCount).catch(console.log);
       }
 
       return items;
@@ -455,7 +459,9 @@ export const useCollection = (
     page, 
     loading, 
     hasLoaded,
-    resource_is_probably_empty: resource_is_probably_empty(_q.current, hasLoaded, loading, page.length),
+    resource_is_probably_empty: resource_is_probably_empty(
+      _q.current, hasLoaded, loading, page?.length
+    ),
     resource_has_more_pages,
     error, 
     sdk,

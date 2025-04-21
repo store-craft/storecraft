@@ -1,8 +1,7 @@
 /**
  * @import { 
  *  ApiQuery, DiscountType, DiscountTypeUpsert, 
- ProductType,
- VariantType
+ *  ProductType, VariantType
  * } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
@@ -20,7 +19,6 @@ import {
 export default class Discounts extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -30,7 +28,6 @@ export default class Discounts extends collection_base {
   /**
    * @description Each discount has eligible products, 
    * you can query and filter these products by discount
-   * 
    * @param {string} id_or_handle discount `id` or `handle`
    * @param {ApiQuery<ProductType | VariantType>} query query
    * @return {Promise<(ProductType | VariantType)[]>} List of discounts
@@ -47,7 +44,6 @@ export default class Discounts extends collection_base {
   /**
    * @description Each discount has eligible products, 
    * you can count the query products by discount
-   * 
    * @param {string} id_or_handle discount `id` or `handle`
    * @param {ApiQuery<ProductType | VariantType>} query query
    * @return {Promise<number>} count
@@ -64,7 +60,6 @@ export default class Discounts extends collection_base {
    * @description List all the tags of products in a collection, This is helpful 
    * for building a filter system in the frontend if you know in advance all 
    * the tags of the products in a collection
-   * 
    * @param {string} id_or_handle Discount `id` or `handle`
    * @return {Promise<string[]>} List of tags
    */
@@ -76,7 +71,6 @@ export default class Discounts extends collection_base {
         method: 'get'
       }
     );
-
     return result
   }
 

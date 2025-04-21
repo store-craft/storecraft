@@ -1,6 +1,6 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, FilterValue_p_in_products, PostTypeUpsert, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, Filter_p_in_products, PostTypeUpsert, 
  *  ProductTypeUpsert, ShippingMethodTypeUpsert, 
  * } from '../../api/types.public.js'
  */
@@ -68,22 +68,21 @@ const discounts_upsert = [
     handle: handle_dis(), priority: 0, title: 'Fake Discount 1',
     info: {
       details: {
-        meta: enums.DiscountMetaEnum.bulk,
+        type: 'bulk',
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
+          op: 'p-in-products',
           meta: enums.FilterMetaEnum.p_in_products,
-          value: /** @type {FilterValue_p_in_products} */ (
-            [
-              {
-                handle: 'pr-non-existing-handle',
-                id: 'pr-non-existing-id',
-              }
-            ]
-          )
+          value: [
+            {
+              handle: 'pr-non-existing-handle',
+              id: 'pr-non-existing-id',
+            }
+          ]
         }
       ]
     }
@@ -94,22 +93,21 @@ const discounts_upsert = [
     handle: handle_dis(), priority: 0, title: 'Fake Discount 2',
     info: {
       details: {
-        meta: enums.DiscountMetaEnum.bulk,
+        type: 'bulk',
         extra: {
           qty: 3, fixed: 100, percent: 100
         }
       },
       filters: [
         {
+          op: 'p-in-products',
           meta: enums.FilterMetaEnum.p_in_products,
-          value: /** @type {FilterValue_p_in_products} */ (
-            [
-              {
-                handle: 'pr-non-existing-handle',
-                id: 'pr-non-existing-id',
-              }
-            ]
-          )
+          value: [
+            {
+              handle: 'pr-non-existing-handle',
+              id: 'pr-non-existing-id',
+            }
+          ]
         }
       ]
     }
@@ -249,8 +247,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

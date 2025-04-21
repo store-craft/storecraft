@@ -38,8 +38,9 @@ export const upsert = (app) =>
       
       isDef(final?.application) && `app:${final.application.id}`,
       isDef(final?.application?.name) && `app:${final.application.name.toLowerCase()}`,
-      isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.id}`,
-      isDef(final?.info?.details?.meta) && `type:${final.info.details.meta.type}`,
+      isDef(final?.info?.details?.type) && `type:${final.info.details.type}`,
+      isDef(final?.info?.details?.meta?.id) && `type:${final.info.details.meta.id}`,
+      isDef(final?.info?.details?.meta?.type) && `type:${final.info.details.meta.type}`,
     );
   },
   'discounts/upsert'

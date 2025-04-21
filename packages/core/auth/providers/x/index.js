@@ -42,6 +42,7 @@ export class XAuth {
 
   /** @type {AuthProvider<Config>["generateAuthUri"]} */
   generateAuthUri = async (redirect_uri='', extra=undefined) => {
+    // console.log({redirect_uri})
     const oauth = new OAuthV1({
       consumer: {
         key: this.config.consumer_api_key,
@@ -95,10 +96,10 @@ export class XAuth {
         }
       }
     );
-    
+
     await assert_async(
       response.ok,
-      () => response.json()
+      () => response.text()
     );
 
     // console.log({response})

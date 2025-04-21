@@ -13,10 +13,8 @@ import { DummyDatabase } from './dummy-database.js';
   
 
 /**
- * 
  * @typedef {string} CreateResult
  * @typedef {payment_gateway<Config, CreateResult>} Impl
- * 
  */
 
 /** 
@@ -33,7 +31,7 @@ export class DummyPayments {
   /**
    * @type {DummyDatabase<DummyPaymentData>}
    */
-  #_db;
+  #db;
 
   /**
    * 
@@ -41,7 +39,12 @@ export class DummyPayments {
    */
   constructor(config={}) {
     this.#_config = this.#validate_and_resolve_config(config);
-    this.#_db = new DummyDatabase();
+    this.#db = new DummyDatabase();
+
+    for(const [key, value] of Object.entries(config?.seed ?? {})) {
+      this.#db.set(key, value);
+    }
+
   }
 
   /**
@@ -87,6 +90,11 @@ export class DummyPayments {
         name: 'Refund',
         description: 'Refund a captured payment'
       },
+      {
+        handle: 'ping',
+        name: 'Ping',
+        description: 'Ping for testing'
+      },
     ]
   }
 
@@ -102,14 +110,22 @@ export class DummyPayments {
         return this.void.bind(this);
       case 'refund':
         return this.refund.bind(this);
-    
+      case 'ping':
+        return async (checkout_create_result) => {
+          return {
+            messages: [
+              checkout_create_result
+            ]
+          }
+        }
+      
       default:
         break;
     }
   }
 
   get db() {
-    return this.#_db;
+    return this.#db;
   }
 
   /**
@@ -117,7 +133,9 @@ export class DummyPayments {
    * @type {Impl["onCheckoutCreate"]}
    */
   async onCheckoutCreate(order) { 
-    const { default_currency_code: currency_code, intent_on_checkout } = this.config; 
+    const { 
+      default_currency_code: currency_code, intent_on_checkout 
+    } = this.config; 
     const id = ID('dummypay');
 
     await this.db.set(
@@ -127,7 +145,10 @@ export class DummyPayments {
         id,
         created_at: (new Date()).toISOString(),
         price: order.pricing.total,
-        currency: currency_code
+        currency: currency_code,
+        metadata: {
+          external_order_id: order.id,
+        },
       }
     );
 
@@ -190,7 +211,64 @@ export class DummyPayments {
 
   /**
    * Fetch the order and analyze it's status
-   * 
+   * @type {Impl["onBuyLinkHtml"]}
+   */
+  async onBuyLinkHtml(order) {
+    return `
+<html>
+  <head>
+    <title>Dummy payment</title>
+  </head>
+  <body>
+    <h1>Dummy payment</h1>
+    <p>Dummy payment processor</p>
+    <p>Price: ${order.pricing.total}</p>
+    <p>Order ID: ${order.id}</p>
+    <p>Order payment status: ${order.status.payment.name}</p>
+  </body>
+</html>  
+    `
+  }
+
+
+  /**
+   * Fetch the order and analyze it's status
+   * @type {Impl["webhook"]}
+   */
+  async webhook(request, response) {
+    /** @type {{id: string}} */
+    const body = await request.json();
+    const transaction_id = body.id;
+
+    assert(
+      transaction_id,
+      `transaction ID was not found in the request body`
+    );
+
+    const payment = await this.retrieve_gateway_order(
+      transaction_id
+    );
+
+    await this.db.set(
+      payment.id, 
+      {
+        ...payment,
+        status: 'captured'
+      }
+    );
+    
+    return {
+      status: {
+        payment: PaymentOptionsEnum.captured,
+        checkout: CheckoutStatusEnum.complete
+      },
+      order_id: payment.metadata.external_order_id
+    }
+  }
+ 
+
+  /**
+   * Fetch the order and analyze it's status
    * @type {Impl["status"]}
    */
   async status(create_result) {

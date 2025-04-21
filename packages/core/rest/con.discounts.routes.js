@@ -25,8 +25,9 @@ export const create_routes = (app) => {
     '/',
     middle_authorize_admin,
     async (req, res) => {
-      const final = await app.api.discounts.upsert(req.parsedBody);
-
+      const final = await app.api.discounts.upsert(
+        req.parsedBody
+      );
       res.sendJson(final);
     }
   )
@@ -38,8 +39,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.discounts.count(q);
-
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -50,9 +50,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const item = await app.api.discounts.get(handle_or_id);
-
       assert(item, 'not-found', 404);
-
       res.sendJson(item);
     }
   );
@@ -63,9 +61,9 @@ export const create_routes = (app) => {
     middle_authorize_admin,
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
-      const removed = handle_or_id && await app.api.discounts.remove(handle_or_id);
-
-      res.setStatus(removed ? 200 : 404).end();
+      const removed = handle_or_id && 
+        await app.api.discounts.remove(handle_or_id);
+      res.sendJson(removed);
     }
   );
 
@@ -77,7 +75,6 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const items = await app.api.discounts.list(q);
-
       res.sendJson(items);
     }
   );
@@ -102,8 +99,7 @@ export const create_routes = (app) => {
       const count = await app.api.discounts.count_discount_products_query(
         discount, q
       );
-
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -117,7 +113,6 @@ export const create_routes = (app) => {
       const items = await app.api.discounts.list_discount_products(
         discount, q
       );
-
       res.sendJson(items);
     }
   );

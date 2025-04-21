@@ -9,6 +9,7 @@ import {
   SqliteIntrospector,
   SqliteQueryCompiler,
 } from 'kysely';
+import { D1Introspector } from './kysely.d1.http.introspector.js';
 
 /**
  * @description Official Storecraft Cloudflare D1 adapter on Worker
@@ -30,7 +31,7 @@ export class D1_Worker_Dialect {
    * @param {Kysely<any>} db 
    */
   createIntrospector(db){
-    return new SqliteIntrospector(db);
+    return new D1Introspector(db);
   }
 }
 

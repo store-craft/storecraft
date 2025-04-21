@@ -1,7 +1,7 @@
 /**
  * @import { storage_driver } from "../types.public.js"
  */
-import { readFile, mkdir, open, unlink } from 'node:fs/promises';
+import { readFile, mkdir, open, unlink, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
 // import { Blob } from 'node:buffer';
@@ -75,8 +75,14 @@ export class NodeLocalStorage {
    * 
    */
   async init(app) {
-    await mkdir(this.#path, { recursive: true });
+    await this.#ensure_folder();
     return this;
+  }
+
+  async #ensure_folder() {
+    try {
+      await mkdir(this.#path, { recursive: true });
+    } catch(e) {}
   }
 
   /**
@@ -109,6 +115,7 @@ export class NodeLocalStorage {
    */
   async putBlob(key, blob) {
     const f = this.to_file_path(key);
+    await this.#ensure_folder();
     const file_handle = await open(f, 'w');
     let ok = true;
     try {
@@ -137,9 +144,9 @@ export class NodeLocalStorage {
    * @param {ArrayBuffer} buffer 
    */
   async putArraybuffer(key, buffer) {
-
     const arr = new Uint8Array(buffer);
     const f = this.to_file_path(key);
+    await this.#ensure_folder();
     const file_handle = await open(f, 'w');
     let ok = true;
     try{
@@ -158,11 +165,15 @@ export class NodeLocalStorage {
    * @type {storage_driver["putStream"]}
    */
   async putStream(key, stream) {
+    if(!stream || !stream.getReader) {
+      throw new Error('stream is not readable');
+    }
     const f = this.to_file_path(key);
     const file_handle = await open(f, 'w')
+    await this.#ensure_folder();
     let ok = true;
 
-    // I found this to be better than async iterators in node.js
+    // I found this to be better than async iterators in older node.js versions
     const reader = stream.getReader();
     const read_more = async () => {
       const { done, value } = await reader.read();
@@ -247,7 +258,10 @@ export class NodeLocalStorage {
    */
   async getStream(key) {
     try { 
-      const s = createReadStream(this.to_file_path(key));
+      const path = this.to_file_path(key);
+      await stat(path);
+
+      const s = createReadStream(path);
       return {
         // @ts-ignore
         value: Readable.toWeb(s), 

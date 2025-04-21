@@ -9,7 +9,6 @@ import {
 
 
 /**
- * 
  * @param {StorecraftSDKConfig} config 
  * @param {string} path 
  * @param {URLSearchParams} [query] url search params
@@ -34,12 +33,10 @@ export const url = (config, path, query) => {
  * - Prepends `backend` endpoint. 
  * - Fetches with `authentication` middleware. 
  * - Refreshed `auth` if needed. 
- * 
  * @param {StorecraftSDK} sdk 
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * @param {URLSearchParams} [query] url search params
- * 
  * @returns {Promise<Response>}
  */ 
 export const fetchOnlyApiResponseWithAuth = async (
@@ -48,11 +45,11 @@ export const fetchOnlyApiResponseWithAuth = async (
 
   const auth_token = await sdk.auth.working_auth_token();
   const auth_header_value = (
-    sdk.auth.authStrategy==='apikey' ? 'Basic' : 'Bearer'
+    sdk.auth.currentAuthStrategy==='apikey' ? 'Basic' : 'Bearer'
   ) + ` ${auth_token}`;
   
 
-  const response = await fetch(
+  const response = await sdk.fetcher(
     url(sdk.config, path, query),
     {
       ...init,
@@ -74,16 +71,14 @@ export const fetchOnlyApiResponseWithAuth = async (
  * - Refreshed `auth` if needed. 
  * - Throws a `json` representation of the `error`, 
  * if the request is `bad`
- * 
+ * - returns the object according to the `content-type` header
+ *  - json, text, html, blob
  * @template {any} [R=any]
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} path relative path in api
  * @param {RequestInit} [init] request `init` type
  * @param {URLSearchParams} [query] url search params
- * 
  * @throws {error}
- * 
  * @returns {Promise<R>}
  */ 
 export const fetchApiWithAuth = async (
@@ -98,15 +93,24 @@ export const fetchApiWithAuth = async (
 
   const isok = response.ok;
   let payload = undefined;
+  const ct = response?.headers?.get('content-type');
 
   try {
-    payload = await response.json();
+    if(ct?.includes('application/json'))
+      payload = await response.json();
+    else if(ct?.includes('text/plain'))
+      payload = await response.text();
+    else if(ct?.includes('text/html'))
+      payload = await response.text();
+    else
+      payload = await response.blob();
   } catch(e) {
     console.log('fetchApiWithAuth.json()', e)
   }
 
-  if(!isok)
+  if(!isok) {
     throw payload;
+  }
 
   return payload;
 }
@@ -114,16 +118,14 @@ export const fetchApiWithAuth = async (
 
 /**
  * @template {any} G Get type
- * 
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} handle_or_id `handle` or `id`
  * @param {string} resource base path of resource
- * 
- * 
  * @returns {Promise<G>}
  */
-export async function get_from_collection_resource(sdk, resource, handle_or_id) {
+export async function get_from_collection_resource(
+  sdk, resource, handle_or_id
+) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}/${handle_or_id}`,
@@ -135,18 +137,15 @@ export async function get_from_collection_resource(sdk, resource, handle_or_id) 
 
 
 /**
- * 
  * @template {any} U the upsert type
- * 
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {U} item Item to upsert
- * 
- * 
  * @returns {Promise<string>} id
  */
-export async function upsert_to_collection_resource(sdk, resource, item) {
+export async function upsert_to_collection_resource(
+  sdk, resource, item
+) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}`,
@@ -176,19 +175,18 @@ export async function count_query_of_resource(sdk, resource, query) {
     {
       method: 'get',
     }
-  ).then((result) => Number(result.count));
+  );
 }
 
 /**
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {string} handle_or_id `handle` or `id`
- * 
- * 
  * @returns {Promise<boolean>}
  */
-export async function remove_from_collection_resource(sdk, resource, handle_or_id) {
+export async function remove_from_collection_resource(
+  sdk, resource, handle_or_id
+) {
   return fetchApiWithAuth(
     sdk, 
     `${resource}/${handle_or_id}`,
@@ -202,19 +200,15 @@ export async function remove_from_collection_resource(sdk, resource, handle_or_i
 /**
  * @description Invoke `api` endpoint that requires use of `query`
  * object. I named it `list` because it usually entails list op.
- * 
- * 
  * @template {any} G Get type
- * 
- * 
  * @param {StorecraftSDK} sdk
  * @param {string} resource base path of resource
  * @param {ApiQuery<G>} [query] 
- * 
- * 
  * @returns {Promise<G[]>}
  */
-export async function list_from_collection_resource(sdk, resource, query={}) {
+export async function list_from_collection_resource(
+  sdk, resource, query={}
+) {
   const sq = api_query_to_searchparams(query);
 
   // console.log('sq', sq.toString())
@@ -230,7 +224,6 @@ export async function list_from_collection_resource(sdk, resource, query={}) {
 
 /**
  * @description A simple resource base `class` with `CRUD` helpers
- * 
  * @template {any} U upsert type
  * @template {any} G get type
  */
@@ -243,7 +236,6 @@ export class collection_base {
   #base_name = undefined;
 
   /**
-   * 
    * @param {StorecraftSDK} sdk storecraft sdk
    * @param {string} base_name base path of resource type
    */
@@ -254,36 +246,33 @@ export class collection_base {
 
   
   /**
-   * 
    * @param {string} handle_or_id `handle` or `id`
-   * 
-   * 
    * @returns {Promise<G>}
    */
   async get(handle_or_id) {
-    return get_from_collection_resource(this.sdk, this.base_name, handle_or_id);
+    return get_from_collection_resource(
+      this.sdk, this.base_name, handle_or_id
+    );
   }
 
   /**
-   * 
    * @param {U} item Item to upsert
-   * 
-   * 
    * @returns {Promise<string>} id
    */
   async upsert(item) {
-    return upsert_to_collection_resource(this.sdk, this.base_name, item);
+    return upsert_to_collection_resource(
+      this.sdk, this.base_name, item
+    );
   }
 
   /**
-   * 
    * @param {string} handle_or_id `handle` or `id`
-   * 
-   * 
    * @returns {Promise<boolean>}
    */
   async remove(handle_or_id) {
-    return remove_from_collection_resource(this.sdk, this.base_name, handle_or_id);
+    return remove_from_collection_resource(
+      this.sdk, this.base_name, handle_or_id
+    );
   }
 
   /**
@@ -291,7 +280,9 @@ export class collection_base {
    * @returns {Promise<G[]>}
    */
   async list(query) {
-    return list_from_collection_resource(this.sdk, this.base_name, query);
+    return list_from_collection_resource(
+      this.sdk, this.base_name, query
+    );
   }
 
   /**
@@ -299,7 +290,9 @@ export class collection_base {
    * @param {ApiQuery<G>} query Query object
    */
   async count_query(query) {
-    return count_query_of_resource(this.sdk, this.base_name, query);
+    return count_query_of_resource(
+      this.sdk, this.base_name, query
+    );
   }
 
   get base_name() {

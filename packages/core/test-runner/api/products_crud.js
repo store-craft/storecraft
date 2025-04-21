@@ -119,7 +119,8 @@ export const create = app => {
     const actual_qtys = items_get.map(item => item.qty);
 
     assert.equal(
-      actual_qtys, expected_qtys, 'changed quantities do not match'
+      actual_qtys, expected_qtys, 
+      'changed quantities do not match'
     );
   });
 
@@ -131,8 +132,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

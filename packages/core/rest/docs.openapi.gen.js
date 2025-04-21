@@ -13,6 +13,7 @@ import {
   apiAuthSignupTypeSchema,
   apiKeyResultSchema,
   authUserTypeSchema,
+  checkoutCreateTypeAfterValidationSchema,
   checkoutCreateTypeSchema,
   checkoutStatusEnumSchema,
   collectionTypeSchema,
@@ -396,6 +397,7 @@ const create_all = () => {
 
   // register routes
   register_reference(registry);
+  register_dashboard(registry);
   register_ai(registry);
   register_similarity_search(registry);
   register_auth(registry);
@@ -588,6 +590,11 @@ const register_base_delete = (registry, slug_base, name, tags, example_id, descr
     responses: {
       200: {
         description: 'Item was deleted',
+        content: {
+          "application/json": {
+            schema: z.boolean().describe('true if deleted'),
+          },
+        },
       },
       ...error() 
     },
@@ -669,6 +676,7 @@ const register_base_list = (
 const register_checkout = (registry) => {
   registry.register('pricingData', pricingDataSchema);
   const _checkoutCreateTypeSchema = registry.register('checkoutCreateType', checkoutCreateTypeSchema);
+  const _checkoutCreateTypeAfterValidationSchema = registry.register('checkoutCreateTypeAfterValidationSchema', checkoutCreateTypeAfterValidationSchema);
 
   const example_checkout = {
     "line_items": [
@@ -792,15 +800,18 @@ const register_checkout = (registry) => {
   registry.registerPath({
     method: 'post',
     path: `/checkout/pricing`,
-    description: 'Get a pricing for an order. order should at least have the `line items`, `shipping` and `coupons`',
     summary: `Get a pricing for an order`,
+    description: 'Get a pricing for an order. order should at least have the `line items`, `shipping` and `coupons`.\
+    This is computed without validation, that products and shipping method exist, discounts\
+    on the other, are always fetched on the backend. ON checkout however, line items and shipping\
+    methods are validated.',
     tags: ['checkout'],
     request: {
       body: {
         description: 'draft `order` data ',
         content: {
           "application/json": {
-            schema: orderDataSchema,
+            schema: _checkoutCreateTypeAfterValidationSchema,
             example: {
               line_items: [
                 {
@@ -809,7 +820,10 @@ const register_checkout = (registry) => {
                 }
               ],
               shipping_method: {
-                id: 'ship_....'
+                id: 'ship_....',
+                price: 50,
+                handle: 'ship-api-storefronts-all-connections-test-js-2',
+                title: 'ship 2'
               },
               coupons: [
                 'special-100'
@@ -1392,6 +1406,61 @@ const register_reference = (registry) => {
       ...error() 
     },
     ...apply_security()
+  });
+}
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_dashboard = (registry) => {
+  registry.register('storecraftConfigSchema', storecraftConfigSchema);
+
+  registry.registerPath({
+    method: 'get',
+    path: `/dashboard`,
+    summary: `Get Default Dashboard`,
+    description: `Get the default (usually latest) dashboard. This default be set from the storecraft app config`,
+    tags: ['dashboard'],
+    responses: {
+      200: {
+        description: `Dashboard HTML`,
+        content: {
+          'text/html': {
+            schema: z.string(),
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: `/dashboard/{version}`,
+    summary: `Get Dashboard By version`,
+    description: `Get the Dashboard by a specific version, see https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions`,
+    tags: ['dashboard'],
+    request: {
+      params: z.object({
+        version: z.string().openapi(
+          { 
+            examples: ['1.0.35', 'latest'],
+            description: 'The version of the dashboard to get, or `latest` for the latest version'
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: `Dashboard HTML`,
+        content: {
+          'text/html': {
+            schema: z.string(),
+          },
+        },
+      },
+      ...error() 
+    },
   });
 }
 
@@ -2000,7 +2069,13 @@ const register_storage = registry => {
     },
     responses: {
       200: {
-        description: 'success'
+        description: 'success',
+        content: {
+          "application/json": {
+            schema: z.boolean().openapi({ description: 'success' }),
+            example: true
+          },
+        },
       },
       ...error() 
     },
@@ -2067,6 +2142,12 @@ const register_storage = registry => {
     responses: {
       200: {
         description: 'success',
+        content: {
+          "application/json": {
+            schema: z.boolean().openapi({ description: 'success' }),
+            example: true
+          },
+        },
       },
       ...error() 
     },
@@ -3051,11 +3132,33 @@ const register_orders = registry => {
   register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(
     registry, slug_base, name, tags, 
-    _typeUpsertSchema, example_order, apply_security(),
-    'List operates differently in the following cases: \n \
-    - If user is `admin`, orders of all customers will be returned \n \
-    - If user is not `admin`, then only his own orders will be returned '
-    );
+    _typeSchema, example_order, apply_security(),
+  );
+  
+  registry.registerPath({
+    method: 'get',
+    path: `/${slug_base}/me`,
+    summary: `Query my orders`,
+    description: `List and filter items of the current authenticated user. this is useful for logged in customers with JWT tokens to directly query their orders`,
+    tags,
+    request: {
+      query: create_query(),
+    },
+    responses: {
+      200: {
+        description: `List of \`${name}s\``,
+        content: {
+          'application/json': {
+            schema: z.array(_typeSchema),
+            example: [example_order]
+          },
+        },
+      },
+      ...error() 
+    },
+    ...apply_security()
+  });  
+  
 }
 
 /**
@@ -3996,168 +4099,6 @@ const register_products = registry => {
     },
   });
   
-  
-  // list collections
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/collections`,
-    description: 'Each `products` has linked collections, you can list all these `collections`',
-    summary: 'List collections of product',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle`'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List all product\'s collections`,
-        content: {
-          'application/json': {
-            schema: z.array(collectionTypeSchema),
-            example: [example_collection]
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
-
-
-
-
-  // list variants
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/variants`,
-    description: 'Each `products` may have linked product variants, you can list all these `variants`',
-    summary: 'List variants of product',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle`'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List all product\'s variants`,
-        content: {
-          'application/json': {
-            schema: z.array(variantTypeSchema),
-            example: [
-              {
-                "handle": "tshirt-red-color",
-                "active": true,
-                "price": 50,
-                "qty": 1,
-                "title": "tshirt variant 1 - red color",
-                "parent_handle": "pr-api-products-variants-test-js-1",
-                "parent_id": "pr_65e5ca42c43e2c41ae5216a9",
-                "variant_hint": [
-                  {
-                    "option_id": "id-option-1",
-                    "value_id": "id-val-1"
-                  }
-                ],
-                "id": "pr_65fab4471d764999c957cb05",
-                "created_at": "2024-03-20T10:02:47.411Z",
-                "updated_at": "2024-03-20T10:02:47.411Z",
-                "search": [
-                  "handle:tshirt-red-color",
-                  "tshirt-red-color",
-                  "id:pr_65fab4471d764999c957cb05",
-                  "pr_65fab4471d764999c957cb05",
-                  "65fab4471d764999c957cb05",
-                  "active:true",
-                  "tshirt",
-                  "variant",
-                  "1",
-                  "red",
-                  "color",
-                  "tshirt variant 1 - red color",
-                  "discount:3-for-100",
-                ]
-              }
-            ]
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
-  // list discounts
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/discounts`,
-    description: 'Each `products` may have linked `discounts`, you can list all these `discounts`',
-    summary: 'List discounts of product',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle`'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List all product\'s discounts`,
-        content: {
-          'application/json': {
-            schema: z.array(discountTypeSchema),
-            example: [example_discount]
-          },
-        },
-      },
-      ...error() 
-     },
-  });
-
-  // list related products
-  registry.registerPath({
-    method: 'get',
-    path: `/${slug_base}/{id_or_handle}/related`,
-    description: 'Each `products` may have related `products`, you can list all these `products`',
-    summary: 'List related products of product',
-    tags,
-    request: {
-      params: z.object({
-        id_or_handle: z.string().openapi(
-          { 
-            example: example_id,
-            description: '`id` or `handle`'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `List all related products`,
-        content: {
-          'application/json': {
-            schema: z.array(discountTypeSchema),
-            example: [example_product]
-          },
-        },
-      },
-      ...error() 
-     },
-  });
 
 }
 

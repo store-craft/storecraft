@@ -1,5 +1,7 @@
 /**
- * @import { NotificationTypeUpsert, NotificationType } from '@storecraft/core/api'
+ * @import { 
+ *  NotificationTypeUpsert, NotificationType 
+ * } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'
 import { 
@@ -14,7 +16,6 @@ import {
 export default class Notifications extends collection_base {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
@@ -22,7 +23,6 @@ export default class Notifications extends collection_base {
   }
 
   /**
-   * 
    * @param {NotificationTypeUpsert[]} items 
    */
   upsertBulk = items => {

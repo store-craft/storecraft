@@ -1,5 +1,5 @@
 /**
- * @import { StorecraftSDKConfig } from './types.js'
+ * @import { Fetcher, StorecraftSDKConfig } from './types.js'
  */
 import Auth from './src/auth.js'
 import Customers from './src/customers.js'
@@ -21,7 +21,10 @@ import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
 import Search from './src/search.js'
-import { fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './src/utils.api.fetch.js'
+import { 
+  fetchApiWithAuth, fetchOnlyApiResponseWithAuth 
+} from './src/utils.api.fetch.js'
+import Email from './src/email.js'
 
 /**
  * @description The official `storecraft` universal **SDK** for `javascript`
@@ -29,13 +32,19 @@ import { fetchApiWithAuth, fetchOnlyApiResponseWithAuth } from './src/utils.api.
 export class StorecraftSDK {
 
   /**@type {StorecraftSDKConfig} */
-  #_config = undefined;
+  #config = undefined;
+  /**@type {Fetcher} */
+  #fetcher = undefined;
 
   /**
-   * @param {StorecraftSDKConfig} [config] 
+   * @param {StorecraftSDKConfig} [config] the `sdk` configuration
+   * @param {Fetcher} [fetcher] Alternative `fetch` implementation. 
+   * This is useful for testing purposes, or if you want to use a 
+   * different `fetch` implementation
    */  
-  constructor(config) {
-    this.#_config = config;
+  constructor(config, fetcher) {
+    this.#config = config;
+    this.#fetcher = fetcher ?? ((input, init) => fetch(input, init));
 
     this.ai = new AI(this);
     this.search = new Search(this);
@@ -57,8 +66,13 @@ export class StorecraftSDK {
     this.checkout = new Checkout(this);
     this.settings = new Settings(this);
     this.notifications = new Notifications(this);
+    this.emails = new Email(this);
   }
 
+  get fetcher() {
+    return this.#fetcher
+  }
+  
   /**
    * @description 
    * - Prepends `backend` endpoint. 
@@ -66,15 +80,11 @@ export class StorecraftSDK {
    * - Refreshed `auth` if needed. 
    * - Throws a `json` representation of the `error`, 
    * if the request is `bad`
-   * 
    * @template {any} [R=any]
-   * 
    * @param {string} path relative path in api
    * @param {RequestInit} [init] request `init` type
    * @param {URLSearchParams} [query] url search params
-   * 
    * @throws {error}
-   * 
    * @returns {Promise<R>}
    */   
   fetchApiWithAuth = (path, init, query) => {
@@ -88,11 +98,9 @@ export class StorecraftSDK {
    * - Prepends `backend` endpoint. 
    * - Fetches with `authentication` middleware. 
    * - Refreshed `auth` if needed. 
-   * 
    * @param {string} path relative path in api
    * @param {RequestInit} [init] request `init` type
    * @param {URLSearchParams} [query] url search params
-   * 
    * @returns {Promise<Response>}
    */   
   fetchOnlyApiResponseWithAuth = (path, init, query) => {
@@ -105,13 +113,14 @@ export class StorecraftSDK {
    * @param {StorecraftSDKConfig} [config] 
    */  
   updateConfig(config) {
-    this.#_config = config;
+    this.#config = {
+      ...config
+    };
   }
 
   get config() {
-    return this.#_config
+    return this.#config
   }
-
 }
 
 /**
@@ -126,7 +135,6 @@ export const validateConfig = (config) => {
  */  
 export const create = (config) => { 
   const sdk = new StorecraftSDK(config);
-  
   return sdk;
 }
 

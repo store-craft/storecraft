@@ -6,26 +6,28 @@ import { App } from '../index.js';
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app
  */
 export const get_extension = (app) => 
   /**
    * @description `Get` Extension info
-   * @param {string} extension_handle `handle` of `extension` 
-   * @returns {ExtensionItemGet}
+   * @param {keyof T["extensions"]} extension_handle `handle` of `extension` 
+   * @returns {Promise<ExtensionItemGet>}
    */
-  (extension_handle) => {
-    const ext = app.extensions?.[extension_handle];
+  async (extension_handle) => {
+    const handle = /** @type {string} */(extension_handle);
+    const ext = app.extensions?.[handle];
 
     assert(
       ext,
-      `Extension with handle=${extension_handle} was not found !`
+      `Extension with handle=${handle} was not found !`
     );
 
     return {
       config: ext.config,
       info: ext.info,
-      handle: extension_handle, 
+      handle: handle, 
       actions: ext.actions,
     }
   }
@@ -36,9 +38,9 @@ export const get_extension = (app) =>
 export const list_extensions = (app) => 
   /**
    * @description `List` extensions info
-   * @returns {ExtensionItemGet[]}
+   * @returns {Promise<ExtensionItemGet[]>}
    */
-  () => {
+  async () => {
     return Object.entries(app.extensions ?? {}).map(
       ([handle, ext]) => (
         {
@@ -53,24 +55,25 @@ export const list_extensions = (app) =>
 
 
 /**
- * @param {App} app `storecraft` app
+ * @template {App} T
+ * @param {T} app
 */
 export const invoke_extension_action = (app) => 
   /**
    * @description Invoke an `extension` **Action**.
-   * @param {string} extension_handle `extension` handle for identification
+   * @param {keyof T["extensions"]} extension_handle `extension` handle for identification
    * @param {string} action_handle `action` handle of extension
    * @param {any} [body] `action` input
    */
   async (
     extension_handle, action_handle, body
   ) => {
-
-    const ext = app.extensions?.[extension_handle];
+    const handle = /** @type {string} */(extension_handle);
+    const ext = app.extensions?.[handle];
 
     assert(
       ext, 
-      `extension with handle ${extension_handle} was not found`, 
+      `extension with handle ${handle} was not found`, 
       400
     );
 
@@ -79,7 +82,8 @@ export const invoke_extension_action = (app) =>
 
 
 /**
- * @param {App} app
+ * @template {App} T
+ * @param {T} app
  */  
 export const inter = app => {
 

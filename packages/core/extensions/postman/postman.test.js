@@ -1,18 +1,18 @@
 /**
- * @import { AuthUserType, OrderData, OrderDataUpsert } from '../../api/types.api.js'
+ * @import { AuthUserType, OrderData } from '../../api/types.api.js'
  * @import { Test } from 'uvu';
  * @import { events } from '../../pubsub/types.public.js';
  */
-import { create_app } from '../../create-app.test.js';
 import { test, suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../../test-runner/api/api.utils.crud.js';
 import { enums } from '../../api/index.js';
 import { App } from '../../index.js';
-import { compileTemplate, sendMailWithTemplate } from '../../api/con.email.logic.js';
+import { sendMailWithTemplate } from '../../api/con.email.logic.js';
 import { get_info } from './index.js';
 import { ID } from '../../api/utils.func.js';
 import { CONFIRM_EMAIL_TOKEN } from '../../api/con.auth.logic.js';
+import esMain from '../../test-runner/api/utils.esmain.js';
 
 /** @type {OrderData} */
 const order_base = {
@@ -510,7 +510,16 @@ export const create_test = (app) => {
   return s;
 }
 
-// create_test(
-//   await create_app(false)
-// )
-// .run();
+
+(async function inner_test() {
+  // helpful for direct inner tests
+  if(!esMain(import.meta)) return;
+  try {
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
+    const s = create_test(app);
+    s.after(async () => { await app.db.disconnect() });
+    s.run();
+  } catch (e) {
+  }
+})();

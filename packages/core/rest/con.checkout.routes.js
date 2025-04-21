@@ -21,7 +21,7 @@ export const create_routes = (app) => {
       const gateway_handle = req.query?.get('gateway');
 
       assert(
-        app.gateway(gateway_handle), 
+        app.gateways?.[gateway_handle], 
         `gateway ${gateway_handle} not found`, 400
       );
 
@@ -52,9 +52,10 @@ export const create_routes = (app) => {
   polka.post(
     '/pricing',
     async (req, res) => {
-      const r = await app.api.checkout.eval_pricing(req.parsedBody);
-
-      res.sendJson(r.pricing);
+      const r = await app.api.checkout.eval_pricing(
+        req.parsedBody
+      );
+      res.sendJson(r?.pricing ?? null);
     }
   );
 

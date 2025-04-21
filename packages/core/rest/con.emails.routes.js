@@ -2,12 +2,10 @@
  * @import { ApiPolka } from './types.public.js' 
  */
 import { Polka } from './polka/index.js'
-import { assert } from '../api/utils.func.js'
 import { authorize_admin } from './con.auth.middle.js'
 import { App } from '../index.js'
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {
@@ -21,7 +19,9 @@ export const create_routes = (app) => {
   polka.post(
     '/send',
     async (req, res) => {
-      const final = await app.api.email.sendMail(req.parsedBody);
+      const final = await app.api.email.sendMail(
+        req.parsedBody
+      );
       res.sendJson(final);
     }
   );
@@ -29,7 +29,9 @@ export const create_routes = (app) => {
   polka.post(
     '/send-with-template',
     async (req, res) => {
-      const final = await app.api.email.sendMailWithTemplate(req.parsedBody);
+      const final = await app.api.email.sendMailWithTemplate(
+        req.parsedBody
+      );
       res.sendJson(final);
     }
   );

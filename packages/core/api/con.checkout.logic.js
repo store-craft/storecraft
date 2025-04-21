@@ -1,10 +1,9 @@
 /**
  * @import { 
- *  OrderData, DiscountType, CheckoutCreateType, 
+ *  OrderData, CheckoutCreateType, 
  *  OrderDataUpsert, ValidationEntry, 
  *  CheckoutCreateTypeAfterValidation
  * } from './types.api.js';
- * @import { type payment_gateway } from '../payments/types.payments.d.ts';
  */
 import { 
   App, CheckoutStatusEnum, DiscountApplicationEnum, 
@@ -15,9 +14,6 @@ import { enums } from "./index.js";
 import { assert_zod } from "./middle.zod-validate.js";
 import { checkoutCreateTypeSchema } from "./types.autogen.zod.api.js";
 import { assert } from "./utils.func.js";
-
-
-
 
 /**
  * @param {App} app
@@ -110,7 +106,7 @@ export const eval_pricing = (app) =>
  * 3. calculate `pricing`
  * 4. return the `order` with `pricing` information
  * 
- * @template {CheckoutCreateType} T
+ * @template {CheckoutCreateTypeAfterValidation} T
  * @param {T} order 
  * @returns {Promise<T & { pricing: OrderData["pricing"] } >}
  */
@@ -151,7 +147,8 @@ async (order) => {
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
  */
 export const create_checkout = app =>
 /**
@@ -165,20 +162,21 @@ export const create_checkout = app =>
  * 5. `upsert` the draft `order` into the database.
  * 
  * @param {CheckoutCreateType} order_checkout
- * @param {keyof App["gateways"]} gateway_handle chosen payment gateway
+ * @param {keyof T["gateways"]} gateway_handle chosen payment gateway
  * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
 
+  const handle = /** @type {string} */ (gateway_handle);
   assert_zod(
     checkoutCreateTypeSchema.transform(x => x ?? undefined), 
     order_checkout
   );
 
   // get gateway and verify
-  const gateway = app.gateways?.[gateway_handle];
+  const gateway = app.gateways?.[handle];
 
-  assert(gateway, `gateway ${String(gateway_handle)} not found`, 400);
+  assert(gateway, `gateway ${handle} not found`, 400);
 
   // fetch correct data from backend. we dont trust client
   const order_validated = await validate_checkout(app)(order_checkout);
@@ -217,7 +215,7 @@ async (order_checkout, gateway_handle) => {
   // save the creation payload
   order.payment_gateway = {
     on_checkout_create,
-    gateway_handle: String(gateway_handle),
+    gateway_handle: handle,
     latest_status: await gateway.status(on_checkout_create)
   };
 
@@ -291,7 +289,7 @@ async (checkoutId, client_payload) => {
   const on_checkout_complete = await gateway.onCheckoutComplete(
     order.payment_gateway?.on_checkout_create, client_payload
   );
-
+  
   { // we need to validate status is in correct format
     if(on_checkout_complete?.status?.checkout) {
       assert(
@@ -332,7 +330,8 @@ async (checkoutId, client_payload) => {
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app 
  */
 export const inter = app => {
 

@@ -4,7 +4,6 @@ import { Polka } from './polka/index.js'
 import { authorize_admin } from './con.auth.middle.js'
 import { assert } from '../api/utils.func.js';
 
-
 /**
  * @param {App} app
  */
@@ -19,7 +18,7 @@ export const create_routes = (app) => {
     authorize_admin(app),
     async (req, res) => {
       const { gateway_handle } = req.params;
-      const r = app.api.payments.get(
+      const r = await app.api.payments.get(
         gateway_handle
       );
       res.sendJson(r);
@@ -33,14 +32,7 @@ export const create_routes = (app) => {
       const r = await app.api.payments.webhook(
         gateway_handle, req, res
       );
-
-      // We expect the webhook handler in the gateway to finish the
-      // response, but in case it didn't, we will error it.
-      assert(
-        res.finished,
-        `webhook for gateway ${gateway_handle} did not send a response`
-      );
-
+      res.end();
     }
   );
 
@@ -49,7 +41,7 @@ export const create_routes = (app) => {
     '/gateways',
     authorize_admin(app),
     async (req, res) => {
-      const r = app.api.payments.list_all();
+      const r = await app.api.payments.list_all();
       res.sendJson(r);
     }
   );
@@ -77,7 +69,6 @@ export const create_routes = (app) => {
       const r = await app.api.payments.invoke_action(
         order_id, action_handle, req.parsedBody
       );
-      
       res.sendJson(r);
     }
   );
@@ -85,15 +76,14 @@ export const create_routes = (app) => {
   polka.get(
     '/buy_ui/:order_id',
     async (req, res) => {
+      console.log({ hello: 'world' })
       const { order_id } = req.params;
       const r = await app.api.payments.buy_ui(
         order_id
       );
-      
       res.sendHtml(r);
     }
   );
 
   return polka;
 }
-

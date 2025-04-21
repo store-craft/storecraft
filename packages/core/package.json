@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.43",
+  "version": "1.0.48",
   "description": "Core Package for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -84,6 +84,9 @@
       "import": "./mailer/public.js",
       "types": "./mailer/types.public.d.ts"
     },
+    "./mailer/*": {
+      "import": "./mailer/*"
+    },
     "./database": {
       "import": "./database/public.js",
       "types": "./database/types.public.d.ts"
@@ -132,6 +135,9 @@
     },
     "./extensions/notifications": {
       "import": "./extensions/notifications/index.js"
+    },
+    "./extensions/dummy": {
+      "import": "./extensions/dummy/index.js"
     },
     "./pubsub": {
       "import": "./pubsub/public.js",
@@ -243,6 +249,7 @@
     "@asteasolutions/zod-to-openapi": "^6.4.0",
     "@cloudflare/workers-types": "^4.20250303.0",
     "@storecraft/database-sqlite": "^1.0.7",
+    "@storecraft/sdk": "^1.0.15",
     "@types/node": "^20.11.0",
     "peggy": "^3.0.2",
     "uvu": "^0.5.6"

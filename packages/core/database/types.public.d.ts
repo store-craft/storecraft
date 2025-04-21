@@ -179,88 +179,19 @@ export interface db_products extends db_crud<
 
   /**
    * increment / decrement stock of multiple products
-   * 
    * @param product_id_or_handles array of `id` or `handle`
    * @param deltas corresponding array of non-zero `positive` or 
    * `negative` integer
    */
   changeStockOfBy: (
     product_id_or_handles: HandleOrId[], deltas: number[]
-  ) => Promise<void>;
-
-  /**
-   * list all of the product related collections, returns eveything, 
-   * this is not query based, we assume, there are a handful of collection 
-   * per product
-   * 
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_all_product_collections: (
-    product: HandleOrId
-  ) => Promise<CollectionType[]>;
-
-  /**
-   * list all of the product related discounts, returns eveything, 
-   * this is not query based, we assume, there are a handful of discounts 
-   * per product
-   * 
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_all_product_discounts: (
-    product: HandleOrId
-  ) => Promise<DiscountType[]>;
-
-  /**
-   * list all of the product related collections, returns eveything, 
-   * this is not query based, we assume, there are a handful of collection 
-   * per product
-   * 
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_all_product_variants: (
-    product: HandleOrId
-  ) => Promise<VariantType[]>;
-  
-  /**
-   * list all of the product related collections, returns eveything, 
-   * this is not query based, we assume, there are a handful of 
-   * collection per product
-   * 
-   * @param product handle or id
-   * @param options options like expand
-   */
-  list_all_related_products: (
-    product: HandleOrId
-  ) => Promise<BaseProductType[]>;
-  
-  
-  /**
-   * Add product to collection
-   * @param product handle or id
-   * @param collection_handle_or_id collection handle or id
-   */
-  add_product_to_collection?: (
-    product: HandleOrId, collection_handle_or_id: HandleOrId
-  ) => Promise<void>;
-
-  /**
-   * remove product from collection
-   * @param product handle or id
-   * @param collection_handle_or_id collection handle or id
-   */
-  remove_product_from_collection?: (
-    product: HandleOrId, collection_handle_or_id: HandleOrId
-  ) => Promise<void>;
+  ) => Promise<boolean>;
 
   /**
    * List all of the tags of all the products deduped, This is helpful 
    * for building a filter system in the frontend if you know in advance 
    * all the tags of the products in a collection, also see the collection 
    * confined version 
-   * 
    * {@link db_collections.list_used_products_tags}
    */
   list_used_products_tags: () => Promise<string[]>
@@ -274,11 +205,11 @@ export interface db_customers extends OmitGetByHandle<db_crud<
   getByEmail: (email: string) => Promise<CustomerType>;
   /**
    * 
-   * @param customer_id the id of the customer (i.e `cus_sdino8dj8sdsd`)
+   * @param customer_id_or_email the id or email of the customer
    * @param query query object
    */
   list_customer_orders: (
-    customer_id: ID, query?: ApiQuery<OrderData>
+    customer_id_or_email: HandleOrId, query?: ApiQuery<OrderData>
   ) => Promise<OrderData[]>;
 
   /**

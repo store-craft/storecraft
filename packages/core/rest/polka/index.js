@@ -1,20 +1,27 @@
 /**
- * @import { VPolkaRequest, VPolkaResponse, Middleware, PolkaOptions, IPolka } from './public.js'
+ * @import { 
+ *  VPolkaRequest, VPolkaResponseCreator, 
+ *  Middleware, PolkaOptions, IPolka, Logger, ErrorLike
+ * } from './public.js'
  */
 import { StorecraftError } from '../../api/utils.func.js';
 import { STATUS_CODES } from './codes.js';
 import { Trouter } from './trouter/index.js';
+import { extractStack } from './utils.js';
 
 const extract_code = e => {
   const parsed = parseInt(e?.cause)
+  throw 'bang'
+  if(parsed ) {
+  }
   return isNaN(parsed) ? undefined : parsed
 }
 
 /**
- * a robust error handler
- * @param { StorecraftError | Error | string | { message: any, code: number } } error
+ * @description a robust error handler
+ * @param {ErrorLike} error
  * @param {VPolkaRequest} req 
- * @param {VPolkaResponse} res 
+ * @param {VPolkaResponseCreator} res 
  */
 export const onError = async (error, req, res) => {
   let code = 500;
@@ -32,12 +39,14 @@ export const onError = async (error, req, res) => {
   } else {
     // assume { message: string, code: number }
     code = (error && ('code' in error)) ? error?.code : code;
-    messages = [{ message: error.message ?? 'unknown-error'}];
+    messages = [{ message: error?.message ?? 'unknown-error'}];
   }
 
   // probably a bad app/lib specific code and not rest-api aligned
   if((code < 200) || (code > 599) )
     code = 500;
+
+  Polka.logger.error(error, req, res, code, messages);
 
   res.setStatus(code, STATUS_CODES[code.toString()])
   res.sendJson({ messages });
@@ -45,23 +54,41 @@ export const onError = async (error, req, res) => {
 
 /**
  * @template {VPolkaRequest} Req
- * @template {VPolkaResponse} Res
+ * @template {VPolkaResponseCreator} Res
  * @param {Middleware<Req, Res>} fn 
  * @returns {Middleware<Req, Res>}
  */
 const mount = fn => fn instanceof Polka ? fn.attach : fn;
 
 /**
- * 
  * @template {VPolkaRequest} Req
- * @template {VPolkaResponse} Res
+ * @template {VPolkaResponseCreator} Res
  * @extends {Trouter<Middleware<Req, Res>>}
  * @implements {IPolka<Req, Res>}
  */
 export class Polka extends Trouter {
 
+  /** @type {Logger} */
+  static logger = {
+    active: true,
+    error(e, req, res, code, messages) {
+      if(!this.active) 
+        return;
+
+      console.log('Error Code:', code);
+      console.log('Error Message:');
+      console.dir(messages, {depth: null, colors: true});
+      console.log('Error Trace: \n', extractStack(e));
+      if(e && (typeof e === 'object') && ('stack' in e)) {
+        // console.dir(e?.stack);
+      } else {
+        // console.log(JSON.stringify(e, null, 2));
+      }
+
+    },
+  };
+
   /**
-   * 
    * @param {PolkaOptions<Req, Res>} opts 
    */
   constructor(opts = {}) {
@@ -119,9 +146,14 @@ export class Polka extends Trouter {
     req.query = req.parsedUrl.searchParams;
     req.params = obj.params;
 
-    if (req.parsedUrl.pathname.length > 1 && req.parsedUrl.pathname.indexOf('%', 1) !== -1) {
+    if (
+      req.parsedUrl.pathname.length > 1 && 
+      req.parsedUrl.pathname.indexOf('%', 1) !== -1
+    ) {
       for (let k in req.params) {
-        try { req.params[k] = decodeURIComponent(req.params[k]); }
+        try { 
+          req.params[k] = decodeURIComponent(req.params[k]); 
+        }
         catch (e) { /* malform uri segment */ }
       }
     }
@@ -142,8 +174,8 @@ export class Polka extends Trouter {
     } catch (e) {
       await this.onError(e, req, res);
 
-      e?.stack && console.log(e?.stack)
-      console.log(JSON.stringify(e, null, 2))
+      // e?.stack && console.log(e?.stack)
+      // console.log(JSON.stringify(e, null, 2))
       // console.log('e?.stack')
       // console.log(e?.stack)
       // throw e

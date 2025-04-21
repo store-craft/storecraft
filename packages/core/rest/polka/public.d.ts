@@ -1,3 +1,4 @@
+import { StorecraftError } from '../../api/utils.func.js';
 import type { Trouter } from './trouter/index.js';
 
 export type PartialURL = Partial<URL>;
@@ -20,7 +21,7 @@ export type VPolkaRequest = Partial<Request> & {
 
 type ResponseBody = ReadableStream | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | string | undefined;
 
-export interface VPolkaResponse {
+export interface VPolkaResponseCreator {
   headers?: Headers;
   status?: number;
   statusText?: string;
@@ -32,18 +33,18 @@ export interface VPolkaResponse {
    * @param body 
    * @returns {Response}
    */
-  send?: (body?: ResponseBody) => VPolkaResponse
-  end?: () => VPolkaResponse
-  sendJson?: (o: Object) => VPolkaResponse
-  sendHtml?: (o: string) => VPolkaResponse
-  sendText?: (o: string) => VPolkaResponse
-  sendBlob?: (o: Blob) => VPolkaResponse
-  sendReadableStream?: (o: ReadableStream) => VPolkaResponse
-  sendArrayBuffer?: (o: ArrayBuffer) => VPolkaResponse
-  sendSearchParams?: (o: URLSearchParams) => VPolkaResponse
-  sendFormData?: (o: FormData) => VPolkaResponse
-  sendServerSentEvents?: (o: ReadableStream) => VPolkaResponse
-  setStatus?: (code: number, text?: string) => VPolkaResponse
+  send?: (body?: ResponseBody) => VPolkaResponseCreator
+  end?: () => VPolkaResponseCreator
+  sendJson?: (o: Object) => VPolkaResponseCreator
+  sendHtml?: (o: string) => VPolkaResponseCreator
+  sendText?: (o: string) => VPolkaResponseCreator
+  sendBlob?: (o: Blob) => VPolkaResponseCreator
+  sendReadableStream?: (o: ReadableStream) => VPolkaResponseCreator
+  sendArrayBuffer?: (o: ArrayBuffer) => VPolkaResponseCreator
+  sendSearchParams?: (o: URLSearchParams) => VPolkaResponseCreator
+  sendFormData?: (o: FormData) => VPolkaResponseCreator
+  sendServerSentEvents?: (o: ReadableStream) => VPolkaResponseCreator
+  setStatus?: (code: number, text?: string) => VPolkaResponseCreator
 }
 
 export interface IError extends Error {
@@ -52,10 +53,10 @@ export interface IError extends Error {
   details?: any;
 }
 
-export type ErrorHandler = (err: string | IError, req: VPolkaRequest, res: VPolkaResponse) => Promise<void>;
-export type Middleware<Req extends VPolkaRequest, Res extends VPolkaResponse> = (req: Req, res: Res) => Promise<Res | void>;
+export type ErrorHandler = (err: string | IError, req: VPolkaRequest, res: VPolkaResponseCreator) => Promise<void>;
+export type Middleware<Req extends VPolkaRequest, Res extends VPolkaResponseCreator> = (req: Req, res: Res) => Promise<Res | void>;
 
-export interface IPolka<Req extends VPolkaRequest, Res extends VPolkaResponse> extends Trouter<Middleware<Req, Res>> {
+export interface IPolka<Req extends VPolkaRequest, Res extends VPolkaResponseCreator> extends Trouter<Middleware<Req, Res>> {
   readonly onError: ErrorHandler;
   readonly onNoMatch: Middleware<Req, Res>;
 
@@ -65,10 +66,21 @@ export interface IPolka<Req extends VPolkaRequest, Res extends VPolkaResponse> e
   use(...handlers: (IPolka<Req, Res> | Middleware<Req, Res>)[]): this;
 }
 
-export type PolkaOptions<Req extends VPolkaRequest, Res extends VPolkaResponse> = {
+export type PolkaOptions<Req extends VPolkaRequest, Res extends VPolkaResponseCreator> = {
   onNoMatch?: Middleware<Req, Res>;
   onError?: ErrorHandler;
   prefix?: string;
+}
+
+export type ErrorLike = StorecraftError | Error | string | { message: any, code: number };
+
+export type Logger = {
+  active: boolean
+  error: (
+    e: ErrorLike, req: VPolkaRequest, 
+    res: VPolkaResponseCreator, 
+    code: number, messages: any[]
+  ) => void;
 }
 
 export * from './index.js';

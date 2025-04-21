@@ -291,7 +291,7 @@ const _m = {
   /**
    * 
    * @param {string} text 
-   * @param {*} opt 
+   * @param {*} [opt] 
    * @returns {(data: object) => string}
    */
   compile: function(text, opt) {

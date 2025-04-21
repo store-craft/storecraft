@@ -194,9 +194,7 @@ export const parse_number_from_string = (q, defaultValue=Number.NaN) => {
  * 2. `startAt=(updated:2012,id:tomer)&sort=(updated:+, id:+)`
  * 
  * INTO a {`ParsedApiQuery`}
- * 
  * @param {URLSearchParams | string} s 
- * 
  * @returns {ApiQuery | undefined}
  */
 export const parse_query = (s) => {

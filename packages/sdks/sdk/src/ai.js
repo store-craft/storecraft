@@ -21,11 +21,11 @@ const HEADER_STORECRAFT_THREAD_ID = /** @satisfies {HEADER_STORECRAFT_THREAD_ID_
 export default class AI {
 
   /**
-   * 
    * @param {StorecraftSDK} sdk 
    */
   constructor(sdk) {
     this.sdk = sdk;
+    
   }
 
   /**
@@ -36,7 +36,7 @@ export default class AI {
    * @returns {Promise<AgentRunResponse>}
    */
   speak = async (agent_handle, params) => {
-    const response = await fetch(
+    const response = await this.sdk.fetcher(
       url(this.sdk.config, `ai/agents/${agent_handle}/run`),
       {
         method: 'post',
@@ -55,8 +55,9 @@ export default class AI {
    * @param {string} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    */
-  streamSpeak = async function(agent_handle, params) {
-    const response = await fetch(
+  streamSpeak = async (agent_handle, params) => {
+    
+    const response = await this.sdk.fetcher(
       url(this.sdk.config, `ai/agents/${agent_handle}/stream`),
       {
         method: 'post',
@@ -160,7 +161,6 @@ export const SSEGenerator = async function *(stream) {
  */
 
 /**
- * 
  * @param {string[]} lines 
  * @returns {SSEFrame}
  */

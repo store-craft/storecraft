@@ -47,13 +47,14 @@ export const regular_upsert = (
    * @returns {Promise<string>} id
    */
   return async (item) => {
-    const requires_event_processing = Boolean(event) && app.pubsub.has(event);
+    const requires_event_processing = Boolean(event) 
+      && app.pubsub.has(event);
 
     /** @type {DB_GET_TYPE} */
     let previous_item;
 
     // active by default
-    if(item && !('active' in item)) {
+    if(item && (typeof item==='object') && !('active' in item)) {
       item.active = true;
     }
 

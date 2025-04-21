@@ -37,13 +37,15 @@ const items = get_static_ids('dis').map(
       application: enums.DiscountApplicationEnum.Auto, 
       info: {
         details: {
-          meta: enums.DiscountMetaEnum.bulk,
+          type: 'bulk',
+          // meta: enums.DiscountMetaEnum.bulk,
           extra: {
             qty: 3, fixed: 100, percent: 100
           }
         },
         filters: [
           {
+            op: 'p-all',
             meta: enums.FilterMetaEnum.p_all,
           }
         ]
@@ -81,8 +83,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

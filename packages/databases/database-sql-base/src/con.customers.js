@@ -195,7 +195,7 @@ const list_customer_orders = (driver) => {
  * @returns {db_col["count_customer_orders"]}
  */
 const count_customer_orders = (driver) => {
-  return async (id, query) => {
+  return async (customer_id_or_email, query) => {
 
     const result = await driver.client
       .selectFrom('orders')
@@ -208,8 +208,8 @@ const count_customer_orders = (driver) => {
             query_to_eb(eb, query, table_name),
             eb.or(
               [
-                eb('_customer_id', '=', id),
-                eb('_customer_email', '=', id),
+                eb('_customer_id', '=', customer_id_or_email),
+                eb('_customer_email', '=', customer_id_or_email),
               ]
             )
           ].filter(Boolean)

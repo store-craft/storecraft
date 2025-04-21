@@ -11,24 +11,25 @@
  * } from "./platform/types.public.js";
  * @import { mailer } from "./mailer/types.public.js";
  * @import { tax_provider } from "./tax/types.public.js";
- * @import { PayloadForUpsert, PubSubOnEvents } from "./pubsub/types.public.js";
- * @import { ApiResponse } from "./rest/types.public.js";
+ * @import { PayloadForUpsert } from "./pubsub/types.public.js";
  * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
  * @import { Agent } from "./ai/agents/types.js";
  * @import { AuthProvider } from "./auth/types.js";
  * 
  */
-import { STATUS_CODES } from './rest/polka/codes.js';
 import { create_rest_api } from './rest/index.js';
-import { create_api, enums } from './api/index.js'
+import { create_api } from './api/index.js'
 import { PubSub } from './pubsub/index.js';
 import { UniformTaxes } from './tax/public.js';
 export * from './api/types.api.enums.js'
 import pkg from './package.json' with { type: "json" }
-import { NotificationsExtension } from './extensions/notifications/index.js';
+import { 
+  NotificationsExtension 
+} from './extensions/notifications/index.js';
 import { StoreAgent } from './ai/agents/index.js';
 import { 
-  save_collection, save_discount, save_product, save_shipping_method 
+  save_collection, save_discount, 
+  save_product, save_shipping_method 
 } from './ai/models/vector-stores/index.js';
 import { assert } from './api/utils.func.js';
 
@@ -41,8 +42,9 @@ import { assert } from './api/utils.func.js';
 
 /**
  * @typedef {{
- *  'store': StoreAgent<any>
- * }} BaseAgents
+ *  'store': StoreAgent<any>,
+*   [h: string]: Agent
+* }} BaseAgents
  */
 
 let ms_init_start = 0;
@@ -61,7 +63,7 @@ let ms_init_start = 0;
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
- * @template {Record<string, Agent> & BaseAgents} [AgentsMap=(BaseAgents)]
+ * @template {BaseAgents} [AgentsMap=(BaseAgents)]
  * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {
@@ -110,84 +112,66 @@ export class App {
   #vector_store;
   
   /** 
-   * 
    * @description The private database driver
-   * 
-   * 
    * @type {Database} 
    */ 
   #db_driver;
 
   /** 
-   * 
    * @description The private storage driver
-   * 
    * @type {Storage} 
    */ 
   #storage;
 
   /** 
-   * 
    * @description The mailer driver
-   * 
    * @type {Mailer} 
    */ 
   #mailer;
 
   /** 
-   * 
    * @description The taxes driver
-   * 
    * @type {Taxes} 
    */ 
   #taxes;
 
   /** 
-   * 
    * @description The payment gateways
-   * 
    * @type {PaymentMap} 
    */ 
   #payment_gateways;
 
   /** 
-   * 
    * @description The extensions
-   * 
    * @type {ExtensionsMap} 
    */ 
   #extensions;
 
   /**
    * @description The app's pubsub system
-   * 
    * @type {PubSub<App>}
    */
   #pubsub;
 
   /** 
    * @description The Storecraft App Config
-   * 
    * @type {StorecraftConfig} 
    */ 
   #config;
 
   /** 
    * @description The REST API controller
-   * 
    * @type {ReturnType<typeof create_rest_api>} 
    */ 
   #rest_controller;
 
   /** 
    * @description Flag for app is ready 
-   * 
    * @type {boolean} 
    */ 
   #is_ready;
 
   /**
-   * 
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
@@ -272,7 +256,6 @@ export class App {
   }
 
   /**
-   * 
    * @description After init, we inspect for missing config values and try to 
    * find them in platform environment.
    */
@@ -284,24 +267,24 @@ export class App {
     const env = this.platform.env;
 
     this.#config = {
-      auth_secret_access_token: env[App.EnvConfig.auth_secret_access_token],
-      auth_secret_refresh_token: env[App.EnvConfig.auth_secret_refresh_token],
-      auth_secret_confirm_email_token: env[App.EnvConfig.auth_secret_confirm_email_token],
-      auth_secret_forgot_password_token: env[App.EnvConfig.auth_secret_forgot_password_token],
-      auth_admins_emails: env[App.EnvConfig.auth_admins_emails]?.split(',')
+      auth_secret_access_token: env?.[App.EnvConfig.auth_secret_access_token],
+      auth_secret_refresh_token: env?.[App.EnvConfig.auth_secret_refresh_token],
+      auth_secret_confirm_email_token: env?.[App.EnvConfig.auth_secret_confirm_email_token],
+      auth_secret_forgot_password_token: env?.[App.EnvConfig.auth_secret_forgot_password_token],
+      auth_admins_emails: env?.[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
-      // @ts-ignore
-      checkout_reserve_stock_on: env[App.EnvConfig.checkout_reserve_stock_on] ?? 'never',
-      storage_rewrite_urls: env[App.EnvConfig.storage_rewrite_urls],
-      general_store_name: env[App.EnvConfig.general_store_name],
-      general_store_website: env[App.EnvConfig.general_store_website],
-      general_store_description: env[App.EnvConfig.general_store_description],
-      general_store_support_email: env[App.EnvConfig.general_store_support_email],
-      general_store_logo_url: env[App.EnvConfig.general_store_logo_url],
-      general_confirm_email_base_url: env[App.EnvConfig.general_confirm_email_base_url],
-      general_forgot_password_confirm_base_url: env[
+      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(env?.[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
+      storage_rewrite_urls: env?.[App.EnvConfig.storage_rewrite_urls],
+      general_store_name: env?.[App.EnvConfig.general_store_name],
+      general_store_website: env?.[App.EnvConfig.general_store_website],
+      general_store_description: env?.[App.EnvConfig.general_store_description],
+      general_store_support_email: env?.[App.EnvConfig.general_store_support_email],
+      general_store_logo_url: env?.[App.EnvConfig.general_store_logo_url],
+      general_confirm_email_base_url: env?.[App.EnvConfig.general_confirm_email_base_url],
+      general_forgot_password_confirm_base_url: env?.[
         App.EnvConfig.general_forgot_password_confirm_base_url
       ],
+      dashboard_version: 'latest',
       ...this.config,
     }
 
@@ -468,7 +451,6 @@ export class App {
   }
 
   /** 
-   * 
    * @description Get the REST API controller 
    */
   get rest_controller() { 
@@ -477,13 +459,13 @@ export class App {
 
   /** 
    * @description Update new payment gateways and rewrite types 
-   * 
    * @template {PlatformAdapter} P
-   * 
    * @param {P} platform 
-   * 
-   * @returns {App<P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
-   * 
+   * @returns {App<
+   *  P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withPlatform(platform) {
     // @ts-ignore
@@ -494,7 +476,6 @@ export class App {
   } 
 
   /** 
-   * 
    * @description Get the native platform object 
    */
   get platform() { 
@@ -503,13 +484,13 @@ export class App {
 
   /** 
    * @description Update **AI** chat provider, some of the builtins
-   * 
    * @template {ChatAI} P
-   * 
    * @param {P} ai 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, P, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
-   * 
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, P, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withAI(ai) {
     // @ts-ignore
@@ -520,7 +501,6 @@ export class App {
   } 
 
   /** 
-   * 
    * @description Get the AI provider
    */
   get ai_chat_provider() { 
@@ -530,13 +510,13 @@ export class App {
   
   /** 
    * @description Update `agents`
-   * 
    * @template {Record<string, Agent>} P
-   * 
    * @param {P} agents 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, P & BaseAgents>}
-   * 
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, VectorStoreProvider, P & BaseAgents
+   *  >
+   * }
    */
   withAgents(agents) {
     // @ts-ignore
@@ -550,7 +530,6 @@ export class App {
   } 
   
   /** 
-   * 
    * @description Get the `agents`
    */
   get agents() {
@@ -559,13 +538,13 @@ export class App {
 
   /** 
    * @description Update new payment gateways and rewrite types 
-   * 
    * @template {VectorStore} P
-   * 
    * @param {P} store 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, P, AgentsMap, AuthProvidersMap>}
-   * 
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, P, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withVectorStore(store) {
     // @ts-ignore
@@ -576,7 +555,6 @@ export class App {
   } 
 
   /** 
-   * 
    * @description Get the Vector Store
    */
   get vectorstore() { 
@@ -585,12 +563,13 @@ export class App {
 
   /** 
    * @description Update new payment gateways and rewrite types 
-   * 
    * @template {db_driver} D
-   * 
    * @param {D} database 
-   * 
-   * @returns {App<Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
+   * @returns {App<
+   *  Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, 
+   *  AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withDatabase(database) {
     // @ts-ignore
@@ -601,7 +580,6 @@ export class App {
   }   
 
   /** 
-   * 
    * @description Get the Database driver 
    */
   get db() { 
@@ -610,12 +588,13 @@ export class App {
 
   /** 
    * @description Update new payment gateways and rewrite types 
-   * 
    * @template {storage_driver} S
-   * 
    * @param {S} storage 
-   * 
-   * @returns {App<Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
+   * @returns {App<
+   *  Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, 
+   *  AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withStorage(storage) {
     // @ts-ignore
@@ -626,7 +605,6 @@ export class App {
   }   
 
   /** 
-   * 
    * @description Get the native storage object 
    */
   get storage() { 
@@ -635,12 +613,13 @@ export class App {
 
   /** 
    * @description Update new payment gateways and rewrite types 
-   * 
    * @template {mailer} M
-   * 
    * @param {M} mailer 
-   * 
-   * @returns {App<Platform, Database, Storage, M, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
+   * @returns {App<
+   *  Platform, Database, Storage, M, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withMailer(mailer) {
     // @ts-ignore
@@ -660,12 +639,13 @@ export class App {
 
   /** 
    * @description Update new tax provider
-   * 
    * @template {tax_provider} T
-   * 
    * @param {T} taxes 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, T, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  T, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withTaxes(taxes) {
     // @ts-ignore
@@ -685,12 +665,13 @@ export class App {
 
   /** 
    * @description Add payment gateways
-   * 
    * @template {Record<string, payment_gateway>} N
-   * 
    * @param {N} gateways 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, 
+   *  AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
@@ -710,12 +691,13 @@ export class App {
 
   /** 
    * @description Add custom extensions
-   * 
    * @template {Record<string, extension>} E
-   * 
    * @param {E} extensions 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap>}
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, 
+   *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >
+   * }
    */
   withExtensions(extensions) { 
     // @ts-ignore
@@ -729,7 +711,6 @@ export class App {
   }
 
   /** 
-   * 
    * @description extensions
    */
   get extensions() { 
@@ -738,12 +719,13 @@ export class App {
 
   /** 
    * @description Add Auth Providers for social login
-   * 
    * @template {Record<string, AuthProvider>} A
-   * 
    * @param {A} providers 
-   * 
-   * @returns {App<Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, AiProvider, VectorStoreProvider, AgentsMap, A>}
+   * @returns {App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, A
+   *  >
+   * }
    */
   withAuthProviders(providers) { 
     // @ts-ignore
@@ -754,7 +736,6 @@ export class App {
   }
 
   /** 
-   * 
    * @description extensions
    */
   get auth_providers() { 
@@ -784,153 +765,38 @@ export class App {
   }
 
   /**
-   * @description Process a request with context in the native platform
+   * @description Process a native platform request with 
+   * context and pass it to the `rest-api` controller. 
+   * This can be used in
    * 
-   * @param {InferPlatformNativeRequest<Platform>} req
+   * - `Node.createServer(..)` as handler
+   * - `Deno.serve(..)` as handler
+   * - `Bun.serve(..)` as handler
+   * - `GoogleFunctions` as handler
+   * - `Cloudflare Workers` as handler
+   * - `AWS API Gateway` as handler
+   * @param {InferPlatformNativeRequest<Platform>} native_request 
+   * native platform `request` object
    * @param {InferPlatformContext<Platform>} [context] 
-   * 
+   * (Optional )extra context object. 
+   * In `node.js` for example, this is the `ServerReponse` object.
    * @returns {Promise<InferPlatformNativeResponse<Platform>>}
    */
-  handler = async (req, context) => {
+  handler = async (native_request, context) => {
     // @ts-ignore
     context = context ?? {};
-    const start_millis = Date.now();
-    const request = await this.#platform.encode(req, context);
-    
-    /** @type {ApiResponse} */
-    const polka_response = {
-      headers: new Headers(),
-      finished: false,
-      status: 200,
-      statusText: 'OK',
-      body: undefined,
-
-      send(body) {
-        this.body = body;
-        this.finished = true;
-        return this;
-      },
-
-      end() {
-        return this.send(undefined);
-      },
-
-      sendReadableStream(o) {
-        return this.send(o);
-      },
-
-      sendServerSentEvents(o) {
-        this.headers.append('Content-Type', 'text/event-stream');
-        return this.send(o);
-      },
-
-      sendJson(o) {
-        this.headers.set('Content-Type', 'application/json');
-        return this.send(o===undefined ? undefined : JSON.stringify(o))
-      },
-
-      sendHtml(o) {
-        this.headers.set('Content-Type', 'text/html');
-        return this.send(String(o));
-      },
-
-      sendText(o) {
-        this.headers.set('Content-Type', 'text/plain');
-        return this.send(String(o))
-      },
-
-      sendBlob(o) {
-        !o.type && this.headers.set('Content-Type', 'application/octet-stream');
-        return this.send(o)
-      },
-
-      sendArrayBuffer(o) {
-        this.headers.set('Content-Type', 'application/octet-stream')
-        return this.send(o)
-      },
- 
-      sendSearchParams(o) {
-        this.headers.set('Content-Type', 'application/x-www-form-urlencoded')
-        return this.send(o)
-      },
-
-      sendFormData(o) {
-        this.headers.set('Content-Type', 'multipart/form-data')
-        return this.send(o)
-      },
-
-      setStatus(code=200, text) {
-        if(typeof code === 'string')
-          code = 400;
-        this.status = code;
-        this.statusText = text ?? STATUS_CODES[code.toString()];
-        return this
-      }
-
-    }
-  
-    const c = {
-      red: '\x1b[1;31m',
-      green: '\x1b[1;32m',
-      cyan: '\x1b[36m',
-      magenta: `\x1b[1;35m`,
-      yellow: `\x1b[33m`,
-      reset: `\x1b[0m`,
-    }
-
-    const method_to_color = {
-      'get': `\x1b[1;43;37mGET\x1b[0m`,
-      'GET': `\x1b[1;43;37mGET\x1b[0m`,
-      'post': `\x1b[1;44;37mPOST\x1b[0m`,
-      'POST': `\x1b[1;44;37mPOST\x1b[0m`,
-      'put': `\x1b[1;44;37mPUT\x1b[0m`,
-      'PUT': `\x1b[1;44;37mPUT\x1b[0m`,
-      'patch': `\x1b[1;44;37mPATCH\x1b[0m`,
-      'PATCH': `\x1b[1;44;37mPATCH\x1b[0m`,
-      'delete': `\x1b[1;41;37mDELETE\x1b[0m`,
-      'DELETE': `\x1b[1;41;37mDELETE\x1b[0m`,
-      'options': `\x1b[1;45;37mOPTIONS\x1b[0m`,
-      'OPTIONS': `\x1b[1;45;37mOPTIONS\x1b[0m`,
-    }
-
-    await this.rest_controller.handler(request, polka_response);
-
-    // console.log('polka_response.body ', polka_response.body);
-
-    const response_web = new Response(
-      polka_response.body, {
-        headers: polka_response.headers,
-        status: polka_response.status, 
-        statusText: polka_response.statusText
-      }
-    )
-
+    const request = await this.#platform.encode(native_request, context);
+    const response_web = await this.rest_controller.handler(request);
     const response = await this.#platform.handleResponse(
       response_web, context
     );
-
-    {
-      const delta = Date.now() - start_millis;
-      const url = new URL(decodeURIComponent(request.url));
-      const line = method_to_color[request.method] + 
-        ' \x1b[33m' + 
-        url.pathname.slice(0, 250) + 
-        '\x1b[0m' + 
-        ` (${delta}ms)`;
-      const query = url.search
-      console.log(line)
-      if(query)
-        console.log(c.cyan, query)
-    }
-
     return response;
   }
 
 
   /**
-   * @description Quickly attach an `event` subscriber. This is just a quick way
-   * to interface into {@link PubSub}
-   * 
+   * @description Quickly attach an `event` subscriber. 
+   * This is just a quick way to interface into {@link PubSub}
    * @type {PubSub["on"]}
    */
   on = (event, callback) => {

@@ -94,6 +94,22 @@ export const count = (app) =>
 
 
 /**
+ * @param {App} app
+ */
+export const list_my_orders = (app) => 
+  /**
+   * @description query orders of a user
+   * @param {string} id_or_email 
+   * @param {ApiQuery<OrderData>} [query={}] 
+   */
+  (id_or_email, query={}) => {
+    return app.api.customers.list_customer_orders(
+      id_or_email, query
+    );
+  }
+
+
+/**
  * 
  * @param {App} app
  */  
@@ -104,6 +120,7 @@ export const inter = app => {
     upsert: upsert(app),
     remove: regular_remove(app, db(app), 'orders/remove'),
     list: regular_list(app, db(app), 'orders/list'),
+    list_my_orders: list_my_orders(app),
     count: count(app),
   }
 }

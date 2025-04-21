@@ -1,7 +1,45 @@
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 
-const html = `
+/**
+ * @param {string} version `npm` package versioning such as 'latest' | '1.0.26' | etc.. 
+ * {@link https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions}
+ */
+const html_umd = (version='latest') => `
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link 
+      rel="icon" 
+      sizes="any" 
+      type="image/svg+xml" 
+      href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft - Next Gen Commerce-As-Code</title>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+    <script 
+      id='_storecraft_script_' 
+      type="application/javascript"
+      src="https://www.unpkg.com/@storecraft/dashboard@${version}/dist/lib/src/index.umd.cjs">
+    </script>
+    <script>
+      console.log({StorecraftDashboard})
+      StorecraftDashboard.mountStorecraftDashboard(
+        document.getElementById('root'), false
+      );
+    </script>
+  </body>
+</html>
+`
+
+/**
+ * @param {string} version `npm` package versioning such as 'latest' | '1.0.26' | etc.. 
+ * {@link https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions}
+ */
+const html_esm = (version='latest') => `
 <!doctype html>
 <html lang="en">
   <head>
@@ -12,7 +50,7 @@ const html = `
     <script 
     id='_storecraft_script_' 
     type="module">
-    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@latest/dist/lib/index.min.js';
+    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@${version}/dist/lib/src/index.min.js';
     mountStorecraftDashboard(
       document.getElementById('root'), false
     );
@@ -100,12 +138,29 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.headers.append('Cache-Control', 'stale-while-revalidate')
-      res.sendHtml(html);
+      res.sendHtml(html_umd('latest'));
     }
   );
 
   polka.get(
     '/favicon.svg',
+    async (req, res) => {
+      res.headers.set("Content-Type", "image/svg+xml");
+      res.send(favicon);
+    }
+  );
+
+  polka.get(
+    '/:version',
+    async (req, res) => {
+      const version = req?.params?.version ?? 'latest';
+      res.headers.append('Cache-Control', 'stale-while-revalidate')
+      res.sendHtml(html_umd(version));
+    }
+  );
+
+  polka.get(
+    '/:version/favicon.svg',
     async (req, res) => {
       res.headers.set("Content-Type", "image/svg+xml");
       res.send(favicon);

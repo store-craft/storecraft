@@ -37,7 +37,7 @@ export const create_routes = (app) => {
         parse_query(req.query))
       );
       const count = await app.api.tags.count(q);
-      res.sendJson({ count });
+      res.sendJson(count);
     }
   );
 
@@ -61,7 +61,7 @@ export const create_routes = (app) => {
     async (req, res) => {
       const handle_or_id = req?.params?.handle;
       const removed = handle_or_id && await app.api.tags.remove(handle_or_id);
-      res.setStatus(removed ? 200 : 404).end();
+      res.sendJson(removed);
     }
   );
 

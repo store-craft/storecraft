@@ -41,7 +41,7 @@ export const create = app => {
   
   s('list providers integrity', async () => {
 
-    const list = app2.api.auth.identity_providers_list();
+    const list = await app2.api.auth.identity_providers_list();
     
     for(const handle of Object.keys(app2.auth_providers)) {
 
@@ -181,8 +181,8 @@ export const create = app => {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
   try {
-    const { create_app } = await import('./play.js');
-    const app = await create_app();
+    const { create_app } = await import('../../app.test.fixture.js');
+    const app = await create_app(false);
     const s = create(app);
     s.after(async () => { await app.db.disconnect() });
     s.run();

@@ -1,10 +1,10 @@
-import { TableSchemaView } from '@/comps/table-schema-view.jsx'
-import ShowIf from '@/comps/show-if.jsx'
-import { BottomActions, TopActions } from '@/comps/collection-actions.jsx'
+import { TableSchemaView } from '@/comps/table-schema-view'
+import ShowIf from '@/comps/show-if'
+import { BottomActions, TopActions } from '@/comps/collection-actions'
 import { RecordActions, Span, SpanArray, 
-  TimeStampView } from '@/comps/common-fields.jsx'
-import useCollectionsActions from '../hooks/use-collections-actions.js'
-import { ResourceTitle } from '../comps/resource-title.jsx'
+  TimeStampView } from '@/comps/common-fields'
+import useCollectionsActions from '../hooks/use-collections-actions'
+import { ResourceTitle } from '../comps/resource-title'
 
 const test = {
   title: 'call of duty',

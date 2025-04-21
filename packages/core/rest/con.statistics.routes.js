@@ -6,7 +6,6 @@ import { parse_query } from '../api/utils.query.js';
 
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {
@@ -16,19 +15,16 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_admin(app);
 
-  // `Compute Statistics`
+  // `Compute Statistics of orders`
   polka.get(
     '/orders',
     middle_authorize_admin,
     async (req, res) => {
-
       const from_day = req?.query.get('fromDay');
       const to_day = req?.query.get('toDay');
-
       const stats = await app.api.statistics.compute_statistics(
         from_day, to_day
       );
-
       res.sendJson(stats);
     }
   );
@@ -42,7 +38,6 @@ export const create_routes = (app) => {
       const count = await app.api.statistics.compute_count_of_query(
         table, q
       );
-
       res.sendJson(count);
     }
   );

@@ -13,26 +13,29 @@ const is_function = o => {
 
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app
  */
 export const get_payment_gateway = (app) => 
   /**
    * @description `Get` payment gateway `info` and `config` by it's `handle`
-   * @param {string} gateway_handle 
-   * @returns {PaymentGatewayItemGet}
+   * @param {keyof T["gateways"]} gateway_handle 
+   * @returns {Promise<PaymentGatewayItemGet>}
    */
-  (gateway_handle) => {
-    const pg = app.gateway(gateway_handle);
+  async (gateway_handle) => {
+    
+    const handle = /** @type {string} */(gateway_handle);
+    const pg = app.gateways?.[handle];
 
     assert(
       pg,
-      `Payment Gateway with handle=${gateway_handle} not found`
+      `Payment Gateway with handle=${handle} not found`
     );
 
     return {
       config: pg.config,
       info: pg.info,
-      handle: gateway_handle, 
+      handle: handle, 
       actions: pg.actions
     }
   }
@@ -43,9 +46,9 @@ export const get_payment_gateway = (app) =>
 export const list_payment_gateways = (app) => 
   /**
    * `List` payment gateways with `config` and `info` 
-   * @returns {PaymentGatewayItemGet[]}
+   * @returns {Promise<PaymentGatewayItemGet[]>}
    */
-  () => {
+  async () => {
   return Object.entries(app.gateways ?? {}).map(
     ([handle, pg]) => (
       {
@@ -59,48 +62,50 @@ export const list_payment_gateways = (app) =>
 }
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app
  */
 export const webhook = (app) => 
   /**
    * @description `Get` payment gateway `info` and `config` by it's `handle`
-   * @param {string} gateway_handle 
-   * @param {Partial<Request>} request
+   * @param {keyof T["gateways"]} gateway_handle 
    * @param {ApiRequest} request
-   * @param {ApiResponse} response
+   * @param {ApiResponse} [response]
    */
   async (gateway_handle, request, response) => {
-    const pg = app.gateway(gateway_handle);
+    const handle = /** @type {string} */(gateway_handle);
+    const pg = app.gateways?.[handle];
 
     assert(
       pg,
-      `Payment Gateway with handle=${gateway_handle} not found`
+      `Payment Gateway with handle=${handle} not found`
     );
 
     assert(
       pg.webhook,
-      `Payment Gateway with handle=${gateway_handle} does not have a webhook handler`
+      `Payment Gateway with handle=${handle} does not have a webhook handler`
     );
 
-    const { status, order_id } = await pg.webhook(request, response);
+    const { status, order_id } = await pg.webhook(
+      request, response
+    );
 
     { // set the side-effects lazily, so the webhook response will be sent quick
       
       if(order_id && status) {
-        app.api.orders.get(order_id).then(
-          (order) => {
-            if(status.checkout) 
-              order.status.checkout = status.checkout;
-            if(status.payment) 
-              order.status.payment = status.payment;
-            app.api.orders.upsert(order).catch(console.log)
+        const order = await app.api.orders.get(order_id);
+        await app.api.orders.upsert(
+          {
+            ...order,
+            status: {
+              ...order.status,
+              payment: status.payment,
+              checkout: status.checkout
+            }
           }
-        ).catch(console.log);
-
+        );
       }
-
     }
-
   }
 
 
@@ -118,7 +123,7 @@ export const payment_status_of_order = (app) =>
     assert(order, `Order ${order_id} not found`, 400);
 
     const gateway_handle = order.payment_gateway?.gateway_handle;
-    const gateway = app.gateway(gateway_handle);
+    const gateway = app.gateways?.[gateway_handle];
 
     assert(gateway, `gateway ${gateway_handle} not found`, 400);
 
@@ -136,6 +141,7 @@ export const payment_buy_ui = (app) =>
    * @description return the `html` ui of payment of an order after
    * a `checkout` was created
    * @param {string} order_id the ID of the order
+   * @returns {Promise<string>} `html` of the payment gateway UI
    */
   async (order_id) => {
     const order = await app.api.orders.get(order_id);
@@ -143,7 +149,7 @@ export const payment_buy_ui = (app) =>
     assert(order, `Order ${order_id} not found`, 400);
 
     const gateway_handle = order.payment_gateway?.gateway_handle;
-    const gateway = app.gateway(gateway_handle);
+    const gateway = app.gateways?.[gateway_handle];
 
     assert(gateway, `gateway ${gateway_handle} not found`, 400);
     assert(
@@ -160,7 +166,8 @@ export const payment_buy_ui = (app) =>
   }
 
 /**
- * @param {App} app `storecraft` app
+ * @template {App} T
+ * @param {T} app
  */
 export const invoke_payment_action_on_order = (app) => 
   /**
@@ -176,19 +183,17 @@ export const invoke_payment_action_on_order = (app) =>
     order_id, action_handle, extra_action_parameters
   ) => {
 
-    console.log('action_handle ', action_handle)
     const order = await app.api.orders.get(order_id);
 
     assert(order, `Order ${order_id} not found`, 400);
 
     const gateway_handle = order.payment_gateway?.gateway_handle;
-    const gateway = app.gateway(gateway_handle);
+    const gateway = app.gateways?.[gateway_handle];
 
     assert(gateway, `gateway ${gateway_handle} not found`, 400);
 
     // test action is a published action by the gateway
-    const is_allowed = gateway.actions?.some(a => a?.handle===action_handle) && 
-                      is_function(gateway[action_handle]);
+    const is_allowed = gateway.actions?.some(a => a?.handle===action_handle);
 
     assert(
       is_allowed, 
@@ -197,13 +202,15 @@ export const invoke_payment_action_on_order = (app) =>
     );
 
     return gateway.invokeAction(action_handle)(
-      order?.payment_gateway?.on_checkout_create, extra_action_parameters
+      order?.payment_gateway?.on_checkout_create, 
+      extra_action_parameters
     );
   }
 
 
 /**
- * @param {App} app
+ * @template {App} T
+ * @param {T} app
  */  
 export const inter = app => {
 

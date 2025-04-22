@@ -74,12 +74,14 @@ s('parse $eq $neq $like', async () => {
     vql_string
   ].join(' & ') + ')';
 
-  const vql = parse(vql_eq);
-
+  console.log('vql_eq', vql_eq);
+  console.dir(parse(vql_eq), {depth: 10});
+  // const vql = parse(vql_eq);
   // console.log(JSON.stringify(vql, null, 2))
 
   assert.equal(
-    compile(parse(vql_eq)) ,vql_eq
+    compile(parse(vql_eq)), 
+    vql_eq
   );
 
 });
@@ -95,12 +97,13 @@ s('parse $lt $lte $gt $gte', async () => {
     vql_string
   ].join(' & ') + ')';
 
-  const vql = parse(vql_eq);
-
+  // const vql = parse(vql_eq);
   // console.log(JSON.stringify(vql, null, 2))
+  // console.log(compile(parse(vql_eq)));
 
   assert.equal(
-    compile(parse(vql_eq)) ,vql_eq
+    compile(parse(vql_eq)), 
+    vql_eq
   );
 
 });

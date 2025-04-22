@@ -1,5 +1,5 @@
-# VQL - Virtual Query Language
-`vql` is a PEG language of boolean logic / membership
+# BoolQL - Boolean Language
+`bool-ql` is a PEG language of boolean logic / membership
 
 The following expression
 ```js

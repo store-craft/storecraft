@@ -65,7 +65,6 @@ export type VQL<T extends Record<string, any> = Record<string, any>> = VQL_BASE<
   // [K in keyof T]: string
 }
 
-type AA = keyof VQL;
 // type CreateObjHelper<T> = {
 //   [K in keyof T]: {
 //       [K2 in keyof T]?: K2 extends K ? T[K2] : never

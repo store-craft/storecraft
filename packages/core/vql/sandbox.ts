@@ -9,31 +9,19 @@ type Data = {
 }
 
 const query: VQL<Data> = {
-
-  // active: {
-  //   $eq: true,
-  // },
-  // created_at: {
-  //   $gt: '2023-01-01',
-  // },
-  search: 'hello',
+  search: 'tag:subscribed',
   $and: [
     {
-      search: 'hello',
       age: {
-        $gt: 18,
+        $gte: 18,
+        $lt: 35,
       },
+    },
+    {
       active: {
         $eq: true,
-      },
-      $and: [
-        {
-          active: {
-            $eq: true,
-          }
-        }
-      ]
-    },
+      }
+    }
   ],
 }
 

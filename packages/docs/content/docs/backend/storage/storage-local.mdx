@@ -8,6 +8,7 @@ Features:
 ## Node.js
 
 ```ts
+import { NodeLocalStorage } from '@storecraft/core/storage/node';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { App } from '@storecraft/core';
  
@@ -43,11 +44,12 @@ await app.api.storage.putBlob(
 ## Deno
 
 ```ts
-import { DenoLocalStorage } from '@storecraft/core/platform/deno';
+import { DenoLocalStorage } from '@storecraft/core/storage/deno';
+import { DenoPlatform } from '@storecraft/core/platform/deno';
 import { App } from '@storecraft/core';
  
 const app = new App()
-.withPlatform(new NodePlatform())
+.withPlatform(new DenoPlatform())
 .withDatabase(new MongoDB())
 .withStorage(
   new DenoLocalStorage(join(homedir(), 'storage'))
@@ -78,11 +80,12 @@ await app.api.storage.putBlob(
 ## Bun
 
 ```ts
-import { BunLocalStorage } from '@storecraft/core/platform/bun';
+import { BunLocalStorage } from '@storecraft/core/storage/bun';
+import { BunPlatform } from '@storecraft/core/platform/bun';
 import { App } from '@storecraft/core';
  
 const app = new App()
-.withPlatform(new NodePlatform())
+.withPlatform(new BunPlatform())
 .withDatabase(new MongoDB())
 .withStorage(
   new BunLocalStorage(join(homedir(), 'storage'))

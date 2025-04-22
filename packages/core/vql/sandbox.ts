@@ -1,4 +1,4 @@
-import { type BOOLQL } from './types.d.ts'
+import { VQL } from "./types.js"
 
 type Data = {
   id: string
@@ -9,17 +9,28 @@ type Data = {
 }
 
 const query: VQL<Data> = {
-  active: {
-    $eq: true,
-  },
-  created_at: {
-    $gt: '2023-01-01',
-  },
-  $or: [
+
+  // active: {
+  //   $eq: true,
+  // },
+  // created_at: {
+  //   $gt: '2023-01-01',
+  // },
+  $and: [
     {
-      name: {
-        $eq: 'John',
+      age: {
+        $gt: 18,
       },
+      active: {
+        $eq: true,
+      },
+      $and: [
+        {
+          active: {
+            $eq: true,
+          }
+        }
+      ]
     },
   ],
 }

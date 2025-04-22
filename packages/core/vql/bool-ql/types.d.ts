@@ -7,10 +7,11 @@ export namespace BOOLQL {
   export type OP = AND | OR | NOT | LEAF;
   export type Node = {
     op: OP;
+    // this is children for non leaf nodes
     args: Node[];
-    group?: boolean;
-    /** For leaf nodes */
+    /** This is value For leaf nodes */
     value?: string;
+    group?: boolean;
   };
 
   export type AST = Node;

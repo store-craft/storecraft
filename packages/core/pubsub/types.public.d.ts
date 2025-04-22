@@ -1,13 +1,13 @@
-import type { App } from '../types.public.js';
+import { type App } from '../index.js';
 import type { 
   ApiAuthResult,
   AuthUserType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
-  StorefrontType, StorefrontTypeUpsert, TagType, TemplateType 
+  StorefrontType, TagType, TemplateType 
 } from '../api/types.api.d.ts';
 import { MailObject, MailResponse } from '../mailer/types.mailer.js';
 
-export * from './public.js';
+export { type PubSub } from './index.js';
 
 /**
  * @description `storecraft` events map, use {@link PubSubEvent} for name guidance
@@ -124,7 +124,7 @@ export type events = {
   },
 
   /** all events */
-  '*': events[keyof events]
+  '*': events[Exclude<keyof events, '*'>]
 }
 
 
@@ -134,7 +134,12 @@ export type events = {
  */
 export type PubSubEvent = keyof events;
 
-export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =(PubSubEvent | string)> = {
+export type EventPayload<
+  T=any, 
+  AppType=App, 
+  E extends (PubSubEvent | string) = (PubSubEvent | string)
+> = {
+  
   /**
    * @description payload
    */
@@ -148,7 +153,7 @@ export type EventPayload<T=any, App=App, E extends (PubSubEvent | string) =(PubS
   /**
    * @description `storecraft` app instance
    */
-  app: App;
+  app: AppType;
 
   /**
    * @description Stop the event propagation

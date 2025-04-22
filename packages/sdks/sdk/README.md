@@ -187,6 +187,15 @@ const collections: CollectionType[] = await sdk.collections.list(
 
 ```
 
+## Testing
+
+most of the tests for this package are done in the `storecraft` `core` package,
+as part of the **REST API** tests.
+
+This package will hold more `unit` tests for the `sdk` itself, which include
+side effects and particular behaviours.
+
+
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

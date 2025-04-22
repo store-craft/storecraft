@@ -1,7 +1,40 @@
 /**
- * @import { legal_value_types, OPS, VQL } from './types.js';
+ * @import { legal_value_types, VQL_OPS, VQL, VQL_STRING_OPS, ReverseStringRecord } from './types.js';
  * @import { BOOLQL } from './bool-ql/types.js';
  */
+
+/**
+ * @description map of inner string operations to VQL.
+ * We put the operations in the order of priority for the regex. 
+ * @satisfies {Record<VQL_STRING_OPS, keyof VQL_OPS>}
+ */
+export const INNER_STRING_OPS_MAP = /** @type {const} */({
+  '>=': '$gte',
+  '!=': '$ne',
+  '<=': '$lte',
+
+  '=': '$eq',
+
+  '>': '$gt',
+
+  '<': '$lt',
+
+  '~': '$like',
+});
+
+/**
+ * @description map of {@link VQL_OPS} to inner string operations.
+ * @satisfies {ReverseStringRecord<typeof INNER_STRING_OPS_MAP>}
+ */
+export const REVERSE_INNER_STRING_OPS_MAP = /** @type {const} */({
+  '$gte': '>=',
+  '$ne': '!=',
+  '$lte': '<=',
+  '$eq': '=',
+  '$gt': '>',
+  '$lt': '<',
+  '$like': '~'
+});
 
 /**
  * @param {any} condition 
@@ -11,6 +44,18 @@ export const assert = (condition, message) => {
   if (!Boolean(condition)) {
     throw new Error(message);
   }
+}
+
+/**
+ * @description Test if the value is a legal type {@link legal_value_types}
+ * @param {any} value 
+ */
+export const is_legal_value_type = (value) => {
+  if (value === undefined || value === null) return false;
+  if (typeof value === 'string') return true;
+  if (typeof value === 'number') return true;
+  if (typeof value === 'boolean') return true;
+  return false;
 }
 
 export function is_string_a_number(str='') {

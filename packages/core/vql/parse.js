@@ -1,28 +1,11 @@
 /**
- * @import { legal_value_types, OPS, VQL } from './types.js';
+ * @import { legal_value_types, VQL_OPS, VQL } from './types.js';
  * @import { BOOLQL } from './bool-ql/types.js';
  */
 import { parse as parseBoolQL } from './bool-ql/index.js';
-import { assert, parse_string_as_type } from './parse.utils.js';
-
-/**
- * @description map of inner string operations to VQL.
- * We put the operations in the order of priority for the regex. 
- * @satisfies {Record<string, keyof OPS>}
- */
-const INNER_STRING_OPS_MAP = /** @type {const} */({
-  '>=': '$gte',
-  '!=': '$ne',
-  '<=': '$lte',
-
-  '=': '$eq',
-
-  '>': '$gt',
-
-  '<': '$lt',
-
-  '~': '$like',
-});
+import { 
+  assert, INNER_STRING_OPS_MAP, parse_string_as_type 
+} from './parse.utils.js';
 
 export const string_arg_to_typed_arg = (arg='') => {
   return parse_string_as_type(arg);
@@ -37,7 +20,7 @@ export const string_arg_to_typed_arg = (arg='') => {
  * - `arg_0`: the first argument, always a string for the property key.
  * - `arg_1`: the second argument
  * @param {string} value 
- * @returns {{op?: keyof OPS, arg_0?: string, arg_1?: legal_value_types}}
+ * @returns {{op?: keyof VQL_OPS, arg_0?: string, arg_1?: legal_value_types}}
  */
 const parse_boolql_leaf_node_string_value = (value) => {
   assert(
@@ -62,11 +45,16 @@ const parse_boolql_leaf_node_string_value = (value) => {
       arg_1: value
     }
   }
-
   
   const op = /** @type {keyof typeof INNER_STRING_OPS_MAP} */ (
     matches[0][1]
   );
+
+  assert(
+    op in INNER_STRING_OPS_MAP,
+    'VQL-failed, expected operation in INNER_STRING_OPS_MAP'
+  );
+  
   const parts = value.split(op);
   // the first part is always the key of the property
   const arg_0 = parts[0].trim();
@@ -76,6 +64,7 @@ const parse_boolql_leaf_node_string_value = (value) => {
   );
 
   if(op==='~') {
+    // `$like` operator is a special case and always a `string`
     arg_1 = String(arg_1);
   }
 
@@ -88,7 +77,7 @@ const parse_boolql_leaf_node_string_value = (value) => {
 
 /**
  * @param {BOOLQL.Node} node 
- * @returns {{[x: string]: OPS<any>} | { search?: string}}}
+ * @returns {{[x: string]: VQL_OPS<any>} | { search?: string}}}
  */
 const boolql_leaf_node_to_vql = (node) => {
   assert(
@@ -127,22 +116,29 @@ const boolql_leaf_node_to_vql = (node) => {
 const boolql_node_to_vql = (node) => {
   switch (node.op) {
     case '&':
-      return {
+      return /** @type {VQL<T>} */({
         $and: node.args.map(
+          /** @type {typeof boolql_node_to_vql<T>} */(
             boolql_node_to_vql
+          )
         )
       }
+    )
     case '|':
-      return {
+      return /** @type {VQL<T>} */({
         $or: node.args.map(boolql_node_to_vql)
       }
+    )
     case '!':
-      return {
+      return /** @type {VQL<T>} */({
         $not: boolql_node_to_vql(node.args[0])
       }
+    )
     case 'LEAF':
       // this is the leaf node
-      return boolql_leaf_node_to_vql(node);
+      return /** @type {VQL<T>} */(
+        boolql_leaf_node_to_vql(node)
+      )
     default:
       throw new Error('VQL-failed, unknown operator: ' + node.op);
   }

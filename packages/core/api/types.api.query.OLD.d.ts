@@ -1,5 +1,5 @@
 // Query types
-import type { VQL } from '../vql/types.d.ts';
+import type { BOOLQL } from '../vql/bool-ql/types.d.ts';
 
 type legal_value_types = string | boolean | number;
 export type ApiQuerySortOrder = 'asc' | 'desc';
@@ -41,7 +41,7 @@ export type ApiQuery<T extends any = undefined> = {
   /**
    * @description internal usage Abstract Syntx Tree (AST)
    */
-  vqlParsed?: VQL.AST;
+  vqlParsed?: BOOLQL.AST;
 
   /**
    * @description Sort by cursor, should correlate with `startAt` / `endAt` cursors

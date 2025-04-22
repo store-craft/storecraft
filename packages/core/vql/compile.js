@@ -1,0 +1,122 @@
+/**
+ * @import { 
+ *  legal_value_types, VQL_OPS, VQL, 
+ *  VQL_STRING_OPS, VQL_BASE 
+ * } from './types.js';
+ */
+
+import { 
+  assert,
+  is_legal_value_type, 
+  REVERSE_INNER_STRING_OPS_MAP 
+} from './parse.utils.js';
+
+/**
+ * @param {VQL} vql 
+ */
+export const compile = (vql) => {
+
+  /** @type {string[]} */
+  const parts = [];
+
+  for(const [key, value] of Object.entries(vql)) {
+
+    const key_casted = /** @type {keyof VQL_BASE} */(key);
+    if(key_casted === 'search') {
+      const value_string = String(value);
+
+      const words_count = value_string.match(/\S+/g).length;
+
+      // console.log({words_count, value_string});
+      
+      parts.push(
+        words_count > 1 ?
+        `"${value_string}"` : 
+        value_string
+      );
+      continue;
+    }
+    else if(key_casted === '$and') {
+      parts.push(
+        '(' + (
+          /** @type {VQL["$and"]} */(value)
+        )
+        .map(compile)
+        .join(' & ')
+        + ')'
+      );
+      continue;
+    }
+    else if(key_casted === '$or') {
+      parts.push(
+        '(' + (
+          /** @type {VQL["$or"]} */(value)
+        )
+        .map(compile)
+        .join(' | ')
+        + ')'
+      );
+      continue;
+    }
+    if(key_casted === '$not') {
+      parts.push(
+        '-' + compile(
+          /** @type {VQL["$not"]} */(value)
+        )
+      );
+      continue;
+    }
+    else {
+      /**
+       * we are in OPS town,
+       * - Each key is a property name
+       * - Each value is a {@link VQL_OPS}
+       */
+      const value_casted = (
+        /** @type {VQL_OPS} */(value)
+      );
+
+      assert(
+        typeof value_casted === 'object',
+        'VQL-failed, expected VQL_OPS'
+      );
+
+      for(const [op_key, op_value] of Object.entries(value_casted)) {
+        const op_key_casted = (
+          /** @type {keyof VQL_OPS} */(op_key)
+        );
+
+        assert(
+          op_key_casted!=='$in' && op_key_casted!=='$nin',
+          'VQL-Compile failed, `$in` and `$nin` are currently not supported\
+          for VQL compile'
+        );
+
+        assert(
+          op_key_casted in REVERSE_INNER_STRING_OPS_MAP,
+          `VQL-Compile failed, ${op_key_casted} is not legal operation`
+        );
+
+        // TODO: in the future we will support $in and $nin
+        // which support arrays of legal value types.
+        assert(
+          is_legal_value_type(op_value),
+          `VQL-Compile failed, ${op_value} is not of type string, number or boolean`
+        );
+
+        /**
+         * `final` has the form {name}{op}{value}, example `updated>=2010-20-10`
+         */
+        const final = (
+          key + 
+          REVERSE_INNER_STRING_OPS_MAP[op_key_casted] + 
+          op_value
+        );
+
+        parts.push(final); 
+      }
+    }
+  }
+
+  return parts.join(' ');
+}

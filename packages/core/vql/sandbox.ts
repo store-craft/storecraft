@@ -16,8 +16,10 @@ const query: VQL<Data> = {
   // created_at: {
   //   $gt: '2023-01-01',
   // },
+  search: 'hello',
   $and: [
     {
+      search: 'hello',
       age: {
         $gt: 18,
       },

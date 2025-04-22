@@ -4,11 +4,17 @@
 
 
 function merge(op, l, r) {
-  const not_groups = !(Boolean(l?.group) || Boolean(r?.group));
-  const similar_op = (l?.op!=='LEAF' ? l.op===op : true) && (r?.op!=='LEAF' ? r.op===op : true);
-  if(!(not_groups && similar_op))
-  	return [l, r];
-  const new_args = [...l?.args??[l], ...r?.args??[r]];
+  const new_args = [];
+  if(l.op===op)
+  	new_args.push(...l?.args??[l]);
+  else
+	new_args.push(l);
+    
+  if(r.op===op)
+  	new_args.push(...r?.args??[r]);
+  else
+	new_args.push(r);
+    
   return new_args;
 }
 

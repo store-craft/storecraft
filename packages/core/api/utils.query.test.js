@@ -242,7 +242,6 @@ s('api_query_equals_maps_to_start_and_end', async () => {
   }
 });
 
-
 s('range_query_overrides_sort_cursor', async () => {
   /** @type {Tuple<string>[]} */
   const range_cursor = [['updated_at', '2012'], ['id', 'id_1']];
@@ -306,7 +305,6 @@ s('non_matching_range_cursor_keys_throw', async () => {
     );
   }
 });
-
 
 s('setting_same_direction_range_cursor_throws', async () => {
   /** @type {Tuple<string>[]} */

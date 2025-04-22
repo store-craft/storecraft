@@ -1,5 +1,3 @@
-// Query types
-import type { BOOLQL } from './bool-ql/types.d.ts';
 
 type legal_value_types = string | boolean | number;
 
@@ -10,7 +8,13 @@ type PickByValue<T, V> = Pick<T, {
 
 type PickKeysByValueType<T, V> = keyof PickByValue<T, V>;
 
-export type OPS<T extends any = any> = {
+/**
+ * @description A subset of vql ops supported when using the vql
+ * as string. obviously missing the `in` operator
+ */
+export type VQL_STRING_OPS = '=' | '!=' | '>' | '>=' | '<' | '<=' | '~';
+
+export type VQL_OPS<T extends legal_value_types = legal_value_types> = {
   /** @description Equal to */
   $eq?: T,
   /** @description Not equal to */
@@ -35,7 +39,7 @@ export type OPS<T extends any = any> = {
   $like?: string,
 }
 
-export type VQL<T extends Record<string, any> = Record<string, any>> = {
+export type VQL_BASE<T extends Record<string, any> = Record<string, any>> = {
   /**
    * @description Logical AND
    */
@@ -50,16 +54,18 @@ export type VQL<T extends Record<string, any> = Record<string, any>> = {
    * @description Logical NOT
    */
   $not?: VQL<T>,
-} | {
-  [K in PickKeysByValueType<T, legal_value_types>]?: OPS<T[K]>
-} | {
   /**
    * @description Search for a term in the search index
    */
   search?: string
 }
 
+export type VQL<T extends Record<string, any> = Record<string, any>> = VQL_BASE<T> & {
+  [K in Exclude<PickKeysByValueType<T, legal_value_types>, '$and' | '$or' | '$not' | 'search'>]?: VQL_OPS<T[K]>
+  // [K in keyof T]: string
+}
 
+type AA = keyof VQL;
 // type CreateObjHelper<T> = {
 //   [K in keyof T]: {
 //       [K2 in keyof T]?: K2 extends K ? T[K2] : never
@@ -83,3 +89,11 @@ export type VQL<T extends Record<string, any> = Record<string, any>> = {
 
 // // Here we come!
 // type SingleKey<T> = IsUnion<keyof T> extends true ? never : {} extends T ? never : T;
+
+/**
+ * @description A small utility type to rewrite any record type
+ * in reverse.
+ */
+export type ReverseStringRecord<T extends Record<string, string>> = {
+  [K in keyof T as T[K]]: K
+}

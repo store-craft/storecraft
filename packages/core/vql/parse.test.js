@@ -74,10 +74,8 @@ s('parse $eq $neq $like', async () => {
     vql_string
   ].join(' & ') + ')';
 
-  console.log('vql_eq', vql_eq);
-  console.dir(parse(vql_eq), {depth: 10});
-  // const vql = parse(vql_eq);
-  // console.log(JSON.stringify(vql, null, 2))
+  // console.log('vql_eq', vql_eq);
+  // console.dir(parse(vql_eq), {depth: 10});
 
   assert.equal(
     compile(parse(vql_eq)), 

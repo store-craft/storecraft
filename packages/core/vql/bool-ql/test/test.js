@@ -11,23 +11,17 @@ test('parse 1', async () => {
         value: 'name:tomer*'
       },
       {
-        op: '&',
+        op: 'LEAF',
+        value: 'tag:genre_a'
+      },
+      {
+        op: '!',
         args: [
           {
             op: 'LEAF',
-            value: 'tag:genre_a'
-          },
-          {
-            op: '!',
-            args: [
-              {
-                op: 'LEAF',
-                value: 'tag:genre_b'
-              }
-            ]
+            value: 'tag:genre_b'
           }
-        ],
-        group: true
+        ]
       }
     ],
     group: true

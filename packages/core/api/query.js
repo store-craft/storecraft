@@ -67,8 +67,7 @@ export const parse_sort_order = (s) => {
  * @returns {ApiQuery | undefined}
  */
 export const parse_query = (s) => {
-  s = s instanceof URLSearchParams ? 
-    s : new URLSearchParams(s);
+  s = new URLSearchParams(s);
 
   const q = /** @type {ApiQuery} */ ({});
 

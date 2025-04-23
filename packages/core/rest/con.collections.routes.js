@@ -6,7 +6,7 @@
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_admin } from './con.auth.middle.js'
-import { parse_query } from '../api/utils.query.js'
+import { parse_query } from '../api/query.js'
 import { App } from '../index.js'
 
 /**

@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const generate = async () => {
   const grammer = await readFile(
-    path.resolve(__dirname, 'vql.pegjs'), 
+    path.resolve(__dirname, 'boolql.v3.pegjs'), 
     { encoding: 'utf-8' }
   );
   

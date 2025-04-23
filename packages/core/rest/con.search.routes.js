@@ -3,7 +3,7 @@
  */
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
-import { parse_query } from '../api/utils.query.js'
+import { parse_query } from '../api/query.js'
 import { is_admin, parse_auth_user } from './con.auth.middle.js';
 
 

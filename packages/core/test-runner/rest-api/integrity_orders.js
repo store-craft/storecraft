@@ -18,7 +18,7 @@ import { admin_email } from '../api/auth.js';
 import { assert_async_throws } from '../api/utils.js';
 import { 
   api_query_to_searchparams, parse_query 
-} from '../../api/utils.query.js';
+} from '../../api/query.js';
 import { ID } from '../../api/utils.func.js';
 
 /**

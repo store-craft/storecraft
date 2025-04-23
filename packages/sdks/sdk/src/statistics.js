@@ -6,7 +6,7 @@ import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth } from './utils.api.fetch.js';
 import { 
   api_query_to_searchparams 
-} from '@storecraft/core/api/utils.query.js';
+} from '@storecraft/core/api/query.js';
 
 /**
  * @description statistics endpoint

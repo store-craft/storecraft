@@ -6,7 +6,7 @@
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 import { authorize_admin } from './con.auth.middle.js';
-import { parse_query } from '../api/utils.query.js';
+import { parse_query } from '../api/query.js';
 import { create_routes as idp_routes } from './con.auth.identity-providers.routes.js';
 
 /**

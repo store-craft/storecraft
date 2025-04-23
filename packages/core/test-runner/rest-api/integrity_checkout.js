@@ -16,7 +16,7 @@ import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
 import { 
   api_query_to_searchparams, parse_query 
-} from '../../api/utils.query.js';
+} from '../../api/query.js';
 import { ID } from '../../api/utils.func.js';
 
 /**

@@ -9,7 +9,7 @@ import {
 } from '@storecraft/sdk-react-hooks';
 import { 
   api_query_to_searchparams, parse_query 
-} from '@storecraft/core/api/utils.query.js';
+} from '@storecraft/core/api/query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { count_query_of_resource } from '@storecraft/sdk/src/utils.api.fetch.js';

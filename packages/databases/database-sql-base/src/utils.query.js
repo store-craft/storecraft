@@ -3,7 +3,9 @@
  * @import { BOOLQL } from '@storecraft/core/vql/bool-ql'
  * @import { Database } from '../types.sql.tables.js'
  * @import { BinaryOperator, ExpressionBuilder } from 'kysely'
- * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
+ * @import {
+ *  DirectedOrderByStringReference, QueryableTables
+ * } from './utils.types.js'
  */
 
 import { parse } from "@storecraft/core/vql/bool-ql";
@@ -79,6 +81,7 @@ export const query_cursor_to_eb = (
   // return result;
 }
 
+
 /**
  * @template {QueryableTables} T
  * @param {ExpressionBuilder<Database>} eb 
@@ -134,17 +137,6 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
       throw new Error('VQL-failed')
   }
 
-}
-
-/**
- * @param {ExpressionBuilder<Database>} eb 
- * @param {BOOLQL.Node} root 
- * @param {QueryableTables} table_name 
- */
-export const query_vql_to_eb = (eb, root, table_name) => {
-  return root ? 
-    query_vql_node_to_eb(eb, root, table_name) : 
-    undefined;
 }
 
 

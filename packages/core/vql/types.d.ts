@@ -14,7 +14,12 @@ type PickKeysByValueType<T, V> = keyof PickByValue<T, V>;
  */
 export type VQL_STRING_OPS = '=' | '!=' | '>' | '>=' | '<' | '<=' | '~';
 
-export type VQL_OPS<T extends legal_value_types = legal_value_types> = {
+/**
+ * @description VQL ops for the VQL object
+ */
+export type VQL_OPS<
+  T extends legal_value_types = legal_value_types
+> = {
   /** @description Equal to */
   $eq?: T,
   /** @description Not equal to */
@@ -39,7 +44,12 @@ export type VQL_OPS<T extends legal_value_types = legal_value_types> = {
   $like?: string,
 }
 
-export type VQL_BASE<T extends Record<string, any> = Record<string, any>> = {
+/**
+ * @description Base type for VQL
+ */
+export type VQL_BASE<
+  T extends Record<string, any> = Record<string, any>
+> = {
   /**
    * @description Logical AND
    */
@@ -60,9 +70,13 @@ export type VQL_BASE<T extends Record<string, any> = Record<string, any>> = {
   search?: string
 }
 
-export type VQL<T extends Record<string, any> = Record<string, any>> = VQL_BASE<T> & {
+/**
+ * @description The entire VQL type
+ */
+export type VQL<
+  T extends Record<string, any> = Record<string, any>
+> = VQL_BASE<T> & {
   [K in Exclude<PickKeysByValueType<T, legal_value_types>, '$and' | '$or' | '$not' | 'search'>]?: VQL_OPS<T[K]>
-  // [K in keyof T]: string
 }
 
 // type CreateObjHelper<T> = {

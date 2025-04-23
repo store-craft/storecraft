@@ -15,7 +15,7 @@ import { StorecraftSDK } from '@storecraft/sdk'
 import { 
   remove_from_collection_resource as sdk_remove 
 } from "@storecraft/sdk/src/utils.api.fetch.js";
-import { api_query_to_searchparams } from '@storecraft/core/api/utils.query.js'
+import { api_query_to_searchparams } from '@storecraft/core/api/query.js'
 
 /**
  * 

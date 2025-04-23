@@ -167,7 +167,7 @@ test('(a1, a2, a3)', async () => {
     ]
   };
 
-  /** @type {import('@storecraft/core').Cursor[]} */
+  /** @type {import('@storecraft/core/api').Cursor[]} */
   const cursor = [
     ['a1', 'b1'],
     ['a2', 'b2'],

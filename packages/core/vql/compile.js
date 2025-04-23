@@ -18,6 +18,15 @@ import {
  */
 export const compile = (vql) => {
 
+  if(vql===undefined) {
+    return '';
+  }
+
+  assert(
+    typeof vql === 'object',
+    'VQL-Compile, you tried to compile a non-object value ' + vql
+  );
+
   /** @type {string[]} */
   const parts = [];
 

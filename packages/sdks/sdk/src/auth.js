@@ -10,7 +10,7 @@
 
 import { 
   api_query_to_searchparams 
-} from '@storecraft/core/api/utils.query.js';
+} from '@storecraft/core/api/query.js';
 import { StorecraftSDK } from '../index.js';
 import { 
   count_query_of_resource, fetchApiWithAuth, url 

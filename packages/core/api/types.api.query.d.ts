@@ -1,5 +1,4 @@
 // Query types
-import type { BOOLQL } from '../vql/bool-ql/types.d.ts';
 import { VQL } from '../vql/types.js';
 
 type legal_value_types = string | boolean | number;
@@ -42,21 +41,15 @@ export type ApiQuery<T extends any = undefined> = {
   expand?: ExpandQuery<T>;
 
   /**
-   * @description boolean `DSL` for querying using terms
+   * @description **VQL** query filtering language as object.
    */
   vql?: VQL<T>;
   /**
-   * @description `vql` as compiled string for internal usage
+   * @description **VQL** query filtering language as string.
    * @example 
    * `(whatever-indexed tag:a -(tag:b | tag:c | "couple of words") handle:product*)`
    */
   vql_as_string?: string;
-
-  /**
-   * @description internal usage Abstract Syntx Tree (AST)
-   * @deprecated
-   */
-  vqlParsed?: BOOLQL.AST;
 
   /**
    * @description Sort by cursor, should correlate with 

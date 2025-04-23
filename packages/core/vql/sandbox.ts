@@ -25,6 +25,4 @@ const query: VQL<Data> = {
   ],
 }
 
-
-
 console.log('helo')

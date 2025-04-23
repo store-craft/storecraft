@@ -30,7 +30,7 @@ export type ExpandQuery<T extends any = undefined> = T extends undefined ?
   >[];
 
 /**
- * @description Query base type for most collections
+ * @description Fully typed query for **API**
  * @template T any object, which will be used to infer the types and schema
  */
 export type ApiQuery<T extends any = undefined> = {
@@ -43,10 +43,13 @@ export type ApiQuery<T extends any = undefined> = {
 
   /**
    * @description boolean `DSL` for querying using terms
+   */
+  vql?: VQL<T>;
+  /**
+   * @description `vql` as compiled string for internal usage
    * @example 
    * `(whatever-indexed tag:a -(tag:b | tag:c | "couple of words") handle:product*)`
    */
-  vql?: VQL<T>;
   vql_as_string?: string;
 
   /**
@@ -56,7 +59,8 @@ export type ApiQuery<T extends any = undefined> = {
   vqlParsed?: BOOLQL.AST;
 
   /**
-   * @description Sort by cursor, should correlate with `startAt` / `endAt` cursors
+   * @description Sort by cursor, should correlate with 
+   * `startAt` / `endAt` cursors
    * @example 
    * ['updated_at']
    * ['updated_at', 'id']
@@ -82,8 +86,12 @@ export type ApiQuery<T extends any = undefined> = {
    * @example 
    * [['updated_at', '2012-09']]
    * [['updated_at', '2012-09'], ['id', 'id_wiwq09j2023j']]
+   * @deprecated use `vql` instead
    */
   startAt?: Cursor<T>;
+  /**
+   * @deprecated use `vql` instead
+   */
   startAfter?: Cursor<T>;
 
   /**
@@ -91,8 +99,12 @@ export type ApiQuery<T extends any = undefined> = {
    * @example 
    * [['updated_at', '2015-09']]
    * [['updated_at', '2015-09'], ['id', 'id_wiwq09j2023j']]
+   * @deprecated use `vql` instead
    */
   endAt?: Cursor<T>;
+  /**
+   * @deprecated use `vql` instead
+   */
   endBefore?: Cursor<T>;
 
   /**
@@ -100,6 +112,7 @@ export type ApiQuery<T extends any = undefined> = {
    * exact value. For example getting all the items which have `active=true`
    * @example 
    * [['active', false]]
+   * @deprecated use `vql` instead
    */
   equals?: Cursor<T>
 }
@@ -113,7 +126,9 @@ type TupleFromType<T> = {
   [K in keyof T]: Tuple<K, T[K]>;
 }[PickKeysByValueType<T, string | number | boolean>];
 
-type PickByValue<T, V> = Pick<T, { 
+type PickByValue<T, V> = Pick<
+  T, 
+  { 
     [K in keyof T]: T[K] extends V ? K : never 
   }[keyof T]
 >

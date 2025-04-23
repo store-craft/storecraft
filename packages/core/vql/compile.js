@@ -12,6 +12,8 @@ import {
 } from './parse.utils.js';
 
 /**
+ * @description
+ * Compile a VQL object into a string
  * @param {VQL} vql 
  */
 export const compile = (vql) => {
@@ -89,7 +91,7 @@ export const compile = (vql) => {
         assert(
           op_key_casted!=='$in' && op_key_casted!=='$nin',
           'VQL-Compile failed, `$in` and `$nin` are currently not supported\
-          for VQL compile'
+          for VQL compile. Will be supported soon by converting them to `|` operators.'
         );
 
         assert(
@@ -113,10 +115,12 @@ export const compile = (vql) => {
           op_value
         );
 
+        // This will count as `&` operator.
         parts.push(final); 
       }
     }
   }
 
+  // `space` is equivalent to `&` operator
   return parts.join(' ');
 }

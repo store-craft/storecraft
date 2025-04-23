@@ -22,7 +22,9 @@ import { parse } from "@storecraft/core/vql/bool-ql";
  * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer 
  * Your chance to change key and value
  */
-export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
+export const query_cursor_to_eb = (
+  eb, c, relation, transformer=(x)=>x
+) => {
 
   /** @type {BinaryOperator} */
   let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
@@ -218,11 +220,13 @@ export const query_to_eb = (eb, q={}, table_name) => {
     console.error('VQL parse error', e);
   }
 
-  const vql_clause = query_vql_to_eb(
-    eb, q.vqlParsed, table_name
-  );
-
-  vql_clause && clauses.push(vql_clause);
+  if(q.vqlParsed) {
+    const vql_clause = query_vql_node_to_eb(
+      eb, q.vqlParsed, table_name
+    );
+    vql_clause && 
+      clauses.push(vql_clause);
+  }
 
   return eb.and(clauses);
 }

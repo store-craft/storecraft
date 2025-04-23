@@ -26,8 +26,6 @@ test('parse 1', async () => {
     ],
     group: true
   };
-  
-  
 
   const source = '(name:tomer* (tag:genre_a -tag:genre_b))';
   const ast = parse(source);

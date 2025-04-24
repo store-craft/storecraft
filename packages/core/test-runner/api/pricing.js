@@ -9,7 +9,7 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '@storecraft/core/api';
-import { create_title_gen, file_name } from './api.utils.crud.js';
+import { create_title_gen, file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { calculate_pricing } from '../../api/con.pricing.logic.js';
 import { to_handle } from '../../api/utils.func.js';

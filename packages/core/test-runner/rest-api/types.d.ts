@@ -1,5 +1,4 @@
 import { create_api } from '../../api/index.js';
-import type { App } from '../../index.js';
 
 type atomic_type = Function | string | number | boolean | null | undefined;
 

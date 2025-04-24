@@ -102,7 +102,7 @@ export const query_vql_node_to_eb = (eb, node, table_name) => {
             eb.or(
               [
                 eb(
-                  `entity_to_search_terms.entity_id`, '=', 
+                  'entity_to_search_terms.entity_id', '=', 
                   eb.ref(`${table_name}.id`)
                 ),
                 eb(

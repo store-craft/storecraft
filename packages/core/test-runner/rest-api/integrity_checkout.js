@@ -5,7 +5,7 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../api/api.utils.crud.js';
+import { file_name } from '../api/api.utils.js';
 import { 
   App, CheckoutStatusEnum, 
   FulfillOptionsEnum, PaymentOptionsEnum 
@@ -55,7 +55,7 @@ export const create = (app) => {
       api_query_to_searchparams({
         limit: 10,
         order: 'desc',
-        vql: 'active:true'
+        vql_as_string: 'active:true'
       })
     );
 

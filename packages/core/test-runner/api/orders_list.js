@@ -2,15 +2,16 @@
  * @import { OrderData, OrderDataUpsert } from '../../api/types.api.js'
  * @import { QueryTestContext } from './api.utils.types.js';
  * @import { Test } from 'uvu';
- * @import { events } from '../../pubsub/types.public.js';
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name, iso, add_query_list_integrity_tests,
-  get_static_ids} from './api.utils.crud.js';
+import { 
+  file_name, iso, get_static_ids
+} from './api.utils.js';
 import { enums } from '../../api/index.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
 
 // In this test, we will test the query list function.
 // In order to create syntatic data with controlled dates,

@@ -1,5 +1,4 @@
 /**
- * @import { Test } from 'uvu'
  */
 import { to_handle } from '../../api/utils.func.js';
 export { file_name } from './api.utils.file.js'
@@ -104,10 +103,16 @@ const generateRandomString = (length=10) => {
   return result;
 }
 
-export const withRandom = (o='', length=10) => o + '-' + generateRandomString(length)
+/**
+ * @description Generate a random string with a prefix
+ * @param {string} o 
+ * @param {number} length 
+ */
+export const withRandom = (o='', length=10) => 
+  o + '-' + generateRandomString(length);
 
 /**
- * 
+ * @description Delete keys from an object
  * @param  {...string} keys 
  */
 export const delete_keys = (...keys) => {

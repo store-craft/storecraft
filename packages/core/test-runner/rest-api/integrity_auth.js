@@ -8,13 +8,13 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../api/api.utils.crud.js';
+import { file_name } from '../api/api.utils.js';
 import { App } from '../../index.js';
 import esMain from '../api/utils.esmain.js';
 import { setup_sdk } from './utils.setup-sdk.js';
 import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
-import { assert_async_throws } from '../api/utils.js';
+import { assert_async_throws } from '../api/api.utils.js';
 import { 
   api_query_to_searchparams, parse_query 
 } from '../../api/query.js';
@@ -55,7 +55,7 @@ export const create = (app) => {
       api_query_to_searchparams({
         limit: 10,
         order: 'desc',
-        vql: 'active:true'
+        vql_as_string: 'active:true'
       })
     );
 

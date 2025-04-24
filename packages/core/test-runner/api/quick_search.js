@@ -1,7 +1,6 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, 
- Filter_p_in_products, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, Filter_p_in_products, 
  *  OrderDataUpsert, OrderDiscountExtra, PostTypeUpsert, ProductTypeUpsert, 
  *  QuickSearchResult, ShippingMethodTypeUpsert, StorefrontTypeUpsert, 
  *  TagTypeUpsert 
@@ -10,9 +9,9 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, 
-  create_handle, file_name, 
-  get_static_ids} from './api.utils.crud.js';
+import {  
+  file_name, get_static_ids
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 import { enums } from '../../api/index.js';

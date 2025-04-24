@@ -4,7 +4,6 @@
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
-import * as assert from 'uvu/assert';
 import { 
   create_handle, file_name, 
   iso, get_static_ids

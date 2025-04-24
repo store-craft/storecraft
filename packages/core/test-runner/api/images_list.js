@@ -4,7 +4,6 @@
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
-import * as assert from 'uvu/assert';
 import { 
   file_name, iso, get_static_ids
 } from './api.utils.js';

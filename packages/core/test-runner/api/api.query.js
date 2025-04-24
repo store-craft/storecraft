@@ -1,13 +1,13 @@
 /**
  * @import { BaseType } from '../../api/types.api.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { Test } from 'uvu'
  * @import { 
  *  PartialBase 
  * } from './api.utils.types.js';
- * @import { VQL, VQL_BASE, VQL_OPS } from '../../vql/types.js';
+ * @import { VQL } from '../../vql/types.js';
  */
 import * as assert from 'uvu/assert';
+import { test_vql_against_object } from '../../vql/utils.js';
 
 /**
  * Notes:
@@ -16,7 +16,7 @@ import * as assert from 'uvu/assert';
  */
 
 /**
- * 
+ * @description Compare **Lexicographically** two tuples of any type
  * @param {any[]} vec1 
  * @param {any[]} vec2 
  */
@@ -63,86 +63,107 @@ export const assert_query_list_integrity = (list, q) => {
     );
   }
 
-  // asc:  (0, 1, 2, 3, 4, 5, )
-  // desc: (5, 4, 3, 2, 1, 0, )
-  // assert startAt/endAt integrity
-  const from = q.startAfter ?? q.startAt;
-  const to = q.endBefore ?? q.endAt;
-  // console.log(list)
-  if(from || to) {
-    for(let ix=1; ix < list.length; ix++) {
-      const it = list[ix];
+  assert_items_against_vql_integrity(
+    list, q.vql, [], {query: q}
+  );
 
-      if(from) {
-        const v1 = from.map(c => c[1]);
-        const v2 = from.map(c => it[c[0]]);
-        const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
-        assert.ok(
-          q.startAt ? sign>=0 : sign>0, 
-          `list item #${ix} does not obey ${from} !`
-        );
-      }
 
-      if(to) {
-        const v1 = to.map(c => c[1]);
-        const v2 = to.map(c => it[c[0]]);
-        const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
-        assert.ok(
-          q.endAt ? sign<=0 : sign < 0, 
-          `list item #${ix} does not obey ${to} !`
-        );
-      }
-    }
-  }
+  // // asc:  (0, 1, 2, 3, 4, 5, )
+  // // desc: (5, 4, 3, 2, 1, 0, )
+  // // assert startAt/endAt integrity
+  // const from = q.startAfter ?? q.startAt;
+  // const to = q.endBefore ?? q.endAt;
+  // // console.log(list)
+  // if(from || to) {
+  //   for(let ix=1; ix < list.length; ix++) {
+  //     const it = list[ix];
+
+  //     if(from) {
+  //       const v1 = from.map(c => c[1]);
+  //       const v2 = from.map(c => it[c[0]]);
+  //       const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
+  //       assert.ok(
+  //         q.startAt ? sign>=0 : sign>0, 
+  //         `list item #${ix} does not obey ${from} !`
+  //       );
+  //     }
+
+  //     if(to) {
+  //       const v1 = to.map(c => c[1]);
+  //       const v2 = to.map(c => it[c[0]]);
+  //       const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
+  //       assert.ok(
+  //         q.endAt ? sign<=0 : sign < 0, 
+  //         `list item #${ix} does not obey ${to} !`
+  //       );
+  //     }
+  //   }
+  // }
 }
-
 
 
 /**
  * @description Test that an item satisfies the 
  * `VQL` filters / constraints.
  * @template {PartialBase} [T=PartialBase]
+ * @param {VQL<PartialBase>} vql the query used
  * @param {T} item the result of the query
- * @param {ApiQuery<PartialBase>} q the query used
+ * @param {string[]} [search_index=[]] Optional 
+ * search index for `$search` operator
+ * @param {any} [context={}] Optional context
  */
-export const assert_query_list_vql_integrity = (item, q) => {
-  const vql = q.vql;
-
+export const assert_item_against_vql_integrity = (
+  vql, item, search_index=[], context
+) => {
   // skip early
   if(!vql || !item) 
     return;
 
-  vql.
+  const result = test_vql_against_object(
+    vql, item, [], false
+  );
 
-  // asc:  (0, 1, 2, 3, 4, 5, )
-  // desc: (5, 4, 3, 2, 1, 0, )
-  // assert startAt/endAt integrity
-  const from = q.startAfter ?? q.startAt;
-  const to = q.endBefore ?? q.endAt;
-  // console.log(list)
-  if(from || to) {
-    for(let ix=1; ix < list.length; ix++) {
-      const it = list[ix];
+  if(!result) {
+    console.dir(
+      {context}, {depth: 15}
+    );
 
-      if(from) {
-        const v1 = from.map(c => c[1]);
-        const v2 = from.map(c => it[c[0]]);
-        const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
-        assert.ok(
-          q.startAt ? sign>=0 : sign>0, 
-          `list item #${ix} does not obey ${from} !`
-        );
-      }
+    console.dir(
+      {vql}, {depth: 15}
+    );
 
-      if(to) {
-        const v1 = to.map(c => c[1]);
-        const v2 = to.map(c => it[c[0]]);
-        const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
-        assert.ok(
-          q.endAt ? sign<=0 : sign < 0, 
-          `list item #${ix} does not obey ${to} !`
-        );
-      }
-    }
+    console.dir(
+      {item}, {depth: 15}
+    );
+
+    // run again with `debug` mode for printing the
+    // chain of tests.
+    test_vql_against_object(
+      vql, item, search_index, true
+    );
+
+    assert.unreachable(
+      `assert_item_against_vql_integrity:: item does not satisfy vql !`
+    );
+  } 
+}
+
+/**
+ * @description Test that items satisfies the 
+ * `VQL` filters / constraints.
+ * @template {PartialBase} [T=PartialBase]
+ * @param {VQL<PartialBase>} vql the query used
+ * @param {T[]} items the result of the query
+ * @param {string[]} [search_index=[]] Optional 
+ * search index for `$search` operator
+ * @param {any} [context={}] Optional context
+ */
+export const assert_items_against_vql_integrity = (
+  items, vql, search_index=[], context
+) => {
+  for(const item of items) {
+    assert_item_against_vql_integrity(
+      vql, item, search_index, context
+    );
   }
 }

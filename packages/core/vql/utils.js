@@ -1,5 +1,8 @@
 /**
- * @import { legal_value_types, PickKeysByValueType, PropertiesOPS, VQL, VQL_BASE, VQL_OPS } from "./types.js";
+ * @import { 
+ *  legal_value_types, PickKeysByValueType, 
+ *  PropertiesOPS, VQL, VQL_BASE, VQL_OPS 
+ * } from "./types.js";
  */
 import { assert } from "./parse.utils.js";
 
@@ -92,6 +95,7 @@ export const reduce_vql = (
 
   /**
    * @param {VQL<Type>} node 
+   * @returns {AndReduceResult}
    */
   const process_node = (node) => {
     const parts = []
@@ -280,7 +284,6 @@ export const test_vql_against_object = (
       true
     );
   }
-
 
   const reduced = reduce_vql(
     {

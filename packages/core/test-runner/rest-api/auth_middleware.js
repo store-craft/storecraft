@@ -4,11 +4,11 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../api/api.utils.crud.js';
+import { file_name } from '../api/api.utils.js';
 import { App } from '../../index.js';
 import { 
   assert_async_throws, assert_partial_v2, withRandom 
-} from '../api/utils.js';
+} from '../api/api.utils.js';
 import { 
   authorize_by_roles, parse_auth_user, parse_bearer_auth 
 } from '../../rest/con.auth.middle.js';

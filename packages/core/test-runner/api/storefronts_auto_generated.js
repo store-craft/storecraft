@@ -1,16 +1,18 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, Filter_p_in_products, PostTypeUpsert, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, PostTypeUpsert, 
  *  ProductTypeUpsert, ShippingMethodTypeUpsert, 
  * } from '../../api/types.public.js'
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '../../api/index.js';
-import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
+import { 
+  create_handle, file_name, promises_sequence 
+} from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
-import { assert_partial_v2, withTimestamp } from './utils.js';
+import { assert_partial_v2, withTimestamp } from './api.utils.js';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 const handle_col = create_handle('col', file_name(import.meta.url));

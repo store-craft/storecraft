@@ -1,6 +1,6 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, Filter_p_in_products, PostTypeUpsert, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, PostTypeUpsert, 
  *  ProductTypeUpsert, ShippingMethodTypeUpsert, StorefrontTypeUpsert 
  * } from '../../api/types.api.js'
  * 
@@ -8,7 +8,9 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '../../api/index.js';
-import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
+import { 
+  create_handle, file_name, promises_sequence 
+} from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
 

@@ -7,10 +7,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '../../api/index.js';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { assert_partial_v2, file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
-import { assert_partial_v2 } from './utils.js';
+import { add_sanity_crud_to_test_suite } from './api.crud.js';
 
 
 /** @type {OrderDataUpsert[]} */

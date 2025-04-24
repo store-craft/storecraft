@@ -74,25 +74,19 @@ export const parse_sort_order = (s) => {
  */
 export const parse_query = (s) => {
   s = new URLSearchParams(s);
-
   const q = /** @type {ApiQuery} */ ({});
 
   // console.log(s.toString())
 
   q.expand = parse_expand(s);
-  // asc  [0, 1, 2, 3, 4, 5, ...]
-  // desc [5, 4, 3, 2, 1, 0, ...]
   q.sortBy = parse_sortby(s);
   q.order = parse_sort_order(s);
-
   q.limit = parseInt(s.get(LIMIT)) ? 
     Math.abs(parseInt(s.get(LIMIT))) : 
     undefined;
-
   q.limitToLast = parseInt(s.get(LIMIT_TO_LAST)) ? 
     Math.abs(parseInt(s.get(LIMIT_TO_LAST))) : 
     undefined;
-
   if(!q.limitToLast && !q.limit) {
     q.limit = 5;
   } 

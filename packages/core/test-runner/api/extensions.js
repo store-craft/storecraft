@@ -5,10 +5,10 @@
 
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
-import { assert_async_throws } from './utils.js';
+import { assert_async_throws } from './api.utils.js';
 import { DummyExtension } from '../../extensions/dummy/index.js';
 
 /**

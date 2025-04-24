@@ -3,10 +3,10 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
+import { create_handle, file_name, promises_sequence } from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { assert_partial, assert_partial_minus_relations } from './utils.js';
+import { assert_partial, assert_partial_minus_relations } from './api.utils.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));

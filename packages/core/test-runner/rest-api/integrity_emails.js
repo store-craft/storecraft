@@ -1,16 +1,17 @@
 /**
  * @import { PROOF_MOCKUP_API_SETUP } from './types.js'
- * @import { SendMailParams, SendMailWithTemplateParams } from '../../api/types.public.js'
+ * @import { 
+ *  SendMailParams, SendMailWithTemplateParams 
+ * } from '../../api/types.public.js'
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../api/api.utils.crud.js';
+import { file_name, assert_async_throws } from '../api/api.utils.js';
 import { App } from '../../index.js';
 import esMain from '../api/utils.esmain.js';
 import { setup_sdk } from './utils.setup-sdk.js';
 import { test_setup } from './utils.api-layer.js';
 import { admin_email } from '../api/auth.js';
-import { assert_async_throws } from '../api/utils.js';
 
 /**
  * @param {App} app `storecraft` app instance

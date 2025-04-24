@@ -1,6 +1,10 @@
 import { StorecraftSDK } from '@storecraft/sdk';
-import { App } from '../../index.js'
+import { App } from '../../index.js';
+
 /**
+ * @description Setup the SDK for the `storecraft` app,
+ * by redirecting it's HTTP requests straight into the app's
+ * REST controller.
  * @param {App} app `storecraft` app instance
  */
 export const setup_sdk = (app) => {

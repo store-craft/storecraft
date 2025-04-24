@@ -8,13 +8,14 @@
 
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { 
   App, CheckoutStatusEnum, FulfillOptionsEnum, 
-  PaymentOptionsEnum } from '../../index.js';
+  PaymentOptionsEnum 
+} from '../../index.js';
 import { DummyPayments } from '../../payments/dummy/index.js'
-import { assert_async_throws, withRandom } from './utils.js';
+import { assert_async_throws, withRandom } from './api.utils.js';
 import { ID } from '../../api/utils.func.js';
 
 /**

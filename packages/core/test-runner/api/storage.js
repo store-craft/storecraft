@@ -3,10 +3,10 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../api/api.utils.crud.js';
+import { file_name } from '../api/api.utils.js';
 import { App } from '../../index.js';
 import esMain from '../api/utils.esmain.js';
-import { assert_async_throws } from '../api/utils.js';
+import { assert_async_throws } from './api.utils.js';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { 

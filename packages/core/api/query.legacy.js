@@ -4,7 +4,8 @@
  * } from './types.api.query.js';
  * @import { VQL_STRING_OPS } from '../vql/types.js';
  */
-import { parenthesise_vql_string as parenthesise_vql_string, parse_tuples } from "./query.utils.js";
+import { parenthesise_vql_string } from "../vql/utils.js";
+import { parse_tuples } from "./query.utils.js";
 import { assert } from "./utils.func.js";
 
 /** @deprecated Use `vql` instead */

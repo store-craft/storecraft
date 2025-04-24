@@ -174,38 +174,3 @@ export const cursor_to_string = c => {
   return string_array_to_string(string_array);
 }
 
-/**
- * @description Pad a VQL string with leading and trailing `()`
- * @param {string} vql 
- */
-export const parenthesise_vql_string = (vql='') => {
-  if(!vql)
-    return vql;
-
-  assert(
-    typeof vql === 'string',
-    'pad_vql_string:: vql must be a string'
-  );
-
-  vql = vql.trim();
-
-  if(vql.startsWith('(') && vql.endsWith(')'))
-    return vql;
-  return '(' + vql + ')';
-}
-
-/**
- * @description Pad a VQL string with leading and trailing `()`
- * @param {...string} vqls 
- */
-export const combine_vql_strings = (...vqls) => {
-  if(!vqls || vqls.length===0)
-    return undefined;
-
-  const parts = vqls
-  .filter(Boolean)
-  .map(parenthesise_vql_string);
-
-  return parts.join(' & ');
-}
-

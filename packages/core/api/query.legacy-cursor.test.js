@@ -157,9 +157,9 @@ s('api_query_to_url_query_params_and_back', async () => {
   for(const c of cases) {
     const q_params = api_query_to_searchparams(c.input);
     const actual_output = parse_query(q_params);
-    console.log({case: c})
-    console.log({q_params})
-    console.dir({actual_output}, {depth: 15});
+    // console.log({case: c})
+    // console.log({q_params})
+    // console.dir({actual_output}, {depth: 15});
 
     assert_partial(
       actual_output,

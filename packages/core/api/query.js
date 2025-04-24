@@ -7,9 +7,7 @@
 import { compile, parse } from "../vql/index.js";
 import { assert } from "./utils.func.js";
 import { 
-  combine_vql_strings,
   cursor_to_string,
-  parenthesise_vql_string,
   parse_list_from_string, 
   string_array_to_string 
 } from "./query.utils.js";
@@ -22,6 +20,7 @@ import {
   START_AFTER, 
   START_AT
 } from "./query.legacy.js";
+import { combine_vql_strings } from "../vql/utils.js";
 
 export const SORT_BY = 'sortBy';
 export const ORDER = 'order';
@@ -123,7 +122,7 @@ export const parse_query = (s) => {
   try {
     const vql = s.get(VQL);
     
-    console.log({vql})
+    // console.log({vql})
 
     q.vql_as_string = vql;
 

@@ -65,7 +65,7 @@ variable "variable"
   }
 
 var1 "variable 1" 
-  = whitespace left:([^\"\' \(\)\|\&]*) characters:("'"[^\']+"'" / '"'[^\"]+'"') whitespace { 
+  = whitespace left:([^\"\' \(\)\|\&]*) characters:("'"[^\']*"'" / '"'[^\"]*'"') whitespace { 
   return { op:'LEAF', value: text().trim()}; 
   }
 

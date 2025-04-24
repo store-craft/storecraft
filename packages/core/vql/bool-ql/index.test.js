@@ -1,6 +1,6 @@
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { parse } from '../index.js';
+import { parse } from './index.js';
 
 test('parse 1', async () => {
   const truth = {
@@ -118,6 +118,43 @@ test('parse 2', async () => {
   }
 
   const source = `(-a | (b & c)) & ((updated_at>"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price>50) | (updated_at="2025-03-07T10:34:13.058Z" & price=50 & active>=true)) & ((updated_at<2025-03-07T10:34:13.058Z) | (updated_at=2025-03-07T10:34:13.058Z & price<100) | (updated_at=2025-03-07T10:34:13.058Z & price=100 & active<=true))`;
+  const ast = parse(source);
+
+  // console.dir({ast}, {depth: 15});
+
+  assert.equal(ast, truth);
+});
+
+
+test('weird combo 1', async () => {
+  const truth = {
+    op: '&',
+    args: [
+      {
+        op: 'LEAF',
+        value: 'a'
+      },
+      {
+        op: 'LEAF',
+        value: 'bcd""',
+        group: true
+      },
+      {
+        op: 'LEAF',
+        value: "abc''"
+      },
+      {
+        op: 'LEAF',
+        value: 'defg""'
+      },
+      {
+        op: 'LEAF',
+        value: 'hijklmno'
+      }
+    ]
+  }
+
+  const source = `a(bcd"")&abc''&defg""&hijklmno`;
   const ast = parse(source);
 
   // console.dir({ast}, {depth: 15});

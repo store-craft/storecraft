@@ -4,13 +4,15 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 import { verify_api_auth_result } from './auth.utils.js';
 import { jwt } from '../../crypto/public.js';
-import { CONFIRM_EMAIL_TOKEN, FORGOT_PASSWORD_IDENTITY_TOKEN } from '../../api/con.auth.logic.js';
-import { assert_async_throws, withRandom } from './utils.js';
+import { 
+  CONFIRM_EMAIL_TOKEN, FORGOT_PASSWORD_IDENTITY_TOKEN 
+} from '../../api/con.auth.logic.js';
+import { assert_async_throws, withRandom } from './api.utils.js';
 
 
 export const admin_email = 'admin@sc.com';

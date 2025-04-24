@@ -1,18 +1,15 @@
 /** 
  * @import { ApiQuery, Tuple } from '../api/types.api.query.js';
+ * @import { BaseType } from './types.api.js';
  */
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { file_name } from '../test-runner/api/api.utils.file.js';
 import { 
-  api_query_to_searchparams, EXPAND, parse_expand, 
-  parse_query, parse_sortby,
-  SORT_BY
+  api_query_to_searchparams, parse_query, 
 } from './query.js';
-import { assert_partial } from '../test-runner/api/utils.js';
-import { parse } from '../vql/bool-ql/index.js';
-
+import { assert_partial } from '../test-runner/api/api.utils.js';
 
 const s = suite(
   file_name(import.meta.url), 
@@ -20,7 +17,7 @@ const s = suite(
 
 s('api_query_to_url_query_params_and_back', async () => {
   
-  /** @type {{input: ApiQuery<Record<string, any>>, output: ApiQuery<any>}[]} */
+  /** @type {{input: ApiQuery<BaseType & {price: number, products: {}[]}>, output: ApiQuery<BaseType & {price: number, products: {}[]}>}[]} */
   const cases = [
     {
       input: {
@@ -43,8 +40,8 @@ s('api_query_to_url_query_params_and_back', async () => {
           '$and': [
             {
               '$or': [
-                { '$not': { search: 'a' } },
-                { '$and': [ { search: 'b' }, { search: 'c' } ] }
+                { '$not': { $search: 'a' } },
+                { '$and': [ { $search: 'b' }, { $search: 'c' } ] }
               ]
             },
             {
@@ -108,8 +105,8 @@ s('api_query_to_url_query_params_and_back', async () => {
           '$and': [
             {
               '$or': [
-                { '$not': { search: 'a' } },
-                { '$and': [ { search: 'b' }, { search: 'c' } ] }
+                { '$not': { $search: 'a' } },
+                { '$and': [ { $search: 'b' }, { $search: 'c' } ] }
               ]
             },
             {

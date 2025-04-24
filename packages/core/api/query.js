@@ -175,6 +175,11 @@ export const api_query_to_searchparams = (q) => {
     .filter(item => Boolean(item.cursor) && item.cursor?.length)
     .forEach(
       item => {
+        console.warn(
+          'Legacy query cursors `equals` / `endAt` / `endBefore` ' +
+          '/ `startAt` / `startAfter`' +
+          'will be deprecated, use `vql` instead',
+        );
         sp.set(item.key, cursor_to_string(item.cursor));
       }
     );

@@ -58,6 +58,16 @@ const parse_boolql_leaf_node_string_value = (value) => {
   const parts = value.split(op);
   // the first part is always the key of the property
   const arg_0 = parts[0].trim();
+
+  if(arg_0.length === 0) {
+    return {
+      // special case.
+      op: undefined,
+      arg_0: undefined,
+      arg_1: string_arg_to_typed_arg(value)
+    }
+  }
+
   // combine the rest of the parts
   let arg_1 = string_arg_to_typed_arg(
     parts.slice(1).join(op).trim()
@@ -77,7 +87,7 @@ const parse_boolql_leaf_node_string_value = (value) => {
 
 /**
  * @param {BOOLQL.Node} node 
- * @returns {{[x: string]: VQL_OPS<any>} | { search?: string}}}
+ * @returns {{[x: string]: VQL_OPS<any>} | { $search?: string}}}
  */
 const boolql_leaf_node_to_vql = (node) => {
   assert(
@@ -96,7 +106,7 @@ const boolql_leaf_node_to_vql = (node) => {
   if(op === undefined) {
     // this is a special case
     return {
-      search: String(arg_1)
+      $search: String(arg_1)
     }
   }
 

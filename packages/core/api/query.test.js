@@ -1,5 +1,6 @@
 /** 
  * @import { ApiQuery, Tuple } from '../api/types.api.query.js';
+ * @import { BaseType } from './types.api.js';
  */
 import 'dotenv/config';
 import { suite } from 'uvu';
@@ -10,7 +11,7 @@ import {
   parse_query, parse_sortby,
   SORT_BY
 } from './query.js';
-import { assert_partial } from '../test-runner/api/utils.js';
+import { assert_partial } from '../test-runner/api/api.utils.js';
 import { parse } from '../vql/bool-ql/index.js';
 
 
@@ -71,7 +72,7 @@ s('parse_sortby', async () => {
 });
 
 s('api_query_to_url_query_params_and_back', async () => {
-  /** @type {ApiQuery<any>[]} */
+  /** @type {ApiQuery<BaseType & {price: number, products: {}[], collections: {}[]}>[]} */
   const cases = [
     {
       expand: ['products'],
@@ -89,8 +90,8 @@ s('api_query_to_url_query_params_and_back', async () => {
         '$and': [
           {
             '$or': [
-              { '$not': { search: 'a' } },
-              { '$and': [ { search: 'b' }, { search: 'c' } ] }
+              { '$not': { $search: 'a' } },
+              { '$and': [ { $search: 'b' }, { $search: 'c' } ] }
             ]
           },
           {

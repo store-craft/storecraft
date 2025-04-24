@@ -1,6 +1,8 @@
 /**
- * @import { legal_value_types, VQL_OPS, VQL, VQL_STRING_OPS, ReverseStringRecord } from './types.js';
- * @import { BOOLQL } from './bool-ql/types.js';
+ * @import { 
+ *  legal_value_types, VQL_OPS, VQL, VQL_STRING_OPS, 
+ *  ReverseStringRecord 
+ * } from './types.js';
  */
 
 /**
@@ -71,7 +73,8 @@ export function is_string_a_number(str='') {
  * 1. direct-string: 'string1' | "string2"
  * 2. boolean: true | false
  * 3. number: 50, 10.32 ...
- * 4. indirect-string: if does not start+end with commas '..', "..", we cast it as string
+ * 4. indirect-string: if does not start+end with 
+ * commas '..', "..", we cast it as string
  * @param {string} part 
  */
 export const parse_string_as_type = (part='') => {

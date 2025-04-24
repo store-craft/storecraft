@@ -1,11 +1,10 @@
 /** 
- * @import { ApiQuery, Tuple } from '../api/types.api.query.js';
  */
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../test-runner/api/api.utils.crud.js';
-import { assert_partial } from '../test-runner/api/utils.js';
+import { file_name } from '../test-runner/api/api.utils.file.js';
+import { assert_partial } from '../test-runner/api/api.utils.js';
 import { compile, parse } from './index.js';
 import { is_string_a_number, parse_string_as_type } from './parse.utils.js';
 import { string_arg_to_typed_arg } from './parse.js';

@@ -5,11 +5,13 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests,
-  get_static_ids} from './api.utils.crud.js';
+import { 
+  create_handle, file_name, 
+  iso, get_static_ids
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
 
 const handle = create_handle('post', file_name(import.meta.url));
 
@@ -21,7 +23,8 @@ const items = get_static_ids('post').map(
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
-      title: `post ${ix}`, text: `text ${ix}`,
+      title: `post ${ix}`, 
+      text: `text ${ix}`,
       handle: handle(),
       id,
       created_at: iso(jx + 1),
@@ -63,6 +66,7 @@ export const create = app => {
     s.after(async () => { await app.db.disconnect() });
     s.run();
   } catch (e) {
+    console.log(e);
   }
 })();
 

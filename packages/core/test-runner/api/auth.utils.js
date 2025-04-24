@@ -4,10 +4,9 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { sleep } from './utils.js';
+import { sleep } from './api.utils.js';
 import * as jwt from '../../crypto/jwt.js'
 
 

@@ -14,6 +14,7 @@ export type Cursor<T extends any = undefined> = T extends undefined ?
 
 export type SortCursor<T extends any = undefined> = T extends undefined ? 
   string[] : 
+  // ('created_at')[];
   (PickKeysByValueType<T, legal_value_types>)[];
 
 export type SortOrder = 'asc' | 'desc';

@@ -8,8 +8,13 @@ type Data = {
   created_at: string
 }
 
+
+const a: VQL<Data>;
+
+
+
 const query: VQL<Data> = {
-  search: 'tag:subscribed',
+  $search: 'tag:subscribed',
   $and: [
     {
       age: {
@@ -36,13 +41,13 @@ const query: VQL<Data> = {
   ],
 }
 
-const query2: VQL = {
-  search: 'tag:subscribed',
+const query2: VQL<{tomer: string}> = {
+  $search: 'tag:subscribed',
   $not:{
-    search: 'tag:unsubscribed',
+    $search: 'tag:unsubscribed',
     $and: [
       {
-        search: 'tag:subscribed',
+        $search: 'tag:subscribed',
         tomer: {
           $eq: 'tomer',
         },
@@ -59,4 +64,16 @@ const query2: VQL = {
   },
 }
 
-console.log('helo')
+console.log('helo');
+
+type Input<T> = (input: T) => T;
+
+const aa = <T,>(input: Input<T>) => {
+
+}
+
+aa(
+  (d:string) => {
+    return 'tomer'
+  }
+)

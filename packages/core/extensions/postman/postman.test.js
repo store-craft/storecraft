@@ -5,7 +5,7 @@
  */
 import { test, suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../../test-runner/api/api.utils.crud.js';
+import { file_name } from '../../test-runner/api/api.utils.file.js';
 import { enums } from '../../api/index.js';
 import { App } from '../../index.js';
 import { sendMailWithTemplate } from '../../api/con.email.logic.js';

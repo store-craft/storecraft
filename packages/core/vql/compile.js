@@ -51,7 +51,7 @@ export const compile = (vql) => {
   for(const [key, value] of Object.entries(vql)) {
 
     const key_casted = /** @type {keyof VQL_BASE} */(key);
-    if(key_casted === 'search') {
+    if(key_casted === '$search') {
       const value_string = String(value);
 
       // console.log({words_count, value_string});

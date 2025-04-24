@@ -175,33 +175,33 @@ export const query_to_eb = (eb, q={}, table_name) => {
   const transformer = (x) => transform_boolean_to_0_or_1(x, table_name);
 
   // compute index clauses
-  if(q.startAt) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.startAt, asc ? '>=' : '<=', transformer
-      )
-    );
-  } else if(q.startAfter) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.startAfter, asc ? '>' : '<', transformer
-      )
-    );
-  }
+  // if(q.startAt) {
+  //   clauses.push(
+  //     query_cursor_to_eb(
+  //       eb, q.startAt, asc ? '>=' : '<=', transformer
+  //     )
+  //   );
+  // } else if(q.startAfter) {
+  //   clauses.push(
+  //     query_cursor_to_eb(
+  //       eb, q.startAfter, asc ? '>' : '<', transformer
+  //     )
+  //   );
+  // }
 
-  if(q.endAt) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.endAt, asc ? '<=' : '>=', transformer
-      )
-    );
-  } else if(q.endBefore) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.endBefore, asc ? '<' : '>', transformer
-      )
-    );
-  }
+  // if(q.endAt) {
+  //   clauses.push(
+  //     query_cursor_to_eb(
+  //       eb, q.endAt, asc ? '<=' : '>=', transformer
+  //     )
+  //   );
+  // } else if(q.endBefore) {
+  //   clauses.push(
+  //     query_cursor_to_eb(
+  //       eb, q.endBefore, asc ? '<' : '>', transformer
+  //     )
+  //   );
+  // }
 
   // compute VQL clauses 
   try {

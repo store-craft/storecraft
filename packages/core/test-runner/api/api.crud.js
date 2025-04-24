@@ -1,116 +1,28 @@
 /**
  * @import { BaseType } from '../../api/types.api.js'
  * @import { ApiQuery } from '../../api/types.api.query.js'
- * @import { PubSubEvent } from '../../pubsub/types.public.js'
  * @import { Test } from 'uvu'
- * @import { QueryTestContext, CrudTestContext, PartialBase } from './api.utils.types.js'
+ * @import { 
+ *  QueryTestContext, CrudTestContext, PartialBase 
+ * } from './api.utils.types.js'
  */
-
 import * as assert from 'uvu/assert';
-import { basename, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { App } from '../../index.js'
-import { assert_async_throws, assert_partial, assert_partial_v2 } from './utils.js';
-import { to_handle } from '../../api/utils.func.js';
 import { 
-  image_url_to_handle, image_url_to_name 
-} from '../../api/con.images.logic.js';
+  assert_async_throws, assert_partial, assert_partial_v2 
+} from './api.utils.js';
+import { assert_query_list_integrity } from './api.query.js';
+import { iso } from './api.utils.js';
 
 /**
- * timestamp to iso
+ * NOTES:
  * 
- * 
- * @param {number} number 
+ * These are general crud test:
+ * - upsert
+ * - get
+ * - delete
+ * - list
+ * - query integrity tests
  */
-export const iso = number => {
-  return new Date(number).toISOString();
-}
-
-/**
- * @param {string | URL} meta_url 
- */
-export const file_name = (meta_url) => {
-  return basename(dirname(fileURLToPath(meta_url))) + '/' + basename(fileURLToPath(meta_url));
-}
-
-
-/**
- * Execute a bunch of functions, that create promises sequentially.
- * All tests promises run in serial to avoid transactions locks.
- * @template T
- * @param {(() => Promise<T>)[]} items 
- */
-export const promises_sequence = async (items) => {
-  const results = [];
-  for(const it of items)
-    results.push(await it())
-  return results;
-}
-
-/**
- * @param  {...string} prefixs 
- */
-export const create_handle = (...prefixs) => {
-  let index = 0;
-  return () => {
-    return to_handle([...prefixs, index+=1].join('-'));
-  }
-}
-
-/**
- * @param  {...string} prefixs 
- */
-export const create_title_gen = (...prefixs) => {
-  let index = 0;
-  return () => {
-    return [...prefixs, index+=1].join(' ');
-  }
-}
-
-
-/**
- * @param  {...string} prefixs 
- */
-export const image_mock_url_handle_name = (...prefixs) => {
-  let index = 0;
-  
-  return () => {
-    const url = [...prefixs, index+=1].join('-') + '.png';
-    return {
-      url: url,
-      name: image_url_to_name(url),
-      handle: image_url_to_handle(url)
-    }
-  }
-}
-
-/**
- * a list of 10 static ids, this is helpful for testing
- * @param {string} prefix 
- */
-export const get_static_ids = (prefix) => {
-  return [
-    '65e5ca42c43e2c41ae5216a9',
-    '65e5ca42c43e2c41ae5216aa',
-    '65e5ca42c43e2c41ae5216ab',
-    '65e5ca42c43e2c41ae5216ac',
-    '65e5ca42c43e2c41ae5216ad',
-    '65e5ca42c43e2c41ae5216ae',
-    '65e5ca42c43e2c41ae5216af',
-    '65e5ca42c43e2c41ae5216b0',
-    '65e5ca42c43e2c41ae5216b1',
-    '65e5ca42c43e2c41ae5216b2'
-  ].map(id => `${prefix}_${id}`);
-}
-
-/**
- * @template T
- * @param {T[]} items 
- */
-export const pick_random = items => {
-  const idx = Math.floor(Math.random() * (items.length - 1));
-  return items.at(idx);
-}
 
 /**
  * A simple CRUD sanity
@@ -230,95 +142,14 @@ export const add_sanity_crud_to_test_suite = s => {
 }
 
 /**
- * 
- * @param {any[]} vec1 
- * @param {any[]} vec2 
- */
-const compare_tuples = (vec1, vec2) => {
-  for(let ix = 0; ix < vec1.length; ix++) {
-    const v1 = vec1[ix], v2 = vec2[ix];
-    if(v1===v2) continue;
-    if(v1>v2) return 1;
-    if(v1<v2) return -1;
-  }
-  return 0;
-}
-
-/**
- * @description Basic testing to see if a query result is satisfied:
- * - Test `limit` is correct
- * - Test `sortBy` by comparing consecutive items
- * - Test `start` / `end` ranges are respected
- * @template {PartialBase} T
- * @param {T[]} list the result of the query
- * @param {ApiQuery<any>} q the query used
- */
-export const assert_query_list_integrity = (list, q) => {
-  const asc = q.order==='asc';
-
-  // assert limit
-  q.limit && assert.equal(list.length, q.limit, `limit != ${list.length}`);
-  q.limitToLast && assert.equal(
-    list.length, q.limitToLast, `limitToLast != ${list.length}`
-    );
-
-  // assert order
-  if(q.sortBy) {
-    const order_preserved = list.slice(1).every(
-      (it, ix) => {
-        const prev = q.sortBy.map(c => list[ix][c[0]]);
-        const current = q.sortBy.map(c => it[c[0]]);
-        const sign = compare_tuples(current, prev);
-        assert.ok(
-          asc ? sign>=0 : sign<=0, 
-          `list item #${ix-1} does not preserve order !`
-        );
-      }
-    );
-  }
-
-  // asc:  (0, 1, 2, 3, 4, 5, )
-  // desc: (5, 4, 3, 2, 1, 0, )
-  // assert startAt/endAt integrity
-  const from = q.startAfter ?? q.startAt;
-  const to = q.endBefore ?? q.endAt;
-  // console.log(list)
-  if(from || to) {
-    for(let ix=1; ix < list.length; ix++) {
-      const it = list[ix];
-
-      if(from) {
-        const v1 = from.map(c => c[1]);
-        const v2 = from.map(c => it[c[0]]);
-        const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
-        assert.ok(
-          q.startAt ? sign>=0 : sign>0, 
-          `list item #${ix} does not obey ${from} !`
-        );
-      }
-
-      if(to) {
-        const v1 = to.map(c => c[1]);
-        const v2 = to.map(c => it[c[0]]);
-        const sign = compare_tuples(v2, v1) * (asc ? 1 : -1);
-        assert.ok(
-          q.endAt ? sign<=0 : sign < 0, 
-          `list item #${ix} does not obey ${to} !`
-        );
-      }
-    }
-  }
-}
-
-/**
  * @description A simple CRUD sanity, we use it to test integrity of lists.
  * However, we have some assumptions:
  * 1. `items` were upserted before the test
  * 2. We have at least 10 items
  * 3. `updated_at` is an ISO of a timestamp starting from number `1`
  * 4. the last 3 items have the same `created_at` timestamp
- * @template {Partial<BaseType>} G
- * @template {Partial<BaseType>} U
+ * @template {Partial<BaseType>} [G=Partial<BaseType>]
+ * @template {Partial<BaseType>} [U=Partial<BaseType>]
  * @param {Test<QueryTestContext<G, U>>} s 
  * @param {boolean} [avoid_setup=false] 
  */
@@ -385,14 +216,20 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
       let is_event_ok = false || !Boolean(ctx.events?.list_event);
       const limit = 3;
 
-      /** @type {ApiQuery<any>} */
-      const q_asc = {
-        startAt: [['created_at', iso(5)]],
+      /** @satisfies {ApiQuery<BaseType>} */
+      const q_asc = ({
+        // startAt: [['created_at', iso(5)]],
         sortBy: ['created_at'],
         order: 'asc',
         limit: limit,
-        expand: ['*']
-      }
+        expand: ['*'],
+        // vql_as_string: 'created_at>iso(5)'
+        vql: {
+          created_at: {
+            $gte: iso(5)
+          }
+        }
+      })
 
       /** @type {ApiQuery<any>} */
       const q_desc = {
@@ -443,7 +280,8 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
     }
   );
 
-  
+  return s;
+
   s('query endAt=(created_at:iso(5)), sortBy=(created_at), order=asc|desc, limitToLast=2', 
     async (ctx) => {
       /** @type {ApiQuery<any>} */

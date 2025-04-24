@@ -18,7 +18,7 @@ export type VQL_STRING_OPS = '=' | '!=' | '>' | '>=' | '<' | '<=' | '~';
  * @description VQL ops for the VQL object
  */
 export type VQL_OPS<
-  T extends legal_value_types = legal_value_types
+  T extends any = legal_value_types
 > = {
   /** @description Equal to */
   $eq?: T,
@@ -68,7 +68,7 @@ export type VQL_BASE<
   /**
    * @description Search for a term in the search index
    */
-  search?: string
+  $search?: string
 }
 
 /**
@@ -79,11 +79,12 @@ export type VQL<
 > = (
   VQL_BASE<T> & 
   Omit<PropertiesOPS<T>, keyof VQL_BASE<T>>
-) | VQL_BASE<T>;// | PropertiesOPS<T>;
+);// | VQL_BASE<T> | PropertiesOPS<T>;
 
 export type PropertiesOPS<T extends Record<string, any>> = {
   [K in PickKeysByValueType<T, legal_value_types>]?: VQL_OPS<T[K]>
 }
+
 
 // type CreateObjHelper<T> = {
 //   [K in keyof T]: {

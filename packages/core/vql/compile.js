@@ -12,6 +12,24 @@ import {
 } from './parse.utils.js';
 
 /**
+ * @description Given a string value,
+ * if it contains more than one word,
+ * it will be quoted with double quotes.
+ * Otherwise, it will be returned as is.
+ * @param {any} value 
+ * @returns 
+ */
+const double_quote_multi_word_if_string = (value) => {
+  if(!(typeof value === 'string')) 
+    return value;
+
+  const words_count = value.match(/\S+/g).length;
+  return words_count > 1 ?
+    `"${value}"` : 
+    value;
+}
+
+/**
  * @description
  * Compile a VQL object into a string
  * @param {VQL} vql 
@@ -36,14 +54,10 @@ export const compile = (vql) => {
     if(key_casted === 'search') {
       const value_string = String(value);
 
-      const words_count = value_string.match(/\S+/g).length;
-
       // console.log({words_count, value_string});
       
       parts.push(
-        words_count > 1 ?
-        `"${value_string}"` : 
-        value_string
+        double_quote_multi_word_if_string(value_string)
       );
       continue;
     }
@@ -121,7 +135,7 @@ export const compile = (vql) => {
         const final = (
           key + 
           REVERSE_INNER_STRING_OPS_MAP[op_key_casted] + 
-          op_value
+          double_quote_multi_word_if_string(op_value)
         );
 
         // This will count as `&` operator.

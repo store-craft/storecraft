@@ -193,3 +193,19 @@ export const parenthesise_vql_string = (vql='') => {
     return vql;
   return '(' + vql + ')';
 }
+
+/**
+ * @description Pad a VQL string with leading and trailing `()`
+ * @param {...string} vqls 
+ */
+export const combine_vql_strings = (...vqls) => {
+  if(!vqls || vqls.length===0)
+    return undefined;
+
+  const parts = vqls
+  .filter(Boolean)
+  .map(parenthesise_vql_string);
+
+  return parts.join(' & ');
+}
+

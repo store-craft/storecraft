@@ -7,13 +7,20 @@
 import { compile, parse } from "../vql/index.js";
 import { assert } from "./utils.func.js";
 import { 
+  combine_vql_strings,
+  cursor_to_string,
   parenthesise_vql_string,
   parse_list_from_string, 
   string_array_to_string 
 } from "./query.utils.js";
 import { 
+  END_AT,
+  END_BEFORE,
+  EQUALS,
   legacy_query_to_vql_string,
-  parse_legacy_query_cursor 
+  parse_legacy_query_cursor, 
+  START_AFTER, 
+  START_AT
 } from "./query.legacy.js";
 
 export const SORT_BY = 'sortBy';
@@ -97,15 +104,15 @@ export const parse_query = (s) => {
       vql_string
     } = parse_legacy_query_cursor(s);
 
-    if(vql_string) {
-      const older = parenthesise_vql_string(
-        s.get(VQL) ?? ''
-      );
-      vql_string = older + ' & ' + vql_string;
-    }
+    // console.log({vql_string});
+
+    const combined = combine_vql_strings(
+      s.get(VQL),
+      vql_string
+    );
 
     // set it so it will be parsed later.
-    s.set(VQL, vql_string);
+    s.set(VQL, combined);
 
     // align sort cursor to query range cursors.
     if(legacy_q?.sortBy)
@@ -116,13 +123,15 @@ export const parse_query = (s) => {
   try {
     const vql = s.get(VQL);
     
+    console.log({vql})
+
     q.vql_as_string = vql;
 
     if(vql) {
       q.vql = parse(vql);
     }
   } catch (e) {
-    console.log(e);
+    console.error('VQL parsing failed ', e);
     assert(
       false, 'VQL parsing failed', 401
     );
@@ -156,26 +165,41 @@ export const api_query_to_searchparams = (q) => {
   q.limitToLast && sp.set(LIMIT_TO_LAST, q.limitToLast.toString());
 
   { // LEGACY query cursor, will be deprecated
-    const legacy_to_vql_string = legacy_query_to_vql_string(q);
-    if(legacy_to_vql_string) {
-      const current_vql_string = sp.get(VQL);
-      console.log({current_vql_string, legacy_to_vql_string})
-      const parts = [];
 
-      if(current_vql_string) {
-        parts.push(
-          parenthesise_vql_string(current_vql_string)
-        );
+    [
+      { cursor: q.equals, key: EQUALS},
+      { cursor: q.endAt, key: END_AT},
+      { cursor: q.endBefore, key: END_BEFORE},
+      { cursor: q.startAt, key: START_AT},
+      { cursor: q.startAfter, key: START_AFTER},
+    ]
+    .filter(item => Boolean(item.cursor) && item.cursor?.length)
+    .forEach(
+      item => {
+        sp.set(item.key, cursor_to_string(item.cursor));
       }
+    );
 
-      if(legacy_to_vql_string) {
-        parts.push(legacy_to_vql_string);
-      }
+    // const legacy_to_vql_string = legacy_query_to_vql_string(q);
+    // if(legacy_to_vql_string) {
+    //   const current_vql_string = sp.get(VQL);
+    //   console.log({current_vql_string, legacy_to_vql_string})
+    //   const parts = [];
 
-      if(parts.length) {
-        sp.set(VQL, parts.join(' & '));
-      }
-    }
+    //   if(current_vql_string) {
+    //     parts.push(
+    //       parenthesise_vql_string(current_vql_string)
+    //     );
+    //   }
+
+    //   if(legacy_to_vql_string) {
+    //     parts.push(legacy_to_vql_string);
+    //   }
+
+    //   if(parts.length) {
+    //     sp.set(VQL, parts.join(' & '));
+    //   }
+    // }
   }
 
   // console.log({q, sp: sp.toString()});

@@ -42,7 +42,7 @@ const parse_boolql_leaf_node_string_value = (value) => {
       // special case.
       op: undefined,
       arg_0: undefined,
-      arg_1: value
+      arg_1: string_arg_to_typed_arg(value)
     }
   }
   

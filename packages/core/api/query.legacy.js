@@ -8,15 +8,15 @@ import { parenthesise_vql_string as parenthesise_vql_string, parse_tuples } from
 import { assert } from "./utils.func.js";
 
 /** @deprecated Use `vql` instead */
-const EQUALS = 'equals';
+export const EQUALS = 'equals';
 /** @deprecated Use `vql` instead */
-const START_AT = 'startAt';
+export const START_AT = 'startAt';
 /** @deprecated Use `vql` instead */
-const START_AFTER = 'startAfter';
+export const START_AFTER = 'startAfter';
 /** @deprecated Use `vql` instead */
-const END_AT = 'endAt';
+export const END_AT = 'endAt';
 /** @deprecated Use `vql` instead */
-const END_BEFORE = 'endBefore';
+export const END_BEFORE = 'endBefore';
 
 /**
  * @description support legacy query cursor to vql string.

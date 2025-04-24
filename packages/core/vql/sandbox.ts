@@ -20,9 +20,43 @@ const query: VQL<Data> = {
     {
       active: {
         $eq: true,
+      },
+      created_at: {
+        $gte: '2023-01-01',
+        $lte: '2023-12-31',
+      },
+      $not: {
+        
+        created_at: {
+          $lt: '2023-01-01',
+          $gt: '2023-12-31',
+        },
       }
     }
   ],
+}
+
+const query2: VQL = {
+  search: 'tag:subscribed',
+  $not:{
+    search: 'tag:unsubscribed',
+    $and: [
+      {
+        search: 'tag:subscribed',
+        tomer: {
+          $eq: 'tomer',
+        },
+      },
+      // {
+      //   $not: {
+      //     search: 'tag:unsubscribed',
+      //     tomer: {
+      //       $eq: 'tomer',
+      //     }
+      //   }
+      // }
+    ]
+  },
 }
 
 console.log('helo')

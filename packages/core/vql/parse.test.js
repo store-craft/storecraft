@@ -67,7 +67,7 @@ s('string_arg_to_typed_arg', async () => {
 s('parse $eq $neq $like', async () => {
   const vql_boolean = '(a1=true | a2!=false | a3~true | -a4=true | term1)';
   const vql_number = '(b1=1 | b2!=2 | b3~3 | -b4=4 | "term2 combined")';
-  const vql_string = '(c1=tomer | c2!=tomer2 | c3~tomer3 | -c4=tomer4 | tomer5)';
+  const vql_string = '(c1=tomer | c2!=tomer2 | c3~tomer3 | -c4="tomer 4" | tomer5)';
   const vql_eq = '(' + [
     vql_boolean,
     vql_number,
@@ -75,6 +75,7 @@ s('parse $eq $neq $like', async () => {
   ].join(' & ') + ')';
 
   // console.log('vql_eq', vql_eq);
+  // console.dir(parse(vql_eq), {depth: 10});
   // console.dir(parse(vql_eq), {depth: 10});
 
   assert.equal(

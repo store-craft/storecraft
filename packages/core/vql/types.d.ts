@@ -64,6 +64,7 @@ export type VQL_BASE<
    * @description Logical NOT
    */
   $not?: VQL<T>,
+
   /**
    * @description Search for a term in the search index
    */
@@ -75,8 +76,13 @@ export type VQL_BASE<
  */
 export type VQL<
   T extends Record<string, any> = Record<string, any>
-> = VQL_BASE<T> & {
-  [K in Exclude<PickKeysByValueType<T, legal_value_types>, '$and' | '$or' | '$not' | 'search'>]?: VQL_OPS<T[K]>
+> = (
+  VQL_BASE<T> & 
+  Omit<PropertiesOPS<T>, keyof VQL_BASE<T>>
+) | VQL_BASE<T>;// | PropertiesOPS<T>;
+
+export type PropertiesOPS<T extends Record<string, any>> = {
+  [K in PickKeysByValueType<T, legal_value_types>]?: VQL_OPS<T[K]>
 }
 
 // type CreateObjHelper<T> = {

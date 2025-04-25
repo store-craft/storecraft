@@ -12,12 +12,15 @@ import {
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 
-const handle_col = create_handle('col', file_name(import.meta.url));
-const handle_pr = create_handle('pr', file_name(import.meta.url));
+const handle_col = create_handle(
+  'col', file_name(import.meta.url)
+);
 
+const handle_pr = create_handle(
+  'pr', file_name(import.meta.url)
+);
 
 /**
- * 
  * @param {App} app 
  */
 export const create = app => {
@@ -25,7 +28,6 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
   );
-
 
   /** @type {CollectionTypeUpsert[]} */
   const col_upsert = [
@@ -108,12 +110,18 @@ export const create = app => {
     const products_queried = await app.api.collections.list_collection_products(
       col_upsert[0].handle,
       {
-        startAt: [['id', prs[0].id]], 
+        vql: {
+          id: {
+            $gte: prs[0].id,
+          }
+        },
         sortBy: ['id'],
+        order: 'asc'
       }
     );
 
     // console.log('products_queried', products_queried)
+
     // the first returned product should be the product
     assert.ok(
       products_queried?.[0]?.handle===prs[0].handle,
@@ -126,6 +134,7 @@ export const create = app => {
     const count = await app.api.collections.count_collection_products_query(
       col_upsert[0].handle, {}
     );
+
     assert.ok(
       count>=col_upsert.length, 
       'count_collection_products_query failed'

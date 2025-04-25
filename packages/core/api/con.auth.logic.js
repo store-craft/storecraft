@@ -546,7 +546,7 @@ export const list_all_api_keys_info = (app) =>
 
     const apikeys = await app.db.resources.auth_users.list(
       {
-        vql: 'tag:apikey',
+        vql_as_string: 'tag:apikey',
         limit: 1000,
         expand: ['*']
       }

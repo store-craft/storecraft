@@ -6,9 +6,7 @@
 import { App } from '../index.js';
 import { assert, parse_json_safely } from './utils.func.js';
 
-/**
- * @param {App} app
- */
+/** @param {App} app */
 export const db = app => app.db.resources.search;
 
 /**
@@ -53,9 +51,13 @@ export const similarity = (app) =>
       'Similarity / Semantic Search query is empty'
     );
 
-    const pre_namespaces = query.namespaces?.length ? query.namespaces : ['all'];
-    const includes_all = pre_namespaces.includes('all') || pre_namespaces.includes('*');
-    const namespaces = includes_all ? allowed_similarity_search_namspaces.slice(2) : pre_namespaces;
+    const pre_namespaces = query.namespaces?.length ? 
+      query.namespaces : ['all'];
+    const includes_all = pre_namespaces.includes('all') || 
+      pre_namespaces.includes('*');
+    const namespaces = includes_all ? 
+      allowed_similarity_search_namspaces.slice(2) : 
+      pre_namespaces;
 
     const items = await app.vectorstore.similaritySearch(
       query.q, query.limit ?? 5, namespaces

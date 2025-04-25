@@ -15,7 +15,6 @@ import {
   END_AT,
   END_BEFORE,
   EQUALS,
-  legacy_query_to_vql_string,
   parse_legacy_query_cursor, 
   START_AFTER, 
   START_AT

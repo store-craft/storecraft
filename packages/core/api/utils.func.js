@@ -3,7 +3,6 @@ import { id } from '../crypto/object-id.js';
 export class StorecraftError extends Error {
   #message_string;
   /**
-   * 
    * @param {any} message 
    * @param {number} code 
    */
@@ -33,9 +32,7 @@ export class StorecraftError extends Error {
 
 /**
  * @description Create an ID with prefix
- * 
  * @param {string} prefix 
- * 
  */
 export const ID = (prefix='') => {
   prefix = prefix ? (prefix + '_') : prefix;
@@ -43,7 +40,6 @@ export const ID = (prefix='') => {
 }
 
 /**
- * 
  * @param {any | boolean} c 
  * @param {any} message 
  * @param {number} code 

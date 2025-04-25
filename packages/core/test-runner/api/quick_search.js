@@ -1,7 +1,7 @@
 /**
  * @import { 
  *  CollectionTypeUpsert, DiscountTypeUpsert, Filter_p_in_products, 
- *  OrderDataUpsert, OrderDiscountExtra, PostTypeUpsert, ProductTypeUpsert, 
+ *  OrderDataUpsert, PostTypeUpsert, ProductTypeUpsert, 
  *  QuickSearchResult, ShippingMethodTypeUpsert, StorefrontTypeUpsert, 
  *  TagTypeUpsert 
  * } from '../../api/types.public.js'
@@ -368,14 +368,14 @@ export const create = app => {
     const resultA = await app.api.search.quicksearch(
       {
         limit: 5,
-        vql: `${A} | tag:${A}`
+        vql_as_string: `${A} | tag:${A}`
       }
     );
 
     const resultB = await app.api.search.quicksearch(
       {
         limit: 5,
-        vql: `${B} | tag:${B}`
+        vql_as_string: `${B} | tag:${B}`
       }
     );
 

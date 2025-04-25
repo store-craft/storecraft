@@ -12,8 +12,6 @@ import {
   SORT_BY
 } from './query.js';
 import { assert_partial } from '../test-runner/api/api.utils.js';
-import { parse } from '../vql/bool-ql/index.js';
-
 
 const s = suite(
   file_name(import.meta.url), 

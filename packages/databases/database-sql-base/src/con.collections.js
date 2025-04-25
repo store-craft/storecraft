@@ -184,7 +184,8 @@ const list_collection_products = (driver) => {
       // .compile();
       // console.log(items[0])
 
-    if(query.limitToLast) items.reverse();
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

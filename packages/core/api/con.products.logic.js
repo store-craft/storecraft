@@ -28,9 +28,7 @@ export const isVariant = item => {
 }
 
 
-/**
- * @param {App} app
- */
+/** @param {App} app */
 export const db = app => app.db.resources.products;
 
 

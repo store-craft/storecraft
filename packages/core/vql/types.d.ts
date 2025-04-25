@@ -1,12 +1,13 @@
+export * from './index.js';
 
-type legal_value_types = string | boolean | number;
+export type legal_value_types = string | boolean | number;
 
 type PickByValue<T, V> = Pick<T, { 
     [K in keyof T]: T[K] extends V ? K : never 
   }[keyof T]
 >
 
-type PickKeysByValueType<T, V> = keyof PickByValue<T, V>;
+export type PickKeysByValueType<T, V> = keyof PickByValue<T, V>;
 
 /**
  * @description A subset of vql ops supported when using the vql

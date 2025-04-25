@@ -64,23 +64,27 @@ export const combine_vql_strings = (...vqls) => {
  * @typedef {object} ReduceVQL_Input
  * @prop {VQL<Type>} vql
  * @prop {(input: ReduceVQL_MapLeaf_Input<Type>) => MapLeafResult} map_leaf
- * @prop {(input: (MapLeafResult | AndReduceResult | OrReduceResult | NotReduceResult | SearchReduceResult)[]) => AndReduceResult} reduce_AND
+ * @prop {(input: (
+ *  MapLeafResult | AndReduceResult | OrReduceResult | 
+ *  NotReduceResult | SearchReduceResult)[]
+ * ) => AndReduceResult} reduce_AND
  * @prop {(input: (AndReduceResult)[]) => OrReduceResult} reduce_OR
  * @prop {(input: (AndReduceResult)) => NotReduceResult} reduce_NOT
  * @prop {(input: string) => SearchReduceResult} reduce_SEARCH
  */
-/* 
- */
 
 /**
+ * @description A helper to `reduce` / `transfrom` the **VQL** into anything.
  * @template Type
  * @template MapLeafResult
  * @template AndReduceResult
  * @template OrReduceResult
  * @template NotReduceResult
  * @template SearchReduceResult
- * @param {ReduceVQL_Input<Type, MapLeafResult, AndReduceResult, OrReduceResult, NotReduceResult, SearchReduceResult>} input
- * @description reduce / transfrom the VQL into anything
+ * @param {ReduceVQL_Input<
+ *  Type, MapLeafResult, AndReduceResult, OrReduceResult, 
+ *  NotReduceResult, SearchReduceResult
+ * >} input
  */
 export const reduce_vql = (
   {
@@ -115,11 +119,14 @@ export const reduce_vql = (
       ([key, value]) => !['$and', '$or', '$not', '$search'].includes(key)
     );
 
+    // iterate over the base operators `$and`, `$or`, `$not`, `$search`
     for(const [key, value] of entries_vql_base) {
       const key_casted = /** @type {keyof VQL_BASE}*/(key);
       
       if(key_casted==='$and') {
-        const value_casted = /** @type {VQL_BASE["$and"]}*/(value);
+        const value_casted = /** @type {VQL_BASE["$and"]}*/(
+          value
+        );
         parts.push(
           reduce_AND(
             value_casted.map(process_node)
@@ -128,7 +135,9 @@ export const reduce_vql = (
       }
       
       if(key_casted==='$or') {
-        const value_casted = /** @type {VQL_BASE["$or"]}*/(value);
+        const value_casted = /** @type {VQL_BASE["$or"]}*/(
+          value
+        );
         parts.push(
           reduce_OR(
             value_casted.map(process_node)
@@ -137,7 +146,9 @@ export const reduce_vql = (
       }
       
       if(key_casted==='$not') {
-        const value_casted = /** @type {VQL_BASE["$not"]}*/(value);
+        const value_casted = /** @type {VQL_BASE["$not"]}*/(
+          value
+        );
         parts.push(
           reduce_NOT(
             process_node(value_casted)
@@ -146,7 +157,9 @@ export const reduce_vql = (
       }
       
       if(key_casted==='$search') {
-        const value_casted = /** @type {VQL_BASE["$search"]}*/(value);
+        const value_casted = /** @type {VQL_BASE["$search"]}*/(
+          value
+        );
         parts.push(
           reduce_SEARCH(
             value_casted
@@ -155,10 +168,12 @@ export const reduce_vql = (
       }
     }
 
+    // iterate over the properties operators, example `{ prop: { '$eq': value } }`
+    // These are the leaves of the VQL tree
     for(const [key, value] of entries_vql_props) {
       // only simple properties
-      const key_casted = /** @type {PickKeysByValueType<Type, legal_value_types>}*/(key);
-      const value_casted = /** @type {PropertiesOPS<Type>[keyof PropertiesOPS<Type>]}*/(
+      const key_casted = /** @type {PickKeysByValueType<Type, legal_value_types>} */(key);
+      const value_casted = /** @type {PropertiesOPS<Type>[keyof PropertiesOPS<Type>]} */(
         value
       );
 
@@ -198,10 +213,10 @@ export const test_vql_against_object = (
 ) => {
 
   /**
-     * @template T
-     * @param {T} fn 
-     * @returns {T}
-     */
+   * @template T
+   * @param {T} fn 
+   * @returns {T}
+   */
   const identity = (fn) => {
     return fn;
   }
@@ -253,12 +268,14 @@ export const test_vql_against_object = (
             );
             break;
           case '$in': {
-            const arg_array = Array.isArray(arg) ? arg : [arg];
+            const arg_array = 
+              Array.isArray(arg) ? arg : [arg];
             result = arg_array.includes(value);
             break;
           }
           case '$nin': {
-            const arg_array = Array.isArray(arg) ? arg : [arg];
+            const arg_array = 
+              Array.isArray(arg) ? arg : [arg];
             result = !arg_array.includes(value);
             break;
           }
@@ -289,7 +306,11 @@ export const test_vql_against_object = (
     {
       vql,
       map_leaf: (node) => {
-        return test_ops(node.op, o[node.name], String(node.name));
+        return test_ops(
+          node.op, 
+          o[node.name], 
+          String(node.name)
+        );
       },
       reduce_AND: identity(
         (nodes) => {

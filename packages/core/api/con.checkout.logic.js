@@ -114,7 +114,12 @@ async (order) => {
   const discounts = await app.api.discounts.list(
     {
       limit: 1000,
-      vql: '(active:true)'
+      // vql_as_string: '(active:true)',
+      vql: {
+        active: {
+          $eq: true
+        }
+      }
     }
   );
 

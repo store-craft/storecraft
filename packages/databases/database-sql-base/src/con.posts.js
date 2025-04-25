@@ -123,11 +123,12 @@ const list = (driver) => {
       ].filter(Boolean))
       .where(
         (eb) => {
-          return query_to_eb(eb, query, table_name);
+          return query_to_eb(
+            eb, query, table_name
+          );
         }
       )
       .orderBy(query_to_sort(query, 'posts'))
-      // .orderBy()
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 

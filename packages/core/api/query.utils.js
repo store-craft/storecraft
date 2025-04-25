@@ -1,11 +1,8 @@
 /**
- * @import {
-Cursor,
- *  Tuple
+ * @import { 
+ *  Cursor, Tuple
  * } from './types.api.query.js';
  */
-
-import { assert } from './utils.func.js'
 
 export const REGEX_ALLOWED_CHARS = /[a-zA-Z0-9\_\:\-\+\*\s\'\"\.\=]+/g
 

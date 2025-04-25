@@ -1,14 +1,13 @@
 /**
  * @import { SafeParseError } from 'zod'
  * @import { ApiRequest, ApiResponse } from '../rest/types.public.js'
- * 
  */
 import { ZodSchema } from 'zod'
 import { StorecraftError } from './utils.func.js';
 
 
 /**
- * @description remove all undefined and null values from object
+ * @description remove all `undefined` and `null` values from object
  * @param {object} o 
  */
 export const sanitize = o => {

@@ -2,10 +2,8 @@
  * @import { search as db_col, db_driver } from '@storecraft/core/database'
  * @import { QuickSearchResource, QuickSearchResult } from '@storecraft/core/api'
  */
-
 import { MongoDB } from '../index.js'
 import { query_to_mongo } from './utils.query.js';
-
 
 /**
  * @type {(keyof db_driver["resources"])[]}
@@ -46,9 +44,7 @@ const prefix_to_resource = {
 }
 
 /**
- * 
  * @param {string} id 
- * 
  * @returns {keyof db_driver["resources"]}
  */
 export const id_to_resource = id => {
@@ -65,8 +61,6 @@ export const id_to_resource = id => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["quicksearch"]}
  */
 export const quicksearch = (driver) => {
@@ -151,10 +145,8 @@ export const quicksearch = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col}
- * */
+ */
 export const impl = (driver) => {
 
   return {

@@ -1,13 +1,14 @@
 /**
  * @import { db_images as db_col } from '@storecraft/core/database'
  * @import { ImageType } from '@storecraft/core/api'
- * @import { Filter, AnyBulkWriteOperation } from 'mongodb'
+ * @import { AnyBulkWriteOperation } from 'mongodb'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { count_regular, get_regular, list_regular, 
-  upsert_regular } from './con.shared.js'
+import { 
+  count_regular, get_regular, list_regular, 
+  upsert_regular 
+} from './con.shared.js'
 import { handle_or_id, to_objid } from './utils.funcs.js';
 import { func } from '@storecraft/core/api';
 import { ID } from '@storecraft/core/api/utils.func.js';
@@ -34,8 +35,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -85,12 +84,8 @@ const remove = (driver) => {
 }
 
 /**
- * report media usages
- * 
- * 
+ * @description report media usages
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["report_document_media"]}
  */
 export const report_document_media = (driver) => {
@@ -99,15 +94,14 @@ export const report_document_media = (driver) => {
       return;
 
     const add_to_search_index = func.union(
-      data['title'], func.to_tokens(data['title'])
+      data['title'], 
+      func.to_tokens(data['title'])
     );
 
     const dates = func.apply_dates({});
     
     /** 
      * @param {string} url 
-     * 
-     * 
      * @returns {AnyBulkWriteOperation<ImageType>}
      */
     const url_to_update = url => {
@@ -156,10 +150,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
 
   return {

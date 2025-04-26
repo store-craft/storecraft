@@ -1,22 +1,18 @@
 /**
  * @import { db_auth_users as db_col } from '@storecraft/core/database'
- * @import { AuthUserType } from '@storecraft/core/api'
  */
-
 import { MongoDB } from '../index.js'
 import { Collection } from 'mongodb'
 import { 
   handle_or_id,
-  objid_or_else_filter, sanitize_one, to_objid_safe 
+  objid_or_else_filter, sanitize_one 
 } from './utils.funcs.js'
 import { 
-  count_regular, get_regular, list_regular, upsert_regular 
+  count_regular, list_regular, upsert_regular 
 } from './con.shared.js'
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('auth_users');
@@ -29,8 +25,6 @@ const upsert = (driver) => upsert_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["getByEmail"]}
  */
 const get = (driver) => {
@@ -46,8 +40,6 @@ const get = (driver) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
@@ -99,8 +91,6 @@ const remove = (driver) => {
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["removeByEmail"]}
  */
 const removeByEmail = (driver) => {
@@ -125,10 +115,8 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
 
   return {

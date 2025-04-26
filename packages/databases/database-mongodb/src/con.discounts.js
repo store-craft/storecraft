@@ -4,7 +4,6 @@
  * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
@@ -30,8 +29,6 @@ import {
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('discounts');
@@ -39,8 +36,6 @@ const col = (d) => d.collection('discounts');
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -143,8 +138,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -327,8 +320,6 @@ const count_discount_products = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
  */
 export const impl = (driver) => {

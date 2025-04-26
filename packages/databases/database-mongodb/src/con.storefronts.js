@@ -5,12 +5,13 @@
  * @import { StorefrontType } from '@storecraft/core/api'
  * @import { WithRelations } from './utils.types.js'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { count_regular, expand, get_regular, list_regular, 
-  remove_regular } from './con.shared.js'
-import { sanitize_array, sanitize_recursively, to_objid } from './utils.funcs.js'
+import { 
+  count_regular, expand, get_regular, list_regular, 
+  remove_regular 
+} from './con.shared.js'
+import { sanitize_recursively, to_objid } from './utils.funcs.js'
 import { 
   add_search_terms_relation_on, create_explicit_relation, save_me 
 } from './utils.relations.js';
@@ -24,8 +25,6 @@ const col = (d) => d.collection('storefronts');
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @return {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -223,10 +222,8 @@ const get_default_auto_generated_storefront = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
 
   return {

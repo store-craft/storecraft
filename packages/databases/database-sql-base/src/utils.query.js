@@ -9,9 +9,7 @@
  * @import { legal_value_types } from "@storecraft/core/vql";
  */
 
-import { parse } from "@storecraft/core/vql";
-import { reduce_vql } from "../../../core/vql/utils.js";
-import { sql } from "kysely";
+import { parse, utils } from "@storecraft/core/vql";
 
 /**
  * @template {keyof Database} [Table=(keyof Database)]
@@ -94,7 +92,7 @@ export const query_vql_root_to_eb = (eb, vql, table_name) => {
     return eb.and(values);
   }
 
-  const reduced = reduce_vql(
+  const reduced = utils.reduce_vql(
     {
       vql,
 
@@ -207,38 +205,6 @@ const SIGN = /** @type {const} */({
 
 /**
  * @description Convert an API Query into sort clause.
- * @template {Record<string, any>} [Type=Record<string, any>]
- * @template {keyof Database} [Table=keyof Database]
- * @param {ApiQuery<Type>} q 
- * @param {Table} table 
- * @returns {import("kysely").Expression<string>}
- */
-export const query_to_sort_OLD = (q={}, table, db) => {
-  // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
-  // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
-  const asc = q.order === 'asc';
-  const sort_sign = (asc ? 1 : -1) * reverse_sign;
-
-  // compute sort fields and order
-  const keys = q.sortBy?.length ? q.sortBy :  ['updated_at', 'id'];
-  const sort = keys.map(
-    s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
-  )
-
-  // // it's too complicated to map each ket to table column.
-  // // kysely was designed to do this in place
-  return (
-    /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
-      sort
-    )
-  );
-}
-
-
-
-/**
- * @description Convert an API Query into sort clause.
  * @template O
  * @template {keyof Database} [Table=(keyof Database)]
  * @param {SelectQueryBuilder<Database, Table, O>} qb 
@@ -296,5 +262,38 @@ export const withQuery = (qb, query={}, table) => {
     )
     .limit(query.limitToLast ?? query.limit ?? 10),
     query, table
+  );
+}
+
+
+
+/**
+ * @deprecated DO NOT USE
+ * @description Convert an API Query into sort clause.
+ * @template {Record<string, any>} [Type=Record<string, any>]
+ * @template {keyof Database} [Table=keyof Database]
+ * @param {ApiQuery<Type>} q 
+ * @param {Table} table 
+ * @returns {import("kysely").Expression<string>}
+ */
+export const query_to_sort_OLD = (q={}, table, db) => {
+  // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
+  // `reverse_sign=-1` means we need to reverse because of `limitToLast`
+  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const asc = q.order === 'asc';
+  const sort_sign = (asc ? 1 : -1) * reverse_sign;
+
+  // compute sort fields and order
+  const keys = q.sortBy?.length ? q.sortBy :  ['updated_at', 'id'];
+  const sort = keys.map(
+    s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
+  )
+
+  // // it's too complicated to map each ket to table column.
+  // // kysely was designed to do this in place
+  return (
+    /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
+      sort
+    )
   );
 }

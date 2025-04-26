@@ -4,7 +4,6 @@
  * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, expand, get_regular, list_regular } from './con.shared.js'
@@ -17,7 +16,6 @@ import {
   save_me, 
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js'
-
 
 const transactionOptions = {
   readPreference: 'primary',
@@ -94,8 +92,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -221,10 +217,7 @@ const count_collection_products = (driver) => {
       filter: filter_query, sort, reverse_sign 
     } = query_to_mongo(query);
 
-    /**
-     * @type {Filter<WithRelations<ProductType | VariantType>>
-     * }
-     */
+    /** @type {Filter<WithRelations<ProductType | VariantType>>} */
     const filter = {
       $and: [
         { '_relations.search': `col:${handle_or_id}` },
@@ -277,10 +270,8 @@ const list_used_products_tags = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
 
   return {

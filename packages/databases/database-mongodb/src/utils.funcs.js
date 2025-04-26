@@ -11,7 +11,6 @@ export const isDef = v => v!==undefined && v!==null;
 export const isUndef = v => !isDef(v);
 
 /**
- * 
  * @param  {...any} keys 
  */
 export const delete_keys = (...keys) => {
@@ -29,7 +28,7 @@ export const delete_keys = (...keys) => {
 }
 
 /**
- * Sanitize hidden properties in-place
+ * @description Sanitize hidden properties in-place
  * @template {object} T
  * @param {T} o 
  * @return {Omit<T, '_id' | '_relations'>}
@@ -46,7 +45,7 @@ export const sanitize_hidden = o => {
 }
 
 /**
- * Sanitize hidden properties in-place recursively
+ * @description Sanitize hidden properties in-place recursively
  * @template {object} T
  * @param {T} o 
  * @return {Omit<T, '_id' | '_relations'>}
@@ -63,7 +62,7 @@ export const sanitize_recursively = o => {
 }
 
 /**
- * Sanitize the mongo document before sending to client
+ * @description Sanitize the mongo document before sending to client
  * @template T
  * @param {WithRelations<T>} o 
  */
@@ -72,7 +71,7 @@ export const sanitize_one = o => {
 }
 
 /**
- * Sanitize the mongo document before sending to client
+ * @description Sanitize the mongo document before sending to client
  * @template T
  * @param {WithRelations<T>[]} o 
  */
@@ -109,7 +108,7 @@ export const to_objid_safe = id => {
 }
 
 /**
- * Create a `filter` for `object-id` or `handle`
+ * @description Create a `filter` for `object-id` or `handle`
  * @template {{handle?: string}} G
  * @param {string} handle_or_id 
  * @returns {Filter<G>}

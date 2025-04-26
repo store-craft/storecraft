@@ -1,6 +1,6 @@
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { query_vql_to_mongo } from '../src/utils.query.js'
+import { query_vql_to_mongo_filter } from '../src/utils.query.js'
 
 test('VQL', async () => {
   const vql_ast = {
@@ -61,7 +61,7 @@ test('VQL', async () => {
     ]
   };
 
-  const m1 = query_vql_to_mongo(vql_ast);
+  const m1 = query_vql_to_mongo_filter(vql_ast);
   
   // console.log(JSON.stringify(m1, null, 2))
 

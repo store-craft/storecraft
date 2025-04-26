@@ -150,7 +150,7 @@ const list = (driver) => {
           return query_to_eb(eb, query, table_name);
         }
       )
-      .orderBy(query_to_sort(query, table_name))
+      .orderBy(query_to_sort(query, table_name, driver.client))
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute()
       .then(

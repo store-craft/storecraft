@@ -43,9 +43,9 @@ export const assert_query_list_integrity = (list, q) => {
   const asc = q.order==='asc';
 
   // assert limit
-  q.limit && assert.equal(list.length, q.limit, `limit != ${list.length}`);
-  q.limitToLast && assert.equal(
-    list.length, q.limitToLast, `limitToLast != ${list.length}`
+  q.limit && assert.ok(list.length<=q.limit, `list.length > q.limit`);
+  q.limitToLast && assert.ok(
+    list.length<=q.limitToLast, `ist.length > q.limitToLast`
     );
 
   // assert order

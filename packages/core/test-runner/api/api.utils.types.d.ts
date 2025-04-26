@@ -28,7 +28,7 @@ export type QueryTestContext<G extends Partial<BaseType>, U extends Partial<Base
     upsert?: (item: U) => Promise<string>
     get?: (id: string) => Promise<G>
     remove?: (id: string) => Promise<boolean>
-    list?: (q: ApiQuery<G>) => Promise<G[]>
+    list?: (q: ApiQuery<any>) => Promise<G[]>
     count?: (q: ApiQuery<G>) => Promise<number>
   }
   events?: {

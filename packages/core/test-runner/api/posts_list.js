@@ -17,19 +17,37 @@ const handle = create_handle('post', file_name(import.meta.url));
 /** 
  * @type {PostTypeUpsert[]} 
  */
-const items = get_static_ids('post').map(
-  (id, ix, arr) => {
-    // 5 last items will have the same timestamps
-    let jx = Math.min(ix, arr.length - 3);
-    return {
-      title: `post ${ix}`, 
-      text: `text ${ix}`,
-      handle: handle(),
-      id,
-      created_at: iso(jx + 1),
+const items = 
+[
+  ...get_static_ids('post').slice(1).map(
+    (id, ix, arr) => {
+      // 3 last items will have the same `created_at` timestamps
+      // last id will be smaller than the rest
+      let jx = Math.min(ix, arr.length - 3);
+      return {
+        title: `post ${ix + 1}`, 
+        text: `text ${ix + 1}`,
+        handle: handle(),
+        id,
+        created_at: iso(jx),
+      }
     }
+  ),
+  {
+    title: `post 10`, 
+    text: `text 10`,
+    handle: handle(),
+    id: get_static_ids('post')[0],
+    created_at: iso(10),
   }
-);
+  // {
+  //   title: `post 10`, 
+  //   text: `text 10`,
+  //   handle: handle(),
+  //   id: get_static_ids('post')[0],
+  //   created_at: iso(6),
+  // }
+]
 
 
 /**

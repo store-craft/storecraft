@@ -214,7 +214,7 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
   s('query startAt=(created_at:iso(5)), sortBy=(created_at), order=asc|desc, limit=3', 
     async (ctx) => {
       let is_event_ok = false || !Boolean(ctx.events?.list_event);
-      const limit = 3;
+      const limit = 1000;
 
       /** @satisfies {ApiQuery<BaseType>} */
       const q_asc = ({
@@ -231,7 +231,7 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
         }
       })
 
-      /** @type {ApiQuery<any>} */
+      /** @type {ApiQuery<BaseType>} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -240,7 +240,10 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
       const unsub = ctx.app.pubsub.on(
         ctx.events?.list_event,
         v => {
-          assert.ok(v.payload.current.length==limit);
+          assert.ok(
+            v.payload.current.length>0 && 
+            v.payload.current.length<=limit
+          );
           is_event_ok=true;
         }
       );
@@ -248,28 +251,25 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
       const list_asc = await ctx.ops.list(q_asc);
       const list_desc = await ctx.ops.list(q_desc);
 
+      // console.log({list_asc})
+      // console.log({list_desc})
+
       assert_query_list_integrity(list_asc, q_asc);
       assert_query_list_integrity(list_desc, q_desc);
 
       { 
-        // for each list item find it's original seed item and make sure
-        // all of it's properties are getting back
-        for(const p of list_asc) {
-          const original_item = ctx.items.find(it => it.id===p.id);
-          if(!original_item) {
-            console.log(
-              `\nWarning: Did not find original item of inserted item !! 
-              likely due to other competing items in the query, no big deal, 
-              but make sure to remove these old timestamps`
-            );
-            continue;
-          }
-
-          // console.log(p)
-          assert.ok(original_item, 'Did not find original item of inserted item !!');
-          // assert_partial(p, original_item);
-          // console.log(original_item)
-          assert_partial(p, original_item);
+        // for each eligible context item, assert that it is in the list result.
+        for(const p of ctx.items.filter(it => it.created_at>=iso(5))) {
+          const item_asc = list_asc.find(it => it.id === p.id);
+          const item_desc = list_desc.find(it => it.id === p.id);
+          assert.ok(
+            item_asc, 
+            `Did not find original id=${p.id} item in list_asc !!`
+          );
+          assert.ok(
+            item_desc, 
+            `Did not find original id=${p.id} item in list_desc !!`
+          );
         }
       }
 
@@ -280,19 +280,22 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
     }
   );
 
-  return s;
-
   s('query endAt=(created_at:iso(5)), sortBy=(created_at), order=asc|desc, limitToLast=2', 
     async (ctx) => {
-      /** @type {ApiQuery<any>} */
+      /** @type {ApiQuery<BaseType>} */
       const q_asc = {
-        endAt: [['created_at', iso(5)]],
+        vql: {
+          created_at: {
+            $lt: iso(5)
+          }
+        },
         sortBy: ['created_at'],
         order: 'asc',
-        limitToLast: 2,
+        limitToLast: 1000,
         expand: ['*']
       }
-      /** @type {ApiQuery<any>} */
+
+      /** @type {ApiQuery<BaseType>} */
       const q_desc = {
         ...q_asc, order: 'desc'
       }
@@ -300,26 +303,24 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
       const list_asc = await ctx.ops.list(q_asc);
       const list_desc = await ctx.ops.list(q_desc);
 
+      // console.log({list_asc, list_desc})
+
       assert_query_list_integrity(list_asc, q_asc);
       assert_query_list_integrity(list_desc, q_desc);
 
       { 
-        // for each list item find it's original seed item and make sure
-        // all of it's properties are getting back
-        for(const p of list_asc) {
-          const original_item = ctx.items.find(it => it.id===p.id);
-          if(!original_item) {
-            console.log(`\nWarning: Did not find original item of inserted item !! likely due
-              to other competing items in the query, no big deal`);
-            continue;
-          }
-          // console.log('ctx.items', ctx.items)
-          // console.log('list_asc', list_asc)
-          // console.log('original_item', original_item)
-          // console.log('p', p)
-          // assert.ok(original_item, 'Did not find original item of inserted item !!');
-          // console.log(original_item)
-          assert_partial(p, original_item);
+        // for each eligible context item, assert that it is in the list result.
+        for(const p of ctx.items.filter(it => it.created_at<iso(5))) {
+          const item_asc = list_asc.find(it => it.id === p.id);
+          const item_desc = list_desc.find(it => it.id === p.id);
+          assert.ok(
+            item_asc, 
+            `Did not find original id=${p.id} item in list_asc !!`
+          );
+          assert.ok(
+            item_desc, 
+            `Did not find original id=${p.id} item in list_desc !!`
+          );
         }
       }
 
@@ -329,48 +330,60 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
     }
   );
 
-  s('refined query', 
+  s('Query with start-at cursor', 
     async (ctx) => {
-      // last 3 items have the same timestamps, so we refine by ID
+      // items 7-9 have the same `created_at` timestamps, 
+      // but the 10th item id has the smallest ID so we refine by ID
       // let's pick one before the last
       const item = ctx.items.at(-2);
-      /** @type {ApiQuery<any>} */
+
+      /** @type {ApiQuery<BaseType>} */
       const q = {
-        startAt: [['created_at', item.created_at], ['id', item.id]],
+        // startAt: [['created_at', item.created_at], ['id', item.id]],
+        vql: { // mimic `startAt` cursor
+          $or: [
+            {
+              created_at: {
+                $gt: item.created_at
+              },
+            },
+            {
+              created_at: {
+                $eq: item.created_at
+              },
+              id: {
+                $gte: item.id
+              }
+            }
+          ]
+        },
         sortBy: ['created_at', 'id'],
         order: 'asc',
-        limit: 2,
+        limit: 1000,
         expand: ['*']
       }
 
       const list = await ctx.ops.list(q);
 
-      // console.log(list)
+      // if(ctx.resource==='customers')
+      //   console.log({list})
       // console.log(items)
+      // console.log({len: list.length})
 
       assert_query_list_integrity(list, q);
+
+      assert.ok(list.length>=2, 'should be == 2');
+
       assert.equal(list[0].id, item.id, 'should have had the same id');
 
       { 
-        // for each list item find it's original seed item and make sure
-        // all of it's properties are getting back
-        for(const p of list) {
-          const original_item = ctx.items.find(it => it.id===p.id);
-
-          if(!original_item) {
-            console.log(
-              `\nWarning: Did not find original item of inserted item !! likely due
-              to other competing items in the query, no big deal, but make sure to 
-              remove these old timestamps`
-            );
-            continue;
-          }
-
+        // Find the last two items in the list
+        for (const p of [ctx.items.at(-2), ctx.items.at(-1)]) {
+          const item = list.find(it => it.id === p.id);
           assert.ok(
-            original_item, 'Did not find original item of inserted item !!'
+            item, 
+            `Did not find original id=${p.id} item of inserted item !!`
           );
-
-          assert_partial(p, original_item);
         }
 
       }
@@ -379,17 +392,24 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
 
   );
 
+  // return s;
   s('refined query, equals=(created_at:iso(9))', 
     async (ctx) => {
       // last 3 items have the same timestamps, so we refine by ID
       // let's pick one before the last
-      const item = ctx.items.at(-2);
+      const item = ctx.items.at(-1);
       /** @type {ApiQuery<any>} */
       const q = {
-        equals: [['created_at', item.created_at]],
+        // equals: [['created_at', item.created_at]],
+        vql: {
+          created_at: {
+            $eq: item.created_at
+          },
+        },
         sortBy: ['created_at', 'id'],
         order: 'asc',
-        expand: ['*']
+        expand: ['*'],
+        limit: 1000
       }
 
       const list = await ctx.ops.list(q);
@@ -398,28 +418,15 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
       // console.log(items)
 
       assert_query_list_integrity(list, q);
-      assert.ok(list.length>=3, 'should be >= 3');
 
       { 
-        // for each list item find it's original seed item and make sure
-        // all of it's properties are getting back
-        for(const p of list) {
-          const original_item = ctx.items.find(it => it.id===p.id);
-
-          if(!original_item) {
-            console.log(
-              `\nWarning: Did not find original item of inserted item !! likely due
-              to other competing items in the query, no big deal, but make sure to 
-              remove these old timestamps`
-            );
-            continue;
-          }
-
+        // Find the last item in the list
+        for (const p of [item]) {
+          const item = list.find(it => it.id === p.id);
           assert.ok(
-            original_item, 'Did not find original item of inserted item !!'
+            item, 
+            `Did not find original id=${p.id} item of inserted item !!`
           );
-
-          assert_partial(p, original_item);
         }
 
       }

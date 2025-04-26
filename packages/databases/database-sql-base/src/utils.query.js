@@ -11,6 +11,7 @@
 
 import { parse } from "@storecraft/core/vql";
 import { reduce_vql } from "../../../core/vql/utils.js";
+import { sql } from "kysely";
 
 /**
  * @template {QueryableTables} T
@@ -64,6 +65,7 @@ export const query_vql_root_to_eb = (eb, vql, table_name) => {
             result = eb(prop_ref, '<=', arg_any);
             break;
           case '$like':
+            // @ts-ignore
             result = eb(prop_ref, 'like', String(arg_any))
             break;
           case '$in': {
@@ -209,9 +211,9 @@ const SIGN = /** @type {const} */({
  * @template {keyof Database} [Table=keyof Database]
  * @param {ApiQuery<Type>} q 
  * @param {Table} table 
- * @returns {DirectedOrderByStringReference<Database, Table, Database[Table]>[]}
+ * @returns {import("kysely").Expression<string>}
  */
-export const query_to_sort = (q={}, table) => {
+export const query_to_sort = (q={}, table, db) => {
   // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
   const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
@@ -223,11 +225,19 @@ export const query_to_sort = (q={}, table) => {
   const sort = keys.map(
     s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
   )
+  // .join(', ');
+  // /** `sort` is like 'table.updated_at ASC, table.id ASC' */
+  const s = sql.raw(sort.join(', '));
+  // const s2 = sql``;
 
-  // console.log({sort})
+  // console.log({sort});
+  // console.log(s.compile(db).sql);
 
-  // it's too complicated to map each ket to table column.
-  // kysely was designed to do this in place
+  return s;
+
+
+  // // it's too complicated to map each ket to table column.
+  // // kysely was designed to do this in place
   return (
     /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
       sort

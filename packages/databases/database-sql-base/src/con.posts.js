@@ -2,14 +2,16 @@
  * @import { db_posts as db_col } from '@storecraft/core/database'
  */
 
+import { sql } from 'kysely'
 import { SQL } from '../index.js'
-import { stringArrayFrom } from './con.helpers.json.js'
 import { report_document_media } from './con.images.js'
-import { count_regular, delete_entity_values_by_value_or_reporter_and_context, 
+import { 
+  count_regular, delete_entity_values_by_value_or_reporter_and_context, 
   delete_me, delete_media_of, delete_search_of, delete_tags_of, 
   insert_media_of, insert_search_of, insert_tags_of, 
   regular_upsert_me, where_id_or_handle_table, 
-  with_media,  with_search,  with_tags} from './con.shared.js'
+  with_media,  with_search,  with_tags
+} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, query_to_sort } from './utils.query.js'
 
@@ -132,7 +134,8 @@ const list = (driver) => {
       .limit(query.limitToLast ?? query.limit ?? 10)
       .execute();
 
-    if(query.limitToLast) items.reverse();
+    if(query.limitToLast) 
+      items.reverse();
     
     return sanitize_array(items);
   }

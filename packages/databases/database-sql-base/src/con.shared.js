@@ -46,9 +46,9 @@ export const safe_trx = (k) => {
 
 
 /**
+ * @template {keyof Database} [T=(keyof Database)]  
  * @param {SQL} driver 
- * @param {QueryableTables} table_name 
- * 
+ * @param {T} table_name 
  * @returns {db_crud["count"]}
  */
 export const count_regular = (driver, table_name) => {
@@ -71,7 +71,6 @@ export const count_regular = (driver, table_name) => {
 }
 
 /**
- * 
  * @param {string} id_or_handle
  */
 export const where_id_or_handle_entity = (id_or_handle) => {
@@ -87,7 +86,6 @@ export const where_id_or_handle_entity = (id_or_handle) => {
 }
 
 /**
- * 
  * @param {string} id_or_handle
  */
 export const where_id_or_handle_table = (id_or_handle) => {
@@ -148,7 +146,9 @@ export const delete_entity_values_by_value_or_reporter_and_context = (
    */
   return (trx, value, reporter, context) => {
 
-    return trx.deleteFrom(entity_table_name).where(
+    return trx
+    .deleteFrom(entity_table_name)
+    .where(
       eb => eb.or(
         [
           value && eb('value', '=', value),
@@ -196,7 +196,9 @@ export const delete_entity_values_of_by_entity_id_or_handle_and_context = (
    * @param {string} [context=undefined] the context (another segment technique)
    */
   return (trx, entity_id, entity_handle=undefined, context=undefined) => {
-    return trx.deleteFrom(entity_table_name).where(
+    return trx
+    .deleteFrom(entity_table_name)
+    .where(
       eb => eb.or(
         [
           entity_id && eb('entity_id', '=', entity_id),
@@ -316,18 +318,18 @@ export const delete_media_of = delete_entity_values_of_by_entity_id_or_handle_an
 
 
 /**
- * @template {keyof Database} T
- * 
+ * @template {keyof Database} [T=(keyof Database)]
  * @param {Kysely<Database>} trx 
  * @param {T} table_name 
  * @param {InsertObject<Database, T> & {id: string, handle: string}} item values of the entity
- * 
  */
 export const regular_upsert_me = async (trx, table_name, item) => {
 
   // TODO: maybe use only `id`
-  await trx.deleteFrom(table_name).where(
-    eb => eb.or(
+  await trx
+  .deleteFrom(table_name)
+  .where(
+    (eb) => eb.or(
       [
         // @ts-ignore
         item?.id && eb('id', '=', item.id),
@@ -337,7 +339,10 @@ export const regular_upsert_me = async (trx, table_name, item) => {
     )
   ).execute();
 
-  return await trx.insertInto(table_name).values(item).executeTakeFirst()
+  return await trx
+  .insertInto(table_name)
+  .values(item)
+  .executeTakeFirst()
 }
 
 
@@ -725,26 +730,3 @@ export const select_values_of_entity_by_entity_id_or_handle =
   )
   .orderBy(`${entity_junction_table}.id`);
 }
-
-// /**
-//  * select the entity ids which are constrained by value or reporter
-//  * 
-//  * @param {ExpressionBuilder<Database>} eb 
-//  * @param {EntityTableKeys} entity_junction_table 
-//  * @param {string | ExpressionWrapper<Database>} value 
-//  * @param {string | ExpressionWrapper<Database>} [reporter] 
-//  */
-// export const select_entity_ids_by_value_or_reporter = 
-// (eb, entity_junction_table, value, reporter=undefined) => {
-//   return eb
-//     .selectFrom(entity_junction_table)
-//     .select(`${entity_junction_table}.entity_id`)
-//     .where(eb2 => eb2.or(
-//         [
-//           eb2(`${entity_junction_table}.value`, '=', value ?? reporter),
-//           eb2(`${entity_junction_table}.reporter`, '=', reporter ?? value),
-//         ]
-//       )
-//     )
-//     .orderBy(`${entity_junction_table}.entity_id`);
-// }

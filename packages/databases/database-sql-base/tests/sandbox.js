@@ -12,7 +12,6 @@ import { SqliteDialect } from 'kysely';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { jsonArrayFrom, stringArrayFrom } from '../src/con.helpers.json.js';
-import { query_to_sort } from '../src/utils.query.js';
 import { products_with_collections, products_with_discounts, products_with_related_products, products_with_variants, with_media, with_tags } from '../src/con.shared.js';
 
 export const sqlite_dialect = new SqliteDialect({
@@ -81,7 +80,7 @@ async function test() {
           ]
         )
         .where('active', '=', 1)
-        .orderBy(['updated_at asc'])
+        .orderBy('updated_at', 'asc')
         .limit(limit),
         app.db.dialectType
       ).as('collections'),
@@ -101,7 +100,7 @@ async function test() {
           ]
         )
         .where('active', '=', 1)
-        .orderBy(['updated_at asc'])
+        .orderBy('updated_at', 'asc')
         .limit(limit),
         app.db.dialectType
       ).as('products'),
@@ -117,7 +116,7 @@ async function test() {
           ]
         )
         .where('active', '=', 1)
-        .orderBy(['updated_at asc'])
+        .orderBy('updated_at', 'asc')
         .limit(limit),
         app.db.dialectType
       ).as('discounts'),
@@ -133,7 +132,7 @@ async function test() {
           ]
         )
         .where('active', '=', 1)
-        .orderBy(['updated_at asc'])
+        .orderBy('updated_at', 'asc')
         .limit(limit),
         app.db.dialectType
       ).as('shipping_methods'),
@@ -149,7 +148,7 @@ async function test() {
           ]
         )
         .where('active', '=', 1)
-        .orderBy(['updated_at asc'])
+        .orderBy('updated_at', 'asc')
         .limit(limit),
         app.db.dialectType
       ).as('posts'),

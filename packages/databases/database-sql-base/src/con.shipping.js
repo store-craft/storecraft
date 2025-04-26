@@ -9,7 +9,7 @@ import { count_regular, delete_entity_values_by_value_or_reporter_and_context,
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
   with_media, with_search, with_tags } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { withQuery } from './utils.query.js'
 
 export const table_name = 'shipping_methods'
 
@@ -111,24 +111,31 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
-      .select(eb => [
-        with_media(eb, eb.ref('shipping_methods.id'), driver.dialectType),
-        with_tags(eb, eb.ref('shipping_methods.id'), driver.dialectType),
-        with_search(eb, eb.ref('shipping_methods.id'), driver.dialectType),
-      ].filter(Boolean))
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, 'shipping_methods'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .select(
+        eb => [
+          with_media(eb, eb.ref('shipping_methods.id'), driver.dialectType),
+          with_tags(eb, eb.ref('shipping_methods.id'), driver.dialectType),
+          with_search(eb, eb.ref('shipping_methods.id'), driver.dialectType),
+        ].filter(Boolean)
+      ),
+      query, table_name
+    ).execute();
 
-    if(query.limitToLast) items.reverse();
+      // .where(
+      //   (eb) => {
+      //     return query_to_eb(eb, query, table_name);
+      //   }
+      // )
+      // .orderBy(query_to_sort(query, 'shipping_methods'))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+      // .execute();
+
+    if(query.limitToLast) 
+      items.reverse();
     
     return sanitize_array(items);
   }

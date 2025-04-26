@@ -1,8 +1,6 @@
 /**
  * @import { db_posts as db_col } from '@storecraft/core/database'
  */
-
-import { sql } from 'kysely'
 import { SQL } from '../index.js'
 import { report_document_media } from './con.images.js'
 import { 
@@ -13,7 +11,7 @@ import {
   with_media,  with_search,  with_tags
 } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { withQuery, withSort } from './utils.query.js'
 
 export const table_name = 'posts'
 
@@ -62,12 +60,13 @@ const get = (driver) => {
     const result = await driver.client
       .selectFrom(table_name)
       .selectAll()
-      .select(eb => [
-        with_media(eb, id_or_handle, driver.dialectType),
-        with_tags(eb, id_or_handle, driver.dialectType),
-        with_search(eb, id_or_handle, driver.dialectType),
-      ]
-      .filter(Boolean))
+      .select(
+        eb => [
+          with_media(eb, id_or_handle, driver.dialectType),
+          with_tags(eb, id_or_handle, driver.dialectType),
+          with_search(eb, id_or_handle, driver.dialectType),
+        ].filter(Boolean)
+      )
       .where(where_id_or_handle_table(id_or_handle))
       .executeTakeFirst();
 
@@ -115,24 +114,21 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
-      .select(eb => [
-        with_media(eb, eb.ref('posts.id'), driver.dialectType),
-        with_tags(eb, eb.ref('posts.id'), driver.dialectType),
-        with_search(eb, eb.ref('posts.id'), driver.dialectType),
-      ].filter(Boolean))
-      .where(
-        (eb) => {
-          return query_to_eb(
-            eb, query, table_name
-          );
-        }
-      )
-      .orderBy(query_to_sort(query, 'posts'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .select(
+        eb => [
+          with_media(eb, eb.ref('posts.id'), driver.dialectType),
+          with_tags(eb, eb.ref('posts.id'), driver.dialectType),
+          with_search(eb, eb.ref('posts.id'), driver.dialectType),
+        ].filter(Boolean)
+      ),
+      query, table_name
+    )
+    .execute();
+    // console.log({items})
 
     if(query.limitToLast) 
       items.reverse();

@@ -8,7 +8,7 @@ import { count_regular, delete_me, delete_media_of, delete_search_of,
   insert_tags_of, regular_upsert_me, where_id_or_handle_table, 
   with_media, with_search, with_tags} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { query_to_eb, withQuery, withSort } from './utils.query.js'
 
 export const table_name = 'customers'
 
@@ -130,22 +130,25 @@ export const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
         with_media(eb, eb.ref('customers.id'), driver.dialectType),
         with_tags(eb, eb.ref('customers.id'), driver.dialectType),
         with_search(eb, eb.ref('customers.id'), driver.dialectType),
-      ].filter(Boolean))
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, table_name))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      ].filter(Boolean)), 
+      query, table_name
+  ).execute();
+  
+    // .where(
+    //   (eb) => {
+    //     return query_to_eb(eb, query, table_name);
+    //   }
+  // .orderBy(query_to_sort(query, table_name))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+      // .execute();
 
     if(query.limitToLast) items.reverse();
 
@@ -160,7 +163,8 @@ const list = (driver) => {
 const list_customer_orders = (driver) => {
   return async (id, query) => {
 
-    const items = await driver.client
+    const items = await withSort(
+      driver.client
       .selectFrom('orders')
       .selectAll()
       .select(eb => [
@@ -180,11 +184,14 @@ const list_customer_orders = (driver) => {
           ].filter(Boolean)
         )
       )
-      .orderBy(query_to_sort(query, 'orders'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .limit(query.limitToLast ?? query.limit ?? 10),
+      query, 'orders'
+    ).execute();
+      // .orderBy(query_to_sort(query, 'orders'))
+      // .execute();
 
-    if(query.limitToLast) items.reverse();
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

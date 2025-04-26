@@ -21,7 +21,7 @@ import {
   products_with_related_products,
   with_search} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { withQuery } from './utils.query.js'
 import { Transaction } from 'kysely'
 import { report_document_media } from './con.images.js'
 import { union } from '@storecraft/core/api/utils.func.js'
@@ -390,40 +390,51 @@ const list = (driver) => {
     const expand_variants = expand.includes('*') || expand.includes('variants');
     const expand_related_products = expand.includes('*') || expand.includes('related_products');
 
-    const items = await driver.client
-    .selectFrom(table_name)
-    .selectAll()
-    .select(
-      eb => [
-        with_tags(eb, eb.ref('products.id'), driver.dialectType),
-        with_media(eb, eb.ref('products.id'), driver.dialectType),
-        with_search(eb, eb.ref('products.id'), driver.dialectType),
+    const items = await withQuery(
+      driver.client
+      .selectFrom(table_name)
+      .selectAll()
+      .select(
+        eb => [
+          with_tags(eb, eb.ref('products.id'), driver.dialectType),
+          with_media(eb, eb.ref('products.id'), driver.dialectType),
+          with_search(eb, eb.ref('products.id'), driver.dialectType),
 
-        expand_collections && 
-        products_with_collections(eb, eb.ref('products.id'), driver.dialectType),
+          expand_collections && 
+          products_with_collections(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
 
-        expand_discounts && 
-        products_with_discounts(eb, eb.ref('products.id'), driver.dialectType),
+          expand_discounts && 
+          products_with_discounts(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
 
-        expand_variants && 
-        products_with_variants(eb, eb.ref('products.id'), driver.dialectType),
+          expand_variants && 
+          products_with_variants(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
 
-        expand_related_products && 
-        products_with_related_products(eb, eb.ref('products.id'), driver.dialectType),
-      ].filter(Boolean)
-    )
-    .where(
-      (eb) => {
-        return query_to_eb(eb, query, table_name);
-      }
-    )
-    .orderBy(query_to_sort(query, table_name))
-    .limit(query.limitToLast ?? query.limit ?? 10)
-    .execute();
+          expand_related_products && 
+          products_with_related_products(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
+        ].filter(Boolean)
+      ),
+      query, table_name
+    ).execute();
 
-    if(query.limitToLast) items.reverse();
-    // .compile();
-        // console.log(items)
+    // .where(
+    //   (eb) => {
+    //     return query_to_eb(eb, query, table_name);
+    //   }
+    // )
+    // .orderBy(query_to_sort(query, table_name))
+    // .limit(query.limitToLast ?? query.limit ?? 10)
+    // .execute();
+
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

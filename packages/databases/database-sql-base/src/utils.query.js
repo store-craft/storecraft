@@ -2,9 +2,9 @@
  * @import { ApiQuery } from '@storecraft/core/api'
  * @import { VQL, VQL_OPS } from '@storecraft/core/vql'
  * @import { Database } from '../types.sql.tables.js'
- * @import { ExpressionBuilder } from 'kysely'
+ * @import { ExpressionBuilder, SelectQueryBuilder } from 'kysely'
  * @import {
- *  DirectedOrderByStringReference, QueryableTables
+ *  DirectedOrderByStringReference
  * } from './utils.types.js'
  * @import { legal_value_types } from "@storecraft/core/vql";
  */
@@ -14,10 +14,10 @@ import { reduce_vql } from "../../../core/vql/utils.js";
 import { sql } from "kysely";
 
 /**
- * @template {QueryableTables} T
- * @param {ExpressionBuilder<Database, keyof Database>} eb 
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @param {ExpressionBuilder<Database, Table>} eb 
  * @param {VQL} vql 
- * @param {T} table_name 
+ * @param {Table} table_name 
  */
 export const query_vql_root_to_eb = (eb, vql, table_name) => {
 
@@ -170,11 +170,11 @@ const boolean_to_0_or_1 = (value) => {
 
 /**
  * @description Convert an {@link ApiQuery} into **SQL** Clause.
- * @template {QueryableTables} [T=QueryableTables]
+ * @template {keyof Database} [Table=(keyof Database)]
  * @template {any} [G=any]
- * @param {ExpressionBuilder<Database, keyof Database>} eb 
+ * @param {ExpressionBuilder<Database, Table>} eb 
  * @param {ApiQuery<G>} q 
- * @param {T} table_name 
+ * @param {Table} table_name 
  */
 export const query_to_eb = (eb, q={}, table_name) => {
   const clauses = [];
@@ -213,7 +213,7 @@ const SIGN = /** @type {const} */({
  * @param {Table} table 
  * @returns {import("kysely").Expression<string>}
  */
-export const query_to_sort = (q={}, table, db) => {
+export const query_to_sort_OLD = (q={}, table, db) => {
   // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
   const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
@@ -225,16 +225,6 @@ export const query_to_sort = (q={}, table, db) => {
   const sort = keys.map(
     s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
   )
-  // .join(', ');
-  // /** `sort` is like 'table.updated_at ASC, table.id ASC' */
-  const s = sql.raw(sort.join(', '));
-  // const s2 = sql``;
-
-  // console.log({sort});
-  // console.log(s.compile(db).sql);
-
-  return s;
-
 
   // // it's too complicated to map each ket to table column.
   // // kysely was designed to do this in place
@@ -242,5 +232,69 @@ export const query_to_sort = (q={}, table, db) => {
     /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
       sort
     )
+  );
+}
+
+
+
+/**
+ * @description Convert an API Query into sort clause.
+ * @template O
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @param {SelectQueryBuilder<Database, Table, O>} qb 
+ * @param {ApiQuery<any>} q 
+ * @param {Table} table 
+ * @returns {SelectQueryBuilder<Database, Table, O>}
+ */
+export const withSort = (qb, q={}, table) => {
+  // `reverse_sign=-1` means we need to reverse because of `limitToLast`
+  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const asc = q.order === 'asc';
+  const sort_sign = (asc ? 1 : -1) * reverse_sign;
+
+  // compute sort fields and order
+  const props = /** @type {(keyof (Database[Table]))[]} */(
+    q.sortBy?.length ? 
+    q.sortBy : 
+    ['updated_at', 'id']
+  );
+
+  let next = qb;
+  
+  // we do it iteratively because `kysely` deprecated 
+  // array of `orderBy` in favor of chaining
+  for(const prop of props) {
+    // console.log('add_sort_to_eb', {s, table});
+    next = next.orderBy(
+      `${table}.${prop}`,
+      SIGN[sort_sign]
+    );
+  }
+
+  return next;
+}
+
+
+/**
+ * @description Apply a {@link ApiQuery} into {@link SelectQueryBuilder},
+ * with `sorting`, `filtering` and `limit`.
+ * @template O
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @param {SelectQueryBuilder<Database, Table, O>} qb 
+ * @param {ApiQuery<any>} query 
+ * @param {Table} table 
+ * @returns {SelectQueryBuilder<Database, Table, O>}
+ */
+export const withQuery = (qb, query={}, table) => {
+  return withSort(
+    qb.where(
+      (eb) => {
+        return query_to_eb(
+          eb, query, table
+        );
+      }
+    )
+    .limit(query.limitToLast ?? query.limit ?? 10),
+    query, table
   );
 }

@@ -44,13 +44,14 @@ export type ApiQuery<T extends any = undefined> = {
   /**
    * @description **VQL** query filtering language as object.
    */
-  vql?: VQL<T>;
+  vql?: VQL<T> | string;
   /**
    * @description **VQL** query filtering language as string.
    * @example 
    * `(whatever-indexed tag:a -(tag:b | tag:c | "couple of words") handle:product*)`
+   * @deprecated use `vql` instead
    */
-  vql_as_string?: string;
+  __vql_as_string?: string;
 
   /**
    * @description Sort by cursor, should correlate with 

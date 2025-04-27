@@ -78,7 +78,7 @@ s('parse $eq $neq $like', async () => {
   // console.dir(parse(vql_eq), {depth: 10});
 
   assert.equal(
-    compile(parse(vql_eq)), 
+    compile(parse(vql_eq), false), 
     vql_eq
   );
 
@@ -100,7 +100,7 @@ s('parse $lt $lte $gt $gte', async () => {
   // console.log(compile(parse(vql_eq)));
 
   assert.equal(
-    compile(parse(vql_eq)), 
+    compile(parse(vql_eq), false), 
     vql_eq
   );
 

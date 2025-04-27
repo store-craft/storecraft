@@ -1,7 +1,6 @@
 /**
  * @import { 
- *  legal_value_types, VQL_OPS, VQL, 
- *  VQL_STRING_OPS, VQL_BASE 
+ *  VQL_OPS, VQL, VQL_BASE 
  * } from './types.js';
  */
 
@@ -31,13 +30,20 @@ const double_quote_multi_word_if_string = (value) => {
 
 /**
  * @description
- * Compile a VQL object into a string
- * @param {VQL} vql 
+ * Compile a **VQL** object into a string.
+ * If a string is passed, it will be returned as is, because 
+ * we assume it is already a VQL string.
+ * @param {VQL | string} vql **VQL** language as object.
+ * @param {boolean} [compile_and_as_space=true] default is true
  */
-export const compile = (vql) => {
+export const compile = (vql, compile_and_as_space=true) => {
 
   if(vql===undefined) {
     return '';
+  }
+
+  if(typeof vql === 'string') {
+    return vql;
   }
 
   assert(
@@ -66,8 +72,8 @@ export const compile = (vql) => {
         '(' + (
           /** @type {VQL["$and"]} */(value)
         )
-        .map(compile)
-        .join(' & ')
+        .map(x => compile(x, compile_and_as_space))
+        .join(compile_and_as_space ? ' ' : ' & ')
         + ')'
       );
       continue;
@@ -77,7 +83,7 @@ export const compile = (vql) => {
         '(' + (
           /** @type {VQL["$or"]} */(value)
         )
-        .map(compile)
+        .map(x => compile(x, compile_and_as_space))
         .join(' | ')
         + ')'
       );
@@ -86,7 +92,8 @@ export const compile = (vql) => {
     if(key_casted === '$not') {
       parts.push(
         '-' + compile(
-          /** @type {VQL["$not"]} */(value)
+          /** @type {VQL["$not"]} */(value),
+          compile_and_as_space
         )
       );
       continue;

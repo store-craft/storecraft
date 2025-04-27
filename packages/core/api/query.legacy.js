@@ -76,7 +76,7 @@ export const binary_tuple_compare_into_vql_string_cursor = (
 
     conjunctions.push(r[0] + relation_key + r[1]);
     disjunctions.push(
-      '(' + conjunctions.join(' & ') + ')'
+      '(' + conjunctions.join(' ') + ')'
     );
   }
 
@@ -92,11 +92,12 @@ export const binary_tuple_compare_into_vql_string_cursor = (
  * This means that if `startAt` / `endAt` / `startAfter` / 
  * `endBefore` is set, it will be converted to a VQL string.
  * This is used to support legacy queries.
- * @param {ApiQuery} q 
+ * @template {any} [T=any]
+ * @param {ApiQuery<T>} q 
  * @returns {string | undefined} `undefined` or a VQL string
  * with padded parentheses `()`
  */
-export const legacy_query_to_vql_string = (q={}) => {
+export const legacy_query_with_cursors_to_vql_string = (q={}) => {
   const asc = q.order === 'asc';
   const parts = [];
 
@@ -138,7 +139,7 @@ export const legacy_query_to_vql_string = (q={}) => {
   return parenthesise_vql_string(
     parts
     .filter(Boolean)
-    .join(' & ')
+    .join(' ')
   );
 }
 
@@ -206,10 +207,5 @@ export const parse_legacy_query_cursor = (s) => {
     );
   }
 
-  const vql_string = legacy_query_to_vql_string(q);
-
-  return {
-    legacy_q: q, 
-    vql_string,
-  }
+  return q;
 }

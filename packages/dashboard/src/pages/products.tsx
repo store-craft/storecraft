@@ -78,31 +78,32 @@ export default ({}) => {
 <div className='w-full h-full'>
   <div className='max-w-[56rem] mx-auto'>
     <ResourceTitle 
-        should_onboard={resource_is_probably_empty}
-        overallCollectionCount={queryCount} 
-        hasLoaded={hasLoaded} 
-        resource={resource}/>
-      <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md mt-5
-                      dark:shadow-slate-900 '>      
+      should_onboard={resource_is_probably_empty}
+      overallCollectionCount={queryCount} 
+      hasLoaded={hasLoaded} 
+      resource={resource}/>
+      <div 
+        className='w-full rounded-md overflow-hidden border 
+          shelf-border-color shadow-md mt-5
+          dark:shadow-slate-900 '>      
         <ShowIf show={error} children={error?.toString()} />
         <TopActions 
-            isCollectionEmpty={resource_is_probably_empty}
-            ref={ref_actions} 
-            reload={onReload} 
-            createLink='/pages/products/create'
-            searchTitle='Search by Name, Handle, Tag values, Collections...' 
-            isLoading={loading} />
+          isCollectionEmpty={resource_is_probably_empty}
+          ref={ref_actions} 
+          reload={onReload} 
+          createLink='/pages/products/create'
+          searchTitle='Search by Name, Handle, Tag values, Collections...' 
+          isLoading={loading} />
         <ShowIf show={!error && page?.length}>
           <TableSchemaView 
-              context={context} 
-              data={page} 
-              fields={schema_fields} />
+            context={context} 
+            data={page} 
+            fields={schema_fields} />
           <BottomActions 
-              prev={prev} 
-              next={next} 
-              limit={query_api.limit}
-              onLimitChange={onLimitChange} />
+            prev={prev} 
+            next={next} 
+            limit={query_api.limit}
+            onLimitChange={onLimitChange} />
         </ShowIf>
         
       </div>    

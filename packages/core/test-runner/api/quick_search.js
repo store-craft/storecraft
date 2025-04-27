@@ -368,14 +368,14 @@ export const create = app => {
     const resultA = await app.api.search.quicksearch(
       {
         limit: 5,
-        vql_as_string: `${A} | tag:${A}`
+        vql: `${A} | tag:${A}`
       }
     );
 
     const resultB = await app.api.search.quicksearch(
       {
         limit: 5,
-        vql_as_string: `${B} | tag:${B}`
+        vql: `${B} | tag:${B}`
       }
     );
 

@@ -3,12 +3,9 @@
  * @import { VQL, VQL_OPS } from '@storecraft/core/vql'
  * @import { Database } from '../types.sql.tables.js'
  * @import { ExpressionBuilder, SelectQueryBuilder } from 'kysely'
- * @import {
- *  DirectedOrderByStringReference
- * } from './utils.types.js'
  * @import { legal_value_types } from "@storecraft/core/vql";
  */
-
+import { legacy_query_with_cursors_to_vql_string } from "@storecraft/core/api/query.legacy.js";
 import { parse, utils } from "@storecraft/core/vql";
 
 /**
@@ -169,7 +166,7 @@ const boolean_to_0_or_1 = (value) => {
 /**
  * @description Convert an {@link ApiQuery} into **SQL** Clause.
  * @template {keyof Database} [Table=(keyof Database)]
- * @template {any} [G=any]
+ * @template {{a:number}} [G={a:number}]
  * @param {ExpressionBuilder<Database, Table>} eb 
  * @param {ApiQuery<G>} q 
  * @param {Table} table_name 
@@ -177,18 +174,24 @@ const boolean_to_0_or_1 = (value) => {
 export const query_to_eb = (eb, q={}, table_name) => {
   const clauses = [];
 
-  // compute VQL clauses 
-  try {
-    if(!q.vql && q.vql_as_string) {
-      q.vql = parse(q.vql_as_string)
-    }
+  try { // compute VQL clauses 
+    q.vql = /** @type {VQL<G>} */({
+      $and: [
+        parse(q.vql),
+        // supports legacy queries with cursors, will be deprecated
+        // in future versions.
+        parse(
+          legacy_query_with_cursors_to_vql_string(q)
+        )
+      ].filter(Boolean)
+    });
   } catch(e) {
-    console.error('VQL parse error', e);
+    console.error('VQL parse error:\n', e, '\nfor query:\n', q);
   }
 
   if(q.vql) {
     const vql_clause = query_vql_root_to_eb(
-      eb, q.vql, table_name
+      eb, /** @type {VQL} */(q.vql), table_name
     );
     vql_clause && 
       clauses.push(vql_clause);
@@ -214,7 +217,7 @@ const SIGN = /** @type {const} */({
  */
 export const withSort = (qb, q={}, table) => {
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const reverse_sign = q.limitToLast ? -1 : 1;
   const asc = q.order === 'asc';
   const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
@@ -262,38 +265,5 @@ export const withQuery = (qb, query={}, table) => {
     )
     .limit(query.limitToLast ?? query.limit ?? 10),
     query, table
-  );
-}
-
-
-
-/**
- * @deprecated DO NOT USE
- * @description Convert an API Query into sort clause.
- * @template {Record<string, any>} [Type=Record<string, any>]
- * @template {keyof Database} [Table=keyof Database]
- * @param {ApiQuery<Type>} q 
- * @param {Table} table 
- * @returns {import("kysely").Expression<string>}
- */
-export const query_to_sort_OLD = (q={}, table, db) => {
-  // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
-  // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
-  const asc = q.order === 'asc';
-  const sort_sign = (asc ? 1 : -1) * reverse_sign;
-
-  // compute sort fields and order
-  const keys = q.sortBy?.length ? q.sortBy :  ['updated_at', 'id'];
-  const sort = keys.map(
-    s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
-  )
-
-  // // it's too complicated to map each ket to table column.
-  // // kysely was designed to do this in place
-  return (
-    /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
-      sort
-    )
   );
 }

@@ -329,7 +329,7 @@ export class Stripe {
       case 'charge.refunded':
       case 'charge.refund.updated':
         payment_status = PaymentOptionsEnum.refunded;
-
+        break;
       default: {
         console.log(`Unhandled event type ${event.type}`);
         return undefined;

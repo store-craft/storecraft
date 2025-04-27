@@ -3,6 +3,9 @@
  * @import { VQL, VQL_OPS, legal_value_types } from '@storecraft/core/vql'
  * @import { Filter, FilterOperators, FindOptions } from 'mongodb'
  */
+import { 
+  legacy_query_with_cursors_to_vql_string 
+} from "@storecraft/core/api/query.legacy.js";
 import { to_objid } from "./utils.funcs.js";
 import { parse, utils } from "@storecraft/core/vql";
 
@@ -160,18 +163,27 @@ const transform = c => {
 export const query_to_mongo = (q) => {
   
   try { // compute VQL clauses 
-    if(!q.vql && q.vql_as_string) {
-      q.vql = parse(q.vql_as_string)
-    }
+    q.vql = /** @type {VQL} */({
+      $and: [
+        parse(q.vql),
+        // supports legacy queries with cursors, will be deprecated
+        // in future versions.
+        parse(
+          legacy_query_with_cursors_to_vql_string(q)
+        )
+      ].filter(Boolean)
+    });
   } catch(e) {
-    console.error('VQL parse error', e);
+    console.error('VQL parse error:\n', e, '\nfor query:\n', q);
   }
 
   /** @type {Filter<any>} */
-  const filter = query_vql_to_mongo_filter(q.vql)
+  const filter = query_vql_to_mongo_filter(
+    /** @type {VQL} */(q.vql)
+  );
 
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const reverse_sign = q.limitToLast ? -1 : 1;
   const asc = q.order === 'asc';
   const sort_sign = (asc ? 1 : -1) * reverse_sign;
 

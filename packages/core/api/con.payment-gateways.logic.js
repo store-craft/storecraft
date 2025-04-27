@@ -98,7 +98,7 @@ export const webhook = (app) =>
           {
             ...order,
             status: {
-              ...order.status,
+              ...order?.status,
               payment: status.payment,
               checkout: status.checkout
             }

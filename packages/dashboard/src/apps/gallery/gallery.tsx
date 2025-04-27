@@ -53,8 +53,9 @@ const Gallery = (
 
   return (
 <div className={`flex flex-col justify-between ${className}`} {...rest} >
-  <Bling rounded='rounded-md' 
-         className='shadow-md w-full h-fit' >
+  <Bling 
+    rounded='rounded-md' 
+    className='shadow-md w-full h-fit' >
     <SearchBar 
       ref={ref_actions} 
       count={queryCount}

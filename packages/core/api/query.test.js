@@ -12,6 +12,7 @@ import {
   SORT_BY
 } from './query.js';
 import { assert_partial } from '../test-runner/api/api.utils.js';
+import { compile } from '../vql/compile.js';
 
 const s = suite(
   file_name(import.meta.url), 
@@ -77,7 +78,7 @@ s('api_query_to_url_query_params_and_back', async () => {
       limit: 10,
       order: 'asc',
       sortBy: ['updated_at', 'price', 'active'],
-      vql_as_string: '-a | (b & c)'
+      vql: '(-a | (b & c))',
     },
     {
       expand: ['products', 'collections'],
@@ -133,7 +134,8 @@ s('api_query_to_url_query_params_and_back', async () => {
     }
   ];
   
-  for(const c of cases) {
+  { // case 1
+    const c = cases[0];
     const q_params = api_query_to_searchparams(c);
     const api_query = parse_query(q_params);
 
@@ -142,10 +144,30 @@ s('api_query_to_url_query_params_and_back', async () => {
     // console.dir({api_query}, {depth: 15});
 
     assert_partial(
+      {
+        ...api_query,
+        vql: compile(api_query.vql, false),
+      },
+      c
+    );
+
+  }
+
+  { // case 2
+    const c = cases[1];
+    const q_params = api_query_to_searchparams(c);
+    const api_query = parse_query(q_params);
+  
+    // console.log({case: c})
+    // console.log({q_params})
+    // console.dir({api_query}, {depth: 15});
+  
+    assert_partial(
       api_query,
       c
     );
   }
+
 });
 
 

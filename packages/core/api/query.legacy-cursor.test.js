@@ -27,61 +27,16 @@ s('api_query_to_url_query_params_and_back', async () => {
         order: 'asc',
         sortBy: ['updated_at', 'price', 'active'],
         startAt: [['updated_at', '"2025-03-07T10:34:13.058Z"'], ['price', 50], ['active', true]],
-        vql_as_string: '-a | (b & c)'
+        vql: '-a | (b & c)'
       },
       output: {
+        endAt: [['updated_at', '2025-03-07T10:34:13.058Z'], ['price', 100], ['active', true]],
         expand: [ 'products' ],
         sortBy: [ 'updated_at', 'price', 'active' ],
         order: 'asc',
         limit: 10,
         limitToLast: undefined,
-        vql_as_string: '(-a | (b & c)) & ((updated_at<"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price<50) | (updated_at="2025-03-07T10:34:13.058Z" & price=50 & active<=true)) & ((updated_at>2025-03-07T10:34:13.058Z) | (updated_at=2025-03-07T10:34:13.058Z & price>100) | (updated_at=2025-03-07T10:34:13.058Z & price=100 & active>=true))',
-        vql: {
-          '$and': [
-            {
-              '$or': [
-                { '$not': { $search: 'a' } },
-                { '$and': [ { $search: 'b' }, { $search: 'c' } ] }
-              ]
-            },
-            {
-              '$or': [
-                { updated_at: { '$lt': '2025-03-07T10:34:13.058Z' } },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$lt': 50 } }
-                  ]
-                },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$eq': 50 } },
-                    { active: { '$lte': true } }
-                  ]
-                }
-              ]
-            },
-            {
-              '$or': [
-                { updated_at: { '$gt': '2025-03-07T10:34:13.058Z' } },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$gt': 100 } }
-                  ]
-                },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$eq': 100 } },
-                    { active: { '$gte': true } }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+        // vql_as_string: '(-a | (b & c)) & ((updated_at<"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price<50) | (updated_at="2025-03-07T10:34:13.058Z" & price=50 & active<=true)) & ((updated_at>2025-03-07T10:34:13.058Z) | (updated_at=2025-03-07T10:34:13.058Z & price>100) | (updated_at=2025-03-07T10:34:13.058Z & price=100 & active>=true))',
       }
     },
     {
@@ -92,61 +47,16 @@ s('api_query_to_url_query_params_and_back', async () => {
         limitToLast: 10,
         order: 'desc',
         startAfter: [['updated_at', '"2025-03-07T10:34:13.058Z"'], ['price', 50], ['active', true]],
-        vql_as_string: '-a | (b & c)'
+        vql: '-a | (b & c)'
       },
       output: {
+        endBefore: [['updated_at', '"2025-03-07T10:34:13.058Z"'], ['price', 100], ['active', true]],
         expand: [ 'products' ],
         sortBy: [ 'updated_at', 'price', 'active' ],
         order: 'desc',
         limit: undefined,
         limitToLast: 10,
-        vql_as_string: '(-a | (b & c)) & ((updated_at<"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price<50) | (updated_at="2025-03-07T10:34:13.058Z" & price=50 & active<true)) & ((updated_at>"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price>100) | (updated_at="2025-03-07T10:34:13.058Z" & price=100 & active>true))',
-        vql: {
-          '$and': [
-            {
-              '$or': [
-                { '$not': { $search: 'a' } },
-                { '$and': [ { $search: 'b' }, { $search: 'c' } ] }
-              ]
-            },
-            {
-              '$or': [
-                { updated_at: { '$lt': '2025-03-07T10:34:13.058Z' } },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$lt': 50 } }
-                  ]
-                },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$eq': 50 } },
-                    { active: { '$lt': true } }
-                  ]
-                }
-              ]
-            },
-            {
-              '$or': [
-                { updated_at: { '$gt': '2025-03-07T10:34:13.058Z' } },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$gt': 100 } }
-                  ]
-                },
-                {
-                  '$and': [
-                    { updated_at: { '$eq': '2025-03-07T10:34:13.058Z' } },
-                    { price: { '$eq': 100 } },
-                    { active: { '$gt': true } }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+        // vql_as_string: '(-a | (b & c)) & ((updated_at<"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price<50) | (updated_at="2025-03-07T10:34:13.058Z" & price=50 & active<true)) & ((updated_at>"2025-03-07T10:34:13.058Z") | (updated_at="2025-03-07T10:34:13.058Z" & price>100) | (updated_at="2025-03-07T10:34:13.058Z" & price=100 & active>true))',
       }
     },
   ];

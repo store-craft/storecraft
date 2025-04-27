@@ -48,7 +48,7 @@ const OrdersQuickSearchActions = ({ ...rest }: React.ComponentProps<'div'>) => {
           <Link 
             key={it.id} 
             draggable='false'
-            to={`/pages/orders/q/vql=fulfill:${it.id}`}>
+            to={`/pages/orders/q/search=fulfill:${it.id}`}>
             <LabelCapsule 
               value={it.name2} 
               className='border shelf-border-color'
@@ -63,7 +63,7 @@ const OrdersQuickSearchActions = ({ ...rest }: React.ComponentProps<'div'>) => {
             <Link 
               key={it.id} 
               draggable='false'
-              to={`/pages/orders/q/vql=payment:${it.id}`}>
+              to={`/pages/orders/q/search=payment:${it.id}`}>
               <LabelCapsule 
                 value={it.name} 
                 className='border shelf-border-color'

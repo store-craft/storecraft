@@ -43,7 +43,7 @@ export const combine_vql_strings = (...vqls) => {
 
   return parts.map(
     parenthesise_vql_string
-  ).join(' & ');
+  ).join(' ');
 }
 
 /**

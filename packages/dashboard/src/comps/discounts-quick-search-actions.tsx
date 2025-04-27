@@ -18,12 +18,12 @@ const DiscountsQuickSearchActions =
       Object.values(DiscountMetaEnum).filter(it => Boolean(it.type)).map(
         it => (
           <Link 
-              key={it.id} 
-              draggable='false'
-              to={`/pages/discounts/q/vql=type:${it.id}`}>
+            key={it.id} 
+            draggable='false'
+            to={`/pages/discounts/q/search=type:${it.id}`}>
             <LabelCapsule 
-                value={it.name} 
-                bgColor={discount_types_to_color(it.type)} />
+              value={it.name} 
+              bgColor={discount_types_to_color(it.type)} />
           </Link>
         )
       )
@@ -34,12 +34,12 @@ const DiscountsQuickSearchActions =
     Object.values(DiscountApplicationEnum).map(
       it => (
         <Link 
-            key={it.id} 
-            draggable='false'
-            to={`/pages/discounts/q/vql=app:${it.name.toLowerCase()}`}>
+          key={it.id} 
+          draggable='false'
+          to={`/pages/discounts/q/search=app:${it.name.toLowerCase()}`}>
           <LabelCapsule 
-              value={it.name} 
-              bgColor={discount_types_to_color(undefined)} />
+            value={it.name} 
+            bgColor={discount_types_to_color(undefined)} />
         </Link>
       )
     )
@@ -49,7 +49,7 @@ const DiscountsQuickSearchActions =
       (it, ix) => (
       <Link key={ix} 
             draggable='false'
-            to={`/pages/discounts/q/vql=active:${it.v}`}>
+            to={`/pages/discounts/q/search=active:${it.v}`}>
         <LabelCapsule 
             value={it.name} 
             bgColor={discount_types_to_color(undefined)} />

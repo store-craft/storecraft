@@ -51,7 +51,7 @@ export const create = (app) => {
       api_query_to_searchparams({
         limit: 10,
         order: 'desc',
-        vql_as_string: 'active:true'
+        vql: 'active:true'
       })
     );
 

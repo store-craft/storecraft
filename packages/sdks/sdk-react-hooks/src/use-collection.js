@@ -1,5 +1,5 @@
 /**
- * @import { ApiQuery, BaseType, Cursor } from '@storecraft/core/api'
+ * @import { ApiQuery } from '@storecraft/core/api'
  * @import { inferDocumentCache, inferUseQueryCache } from './use-storecraft-cache.js'
  * @import { InferQueryableType, queryable_resources } from './use-collection.types.js'
  */
@@ -7,7 +7,9 @@ import {
   useCallback, useEffect, useRef, useState 
 } from 'react'
 import useTrigger from './use-trigger.js'
-import { count_query_of_resource, list_from_collection_resource } from '@storecraft/sdk/src/utils.api.fetch.js'
+import { 
+  count_query_of_resource, list_from_collection_resource 
+} from '@storecraft/sdk/src/utils.api.fetch.js'
 import { App } from '@storecraft/core'
 import { useStorecraft } from './use-storecraft.js'
 import { useDocumentCache, useQueryCache } from './use-storecraft-cache.js'
@@ -15,7 +17,6 @@ import { StorecraftSDK } from '@storecraft/sdk'
 import { 
   remove_from_collection_resource as sdk_remove 
 } from "@storecraft/sdk/src/utils.api.fetch.js";
-import { api_query_to_searchparams } from '@storecraft/core/api/query.js'
 
 /**
  * 
@@ -63,8 +64,6 @@ export const resource_is_probably_empty = (
  * @param {StorecraftSDK} sdk
  * @param {ApiQuery<G>} query 
  * @param {string} resource
- * 
- * 
  */
 const paginate_helper = (sdk, query, resource) => {
 
@@ -82,8 +81,10 @@ const paginate_helper = (sdk, query, resource) => {
       ...query_cast,
       startAfter
     }
+    
+    // console.log({CURRENT: current});
 
-    /** @type{G[]} */
+    /** @type {G[]} */
     const l = await list_from_collection_resource(
       sdk,
       resource,
@@ -114,7 +115,8 @@ export const q_initial =  ({
 
 /**
  * @description A hook to fetch and query a resource. such as 
- * - concrete tables: `products`, 'collections', `orders`, `customers`, `shipping_methods`, etc.
+ * - concrete tables: `products`, 'collections', `orders`, 
+ * `customers`, `shipping_methods`, etc.
  * - extra resources: 'payment/gateways', 'extension'
  * - nested resources: 
  *  - `collections/{handle-name}/products`
@@ -236,7 +238,6 @@ export const useCollection = (
   const paginate = useCallback(
     /**
      * @param {boolean} up paginate up or down
-     * @returns 
      */
     (up) => {
 
@@ -334,9 +335,12 @@ export const useCollection = (
       {
 
         const { 
-          limit, limitToLast, startAfter, startAt, endAt, endBefore, 
+          limit, limitToLast, 
+          startAfter, startAt, endAt, endBefore, 
           ...q_minus_filters
         } = q_modified;
+
+        // console.log({q_minus_filters})
 
         // every queryable resource has a `count_query` endpoint
         count_query_of_resource(

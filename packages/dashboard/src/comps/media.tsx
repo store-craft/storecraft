@@ -271,6 +271,7 @@ const GallerySource = (
       className={`flex flex-col justify-center items-center p-2
                   shelf-media-source rounded-lg 
                   border-4 border-dashed cursor-pointer
+                  border-gray-300
                   ${className}`} {...rest}>
     <div className='flex flex-col justify-center items-center'>
       <RiGalleryLine className='w-10 h-10 text-gray-400 stroke-red-400' />
@@ -332,6 +333,7 @@ const UrlSource = (
   return (
 <div className={`p-3 --h-32 shelf-text-minor
                 text-xs font-semibold 
+                border-gray-300
                 rounded-lg shelf-media-source
                 border-4 border-dashed cursor-pointer 
                 ${className}`}>

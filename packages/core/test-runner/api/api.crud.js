@@ -223,7 +223,6 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
         order: 'asc',
         limit: limit,
         expand: ['*'],
-        // vql_as_string: 'created_at>iso(5)'
         vql: {
           created_at: {
             $gte: iso(5)

@@ -156,19 +156,32 @@ const boolql_node_to_vql = (node) => {
 
 /**
  * @description
- * Parse a string into {@link VQL}
+ * Parse a string into {@link VQL}  
+ * - If passed value is an object, it will be returned as is, because
+ * it assumes it is already a VQL object.
  * @template {any} [T=any]
- * @param {string} vql 
+ * @param {string | object} vql 
  * @returns {VQL<T> | undefined}
  */
 export const parse = (vql) => {
+  // if the value is an object, return it as is
+  // because we assume, it is already a VQL object
+  if(typeof vql !== 'string') {
+    return vql;
+  }
+
+  // VQL does not parse empty strings
+  if(vql.trim().length === 0) {
+    return /** @type {any} */(vql);
+  }
+
   /** @type {BOOLQL.Node} */
   let ast;
 
   try {
     ast = parseBoolQL(vql);
   } catch (e) {
-    console.error('boolql failed with ', e);
+    console.error('boolql failed with ', e, ' for string: ', vql);
     return undefined;
   }
 

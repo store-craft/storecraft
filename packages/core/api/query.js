@@ -73,7 +73,7 @@ export const parse_sort_order = (s) => {
  */
 export const parse_query = (s) => {
   s = new URLSearchParams(s);
-  const q = /** @type {ApiQuery} */ ({});
+  let q = /** @type {ApiQuery} */ ({});
 
   // console.log(s.toString())
 
@@ -89,26 +89,33 @@ export const parse_query = (s) => {
   if(!q.limitToLast && !q.limit) {
     q.limit = 5;
   } 
+  if(q.limitToLast && q.limit) {
+    console.warn(
+      'Both `limit` and `limitToLast` are set, ' +
+      'using `limitToLast` only'
+    );
+    q.limit = undefined;
+  }
 
   { // LEGACY query cursor, will be deprecated
-    let {
-      legacy_q,
-      vql_string
-    } = parse_legacy_query_cursor(s);
+    const legacy_q = parse_legacy_query_cursor(s);
 
-    // console.log({vql_string});
+    q = {
+      ...q,
+      ...legacy_q
+    }
 
-    const combined = combine_vql_strings(
-      s.get(VQL),
-      vql_string
-    );
+    // const combined = combine_vql_strings(
+    //   s.get(VQL),
+    //   vql_string
+    // );
 
-    // set it so it will be parsed later.
-    s.set(VQL, combined);
+    // // set it so it will be parsed later.
+    // s.set(VQL, combined);
 
-    // align sort cursor to query range cursors.
-    if(legacy_q?.sortBy)
-      q.sortBy = legacy_q.sortBy;
+    // // align sort cursor to query range cursors.
+    // if(legacy_q?.sortBy)
+    //   q.sortBy = legacy_q.sortBy;
   }
 
   // `vql` parsing
@@ -117,13 +124,10 @@ export const parse_query = (s) => {
     
     // console.log({vql})
 
-    q.vql_as_string = vql;
-
-    if(vql) {
-      q.vql = parse(vql);
-    }
+    q.__vql_as_string = vql;
+    q.vql = parse(vql);
   } catch (e) {
-    console.error('VQL parsing failed ', e);
+    console.error('VQL parsing failed ', e,  'for query:\n', q);
     assert(
       false, 'VQL parsing failed', 401
     );
@@ -148,11 +152,13 @@ export const api_query_to_searchparams = (q) => {
     q.limit = 5;
   }
 
+  // console.log({...q})
+
   // set
   sp.set(ORDER, q.order);
   sp.set(SORT_BY, string_array_to_string(q.sortBy));
   sp.set(EXPAND, string_array_to_string(q.expand));
-  sp.set(VQL, q.vql_as_string ?? compile(q.vql));
+  sp.set(VQL, compile(q.vql, true));
   q.limit && sp.set(LIMIT, q.limit.toString());
   q.limitToLast && sp.set(LIMIT_TO_LAST, q.limitToLast.toString());
 

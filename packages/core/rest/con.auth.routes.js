@@ -10,7 +10,6 @@ import { parse_query } from '../api/query.js';
 import { create_routes as idp_routes } from './con.auth.identity-providers.routes.js';
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {

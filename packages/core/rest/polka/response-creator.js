@@ -1,12 +1,11 @@
 /**
  * @import { type VPolkaResponseCreator } from './public.js'
  */
-
 import { STATUS_CODES } from './codes.js';
 
 /**
- * Implements the response creator interface for Polka {@link VPolkaResponseCreator}
- * 
+ * Implements the response creator interface 
+ * for Polka {@link VPolkaResponseCreator}
  * @implements {VPolkaResponseCreator}
  */
 export class PolkaResponseCreator {

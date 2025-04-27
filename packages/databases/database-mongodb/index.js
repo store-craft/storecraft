@@ -22,7 +22,6 @@ import { impl as search } from './src/con.search.js';
 export { migrateToLatest } from './migrate.js';
 export { MongoVectorStore } from './vector-store/index.js';
 
-
 /**
  * @implements {db_driver}
  */
@@ -67,9 +66,7 @@ export class MongoDB {
     };
   }
 
-  /**
-   * @type {db_driver["init"]}
-   */
+  /** @type {db_driver["init"]} */
   init(app) {
     if(this.isReady)
       return this;

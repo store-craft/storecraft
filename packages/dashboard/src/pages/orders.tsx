@@ -72,9 +72,11 @@ export default ({}) => {
       resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
     <OrdersQuickSearchActions className='mt-5' />
-    <div className='w-full rounded-md overflow-hidden border 
-                    shelf-border-color shadow-md 
-                    dark:shadow-slate-900 mt-5'>      
+    <div 
+      className='w-full rounded-md overflow-hidden border 
+        shelf-border-color shadow-md 
+        dark:shadow-slate-900 mt-5'
+      >
       <TopActions 
         isCollectionEmpty={resource_is_probably_empty}
         reload={onReload} 

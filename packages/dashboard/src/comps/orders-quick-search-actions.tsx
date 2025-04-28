@@ -43,12 +43,14 @@ const OrdersQuickSearchActions = ({ ...rest }: React.ComponentProps<'div'>) => {
             bgColor='bg-pink-400 dark:bg-pink-400/40' />
       </Link>
       {
-        Object.values(FulfillOptionsEnum).map(
+        Object
+        .values(FulfillOptionsEnum)
+        .map(
           it => (
           <Link 
             key={it.id} 
             draggable='false'
-            to={`/pages/orders/q/search=fulfill:${it.id}`}>
+            to={`/pages/orders/q/search=fulfill:${it.name2}`}>
             <LabelCapsule 
               value={it.name2} 
               className='border shelf-border-color'
@@ -58,12 +60,14 @@ const OrdersQuickSearchActions = ({ ...rest }: React.ComponentProps<'div'>) => {
         )
       }
       {
-        Object.values(PaymentOptionsEnum).map(
+        Object
+        .values(PaymentOptionsEnum)
+        .map(
           it => (
             <Link 
               key={it.id} 
               draggable='false'
-              to={`/pages/orders/q/search=payment:${it.id}`}>
+              to={`/pages/orders/q/search=payment:${it.name2}`}>
               <LabelCapsule 
                 value={it.name} 
                 className='border shelf-border-color'

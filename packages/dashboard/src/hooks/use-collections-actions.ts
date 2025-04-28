@@ -1,5 +1,7 @@
 /**
- * @import { queryable_resources, InferQueryableType } from '@storecraft/sdk-react-hooks'
+ * @import { 
+ *  queryable_resources, InferQueryableType 
+ * } from '@storecraft/sdk-react-hooks'
  * @import { ApiQuery } from '@storecraft/core/api'
  */
 import { 
@@ -20,6 +22,13 @@ import { ApiQuery } from '@storecraft/core/api';
  * - Viewing of collections
  * - Pagination through querying or navigation
  * - Querying
+ * It's main use case is for performing url navigation with query params
+ * although can be used without.
+ * 
+ * TODO: Rewrite the cursors to be used by `vql` in later versions.
+ * currently, i dont do that because it is a breaking change for dashboards
+ * that dont have the backend to support it.
+ * Also, `limit` always resets the query. 
  * 
  * This hook wraps {@link useCollection} hook
  * 
@@ -240,7 +249,9 @@ const useCollectionsActions = <
 
       if(perform_navigation) {
         // console.log({look: api_query_to_searchparams(q).toString()})
-        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}&search=${search}`);
+        nav(
+          `${slug}/q/${api_query_to_searchparams(q).toString()}&search=${search}`
+        );
       } else {
         await query(q, true);
       }

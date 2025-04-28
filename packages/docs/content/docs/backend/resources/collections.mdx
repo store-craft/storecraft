@@ -16,7 +16,6 @@ const app = new App(config)
   .withStorage(new R2);
 
 await app.init();
-
 ```
 
 ## Upsert a new collection
@@ -32,10 +31,7 @@ const id = await app.api.collctions.upsert(
 );
 
 console.log(id)
-//
 // Will print ID such as `col_65e5ca42c43e2c41ae5216a9`
-//
-
 ```
 
 > `handle` is optional for new inserts
@@ -73,9 +69,7 @@ You can query the `collections` resource with
 ```js
 const items = await app.api.collections.list(
   {
-    startAfter: [
-      ['updated_at', '2024-06-13T08:51:52.202Z']
-    ],
+    vql: 'active=true & title~nintendo',
     order: 'desc',
     sortBy: [
       'updated_at'

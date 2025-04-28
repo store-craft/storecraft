@@ -13,7 +13,6 @@ import { App } from '../index.js';
 export const db = app => app.db.resources.posts;
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 

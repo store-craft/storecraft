@@ -33,7 +33,6 @@ export const db = app => app.db.resources.products;
 
 
 /**
- * 
  * @param {App} app
  */
 export const upsert = (app) => 

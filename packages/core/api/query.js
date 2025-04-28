@@ -19,7 +19,6 @@ import {
   START_AFTER, 
   START_AT
 } from "./query.legacy.js";
-import { combine_vql_strings } from "../vql/utils.js";
 
 export const SORT_BY = 'sortBy';
 export const ORDER = 'order';

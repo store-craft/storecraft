@@ -116,7 +116,7 @@ const Layout = (
             headings?.length && 
             <TOC
               headings={headings} 
-              className='pt-[80px] h-full w-[19rem]  --bg-red-300 
+              className='pt-[80px] h-full w-[250px]  --bg-red-300 
                 hidden xl:flex flex-none top-0 right-0 fixed 
                 border-l border-gray-400/20 dark:border-gray-400/10'
             />

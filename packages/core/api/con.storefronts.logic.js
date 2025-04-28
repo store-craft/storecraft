@@ -18,7 +18,6 @@ export const db = app => app.db.resources.storefronts;
  */
 export const upsert = (app) => 
 /**
- * 
  * @param {StorefrontTypeUpsert} item
  */
 (item) => regular_upsert(

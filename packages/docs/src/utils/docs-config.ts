@@ -209,7 +209,7 @@ export default {
           ]
         }, 
         {
-          title: '📚 Resources',
+          title: '📚 Query Resources',
           route: 'backend/resources',
           empty: true,
           groups: [
@@ -219,7 +219,7 @@ export default {
               path: 'content/docs/backend/resources/overview.mdx'
             },
             {
-              title: 'Query Guide',
+              title: 'VQL Query Guide',
               route: 'backend/resources/query',
               path: 'content/docs/backend/resources/query.mdx'
             },
@@ -242,11 +242,6 @@ export default {
               title: 'Discounts',
               route: 'backend/resources/discounts',
               path: 'content/docs/backend/resources/discounts.mdx'
-            },
-            {
-              title: 'Orders',
-              route: 'backend/resources/orders',
-              path: 'content/docs/backend/resources/orders.mdx'
             },
           ]
         },                    

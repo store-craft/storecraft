@@ -603,7 +603,6 @@ async (id_or_email) => {
 export const upsert_auth_user = (app) => 
   /**
    * @description `upsert` an auth user and dispatch `auth/upsert` event
-   * 
    * @param {AuthUserType} item 
    */
   async (item) => {

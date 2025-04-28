@@ -9,127 +9,152 @@ All resources have a query functionality.
 The main query object is `ApiQuery`
 
 ```ts
-import type { ApiQuery } from '@storecraft/core/api'
+import { type ApiQuery } from '@storecraft/core/api'
 
 ```
 
 Which, approximately have the following shape
 
 ```ts
-type ApiQuery<T extends any = undefined> = {
-  /**
-   * @description Expand connections of items returned from Query
-   * @example ['products', 'tags', 'none']
-   * @default ['*']
-   */
-  expand?: ExpandQuery<T>;
-
-  /**
-   * @description boolean `DSL` for querying using terms
-   * @example 
-   * `(whatever-indexed tag:a -(tag:b | tag:c | "couple of words") handle:product*)`
-   */
-  vql?: string;
-  
-  /**
-   * @description internal usage Abstract Syntx Tree (AST)
-   */
-  vqlParsed?: VQL.AST;
-
-  /**
-   * @description Sort by cursor, should correlate with `startAt` / `endAt` cursors
-   * @example 
-   * ['updated_at']
-   * ['updated_at', 'id']
-   */
-  sortBy?: SortCursor<T>;
-
-  /**
-   * @description `asc` | `desc`
-   */
+type ApiQuery = {
+  expand?: ExpandQuery;
+  vql?: string | VQL;
+  sortBy?: SortCursor;
   order?: SortOrder;
-
-  /**
-   * @description Limit of items returned
-   */
   limit?: number;
-  /**
-   * @description Limit to last items returned from the tail of the query
-   */
   limitToLast?: number;
-
-  /**
-   * @description Lower Bound Filter Cursors on the properties of the items
-   * @example 
-   * [['updated_at', '2012-09']]
-   * [['updated_at', '2012-09'], ['id', 'id_wiwq09j2023j']]
-   */
-  startAt?: Cursor<T>;
-  startAfter?: Cursor<T>;
-
-  /**
-   * @description Upper Bound Filter Cursors on the properties of the items
-   * @example 
-   * [['updated_at', '2015-09']]
-   * [['updated_at', '2015-09'], ['id', 'id_wiwq09j2023j']]
-   */
-  endAt?: Cursor<T>;
-  endBefore?: Cursor<T>;
-
-  /**
-   * @description A shortcut for using `endAt` and `startAt` to query an
-   * exact value. For example getting all the items which have `active=true`
-   * @example 
-   * [['active', false]]
-   */
-  equals?: Cursor<T>
 }
 ```
 
 ## VQL
 
 ### Introduction
-Storecraft's VQL is a boolean search language,
 
-All of the resources of `storecraft` index selected search terms, which you can query with 
-storecraft's **VQL** lingo in your queries.
+Storecraft's **VQL** is a boolean search language, that allows you to filter and search for specific terms in your resources.
+- In table properties if they are not a relation.
+- In search index of the resource.
+- Supports both string language and object language.
 
 **VQL** supports essential features:
-- **OR (|)** -> `term1 | term2`
-- **AND (&)** -> `term1 & term2`, also equivalent to `term1 term2`
-- **NOT (-)** -> `term1 -term2`
+- **OR** -> `term1 | term2`
+- **AND** -> `term1 & term2`, also equivalent to `term1 term2`
+- **NOT** -> `term1 -term2`
 - **Aggregation** of multiple words -> `term1 & -"term with multiple words"`
 - **Nesting** -> `(term1 & term2) | (term3 & -term4)` 
 
 > You can always watch the search terms for each resource at the Dashboard
 
-### What is indexed
-> TODO, will add json examples
+**VQL** can be written in two ways:
+#### **String** Form
 
+`price>=19 & (tag:genre_action | tag:genre_adventure)`
+
+#### **Object** Form
+
+```json
+{ 
+  $and: [ 
+    { price: { $gte: 19 } }, 
+    { 
+      $or: [ 
+        { $search: 'genre_action' }, 
+        { $search: 'genre_adventure' } 
+      ] 
+    } 
+  ] 
+}
+```
+
+### Operators
+
+Thw following operators are supported in **VQL**:
+
+**Base Operators:**
+For composing the filter.
+
+```js
+const operators = {
+  $and: '&',
+  $or: '|',
+  $not: '-',
+  // for searching in the search index
+  $search: string,
+}
+```
+
+**Properties Operators:**
+For querying specific properties in the table.
+
+```js
+const operators = {
+  $like: '~',
+  $eq: '=',
+  $ne: '!=',
+  $gt: '>',
+  $gte: '>=',
+  $lt: '<',
+  $lte: '<='
+}
+```
+
+' ' 
 # Examples
 
-In the following example, we query `products`
-- fetch next batch of 5 items after a specific point
-- use `vql` to filter in only products, that do **NOT** belong to `col:collection-a`
-and have tags `tag:genre_action` OR `tag:genre_adventure`
-- In the future cursor based `startAfter` / `endAt` will be deprecated in favor of `vql` based queries
-such as `created_at>=2023-01-01T00:00:00Z & active=true`
+In the following example, we query `products` with the following conditions:
+- product is `active`, and
+- product `price` is greater than `19`, and
+- product search index: 
+  - contains `tag:genre_action` OR `tag:genre_adventure`, and
+  - does not contain `collection:nitendo-games`
+
+Basically, we want to get all active products, that are not in the collection `nitendo-games` and are either `action` or `adventure` genre.
 
 ```ts
 const products = await app.api.products.list(
   {
-    startAfter: [
-      ['updated_at', '2024-06-13T08:51:52.202Z'],
-      ['id', 'pr_uiwe9j2i3i239iij23']
-    ],
     order: 'desc',
     sortBy: [
       'updated_at',
       'id'
     ],
-    vql: '-col:collection-a & (tag:genre_action | tag:genre_adventure)',
+    vql: 'active=true & price>19 & -collection:nitendo-games & (tag:genre_action | tag:genre_adventure)',
     limit: 5
   }
 );
 
 ```
+
+This can also be written in **object** form:
+
+```ts
+const products = await app.api.products.list(
+  {
+    order: 'desc',
+    sortBy: [
+      'updated_at',
+      'id'
+    ],
+    vql: {
+      $and: [
+        { active: { $eq: true } },
+        { price: { $gt: 19 } },
+        { $not: { $search: 'collection:nitendo-games' } },
+        {
+          $or: [
+            { $search: 'tag:genre_action' },
+            { $search: 'tag:genre_adventure' }
+          ]
+        }
+      ]
+    },
+    limit: 5
+  }
+);
+```  
+`
+
+# Queryable Properties
+
+The following properties are queryable in **VQL** and search index
+
+<VQLTable/>

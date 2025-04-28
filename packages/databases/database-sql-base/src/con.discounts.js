@@ -7,7 +7,7 @@ import {
   helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
  } from '@storecraft/core/database'
 import { SQL } from '../index.js'
-import { discount_to_conjunctions } from './con.discounts.utils.js'
+import { discount_to_conjunctions, is_order_discount } from './con.discounts.utils.js'
 import { 
   delete_entity_values_by_value_or_reporter_and_context, 
   delete_me, delete_media_of, delete_search_of, 
@@ -59,7 +59,13 @@ const upsert = (driver) => {
               trx, extra_tag);
           }
   
-          if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
+          // make connections into `products_to_discounts`, only applicable for
+          // `product` discounts and automatic discounts
+          if(
+            item.active && 
+            item.application.id===enums.DiscountApplicationEnum.Auto.id &&
+            !is_order_discount(item)
+          ) {
             // make connections
             await trx
             .insertInto('products_to_discounts')

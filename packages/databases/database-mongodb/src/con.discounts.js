@@ -12,7 +12,7 @@ import {
 import { 
   handle_or_id, isDef, sanitize_array, to_objid 
 } from './utils.funcs.js'
-import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
+import { discount_to_mongo_conjunctions, is_order_discount } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 import { enums } from '@storecraft/core/api'
@@ -77,7 +77,11 @@ const upsert = (driver) => {
           );
           
           // now filter and update for products
-          if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
+          if(
+            data.active && 
+            data.application.id===enums.DiscountApplicationEnum.Auto.id &&
+            !is_order_discount(data)
+          ) {
             const conjunctions = discount_to_mongo_conjunctions(data);
             await driver.resources.products._col.updateMany(
               conjunctions.length ? { $and: conjunctions } : {},

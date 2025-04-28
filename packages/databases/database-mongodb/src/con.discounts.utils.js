@@ -9,7 +9,7 @@ import { enums } from "@storecraft/core/api";
 import { to_objid_safe } from "./utils.funcs.js";
 
 /** @param {DiscountType} d */
-const is_order_discount = d => {
+export const is_order_discount = d => {
   return (
     (d.info.details.type===enums.DiscountMetaEnum.order.type) ||
     // @ts-ignore
@@ -18,7 +18,7 @@ const is_order_discount = d => {
 }
 
 /** @param {DiscountType} d */
-const is_automatic_discount = d => {
+export const is_automatic_discount = d => {
   return (d.application.id===enums.DiscountApplicationEnum.Auto.id);
 }
 

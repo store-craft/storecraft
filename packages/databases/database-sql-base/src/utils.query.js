@@ -166,7 +166,7 @@ const boolean_to_0_or_1 = (value) => {
 /**
  * @description Convert an {@link ApiQuery} into **SQL** Clause.
  * @template {keyof Database} [Table=(keyof Database)]
- * @template {{a:number}} [G={a:number}]
+ * @template {any} [G=any]
  * @param {ExpressionBuilder<Database, Table>} eb 
  * @param {ApiQuery<G>} q 
  * @param {Table} table_name 

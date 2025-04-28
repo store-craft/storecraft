@@ -117,12 +117,15 @@ export const quicksearch = (driver) => {
       await sts.executeTakeFirst())
     );
 
+    
     const sanitized = Object.fromEntries(
       Object.entries(items).filter(
         ([key, value]) => Boolean(value?.length)
       )
     );
-
+    
+    // console.log('items', JSON.stringify(items, null, 2))
+    
     // console.log('sanitized', JSON.stringify(sanitized, null, 2))
 
     return sanitized;

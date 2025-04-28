@@ -5,6 +5,7 @@ import ShowIf from './show-if'
 import MDView from './md-view'
 import { DiscountType, ProductType } from '@storecraft/core/api'
 import { FieldLeafViewParams } from './fields-view'
+import { enums } from '@storecraft/core/api'
 
 export type ItemParams = {
   /**
@@ -22,6 +23,7 @@ const Item = (
     value, onClick 
   }: ItemParams
 ) => {
+  const discount_name = enums.DiscountMetaEnum[value.info.details.type ?? value.info.details.meta.type];
 
   return (
 <div className='w-full flex flex-col gap-2
@@ -32,7 +34,7 @@ const Item = (
         <span children={value?.title} />                  
       </a>
     </Label>
-    <MDView value={`**\`${value.info.details.meta.name}\`**`} className='text-right' />
+    <MDView value={`**\`${discount_name}\`**`} className='text-right' />
   </div>
 
   <MDView value={value?.description ?? 'Discount does not have `description`'} />

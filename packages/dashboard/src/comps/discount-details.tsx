@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { 
   DiscountMetaEnum,
-  FilterMetaEnum
+  FilterMetaEnum,
+  get_filter_op,
+  is_product_filter
 // @ts-ignore
 } from '@storecraft/core/api/types.api.enums.js'
 import { BlingInput, HR } from './common-ui'
@@ -11,10 +13,14 @@ import { TbMath } from 'react-icons/tb'
 import { 
   BulkDiscountExtra, BundleDiscountExtra, 
   BuyXGetYDiscountExtra, DiscountDetails, 
-  DiscountType, Filter, FilterValue_p_in_collections, 
-  FilterValue_p_in_price_range, FilterValue_p_in_products, 
-  FilterValue_p_in_tags, FilterValue_p_not_in_collections, 
-  FilterValue_p_not_in_products, FilterValue_p_not_in_tags, 
+  DiscountType, Filter, 
+  Filter_p_in_collections, 
+  Filter_p_in_price_range, 
+  Filter_p_in_products, 
+  Filter_p_in_tags, 
+  Filter_p_not_in_collections, 
+  Filter_p_not_in_products, 
+  Filter_p_not_in_tags, 
   OrderDiscountExtra, RegularDiscountExtra 
 } from '@storecraft/core/api'
 import { FieldContextData, FieldLeafViewParams } from './fields-view'
@@ -27,9 +33,11 @@ export const discount_details_validator = v => {
 
 /////
 
+type DiscountMeta = typeof DiscountMetaEnum[keyof typeof DiscountMetaEnum];
+
 export type DiscountTypesParams = {
-  selectedType: DiscountDetails["meta"];
-  onChange: (meta: DiscountDetails["meta"]) => void;
+  selectedMeta: DiscountMeta;
+  onChange: (meta: DiscountMeta) => void;
 };
 
 export type BulkDiscountParams = {
@@ -39,7 +47,6 @@ export type BulkDiscountParams = {
 };
 
 export type BundleDiscountParams = {
-  meta: "bundle";
   value: BundleDiscountExtra;
   context: FieldContextData;
   onChange: (extra: BundleDiscountExtra) => void;
@@ -71,7 +78,7 @@ export type OrderDiscountParams = {
 };
 
 export type Type2CompParams = {
-  meta: DiscountDetails["meta"];
+  meta: DiscountMeta;
   context: FieldContextData<DiscountType> //Parameters<({ field, value, context, onChange, ...rest }: import('./fields-view.js').FieldLeafViewParams<import('@storecraft/core/api').DiscountDetails, import('../pages/discount.js').Context, import('@storecraft/core/api').DiscountType>) => import("react").JSX.Element>["0"]["context"];
   onChange: (extra: DiscountDetails["extra"]) => void;
   value: DiscountDetails["extra"];
@@ -88,28 +95,27 @@ export type DiscountDetailsViewParams = FieldLeafViewParams<
 
 export const discount_types = [
   { 
-    id: 0, type: 'regular',          
-    name : 'Regular Discount', 
+    ...DiscountMetaEnum.regular,
     desc: 'All Filtered products you defined will get the same discount. \
     For Example: Every shirt will have 10% discount' 
   },
   { 
-    id: 1, type: 'bulk', name : 'Bulk Discount', 
+    ...DiscountMetaEnum.bulk,
     desc: 'Set an exact bulk discount on filtered products. \
     for Example, 3 for 100$, 5 for 5% off' 
   },
   { 
-    id: 2, type: 'buy_x_get_y', name : 'Buy X Get Y',
+    ...DiscountMetaEnum.buy_x_get_y,
     desc: 'Buy some from the filtered products and get Y for discount. \
     For Example: Buy 3 pants, get a Shirt for 50% off' 
   },
   { 
-    id: 3, type: 'order', name : 'Order Discount',
+    ...DiscountMetaEnum.order,
     desc: 'Offer a discount on the total order including perks \
     such as Free Shipping' 
   },
   { 
-    id: 4, type: 'bundle', name : 'Bundle Discount',
+    ...DiscountMetaEnum.bundle,
     desc: 'Offer a discount on a bundle of products. For Example, \
     buy a Laptop + Headset at discount 💲' 
   },
@@ -117,24 +123,22 @@ export const discount_types = [
 
 const DiscountTypes = (
   { 
-    selectedType, onChange 
+    selectedMeta, onChange 
   }: DiscountTypesParams
 ) => {
   
-  
-  const desc = useMemo(
+  const description = useMemo(
     () => discount_types.find(
-      it => it.id === selectedType?.id
+      it => it.id === selectedMeta?.id
     )?.desc
-    , [selectedType, discount_types]
+    , [selectedMeta, discount_types]
   );
-
 
   const Option = (
     { 
-      type 
+      meta 
     }: { 
-      type: Omit<typeof DiscountMetaEnum, 'any'>[keyof Omit<typeof DiscountMetaEnum, 'any'>]
+      meta: (typeof DiscountMetaEnum)[keyof typeof DiscountMetaEnum]
     }
   ) => {
     
@@ -142,18 +146,19 @@ const DiscountTypes = (
       <div className=''>
         <input 
           type='radio' 
-          id={type.type} 
+          id={meta.type} 
           name='discount_type' 
-          value={type.type} 
+          value={meta.type} 
           className='accent-pink-500'
-          checked={type.type===selectedType?.type} 
-          // @ts-ignore
-          onChange={e => onChange(type)} />
+          checked={meta.type===selectedMeta?.type} 
+          onChange={_ => onChange(meta)} 
+        />
         <label 
-          htmlFor={type.type} children={type.name} 
-          // @ts-ignore
-          onClick={e => onChange(type)}
-          className='mx-3' />
+          htmlFor={meta.type} 
+          children={meta.name} 
+          onClick={_ => onChange(meta)}
+          className='mx-3' 
+        />
       </div>      
     )
   }
@@ -162,16 +167,18 @@ const DiscountTypes = (
 <div className='flex flex-row flex-wrap gap-5 --items-start'>
   <div className='flex flex-col gap-2 --flex-shrink-0 w-fit'>
   {
-    Object.values(DiscountMetaEnum).filter(it => it.type).map(
-      // @ts-ignore
-      (it, ix) => (
-        <Option type={it} key={it.type} />
+    Object
+    .values(DiscountMetaEnum)
+    .filter(m => m.type)
+    .map(
+      (m, ix) => (
+        <Option meta={m} key={m.type} />
       )
     )
   }
   </div>
   <div className='pl-5 border-l-2 shelf-border-color flex-1 min-w-[13rem]'>
-    <p children={desc} 
+    <p children={description} 
        className='text-gray-500 text-sm tracking-wide'/>
   </div>
 </div>
@@ -319,7 +326,7 @@ const BulkDiscount = ({ type, value, onChange }: BulkDiscountParams) => {
 }
 
 const explain_filter = (f: Filter) => {
-  switch (f.meta.op) {
+  switch (get_filter_op(f)) {
     case FilterMetaEnum.p_all.op:
       return (
         <>
@@ -328,7 +335,7 @@ const explain_filter = (f: Filter) => {
       );
     case FilterMetaEnum.p_in_collections.op:
       {
-        const cast = (f.value ?? []) as FilterValue_p_in_collections;
+        const cast = (f.value ?? []) as Filter_p_in_collections["value"];
   
         return (
         <>
@@ -349,7 +356,7 @@ const explain_filter = (f: Filter) => {
       }
     case FilterMetaEnum.p_not_in_collections.op:
       {
-        const cast = (f.value ?? []) as FilterValue_p_not_in_collections;
+        const cast = (f.value ?? []) as Filter_p_not_in_collections["value"];
 
         return (
           <>
@@ -368,7 +375,7 @@ const explain_filter = (f: Filter) => {
       }
     case FilterMetaEnum.p_in_tags.op:
       {
-        const cast = (f.value ?? []) as FilterValue_p_in_tags;
+        const cast = (f.value ?? []) as Filter_p_in_tags["value"];
 
         return (
         <>
@@ -386,7 +393,7 @@ const explain_filter = (f: Filter) => {
       }
     case FilterMetaEnum.p_not_in_tags.op:
       {
-        const cast = (f.value ?? []) as FilterValue_p_not_in_tags;
+        const cast = (f.value ?? []) as Filter_p_not_in_tags["value"];
         
         return (
         <>
@@ -405,7 +412,7 @@ const explain_filter = (f: Filter) => {
       }
     case FilterMetaEnum.p_in_products.op:
       {
-        const cast = (f.value ?? []) as FilterValue_p_in_products;
+        const cast = (f.value ?? []) as Filter_p_in_products["value"];
 
         return (
         <>
@@ -424,7 +431,7 @@ const explain_filter = (f: Filter) => {
     case FilterMetaEnum.p_not_in_products.op:
       {
         
-        const cast = (f.value ?? []) as FilterValue_p_not_in_products;
+        const cast = (f.value ?? []) as Filter_p_not_in_products["value"];
 
         return (
         <>
@@ -443,7 +450,7 @@ const explain_filter = (f: Filter) => {
       }
     case FilterMetaEnum.p_in_price_range.op:
       {
-        const cast = (f.value) as FilterValue_p_in_price_range;
+        const cast = (f.value) as Filter_p_in_price_range["value"];
 
         return (
         <>
@@ -468,13 +475,13 @@ const to_order = (ix: number) => {
 }
 
 const filter_legal = (f: Filter) => {
-  return (f.meta.type==='product') 
+  return is_product_filter(f);
 }
 
 
 const BundleDiscount = (
   { 
-    meta, value, context, onChange 
+    value, context, onChange 
   }: BundleDiscountParams
 ) => {
 
@@ -577,39 +584,44 @@ const BundleDiscount = (
     <div className='flex flex-row items-center gap-3'>
       <label children='Fixed Price' />
       <BlingInput
-          type='number' 
-          value={v.fixed}
-          // @ts-ignore
-          onWheel={(e) => e.target.blur()}
-          onChange={
-            e => onChangeInternal(
-              'fixed', 
-              parseFloat(e.currentTarget.value)
-            )
-          }
-          inputClsName='h-7'
-          // stroke='pb-px'
-          className='rounded-lg w-16'/>
+        type='number' 
+        value={v.fixed}
+        // @ts-ignore
+        onWheel={(e) => e.target.blur()}
+        onChange={
+          e => onChangeInternal(
+            'fixed', 
+            parseFloat(e.currentTarget.value)
+          )
+        }
+        inputClsName='h-7'
+        // stroke='pb-px'
+        className='rounded-lg w-16'
+      />
 
     </div>
   </div>
-  <p children={`* Fixed Price may be negative. `} 
-     className='text-sm  mt-5 tracking-wider'/>
+  <p 
+    children={`* Fixed Price may be negative. `} 
+    className='text-sm  mt-5 tracking-wider'/>
 
 
   <p children='Other Options' 
      className='text-lg font-bold mt-6'/>
   <div className='flex flex-row gap-3 items-center mt-5'>
     <input 
-        id='cb_recursive' type='checkbox' 
-        checked={v.recursive===true}
-        // @ts-ignore
-        onChange={e => onChangeInternal('recursive', !v.recursive)}
-        className='w-4 h-4 accent-pink-500 border-0 rounded-md 
-                  focus:ring-0' />
+      id='cb_recursive' type='checkbox' 
+      checked={v.recursive===true}
+      // @ts-ignore
+      onChange={e => onChangeInternal('recursive', !v.recursive)}
+      className='w-4 h-4 accent-pink-500 border-0 rounded-md 
+        focus:ring-0' 
+    />
     <label htmlFor='cb_recursive' children='Recursive' />
-    <span children='(Apply the discount as much as possible)' 
-          className=' text-sm' />
+    <span 
+      children='(Apply the discount as much as possible)' 
+      className=' text-sm' 
+    />
   </div>
        
   <ExplainPrice 
@@ -681,19 +693,20 @@ const RegularDiscount = (
                   gap-3 items-center '>
     <label children='Percents off' />
     <BlingInput
-        type='number' 
-        // @ts-ignore
-        onWheel={(e) => e.target.blur()}
-        onChange={
-          e => onChangeInternal(
-            'percent', 
-            Math.min(parseFloat(e.currentTarget.value),100)
-          )
-        }
-        value={v.percent} 
-        min='0' max='100' step='1' 
-        inputClsName='h-7'
-        className='rounded-lg w-14' />
+      type='number' 
+      // @ts-ignore
+      onWheel={(e) => e.target.blur()}
+      onChange={
+        e => onChangeInternal(
+          'percent', 
+          Math.min(parseFloat(e.currentTarget.value),100)
+        )
+      }
+      value={v.percent} 
+      min='0' max='100' step='1' 
+      inputClsName='h-7'
+      className='rounded-lg w-14' 
+    />
 
     <span children='+' className='text-2xl font-bold' />
     <div className='flex flex-row items-center gap-3'>
@@ -721,7 +734,8 @@ const RegularDiscount = (
   <ExplainPrice 
     prefix='Product Price' 
     percent={v?.percent} 
-    fixed={v?.fixed} />
+    fixed={v?.fixed} 
+  />
 
 </div>    
   )
@@ -905,11 +919,7 @@ const OrderDiscount = (
   // useEffect(() => { onChange(v) }, [])
 
   const onChangeInternal = useCallback(
-    /**
-     * @param {keyof typeof value} who 
-     * @param {any} val 
-     */
-    (who, val) => {
+    (who: keyof typeof value, val: any) => {
       const vvv = { ...v, [who] : val }
 
       setV(vvv);
@@ -992,7 +1002,8 @@ const OrderDiscount = (
   <ExplainPrice 
     prefix={`Order Total`}
     percent={v?.percent} 
-    fixed={v?.fixed} />
+    fixed={v?.fixed} 
+  />
 
 </div>    
   )
@@ -1002,24 +1013,24 @@ const OrderDiscount = (
 
 const discount_types_comps = [
   { 
-    type: 'regular', 
+    type: DiscountMetaEnum.regular.type, 
     Comp: RegularDiscount, CompParams : {} 
   },
   { 
-    type: 'bulk', 
+    type: DiscountMetaEnum.bulk.type, 
     Comp: BulkDiscount, CompParams : {} 
   },
   { 
-    type: 'buy_x_get_y', 
+    type: DiscountMetaEnum.buy_x_get_y.type,
     Comp: BuyXGetYDiscount, 
     CompParams : {} 
   },
   { 
-    type: 'order', 
+    type: DiscountMetaEnum.order.type, 
     Comp: OrderDiscount, CompParams : {} 
   },
   { 
-    type: 'bundle', 
+    type: DiscountMetaEnum.bundle.type, 
     Comp: BundleDiscount, CompParams : {} 
   },
 ]
@@ -1033,52 +1044,54 @@ const Type2Comp = (
   
   const record = discount_types_comps.find(
     it => it.type===meta?.type
-  )
+  );
 
   if (!record)
     return (<></>)
+
   const { Comp, CompParams } = record;
 
   return (
     <Comp 
-        {...CompParams} 
-        // @ts-ignore
-        onChange={onChange} 
-        // @ts-ignore
-        value={value} 
-        // @ts-ignore
-        meta={meta} 
-        // @ts-ignore
-        type={meta.type} 
-        // @ts-ignore
-        context={context} 
-        {...rest} />
+      {...CompParams} 
+      // @ts-ignore
+      onChange={onChange} 
+      // @ts-ignore
+      value={value} 
+      // @ts-ignore
+      meta={meta} 
+      // @ts-ignore
+      type={meta.type} 
+      // @ts-ignore
+      context={context} 
+      {...rest} 
+    />
   );
 }
 
-const getDefaultExtraByMeta = (m: DiscountDetails["meta"]) => {
-  switch(m.id) {
-    case DiscountMetaEnum.regular.id:
+const getDefaultExtraByType = (type: DiscountDetails["type"]) => {
+  switch(type) {
+    case DiscountMetaEnum.regular.type:
       return { 
         percent: 0.0, fixed : 0.0 
       };
-    case DiscountMetaEnum.bulk.id:
+    case DiscountMetaEnum.bulk.type:
       return { 
         percent: 0.0, fixed : 0.0, 
         qty: 3,  recursive: false 
       };
-    case DiscountMetaEnum.order.id:
+    case DiscountMetaEnum.order.type:
       return { 
         percent: 0.0, fixed : 0.0, 
         free_shipping: false 
       };
-    case DiscountMetaEnum.buy_x_get_y.id:
+    case DiscountMetaEnum.buy_x_get_y.type:
       return { 
         percent: 0.0, fixed : 0.0, 
         qty_x: 1, qty_y: 1,
         filters_y: [] 
       };    
-    case DiscountMetaEnum.bundle.id:
+    case DiscountMetaEnum.bundle.type:
       return { 
         percent: 0.0, fixed : 0.0 
       };
@@ -1087,31 +1100,51 @@ const getDefaultExtraByMeta = (m: DiscountDetails["meta"]) => {
   }
 }
 
+const extract_meta_from_details = (details: DiscountDetails) => {
+  // support for older and deprecated embedded meta details
+  if(details?.meta)
+    return details.meta;
+
+  if(details?.type) {
+    const meta = DiscountMetaEnum[details?.type]
+
+    if(meta) {
+      return meta;
+    }
+  }
+
+  return undefined;
+
+  throw new Error(
+    `DiscountDetailsView: meta not found \
+    for discount details ${details}`
+  );
+}
+
 const DiscountDetailsView = (
   { 
     field, value, context, onChange, ...rest 
   }: DiscountDetailsViewParams
 ) => {
 
-  const [meta, setType] = useState(value?.meta)
-  // @ts-ignore
+  const [meta, setMeta] = useState(extract_meta_from_details(value));
   const [extra, setExtra] = useState(value?.extra)
 
   const notify = useCallback(
-    (t: DiscountDetails["meta"], e: DiscountDetails["extra"]) => {
-      setType(t);
+    (m: DiscountMeta, e: DiscountDetails["extra"]) => {
+      setMeta(m);
       setExtra(e);
       onChange && onChange({
-        meta : t,
+        type: m.type as any,
         extra : e
       });
     }, [onChange]
   );
 
   const onTypeSelected = useCallback(
-    (t: DiscountDetails["meta"]) => {
+    (m: DiscountMeta) => {
       
-      notify(t, getDefaultExtraByMeta(t))
+      notify(m, getDefaultExtraByType(m.type))
     }, [notify]
   );
 
@@ -1125,17 +1158,20 @@ const DiscountDetailsView = (
 <div className='w-full'>
   <DiscountTypes 
     onChange={onTypeSelected} 
-    selectedType={meta} />
+    selectedMeta={meta} />
   <ShowIf show={meta}>
-    <p children='' 
-       className='border-b-g mt-5 h-0.5 mb-5 bg-gradient-to-r 
-                from-pink-400 to-kf-300'/>
+    <p 
+      children='' 
+      className='border-b-g mt-5 h-0.5 mb-5 bg-gradient-to-r 
+      from-pink-400 to-kf-300'
+    />
   </ShowIf>
   <Type2Comp 
     meta={meta} 
     context={context}
     onChange={onExtraChange} 
-    value={value?.extra} />
+    value={value?.extra} 
+  />
 
 </div>
   )

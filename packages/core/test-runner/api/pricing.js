@@ -93,16 +93,17 @@ export const create = () => {
       info: {
         details: {
           type: 'regular',
-          meta: enums.DiscountMetaEnum.regular,
+          // meta: enums.DiscountMetaEnum.regular,
           extra: {
             fixed: 0, percent: 10
           }
         },
         filters: [
-          /** @type {Filter_p_in_tags} */({ // discount for a specific product handle
-            meta: enums.FilterMetaEnum.p_in_tags,
+          { // discount for a specific product handle
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['regular']
-          })
+          }
         ]
       }
     }    
@@ -185,7 +186,7 @@ export const create = () => {
       info: {
         details: {
           type: 'bulk',
-          meta: enums.DiscountMetaEnum.bulk,
+          // meta: enums.DiscountMetaEnum.bulk,
           extra: {
             qty: 3,
             percent: 100,
@@ -194,10 +195,11 @@ export const create = () => {
           }
         },
         filters: [
-          /** @type {Filter_p_in_tags} */({ // discount for a specific product handle
-            meta: enums.FilterMetaEnum.p_in_tags,
+          { // discount for a specific product handle
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['bulk']
-          })
+          }
         ]
       }
     }    
@@ -291,7 +293,7 @@ export const create = () => {
       info: {
         details: {
           type: 'bulk',
-          meta: enums.DiscountMetaEnum.bulk,
+          // meta: enums.DiscountMetaEnum.bulk,
           extra: {
             qty: 3,
             percent: 100,
@@ -300,10 +302,11 @@ export const create = () => {
           }
         },
         filters: [
-          /** @type {Filter_p_in_tags} */({ // discount for a specific product handle
-            meta: enums.FilterMetaEnum.p_in_tags,
+          { // discount for a specific product handle
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['bulk']
-          })
+          }
         ]
       }
     }    
@@ -397,21 +400,22 @@ export const create = () => {
       info: {
         details: {
           type: 'bundle',
-          meta: enums.DiscountMetaEnum.bundle,
+          // meta: enums.DiscountMetaEnum.bundle,
           extra: {
             fixed: 0, percent: 50, recursive: false
           }
         },
         filters: [ // in bundle, each filter is part of the bundle
-          /** @type {Filter_p_in_tags} */({ 
-            meta: enums.FilterMetaEnum.p_in_tags,
+          { 
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_arm']
-          }),
-          /** @type {Filter_p_in_tags} */({ 
-            meta: enums.FilterMetaEnum.p_in_tags,
+          },
+          { 
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_arm']
-          })
-
+          }
         ]
       }
     }    
@@ -475,21 +479,22 @@ export const create = () => {
       info: {
         details: {
           type: 'bundle',
-          meta: enums.DiscountMetaEnum.bundle,
+          // meta: enums.DiscountMetaEnum.bundle,
           extra: {
             fixed: 0, percent: 50, recursive: false
           }
         },
         filters: [ // in bundle, each filter is part of the bundle
-          /** @type {Filter_p_in_tags} */({ 
-            meta: enums.FilterMetaEnum.p_in_tags,
+          { 
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_arm']
-          }),
-          /** @type {Filter_p_in_tags} */({ 
-            meta: enums.FilterMetaEnum.p_in_tags,
+          },
+          { 
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_leg']
-          })
-
+          }
         ]
       }
     }    
@@ -583,21 +588,22 @@ export const create = () => {
       info: {
         details: {
           type: 'bundle',
-          meta: enums.DiscountMetaEnum.bundle,
+          // meta: enums.DiscountMetaEnum.bundle,
           extra: {
             fixed: 0, percent: 50, recursive: true
           }
         },
         filters: [ // in bundle, each filter is part of the bundle
-          /** @type {Filter_p_in_tags} */({  
-            meta: enums.FilterMetaEnum.p_in_tags,
+          {  
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_arm']
-          }),
-          /** @type {Filter_p_in_tags} */({
-            meta: enums.FilterMetaEnum.p_in_tags,
+          },
+          {
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_leg']
-          })
-
+          }
         ]
       }
     }    
@@ -690,26 +696,28 @@ export const create = () => {
       info: {
         details: {
           type: 'buy_x_get_y',
-          meta: enums.DiscountMetaEnum.buy_x_get_y,
+          // meta: enums.DiscountMetaEnum.buy_x_get_y,
           extra: {
             fixed: 0, percent: 50,
             recursive: false,
             qty_x: 2,
             qty_y: 1,
             filters_y: [
-              /** @type {Filter_p_in_tags} */({ 
-                meta: enums.FilterMetaEnum.p_in_tags,
+              { 
+                // meta: enums.FilterMetaEnum.p_in_tags,
+                op: 'p-in-tags',
                 value: ['robot_arm']
-              }),
+              },
             ]
 
           }
         },
         filters: [ // in bundle, each filter is part of the bundle
-          /** @type {Filter_p_in_tags} */({  
-            meta: enums.FilterMetaEnum.p_in_tags,
+          {  
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_leg']
-          }),
+          },
         ]
       }
     }    
@@ -791,26 +799,28 @@ export const create = () => {
       info: {
         details: {
           type: 'buy_x_get_y',
-          meta: enums.DiscountMetaEnum.buy_x_get_y,
+          // meta: enums.DiscountMetaEnum.buy_x_get_y,
           extra: {
             fixed: 0, percent: 50,
             recursive: true,
             qty_x: 1,
             qty_y: 1,
             filters_y: [
-              /** @type {Filter_p_in_tags} */({ 
-                meta: enums.FilterMetaEnum.p_in_tags,
+              { 
+                // meta: enums.FilterMetaEnum.p_in_tags,
+                op: 'p-in-tags',
                 value: ['robot_arm']
-              }),
+              },
             ]
 
           }
         },
         filters: [ // in bundle, each filter is part of the bundle
-          /** @type {Filter_p_in_tags} */({  
-            meta: enums.FilterMetaEnum.p_in_tags,
+          {  
+            // meta: enums.FilterMetaEnum.p_in_tags,
+            op: 'p-in-tags',
             value: ['robot_leg']
-          }),
+          },
         ]
       }
     }    
@@ -901,19 +911,20 @@ export const create = () => {
       info: {
         details: {
           type: 'order',
-          meta: enums.DiscountMetaEnum.order,
+          // meta: enums.DiscountMetaEnum.order,
           extra: {
             fixed: 0, percent: 10
           }
         },
         filters: [
-          /** @type {Filter_o_subtotal_in_range} */({  
+          {  
             // discount for a specific product handle
-            meta: enums.FilterMetaEnum.o_subtotal_in_range,
+            // meta: enums.FilterMetaEnum.o_subtotal_in_range,
+            op: 'o-subtotal-in-range',
             value: {
               from: 300
             }
-          })
+          }
         ]
       }
     }    
@@ -1054,20 +1065,21 @@ export const create = () => {
       info: {
         details: {
           type: 'order',
-          meta: enums.DiscountMetaEnum.order,
+          // meta: enums.DiscountMetaEnum.order,
           extra: {
             fixed: 0, percent: 10
           }
         },
         filters: [
-          /** @type {Filter_o_date_in_range} */({ 
+          { 
             // discount for a specific product handle
-            meta: enums.FilterMetaEnum.o_date_in_range,
+            // meta: enums.FilterMetaEnum.o_date_in_range,
+            op: 'o-date-in-range',
             value: {
               from: (new Date(Date.now() - 1000)).toISOString(),
               to: (new Date(Date.now() + 1000*60)).toISOString()
             }
-          })
+          }
         ]
       }
     }    
@@ -1110,6 +1122,7 @@ export const create = () => {
 
     { // order NOT in date range
 
+      // @ts-ignore
       discount.info.filters[0].value = {
         to: (new Date(0)).toISOString()
       }
@@ -1166,19 +1179,20 @@ export const create = () => {
       info: {
         details: {
           type: 'order',
-          meta: enums.DiscountMetaEnum.order,
+          // meta: enums.DiscountMetaEnum.order,
           extra: {
             fixed: 0, percent: 10
           }
         },
         filters: [
-          /** @type {Filter_o_items_count_in_range} */({  
+          {  
             // discount for a specific product handle
-            meta: enums.FilterMetaEnum.o_items_count_in_range,
+            // meta: enums.FilterMetaEnum.o_items_count_in_range,
+            op: 'o-items-count-in-range',
             value: {
               from: 10
             }
-          })
+          }
         ]
       }
     }    
@@ -1296,21 +1310,22 @@ export const create = () => {
       info: {
         details: {
           type: 'order',
-          meta: enums.DiscountMetaEnum.order,
+          // meta: enums.DiscountMetaEnum.order,
           extra: {
             fixed: 0, percent: 10
           }
         },
         filters: [
-          /** @type {Filter_o_has_customers} */({
+          {
             // discount for a specific product handle
-            meta: enums.FilterMetaEnum.o_has_customer,
+            // meta: enums.FilterMetaEnum.o_has_customer,
+            op: 'o-has-customer',
             value: [
               {
                 id: 'cus_ID_i_promised_a_discount_to'
               },
             ]
-          })
+          }
         ]
       }
     }    
@@ -1409,20 +1424,21 @@ export const create = () => {
       info: {
         details: {
           type: 'order',
-          meta: enums.DiscountMetaEnum.order,
+          // meta: enums.DiscountMetaEnum.order,
           extra: {
             fixed: 0, percent: 10
           }
         },
         filters: [
-          /** @type {Filter_o_has_customers} */({ // discount for a specific product handle
-            meta: enums.FilterMetaEnum.o_has_customer,
+          { // discount for a specific product handle
+            // meta: enums.FilterMetaEnum.o_has_customer,
+            op: 'o-has-customer',
             value: [
               {
                 id: 'cus_ID_i_promised_a_discount_to'
               },
             ]
-          })
+          }
         ]
       }
     }    

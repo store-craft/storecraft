@@ -15,12 +15,15 @@ const DiscountsQuickSearchActions =
       <LabelCapsule value='all' bgColor='bg-pink-400 dark:bg-pink-400/60' />
     </Link>
     {
-      Object.values(DiscountMetaEnum).filter(it => Boolean(it.type)).map(
+      Object
+      .values(DiscountMetaEnum)
+      .filter(it => Boolean(it.type))
+      .map(
         it => (
           <Link 
             key={it.id} 
             draggable='false'
-            to={`/pages/discounts/q/search=type:${it.id}`}>
+            to={`/pages/discounts/q/search=type:${it.type}`}>
             <LabelCapsule 
               value={it.name} 
               bgColor={discount_types_to_color(it.type)} />
@@ -36,7 +39,7 @@ const DiscountsQuickSearchActions =
         <Link 
           key={it.id} 
           draggable='false'
-          to={`/pages/discounts/q/search=app:${it.name.toLowerCase()}`}>
+          to={`/pages/discounts/q/search=app:${it.name2}`}>
           <LabelCapsule 
             value={it.name} 
             bgColor={discount_types_to_color(undefined)} />
@@ -49,7 +52,7 @@ const DiscountsQuickSearchActions =
       (it, ix) => (
       <Link key={ix} 
             draggable='false'
-            to={`/pages/discounts/q/search=active:${it.v}`}>
+            to={`/pages/discounts/q/search=active=${it.v}`}>
         <LabelCapsule 
             value={it.name} 
             bgColor={discount_types_to_color(undefined)} />

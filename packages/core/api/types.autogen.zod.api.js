@@ -437,6 +437,7 @@ export const filterPAllSchema = z
   .object({
     op: filterMetaEnumSchema.shape.p_all.shape.op.optional(),
     meta: filterMetaEnumSchema.shape.p_all.optional(),
+    value: z.undefined(),
   })
   .describe("Filter for product discount,\nthat chooses all products");
 

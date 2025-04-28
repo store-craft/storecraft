@@ -1048,6 +1048,7 @@ export type Filter_p_all = {
   op?: FilterMetaEnum['p_all']["op"],
   /** @deprecated */
   meta?: FilterMetaEnum['p_all'],
+  value: undefined
 };
 
 /**
@@ -1349,7 +1350,8 @@ export interface DiscountMetaEnum  {
     name?: string,
   },
   any: { 
-    id?: number, type?: unknown, 
+    id?: number, 
+    type?: unknown, 
     name?: string,
   },
 

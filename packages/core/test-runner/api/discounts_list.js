@@ -47,7 +47,8 @@ const items = get_static_ids('dis').map(
         filters: [
           {
             op: 'p-all',
-            meta: enums.FilterMetaEnum.p_all,
+            // meta: enums.FilterMetaEnum.p_all,
+            value: undefined
           }
         ]
       }

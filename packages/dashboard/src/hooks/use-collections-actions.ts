@@ -161,7 +161,7 @@ const useCollectionsActions = <
     }, [nav, query, slug, parsed_query_params, page]
   );
 
-  console.log({current_page: page})
+  // console.log({current_page: page})
 
   const next = useCallback(
     /**

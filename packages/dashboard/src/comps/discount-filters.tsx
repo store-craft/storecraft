@@ -8,74 +8,87 @@ import { IoMdClose } from 'react-icons/io'
 import LocalEN from 'air-datepicker/locale/en.js'
 import { Overlay } from './overlay';
 import { 
-  BrowseCustomers, BrowseCustomersParams, BrowseProducts, BrowseProductsParams 
+  BrowseCustomers, BrowseCustomersParams, 
+  BrowseProducts, BrowseProductsParams 
 } from './resource-browse'
 import { BlingButton } from './common-button'
-import { FilterMetaEnum } from '@storecraft/core/api/types.api.enums.js'
+import { 
+  FilterMetaEnum, get_filter_op, get_filter_type 
+} from '@storecraft/core/api/types.api.enums.js'
 import { SelectTags } from './tags-edit'
 import { extract_contact_field } from '../pages/customers'
 import useNavigateWithState from '@/hooks/use-navigate-with-state'
 import { 
-  CollectionType,
-  CustomerType, DiscountType, Filter, FilterValue_o_date_in_range, FilterValue_o_items_count_in_range, 
-  FilterValue_o_subtotal_in_range, FilterValue_p_in_collections, FilterValue_p_in_price_range, 
-  FilterValue_p_in_products, FilterValue_p_in_tags 
+  CustomerType, DiscountType, Filter, Filter_o_date_in_range, 
+  Filter_o_items_count_in_range, Filter_o_subtotal_in_range, 
+  Filter_p_in_collections, Filter_p_in_price_range, 
+  Filter_p_in_products, Filter_p_in_tags,
 } from '@storecraft/core/api'
 import { AirDatePicker } from './air-date-picker'
 import useDarkMode from '@/hooks/use-dark-mode'
 import { FieldLeafViewParams } from './fields-view.js'
  
 export type Filter_ProductInCollectionsParams = {
-  value: FilterValue_p_in_collections;
-  onChange: (filter_value: FilterValue_p_in_collections) => void;
+  value: Filter_p_in_collections["value"];
+  onChange: (filter_value: Filter_p_in_collections["value"]) => void;
   context: import('../pages/discount.js').Context;
 };
+
 export type Filter_ProductHasTagsParams = {
-  value: FilterValue_p_in_tags;
-  onChange: (filter_value: FilterValue_p_in_tags) => void;
+  value: Filter_p_in_tags["value"];
+  onChange: (filter_value: Filter_p_in_tags["value"]) => void;
   context: import('../pages/discount.js').Context;
 };
+
 export type Filter_ProductHasHandleParams = {
-  value: FilterValue_p_in_products;
-  onChange: (filter_value: FilterValue_p_in_products) => void;
+  value: Filter_p_in_products["value"];
+  onChange: (filter_value: Filter_p_in_products["value"]) => void;
   context: import('../pages/discount.js').Context;
 };
+
 export type Filter_ProductPriceInRangeParams = {
-  value: FilterValue_p_in_price_range;
-  onChange: (filter_value: FilterValue_p_in_price_range) => void;
+  value: Filter_p_in_price_range["value"];
+  onChange: (filter_value: Filter_p_in_price_range["value"]) => void;
 };
+
 export type Filter_OrderSubTotalParams = {
-  value: FilterValue_o_subtotal_in_range;
-  onChange: (filter_value: FilterValue_o_subtotal_in_range) => void;
+  value: Filter_o_subtotal_in_range["value"];
+  onChange: (filter_value: Filter_o_subtotal_in_range["value"]) => void;
 };
+
 export type Filter_OrderItemCountParams = {
-  value?: FilterValue_o_items_count_in_range;
-  onChange: (filter_value: FilterValue_o_items_count_in_range) => void;
+  value?: Filter_o_items_count_in_range["value"];
+  onChange: (filter_value: Filter_o_items_count_in_range["value"]) => void;
 };
+
 export type Filter_OrderDateParams = {
-  onChange: (value: FilterValue_o_date_in_range) => void;
-  value?: FilterValue_o_date_in_range;
+  onChange: (value: Filter_o_date_in_range["value"]) => void;
+  value?: Filter_o_date_in_range["value"];
 };
+
 export type Filter_OrderHasCustomersParams = {
   onChange: (value: CustomerType[]) => void;
   value: CustomerType[];
   context: import('../pages/discount.js').Context;
 };
+
 export type ProductFilterContainerParams = {
   name: string;
   value: Filter["value"];
   Comp: any;
   CompParams: any;
-  type: Filter["meta"]["type"];
+  type: typeof FilterMetaEnum[Exclude<keyof typeof FilterMetaEnum, 'any'>]["type"];
   onChange: (value: Filter["value"]) => void;
   onRemove: () => void;
   ix: number;
   context: import('../pages/discount.js').Context;
 } & React.ComponentProps<'div'>;
+
 export type AddFilterParams = {
   type: string;
   onAdd: (filter_id: string | number) => void;
 };
+
 export type DiscountFiltersParams = FieldLeafViewParams<
   Filter[], 
   import('../pages/discount.js').Context,
@@ -84,18 +97,8 @@ export type DiscountFiltersParams = FieldLeafViewParams<
   types: ("product" | "order")[];
 }
 
-
 /////
 /////
-
-export const discount_filters_validator = (v: Filter["meta"][]) => {
-  const product_filters = v?.filter(it => it.type==='product') ?? [];
-
-  if(product_filters.length==0)
-    return [false, 'You have to apply at least ONE Product Filter'];
-
-  return [true, undefined];
-}
 
 const Filter_ProductInCollections = (
   { 
@@ -142,7 +145,6 @@ const Filter_ProductInCollections = (
       const url = `/pages/collections/${v.handle}`;
 
       navWithState(url, state);
-
     },
     [context, navWithState]
   );
@@ -228,19 +230,21 @@ const Filter_ProductHasTags = (
   return (
 <div className='w-full'>
   <SelectTags 
-      onSelect={onAdd} 
-      header='Select Tags' 
-      clsReload='text-3xl text-kf-400' 
-      layout={1}/>
+    onSelect={onAdd} 
+    header='Select Tags' 
+    clsReload='text-3xl text-kf-400' 
+    layout={1}
+  />
   { 
     tags?.length>0 && 
     <HR className='w-full mt-5' />  
   }
   <CapsulesView 
-      onRemove={onRemove}
-      onClick={onRemove} 
-      tags={tags} 
-      className='mt-5' />
+    onRemove={onRemove}
+    onClick={onRemove} 
+    tags={tags} 
+    className='mt-5' 
+  />
 </div>
   )
 }
@@ -320,11 +324,13 @@ const Filter_ProductInProducts = (
     className='text-sm mx-auto h-10 w-40 ' 
     stroke='border-2'
     children='Browse products' 
-    onClick={() => ref_overlay.current.show()} />
+    onClick={() => ref_overlay.current.show()} 
+  />
   <Overlay ref={ref_overlay} >
     <BrowseProducts 
       onSave={onBrowseAdd} 
-      onCancel={() => ref_overlay.current.hide()} />
+      onCancel={() => ref_overlay.current.hide()} 
+    />
   </Overlay>
   { 
     tags?.length>0 && 
@@ -335,7 +341,8 @@ const Filter_ProductInProducts = (
     onClick={onClick} 
     tags={tags} 
     name_fn={it => it.title ?? it.handle ?? it.id }
-    className='mt-5' />
+    className='mt-5' 
+  />
 </div>
   )
 } 
@@ -402,7 +409,8 @@ const Filter_ProductPriceInRange = (
           type='number' step='1' min='0' value={v[key]} 
           className='w-20 rounded-md' 
           onWheel={(e) => (e.target as HTMLInputElement).blur()}
-          onChange={e => onChangeInternal(key, e)} />
+          onChange={e => onChangeInternal(key, e)} 
+        />
       </div>
     ))
   }
@@ -453,7 +461,8 @@ const Filter_OrderSubTotal = (
           value={v[key]} 
           className='w-20 rounded-md ' 
           onWheel={(e) => (e.target as HTMLInputElement).blur()}
-          onChange={e => onChangeInternal(key, e)} />
+          onChange={e => onChangeInternal(key, e)} 
+        />
       </div>
     ))
   }
@@ -570,29 +579,6 @@ const Filter_OrderDate = (
       }
     </div>
   )
-
-//   return (
-// <div className='w-full flex flex-row gap-5 flex-wrap'>
-//   {
-//     data.map(
-//       ({ name, key}, ix) => (
-//       <div className='flex flex-row --items-center flex-wrap gap-3' key={ix}>
-//         <span children={name}/>
-//         <DatePicker  
-//           className='border p-3 shelf-card outline-none'
-//           selected={new Date(v[key] ?? null)}
-//           onChange={(date) => onChangeInternal(key, date)}
-//           showTimeSelect
-//           timeFormat="HH:mm"
-//           timeIntervals={60}
-//           timeCaption="time"
-//           dateFormat="MMMM d, yyyy h:mm aa" />
-//       </div>
-//       )
-//     )
-//   }
-// </div>
-//   )
 }
 
 const Filter_OrderHasCustomers = (
@@ -651,15 +637,17 @@ const Filter_OrderHasCustomers = (
   return (
 <div className='w-full'>
   <BlingButton 
-      children='Browse Customers' 
-      className='text-sm mx-auto h-10 w-40' 
-      stroke='border-2'
-      onClick={() => ref_overlay.current.show()} />
+    children='Browse Customers' 
+    className='text-sm mx-auto h-10 w-40' 
+    stroke='border-2'
+    onClick={() => ref_overlay.current.show()} 
+  />
 
   <Overlay ref={ref_overlay} >
     <BrowseCustomers 
-        onSave={onBrowseAdd} 
-        onCancel={() => ref_overlay.current.hide()} />
+      onSave={onBrowseAdd} 
+      onCancel={() => ref_overlay.current.hide()} 
+    />
   </Overlay>
 
   { 
@@ -667,11 +655,12 @@ const Filter_OrderHasCustomers = (
     <HR className='w-full mt-5' />  
   } 
   <CapsulesView 
-      onRemove={onRemove} 
-      onClick={onClick} 
-      name_fn={extract_contact_field}
-      tags={tags} 
-      className='mt-5' />
+    onRemove={onRemove} 
+    onClick={onClick} 
+    name_fn={extract_contact_field}
+    tags={tags} 
+    className='mt-5' 
+  />
 </div>
   )
 }
@@ -690,28 +679,33 @@ const ProductFilterContainer = (
   const [warn, setWarn] = useState(undefined)
 
   return (
-<div className='shelf-card-light w-full h-fit p-5 border shadow-lg
-               text-sm rounded-lg' {...rest}>
+<div 
+  className='shelf-card-light w-full h-fit p-5 border shadow-lg
+    text-sm rounded-lg' 
+  {...rest}>
 
-  <div className='shelf-border-color border-b pb-2 flex 
-                  flex-row justify-between mb-5'>
+  <div 
+    className='shelf-border-color border-b pb-2 flex 
+      flex-row justify-between mb-5'>
 
     <div className='flex flex-row flex-wrap gap-3 items-center'>
-      <span children={`${type} Filter`} 
-            className={`p-1 text-white rounded-md bg-gradient-to-r 
-                        border whitespace-nowrap  
-                        ${(type==='product' ? 
-                        'from-pink-500 to-kf-500 border-kf-300/50' : 
-                        'from-teal-500 to-teal-400  border-teal-500')}`
-                      } />
+      <span 
+        children={`${type} Filter`} 
+        className={`p-1 text-white rounded-md bg-gradient-to-r 
+                    border whitespace-nowrap  
+                    ${(type==='product' ? 
+                    'from-pink-500 to-kf-500 border-kf-300/50' : 
+                    'from-teal-500 to-teal-400  border-teal-500')}`
+        } 
+      />
 
       <span children={name} className='pr-3' />
     </div>
     <IoMdClose 
       onClick={onRemove} 
       className='text-base items-center 
-                cursor-pointer hover:text-teal-600
-                flex-shrink-0' />
+        cursor-pointer hover:text-teal-600
+        flex-shrink-0' />
   </div>
   {
     Comp && (
@@ -794,8 +788,8 @@ const fake_data = [
 ]
 
 
-const filterId2Comp = (id: Filter["meta"]["id"]) => {
-  const filter = filters_2_comp.find(it => it.id===id);
+const filterOp2Comp = (op: Filter["op"]) => {
+  const filter = filters_2_comp.find(it => it.op===op);
 
   return { 
     name: filter?.name, 
@@ -815,20 +809,20 @@ const AddFilter = (
   );
 
   return (
-<button className='shelf-bling-fill shelf-border-color
-                   rounded-lg w-full border pl-2 sm:px-3 --pl-3 
-                   py-2 shadow-lg flex overflow-x-hidden
-                   flex-col justify-between h-full text-base' >
-  <p children={`${type} Filter`} 
-     className='shelf-text-minor-2 overflow-x-hidden whitespace-nowrap' />
+<button 
+  className='shelf-bling-fill shelf-border-color
+    rounded-lg w-full border pl-2 sm:px-3 --pl-3 
+    py-2 shadow-lg flex overflow-x-hidden
+    flex-col justify-between h-full text-base' >
   <select 
-      value={'-1'} 
-      className='w-full h-9 bg-transparent outline-none text-gray-500  p-0'
-      onChange={e => onAdd(e.currentTarget.value)}>
+    value={'-1'} 
+    className='w-full h-9 bg-transparent outline-none p-0'
+    onChange={e => onAdd(e.currentTarget.value)}>
     <option 
-        children={`Add Filter`} 
-        value='-1' key='-1' 
-        className='p-0 appearance-none' />
+      children={`Add ${type} Filter`} 
+      value='-1' key='-1' 
+      className='p-0 appearance-none' 
+    />
     {
       options.map(
         (it, ix) => (
@@ -881,14 +875,12 @@ const DiscountFilters = (
     (filter_id: number) => {
       const fd = filters_2_comp.find(it => it.id==filter_id);
 
-      const f = { 
-        meta: {
-          id: fd.id, type: fd.type, op: fd.op
-        },
+      const filter = { 
+        op: fd.op,
         value: undefined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
       } as Filter;
 
-      const vv = [...filters, f];
+      const vv = [...filters, filter];
 
       setAndChange(vv);
 
@@ -903,7 +895,10 @@ const DiscountFilters = (
     {
       types.map(
         (t, ix) => (
-          <Bling className='flex-1' rounded='rounded-lg' key={ix}>
+          <Bling 
+            className='flex-1' 
+            rounded='rounded-lg' 
+            key={ix}>
             <AddFilter type={t} onAdd={onAddFilter} />
           </Bling>
         )
@@ -912,23 +907,29 @@ const DiscountFilters = (
     </div>
 
     <ShowIf show={filters.length}>
-      <p children='' className='mt-5 h-0.5 mb-5 bg-gradient-to-r 
-                from-pink-500/50 to-kf-500/50'/>
+      <p 
+        children='' 
+        className='mt-5 h-0.5 mb-5 bg-gradient-to-r 
+        from-pink-500/50 to-kf-500/50'/>
     </ShowIf>
 
     <div className='w-full flex flex-col gap-5'>
     {
-      filters.map((it, ix) => (
-        <ProductFilterContainer 
-          {...filterId2Comp(it?.meta?.id)} 
-          context={context}
-          onChange={(v: Filter["value"]) => onProductFilterChange(ix, v)} 
-          onRemove={() => onRemoveProductFilter(ix)} 
-          key={ix} ix={ix} value={it.value} 
-          id={String(it.meta?.id)} 
-          type={it.meta?.type} 
-        />
-      ))
+      filters.map(
+        (filter, ix) => (
+          <ProductFilterContainer 
+            {...filterOp2Comp(get_filter_op(filter))} 
+            context={context}
+            onChange={(v: Filter["value"]) => onProductFilterChange(ix, v)} 
+            onRemove={() => onRemoveProductFilter(ix)} 
+            key={ix} 
+            ix={ix} 
+            value={filter.value} 
+            id={get_filter_op(filter)} 
+            type={get_filter_type(filter)} 
+          />
+        )
+      )
     }      
     </div>    
   </div>

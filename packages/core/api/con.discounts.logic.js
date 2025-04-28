@@ -11,7 +11,7 @@ import {
 } from './con.shared.js'
 import { isDef } from './utils.index.js';
 import { App } from '../index.js';
-import { is_product_filter, is_order_filter } from './types.api.enums.js';
+import { is_product_filter, is_order_filter, DiscountMetaEnum } from './types.api.enums.js';
 
 
 /**
@@ -31,32 +31,63 @@ export const upsert = (app) =>
   app, db(app), 'dis', discountTypeUpsertSchema, 
   (before) => {
     
-    // let's validate further, that order and product filters are not mixed
-    const type = before.info.details.type;
-    if(type==='order') {
-      for (const filter of before.info.filters) {
-        assert(
-          // @ts-ignore
-          is_order_filter(filter),
-          'Discount with `order` type must only contain `order` filters'
-        );
-      }
-    }
-    else if(type) { // else this is a product discount
-      for (const filter of before.info.filters) {
-        assert(
-          // @ts-ignore
-          is_product_filter(filter),
-          `Discount with \`${filter.op}\` type must only contain \`product\` filters`
-        );
-      }
-    } else {
+    before.priority ??= 0;
+    
+    { // Upgrade deprecated `meta` props
+      const type = before?.info?.details?.type ?? before?.info?.details?.meta?.type;
+
       assert(
-        false,
+        type,
         'Discount has no type, please set a type'
       );
+
+      delete before.info.details.meta;
+
+      before.info.details.type = type;
+
+      // now align filters with deprecated `meta` properties
+      for (const filter of before?.info?.filters ?? []) {
+        filter.op = filter.op ?? filter?.meta?.op;
+        delete filter.meta;
+        assert(
+          filter.op,
+          'Filter does not specify an operator'
+        );
+      }
     }
-    
+
+    {
+      // now we can check if the filters are valid
+      // if the discount is of type `order`, then all filters must be of type `order`
+      // if the discount is of type `product`, then all filters must be of type `product`
+      const type = before.info.details.type;
+
+      if(type==='order') {
+        for (const filter of (before?.info?.filters ?? [])) {
+          assert(
+            // @ts-ignore
+            is_order_filter(filter),
+            'Discount with `order` type must only contain `order` filters'
+          );
+        }
+      }
+      else if(type) { // else this is a product discount
+        for (const filter of (before?.info?.filters ?? [])) {
+          assert(
+            // @ts-ignore
+            is_product_filter(filter),
+            `Discount with product type must only contain \`product\` filters,
+            Instead a filter with op \`${filter.op}\` was found`
+          );
+        }
+      } else {
+        assert(
+          false,
+          'Discount has no type, please set a type'
+        );
+      }
+    }
+
     return {
       ...before,
       handle: before.handle ?? to_handle(before.title)
@@ -65,10 +96,9 @@ export const upsert = (app) =>
   (final) => {
     return union(
       isDef(final?.application) && `app:${final.application.id}`,
-      isDef(final?.application?.name) && `app:${final.application.name.toLowerCase()}`,
+      isDef(final?.application?.name2) && `app:${final.application.name2}`,
       isDef(final?.info?.details?.type) && `type:${final.info.details.type}`,
-      isDef(final?.info?.details?.meta?.id) && `type:${final.info.details.meta.id}`,
-      isDef(final?.info?.details?.meta?.type) && `type:${final.info.details.meta.type}`,
+      isDef(final?.info?.details?.type) && `type:${DiscountMetaEnum[final?.info?.details?.type].id}`,
     );
   },
   'discounts/upsert'

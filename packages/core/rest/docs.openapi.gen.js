@@ -287,19 +287,6 @@ const example_order = {
 
 // Register definitions here
 const create_query = () => {
-  const cursor = z.string().optional().openapi(
-    { 
-      examples: [
-        '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)',
-        '(updated_at:"2024-01-24T20:28:24.126Z", id:"tag_65b172ebc4c9552fd46c1027")',
-        '(price: 50, updated_at:"2024-01-24T20:28:24.126Z")',
-        '(active: true)',
-        '(active: false)',
-      ],
-      description: 'A cursor in CSV format of key and values, example: \
-      `(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)`'
-    }
-  );
 
   return z.object({
     limit: z.number().optional().openapi(
@@ -314,11 +301,6 @@ const create_query = () => {
         description: 'Limit filtered results from the end of a query range' 
       }
     ),
-    startAt: cursor,
-    startAfter: cursor,
-    endAt: cursor,
-    endBefore: cursor,
-    equals: cursor,
     sortBy: z.string().optional().openapi(
       { 
         examples: ['(updated_at,id)', '(price)'],
@@ -335,9 +317,10 @@ const create_query = () => {
     ),
     vql: z.string().optional().openapi(
       { 
-        examples: ["(term1 & (term2 | -term3))"],
-        description: 'Every item has a recorded search terms which you can use \
-        to refine your filtering with `VQL` boolean language, example: "term1 & (term2 | -term3)"'
+        examples: ["(active=true & updated_at>=2012 & (price>=20 & price<40) & (super | -mario))"],
+        description: '**VQL** is a query filtering language for `storecraft`. Learn about it \
+        in the following link https://storecraft.app/docs/backend/resources/query#vql. \
+        Example: `(active=true & updated_at>=2012 & (price>=20 & price<40) & (super | -mario))`',
       }
     ),
     expand: z.string().optional().openapi(

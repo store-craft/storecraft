@@ -61,7 +61,7 @@ export const query_vql_root_to_eb = (eb, vql, table_name) => {
             break;
           case '$like':
             // @ts-ignore
-            result = eb(prop_ref, 'like', String(arg_any))
+            result = eb(prop_ref, 'like', `%${String(arg_any)}%`);
             break;
           case '$in': {
             result = eb(prop_ref, 'in', arg_any)
@@ -137,7 +137,7 @@ export const query_vql_root_to_eb = (eb, vql, table_name) => {
                 ),
                 eb(
                   `entity_to_search_terms.value`, 'like', 
-                  value.toLowerCase()
+                  `%${String(value.toLowerCase())}%`
                 )
               ]
             )

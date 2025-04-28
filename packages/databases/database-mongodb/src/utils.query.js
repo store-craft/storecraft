@@ -163,16 +163,20 @@ const transform = c => {
 export const query_to_mongo = (q) => {
   
   try { // compute VQL clauses 
-    q.vql = /** @type {VQL} */({
-      $and: [
-        parse(q.vql),
-        // supports legacy queries with cursors, will be deprecated
-        // in future versions.
-        parse(
-          legacy_query_with_cursors_to_vql_string(q)
-        )
-      ].filter(Boolean)
-    });
+    const parts = [
+      parse(q.vql),
+      // supports legacy queries with cursors, will be deprecated
+      // in future versions.
+      parse(
+        legacy_query_with_cursors_to_vql_string(q)
+      )
+    ].filter(Boolean);
+
+    if(parts.length>0) {
+      q.vql = /** @type {VQL} */({
+        $and: parts
+      });
+    }
   } catch(e) {
     console.error('VQL parse error:\n', e, '\nfor query:\n', q);
   }

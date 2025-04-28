@@ -19,9 +19,12 @@ import Attributes from '@/comps/attributes'
 import TagsEdit from '@/comps/tags-edit'
 import MDEditor from '@/comps/md-editor'
 import { CreateDate, Div, withBling } from '@/comps/common-ui'
-import { PaymentOptionsEnum, FulfillOptionsEnum, 
-  CheckoutStatusEnum } from '@storecraft/core/api/types.api.enums.js'
-import { DocumentActionsMode, useDocumentActions } from '@/hooks/use-document-actions'
+import { 
+  PaymentOptionsEnum, FulfillOptionsEnum, CheckoutStatusEnum 
+} from '@storecraft/core/api/types.api.enums.js'
+import { 
+  DocumentActionsMode, useDocumentActions 
+} from '@/hooks/use-document-actions'
 import { useCallback, useMemo } from 'react'
 import { OrderData } from '@storecraft/core/api'
 import { BaseDocumentContext } from '.'
@@ -157,7 +160,7 @@ const status_schema = {
         withBling(
           create_select_view(Object.values(PaymentOptionsEnum))
         ), 
-        { className : 'text-gray-600' }, false
+        { className : '' }, false
       ),
       comp_params: {className: 'text-gray-500'} 
     }, 
@@ -170,7 +173,7 @@ const status_schema = {
         withBling(create_select_view(
           Object.values(FulfillOptionsEnum))
         ), 
-        { className : 'text-gray-600'}, false
+        { className : ''}, false
       ) ,
       comp_params: {className: 'text-gray-500  mt-5'} 
     },
@@ -183,7 +186,7 @@ const status_schema = {
         withBling(
           create_select_view(Object.values(CheckoutStatusEnum))
         ), 
-        { className : 'text-gray-600'}, false
+        { className : ''}, false
       ),
       comp_params: { className: 'text-gray-500  mt-5' } 
     },

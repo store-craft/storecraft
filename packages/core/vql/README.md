@@ -1,7 +1,54 @@
 # VQL - Virtual Query Language
 
-`vql` is both a typed data structure and a query language. It is designed to be used with the `vql` package, which provides a parser and an interpreter for the language.
-It is a simple and powerful way to query data structures, allowing you to express complex queries in a concise and readable format.
+**VQL** helps you transform this:
+
+```js
+((tag:subscribed & age>=18 & age<35) | active=true)
+```
+Into this:
+
+```js
+{
+  '$or': [
+    {
+      '$and': [
+        { $search: 'subscribed' },
+        { age: { '$gte': 18 } },
+        { age: { '$lt': 35 } }
+      ]
+    },
+    { active: { '$eq': true } }
+  ]
+}
+```
+And this:
+
+```js
+((name~'mario 2' & age>=18 -age<35) | active=true) 
+```
+Into this:
+
+```js
+{ 
+  '$or': [
+    {
+      $and: [
+        { name: { $like: 'mario 2' } },
+        { age: { $gte: 18 } },
+        { $not: { age: { $lt: 35 } } }
+      ]
+    },
+    { active: { '$eq': true } }
+  ]
+}
+```
+
+`VQL` is both a typed data structure and a query language. 
+It is designed to be used with the `vql` package, which provides 
+a parser and an interpreter for the language.
+
+It is a simple and powerful way to query data structures, 
+allowing you to express complex queries in a concise and readable format.
 
 ## Features
 

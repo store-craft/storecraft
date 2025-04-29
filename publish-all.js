@@ -44,6 +44,7 @@ export const publish_folder = (
   '/core',
   '/cli',
   '/dashboard',
+  '/chat',
 
   '/databases/database-cloudflare-d1',
   '/databases/database-mongodb',

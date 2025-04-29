@@ -26,7 +26,8 @@ export default defineConfig(
       dts(
         { 
           logLevel: 'silent',
-          tsconfigPath: resolve(__dirname, "tsconfig.app.json")
+          tsconfigPath: resolve(__dirname, "tsconfig.app.json"),
+          outDir: resolve(__dirname, "dist/lib"),
         }
       )
     ], 

@@ -26,7 +26,8 @@ export default defineConfig(
       dts(
         { 
           logLevel: 'silent',
-          tsconfigPath: resolve(__dirname, "tsconfig.app.json")
+          tsconfigPath: resolve(__dirname, "tsconfig.app.json"),
+          outDir: resolve(__dirname, "dist/lib"),
         }
       )
     ], 
@@ -42,20 +43,18 @@ export default defineConfig(
       copyPublicDir: false,
       assetsInlineLimit: 1048576,
       emptyOutDir: true,
-      outDir: 'dist/lib',
-      // commonjsOptions: {
-      //   include: [/node_modules/],
-      // },
+      outDir: 'dist/lib/src',
       cssCodeSplit: false,
       lib: {
         entry: ['src/index.tsx'],
-        // name: '@storecraft/dashboard',
         name: 'StorecraftChat',
-        formats: ['es', 'cjs', 'umd'],
+        formats: [
+          'es', 
+          'umd'
+        ],
       },
       rollupOptions: {
-        external: [
-        ]
+        treeshake: 'smallest',
       }
     }
   }

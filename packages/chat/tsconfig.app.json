@@ -34,39 +34,3 @@
   },
   "include": ["src"]
 }
-
-
-// {
-//   "compileOnSave": false,
-//   "compilerOptions": {
-//     "noEmit": true,
-//     "allowJs": true,
-//     "maxNodeModuleJsDepth": 20,
-//     "checkJs": true,
-//     "resolveJsonModule": true,
-//     "target": "ESNext",
-//     "module": "NodeNext",
-//     "moduleResolution": "NodeNext",
-//     "esModuleInterop": true,
-//     "lib": [
-//       "dom",
-//       "dom.iterable",
-//       "esnext"
-//     ],
-//     "skipLibCheck": true,
-//     "strict": false,
-//     "incremental": true,
-//     "isolatedModules": true,
-//     "jsx": "preserve",
-//     "paths": {
-//       "@/*": ["./src/*"]
-//     },
-//   },
-//   "include": [
-//     "*",
-//     "**/*"
-//   ],
-//   "exclude": [
-//     "**/*.json"
-//   ]
-// }

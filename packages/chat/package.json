@@ -17,6 +17,7 @@
     "storecraft"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/lib/index.d.ts",
@@ -30,6 +31,8 @@
     "build": "vite build -c vite.lib.config.ts",
     "lint": "eslint .",
     "preview": "vite preview",
+    "preview:esm": "npx http-server . -o index.esm.html",
+    "preview:umd": "npx http-server . -o index.umd.html",
     "analyze": "npx vite-bundle-visualizer -c vite.lib.config.ts",
     "prepublishOnly": "npm version patch --force && npm run build",
     "sc-publish": "npm publish"

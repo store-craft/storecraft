@@ -82,12 +82,27 @@ const items = await app.api.collections.list(
 
 ## Query Products of Collection
 
-```js
+```ts
 const id = await app.api.collections.list_collection_products(
   'nintendo-games', 
   {
     limit: 5,
     vql: 'pikmin'
+  }
+);
+
+```
+
+And also in object mode
+
+```ts
+const id = await app.api.collections.list_collection_products(
+  'nintendo-games', 
+  {
+    vql: {
+      $search: 'pikmin'
+    },
+    limit: 5
   }
 );
 

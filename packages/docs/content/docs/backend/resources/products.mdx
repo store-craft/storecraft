@@ -102,9 +102,9 @@ In the future we will add sugar methods and examples here.
 
 ## Query products
 
-You can query the `products` resource with
+You can query the `products` resource with **VQL**
 
-```js
+```ts
 const products = await app.api.products.list(
   {
     vql: 'active=true & price>19 & -collection:nitendo-games & (tag:genre_action | tag:genre_adventure)',
@@ -117,7 +117,33 @@ const products = await app.api.products.list(
 );
 
 ```
+And also in object mode
 
+```ts
+const products = await app.api.products.list(
+  {
+    vql: {
+      $and: [
+        { active: { $eq: true } },
+        { price: { $gt: 19 } },
+        { $not: { $search: 'collection:nitendo-games' } },
+        {
+          $or: [
+            { $search: 'tag:genre_action' },
+            { $search: 'tag:genre_adventure' }
+          ]
+        }
+      ]
+    },
+    order: 'desc',
+    sortBy: [
+      'updated_at'
+    ],
+    limit: 5
+  }
+);
+
+```
 
 ## List all product Collections
 

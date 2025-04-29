@@ -83,10 +83,31 @@ const store = await app.api.storefronts.get(
 
 You can query the `storefronts` resource with
 
-```js
+```ts
 const items = await app.api.storefronts.list(
   {
     vql: 'active=true & title~black',
+    order: 'desc',
+    sortBy: [
+      'updated_at'
+    ],
+    limit: 5
+  }
+);
+
+```
+
+And also in object mode
+
+```ts
+const items = await app.api.storefronts.list(
+  {
+    vql: {
+      $and: [
+        { active: { $eq: true } },
+        { title: { $like: 'black' } }
+      ]
+    },
     order: 'desc',
     sortBy: [
       'updated_at'

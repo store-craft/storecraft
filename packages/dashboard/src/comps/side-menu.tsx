@@ -154,7 +154,7 @@ const Version = (
     'reference', 'settings', true, true
   );
 
-  if(loading)
+  if(loading || error)
     return null;
   
   const text = `core v${doc?.core_version}`

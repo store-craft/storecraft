@@ -156,6 +156,7 @@ export const create = (app) => {
     const actual_config = await response.json();
     const expected_config = {
       ...app.config,
+      core_version: app.version,
     }
 
     assert.equal(

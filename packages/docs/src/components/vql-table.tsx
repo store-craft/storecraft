@@ -121,7 +121,7 @@ const data = [
       ['checkout status id', 'checkout:0 | checkout:1 | checkout:2 | checkout:3 | checkout:4'],
       ['checkout status name', 'checkout:created | checkout:requires_action | checkout:failed | checkout:complete | checkout:unknown,'],
       
-      ['applied discounts', 'dis:buy-2-get-1-free'],
+      ['applied discounts with code', 'discount:buy-2-get-1-free'],
 
       ['line items products ids', 'li:pr_123456789'],
       ['line items products handles', 'li:super-mario-switch'],
@@ -166,7 +166,7 @@ const data = [
       ['title', 'flash sale, 10% off, flash, sale'],
       ['Discount application method id', 'app:0 | app:1'],
       ['Discount application method name', 'app:automatic | app:manual'],
-      ['Discount Type', 'regular | bulk | buy_x_get_y | order | bundle'],
+      ['Discount Type', 'type:regular | type:bulk | type:buy_x_get_y | type:order | type:bundle'],
     ]
   },
   {
@@ -228,9 +228,9 @@ export const VQLTable = () => {
           (it, ix) => (
             <div key={ix}>
               <p children={it.name} className='text-2xl italic font-bold' />
-              <p children={'The following properties are directly queryable'}  />
+              <p children={'The following properties are directly queryable with $eq, $neq, $like, $lt, $lte, $gt, $gte'}  />
               <Table rows={[['property', 'type'], ...it.properties]} />
-              <p children={'The following complex properties are indexed for search \
+              <p children={'The following entities are indexed for search \
                 using the $search operator (in object mode), or a string without property ops \
                 in string mode, look at the examples'} />
               <Table rows={[['What is indexed', 'how it\'s indexed'], ...it.search]} />
